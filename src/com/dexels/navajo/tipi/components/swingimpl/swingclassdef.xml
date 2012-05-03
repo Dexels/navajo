@@ -1732,6 +1732,7 @@
          <value direction="inout" name="mnemonic" type="string" property="stringMnemonic" />
          <value direction="inout" name="propertyWidth" type="integer" property="propertyWidth" />
          <value direction="in" name="labelColor" type="color"/>
+         <value direction="in" name="labelFont" type="font"/>
 
          <!-- todo -->
          <value direction="inout" name="propertyValue" type="object" />

@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
@@ -52,6 +54,9 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 		// initContainer();
 		super();
 	}
+	
+	
+	
 
 	public Object createContainer() {
 		p = new TipiSwingPropertyComponent(this);
@@ -133,7 +138,25 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 			}
 		});
 	}
+	
+	public void setLabelColor(final Color c) {
+		runSyncInEventThread(new Runnable() {
+			public void run() {
+				((GenericPropertyComponent) getContainer())
+						.setLabelColor(c);
+			}
+		});
+	}
 
+	
+	public void setLabelFont(final Font f) {
+		runSyncInEventThread(new Runnable() {
+			public void run() {
+				((GenericPropertyComponent) getContainer())
+						.setLabelFont(f);
+			}
+		});
+	}
 	@Override
 	public void addTipiEvent(TipiEvent te) {
 		myEventList.add(te);
@@ -172,6 +195,13 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 			}
 			myPropertyValue = object;
 		}
+		if (name.equals("labelColor")) {
+			setLabelColor((Color)object);
+		}
+		if (name.equals("labelFont")) {
+			setLabelFont((Font)object);
+		}
+		
 		super.setComponentValue(name, object);
 	}
 
