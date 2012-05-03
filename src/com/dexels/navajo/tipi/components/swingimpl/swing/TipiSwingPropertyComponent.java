@@ -76,7 +76,6 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 			super.constructPropertyComponent(p);
 			return;
 		}
-		System.err.println("TYPE: " + subtype);
 
 		String[] types = Property.VALID_DATA_TYPES;
 		for (int i = 0; i < types.length; i++) {
