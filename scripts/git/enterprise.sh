@@ -12,17 +12,8 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh com.dexels.navajo.mongo com.dexels.navajo.mongo
 ./cvsgit.sh com.dexels.navajo.mongo.navajostore com.dexels.navajo.mongo.navajostore
 ./cvsgit.sh com.dexels.navajo.other.feature com.dexels.navajo.other.feature
-./cvsgit.sh com.dexels.navajo.resource.feature com.dexels.navajo.resource.feature
-./cvsgit.sh com.dexels.navajo.resource com.dexels.navajo.resource
-./cvsgit.sh com.dexels.navajo.resource.jdbc.h2 com.dexels.navajo.resource.jdbc.h2
-./cvsgit.sh com.dexels.navajo.resource.jdbc.mysql com.dexels.navajo.resource.jdbc.mysql
-./cvsgit.sh com.dexels.navajo.resource.jdbc.oracle com.dexels.navajo.resource.jdbc.oracle
-./cvsgit.sh com.dexels.navajo.resource.mongodb com.dexels.navajo.resource.mongodb
-./cvsgit.sh com.dexels.navajo.resource.test com.dexels.navajo.resource.test
-./cvsgit.sh com.dexels.navajo.resource.manager com.dexels.navajo.resource.manager
 ./cvsgit.sh com.dexels.navajo.test.feature com.dexels.navajo.test.feature
 ./cvsgit.sh NavajoRemoteTestLibrary com.dexels.navajo.test.remote
-./cvsgit.sh NavajoServer com.dexels.navajo.server
 ./cvsgit.sh com.dexels.navajo.server.bridged com.dexels.navajo.server.bridged
 ./cvsgit.sh com.dexels.navajo.server.bridged.deploy com.dexels.navajo.server.bridged.deploy
 
