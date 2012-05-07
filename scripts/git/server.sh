@@ -12,6 +12,6 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 ./cvsgit.sh NavajoAgents com.dexels.navajo.agents
 ./cvsgit.sh NavajoDBReplicationService com.dexels.navajo.enterprise.dbreplication
-./cvsgit.sh NavajoJspDeploy com.dexels.navajo.jsp.deploy
 
+# still clean up these:
 ./cvsgit.sh NavajoDashboardTwo com.dexels.navajo.dashboard
