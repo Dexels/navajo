@@ -67,6 +67,7 @@ genmerge.sh com.dexels.navajo.enterprise.ideal.sportlink
 genmerge.sh com.dexels.navajo.enterprise.openfire
 genmerge.sh com.dexels.navajo.enterprise.tomahawk
 genmerge.sh com.dexels.navajo.enterprise.dbreplication
+genmerge.sh com.dexels.navajo.enterprise.lucene
 
 export MODULEPATH=other
 export REPOSITORY=internal

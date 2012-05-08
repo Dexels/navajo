@@ -12,7 +12,7 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh PeelPage com.dexels.demos.peelpage
 ./cvsgit.sh PinkRoccadeAdapters com.dexels.demos.pinkroccade.adapters
 ./cvsgit.sh PinkRoccadeEI com.dexels.demos.pinkroccade.ei
-./cvsgit.sh PeelPage com.dexels.utilities.smsgateway
+./cvsgit.sh SMSGateway com.dexels.utilities.smsgateway
 ./cvsgit.sh StadiumDesigner com.dexels.demos.stadiumdesigner
 ./cvsgit.sh TipiDashboard com.dexels.demos.tipidashboard
 
@@ -116,5 +116,5 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh com.dexels.navajo.workflow.editor.gmf com.dexels.navajo.workflow.editor.gmf
 ./cvsgit.sh com.dexels.navajo.editor.feature com.dexels.navajo.workflow.editor.feature
 ./cvsgit.sh NavajoPDF com.dexels.navajo.function.pdf
-
+./cvsgit.sh Lucene com.dexels.navajo.enterprise.lucene
 ./cvsgit.sh FileUploadServlet com.dexels.navajo.fileuploadservlet
