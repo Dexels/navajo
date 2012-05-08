@@ -606,8 +606,16 @@ private Object waitForResult = new Object();
   }
 
   public final Object getProperty(String fullName) throws Exception {
-	  
+
 	  Property p = getPropertyObject(fullName);
+
+	  if ( p.getType().equals(Property.SELECTION_PROPERTY) ) {
+		  if ( p.getSelected() != null ) {
+			  return p.getSelected().getValue();
+		  } else {
+			  return null;
+		  }
+	  }
 	  return p.getTypedValue();
   }
   
