@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+   <tipiclass addtocontainer="true" childcount="*" class="JOGLTribeView" layoutmanager="false" module="dashboard" name="gltribeview" package="com.dexels.navajo.dashboard.viewer" studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onSelectionChanged">
+            <param name="tribe" type="string"/>
+         </event>
+         <event name="onDisconnect"/>
+         <event name="onConferenceSelected">
+            <param name="conference" type="string"/>
+         </event>
+         <event name="onTalk">
+            <param name="text" type="string"/>
+            <param name="recipient" type="string"/>
+         </event>
+         <event name="onPostman">
+            <param name="serverName" type="string"/>
+            <param name="serverURL" type="string"/>
+         </event>
+         <event name="onLoad">
+            <param name="navajo" type="navajo"/>
+            <param name="service" type="string"/>
+         </event>
+         <event name="onStatus"/>
+         <event name="onException">
+            <param name="user" type="string"/>
+         </event>
+      </events>
+      <values>
+          <value direction="out" name="selectedServer" type="string"/>  
+      </values>
+      <methods>
+         <method name="commandReceived">
+            <param name="command" type="string"/>
+         </method>    
+      </methods>
+   </tipiclass>
+   <tipiclass addtocontainer="true" childcount="*" class="JOGL3DTribeView" layoutmanager="false" module="dashboard" name="3dtribeview" package="com.dexels.navajo.dashboard.viewer" studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onSelectionChanged">
+            <param name="tribe" type="string"/>
+         </event>
+         <event name="onLoad">
+            <param name="service" type="string"/>
+         </event>
+      </events>
+      <values>
+      </values>
+      <methods>         
+      </methods>
+   </tipiclass>    
+</tid>
