@@ -17,9 +17,9 @@ public abstract class AbstractVersion extends BaseVersion implements BundleActiv
 		context = bc;
 		defaultContext = bc;
 		if(bc==null) {
-			logger.info("Bundle started in non-osgi environment: "+getClass().getName());
+			logger.debug("Bundle started in non-osgi environment: {}",getClass().getName());
 		} else {
-			logger.info("Bundle started: "+bc.getBundle().toString());
+			logger.debug("Bundle started: {}",bc.getBundle().toString());
 		}
 		instance = this;
 	}
