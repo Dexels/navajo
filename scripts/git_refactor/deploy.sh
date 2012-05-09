@@ -7,6 +7,7 @@ export PATH=$PATH:$DIR:.
 teardown.sh navajo
 teardown.sh sportlink
 teardown.sh internal
+setup.sh targetplatform
 echo "About to setup:"
 setup.sh navajo
 setup.sh sportlink
