@@ -6,6 +6,9 @@
  */
 package com.dexels.navajo.tipi.vaadin.components;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
@@ -36,6 +39,9 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     private final String validStyle = "valid";
     private final String invalidStyle = "invalid";
     
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTabbedQuestionList.class);
+	
     protected Object getGroupConstraints(Message groupMessage) {
         // TODO Auto-generated method stub
         Property name = groupMessage.getProperty("Name");
@@ -53,7 +59,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     }
     
     public Object createContainer() {
-        myTabbedPane = new TabSheet();
+    	myTabbedPane = new TabSheet();
         myTabbedPane.setSizeFull();
         myTabbedPane.setStyleName("Default");
         
@@ -92,10 +98,6 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 
    
     
-    public void removeFromContainer(Object c) {
-		// TODO Auto-generated method stub
-		super.removeFromContainer(c);
-	}
 	public void setGroupValid(boolean valid, TipiBaseQuestionGroup group) {
         super.setGroupValid(valid, group);
         int i = myGroups.indexOf(group);
@@ -103,13 +105,12 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
             return;
         }
         if (i < 0) {
-            System.err.println("Sh!34#@$!");
+            logger.error("Sh!34#@$!");
             return;
         }
         Tab t = myTabbedPane.getTab(i);
         t.setIcon(valid ? validImage : inValidImage);
         t.getComponent().setStyleName(valid?validStyle:invalidStyle);
-        System.err.println("SETTING VALIDITY "+valid+" style: "+validStyle+" inv: "+invalidStyle);
 	}
 
 }

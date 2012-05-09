@@ -19,12 +19,14 @@ import com.dexels.navajo.tipi.TipiEventListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.PropertyComponent;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
+import com.dexels.navajo.tipi.vaadin.document.SelectedItemValuePropertyBridge;
 import com.dexels.navajo.tipi.vaadin.document.SelectionBridge;
 import com.dexels.navajo.tipi.vaadin.document.SelectionListBridge;
 import com.dexels.navajo.tipi.vaadin.document.StaticTypeValuePropertyBridge;
 import com.dexels.navajo.tipi.vaadin.document.ValuePropertyBridge;
 import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
+import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
@@ -262,6 +264,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 
 	protected void createMultiSelect() throws NavajoException {
 		SelectionListBridge selectionListBridge = new SelectionListBridge(property);
+
 		if("picklist".equals(selectiontype)) {
 			value = new TwinColSelect("caption",property.getAllSelections());
 		} else {
@@ -274,7 +277,10 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 			}
 		}
 		final AbstractSelect t = (AbstractSelect)value;
-//		final ListSelect ls = (ListSelect)value;
+//		SelectedItemValuePropertyBridge selectionValueBridge =  new SelectedItemValuePropertyBridge(property);
+		Collection<Object> selectedCollection = selectionListBridge.getSelectedCollection();
+		System.err.println("Count: "+selectedCollection.size());
+		t.setValue(selectedCollection);
 		t.setImmediate(true);
 		t.addListener(new Property.ValueChangeListener() {
 			
