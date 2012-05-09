@@ -9,12 +9,13 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../DexelsVersionControl</module>
-		<module>../NavajoDocument</module>
-		<module>../NavajoClient</module>
-		<module>../Navajo</module>
-		<module>../NavajoAsyncClient</module>
-		<module>../NavajoFunctions</module>
+		<module>../../DexelsVersionControl/</module>
+		<module>../../NavajoDocument</module>
+		<module>../../NavajoClient</module>
+		<module>../../Navajo</module>
+		<module>../../NavajoAsyncClient</module>
+		<module>../../NavajoFunctions</module>
+		<module>../</module>
 
 	</modules>
         <parent>
