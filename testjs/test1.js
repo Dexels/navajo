@@ -1,5 +1,4 @@
-env.client.username="";
-env.client.password="";
+// removed username / password
 env.client.server="http://hera1.dexels.com/sportlink/knvb/servlet/Postman";
 
 // create init message:

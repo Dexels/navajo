@@ -1,5 +1,4 @@
-env.client.username="";
-env.client.password="";
+// removed username / password
 env.client.server="http://penelope1.dexels.com/sportlink/knvb/servlet/Postman";
 
 function callSqlService( datasource, query,  param) {
