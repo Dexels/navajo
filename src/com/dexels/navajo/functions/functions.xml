@@ -647,5 +647,9 @@
         <input>boolean,any,any</input>
         <result>any</result>
     </function>
-    
+    <function name="KeyValueMap" class="com.dexels.navajo.functions.KeyValueMap">
+        <description>KeyValueMap(string,string,string)</description>
+        <input>string,string,string</input>
+        <result>string</result>
+    </function>
 </functiondef>
