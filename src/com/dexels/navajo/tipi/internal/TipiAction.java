@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
@@ -32,7 +35,10 @@ public abstract class TipiAction extends TipiAbstractExecutable {
 	protected String myTextNode;
 
 	protected Map<String, TipiValue> parameterMap = new HashMap<String, TipiValue>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiAction.class);
+	
 	// if present, will intercept all parameter evaluations
 	protected Map<String, Object> evaluatedMap = null; // = new HashMap<String,
 														// TipiValue>();
@@ -95,6 +101,9 @@ public abstract class TipiAction extends TipiAbstractExecutable {
 		} catch (TipiSuspendException e) {
 			// hide
 			throw e;
+		} catch (TipiBreakException e) {
+			// also hide
+			throw e;
 		} catch (Throwable e) {
 			dumpStack(e.getMessage());
 			if (e instanceof RuntimeException) {
@@ -107,8 +116,7 @@ public abstract class TipiAction extends TipiAbstractExecutable {
 				getStackElement().dumpStack("Break detected in action");
 				throw (TipiBreakException) e;
 			}
-			System.err.println("Uncaught exception: ");
-			e.printStackTrace();
+			logger.error("Uncaught exception: ",e);
 		}
 		setEvent(null);
 	}

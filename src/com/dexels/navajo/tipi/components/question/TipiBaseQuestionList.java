@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -32,7 +35,6 @@ import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
- * @deprecated
  * @author frank
  * 
  */
@@ -49,7 +51,10 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 	protected final List<TipiBaseQuestionGroup> myGroups = new ArrayList<TipiBaseQuestionGroup>();
 	protected final Set<TipiBaseQuestionGroup> myValidGroups = new HashSet<TipiBaseQuestionGroup>();
 	private String subQuestionPath = null;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiBaseQuestionList.class);
+	
 	protected abstract Object getGroupConstraints(Message groupMessage);
 
 	public void setComponentValue(String name, Object object) {
@@ -156,7 +161,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 				flatten(serviceName, serviceUrl, username, password, pincode,
 						keystore, keypass, isFinal);
 			} catch (NavajoException ex) {
-				ex.printStackTrace();
+				logger.error("Error performing flattening method: ",ex);
 			}
 		}
 		super.performComponentMethod(name, compMeth, event);
@@ -218,6 +223,8 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 			Message group = questionGroups.get(i);
 			flattenGroup(group, answers);
 		}
+		logger.info("Flatten complete: Final input for output: ");
+		n.write(System.err);
 		myContext.performTipiMethod(this, n, "*", serviceName, true, null, -1,
 				server, username, password, keystore, keypass);
 	}
@@ -277,8 +284,13 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		return answerMessage;
 	}
 
+	
+	/**
+	 * I think super.loadData should be called... Giving it a shot...
+	 */
 	public void loadData(final Navajo n, final String method)
 			throws TipiException {
+		super.loadData(n, method);
 		final TipiBaseQuestionList me = this;
 		myGroups.clear();
 		myValidGroups.clear();
