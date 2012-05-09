@@ -6,7 +6,8 @@ echo $PATH
 
 export MODULEPATH=platform
 export REPOSITORY=targetplatform
-com.dexels.thirdparty.feature
+
+genmerge.sh com.dexels.thirdparty.feature
 
 export MODULEPATH=setup
 export REPOSITORY=navajo
