@@ -2,10 +2,14 @@ package com.dexels.navajo.tipi.vaadin.document;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
@@ -27,6 +31,9 @@ public class SelectionListBridge implements Container {
 	private final Map<Object,SelectionBridge> selectionMap = new HashMap<Object,SelectionBridge>();
 	private final List<Object> selectionList = new ArrayList<Object>();
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SelectionListBridge.class);
+	
 	public SelectionListBridge(com.dexels.navajo.document.Property src) {
 		this.src = src;
 		if(!com.dexels.navajo.document.Property.SELECTION_PROPERTY.equals(src.getType())) {
@@ -45,7 +52,7 @@ public class SelectionListBridge implements Container {
 				//				i++;
 			}
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error creating SelectionListBridge: ",e);
 		}
 	}
 	
@@ -108,7 +115,16 @@ public class SelectionListBridge implements Container {
 		}
 		return null;
 	}
-	
+	public Collection<Object> getSelectedCollection() {
+		List<Object> result = new ArrayList<Object>();
+		for (Object n : selectionList) {
+			SelectionBridge sb = selectionMap.get(n);
+			if(sb.isSelected()) {
+				result.add(n);
+			}
+		}
+		return Collections.unmodifiableCollection(result);
+	}
 	@Override
 	public Class<?> getType(Object propertyId) {
 		

@@ -22,6 +22,10 @@ public class SelectedItemValuePropertyBridge implements Property, Property.Value
 	private final List<SelectionBridge> selections = new ArrayList<SelectionBridge>();
 	private SelectionListBridge selectionListBridge;
 	
+	public SelectedItemValuePropertyBridge(com.dexels.navajo.document.Property src) {
+		this(src,src.isDirIn());
+	}
+	
 	public SelectedItemValuePropertyBridge(com.dexels.navajo.document.Property src, boolean editable) {
 		this.src = src;
 		this.editable = editable;
