@@ -14,4 +14,5 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh com.dexels.navajo.tipi.vaadin.embedded com.dexels.navajo.tipi.vaadin.embedded
 ./cvsgit.sh com.dexels.navajo.tipi.vaadin.bridged.deploy com.dexels.navajo.tipi.vaadin.bridged.deploy
 ./cvsgit.sh com.dexels.navajo.tipi.vaadin.feature com.dexels.navajo.tipi.vaadin.feature
+./cvsgit.sh com.dexels.navajo.tipi.jogl com.dexels.navajo.tipi.jogl
 

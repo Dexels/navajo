@@ -11,4 +11,5 @@ echo "About to setup:"
 setup.sh navajo
 setup.sh sportlink
 setup.sh internal
+setup.sh targetplatform
 merge_all.sh 

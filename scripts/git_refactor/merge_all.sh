@@ -4,11 +4,16 @@
 echo $BASEPATH
 echo $PATH
 
+export MODULEPATH=platform
+export REPOSITORY=targetplatform
+com.dexels.thirdparty.feature
+
 export MODULEPATH=setup
 export REPOSITORY=navajo
 
 genmerge.sh com.dexels.repository 
 genmerge.sh com.dexels.target 
+genmerge.sh com.dexels.opensource
 
 export MODULEPATH=core
 
@@ -212,7 +217,12 @@ genmerge.sh com.dexels.navajo.tipi.vaadin.bridged
 genmerge.sh com.dexels.navajo.tipi.vaadin.embedded
 genmerge.sh com.dexels.navajo.tipi.vaadin.bridged.deploy
 genmerge.sh com.dexels.navajo.tipi.vaadin.feature
+genmerge.sh com.dexels.navajo.tipi.jcr
+genmerge.sh com.dexels.navajo.tipi.jogl
+genmerge.sh com.dexels.navajo.tipi.jogl.feature
 
+genmerge.sh com.dexels.navajo.tipi.rcp
+genmerge.sh com.dexels.navajo.tipi.rcp.feature
 
 
 genmerge.sh com.dexels.navajo.tipi.swing.docking.feature

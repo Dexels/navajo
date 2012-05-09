@@ -35,12 +35,19 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh com.dexels.navajo.tipi.rss.feature com.dexels.navajo.tipi.rss.feature
 ./cvsgit.sh TipiRss com.dexels.navajo.tipi.rss
 
+# pretty sure this is legacy:
 ./cvsgit.sh NavajoReportingTipi com.dexels.navajo.tipi.reporting
+
 ./cvsgit.sh TipiRDF com.dexels.tipi.swing.rdf
 ./cvsgit.sh StadiumDesignTipi com.dexels.tipi.swing.stadiumdesign
 ./cvsgit.sh Tipi3d com.dexels.tipi.swing.3d
 ./cvsgit.sh TipiMonkey com.dexels.tipi.swing.monkeyengine
+./cvsgit.sh com.dexels.navajo.tipi.jogl com.dexels.navajo.tipi.jogl
+./cvsgit.sh com.dexels.navajo.tipi.jogl.feature com.dexels.navajo.tipi.jogl.feature
+./cvsgit.sh com.dexels.navajo.tipi.jcr com.dexels.navajo.tipi.jcr
+
 ./cvsgit.sh com.dexels.navajo.tipi.rcp com.dexels.navajo.tipi.rcp 
+./cvsgit.sh com.dexels.navajo.tipi.rcp.feature com.dexels.navajo.tipi.rcp.feature
 ./cvsgit.sh com.dexels.navajo.tipi.css com.dexels.navajo.tipi.css
 ./cvsgit.sh com.dexels.navajo.tipi.css.tkui com.dexels.navajo.tipi.css.tkui
 ./cvsgit.sh com.dexels.navajo.tipi.css.feature com.dexels.navajo.tipi.css.feature
