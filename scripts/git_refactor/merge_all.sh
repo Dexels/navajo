@@ -14,7 +14,7 @@ export REPOSITORY=navajo
 
 genmerge.sh com.dexels.repository 
 genmerge.sh com.dexels.target 
-genmerge.sh com.dexels.opensource
+#genmerge.sh com.dexels.opensource
 
 export MODULEPATH=core
 
