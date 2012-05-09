@@ -29,10 +29,10 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLJPanel;
+import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 
 import org.jdesktop.animation.timing.Animator;
@@ -51,13 +51,12 @@ import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.jogamp.opengl.util.awt.TextRenderer;
+import com.jogamp.opengl.util.awt.TextureRenderer;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureCoords;
 
-import com.sun.media.rtsp.StatusMessage;
-import com.sun.opengl.util.BufferUtil;
-import com.sun.opengl.util.j2d.TextRenderer;
-import com.sun.opengl.util.j2d.TextureRenderer;
-import com.sun.opengl.util.texture.Texture;
-import com.sun.opengl.util.texture.TextureCoords;
+
 
 public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListener {
 	private final String tribeIdentifier = "navajotribe";
@@ -654,8 +653,8 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 	}
 
 	public void display(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 
 		// Zooming
@@ -668,7 +667,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		gl.glTranslatef(panPoint.x, panPoint.y, 0f);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glEnable(GL.GL_LINE_SMOOTH);
-		gl.glShadeModel(GL.GL_SMOOTH);
+		gl.glShadeModel(GL2.GL_SMOOTH);
 		gl.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST);
 
 		if (pickPoint != null) {
@@ -677,16 +676,16 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 		drawStars(gl);
 		if (selectConference) {
-			drawConferenceSelect(gl, GL.GL_RENDER);
+			drawConferenceSelect(gl, GL2.GL_RENDER);
 		} else {
 			gl.glColor4f(1f, 0f, 0f, .5f);
-			drawRooms(gl, GL.GL_RENDER);
+			drawRooms(gl, GL2.GL_RENDER);
 			drawTribeMessages(gl);
 		}
 
 		// Draw selected user
 		if (selectedUser > -1) {
-			serverStatus.draw(gl, width, height, GL.GL_RENDER);
+			serverStatus.draw(gl, width, height, GL2.GL_RENDER);
 		}
 		// displayFPSText(drawable);
 		gl.glFlush();
@@ -721,7 +720,8 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		}
 	}
 
-	private final void drawStars(GL gl) {
+	private final void drawStars(GL gl1) {
+		GL2 gl = gl1.getGL2();
 		if (stars != null) {
 			gl.glBegin(GL.GL_POINTS);
 			Random r = new Random(System.currentTimeMillis());
@@ -753,7 +753,8 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		}
 	}
 
-	private final void drawRooms(GL gl, int mode) {
+	private final void drawRooms(GL gl1, int mode) {
+		GL2 gl = gl1.getGL2();
 		try {
 			gl.glPushMatrix();
 			gl.glTranslatef(width / 2, height / 2, 0f);
@@ -766,7 +767,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 				// The outer loop draws the tribe fire icons
 				for (int i = 0; i < tribeRooms.getArraySize(); i++) {
 					// Load the name for the tribe
-					if (mode == GL.GL_SELECT) {
+					if (mode == GL2.GL_SELECT) {
 						gl.glLoadName(tribeModFactor * i);
 					}
 					// Get the locations on the unity circle for the tribes in
@@ -817,7 +818,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 						// Push the name of the occupant, distinct between
 						// server or occupant
-						if (mode == GL.GL_SELECT && j < servers.size() && servers.size() > 0) {
+						if (mode == GL2.GL_SELECT && j < servers.size() && servers.size() > 0) {
 							gl.glPushName(tribeModFactor * i + subTribeModFactor * (j + 1));
 						} else {
 							gl.glPushName(tribeModFactor * i + j + 1);
@@ -847,7 +848,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 						// Release name. (everything after this is not
 						// selectable, with the mouse)
-						if (mode == GL.GL_SELECT) {
+						if (mode == GL2.GL_SELECT) {
 							gl.glPopName();
 						}
 
@@ -936,7 +937,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 			}
 
 			// Set selection name for the conference (globe)
-			if (mode == GL.GL_SELECT) {
+			if (mode == GL2.GL_SELECT) {
 				gl.glLoadName(9999);
 			}
 
@@ -954,7 +955,8 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 	 * Utility function that draws an icon centered around the current GL
 	 * location
 	 */
-	private final void drawIcon(GL gl, Texture t) {
+	private final void drawIcon(GL gl1, Texture t) {
+		GL2 gl = gl1.getGL2();
 		TextureCoords tc = t.getImageTexCoords();
 		float tx1 = tc.left();
 		float ty1 = tc.top();
@@ -966,7 +968,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		t.enable();
 		t.bind();
 
-		gl.glBegin(GL.GL_QUADS);
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glColor4f(1f, 1f, 1f, 1f);
 		gl.glTexCoord2f(tx1, ty2);
 		gl.glVertex2d(-hw, -hh);
@@ -1005,7 +1007,8 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 	/*
 	 * Draw a message
 	 */
-	private final void drawMessageBalloon(GL gl, String message, float xpos, float ypos) {
+	private final void drawMessageBalloon(GL gl1, String message, float xpos, float ypos) {
+		GL2 gl = gl1.getGL2();
 		gl.glBegin(GL.GL_LINES);
 		gl.glColor4f(1f, 1f, 1f, 0f);
 		gl.glVertex2d(xpos + 20, ypos - 5);
@@ -1018,7 +1021,8 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 	/*
 	 * Draw the planet icons that select a conference.
 	 */
-	private final void drawConferenceSelect(GL gl, int mode) {
+	private final void drawConferenceSelect(GL gl1, int mode) {
+		GL2 gl = gl1.getGL2();
 		try {
 			// Four textures
 			float offset = width / 5f;
@@ -1032,7 +1036,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 			mars.enable();
 			mars.bind();
-			if (mode == GL.GL_SELECT) {
+			if (mode == GL2.GL_SELECT) {
 				gl.glLoadName(0);
 			}
 
@@ -1048,7 +1052,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 			gl.glPushMatrix();
 			gl.glTranslatef(pos, height / 2, 0f);
-			gl.glBegin(GL.GL_QUADS);
+			gl.glBegin(GL2.GL_QUADS);
 			gl.glColor4f(1f, 1f, 1f, alpha);
 			gl.glTexCoord2f(tx1, ty2);
 			gl.glVertex2d(-64, -64);
@@ -1074,7 +1078,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 			moon.enable();
 			moon.bind();
-			if (mode == GL.GL_SELECT) {
+			if (mode == GL2.GL_SELECT) {
 				gl.glLoadName(1);
 			}
 
@@ -1090,7 +1094,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 			gl.glPushMatrix();
 			gl.glTranslatef(pos, height / 2, 0f);
-			gl.glBegin(GL.GL_QUADS);
+			gl.glBegin(GL2.GL_QUADS);
 			gl.glColor4f(1f, 1f, 1f, alpha);
 			gl.glTexCoord2f(tx1, ty2);
 			gl.glVertex2d(-64, -64);
@@ -1116,7 +1120,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 			earth.enable();
 			earth.bind();
-			if (mode == GL.GL_SELECT) {
+			if (mode == GL2.GL_SELECT) {
 				gl.glLoadName(2);
 			}
 			pos = 3 * offset;
@@ -1131,7 +1135,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 			gl.glPushMatrix();
 			gl.glTranslatef(pos, height / 2, 0f);
-			gl.glBegin(GL.GL_QUADS);
+			gl.glBegin(GL2.GL_QUADS);
 			gl.glColor4f(1f, 1f, 1f, alpha);
 			gl.glTexCoord2f(tx1, ty2);
 			gl.glVertex2d(-64, -64);
@@ -1157,7 +1161,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 			sun.enable();
 			sun.bind();
-			if (mode == GL.GL_SELECT) {
+			if (mode == GL2.GL_SELECT) {
 				gl.glLoadName(3);
 			}
 
@@ -1173,7 +1177,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 			gl.glPushMatrix();
 			gl.glTranslatef(pos, height / 2, 0f);
-			gl.glBegin(GL.GL_QUADS);
+			gl.glBegin(GL2.GL_QUADS);
 			gl.glColor4f(1f, 1f, 1f, alpha);
 			gl.glTexCoord2f(tx1, ty2);
 			gl.glVertex2d(-64, -64);
@@ -1200,21 +1204,22 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 	 * picking. Then the objects are drawn.
 	 */
 
-	private void pickRect(GL gl) {
+	private void pickRect(GL gl1) {
+		GL2 gl = gl1.getGL2();
 		int selectBuf[] = new int[BUFSIZE];
-		IntBuffer selectBuffer = BufferUtil.newIntBuffer(BUFSIZE);
+		IntBuffer selectBuffer = IntBuffer.allocate(BUFSIZE); // BufferUtil.newIntBuffer(BUFSIZE);
 		int hits;
 		int viewport[] = new int[4];
 
 		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
 
 		gl.glSelectBuffer(BUFSIZE, selectBuffer);
-		gl.glRenderMode(GL.GL_SELECT);
+		gl.glRenderMode(GL2.GL_SELECT);
 
 		gl.glInitNames();
 		gl.glPushName(0);
 
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 
@@ -1234,16 +1239,16 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		gl.glTranslatef(panPoint.x, panPoint.y, 0f);
 
 		if (selectConference) {
-			drawConferenceSelect(gl, GL.GL_SELECT);
+			drawConferenceSelect(gl, GL2.GL_SELECT);
 		} else {
-			drawRooms(gl, GL.GL_SELECT);
+			drawRooms(gl, GL2.GL_SELECT);
 		}
 
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glPopMatrix();
 		gl.glFlush();
 
-		hits = gl.glRenderMode(GL.GL_RENDER);
+		hits = gl.glRenderMode(GL2.GL_RENDER);
 		selectBuffer.get(selectBuf);
 		processHits(hits, selectBuf);
 	}
@@ -1289,9 +1294,9 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 		tribeIcon = loadTexture("fire_small.png");
 		float values[] = new float[2];
-		gl.glGetFloatv(GL.GL_LINE_WIDTH_GRANULARITY, values, 0);
+		gl.glGetFloatv(GL2.GL_LINE_WIDTH_GRANULARITY, values, 0);
 		System.out.println("GL.GL_LINE_WIDTH_GRANULARITY value is " + values[0]);
-		gl.glGetFloatv(GL.GL_LINE_WIDTH_RANGE, values, 0);
+		gl.glGetFloatv(GL2.GL_LINE_WIDTH_RANGE, values, 0);
 		System.out.println("GL.GL_LINE_WIDTH_RANGE values are " + values[0] + ", " + values[1]);
 		gl.glEnable(GL.GL_LINE_SMOOTH);
 		gl.glEnable(GL.GL_BLEND);
@@ -1317,9 +1322,9 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 	public void reshape(GLAutoDrawable drawable, int i, int x, int width, int height) {
 		this.width = width;
 		this.height = height;
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		gl.glOrtho(0f, width, 0f, height, 0f, 1f);
 	}
@@ -1338,10 +1343,6 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		textRenderer.end3DRendering();
 	}
 
-	@Override
-	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
-		// System.err.println("Display changed");
-	}
 
 	/*
 	 * Utility function for loading the Texture for the rotate modifier
@@ -1366,6 +1367,12 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		} catch (Exception e) {
 
 		}
+	}
+
+	@Override
+	public void dispose(GLAutoDrawable arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

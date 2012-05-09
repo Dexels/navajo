@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -14,12 +12,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.nio.IntBuffer;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -27,12 +20,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
-import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLJPanel;
+import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 
 import org.jdesktop.animation.timing.Animator;
@@ -41,20 +33,23 @@ import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.jogamp.opengl.util.awt.TextRenderer;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureCoords;
+import com.jogamp.opengl.util.texture.TextureIO;
 
-import com.sun.media.rtsp.StatusMessage;
-import com.sun.opengl.util.BufferUtil;
-import com.sun.opengl.util.j2d.TextRenderer;
-import com.sun.opengl.util.j2d.TextureRenderer;
-import com.sun.opengl.util.texture.Texture;
-import com.sun.opengl.util.texture.TextureCoords;
-import com.sun.opengl.util.texture.TextureIO;
+//import com.sun.media.rtsp.StatusMessage;
+//import com.sun.opengl.util.BufferUtil;
+//import com.sun.opengl.util.j2d.TextRenderer;
+//import com.sun.opengl.util.j2d.TextureRenderer;
+//import com.sun.opengl.util.texture.Texture;
+//import com.sun.opengl.util.texture.TextureCoords;
+//import com.sun.opengl.util.texture.TextureIO;
 
 public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventListener {
 
@@ -105,6 +100,8 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 			public void run() {
 
 				canvas = new GLCanvas() {
+					private static final long serialVersionUID = -6597323676724928801L;
+
 					public Dimension getMaximumSize() {
 						return new Dimension(0, 0);
 					}
@@ -334,18 +331,18 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 	/*
 	 * Debug function for outputting the current Frames Per Second
 	 */
-	private void displayFPSText(GLAutoDrawable drawable) {
-		if (++frameCount == 10) {
-			long endTime = System.currentTimeMillis();
-			float fps = 10.0f / (float) (endTime - startTime) * 1000;
-			frameCount = 0;
-			startTime = System.currentTimeMillis();
-			fpsText = format.format(fps);
-			int x = drawable.getWidth() - fpsWidth - 5;
-			int y = drawable.getHeight() - 30;
-			System.err.println("FPS: " + fpsText);
-		}
-	}
+//	private void displayFPSText(GLAutoDrawable drawable) {
+//		if (++frameCount == 10) {
+//			long endTime = System.currentTimeMillis();
+//			float fps = 10.0f / (float) (endTime - startTime) * 1000;
+//			frameCount = 0;
+//			startTime = System.currentTimeMillis();
+//			fpsText = format.format(fps);
+//			int x = drawable.getWidth() - fpsWidth - 5;
+//			int y = drawable.getHeight() - 30;
+//			System.err.println("FPS: " + fpsText);
+//		}
+//	}
 
 	@Override
 	protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, final TipiEvent event) throws TipiBreakException {
@@ -360,11 +357,11 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 	}
 
 	public void display(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 //		gl.glMatrixMode(gl.GL_PROJECTION);
 //		gl.glLoadIdentity();
 		
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();  
         
 
@@ -377,9 +374,9 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		// Panning
 		gl.glTranslatef(panPoint.x, panPoint.y, 0);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-		gl.glEnable(gl.GL_LINE_SMOOTH);
-		gl.glShadeModel(gl.GL_SMOOTH);
-		gl.glHint(gl.GL_LINE_SMOOTH_HINT, gl.GL_NICEST);
+		gl.glEnable(GL.GL_LINE_SMOOTH);
+		gl.glShadeModel(GL2.GL_SMOOTH);
+		gl.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST);
 
 		if (pickPoint != null) {
 			pickRect(gl);
@@ -398,7 +395,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 
 //		gl.glPushMatrix();
 //		gl.glTranslatef(0,0,.01f);
-		gl.glBegin(gl.GL_QUADS);
+		gl.glBegin(GL2.GL_QUADS);
 		
 		gl.glColor4f(1f, 1f, 1f, .8f);
 		gl.glTexCoord2f(tx1, ty2);
@@ -431,9 +428,10 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		repaintCanvas();
 	}
 	
-	private final void drawStars(GL gl){
+	private final void drawStars(GL gl1){
+		GL2 gl = gl1.getGL2();
 		if(stars != null){
-			gl.glBegin(gl.GL_POINTS);
+			gl.glBegin(GL.GL_POINTS);
 			Random r = new Random(System.currentTimeMillis());
 			for(int i=0;i<stars.size();i++){
 				Point2D.Float star = stars.get(i);
@@ -464,7 +462,8 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		}
 	}
 
-	private final void drawRooms(GL gl, int mode) {
+	private final void drawRooms(GL gl1, int mode) {
+		GL2 gl = gl1.getGL2();
 		try {		
 			if (rooms != null) {
 				System.err.println("aap");
@@ -476,14 +475,14 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 
 				for (int i = 0; i < rooms.getArraySize(); i++) {
 					System.err.println("Noot: " + i);
-					if (mode == GL.GL_SELECT) {
+					if (mode == GL2.GL_SELECT) {
 						gl.glLoadName(tribeModFactor * i);
 					}
 
 					Point2D.Double loc = locations.get(i);
 					float radius = (i == selectedTribe ? tribeRadius : maxTribeRadius / 1.5f);
 
-					gl.glBegin(gl.GL_LINES);
+					gl.glBegin(GL.GL_LINES);
 					gl.glColor4f(1f, 1f, 1f, 0f);
 					gl.glVertex3d(0, 0, 0f);					
 					gl.glColor4f(1f, 1f, 1f, 1f);
@@ -504,7 +503,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 					tribeIcon.bind();
 
 					gl.glTranslatef((float) (radius * loc.x), (float) (radius * loc.y), 0f);
-					gl.glBegin(gl.GL_QUADS);
+					gl.glBegin(GL2.GL_QUADS);
 					gl.glColor4f(1f, 1f, 1f, 1f);
 					gl.glTexCoord2f(tx1, ty2);
 					gl.glVertex3d(-24, -24, 0f);
@@ -534,11 +533,11 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 					for (int j = 0; j < occupants; j++) {					
 						System.err.println("miets: " + j);
 						
-						if (mode == GL.GL_SELECT) {
+						if (mode == GL2.GL_SELECT) {
 							gl.glLoadName(tribeModFactor * i + j + 1);
 						}
 						Point2D.Double occLocation = occLoc.get(j);
-						gl.glBegin(gl.GL_LINES);
+						gl.glBegin(GL.GL_LINES);
 						gl.glColor4f(1f, 1f, 1f, 0f);
 						gl.glVertex3d(0, 0, 0);
 						gl.glColor4f(1f, 1f, 1f, 1f);
@@ -560,7 +559,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 						tribeIcon.enable();
 						tribeIcon.bind();
 						gl.glTranslatef((float) (roomRadius * occLocation.x), (float) (roomRadius * occLocation.y), 0f);
-						gl.glBegin(gl.GL_QUADS);
+						gl.glBegin(GL2.GL_QUADS);
 						gl.glColor4f(1f, 1f, 1f, 1f);
 						gl.glTexCoord2f(tx1, ty2);
 						gl.glVertex3d(-24, -24, 0f);
@@ -601,7 +600,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 					drawString(gl, label, (int) (radius * loc.x - (text_scale * textBounds.getWidth() / 2f)), (int) (radius * loc.y - (text_scale * textBounds.getHeight() / .5f)), Color.white, text_scale);
 				}
 				
-				if (mode == GL.GL_SELECT) {
+				if (mode == GL2.GL_SELECT) {
 					gl.glLoadName(99);
 				}
 
@@ -614,7 +613,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 				fireIcon.enable();
 				fireIcon.bind();
 
-				gl.glBegin(gl.GL_QUADS);
+				gl.glBegin(GL2.GL_QUADS);
 				gl.glColor4f(1f, 1f, 1f, .8f);
 				gl.glTexCoord2f(tx1, ty2);
 				gl.glVertex3d(-64, -64, 0f);
@@ -650,8 +649,9 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		drawString(gl, requestRate, (int) (xpos - (text_scale * textBounds.getWidth() / 2f)), y_pos, Color.gray, text_scale);
 	}
 
-	private final void drawMessageBalloon(GL gl, String message, float xpos, float ypos){
-		gl.glBegin(gl.GL_LINES);
+	private final void drawMessageBalloon(GL gl1, String message, float xpos, float ypos){
+		GL2 gl = gl1.getGL2();
+		gl.glBegin(GL.GL_LINES);
 		gl.glColor4f(1f, 1f, 1f, 0f);
 		gl.glVertex3d(xpos+20, ypos-5, 0f);
 		gl.glColor4f(1f, 1f, 1f, 1f);
@@ -665,21 +665,23 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 	 * picking. Then the objects are drawn.
 	 */
 
-	private void pickRect(GL gl) {
+	private void pickRect(GL gl1) {
+		GL2 gl = gl1.getGL2();
+
 		int selectBuf[] = new int[BUFSIZE];
-		IntBuffer selectBuffer = BufferUtil.newIntBuffer(BUFSIZE);
+		IntBuffer selectBuffer = IntBuffer.allocate(BUFSIZE);
 		int hits;
 		int viewport[] = new int[4];
 
 		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
 
 		gl.glSelectBuffer(BUFSIZE, selectBuffer);
-		gl.glRenderMode(GL.GL_SELECT);
+		gl.glRenderMode(GL2.GL_SELECT);
 
 		gl.glInitNames();
 		gl.glPushName(0);
 
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 
@@ -699,13 +701,13 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		gl.glTranslatef(panPoint.x, panPoint.y, 0f);
 
 		// Hier stadion tekenen Mode gl.GL_SELECT ----
-		drawRooms(gl, gl.GL_SELECT);
+		drawRooms(gl, GL2.GL_SELECT);
 
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glPopMatrix();
 		gl.glFlush();
 
-		hits = gl.glRenderMode(GL.GL_RENDER);
+		hits = gl.glRenderMode(GL2.GL_RENDER);
 		selectBuffer.get(selectBuf);
 		processHits(hits, selectBuf);
 	}
@@ -737,16 +739,16 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 
 	@Override
 	public void init(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
-		gl.glEnable(GL.GL_TEXTURE_2D);
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glEnable(GL2.GL_TEXTURE_2D);
 		
 		loadTribeIcons(29);
 		fireIcon = loadTexture("earth.png");
 		tribeIcon = loadTexture("fire_small.png");
 		float values[] = new float[2];
-		gl.glGetFloatv(GL.GL_LINE_WIDTH_GRANULARITY, values, 0);
-		System.out.println("GL.GL_LINE_WIDTH_GRANULARITY value is " + values[0]);
-		gl.glGetFloatv(GL.GL_LINE_WIDTH_RANGE, values, 0);
+		gl.glGetFloatv(GL2.GL_LINE_WIDTH_GRANULARITY, values, 0);
+		System.out.println("GL2.GL_LINE_WIDTH_GRANULARITY value is " + values[0]);
+		gl.glGetFloatv(GL2.GL_LINE_WIDTH_RANGE, values, 0);
 		System.out.println("GL.GL_LINE_WIDTH_RANGE values are " + values[0] + ", " + values[1]);
 		gl.glEnable(GL.GL_LINE_SMOOTH);
 		gl.glEnable(GL.GL_BLEND);
@@ -757,13 +759,13 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		gl.glClearDepth(1.0);                                  //Enables Clearing Of The Depth Buffer
         gl.glEnable(GL.GL_DEPTH_TEST);                            //Enables Depth Testing
         gl.glDepthFunc(GL.GL_LEQUAL);                             //The Type Of Depth Test To Do
-        gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);  // Really Nice Perspective Calculations
-        gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightAmbient, 0);		// Setup The Ambient Light
-        gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, lightDiffuse, 0);		// Setup The Diffuse Light
-        gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, lightPosition, 0);	// Position The Light
-        gl.glEnable(GL.GL_LIGHT1);
-        gl.glEnable(GL.GL_LIGHTING);	
-        gl.glShadeModel(GL.GL_SMOOTH); 
+        gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);  // Really Nice Perspective Calculations
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_AMBIENT, lightAmbient, 0);		// Setup The Ambient Light
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, lightDiffuse, 0);		// Setup The Diffuse Light
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, lightPosition, 0);	// Position The Light
+        gl.glEnable(GL2.GL_LIGHT1);
+        gl.glEnable(GL2.GL_LIGHTING);	
+        gl.glShadeModel(GL2.GL_SMOOTH); 
 		
 		
 		Font font = new Font("SansSerif", Font.PLAIN, 18);
@@ -783,11 +785,11 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 	public void reshape(GLAutoDrawable drawable, int i, int x, int width, int height) {
 		this.width = width;
 		this.height = height;
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
 //		gl.glMatrixMode(GL.GL_PROJECTION);
 //		gl.glLoadIdentity();
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();  
         
 		gl.glOrtho(0f, width, 0f, height, 0f, 1f);
@@ -806,10 +808,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		textRenderer.end3DRendering();
 	}
 
-	@Override
-	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
-		System.err.println("Display changed");
-	}
+
 
 	/*
 	 * Utility function for loading the Texture for the rotate modifier
@@ -832,6 +831,12 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		}catch(Exception e){
 			
 		}
+	}
+
+	@Override
+	public void dispose(GLAutoDrawable arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -1,30 +1,22 @@
 package com.dexels.navajo.dashboard.viewer;
 
-import javax.imageio.ImageIO;
+import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.io.IOException;
+import java.text.DecimalFormat;
+
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
-import com.sun.opengl.util.j2d.TextureRenderer;
-import com.sun.opengl.util.texture.Texture;
-import com.sun.opengl.util.texture.TextureCoords;
-import com.sun.opengl.util.texture.TextureIO;
-
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.text.DecimalFormat;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureCoords;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventListener {
     private boolean lightingEnabled;				// Lighting ON/OFF
@@ -150,22 +142,23 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 
     public void init(GLAutoDrawable glDrawable) {
 
-        GL gl = glDrawable.getGL();
+        GL2 gl = glDrawable.getGL().getGL2();
   			
 						
 
         gl.glEnable(GL.GL_TEXTURE_2D);							// Enable Texture Mapping
         fireIcon  = loadTexture("earth.png");
-        gl.glShadeModel(GL.GL_SMOOTH);                            //Enables Smooth Color Shading
+        
+        gl.glShadeModel(GL2.GL_SMOOTH);                            //Enables Smooth Color Shading
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);               //This Will Clear The Background Color To Black
         gl.glClearDepth(1.0);                                  //Enables Clearing Of The Depth Buffer
         gl.glEnable(GL.GL_DEPTH_TEST);                            //Enables Depth Testing
         gl.glDepthFunc(GL.GL_LEQUAL);                             //The Type Of Depth Test To Do
-        gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);  // Really Nice Perspective Calculations
-        gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightAmbient, 0);		// Setup The Ambient Light
-        gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, lightDiffuse, 0);		// Setup The Diffuse Light
-        gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, lightPosition, 0);	// Position The Light
-        gl.glEnable(GL.GL_LIGHT1);								// Enable Light One
+        gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);  // Really Nice Perspective Calculations
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_AMBIENT, lightAmbient, 0);		// Setup The Ambient Light
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, lightDiffuse, 0);		// Setup The Diffuse Light
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, lightPosition, 0);	// Position The Light
+        gl.glEnable(GL2.GL_LIGHT1);								// Enable Light One
 
         gl.glColor4f(1.0f, 1.0f, 1.0f, 0.5f);					// Full Brightness.  50% Alpha (new )
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE);					// Set The Blending Function For Translucency (new )
@@ -177,7 +170,7 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 
 
     public void display(GLAutoDrawable glDrawable) {
-        GL gl = glDrawable.getGL();
+        GL2 gl = glDrawable.getGL().getGL2();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);       //Clear The Screen And The Depth Buffer
         gl.glLoadIdentity();                                         //Reset The View
         gl.glTranslatef(0.0f, 0.0f, z);
@@ -191,7 +184,7 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 
         fireIcon.enable();
         fireIcon.bind();
-        gl.glBegin(GL.GL_QUADS);
+        gl.glBegin(GL2.GL_QUADS);
         // Front Face
         
         gl.glTexCoord3f(0.0f, 0.0f, 0f);
@@ -248,16 +241,16 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 	}
 
     public void reshape(GLAutoDrawable glDrawable, int x, int y, int w, int h) {
-        final GL gl = glDrawable.getGL();
+        final GL2 gl = glDrawable.getGL().getGL2();
 
         if (h <= 0) // avoid a divide by zero error!
             h = 1;
         final float a = (float) w / (float) h;
         gl.glViewport(0, 0, w, h);
-        gl.glMatrixMode(GL.GL_PROJECTION);
+        gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
         glu.gluPerspective(45.0f, a, 1.0, 20.0);
-        gl.glMatrixMode(GL.GL_MODELVIEW);
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();                                     // Reset The ModalView Matrix
     }
 
@@ -284,6 +277,13 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 	        }
 	        return t;
 	    }
+
+
+	@Override
+	public void dispose(GLAutoDrawable arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 	

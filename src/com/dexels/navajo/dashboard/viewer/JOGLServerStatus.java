@@ -7,10 +7,12 @@ import java.net.URL;
 import java.util.HashMap;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.fixedfunc.GLPointerFunc;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.sun.opengl.util.j2d.TextRenderer;
+import com.jogamp.opengl.util.awt.TextRenderer;
 
 public class JOGLServerStatus {
 	private HashMap<String, String[]> authentication = new HashMap<String, String[]>();
@@ -54,8 +56,9 @@ public class JOGLServerStatus {
 
 	}
 
-	public void draw(GL gl, float width, float height, int mode) {
-		gl.glBegin(GL.GL_QUADS);
+	public void draw(GL gl1, float width, float height, int mode) {
+		GL2 gl = gl1.getGL2();
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glColor4f(0f, 0f, 0f, .9f);
 		gl.glVertex2d(50, 50);
 		gl.glVertex2d(50, height - 50);
@@ -105,7 +108,8 @@ public class JOGLServerStatus {
 		}
 	}
 
-	private void drawServerLoad(GL gl, float width, float height) {
+	private void drawServerLoad(GL gl1, float width, float height) {
+		GL2 gl = gl1.getGL2();
 		Message load = serverLoad.getMessage("Result");
 		float x_offset = 100f;
 		float y_offset = 100f;
@@ -119,7 +123,7 @@ public class JOGLServerStatus {
 		gl.glPushMatrix();
 
 		// Draw the background for the graph
-		gl.glBegin(GL.GL_QUADS);
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glColor4f(1f, 1f, 1f, .1f);
 		gl.glVertex2d(x_offset, y_offset);
 		gl.glVertex2d(width - x_offset, y_offset);
@@ -140,7 +144,7 @@ public class JOGLServerStatus {
 		
 		
 		// Draw the bounding box for the graph
-		gl.glBegin(GL.GL_LINE_LOOP);
+		gl.glBegin(GL2.GL_LINE_LOOP);
 		gl.glColor4f(1f, 1f, 1f, .6f);
 		gl.glVertex2d(x_offset, y_offset);
 		gl.glVertex2d(width - x_offset, y_offset);
@@ -149,7 +153,7 @@ public class JOGLServerStatus {
 		gl.glEnd();
 
 		// Draw the actual graph
-		gl.glBegin(GL.GL_QUADS);
+		gl.glBegin(GL2.GL_QUADS);
 		for (int i = load.getArraySize() - 1; i >= 0; i--) {
 			float value = Float.parseFloat(load.getMessage(i).getProperty("ServerLoad").getValue());
 
