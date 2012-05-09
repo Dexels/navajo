@@ -4,10 +4,10 @@
 echo $BASEPATH
 echo $PATH
 
-export MODULEPATH=platform
-export REPOSITORY=targetplatform
+#export MODULEPATH=platform
+#export REPOSITORY=targetplatform
 
-genmerge.sh com.dexels.thirdparty.feature
+#genmerge.sh com.dexels.thirdparty.feature
 
 export MODULEPATH=setup
 export REPOSITORY=navajo
