@@ -6,9 +6,7 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 3.2.0.qualifier
 Bundle-Activator: navajoclient.Version
 Bundle-ClassPath: .,
- lib/jzlib.jar,
- lib/smack.jar,
- lib/smackx.jar
+ lib/jzlib.jar
 Export-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.context,
  com.dexels.navajo.client.jabber,
@@ -17,16 +15,13 @@ Export-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.server,
  com.dexels.navajo.client.sessiontoken,
  com.dexels.navajo.client.systeminfo,
- com.jcraft.jzlib,
- org.jivesoftware.smack,
- org.jivesoftware.smack.packet,
- org.jivesoftware.smack.util,
- org.jivesoftware.smackx,
- org.jivesoftware.smackx.muc
+ com.jcraft.jzlib
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.document,
  com.dexels.navajo.version,
- org.junit
+ org.junit,
+ org.igniterealtime.smack;bundle-version="3.2.2",
+ org.igniterealtime.smack-ext;bundle-version="3.2.2"
 Import-Package: javax.net,
  javax.net.ssl,
  org.junit,
