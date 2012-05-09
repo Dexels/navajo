@@ -14,7 +14,7 @@ export REPOSITORY=navajo
 
 genmerge.sh com.dexels.repository 
 genmerge.sh com.dexels.target 
-#genmerge.sh com.dexels.opensource
+genmerge.sh com.dexels.opensource
 
 export MODULEPATH=core
 
@@ -221,6 +221,7 @@ genmerge.sh com.dexels.navajo.tipi.vaadin.feature
 genmerge.sh com.dexels.navajo.tipi.jcr
 genmerge.sh com.dexels.navajo.tipi.jogl
 genmerge.sh com.dexels.navajo.tipi.jogl.feature
+genmerge.sh com.dexels.navajo.tipi.extensions.feature
 
 genmerge.sh com.dexels.navajo.tipi.rcp
 genmerge.sh com.dexels.navajo.tipi.rcp.feature
