@@ -12,6 +12,7 @@
 		<module>../com.dexels.navajo.tipi.swt.client</module>
 		<module>../NavajoBIRT</module>
 		<module>../NavajoScriptPlugin</module>
+		<module>../com.dexels.navajo.dsl.expression</module>
 	</modules>
 	<parent>
 		<groupId>com.dexels.navajo.core</groupId>
