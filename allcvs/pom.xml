@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.dexels.navajo.core</groupId>
+	<artifactId>com.dexels.navajo.tipi.extensions.aggr</artifactId>
+	<version>1.0.3</version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>../../com.dexels.navajo.tipi.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.css.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.dev.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.echo.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.flickr.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.jabber.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.jogl.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.mail.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.rcp.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.rss.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.ruby.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.swing.charting.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.swing.cobra.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.swing.docking.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.swing.editor.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.swing.geo.feature</module>
+		<module>../../com.dexels.navajo.tipi.swing.rich.feature</module>
+		<module>../../com.dexels.navajo.tipi.swing.mig.feature</module>
+		<module>../../com.dexels.navajo.tipi.swing.substance.feature</module>
+		<module>../../com.dexels.navajo.tipi.swing.svg.feature</module> 
+		<module>../</module>
+	</modules>
+	
+        <parent>
+                <groupId>com.dexels.navajo.core</groupId>
+                <artifactId>com.dexels.navajo.super</artifactId>
+                <version>1.0.0</version>
+                <relativePath></relativePath>
+        </parent>
+
+	
+</project>

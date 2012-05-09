@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.dexels.navajo.tipi.extensions"
+      id="com.dexels.navajo.tipi.extensions.feature"
       label="All Tipi Extensions"
       version="1.0.0.qualifier"
       provider-name="Dexels">
@@ -18,6 +18,22 @@
    </license>
 
    <includes
+         id="com.dexels.navajo.tipi.css.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.dev.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.echo.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.feature"
+         version="0.0.0"/>
+
+   <includes
          id="com.dexels.navajo.tipi.flickr.feature"
          version="0.0.0"/>
 
@@ -26,7 +42,15 @@
          version="0.0.0"/>
 
    <includes
+         id="com.dexels.navajo.tipi.jogl.feature"
+         version="0.0.0"/>
+
+   <includes
          id="com.dexels.navajo.tipi.mail.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.rcp.feature"
          version="0.0.0"/>
 
    <includes
@@ -54,6 +78,10 @@
          version="0.0.0"/>
 
    <includes
+         id="com.dexels.navajo.tipi.swing.feature"
+         version="0.0.0"/>
+
+   <includes
          id="com.dexels.navajo.tipi.swing.geo.feature"
          version="0.0.0"/>
 
@@ -71,6 +99,10 @@
 
    <includes
          id="com.dexels.navajo.tipi.swing.svg.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.vaadin.feature"
          version="0.0.0"/>
 
 </feature>
