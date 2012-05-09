@@ -15,6 +15,10 @@ public class KeyValueMap extends FunctionInterface {
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		
+		if ( getOperands().size() != 3 ) {
+			throw new TMLExpressionException("KeyValueMap(): invalid number of operands. Usage: " + usage());
+		}
+		
 		Object a = this.getOperands().get(0);
 		Object b = this.getOperands().get(1);
 		Object c = this.getOperands().get(2);
@@ -48,7 +52,7 @@ public class KeyValueMap extends FunctionInterface {
 		KeyValueMap kvm = new KeyValueMap();
 		kvm.reset();
 		kvm.insertOperand(new String("personid=CHGP12Y;statuscode=21;organizationid=BBFW06E"));
-		kvm.insertOperand(new String(";"));
+		//kvm.insertOperand(new String(";"));
 		kvm.insertOperand(new String("organizationid"));
 		
 		Object o = kvm.evaluate();
