@@ -334,23 +334,30 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 
 	public static void registerNavajoConfig(NavajoConfigInterface nc) {
-        Dictionary<String, Object> properties = new Hashtable<String, Object>();
-        properties.put("rootPath", nc.getRootPath());
-        properties.put("instanceName", nc.getInstanceName());
-        properties.put("instanceGroup", nc.getInstanceGroup());
-        navajoConfig = getDefaultBundleContext().registerService(NavajoConfigInterface.class.getName(), nc, properties);
-		
+		Dictionary<String, Object> properties = new Hashtable<String, Object>();
+		properties.put("rootPath", nc.getRootPath());
+		properties.put("instanceName", nc.getInstanceName());
+		properties.put("instanceGroup", nc.getInstanceGroup());
+		if ( getDefaultBundleContext() != null ) {
+			navajoConfig = getDefaultBundleContext().registerService(NavajoConfigInterface.class.getName(), nc, properties);
+		}else {
+			logger.warn("Could NOT find default bundle context. No OSGi?");
+		}
 	}
 
 
 
 	public static void registerDispatcher(DispatcherInterface instance) {
-        Dictionary<String, Object> properties = new Hashtable<String, Object>();
-        properties.put("edition", instance.getEdition());
-        properties.put("product", instance.getProduct());
-        properties.put("applicationId", instance.getApplicationId());
-        properties.put("serverId", instance.getServerId());
-        dispatcherRegistration = getDefaultBundleContext().registerService(DispatcherInterface.class.getName(), instance, properties);
+		Dictionary<String, Object> properties = new Hashtable<String, Object>();
+		properties.put("edition", instance.getEdition());
+		properties.put("product", instance.getProduct());
+		properties.put("applicationId", instance.getApplicationId());
+		properties.put("serverId", instance.getServerId());
+		if ( getDefaultBundleContext() != null ) {
+			dispatcherRegistration = getDefaultBundleContext().registerService(DispatcherInterface.class.getName(), instance, properties);
+		} else {
+			logger.warn("Could NOT find default bundle context. No OSGi?");
+		}
 	}
 	
 
