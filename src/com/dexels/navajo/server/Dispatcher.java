@@ -1121,10 +1121,24 @@ private ServiceHandler createHandler(String handler, Access access)
 public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, String rpcName, String rpcUser,
 		Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated, AfterWebServiceEmitter emit) {
 	if (access != null && !scheduledWebservice) {
-		  // If emitter is specified, first fire emitter.
-	      if ( emit != null ) {
-	      emit.emit(access.getOutputDoc());
-	      }
+		
+		// Always make sure header contains original rpcName and rpcUser
+		// (BUT NOT PASSWORD!).
+		Header h = outMessage.getHeader();
+		if (h == null) {
+			h = NavajoFactory.getInstance().createHeader(outMessage, rpcName, rpcUser, "", -1);
+			outMessage.addHeader(h);
+		} else {
+			h.setRPCName(rpcName);
+			h.setRPCUser(rpcUser);
+		}
+		// Set accessId to make sure it can be used as reference by triggered tasks.
+		h.setHeaderAttribute("accessId", access.getAccessID());
+		
+		// If emitter is specified, first fire emitter.
+		if ( emit != null ) {
+			emit.emit(access.getOutputDoc());
+		}
 
 		// Call after web service event...
 		afterWebServiceActivated = WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
@@ -1137,17 +1151,7 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 		// Set access to finished state.
 		access.setFinished();
 
-		// Always make sure header contains original rpcName and rpcUser
-		// (BUT NOT PASSWORD!).
-		Header h = outMessage.getHeader();
-		if (h == null) {
-			h = NavajoFactory.getInstance().createHeader(outMessage, rpcName, rpcUser, "", -1);
-			outMessage.addHeader(h);
-		} else {
-			h.setRPCName(rpcName);
-			h.setRPCUser(rpcUser);
-		}
-
+		
 		// Translate property descriptions.
 		updatePropertyDescriptions(inMessage, outMessage);
 		access.storeStatistics(h);
