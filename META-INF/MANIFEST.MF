@@ -16,4 +16,4 @@ Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.5",
  com.dexels.navajo.version;bundle-version="1.0.15",
  com.dexels.navajo.core;bundle-version="2.9.7",
  org.mozilla.javascript;bundle-version="1.7.2",
- com.dexels.navajo.client;bundle-version="3.1.1"
+ com.dexels.navajo.client;bundle-version="3.3.0"
