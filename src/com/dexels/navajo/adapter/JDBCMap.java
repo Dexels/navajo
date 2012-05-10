@@ -1214,6 +1214,7 @@ public void setUsername(final String s) throws MappableException, UserException 
 	// ignore completely
 	String[] elements = s.split("/");
 	this.username = elements[0];
+	logger.info("Username set to: "+this.username);
 }
 
 // dummy for now
