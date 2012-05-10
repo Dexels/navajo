@@ -6,6 +6,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.*;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+
 
 public class RDFGraphPainter {
 	private final float TEXT_LARGE = 1f;
@@ -26,7 +28,8 @@ public class RDFGraphPainter {
 		graph.repaintCanvas();
 	}
 
-	public void paintRDFOBject(GL gl, int mode, RDFObject rdfObject) {
+	public void paintRDFOBject(GL gl1, int mode, RDFObject rdfObject) {
+		GL2 gl = gl1.getGL2();
 		float cx = (int) graph.width / 2;
 		float cy = (int) graph.height / 2;
 		float text_scale = TEXT_LARGE;
@@ -41,7 +44,7 @@ public class RDFGraphPainter {
 			return;
 		}
 
-		if (mode == GL.GL_SELECT) {
+		if (mode == GL2.GL_SELECT) {
 			gl.glLoadName(rdfObject.getId());
 		}
 
@@ -69,7 +72,7 @@ public class RDFGraphPainter {
 
 			index++;
 
-			if (mode == GL.GL_SELECT) {
+			if (mode == GL2.GL_SELECT) {
 				gl.glPushName(o.getId());
 			}
 
@@ -94,7 +97,7 @@ public class RDFGraphPainter {
 //			graph.drawString(gl, connection, (int) (cx - 0.5 * radius * loc.x - (text_scale * b.width / 2)), (int) (cy - 0.5 * radius * loc.y - (text_scale * b.height / 2)), Color.black, 1.0f, text_scale);
 			graph.drawString(gl, connection, (int) - (text_scale * b.width / 2), (int)  - (text_scale * b.height / 2), predicateTextColor, 1.0f, text_scale);
 			gl.glTranslated(-(cx - 0.5 * radius * loc.x), -(cy - 0.5 * radius * loc.y), 0);
-			if (mode == GL.GL_SELECT) {
+			if (mode == GL2.GL_SELECT) {
 				gl.glPopName();
 			}
 		}
@@ -116,7 +119,7 @@ public class RDFGraphPainter {
 
 			index++;
 
-			if (mode == GL.GL_SELECT) {
+			if (mode == GL2.GL_SELECT) {
 				gl.glPushName(o.getId());
 			}
 
@@ -139,7 +142,7 @@ public class RDFGraphPainter {
 			b = (Rectangle2D.Double) graph.textRenderer.getBounds(connection);
 			graph.drawString(gl, connection, (int) (cx - 0.5 * radius * loc.x - (text_scale * b.width / 2)), (int) (cy - 0.5 * radius * loc.y - (text_scale * b.height / 2)), predicateTextColor, 1.0f, text_scale);
 
-			if (mode == GL.GL_SELECT) {
+			if (mode == GL2.GL_SELECT) {
 				gl.glPopName();
 			}
 		}
@@ -170,8 +173,8 @@ public class RDFGraphPainter {
 		}
 	}
 
-	public void paintRDFOBjectDeep(GL gl, int mode, RDFObject rdfObject, float scale, int level, double cx, double cy, String excludeName) {
-
+	public void paintRDFOBjectDeep(GL gl1, int mode, RDFObject rdfObject, float scale, int level, double cx, double cy, String excludeName) {
+		GL2 gl = gl1.getGL2();
 		float text_scale = TEXT_LARGE;
 		float radius = graph.radius;
 		int inset_x = 25;
@@ -185,7 +188,7 @@ public class RDFGraphPainter {
 			return;
 		}
 
-		if (mode == GL.GL_SELECT) {
+		if (mode == GL2.GL_SELECT) {
 			gl.glLoadName(rdfObject.getId());
 		}
 
@@ -218,7 +221,7 @@ public class RDFGraphPainter {
 
 			index++;
 
-			if (mode == GL.GL_SELECT) {
+			if (mode == GL2.GL_SELECT) {
 				gl.glPushName(o.getId());
 			}
 
@@ -244,7 +247,7 @@ public class RDFGraphPainter {
 				b = (Rectangle2D.Double) graph.textRenderer.getBounds(connection);
 				graph.drawString(gl, connection, (int) (cx - 0.5 * radius * loc.x - (text_scale * b.width / 2)), (int) (cy - 0.5 * radius * loc.y - (text_scale * b.height / 2)), predicateTextColor, 1.0f, text_scale);
 			}
-			if (mode == GL.GL_SELECT) {
+			if (mode == GL2.GL_SELECT) {
 				gl.glPopName();
 			}
 
@@ -272,7 +275,7 @@ public class RDFGraphPainter {
 
 			index++;
 
-			if (mode == GL.GL_SELECT) {
+			if (mode == GL2.GL_SELECT) {
 				gl.glPushName(o.getId());
 			}
 
@@ -308,7 +311,7 @@ public class RDFGraphPainter {
 //				gl.glRotatef(-angle, 0f, 0f, 1f);
 //				gl.glTranslated(-(cx - 0.5 * radius * loc.x), -(cy - 0.5 * radius * loc.y), 0);
 			}
-			if (mode == GL.GL_SELECT) {
+			if (mode == GL2.GL_SELECT) {
 				gl.glPopName();
 			}
 			int grand_children = o.getObjects().size() + o.getSubjects().size();
@@ -402,9 +405,10 @@ public class RDFGraphPainter {
 	}
 
 
-	private void drawRect(GL gl, int x, int y, double width, double height, Color c, float alpha) {
+	private void drawRect(GL gl1, int x, int y, double width, double height, Color c, float alpha) {
+		GL2 gl = gl1.getGL2();
 		gl.glColor4f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, alpha);
-		gl.glBegin(GL.GL_QUADS);
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glVertex2d(x, y);
 		gl.glVertex2d(x + width, y);
 		gl.glColor4f(1f, 1f, 1f, 1f);

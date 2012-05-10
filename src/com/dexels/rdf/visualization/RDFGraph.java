@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.media.opengl.*;
+import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 
 import org.jdesktop.animation.timing.Animator;
@@ -17,12 +18,12 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.internal.TipiEvent;
-import com.sun.opengl.util.BufferUtil;
-import com.sun.opengl.util.j2d.TextRenderer;
+import com.jogamp.opengl.util.awt.TextRenderer;
 
 // http://www.navajo.nl/navajo/service/club_ProcessQueryClub 
 
 public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
+	private static final long serialVersionUID = -3851994275022643825L;
 	public static HashMap<String, String> namespaces = new HashMap<String, String>();
 	private HashMap<String, RDFObject> rdfObjects = new HashMap<String, RDFObject>();
 
@@ -213,8 +214,8 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 	}
 
 	public void display(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 
 		// Zooming
@@ -232,7 +233,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 			pickRect(gl);
 		}
 
-		painter.paintRDFOBjectDeep(gl, GL.GL_RENDER, currentRDFObject, 1f, 0, width / 2, height / 2, null);
+		painter.paintRDFOBjectDeep(gl, GL2.GL_RENDER, currentRDFObject, 1f, 0, width / 2, height / 2, null);
 
 	}
 
@@ -241,18 +242,18 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 	 * picking. Then the objects are drawn.
 	 */
 
-	private void pickRect(GL gl) {
+	private void pickRect(GL2 gl) {
 		int BUFSIZE = 512;
 		int selectBuf[] = new int[BUFSIZE];
-		IntBuffer selectBuffer = BufferUtil.newIntBuffer(BUFSIZE);
+		IntBuffer selectBuffer = IntBuffer.allocate(BUFSIZE);
 		int hits;
 		int viewport[] = new int[4];
 		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
 		gl.glSelectBuffer(BUFSIZE, selectBuffer);
-		gl.glRenderMode(GL.GL_SELECT);
+		gl.glRenderMode(GL2.GL_SELECT);
 		gl.glInitNames();
 		gl.glPushName(0);
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 
@@ -272,14 +273,14 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 
 		// Drawing in SELECTION MODE
 		if (rdfObjects.size() > 0) {
-			painter.paintRDFOBjectDeep(gl, GL.GL_SELECT, currentRDFObject, 1f, 0, width / 2, height / 2, null);
+			painter.paintRDFOBjectDeep(gl, GL2.GL_SELECT, currentRDFObject, 1f, 0, width / 2, height / 2, null);
 		}
 
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glPopMatrix();
 		gl.glFlush();
 
-		hits = gl.glRenderMode(GL.GL_RENDER);
+		hits = gl.glRenderMode(GL2.GL_RENDER);
 		selectBuffer.get(selectBuf);
 		processHits(hits, selectBuf);
 	}
@@ -320,11 +321,11 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 	}
 
 	public void init(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 		float values[] = new float[2];
-		gl.glGetFloatv(GL.GL_LINE_WIDTH_GRANULARITY, values, 0);
+		gl.glGetFloatv(GL2.GL_LINE_WIDTH_GRANULARITY, values, 0);
 		System.out.println("GL.GL_LINE_WIDTH_GRANULARITY value is " + values[0]);
-		gl.glGetFloatv(GL.GL_LINE_WIDTH_RANGE, values, 0);
+		gl.glGetFloatv(GL2.GL_LINE_WIDTH_RANGE, values, 0);
 		System.out.println("GL.GL_LINE_WIDTH_RANGE values are " + values[0] + ", " + values[1]);
 		gl.glEnable(GL.GL_LINE_SMOOTH);
 		gl.glEnable(GL.GL_BLEND);
@@ -343,9 +344,9 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 	public void reshape(GLAutoDrawable drawable, int i, int x, int width, int height) {
 		this.width = width;
 		this.height = height;
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		gl.glOrtho(0f, width, 0f, height, 0f, 1f);
 		repaintCanvas();
@@ -519,6 +520,12 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 		textRenderer.setColor(r, g, b, alpha);
 		textRenderer.draw3D(text, xpos, ypos, -1f, scale);
 		textRenderer.end3DRendering();
+	}
+
+	@Override
+	public void dispose(GLAutoDrawable arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

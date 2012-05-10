@@ -1,17 +1,13 @@
 package com.dexels.rdf.visualization;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
 
 public class PointRotationPanel extends JComponent {
+	
+	private static final long serialVersionUID = -2643158698720451770L;
 	private int pointCount = 10;
 	private double x_scale = 1.0;
 	private double y_scale = 0.6;
