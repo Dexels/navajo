@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../../NavajoTipi</module>
+		<module>../../com.dexels.navajo.tipi</module>
 		<module>../</module>
 	</modules>
 	
