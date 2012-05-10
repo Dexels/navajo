@@ -219,12 +219,15 @@ genmerge.sh com.dexels.navajo.tipi.vaadin.embedded
 genmerge.sh com.dexels.navajo.tipi.vaadin.bridged.deploy
 genmerge.sh com.dexels.navajo.tipi.vaadin.feature
 genmerge.sh com.dexels.navajo.tipi.jcr
+genmerge.sh com.dexels.navajo.tipi.jcr.feature
 genmerge.sh com.dexels.navajo.tipi.jogl
 genmerge.sh com.dexels.navajo.tipi.jogl.feature
 genmerge.sh com.dexels.navajo.tipi.extensions.feature
 
 genmerge.sh com.dexels.navajo.tipi.rcp
 genmerge.sh com.dexels.navajo.tipi.rcp.feature
+genmerge.sh com.dexels.navajo.tipi.swing.rdf.feature
+genmerge.sh com.dexels.navajo.tipi.swing.rdf
 
 
 genmerge.sh com.dexels.navajo.tipi.swing.docking.feature

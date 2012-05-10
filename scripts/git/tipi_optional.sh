@@ -34,11 +34,13 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh TipiRuby com.dexels.navajo.tipi.ruby
 ./cvsgit.sh com.dexels.navajo.tipi.rss.feature com.dexels.navajo.tipi.rss.feature
 ./cvsgit.sh TipiRss com.dexels.navajo.tipi.rss
+./cvsgit.sh TipiRDF com.dexels.navajo.tipi.swing.rdf
+./cvsgit.sh com.dexels.navajo.tipi.swing.rdf.feature com.dexels.navajo.tipi.swing.rdf.feature
+./cvsgit.sh com.dexels.navajo.tipi.jcr.feature com.dexels.navajo.tipi.jcr.feature
 
 # pretty sure this is legacy:
 ./cvsgit.sh NavajoReportingTipi com.dexels.navajo.tipi.reporting
 
-./cvsgit.sh TipiRDF com.dexels.tipi.swing.rdf
 ./cvsgit.sh StadiumDesignTipi com.dexels.tipi.swing.stadiumdesign
 ./cvsgit.sh Tipi3d com.dexels.tipi.swing.3d
 ./cvsgit.sh TipiMonkey com.dexels.tipi.swing.monkeyengine
