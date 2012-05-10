@@ -85,6 +85,8 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBC
 
 private boolean ownContext = false;
 
+private String username;
+
 
   
 
@@ -520,7 +522,13 @@ public void setKillConnection() {
 //      } else {
     		con = jdbc.getConnection();
 //      }
-      
+
+    	if(this.username!=null) {
+    		PreparedStatement ps = con.prepareStatement("ALTER SESSION SET CURRENT SCHEMA = "+username+"");
+    		ps.executeUpdate();
+    		logger.info("Username set to: "+this.username);
+    	}
+    		
       this.transactionContext = con.hashCode();
       logger.info(":::Creating transactioncontext: "+transactionContext);
       this.ownContext  =true;
@@ -1203,7 +1211,9 @@ public boolean getDebug() {
  */
 @Override
 public void setUsername(final String s) throws MappableException, UserException {
-	// ignore completely, used fo
+	// ignore completely
+	String[] elements = s.split("/");
+	this.username = elements[0];
 }
 
 // dummy for now
