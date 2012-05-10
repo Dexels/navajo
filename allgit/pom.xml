@@ -20,6 +20,7 @@
 		<module>../../com.dexels.navajo.tipi.rcp.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.rss.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.ruby.feature/allgit</module>
+		<module>../../com.dexels.navajo.tipi.jcr.feature/allcvs</module>
 		<module>../../com.dexels.navajo.tipi.swing.charting.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.swing.cobra.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.swing.docking.feature/allgit</module>
@@ -27,6 +28,7 @@
 		<module>../../com.dexels.navajo.tipi.swing.geo.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.swing.rich.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.swing.mig.feature/allgit</module>
+		<module>../../com.dexels.navajo.tipi.swing.rdf.feature/allgit</module> 
 		<module>../../com.dexels.navajo.tipi.swing.substance.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.swing.svg.feature/allgit</module> 
 		<module>../</module>

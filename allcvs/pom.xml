@@ -20,6 +20,7 @@
 		<module>../../com.dexels.navajo.tipi.rcp.feature/allcvs</module>
 		<module>../../com.dexels.navajo.tipi.rss.feature/allcvs</module>
 		<module>../../com.dexels.navajo.tipi.ruby.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.jcr.feature/allcvs</module>
 		<module>../../com.dexels.navajo.tipi.swing.charting.feature/allcvs</module>
 		<module>../../com.dexels.navajo.tipi.swing.cobra.feature/allcvs</module>
 		<module>../../com.dexels.navajo.tipi.swing.docking.feature/allcvs</module>
@@ -28,6 +29,7 @@
 		<module>../../com.dexels.navajo.tipi.swing.rich.feature/allcvs</module>
 		<module>../../com.dexels.navajo.tipi.swing.mig.feature/allcvs</module>
 		<module>../../com.dexels.navajo.tipi.swing.substance.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.swing.rdf.feature/allcvs</module> 
 		<module>../../com.dexels.navajo.tipi.swing.svg.feature/allcvs</module> 
 		<module>../</module>
 	</modules>
