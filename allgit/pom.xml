@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../../TipiCharting/</module>
+		<module>../../com.dexels.navajo.tipi.swing.charting/</module>
 		<module>../</module>
 	</modules>
 	
