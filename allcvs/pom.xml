@@ -24,11 +24,11 @@
 		<module>../../com.dexels.navajo.tipi.swing.cobra.feature/allcvs</module>
 		<module>../../com.dexels.navajo.tipi.swing.docking.feature/allcvs</module>
 		<module>../../com.dexels.navajo.tipi.swing.editor.feature/allcvs</module>
-		<module>../../com.dexels.navajo.tipi.swing.geo.feature</module>
-		<module>../../com.dexels.navajo.tipi.swing.rich.feature</module>
-		<module>../../com.dexels.navajo.tipi.swing.mig.feature</module>
-		<module>../../com.dexels.navajo.tipi.swing.substance.feature</module>
-		<module>../../com.dexels.navajo.tipi.swing.svg.feature</module> 
+		<module>../../com.dexels.navajo.tipi.swing.geo.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.swing.rich.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.swing.mig.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.swing.substance.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.swing.svg.feature/allcvs</module> 
 		<module>../</module>
 	</modules>
 	
