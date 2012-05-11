@@ -9,8 +9,8 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../../com.dexels.navajo.tipi.rich.client</module>
-		<module>../../com.dexels.navajo.tipi.rich</module>
+		<module>../../com.dexels.navajo.tipi.swing.rich.client</module>
+		<module>../../com.dexels.navajo.tipi.swing.rich</module>
 		<module>../</module>
 	</modules>
 	
