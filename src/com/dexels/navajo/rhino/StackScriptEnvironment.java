@@ -1,9 +1,12 @@
 package com.dexels.navajo.rhino;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+
+import org.xml.sax.SAXException;
 
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
@@ -15,6 +18,8 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.mapping.MappingException;
+import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.server.Access;
 
@@ -614,21 +619,38 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		getProperty().setAnyValue(value);
 	}
 
-	public Message addMessage(String name) throws NavajoException {
+	public Message addMessage(String name,Map<String, String> attributes) throws NavajoException, IOException, SAXException, MappingException {
 		Object oo = getTopmostElement(new Class[] { Message.class, Navajo.class });
 		if (Message.class.isAssignableFrom(oo.getClass())) {
 			Message parent = (Message) oo;
-			if (parent.isArrayMessage()) {
-				return addElement();
+			Message[] mm = MappingUtils.addMessage(parent.getRootDoc(), parent, name, "", 1, attributes.get(Message.MSG_TYPE), attributes.get(Message.MSG_MODE), attributes.get(Message.MSG_ORDERBY));
+			if(mm.length==0) {
+				throw new MappingException("I've just created a message, but it isn't there.");
 			}
-			Message m = super.addMessage(parent, name);
-			pushMessage(m);
-			return m;
+			return mm[0];
+//			Message resolvedParent = MappingUtils.getParentMessage(parent, name);
+//			if(resolvedParent==null) {
+//				logger.warn("Null resolved parent in addmessage.");
+//			}
+//			boolean isArray = parent.isArrayMessage();
+//			MessageMappingUtils.getMessageObject(name, resolvedParent, true, parent.getRootDoc(), isArray, mode, -1)
+//			if (isArray) {
+//				return addElement();
+//			}
+//			Message m = super.addMessage(parent, name);
+//			pushMessage(m);
+//			return m;
 		}
 		if (Navajo.class.isAssignableFrom(oo.getClass())) {
-			Message m = super.addMessage((Navajo) oo, name);
-			pushMessage(m);
-			return m;
+			Navajo n = (Navajo)oo;
+			Message[] mm = MappingUtils.addMessage(n, null, name, "", 1, attributes.get(Message.MSG_TYPE), attributes.get(Message.MSG_MODE), attributes.get(Message.MSG_ORDERBY));
+			if(mm.length==0) {
+				throw new MappingException("I've just created a message, but it isn't there.");
+			}
+			return mm[0];
+//			Message m = super.addMessage((Navajo) oo, name);
+//			pushMessage(m);
+//			return m;
 
 		}
 
@@ -697,6 +719,21 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		String type = attributes.get("type");
 		if (type == null) {
 			type = Property.STRING_PROPERTY;
+		}
+		
+		if(name.startsWith("/")) {
+			Message param = getTopParamMessage();
+			name = name.substring(1);
+			Property pp = getParam(name, param);
+			if (pp == null) {
+				pp = createProperty(name, value, attributes, getAccess()
+						.getInDoc());
+				param.addProperty(pp);
+			} else {
+				pp.setAnyValue(value);
+			}
+			return pp;
+			
 		}
 		try {
 			Message param = getTopParamStackMessage();

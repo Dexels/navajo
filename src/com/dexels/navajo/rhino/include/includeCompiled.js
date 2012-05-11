@@ -337,8 +337,8 @@ function addAttributes(object, attributes) {
 	}
 }
 
-function addMessage(messageName, callback) {
-	result = env.addMessage(messageName);
+function addMessage(messageName, callback,attributes) {
+	result = env.addMessage(messageName,attributes);
 	if(callback!=undefined && callback!=null) {
 		callback();
 	}

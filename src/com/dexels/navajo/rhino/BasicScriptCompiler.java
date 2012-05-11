@@ -39,6 +39,9 @@ public class BasicScriptCompiler implements ScriptCompiler {
 	private static final String[] PROPERTY_ATTRIBUTES = new String[] { "type",
 			"subtype", "direction", "description", "cardinality", "length",
 			"value" };
+	private static final String[] MESSAGE_ATTRIBUTES = new String[] { "type",
+		"mode" };
+
 	private long compileStart;
 	private File includeBase = null;
 	private String scriptName = null;
@@ -484,6 +487,9 @@ public class BasicScriptCompiler implements ScriptCompiler {
 	private void processMessage(XMLElement current, IndentWriter os)
 			throws IOException {
 		String name = current.getStringAttribute("name");
+		Map<String, String> attr = createAttributesFromElement(current, MESSAGE_ATTRIBUTES);
+		String attributeObject = createAttributeObject(attr);
+
 		if (Message.MSG_TYPE_ARRAY.equals(current.getStringAttribute("type"))) {
 			os.writeln("addArrayMessage(\"" + name + "\",function() {");
 		} else {
@@ -494,7 +500,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			process(c, os);
 		}
 		os.out();
-		os.writeln("});");
+		os.writeln("}"+ "," + attributeObject + ");");
 	}
 
 	private void processParamArrayMessage(XMLElement current, IndentWriter os)
@@ -896,16 +902,17 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		FileReader fr = new FileReader(result);
 		XMLElement elt = new CaseSensitiveXMLElement();
 		elt.parseFromReader(fr);
+		
 		return elt;
 	}
 
 	public static void main(String[] args) throws IOException {
 		File output = new File("work");
 		File input = new File(
-				"/Users/frank/Documents/Spiritus/sportlink-serv/navajo-tester/auxilary/scripts");
+				"/Users/frank/Documents/workspace-indigo/sportlink-serv/navajo-tester/auxilary/scripts");
 		BasicScriptCompiler bsc = new BasicScriptCompiler();
 		bsc.setIncludeBase(new File(
-				"/Users/frank/Documents/Spiritus/sportlink-serv/navajo-tester/auxilary/scripts/"));
+				"/Users/frank/Documents/workspace-indigo/sportlink-serv/navajo-tester/auxilary/scripts/"));
 		massCompile(input, output, bsc);
 		logger.info("total fails: " + (fails) + " ignores: " + ignores
 				+ " successses: " + successes);
