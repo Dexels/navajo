@@ -195,20 +195,20 @@ public abstract class ScriptEnvironment implements Serializable {
 		return m;
 	}
 
-	public Message addMessage(Message parent, String name)
-			throws NavajoException {
-		Message old = parent.getMessage(name);
-		if (old != null) {
-			getAccess().setCurrentOutMessage(old);
-			return old;
-		}
-		Message m = NavajoFactory.getInstance().createMessage(
-				parent.getRootDoc(), name);
-		parent.addMessage(m);
-		getAccess().setCurrentOutMessage(m);
-
-		return m;
-	}
+//	public Message addMessage(Message parent, String name)
+//			throws NavajoException {
+//		Message old = parent.getMessage(name);
+//		if (old != null) {
+//			getAccess().setCurrentOutMessage(old);
+//			return old;
+//		}
+//		Message m = NavajoFactory.getInstance().createMessage(
+//				parent.getRootDoc(), name);
+//		parent.addMessage(m);
+//		getAccess().setCurrentOutMessage(m);
+//
+//		return m;
+//	}
 
 	public Selection addSelection(Property p, String name, Object value,
 			Integer selected) throws NavajoException {
