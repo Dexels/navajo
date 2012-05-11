@@ -166,19 +166,19 @@ public abstract class ScriptEnvironment implements Serializable {
 		this.currentContext = currentContext;
 	}
 
-	public Message addMessage(Navajo n, String name) throws NavajoException {
-		Message old = n.getMessage(name);
-
-		if (old != null) {
-			getAccess().setCurrentOutMessage(old);
-			return old;
-		}
-		Message m = NavajoFactory.getInstance().createMessage(n, name);
-		n.addMessage(m);
-		getAccess().setCurrentOutMessage(m);
-
-		return m;
-	}
+//	public Message addMessage(Navajo n, String name) throws NavajoException {
+//		Message old = n.getMessage(name);
+//
+//		if (old != null) {
+//			getAccess().setCurrentOutMessage(old);
+//			return old;
+//		}
+//		Message m = NavajoFactory.getInstance().createMessage(n, name);
+//		n.addMessage(m);
+//		getAccess().setCurrentOutMessage(m);
+//
+//		return m;
+//	}
 
 	public Message addArrayMessage(Navajo n, String name)
 			throws NavajoException {
