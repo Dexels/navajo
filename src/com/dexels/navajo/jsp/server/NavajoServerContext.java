@@ -12,20 +12,14 @@ import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.client.context.NavajoContext;
 import com.dexels.navajo.jsp.server.impl.ScriptStatusImpl;
 
-public class NavajoJspServerContext {
+public class NavajoServerContext {
 	private PageContext pageContext;
 	private File currentFolder;
 	private Map<String,Map<String,String>> cvsInfo = null;
@@ -34,27 +28,9 @@ public class NavajoJspServerContext {
 	private NavajoContext navajoContext;
 	private ScriptStatus scriptStatus;
 	private InstallerContext installerContext;
-	private ServletContext servletContext;
-	
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(NavajoJspServerContext.class);
 	
 	public InstallerContext getInstallerContext() {
 		return installerContext;
-	}
-	
-	public NavajoJspServerContext() {
-	}
-	
-	public void setupOsgiLink() {
-		com.dexels.navajo.server.api.NavajoServerContext navajoServerContext;
-		logger.info("Hash of context: "+servletContext.hashCode());
-		BundleContext bc = (BundleContext) servletContext.getAttribute(BundleContext.class.getName());
-		ServiceReference sr = bc.getServiceReference("com.dexels.navajo.server.api.NavajoServerContext");
-		if(sr!=null) {
-			logger.info("ServerCONTEXT serverref found!");
-		}
 	}
 
 	public void setInstallerContext(InstallerContext installerContext) throws IOException {
@@ -115,7 +91,7 @@ public class NavajoJspServerContext {
 				setPath(path);
 			}
 		} catch (Throwable e) {
-			logger.error("Error: ", e);
+			e.printStackTrace();
 		}
 	}
 	
@@ -126,7 +102,7 @@ public class NavajoJspServerContext {
 			File navajoRoot = getNavajoRoot();
 			AntRun.callAnt(buildFile, navajoRoot, params, null);
 		} catch (Throwable e) {
-			logger.error("Error: ", e);
+			e.printStackTrace();
 		}
 		
 	}
@@ -134,7 +110,7 @@ public class NavajoJspServerContext {
 	public void setupClient() throws IOException {
 		Map<String,String> settings = getClientSettings();
 		
-		getNavajoContext().setupClient(settings.get("server") , settings.get("username")  , settings.get("password"), settings.get("requestServerName"), Integer.parseInt(settings.get("requestServerPort")), settings.get("requestContextPath"),"/Postman",true);
+		getNavajoContext().setupClient(settings.get("server") , settings.get("username")  , settings.get("password"), settings.get("requestServerName"), Integer.parseInt(settings.get("requestServerPort")), settings.get("requestContextPath"),null, true);
 	}
 
 	public Map<String,String> getClientSettings() throws IOException {
@@ -248,7 +224,7 @@ public class NavajoJspServerContext {
 			return relativePath;
 			
 		} catch (IOException e) {
-			logger.error("Error: ", e);
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -260,18 +236,15 @@ public class NavajoJspServerContext {
 			if(newCurrent.getCanonicalPath().startsWith(getScriptRoot().getCanonicalPath())) {
 				setCurrentFolder(newCurrent);
 			} else {
-				logger.warn("Ignored, leaving script folder.");
+				System.err.println("Ignored!");
 			}
 		} catch (IOException e) {
-			logger.error("Error: ", e);
+			e.printStackTrace();
 		}
 	}
 
 	public void setPageContext(PageContext pageContext) throws IOException {
 		this.pageContext = pageContext;
-		this.servletContext = pageContext.getServletContext();
-		setupOsgiLink();
-
 	}
 
 	public PageContext getPageContext() {
@@ -280,7 +253,7 @@ public class NavajoJspServerContext {
 	
 	public File getNavajoRoot() throws IOException {
 		if(getPageContext()==null) {
-			logger.warn("Returning custom root. Don't know what this implies...");
+			System.err.println("Returning custom root. Don't know what this implies...");
 			return customNavajoRoot;
 		}
 		
@@ -302,12 +275,10 @@ public class NavajoJspServerContext {
 		return new File(getNavajoRoot(),"config/");
 	}
 	
-	
-	// TODO: Rewrite to OSGi service / config retrieval
 	public ResourceBundle getClientSettingsBundle() throws IOException {
 		File props = new File(getConfigRoot(),"client.properties");
 		if(!props.exists()) {
-			logger.warn("Not found.");
+			System.err.println("Not found.");
 			return null;
 		}
 		FileReader fr = null;
@@ -356,19 +327,19 @@ public class NavajoJspServerContext {
 		return all;
 	}
 
-//	public List<ScriptStatus> getScriptList() throws IOException {
-//		List<ScriptStatus> all = new ArrayList<ScriptStatus>();
-//		File[] filelist = getCurrentFolder().listFiles();
-//		for (File file : filelist) {
-//			int ii = file.getName().lastIndexOf('.');
-//			if(ii>=0 && !file.isDirectory()) {
-//				ScriptStatus s = new ScriptStatusImpl(this,getScriptRoot(), file, getCompiledRoot());
-//				all.add(s);
-//			}
-//		}
-//		Collections.sort(all);
-//		return all;
-//	}
+	public List<ScriptStatus> getScriptList() throws IOException {
+		List<ScriptStatus> all = new ArrayList<ScriptStatus>();
+		File[] filelist = getCurrentFolder().listFiles();
+		for (File file : filelist) {
+			int ii = file.getName().lastIndexOf('.');
+			if(ii>=0 && !file.isDirectory()) {
+				ScriptStatus s = new ScriptStatusImpl(this,getScriptRoot(), file, getCompiledRoot());
+				all.add(s);
+			}
+		}
+		Collections.sort(all);
+		return all;
+	}
 
 
 	public File getContextRoot() {
@@ -402,24 +373,26 @@ public class NavajoJspServerContext {
 		return all;
 	}
 	
-//	public ScriptInfoAccessMap getScriptInfoMap()  {
-//		return new ScriptInfoAccessMap(this);
-//	}
+	public ScriptInfoAccessMap getScriptInfoMap()  {
+		return new ScriptInfoAccessMap(this);
+	}
+
+	public ScriptStatus getScriptInfo(String path)  {
+		if(path==null || "".equals(path)) {
+			return null;
+		}
+		try {
+			ScriptStatus s = new ScriptStatusImpl(this,getScriptRoot(), getCompiledRoot(), path);
+			return s;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		System.err.println("Fail?");
+		return null;
+	}
+	
+	public void setScript(String script) {
 //
-//	public ScriptStatus getScriptInfo(String path)  {
-//		if(path==null || "".equals(path)) {
-//			return null;
-//		}
-//		try {
-//			ScriptStatus s = new ScriptStatusImpl(this,getScriptRoot(), getCompiledRoot(), path);
-//			return s;
-//		} catch (Throwable e) {
-//			logger.error("Error: ", e);
-//		}
-//		return null;
-//	}
-//	
-//	public void setScript(String script) {
-//		scriptStatus = getScriptInfo(script);
-//	}
+		scriptStatus = getScriptInfo(script);
+	}
 }

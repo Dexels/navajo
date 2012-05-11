@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.jsp.server.NavajoJspServerContext;
+import com.dexels.navajo.jsp.server.NavajoServerContext;
 import com.dexels.navajo.jsp.server.ScriptStatus;
 
 public class ScriptStatusImpl implements ScriptStatus {
@@ -26,7 +27,7 @@ public class ScriptStatusImpl implements ScriptStatus {
 	
 	public final String[] acceptedCompileCode = new String[]{"java","js"};
 	
-	public ScriptStatusImpl(NavajoJspServerContext nsc, File scriptRoot, File currentFile, File compileRoot) throws IOException {
+	public ScriptStatusImpl(NavajoServerContext nsc, File scriptRoot, File currentFile, File compileRoot) throws IOException {
 //		this.navajoServerContext = nsc;
 		this.scriptRoot = scriptRoot;
 		this.currentFile = currentFile;
@@ -45,7 +46,7 @@ public class ScriptStatusImpl implements ScriptStatus {
 
 	}
 	
-	public ScriptStatusImpl(NavajoJspServerContext nsc, File scriptRoot, File compileRoot, String servicePath) throws IOException {
+	public ScriptStatusImpl(NavajoServerContext nsc, File scriptRoot, File compileRoot, String servicePath) throws IOException {
 //		this.navajoServerContext = nsc;
 		this.scriptRoot = scriptRoot;
 		this.compileRoot = compileRoot;
