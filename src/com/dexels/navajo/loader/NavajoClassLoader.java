@@ -69,12 +69,12 @@ class BetaJarFilter implements FilenameFilter {
 
 public class NavajoClassLoader extends MultiClassLoader {
 
-    private String adapterPath = "";
-    private String compiledScriptPath = "";
+	protected String adapterPath = "";
+	protected String compiledScriptPath = "";
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
-    private HashSet<JarResources> jarResources = null;
-    private HashSet<JarResources> betaJarResources = null;
+    protected HashSet<JarResources> jarResources = null;
+    protected HashSet<JarResources> betaJarResources = null;
     
     private boolean noCaching = false;
     
@@ -85,7 +85,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     /**
      * beta flag denotes whether beta versions of jar files should be used (if present).
      */
-    private boolean beta;
+	protected boolean beta;
 
     public NavajoClassLoader(ClassLoader parent) {
     	super(parent);
@@ -239,7 +239,7 @@ public class NavajoClassLoader extends MultiClassLoader {
         return files;
     }
 
-    private final void initializeJarResources() {
+    protected final void initializeJarResources() {
 
     	if ( adapterPath == null || !new File(adapterPath).exists() ) {
     		System.err.println("No adapters found!");

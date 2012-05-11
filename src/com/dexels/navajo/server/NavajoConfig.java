@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -21,6 +24,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
+import com.dexels.navajo.loader.NavajoLegacyClassLoader;
 import com.dexels.navajo.lockguard.LockManager;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.persistence.PersistenceManager;
@@ -100,6 +104,13 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	private String compilationLanguage;
 
 	private File contextRoot;
+	
+	
+
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoConfig.class);
+
+
     
 	/**
 	 * Creates a fresh NavajoConfig object.
@@ -214,13 +225,18 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		
     		if(adapterClassloader == null) {
     			if(!navajo.Version.osgiActive()) {
-        			adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
+        			adapterClassloader = new NavajoLegacyClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
+        			logger.warn("Setting non-OSGi legacy adapter classloader: " + adapterClassloader);
+    			} else {
+    				adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
     			}
     		}
 
     		if(betaClassloader==null) {
     			if(!navajo.Version.osgiActive()) {
-        			betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true, getClass().getClassLoader());
+        			betaClassloader = new NavajoLegacyClassLoader(adapterPath, compiledScriptPath, true, getClass().getClassLoader());
+    			} else {
+    				adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
     			}
     		}
     		
@@ -790,9 +806,11 @@ public final class NavajoConfig implements NavajoConfigInterface {
      */
     public final synchronized void doClearCache() {
 
-    	adapterClassloader = new NavajoClassLoader(adapterPath, null, getClass().getClassLoader());
-    	betaClassloader = new NavajoClassLoader(adapterPath, null, true, getClass().getClassLoader());
-    	GenericHandler.doClearCache();
+    	if(!navajo.Version.osgiActive()) {
+    		adapterClassloader = new NavajoLegacyClassLoader(adapterPath, null, getClass().getClassLoader());
+    		betaClassloader = new NavajoLegacyClassLoader(adapterPath, null, true, getClass().getClassLoader());
+    		GenericHandler.doClearCache();
+    	}
 
     }
     
