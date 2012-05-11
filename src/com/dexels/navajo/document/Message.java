@@ -45,6 +45,7 @@ public interface Message
   public static final String MSG_ARRAY_SIZE = "array_size";
   public static final String MSG_TYPE_ARRAY_ELEMENT = "array_element";
   public static final String MSG_TYPE_DEFINITION = "definition";
+  public static final String MSG_ORDERBY = "orderby";
 
   /**
    * Get the name of the message. A message name must be unique at each message level.
