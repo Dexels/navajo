@@ -9,7 +9,7 @@
 	
 	
 	<!-- Skip all unit tests. -->
-	<property name="notests" value="false" />
+	<property name="notests" value="true" />
 
 	<!-- Abort the build if any tests fail. -->
 	<property name="haltontestfailure" value="false" />
