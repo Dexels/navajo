@@ -23,7 +23,7 @@ public class TestMail {
 
 	public static void main(String args[]) throws Exception {
 
-		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+//		Security.addProvider( new com.sun.net.ssl.internal.ssl.Provider());
 
 		new TestMail().sendSSLMessage(sendTo, emailSubjectTxt, emailMsgTxt, emailFromAddress);
 		System.out.println("Sucessfully Sent mail to All Users");
@@ -44,7 +44,7 @@ public class TestMail {
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("flyaruu", "******");
+				return new PasswordAuthentication("flyaruu", "----");
 			}
 		});
 
