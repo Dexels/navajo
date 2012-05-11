@@ -167,13 +167,8 @@ genmerge.sh com.sportlink.analysis
 
 #customized, to change the names:
 
-export MODULEPATH=other
 export REPOSITORY=navajo
 
-genmerge.sh com.dexels.navajo.utilities
-genmerge.sh com.dexels.navajo.oda.feature
-genmerge.sh com.dexels.navajo.oda
-genmerge.sh com.dexels.navajo.oda.ui
 
 export MODULEPATH=demos
 
@@ -186,6 +181,10 @@ export MODULEPATH=demos
 
 export MODULEPATH=optional
 
+genmerge.sh com.dexels.navajo.utilities
+genmerge.sh com.dexels.navajo.oda.feature
+genmerge.sh com.dexels.navajo.oda
+genmerge.sh com.dexels.navajo.oda.ui
 genmerge.sh com.dexels.navajo.twitter
 genmerge.sh com.dexels.navajo.twitter.feature
 genmerge.sh com.dexels.navajo.svg
@@ -265,6 +264,9 @@ genmerge.sh com.dexels.navajo.tipi.ruby.feature
 genmerge.sh com.dexels.navajo.tipi.ruby
 genmerge.sh com.dexels.navajo.tipi.rss.feature
 genmerge.sh com.dexels.navajo.tipi.rss
+genmerge.sh com.dexels.navajo.tipi.css 
+genmerge.sh com.dexels.navajo.tipi.css.tkui
+genmerge.sh com.dexels.navajo.tipi.css.feature
 
 export MODULEPATH=tipi_dev
 

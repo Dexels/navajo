@@ -22,7 +22,7 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh OpenfireNavajo com.dexels.navajo.enterprise.openfire
 ./cvsgit.sh NavajoTomahawk com.dexels.navajo.enterprise.tomahawk
 
-./cvsgit.sh NavajoAgents com.dexels.navajo.agents
+./cvsgit.sh NavajoAgents com.dexels.navajo.enterprise.agents
 
 #NavajoIntegrationTest
 

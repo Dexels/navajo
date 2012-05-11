@@ -16,4 +16,10 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh com.dexels.navajo.tipi.vaadin.feature com.dexels.navajo.tipi.vaadin.feature
 ./cvsgit.sh com.dexels.navajo.tipi.jogl com.dexels.navajo.tipi.jogl
 ./cvsgit.sh com.dexels.navajo.tipi.extensions.feature com.dexels.navajo.tipi.extensions.feature
+./cvsgit.sh com.dexels.navajo.tipi.css com.dexels.navajo.tipi.css
+./cvsgit.sh com.dexels.navajo.tipi.css.tkui com.dexels.navajo.tipi.css.tkui
+./cvsgit.sh com.dexels.navajo.tipi.css.feature com.dexels.navajo.tipi.css.feature
+./cvsgit.sh RDFBrowser com.dexels.navajo.tipi.swing.rdf
+./cvsgit.sh com.dexels.navajo.tipi.swing.rdf.feature com.dexels.navajo.tipi.swing.rdf.feature
+./cvsgit.sh com.dexels.navajo.tipi.css.feature com.dexels.navajo.tipi.css.feature
 
