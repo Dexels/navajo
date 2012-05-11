@@ -38,10 +38,13 @@ public class FunctionFactoryFactory {
 				// can't read property. Whatever, func remains null.
 			}
 
-			if(Version.getDefaultBundleContext()!=null) {
-				System.err.println("OSGi environment detected!");
-				func = "com.dexels.navajo.functions.util.OsgiFunctionFactory";
-				
+			try {
+				if(Version.getDefaultBundleContext()!=null) {
+					System.err.println("OSGi environment detected!");
+					func = "com.dexels.navajo.functions.util.OsgiFunctionFactory";
+				}
+			} catch (Throwable t) {
+				System.err.println("NO OSGi environment detected!");
 			}
 			
 			if ( func != null ) {

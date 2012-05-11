@@ -230,7 +230,11 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	
 	
 	public static boolean osgiActive() {
-		return getDefaultBundleContext()!=null;
+		try {
+			return getDefaultBundleContext()!=null;
+		} catch (Throwable t) {
+			return false;
+		}
 	}
 	
 	@Override
@@ -338,10 +342,14 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		properties.put("rootPath", nc.getRootPath());
 		properties.put("instanceName", nc.getInstanceName());
 		properties.put("instanceGroup", nc.getInstanceGroup());
-		if ( getDefaultBundleContext() != null ) {
-			navajoConfig = getDefaultBundleContext().registerService(NavajoConfigInterface.class.getName(), nc, properties);
-		}else {
-			logger.warn("Could NOT find default bundle context. No OSGi?");
+		try {
+			if ( getDefaultBundleContext() != null ) {
+				navajoConfig = getDefaultBundleContext().registerService(NavajoConfigInterface.class.getName(), nc, properties);
+			}else {
+				logger.warn("Could NOT find default bundle context. No OSGi?");
+			}
+		} catch (Throwable t) {
+			logger.warn("Could NOT find method getDefaultBundleContext(). No OSGi?");
 		}
 	}
 
@@ -353,10 +361,14 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		properties.put("product", instance.getProduct());
 		properties.put("applicationId", instance.getApplicationId());
 		properties.put("serverId", instance.getServerId());
-		if ( getDefaultBundleContext() != null ) {
-			dispatcherRegistration = getDefaultBundleContext().registerService(DispatcherInterface.class.getName(), instance, properties);
-		} else {
-			logger.warn("Could NOT find default bundle context. No OSGi?");
+		try {
+			if ( getDefaultBundleContext() != null ) {
+				dispatcherRegistration = getDefaultBundleContext().registerService(DispatcherInterface.class.getName(), instance, properties);
+			} else {
+				logger.warn("Could NOT find default bundle context. No OSGi?");
+			}
+		} catch (Throwable t) {
+			logger.warn("Could NOT find method  getDefaultBundleContext(). No OSGi?");
 		}
 	}
 	

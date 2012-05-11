@@ -65,7 +65,13 @@ public class StatisticsRunnerFactory {
 	
 	private static StatisticsRunnerInterface getStatisticsRunnerInstanceOSGi(String storePath,
 			Map parameters, String storeClass) throws InvalidSyntaxException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-		BundleContext bc = Version.getDefaultBundleContext();
+		BundleContext bc = null;
+		try {
+			bc = Version.getDefaultBundleContext();
+		} catch (Throwable t) {
+			logger.warn("Could not get OSGi instance for statistics runnner. No OSGi?");
+			return null;
+		}
 		if(bc==null) {
 			return null;
 		}
