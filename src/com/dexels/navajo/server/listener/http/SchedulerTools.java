@@ -56,11 +56,13 @@ public class SchedulerTools {
 
 	private static TmlScheduler getSchedulerService(String schedulerName) throws InvalidSyntaxException {
 		BundleContext bc =navajolisteners.Version.getDefaultBundleContext();
-		Collection<ServiceReference<TmlScheduler>> bcc = bc.getServiceReferences(TmlScheduler.class, "(schedulerClass="+schedulerName+")");
-		if(!bcc.isEmpty()) {
-			return bc.getService( bcc.iterator().next());
+		if ( bc != null ) {
+			Collection<ServiceReference<TmlScheduler>> bcc = bc.getServiceReferences(TmlScheduler.class, "(schedulerClass="+schedulerName+")");
+			if(!bcc.isEmpty()) {
+				return bc.getService( bcc.iterator().next());
+			}
 		}
-		logger.info("No TmlScheduler found for: "+schedulerName);
+		logger.info("No OSGi TmlScheduler found for: "+schedulerName);
 		return null;
 	}
 
