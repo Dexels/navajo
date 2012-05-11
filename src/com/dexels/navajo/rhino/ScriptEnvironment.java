@@ -256,6 +256,9 @@ public abstract class ScriptEnvironment implements Serializable {
 				parent.getRootDoc(), name, Property.STRING_PROPERTY, "", 0, "",
 				Property.DIR_INOUT);
 		p.setAnyValue(value);
+		if(value!=null) {
+			p.setType(NavajoFactory.getInstance().getNavajoType(value.getClass()));
+		}
 		parent.addProperty(p);
 		return p;
 	}
