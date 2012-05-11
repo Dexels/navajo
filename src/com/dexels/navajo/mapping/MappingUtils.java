@@ -385,7 +385,7 @@ public final class MappingUtils {
     	existing = null;
     }
     
-    if ( mode.equals(Message.MSG_MODE_OVERWRITE ) && existing != null ) {
+    if ( !Message.MSG_MODE_OVERWRITE.equals(mode) && existing != null ) {
     	// remove existing message.
     	
     	if ( parent != null ) {
@@ -408,18 +408,13 @@ public final class MappingUtils {
         return messages;
       }
     }
+ 
+    /**
+     * Added getBaseMessageName to support relative message creation.
+     */
+    msg = doc.getNavajoFactory().createMessage(doc, getBaseMessageName(message));
 
-    if (!template.equals("")) { // Read template file.
-      throw new MappingException("TEMPLATES ARE NOT SUPPORTED");
-    }
-    else {
-      /**
-       * Added getBaseMessageName to support relative message creation.
-       */
-      msg = doc.getNavajoFactory().createMessage(doc, getBaseMessageName(message));
-    }
-
-    if (!mode.equals("")) {
+    if (mode != null && !mode.equals("")) {
       msg.setMode(mode);
     }
   
@@ -448,12 +443,12 @@ public final class MappingUtils {
        
       //}
       messages[index++] = msg;
-      if (!type.equals("")) {
+      if ( type != null && !type.equals("")) {
         msg.setType(type);
       }
     }
     
-    if ( mode.equals(Message.MSG_MODE_IGNORE)) {
+    if ( Message.MSG_MODE_IGNORE.equals(mode) ) {
   	  msg.setMode(mode);
     }
 
