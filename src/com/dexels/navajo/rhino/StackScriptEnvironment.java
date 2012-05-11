@@ -479,6 +479,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 
 	public void popMessage() {
 		myElementStack.pop();
+		getAccess().setCurrentOutMessage(getMessage());
 	}
 	
 	// no stack activity
@@ -498,6 +499,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	}
 
 	public void pushMessage(Message m) {
+		getAccess().setCurrentOutMessage(m);
 		if (m != null) {
 			pushElement(m);
 		}
