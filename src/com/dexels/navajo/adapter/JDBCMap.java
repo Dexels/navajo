@@ -514,18 +514,20 @@ public void setKillConnection() {
       }
       
       DataSource jdbc = JdbcResourceComponent.getJdbc(datasource);
+      
 //      if(jdbc instanceof ConnectionPoolDataSource) {
 //    	  logger.info("USING POOL");
 //    	  ConnectionPoolDataSource cpds = (ConnectionPoolDataSource)jdbc;
 //    	  this.currentPooledConnection = cpds.getPooledConnection();
 //    	  con = currentPooledConnection.getConnection();
 //      } else {
-    		con = jdbc.getConnection();
+      con = jdbc.getConnection();
 //      }
 
     	if(this.username!=null) {
-    		PreparedStatement ps = con.prepareStatement("ALTER SESSION SET CURRENT SCHEMA = "+username+"");
+    		PreparedStatement ps = con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = "+username);
     		ps.executeUpdate();
+    		ps.close();
     		logger.info("Username set to: "+this.username);
     	}
     		
