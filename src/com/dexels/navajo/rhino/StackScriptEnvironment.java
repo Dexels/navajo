@@ -627,6 +627,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 			if(mm.length==0) {
 				throw new MappingException("I've just created a message, but it isn't there.");
 			}
+			pushMessage(mm[0]);
 			return mm[0];
 //			Message resolvedParent = MappingUtils.getParentMessage(parent, name);
 //			if(resolvedParent==null) {
@@ -638,7 +639,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 //				return addElement();
 //			}
 //			Message m = super.addMessage(parent, name);
-//			pushMessage(m);
+			
 //			return m;
 		}
 		if (Navajo.class.isAssignableFrom(oo.getClass())) {
@@ -647,6 +648,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 			if(mm.length==0) {
 				throw new MappingException("I've just created a message, but it isn't there.");
 			}
+			pushMessage(mm[0]);
 			return mm[0];
 //			Message m = super.addMessage((Navajo) oo, name);
 //			pushMessage(m);
