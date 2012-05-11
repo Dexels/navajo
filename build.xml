@@ -12,7 +12,7 @@
 	<property file="build.properties" />
 <!--	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions" />-->
 	<property name="basicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoQueueManager,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions,NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners,NavajoAsyncClient,NavajoListenersContinuations,NavajoRhino,NavajoMongoAdapters,NavajoMongoStore,com.dexels.navajo.resource,com.dexels.navajo.resource.manager" />
-	<property name="localbasicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoQueueManager,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions,NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners,NavajoAsyncClient,NavajoListenersContinuations,NavajoRhino,com.dexels.navajo.mongo,com.dexels.navajo.mongo.navajostore" />
+	<property name="localbasicdeploy" value="DexelsVersionControl,NavajoDocument,NavajoQueueManager,NavajoClient,Navajo,NavajoListeners,NavajoAdapters,NavajoJsp,NavajoJspServer,NavajoFunctions,NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners,NavajoAsyncClient,NavajoListenersContinuations,NavajoRhino,com.dexels.navajo.mongo,com.dexels.navajo.mongo.navajostore,com.dexels.navajo.resource,com.dexels.navajo.resource.manager,com.dexels.navajo.authentication.api" />
 	<property name="enterprisedeploy" value="NavajoEnterprise,NavajoEnterpriseAdapters,NavajoEnterpriseListeners" />
 
 	
@@ -71,7 +71,7 @@
 		<mkdir dir="${webInfLib}" />
 		<for list="${currentdeploy}" delimiter="," param="deploy">
 			<sequential>
-				<copy todir="${webInfLib}">
+				<copy verbose="true" todir="${webInfLib}">
 					<fileset dir="../@{deploy}/">
 						<include name="*.jar" />
 					</fileset>
