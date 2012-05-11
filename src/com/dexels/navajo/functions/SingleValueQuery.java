@@ -1,5 +1,6 @@
 package com.dexels.navajo.functions;
 
+import com.dexels.navajo.jdbc.JDBCFactory;
 import com.dexels.navajo.jdbc.JDBCMappable;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.adapter.JDBCMap;
@@ -22,9 +23,6 @@ public class SingleValueQuery extends FunctionInterface {
   public static final String DATASOURCEDELIMITER = ":";
   public static final String USERDELIMITER = "@";
 
-  protected boolean useJDBCMap() {
-	  return true;
-  }
   
   protected final JDBCMappable evaluateQuery() throws com.dexels.navajo.parser.TMLExpressionException {
 
@@ -56,13 +54,8 @@ public class SingleValueQuery extends FunctionInterface {
 	  int parameterCount = tokens.countTokens() - 1;
 	  if (query.endsWith("?"))
 		  parameterCount++;
-	  if (useJDBCMap()) {
-		  sql = new JDBCMap();
-		
-  	 } else {
-  		  sql = new SQLMap();
-
-  	 }
+	  
+	  sql = JDBCFactory.getJDBCMap();
 	  String datasource = "";
 	  String user = "";
 
