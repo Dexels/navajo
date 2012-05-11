@@ -24,7 +24,7 @@ public class FormattedFileTag  extends BaseNavajoTag {
 	private String absoluteFilePath;
 	private String extension;
 	private String name;
-	private NavajoJspServerContext serverContext;
+	private NavajoServerContext serverContext;
 	private Object content;
 
 	
@@ -64,11 +64,11 @@ public class FormattedFileTag  extends BaseNavajoTag {
 		this.absoluteFilePath = absoluteFilePath;
 	}
 	
-	public NavajoJspServerContext getServerContext() {
+	public NavajoServerContext getServerContext() {
 		return serverContext;
 	}
 
-	public void setServerContext(NavajoJspServerContext serverContext) {
+	public void setServerContext(NavajoServerContext serverContext) {
 		this.serverContext = serverContext;
 	}
 

@@ -5,7 +5,7 @@ import javax.servlet.jsp.JspException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.jsp.server.NavajoJspServerContext;
+import com.dexels.navajo.jsp.server.NavajoServerContext;
 import com.dexels.navajo.jsp.tags.BaseNavajoTag;
 
 /**
@@ -20,7 +20,7 @@ public class LocalClientTag extends BaseNavajoTag {
 			.getLogger(LocalClientTag.class);
 	
 	public int doStartTag() throws JspException {
-		NavajoJspServerContext nc = (NavajoJspServerContext) getPageContext().findAttribute("serverContext");
+		NavajoServerContext nc = (NavajoServerContext) getPageContext().findAttribute("serverContext");
 		try {
 			if(nc!=null) {
 				nc.setupClient();
