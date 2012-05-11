@@ -696,14 +696,14 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		return e;
 	}
 
-	public Property addProperty(String name, Object value)
-			throws NavajoException {
+	public Property addProperty(String name, Object value, Map<String,String> attributes)
+			throws NavajoException, MappingException {
 		// System.err.println("Adding property: "+name+" to message: "+getMessage().getName());
 		if (getMessage() == null) {
 			log("No message, can not add property!");
 			log(dumpStack());
 		}
-		Property p = super.addProperty(getMessage(), name, value);
+		Property p = super.addProperty(getMessage(), name, value,attributes);
 		// pushProperty(p);
 		return p;
 	}

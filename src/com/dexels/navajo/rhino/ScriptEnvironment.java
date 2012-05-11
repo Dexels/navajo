@@ -30,6 +30,8 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.mapping.MappingException;
+import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;
@@ -250,16 +252,38 @@ public abstract class ScriptEnvironment implements Serializable {
 		return m;
 	}
 
-	public Property addProperty(Message parent, String name, Object value)
-			throws NavajoException {
-		Property p = NavajoFactory.getInstance().createProperty(
-				parent.getRootDoc(), name, Property.STRING_PROPERTY, "", 0, "",
-				Property.DIR_INOUT);
-		p.setAnyValue(value);
-		if(value!=null) {
-			p.setType(NavajoFactory.getInstance().getNavajoType(value.getClass()));
+	public Property addProperty(Message parent, String name, Object value, Map<String,String> attributes)
+			throws NavajoException, MappingException {
+		String navajoType = null;
+		String subtype = null;
+		String direction = null;
+		String description = null;
+		int length = 0;
+		if(attributes!=null) {
+			subtype = attributes.get(Property.PROPERTY_SUBTYPE);
+			direction = attributes.get(Property.PROPERTY_DIRECTION);
+			description = attributes.get(Property.PROPERTY_DESCRIPTION);
+			String lengthString = attributes.get(Property.PROPERTY_LENGTH);
+			if(lengthString!=null) {
+				length = Integer.parseInt(lengthString);
+			}
+			navajoType = attributes.get(Property.PROPERTY_TYPE);
 		}
-		parent.addProperty(p);
+		if(value==null) {
+				//
+		} else {
+			navajoType = NavajoFactory.getInstance().getNavajoType(value.getClass());
+		}
+		Property p = MappingUtils.setProperty(false, parent, name, value, navajoType, subtype, direction, description, length, getAccess().getOutputDoc(), getAccess().getInDoc(), false);
+//		Property p = NavajoFactory.getInstance().createProperty(
+//				parent.getRootDoc(), name, Property.STRING_PROPERTY, "", 0, "",
+//				Property.DIR_INOUT);
+//		p.setAnyValue(value);
+//		if(value!=null) {
+//			p.setType(navajoType);
+//		}
+//		
+//		parent.addProperty(p);
 		return p;
 	}
 

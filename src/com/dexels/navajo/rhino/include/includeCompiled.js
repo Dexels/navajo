@@ -295,19 +295,19 @@ function propertyExpression(fieldName,expression,attributes) {
 
 function addProperty(propertyName,value, attributes) {
 	p = env.addProperty(propertyName,value);
-	addAttributes(p,attributes);
+//	addAttributes(p,attributes);
 	return p;
 }
 
 function addProperty(propertyName,value, attributes) {
-	p = env.addProperty(propertyName,value);
-	addAttributes(p,attributes);
+	p = env.addProperty(propertyName,value,attributes);
+//	addAttributes(p,attributes);
 	return p;
 }
 function addProperty(propertyName, value, attributes,callback) {
-	p = env.addProperty(propertyName,value);
+	p = env.addProperty(propertyName,value,attributes);
 	env.pushProperty(p);
-	addAttributes(p,attributes);
+//	addAttributes(p,attributes);
 	if(callback!=undefined && callback!=null) {
 		callback();
 	}
