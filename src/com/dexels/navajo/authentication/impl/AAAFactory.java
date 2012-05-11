@@ -87,10 +87,19 @@ public final class AAAFactory implements AuthenticationFactory {
 
   @Override
   public AAAInterface getAuthenticationModule() {
+	  try {
 	  return moduleList.first();
+	  } catch (Exception  e) {
+		  logger.warn("No AuthenticationModule found. No OSGi?", e);
+		  return null;
+	  }
   }
 
   public static AuthenticationFactory getInstance() {
+	  if ( instance == null ) {
+		  logger.warn("No AuthenticatonFactory found. No OSGi?");
+		  instance = new AAAFactory();
+	  } 
 	  return instance;
   }
   
