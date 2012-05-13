@@ -1229,6 +1229,7 @@ private boolean isLegacyMode() {
 
                     case Types.BINARY:
                     case Types.BLOB:
+                    case Types.VARBINARY:
                     case -4:
                       InputStream is = rs.getBinaryStream(i);
                       if (is != null) {
