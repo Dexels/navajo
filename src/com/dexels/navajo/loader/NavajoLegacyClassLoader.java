@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.dexels.utils.JarResources;
-
-import sun.misc.CompoundEnumeration;
 
 public class NavajoLegacyClassLoader extends NavajoClassLoader {
 
@@ -29,7 +29,7 @@ public class NavajoLegacyClassLoader extends NavajoClassLoader {
 	    public Enumeration<URL> getResources(String name) throws IOException {
 
 
-	    	HashSet<URL> s = new HashSet();
+	    	HashSet<URL> s = new HashSet<URL>();
 
 	    	if ( jarResources == null || betaJarResources == null ) {
 	    		initializeJarResources();
@@ -76,9 +76,10 @@ public class NavajoLegacyClassLoader extends NavajoClassLoader {
 	    			}
 	    		}
 	    	}
-
-	    	return new CompoundEnumeration(new Enumeration[]{Collections.enumeration(s), 
-	    			                       getClass().getClassLoader().getResources(name)});
+	    	List<Enumeration<URL>> list = new LinkedList<Enumeration<URL>>();
+	    	list.add(Collections.enumeration(s));
+	    	list.add(getClass().getClassLoader().getResources(name));
+	    	return new CompositeEnumeration<URL>(list);
 
 	    }
 
