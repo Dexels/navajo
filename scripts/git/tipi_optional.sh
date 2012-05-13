@@ -34,7 +34,7 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh TipiRuby com.dexels.navajo.tipi.ruby
 ./cvsgit.sh com.dexels.navajo.tipi.rss.feature com.dexels.navajo.tipi.rss.feature
 ./cvsgit.sh TipiRss com.dexels.navajo.tipi.rss
-./cvsgit.sh TipiRDF com.dexels.navajo.tipi.swing.rdf
+./cvsgit.sh RDFBrowser com.dexels.navajo.tipi.swing.rdf
 ./cvsgit.sh com.dexels.navajo.tipi.swing.rdf.feature com.dexels.navajo.tipi.swing.rdf.feature
 ./cvsgit.sh com.dexels.navajo.tipi.jcr.feature com.dexels.navajo.tipi.jcr.feature
 

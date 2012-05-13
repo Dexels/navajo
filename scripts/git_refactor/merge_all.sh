@@ -68,12 +68,17 @@ genmerge.sh com.dexels.navajo.mongo.feature
 genmerge.sh com.dexels.navajo.mongo
 genmerge.sh com.dexels.navajo.mongo.navajostore
 
-genmerge.sh com.dexels.navajo.enterprise.ideal
-genmerge.sh com.dexels.navajo.enterprise.ideal.sportlink
 genmerge.sh com.dexels.navajo.enterprise.openfire
 genmerge.sh com.dexels.navajo.enterprise.tomahawk
 genmerge.sh com.dexels.navajo.enterprise.dbreplication
 genmerge.sh com.dexels.navajo.enterprise.lucene
+genmerge.sh com.dexels.navajo.enterprise.agents
+
+export MODULEPATH=incubation
+
+genmerge.sh com.dexels.navajo.enterprise.ideal
+genmerge.sh com.dexels.navajo.enterprise.ideal.sportlink
+
 
 export MODULEPATH=other
 export REPOSITORY=internal
