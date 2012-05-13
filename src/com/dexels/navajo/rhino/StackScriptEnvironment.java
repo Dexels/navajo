@@ -491,7 +491,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 			System.err.println("In doc:");
 			getAccess().getInDoc().write(System.err);
 
-			System.err.println("Out doc would be: ");
 			getAccess().getOutputDoc().write(System.err);
 		}
 		result.write(System.err);
