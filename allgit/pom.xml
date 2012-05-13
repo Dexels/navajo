@@ -10,11 +10,11 @@
 
 	<modules>
 	
-		<module>../../core/com.dexels.navajo.core.feature/allgit/</module>
-		<module>../../server/com.dexels.navajo.server.feature/allgit/</module>
-		<module>../../tipi/com.dexels.navajo.tipi.extensions.feature/allgit/</module>
-		<module>../../tipi_dev/com.dexels.navajo.tipi.dev.feature/allgit/</module>
-		<module>../../dev/com.dexels.navajo.dev/allgit/</module>
+		<module>../../../core/com.dexels.navajo.core.feature/allgit/</module>
+		<module>../../../server/com.dexels.navajo.server.feature/allgit/</module>
+		<module>../../../tipi/com.dexels.navajo.tipi.extensions.feature/allgit/</module>
+		<module>../../../tipi_dev/com.dexels.navajo.tipi.dev.feature/allgit/</module>
+		<module>../../../dev/com.dexels.navajo.dev.feature/allgit/</module>
 	</modules>
 	<parent>
 		<groupId>com.dexels.navajo.core</groupId>
