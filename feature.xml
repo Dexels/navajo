@@ -41,10 +41,10 @@
          id="com.dexels.navajo.tipi.jabber.feature"
          version="0.0.0"/>
 
-   <includes
+  <!-- <includes
          id="com.dexels.navajo.tipi.jogl.feature"
          version="0.0.0"/>
-
+	-->
    <includes
          id="com.dexels.navajo.tipi.mail.feature"
          version="0.0.0"/>
