@@ -11,7 +11,7 @@ public class JDBCFactory {
 	public final static Logger logger = LoggerFactory.getLogger(JDBCFactory.class);
 	private static volatile int useOSGi = -1;
 	
-	private final static boolean useOSGi() {
+	public final static boolean useOSGi() {
 		if ( useOSGi != -1) {
 			return ( useOSGi == 1);
 		}
