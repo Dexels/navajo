@@ -111,7 +111,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	// Flag to indicate that during the execution of the webservice, break was called.
 	private boolean breakWasSet = false;
 	
-	private Object scriptEnvironment = null;
+	private transient Object scriptEnvironment = null;
 	
 
 	private Throwable myException;
@@ -122,7 +122,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	private Navajo mergedDoc;
 
 	private Message currentOutMessage;
-	private Object userCertificate;
+	private transient Object userCertificate;
 	private static Object mutex = new Object();
 	private Set<Map<?,?>> piggyBackData = null;
 	private String clientToken = null;
