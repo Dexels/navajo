@@ -20,6 +20,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.adapter.JDBCMap;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -28,6 +29,7 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
+import com.dexels.navajo.jdbc.JDBCFactory;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.MappingException;
@@ -470,7 +472,8 @@ public abstract class ScriptEnvironment implements Serializable {
 			Message currentOutMessage) throws ClassNotFoundException {
 		logger.debug("Creating map for class: "+className);
 		try {
-			if("com.dexels.navajo.adapter.SQLMap".equals(className)) {
+			
+			if("com.dexels.navajo.adapter.SQLMap".equals(className) && JDBCFactory.useOSGi() ) {
 				System.err.println("REPLACE!");
 				className = "com.dexels.navajo.adapter.JDBCMap";
 			}
