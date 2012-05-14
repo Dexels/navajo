@@ -43,10 +43,10 @@ function mapOntoMessage(field,path,filter,callback) {
 	if(isArr) {
 		ref = env.createMapRef(field);
 		list = mm.getAllMessages().toArray();
-		env.log("Array size: "+list.length+" : "+ref.length);
+		//env.log("Array size: "+list.length+" : "+ref.length);
 		count = Math.min(list.length,ref.length);
 		for(a=0; a<count; a++) {
-			env.log("Iteration: "+i+" message: "+list[a]);
+			//env.log("Iteration: "+i+" message: "+list[a]);
 			env.pushMappableTreeNode(ref[a]);
 			env.pushInputMessage(list[a]);
 			if((filter==null || filter==undefined) || evaluateNavajo(filter)==true) {
@@ -93,14 +93,14 @@ function callReferenceMap(field,filter,callback){
 
 			env.popMappableTreeNode();
 			//env.log('Should be poppin the element now:');
-			env.popMessage();
+			env.popElement();
 		}
 	} else {
 		//env.log('it is not an array');
 		ref = env.createMapRef(field);
-			//env.pushMappableTreeNode(ref);
+			env.pushMappableTreeNode(ref);
 			callback(ref);
-			//env.popMappableTreeNode();
+			env.popMappableTreeNode();
 	}
 	//env.popMappableTreeNode();
 }
@@ -139,11 +139,11 @@ function callReferenceMapSelection(field,filter,callback){
 	} else {
 		//env.log('it is not an array');
 		ref = env.createMapRef(field);
-			//env.pushMappableTreeNode(ref);
+			env.pushMappableTreeNode(ref);
 			callback(ref);
-			//env.popMappableTreeNode();
+			env.popMappableTreeNode();
 	}
-	env.popMappableTreeNode();
+	//env.popMappableTreeNode();
 }
     
 
