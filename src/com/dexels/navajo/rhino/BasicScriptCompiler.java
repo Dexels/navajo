@@ -753,7 +753,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		}
 		os.writeln("addSelectionToProperty(prop,\"" + s.getStringAttribute("name")
 				+ "\",\"" + s.getStringAttribute("value") + "\","
-				+ "\"" + s.getStringAttribute("selected") + "\");");
+				+ "\"" + ( s.getStringAttribute("selected") != null ? s.getStringAttribute("selected") : "0") + "\");");
 		if (condition != null && !condition.equals("")) {
 			os.out();
 			os.writeln("}");
