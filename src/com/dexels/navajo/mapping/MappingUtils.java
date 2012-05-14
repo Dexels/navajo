@@ -236,13 +236,13 @@ public final class MappingUtils {
 
     if (prop == null) { // Property does not exist.
     	if (!parameter) {
-    		if (type.equals(Property.SELECTION_PROPERTY)) {
+    		if (Property.SELECTION_PROPERTY.equals(type)) {
     			prop = ref.getRootDoc().getNavajoFactory().createProperty(outputDoc, actualName, "1", description, direction);
     			if ( value instanceof Selection [] ) {
     				prop.setCardinality("+");
     				prop.setValue((Selection []) value);
     			}
-    		} else if (type.equals(Property.BINARY_PROPERTY)) {
+    		} else if (Property.BINARY_PROPERTY.equals(type)) {
     			prop = ref.getRootDoc().getNavajoFactory().createProperty(outputDoc, actualName, type, "", length, description, direction);
     			if (value != null && value instanceof Binary) {
     				prop.setValue( (Binary) value);
@@ -250,7 +250,7 @@ public final class MappingUtils {
     		} 
     		else {
     			// Legacy mode hack, many scripts do not expect null valued string properties.
-    			if ( type.equals(Property.STRING_PROPERTY) && value == null ) {
+    			if ( Property.STRING_PROPERTY.equals(type) && value == null ) {
     				value = "";
     			}
     			prop = ref.getRootDoc().getNavajoFactory().createProperty(outputDoc, actualName, type, "", length, description, direction);
@@ -259,13 +259,13 @@ public final class MappingUtils {
     		}
     	}
     	else {
-    		if (type.equals(Property.SELECTION_PROPERTY)) {
+    		if (Property.SELECTION_PROPERTY.equals(type)) {
     			prop = ref.getRootDoc().getNavajoFactory().createProperty(tmlDoc, actualName, "1", description, direction);
     			if ( value instanceof Selection [] ) {
     				prop.setCardinality("+");
     				prop.setValue((Selection []) value);
     			}
-    		} else if (type.equals(Property.BINARY_PROPERTY)) {
+    		} else if (Property.BINARY_PROPERTY.equals(type)) {
     			prop = ref.getRootDoc().getNavajoFactory().createProperty(tmlDoc, actualName, type, "", length, description, direction);
     			if (value != null && value instanceof Binary) {
     				prop.setValue( (Binary) value);
@@ -282,16 +282,16 @@ public final class MappingUtils {
     else { // Existing property.
     	prop.clearValue();
     	prop.setType(type);
-    	if (type.equals(Property.BINARY_PROPERTY)) {
+    	if (Property.BINARY_PROPERTY.equals(type)) {
     		if (value != null && (value instanceof Binary)) {
     			prop.setValue( (Binary) value);
     		} else {
     			prop.clearValue();
     		}
-    	}  else if ( type.equals(Property.SELECTION_PROPERTY) && value != null && value instanceof Selection [] ) {
+    	}  else if ( Property.SELECTION_PROPERTY.equals(type) && value != null && value instanceof Selection [] ) {
     		prop.setCardinality("+");
     		prop.setValue((Selection []) value);
-    	}  else if ( !type.equals(Property.SELECTION_PROPERTY) ) {
+    	}  else if ( !Property.SELECTION_PROPERTY.equals(type) ) {
     		if (value != null) {
     			prop.setAnyValue(value);
     		}
@@ -385,7 +385,7 @@ public final class MappingUtils {
     	existing = null;
     }
     
-    if ( !Message.MSG_MODE_OVERWRITE.equals(mode) && existing != null ) {
+    if ( Message.MSG_MODE_OVERWRITE.equals(mode) && existing != null ) {
     	// remove existing message.
     	
     	if ( parent != null ) {
