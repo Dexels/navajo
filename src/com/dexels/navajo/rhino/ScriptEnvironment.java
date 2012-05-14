@@ -212,8 +212,7 @@ public abstract class ScriptEnvironment implements Serializable {
 //		return m;
 //	}
 
-	public Selection addSelection(Property p, String name, Object value,
-			Integer selected) throws NavajoException {
+	public Selection addSelection(Property p, String name, Object value, Object selected) throws NavajoException {
 		Selection s = NavajoFactory.getInstance().createSelection(
 				getAccess().getOutputDoc(), name, "" + value, selected);
 		p.addSelection(s);
@@ -222,6 +221,16 @@ public abstract class ScriptEnvironment implements Serializable {
 		}
 		return s;
 	}
+	
+//	public Selection addSelection(Property p, String name, Object value, boolean selected) throws NavajoException {
+//		Selection s = NavajoFactory.getInstance().createSelection(
+//				getAccess().getOutputDoc(), name, "" + value, selected);
+//		p.addSelection(s);
+//		if (p.getCardinality() == null) {
+//			p.setCardinality(Property.CARDINALITY_SINGLE);
+//		}
+//		return s;
+//	}
 
 	public Message addArrayMessage(Message parent, String name)
 			throws NavajoException {
@@ -260,11 +269,15 @@ public abstract class ScriptEnvironment implements Serializable {
 		String subtype = null;
 		String direction = null;
 		String description = null;
+		String cardinality = null;
+		String literalValue = null;
 		int length = 0;
 		if(attributes!=null) {
 			subtype = attributes.get(Property.PROPERTY_SUBTYPE);
 			direction = attributes.get(Property.PROPERTY_DIRECTION);
 			description = attributes.get(Property.PROPERTY_DESCRIPTION);
+			cardinality = attributes.get(Property.PROPERTY_CARDINALITY);
+			literalValue = attributes.get(Property.PROPERTY_VALUE);
 			String lengthString = attributes.get(Property.PROPERTY_LENGTH);
 			if(lengthString!=null) {
 				length = Integer.parseInt(lengthString);
@@ -277,7 +290,13 @@ public abstract class ScriptEnvironment implements Serializable {
 			navajoType = NavajoFactory.getInstance().getNavajoType(value.getClass());
 		}
 		Property p = MappingUtils.setProperty(false, parent, name, value, navajoType, subtype, direction, description, length, getAccess().getOutputDoc(), getAccess().getInDoc(), false);
-//		Property p = NavajoFactory.getInstance().createProperty(
+		if ( Property.SELECTION_PROPERTY.equals(navajoType) && cardinality != null ) {
+			p.setCardinality(cardinality);
+		}
+		if ( literalValue != null ) {
+			p.setValue(literalValue);
+		}
+		//		Property p = NavajoFactory.getInstance().createProperty(
 //				parent.getRootDoc(), name, Property.STRING_PROPERTY, "", 0, "",
 //				Property.DIR_INOUT);
 //		p.setAnyValue(value);
