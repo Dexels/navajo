@@ -258,7 +258,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 					if (isArray ) {
 						 log("Element# "+ ((Object[])mapref).length+" for getter: "+fieldGetter+" map: "+map);
 					}
-					pushMappableTreeNode(mapref, isArray);
+					//pushMappableTreeNode(mapref, isArray);
 				}
 				return mapref;
 			}
@@ -781,12 +781,12 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		return par;
 	}
 
-	public Selection addSelection(String name, String value, int selected)
+	public Selection addSelection(String name, String value, Object selected)
 			throws NavajoException {
 		return super.addSelection(getProperty(), name, value, selected);
 	}
 	public Selection addSelectionToProperty(Property p, String name, Object value,
-			Integer selected) throws NavajoException {
+			Object selected) throws NavajoException {
 		return super.addSelection(p, name, value, selected);
 	}
 	public Method addMethod(String name) throws NavajoException {
