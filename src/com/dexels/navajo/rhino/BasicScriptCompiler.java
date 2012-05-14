@@ -666,7 +666,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			}
 		}
 		if(selectionSelected==null) {
-			selectionSelected = "0";
+			selectionSelected = "false";
 		}
 		os.writeln("addProperty(\"" + propertyName + "\",null,"+ attributeObject + ",function() {");
 		os.in();
@@ -753,7 +753,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		}
 		os.writeln("addSelectionToProperty(prop,\"" + s.getStringAttribute("name")
 				+ "\",\"" + s.getStringAttribute("value") + "\","
-				+ s.getStringAttribute("selected") + ");");
+				+ "\"" + s.getStringAttribute("selected") + "\");");
 		if (condition != null && !condition.equals("")) {
 			os.out();
 			os.writeln("}");
