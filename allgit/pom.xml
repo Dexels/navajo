@@ -14,7 +14,7 @@
 		<module>../../com.dexels.navajo.tipi.echo.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.flickr.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.jabber.feature/allgit</module>
-		<module>../../com.dexels.navajo.tipi.jogl.feature/allgit</module>
+		<!-- <module>../../com.dexels.navajo.tipi.jogl.feature/allgit</module>-->
 		<module>../../com.dexels.navajo.tipi.mail.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.rcp.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.rss.feature/allgit</module>
@@ -27,7 +27,7 @@
 		<module>../../com.dexels.navajo.tipi.swing.geo.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.swing.rich.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.swing.mig.feature/allgit</module>
-		<module>../../com.dexels.navajo.tipi.swing.rdf.feature/allgit</module> 
+		<!-- <module>../../com.dexels.navajo.tipi.swing.rdf.feature/allgit</module>  -->
 		<module>../../com.dexels.navajo.tipi.swing.substance.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.swing.svg.feature/allgit</module> 
 		<module>../</module>
