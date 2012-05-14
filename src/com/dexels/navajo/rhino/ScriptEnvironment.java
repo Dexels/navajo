@@ -280,7 +280,11 @@ public abstract class ScriptEnvironment implements Serializable {
 			literalValue = attributes.get(Property.PROPERTY_VALUE);
 			String lengthString = attributes.get(Property.PROPERTY_LENGTH);
 			if(lengthString!=null) {
+				try {
 				length = Integer.parseInt(lengthString);
+				} catch (Exception e) {
+					logger.warn("Invalid integer: " + lengthString);
+				}
 			}
 			navajoType = attributes.get(Property.PROPERTY_TYPE);
 		}
