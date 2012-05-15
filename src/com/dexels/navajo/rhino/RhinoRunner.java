@@ -231,6 +231,11 @@ public class RhinoRunner {
 //			cx.executeScriptWithContinuations(includeRun, globalScope);
 	
 			try {
+				/**
+				 * TODO: NEXT TWO evaluateReader() steps consume most of the time for simple scripts.
+				 * find another way of including includeCompiled.js only once in generated script.
+				 * Why is include.js needed??
+				 */
 				cx.evaluateReader(globalScope, includeCompiledReader, "includeCompiled.js", 1, null);
 				cx.evaluateReader(globalScope, includeReader, "include.js", 1, null);
 				cx.evaluateReader(globalScope, fileReader, a.getRpcName()+ ".js", 1, null);
@@ -297,6 +302,7 @@ public class RhinoRunner {
 			}
 			fileReader.close();
 			includeReader.close();
+			includeCompiledReader.close();
 		}
 		// special case without interruptions. What to do?
 	}
