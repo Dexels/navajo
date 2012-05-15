@@ -63,4 +63,6 @@ public abstract class ServiceHandler implements Constructor {
         return doService();
     }
 
+    public abstract boolean needsRecompile();
+    
 }

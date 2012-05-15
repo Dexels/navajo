@@ -435,7 +435,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
 		  // POINT... ALSO THE CURRENT NEEDSRECOMPILE DOES NOT CHECK DIRTY DEPENDENCIES!!
 		  // ALSO I DO NOT WANT CACHECONTROLLER DEPENDENCY @ THIS POINT.
 		  long expirationInterval = CacheController.getInstance().getExpirationInterval(access.rpcName);
-		  if ( expirationInterval > 0 && GenericHandler.needsRecompile(access ) ) {
+		  if ( expirationInterval > 0 && sh.needsRecompile() ) {
 			  expirationInterval = -1;
 		  }
 		  

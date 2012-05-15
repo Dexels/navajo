@@ -287,7 +287,7 @@ public final class GenericHandler extends ServiceHandler {
      * @param a
      * @return
      */
-    public final static boolean needsRecompile(Access a) {
+    public final static boolean needsRecompileForScript(Access a) {
     	Object [] all = getScriptPathServiceNameAndScriptFile(a.rpcName, a.betaUser);
  		if(all==null) {
  			return false;
@@ -304,6 +304,10 @@ public final class GenericHandler extends ServiceHandler {
     	             hasDirtyDepedencies(a, className));
     	//System.err.println(">>>>>>>>>>>>>>>>>>>>>>> needsRecompile()... " + nr);
     	return nr;
+    }
+    
+    public boolean needsRecompile() {
+    	return needsRecompileForScript(this.access);
     }
     
     public static CompiledScript compileScript(Access a, StringBuffer compilerErrors) throws Exception {
