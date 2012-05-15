@@ -60,10 +60,7 @@ public class RhinoHandler extends ServiceHandler {
 
 	public static CompiledScript compileScript(Access a,
 			StringBuffer compilerErrors) throws Exception {
-
-
-		// TODO reuse this bugger
-		BasicScriptCompiler compiler = new BasicScriptCompiler();
+		
 		InputStream inStr = DispatcherFactory.getInstance().getNavajoConfig()
 				.getScript(a.getRpcName());
 		File compiledPath = new File(DispatcherFactory.getInstance()
@@ -85,6 +82,9 @@ public class RhinoHandler extends ServiceHandler {
 			logger.info("Skipping compile step!");
 		} else {
 
+			// TODO reuse this bugger
+			BasicScriptCompiler compiler = new BasicScriptCompiler();
+			
 			logger.info("Compiling: " + compiledPath.getAbsolutePath()
 					+ " to: " + scriptPath.getAbsolutePath()
 					+ " (actually the other way around)");
