@@ -124,4 +124,10 @@ public class RhinoHandler extends ServiceHandler {
 
 	}
 
+	@Override
+	public boolean needsRecompile() {
+		logger.warn("Need to implement needsRecompile() for RhinoHandler.");
+		return false;
+	}
+
 }
