@@ -490,11 +490,17 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		Map<String, String> attr = createAttributesFromElement(current, MESSAGE_ATTRIBUTES);
 		String attributeObject = createAttributeObject(attr);
 
+		String fieldName = "";
+		if ( current.getFirstChild() != null && current.getFirstChild().getName().equals("map") ) {
+			fieldName = ( current.getFirstChild().getAttribute("ref") != null ? current.getFirstChild().getAttribute("ref").toString() : "");
+		}
+		
 		if (Message.MSG_TYPE_ARRAY.equals(current.getStringAttribute("type"))) {
 			os.writeln("addArrayMessage(\"" + name + "\",function() {");
 		} else {
-			os.writeln("addMessage(\"" + name + "\",function() {");
+			os.writeln("addMessage(\"" + name + "\",\"" + fieldName + "\",function() {");
 		}
+		
 		os.in();
 		for (XMLElement c : current.getChildren()) {
 			process(c, os);
