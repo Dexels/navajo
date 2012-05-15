@@ -83,24 +83,26 @@ function callReferenceMap(field,filter,callback){
 		for(a in ref) {
 			//env.log('Entering loop');
 			//env.log('Element: '+ref[a]);
-			env.addElement();
+			
 			env.pushMappableTreeNode(ref[a]);
 			if((filter==null || filter==undefined) || evaluateNavajo(filter)==true) {
+			    env.addElement();
 				callback(ref[a]);
+				//env.log('Should be poppin the element now:');
+			    env.popElement();
 			} else {
 				env.log("FILTER FAILED!");
 			}
 
 			env.popMappableTreeNode();
-			//env.log('Should be poppin the element now:');
-			env.popElement();
+			
 		}
 	} else {
 		//env.log('it is not an array');
 		ref = env.createMapRef(field);
-			env.pushMappableTreeNode(ref);
-			callback(ref);
-			env.popMappableTreeNode();
+		env.pushMappableTreeNode(ref);
+		callback(ref);
+		env.popMappableTreeNode();
 	}
 	//env.popMappableTreeNode();
 }
