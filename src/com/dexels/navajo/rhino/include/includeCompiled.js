@@ -105,8 +105,7 @@ function callReferenceMap(field,filter,callback){
 	//env.popMappableTreeNode();
 }
     
-
-
+    
 function callReferenceMapSelection(field,filter,callback){
 	//ref = env.pushMapReference(field);
 	if(callback==undefined) {
@@ -337,11 +336,24 @@ function addAttributes(object, attributes) {
 	}
 }
 
-function addMessage(messageName, callback,attributes) {
-	result = env.addMessage(messageName,attributes);
+function addMessage(messageName, callback, attributes) {
+	return addMessage(messageName, null, callback, attributes);
+}
+
+function addMessage(messageName, field, callback,attributes) {
+    //env.log('Message added in addMessage: ' + messageName);
+    //env.log('field: ' + field);
+    if ( field != null && field != '' && env.isArrayMapRef(field) ) {
+    	result = env.addArrayMessage(messageName,attributes);
+    	//env.log('Added array message!!!');
+    } else {
+		result = env.addMessage(messageName,attributes);
+	}
+	
 	if(callback!=undefined && callback!=null) {
 		callback();
 	}
+	//env.log('Popping message: ' + messageName);
 	env.popMessage();
 	return result;
 }
@@ -366,8 +378,8 @@ function addErrorMessage(message, code, body) {
 
 
 
-function addArrayMessage(messageName, callback) {
-	result = env.addArrayMessage(messageName);
+function addArrayMessage(messageName, callback, attributes) {
+	result = env.addArrayMessage(messageName,attributes);
 	if(callback!=undefined && callback!=null) {
 		callback();
 	}
