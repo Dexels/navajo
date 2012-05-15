@@ -651,6 +651,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		String attributeObject = createAttributeObject(attributes);
 		XMLElement map = current.getChildByTagName("map");
 		String refName = map.getStringAttribute("ref");
+		String filter = map.getStringAttribute("filter");
 		String selectionValue = null;
 		String selectionName = null;
 		String selectionSelected = null;
@@ -676,7 +677,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		}
 		os.writeln("addProperty(\"" + propertyName + "\",null,"+ attributeObject + ",function() {");
 		os.in();
-		os.writeln("callReferenceMapSelection(\""+refName+"\",null,function() {");
+		os.writeln("callReferenceMapSelection(\""+refName+"\",\""+filter+"\",function() {");
 		os.in();
 		os.writeln("addSelection("+selectionName+","+selectionValue+","+selectionSelected+");");
 		os.out();
@@ -712,10 +713,11 @@ public class BasicScriptCompiler implements ScriptCompiler {
 
 		for (XMLElement xmlElement : refs) {
 			String field = xmlElement.getStringAttribute("ref");
+			String filter = xmlElement.getStringAttribute("filter");
 			String name = locateNamePropertyExpression(xmlElement);
 			String value = locateValuePropertyExpression(xmlElement);
 			String selected = locateSelectedPropertyExpression(xmlElement);
-			os.writeln("callReferenceMapSelection(\"" + field + "\",null,function() {");
+			os.writeln("callReferenceMapSelection(\"" + field + "\",\""+filter+"\",function() {");
 			os.in();
 			os.writeln("addSelection(\"" + name + "\",\""+ value + "\","+selected+");");
 			os.out();
