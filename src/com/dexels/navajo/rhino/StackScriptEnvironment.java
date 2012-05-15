@@ -630,18 +630,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 			}
 			pushMessage(mm[0]);
 			return mm[0];
-//			Message resolvedParent = MappingUtils.getParentMessage(parent, name);
-//			if(resolvedParent==null) {
-//				logger.warn("Null resolved parent in addmessage.");
-//			}
-//			boolean isArray = parent.isArrayMessage();
-//			MessageMappingUtils.getMessageObject(name, resolvedParent, true, parent.getRootDoc(), isArray, mode, -1)
-//			if (isArray) {
-//				return addElement();
-//			}
-//			Message m = super.addMessage(parent, name);
-			
-//			return m;
 		}
 		if (Navajo.class.isAssignableFrom(oo.getClass())) {
 			Navajo n = (Navajo)oo;
@@ -651,29 +639,17 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 			}
 			pushMessage(mm[0]);
 			return mm[0];
-//			Message m = super.addMessage((Navajo) oo, name);
-//			pushMessage(m);
-//			return m;
-
 		}
 
 		return null;
 	}
 
-	public Message addArrayMessage(String name) throws NavajoException {
-		Object oo = getTopmostElement(new Class[] { Message.class, Navajo.class });
-		if (Message.class.isAssignableFrom(oo.getClass())) {
-			Message m = super.addArrayMessage((Message) oo, name);
-			pushMessage(m);
-			return m;
-		}
-		if (Navajo.class.isAssignableFrom(oo.getClass())) {
-			Message m = super.addArrayMessage((Navajo) oo, name);
-			pushMessage(m);
-			return m;
+	public Message addArrayMessage(String name,Map<String, String> attributes) throws NavajoException, MappingException, IOException, SAXException {
+		
+		Map<String,String> cloneAttributes = new HashMap<String,String>(attributes);
+		cloneAttributes.put(Message.MSG_TYPE, Message.MSG_TYPE_ARRAY);
+		return addMessage(name, cloneAttributes);
 
-		}
-		return null;
 	}
 
 	public Message addParamArrayMessage(String name) throws NavajoException {
