@@ -14,34 +14,38 @@ public class ConditionError extends RuntimeException {
 	 * 
 	 */
 	private static final long serialVersionUID = 5199659554341354411L;
-	private Navajo conditionNavajo;
+	private Navajo conditionNavajo = null;
 	private Message conditionMessage;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(ConditionError.class);
 	
 	public ConditionError() {
-		conditionNavajo = NavajoFactory.getInstance().createNavajo();
-		conditionMessage = NavajoFactory.getInstance().createMessage(
-				conditionNavajo, "ConditionErrors", Message.MSG_TYPE_ARRAY);
-		try {
-			conditionNavajo.addMessage(conditionMessage);
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public Navajo getConditionErrors() {
 		return conditionNavajo;
 	}
 
-	public void append(int code, String description) {
+	public void append(String code, String description) {
+		
+		if ( conditionNavajo == null ) {
+			conditionNavajo = NavajoFactory.getInstance().createNavajo();
+			conditionMessage = NavajoFactory.getInstance().createMessage(
+					conditionNavajo, "ConditionErrors", Message.MSG_TYPE_ARRAY);
+			try {
+				conditionNavajo.addMessage(conditionMessage);
+			} catch (NavajoException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		Message m = NavajoFactory.getInstance().createMessage(conditionNavajo,
 				"ConditionErrors", Message.MSG_TYPE_ARRAY_ELEMENT);
 		conditionMessage.addElement(m);
 		try {
 			Property codeProperty = NavajoFactory.getInstance().createProperty(
-					conditionNavajo, "Code", Property.INTEGER_PROPERTY,
+					conditionNavajo, "Id", Property.STRING_PROPERTY,
 					"" + code, 0, "", Property.DIR_OUT);
 			Property descriptionProperty = NavajoFactory.getInstance()
 					.createProperty(conditionNavajo, "Description",
@@ -58,7 +62,7 @@ public class ConditionError extends RuntimeException {
 	}
 
 	public boolean hasConditionErrors() {
-		return conditionMessage.getArraySize() > 0;
+		return (conditionMessage != null && conditionMessage.getArraySize() > 0);
 	}
 
 }
