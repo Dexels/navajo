@@ -440,12 +440,16 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			throws IOException {
 		String conditionExpression = current.getContent().trim().replaceAll("\\n", " ").replaceAll("\n", "\\\\\n");
 		String unesc = XMLutils.XMLUnescape(conditionExpression);
-		int code = current.getIntAttribute("code");
+		String code = current.getStringAttribute("code");
 		String description = current.getStringAttribute("description");
 
-		os.writeln("if(!evaluateNavajo(\"" + unesc + "\")==true) {");
+		os.writeln("if(evaluateNavajo(\"" + unesc + "\")==false) {");
 		os.in();
-		os.writeln("appendConditionError(" + code + "," + description + ");");
+		if ( description != null ) {
+		os.writeln("appendConditionError(\"" + code + "\",\"" + description + "\");");
+		} else {
+			os.writeln("appendConditionError(\"" + code + "\",null);");
+		}
 		os.out();
 		os.writeln("} else {");
 		os.in();
@@ -677,7 +681,11 @@ public class BasicScriptCompiler implements ScriptCompiler {
 		}
 		os.writeln("addProperty(\"" + propertyName + "\",null,"+ attributeObject + ",function() {");
 		os.in();
-		os.writeln("callReferenceMapSelection(\""+refName+"\",\""+filter+"\",function() {");
+		if ( filter != null ) {
+			os.writeln("callReferenceMapSelection(\""+refName+"\",\""+filter+"\",function() {");
+		} else {
+			os.writeln("callReferenceMapSelection(\""+refName+"\",null,function() {");
+		}
 		os.in();
 		os.writeln("addSelection("+selectionName+","+selectionValue+","+selectionSelected+");");
 		os.out();
@@ -717,7 +725,11 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			String name = locateNamePropertyExpression(xmlElement);
 			String value = locateValuePropertyExpression(xmlElement);
 			String selected = locateSelectedPropertyExpression(xmlElement);
-			os.writeln("callReferenceMapSelection(\"" + field + "\",\""+filter+"\",function() {");
+			if ( filter != null ) {
+				os.writeln("callReferenceMapSelection(\"" + field + "\",\""+filter+"\",function() {");
+			} else {
+				os.writeln("callReferenceMapSelection(\"" + field + "\",null,function() {");
+			}
 			os.in();
 			os.writeln("addSelection(\"" + name + "\",\""+ value + "\","+selected+");");
 			os.out();
