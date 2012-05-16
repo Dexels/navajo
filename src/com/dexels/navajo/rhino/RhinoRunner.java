@@ -241,20 +241,25 @@ public class RhinoRunner {
 				cx.evaluateReader(globalScope, fileReader, a.getRpcName()+ ".js", 1, null);
 //			cx.executeScriptWithContinuations(scriptrun, globalScope);
 			} catch (JavaScriptException e) {
-				Object o = e.getValue();
 				
-				;
-				logger.error("ScriptStack: \n{}",e.getScriptStackTrace());
-//				o = Context.jsToJava(o, Object.class);
-				System.err.println("o: " + o);
-				if(o instanceof Throwable) {
-					logger.error("Exception:", (Throwable)o);
-				}
-				logger.error("Other exception:", e);
-				
-				if (o instanceof RuntimeException) {
-					RuntimeException t = (RuntimeException) o;
-					throw t;
+				if ( conditionError.getConditionErrors() != null ) {
+					a.setOutputDoc(conditionError.getConditionErrors());
+				} else {
+					Object o = e.getValue();
+
+					;
+					logger.error("ScriptStack: \n{}",e.getScriptStackTrace());
+					//				o = Context.jsToJava(o, Object.class);
+					System.err.println("o: " + o);
+					if(o instanceof Throwable) {
+						logger.error("Exception:", (Throwable)o);
+					}
+					logger.error("Other exception:", e);
+
+					if (o instanceof RuntimeException) {
+						RuntimeException t = (RuntimeException) o;
+						throw t;
+					}
 				}
 			}
 			// this only happens when the entire scripts runs without
