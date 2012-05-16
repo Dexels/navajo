@@ -15,9 +15,9 @@ function callMap(mapClass, callback) {
 			env.log("After store");
 		}
 	} catch(e) {
-		e.rhinoException.printStackTrace();
+		//e.rhinoException.printStackTrace();
 		env.killMap(map);
-		env.logException("Map problem:",e.rhinoException);
+		//env.logException("Map problem:",e.rhinoException);
 		throw (e.rhinoException);
 	}
 	// TODO: Handle exceptions and call kill()
@@ -41,31 +41,52 @@ function mapOntoMessage(field,path,filter,callback) {
 	}
 	i = 0;
 	if(isArr) {
-		ref = env.createMapRef(field);
-		list = mm.getAllMessages().toArray();
+	    // instead of createMapRef, use something else
+	    list = mm.getAllMessages().toArray();
+	    ref = env.createMapRefObjects(field, list.length);
+		
 		//env.log("Array size: "+list.length+" : "+ref.length);
-		count = Math.min(list.length,ref.length);
-		for(a=0; a<count; a++) {
+		//count = Math.min(list.length,ref.length);
+		for(a=0; a<list.length; a++) {
 			//env.log("Iteration: "+i+" message: "+list[a]);
 			env.pushMappableTreeNode(ref[a]);
+			env.loadMap(ref[a]);
 			env.pushInputMessage(list[a]);
-			if((filter==null || filter==undefined) || evaluateNavajo(filter)==true) {
-				callback(ref[a],list[a]);
-			} else {
-				env.log("FILTER FAILED!");
+			try {
+				if((filter==null || filter==undefined) || evaluateNavajo(filter)==true) {
+					callback(ref[a],list[a]);
+				} else {
+					env.log("FILTER FAILED!");
+				}
+				env.storeMap(ref[a]);
+			} catch(e) {
+				e.rhinoException.printStackTrace();
+				env.killMap(ref[a]);
+				env.logException("Map problem:",e.rhinoException);
+				throw (e.rhinoException);
 			}
 			env.popMappableTreeNode();
 			env.popInputMessage();
 			i++;
 		}
 	} else {
+	    ref = env.createMapRefObjects(field, list.length);
+	    env.pushMappableTreeNode(ref);
+	    env.loadMap(ref);
 		mm = env.getInputMessage(path);
 		env.pushInputMessage(mm);
-		ref = env.createMapRef(field);
-		callback(ref);
+		try {
+			callback(ref);
+		} catch(e) {
+				e.rhinoException.printStackTrace();
+				env.killMap(ref);
+				env.logException("Map problem:",e.rhinoException);
+				throw (e.rhinoException);
+			}
+	    env.popMappableTreeNode();
 		env.popInputMessage();
 	}
-	env.popMappableTreeNode();
+	//env.popMappableTreeNode();
 }
 
 function callReferenceMap(field,filter,callback){

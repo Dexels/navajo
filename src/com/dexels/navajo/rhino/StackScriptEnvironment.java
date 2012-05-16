@@ -1,6 +1,7 @@
 package com.dexels.navajo.rhino;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.mapping.MappingException;
 import com.dexels.navajo.mapping.MappingUtils;
@@ -33,7 +35,8 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	private final Map<Navajo, String> myInverseNavajoMap = new HashMap<Navajo, String>();
 	private final Stack<Object> myElementStack = new Stack<Object>();
 	private final Stack<MappableTreeNode> treeNodeStack = new Stack<MappableTreeNode>();
-
+	private final Map<String, Boolean> isArrayRef = new HashMap<String,Boolean>();
+	
 	private Message currentParamMessage = null;
 
 	public StackScriptEnvironment() {
@@ -206,28 +209,25 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		pushMappableTreeNode(map);
 	}
 
-	public boolean isArrayMapRef(String fieldName)
+	public final boolean isArrayMapRef(String fieldName)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchMethodException {
-		String fieldGetter = "get" + fieldName.substring(0, 1).toUpperCase()
-				+ fieldName.substring(1);
 		Object map = getCurrentTreeNode().getMyMap();
-		System.err.println("Getting field: " + fieldGetter
-				+ " from object type: " + map.getClass().getName());
-		// debugTreeNodeStack();
-		java.lang.reflect.Method[] methods = map.getClass().getMethods();
-		for (java.lang.reflect.Method method : methods) {
-			// System.err.println("Examining method: "+method.toString()+" in class: "+map.getClass());
-			if (method.getName().equals(fieldGetter)) {
-				// log("found qualified getter");
-//				int paramCount = method.getParameterTypes().length;
-				// log("Params in ref: "+paramCount);
-				return method.getReturnType().isArray();
+		String key = map.getClass().getName()+"."+fieldName;
+		if ( !isArrayRef.containsKey(key)) {
+			try {
+				boolean result = MappingUtils.isArrayAttribute(map.getClass(), fieldName);
+				isArrayRef.put(key, result);
+				return result;
+			} catch (Exception e) {
+				throw new NoSuchMethodException(fieldName + " in object: " + map);
 			}
+		} else {
+			return isArrayRef.get(key).booleanValue();
 		}
-		throw new NoSuchMethodException(fieldGetter + "in object: " + map);
+		
 	}
-
+	
 	public void debugTreeNodeStack(String message) {
 		log("DEBUG TREE: " + message);
 		if (treeNodeStack.isEmpty()) {
@@ -239,6 +239,29 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		}
 	}
 
+	public Object createMapRefObjects(String fieldName, int count) 
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, SecurityException, NoSuchFieldException, InstantiationException {
+		Object map = getCurrentTreeNode().getMyMap();
+		Class fieldType = null; 
+		if (isArrayMapRef(fieldName)) {
+			fieldType = map.getClass().getField(fieldName).getType().getComponentType();
+			System.err.println("IN CREATEMAPREFSOBJECT (ARRAY): " + fieldType + ", COUNT=" + count);
+			Object fieldArrayObject = Array.newInstance(fieldType, count);
+			for ( int i = 0; i < count; i++) {
+				Object fieldObject = fieldType.newInstance();
+				Array.set(fieldArrayObject, i, fieldObject);
+			}
+			return fieldArrayObject;
+		} else {
+			fieldType = map.getClass().getField(fieldName).getType();
+			Object fieldObject = fieldType.newInstance();
+			System.err.println("IN CREATEMAPREFSOBJECT: " + fieldType + ", COUNT="+count);
+			return fieldObject;
+			
+		}
+		
+	}
+	
 	// includes a stack push!
 	public Object createMapRef(String fieldName) throws IllegalAccessException,
 			InvocationTargetException {
