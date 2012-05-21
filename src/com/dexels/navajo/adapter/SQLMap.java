@@ -247,6 +247,8 @@ private static Object semaphore = new Object();
     String autoCommitStr = ( body.getProperty("autocommit") != null ? body.getProperty("autocommit").getValue() : "" ); 
     boolean ac = (autoCommitStr.equals("") ||
                   autoCommitStr.equalsIgnoreCase("true"));
+    String type = ( body.getProperty("type") != null ? body.getProperty("type").getValue() : "");
+    
 //    DbConnectionBroker myBroker = null;
     autoCommitMap.put(dataSourceName, new Boolean(ac));
 
@@ -265,7 +267,7 @@ private static Object semaphore = new Object();
     try {
     	fixedBroker.put(dataSourceName, driver, url, username, password,
     			minConnections, maxConnections, logFile,
-    			refresh, new Boolean(ac), false);
+    			refresh, new Boolean(ac), false, type);
     }
     catch (ClassNotFoundException e) {
       throw new UserException( -1, e.toString(),e);
@@ -458,7 +460,11 @@ private static Object semaphore = new Object();
 		  
 		  String resetSession = null;
 		  if ( myConnectionBroker != null && this.alternativeUsername != null ) {
-			  resetSession = "ALTER SESSION SET CURRENT_SCHEMA = " + myConnectionBroker.getUsername();
+			  if ( "postgresql".equals(myConnectionBroker.getDbIdentifier()) ) {
+				  resetSession = "SET SEARCH_PATH TO " + myConnectionBroker.getUsername();
+			  } else {
+				  resetSession = "ALTER SESSION SET CURRENT_SCHEMA = " + myConnectionBroker.getUsername();
+			  }
 		  }
 		  try {
 			  if (con != null && !con.isClosed() ) {
@@ -894,7 +900,12 @@ private static Object semaphore = new Object();
       if ( this.alternativeUsername != null ) { // Only works for Oracle...
     	  try {
     		  // Now set current_schema...
-    		  PreparedStatement stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.alternativeUsername);
+    		  PreparedStatement stmt = null;
+    		  if ( "postgresql".equals(myConnectionBroker.getDbIdentifier()) ) {
+    			  stmt =  con.prepareStatement("SET SEARCH_PATH TO " + this.alternativeUsername);
+    		  } else {
+    			  stmt =  con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.alternativeUsername);
+    		  }
     		  stmt.executeUpdate();
     		  stmt.close();
     	  } catch (Exception e) {

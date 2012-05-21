@@ -68,7 +68,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 		  final String pwd, final int minconn,
 		  final int maxconn,
 		  final String lfile, final double rfrsh,
-		  final Boolean ac, final boolean forcecreation
+		  final Boolean ac, final boolean forcecreation,
+		  final String type
   ) throws ClassNotFoundException {
 	  
 	  SQLMapBroker broker = null;
@@ -109,7 +110,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 		  }
 		  else {
 			  // Create new broker.
-			  broker = new SQLMapBroker(dsrc, drv, url, usr, pwd, minconn, maxconn, lfile, rfrsh, ac);
+			  broker = new SQLMapBroker(dsrc, drv, url, usr, pwd, minconn, maxconn, lfile, rfrsh, ac, type);
 		  }
 		  
 		  // Create a new broker.
@@ -306,7 +307,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 		  try { 
 			  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
 					  broker.minconnections, broker.maxconnections, broker.logFile,
-					  broker.refresh, broker.autocommit, true);
+					  broker.refresh, broker.autocommit, true, broker.type);
 			  broker = ( (SQLMapBroker)this.brokerMap.get(datasource));
 			  broker.health = health;
 		  } catch (Exception e) {
@@ -340,7 +341,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 			  try { 
 				  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
 						   broker.minconnections, broker.maxconnections, broker.logFile,
-						   broker.refresh, broker.autocommit, true);
+						   broker.refresh, broker.autocommit, true, broker.type);
 				  broker = ( (SQLMapBroker)this.brokerMap.get(datasource));
 				  broker.health = health;
 			  } catch (Exception e) {
@@ -523,6 +524,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     public String datasource;
     public String driver;
     public String url;
+    public String type;
     
 	public String username;
     public String password;
@@ -542,7 +544,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
                         final String pwd, final int minconn,
                         final int maxconn,
                         final String lfile, final double rfrsh,
-                        final Boolean ac) {
+                        final Boolean ac, final String type) {
       this.datasource = dsrc;
       this.driver = drv;
       this.url = url;
@@ -553,6 +555,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
       this.logFile = lfile;
       this.refresh = rfrsh;
       this.autocommit = ac;
+      this.type = type;
 
     }
 
@@ -562,6 +565,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     			this.minconnections,
     			this.maxconnections, this.logFile,
     			this.refresh);
+    	this.broker.setDbIdentifier(this.type);
     	// Only get metadata if started in 'broker' mode (i.e. refresh > 0 )
     	if (this.broker != null && refresh > 0) {
     		Connection c = this.broker.getConnection();
@@ -586,7 +590,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
       final SQLMapBroker y = new SQLMapBroker(
           this.datasource, this.driver, this.url, this.username, this.password,
           this.minconnections,
-          this.maxconnections, this.logFile, this.refresh, this.autocommit);
+          this.maxconnections, this.logFile, this.refresh, this.autocommit, this.type);
       return (y);
     }
 
