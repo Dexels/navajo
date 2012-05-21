@@ -24,46 +24,21 @@
  */
 package com.dexels.navajo.server.statistics.impl;
 
-import java.io.IOException;
-
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 
 public final class TodoItem {
 	
-	Access myAccess;
+	final Access myAccess;
 	
-	public TodoItem(final Access a, final AsyncMappable am) throws IOException {
+	public TodoItem(final Access a, final AsyncMappable am)  {
 		asyncobject = am;
 		myAccess = a;
 	}
 	
 	public Access getAccessObject()  {
-//		ObjectInputStream ois = null;
-//		try {
-//			File f = new File(persistedFileName);
-//			ois = new ObjectInputStream(new FileInputStream(f));
-//			Access a = (Access) ois.readObject();
-//			return a;
-//		} catch (Exception e) {
-//			return null;
-//		} finally {
-//			if ( ois != null ) {
-//				try {
-//					ois.close();
-//				} catch (IOException e) {}
-//			}
-//		}
 		return myAccess;
 	}
 	
-	public void finalize() {
-		myAccess = null;
-//		if ( persistedFileName != null ) {
-//			new File(persistedFileName).delete();
-//		}
-	}
-	
-	//private final String persistedFileName;
 	public final AsyncMappable asyncobject;
 }

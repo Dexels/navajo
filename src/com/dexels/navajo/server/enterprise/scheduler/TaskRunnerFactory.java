@@ -31,7 +31,7 @@ public class TaskRunnerFactory {
 					Method m = c.getMethod("getInstance",(Class[])null);
 					ClockInterface myClock = (ClockInterface) m.invoke(dummy, (Object[])null);
 				} catch (Exception e) {
-					//e.printStackTrace(System.err);
+					e.printStackTrace(System.err);
 					AuditLog.log("INIT", "WARNING: Clock not available", Level.WARNING);
 				}	
 				try {
@@ -40,7 +40,7 @@ public class TaskRunnerFactory {
 					Method m = c.getMethod("getInstance",(Class[]) null);
 					instance = (TaskRunnerInterface) m.invoke(dummy, (Object[])null);
 				} catch (Exception e) {
-					//e.printStackTrace(System.err);
+					e.printStackTrace(System.err);
 					AuditLog.log("INIT", "WARNING: Scheduler not available", Level.WARNING);
 					instance = new DummyTaskRunner();
 				}	
@@ -50,7 +50,7 @@ public class TaskRunnerFactory {
 					Method m = c.getMethod("getInstance", (Class[])null);
 					m.invoke(dummy, (Object[])null);
 				} catch (Exception e) {
-					//e.printStackTrace(System.err);
+					e.printStackTrace(System.err);
 					AuditLog.log("INIT", "WARNING: Workflow not available", Level.WARNING);
 				}	
 				try {
@@ -59,7 +59,7 @@ public class TaskRunnerFactory {
 					Method m = c.getMethod("getInstance", (Class[])null);
 					m.invoke(dummy, (Object[])null);
 				} catch (Exception e) {
-					//e.printStackTrace(System.err);
+					e.printStackTrace(System.err);
 					AuditLog.log("INIT", "WARNING: Listener Runner not available", Level.WARNING);
 				}	
 				

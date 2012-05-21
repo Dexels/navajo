@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dexels.navajo.events.types.AuditLogEvent;
+import com.dexels.navajo.events.types.WorkflowEvent;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.statistics.impl.TodoItem;
@@ -58,6 +59,8 @@ public interface StoreInterface {
    */
   public void storeAuditLogs(final Set<AuditLogEvent> auditLogSet);
 
+  public void storeWorkflowEvents(final Set<WorkflowEvent> workflowEventSet);
+  
   /**
    * Set the url for the database.
    *
