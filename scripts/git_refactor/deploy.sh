@@ -5,6 +5,8 @@ export BASEPATH=$1
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export PATH=$PATH:$DIR:.
 teardown.sh navajo
+teardown.sh navajo_ios
+teardown.sh navajo_php
 teardown.sh sportlink
 teardown.sh internal
 teardown.sh targetplatform
@@ -13,4 +15,6 @@ setup.sh navajo
 setup.sh sportlink
 setup.sh internal
 setup.sh targetplatform
+setup.sh navajo_ios
+setup.sh navajo_php
 merge_all.sh 

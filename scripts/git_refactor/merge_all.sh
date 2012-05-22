@@ -55,7 +55,6 @@ genmerge.sh com.dexels.navajo.authentication.api
 export MODULEPATH=enterprise
 export REPOSITORY=internal
 
-# this one isn't correct, the second arg is ignored
 genmerge.sh com.dexels.navajo.wsdl
 genmerge.sh com.dexels.navajo.wsdl.feature
 genmerge.sh com.dexels.navajo.enterprise.feature
@@ -125,12 +124,15 @@ genmerge.sh com.dexels.navajo.remotetest
 genmerge.sh com.dexels.navajo.dev.navadoc
 
 
-export MODULEPATH=ios
+export REPOSITORY=navajo_ios
+export MODULEPATH=client
 genmerge.sh com.dexels.navajo.cocoa.client
 
-export MODULEPATH=php
+export REPOSITORY=navajo_php
+export MODULEPATH=client
 genmerge.sh com.dexels.navajo.client.php
 genmerge.sh com.dexels.navajo.client.php.library
+export MODULEPATH=joomla
 genmerge.sh com.dexels.navajo.php.joomla
 
 
