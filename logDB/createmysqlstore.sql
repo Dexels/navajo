@@ -42,6 +42,22 @@ queuelength     integer,
 PRIMARY KEY (access_id)
 );
 
+CREATE TABLE
+    NAVAJOWORKFLOW
+    (
+        NAME VARCHAR2(256) NOT NULL,
+        ID VARCHAR2(256) NOT NULL,
+        EVENTTIME DATE NOT NULL,
+        SEQ NUMBER,
+        EVENTTYPE VARCHAR2(256) NOT NULL,
+        CURRENTSTATE VARCHAR2(256) NOT NULL,
+        NEXTSTATE VARCHAR2(256),
+        TRIGGERNAME VARCHAR2(1024),
+        ACCESS_ID VARCHAR2(128),
+        WEBSERVICE VARCHAR2(256),
+        STATEDUMP BLOB
+    )
+    
 CREATE TABLE navajomap (
   access_id       varchar(128) not null,
   sequence_id     integer not null,
@@ -95,7 +111,7 @@ CREATE TABLE auditlog (
 );
 
 CREATE TABLE propertydescription  (
-   DESCRIPTIONID        INTEGER,
+   DESCRIPTIONID        INTEGER AUTO_INCREMENT NOT NULL,
    LOCALE               VARCHAR(32),                    
    SUBLOCALE            VARCHAR(32),
    NAME                 VARCHAR(255),

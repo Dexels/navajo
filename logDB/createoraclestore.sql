@@ -2,6 +2,35 @@
 --       replace all XXX by the actual union abbreviation in upper case
 --       before loading the script
 
+DROP TABLE NAVAJOWORKFLOW
+/
+
+CREATE TABLE
+    NAVAJOWORKFLOW
+    (
+        NAME VARCHAR2(256) NOT NULL,
+        ID VARCHAR2(256) NOT NULL,
+        EVENTTIME DATE NOT NULL,
+        SEQ NUMBER,
+        EVENTTYPE VARCHAR2(256) NOT NULL,
+        CURRENTSTATE VARCHAR2(256) NOT NULL,
+        NEXTSTATE VARCHAR2(256),
+        TRIGGERNAME VARCHAR2(1024),
+        ACCESS_ID VARCHAR2(128),
+        WEBSERVICE VARCHAR2(256),
+        STATEDUMP BLOB
+    )
+pctfree 20
+pctused 40
+storage
+(
+    initial 1024K
+    next 1024K
+    pctincrease 0
+)
+tablespace XXXKERN
+/
+
 DROP TABLE STATISTICS
 /
 
