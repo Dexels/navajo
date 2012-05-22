@@ -39,6 +39,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import navajo.Version;
@@ -120,7 +121,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
   private static boolean servicesStarted = false;
   
   protected  boolean matchCN = false;
-  public final Set<Access> accessSet = new HashSet<Access>();
+  public final Set<Access> accessSet = Collections.newSetFromMap(new ConcurrentHashMap<Access,Boolean>());
 
   public  boolean useAuthorisation = true;
   private  final String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
@@ -1003,10 +1004,8 @@ private ServiceHandler createHandler(String handler, Access access)
       else { // ACCESS GRANTED.
 
         access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
-        synchronized ( accessSet ) {
-        	accessSet.add(access);
-        }
-            
+        accessSet.add(access);
+      
         /**
          * Phase VIa: Check if scheduled webservice
          */
@@ -1145,9 +1144,7 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 		
 //		access.getOriginalRunnable().
 		// Remove access object from set of active webservices first.
-		synchronized (accessSet) {
-			accessSet.remove(access);
-		}
+		accessSet.remove(access);
 		// Set access to finished state.
 		access.setFinished();
 
