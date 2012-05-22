@@ -132,32 +132,7 @@ ctx.tmpdir = r'cvs2svn-tmp'
 # This first alternative is much slower but is better tested and has a
 # chance of working with CVSNT repositories.  It invokes CVS or RCS to
 # reconstuct the contents of CVS file revisions:
-ctx.revision_collector = GitRevisionCollector(
-    # The file in which to write the git-fast-import stream that
-    # contains the file revision contents:
-    'cvs2svn-tmp/git-blob.dat',
 
-    # The following option specifies how the revision contents of the
-    # RCS files should be read.
-    #
-    # RCSRevisionReader uses RCS's "co" program to extract the
-    # revision contents of the RCS files during CollectRevsPass.  The
-    # constructor argument specifies how to invoke the "co"
-    # executable.
-    #
-    # CVSRevisionReader uses the "cvs" program to extract the revision
-    # contents out of the RCS files during OutputPass.  This option is
-    # considerably slower than RCSRevisionReader because "cvs" is
-    # considerably slower than "co".  However, it works in some
-    # situations where RCSRevisionReader fails; see the HTML
-    # documentation of the "--use-cvs" option for details.  The
-    # constructor argument specifies how to invoke the "co"
-    # executable.
-    #
-    # Uncomment one of the two following lines:
-    #RCSRevisionReader(co_executable=r'co'),
-    CVSRevisionReader(cvs_executable=r'cvs'),
-    )
 # This second alternative is vastly faster than the version above.  It
 # uses an external Python program to reconstruct the contents of CVS
 # file revisions:
@@ -370,7 +345,7 @@ global_symbol_strategy_rules = [
 # record the original author (for example, the creation of a branch).
 # This should be a simple (unix-style) username, but it can be
 # translated into a git-style name by the author_transforms map.
-ctx.username = 'cvs2svn'
+ctx.username = 'gitmonkey'
 
 # ctx.file_property_setters and ctx.revision_property_setters contain
 # rules used to set the svn properties on files in the converted
@@ -486,7 +461,7 @@ ctx.cross_branch_commits = False
 # .gitignore files, so by default, the .cvsignore files are included
 # in the conversion output.  If you would like to omit the .cvsignore
 # files from the output, set this option to False:
-ctx.keep_cvsignore = True
+ctx.keep_cvsignore = False
 
 # By default, it is a fatal error for a CVS ",v" file to appear both
 # inside and outside of an "Attic" subdirectory (this should never
@@ -518,6 +493,13 @@ author_transforms={
     # the original author, as explained above.
     'cvs2svn' : 'cvs2svn <admin@example.com>',
     }
+    
+    author_transforms={
+    'frank' : ('Frank Lyaruu', 'frank@dexels.com'),
+    'arjen' : ('Arjen Schoneveld', 'arjen@dexels.com'),
+    'martin' : ('Martin Bergman', 'martin@dexels.com')
+    }
+    
 
 # This is the main option that causes cvs2svn to output to a
 # "fastimport"-format dumpfile rather than to Subversion:

@@ -1,6 +1,6 @@
 rm -rf $2
 rm -rf cvs2svn-tmp
-cvs2git --options=cvs2svn.options --username gitmonkey --fallback-encoding=ascii --encoding=utf_8 --blobfile=$2.blob --dumpfile=$2.dump /home/cvs/$1
+cvs2git --options=cvs2git.options --username gitmonkey --fallback-encoding=ascii --encoding=utf_8 --blobfile=$2.blob --dumpfile=$2.dump /home/cvs/$1
 mkdir $2
 cd $2 
 git init --bare
