@@ -53,7 +53,7 @@ genmerge.sh com.dexels.navajo.server.bridged.deploy
 genmerge.sh com.dexels.navajo.authentication.api
 
 export MODULEPATH=enterprise
-export REPOSITORY=internal
+export REPOSITORY=enterprise
 
 genmerge.sh com.dexels.navajo.wsdl
 genmerge.sh com.dexels.navajo.wsdl.feature
@@ -74,19 +74,13 @@ genmerge.sh com.dexels.navajo.enterprise.lucene
 genmerge.sh com.dexels.navajo.enterprise.agents
 
 export MODULEPATH=incubation
+export REPOSITORY=internal
 
 genmerge.sh com.dexels.navajo.enterprise.ideal
 genmerge.sh com.dexels.navajo.enterprise.ideal.sportlink
 
 
-export MODULEPATH=other
-export REPOSITORY=internal
 
-genmerge.sh com.dexels.navajo.other.feature
-genmerge.sh com.dexels.navajo.test.feature
-genmerge.sh com.dexels.navajo.test.remote
-genmerge.sh com.dexels.geospatial.imageprovider
-genmerge.sh com.dexels.utilities.smsgateway
 
 export MODULEPATH=demos
 #genmerge.sh com.dexels.demos.rdfbrowser
@@ -141,7 +135,6 @@ export MODULEPATH=libraries
 
 
 genmerge.sh com.sportlink.tipi.facilityoccupation
-genmerge.sh com.sportlink.client
 genmerge.sh com.sportlink.adapters
 genmerge.sh com.sportlink.crystal
 genmerge.sh com.sportlink.aaa
@@ -154,6 +147,7 @@ genmerge.sh com.sportlink.dba
 
 export MODULEPATH=applications
 
+genmerge.sh com.sportlink.client
 genmerge.sh com.sportlink.serv
 genmerge.sh com.sportlink.dwf.av
 genmerge.sh com.sportlink.club 
@@ -172,20 +166,7 @@ export MODULEPATH=documents
 genmerge.sh com.sportlink.analysis
 
 
-#customized, to change the names:
-
 export REPOSITORY=navajo
-
-
-export MODULEPATH=demos
-
-#genmerge.sh tipi.lesson.one
-#genmerge.sh tipi.lesson.two
-#genmerge.sh tipi.lesson.three
-#genmerge.sh tipi.lesson.four
-#genmerge.sh tipi.lesson.five
-#genmerge.sh tipi.lesson.six
-
 export MODULEPATH=optional
 
 genmerge.sh com.dexels.navajo.utilities
@@ -203,11 +184,19 @@ genmerge.sh com.dexels.navajo.workflow.editor.gmf
 #genmerge.sh com.dexels.navajo.workflow.editor.feature
 genmerge.sh com.dexels.navajo.function.pdf
 genmerge.sh com.dexels.navajo.fileuploadservlet
+genmerge.sh com.dexels.navajo.other.feature
+genmerge.sh com.dexels.navajo.test.feature
+genmerge.sh com.dexels.navajo.test.remote
 
 
+export MODULEPATH=other
+export REPOSITORY=internal
 
+genmerge.sh com.dexels.geospatial.imageprovider
+genmerge.sh com.dexels.utilities.smsgateway
 
 export MODULEPATH=tipi
+export REPOSITORY=navajo
 
 genmerge.sh com.dexels.navajo.tipi
 genmerge.sh com.dexels.navajo.tipi.feature

@@ -10,6 +10,7 @@ teardown.sh navajo_php
 teardown.sh sportlink
 teardown.sh internal
 teardown.sh targetplatform
+teardown.sh enterprise
 echo "About to setup:"
 setup.sh navajo
 setup.sh sportlink
@@ -17,4 +18,5 @@ setup.sh internal
 setup.sh targetplatform
 setup.sh navajo_ios
 setup.sh navajo_php
+setup.sh enterprise
 merge_all.sh 
