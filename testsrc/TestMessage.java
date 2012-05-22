@@ -345,6 +345,7 @@ public class TestMessage {
 	    Message m = testDoc.getMessage("testmessage/testmessage_sub1");
 	    Assert.assertNotNull(m);
 	    testDoc.removeMessage(m);
+	    testDoc.write(System.err);
 	    Message m2 = testDoc.getMessage("testmessage/testmessage_sub1");
 	    Assert.assertNull(m2);
 	    Message m3 = testDoc.getMessage("testmessage");
