@@ -78,8 +78,9 @@ export REPOSITORY=internal
 
 genmerge.sh com.dexels.navajo.enterprise.ideal
 genmerge.sh com.dexels.navajo.enterprise.ideal.sportlink
-
-
+genmerge.sh com.dexels.navajo.tipi.swing.3d
+genmerge.sh com.dexels.navajo.tipi.swing.jmonkeyengine
+genmerge.sh com.dexels.navajo.tipi.swing.stadiumdesign
 
 
 export MODULEPATH=demos
@@ -114,7 +115,6 @@ genmerge.sh com.dexels.navajo.dsl.tsl.model
 genmerge.sh com.dexels.navajo.dsl.tsl.ui
 genmerge.sh com.dexels.navajo.dsl.integration
 genmerge.sh com.dexels.navajo.dsl.feature
-genmerge.sh com.dexels.navajo.remotetest
 genmerge.sh com.dexels.navajo.dev.navadoc
 
 
