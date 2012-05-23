@@ -1,0 +1,23 @@
+Bundle-Name: Navajo Functions
+Bundle-SymbolicName: com.dexels.navajo.function
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 2.0.7.qualifier
+Bundle-Activator: navajofunctions.Version
+Export-Package: com.dexels.navajo.functions,
+ com.dexels.navajo.functions.scale,
+ com.dexels.navajo.functions.test,
+ navajofunctions
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.0",
+ com.dexels.navajo.core;bundle-version="2.9.0",
+ com.dexels.navajo.version;bundle-version="1.0.6"
+Import-Package: javax.imageio,
+ javax.imageio.plugins.jpeg,
+ javax.imageio.stream,
+ javax.swing,
+ org.junit,
+ org.junit.runners,
+ org.osgi.framework,
+ org.slf4j;version="1.6.1"
+Bundle-ActivationPolicy: lazy
