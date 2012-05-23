@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="TipiJabber" default="archive" basedir=".">
+
+	<!--
+	This file is suitable for copying / pasting to other projects.
+	Make sure you update the project name above, otherwise it might overwrite existing files on the server
+	-->
+	
+	<!-- Use tipi extension post processing. -->
+	<property name="tipiExtension" value="true" />
+	<property name="deployedDependencyJars" value="" />
+
+	<!-- Skip all unit tests. -->
+	<property name="notests" value="false" />
+
+	<!-- Abort the build if any tests fail. -->
+	<property name="haltontestfailure" value="false" />
+
+	<!--
+	Calls clean before every build. May be a bit slower (everything will be recompiled..)
+	-->
+	<property name="clean" value="true"/>
+
+	<!--
+	Set to true to call the build scripts on all dependencies too.
+	Not very efficient, but thorough.
+	-->
+	<property name="recursivebuild" value="false"/>
+
+	<!--
+	Create a zip-file of the binary jar, and all its dependencies.
+	-->
+
+	<property name="createbinaryzip" value="false"/>
+	<!--
+	Create a zip-file of the source and the test source
+	-->
+	<property name="createbinaryzip" value="false"/>
+
+	<!--
+	Upload all distribution files to a repository (using SCP)
+	Edit the build.properties file in DexelsVersionControl for locations / credentials.
+	-->
+	<property name="uploaddownloads" value="false"/>
+	
+	<!--
+	Build javadoc files of this project. Not all that useful, as it will not 'link' to other project's javadoc.
+	TODO: Build a centrally built javadoc repository at spiritus
+	-->
+	<property name="buildjavadoc" value="false"/>
+
+	<!--
+	Upload javadoc files of this project. This may take a while
+	-->
+	<property name="deployjavadocs" value="false"/>
+	
+	
+	<!--
+	Cleans up dependencies after building. They can safely be discarded, but they can prove useful
+	for debugging building problems
+	-->
+	<property name="cleanupdependencies" value="false"/>
+	
+	<!--
+	A comma separated list of Navajo project (e.g. DexelsVersionControl,NavajoDocument,NavajoClient)
+	You need to specify all of them, it will not include the dependencies of your dependencies (and so on..)
+	Make sure that the dependencies have been built properly (or set 'recursivebuild' to true)	
+	If there are no dependencies, supply an empty string.
+	
+	
+	The java compiler will use the following in its classpath:
+	1) The jar file in the root of the dependency
+	2) All jars in the 'libs' folder
+	3) All jars in the 'compilelibs' folder
+	Note: The difference between 'libs' and 'compilelibs' is that the libs will also be included in deploys
+	(for example WAR-files), and compilelibs will not. 
+	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
+	-->
+	<property name="dependencies" value="DexelsVersionControl,NavajoDocument,Navajo,NavajoClient,NavajoTipi" />
+
+	<import file="../DexelsVersionControl/ant/navajobuild.xml" />
+
+</project>
+<!-- EOF: $RCSfile$ -->
