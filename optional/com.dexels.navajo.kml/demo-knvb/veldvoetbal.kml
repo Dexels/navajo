@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+<Document>
+  <name>Spelers veldvoetbal per gemeente</name> 
+	<NetworkLink>
+	  <Region>
+          <LatLonAltBox>
+            <north>56</north>
+            <south>45</south>
+            <east>8</east>
+            <west>4</west>
+          </LatLonAltBox>
+          <Lod>
+            <minLodPixels>10000</minLodPixels>
+          </Lod>
+        </Region>	
+	  <name>Gemeente</name>
+	  <Link>
+	    <href>http://spiritus.dexels.nl:7080/gea/statistics/gemeente.jsp</href>
+	    <viewRefreshMode>onStop</viewRefreshMode>
+	    <viewRefreshTime>1</viewRefreshTime>	    	    
+	    <viewBoundScale>1.5</viewBoundScale>	    
+	  </Link>
+	</NetworkLink>
+  </Document> 
+</kml>

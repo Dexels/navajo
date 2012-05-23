@@ -1,0 +1,100 @@
+<kml xmlns="http://earth.google.com/kml/2.2">
+			<Document>
+
+				<name>Leeftijdscategorieen</name>
+	    					
+						
+						<Folder>
+							<name>Senioren</name>
+							<open>0</open>
+						</Folder>
+						
+						<Folder>
+							<name>Senioren Dames</name>
+
+							<open>0</open>
+						</Folder>
+						
+						<Folder>
+							<name>A-Junioren</name>
+							<open>0</open>
+						</Folder>
+						
+						<Folder>
+
+							<name>B-Junioren</name>
+							<open>0</open>
+						</Folder>
+						
+						<Folder>
+							<name>C-Junioren</name>
+							<open>0</open>
+						</Folder>
+
+						
+						<Folder>
+							<name>D-Pupillen</name>
+							<open>0</open>
+						</Folder>
+						
+						<Folder>
+							<name>E-Pupillen</name>
+							<open>0</open>
+
+						</Folder>
+						
+						<Folder>
+							<name>F-pupillen</name>
+							<open>0</open>
+						</Folder>
+						
+						<Folder>
+							<name>A-Junioren Dames</name>
+
+							<open>0</open>
+						</Folder>
+						
+						<Folder>
+							<name>B-Junioren Dames</name>
+							<open>0</open>
+						</Folder>
+						
+						<Folder>
+
+							<name>C-Junioren Dames</name>
+							<open>0</open>
+						</Folder>
+						
+						<Folder>
+							<name>F-pupillen (mini)</name>
+							<open>0</open>
+						</Folder>
+
+						
+						<Folder>
+							<name>F-pupillen (meisjes mini)</name>
+							<open>0</open>
+						</Folder>
+						
+						<Folder>
+							<name>D-Pupillen Meisjes</name>
+							<open>0</open>
+
+						</Folder>
+						
+						<Folder>
+							<name>E-Pupillen Meisjes</name>
+							<open>0</open>
+						</Folder>
+						
+						<Folder>
+							<name>F-Pupillen Meisjes</name>
+
+							<open>0</open>
+						</Folder>
+					
+					    
+			</Document>
+		</kml>
+	
+

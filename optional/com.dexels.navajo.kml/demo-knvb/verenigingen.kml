@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+<Document>
+  <name>Lijst van verenigingen</name> 
+	<NetworkLink>
+	  <Region>
+          <LatLonAltBox>
+            <north>56</north>
+            <south>45</south>
+            <east>8</east>
+            <west>4</west>
+          </LatLonAltBox>
+          <Lod>
+            <minLodPixels>5000</minLodPixels>
+          </Lod>
+        </Region>	
+	  <Link>
+	    <href>http://spiritus.dexels.nl:7080/gea/statistics/vereniging.jsp</href>	    
+	  </Link>
+	</NetworkLink>
+  </Document> 
+</kml>

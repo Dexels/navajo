@@ -1,0 +1,28 @@
+<tsl author="Frank" id="person/ProcessDeletePerson" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <message name="Result">
+         <map object="com.dexels.navajo.geo.KMLMap">
+           <field name="colorizer">
+               <expression value="'whiteorange'"/>
+            </field>
+        
+           <field name="title">
+               <expression value="'Aantal mothafocka's'"/>
+            </field>
+        
+           <field name="legendHeight">
+               <expression value="480"/>
+            </field>
+           <field name="legendWidth">
+               <expression value="140"/>
+            </field>
+             <field name="legendSteps">
+               <expression value="10"/>
+            </field>          
+            <property name="result">
+               <expression value="$kmlData"/>
+            </property>
+         </map>
+    </message>
+    <methods>
+     </methods> 
+</tsl>
