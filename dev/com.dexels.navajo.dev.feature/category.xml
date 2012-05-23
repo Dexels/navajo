@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.dexels.navajo.dev_1.0.2.jar" id="com.dexels.navajo.dev" version="1.0.2">
+      <category name="Navajo"/>
+   </feature>
+   <category-def name="Navajo" label="Navajo"/>
+</site>
