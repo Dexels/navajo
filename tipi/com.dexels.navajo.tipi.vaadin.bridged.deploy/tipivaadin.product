@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Tipi Vaadin" uid="com.dexels.navajo.tipi.vaadin" application="org.eclipse.ui.ide.workbench" version="1.0.1" useFeatures="false" includeLaunchers="false">
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>-consoleLog -console</programArgs>
+      <vmArgs>-Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dorg.osgi.service.http.port=8080</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages/>
+
+   <launcher>
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
+
+   <plugins>
+      <plugin id="ch.qos.logback.classic"/>
+      <plugin id="ch.qos.logback.core"/>
+      <plugin id="ch.qos.logback.slf4j" fragment="true"/>
+      <plugin id="com.dexels.navajo.client"/>
+      <plugin id="com.dexels.navajo.client.deps" fragment=""/>
+      <plugin id="com.dexels.navajo.core"/>
+      <plugin id="com.dexels.navajo.document"/>
+      <plugin id="com.dexels.navajo.function"/>
+      <plugin id="com.dexels.navajo.tipi"/>
+      <plugin id="com.dexels.navajo.tipi.mail"/>
+      <plugin id="com.dexels.navajo.tipi.ruby"/>
+      <plugin id="com.dexels.navajo.tipi.vaadin"/>
+      <plugin id="com.dexels.navajo.tipi.vaadin.embedded"/>
+      <plugin id="com.dexels.navajo.version"/>
+      <plugin id="javax.servlet"/>
+      <plugin id="javax.transaction" fragment="true"/>
+      <plugin id="org.apache.ant"/>
+      <plugin id="org.eclipse.core.contenttype"/>
+      <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.runtime"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.auth"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
+      <plugin id="org.eclipse.equinox.app"/>
+      <plugin id="org.eclipse.equinox.common"/>
+      <plugin id="org.eclipse.equinox.ds"/>
+      <plugin id="org.eclipse.equinox.http"/>
+      <plugin id="org.eclipse.equinox.http.registry"/>
+      <plugin id="org.eclipse.equinox.http.servlet"/>
+      <plugin id="org.eclipse.equinox.http.servletbridge"/>
+      <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.registry"/>
+      <plugin id="org.eclipse.equinox.servletbridge.extensionbundle" fragment="true"/>
+      <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
+      <plugin id="org.eclipse.equinox.util"/>
+      <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
+      <plugin id="org.eclipse.jetty.client"/>
+      <plugin id="org.eclipse.jetty.continuation"/>
+      <plugin id="org.eclipse.jetty.http"/>
+      <plugin id="org.eclipse.jetty.io"/>
+      <plugin id="org.eclipse.jetty.jmx"/>
+      <plugin id="org.eclipse.jetty.security"/>
+      <plugin id="org.eclipse.jetty.server"/>
+      <plugin id="org.eclipse.jetty.servlet"/>
+      <plugin id="org.eclipse.jetty.servlets"/>
+      <plugin id="org.eclipse.jetty.util"/>
+      <plugin id="org.eclipse.jetty.webapp"/>
+      <plugin id="org.eclipse.jetty.xml"/>
+      <plugin id="org.eclipse.net4j.jms.api" fragment=""/>
+      <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.services"/>
+      <plugin id="org.eclipse.update.configurator"/>
+      <plugin id="org.hamcrest.core"/>
+      <plugin id="org.junit"/>
+      <plugin id="org.mortbay.jetty.util"/>
+      <plugin id="org.slf4j.api"/>
+   </plugins>
+
+   <configurations>
+      <plugin id="ch.qos.logback.classic" autoStart="true" startLevel="0" />
+      <plugin id="ch.qos.logback.core" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.client" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.client.deps" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.core" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.document" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.function" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.tipi" autoStart="true" startLevel="3" />
+      <plugin id="com.dexels.navajo.tipi.mail" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.tipi.vaadin" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.tipi.vaadin.embedded" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.version" autoStart="true" startLevel="0" />
+      <plugin id="javax.servlet" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.ant" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.app" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.http.registry" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.http.servlet" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.http.servletbridge" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.preferences" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.registry" autoStart="false" startLevel="0" />
+      <plugin id="org.eclipse.equinox.util" autoStart="false" startLevel="0" />
+      <plugin id="org.eclipse.jetty.client" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.continuation" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.http" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.io" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.jmx" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.security" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.server" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.servlet" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.servlets" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.util" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.webapp" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.jetty.xml" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.net4j.jms.api" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+      <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="0" />
+      <plugin id="org.hamcrest.core" autoStart="true" startLevel="0" />
+      <plugin id="org.junit" autoStart="true" startLevel="0" />
+      <plugin id="org.mortbay.jetty.util" autoStart="false" startLevel="0" />
+      <plugin id="org.slf4j.api" autoStart="false" startLevel="0" />
+   </configurations>
+
+</product>
