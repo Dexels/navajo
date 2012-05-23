@@ -1,0 +1,472 @@
+//grammar com.dexels.navajo.dsl.tsl.Tsl with org.eclipse.xtext.common.Terminals //with com.dexels.navajo.dsl.expression.NavajoExpression
+grammar com.dexels.navajo.dsl.tsl.Tsl with com.dexels.navajo.dsl.expression.NavajoExpression hidden(WS, XMLComment)
+
+//import "platform:/resource/com.dexels.navajo.dsl.expression/src/com/dexels/navajo/dsl/expression/Navajo.ecore" as ncore
+//import "http://www.dexels.com/navajo/dsl/expression/NavajoExpression" as nexpr
+import "platform:/resource/com.dexels.navajo.dsl.expression.model/model/Expression.ecore" as nexpr
+import "platform:/resource/com.dexels.navajo.dsl.tsl.model/model/NavaScript.ecore" 
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+//com.dexels.navajo.dsl.expression/src-gen/com/dexels.navajo/dsl/expression/NavajoExpression.ecore"
+//generate tsl "http://www.dexels.com/navajo/dsl/tsl/NavajoTsl"
+
+
+
+
+Tml :
+	{Tml}
+	XMLHead?
+	NAVASCRIPT_START  (attributes+=PossibleExpression)* 
+	(
+		(XML_TAG_END 
+			((children+=Message) | (children+=Map)| (children+=Param) | (methods += Methods) | (children+=DebugTag)| (children+=Include) | (children+=Validations) | (children+=Comment))*
+		NAVASCRIPT_END
+		)
+	|	(
+		XML_TAG_SINGLEEND
+		)
+	);
+
+terminal XMLHead: '<?' -> '?>';
+terminal XMLComment: '<!--' -> '-->';
+terminal QUOTEQ: '"=';	
+terminal SEMICOLONQUOTE: ';"';
+
+terminal DOT: '.';
+
+
+terminal DEBUG_START_TAG:
+	 '<debug';
+terminal DEBUG_END_TAG:
+	 '</debug' XML_TAG_END;
+
+
+//terminal NAVASCRIPT_START:
+//	'<navascript';
+
+
+terminal EMPTYSTRING:
+	'""'
+;
+
+terminal ATTRIBUTESTRING	: 
+	('"' !('='|'"')* '"')
+;	
+
+terminal XML_START_ENDTAG:
+	'</'
+;
+	
+terminal XML_TAG_END: 
+	'>'
+;
+
+terminal XML_TAG_SINGLEEND: 
+	'/>'
+;
+
+terminal MAP_METHOD_STARTTAG_START: '<_';
+terminal MAP_METHOD_ENDTAG_START: '</_';
+
+
+//terminal XML_TAG_START: '<';
+
+
+terminal MAPENDKEYWORD: 
+	'</map'
+;
+
+terminal MAPSTARTKEYWORD: 
+	'<map' 
+;
+
+
+
+terminal INCLUDE_START_TAG:
+	 '<include'
+;
+
+terminal PROPERTY_START_TAG:
+	 '<property'
+;
+
+terminal REQUIRED_START_TAG:
+	 '<required'
+;
+
+terminal VALIDATIONS_START_TAG:
+	 '<validations'
+;
+terminal CHECK_START_TAG:
+	 '<check'
+;
+terminal COMMENT_START_TAG:
+	 '<comment'
+;
+
+terminal BREAK_START_TAG:
+	 '<break'
+;
+
+
+//
+terminal OPTION_START_TAG:
+	 '<option'
+;
+
+
+
+terminal BREAK_END_TAG: 
+	 '</break' XML_TAG_END
+;
+
+
+terminal OPTION_END_TAG: 
+	 '</option' XML_TAG_END
+;
+
+
+terminal REQUIRED_END_TAG: 
+	 '</required' XML_TAG_END
+;
+
+terminal INCLUDE_END_TAG: 
+	 '</include' XML_TAG_END
+;
+
+
+terminal PROPERTY_END_TAG: 
+	 '</property' XML_TAG_END
+;
+
+terminal COMMENT_END_TAG: 
+	 '</comment' XML_TAG_END
+;
+terminal VALIDATIONS_END_TAG: 
+	'</validations' XML_TAG_END
+;
+terminal CHECK_END_TAG: 
+	'</check' XML_TAG_END
+;
+
+
+terminal PARAM_END_TAG: 
+	'</param' XML_TAG_END
+;
+
+terminal MESSAGE_END_TAG: 
+	'</message' XML_TAG_END
+;
+
+terminal METHODS_END_TAG: 
+	 '</methods' XML_TAG_END
+;
+terminal METHOD_END_TAG: 
+	 '</method' XML_TAG_END
+;
+
+terminal FIELD_END_TAG: 
+	 '</field' XML_TAG_END
+;
+
+terminal EXPRESSION_START_TAG:
+	 '<expression'
+;
+
+terminal EXPRESSION_END_TAG:
+	 '</expression' XML_TAG_END
+;
+terminal PARAM_START_TAG:
+	 '<param'
+;
+
+terminal MESSAGE_START_TAG:
+	'<message'
+;
+
+terminal METHOD_START_TAG:
+	 '<method'
+;
+
+terminal METHODS_START_TAG:
+	 '<methods'
+;
+
+terminal FIELD_START_TAG:
+	 '<field'
+;
+terminal NAVASCRIPT_START:
+ //	XML_TAG_START NAVASCRIPT_KEYWORD;
+	'<navascript' | '<tsl';
+
+terminal  NAVASCRIPT_END:
+ 	//XML_START_ENDTAG NAVASCRIPT_KEYWORD XML_TAG_END;
+	('</navascript' XML_TAG_END ) | ('</tsl' XML_TAG_END)
+	;
+	
+
+
+// might need to add a lot more kywords here 'message' | 'comment' 
+AttributeName:
+	ID ;
+
+PossibleExpression:
+	(namespace= ID ':')? key=AttributeName '='
+	(
+		 QUOTEQ expressionValue=TopLevel endToken=SEMICOLONQUOTE
+		| value=ATTRIBUTESTRING
+		| value=EMPTYSTRING
+	)
+	;
+
+Methods :
+	METHODS_START_TAG {Methods} 
+	
+	((splitTag?=XML_TAG_END
+	(method+=Method)*
+	closedTag?=METHODS_END_TAG)
+	|
+	XML_TAG_SINGLEEND)
+	;
+	
+Method:
+	METHOD_START_TAG {Method}  (attributes+=PossibleExpression)* 
+	
+	((splitTag?=XML_TAG_END
+		(children+=Required)*
+	closedTag?=METHOD_END_TAG
+	)
+	|
+	XML_TAG_SINGLEEND
+	)
+	;	
+	
+
+Validations :
+	VALIDATIONS_START_TAG {Validations} 
+	
+	((splitTag?=XML_TAG_END
+	( children+=Check)*
+	closedTag?=VALIDATIONS_END_TAG)
+	|
+	XML_TAG_SINGLEEND)
+	;
+	
+Check:
+	CHECK_START_TAG {Check}  (attributes+=PossibleExpression)* 
+	
+	((splitTag?=XML_TAG_END
+		expression=TopLevel
+	closedTag?=CHECK_END_TAG
+	)
+	|
+	XML_TAG_SINGLEEND
+	)
+	;	
+	
+	
+Comment:
+	COMMENT_START_TAG {Comment}  (attributes+=PossibleExpression)* 
+	
+	((splitTag ?= XML_TAG_END
+//		expression=TopLevel
+	closedTag?=COMMENT_END_TAG
+	)
+	|
+	XML_TAG_SINGLEEND
+	)
+	;	
+	
+Break:
+	BREAK_START_TAG {Break}  (attributes+=PossibleExpression)* 
+	 
+	((splitTag ?= XML_TAG_END
+//		expression=TopLevel
+		closedTag?=BREAK_END_TAG
+	)
+	|
+	XML_TAG_SINGLEEND
+	)
+	;	
+
+// create Include entity in Model
+Include returns Method:
+	INCLUDE_START_TAG {Method}  
+		(attributes+=PossibleExpression)* 
+
+		(( splitTag?=XML_TAG_END closedTag?=INCLUDE_END_TAG) |
+	XML_TAG_SINGLEEND)
+	;	
+
+
+
+Message:
+	MESSAGE_START_TAG {Message}  (attributes+=PossibleExpression)* 
+	
+	((splitTag?=XML_TAG_END
+		((children+=Message) | (children+=Property) | (children+=Param)  | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) | (children+=Comment) | (children+=Break))*
+	closedTag ?= MESSAGE_END_TAG
+	)
+	|
+	XML_TAG_SINGLEEND
+	)
+	;
+
+
+
+
+Map returns Map:
+	MAPSTARTKEYWORD {Map} (
+		(DOT mapName=MapId (attributes+=PossibleExpression)*)
+	|	(attributes+=PossibleExpression)*
+	) 
+	(
+			( XML_TAG_SINGLEEND
+	| (splitTag?=XML_TAG_END
+		((children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) | (children+=Comment) | (children+=Break))*
+		
+		(MAPENDKEYWORD (DOT mapClosingName=MapId)? closedTag?=XML_TAG_END)
+	))
+	)
+	;
+	
+
+
+
+
+MapId:
+	ID;
+
+
+
+
+
+// doesn't seem to work. All are optional
+	
+//Modifier: static?='static'? & final?='final'? & visibility=Visibility;
+
+// ToDo Add ALL types!
+
+// this fails. All these possibilities will be tokens/keywords, so it will break other stuff.
+
+//PropertyTypes: STRING_PROPERTY='string' | INTEGER_PROPERTY='integer' | LONG_PROPERTY='long' | DATE_PROPERTY = "date" | FLOAT_PROPERTY = "float";
+//MessageTypes: MSG_TYPE_SIMPLE='simple' |  MSG_TYPE_ARRAY = "array" | MSG_TYPE_TABLE = "table";
+//MessageModes: MSG_MODE = "mode" | MSG_MODE_LAZY = "lazy" | MSG_MODE_IGNORE = "ignore" | MSG_MODE_OVERWRITE = "overwrite";
+
+// The direction 'inout' has been deprecated, so I've left that one out.
+//PropertyDirection: DIR_IN = "in" | DIR_OUT = "out";
+
+// '1' this makes 1 a keyword
+//PropertyCardinalities: CARDINALITY_SINGLE = "1" | CARDINALITY_MULTIPLE = "+";
+	
+
+
+Required: 
+	REQUIRED_START_TAG {Required} (attributes+=PossibleExpression)*
+	(
+		(XML_TAG_SINGLEEND)
+	|
+		( splitTag?=XML_TAG_END 	
+			closedTag ?= REQUIRED_END_TAG
+		)
+	);
+	
+
+	
+	
+Property:
+	PROPERTY_START_TAG {Property} (attributes+=PossibleExpression)* 
+	(
+		(XML_TAG_SINGLEEND)
+	|
+		( splitTag?=XML_TAG_END 	
+			(
+				children += ExpressionOrOption
+				|
+				children += Map
+		 	)*
+		closedTag ?= PROPERTY_END_TAG
+		)
+	);
+
+Param returns Param:
+	PARAM_START_TAG {Param} (attributes+=PossibleExpression)* 
+	(
+		(XML_TAG_SINGLEEND)
+	|
+		( splitTag?=XML_TAG_END 	
+			((children += ExpressionOrOption) | (children+=Map))*
+		closedTag ?= PARAM_END_TAG
+		)
+	);
+
+MapMethod returns MapMethod:
+	MAP_METHOD_STARTTAG_START  mapName = ID DOT methodName= AttributeName (attributes+=PossibleExpression)* 
+	(
+		(XML_TAG_SINGLEEND)
+	|
+		( splitTag?=XML_TAG_END 
+			((children += ExpressionOrOption) | (children+=Message) | (children+=Property) | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Field) | (children+=Comment) | (children+=Break))*
+		closedTag ?= MAP_METHOD_ENDTAG_START methodClosingName = ID DOT methodClosingMethod = ID XML_TAG_END
+		)
+	);
+	
+Field returns Field:
+	FIELD_START_TAG {Field} (attributes+=PossibleExpression)*  
+	(
+	 XML_TAG_SINGLEEND
+	 |
+	 ( splitTag?=XML_TAG_END
+		((children += ExpressionOrOption)  | (children+=Param) | (children+=Map) | (children+=MapMethod) | (children+=DebugTag) | (children+=Comment) | (children+=Break))*
+	 )
+	 closedTag ?= FIELD_END_TAG
+	)
+;
+
+DebugTag returns DebugTag:
+	DEBUG_START_TAG {DebugTag} (attributes+=PossibleExpression)* 
+	(
+		(XML_TAG_SINGLEEND)
+	|
+		( splitTag?=XML_TAG_END 	
+			(expression=TopLevel)?
+		closedTag ?= DEBUG_END_TAG
+		)
+	)	
+	;	
+
+ExpressionOrOption returns Element:
+		EXPRESSION_START_TAG ExpressionTag
+		|
+		OPTION_START_TAG Option
+		
+		
+;
+
+
+ExpressionTag returns ExpressionTag:
+	
+	{ExpressionTag} (attributes+=PossibleExpression)* 
+	(
+		XML_TAG_SINGLEEND
+	|
+		( splitTag?=XML_TAG_END 	
+			expression=TopLevel
+			
+		    closedTag ?= EXPRESSION_END_TAG
+		)
+	)	
+	;	
+	
+Option: 
+	 {Option} (attributes+=PossibleExpression)*
+	(
+		XML_TAG_SINGLEEND
+	|
+		( splitTag?=XML_TAG_END 	
+		closedTag ?= OPTION_END_TAG
+		)
+	);
+	
+
+	
