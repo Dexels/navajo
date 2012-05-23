@@ -1,0 +1,11 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo MySQL driver" name="Navajo MySQL driver" id="navajo.resource.mysql">
+    <AD name="url"    id="url"   required="true"  type="String" default="jdbc:mysql"/>   
+    <AD name="user"  id="user" required="false" type="String" default="demo"/>
+    <AD name="password"  id="password" required="false" type="String" default="demo"/>
+    <AD name="name"  id="name" required="false" type="String" default="navajo.resource.myjdbc"/>
+  </OCD>
+  <Designate pid="navajo.resource.mysql" factoryPid="navajo.resource.mysql">
+     <Object ocdref="navajo.resource.mysql"/>
+  </Designate>
+</metatype:MetaData>

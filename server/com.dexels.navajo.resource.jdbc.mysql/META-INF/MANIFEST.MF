@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JDBC Driver for H2 database
+Bundle-SymbolicName: com.dexels.navajo.resource.jdbc.mysql
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.dexels.navajo.resource.jdbc.mysql.Activator
+Bundle-Vendor: Dexels
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: javax.sql,
+ org.osgi.framework;version="1.3.0",
+ org.osgi.service.jdbc;version="1.0.0",
+ org.slf4j;version="1.6.1"
+Require-Bundle: com.mysql.jdbc;bundle-version="5.1.18",
+ com.dexels.navajo.resource;bundle-version="1.0.0"
