@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<functiondef>
+    <function name="MergePDF" class="com.dexels.navajo.pdf.functions.MergePDF">
+        <description>Merges two PDF documents</description>
+        <input>binary,binary</input>
+        <result>binary</result>
+    </function>    
+</functiondef>
