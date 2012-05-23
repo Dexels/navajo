@@ -7,20 +7,21 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
-import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.rhino.RhinoHandler;
 import com.dexels.navajo.server.HandlerFactory;
 import com.dexels.navajo.server.ServiceHandler;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
+	@SuppressWarnings("rawtypes")
 	private ServiceRegistration handler;
 
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
 		System.err.println("Starting Navajo Rhino");
-		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
+//		FunctionFactoryInterface fi= 
+		FunctionFactoryFactory.getInstance();
 //		RhinoRepository rp = new RhinoRepository();
 //		RepositoryFactory.registerRepository(
 //				"com.dexels.navajo.rhino.RhinoRepository", rp);

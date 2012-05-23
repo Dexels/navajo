@@ -18,7 +18,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.mapping.MappingException;
 import com.dexels.navajo.mapping.MappingUtils;
@@ -239,6 +238,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Object createMapRefObjects(String fieldName, int count) 
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, SecurityException, NoSuchFieldException, InstantiationException {
 		Object map = getCurrentTreeNode().getMyMap();

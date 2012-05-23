@@ -1,13 +1,8 @@
 package com.dexels.navajo.server.instance;
 
-import java.io.IOException;
-import java.util.Dictionary;
-import java.util.Hashtable;
-
 import javax.servlet.ServletContext;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
@@ -24,7 +19,7 @@ public class NavajoHttpServiceContextComponent {
 	private BundleContext bundleContext;
 	private NavajoContextFactory factory;
 	private HttpService httpService;
-	private ConfigurationAdmin configurationAdmin;
+//	private ConfigurationAdmin configurationAdmin;
 
 	public void activate(ComponentContext c) {
 		logger.info("Activating HTTP server component");
@@ -62,10 +57,10 @@ public class NavajoHttpServiceContextComponent {
 	}
 
 	protected void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
-		this.configurationAdmin = configurationAdmin;
+//		this.configurationAdmin = configurationAdmin;
 	}
 	protected void clearConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
-		this.configurationAdmin = null;
+//		this.configurationAdmin = null;
 	}
 
 }

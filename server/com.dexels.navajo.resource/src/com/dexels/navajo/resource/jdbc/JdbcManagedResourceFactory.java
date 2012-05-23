@@ -34,6 +34,7 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(JdbcManagedResourceFactory.class);
+	@SuppressWarnings("rawtypes")
 	private ServiceRegistration factoryRegistration;
 	
 	public JdbcManagedResourceFactory(BundleContext bc,DataSourceFactory factory, String pid, String name) {

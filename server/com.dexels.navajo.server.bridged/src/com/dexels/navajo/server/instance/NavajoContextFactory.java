@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.osgi.framework.BundleContext;
@@ -32,7 +31,9 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 
 	private static final String NQL_SERVLET_ALIAS = "/Nql";
 	private final Map<String,NavajoServerContext> contextMap = new HashMap<String, NavajoServerContext>();
+	@SuppressWarnings("rawtypes")
 	private final Map<String,ServiceRegistration> registryMap = new HashMap<String,ServiceRegistration>();
+	@SuppressWarnings("rawtypes")
 	private final ServiceRegistration factoryRegistration;
 	private final BundleContext bundleContext;
 	private final String pid;
@@ -42,7 +43,7 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 
 	
 	private HttpContext httpContext;
-	private ServletContext servletContext;
+//	private ServletContext servletContext;
 	private HttpService httpService;
 
 	private final static Logger logger = LoggerFactory.getLogger(NavajoContextFactory.class);
@@ -60,11 +61,13 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	public ServiceRegistration<ManagedServiceFactory> getFactoryRegistration() {
 		return factoryRegistration;
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void deleted(String pid) {
 		logger.info("Shutting down instance: "+pid);
@@ -147,7 +150,7 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 			NavajoContextListener ncl = new NavajoContextListener();
 			ncl.init(nqlServlet.getServletContext(),contextPath,servletPath,installPath);
 	
-			servletContext = legacyServlet.getServletContext();
+//			servletContext = legacyServlet.getServletContext();
 //			String contextPath = servletContext.getContextPath();
 //			String servletContextPath = servletContext.getRealPath("");
 //			String installationPath = NavajoContextListener.getInstallationPath(contextPath);
@@ -179,14 +182,14 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 	}
 
 	
+	@SuppressWarnings("rawtypes")
 	public void close() {
 		for (Entry<String,ServiceRegistration> s: registryMap.entrySet()) {
 			s.getValue().unregister();
 		}
 
-		for (Entry<String, NavajoServerContext> s: contextMap.entrySet()) {
-			// close individual datasources?
-		}
+//		for (Entry<String, NavajoServerContext> s: contextMap.entrySet()) {
+//		}
 
 		registryMap.clear();
 		contextMap.clear();

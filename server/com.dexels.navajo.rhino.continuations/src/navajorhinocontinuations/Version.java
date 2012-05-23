@@ -14,7 +14,9 @@ import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
+	@SuppressWarnings("rawtypes")
 	private final Set<ServiceRegistration> adapterRegs = new HashSet<ServiceRegistration>();
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
@@ -37,6 +39,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		}
 	
 	}
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void stop(BundleContext bc) throws Exception {
 		for (ServiceRegistration sr :adapterRegs) {

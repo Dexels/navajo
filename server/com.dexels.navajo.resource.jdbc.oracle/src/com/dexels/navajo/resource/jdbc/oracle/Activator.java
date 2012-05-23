@@ -16,7 +16,6 @@ public class Activator implements BundleActivator {
 	private static DataSourceFactory dataSourceFactory;
 	private static final Logger logger = LoggerFactory.getLogger(Activator.class);
 	
-	private javax.management.InstanceAlreadyExistsException inst;	
 
 	public static DataSourceFactory getDataSourceFactory() {
 		return dataSourceFactory;

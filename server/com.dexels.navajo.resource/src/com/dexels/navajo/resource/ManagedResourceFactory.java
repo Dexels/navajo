@@ -27,6 +27,7 @@ public abstract class ManagedResourceFactory<T> implements ManagedServiceFactory
 	private final Map<String,ServiceRegistration<T>> registryMap = new HashMap<String,ServiceRegistration<T>>();
 
 	private final static Logger logger = LoggerFactory.getLogger(ManagedResourceFactory.class);
+	@SuppressWarnings("rawtypes")
 	private ServiceRegistration factoryRegistration;
 	private Class<?> serviceClass;
 	
