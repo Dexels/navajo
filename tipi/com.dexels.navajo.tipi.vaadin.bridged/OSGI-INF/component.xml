@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="startup" deactivate="shutdown" name="com.dexels.navajo.tipi.vaadin.bridged">
+   <implementation class="com.dexels.navajo.tipi.vaadin.bridged.VaadinComponent"/>
+   <reference bind="setHttpService" cardinality="1..n" interface="org.osgi.service.http.HttpService" name="HttpService" policy="dynamic" unbind="removeHttpService"/>
+</scr:component>
+ 
