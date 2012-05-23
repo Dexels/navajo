@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+	<tipiclass addtocontainer="true" childcount="*" class="TipiTimeChart"
+		layoutmanager="false" module="dashboard" name="timechart"
+		package="com.dexels.navajo.tipi.charting" studio-icon="tabs.gif" type="tipi">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onLoad">
+				<param name="navajo" type="navajo" />
+				<param name="service" type="string" />
+			</event>
+		</events>
+		<values>
+			<value direction="in" name="x-axis" type="string" />
+			<value direction="in" name="series" type="string" />
+			<value direction="in" name="dataMessage" type="string" />
+			<value direction="in" name="label-x" type="string" />
+			<value direction="in" name="label-y" type="string" />
+			<value direction="in" name="title" type="string" />
+		</values>
+		<methods />
+	</tipiclass>
+	<tipiclass addtocontainer="true" childcount="*" class="TipiDialChart"
+		layoutmanager="false" module="dashboard" name="dialchart"
+		package="com.dexels.navajo.tipi.charting" studio-icon="tabs.gif" type="tipi">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onLoad">
+				<param name="navajo" type="navajo" />
+				<param name="service" type="string" />
+			</event>
+		</events>
+		<values>
+			<value direction="in" name="dataMessage" type="string" />
+			<value direction="in" name="dataProperty" type="string" />
+			<value direction="in" name="label-x" type="string" />
+			<value direction="in" name="label-y" type="string" />
+			<value direction="in" name="title" type="string" />
+			<value direction="in" name="size" type="integer" />
+			<value direction="in" name="background" type="resource" />
+			<value direction="in" name="range_minimum" type="float" />
+			<value direction="in" name="range_maximum" type="float" />
+		</values>
+		<methods>
+			<method name="setValue">
+				<param name="value" type="float" />
+			</method>
+		</methods>
+	</tipiclass>
+	<tipiclass addtocontainer="true" childcount="*"
+		class="TipiGenericChart" layoutmanager="false" module="dashboard"
+		name="chart" package="com.dexels.navajo.tipi.charting" studio-icon="tabs.gif"
+		type="tipi">
+		<events>
+			<event name="onInstantiate" />
+			<event name="onLoad">
+				<param name="navajo" type="navajo" />
+				<param name="service" type="string" />
+			</event>
+		</events>
+		<values>
+			<value direction="in" name="title" type="string" />
+			<value direction="in" name="series" type="string" />
+			<value direction="in" name="category" type="string" />
+			<value direction="in" name="value" type="string" />
+			<value direction="in" name="type" type="string" />
+			<value direction="in" name="messagePath" type="string" />
+		</values>
+		<methods>
+			<method name="render" />
+		</methods>
+	</tipiclass>
+</tid>
