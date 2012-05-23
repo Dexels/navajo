@@ -4,10 +4,10 @@
 echo $BASEPATH
 echo $PATH
 
-#export MODULEPATH=platform
-#export REPOSITORY=targetplatform
+export MODULEPATH=platform
+export REPOSITORY=targetplatform
 
-#genmerge.sh com.dexels.thirdparty.feature
+genmerge.sh com.dexels.thirdparty.feature
 
 export MODULEPATH=setup
 export REPOSITORY=navajo
@@ -52,61 +52,7 @@ genmerge.sh com.dexels.navajo.server.deploy
 genmerge.sh com.dexels.navajo.server.bridged.deploy
 genmerge.sh com.dexels.navajo.authentication.api
 
-export MODULEPATH=enterprise
-export REPOSITORY=enterprise
-
-genmerge.sh com.dexels.navajo.wsdl
-genmerge.sh com.dexels.navajo.wsdl.feature
-genmerge.sh com.dexels.navajo.enterprise.feature
-genmerge.sh com.dexels.navajo.enterprise.listeners
-genmerge.sh com.dexels.navajo.enterprise.adapters
-genmerge.sh com.dexels.navajo.enterprise
-genmerge.sh com.dexels.navajo.enterprise.listeners.deps
-genmerge.sh com.dexels.navajo.enterprise.adapters.deps
-genmerge.sh com.dexels.navajo.mongo.feature
-genmerge.sh com.dexels.navajo.mongo
-genmerge.sh com.dexels.navajo.mongo.navajostore
-
-genmerge.sh com.dexels.navajo.enterprise.openfire
-genmerge.sh com.dexels.navajo.enterprise.tomahawk
-genmerge.sh com.dexels.navajo.enterprise.dbreplication
-genmerge.sh com.dexels.navajo.enterprise.lucene
-genmerge.sh com.dexels.navajo.enterprise.agents
-
-export MODULEPATH=incubation
-export REPOSITORY=internal
-
-genmerge.sh com.dexels.navajo.enterprise.ideal
-genmerge.sh com.dexels.navajo.enterprise.ideal.sportlink
-genmerge.sh com.dexels.navajo.tipi.swing.3d
-genmerge.sh com.dexels.navajo.tipi.swing.jmonkeyengine
-genmerge.sh com.dexels.navajo.tipi.swing.stadiumdesign
-genmerge.sh com.dexels.navajo.geo.cbs.scrape
-
-export MODULEPATH=demos
-#genmerge.sh com.dexels.demos.rdfbrowser
-genmerge.sh com.dexels.demos.ticketing
-genmerge.sh com.dexels.demos.peelpage
-genmerge.sh com.dexels.demos.pinkroccade.adapters 
-genmerge.sh com.dexels.demos.pinkroccade.ei
-genmerge.sh com.dexels.demos.stadiumdesigner
-genmerge.sh com.dexels.demos.tipidashboard
-genmerge.sh com.dexels.navajo.dashboard
-genmerge.sh tipi.lessone.one
-genmerge.sh tipi.lessone.two
-genmerge.sh tipi.lessone.three
-genmerge.sh tipi.lessone.four
-genmerge.sh tipi.lessone.five
-genmerge.sh tipi.lessone.six
-
-export MODULEPATH=papers
-genmerge.sh com.dexels.documents
-genmerge.sh com.dexels.papers
-genmerge.sh com.dexels.documents.other
-genmerge.sh com.dexels.documents.ticketing
-
 export MODULEPATH=dev
-export REPOSITORY=navajo
 
 genmerge.sh com.dexels.navajo.birt.push 
 genmerge.sh com.dexels.navajo.dev.feature 
@@ -122,20 +68,6 @@ genmerge.sh com.dexels.navajo.dsl.tsl.ui
 genmerge.sh com.dexels.navajo.dsl.integration
 genmerge.sh com.dexels.navajo.dsl.feature
 genmerge.sh com.dexels.navajo.dev.navadoc
-
-
-export REPOSITORY=navajo_ios
-export MODULEPATH=client
-genmerge.sh com.dexels.navajo.cocoa.client
-
-export REPOSITORY=navajo_php
-export MODULEPATH=client
-genmerge.sh com.dexels.navajo.client.php
-genmerge.sh com.dexels.navajo.client.php.library
-export MODULEPATH=joomla
-genmerge.sh com.dexels.navajo.php.joomla
-
-
 
 
 export REPOSITORY=navajo
@@ -161,14 +93,7 @@ genmerge.sh com.dexels.navajo.test.feature
 genmerge.sh com.dexels.navajo.test.remote
 
 
-export MODULEPATH=other
-export REPOSITORY=internal
-
-genmerge.sh com.dexels.geospatial.imageprovider
-genmerge.sh com.dexels.utilities.smsgateway
-
 export MODULEPATH=tipi
-export REPOSITORY=navajo
 
 genmerge.sh com.dexels.navajo.tipi
 genmerge.sh com.dexels.navajo.tipi.feature
@@ -244,6 +169,84 @@ genmerge.sh com.dexels.navajo.tipi.dev.plugin
 genmerge.sh com.dexels.navajo.tipi.dev.feature
 genmerge.sh com.dexels.navajo.tipi.build
 genmerge.sh com.dexels.navajo.tipi.server
+
+
+
+export MODULEPATH=enterprise
+export REPOSITORY=enterprise
+
+genmerge.sh com.dexels.navajo.wsdl
+genmerge.sh com.dexels.navajo.wsdl.feature
+genmerge.sh com.dexels.navajo.enterprise.feature
+genmerge.sh com.dexels.navajo.enterprise.listeners
+genmerge.sh com.dexels.navajo.enterprise.adapters
+genmerge.sh com.dexels.navajo.enterprise
+genmerge.sh com.dexels.navajo.enterprise.listeners.deps
+genmerge.sh com.dexels.navajo.enterprise.adapters.deps
+genmerge.sh com.dexels.navajo.mongo.feature
+genmerge.sh com.dexels.navajo.mongo
+genmerge.sh com.dexels.navajo.mongo.navajostore
+
+genmerge.sh com.dexels.navajo.enterprise.openfire
+genmerge.sh com.dexels.navajo.enterprise.tomahawk
+genmerge.sh com.dexels.navajo.enterprise.dbreplication
+genmerge.sh com.dexels.navajo.enterprise.lucene
+genmerge.sh com.dexels.navajo.enterprise.agents
+
+export MODULEPATH=incubation
+export REPOSITORY=internal
+
+genmerge.sh com.dexels.navajo.enterprise.ideal
+genmerge.sh com.dexels.navajo.enterprise.ideal.sportlink
+genmerge.sh com.dexels.navajo.tipi.swing.3d
+genmerge.sh com.dexels.navajo.tipi.swing.jmonkeyengine
+genmerge.sh com.dexels.navajo.tipi.swing.stadiumdesign
+genmerge.sh com.dexels.navajo.geo.cbs.scrape
+
+
+export MODULEPATH=other
+
+genmerge.sh com.dexels.geospatial.imageprovider
+genmerge.sh com.dexels.utilities.smsgateway
+
+export MODULEPATH=demos
+#genmerge.sh com.dexels.demos.rdfbrowser
+genmerge.sh com.dexels.demos.ticketing
+genmerge.sh com.dexels.demos.peelpage
+genmerge.sh com.dexels.demos.pinkroccade.adapters 
+genmerge.sh com.dexels.demos.pinkroccade.ei
+genmerge.sh com.dexels.demos.stadiumdesigner
+genmerge.sh com.dexels.demos.tipidashboard
+genmerge.sh com.dexels.navajo.dashboard
+genmerge.sh tipi.lessone.one
+genmerge.sh tipi.lessone.two
+genmerge.sh tipi.lessone.three
+genmerge.sh tipi.lessone.four
+genmerge.sh tipi.lessone.five
+genmerge.sh tipi.lessone.six
+
+export MODULEPATH=papers
+genmerge.sh com.dexels.documents
+genmerge.sh com.dexels.papers
+genmerge.sh com.dexels.documents.other
+genmerge.sh com.dexels.documents.ticketing
+
+
+
+export REPOSITORY=navajo_ios
+export MODULEPATH=client
+genmerge.sh com.dexels.navajo.cocoa.client
+
+export REPOSITORY=navajo_php
+export MODULEPATH=client
+genmerge.sh com.dexels.navajo.client.php
+genmerge.sh com.dexels.navajo.client.php.library
+export MODULEPATH=joomla
+genmerge.sh com.dexels.navajo.php.joomla
+
+
+
+
 
 
 
