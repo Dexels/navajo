@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="flickr" requiresMain="" project="TipiFlickr" version="0.9" title="Tipi Flickr Library" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		Flickr extensions
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/flickr/flickrclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="flickrapi-1.0b4.jar"/>
+	</jars>
+	<other>
+		<link href="http://flickrj.sourceforge.net/"/>
+	</other>
+</extension>

@@ -1,0 +1,16 @@
+Bundle-Name: Navajo Tipi Charting
+Bundle-SymbolicName: com.dexels.navajo.tipi.flickr
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.18.qualifier
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.document,
+ com.dexels.navajo.client,
+ com.dexels.navajo.tipi,
+ com.dexels.navajo.core,
+ com.dexels.navajo.version
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/flickrapi-1.0b4.jar,
+ .
+Bundle-Activator: tipi.TipiFlickrExtension
+Import-Package: org.osgi.framework;version="1.5.0"
