@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="rss" requiresMain="" project="TipiRss" version="0.9" title="Tipi Rss extension" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/rssclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="rssutils.jar"/>
+		<jar path="TipiRss.jar"/>
+	</jars>
+	<other>
+	</other>
+</extension>

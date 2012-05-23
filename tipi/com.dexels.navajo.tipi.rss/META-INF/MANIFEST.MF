@@ -1,0 +1,16 @@
+Bundle-Name: Navajo Tipi Rss extension
+Bundle-SymbolicName: com.dexels.navajo.tipi.rss
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.7.qualifier
+Bundle-Vendor: Dexels
+Bundle-ActivationPolicy: lazy
+Require-Bundle: com.dexels.navajo.version;bundle-version="1.0.6",
+ com.dexels.navajo.tipi;bundle-version="1.0.43",
+ com.dexels.navajo.document;bundle-version="1.0.3",
+ com.dexels.navajo.core;bundle-version="2.9.4"
+Bundle-ClassPath: .,
+ lib/rssutils.jar
+Import-Package: org.osgi.framework;version="1.5.0"
+Bundle-Activator: tipi.TipiRssExtension
+Export-Package: com.dexels.navajo.tipi.rss

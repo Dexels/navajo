@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.navajo.nl/classdef_schema.xsd">
+   <tipiclass addtocontainer="false" childcount="*" class="TipiRssComponent" layoutmanager="false" module="container" name="rss" package="com.dexels.navajo.tipi.rss"
+      studio-icon="tabs.gif" type="connector">
+      <description>
+	      	This connector connects to a rss source.\\
+	  - Call 'InitRss'\\
+	  - set the URL property at {propertyref:/InitRss:/Rss/URL}\\
+	  - Call Rss.\\
+	  - The Rss navajo object will contain the entries, in an array message named 'Rss'\\
+	  - The Rss navajo object also contains a 'Channel' message with channel info. \\
+	  
+      </description>
+   </tipiclass>
+</tid>
