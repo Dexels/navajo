@@ -1,0 +1,10 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo Server Context/Instance" name="Navajo Server Context" id="navajo.server.context.factory" >
+    <AD name="contextPath"    id="contextPath"   required="true"  type="String" default="/"/>   
+    <AD name="servletContextPath"  id="servletContextPath" required="false" type="String" />
+    <AD name="installationPath"  id="installationPath" required="true" type="String" default="/Users/frank/Documents/workspace-indigo/sportlink-serv/navajo-tester/auxilary"/>
+  </OCD>
+  <Designate pid="navajo.server.context.factory" factoryPid="navajo.server.context.factory">
+     <Object ocdref="navajo.server.context.factory"/>
+  </Designate>
+</metatype:MetaData>

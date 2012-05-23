@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product useFeatures="false" includeLaunchers="false">
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>-consoleLog -console 2401</programArgs>
+      <vmArgs>-Dosgi.console=2401 -Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dorg.osgi.service.http.port=8080</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages/>
+
+   <launcher>
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
+
+   <plugins>
+      <plugin id="com.dexels.navajo.adapters"/>
+      <plugin id="com.dexels.navajo.client"/>
+      <plugin id="com.dexels.navajo.client.async"/>
+      <plugin id="com.dexels.navajo.core"/>
+      <plugin id="com.dexels.navajo.document"/>
+      <plugin id="com.dexels.navajo.enterprise"/>
+      <plugin id="com.dexels.navajo.enterprise.adapters"/>
+      <plugin id="com.dexels.navajo.enterprise.adapters.deps"/>
+      <plugin id="com.dexels.navajo.enterprise.listeners"/>
+      <plugin id="com.dexels.navajo.enterprise.listeners.deps"/>
+      <plugin id="com.dexels.navajo.function"/>
+      <plugin id="com.dexels.navajo.jsp"/>
+      <plugin id="com.dexels.navajo.jsp.server"/>
+      <plugin id="com.dexels.navajo.kml"/>
+      <plugin id="com.dexels.navajo.listeners"/>
+      <plugin id="com.dexels.navajo.listeners.continuations"/>
+      <plugin id="com.dexels.navajo.mongo"/>
+      <plugin id="com.dexels.navajo.mongo.navajostore"/>
+      <plugin id="com.dexels.navajo.queuemanager"/>
+      <plugin id="com.dexels.navajo.rhino"/>
+      <plugin id="com.dexels.navajo.server.bridged"/>
+      <plugin id="com.dexels.navajo.swing.editor"/>
+      <plugin id="com.dexels.navajo.tipi"/>
+      <plugin id="com.dexels.navajo.tipi.charting"/>
+      <plugin id="com.dexels.navajo.tipi.swing"/>
+      <plugin id="com.dexels.navajo.tipi.swing.client"/>
+      <plugin id="com.dexels.navajo.tipi.swing.deps"/>
+      <plugin id="com.dexels.navajo.tipi.vaadin"/>
+      <plugin id="com.dexels.navajo.version"/>
+      <plugin id="com.dexels.navajo.wsdl"/>
+      <plugin id="com.mongodb"/>
+      <plugin id="com.vaadin"/>
+      <plugin id="org.eclipse.equinox.http"/>
+      <plugin id="org.eclipse.jetty.ajp"/>
+      <plugin id="org.eclipse.jetty.client"/>
+      <plugin id="org.eclipse.jetty.continuation"/>
+      <plugin id="org.eclipse.jetty.http"/>
+      <plugin id="org.eclipse.jetty.io"/>
+      <plugin id="org.eclipse.jetty.osgi.httpservice"/>
+      <plugin id="org.eclipse.jetty.security"/>
+      <plugin id="org.eclipse.jetty.server"/>
+      <plugin id="org.eclipse.jetty.servlet"/>
+      <plugin id="org.eclipse.jetty.util"/>
+      <plugin id="org.eclipse.jetty.xml"/>
+      <plugin id="org.jgroups"/>
+      <plugin id="org.kjkoster.zapcat"/>
+   </plugins>
+
+   <configurations>
+      <plugin id="com.dexels.navajo.adapters" autoStart="true" startLevel="5" />
+      <plugin id="com.dexels.navajo.client" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.core" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.document" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.function" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.listeners" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.server.bridged" autoStart="true" startLevel="5" />
+      <plugin id="com.dexels.navajo.version" autoStart="true" startLevel="0" />
+   </configurations>
+
+</product>
