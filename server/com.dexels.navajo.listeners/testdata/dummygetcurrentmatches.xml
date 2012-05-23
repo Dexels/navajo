@@ -1,0 +1,96 @@
+<matchform_InitGetCurrentMatches>
+	<tml rpc_name="person_InitInsertPerson" rpc_pwd="DWFR20T"
+		rpc_usr="DWFROOT">
+		<m_Club>
+			<p_ClubIdentifier description="" direction="out"
+				length="-1" subtype="" type="string" value="" />
+		</m_Club>
+		<m_User>
+			<p_UserId description="Login" direction="in" length="7"
+				subtype="" type="string" value="lwmz153" />
+			<p_PinCode description="PinCode" direction="in" length="5"
+				subtype="password=true" type="string" value="6627" />
+			<p_MatchId description="Wedstrijdnummer" direction="in"
+				length="9" subtype="" type="string" value="" />
+		</m_User>
+		<m_MatchForm>
+			<p_SeasonId description="Seizoen" direction="out" length="-1"
+				subtype="" type="string" value="2010" />
+			<p_MatchId description="Wedstrijdnummer" direction="in"
+				length="9" subtype="" type="string" value="" />
+			<p_MatchRole description="Wedstrijdrol" direction="in"
+				length="9" subtype="" type="string" value="" />
+			<p_ObjectId description="Objectcode" direction="in"
+				length="9" subtype="" type="string" value="" />
+			<p_MatchPersonId description="Wedstrijdpersoon"
+				direction="in" length="9" subtype="" type="string" value="" />
+			<p_DateFrom description="Datum" direction="in" length="-1"
+				subtype="" type="date" value="2010-07-01" />
+			<p_DateTo description="Datum t/m" direction="in" length="-1"
+				subtype="" type="date" value="--" />
+			<p_FilterPlannedMatches description="Verberg geplande wedstrijden?"
+				direction="in" length="-1" subtype="" type="boolean" value="true" />
+			<p_SportId description="Sport" direction="in" length="0"
+				subtype="" type="selection" value="">
+				<option name="-" selected="false" value="-1" />
+				<option name="Veld" selected="true" value="SOCCER-VE-WK" />
+				<option name="Vriendschappelijk ZA" selected="false" value="SOCCER-VR-ZA" />
+				<option name="Bekervoetbal ZA" selected="false" value="SOCCER-BEK-ZA" />
+				<option name="Veld ZO" selected="false" value="SOCCER-VE-ZO" />
+				<option name="Veld ZA" selected="false" value="SOCCER-VE-ZA" />
+				<option name="Oefenwedstrijden ZA" selected="false" value="SOCCER-OEF-ZA" />
+				<option name="Zaal" selected="false" value="SOCCER-ZA-WK" />
+				<option name="Zaal ZA" selected="false" value="SOCCER-ZA-ZA" />
+			</p_SportId>
+			<p_CompetitionKind description="Competitiesoort"
+				direction="in" length="0" subtype="" type="selection" value="">
+				<option name="-" selected="true" value="-1" />
+				<option name="Buitenlandse nationale competitie" selected="false"
+					value="FOREIGN_COMPETITION" />
+				<option name="Mondiale competitie" selected="false"
+					value="EUROPEAN_COMPETITION" />
+				<option name="Nationale Toernooien (vooralsnog niet gebruiken)"
+					selected="false" value="TOURNAMENT_COMPETITION" />
+				<option name="Nederlandse bekercompetitie" selected="false"
+					value="TROPHY_COMPETITION" />
+				<option name="Nederlandse nacompetitie / play-offs" selected="false"
+					value="POST_COMPETITION" />
+				<option name="Nederlandse reguliere competitie" selected="false"
+					value="DEFAULT_COMPETITION" />
+				<option name="Officiële landencompetitie" selected="false"
+					value="NATIONAL_TEAMS" />
+				<option name="Vriendschappelijke wedstrijden" selected="false"
+					value="FRIENDLY_COMPETITION" />
+			</p_CompetitionKind>
+			<p_AgeClassCode description="Leeftijdscategorie"
+				direction="in" length="0" subtype="" type="selection" value="">
+				<option name="-" selected="true" value="-1" />
+				<option name="Senioren" selected="false" value="001" />
+				<option name="Senioren Dames" selected="false" value="002" />
+				<option name="A-Junioren" selected="false" value="003" />
+				<option name="B-Junioren" selected="false" value="004" />
+				<option name="C-Junioren" selected="false" value="005" />
+				<option name="D-Pupillen" selected="false" value="006" />
+				<option name="E-Pupillen" selected="false" value="007" />
+				<option name="F-pupillen" selected="false" value="008" />
+				<option name="A-Junioren Dames" selected="false" value="009" />
+				<option name="B-Junioren Dames" selected="false" value="010" />
+				<option name="C-Junioren Dames" selected="false" value="011" />
+				<option name="D-Pupillen Meisjes" selected="false" value="012" />
+				<option name="E-Pupillen Meisjes" selected="false" value="013" />
+				<option name="F-Pupillen Meisjes" selected="false" value="014" />
+				<option name="F-pupillen (mini)" selected="false" value="998" />
+				<option name="F-pupillen (meisjes mini)" selected="false"
+					value="999" />
+			</p_AgeClassCode>
+			<p_TeamSex description="Geslacht" direction="in" length="0"
+				subtype="" type="selection" value="">
+				<option name="-" selected="true" value="-1" />
+				<option name="man" selected="false" value="1" />
+				<option name="niet bekend" selected="false" value="0" />
+				<option name="niet gespecificeerd" selected="false" value="9" />
+				<option name="vrouw" selected="false" value="2" />
+			</p_TeamSex>
+		</m_MatchForm>
+	</tml>
+</matchform_InitGetCurrentMatches> 

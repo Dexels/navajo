@@ -1,0 +1,37 @@
+Bundle-Name: Navajo Listeners
+Bundle-SymbolicName: com.dexels.navajo.listeners
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 3.1.6.qualifier
+Bundle-Activator: navajolisteners.Version
+Bundle-ClassPath: .
+Include-Resource: lib
+Export-Package: com.dexels.navajo.server.api.impl,
+ com.dexels.navajo.server.listener;uses:="javax.servlet,com.dexels.navajo.server",
+ com.dexels.navajo.server.listener.http;
+  uses:="javax.servlet,
+   com.dexels.navajo.server,
+   com.dexels.navajo.mapping,
+   com.dexels.navajo.document,
+   javax.servlet.http",
+ com.dexels.navajo.server.listener.http.filter;uses:="javax.servlet,javax.servlet.http,com.dexels.navajo.document",
+ com.dexels.navajo.server.listener.http.impl,
+ com.dexels.navajo.server.listener.http.schedulers,
+ com.dexels.navajo.server.listener.http.standard,
+ com.dexels.navajo.server.listener.nql;uses:="javax.servlet.http",
+ navajolisteners;uses:="dexels"
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.core,
+ com.dexels.navajo.client;bundle-version="3.0.5",
+ com.dexels.navajo.document;bundle-version="1.0.0",
+ com.dexels.navajo.version;bundle-version="1.0.7"
+Import-Package: javax.management,
+ javax.servlet;version="[2.5.0,4.0.0)",
+ javax.servlet.http;version="[2.5.0,4.0.0)",
+ org.junit,
+ org.junit.runner,
+ org.junit.runners,
+ org.osgi.framework;version="1.5.0",
+ org.osgi.service.cm;version="1.3.0",
+ org.slf4j;version="1.6.1"
+Bundle-ActivationPolicy: lazy
