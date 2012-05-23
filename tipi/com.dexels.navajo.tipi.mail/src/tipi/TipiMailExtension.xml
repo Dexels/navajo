@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="mail" requiresMain="" project="TipiMail" version="0.9" title="Tipi Mail Library" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		Mail connector. Uses the java mail api to connect to a imap server. TODO: POP support
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/mailclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="mail.jar"/>
+		<jar path="TipiMail.jar"/>
+	</jars>
+	<other>
+		<link href="http://java.sun.com/javase/technologies/desktop/javabeans/jaf/"/>
+		<link href="http://java.sun.com/products/javamail/"/>
+	</other>
+	<requires>
+	</requires>
+</extension>

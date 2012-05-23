@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+
+   <tipiclass addtocontainer="false" childcount="*" class="TipiMailConnector" layoutmanager="false" module="container" name="mail" package="com.dexels.navajo.tipi.mail" studio-icon="tabs.gif" type="connector">
+      <events>
+         <event name="onInstantiate" />
+         <event name="onMailError">
+            <param name="message" type="string"/>
+            <param name="exception" type="string"/>
+         </event>
+         <event name="onConnectionCreated"/>
+         <event name="onFolderOpened">
+    	     <param name="messageCount" type="integer" />
+	         <param name="unreadMessageCount" type="integer" />
+         </event>
+
+         <event name="onConnectionLost" />
+         <event name="onConnectionClosed" />
+         <event name="onTimeout" />
+                  
+      </events>
+      <values>
+         <value direction="in" name="server" type="string" />
+         <value direction="in" name="username" type="string" />
+         <value direction="in" name="password" type="string" />
+         <value direction="in" name="mailMode" type="string" />
+         <value direction="out" name="messageCount" type="integer" />
+         <value direction="out" name="recentMessageCount" type="integer" />
+         <value direction="in" name="recentAfter" type="date" />
+         <value direction="inout" name="currentPage" type="integer" />
+         <value direction="inout" name="pageSize" type="integer" />
+         <value direction="out" name="pageCount" type="integer" />
+         <value direction="inout" name="disconnectTimeout" type="integer" />
+      </values>
+      <methods>
+         <method name="connect"/>
+         <method name="disconnect" />
+         <method name="nextPage"/>
+         <method name="previousPage"/>
+         <method name="firstPage"/>
+         <method name="lastPage"/>
+
+      </methods>  
+</tipiclass>
+</tid>
