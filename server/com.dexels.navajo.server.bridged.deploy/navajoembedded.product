@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product uid="com.dexels.navajo" application="org.eclipse.ui.ide.workbench" version="1.0.0" useFeatures="false" includeLaunchers="false">
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>-consoleLog -console</programArgs>
+      <vmArgs>-Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dorg.osgi.service.http.port=9090</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages/>
+
+   <launcher>
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
+
+   <plugins>
+      <plugin id="ch.qos.logback.classic"/>
+      <plugin id="ch.qos.logback.core"/>
+      <plugin id="ch.qos.logback.slf4j" fragment="true"/>
+      <plugin id="com.dexels.equinox.bridge"/>
+      <plugin id="com.dexels.navajo.adapters"/>
+      <plugin id="com.dexels.navajo.authentication.api"/>
+      <plugin id="com.dexels.navajo.client"/>
+      <plugin id="com.dexels.navajo.core"/>
+      <plugin id="com.dexels.navajo.document"/>
+      <plugin id="com.dexels.navajo.enterprise"/>
+      <plugin id="com.dexels.navajo.enterprise.adapters"/>
+      <plugin id="com.dexels.navajo.enterprise.adapters.deps"/>
+      <plugin id="com.dexels.navajo.enterprise.listeners"/>
+      <plugin id="com.dexels.navajo.enterprise.listeners.deps"/>
+      <plugin id="com.dexels.navajo.function"/>
+      <plugin id="com.dexels.navajo.function.pdf"/>
+      <plugin id="com.dexels.navajo.listeners"/>
+      <plugin id="com.dexels.navajo.listeners.continuations"/>
+      <plugin id="com.dexels.navajo.mongo"/>
+      <plugin id="com.dexels.navajo.mongo.navajostore"/>
+      <plugin id="com.dexels.navajo.osgi.console"/>
+      <plugin id="com.dexels.navajo.queuemanager"/>
+      <plugin id="com.dexels.navajo.resource"/>
+      <plugin id="com.dexels.navajo.resource.jdbc.h2"/>
+      <plugin id="com.dexels.navajo.resource.jdbc.mysql"/>
+      <plugin id="com.dexels.navajo.resource.jdbc.oracle"/>
+      <plugin id="com.dexels.navajo.resource.manager"/>
+      <plugin id="com.dexels.navajo.resource.mongodb"/>
+      <plugin id="com.dexels.navajo.resource.test"/>
+      <plugin id="com.dexels.navajo.rhino"/>
+      <plugin id="com.dexels.navajo.server.bridged"/>
+      <plugin id="com.dexels.navajo.servletbridge.extensionbundle" fragment="true"/>
+      <plugin id="com.dexels.navajo.version"/>
+      <plugin id="com.mongodb"/>
+      <plugin id="com.mysql.jdbc"/>
+      <plugin id="com.oracle.jdbc.driver"/>
+      <plugin id="com.sportlink.aaa"/>
+      <plugin id="com.sportlink.adapters"/>
+      <plugin id="com.sportlink.tensing"/>
+      <plugin id="com.sportlink.tools.geo"/>
+      <plugin id="javax.activation"/>
+      <plugin id="javax.el"/>
+      <plugin id="javax.jcr"/>
+      <plugin id="javax.mail.glassfish"/>
+      <plugin id="javax.servlet.jsp"/>
+      <plugin id="javax.servlet.jsp.jstl"/>
+      <plugin id="org.apache.commons.dbcp"/>
+      <plugin id="org.apache.commons.pool"/>
+      <plugin id="org.apache.felix.http.whiteboard"/>
+      <plugin id="org.apache.felix.webconsole"/>
+      <plugin id="org.eclipse.equinox.cm"/>
+      <plugin id="org.eclipse.equinox.ds"/>
+      <plugin id="org.eclipse.equinox.event"/>
+      <plugin id="org.eclipse.equinox.metatype"/>
+      <plugin id="org.eclipse.equinox.util"/>
+      <plugin id="org.eclipse.jetty.continuation"/>
+      <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.services"/>
+      <plugin id="org.h2"/>
+      <plugin id="org.hamcrest.core"/>
+      <plugin id="org.jgroups"/>
+      <plugin id="org.junit"/>
+      <plugin id="org.kjkoster.zapcat"/>
+      <plugin id="org.slf4j.api"/>
+      <plugin id="osgi.enterprise"/>
+   </plugins>
+
+   <configurations>
+      <plugin id="ch.qos.logback.classic" autoStart="true" startLevel="0" />
+      <plugin id="ch.qos.logback.core" autoStart="false" startLevel="0" />
+      <plugin id="com.dexels.navajo.adapters" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.authentication.api" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.client" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.core" autoStart="true" startLevel="4" />
+      <plugin id="com.dexels.navajo.document" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.enterprise" autoStart="true" startLevel="4" />
+      <plugin id="com.dexels.navajo.enterprise.adapters" autoStart="true" startLevel="4" />
+      <plugin id="com.dexels.navajo.enterprise.adapters.deps" autoStart="true" startLevel="4" />
+      <plugin id="com.dexels.navajo.enterprise.listeners" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.enterprise.listeners.deps" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.function" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.function.pdf" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.listeners" autoStart="true" startLevel="4" />
+      <plugin id="com.dexels.navajo.listeners.continuations" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.mongo" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.mongo.navajostore" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.osgi.console" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.queuemanager" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.resource" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.resource.jdbc.h2" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.resource.jdbc.mysql" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.resource.jdbc.oracle" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.resource.manager" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.resource.mongodb" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.resource.test" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.rhino" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.server.bridged" autoStart="true" startLevel="6" />
+      <plugin id="com.dexels.navajo.version" autoStart="true" startLevel="5" />
+      <plugin id="com.mongodb" autoStart="true" startLevel="0" />
+      <plugin id="com.mysql.jdbc" autoStart="true" startLevel="0" />
+      <plugin id="com.oracle.jdbc.driver" autoStart="true" startLevel="0" />
+      <plugin id="com.sportlink.aaa" autoStart="true" startLevel="0" />
+      <plugin id="com.sportlink.adapters" autoStart="true" startLevel="6" />
+      <plugin id="com.sportlink.tensing" autoStart="true" startLevel="0" />
+      <plugin id="com.sportlink.tools.geo" autoStart="true" startLevel="0" />
+      <plugin id="javax.activation" autoStart="true" startLevel="0" />
+      <plugin id="javax.el" autoStart="true" startLevel="0" />
+      <plugin id="javax.jcr" autoStart="true" startLevel="0" />
+      <plugin id="javax.mail.glassfish" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.commons.dbcp" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.commons.pool" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.felix.http.whiteboard" autoStart="true" startLevel="0" />
+      <plugin id="org.apache.felix.webconsole" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.cm" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.metatype" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.util" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+      <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="0" />
+      <plugin id="org.h2" autoStart="true" startLevel="0" />
+      <plugin id="org.hamcrest.core" autoStart="true" startLevel="0" />
+      <plugin id="org.jgroups" autoStart="true" startLevel="0" />
+      <plugin id="org.junit" autoStart="true" startLevel="0" />
+      <plugin id="org.kjkoster.zapcat" autoStart="true" startLevel="0" />
+      <plugin id="org.slf4j.api" autoStart="true" startLevel="0" />
+      <plugin id="osgi.enterprise" autoStart="true" startLevel="0" />
+   </configurations>
+
+</product>

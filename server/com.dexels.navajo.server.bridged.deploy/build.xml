@@ -1,0 +1,63 @@
+<project default="publish" name="NavajoEquinoxDeploy" basedir=".">
+
+	<target name="clean">
+		<delete dir="WEB-INF/eclipse" />
+		<delete dir="WEB-INF/lib" />
+	</target>
+	
+	<property name="deployPath" value="/Library/apache-tomcat-7.0.16/webapps"/>
+	<property name="exportPath" value="/Users/frank/Desktop/dump_product/"/>
+	
+	<target name="downloadproduct" depends="clean">
+		<copy todir="WEB-INF" overwrite="true">
+			<fileset dir="${exportPath}">
+				<include name="eclipse/configuration/**" />
+				<include name="eclipse/plugins/**" />
+			</fileset>
+		</copy>
+		<copy todir="WEB-INF/lib" overwrite="true">
+			<fileset dir="servletbridge">
+				<include name="org.eclipse.equinox.servletbridge_*" />
+			</fileset>
+		</copy>
+
+		<copy todir="WEB-INF/eclipse" overwrite="true">
+			<fileset dir=".">
+				<include name="launch.ini" />
+			</fileset>
+		</copy>
+		<copy todir="WEB-INF" overwrite="true">
+			<fileset dir=".">
+				<include name="web.xml" />
+			</fileset>
+		</copy>
+		<copy todir="WEB-INF/eclipse/plugins" overwrite="true">
+			<fileset dir="otherjar">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<fileset dir="otherjar">
+			<include name="*"/>
+		</fileset>
+
+	</target>
+
+	<target name="archive" description="description" depends="downloadproduct">
+		<war destfile="NavajoEquinoxDeploy.war">
+			<fileset dir=".">
+				<include name="WEB-INF/**/*" />
+				<include name="index.htm" />
+			</fileset>
+		</war>
+
+	</target>
+
+	<target name="publish" depends="archive">
+		<copy file="NavajoEquinoxDeploy.war" tofile="${deployPath}/NavajoEquinoxDeploy.war" />
+		<!--	<scp verbose="true" file="TipiVaadin.war" todir="dexels@hermes2.dexels.com:" keyfile="/Users/frank/.ssh/id_rsa"/>
+		-->
+	</target>
+
+
+</project>
