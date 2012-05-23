@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<psf version="2.0">
+<provider id="org.eclipse.team.cvs.core.cvsnature">
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.sportlink.feature,com.sportlink.feature"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,sportlink-adapters,sportlink-adapters"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,sportlink-serv,sportlink-serv"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,sportlink-serv-AAA,sportlink-serv-AAA"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,sportlink-serv-comp,sportlink-serv-comp"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,sportlink-serv-crystal,sportlink-serv-crystal"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,SportlinkClub,SportlinkClub"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,SportlinkOfficialPortal,SportlinkOfficialPortal,Vaadin"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,SportlinkOfficialPortal,SportlinkOfficialPortal_Vaadin_Merge"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TensingOracle,TensingOracle"/>
+</provider>
+</psf>

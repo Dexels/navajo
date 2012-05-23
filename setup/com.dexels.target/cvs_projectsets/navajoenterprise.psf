@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<psf version="2.0">
+<provider id="org.eclipse.team.cvs.core.cvsnature">
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.enterprise.adapters.deps,com.dexels.navajo.enterprise.adapters.deps"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.enterprise.listeners.deps,com.dexels.navajo.enterprise.listeners.deps"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.mongo,com.dexels.navajo.mongo"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.mongo.navajostore,com.dexels.navajo.mongo.navajostore"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.tools.wsdl,com.dexels.navajo.tools.wsdl"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoEnterprise,NavajoEnterprise"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoEnterpriseAdapters,NavajoEnterpriseAdapters"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoEnterpriseListeners,NavajoEnterpriseListeners"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.server.bridged,com.dexels.navajo.server.bridged"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.server.bridged.deploy,com.dexels.navajo.server.bridged.deploy"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.server.embedded,com.dexels.navajo.server.embedded"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.server.embedded.feature,com.dexels.navajo.server.embedded.feature"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.server.enterprise.feature,com.dexels.navajo.server.enterprise.feature"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoKmlAdapter,NavajoKmlAdapter"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoListenersContinuations,NavajoListenersContinuations"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoQueueManager,NavajoQueueManager"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoRemoteTestLibrary,NavajoRemoteTestLibrary"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoRhino,NavajoRhino"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoSvgRenderAdapter,NavajoSvgRenderAdapter"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,org.jgroups,org.jgroups"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,org.kjkoster.zapcat,org.kjkoster.zapcat"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,TwitterAdapter,TwitterAdapter"/>
+</provider>
+</psf>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="feature_export" name="feature_export" basedir=".">
+	<property file="build.properties" />
+	<mkdir dir="${basedir}/p2"/>
+	<target name="feature_export">
+		<delete>
+			<fileset dir="${basedir}/p2">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+
+		<p2.publish.featuresAndBundles repository="file://${basedir}/p2" publishArtifacts="true" compress="true" append="false" source="${basedir}/3rdparty">
+		</p2.publish.featuresAndBundles>
+	</target>
+</project>

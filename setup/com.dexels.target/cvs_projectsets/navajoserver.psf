@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<psf version="2.0">
+<provider id="org.eclipse.team.cvs.core.cvsnature">
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,com.dexels.navajo.server.feature,com.dexels.navajo.server.feature"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoAdapters,NavajoAdapters"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoJsp,NavajoJsp"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoJspServer,NavajoJspServer"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoListeners,NavajoListeners"/>
+<project reference="1.0,:pserver:spiritus.dexels.nl:/home/cvs,NavajoServer,NavajoServer"/>
+</provider>
+</psf>
