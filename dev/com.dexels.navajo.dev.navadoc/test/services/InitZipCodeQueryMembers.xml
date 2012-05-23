@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl notes="The 500S offers the perfect balance of processing speed, memory, hard drive space and price. This solid performer goes beyond the basics, and delivers the latest technology in a sleek design.">
+  <message name="ZipCodeQueryMembers">
+    <property description="" direction="in" length="" name="ZipCode"
+      type="string" value=""/>
+    <property description="" direction="in" length="" name="AddressNumber"
+      type="string" value=""/>
+  </message>
+  <methods>
+    <method name="ProcessZipCodeQueryMembers">
+      <required message="ZipCodeQueryMembers"/>
+    </method>
+  </methods>
+</tsl>

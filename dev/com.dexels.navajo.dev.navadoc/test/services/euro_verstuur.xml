@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Arjen Schoneveld" id="euro_verstuur"
+  notes="Performs the work for Euro calculations" repository="$Id$">
+  <message name="resultaat">
+    <property description="Resultaat van de berekening" direction="out"
+      name="kip" type="string" value="Bedankt hoor!"/>
+  </message>
+  <message condition="" count="1" name="resultaat">
+    <property description="'Geconverteerd'" direction="out" name="conversie"
+      type="float" value="">
+      <expression condition="" name="Round([invoer/bedrag] * 2.20371, 2)"/>
+    </property>
+  </message>
+</tsl>

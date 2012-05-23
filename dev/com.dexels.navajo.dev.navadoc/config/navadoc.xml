@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navadoc xmlns="http://www.dexels.com/NavaDoc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/NavaDoc file:///home/meichler/projects/NavaDoc/dtd/navadoc-config.xsd">
+  <configuration>
+    <document-set default="true" name="Sportlink webservices">
+      <description>Documentation set of all the Sportlink webservices. </description>
+      <path>
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts/"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
+        <target value="sportlink-doc"/>
+      </path>
+      <property name="base-uri" value="./"/>
+      <property name="css-uri" value="./navadoc.css"/>
+      <property name="indent" value="2"/>
+    </document-set>
+  </configuration>
+</navadoc>

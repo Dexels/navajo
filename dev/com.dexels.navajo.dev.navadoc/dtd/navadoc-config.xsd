@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xs:schema elementFormDefault="qualified"
+  targetNamespace="http://www.dexels.com/NavaDoc"
+  xmlns:log4j="http://jakarta.apache.org/log4j/"
+  xmlns:navadoc="http://www.dexels.com/NavaDoc"
+  xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://jakarta.apache.org/log4j/" schemaLocation="http://dexels.durgerlan.nl:8080/schema/log4j.xsd"/>
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://dexels.durgerlan.nl:8080/schema/xml.xsd"/>
+  <xs:element name="navadoc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" ref="navadoc:configuration"/>
+        <xs:element maxOccurs="1" minOccurs="0" ref="log4j:configuration"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="configuration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="navadoc:document-set"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="document-set">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element maxOccurs="1" minOccurs="0" ref="navadoc:description"/>
+        <xs:element maxOccurs="1" minOccurs="1" ref="navadoc:path"/>
+        <xs:element maxOccurs="unbounded" minOccurs="0" ref="navadoc:property"/>
+      </xs:choice>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="default" use="optional">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="true"/>
+            <xs:enumeration value="yes"/>
+            <xs:enumeration value="false"/>
+            <xs:enumeration value="no"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="description">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute ref="xml:space" use="optional"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="path">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" minOccurs="1" ref="navadoc:services"/>
+        <xs:element maxOccurs="1" minOccurs="1" ref="navadoc:stylesheet"/>
+        <xs:element maxOccurs="1" minOccurs="1" ref="navadoc:target"/>
+      </xs:sequence>
+      <xs:attribute name="base" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="services">
+    <xs:complexType>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="stylesheet">
+    <xs:complexType>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="target">
+    <xs:complexType>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="property">
+    <xs:complexType>
+      <xs:attribute name="name" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="base-uri"/>
+            <xs:enumeration value="css-uri"/>
+            <xs:enumeration value="indent"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="description" type="xs:string" use="optional"/>
+      <xs:attribute name="value" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="configuration"/>
+</xs:schema>
