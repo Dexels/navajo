@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="feature_export" name="build">
+	<target name="feature_export">
+		<pde.exportFeatures destination="/Users/frank/Desktop/dump5" exportSource="false" exportType="directory" features="com.dexels.navajo.birt.oda.feature,com.dexels.navajo.core.feature,com.dexels.navajo.dev,com.dexels.navajo.language.feature,com.dexels.navajo.server.embedded.feature,com.dexels.navajo.server.enterprise.feature,com.dexels.navajo.server.feature,com.dexels.navajo.tipi.feature,com.dexels.navajo.tipi.vaadin.feature" useJARFormat="true"/>
+	</target>
+</project>
