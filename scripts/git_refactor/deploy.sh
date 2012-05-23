@@ -7,15 +7,11 @@ export PATH=$PATH:$DIR:.
 teardown.sh navajo
 teardown.sh navajo_ios
 teardown.sh navajo_php
-teardown.sh sportlink
-teardown.sh sportlink_ios
 teardown.sh internal
 teardown.sh targetplatform
 teardown.sh enterprise
 echo "About to setup:"
 setup.sh navajo
-setup.sh sportlink
-setup.sh sportlink_ios
 setup.sh internal
 setup.sh targetplatform
 setup.sh navajo_ios
