@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tipi RCP integration
+Bundle-SymbolicName: com.dexels.navajo.tipi.rcp; singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Bundle-Activator: tipiswt.Activator
+Bundle-Vendor: Dexels
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.dexels.navajo.tipi;bundle-version="1.0.64",
+ com.dexels.navajo.document;bundle-version="2.0.1",
+ com.dexels.navajo.core;bundle-version="2.9.4",
+ com.dexels.navajo.version;bundle-version="1.0.10"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
