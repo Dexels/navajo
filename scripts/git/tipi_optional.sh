@@ -41,9 +41,9 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # pretty sure this is legacy:
 ./cvsgit.sh NavajoReportingTipi com.dexels.navajo.tipi.reporting
 
-./cvsgit.sh StadiumDesignTipi com.dexels.tipi.swing.stadiumdesign
-./cvsgit.sh Tipi3d com.dexels.tipi.swing.3d
-./cvsgit.sh TipiMonkey com.dexels.tipi.swing.monkeyengine
+./cvsgit.sh StadiumDesignTipi com.dexels.navajo.tipi.swing.stadiumdesign
+./cvsgit.sh Tipi3d com.dexels.navajo.tipi.swing.3d
+./cvsgit.sh TipiMonkey com.dexels.navajo.tipi.swing.jmonkeyengine
 ./cvsgit.sh com.dexels.navajo.tipi.jogl com.dexels.navajo.tipi.jogl
 ./cvsgit.sh com.dexels.navajo.tipi.jogl.feature com.dexels.navajo.tipi.jogl.feature
 ./cvsgit.sh com.dexels.navajo.tipi.jcr com.dexels.navajo.tipi.jcr
