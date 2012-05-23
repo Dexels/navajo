@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow transient="true">
+    <state id="init">
+       <transition trigger="navajo:official/evalform/ProcessUpdateOfficialEvaluationFormStatus" navajo="request" condition="[/Form/Status] == 'CLOSED'" nextstate="generatepdf">
+          <param name="ObjectFormId">
+            <expression navajo="request" value="[/Form/ObjectFormId]"/>
+          </param>
+          <param name="MatchId">
+            <expression navajo="request" value="[/Form/MatchId]"/>
+          </param>
+       </transition>
+    </state>
+    <state id="generatepdf">
+        <task service="official/evalform/GeneratePDFReport" navajo="generatepdf:request"/>
+        <transition trigger="immediate" nextstate="null"/>
+    </state>
+</workflow>

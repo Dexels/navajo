@@ -1,0 +1,9 @@
+<workflow transient="true">
+    <state id="init">
+       <transition trigger="database:sportlinkkernel|SPORT" condition="[/Transaction/Columns@Name=gametype/Value] == 'VELDBV'" nextstate="finalizedone" username="dummy"/>
+    </state>
+    <state id="finalizedone">
+        <task service="InitTest"/>
+        <transition trigger="immediate" nextstate="null"/>
+    </state>
+</workflow>

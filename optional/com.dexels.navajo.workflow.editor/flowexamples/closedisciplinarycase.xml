@@ -1,0 +1,11 @@
+<!-- For non-BV clubs notify a club by e-mail when a disciplinary case is closed -->
+<!-- and the associated sentence contains certain types of sanctions             -->
+<workflow transient="true">
+    <state id="init">
+       <transition trigger="navajo:discipline/ProcessCloseCase" nextstate="notifyclub" username="dummy"/>
+    </state>
+    <state id="notifyclub">
+        <task service="discipline/ProcessNotifyClub" navajo="init:request"/>
+        <transition trigger="immediate" nextstate="null"/>
+    </state>
+</workflow>

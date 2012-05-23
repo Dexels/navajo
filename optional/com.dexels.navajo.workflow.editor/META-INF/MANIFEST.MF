@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: WorkflowGef Plug-in
+Bundle-SymbolicName: com.dexels.navajo.workflow.editor;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: workflowgef.Activator
+Bundle-Vendor: Dexels
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.jface.text,
+ org.eclipse.core.resources,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.ide,
+ org.eclipse.gef,
+ com.dexels.navajo.document;bundle-version="2.0.1",
+ org.eclipse.emf.ecore;bundle-version="2.6.1",
+ org.eclipse.emf.ecore.change;bundle-version="2.5.1",
+ org.junit
+Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
