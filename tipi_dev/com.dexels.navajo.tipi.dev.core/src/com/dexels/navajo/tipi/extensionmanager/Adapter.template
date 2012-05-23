@@ -1,0 +1,17 @@
+package |Package|;
+
+import com.dexels.navajo.tipi.components.core.adapter.BaseAdapter;
+
+
+public class |ClassName| extends BaseAdapter {
+
+	public |ClassName|() {
+		super();
+	}
+	
+|Content|
+	
+
+
+
+}
