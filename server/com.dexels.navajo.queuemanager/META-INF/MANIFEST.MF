@@ -1,0 +1,24 @@
+Bundle-Name: Navajo Queue Manager
+Bundle-SymbolicName: com.dexels.navajo.queuemanager
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.3.qualifier
+Bundle-ClassPath: .
+Include-Resource: lib
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.client,
+ com.dexels.navajo.document;bundle-version="1.0.0",
+ com.dexels.navajo.core;bundle-version="2.9.2",
+ com.dexels.navajo.version;bundle-version="1.0.4",
+ com.dexels.navajo.listeners;bundle-version="3.1.2"
+Import-Package: javax.script,
+ javax.servlet,
+ javax.servlet.http,
+ org.osgi.framework;version="1.5.0",
+ org.slf4j;version="1.6.1"
+Export-Package: com.dexels.navajo.queuemanager,
+ com.dexels.navajo.queuemanager.api,
+ com.dexels.navajo.server.listener.http.schedulers.priority,
+ navajoqueuemanager
+Bundle-Activator: navajoqueuemanager.Version
+Bundle-ActivationPolicy: lazy
