@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="TipiSwing" requiresMain="" project="TipiSwingDocking" version="0" title="Tipi Swing Docking (using javadocking)" vendor="Dexels" homepage="http://www.navajo.nl">
+	<description>
+		Standard swing docking framework
+	</description>
+	<includes>
+		<!--  needed for runtime, not for JNLP -->
+		<include path="com/dexels/navajo/tipi/components/swingimpl/swingdockingclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="TipiSwingDocking.jar"/>
+		<jar path="javadocking.jar"/>
+	</jars>
+	<requires>
+		<require path="TipiSwing" id="TipiSwing"/>
+	</requires>
+	<other>
+		<link href="http://www.javadocking.com/"/>
+
+	</other>
+	
+</extension>
