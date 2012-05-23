@@ -1,0 +1,11 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo Oracle driver" name="Navajo Oracle driver" id="navajo.resource.oracle">
+    <AD name="url"    id="url"   required="true"  type="String" default="jdbc:oracle:thin:@//myhost:1521/orcl"/>   
+    <AD name="user"  id="user" required="false" type="String" default="demo"/>
+    <AD name="password"  id="password" required="false" type="String" default="demo"/>
+    <AD name="name"  id="name" required="false" type="String" default="navajo.resource.myjdbc"/>
+  </OCD>
+  <Designate pid="navajo.resource.oracle" factoryPid="navajo.resource.oracle">
+     <Object ocdref="navajo.resource.oracle"/>
+  </Designate>
+</metatype:MetaData>
