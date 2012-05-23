@@ -27,6 +27,7 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 	private Map<URL,Bundle> bundleMap = new HashMap<URL,Bundle>();
 	final static Logger logger = LoggerFactory.getLogger("com.dexels.navajo.version");
 
+	@SuppressWarnings("rawtypes")
 	private ServiceRegistration registration;
 
 	
