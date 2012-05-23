@@ -1,23 +1,18 @@
 package com.dexels.navajo.jcr.tipi.urlhandler;
 
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
-import javax.jcr.Binary;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.jcr.tipi.impl.JcrNodeUtils;
 
 public class JcrStreamHandler extends URLStreamHandler {
 	
@@ -62,22 +57,22 @@ public class JcrStreamHandler extends URLStreamHandler {
 		};
 	}
 
-	private InputStream readFile(Node node) throws RepositoryException {
-		if (node.hasProperty(Property.JCR_DATA)) {
-			Property data = node.getProperty(Property.JCR_DATA);
-			final Binary binary = data.getBinary();
-			return new FilterInputStream(binary.getStream()) {
-				@Override
-				public void close() throws IOException {
-					super.close();
-					binary.dispose();
-				}
-			};
-		} else if (node.hasNode(Node.JCR_CONTENT)) {
-			return readFile(node.getNode(Node.JCR_CONTENT));
-		} else {
-			throw new RepositoryException("Unable to read file node: "
-					+ node.getPath());
-		}
-	}
+//	private InputStream readFile(Node node) throws RepositoryException {
+//		if (node.hasProperty(Property.JCR_DATA)) {
+//			Property data = node.getProperty(Property.JCR_DATA);
+//			final Binary binary = data.getBinary();
+//			return new FilterInputStream(binary.getStream()) {
+//				@Override
+//				public void close() throws IOException {
+//					super.close();
+//					binary.dispose();
+//				}
+//			};
+//		} else if (node.hasNode(Node.JCR_CONTENT)) {
+//			return readFile(node.getNode(Node.JCR_CONTENT));
+//		} else {
+//			throw new RepositoryException("Unable to read file node: "
+//					+ node.getPath());
+//		}
+//	}
 }

@@ -9,15 +9,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.Workspace;
 
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
