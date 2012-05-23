@@ -1,0 +1,26 @@
+Bundle-Name: Navajo Async Client
+Bundle-SymbolicName: com.dexels.navajo.client.async
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.1.0.qualifier
+Export-Package: com.dexels.navajo.client.async,
+ navajoasyncclient
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.document,
+ com.dexels.navajo.client;bundle-version="3.0.8",
+ com.dexels.navajo.core;bundle-version="2.9.2",
+ com.dexels.navajo.version
+Bundle-ClassPath: lib/jetty-client-7.0.2.v20100331.jar,
+ lib/jetty-http-7.0.2.v20100331.jar,
+ lib/jetty-io-7.0.2.v20100331.jar,
+ lib/jetty-util-7.0.2.v20100331.jar,.
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: navajoasyncclient.Version
+Import-Package: org.eclipse.jetty.client;version="7.4.1.v20110513",
+ org.eclipse.jetty.client.security;version="7.4.1.v20110513",
+ org.eclipse.jetty.http;version="7.4.1.v20110513",
+ org.eclipse.jetty.io;version="7.4.1.v20110513",
+ org.eclipse.jetty.util;version="7.4.1.v20110513",
+ org.eclipse.jetty.util.component;version="7.4.1.v20110513",
+ org.osgi.framework;version="1.5.0",
+ org.slf4j;version="1.6.1"
