@@ -1,42 +1,29 @@
 package com.dexels.navajo.util.navadoc.servlet;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
-/**
- * <p>
- * Title: NavaDoc
- * </p>
- * <p>
- * Description: Navajo Web Services Automated Documentation Facility servet to
- * document a given web service from a given document set on the fly, Requires
- * the following params: sname = web service name, set = document set name
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002 - 2003
- * </p>
- * <p>
- * Company: Dexels BV
- * </p>
- * 
- * @author Matthew Eichler meichler@dexels.com
- * @version $Id$
- */
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.dexels.navajo.util.navadoc.NavaDocConstants;
-import com.dexels.navajo.util.navadoc.NavaDocTransformer;
 import com.dexels.navajo.util.navadoc.NavaDocOutputter;
-
-import com.dexels.navajo.util.navadoc.config.NavaDocConfigurator;
+import com.dexels.navajo.util.navadoc.NavaDocTransformer;
 import com.dexels.navajo.util.navadoc.config.ConfigurationException;
 import com.dexels.navajo.util.navadoc.config.DocumentSet;
+import com.dexels.navajo.util.navadoc.config.NavaDocConfigurator;
 
 
 
 public class DocumentWebService extends HttpServlet {
 
-    public static final String vcIdent = "$Id$";
+	private static final long serialVersionUID = 734252235280784513L;
+
+	public static final String vcIdent = "$Id$";
 
     private String configUri;
 
@@ -97,7 +84,8 @@ public class DocumentWebService extends HttpServlet {
         if ( ( sname != null ) && ( sname.length() > 0 ) ) {
 
             transformer.transformWebService( sname );
-            final NavaDocOutputter outputter = new NavaDocOutputter(transformer, (PrintWriter) null);
+//            final NavaDocOutputter outputter =
+            		new NavaDocOutputter(transformer, (PrintWriter) null);
             
             response.sendRedirect("doc/" + sname + ".html");
             return;

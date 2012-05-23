@@ -764,11 +764,11 @@ public class TestProperty {
 		Assert.assertEquals(m.editingString(), "10");
 
 		m = new Money("10.000");
-		Assert.assertEquals(m.doubleValue(), 10000d);
+		Assert.assertEquals(m.doubleValue(), 10000d,0.1);
 		m = new Money("10.000,00");
-		Assert.assertEquals(m.doubleValue(), 10000d);
+		Assert.assertEquals(m.doubleValue(), 10000d,0.1);
 		m = new Money("5,00");
-		Assert.assertEquals(m.doubleValue(), 5d);
+		Assert.assertEquals(m.doubleValue(), 5d,0.1);
 
 	}
 
@@ -792,7 +792,7 @@ public class TestProperty {
 		logger.info("m: " + mon.toTmlString() + " :: " + mon.editingString()
 				+ " :: " + mon.toString());
 		Assert.assertEquals(mon.toTmlString(), "10.30");
-		Assert.assertEquals(mon.doubleValue(), 10.30d);
+		Assert.assertEquals(mon.doubleValue(), 10.30d,0.1);
 
 	}
 
@@ -813,7 +813,7 @@ public class TestProperty {
 		double d = 1300.50;
 		Money m = new Money("1.300,50");
 		logger.info(":: " + m.doubleValue());
-		Assert.assertEquals(d, m.doubleValue());
+		Assert.assertEquals(d, m.doubleValue(),0.1);
 
 	}
 

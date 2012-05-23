@@ -44,7 +44,7 @@ public class NavaDocConfigurator {
 
     private Element navConf = null;
 
-    private Element loggerConfig = null;
+//    private Element loggerConfig = null;
 
 //    private NodeList docProps = null;
 
