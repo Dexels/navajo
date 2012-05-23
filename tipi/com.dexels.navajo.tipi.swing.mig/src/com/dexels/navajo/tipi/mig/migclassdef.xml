@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+   <!-- <tipiclass addtocontainer="false" childcount="*" class="TipiMigComponent" layoutmanager="false" module="container" name="mig" package="com.dexels.navajo.tipi.mig"
+      studio-icon="tabs.gif" type="connector">
+      <events>
+         <event name="onInstantiate" />
+      </events>
+      <values>
+      </values>
+      <methods>
+      </methods>
+   </tipiclass>
+   -->
+      <tipiclass class="TipiMigLayout" name="mig" package="com.dexels.navajo.tipi.mig" type="layout">
+      <values>
+         <!--  possible values: left, right, center -->
+         <value direction="in" name="grid" type="string" value="left" />
+       </values>
+   </tipiclass>
+</tid>
