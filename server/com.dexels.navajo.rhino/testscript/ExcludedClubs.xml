@@ -1,0 +1,12 @@
+<tsl>
+   <!-- Defines -->
+   <defines>
+       <define name="ExcludedClubs">
+           StringFunction('indexOf', 'LWNY247;XYZ', $columnValue('organizationid')) == -1
+       </define>
+   </defines>
+   <param name="aap">
+	<expression value="#ExcludedClubs"/>
+   </param>
+   
+</tsl>

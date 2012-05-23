@@ -1,0 +1,22 @@
+<tsl>
+	<validations>
+		<check code="5046" xml:space="preserve">
+		1 == 1
+      </check>
+	</validations>
+	
+	<message name="result" type="array">
+		<map object="com.dexels.navajo.adapter.MultipleEmptyMap">
+			<field name="emptyMaps">
+				<map ref="/Monkey" filter="true">
+						<message name="result">
+							<property name="Hoempapa">
+								<expression value="[Name]"/>
+							</property>
+						</message>
+				</map>
+			</field>
+		</map>
+	</message>
+
+</tsl>

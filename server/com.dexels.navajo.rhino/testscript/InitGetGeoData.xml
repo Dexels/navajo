@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+    <message name="Input">
+        <property name="Latitude" direction="in" type="float"/>
+        <property name="Longitude" direction="in" type="float"/>
+        <property name="City" direction="in" type="string"/>
+    </message>
+    <methods>
+        <method name="geospatial/ProcessGetWeather"/>
+        <method name="geospatial/ProcessGetWikipediaInfo"/>
+    </methods>
+</tsl>

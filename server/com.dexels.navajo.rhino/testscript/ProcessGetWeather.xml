@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+    <param name="City">
+        <expression value="URLEncode([/Input/City])" />
+    </param>
+    <map object="com.dexels.navajo.adapter.HTTPMap">
+        <!-- http://xoap.weather.com/weather/search?where=amsterdam,netherlands -->
+        <field name="method">
+            <expression value="'GET'"/>
+        </field>
+        <field name="url">
+            <expression value="'xoap.weather.com/weather/search?where=' + [/@City] + ',netherlands'"/>
+        </field>
+        <field name="doSend">
+            <expression value="true"/>
+        </field>
+        <param name="XMLResult">
+            <expression value="$result"/>
+        </param>
+        <map object="com.dexels.navajo.adapter.XMLMap">
+            <field name="content">
+                <expression value="[/@XMLResult]"/>
+            </field>
+            <break condition="!$exists('loc')"/>
+            <param name="StationId">
+                <expression value="$childAttribute('loc', 'id')"/>
+            </param>
+            <debug value="[/@StationId]"/>
+        </map>
+    </map>
+    <break condition="[/@StationId] == null"/>
+    <map object="com.dexels.navajo.adapter.HTTPMap">
+        <field name="method">
+            <expression value="'GET'"/>
+        </field>
+        <field name="url">
+            <expression value="'xoap.weather.com/weather/local/' + [/@StationId] + '?cc=*&amp;dayf=5&amp;link=xoap&amp;prod=xoap&amp;par=1055908700&amp;key=1649130e086620c2'"/>
+        </field>
+        <field name="doSend">
+            <expression value="true"/>
+        </field>
+        <param name="XMLResult">
+            <expression value="$result"/>
+        </param>
+        <map object="com.dexels.navajo.adapter.XMLMap">
+            <field name="content">
+                <expression value="[/@XMLResult]"/>
+            </field>
+            <message name="CurrentWeather">
+                <property name="LocationName" direction="out">
+                    <expression value="$childText('loc/dnam')"/>
+                </property>
+                <property name="Temperature" direction="out">
+                    <expression value="( ToInteger($childText('cc/tmp')) - 32 ) * 5.0 / 9.0"/>
+                </property>
+                <property name="Pressure" direction="out">
+                    <expression value="$childText('cc/bar/r')"/>
+                </property>
+                <property name="PressureVolatility" direction="out">
+                    <expression value="$childText('cc/bar/d')"/>
+                </property>
+                <property name="Description" direction="out">
+                    <expression value="$childText('cc/t')"/>
+                </property>
+                <property name="Wind" direction="out">
+                    <expression value="$childText('cc/wind/s')"/>
+                </property>
+                <property name="Sunrise" direction="out">
+                    <expression value="$childText('loc/sunr')"/>
+                </property>
+                <property name="Sunset" direction="out">
+                    <expression value="$childText('loc/suns')"/>
+                </property>
+            </message>
+        </map>
+    </map>
+    <finally>
+        <message name="Noot"/>
+    </finally>
+</tsl>

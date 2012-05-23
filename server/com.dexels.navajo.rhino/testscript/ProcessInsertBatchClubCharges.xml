@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Martin Bergman" id="club/ProcessInsertBatchClubCharges"
+    notes="Processing script for inserting multiple club charges to a selection of clubs"
+    repository="$Id$"
+    xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.nl:8080/schema/navascript.xsd ">
+    <!-- Validations -->
+    <!-- None -->
+    <!-- Includes -->
+    <include script="include/IncludeOracle"/>
+    <include script="include/SelectedGlobals"/>
+    <!-- Service context -->
+    <param name="OrganizationId">
+        <expression value="''"/>
+    </param>
+    <param name="UpdateCount">
+        <expression condition="" value="0"/>
+    </param>
+    <!-- Maps and messages -->
+    <map object="com.dexels.navajo.adapter.MultipleEmptyMap">
+        <field name="emptyMaps">
+            <map ref="/Clubs">
+                <param name="OrganizationId">
+                    <expression value="[OrganizationId]"/>
+                </param>
+                <map object="com.dexels.navajo.adapter.MultipleEmptyMap">
+                    <field name="emptyMaps">
+                        <map filter="[TypeOfCharge:value] != '-1'" ref="/ClubCharges">
+                            <map object="com.dexels.navajo.adapter.NavajoMap">
+                                <field name="propertyName">
+                                    <expression value="'/NewClubCharge/SeasonId'"/>
+                                </field>
+                                <field name="stringProperty">
+                                    <expression value="[/@SeasonId]"/>
+                                </field>     
+                                <field name="propertyName">
+                                    <expression value="'/NewClubCharge/OrganizationId'"/>
+                                </field>
+                                <field name="stringProperty">
+                                    <expression value="[/@OrganizationId]"/>
+                                </field>
+                                <field name="propertyName">
+                                    <expression value="'/NewClubCharge/TypeOfCharge'"/>
+                                </field>
+                                <field name="stringProperty">
+                                    <expression value="[TypeOfCharge:value]"/>
+                                </field>
+                                <field name="propertyName">
+                                    <expression value="'/NewClubCharge/LedgerKeyId'"/>
+                                </field>
+                                <field name="stringProperty">
+                                    <expression value="null"/>
+                                </field>
+                                <field name="propertyName">
+                                    <expression value="'/NewClubCharge/CostCentre'"/>
+                                </field>
+                                <field name="stringProperty">
+                                    <expression value="null"/>
+                                </field>
+                                <field name="propertyName">
+                                    <expression value="'/NewClubCharge/Project'"/>
+                                </field>
+                                <field name="stringProperty">
+                                    <expression value="null"/>
+                                </field>
+                                <field name="propertyName">
+                                    <expression value="'/NewClubCharge/FinancialRegion'"/>
+                                </field>
+                                <field name="stringProperty">
+                                    <expression value="null"/>
+                                </field>
+                                <field name="propertyName">
+                                    <expression value="'/NewClubCharge/Amount'"/>
+                                </field>
+                                <field name="moneyProperty">
+                                    <expression value="[Amount]"/>
+                                </field>
+                                <field name="propertyName">
+                                    <expression value="'/NewClubCharge/Subject'"/>
+                                </field>
+                                <field name="stringProperty">
+                                    <expression value="null"/>
+                                </field>
+                                <field name="propertyName">
+                                    <expression value="'/NewClubCharge/Description'"/>
+                                </field>
+                                <field name="stringProperty">
+                                    <expression value="[Description]"/>
+                                </field>
+                                <field name="doSend">
+                                    <expression value="'club/ProcessInsertClubCharge'"/>
+                                </field>
+                                <param name="UpdateCount">
+                                    <expression value="[/@UpdateCount] + $integerProperty('/Inserted/UpdateCount')"/>
+                                </param>
+                            </map>
+                        </map>
+                    </field>
+                </map>
+            </map>
+        </field>
+    </map>
+    <!-- Result message -->
+    <message count="1" name="Inserted">
+        <property direction="out" name="UpdateCount" type="integer">
+            <expression condition="" value="[/@UpdateCount]"/>
+        </property>
+        <property direction="out" name="Timestamp">
+            <expression condition="" value="TODAY"/>
+        </property>
+        <property direction="out" name="DatabaseVersion" type="string">
+            <expression condition="" value="[/@DatabaseVersion]"/>
+        </property>
+        <property direction="out" name="DatabaseProductName" type="string">
+            <expression condition="" value="[/@DatabaseProductName]"/>
+        </property>
+    </message>
+</tsl>
+<!-- EOF: $RCSfile$ -->
