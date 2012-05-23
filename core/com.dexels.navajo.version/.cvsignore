@@ -1,0 +1,10 @@
+classes
+target
+.settings
+pom.xml.releaseBackup
+release.properties
+DexelsVersionControl.jar
+dist
+distribution
+osgi_run
+work

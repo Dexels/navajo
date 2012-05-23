@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project default="archive" basedir=".">
+	<property name="src" value="src" />
+	<property name="testsrc" value="testsrc" />
+	<property name="work" value="work"/>
+	<property name="build" value="${work}/classes" />
+	<property name="eclipseclasses" value="classes" />
+	<property name="testbase" value="test" />
+	<property name="testbuild" value="test/classes" />
+	<property name="testreports" value="test/reports" />
+	<property name="distribution" value="distribution"/>
+	<property name="lib" value="lib" />
+	<property name="compilelib" value="compilelib" />
+	<property name="javadoc" value="${work}/docs" />
+	<property name="dependencybase" value="${work}/dependency" />
+	<property name="dependencyclasses" value="${dependencybase}/classes" />
+	<property name="dependencysrc" value="${dependencybase}/src" />
+	<property name="dependencylib" value="${dependencybase}/lib" />
+	<property name="deploydependencylib" value="${dependencybase}/deploylib" />
+	<property name="dependencycompilelib" value="${dependencybase}/compilelib" />
+	<property name="archive" value="${ant.project.name}.jar" />
+	<property name="junitjar" value="../DexelsVersionControl/compilelib/junit.jar" />
+	<property file="../DexelsVersionControl/ant/build.properties" />
+	<property name="deployRoot" value="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}" />
+<!--	<taskdef name="antclipse" classname="net.sf.antcontrib.antclipse.ClassPathTask"/>
+-->	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" onerror="ignore" />
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+	<fail message="This file is only supposed to be imported, not invoked standalone. Also, make sure your invoking file has a project name!" unless="ant.project.name"/>
+
+	<path id="projectlibs">
+	   <fileset dir="${lib}">
+	      <include name="**/*.jar"/>
+ 	   </fileset>
+	   <fileset dir="${compilelib}" >
+	      <include name="**/*.jar"/>
+ 	   </fileset>
+	</path>
+
+	<path id="dependencylibs">
+	   <fileset dir="${dependencylib}">
+	      <include name="**/*.jar"/>
+ 	   </fileset>
+	   <fileset dir="${dependencycompilelib}" >
+	      <include name="**/*.jar"/>
+ 	   </fileset>
+	</path>
+	
+	<target name="init">
+		<tstamp />
+		<antcall target="clean"/>
+		<mkdir dir="${work}" />
+		<mkdir dir="${build}" />
+		<mkdir dir="${dependencybase}" />
+		<mkdir dir="${dependencyclasses}" />
+		<mkdir dir="${dependencylib}" />
+		<mkdir dir="${deploydependencylib}" />
+		
+		<mkdir dir="${dependencycompilelib}" />
+		<mkdir dir="${distribution}"/>
+
+		<mkdir dir="${javadoc}"/>
+		<if>
+			<not>
+				<available file="lib"></available>
+			</not>
+			<then>
+				<mkdir dir="lib"/>
+			</then>
+		</if>
+		<if>
+			<not>
+				<available file="compilelib"></available>
+			</not>
+			<then>
+				<mkdir dir="compilelib"/>
+			</then>
+		</if>
+	</target>
+	<target name="clean">
+		<if>
+			<equals arg1="${clean}" arg2="true"/>
+			<then>
+				<delete dir="${build}" />
+				<delete dir="${testbase}" />
+				<delete dir="${work}" />
+				<delete dir="${distribution}" />
+			</then>
+		</if>
+	</target>
+	<target name="precompile">
+	</target>
+
+	<target name="recursiveBuild" >
+		<if>
+			<and>
+				<isset property="dependencies"/>
+				<equals arg1="${recursivebuild}" arg2="true" />
+			</and>
+			<then>
+				<echo message="Calling build on: ${currentdep}"/>
+				<ant dir="../${currentdep}" antfile="buildLegacy.xml" inheritall="false">
+				</ant>
+			</then>
+			<else>
+				<echo message="Skipping build on: ${currentdep}"/>
+			</else>
+		</if>
+	</target>
+	
+	<target name="resolveDependency">
+		<antcall target="recursiveBuild">
+		</antcall>
+		<echo message="Current dependency: ${currentdep}" />
+		<copy todir="${dependencylib}" failonerror="false">
+			<fileset dir="../${currentdep}">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${dependencycompilelib}" failonerror="false">
+			<fileset dir="../${currentdep}/compilelib" />
+		</copy>
+		
+		<copy todir="${dependencylib}" failonerror="false" >
+			<fileset dir="../${currentdep}/lib" />
+		</copy>
+	</target>
+
+	<target name="resolveDependencies">
+		<echo message="Resolving dependencies: ${dependencies}"/>
+		<for list="${dependencies}" delimiter="," param="currentdep">
+			<sequential>
+				<echo message="Current dependency: @{currentdep}"></echo>
+				<ant target="resolveDependency" antfile="../DexelsVersionControl/ant/navajobuild.xml" inheritall="true">
+					<property name="currentdep" value="@{currentdep}" />
+				</ant>
+			</sequential>
+		</for>
+
+		<for list="${deployedDependencyJars}" delimiter="," param="currentjar">
+			<sequential>
+				<echo message="Current dep: @{currentjar}"/>
+	
+				<copy todir="${deploydependencylib}">
+					<fileset dir="${dependencylib}">
+						<include name="@{currentjar}"/>
+					</fileset>
+				</copy>
+			</sequential>
+		</for>		
+		<!-- <for list="${tipiDeployedDependencyJars}" delimiter="," param="currentjar">
+			<sequential>
+				<echo message="Current tipi dep: @{currentjar}"/>
+	
+				<copy todir="${dist}/lib">
+					<fileset dir="${dependencylib}">
+						<include name="@{currentjar}"/>
+					</fileset>
+				</copy>
+			</sequential>
+		</for>		 -->
+	</target>
+	
+	
+	<target name="compile" depends="init,resolveDependencies, precompile,resource">
+		<javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="lines,vars,source" target="1.6" compiler="javac1.6">
+			<classpath refid="projectlibs" />
+			<classpath refid="dependencylibs" />
+			<classpath path="${dependencyclasses}"/>
+		</javac>
+	</target>
+
+	<target name="buildjavadoc" >
+		<if>
+			<equals arg1="${buildjavadoc}" arg2="true"/>
+			<then>
+				
+				<javadoc verbose="false" destdir="${javadoc}" author="true"  version="true" use="true"  windowtitle="Navajo API docs">
+
+				    <fileset dir="${src}" defaultexcludes="yes">
+				    </fileset>
+
+				    <doctitle><![CDATA[<h1>Navajo Framework</h1>]]></doctitle>
+				    <bottom><![CDATA[<i>Copyright &#169; 2009 Dexels BV. All Rights Reserved.</i>]]></bottom>
+				    <tag name="todo" scope="all" description="To do:"/>
+				    <group title="Group 1 Packages" packages="com.dummy.test.a*"/>
+				    <group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*"/>
+				    <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="C:\tmp"/>
+				    <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+				  </javadoc>
+					<if>
+						<equals arg1="${deployjavadocs}" arg2="true"/>
+						<then>
+							<copy todir="${distribution}">
+								<fileset dir="${javadoc}"/>
+							</copy>
+						</then>
+					</if>
+
+			</then>
+		</if>
+	</target>
+	<target name="compiletest">
+		<mkdir dir="${testbase}"/>
+		<mkdir dir="${testbuild}"/>
+		<mkdir dir="${testreports}"/>
+		<mkdir dir="${distribution}/${ant.project.name}"/>
+		<copy todir="${eclipseclasses}">
+			<fileset dir="${testsrc}">
+				<exclude name="**/*.java" />
+				<exclude name="CVS" />
+			</fileset>
+		</copy>
+		<javac target="1.6"  srcdir="${testsrc}" destdir="${testbuild}"  debug="true" debuglevel="lines,vars,source">
+			<classpath refid="projectlibs" />
+			<classpath refid="dependencylibs" />
+			<classpath path="${build}"/>
+			<classpath path="${dependencyclasses}"/>
+
+		</javac>
+		<echo message="Creating test jar: ${distribution}/${ant.project.name}Test.jar"/>
+		<if>
+			<equals arg1="${createbinaryzip}" arg2="true"/>
+			<then>
+				<jar destfile="${distribution}/${ant.project.name}/${ant.project.name}Tests.jar">
+					<fileset dir="${testbuild}">
+						<include name="*/**" />
+					</fileset>
+				
+				</jar>
+			</then>
+			</if>
+		
+		<if>
+			<equals arg1="${createsourcezip}" arg2="true"/>
+			<then>
+				<zip destfile="${distribution}/${ant.project.name}/${ant.project.name}TestSource.zip">
+					<fileset dir="${testsrc}">
+						<include name="*/**" />
+					</fileset>
+				</zip>
+			</then>
+		</if>
+	</target>
+	
+	<target name="resource">
+		<copy todir="${build}">
+			<fileset dir="${src}">
+				<exclude name="**/*.java" />
+				<exclude name="CVS" />
+			</fileset>
+		</copy>
+		<!-- Only part where I touch the eclipse class dir:-->
+		<copy todir="${eclipseclasses}">
+			<fileset dir="${src}">
+				<exclude name="**/*.java" />
+				<exclude name="CVS" />
+			</fileset>
+		</copy>
+	</target>
+
+	<path id="test.class.path">
+		<pathelement path="${testbuild}"/>
+	</path>
+
+	<target name="testgeneral" description="Run the JUnit tests" >
+		<antcall target="compiletest"/>
+		<property name="testSuite" value="${ant.project.name}"/>
+		<echo message="Testing project: ${ant.project.name}"/>
+		<junit showoutput="true" printsummary="yes" haltonfailure="${continueonfailedtest}"  >
+			<classpath refid="test.class.path" />
+			<classpath path="${junitjar}"></classpath>
+			<classpath refid="projectlibs" />
+			<classpath refid="dependencylibs" />
+			<classpath path="${build}"/>
+			<classpath path="${dependencyclasses}"/>
+			<formatter type="plain" />
+			<test name="${testSuite}" outfile="result" todir="./${testreports}"/>
+			<sysproperty key="integrationServers" value="${integrationServers}"/>
+			<sysproperty key="integrationServerUser" value="${integrationServerUser}"/>
+			<sysproperty key="integrationServerPassword" value="${integrationServerPassword}"/>
+		</junit>
+	</target>
+	<target name="test" description="Run the JUnit tests">
+		<if>
+			<and>
+				<available file="testsrc"/>
+				<equals arg1="${notests}" arg2="false"/>
+			</and>
+			<then>
+				<antcall target="testgeneral" inheritrefs="true"/>
+			</then>
+		</if>
+	</target>
+
+
+	<target name="archive" depends="compile,resource,test,buildjavadoc">
+		<jar jarfile="${archive}">
+			<fileset dir="${build}">
+				<include name="*/**" />
+			</fileset>
+		</jar>
+		<antcall target="tipiExtensionProcessing"/>
+		<if>
+			<equals arg1="${createbinaryzip}" arg2="true"/>
+			<then>
+				<antcall target="createBinaryZip"></antcall>
+			</then>
+		</if>
+		<if>
+			<equals arg1="${createsourcezip}" arg2="true"/>
+			<then>
+				<antcall target="createSourceZip"></antcall>
+			</then>
+		</if>
+		<antcall target="afterdeploy"/>
+		<antcall target="cleanup"></antcall>
+		<if>
+			<equals arg1="${uploaddownloads}" arg2="false"/>
+			<then>
+				<antcall target="upload"></antcall>
+			</then>
+		</if>
+	</target>
+	
+	<target name="tipiExtensionProcessing">
+		<if>
+			<equals arg1="${tipiExtension}" arg2="true"/>
+			<then>
+				<echo message="Tipi Extension found. Checking tipi. Project: ${ant.project.name}"/>
+				<if>
+					<equals arg1="${doUploadTipi}" arg2="true"/>
+					<then>
+						<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
+					</then>
+					<else>
+						<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="buildTipi" />
+					</else>
+				</if>
+
+			</then>
+		</if>
+	</target>
+
+	<target name="afterdeploy">
+	</target>
+	<target name="aftercleanup">
+	</target>	
+	<target name="cleanup" if="cleanupdependencies">
+		<if>
+			<equals arg1="${cleanupdependencies}" arg2="true"/>
+			<then>
+				<delete dir="${dependencybase}"/>
+				<delete dir="${work}"/>
+				<delete dir="test"/>
+			</then>
+		</if>
+	</target>
+
+	<target name="upload" >
+		<if>
+			<equals arg1="${doUploadTipi}" arg2="true"/>
+			<then>
+				<scp trust="true"  sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
+					<fileset dir="${distribution}">
+						<include name="**" />
+					</fileset>
+				</scp>			
+			</then>
+		</if>
+
+
+
+	</target>
+
+	<target name="onlyarchive" depends="resource">
+		<jar jarfile="${archive}">
+			<fileset dir="${build}">
+				<include name="*/**" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="createSourceZip">
+		<delete dir="${work}/tmp"/>
+		<mkdir dir="${work}/tmp"/>
+		<mkdir dir="${work}/tmp/${ant.project.name}"/>
+		<mkdir dir="${distribution}"/>
+		<mkdir dir="${distribution}/${ant.project.name}"/>
+    	 <copy todir="${work}/tmp/${ant.project.name}">
+			<fileset dir=".">
+				<include name="src/**"/>
+				<include name="lib/**"/>
+				<include name="compilelib/**"/>
+			</fileset>
+    	 </copy>
+       	 <copy todir="${work}/tmp/${ant.project.name}/lib">
+			<fileset dir="${deploydependencylib}">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+    	 <zip zipfile="${distribution}/${ant.project.name}/${ant.project.name}Source.zip" basedir="${work}/tmp">
+		</zip>
+	</target>
+	
+	<target name="createBinaryZip">
+		<delete dir="${work}/tmp"/>
+		<mkdir dir="${work}/tmp"/>
+		<mkdir dir="${work}/tmp/${ant.project.name}"/>
+		<mkdir dir="${distribution}/${ant.project.name}"/>
+		<copy todir="${work}/tmp/${ant.project.name}">
+			<fileset dir=".">
+				<include name="${ant.project.name}.jar"/>
+			</fileset>
+			<fileset dir=".">
+				<include name="lib/**"/>
+			<!-- Should not need this	<include name="compilelib/**"/>-->
+				<include name="scripts/**"/>
+			</fileset>
+			<fileset dir="work">
+				<include name="docs/**"/>
+			</fileset>
+<!--			<fileset dir="doc" >
+				<include name="**"/>
+			</fileset>-->
+		</copy>
+		
+      	 <copy todir="${work}/tmp/${ant.project.name}/lib">
+			<fileset dir="${deploydependencylib}">
+				<include name="*.jar"/>
+			</fileset>
+      	 	
+		</copy>
+
+		<zip zipfile="${distribution}/${ant.project.name}/${ant.project.name}Binary.zip" basedir="${work}/tmp">
+		</zip>
+	</target>
+</project>
+<!-- EOF: $RCSfile$ -->

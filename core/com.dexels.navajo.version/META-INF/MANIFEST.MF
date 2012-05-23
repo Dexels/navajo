@@ -1,0 +1,13 @@
+Bundle-Name: Navajo Version Control
+Bundle-SymbolicName: com.dexels.navajo.version
+Bundle-Description: Core version manager
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.16.qualifier
+Bundle-Activator: com.dexels.navajo.version.NavajoBundleManager
+Export-Package: com.dexels.navajo.version,
+ navajo
+Bundle-Vendor: Dexels
+Bundle-ClassPath: .
+Bundle-ActivationPolicy: lazy
+Import-Package: org.osgi.framework,
+ org.slf4j;version="1.6.1"

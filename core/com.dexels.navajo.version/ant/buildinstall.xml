@@ -1,0 +1,6 @@
+<project>
+	<property file="install.properties"/>
+	<target name="download">
+		
+	</target>
+</project>
