@@ -35,6 +35,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	
 	private File installationFolder = null;
 	
+	@SuppressWarnings("rawtypes")
 	private final Set<ServiceRegistration> adapterRegs = new HashSet<ServiceRegistration>();
 
 		
@@ -56,6 +57,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 		loadDescriptor();
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void start(BundleContext bc) throws Exception {
 		this.context = bc;
 		logger.info("Starting vaadin tipi bundle");
@@ -80,6 +82,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	}
 
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		deregisterTipiExtension(context);
