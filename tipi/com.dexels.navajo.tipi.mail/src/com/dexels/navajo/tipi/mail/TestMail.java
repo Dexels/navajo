@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.mail;
 
-import java.security.Security;
 import java.util.Properties;
 
 import javax.mail.Message;

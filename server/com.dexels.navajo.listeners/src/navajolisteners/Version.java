@@ -28,7 +28,6 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.listeners.SchedulerRegistry;
@@ -39,6 +38,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	// Included packages.
 
+	@SuppressWarnings("rawtypes")
 	private ServiceRegistration reference;
 
 

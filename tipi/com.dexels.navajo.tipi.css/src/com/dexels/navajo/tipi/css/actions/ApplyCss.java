@@ -12,10 +12,8 @@ import org.akrogen.tkui.css.core.dom.properties.ICSSPropertyHandlerProvider;
 import org.akrogen.tkui.css.core.engine.CSSEngine;
 import org.akrogen.tkui.css.core.engine.CSSErrorHandler;
 import org.akrogen.tkui.css.tipi.engine.CSSTipiEngineImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.css.sac.ConditionFactory;
 import org.w3c.dom.css.CSSStyleDeclaration;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
@@ -30,8 +28,6 @@ public class ApplyCss extends TipiAction {
 	public org.akrogen.tkui.css.tipi.engine.CSSTipiEngineImpl aap;
 //	public org.w3c.dom.css.DocumentCSS noot;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(ApplyCss.class);
 	
 	protected void execute(final TipiEvent event) throws TipiBreakException, TipiException {
 		getContext().runSyncInEventThread(new Runnable(){

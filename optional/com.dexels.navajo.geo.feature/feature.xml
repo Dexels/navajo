@@ -24,14 +24,14 @@
          version="0.0.0"/>
 
    <plugin
-         id="com.sportlink.tools.geo"
+         id="com.dexels.navajo.svg"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.svg"
+         id="com.navajo.tools.geo"
          download-size="0"
          install-size="0"
          version="0.0.0"

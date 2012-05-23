@@ -41,6 +41,7 @@ import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThread
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	
+	@SuppressWarnings("rawtypes")
 	private ServiceRegistration registration;
 
 	@Override

@@ -53,8 +53,10 @@ import com.dexels.navajo.pdf.functions.PDFFunctionDefinitions;
  */
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
+	@SuppressWarnings("rawtypes")
 	private final Set<ServiceRegistration> registrations = new HashSet<ServiceRegistration>();
 	//Included packages.
+	@SuppressWarnings("rawtypes")
 	private ServiceRegistration registration;
 	
 	public Version() {

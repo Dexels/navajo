@@ -24,6 +24,7 @@ public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiE
 
 	private static final long serialVersionUID = -8495583222148257940L;
 	private static TipiMailExtension instance = null;
+	@SuppressWarnings("rawtypes")
 	private final Set<ServiceRegistration> registrations = new HashSet<ServiceRegistration>();
 
 	private final static Logger logger = LoggerFactory
@@ -40,6 +41,7 @@ public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiE
 		
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void start(BundleContext context) throws Exception {
 		logger.info("Starting mail tipi bundle");
@@ -60,6 +62,7 @@ public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiE
 		
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		deregisterTipiExtension(context);

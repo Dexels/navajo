@@ -3,7 +3,6 @@ package com.dexels.navajo.jsp.server;
 import java.io.IOException;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
 
 import org.osgi.framework.BundleContext;
@@ -16,7 +15,7 @@ import com.dexels.navajo.server.api.NavajoServerContext;
 
 public class NavajoServerContextProxy implements NavajoServerContext {
 
-	private PageContext pageContext;
+//	private PageContext pageContext;
 	private ServletContext servletContext;
 	
 	private final static Logger logger = LoggerFactory
@@ -24,7 +23,7 @@ public class NavajoServerContextProxy implements NavajoServerContext {
 	private BundleContext bundleContext;
 	
 	public void setupOsgiLink() {
-		com.dexels.navajo.server.api.NavajoServerContext navajoServerContext;
+//		com.dexels.navajo.server.api.NavajoServerContext navajoServerContext;
 		logger.info("Hash of context: "+servletContext.hashCode());
 		bundleContext = (BundleContext) servletContext.getAttribute(BundleContext.class.getName());
 		getDispatcher();
@@ -54,7 +53,7 @@ public class NavajoServerContextProxy implements NavajoServerContext {
 	}
 
 	public void setPageContext(PageContext pageContext) throws IOException {
-		this.pageContext = pageContext;
+//		this.pageContext = pageContext;
 		this.servletContext = pageContext.getServletContext();
 		setupOsgiLink();
 

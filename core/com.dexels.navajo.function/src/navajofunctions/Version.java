@@ -52,6 +52,7 @@ import com.dexels.navajo.parser.FunctionInterface;
  * 1.1.2. Fix in ToClockTime
  */
 public class Version extends com.dexels.navajo.version.AbstractVersion {
+	@SuppressWarnings("rawtypes")
 	private final Set<ServiceRegistration> serviceRegistrations = new HashSet<ServiceRegistration>();
 
 
@@ -64,6 +65,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	
 	
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
@@ -91,6 +93,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void stop(BundleContext arg0) throws Exception {
 		super.stop(arg0);
