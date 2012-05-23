@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.dexels.navajo.tipi.extensions.feature"
+      label="All Tipi Extensions"
+      version="1.0.0.qualifier"
+      provider-name="Dexels">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <includes
+         id="com.dexels.navajo.tipi.css.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.dev.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.echo.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.flickr.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.jabber.feature"
+         version="0.0.0"/>
+
+  <!-- <includes
+         id="com.dexels.navajo.tipi.jogl.feature"
+         version="0.0.0"/>
+	-->
+   <includes
+         id="com.dexels.navajo.tipi.mail.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.rcp.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.rss.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.ruby.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.swing.charting.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.swing.cobra.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.swing.docking.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.swing.editor.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.swing.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.swing.geo.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.swing.mig.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.swing.rich.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.swing.substance.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.swing.svg.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.vaadin.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="com.dexels.navajo.tipi.jcr.feature"
+         version="0.0.0"/>
+
+<!--
+   <includes
+         id="com.dexels.navajo.tipi.swing.rdf.feature"
+         version="0.0.0"/>
+-->
+</feature>
