@@ -1,8 +1,5 @@
 package com.dexels.navajo.functions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -20,8 +17,6 @@ import com.dexels.navajo.server.DispatcherFactory;
 public class GetReportFile extends FunctionInterface {
 
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(GetReportFile.class);
   public GetReportFile() {
   }
 
