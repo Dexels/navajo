@@ -1,0 +1,7 @@
+<tid>
+    <tipi-include location="com/dexels/navajo/dashboard/viewer/dashboardclassdef.xml"/>
+    <tipi-include location="com/dexels/rdf/visualization/rdfclassdef.xml"/>
+    <tipi-include location="com/dexels/navajo/tipi/components/rich/ui/richclassdef.xml"/>
+    <tipi-include location="com/dexels/navajo/tipi/mig/migclassdef.xml" />
+    <tipi-include location="init.xml"/>
+</tid>

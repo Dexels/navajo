@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Aap" basedir=".." default="deployAll">
+	
+	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
+	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
+	<taskdef name="start" classname="org.apache.catalina.ant.StartTask" />
+
+	<tstamp>
+		<format property="build.timestamp" pattern="dd_MMM_yy_HH_mm_ss" />
+	</tstamp>
+
+	<fail message="This ant file is supposed to be run from the eclipse plugin">
+		<condition>
+			<not>
+				<isset property="eclipse.running" />
+			</not>
+		</condition>
+	</fail>
+	<taskdef name="buildDeployJnlp" classname="com.dexels.navajo.tipi.ant.projectbuilder.TipiBuildDeployJnlp" />
+	<taskdef name="buildWikiSource" classname="com.dexels.navajo.tipi.ant.projectbuilder.TipiBuildWikiSource" />
+
+	<property name="archive" value="${projectName}.jar" />
+
+	<target name="baseDeploy">
+	</target>
+
+	<target name="echocopy">
+		<antcall target="createEchoTemplate"></antcall>
+	</target>
+	
+	<target name="web">
+		<echo message="Deploying web style!"></echo>
+	</target>
+	
+	
+	<target name="createBasicTemplate">
+		<replace file="deploy/current/index.html" token="@@APPNAME@@" value="${projectName}" />
+		<replace file="deploy/current/index.html" token="@@TITLE@@" value="${title}" />
+		<replace file="deploy/current/index.html" token="@@VENDOR@@" value="${vendor}" />
+		<replace file="deploy/current/index.html" token="@@HOMEPAGE@@" value="${homepage}" />
+		<replace file="deploy/current/index.html" token="@@SPLASH@@" value="${splash}" />
+		<replace file="deploy/current/index.html" token="@@PROFILELINKLIST@@" value="${profileLinkList}" />
+		<replace file="deploy/current/index.html" token="@@TIMESTAMP@@" value="${build.timestamp}" />
+		<replace file="deploy/current/index.html" token="@@SOURCELINK@@" value="${tipiDoc}:${projectName}:info" />
+		<replace file="deploy/current/index.html" token="@@ICON@@" value="${icon}" />
+	</target>
+	<target name="createJnlpTemplate">
+		<antcall target="createBasicTemplate"></antcall>
+		<replace file="deploy/current/index.html" token="@@APPLINK@@" value="${tipiAppStore}${projectName}/DefaultLocal.jnlp" />
+		<replace file="deploy/current/index.html" token="@@PROFILELINKLIST@@" value="${profileLinkList}" />
+
+	</target>
+	<target name="createEchoTemplate">
+		<antcall target="createBasicTemplate"></antcall>
+		<replace file="deploy/current/index.html" token="@@APPLINK@@" value="${tipiTomcatServer}${projectName}/app" />
+		<replace file="deploy/current/index.html" token="@@PROFILELINKLIST@@" value="${profileLinkList}" />
+	</target>
+<!--	<target name="deployEchaaao" depends="deployJnlp">
+	</target>-->
+	
+	
+	<target name="createWar">
+		<war destfile="${baseDir}/deploy/${projectName}.war" basedir="${baseDir}/deploy/current" defaultexcludes="no"/>
+		<echo file="${basedir}/output" message="Deployment: server: ${tipiTomcatServer} war: ${baseDir}/deploy/${projectName}.war path=${projectName}"/>
+		<deploy url="${tipiTomcatManager}" update="true" username="${tipiTomcatUsername}" password="${tipiTomcatPassword}" path="/${projectName}" war="${baseDir}/deploy/${projectName}.war"/>
+	</target>
+	<target name="deployEcho">
+		<antcall target="deployAll"></antcall>	
+		<antcall target="copyEchoLibs"></antcall>	
+		<antcall target="createEchoTemplate"></antcall>	
+		<antcall target="createWar"></antcall>
+		<antcall target="deployUpload"></antcall>	
+	</target>
+	<target name="deployJnlp">
+		<antcall target="deployAll"></antcall>	
+		<antcall target="createJnlpTemplate"></antcall>	
+		<antcall target="deployUpload"></antcall>	
+	</target>
+
+	<target name="copyEchoLibs">
+		<copy todir="deploy/current">
+			<fileset dir=".">
+				<include name="WEB-INF/**" />
+				<include name="*.stylesheet" />
+
+			</fileset>
+		</copy>
+
+	</target>
+	
+	<target name="deployAll" depends="baseDeploy">
+		<echo message="Goin in!"/>
+		<delete dir="deploy/current" />
+		<buildDeployJnlp codebase="${tipiAppStore}${projectName}" baseDir="${baseDir}" deployPath="${deployPath}" />
+
+		<mkdir dir="deploy" />
+		<mkdir dir="deploy/current" />
+		<mkdir dir="deploy/archived" />
+		<buildWikiSource sourceDir="tipi/" resourceDir="resource/" appCodebase="${tipiAppStore}${projectName}/resource/" docDir="deploy/current/source/" baseDir="${baseDir}" name="${projectName}" />
+		<copy todir="deploy/current">
+			<fileset dir=".">
+				<include name="tipi/**" />
+				<include name="resource/**" />
+				<include name="lib/**" />
+			</fileset>
+		</copy>
+		<copy file="settings/template.html" tofile="deploy/current/index.html" />
+		
+
+
+		<zip destfile="${baseDir}/deploy/archived/${projectName}_${build.timestamp}.zip" basedir="${baseDir}/deploy/current" />
+</target>
+	
+	<target name="deployUpload" depends="baseDeploy">
+		
+		<mkdir dir="${projectName}" />
+		<copy todir="${projectName}">
+			<fileset dir=".">
+				<include name=".project" />
+			</fileset>
+		</copy>
+		<eclipse.refreshLocal resource="${ant.project.name}" />
+		<scp trust="true" sftp="true" verbose="true" todir="${tipiAppStoreSsh}">
+			<fileset dir=".">
+				<include name="${projectName}/**" />
+			</fileset>
+		</scp>
+		<scp trust="true" sftp="true" verbose="true" todir="${tipiDocSsh}">
+			<fileset dir=".">
+				<include name="${projectName}/**" />
+			</fileset>
+		</scp>
+		<delete dir="${projectName}">
+		</delete>
+		<scp trust="true" sftp="true" verbose="true" todir="${tipiAppStoreSsh}${projectName}">
+			<fileset dir="deploy/current">
+				<include name="*.jnlp" />
+				<include name="lib/**" />
+				<include name="tipi/**" />
+				<include name="resource/**" />
+				<include name="index.html" />
+			</fileset>
+		</scp>
+		<scp trust="true" sftp="true" verbose="true" todir="${tipiDocSsh}${projectName}">
+			<fileset dir="deploy/current/source">
+				<include name="**" />
+			</fileset>
+		</scp>
+	</target>
+
+	<target name="clean">
+		<delete dir="lib" />
+		<delete dir="WEB-INF" />
+		<delete dir=".tipiproject" />
+		<delete file="tipi/tipi.xsd" />
+		<delete file="Local.jnlp" />
+		<delete file="Remote.jnlp" />
+		<eclipse.refreshLocal resource="${projectName}" />
+	</target>
+
+</project>

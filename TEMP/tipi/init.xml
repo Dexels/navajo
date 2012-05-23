@@ -1,0 +1,83 @@
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipi.xsd">
+    <client-config locale="'nl'" password="{system:/navajo.globals.NavajoPwd}" server="{system:/navajo.globals.CoreSysPostmanURI}" username="{system:/navajo.globals.NavajoUsr}" />
+    <d.frame h="768" w="1024" name="init" title="'RDF Knowledge browser'" visible="true" icon="{resource:/icons/joystick.png}" fullscreen="true">
+        <onInstantiate>
+            <callService service="'rdf/InitGetConnections'" />
+        </onInstantiate>
+        <!-- must be a MIG layout -->
+        <l.mig grid="wrap 2">
+            <c.panel id="addressPanel" border="{border:/titled-Start}" constraint="width 100%, height 20px, spanx 2" service="rdf/InitGetConnections">
+                <l.mig grid="fillx, ins 0">
+                    <c.property constraint="width 300px" propertyname="'Object/ObjectType'" showlabel="false" />
+                    <c.property constraint="growx" propertyname="'Object/ObjectName'" showlabel="false" />
+                    <c.button constraint="width 50px" text="'Go!'">
+                        <onActionPerformed>
+                            <block condition="StringFunction('indexOf', GetSelectedValue({property:/rdf/InitGetConnections:Object/ObjectType}), 'dbobject') &gt;= 0">
+                                <set element="{propertyref:/rdf/InitGetConnections:Object/Object}" value="GetSelectedValue({property:/rdf/InitGetConnections:Object/ObjectType}) + {property:/rdf/InitGetConnections:Object/ObjectName}" />
+                                <set element="{propertyref:/rdf/InitGetConnections:Object/Predicate}" value="'http://www.navajo.nl/dbproperty'" />
+                            </block>
+                            <block condition="StringFunction('indexOf', GetSelectedValue({property:/rdf/InitGetConnections:Object/ObjectType}), 'dbobject') == -1">
+                                <set element="{propertyref:/rdf/InitGetConnections:Object/Object}" value="GetSelectedValue({property:/rdf/InitGetConnections:Object/ObjectType}) + StringFunction('replaceAll', {property:/rdf/InitGetConnections:Object/ObjectName}, '/', '_')" />
+                                <set element="{propertyref:/rdf/InitGetConnections:Object/Predicate}" value="''" />
+                            </block>
+                            <rdfgraph.clear path="{component:/../../split/mainPanel/rdf}" />
+                            <rdfgraph.setViewDepth path="{component:/../../split/mainPanel/rdf}" depth="2" />
+                            <callService input="{navajo:/rdf/InitGetConnections}" service="'rdf/InitGetConnections'" />
+                            <callService input="{navajo:/rdf/InitGetConnections}" service="'rdf/ProcessGetObjectDetails'" />
+                        </onActionPerformed>
+                    </c.button>
+                </l.mig>
+            </c.panel>
+            <c.split id="split" constraint="width 100%, height 100%" dividersize="6" dividerlocation="300">
+                <c.panel id="propertiesPanel" constraint="left">
+                    <l.mig grid="wrap 1">
+                        <c.tipitable border="{border:/titled-Properties}" id="scriptsTable" messagepath="'/ScriptDetails'" constraint="width 100%, height 33%" service="rdf/ProcessGetObjectDetails">
+                            <column name="PredicateDesc" label="'Property'" editable="false" size="60" />
+                            <column name="ObjectDesc" label="'Value'" editable="false" />
+                        </c.tipitable>
+                        <c.tipitable border="{border:/titled-Database}" id="databaseTable" messagepath="'/DatabaseDetails'" constraint="width 100%, height 33%" service="rdf/ProcessGetObjectDetails">
+                            <column name="PredicateDesc" label="'Property'" editable="false" size="60" />
+                            <column name="ObjectDesc" label="'Value'" editable="false" />
+                        </c.tipitable>
+                        <c.tipitable border="{border:/titled-Objects}" id="objectTable" messagepath="'/JavaDetails'" constraint="width 100%, height 33%" service="rdf/ProcessGetObjectDetails">
+                            <column name="ObjectDesc" label="'Value'" editable="false" />
+                        </c.tipitable>
+                        <c.panel id="controlPanel" constraint="width 100%, height 20px">
+                            <l.mig grid="filly, wrap 2">
+                                <c.slider constraint="width 80%" id="depthSlider" min="0" max="5" value="1" orientation="'Horizontal'" showticks="true" majortick="5" minortick="1" snaptoticks="true">
+                                    <onValueChanged>
+                                        <rdfgraph.setViewDepth path="{component:/../../../mainPanel/rdf}" depth="{attribute:/.:value}" />
+                                    </onValueChanged>
+                                </c.slider>
+                                <c.button text="'Clear'" constraint="width 20%">
+                                    <onActionPerformed>
+                                        <rdfgraph.clear path="{component:/../../../mainPanel/rdf}" />
+                                    </onActionPerformed>
+                                </c.button>
+                                <c.hidden constraint="growy"/>
+                            </l.mig>
+                        </c.panel>
+                    </l.mig>
+                </c.panel>
+                <c.panel id="mainPanel" constraint="right">
+                    <l.border>
+                        <c.rdfgraph id="rdf" constraint="Center" service="rdf/InitGetConnections;rdf/ProcessGetObjectDetails">
+                            <onInstantiate>
+                                <rdfgraph.setNamespace path="{component:/.}" ns="'tipi'" url="'http://www.navajo.nl/tipi/'" />
+                                <rdfgraph.setNamespace path="{component:/.}" ns="'navajo'" url="'http://www.navajo.nl/navajo/'" />
+                                <rdfgraph.setNamespace path="{component:/.}" ns="'dbo'" url="'http://www.navajo.nl/dbobject/'" />
+                                <rdfgraph.setNamespace path="{component:/.}" ns="'base'" url="'http://www.navajo.nl/'" />
+                                <rdfgraph.setNamespace path="{component:/.}" ns="'service'" url="'http://www.navajo.nl/navajo/service/'" />
+                            </onInstantiate>
+                            <onObjectChanged>
+                                <set element="{propertyref:/rdf/InitGetConnections:Object/Object}" value="{event:/url}" />
+                                <callService input="{navajo:/rdf/InitGetConnections}" service="'rdf/InitGetConnections'" />
+                                <callService input="{navajo:/rdf/InitGetConnections}" service="'rdf/ProcessGetObjectDetails'" />
+                            </onObjectChanged>
+                        </c.rdfgraph>
+                    </l.border>
+                </c.panel>
+            </c.split>
+        </l.mig>
+    </d.frame>
+</tid>
