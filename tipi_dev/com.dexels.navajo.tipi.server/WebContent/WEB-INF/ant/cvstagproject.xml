@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE project>
+<project default="tag" >
+<!--	<property name="tag" value="testtag3"/> basedir="/Users/frank/testcvs/aap/SportlinkClub"-->
+	<fail unless="tipiAppstore" message="This script will only run from the app store."/>
+	<target name="tag">
+		<echo message="Tag: ${tag} dir: ${basedir}"/>
+		<cvs command="tag ${tag}"></cvs>
+	</target>
+	
+</project>

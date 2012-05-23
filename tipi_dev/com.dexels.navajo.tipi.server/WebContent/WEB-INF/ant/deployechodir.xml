@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE project>
+<project default="deploy" >
+	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
+	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
+	<taskdef name="start" classname="org.apache.catalina.ant.StartTask" />
+	<taskdef name="stopApplication" classname="org.apache.catalina.ant.StopTask" />
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+	
+	<fail unless="tipiAppstore" message="This script will only run from the app store."/>
+
+	<!--	<property name="tag" value="testtag3"/> basedir="/Users/frank/testcvs/aap/SportlinkClub"-->
+	<target name="deploy" depends="createwar">
+		<echo message=">>>>>>> skipdeply: ${skipdeploy}"/>
+		<if>
+			<isset property="skipdeploy"/>
+			<then>
+				<echo message="Skipping deploy, as instructed."/>
+			</then>
+			<else>
+				<deploy  url="${managerUrl}" update="true" username="${managerUsername}" password="${managerPassword}" war="${basedir}/${application}.war" path="/${applicationContext}"/>
+			</else>
+		</if>
+	</target>
+
+	<target name="createwar">
+		<war destfile="${application}.war">
+			<fileset dir=".">
+				<include name="WEB-INF/**"/>
+				<include name="*.stylesheet"/>
+				<include name="tipi/**"/>
+				<include name="resource/**"/>
+			</fileset>
+		</war>
+		<echo message="Created war file: ${application}.war"/>
+	</target>	
+</project>

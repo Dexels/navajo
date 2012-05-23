@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE project>
+<!-- $Id$ -->
+<project name="TipiServer" default="dobuild" basedir=".">
+    <property name="tipiTomcatServer" value="http://localhost:9080/"/>
+    <property name="tipiTomcatManager" value="http://localhost:9080/manager/text"/>
+    <property name="tipiTomcatUsername" value="navajo"/>
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
+	
+	<target name="setuptarget">
+		<copy overwrite="true" todir="WebContent/WEB-INF/" file="serverconfigurations/localhost/web.xml"/>
+	</target>
+	
+	<target name="dobuild" depends="setuptarget">
+		<ant antfile="buildserver.xml" target="publish"></ant>
+	</target>
+	
+</project>
+<!-- EOF: $RCSfile$ -->

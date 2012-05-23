@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE project>
+<project default="createzip">
+<!--	<property name="filename" value="/Users/frank/Documents/Spiritus/TipiServer/gorilla.zip"/>
+	<property name="baseDir" value="/Users/frank/Documents/runtime-New_configuration(1)/Baaaapaa/"/>
+	-->
+	<fail unless="tipiAppstore" message="This script will only run from the app store."/>
+
+	<echo message="filename: ${filename}"/>
+	<echo message="basedir: ${zipDir}"/>
+	<target name="createzip">
+		<zip destfile="${application}.zip" basedir="${zipDir}" includes="tipi/**,resource/**,settings/**"/>
+	</target>
+
+	
+</project>
