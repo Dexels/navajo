@@ -40,8 +40,8 @@ public class PointRotationPanel extends JComponent {
 		double delta_radians = delta * rad_degree;
 		double alignment = 90 * rad_degree; // we center at 1 1/2 PI
 		
-		double x = Math.cos(delta_radians);
-		double y = Math.sin(delta_radians);
+//		double x = Math.cos(delta_radians);
+//		double y = Math.sin(delta_radians);
 		
 		ArrayList<Point2D.Double> points = new ArrayList<Point2D.Double>();
 		

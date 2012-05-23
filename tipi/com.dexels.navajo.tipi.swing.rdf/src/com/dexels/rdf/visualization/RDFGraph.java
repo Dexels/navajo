@@ -41,8 +41,8 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 	// Zooming
 	public GLU glu = new GLU();
 	private float zoomIncrement;
-	private float previousZoom;
-	private Point zoomPoint = new Point(0, 0);
+//	private float previousZoom;
+//	private Point zoomPoint = new Point(0, 0);
 
 	// Drawing
 	private Point pickPoint = new Point(0, 0);
@@ -136,7 +136,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 						max_radius = radius;
 					}
 				}else{
-					zoomPoint = e.getPoint();
+//					zoomPoint = e.getPoint();
 					zoom(-e.getWheelRotation());
 				}
 				repaintCanvas();
@@ -165,7 +165,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 	}
 	
 	public void zoom(int factor) {
-		previousZoom = zoom;
+//		previousZoom = zoom;
 		float previousIncrement = zoomIncrement;
 		float max_depth = 100f;
 		float min_increment = 1f;
@@ -316,8 +316,6 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 	}
 
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void init(GLAutoDrawable drawable) {
@@ -524,8 +522,6 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
