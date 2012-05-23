@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="rich" requiresMain="" project="TipiRich" version="0.9" title="Tipi Rich UI Library" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		Several cool rich ui interface components
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/components/rich/richclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="TipiRichClient.jar"/>
+		<jar path="TipiRich.jar"/>
+	</jars>
+	<other>
+		<link href="https://timingframework.dev.java.net/"/>
+		<link href="https://animatedtransitions.dev.java.net/"/>
+		<link href="http://filthyrichclients.org/"/>
+	</other>
+</extension>

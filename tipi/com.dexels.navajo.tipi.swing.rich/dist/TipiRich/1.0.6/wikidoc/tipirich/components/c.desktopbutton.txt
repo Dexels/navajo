@@ -1,0 +1,30 @@
+==== Component: desktopbutton (type: component) ====
+ [[..componentlist|(Back to componentlist)]]
+=== Values === 
+  *[[tipidoc:TipiEcho:types:color|color]] : background (writable) 
+  *[[tipidoc:TipiEcho:types:color|color]] : foreground (writable) 
+  *[[tipidoc:TipiEcho:types:border|border]] : border (writable) 
+  *[[tipidoc:Tipi:types:string|string]] : text (writable) 
+  *[[tipidoc:Tipi:types:string|string]] : subtext (writable) 
+  *[[tipidoc:Tipi:types:url|url]] : icon (writable) 
+  *[[tipidoc:Tipi:types:boolean|boolean]] : opaque (writable) 
+  *[[tipidoc:Tipi:types:boolean|boolean]] : showSpring (writable) 
+  *[[tipidoc:Tipi:types:boolean|boolean]] : enabled (writable) 
+  *[[tipidoc:Tipi:types:string|string]] : tooltip (writable) 
+  *[[tipidoc:Tipi:types:resource|resource]] : textfont (writable) 
+  *[[tipidoc:Tipi:types:resource|resource]] : subtextfont (writable) 
+  *[[tipidoc:Tipi:types:boolean|boolean]] : visible (writable) 
+  *[[tipidoc:Tipi:types:float|float]] : opacity (writable) 
+  *[[tipidoc:Tipi:types:integer|integer]] : speed (writable) 
+=== Methods ===
+== Method: desktopbutton.flip ==
+=== Events ===
+== Event: onInstantiate ==
+== Event: onActionPerformed ==
+== Event: onLoad ==
+      *[[tipidoc:Tipi:types:string|string]] : service
+
+------
+
+[[tipiremarks:TipiRich:desktopbutton|Remarks & demo code for desktopbutton]]
+[[classdefdesktopbutton|XML Definition]]

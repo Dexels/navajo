@@ -1,0 +1,19 @@
+<code xml>
+<tipiclass name="richtipi" module="container" addtocontainer="true" class="TipiRichPanel" childcount="*" layoutmanager="true" type="tipi" package="com.dexels.navajo.tipi.components.rich" extension="TipiRich" studio-icon="tabs.gif">
+    <events>
+        <event name="onInstantiate"/>
+        <event name="onLoad">
+            <param name="service" type="string"/>
+        </event>
+    </events>
+    <values>
+        <value name="background" type="color" property="background" direction="in"/>
+        <value name="foreground" type="color" property="foreground" direction="in"/>
+        <value name="border" type="border" direction="in"/>
+        <value name="opacity" type="float" property="opacity" direction="in"/>
+        <value name="bordersize" type="float" property="borderWidth" direction="in"/>
+        <value name="arc" type="integer" property="arcWidth" direction="in"/>
+    </values>
+    <methods/>
+</tipiclass>
+</code>

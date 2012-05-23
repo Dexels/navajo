@@ -1,0 +1,16 @@
+<code xml>
+<tipiclass name="peelpanel" module="container" addtocontainer="true" class="TipiPeelPanel" childcount="*" layoutmanager="false" type="tipi" package="com.dexels.navajo.tipi.components.rich" extension="TipiRich" studio-icon="tabs.gif">
+    <events>
+        <event name="onInstantiate"/>
+        <event name="onLoad">
+            <param name="service" type="string"/>
+        </event>
+    </events>
+    <values>
+        <value name="backsidecolor" type="color" property="backSideColor" direction="in"/>
+        <value name="backsideimage" type="resource" property="backSideImage" direction="in"/>
+        <value name="visible" type="boolean" property="visible" direction="in"/>
+    </values>
+    <methods/>
+</tipiclass>
+</code>

@@ -1,0 +1,32 @@
+==== Tipi extension: TipiRich ====
+=== Several cool rich ui interface components ===
+Main repository deployment: [not applicable]
+
+This extension can be used in any frontend configuration
+
+=== Open source dependencies: ===
+[[https://timingframework.dev.java.net/|https://timingframework.dev.java.net/]]
+
+[[https://animatedtransitions.dev.java.net/|https://animatedtransitions.dev.java.net/]]
+
+[[http://filthyrichclients.org/|http://filthyrichclients.org/]]
+
+
+-----
+Deployment descriptor: [[http://spiritus.dexels.nl:41766/Tipi/Extensions/TipiRich/1.0.6/TipiRich.jnlp| TipiRich.jnlp ]]
+
+Click to preload extension into Webstart cache.
+
+^ Signed: ^ Unsigned: ^
+| [[http://spiritus.dexels.nl:41766/Tipi/Extensions/TipiRich/1.0.6/lib/TipiRichClient.jar|TipiRichClient.jar]] | [[http://spiritus.dexels.nl:41766/Tipi/Extensions/TipiRich/1.0.6/unsigned/TipiRichClient.jar|TipiRichClient.jar]] | 
+| [[http://spiritus.dexels.nl:41766/Tipi/Extensions/TipiRich/1.0.6/lib/TipiRich.jar|TipiRich.jar]] | [[http://spiritus.dexels.nl:41766/Tipi/Extensions/TipiRich/1.0.6/unsigned/TipiRich.jar|TipiRich.jar]] | 
+
+
+Components: [[componentlist|Components]]
+
+Actions: [[actionlist|Actions]]
+
+Types: [[typelist|Types]]
+
+Functions: [[functionlist|Functions]]
+
