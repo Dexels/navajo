@@ -1,0 +1,950 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Written by Eclipse BIRT 2.0 -->
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.0.1 Build &lt;20060222-1204></property>
+    <property name="units">in</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">odaDriverClass</property>
+            <property name="id">7</property>
+        </structure>
+        <structure>
+            <property name="name">odaURL</property>
+            <property name="id">7</property>
+        </structure>
+        <structure>
+            <property name="name">odaUser</property>
+            <property name="id">7</property>
+            <expression name="value">params["ApplicationInstance"]+"_"+params["ClubIdentifier"]</expression>
+        </structure>
+        <structure>
+            <property name="name">odaPassword</property>
+            <property name="id">7</property>
+            <expression name="value">params["ApplicationInstance"]+"_"+params["ClubIdentifier"]</expression>
+        </structure>
+    </list-property>
+    <list-property name="configVars">
+        <structure>
+            <property name="name">ApplicationInstance</property>
+            <property name="value">KNVB</property>
+        </structure>
+        <structure>
+            <property name="name">ClubIdentifier</property>
+            <property name="value">BBKY84H</property>
+        </structure>
+        <structure>
+            <property name="name">InvoiceId</property>
+            <property name="value">1758</property>
+        </structure>
+    </list-property>
+    <parameters>
+        <scalar-parameter name="ApplicationInstance" id="165">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="format">Unformatted</property>
+            <property name="controlType">text-box</property>
+            <property name="defaultValue">KNVB</property>
+        </scalar-parameter>
+        <scalar-parameter name="ClubIdentifier" id="149">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="allowBlank">false</property>
+            <property name="format">Unformatted</property>
+            <property name="controlType">text-box</property>
+            <property name="defaultValue">BBKY84H</property>
+        </scalar-parameter>
+        <scalar-parameter name="InvoiceId" id="150">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="allowBlank">false</property>
+            <property name="format">Unformatted</property>
+            <property name="controlType">text-box</property>
+            <property name="defaultValue">1758</property>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="ASP DB - DEXORA" id="7">
+            <property name="odaDriverClass">oracle.jdbc.OracleDriver</property>
+            <property name="odaURL">jdbc:oracle:thin:@geranium:6310:DEXORA</property>
+            <property name="odaUser">KNVB_BBKY84H</property>
+            <encrypted-property name="odaPassword">S05WQl9CQktZODRI</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="InvoiceHeader" id="8">
+            <property name="dataSource">ASP DB - DEXORA</property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">club1</property>
+                    <property name="dataType">string</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">"BBKY84H"</expression>
+                    <property name="isInput">true</property>
+                </structure>
+                <structure>
+                    <property name="name">club2</property>
+                    <property name="dataType">string</property>
+                    <property name="position">2</property>
+                    <expression name="defaultValue">"BBKY84H"</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">invoiceid</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">3</property>
+                    <expression name="defaultValue">1758</expression>
+                    <property name="isInput">true</property>
+                </structure>
+            </list-property>
+            <property name="queryText"> SELECT DISTINCT
+                       invoiceid
+                ,      invoicedate
+                ,      invoicedescription
+                ,      ( SELECT description
+                         FROM   localcode
+                         WHERE  codetable = 'instructie_type'
+                         AND    code = iti1.preferredinstructiontype
+                       ) AS InstructionType
+                ,      ( SELECT externalid 
+                         FROM   person
+                         WHERE  personid = iti1.invoiceobjectid
+                      ) AS personid
+                ,      invoicepersonbankaccount AS accountno
+                ,      invoicepersonbankaccounttype AS accounttype
+                ,      invoicepersonlastname || ', ' || invoicepersoninitials || ' ' || invoicepersoninfix AS invoicepersonname
+                ,      invoicepersonlastname AS lastname      
+                ,      invoicepersonstreetname AS streetname
+                ,      invoicepersonhousenumber AS housenumber
+                ,      invoicepersonnumberappendix AS numberappendix
+                ,      invoicepersoncity AS city
+                ,      invoicepersonzipcode AS zipcode  
+                ,      invoicedate + 14 AS followupdate                	   
+                ,      invoicepaymentdate
+                ,      isinvoiced
+                ,      processingnumber
+                ,      NVL ( ( SELECT SUM(transactionitemamount)
+                               FROM   vw_invoicetransactionitems iti2
+                               WHERE  iti1.invoiceid    = iti2.invoiceid
+                               AND    iti2.transactionitemtype = 'D' 
+                               AND    iti2.transactionitemledgerkeyid = ( SELECT ledgerkeyid 
+                                                                          FROM   fin_ledgerkey 
+                                                                          WHERE  ledgerkeytype = 'DEBTORS' 
+                                                                        ) 
+                             ), 0               
+                       ) AS InvoiceAmount                    
+                ,      ( SELECT attribvalue  
+                         FROM   organizationattribute
+                         WHERE  organizationid = ( SELECT organizationid 
+                                                   FROM organization 
+                                                   WHERE externalid = ? 
+                                                 )
+                         AND    attribid       = 'JournalCode'
+                       ) AS JournalCode        
+                ,      NVL ( ( SELECT description
+                               FROM   fin_contribseason
+                               WHERE  seasonid = ( SELECT seasonid 
+                                                   FROM   fin_contribseasonperiod
+                                                   WHERE  fin_contribseasonperiod.seasonid = fin_contribseason.seasonid
+                                                   AND    fin_contribseasonperiod.contribseasonperiodid = iti1.contribseasonperiodid
+                                                 )
+                             ), '-' 
+                       ) AS SeasonDescription
+                ,      ( SELECT attribvalue  
+                         FROM   organizationattribute
+                         WHERE  organizationid = ( SELECT organizationid 
+                                                   FROM organization 
+                                                   WHERE externalid = ?
+                                                 )
+                         AND    attribid       = 'FollowUpDelay'
+                       ) AS FollowUpDelay
+                FROM   vw_invoicetransactionitems iti1
+                WHERE  invoiceid = ?</property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Transaction Items" id="114">
+            <property name="dataSource">ASP DB - DEXORA</property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">1758</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <property name="queryText">SELECT DISTINCT
+                       transactionitemid
+                ,      financialperiod
+                ,      transactionitemdescription
+                ,      transactionitemamount
+                ,      ( SELECT ledgerkeynumber
+                         FROM   fin_ledgerkey
+                         WHERE  fin_ledgerkey.ledgerkeyid = iti1.transactionitemledgerkeyid
+                       ) AS LedgerKeyNumber
+                ,      transactionpersonfirstname AS firstname
+                ,      transactionpersoninitials AS initials
+                ,      transactionpersoninfix AS infix
+                ,      transactionpersonlastname AS lastname
+                FROM   vw_invoicetransactionitems iti1
+                WHERE  transactionid IN ( SELECT transactionid 
+                                          FROM   fin_transaction 
+                                          WHERE invoiceid = ?
+                                        )               
+                AND    iti1.transactionitemtype = 'C'
+                AND    iti1.transactionitemledgerkeyid != ( SELECT ledgerkeyid
+                                                            FROM   fin_ledgerkey
+                                                            WHERE  ledgerkeytype = 'DEBTORS'
+                                                          )
+</property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="OrganizationName" id="166">
+            <property name="dataSource">ASP DB - DEXORA</property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">clubidentifier</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">'BBKY84H'</expression>
+                    <property name="isInput">true</property>
+                </structure>
+            </list-property>
+            <property name="queryText">select name
+from organization
+where externalid = ?</property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="Header" id="63">
+            <property name="fontFamily">Lucida Sans</property>
+            <property name="fontSize">x-large</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingTop">10pt</property>
+            <property name="paddingLeft">10pt</property>
+            <property name="paddingBottom">10pt</property>
+            <property name="paddingRight">10pt</property>
+            <property name="textAlign">center</property>
+        </style>
+        <style name="Bordered Table" id="112">
+            <property name="borderBottomStyle">none</property>
+            <property name="borderLeftStyle">none</property>
+            <property name="borderRightStyle">none</property>
+            <property name="borderTopStyle">none</property>
+            <property name="paddingTop">3pt</property>
+            <property name="paddingLeft">3pt</property>
+            <property name="paddingBottom">3pt</property>
+            <property name="paddingRight">3pt</property>
+        </style>
+        <style name="TH" id="136">
+            <property name="fontFamily">SansSerif</property>
+            <property name="fontSize">medium</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingTop">2pt</property>
+            <property name="paddingLeft">3pt</property>
+            <property name="paddingBottom">2pt</property>
+            <property name="paddingRight">3pt</property>
+        </style>
+        <style name="TD" id="137">
+            <property name="paddingTop">3pt</property>
+            <property name="paddingLeft">3pt</property>
+            <property name="paddingBottom">3pt</property>
+            <property name="paddingRight">3pt</property>
+        </style>
+        <style name="Table footer" id="146">
+            <property name="borderTopStyle">double</property>
+            <property name="borderTopWidth">medium</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="leftMargin">1in</property>
+            <property name="rightMargin">1in</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <grid id="167">
+            <property name="width">100%</property>
+            <property name="dataSet">OrganizationName</property>
+            <column id="168">
+                <property name="width">1in</property>
+            </column>
+            <column id="169">
+                <property name="width">5.484in</property>
+            </column>
+            <row id="170">
+                <cell id="171">
+                    <property name="colSpan">2</property>
+                    <property name="rowSpan">1</property>
+                    <data id="174">
+                        <property name="style">Header</property>
+                        <property name="fontFamily">sans-serif</property>
+                        <property name="paddingLeft">0pt</property>
+                        <property name="textAlign">left</property>
+                        <property name="dataSet">OrganizationName</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">clubidentifier</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                        </list-property>
+                        <expression name="valueExpr">row["NAME"] + ' - factuur'</expression>
+                    </data>
+                </cell>
+            </row>
+        </grid>
+        <grid id="65">
+            <property name="width">100%</property>
+            <property name="dataSet">InvoiceHeader</property>
+            <column id="66">
+                <property name="width">1.115in</property>
+            </column>
+            <column id="67">
+                <property name="width">0.768in</property>
+            </column>
+            <column id="68">
+                <property name="width">0.968in</property>
+            </column>
+            <column id="69">
+                <property name="width">1.568in</property>
+            </column>
+            <column id="70">
+                <property name="width">1.042in</property>
+            </column>
+            <column id="71">
+                <property name="width">1.031in</property>
+            </column>
+            <row id="72">
+                <cell id="73">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="64">
+                        <property name="fontFamily">sans-serif</property>
+                        <text-property name="text">Factuurnummer:</text-property>
+                    </label>
+                </cell>
+                <cell id="74">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="13">
+                        <property name="fontFamily">sans-serif</property>
+                        <property name="dataSet">InvoiceHeader</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">club1</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">club2</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">invoiceid</property>
+                                <expression name="expression">params["InvoiceId"]</expression>
+                            </structure>
+                        </list-property>
+                        <expression name="valueExpr">row["INVOICEID"]</expression>
+                    </data>
+                </cell>
+                <cell id="75">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="103">
+                        <property name="fontFamily">sans-serif</property>
+                        <text-property name="text">Seizoen:</text-property>
+                    </label>
+                </cell>
+                <cell id="76">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="14">
+                        <property name="fontFamily">sans-serif</property>
+                        <property name="dataSet">InvoiceHeader</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">club1</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">club2</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">invoiceid</property>
+                                <expression name="expression">params["InvoiceId"]</expression>
+                            </structure>
+                        </list-property>
+                        <expression name="valueExpr">row["SEASONDESCRIPTION"]</expression>
+                    </data>
+                </cell>
+                <cell id="77">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="107">
+                        <property name="fontFamily">sans-serif</property>
+                        <text-property name="text">Factuurdatum:</text-property>
+                    </label>
+                </cell>
+                <cell id="78">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="111">
+                        <property name="fontFamily">sans-serif</property>
+                        <structure name="dateTimeFormat">
+                            <property name="category">Custom</property>
+                            <property name="pattern">dd-MM-yyyy</property>
+                        </structure>
+                        <property name="dataSet">InvoiceHeader</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">club1</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">club2</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">invoiceid</property>
+                                <expression name="expression">params["InvoiceId"]</expression>
+                            </structure>
+                        </list-property>
+                        <expression name="valueExpr">row["INVOICEDATE"]</expression>
+                    </data>
+                </cell>
+            </row>
+            <row id="79">
+                <cell id="80">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <label id="102">
+                        <property name="fontFamily">sans-serif</property>
+                        <text-property name="text">Dagboeknummer:</text-property>
+                    </label>
+                </cell>
+                <cell id="81">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <data id="49">
+                        <property name="fontFamily">sans-serif</property>
+                        <property name="dataSet">InvoiceHeader</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">club1</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">invoiceid</property>
+                                <expression name="expression">params["InvoiceId"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">club2</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                        </list-property>
+                        <expression name="valueExpr">row["JOURNALCODE"]</expression>
+                    </data>
+                </cell>
+                <cell id="82">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <label id="104">
+                        <property name="fontFamily">sans-serif</property>
+                        <text-property name="text">Verwerkingsnr.:</text-property>
+                    </label>
+                </cell>
+                <cell id="83">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <data id="50">
+                        <property name="fontFamily">sans-serif</property>
+                        <property name="dataSet">InvoiceHeader</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">club1</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">club2</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">invoiceid</property>
+                                <expression name="expression">params["InvoiceId"]</expression>
+                            </structure>
+                        </list-property>
+                        <expression name="valueExpr">row["PROCESSINGNUMBER"]</expression>
+                    </data>
+                </cell>
+                <cell id="84">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <label id="108">
+                        <property name="fontFamily">sans-serif</property>
+                        <text-property name="text">Vervalt:</text-property>
+                    </label>
+                </cell>
+                <cell id="85">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <data id="175">
+                        <property name="fontFamily">sans-serif</property>
+                        <structure name="dateTimeFormat">
+                            <property name="category">Custom</property>
+                            <property name="pattern">dd-MM-yyyy</property>
+                        </structure>
+                        <expression name="valueExpr">row["FOLLOWUPDATE"]</expression>
+                    </data>
+                </cell>
+            </row>
+            <row id="86">
+                <cell id="87">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <label id="101">
+                        <property name="fontFamily">sans-serif</property>
+                        <text-property name="text">Deb. nummer:</text-property>
+                    </label>
+                </cell>
+                <cell id="88">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <data id="52">
+                        <property name="fontFamily">sans-serif</property>
+                        <property name="dataSet">InvoiceHeader</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">club1</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">club2</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">invoiceid</property>
+                                <expression name="expression">params["InvoiceId"]</expression>
+                            </structure>
+                        </list-property>
+                        <expression name="valueExpr">row["PERSONID"]</expression>
+                    </data>
+                </cell>
+                <cell id="89">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <label id="105">
+                        <property name="fontFamily">sans-serif</property>
+                        <text-property name="text">Naam:</text-property>
+                    </label>
+                </cell>
+                <cell id="90">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <data id="53">
+                        <property name="fontFamily">sans-serif</property>
+                        <property name="dataSet">InvoiceHeader</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">club1</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">club2</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">invoiceid</property>
+                                <expression name="expression">params["InvoiceId"]</expression>
+                            </structure>
+                        </list-property>
+                        <expression name="valueExpr">row["INVOICEPERSONNAME"]</expression>
+                    </data>
+                </cell>
+                <cell id="91">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <label id="109">
+                        <property name="fontFamily">sans-serif</property>
+                        <text-property name="text">Betalingsdatum:</text-property>
+                    </label>
+                </cell>
+                <cell id="92">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <data id="56">
+                        <property name="fontFamily">sans-serif</property>
+                        <structure name="dateTimeFormat">
+                            <property name="category">Custom</property>
+                            <property name="pattern">dd-MM-yyyy</property>
+                        </structure>
+                        <property name="dataSet">InvoiceHeader</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">club1</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">club2</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">invoiceid</property>
+                                <expression name="expression">params["InvoiceId"]</expression>
+                            </structure>
+                        </list-property>
+                        <expression name="valueExpr">row["INVOICEPAYMENTDATE"]</expression>
+                    </data>
+                </cell>
+            </row>
+            <row id="93">
+                <cell id="94">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <label id="100">
+                        <property name="fontFamily">sans-serif</property>
+                        <text-property name="text">Factuurbedrag:</text-property>
+                    </label>
+                </cell>
+                <cell id="95">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <data id="61">
+                        <property name="fontFamily">sans-serif</property>
+                        <structure name="numberFormat">
+                            <property name="category">Currency</property>
+                            <property name="pattern">€###0.00</property>
+                        </structure>
+                        <property name="dataSet">InvoiceHeader</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">club1</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">club2</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">invoiceid</property>
+                                <expression name="expression">params["InvoiceId"]</expression>
+                            </structure>
+                        </list-property>
+                        <expression name="valueExpr">row["INVOICEAMOUNT"]</expression>
+                    </data>
+                </cell>
+                <cell id="96">
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <label id="106">
+                        <property name="fontFamily">sans-serif</property>
+                        <text-property name="text">Omschrijving:</text-property>
+                    </label>
+                </cell>
+                <cell id="97">
+                    <property name="colSpan">3</property>
+                    <property name="rowSpan">1</property>
+                    <property name="style">Bordered Table</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <data id="62">
+                        <property name="fontFamily">sans-serif</property>
+                        <property name="dataSet">InvoiceHeader</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">club1</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">club2</property>
+                                <expression name="expression">params["ClubIdentifier"]</expression>
+                            </structure>
+                            <structure>
+                                <property name="paramName">invoiceid</property>
+                                <expression name="expression">params["InvoiceId"]</expression>
+                            </structure>
+                        </list-property>
+                        <expression name="valueExpr">row["INVOICEDESCRIPTION"]</expression>
+                    </data>
+                </cell>
+            </row>
+        </grid>
+        <label id="135">
+            <property name="style">Header</property>
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">large</property>
+            <property name="paddingTop">30pt</property>
+            <property name="paddingLeft">0pt</property>
+            <property name="textAlign">left</property>
+            <text-property name="text">Specificatie</text-property>
+        </label>
+        <table id="115">
+            <property name="width">100%</property>
+            <property name="dataSet">Transaction Items</property>
+            <list-property name="paramBindings">
+                <structure>
+                    <property name="paramName">id</property>
+                    <expression name="expression">params.InvoiceId</expression>
+                </structure>
+            </list-property>
+            <column id="128">
+                <property name="width">5.178in</property>
+            </column>
+            <column id="129">
+                <property name="width">1.305in</property>
+            </column>
+            <header>
+                <row id="116">
+                    <property name="backgroundColor">#E6E6FA</property>
+                    <property name="textAlign">center</property>
+                    <cell id="117">
+                        <property name="fontFamily">sans-serif</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="textAlign">left</property>
+                        <label id="131">
+                            <property name="style">TH</property>
+                            <text-property name="text">Omschrijving</text-property>
+                        </label>
+                    </cell>
+                    <cell id="118">
+                        <property name="fontFamily">sans-serif</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="textAlign">left</property>
+                        <label id="132">
+                            <property name="style">TH</property>
+                            <text-property name="text">Bedrag</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="120">
+                    <property name="style">TD</property>
+                    <cell id="121">
+                        <property name="style">TD</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="134">
+                            <property name="fontFamily">sans-serif</property>
+                            <expression name="valueExpr">row["TRANSACTIONITEMDESCRIPTION"]</expression>
+                        </data>
+                    </cell>
+                    <cell id="122">
+                        <property name="style">TD</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <data id="133">
+                            <property name="fontFamily">sans-serif</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">€###0.00</property>
+                            </structure>
+                            <expression name="valueExpr">row["TRANSACTIONITEMAMOUNT"]</expression>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="124">
+                    <property name="style">Table footer</property>
+                    <cell id="125">
+                        <property name="style">Table footer</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">bottom</property>
+                        <label id="145">
+                            <property name="fontFamily">sans-serif</property>
+                            <property name="paddingTop">3pt</property>
+                            <property name="paddingLeft">3pt</property>
+                            <property name="paddingBottom">3pt</property>
+                            <property name="paddingRight">3pt</property>
+                            <property name="textAlign">right</property>
+                            <text-property name="text">Totaal:  </text-property>
+                        </label>
+                    </cell>
+                    <cell id="126">
+                        <property name="style">Table footer</property>
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">bottom</property>
+                        <data id="143">
+                            <property name="style">TD</property>
+                            <property name="fontFamily">sans-serif</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">€###0.00</property>
+                            </structure>
+                            <expression name="valueExpr">Total.sum(row["TRANSACTIONITEMAMOUNT"])</expression>
+                        </data>
+                    </cell>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

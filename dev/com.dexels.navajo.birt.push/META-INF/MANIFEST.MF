@@ -1,0 +1,16 @@
+Bundle-Name: Navajo Birt
+Bundle-SymbolicName: com.dexels.navajo.birt.push
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.1.qualifier
+Bundle-Activator: navajobirt.Version
+Export-Package: com.dexels.navajo.adapter,
+ com.dexels.navajo.birt,
+ navajobirt
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.0",
+ com.dexels.navajo.core;bundle-version="2.9.0",
+ com.dexels.navajo.document;bundle-version="1.0.1",
+ com.dexels.navajo.client;bundle-version="1.0.0",
+ com.dexels.navajo.version;bundle-version="1.0.7"
+Import-Package: org.osgi.framework;version="1.5.0"

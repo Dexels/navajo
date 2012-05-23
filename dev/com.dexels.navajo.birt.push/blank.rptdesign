@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Written by Eclipse BIRT 2.0 -->
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.6" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2</property>
+    <property name="units">in</property>
+    <property name="comments">Dexels</property>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.xml" name="Data Source" id="4">
+            <text-property name="displayName"></text-property>
+            <property name="FILELIST"></property>
+            <property name="SCHEMAFILELIST"></property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+    </data-sets>
+    
+    <styles>
+        <style name="TableHeader" id="5">
+            <property name="fontSize">larger</property>
+            <property name="fontWeight">bold</property>
+            <property name="borderBottomColor">#000000</property>
+            <property name="borderBottomStyle">dotted</property>
+            <property name="borderBottomWidth">thin</property>
+        </style>
+        <style name="TableBody" id="7">
+            <property name="fontSize">larger</property>
+            <property name="fontWeight">bold</property>
+        </style>
+        <style name="MessageTable" id="8"/>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+   
+</report>
