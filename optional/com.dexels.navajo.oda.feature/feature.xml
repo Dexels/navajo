@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.dexels.navajo.oda.feature"
+      label="Birt ODA Driver"
+      version="1.0.2.qualifier"
+      provider-name="Dexels">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.navajo.nl/licence.html">
+      Dexels LGPL
+   </license>
+
+   <url>
+      <discovery label="Navajo Home" url="http://www.navajo.nl/p2"/>
+   </url>
+
+   <plugin
+         id="com.dexels.navajo.oda"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.oda.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
