@@ -31,6 +31,7 @@ import tipi.TipiCoreExtension;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
+	@SuppressWarnings("rawtypes")
 	private ServiceRegistration registration = null;
 	// Included packages.
 	public Version() {

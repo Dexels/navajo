@@ -19,6 +19,8 @@ import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class ServiceRegistrationUtils {
+	
+	@SuppressWarnings("rawtypes")
 	static ServiceRegistration registerWhiteBoardExtension(TipiExtension extension,
 			BundleContext context) throws FileNotFoundException {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
@@ -37,6 +39,7 @@ public class ServiceRegistrationUtils {
 	}
 	
 	
+	@SuppressWarnings("rawtypes")
 	static ServiceRegistration registerCoreExtension(TipiCoreExtension extension,
 			BundleContext context) throws FileNotFoundException {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
@@ -48,6 +51,7 @@ public class ServiceRegistrationUtils {
 		return context.registerService(TipiCoreExtension.class.getName(), extension, props);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static ServiceRegistration registerMainExtension(TipiMainExtension extension,
 			BundleContext context) throws FileNotFoundException {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
