@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="cobra" requiresMain="" project="TipiCobraBrowser" version="0.9" title="Tipi Cobra Browser" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		Open source pure-java browser implementation	
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/cobra/cobraclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="cobra.jar"/>
+		<jar path="js.jar"/>
+		<jar path="TipiCobraBrowser.jar"/>
+	</jars>
+	<other>
+		<link href="http://lobobrowser.org/cobra.jsp"/>
+	</other>
+	
+	<requires>
+	</requires>
+</extension>

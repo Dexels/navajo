@@ -1,0 +1,20 @@
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.navajo.nl/classdef_schema.xsd">
+   <tipiclass addtocontainer="true" class="TipiCobraBrowser" layoutmanager="false" module="container" name="cobrabrowser" package="com.dexels.navajo.tipi.cobra"
+      childcount="0" studio-icon="toolbar.gif" type="component">
+      <events>
+         <event name="onInstantiate" />
+		 <event name="onLink">
+		 	<param name="url" type="string"/>
+		 </event>
+      </events>
+      <values>
+         <value direction="in" name="binary" type="resource" property="binary" />
+         <value direction="in" name="url" type="string"/>
+   		 <value direction="inout" name="status" type="string"/>
+    	 <value direction="in" name="allowLink" type="boolean"/>
+    	 <value direction="in" name="emailNavajo" type="navajo"/>
+		 
+      </values>
+      <methods />
+   </tipiclass>
+</tid>

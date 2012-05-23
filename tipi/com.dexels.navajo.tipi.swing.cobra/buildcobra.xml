@@ -1,0 +1,23 @@
+<project name="TipiCobraBrowser" default="archive" basedir=".">
+
+	<target name="resource">
+		<copy todir="cobraclasses">
+			<fileset dir="cobrasrc">
+				<exclude name="**/*.java" />
+				<exclude name="CVS" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="compile" depends="resource">
+		<javac srcdir="cobrasrc" destdir="cobraclasses" debug="true" debuglevel="lines,vars,source">
+			<classpath path="lib/js.jar" />
+		</javac>
+	</target>
+	<target name="archive" depends="compile">
+		<jar jarfile="lib/cobra.jar">
+			<fileset dir="cobraclasses">
+				<include name="*/**" />
+			</fileset>
+		</jar>
+	</target>
+</project>
