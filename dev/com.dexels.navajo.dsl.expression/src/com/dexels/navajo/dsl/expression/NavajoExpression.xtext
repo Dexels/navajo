@@ -1,0 +1,170 @@
+grammar com.dexels.navajo.dsl.expression.NavajoExpression   hidden(WS)
+
+//import "platform:/resource/com.dexels.navajo.dsl.expression/src/com/dexels/navajo/dsl/expression/Navajo.ecore" as ncore
+import "platform:/resource/com.dexels.navajo.dsl.expression.model/model/Expression.ecore"
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+
+//import "classpath:/com/dexels/navajo/dsl/expression/Navajo.ecore"
+//import "file:///Users/frank/Documents/workspace-xtext/com.dexels.navajo.dsl.expression/src/com/dexels/navajo/dsl/expression/Navajo.ecore" as ncore
+
+//import "http://www.dexels.com/navajo/dsl/expression/NavajoCore" as ncore
+ 
+
+//generate navajoExpression "http://www.dexels.com/navajo/dsl/expression/NavajoExpression"
+//terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+
+TopLevel returns TopLevel: 
+//	 toplevelExpression =OrExpression
+		toplevelExpression=OrExpression
+ 	;
+
+
+ 
+//terminal INT returns ecore::EString: ('0'..'9')+;
+terminal XML_GT: '&gt;';
+terminal XML_LT: '&lt;';
+terminal XML_GTEQ: '&gt;=';
+terminal XML_LTEQ: '&lt;=';
+
+terminal NUMBER returns ecore::EBigDecimal:
+  ('0'..'9')+ ('.' ('0'..'9')+)?;
+
+
+terminal WS			: (' '|'\t'|'\r'|'\n')+;
+terminal TRUE: 'true' | 'TRUE';
+terminal FALSE: 'false' | 'FALSE';
+terminal NULL: 'null' | 'NULL';
+terminal TODAY: 'today' | 'TODAY';
+terminal FORALL: 'FORALL';
+terminal PARENT: "..";
+terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+	
+terminal AT: '@';	
+
+
+
+terminal LITERALSTRING returns ecore::EString: 
+			"'" ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|"'"|'\\') | !('\\'|"'") )* "'"
+			| 	'<![CDATA[' -> ']]>'
+	;
+	
+
+terminal SQBRACKET_OPEN:
+	'[';
+	
+terminal SQBRACKET_CLOSE:
+	']';
+
+terminal TML_SEPARATOR:
+	'/';
+
+terminal TML_EXISTS:
+	'?';
+	
+terminal DOLLAR:
+	'$';
+	
+
+// skipped url, image, points, datepattern, password
+
+	
+
+//terminal PATH_ELEMENT: ('.'|'..'|("a".. "z"| "A" .. "Z"|"_")("a".. "z"| "A" .. "Z"|"0" .. "9"|"_")*);
+ 	
+PathElement returns ecore::EString:
+	(ID|"."|PARENT)
+	;
+	
+	
+TmlExpression returns TmlReference:
+	SQBRACKET_OPEN (absolute?=TML_SEPARATOR)? (param?=AT)? elements+=PathElement (TML_SEPARATOR elements+=PathElement)* SQBRACKET_CLOSE
+;
+
+ExistsTmlExpression returns ExistsTmlReference: 
+	TML_EXISTS SQBRACKET_OPEN (absolute?=TML_SEPARATOR)? (param?=AT)? elements+=PathElement (TML_SEPARATOR elements+=PathElement)* SQBRACKET_CLOSE
+;
+
+MapReferenceParams returns ReferenceParams: 
+	'(' (getterParams+=Literal) (',' getterParams+=Literal)* ')'
+;
+
+MapGetReference returns MapGetReference: 
+	operations+=DOLLAR (elements+=PARENT TML_SEPARATOR)* elements+=ID  (referenceParams=MapReferenceParams)?
+;
+   
+OrExpression returns Expression:
+    parameters+=AndExpression (operations+="OR" parameters+=AndExpression )*;
+    
+AndExpression returns Expression:
+     parameters+=EqualityExpression (operations+="AND" parameters+=EqualityExpression )*
+     ;  
+
+EqualityExpression returns Expression: 
+     parameters+=RelationalExpression ((operations+='==' parameters+=RelationalExpression) | (operations+='!=' parameters+=RelationalExpression))?
+;     
+  
+// Skipped for now. Trouble with overloaded '<' stuff  
+RelationalExpression returns Expression: 
+   {Expression} parameters+=AdditiveExpression ((operations+=XML_LT parameters+=AdditiveExpression)|(operations+=XML_GT parameters+=AdditiveExpression)|(operations+=XML_LTEQ parameters+=AdditiveExpression)|(operations+=XML_GTEQ parameters+=AdditiveExpression))?
+    ;
+AdditiveExpression returns Expression:
+      parameters+=MultiplicativeExpression (('+' parameters+=MultiplicativeExpression ) | ('-' parameters+=MultiplicativeExpression))*
+	;
+	
+MultiplicativeExpression returns Expression: 
+      parameters+=UnaryExpression ((operations+='*' parameters+=UnaryExpression ) |  (operations+=TML_SEPARATOR parameters+=UnaryExpression ))*
+	;
+	
+UnaryExpression returns Expression:
+	operations+="!" parameters+=PrimaryExpression
+	| PrimaryExpression;	
+
+PrimaryExpression returns Expression:
+   	parameters+=Literal
+	| '(' parameters+=OrExpression ')'
+;	
+
+
+// Keep this one in place so it will create a node for the code completion
+FunctionName:
+	ID;
+
+
+FunctionCall returns FunctionCall:
+	name=FunctionName '('(parameters+=OrExpression)? (',' parameters+=OrExpression)*  ')'
+;
+
+//void DatePatternLiteral() #void:
+//{}
+//{
+//  (Literal()"#"Literal()"#"Literal()"#"Literal()"#"Literal()"#"Literal()) #DatePatternNode
+//}
+
+
+//Expression returns Expression:
+//	Literal | FunctionCall | FunctionOperands ;
+
+DateLiteral returns Expression:
+{Expression}
+	NUMBER '#' NUMBER '#' NUMBER '#' NUMBER '#' NUMBER '#' NUMBER
+;
+
+
+Literal returns Expression:
+  {Expression}NUMBER
+  | valueString= LITERALSTRING
+  | operations+=FORALL '(' valueString=LITERALSTRING ',' parameters+=OrExpression ')'
+  | parameters+=FunctionCall
+  | expressionType='{' (parameters+=OrExpression)?  (',' parameters+=OrExpression)* '}'
+  | elements+=NULL
+  | elements+=TODAY 
+  | elements+=TRUE
+  | elements+=FALSE
+  | parameters+=TmlExpression
+  | parameters+=ExistsTmlExpression
+  | parameters+=MapGetReference
+  | parameters+=DateLiteral
+  
+  ;
+
