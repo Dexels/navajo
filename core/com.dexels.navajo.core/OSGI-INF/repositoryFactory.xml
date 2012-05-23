@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" immediate="true" name="com.dexels.navajo.repositoryFactory">
+   <implementation class="com.dexels.navajo.server.RepositoryFactoryImpl"/>
+   <reference bind="addRepository" cardinality="0..n" interface="com.dexels.navajo.server.Repository" name="Repository" policy="dynamic" unbind="removeRepository"/>
+   <service>
+      <provide interface="com.dexels.navajo.server.RepositoryFactory"/>
+   </service>
+</scr:component>

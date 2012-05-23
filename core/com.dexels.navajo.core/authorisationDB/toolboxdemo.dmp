@@ -1,0 +1,234 @@
+# MySQL dump 8.16
+#
+# Host: localhost    Database: toolboxdemo
+#--------------------------------------------------------
+# Server version	3.23.46
+
+#
+# Table structure for table 'access'
+#
+
+CREATE TABLE access (
+  id int(11) NOT NULL default '0',
+  user_id int(11) NOT NULL default '0',
+  service_id int(11) NOT NULL default '0',
+  entered date default NULL,
+  tijdstip time default NULL,
+  address varchar(100) NOT NULL default 'unknown',
+  host varchar(255) NOT NULL default 'unknown',
+  user_agent varchar(255) NOT NULL default 'unknown',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'access'
+#
+
+
+#
+# Table structure for table 'access_count'
+#
+
+CREATE TABLE access_count (
+  a_count int(11) NOT NULL default '0'
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'access_count'
+#
+
+INSERT INTO access_count VALUES (18091);
+
+#
+# Table structure for table 'conditions'
+#
+
+CREATE TABLE conditions (
+  id int(11) NOT NULL auto_increment,
+  service_id int(11) NOT NULL default '0',
+  user_id int(11) NOT NULL default '0',
+  condition varchar(255) NOT NULL default '',
+  comment varchar(255) default NULL,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'conditions'
+#
+
+#
+# Table structure for table 'definitions'
+#
+
+CREATE TABLE definitions (
+  parameter_id int(11) NOT NULL auto_increment,
+  name varchar(100) default NULL,
+  type varchar(100) default NULL,
+  PRIMARY KEY  (parameter_id)
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'definitions'
+#
+
+#
+# Table structure for table 'group_authorisation'
+#
+
+CREATE TABLE group_authorisation (
+  user_id int(11) NOT NULL default '0',
+  group_id int(11) NOT NULL default '0',
+  PRIMARY KEY  (user_id,group_id)
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'group_authorisation'
+#
+
+#
+# Table structure for table 'log'
+#
+
+CREATE TABLE log (
+  id int(11) NOT NULL auto_increment,
+  user_id int(11) NOT NULL default '0',
+  service_id int(11) NOT NULL default '0',
+  access_id int(11) NOT NULL default '0',
+  log_level int(11) default NULL,
+  comment varchar(100) default NULL,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'log'
+#
+
+#
+# Table structure for table 'parameters'
+#
+
+CREATE TABLE parameters (
+  id int(11) NOT NULL auto_increment,
+  parameter_id int(11) NOT NULL default '0',
+  user_id int(11) NOT NULL default '0',
+  value varchar(255) default NULL,
+  condition varchar(255) default NULL,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'parameters'
+#
+
+#
+# Table structure for table 'permission_defs'
+#
+
+CREATE TABLE permission_defs (
+  id int(11) NOT NULL auto_increment,
+  name varchar(255) NOT NULL default '',
+  PRIMARY KEY  (id),
+  KEY name (name)
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'permission_defs'
+#
+
+#
+# Table structure for table 'permissions'
+#
+
+CREATE TABLE permissions (
+  id int(11) NOT NULL auto_increment,
+  user_id int(11) NOT NULL default '0',
+  permission_id int(11) NOT NULL default '0',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'permissions'
+#
+
+#
+# Table structure for table 'polis_count'
+#
+
+CREATE TABLE polis_count (
+  a_count int(11) NOT NULL default '0'
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'polis_count'
+#
+
+#
+# Table structure for table 'postcodes'
+#
+
+CREATE TABLE postcodes (
+  postcode varchar(6) default NULL,
+  straatnaam varchar(128) default NULL
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'postcodes'
+#
+
+#
+# Table structure for table 'service_group'
+#
+
+CREATE TABLE service_group (
+  id int(11) NOT NULL default '0',
+  name varchar(100) NOT NULL default '',
+  servlet varchar(255) default NULL,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'service_group'
+#
+
+#
+# Table structure for table 'services'
+#
+
+CREATE TABLE services (
+  id int(11) NOT NULL default '0',
+  name varchar(100) default NULL,
+  group_id int(11) default NULL,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'services'
+#
+
+#
+# Table structure for table 'timing'
+#
+
+CREATE TABLE timing (
+  id int(11) NOT NULL auto_increment,
+  access_id int(11) NOT NULL default '0',
+  part int(11) NOT NULL default '0',
+  timespent int(11) NOT NULL default '0',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+#
+# Dumping data for table 'timing'
+#
+
+
+#
+# Table structure for table 'users'
+#
+
+CREATE TABLE users (
+  id int(11) NOT NULL default '0',
+  name varchar(40) default NULL,
+  password varchar(40) default NULL,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;

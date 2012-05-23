@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.navajo.nl/schemas/xml.xsd"/>
+    <!-- Top level navascript -->
+    <xs:complexType name="TopLevel">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="message"/>
+            <xs:element ref="property"/>
+            <xs:element ref="include"/>
+            <xs:element ref="param"/>
+            <xs:element ref="methods"/>
+            <xs:element ref="map"/>
+            <xs:element ref="break"/>
+            <xs:element ref="debug"/>
+            <xs:element maxOccurs="1" minOccurs="0" ref="validations"/>
+            <!-- Generated newstyle adapter elements -->
+            <xs:element ref="map.sqlquery"/>
+            <xs:element ref="map.dropdown"/>
+            <xs:element ref="map.codedropdown"/>
+            <xs:element ref="map.navajomap"/>
+        </xs:choice>
+        <xs:attribute name="author" type="xs:string"/>
+        <xs:attribute name="debug" type="xs:string"/>
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="repository" type="xs:string"/>
+        <xs:attribute name="notes" type="xs:string"/>
+        <xs:attribute name="id" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="MapType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="message"/>
+            <xs:element ref="property"/>
+            <xs:element ref="include"/>
+            <xs:element ref="param"/>
+            <xs:element ref="methods"/>
+            <xs:element ref="map"/>
+            <xs:element ref="break"/>
+            <xs:element ref="debug"/>
+            <xs:element ref="field"/>
+            <xs:element maxOccurs="1" minOccurs="0" ref="request"/>
+            <xs:element maxOccurs="1" minOccurs="0" ref="response"/>
+            <xs:element maxOccurs="1" minOccurs="0" ref="running"/>
+            <!-- Generated newstyle adapter elements -->
+            <xs:element ref="map.sqlquery"/>
+            <xs:element ref="map.dropdown"/>
+            <xs:element ref="map.codedropdown"/>
+            <xs:element ref="map.navajomap"/>
+        </xs:choice>
+        <xs:attribute name="object" type="xs:string"/>
+        <xs:attribute name="condition" type="xs:string"/>
+        <xs:attribute name="filter" type="xs:string"/>
+        <xs:attribute name="ref" type="xs:string"/>
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="MessageType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="message"/>
+            <xs:element ref="property"/>
+            <xs:element ref="include"/>
+            <xs:element ref="param"/>
+            <xs:element ref="methods"/>
+            <xs:element ref="map"/>
+            <xs:element ref="break"/>
+            <xs:element ref="debug"/>
+            <!-- Generated newstyle adapter elements -->
+            <xs:element ref="map.sqlquery"/>
+            <xs:element ref="map.dropdown"/>
+            <xs:element ref="map.codedropdown"/>
+            <xs:element ref="map.navajomap"/>
+        </xs:choice>
+        <xs:attribute use="required" name="name" type="xs:string"/>
+        <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="condition" type="xs:string"/>
+        <xs:attribute name="mode" type="xs:string"/>
+        <xs:attribute name="index" type="xs:integer"/>
+    </xs:complexType>
+    <xs:element name="navascript" type="TopLevel"/>
+    <xs:element name="tsl" type="TopLevel"/>
+    <xs:element name="validations">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element maxOccurs="unbounded" ref="check"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="check">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="code" type="xs:integer" use="required"/>
+                    <xs:attribute name="condition" type="xs:string" use="optional"/>
+                    <xs:attribute ref="xml:space" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="methods">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="method"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="method">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element name="required">
+                    <xs:complexType>
+                        <xs:attribute name="message" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:attribute use="required" name="name" type="xs:string"/>
+            <xs:attribute name="description" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="message" type="MessageType"/>
+    <xs:element name="map" type="MapType"/>
+    <xs:element name="field">
+        <xs:annotation>
+            <xs:documentation>A field is used a Java bean setter</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="1">
+                <xs:element ref="expression"/>
+                <xs:element ref="map"/>
+            </xs:choice>
+            <xs:attribute use="required" name="name" type="xs:string"/>
+            <xs:attribute name="condition" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="property">
+        <xs:annotation>
+            <xs:documentation>A property is the basic data element</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="option"/>
+                <xs:element ref="expression"/>
+                <xs:element ref="map"/>
+            </xs:choice>
+            <xs:attribute use="required" name="name" type="xs:string"/>
+            <xs:attribute name="type">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="boolean"/>
+                        <xs:enumeration value="integer"/>
+                        <xs:enumeration value="selection"/>
+                        <xs:enumeration value="string"/>
+                        <xs:enumeration value="date"/>
+                        <xs:enumeration value="float"/>
+                        <xs:enumeration value="binary"/>
+                        <xs:enumeration value="money"/>
+                        <xs:enumeration value="clocktime"/>
+                        <xs:enumeration value="stopwatchtime"/>
+                        <xs:enumeration value="percentage"/>
+                        <xs:enumeration value="expression"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="value" type="xs:string"/>
+            <xs:attribute use="required" name="direction">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="in"/>
+                        <xs:enumeration value="out"/>
+                        <xs:enumeration value="inout"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="length" type="xs:integer"/>
+            <xs:attribute name="cardinality" type="xs:string"/>
+            <xs:attribute name="description" type="xs:string"/>
+            <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute name="subtype" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="param">
+        <xs:annotation>
+            <xs:documentation>A param is the basic variable element</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="option"/>
+                <xs:element ref="expression"/>
+            </xs:choice>
+            <xs:attribute use="required" name="name" type="xs:string"/>
+            <xs:attribute name="type">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="boolean"/>
+                        <xs:enumeration value="integer"/>
+                        <xs:enumeration value="selection"/>
+                        <xs:enumeration value="string"/>
+                        <xs:enumeration value="date"/>
+                        <xs:enumeration value="float"/>
+                        <xs:enumeration value="binary"/>
+                        <xs:enumeration value="money"/>
+                        <xs:enumeration value="clocktime"/>
+                        <xs:enumeration value="stopwatchtime"/>
+                        <xs:enumeration value="percentage"/>
+                        <xs:enumeration value="expression"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="value" type="xs:string"/>
+            <xs:attribute name="condition" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="option">
+        <xs:annotation>
+            <xs:documentation>Used in properties of type selection to define a list of (possibly selected) name/value pairs</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute use="required" name="name" type="xs:string"/>
+            <xs:attribute use="required" name="value" type="xs:string"/>
+            <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute use="required" name="selected">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="1"/>
+                        <xs:enumeration value="0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="expression">
+        <xs:annotation>
+            <xs:documentation/>
+        </xs:annotation>
+        <xs:complexType mixed="true">
+            <xs:choice>
+                <xs:element ref="value" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:choice>
+            <xs:attribute name="value" type="xs:string"/>
+            <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute ref="xml:space"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="value">
+        <xs:annotation>
+            <xs:documentation/>
+        </xs:annotation>
+        <xs:complexType mixed="true">
+            <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute ref="xml:space" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include">
+        <xs:annotation>
+            <xs:documentation/>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="script" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="comment">
+        <xs:complexType>
+            <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="debug">
+        <xs:complexType>
+            <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="break">
+        <xs:complexType>
+            <xs:attribute name="condition" type="xs:string" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="request">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="field"/>
+                <xs:element ref="property"/>
+                <xs:element ref="message"/>
+                <xs:element ref="map"/>
+                <xs:element ref="comment"/>
+                <xs:element ref="debug"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="response">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="field"/>
+                <xs:element ref="property"/>
+                <xs:element ref="message"/>
+                <xs:element ref="map"/>
+                <xs:element ref="comment"/>
+                <xs:element ref="debug"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
+            </xs:choice>
+            <xs:attribute name="while_running" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="true"/>
+                        <xs:enumeration value="false"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="running">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="field"/>
+                <xs:element ref="property"/>
+                <xs:element ref="message"/>
+                <xs:element ref="map"/>
+                <xs:element ref="comment"/>
+                <xs:element ref="debug"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <!-- The Setter type for newstyle adapters -->
+    <xs:complexType name="SetterType" mixed="true">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element ref="value"/>
+        </xs:choice>
+        <xs:attribute name="value" type="xs:string"/>
+        <xs:attribute name="condition" type="xs:string"/>
+        <xs:attribute ref="xml:space" use="optional"/>
+    </xs:complexType>
+    <!--
+         Add adapter schema definitions 
+    -->
+    <!-- sqlquery adapter -->
+    <xs:element name="map.sqlquery">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <!-- Inherited elements from map -->
+                <xs:element ref="message"/>
+                <xs:element ref="property"/>
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="methods"/>
+                <xs:element ref="map"/>
+                <xs:element ref="break"/>
+                <xs:element ref="debug"/>
+                <xs:element ref="field"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
+                <!-- Generated setters -->
+                <xs:element name="sqlquery.query" type="SetterType"/>
+                <xs:element name="sqlquery.update" type="SetterType"/>
+                <xs:element name="sqlquery.transactionContext" type="SetterType"/>
+                <xs:element name="sqlquery.datasource" type="SetterType"/>
+                <xs:element name="sqlquery.username" type="SetterType"/>
+                <!-- Generated methods -->
+                <xs:element name="sqlquery.addParameter">
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                        <xs:attribute name="condition" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="sqlquery.doUpdate"/>
+            </xs:choice>
+            <!-- Default attributes -->
+            <xs:attribute name="condition" type="xs:string"/>
+            <!-- Generated setters as attributes -->
+            <xs:attribute name="query" type="xs:string"/>
+            <xs:attribute name="datasource" type="xs:string"/>
+            <xs:attribute name="username" type="xs:string"/>
+            <xs:attribute name="transactionContext" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- dropdown adapter -->
+    <xs:element name="map.dropdown">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <!-- Inherited elements from map -->
+                <xs:element ref="message"/>
+                <xs:element ref="property"/>
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="methods"/>
+                <xs:element ref="map"/>
+                <xs:element ref="break"/>
+                <xs:element ref="debug"/>
+                <xs:element ref="field"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
+                <!-- Generated optional setters as elements -->
+                <xs:element name="dropdown.query" type="SetterType"/>
+                <xs:element name="dropdown.transactionContext" type="SetterType"/>
+                <xs:element name="dropdown.datasource" type="SetterType"/>
+                <xs:element name="dropdown.selectedValue" type="SetterType"/>
+                <xs:element name="dropdown.orderByDescription" type="SetterType"/>
+                <xs:element name="dropdown.emptyOption" type="SetterType"/>
+                <!-- Generated methods -->
+                <xs:element name="dropdown.addParameter">
+                    <xs:complexType>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                        <xs:attribute name="condition" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <!-- Default attributes -->
+            <xs:attribute name="condition" type="xs:string"/>
+            <!-- Generated required setters as attributes -->
+            <xs:attribute name="name" use="required" type="xs:string"/>
+            <xs:attribute name="direction" use="required" type="xs:string"/>
+            <!-- Generated optional setters as attributes -->
+            <xs:attribute name="query" type="xs:string"/>
+            <xs:attribute name="datasource" type="xs:string"/>
+            <xs:attribute name="description" type="xs:string"/>
+            <xs:attribute name="emptyOption" type="xs:string"/>
+            <xs:attribute name="orderByDescription" type="xs:string"/>
+            <xs:attribute name="selectedValue" type="xs:string"/>
+            <xs:attribute name="transactionContext" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- codedropdown adapter -->
+    <xs:element name="map.codedropdown">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <!-- Inherited elements from map -->
+                <xs:element ref="message"/>
+                <xs:element ref="property"/>
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="methods"/>
+                <xs:element ref="map"/>
+                <xs:element ref="break"/>
+                <xs:element ref="debug"/>
+                <xs:element ref="field"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
+                <!-- Generated optional setters as elements -->
+                <xs:element name="codedropdown.transactionContext" type="SetterType"/>
+                <xs:element name="codedropdown.datasource" type="SetterType"/>
+                <xs:element name="codedropdown.selectedValue" type="SetterType"/>
+                <xs:element name="codedropdown.orderByDescription" type="SetterType"/>
+                <xs:element name="codedropdown.emptyOption" type="SetterType"/>
+            </xs:choice>
+            <!-- Default attributes -->
+            <xs:attribute name="condition" type="xs:string"/>
+            <!-- Generated required setters as attributes -->
+            <xs:attribute name="name" use="required" type="xs:string"/>
+            <xs:attribute name="language" use="required" type="xs:string"/>
+            <xs:attribute name="typeOfCode" use="required" type="xs:string"/>
+            <xs:attribute name="direction" use="required" type="xs:string"/>
+            <!-- Generated optional setters as attributes -->
+            <xs:attribute name="query" type="xs:string"/>
+            <xs:attribute name="datasource" type="xs:string"/>
+            <xs:attribute name="description" type="xs:string"/>
+            <xs:attribute name="emptyOption" type="xs:string"/>
+            <xs:attribute name="orderByDescription" type="xs:string"/>
+            <xs:attribute name="selectedValue" type="xs:string"/>
+            <xs:attribute name="transactionContext" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- navajomap adapter -->
+    <xs:element name="map.navajomap">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <!-- Inherited elements from map -->
+                <xs:element ref="message"/>
+                <xs:element ref="property"/>
+                <xs:element ref="include"/>
+                <xs:element ref="param"/>
+                <xs:element ref="methods"/>
+                <xs:element ref="map"/>
+                <xs:element ref="break"/>
+                <xs:element ref="debug"/>
+                <xs:element ref="field"/>
+                <!-- Generated newstyle adapter elements -->
+                <xs:element ref="map.sqlquery"/>
+                <xs:element ref="map.dropdown"/>
+                <xs:element ref="map.codedropdown"/>
+                <xs:element ref="map.navajomap"/>
+                <!-- Generated optional setters as elements -->
+                <xs:element name="navajomap.sendThrough" type="SetterType"/>
+                <xs:element name="navajomap.messagePointer" type="SetterType"/>
+                <!-- Generated methods -->
+                <xs:element name="navajomap.createproperty">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                        <xs:attribute name="condition" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="navajomap.callwebservice">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="server" type="xs:string"/>
+                        <xs:attribute name="username" type="xs:string"/>
+                        <xs:attribute name="password" type="xs:string"/>
+                        <xs:attribute name="append" type="xs:string"/>
+                        <xs:attribute name="condition" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <!-- Default attributes -->
+            <xs:attribute name="condition" type="xs:string"/>
+            <!-- Generated optional setters as attributes -->
+            <xs:attribute name="sendThrough" type="xs:string"/>
+            <xs:attribute name="server" type="xs:string"/>
+            <xs:attribute name="username" type="xs:string"/>
+            <xs:attribute name="password" type="xs:string"/>
+            <xs:attribute name="useCurrentOutDoc" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- -->
+</xs:schema>

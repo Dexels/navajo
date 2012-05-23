@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="com.dexels.navajo.statistics.runner">
+   <implementation class="com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerComponent"/>
+   <reference bind="setNavajoConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfigInterface" policy="dynamic" unbind="clearNavajoConfig"/>
+</scr:component>

@@ -1,0 +1,10 @@
+1	produktId	string
+2	dPerc_Inhouding	float
+3	dPerc_AankoopKostenVast	float
+4	dPerc_AankoopKosten	float
+5	dPerc_VerkoopKosten	float
+6	dVast_DoorlopendeKosten	float
+10	dPerc_Behandelingskosten	float
+11	valutaCode	integer
+12	tussenpersoon	string
+13	externIdPrefix	string

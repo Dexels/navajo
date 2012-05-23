@@ -1,0 +1,3 @@
+The authorisationDB implements the default Navajo SQL repository
+for doing authorisation/authentication/business rule persistence/dispatch
+rules and logging

@@ -1,0 +1,14 @@
+1	4	3	[verzekering.premie] > 4000	Minimum inleg bedraagt fl.4000,-
+2	4	3	[verzekering.einddatum] < -4	De minimum looptijd is 5 jaar
+3	2	3	[verzekering.premie] > 4000	Minimum inleg bedraagt fl.4000,-
+4	2	3	[verzekering.einddatum] < -4	De minimum looptijd is 5 jaar
+12	8	1	[verkering.premie] > 12500	Minimale inleg is fl.12,500.-
+13	2	2	[verkering.premie] > 12500	Minimale inleg is fl.12,500.-
+14	4	2	[verkering.premie] > 12500	Minimale inleg is fl.12,500.-
+15	8	2	[verkering.premie] > 12500	Minimale inleg is fl.12,500.-
+35	4	1	!([naam.naam] = de Kater) | (([naam.naam] = de Kater) & ([verzekering.premie] >= 20000))	De Kater moet meer dan 20000,- betalen
+18	2	2	[persoon.geboortedatum] > 18	De minimum leeftijd is 18 jaar
+19	4	2	[persoon.geboortedatum] > 18	De minimum leeftijd is 18 jaar
+20	2	3	[persoon.geboortedatum] > 18	De minimum leeftijd is 18 jaar
+21	4	3	[persoon.geboortedatum] > 18	De minimum leeftijd is 18 jaar
+36	2	1	!([naam.naam] = de Kater) | (([naam.naam] = de Kater) & ([verzekering.premie] >= 20000))	De Kater moet meer dan 20000,- betalen
