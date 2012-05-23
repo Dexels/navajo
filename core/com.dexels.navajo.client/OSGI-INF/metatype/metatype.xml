@@ -1,0 +1,11 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo client" name="Navajo Client" id="navajo.client.Factory">
+    <AD name="name"    id="name"   required="true"  type="String" default="localclient"/>   
+    <AD name="server"    id="server"   required="true"  type="String" default="localhost:9090/PostmanLegacy"/>   
+    <AD name="username"  id="username" required="false" type="String" default="ROOT"/>
+    <AD name="password"  id="password" required="false" type="String" default=""/>
+  </OCD>
+  <Designate factoryPid="navajo.client.Factory" pid="navajo.client.Factory">
+     <Object ocdref="navajo.client.Factory"/>
+  </Designate>
+</metatype:MetaData>

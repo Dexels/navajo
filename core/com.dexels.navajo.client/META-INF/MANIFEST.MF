@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Bundle-Name: Navajo Client
+Bundle-SymbolicName: com.dexels.navajo.client
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 3.3.0.qualifier
+Bundle-Activator: navajoclient.Version
+Bundle-ClassPath: .,
+ lib/jzlib.jar
+Export-Package: com.dexels.navajo.client,
+ com.dexels.navajo.client.context,
+ com.dexels.navajo.client.jabber,
+ com.dexels.navajo.client.logger,
+ com.dexels.navajo.client.nql,
+ com.dexels.navajo.client.server,
+ com.dexels.navajo.client.sessiontoken,
+ com.dexels.navajo.client.systeminfo,
+ com.jcraft.jzlib
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.document,
+ com.dexels.navajo.version,
+ org.junit,
+ org.igniterealtime.smack;bundle-version="3.2.2",
+ org.igniterealtime.smack-ext;bundle-version="3.2.2"
+Import-Package: javax.net,
+ javax.net.ssl,
+ org.junit,
+ org.junit.runner,
+ org.junit.runners,
+ org.osgi.framework;version="1.5.0",
+ org.osgi.service.cm;version="1.3.0",
+ org.slf4j;version="1.6.1"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
