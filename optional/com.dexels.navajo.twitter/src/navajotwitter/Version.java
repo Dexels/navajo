@@ -15,8 +15,10 @@ import com.dexels.twitter.TwitterAdapterLibrary;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion implements BundleActivator {
 
+	@SuppressWarnings("rawtypes")
 	private final Set<ServiceRegistration> adapterRegs = new HashSet<ServiceRegistration>();
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
@@ -39,6 +41,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion implement
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void stop(BundleContext bc) throws Exception {
 		for (ServiceRegistration sr :adapterRegs) {
