@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Tiny//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny.dtd">
+<svg width="240" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"   viewBox="0 0 240 240" height="240" preserveAspectRatio="xMidYMid meet">
+    <g id="all">
+ 
+<!--  <animateTransform id="animin" attributeName="transform" type="translate" keySplines=".5 0 .5 1" from="300" to="0" dur="1" begin="3" calcMode="spline" fill="freeze"/>
+        <animateTransform id="animout" attributeName="transform" type="translate" keySplines=".5 0 .5 1" from="0" to="300" dur="1" begin="0" calcMode="spline" fill="freeze"/>
+    -->     
+          <animateTransform id="animout" attributeName="rotate" type="translate" keySplines=".5 0 .5 1" from="0" to="300" dur="1" begin="0" calcMode="spline" fill="freeze"/>
+  
+    
+        <rect id="main" width="220"  fill="#ffff33"  stroke="#000000" height="220"  transform="translate(10,10)"/>
+        <path fill-opacity="0.4" d="M27.911,19.221 L36.772,19.221 C42.492,19.221 46.359,19.483 48.375,20.008 C50.391,20.534 51.924,21.396 52.975,22.596 C54.025,23.797 54.681,25.133 54.944,26.605 C55.206,28.077 55.338,30.97 55.338,35.283 L55.338,51.233 C55.338,55.321 55.145,58.054 54.761,59.433 C54.376,60.811 53.706,61.889 52.75,62.667 C51.793,63.446 50.612,63.99 49.205,64.299 C47.799,64.608 45.68,64.763 42.848,64.763 L27.911,64.763 L27.911,19.221 Z M39.754,27.013 L39.754,56.971 C41.46,56.971 42.51,56.629 42.904,55.944 C43.298,55.26 43.495,53.399 43.495,50.361 L43.495,32.667 C43.495,30.604 43.429,29.282 43.298,28.701 C43.167,28.119 42.867,27.693 42.398,27.421 C41.929,27.149 41.048,27.013 39.754,27.013 L39.754,27.013 Z M59.754,19.221 L79.501,19.221 L79.501,28.335 L71.597,28.335 L71.597,36.971 L78.995,36.971 L78.995,45.635 L71.597,45.635 L71.597,55.649 L80.289,55.649 L80.289,64.763 L59.754,64.763 L59.754,19.221 Z M107.716,19.221 L103.58,39.362 L109.825,64.763 L98.855,64.763 C97.542,60.225 96.342,54.702 95.254,48.195 C94.954,51.064 94.541,54.111 94.016,57.337 L92.891,64.763 L81.358,64.763 L85.634,39.362 L81.358,19.221 L92.807,19.221 C93.013,20.477 93.426,22.568 94.044,25.494 C94.532,27.725 94.935,29.77 95.254,31.626 L97.786,19.221 L107.716,19.221 Z M111.513,19.221 L131.26,19.221 L131.26,28.335 L123.356,28.335 L123.356,36.971 L130.754,36.971 L130.754,45.635 L123.356,45.635 L123.356,55.649 L132.048,55.649 L132.048,64.763 L111.513,64.763 L111.513,19.221 Z M147.323,19.221 L147.323,55.649 L154.524,55.649 L154.524,64.763 L135.48,64.763 L135.48,19.221 L147.323,19.221 Z M182.513,33.004 L171.514,33.004 L171.514,29.629 C171.514,28.054 171.374,27.05 171.092,26.619 C170.811,26.188 170.342,25.972 169.686,25.972 C168.973,25.972 168.434,26.263 168.068,26.844 C167.703,27.425 167.52,28.307 167.52,29.488 C167.52,31.007 167.726,32.151 168.139,32.92 C168.533,33.689 169.648,34.617 171.486,35.705 C176.756,38.837 180.075,41.406 181.444,43.413 C182.813,45.419 183.498,48.654 183.498,53.117 C183.498,56.362 183.118,58.753 182.358,60.291 C181.599,61.828 180.132,63.118 177.956,64.158 C175.781,65.199 173.249,65.72 170.361,65.72 C167.192,65.72 164.487,65.119 162.246,63.919 C160.005,62.719 158.537,61.191 157.843,59.334 C157.149,57.478 156.802,54.843 156.802,51.43 L156.802,48.448 L167.801,48.448 L167.801,53.989 C167.801,55.696 167.956,56.793 168.265,57.281 C168.575,57.768 169.123,58.012 169.911,58.012 C170.699,58.012 171.285,57.703 171.669,57.084 C172.054,56.465 172.246,55.546 172.246,54.327 C172.246,51.645 171.88,49.892 171.149,49.067 C170.399,48.242 168.551,46.863 165.607,44.932 C162.663,42.981 160.712,41.565 159.756,40.684 C158.8,39.803 158.007,38.584 157.379,37.027 C156.751,35.471 156.437,33.483 156.437,31.063 C156.437,27.575 156.882,25.025 157.773,23.412 C158.664,21.799 160.103,20.538 162.091,19.629 C164.079,18.719 166.479,18.264 169.292,18.264 C172.368,18.264 174.988,18.761 177.154,19.755 C179.32,20.749 180.755,22.001 181.458,23.511 C182.162,25.02 182.513,27.585 182.513,31.204 L182.513,33.004 Z" fill="#000000" font-family="Impact" font-size="57.61" font-style="normal" font-weight="400" id="text5090" stroke="none" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1"/>
+        <g id="content" transform="translate(38,13)" width="150">
+		   <a xlink:href="#onFire_b1" id="b1">       
+            <g id="b1_g" transform="translate(0,60)"> 
+                <!---->
+                <animateTransform additive="sum" id="onFire_b1" attributeName="transform" type="scale" keySplines=".5 0 .5 1" from="1" to="1.05" dur="0.3" begin="b1.activate" calcMode="spline" fill="remove"/>
+                <animateTransform additive="sum" id="onFire2_b1" attributeName="transform" type="scale" keySplines=".5 0 .5 1" from="1.05" to="1" dur="0.3" begin="onFire_b1.end" calcMode="spline" fill="remove"/>
+                
+                <rect id="b1_r1" x="0" y="0" fill="#ffffcc" stroke="#447711" width="136" height="22.75" rx="5" ry="5">
+                    <animate id="onMouseEnter_b1_r1" attributeName="fill" attributeType="auto" begin="indeterminate" from="#ffffcc" to="#ff5533" dur="2.2s" fill="freeze"/>
+                    <animate id="onSelect_b1" attributeName="fill" attributeType="auto" begin="0" from="#ffffcc" to="#ff5533" dur="2.2s" fill="freeze"/>
+                    <animate id="onDeselect_b1" attributeName="fill" attributeType="auto" begin="b1.focusout" from="#ff5533" to="#ffffcc"  dur="0.2s" fill="freeze"/>
+                    <animate id="onFire3_b1" attributeName="fill" attributeType="auto" begin="b1.activate" from="#ff5533" to="#ffffff" dur="0.2s" fill="freeze"/>
+                    <animate id="onFire4_b1" attributeName="fill" attributeType="auto" begin="onFire3_b1.end" from="#ffffff" to="#ff5533"  dur="0.2s" fill="freeze"/>
+                </rect>
+                <!--<animate id="onFire_b1" attributeName="scale" attributeType="scale" begin="b1.activate" from="1" to="1.1"  dur="1.2s" fill="remove"/>-->
+                <text id="b1_t1" x="6" y="16" xml:space="preserve" font-size="16">Person list</text>
+            </g> 
+</a>
+	 
+        </g>
+    </g>
+</svg>         
+

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generator: Mobile Designer 2 2.0 -->
+<svg width="240" height="320" viewBox="-120 -160 240 320" stroke-miterlimit="2" zoomAndPan="disable"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xml:space="preserve" version="1.1" baseProfile="SVG Tiny 1.1+">
+ 
+<!-- Definitions -->
+<defs/>
+<!-- Movie Background -->
+<rect fill="#fff" x="-120" y="-160" width="240" height="320"/>
+ 
+<!-- Scene 1 -->
+<g id="Scene_1">
+	<rect x="-125" y="-138" width="100" height="100" xlink:href="#my_box1.png"
+		transform="translate(-5,-302)">
+		<animateTransform attributeName="transform" type="translate"
+			values="-5,-302;-5,-302;-3.79,-86.34;-3.03,47.96;-2.65,116.12;-2.56,132.44;-2.67,112.44;-2.9,72.39;-3.15,27.7;-3.35,-9.11;-3.47,-29.94;-3.48,-31.72;-3.39,-16.15;-3.24,11.45;-3.06,43.93;-2.89,73.97;-2.77,95.77;-2.71,106.01;-2.72,104.19;-2.79,92.39;-2.89,74.46;-3,54.98;-3.09,38.21;-3.15,27.26;-3.17,23.58;-3.15,26.93;-3.1,35.64;-3.04,47.15;-2.97,58.68;-2.92,67.84;-2.89,73.06;-2.89,73.81;-2.91,70.55;-2.94,64.51;-2.98,57.35;-3.02,50.69;-3.05,45.85;-3.06,43.59;-3.06,44;-3.04,46.64;-3.02,50.65;-3,55;-3,55"
+			keyTimes="0;0.537;0.544;0.551;0.558;0.565;0.572;0.579;0.586;0.593;0.599;0.606;0.613;0.62;0.627;0.634;0.641;0.648;0.655;0.662;0.668;0.675;0.682;0.689;0.696;0.703;0.71;0.717;0.724;0.731;0.737;0.744;0.751;0.758;0.765;0.772;0.779;0.786;0.793;0.799;0.806;0.813;1"
+			dur="7.25s" fill="freeze"/>
+	</rect>
+	<use  visibility="hidden" x="-46" y="-26" xlink:href="#ally.png_copy"
+		transform="translate(65,-120) scale(-1.#IND)">
+		<animate attributeName="visibility"
+			values="hidden;hidden;hidden;visible;visible"
+			keyTimes="0;0.689;0.841;0.848;1"
+			dur="7.25s" fill="freeze"/>
+		<animateTransform attributeName="transform" type="translate"
+			values="65,-120;65,-120;65,-120;65,-120;65,-120"
+			keyTimes="0;0.841;0.848;0.958;1"
+			dur="7.25s" fill="freeze"/>
+		<animateTransform attributeName="transform" type="scale" additive="sum"
+			values="0,0;0,0;0.0588235,0.0588235;1,1;1,1"
+			keyTimes="0;0.841;0.848;0.958;1"
+			dur="7.25s" fill="freeze"/>
+	</use>
+	<text x="-119" y="154" font-size="14" font-family="Impact" fill="#2f4c10">www.dexels.com</text>
+	<text x="-70" y="-110" font-size="30" font-family="Arial" font-weight="bold" fill="#fff">Open<animate attributeName="visibility"
+			values="visible;visible;hidden;hidden"
+			keyTimes="0;0.027;0.199;1"
+			dur="7.25s" fill="freeze"/><animate attributeName="fill"
+			values="#fff;#fff;#000;#000;#fff;#fff"
+			keyTimes="0;0.027;0.096;0.131;0.199;1"
+			dur="7.25s" fill="freeze"/></text>
+	<text x="-34" y="-54" visibility="hidden" font-size="30" font-family="Arial" font-weight="bold" fill="#fff">&amp;<animate attributeName="visibility"
+			values="hidden;visible;hidden;hidden"
+			keyTimes="0;0.151;0.337;1"
+			dur="7.25s" fill="freeze"/><animate attributeName="fill"
+			values="#fff;#fff;#2f4c10;#2f4c10;#fff;#fff"
+			keyTimes="0;0.151;0.234;0.268;0.337;1"
+			dur="7.25s" fill="freeze"/></text>
+	<text x="-16" y="3" font-size="30" font-family="Arial" font-weight="bold" fill="#fff">Agnostic
+		<animate attributeName="visibility" values="visible;visible;hidden;hidden" keyTimes="0;0.303;0.475;1" dur="7.25s" fill="freeze"/>
+		<animate attributeName="fill" values="#fff;#fff;#000;#000;#fff;#fff" keyTimes="0;0.303;0.372;0.406;0.475;1" dur="7.25s" fill="freeze"/>
+	</text>
+</g>
+ 
+<!-- Scene 2 -->
+<g id="Scene_2" display="none">
+</g>
+ 
+</svg>

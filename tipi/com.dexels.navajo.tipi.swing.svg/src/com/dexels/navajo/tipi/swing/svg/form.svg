@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 280 160"
+   id="svg2212"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   width="280"
+   height="160"
+   sodipodi:docname="form.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   sodipodi:docbase="C:\eclipse_mobile\workspace\TipiSvgDemo\resource"
+   version="1.0">
+  <metadata
+     id="metadata2226">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs2224">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3280">
+      <stop
+         style="stop-color:#ffff00;stop-opacity:1;"
+         offset="0"
+         id="stop3282" />
+      <stop
+         style="stop-color:#ffff00;stop-opacity:0;"
+         offset="1"
+         id="stop3284" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3280"
+       id="linearGradient3286"
+       x1="82.189529"
+       y1="146.86371"
+       x2="361.74847"
+       y2="146.86371"
+       gradientUnits="userSpaceOnUse" />
+    <filter
+       inkscape:collect="always"
+       id="filter3213">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.1818014"
+         id="feGaussianBlur3215" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-height="1005"
+     inkscape:window-width="1280"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     inkscape:zoom="1.0159482"
+     inkscape:cx="449.55338"
+     inkscape:cy="257.62263"
+     inkscape:window-x="1364"
+     inkscape:window-y="18"
+     inkscape:current-layer="svg2212" />
+  <rect
+     style="opacity:0.85;fill:url(#linearGradient3286);fill-opacity:1;stroke:#000000;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter3213)"
+     id="rect2228"
+     width="273.55893"
+     height="150.80135"
+     x="5"
+     y="5"
+     rx="14.509804"
+     ry="17.064516" />
+  <text
+     x="40"
+     y="40"
+     id="LastName">-</text>
+  <text
+     x="40"
+     y="60"
+     id="Infix">-</text>
+  <text
+     x="40"
+     y="80"
+     id="Initials">-</text>
+  <text
+     x="40"
+     y="100"
+     id="FirstName">-</text>
+  <image
+     xlink:href="http://www.dexels.com/images/logo-dexels.gif"
+     id="Photo"
+     width="140.20213"
+     height="125.97818"
+     x="119.02974"
+     y="19.249203"
+     rx="14.509804"
+     ry="17.064516" />
+</svg>
