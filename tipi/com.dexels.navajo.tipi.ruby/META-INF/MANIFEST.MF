@@ -1,0 +1,16 @@
+Bundle-Name: Navajo Tipi Ruby
+Bundle-SymbolicName: com.dexels.navajo.tipi.ruby
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.3.qualifier
+Bundle-Activator: tipi.TipiRubyExtension
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.document,
+ com.dexels.navajo.client;bundle-version="1.0.0",
+ com.dexels.navajo.core;bundle-version="2.9.2",
+ com.dexels.navajo.function;bundle-version="2.0.1",
+ com.dexels.navajo.tipi;bundle-version="1.0.43",
+ com.dexels.navajo.version;bundle-version="1.0.10"
+Import-Package: org.osgi.framework
+Bundle-ClassPath: lib/jruby-complete-1.4.0.jar,
+ .
