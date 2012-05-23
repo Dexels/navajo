@@ -1,25 +1,13 @@
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-./cvsgit.sh AccommodatieZaken com.sportlink.accommodatiezaken
-./cvsgit.sh AutomatischePouleIndeling com.sportlink.optimizepool
-./cvsgit.sh DWFDashboard com.sportlink.dwf.dashboard
-./cvsgit.sh DexDMS com.sportlink.dms.joomla
 ./cvsgit.sh Dexels com.dexels.documents
 ./cvsgit.sh DexelsDocs com.dexels.documents.other
 ./cvsgit.sh DexelsVersionControl com.dexels.navajo.version
-./cvsgit.sh DocumentManagement com.sportlink.dms.client
 ./cvsgit.sh FileUploadServlet com.dexels.navajo.fileuploadservlet
-./cvsgit.sh Geo com.sportlink.geo.cbs.scrape
-./cvsgit.sh GeoJsp com.sportlink.geo.jsp
-./cvsgit.sh GoogleEarthAccommodations com.sportlink.accommodations
+./cvsgit.sh Geo com.dexels.navajo.geo.cbs.scrape
 ./cvsgit.sh ImageProvider com.dexels.geospatial.imageprovider
-# needs trimming down
-#./cvsgit.sh KNHB-Sporttaal com.sportlink.knhb.sporttaal
 
 ./cvsgit.sh KNVBTicketing com.dexels.documents.ticketing
-./cvsgit.sh KNVBWidget com.sportlink.knvb.widget
-./cvsgit.sh KNZB-JSP-Interface com.sportlink.knzb.interface
 ./cvsgit.sh Lucene com.dexels.navajo.enterprise.lucene
-./cvsgit.sh MDex com.sportlink.james
 ./cvsgit.sh NavaDoc com.dexels.navajo.dev.navadoc 
 # reprecated ./cvsgit.sh NavaTest com.dexels.navajo.dev.navajo.test 
 ./cvsgit.sh Navajo com.dexels.navajo.core
@@ -57,12 +45,10 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh NavajoServer com.dexels.navajo.server.deploy
 
 ./cvsgit.sh NavajoSvgRenderAdapter com.dexels.navajo.svg
-./cvsgit.sh NavajoSwingClient com.sportlink.swing.client
 ./cvsgit.sh NavajoSwingTipi com.dexels.navajo.tipi.swing
 ./cvsgit.sh NavajoTipi com.dexels.navajo.tipi
 ./cvsgit.sh NavajoTomahawk com.dexels.navajo.enterprise.tomahawk
 ./cvsgit.sh NavajoUtilities com.dexels.navajo.utilities
-./cvsgit.sh NevoboDPS com.sportlink.nevobo.dps
 ./cvsgit.sh OpenfireNavajo com.dexels.navajo.enterprise.openfire
 ./cvsgit.sh Papers com.dexels.papers
 ./cvsgit.sh PeelPage com.dexels.demos.peelpage
@@ -73,27 +59,14 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 
 ./cvsgit.sh SMSGateway com.dexels.utilities.smsgateway
-./cvsgit.sh SportlinkBackoffice com.sportlink.backoffice
-./cvsgit.sh SportlinkCIF com.sportlink.cif
-./cvsgit.sh SportlinkClub com.sportlink.club
-./cvsgit.sh SportlinkDWF com.sportlink.dwf.av
-./cvsgit.sh SportlinkDashboard com.sportlink.dashboard
-./cvsgit.sh SportlinkDwfTouch com.sportlink.dwf.bv.ios
-./cvsgit.sh SportlinkMatchForms com.sportlink.matchforms
-./cvsgit.sh SportlinkOfficialPortal com.sportlink.officialportal
-./cvsgit.sh SportlinkReports com.sportlink.reports
-./cvsgit.sh SportlinkTeamRegistration com.sportlink.teamregistration
-./cvsgit.sh SportlinkWebshop com.sportlink.webshop
 
 
 ./cvsgit.sh StadiumDesigner com.dexels.demos.stadiumdesigner
-./cvsgit.sh TensingOracle com.sportlink.tensing
 ./cvsgit.sh Ticketing com.dexels.demos.ticketing
 ./cvsgit.sh TipiAntBuild com.dexels.navajo.tipi.dev.ant
 ./cvsgit.sh TipiBuild com.dexels.navajo.tipi.build
 ./cvsgit.sh TipiBuildLibrary com.dexels.navajo.tipi.dev.core
 ./cvsgit.sh TipiDashboard com.dexels.demos.tipidashboard
-./cvsgit.sh TipiFacilityOccpation com.sportlink.tipi.facilityoccupation
 ./cvsgit.sh TipiLessonFive tipi.lesson.five
 ./cvsgit.sh TipiLessonFour tipi.lesson.four
 ./cvsgit.sh TipiLessonOne tipi.lesson.one
@@ -162,15 +135,5 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh com.dexels.repository com.dexels.repository
 ./cvsgit.sh com.dexels.target com.dexels.target
 ./cvsgit.sh com.dexels.thirdparty.feature com.dexels.thirdparty.feature
-./cvsgit.sh sportlink-adapters com.sportlink.adapters
-./cvsgit.sh sportlink-analysis com.sportlink.analysis
-./cvsgit.sh sportlink-clnt-v2 com.sportlink.client
-./cvsgit.sh sportlink-dba com.sportlink.dba
-./cvsgit.sh sportlink-downloadcentre com.sportlink.downloadservlet
-./cvsgit.sh sportlink-dwf-bv com.sportlink.dwf.bv.web
+
 ./cvsgit.sh sportlink-ideal com.dexels.navajo.enterprise.ideal.sportlink
-./cvsgit.sh sportlink-knvb-digitaalinschrijven com.sportlink.digitaalinschrijven
-./cvsgit.sh sportlink-serv com.sportlink.serv
-./cvsgit.sh sportlink-serv-AAA com.sportlink.aaa
-./cvsgit.sh sportlink-serv-comp com.sportlink.comp
-./cvsgit.sh sportlink-serv-crystal com.sportlink.crystal
