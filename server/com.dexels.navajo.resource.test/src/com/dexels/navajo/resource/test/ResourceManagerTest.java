@@ -22,7 +22,6 @@ import com.dexels.navajo.adapter.JDBCMap;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.LocalClient;
-import com.dexels.navajo.client.context.ClientContext;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.resource.manager.ResourceManager;
