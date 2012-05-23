@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="jxlayer" requiresMain="" project="TipiJxLayer" version="0.9" title="Tipi Flickr Library" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		TipiJxLayerExtensionns
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/jxlayerclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="jxlayer.jar"/>
+		<jar path="filters.jar"/>
+	</jars>
+	<other>
+		<link href="https://jxlayer.dev.java.net/"/>
+	</other>
+	<requires>
+	 	<require path="TipiSwingX" id="swingx"/>
+	</requires>
+</extension>
