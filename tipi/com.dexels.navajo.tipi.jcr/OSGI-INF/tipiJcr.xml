@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="com.dexels.navajo.jcr.tipi">
+   <implementation class="com.dexels.navajo.jcr.tipi.JcrTipiComponent"/>
+   <reference bind="setSession" cardinality="1..1" interface="javax.jcr.Session" name="Session" policy="dynamic" unbind="clearSession"/>
+   <service>
+      <provide interface="com.dexels.navajo.tipi.internal.TipiResourceLoader"/>
+   </service>
+</scr:component>
