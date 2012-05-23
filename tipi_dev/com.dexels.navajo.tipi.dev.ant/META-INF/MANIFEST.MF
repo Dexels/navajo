@@ -1,0 +1,11 @@
+Bundle-Name: Tipi Ant build tasks
+Bundle-SymbolicName: com.dexels.navajo.tipi.dev.ant
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.2.qualifier
+Bundle-Vendor: Dexels
+Import-Package: org.osgi.framework;version="1.5.0"
+Require-Bundle: org.apache.ant;bundle-version="1.7.1",
+ com.dexels.navajo.tipi.dev.core;bundle-version="1.0.2"
+Export-Package: com.dexels.navajo.tipi.ant,
+ com.dexels.navajo.tipi.ant.projectbuilder
