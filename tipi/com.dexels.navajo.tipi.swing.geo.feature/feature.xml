@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.dexels.navajo.tipi.swing.geo.feature"
+      label="Swing based geo visualization"
+      version="1.0.0.qualifier"
+      provider-name="Dexels">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import feature="com.dexels.navajo.tipi.swing.feature" version="1.0.0.qualifier"/>
+   </requires>
+
+   <plugin
+         id="com.dexels.navajo.tipi.swing.jxlayer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.tipi.swing.geo"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.dexels.navajo.tipi.swing.swingx"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
