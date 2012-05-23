@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="TipiJOGLDashboard" requiresMain="" project="TipiJOGLDashboard" version="0" title="Tipi JOGL Dashboard" vendor="Dexels" homepage="http://www.navajo.nl">
+	<description>
+		JOGL Dashboard implementation
+	</description>
+	<includes>
+		<!--  needed for runtime, not for JNLP -->
+		<include path="com/dexels/navajo/dashboard/viewer/dashboardclassdef.xml"/>
+	</includes>
+	<jars>		
+		<jar path="TipiJOGLDashboard.jar"/>
+	</jars>
+	<requires>
+		<require path="Tipi" id="Tipi"/>
+        <require path="TipiJogl" id="TipiJogl"/>
+        <require path="TipiJabber" id="TipiJabber"/>
+	</requires>	
+</extension>
