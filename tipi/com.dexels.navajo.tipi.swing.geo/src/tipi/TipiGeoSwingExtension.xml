@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="geo" requiresMain="swing" project="TipiGeoSwing" title="Geographic tipi swing extensions" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		Geographic tipi swing extensions
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/swing/geo/geoclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="swingx-ws.jar"/>
+		<jar path="TipiGeoSwing.jar"/>
+	</jars>
+	<other>
+		<link href="https://swingx-ws.dev.java.net/"/>
+	</other>
+	<!--<requires>
+	 	<require extension="TipiSwingX" id="swingx"/>
+	</requires> -->
+</extension>

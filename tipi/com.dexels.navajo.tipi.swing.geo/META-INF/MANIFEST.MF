@@ -1,0 +1,21 @@
+Bundle-Name: Navajo Tipi Google maps viewer
+Bundle-SymbolicName: com.dexels.navajo.tipi.swing.geo
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.9.qualifier
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.document,
+ com.dexels.navajo.client,
+ com.dexels.navajo.tipi,
+ com.dexels.navajo.core,
+ com.dexels.navajo.tipi.swing.deps,
+ com.dexels.navajo.version,
+ com.dexels.navajo.tipi.swing;bundle-version="1.0.41",
+ com.dexels.navajo.tipi.swing.swingx;bundle-version="1.0.0",
+ com.dexels.navajo.tipi.swing.client;bundle-version="1.0.3"
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/swingx-ws.jar
+Bundle-Activator: tipi.TipiGeoSwingExtension
+Import-Package: org.osgi.framework;version="1.5.0"
+Export-Package: com.dexels.navajo.tipi.swing.geo
