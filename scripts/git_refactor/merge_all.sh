@@ -81,7 +81,7 @@ genmerge.sh com.dexels.navajo.enterprise.ideal.sportlink
 genmerge.sh com.dexels.navajo.tipi.swing.3d
 genmerge.sh com.dexels.navajo.tipi.swing.jmonkeyengine
 genmerge.sh com.dexels.navajo.tipi.swing.stadiumdesign
-
+genmerge.sh com.dexels.navajo.geo.cbs.scrape
 
 export MODULEPATH=demos
 #genmerge.sh com.dexels.demos.rdfbrowser
@@ -92,6 +92,12 @@ genmerge.sh com.dexels.demos.pinkroccade.ei
 genmerge.sh com.dexels.demos.stadiumdesigner
 genmerge.sh com.dexels.demos.tipidashboard
 genmerge.sh com.dexels.navajo.dashboard
+genmerge.sh tipi.lessone.one
+genmerge.sh tipi.lessone.two
+genmerge.sh tipi.lessone.three
+genmerge.sh tipi.lessone.four
+genmerge.sh tipi.lessone.five
+genmerge.sh tipi.lessone.six
 
 export MODULEPATH=papers
 genmerge.sh com.dexels.documents
@@ -144,6 +150,9 @@ genmerge.sh com.sportlink.swing.client
 genmerge.sh com.sportlink.nevobo.dps
 genmerge.sh com.sportlink.reports
 genmerge.sh com.sportlink.dba
+genmerge.sh com.sportlink.optimizepool
+# left it out, needs trimming down (KNHB-Sporttaal)
+#genmerge.sh com.sportlink.knhb.sporttaal
 
 export MODULEPATH=applications
 
@@ -161,9 +170,24 @@ genmerge.sh com.sportlink.dwf.dashboard
 genmerge.sh com.sportlink.dashboard
 genmerge.sh com.sportlink.teamregistration
 genmerge.sh com.sportlink.webshop
+genmerge.sh com.sportlink.accommodatiezaken
+genmerge.sh com.sportlink.dms.joomla
+genmerge.sh com.sportlink.dms.client
+genmerge.sh com.sportlink.knvb.widget
+genmerge.sh com.sportlink.knzb.interface
+genmerge.sh com.sportlink.james
+genmerge.sh com.sportlink.dwf.bv.web
+genmerge.sh com.sportlink.downloadservlet
 
 export MODULEPATH=documents
 genmerge.sh com.sportlink.analysis
+genmerge.sh com.sportlink.dba
+
+
+export REPOSITORY=sportlink_ios
+export MODULEPATH=dwf
+# maybe separate repo?
+genmerge.sh com.sportlink.dwf.bv.ios
 
 
 export REPOSITORY=navajo
@@ -181,7 +205,7 @@ genmerge.sh com.dexels.navajo.kml
 genmerge.sh com.dexels.navajo.geo.feature
 genmerge.sh com.dexels.navajo.workflow.editor
 genmerge.sh com.dexels.navajo.workflow.editor.gmf
-#genmerge.sh com.dexels.navajo.workflow.editor.feature
+genmerge.sh com.dexels.navajo.workflow.editor.feature
 genmerge.sh com.dexels.navajo.function.pdf
 genmerge.sh com.dexels.navajo.fileuploadservlet
 genmerge.sh com.dexels.navajo.other.feature

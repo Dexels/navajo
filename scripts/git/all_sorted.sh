@@ -8,18 +8,20 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh DexelsVersionControl com.dexels.navajo.version
 ./cvsgit.sh DocumentManagement com.sportlink.dms.client
 ./cvsgit.sh FileUploadServlet com.dexels.navajo.fileuploadservlet
-./cvsgit.sh Geo com.sportlink.geo
+./cvsgit.sh Geo com.sportlink.geo.cbs.scrape
 ./cvsgit.sh GeoJsp com.sportlink.geo.jsp
 ./cvsgit.sh GoogleEarthAccommodations com.sportlink.accommodations
 ./cvsgit.sh ImageProvider com.dexels.geospatial.imageprovider
-./cvsgit.sh KNHB-Sporttaal com.sportlink.knhb.sporttaal
+# needs trimming down
+#./cvsgit.sh KNHB-Sporttaal com.sportlink.knhb.sporttaal
+
 ./cvsgit.sh KNVBTicketing com.dexels.documents.ticketing
 ./cvsgit.sh KNVBWidget com.sportlink.knvb.widget
 ./cvsgit.sh KNZB-JSP-Interface com.sportlink.knzb.interface
 ./cvsgit.sh Lucene com.dexels.navajo.enterprise.lucene
 ./cvsgit.sh MDex com.sportlink.james
 ./cvsgit.sh NavaDoc com.dexels.navajo.dev.navadoc 
-./cvsgit.sh NavaTest com.dexels.navajo.dev.navajo.test 
+# reprecated ./cvsgit.sh NavaTest com.dexels.navajo.dev.navajo.test 
 ./cvsgit.sh Navajo com.dexels.navajo.core
 ./cvsgit.sh NavajoAdapters com.dexels.navajo.adapters 
 ./cvsgit.sh NavajoAgents com.dexels.navajo.enterprise.agents
@@ -37,6 +39,7 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh NavajoEnterpriseListeners com.dexels.navajo.enterprise.listeners
 ./cvsgit.sh NavajoFunctions com.dexels.navajo.function
 ./cvsgit.sh NavajoGeoTools com.dexels.navajo.geo 
+
 ./cvsgit.sh NavajoIdeal com.dexels.navajo.enterprise.ideal
 ./cvsgit.sh NavajoJoomlaPlugin com.dexels.navajo.php.joomla
 ./cvsgit.sh NavajoJsp com.dexels.navajo.jsp 
@@ -52,6 +55,7 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh NavajoRhino com.dexels.navajo.rhino
 ./cvsgit.sh NavajoScriptPlugin com.dexels.navajo.dev.script 
 ./cvsgit.sh NavajoServer com.dexels.navajo.server.deploy
+
 ./cvsgit.sh NavajoSvgRenderAdapter com.dexels.navajo.svg
 ./cvsgit.sh NavajoSwingClient com.sportlink.swing.client
 ./cvsgit.sh NavajoSwingTipi com.dexels.navajo.tipi.swing
@@ -65,6 +69,9 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh PinkRoccadeAdapters com.dexels.demos.pinkroccade.adapters
 ./cvsgit.sh PinkRoccadeEI com.dexels.demos.pinkroccade.ei
 ./cvsgit.sh RDFBrowser com.dexels.navajo.tipi.swing.rdf
+
+
+
 ./cvsgit.sh SMSGateway com.dexels.utilities.smsgateway
 ./cvsgit.sh SportlinkBackoffice com.sportlink.backoffice
 ./cvsgit.sh SportlinkCIF com.sportlink.cif
@@ -77,6 +84,8 @@ export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ./cvsgit.sh SportlinkReports com.sportlink.reports
 ./cvsgit.sh SportlinkTeamRegistration com.sportlink.teamregistration
 ./cvsgit.sh SportlinkWebshop com.sportlink.webshop
+
+
 ./cvsgit.sh StadiumDesigner com.dexels.demos.stadiumdesigner
 ./cvsgit.sh TensingOracle com.sportlink.tensing
 ./cvsgit.sh Ticketing com.dexels.demos.ticketing
