@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<templates>
+	<template autoinsert="true" context="com.dexels.navajo.dsl.tsl.Tsl.Property"
+		deleted="false" description="String property with expression" enabled="true"
+		name="property">&lt;property name="${cursor}${word_selection}" type="string"
+		direction="in"&gt;
+		&lt;expression&gt;1&lt;/expression&gt;
+		&lt;/property&gt;
+	</template>
+	<template autoinsert="true" context="com.dexels.navajo.dsl.tsl.Tsl.Property"
+		deleted="false" description="Simple message" enabled="true"
+		name="message">&lt;message name="${cursor}${word_selection}"
+		&gt;
+		&lt;expression&gt;1&lt;/expression&gt;
+		&lt;/property&gt;
+	</template>
+	
+</templates>

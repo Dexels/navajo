@@ -1,0 +1,563 @@
+<tml documentImplementation="SAXP">
+   <header requestParseTime="0" sourceScript="club/InitUpdateClub" processingTime="14462" accessId="1289560305969-2" transferTime="66" cpuload="0.105" threadName="fastThread_2" authorisationTime="30" serverTime="14577" threadCount="0" language="js version:Rhino 1.7 release 3 PRERELEASE 2010 06 17" queueTime="0" clientTime="14643" postTime="46">
+      <transaction rpc_usr="ROOT" rpc_name="club/ProcessQueryClub" rpc_pwd=""/>
+      <callback/>
+      <client/>
+      <piggyback requestRate="0.0" serverId="spiritus.dexels.nl/SportlinkTestServer1"/>
+   </header>
+   <message name="ClubData" type="simple">
+      <property description="Clubcode" direction="out" name="ClubIdentifier" value="BBFW63X" type="string"/>
+      <property description="District" direction="out" name="RegionOwner" value="KNVB-DISTRICT-WEST1" type="string"/>
+      <property description="District" direction="out" name="RegionOwnerName" value="KNVB district West I" type="string"/>
+      <property description="Clubnaam" direction="in" name="ClubName" value="MOC" length="64" type="string"/>
+      <property description="Originele Clubnaam" direction="out" name="OriginalClubName" value="MOC" length="64" type="string"/>
+      <property description="Verkorte naam" direction="in" name="ClubShortName" value="MOC" length="20" type="string"/>
+      <property description="Clubtype" direction="in" name="TypeOfClub" type="selection" cardinality="1">
+         <option selected="0" name="-" value="-1"/>
+         <option selected="1" name="amateur" value="AMATEUR"/>
+         <option selected="0" name="betaald" value="PROFESSIONAL"/>
+      </property>
+      <property description="Clubcategorie" direction="in" name="CategoryOfClub" value="A" length="32" type="string"/>
+      <property description="Zoeknaam" direction="in" subtype="capitalization=upper" name="ClubSearchName" value="MOC" length="15" type="string"/>
+      <property description="Juridische naam" direction="in" name="LegalName" value="MOC" length="95" type="string"/>
+      <property description="Huidige kanonieke juridische naam" direction="out" name="CurrentCanonicalLegalName" value="MOC" length="94" type="string"/>
+      <property description="Rechtsvorm" direction="in" name="LegalForm" type="selection" cardinality="1">
+         <option selected="1" name="-" value="-1"/>
+         <option selected="0" name="BV" value="LTD"/>
+         <option selected="0" name="NV" value="INC"/>
+         <option selected="0" name="commanditaire vennootschap" value="LIMITED_PARTNERSHIP"/>
+         <option selected="0" name="eenmanszaak" value="ONE_MAN_BUSINESS"/>
+         <option selected="0" name="stichting" value="FOUNDATION"/>
+         <option selected="0" name="vereniging" value="ASSOCIATION"/>
+      </property>
+      <property description="Kostentype bij naamsverandering" direction="out" name="TypeOfCharge" value="NAME_CHANGE" length="32" type="string"/>
+      <property description="Oprichtingsdatum" direction="in" name="EstablishedDate" value="1933-08-01 00:00:00.00" type="date"/>
+      <property description="Opheffingsdatum" direction="in" name="ClubLiquidationDate" type="date"/>
+      <property description="Type adres" direction="in" name="TypeOfAddress" type="selection" cardinality="1">
+         <option selected="0" name="-" value="-1"/>
+         <option selected="1" name="adres" value="DEFAULT_ADDRESS"/>
+         <option selected="0" name="bezoekadres" value="VISITOR_ADDRESS"/>
+         <option selected="0" name="correspondentieadres" value="CORRESPONDENCE_ADDRESS"/>
+         <option selected="0" name="factuuradres" value="INVOICE_ADDRESS"/>
+         <option selected="0" name="postbus" value="PO_BOX"/>
+         <option selected="0" name="postbus, prive" value="PO_BOX_PRIVATE"/>
+         <option selected="0" name="postbus, zakelijk" value="PO_BOX_BUSINESS"/>
+         <option selected="0" name="prive-adres" value="PRIVATE_ADDRESS"/>
+         <option selected="0" name="zakenadres" value="BUSINESS_ADDRESS"/>
+      </property>
+      <property description="Straat" direction="in" name="StreetName" value="Midwouder Dorpsstraat" length="45" type="string"/>
+      <property description="Info" direction="in" name="Info" value="migrated West1 Organization BBFW63X from Sybase" length="256" type="string"/>
+      <property description="Telefoon Identifier" direction="out" name="TelephoneId" value="3001378" length="16" type="string"/>
+      <property description="Telephone Type" direction="in" name="TypeOfTelephone" type="selection" cardinality="1">
+         <option selected="0" name="-" value="-1"/>
+         <option selected="0" name="telefoon" value="TELEPHONE"/>
+         <option selected="1" name="telefoon, mobiel" value="MOBILEPHONE"/>
+         <option selected="0" name="telefoon, mobiel prive" value="MOBILEPHONE_PRIVATE"/>
+         <option selected="0" name="telefoon, mobiel zakelijk" value="MOBILEPHONE_WORK"/>
+         <option selected="0" name="telefoon, prive" value="PRIVATE_TELEPHONE"/>
+         <option selected="0" name="telefoon, prive geheim" value="PRIVATE_TELEPHONE_SECRET"/>
+         <option selected="0" name="telefoon, publicatie" value="PUBLICATION_TELEPHONE"/>
+         <option selected="0" name="telefoon, zakelijk" value="WORK_PHONE"/>
+         <option selected="0" name="telefoon, zakelijk rechtstreeks" value="WORK_PHONE_DIRECT"/>
+      </property>
+      <property description="Telefoon" direction="in" name="TelephoneData" value="06-13550966" length="32" type="string"/>
+      <property description="Fax Identifier" direction="out" name="FaxId" length="16" type="string"/>
+      <property description="Fax Type" direction="in" name="TypeOfFax" type="selection" cardinality="1">
+         <option selected="1" name="-" value="-1"/>
+         <option selected="0" name="fax" value="FAXNUMBER"/>
+         <option selected="0" name="fax, prive" value="FAXNUMBER_PRIVATE"/>
+         <option selected="0" name="fax, zakelijk" value="FAXNUMBER_WORK"/>
+      </property>
+      <property description="Fax" direction="in" name="FaxData" length="32" type="string"/>
+      <property description="E-mail Identifier" direction="out" name="EmailId" value="5035611" length="16" type="string"/>
+      <property description="E-mail Type" direction="in" name="TypeOfEmail" type="selection" cardinality="1">
+         <option selected="0" name="-" value="-1"/>
+         <option selected="0" name="Doorstuur emailadres (email abonnementen)" value="FORWARD_EMAIL"/>
+         <option selected="0" name="MDesk emailadres (email abonnementen)" value="MDESK_EMAIL"/>
+         <option selected="1" name="e-mailadres" value="EMAIL"/>
+         <option selected="0" name="e-mailadres, prive" value="PRIVATE_EMAIL"/>
+         <option selected="0" name="e-mailadres, zakelijk" value="WORK_EMAIL"/>
+      </property>
+      <property description="E-mail" direction="in" subtype="uri=true" name="EmailData" value="info@vvmoc.nl" length="64" type="string"/>
+      <property description="Website Identifier" direction="out" name="WebsiteId" value="5035612" length="16" type="string"/>
+      <property description="Website Type" direction="in" name="TypeOfWebsite" type="selection" cardinality="1">
+         <option selected="0" name="-" value="-1"/>
+         <option selected="1" name="website URL" value="URL"/>
+         <option selected="0" name="website URL, bestemd voor knvb.nl" value="URL_KNVB.NL"/>
+         <option selected="0" name="website URL, prive" value="URL_PRIVATE"/>
+         <option selected="0" name="website URL, zakelijk" value="URL_WORK"/>
+      </property>
+      <property description="Website" direction="in" subtype="uri=true" name="WebsiteData" value="www.vvmoc.nl" length="64" type="string"/>
+      <property description="Huisnummer" direction="in" name="AddressNumber" value="44" length="15" type="string"/>
+      <property description="Toevoeging" direction="in" name="AddressNumberAppendix" value="" length="15" type="string"/>
+      <property description="Postcode" direction="in" name="ZipCode" value="1679GC" length="15" type="string"/>
+      <property description="Plaats" direction="in" name="City" value="MIDWOUD" length="32" type="string"/>
+      <property description="Landcode" direction="in" name="AddressCountryCode" value="NL" type="string"/>
+      <property description="Banknummer" direction="in" name="BankAccountNumber" value="333025253" length="11" type="string"/>
+      <property description="Tenaamstelling" direction="in" name="Ascription" value="MOC" length="51" type="string"/>
+      <property description="Plaats tenaamstelling" direction="in" name="AscriptionPlace" value="1657 LN ABBEKERK" length="51" type="string"/>
+      <property description="Secretaris" direction="out" name="SecretaryMemberIdentifier" value="LZTZ52Q" length="7" type="string"/>
+      <property description="Naam" direction="out" name="SecretaryName" value="I. Keijzer" length="36" type="string"/>
+      <property description="Contributieservice betaalwijze" direction="in" name="CollectionServicePaymentMethod" type="selection" cardinality="1">
+         <option selected="1" name="acceptgiro" value="PAYMENT_SLIP"/>
+         <option selected="0" name="automatische incasso" value="DIRECT_DEBIT"/>
+         <option selected="0" name="nota" value="INVOICE"/>
+         <option selected="0" name="rekening-courant" value="RUNNING_ACCOUNT"/>
+      </property>
+      <property description="Regio veld" direction="in" name="RegionField" type="selection" cardinality="1">
+         <option selected="0" name="-" value="-1"/>
+         <option selected="1" name="Regio 1 veld" value="011"/>
+         <option selected="0" name="Regio 2 veld" value="012"/>
+         <option selected="0" name="Regio 3 veld" value="013"/>
+         <option selected="0" name="Regio 4 veld" value="014"/>
+         <option selected="0" name="Regio 5 veld" value="015"/>
+         <option selected="0" name="Regio 6 veld" value="016"/>
+         <option selected="0" name="Regio 7 veld" value="017"/>
+         <option selected="0" name="Regio 8 veld" value="018"/>
+         <option selected="0" name="Regio 9 veld" value="019"/>
+         <option selected="0" name="Regio 1 futsal" value="111"/>
+         <option selected="0" name="Regio 2 futsal" value="112"/>
+         <option selected="0" name="Regio 3 futsal" value="113"/>
+         <option selected="0" name="Regio 4 futsal" value="114"/>
+         <option selected="0" name="Regio 5 futsal" value="115"/>
+         <option selected="0" name="NIET GEBRUIKEN" value="116"/>
+      </property>
+      <property description="Regio zaal" direction="in" name="RegionIndoor" type="selection" cardinality="1">
+         <option selected="0" name="-" value="-1"/>
+         <option selected="0" name="Regio 1 veld" value="011"/>
+         <option selected="0" name="Regio 2 veld" value="012"/>
+         <option selected="0" name="Regio 3 veld" value="013"/>
+         <option selected="0" name="Regio 4 veld" value="014"/>
+         <option selected="0" name="Regio 5 veld" value="015"/>
+         <option selected="0" name="Regio 6 veld" value="016"/>
+         <option selected="0" name="Regio 7 veld" value="017"/>
+         <option selected="0" name="Regio 8 veld" value="018"/>
+         <option selected="0" name="Regio 9 veld" value="019"/>
+         <option selected="1" name="Regio 1 futsal" value="111"/>
+         <option selected="0" name="Regio 2 futsal" value="112"/>
+         <option selected="0" name="Regio 3 futsal" value="113"/>
+         <option selected="0" name="Regio 4 futsal" value="114"/>
+         <option selected="0" name="Regio 5 futsal" value="115"/>
+         <option selected="0" name="NIET GEBRUIKEN" value="116"/>
+      </property>
+      <property description="Kamer van Koophandelnummer" direction="in" name="BusinessRegistrationNumber" value="40624435" length="15" type="string"/>
+      <property description="Shirtkleuren (thuis)" direction="in" name="HomeShirtColors" value="Oranje" length="128" type="string"/>
+      <property description="Broekkleuren (thuis)" direction="in" name="HomeShortsColors" value="Zwart" length="128" type="string"/>
+      <property description="Kousenkleuren (thuis)" direction="in" name="HomeStockingColors" value="Oranje" length="128" type="string"/>
+      <property description="Shirtkleuren (uit)" direction="in" name="AwayShirtColors" value="" length="128" type="string"/>
+      <property description="Broekkleuren (uit)" direction="in" name="AwayShortsColors" value="" length="128" type="string"/>
+      <property description="Kousenkleuren (uit)" direction="in" name="AwayStockingColors" value="" length="128" type="string"/>
+      <property description="Shirtkleuren (reserve)" direction="in" name="ReserveShirtColors" value="" length="128" type="string"/>
+      <property description="Broekkleuren (reserve)" direction="in" name="ReserveShortsColors" value="" length="128" type="string"/>
+      <property description="Kousenkleuren (reserve)" direction="in" name="ReserveStockingColors" value="" length="128" type="string"/>
+      <property description="Hoofdsponsor" direction="in" name="MainSponsor" length="64" type="string"/>
+      <property description="Shirtsponsor" direction="in" name="ShirtSponsor" length="64" type="string"/>
+      <property description="Niveau jeugdopleiding" direction="in" name="YouthTrainingLevel" value="0" length="32" type="string"/>
+      <property description="Deelnemend in Contributieservice" direction="in" name="isCollectionServiced" value="false" length="15" type="boolean"/>
+      <property description="Contributieservice banknummer" direction="in" name="CollectionServiceBankAccountNumber" value="" length="11" type="string"/>
+      <property description="Contributieservice tenaamstelling" direction="in" name="CollectionServiceAscription" value="" length="51" type="string"/>
+      <property description="Contributieservice plaats tenaamstelling" direction="in" name="CollectionServiceAscriptionPlace" value="" length="51" type="string"/>
+      <property description="Contributieservice alternatief banknummer" direction="in" name="CollectionServiceAlternateBankAccountNumber" value="" length="11" type="string"/>
+      <property description="Contributieservice alternatieve tenaamstelling" direction="in" name="CollectionServiceAlternateAscription" value="" length="51" type="string"/>
+      <property description="Contributieservice alternatieve plaats tenaamstelling" direction="in" name="CollectionServiceAlternateAscriptionPlace" value="" length="51" type="string"/>
+      <property description="Club id of club into which this club was merged" direction="out" name="MergedIntoClubId" length="32" type="string"/>
+      <property description="Club name of club into which this club was merged" direction="out" name="MergedIntoClub" length="64" type="string"/>
+      <property description="Place of business" direction="in" name="PlaceOfBusiness" length="64" type="string"/>
+      <property description="Clublogo" direction="in" subtype="extension=gif,handle=binary_object7465785574277924366navajo,mime=image/gif" name="Logo" length="10240" type="binary">
+R0lGODdhrABuAPcAAAAAAAEBAQICAgMDAwQEBAUFBQYGBgcHBwgICAkJCQoKCgsLCwwMDA0NDQ4O
+Dg8PDxAQEBERERISEhMTExQUFBUVFRYWFhcXFxgYGBkZGRoaGhsbGxwcHB0dHR4eHh8fHyAgICEh
+ISIiIiMjIyQkJCUlJSYmJicnJygoKCkpKSoqKisrKywsLC0tLS4uLi8vLzAwMDExMTIyMjMzMzQ0
+NDU1NTY2Njc3Nzg4ODk5OTo6Ojs7Ozw8PD09PT4+Pj8/P0BAQEFBQUJCQkNDQ0REREVFRUZGRkdH
+R0hISElJSUpKSktLS0xMTE1NTU5OTk9PT1BQUFFRUVJSUlNTU1RUVFVVVVZWVldXV1hYWFlZWVpa
+WltbW1xcXF1dXV5eXl9fX2BgYGFhYWJiYmNjY2RkZGVlZWZmZmdnZ2hoaGlpaWpqamtra2xsbG1t
+bW5ubm9vb3BwcHFxcXJycnNzc3R0dHV1dXZ2dnd3d3h4eHl5eXp6ent7e3x8fH19fX5+fn9/f4CA
+gIGBgYKCgoODg4SEhIWFhYaGhoeHh4iIiImJiYqKiouLi4yMjI2NjY6Ojo+Pj5CQkJGRkZKSkpOT
+k5SUlJWVlZaWlpeXl5iYmJmZmZqampubm5ycnJ2dnZ6enp+fn6CgoKGhoaKioqOjo6SkpKWlpaam
+pqenp6ioqKmpqaqqqqurq6ysrK2tra6urq+vr7CwsLGxsbKysrOzs7S0tLW1tba2tre3t7i4uLm5
+ubq6uru7u7y8vL29vb6+vr+/v8DAwMHBwcLCwsPDw8TExMXFxcbGxsfHx8jIyMnJycrKysvLy8zM
+zM3Nzc7Ozs/Pz9DQ0NHR0dLS0tPT09TU1NXV1dbW1tfX19jY2NnZ2dra2tvb29zc3N3d3d7e3t/f
+3+Dg4OHh4eLi4uPj4+Tk5OXl5ebm5ufn5+jo6Onp6erq6uvr6+zs7O3t7e7u7u/v7/Dw8PHx8fLy
+8vPz8/T09PX19fb29vf39/j4+Pn5+fr6+vv7+/z8/P39/f7+/v///yH5BAAAAAAALAAAAACsAG4A
+QAj/APsJHEiwoMGDCBMqXMiwocOHECNKnPhw3zYAAA4I1NcPgAeCGAF0FPCCHz9/AtT9S0Kg3D4U
+APzpUwYg3D5/IQH846cw379CABDY+odv3z9pQDB+GCTun1OZ+aJKzcfP6T95pX5gBIHKKb5/ozCS
++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
+      </property>
+      <property description="Small Club logo" direction="out" subtype="extension=jpg,handle=binary_object1665730103865544235navajo,mime=null" name="SmallLogo" length="9441" type="binary">
+/9j/4AAQSkZJRgABAgAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcU
+FhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgo
+KCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCABuAKwDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD6nooo
+oAKKK4bxtr/iKLxDZ+H/AAhb6cupT2M+oC41RJGgcRtGnlLsZTvJkBJz8oHQ7uADsZry1hu7e1mu
+YY7m43eTE7gPLtGW2jqcDk46Vx9n8QrfVbLxPLoej6vdTaHbmXy7i3a2+0yeV5iRIr/vAWG3kx/x
+AjOa8u8RtqWtW+i/FHweTYalqFrB5smqLaNZ6eqPsffNPiWKMrJIMwgF+uASKn134v8AgPwR481v
+V7a41PULjWra2E9vaWRC74Q4SUSSsgZWR0AKAjCA5OaANuH47adeeIIdLstPYC8utMh0+4kkJW6W
+58lpuAuFeJZkBXcTlh0re174h6lpWp6rcLo9nN4a0rUrfS7u6F6wuFeVYCZFi8vBVTOq43ZOMivm
+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
+      </property>
+      <property description="Has Couple of Documents" direction="out" name="HasDocuments" value="true" length="16" type="string"/>
+      <property description="Sportlink Club Region Owner (special format..)" direction="out" name="SportlinkClubRegionOwner" value="West1" type="string"/>
+      <property direction="in" name="TelephoneNumber" value="" length="15" type="string"/>
+      <property direction="out" name="isCOS" value="0" type="boolean"/>
+      <property description="Statutaire speeldag" direction="out" name="StatutorySport" value="Veld ZO" type="string"/>
+      <property direction="out" name="HasFinancialRole" value="true" length="4" type="boolean"/>
+      <property direction="out" name="AllowPaymentsAfterLiquidation" value="false" length="4" type="boolean"/>
+      <property description="Laatste mutatie lid" direction="out" name="MemberLastUpdate" value="2008-11-19 00:00:00.00" type="string"/>
+   </message>
+   <message name="VisitorAddress" type="simple">
+      <property direction="out" name="OrganizationId" value="BBFW63X" type="string"/>
+      <property direction="out" name="TypeOfAddress" value="VISITOR_ADDRESS" type="integer"/>
+      <property direction="out" name="AddressId" value="4023821" type="integer"/>
+      <property description="Straat" direction="in" name="StreetName" value="Tripkouw" type="string"/>
+      <property description="Huisnummer" direction="in" name="AddressNumber" value="28" type="integer"/>
+      <property description="Toevoeging" direction="in" name="AddressNumberAppendix" type="string"/>
+      <property description="Plaats" direction="in" name="City" value="MIDWOUD" type="string"/>
+      <property description="Postcode" direction="in" name="ZipCode" value="1679GJ" type="string"/>
+      <property description="Landcode" direction="in" name="AddressCountryCode" value="NL " type="string"/>
+      <property description="Plan route naar.." direction="out" name="RouteTo" value="http://www.google.com/maps?source=uds&amp;daddr=Tripkouw+28,+1679GJ,+MIDWOUD,+Nederland&amp;iwstat1=dir:to" type="string"/>
+      <property description="Regio zaal" direction="in" name="RegionIndoor" type="selection" cardinality="1">
+         <option selected="0" name="-" value="-1"/>
+         <option selected="0" name="Regio 1 veld" value="011"/>
+         <option selected="0" name="Regio 2 veld" value="012"/>
+         <option selected="0" name="Regio 3 veld" value="013"/>
+         <option selected="0" name="Regio 4 veld" value="014"/>
+         <option selected="0" name="Regio 5 veld" value="015"/>
+         <option selected="0" name="Regio 6 veld" value="016"/>
+         <option selected="0" name="Regio 7 veld" value="017"/>
+         <option selected="0" name="Regio 8 veld" value="018"/>
+         <option selected="0" name="Regio 9 veld" value="019"/>
+         <option selected="1" name="Regio 1 futsal" value="111"/>
+         <option selected="0" name="Regio 2 futsal" value="112"/>
+         <option selected="0" name="Regio 3 futsal" value="113"/>
+         <option selected="0" name="Regio 4 futsal" value="114"/>
+         <option selected="0" name="Regio 5 futsal" value="115"/>
+         <option selected="0" name="NIET GEBRUIKEN" value="116"/>
+      </property>
+   </message>
+   <message name="DatabaseStatus" type="simple">
+      <property direction="out" name="DatabaseProductName" value="Oracle" length="32" type="string"/>
+      <property direction="out" name="DatabaseVersion" value="20.1" length="32" type="string"/>
+      <property direction="out" name="DatabaseSchemaOwner" length="32" type="string"/>
+   </message>
+   <methods>
+      <method name="club/ProcessUpdateClub"/>
+   </methods>
+</tml>
