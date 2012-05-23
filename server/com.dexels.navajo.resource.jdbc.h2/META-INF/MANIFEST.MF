@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JDBC Driver for H2 database
+Bundle-SymbolicName: com.dexels.navajo.resource.jdbc.h2
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.dexels.navajo.resource.jdbc.h2.Activator
+Bundle-Vendor: Dexels
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: javax.sql,
+ org.h2;version="1.3.162",
+ org.h2.jdbcx;version="1.3.162",
+ org.osgi.framework;version="1.3.0",
+ org.osgi.service.cm;version="1.3.0",
+ org.osgi.service.jdbc;version="1.0.0",
+ org.slf4j;version="1.6.1"
+Require-Bundle: com.dexels.navajo.resource;bundle-version="1.0.0"

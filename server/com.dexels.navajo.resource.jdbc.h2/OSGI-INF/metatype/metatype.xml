@@ -1,0 +1,11 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo H2 driver" name="Navajo H2 driver" id="navajo.resource.h2">
+    <AD name="url"    id="url"   required="true"  type="String" default="jdbc:h2:localhost/aap"/>   
+    <AD name="user"  id="user" required="false" type="String" default="demo"/>
+    <AD name="password"  id="password" required="false" type="String" default="demo"/>
+    <AD name="name"  id="name" required="false" type="String" default="navajo.resource.myjdbc"/>
+  </OCD>
+  <Designate pid="navajo.resource.h2" factoryPid="navajo.resource.h2">
+     <Object ocdref="navajo.resource.h2"/>
+  </Designate>
+</metatype:MetaData>
