@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="TipiSwing" isMain="true" requiresMain="" project="TipiSwing" version="0" title="Tipi Swing" vendor="Dexels" homepage="http://www.navajo.nl">
+	<description>
+		Standard swing implementation
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/components/echoimpl/echoclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="commons-fileupload-1.0.jar"/>
+		<jar path="Echo2_App.jar"/>
+		<jar path="Echo2_Extras_WebContainer.jar"/>
+		<jar path="Echo2_Extras_App.jar"/>
+		<jar path="Echo2_FileTransfer_App.jar"/>
+		<jar path="Echo2_FileTransfer_WebContainer.jar"/>
+		<jar path="Echo2_WebContainer.jar"/>
+		<jar path="Echo2_WebRender.jar"/>
+		<jar path="echopointng-2.1.0rc5.jar"/>
+		<jar path="jcommon-1.0.0.jar"/>
+		<jar path="tucana-20060720.jar"/>
+		<jar path="TipiEcho.jar"/>
+		<jar path="TipiEchoClient.jar"/>
+		
+	</jars>
+	<requires>
+		<require path="Tipi" id="Tipi"/>
+	</requires>
+	<other>
+		<link href="http://echo.nextapp.com/site/"/>
+
+	</other>
+	<main class="tipi.MainApplication" proxyjar="SwingMain.jar"/>
+	
+</extension>
