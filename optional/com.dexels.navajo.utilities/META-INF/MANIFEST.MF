@@ -1,0 +1,12 @@
+Bundle-Name: Navajo Utilities
+Bundle-SymbolicName: com.dexels.navajo.other.utilities
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.1.qualifier
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.document,
+ com.dexels.navajo.core;bundle-version="2.9.2",
+ com.dexels.navajo.version
+Bundle-ClassPath: lib/ganymed-ssh2-build210.jar
+Export-Package: com.dexels.navajo.install,
+ com.dexels.navajo.util
