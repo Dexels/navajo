@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="tipiRepositoryBuilder"
+         name="Tipi Repository Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="com.dexels.tipi.plugin.TipiRepositoryBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="tipiNature"
+         name="Tipi Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.dexels.tipi.plugin.TipiNature">
+         </run>
+      </runtime>
+      <builder
+            id="TipiPlugin.tipiRepositoryBuilder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="TipiPlugin.contribution1">
+	         <action
+               label="Add/Remove Tipi Nature"
+               class="com.dexels.tipi.plugin.ToggleNatureAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="TipiPlugin.addRemoveNatureAction">
+         </action>
+      </objectContribution>
+   </extension>
+
+  
+   
+   
+      <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="TipiPlugin.contribution2">
+                      <filter
+             name="projectNature"
+             value="TipiPlugin.tipiNature">
+         </filter>
+            
+         <action
+               label="Deploy current Tipi"
+               class="com.dexels.tipi.plugin.DeployAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="TipiPlugin.deployTipi">
+         </action>
+      </objectContribution>
+   </extension>
+   
+    <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="TipiPlugin.contribution3">
+                      <filter
+             name="projectNature"
+             value="TipiPlugin.tipiNature">
+         </filter>
+            
+         <action
+               label="Deploy to appstores"
+               class="com.dexels.tipi.plugin.DeployAppStoreAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="TipiPlugin.deployTipi">
+         </action>
+      </objectContribution>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="TipiPlugin.rebuild">
+                      <filter
+             name="projectNature"
+             value="TipiPlugin.tipiNature">
+         </filter>
+            
+         <action
+               label="Rebuild current Tipi"
+               class="com.dexels.tipi.plugin.RebuildAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="TipiPlugin.rebuildTipi">
+         </action>
+      </objectContribution>
+   </extension>
+   
+   
+      <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="TipiPlugin.clean">
+                      <filter
+             name="projectNature"
+             value="TipiPlugin.tipiNature">
+         </filter>
+            
+         <action
+               label="Clean current Tipi"
+               class="com.dexels.tipi.plugin.CleanAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="TipiPlugin.cleanTipi">
+         </action>
+      </objectContribution>
+   </extension>
+   
+   
+   
+   
+   
+   
+   <extension
+         id="xmlProblem"
+         name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="TipiPlugin"
+            name="Tipi">
+      </category>
+      <view
+            category="TipiPlugin"
+            class="tipiplugin.views.TipiHelpView"
+            icon="icons/sample.gif"
+            id="tipiplugin.views.TipiHelpView"
+            name="Tipi Help">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               id="tipiplugin.views.TipiHelpView"
+               ratio="0.5"
+               relationship="right"
+               relative="org.eclipse.ui.views.TaskList">
+         </view>
+      </perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               id="tipiplugin.views.SampleView"
+               ratio="0.5"
+               relationship="right"
+               relative="org.eclipse.ui.views.TaskList">
+         </view>
+      </perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               id="tipiplugin.views.SampleView"
+               ratio="0.5"
+               relationship="right"
+               relative="org.eclipse.ui.views.TaskList">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+      <contexts
+            file="contexts.xml">
+      </contexts>
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
+   
+   <extension point="org.eclipse.ant.core.antTasks">
+      <antTask name="deploy" class="com.dexels.navajo.tipi.ant.projectbuilder.DeployTask" library="lib/TipiAntTask.jar"/>
+   </extension> 
+   <extension point="org.eclipse.ant.core.antTasks">
+      <antTask name="build" class="com.dexels.navajo.tipi.ant.projectbuilder.BuildTask" library="lib/TipiAntTask.jar"/>
+   </extension> 
+      
+   <extension
+         point="org.eclipse.ant.core.extraClasspathEntries">
+      <extraClasspathEntry
+            library="lib/TipiAntTask.jar">
+      </extraClasspathEntry>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.extraClasspathEntries">
+      <extraClasspathEntry
+            library="lib/TipiBuildLibrary.jar">
+      </extraClasspathEntry>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.extraClasspathEntries">
+      <extraClasspathEntry
+            library="lib/jsch-0.1.39.jar">
+      </extraClasspathEntry>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+   </extension>
+
+</plugin>
