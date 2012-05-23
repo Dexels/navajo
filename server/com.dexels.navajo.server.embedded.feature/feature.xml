@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.dexels.navajo.server.embedded.feature"
+      label="Embedded Server"
+      version="1.0.1.qualifier"
+      provider-name="DEXELS">
+
+   <description url="http://www.dexels.com/">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import feature="com.dexels.navajo.core.feature" version="1.0.7.qualifier"/>
+      <import feature="com.dexels.navajo.server.feature" version="1.0.4.qualifier"/>
+   </requires>
+
+   <plugin
+         id="com.dexels.navajo.server.embedded"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
