@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipi.xsd">
+
+   <d.headlessbutton name="hbutton2" >
+   <onInstantiate>
+         <showInfo text="'event2'"/>
+   </onInstantiate>
+      <onActionPerformed>
+         <showInfo text="'event3'"/>
+         <sleep time="1000"/>
+         <exit/>
+      </onActionPerformed>
+    </d.headlessbutton> 
+</tid>

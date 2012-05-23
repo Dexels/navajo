@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipi.xsd">
+
+   <d.headless name="init" service="InlineTml">
+         <onInstantiate>
+    </onInstantiate>
+         <c.headlessbutton id="button">
+            <onActionPerformed>
+               <showInfo text="'event1'"/>
+               <headlessbutton.instantiate location="{component:/..}" id="'hbuttonid'" name="'hbutton'"/>
+               <headlessbutton.fireAction path="{component:/../hbuttonid}"/>
+				<sleep time="100"/>
+               <headlessbutton.instantiate location="{component:/..}" id="'hbuttonid2'" name="'hbutton2'"/>
+               <headlessbutton.fireAction path="{component:/../hbuttonid2}"/>
+            </onActionPerformed>
+         </c.headlessbutton>
+    </d.headless> 
+</tid>

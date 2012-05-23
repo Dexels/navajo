@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipi.xsd">
+	<d.headless name="init" service="InlineTml">
+		<c.headlessbutton id="button">
+		
+		</c.headlessbutton>
+		<onInstantiate>
+			<run engine="'javascript'">
+				<![CDATA[
+					var fruits = ["Banana", "Orange", "Apple", "Mango"];
+					println(component.getId());
+					for (i in component) { println(i)};
+					
+					
+					println("***********************: "+tipiContext);
+					for (a in tipiContext) {
+						 println(a);
+					}
+					var button = component.getComponent("button");
+					println(button.getValue("enabled"));
+					]]>
+			</run>
+			<exit />
+
+		</onInstantiate>
+	</d.headless>
+</tid>

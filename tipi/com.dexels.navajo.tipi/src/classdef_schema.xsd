@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="tid">
+		<xs:annotation>
+			<xs:documentation>This is the top level tag</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded" minOccurs="0">
+				<xs:element ref="function" />
+				<xs:element maxOccurs="unbounded" minOccurs="0" ref="tipiclass" />
+				<xs:element maxOccurs="unbounded" minOccurs="0" ref="tipiaction" />
+				<xs:element maxOccurs="unbounded" minOccurs="0" ref="tipi-parser" />
+			</xs:choice>
+			<!--
+				<xs:choice maxOccurs="unbounded" minOccurs="0"> <xs:element
+				name="onInstantiate" type="allActions"/> <xs:element name="onLoad"
+				type="allActions"/> </xs:choice>
+			-->
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tipiclass">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="1" minOccurs="0" ref="description" />
+				<xs:element maxOccurs="1" minOccurs="0" ref="events" />
+				<xs:element maxOccurs="1" minOccurs="0" ref="values" />
+				<xs:element maxOccurs="1" minOccurs="0" ref="methods" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="class" type="xs:string" use="optional" />
+			<xs:attribute name="implements" type="xs:string" use="optional" />
+			<xs:attribute name="deprecated" type="xs:string" use="optional" />
+			<xs:attribute name="package" type="xs:string" use="optional" />
+			<xs:attribute name="type" type="xs:string" use="optional" />
+			<xs:attribute name="childcount" type="xs:string" use="optional" />
+			<xs:attribute name="layoutmanager" type="xs:string" use="optional" />
+			<xs:attribute name="addtocontainer" type="xs:string" use="optional" />
+			<xs:attribute name="studio-icon" type="xs:string" use="optional" />
+			<xs:attribute name="customstructure" type="xs:string" use="optional" />
+			<xs:attribute name="module" type="xs:string" use="optional" />
+			<xs:attribute name="toplevel" type="xs:boolean" use="optional" />
+			<xs:attribute name="propertycomponent" type="xs:string" use="optional" />
+			
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="tipiaction">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="1" minOccurs="0" ref="description" />
+				<xs:element maxOccurs="unbounded" minOccurs="0" ref="param" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="class" type="xs:string" use="required" />
+			<xs:attribute name="package" type="xs:string" use="required" />
+			<xs:attribute name="deprecated" type="xs:boolean" use="optional" />
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="tipi-parser">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="1" minOccurs="0" ref="description" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="parser" type="xs:string" use="required" />
+			<xs:attribute name="type" type="xs:string" use="required" />
+			<xs:attribute name="deprecated" type="xs:boolean" use="optional" />
+		</xs:complexType>
+	</xs:element>	
+
+	<xs:element name="function">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="1" minOccurs="1" ref="description" />
+				<xs:element maxOccurs="1" minOccurs="1" ref="input" />
+				<xs:element maxOccurs="1" minOccurs="1" ref="result" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="class" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="description">
+	</xs:element>
+	<xs:element name="input">
+	</xs:element>
+	<xs:element name="result">
+	</xs:element>
+	<xs:element name="param">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" minOccurs="0" ref="description" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="type" type="xs:string" use="required" />
+			<xs:attribute name="required" type="xs:string" use="optional" />
+			<xs:attribute name="value" type="xs:string" use="optional" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="events">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" ref="event" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="values">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" minOccurs="0"  ref="value" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="methods">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" minOccurs="0"  ref="method" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="event">
+		<xs:annotation>
+			<xs:documentation>An event</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="1" minOccurs="0" ref="description" />
+				<xs:element maxOccurs="unbounded" minOccurs="0" ref="param" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="value">
+		<xs:annotation>
+			<xs:documentation>A value property</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="1" minOccurs="0" ref="description" />
+				<xs:element maxOccurs="unbounded" minOccurs="0" ref="option" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="type" type="xs:string" use="required" />
+			<xs:attribute name="direction" type="xs:string" use="required" />
+			<xs:attribute name="property" type="xs:string" use="optional" />
+			<xs:attribute name="value" type="xs:string" use="optional" />
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="option">
+		<xs:complexType>
+			<xs:attribute name="description" type="xs:string" use="required" />
+			<xs:attribute name="value" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+          
+	
+	<xs:element name="method">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="1" minOccurs="0" ref="description" />
+				<xs:element maxOccurs="unbounded" minOccurs="0" ref="param" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required" />
+			<xs:attribute name="deprecated" type="xs:boolean" use="optional" />
+		</xs:complexType>
+	</xs:element>
+	
+	
+	
+</xs:schema>

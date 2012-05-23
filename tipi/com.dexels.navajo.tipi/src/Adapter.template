@@ -1,0 +1,34 @@
+package com.dexels.navajo.tipi.components.core;
+
+import com.dexels.navajo.tipi.components.core.adapter.BaseAdapter;
+
+//<values>
+//<value direction="in" name="enabled" type="boolean" />
+//</values>
+//<methods >
+//<method name="fireAction">
+//	<description>
+//Programmatically fire an onActionPerformed. This is a useful method to reduce code duplication.
+//	</description>
+// </method>
+//</methods>
+
+public class $ClassName$Adapter extends BaseAdapter {
+
+	public $ClassName$Adapter($ClassName$ b) {
+		super(b);
+	}
+	
+	public boolean isEnabled() {
+		return (Boolean) myComponent.getValue("enabled");
+	}
+
+	public void setEnabled(boolean value) {
+		myComponent.setValue("enabled",value);
+	}
+
+	public void fireAction() {
+		myComponent.performMethod("fireAction", invocation, event);
+	}
+
+}

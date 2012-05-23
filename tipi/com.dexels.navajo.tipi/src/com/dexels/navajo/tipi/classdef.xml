@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.navajo.nl/classdef_schema.xsd">
+
+	<!-- Odd way to do this, deprecated? -->
+   <tipi-include location="com/dexels/navajo/tipi/actions/actiondef.xml" />
+   
+   
+   <!-- Abstract found -->
+
+   <tipiclass name="basecomponent">
+		<description>
+			Abstract component, used by all components.
+		</description>
+		<values>
+           <value direction="in" name="cssClass" type="string" />
+           <value direction="in" name="cssStyle" type="string" />
+		</values>
+      <events>
+         <event name="onInstantiate">
+			<description>
+				The onInstantiate event gets fired after a component (__and its children!__) has been instantiated. 
+				It is a synchronous event, so the thread causing the onInstantiate call (usually by instantiating something) will
+				block until this event has completed.
+			</description>
+         </event>
+         
+      </events>
+   </tipiclass>
+
+      <tipiclass name="datacomponent" implements="basecomponent" layoutmanager="false" addtocontainer="false">
+		<description>
+			Abstract data component, used by most data aware tipi components.
+		</description>
+      <events>
+         <event name="onGeneratedErrors">
+	         <description>
+	         		This event gets fired when the service this component is registered to returns an error.
+	         		TODO: Add actual error navajo and service name
+	         </description>
+            <param name="id" type="string" />
+            <param name="description" type="string" />
+         </event>
+         <event name="onLoad">
+         	<description>
+				The onLoad event gets fired after this component, or one of its ancestors gets loaded with a service.\\
+				service: The name of the service that was loaded\\
+         		navajo: The contents of the service that was loaded\\
+         	</description>
+            <param name="service" type="string"/>
+            <param name="navajo" type="navajo"/>
+         </event>
+      </events>
+   </tipiclass>
+   
+
+     <tipiclass name="messagecomponent"  implements="datacomponent" layoutmanager="false" addtocontainer="false">
+		<description>
+			Abstract data component, used by most data aware tipi components that listen to a certain message.
+		</description>
+      <events>
+      </events>
+      <values>
+           <value direction="in" name="messagePath" type="string" />
+          <value direction="in" name="message" type="message" />
+      </values>
+   </tipiclass>
+   
+   
+      
+   <!--
+   -->
+   <tipiclass class="HttpNavajoConnector" implements="basecomponent" description="Navajo HTTP" name="http" package="com.dexels.navajo.tipi.connectors" type="connector">
+      <events>
+         <event name="onServiceSent">
+         	<description>
+				This event gets fired when a service call has been initiated. Whether the service has terminated yet at this point is unknown
+         	</description>
+            <param name="service" type="string" />
+         </event>
+         <event name="onServiceReceived">
+         	<description>
+				This event gets fired when a service call has terminated. After this, any onLoad event of listening components will fire.
+	     	</description>
+
+            <param name="service" type="string" />
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="server" type="string" />
+         <value direction="in" name="username" type="string" />
+         <value direction="in" name="password" type="string" />
+         <value direction="in" name="keystore" type="string" />
+         <value direction="in" name="storepass" type="string" />
+      </values>
+      <methods />
+       <entrypoints>
+         <entry name="Init" />
+      </entrypoints>
+     
+   </tipiclass>
+   <tipiclass class="ResourceNavajoConnector"  implements="basecomponent" description="Navajo Resource" name="resource" package="com.dexels.navajo.tipi.connectors" type="connector">
+	  <description>
+		The resource connector allows you to load navajo objects from the resource loader.\\
+		As a service name, you supply the resource path as service parameter, and that navajo will be injected under the name supplied by destination.\\
+		Using functions or actions might be better suited, this component is candidate for future deprecation.
+	
+	  </description>
+   </tipiclass>
+   
+   <tipiclass class="TmlWriteConnector"  implements="basecomponent" description="Tml resource writer" name="tmlwriter" package="com.dexels.navajo.tipi.connectors" type="connector">
+		<description>
+			Writes a tml object to the file system.\\
+			Supply the file path as destination, service is not used, use an empty string.
+		</description>
+   </tipiclass>
+   <tipiclass studio-icon="messagestore.gif"  implements="basecomponent"  module="abstract" class="TipiShadowFilterImpl" name="filter" package="com.dexels.navajo.tipi.connectors" type="connector" childcount="0" layoutmanager="false" addtocontainer="false">
+      <values>
+         <value direction="in" name="messagePath" type="string" />
+         <value direction="in" name="simpleFilter" type="string" />
+      </values>
+      <methods />
+   </tipiclass>
+   <!--     -->
+   <tipiclass implements="datacomponent,basecomponent"  studio-icon="messagestore.gif" module="abstract" class="TipiHeadlessFrame" name="headless" package="com.dexels.navajo.tipi.components.core" type="tipi"
+      childcount="*" layoutmanager="false" addtocontainer="false">
+		<description>
+			The headless frame allows you to start a displayless tipi application, useful for unit testing.\\
+			You can use it in conjunction with [[headlessbutton|headless buttons]] and [[messagestore|messagestore]] components.
+		</description>
+   </tipiclass>
+
+      <tipiclass studio-icon="messagestore.gif" implements="basecomponent" module="abstract" class="TipiHeadlessButton" name="headlessbutton" package="com.dexels.navajo.tipi.components.core" type="component"
+      childcount="0" layoutmanager="false" addtocontainer="false">
+	  <description>
+		A 'virtual button' it is a displayless button. The only way to activate it is by calling the fireAction method.
+	  </description>
+      <events>
+            <event name="onActionPerformed">
+				<description>
+					The onActionPerformed event usually gets fired when a button click occurs.\\
+					In this case, that can not happen, as the button is not actually visible.\\
+					If you want an this event to fire, call a fireAction method.
+				</description>
+            </event>
+      </events>
+      <values>
+         <value direction="in" name="enabled" type="boolean" />
+      </values>
+      <methods >
+       <method name="fireAction">
+       	<description>
+			Programmatically fire an onActionPerformed. This is a useful method to reduce code duplication.
+       	</description>
+          </method>
+      </methods>
+   </tipiclass>
+
+
+   <tipiclass studio-icon="messagestore.gif" implements="basecomponent,datacomponent" module="abstract" class="TipiMessageStoreImpl" name="messagestore" package="com.dexels.navajo.tipi.components.core" type="tipi"
+      childcount="0" layoutmanager="false" addtocontainer="false">
+	<description>
+		Invisible component, has the capability to listen to services
+	</description>
+   </tipiclass>
+
+   
+   
+   <tipiclass studio-icon="messagestore.gif"  implements="basecomponent" deprecated="true" module="abstract" class="TipiTimerImpl" name="timer" package="com.dexels.navajo.tipi.components.core" type="tipi"
+      childcount="0" layoutmanager="false" addtocontainer="false">
+      <description>
+      	Programatic timer. Usage:\\set the interval \\call start \\Wait for the onTimer event\\
+      	I am not to thrilled about this one, hence the deprecation. I am considering an action based approach, if you need timers, let me know.
+      </description>
+      <events>
+         <event name="onTimer">
+         	<description>
+         	</description>
+         </event>
+         <event name="onInstantiate" />
+      </events>
+      <values>
+         <value direction="in" name="interval" type="integer" />
+      </values>
+      <methods>
+         <method name="start" />
+         <method name="stop" />
+      </methods>
+   </tipiclass>
+  
+   <tipi-parser name="tipi" type="com.dexels.navajo.tipi.TipiDataComponent" parser="com.dexels.navajo.tipi.components.core.parsers.TipiParser">
+	<description>
+		Deprecated. Use [[component|component]] instead
+	</description>
+   </tipi-parser>
+   <tipi-parser name="component" type="com.dexels.navajo.tipi.TipiComponent" parser="com.dexels.navajo.tipi.components.core.parsers.ComponentParser">
+	<description>
+		Refer to a component in the tipi tree.\\
+		
+	
+		Examples:
+		{component://init/desktop}\\
+		Absolute path. (Because of the double slash)\\
+		-----
+		{component:/../button}\\
+		Relative path. (Because of the single slash)\\
+		Evaluating will start at the current component.
+		The '..' operator will request the parent of the current component (that is, the component evaluating this expression, in the case of an action: The component firing the event 
+		that executes this action)\\
+		A '.' will access the component itself.
+		-----
+		{component:/~/toolbar/button}\\
+		Home-relative path. (Because of the ~)\\
+		Evaluating will start at the root of the current definition.
+		The '..' operator will request the parent of the current component (that is, the component evaluating this expression, in the case of an action: The component firing the event 
+		that executes this action)\\
+		
+		-----
+	</description>
+   </tipi-parser>
+   <tipi-parser name="context" type="com.dexels.navajo.tipi.TipiContext" parser="com.dexels.navajo.tipi.components.core.parsers.ContextParser">
+	<description>
+		Example: {context:/.}
+		This will evaluate to the current tipicontext\\
+		As yet it can not evaluate any other contexts.
+		(This could be implemented easily, if necessary)
+	</description>
+   </tipi-parser>
+   <tipi-parser name="attributeref" type="com.dexels.navajo.tipi.internal.AttributeRef" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeRefParser">
+	<description>
+		Reference an attribute of a certain component.
+		See the section: [[concepts:swing:refs|What is all the 'ref' stuff anyway?!]]
+	</description>
+   </tipi-parser>
+   <tipi-parser name="global" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.GlobalParser">
+	<description>
+		Global values
+	</description>
+   </tipi-parser>
+   <tipi-parser name="globalref" type="com.dexels.navajo.tipi.internal.GlobalRef" parser="com.dexels.navajo.tipi.components.core.parsers.GlobalRefParser">
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="systemref" type="com.dexels.navajo.tipi.internal.SystemPropertyRef" parser="com.dexels.navajo.tipi.components.core.parsers.SystemPropertyRefParser">
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="attribute" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeParser">
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="path" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.PathParser">
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="property" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.PropertyParser">
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="message" type="com.dexels.navajo.document.Message" parser="com.dexels.navajo.tipi.components.core.parsers.MessageParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="propertyref" type="com.dexels.navajo.document.Property" parser="com.dexels.navajo.tipi.components.core.parsers.PropertyRefParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="resource" type="java.net.URL" parser="com.dexels.navajo.tipi.components.core.parsers.ResourceParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="url" type="java.net.URL" parser="com.dexels.navajo.tipi.components.core.parsers.UrlParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="string" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="integer" type="java.lang.Integer" parser="com.dexels.navajo.tipi.components.core.parsers.IntegerParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="float" type="java.lang.Float" parser="com.dexels.navajo.tipi.components.core.parsers.FloatParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="list" type="java.util.List" parser="com.dexels.navajo.tipi.components.core.parsers.ListParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="boolean" type="java.lang.Boolean" parser="com.dexels.navajo.tipi.components.core.parsers.BooleanParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="date" type="java.util.Date" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser" >
+	<description>
+	</description>
+   </tipi-parser>
+  
+   <tipi-parser name="system" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.SystemPropertyParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="event" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.EventParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="eventref" type="com.dexels.navajo.tipi.components.core.parsers.EventRef" parser="com.dexels.navajo.tipi.components.core.parsers.EventRefParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="label" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.LabelParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="alias" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.AliasParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="binary" type="com.dexels.navajo.document.types.Binary" parser="com.dexels.navajo.tipi.components.core.parsers.BinaryParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="cookie" parser="com.dexels.navajo.tipi.components.core.parsers.CookieParser" type="java.lang.String" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="cookieref" parser="com.dexels.navajo.tipi.components.core.parsers.CookieRefParser" type="com.dexels.navajo.tipi.internal.TipiReference" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="navajo" type="com.dexels.navajo.document.Navajo" parser="com.dexels.navajo.tipi.components.core.parsers.NavajoParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="link" type="com.dexels.navajo.tipi.PropertyLinkRequest" parser="com.dexels.navajo.tipi.components.core.parsers.LinkParser" >
+	<description>
+	</description>
+   </tipi-parser>
+
+   <tipi-parser name="selection" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser" >
+	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser type="java.lang.Object" name="object" parser="com.dexels.navajo.tipi.components.core.parsers.ObjectParser" >
+	<description>
+	</description>
+   </tipi-parser>
+
+</tid>
