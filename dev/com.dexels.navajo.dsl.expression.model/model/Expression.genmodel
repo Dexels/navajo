@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.dexels.navajo.dsl.expression.model/src-gen"
+    modelPluginID="com.dexels.navajo.dsl.expression.model" modelName="Expression"
+    testsDirectory="/com.dexels.navajo.dsl.expression.model.tests/testsrc" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>Expression.ecore</foreignModel>
+  <genPackages prefix="Expression" basePackage="com.dexels.navajo.dsl.model" disposableProviderFactory="true"
+      ecorePackage="Expression.ecore#/">
+    <genClasses ecoreClass="Expression.ecore#//TopLevel">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expression.ecore#//TopLevel/toplevelExpression"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Expression.ecore#//Expression">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expression.ecore#//Expression/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expression.ecore#//Expression/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//Expression/operations"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//Expression/elements"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expression.ecore#//Expression/subliteral"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//Expression/valueString"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//Expression/expressionType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expression.ecore#//Expression/pathSequence"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expression.ecore#//Expression/existsPathSequence"/>
+    </genClasses>
+    <genClasses ecoreClass="Expression.ecore#//FunctionCall">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//FunctionCall/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expression.ecore#//FunctionCall/operands"/>
+    </genClasses>
+    <genClasses ecoreClass="Expression.ecore#//MapGetReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//MapGetReference/pathElements"/>
+    </genClasses>
+    <genClasses ecoreClass="Expression.ecore#//TmlReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//TmlReference/pathElements"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//TmlReference/absolute"/>
+    </genClasses>
+    <genClasses ecoreClass="Expression.ecore#//ExistsTmlReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//ExistsTmlReference/pathElements"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//ExistsTmlReference/absolute"/>
+    </genClasses>
+    <genClasses ecoreClass="Expression.ecore#//FunctionOperands">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expression.ecore#//FunctionOperands/paramList"/>
+    </genClasses>
+    <genClasses ecoreClass="Expression.ecore#//Operation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//Operation/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Expression.ecore#//PathSequence">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expression.ecore#//PathSequence/pathElements"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
