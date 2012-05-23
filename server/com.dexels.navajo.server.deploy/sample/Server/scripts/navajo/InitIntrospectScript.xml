@@ -1,0 +1,9 @@
+<tsl>
+    <message name="Input">
+        <property name="ScriptName" direction="in" type="string" length="10"/>
+    </message>
+    <methods>
+        <method name="navajo/ProcessIntrospectScript"/>
+        <method name="navajo/ProcessScriptRDF"/>
+    </methods>
+</tsl>

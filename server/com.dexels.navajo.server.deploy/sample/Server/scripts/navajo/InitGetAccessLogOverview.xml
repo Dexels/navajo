@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Arjen Schoneveld" id="InitGetAccessLogOverview" xmlns="http://www.dexels.com/navascript"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://mail.dexels.com:8080/schema/navascript.xsd">
+    <methods>
+        <method name="navajo/ProcessGetAccessLog">
+            <required message="AccessDetails"/>
+        </method>
+    </methods>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'navajostore'"/>
+        </field>
+        <field name="endIndex">
+            <expression value="100"/>
+        </field>
+        <field name="query">
+            <expression xml:space="preserve">
+                SELECT 
+                    CAST(navajoaccess.created AS DATE) AS datecreated,
+                    navajoaccess.created,
+                    navajoaccess.totaltime,
+                    navajoaccess.parsetime,
+                    navajoaccess.authorisationtime,
+                    navajoaccess.requestsize,
+                    navajoaccess.requestencoding,
+                    navajoaccess.compressedrecv,
+                    navajoaccess.compressedsnd,
+                    navajoaccess.access_id,
+                    navajoaccess.webservice,
+                    navajoaccess.username,
+                    navajoaccess.ip_address,
+                    navajoaccess.hostname
+                 FROM 
+                    navajoaccess
+                 ORDER BY created DESC
+             </expression>
+        </field>
+        <message name="AccessDetails">
+            <property direction="in" name="AccessId" value="" description="AccessId" type="string" length="20"/>
+        </message>
+        <message name="LogOverview">
+            <map ref="resultSet">
+                <property name="CreatedDate" direction="out">
+                    <expression value="$columnValue('datecreated')"/>
+                </property>
+                <property name="CreatedTime" direction="out">
+                    <expression value="$columnValue('created')"/>
+                </property>
+                <property name="AccessId" direction="out">
+                    <expression value="$columnValue('access_id')"/>
+                </property>
+                <property name="Webservice" direction="out">
+                    <expression value="$columnValue('webservice')"/>
+                </property>
+                <property name="UserName" direction="out">
+                    <expression value="$columnValue('username')"/>
+                </property>
+                <property name="IpAddress" direction="out">
+                    <expression value="$columnValue('ip_address')"/>
+                </property>
+                <property name="Hostname" direction="out">
+                    <expression value="$columnValue('hostname')"/>
+                </property>
+                <property name="TotalTime" direction="out">
+                    <expression value="$columnValue('totaltime')"/>
+                </property>
+                <property name="ParseTime" direction="out">
+                    <expression value="$columnValue('parsetime')"/>
+                </property>
+                <property name="AuthorisationTime" direction="out">
+                    <expression value="$columnValue('authorisationtime')"/>
+                </property>
+                <property name="RequestSize" direction="out">
+                    <expression value="$columnValue('requestsize')"/>
+                </property>
+                <property name="Encoding" direction="out">
+                    <expression value="$columnValue('requestencoding')"/>
+                </property>
+                <property name="CompressedReceive" direction="out">
+                    <expression value="$columnValue('compressedrecv') == 'TRUE'"/>
+                </property>
+                <property name="CompressedSend" direction="out">
+                    <expression value="$columnValue('compressedsnd') == 'TRUE'"/>
+                </property>
+
+            </map>
+        </message>
+    </map>
+</tsl>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Arjen Schoneveld" id="navajo/ProcessUpdateTasks" 
+    notes="Processing script both for updating and deleting user scheduled tasks" 
+    repository="$Id$"
+    xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.nl:8080/schema/navascript.xsd ">
+    <!-- Validations -->
+    <validations>
+        <!-- for updating: verify that the date and time combination does not lie in the past -->
+        <check code="2028" xml:space="preserve">
+            FORALL('/Tasks',
+                  `! [Update] OR
+                     ( CheckDate( [TaskDate] ) AND [TaskTime] != null AND
+                       ( [TaskDate] &gt; TODAY
+                         OR
+                         ( [TaskDate] == ParseDate( FormatDate( TODAY, 'yyyy-MM-dd' ), 'yyyy-MM-dd' ) AND
+                           [TaskTime] &gt; ToClockTime( '' + FormatDate( TODAY, 'HH:mm' ) ) 
+                         )
+                       )
+                     )`
+                  )
+        </check>
+        <!-- for deleting: verify that the task has not been completed -->
+        <check code="2029" xml:space="preserve">
+            FORALL('/Tasks', `! [Delete] OR ! [IsFinished]`)
+        </check>
+    </validations>
+    <!-- Includes -->
+    <!-- None -->
+    <!-- Methods -->
+    <!-- None -->
+    <!-- Service context -->
+    <!-- None -->
+    <!-- Maps and messages -->
+    <map object="com.dexels.navajo.adapter.MultipleEmptyMap">
+        <field name="emptyMaps">
+            <map ref="/Tasks" filter="[Delete] == true">
+                <map object="com.dexels.navajo.scheduler.TaskRunnerMap">
+                    <field name="id">
+                        <expression value="[Id]"/>
+                    </field>
+                    <field name="remove">
+                        <expression value="true"/>
+                    </field>
+                </map>
+            </map>
+        </field>
+        <field name="emptyMaps">
+            <map ref="/Tasks" filter="[Update] == true">
+                <map object="com.dexels.navajo.scheduler.TaskRunnerMap">
+                    <field name="id">
+                        <expression value="[Id]"/>
+                    </field>
+                      <field name="webservice">
+                        <expression value="[Webservice]"/>
+                    </field>
+                    <field name="trigger">
+                        <expression value="'time:' + StringField( FormatDate( [TaskDate], 'dd-MM-yyyy'), '-', 2 ) + '|' + StringField( FormatDate( [TaskDate], 'dd-MM-yyyy'), '-', 1 ) + '|' + StringField( FormatDate( [TaskTime], 'HH:mm'), ':', 1 ) + '|' + StringField( FormatDate( [TaskTime], 'HH:mm'), ':', 2 ) + '|*|' + StringField( FormatDate( [TaskDate], 'dd-MM-yyyy'), '-', 3 )"/>
+                    </field>
+                    <field name="taskDescription">
+                        <expression value="[TaskDescription]"/>
+                    </field>
+                    <field name="update">
+                        <expression value="true"/>
+                    </field>
+                    <field name="inactive">
+                        <expression value="![IsActive]"/>
+                    </field>
+                </map>
+            </map>
+        </field>
+    </map>
+</tsl>
+<!-- EOF: $RCSfile$ -->

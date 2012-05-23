@@ -1,0 +1,30 @@
+<tsl>
+	<message name="Result">
+		<map object="com.dexels.navajo.adapter.MailMap">
+			<field name="recipients">
+				<expression value="'frank@dexels.com,frank@swingstreet.nl,frank@lindyhop.nl,flyaruu@gmail.com'" />
+			</field>
+			<field name="mailServer">
+				<expression value="'smtp.gmail.com'" />
+			</field>
+			<field name="subject">
+				<expression value="'Navajo map test'" />
+			</field>
+			<field name="sender">
+				<expression value="'dexels@gmail.com'" />
+			</field>
+			<field name="text">
+				<expression value="'Mail content'" />
+			</field>
+			<field name="smtpUser">
+				<expression value="'username'" />
+			</field>
+			<field name="smtpPass">
+				<expression value="'*******'" />
+			</field>
+			<field name="useEncryption">
+				<expression value="true" />
+			</field>
+		</map>
+	</message>
+</tsl>

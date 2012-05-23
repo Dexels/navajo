@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="NavajoComplete" default="NavajoComplete" basedir=".">
+	<property name="enterprisebuild" location="enterpriseclasses" />
+	<property name="enterprisearchive" location="enterprisedist/NavajoEnterpriseExtension.jar" />
+	<property name="lib" value="3rdparty" />
+	<property name="enterpriselib" value="3rdparty/enterprise" />
+	<property name="dist" value="dist" />
+	<path id="enterprisedepend">
+		<fileset dir="${lib}">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${enterpriselib}">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="classes" />
+	</path>
+	<target name="init">
+		<tstamp />
+	</target>
+	<target name="clean">
+		<delete file="${archive}" />
+		<delete dir="${enterprisebuild}" />
+		<delete dir="${dist}" />
+	</target>
+	<target name="resource">
+		<copy includeemptydirs="false" todir="${enterprisebuild}">
+			<fileset dir="source/NavajoEnterprise">
+				<exclude name="**/*.java" />
+				<exclude name="**/javacc" />
+				<exclude name="**/jjtree" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${enterprisebuild}" />
+		<mkdir dir="${dist}" />
+
+		<javac  destdir="${enterprisebuild}" nowarn="true" failonerror="true" debug="true">
+
+			<src path="source/NavajoEnterprise" />
+			<classpath refid="enterprisedepend" />
+		</javac>
+	</target>
+	<target name="NavajoComplete" depends="compile,resource">
+		<jar destfile="${enterprisearchive}" basedir="${enterprisebuild}">
+		</jar>
+	</target>
+</project>

@@ -1,0 +1,10 @@
+<tsl>
+  <map object="com.dexels.navajo.server.Dispatcher">
+     <field name="disabled">
+        <expression value="false"/>
+     </field>
+     <field name="enabled">
+        <expression value="true"/>
+     </field>
+  </map>
+</tsl>

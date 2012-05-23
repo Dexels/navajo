@@ -1,0 +1,9 @@
+<navascript>
+  <map object="com.dexels.navajo.util.GenerateXSD">
+     <message name="Result">
+        <property name="XSD" direction="out">
+           <expression value="$navajoXSD"/> 
+        </property>
+     </message>
+  </map>
+</navascript>

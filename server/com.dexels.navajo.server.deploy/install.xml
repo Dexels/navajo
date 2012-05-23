@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project default="createDefaultInstall" >
+	<target name="createDefaultInstall">
+		<echo message="Creating default: ${basedir} selected: ${selectedPath}"/>
+		<mkdir dir="${selectedPath}"/>
+		
+		<copy todir="${selectedPath}" verbose="true">
+			<fileset dir="." defaultexcludes="true">
+				<include name="adapters/**"/>
+				<include name="config/**"/>
+				<include name="scripts/**"/>
+				<exclude name="scripts/navajo/**"/>
+
+				<exclude name="CVS/**"/>
+			</fileset>
+		</copy>
+		<war destfile="bridged.war"></war>
+	</target>
+</project>

@@ -1,0 +1,43 @@
+<tsl debug="request">
+  <message name="Results2">
+     <property name="StringField1Type" direction="in"> 
+        <expression value="GetPropertyType('/Results1/StringField1') == 'string'"/>
+     </property>
+     <property name="IntegerField1Type" direction="in"> 
+        <expression value="GetPropertyType('/Results1/IntegerField1') == 'integer'"/>
+     </property>
+     <property name="PrimitiveInteger1Type" direction="in"> 
+        <expression value="GetPropertyType('/Results1/PrimitiveInteger1') == 'integer'"/>
+     </property>
+     <property name="FloatField1Type" direction="in"> 
+        <expression value="GetPropertyType('/Results1/FloatField1') == 'float'"/>
+     </property>
+     <property name="PrimitiveFloat1Type" direction="in"> 
+        <expression value="GetPropertyType('/Results1/PrimitiveFloat1') == 'float'"/>
+     </property>
+     <property name="DoubleField1Type" direction="in"> 
+        <expression value="GetPropertyType('/Results1/DoubleField1') == 'float'"/>
+     </property>
+     <property name="PrimitiveDouble1Type" direction="in"> 
+        <expression value="GetPropertyType('/Results1/PrimitiveDouble1') == 'float'"/>
+     </property>
+     <property name="DateField1Type" direction="in"> 
+        <expression value="GetPropertyType('/Results1/DateField1') == 'date'"/>
+     </property>
+     <property name="PrimitiveBoolean1Type" direction="in"> 
+        <expression value="GetPropertyType('/Results1/PrimitiveBoolean1') == 'boolean'"/>
+     </property>
+     <property name="BooleanField1Type" direction="in"> 
+        <expression value="GetPropertyType('/Results1/BooleanField1') == 'boolean'"/>
+     </property>
+     <property name="MoneyField1Type" direction="in"> 
+        <expression value="GetPropertyType('/Results1/MoneyField1') == 'money'"/>
+     </property>
+     <property name="ClocktimeField1Type" direction="in"> 
+        <expression value="GetPropertyType('/Results1/ClocktimeField1') == 'clocktime'"/>
+     </property>
+     <property name="BinaryField1Type" direction="in"> 
+        <expression value="GetPropertyType('/Results1/BinaryField1') == 'binary'"/>
+     </property>
+  </message>
+</tsl>
