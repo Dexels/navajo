@@ -28,7 +28,6 @@ import com.dexels.navajo.tipi.internal.PropertyComponent;
  * 
  * @author not attributable
  * @version 1.0
- * @deprecated
  */
 
 public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {

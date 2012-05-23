@@ -35,7 +35,6 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * 
  * @author not attributable
  * @version 1.0
- * @deprecated
  */
 public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 	/**
