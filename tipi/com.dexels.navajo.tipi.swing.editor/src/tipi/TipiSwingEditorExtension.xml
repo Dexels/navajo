@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="substance" requiresMain="" project="TipiSwingEditor" version="0.9" title="Tipi Swing editor. WYSISYG editor" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/swingeditor/swingeditorclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="gnu-regexp-1.1.4.jar"/>
+		<jar path="kafenio-config.jar"/>
+		<jar path="kafenio-icons.jar"/>
+		<jar path="TipiSwingEditor.jar"/>
+	</jars>
+	<requires>
+		<require path="TipiSwing" id="TipiSwing"/>
+	</requires>
+	<other>
+		<link href="http://editor.kafenio.org/"/>
+	</other>
+</extension>

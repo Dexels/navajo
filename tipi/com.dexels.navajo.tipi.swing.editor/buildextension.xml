@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="TipiSwingEditor" default="publish" basedir=".">
+	<!-- <property name="dist" value="dist/${ant.project.name}" /> -->
+	<!-- <property name="repository" value="http://www.navajo.nl/Tipi" /> -->
+<taskdef name="retrieveVersion" classname="com.dexels.navajo.tipi.ant.extensionbuilder.RetrieveVersion" classpath="bin" />
+<retrieveVersion/>
+<property name="dist" value="dist/${ant.project.name}/${tipiComponentVersion}" />
+			
+		
+	<target name="archive">
+		<ant antfile="build.xml" dir="." inheritall="true" inheritrefs="true" target="archive" />
+	</target>
+		
+	<target name="customGrabjar" depends="cleandistribution">
+		<echo message="Grabbing to: ${dist}/lib"/>
+		<copy todir="${dist}/lib" file="${ant.project.name}.jar" />
+		<copy todir="${dist}/lib" file="../NavajoSwingEditor/NavajoSwingEditor.jar" />
+		<copy todir="${dist}/lib">
+			<fileset dir="../NavajoSwingEditor/lib">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+
+	</target>
+	<target name="cleandistribution" depends="archive">
+		<delete dir="dist" />
+		<retrieveVersion/>
+		<copy todir="${dist}/lib" file="${ant.project.name}.jar" />
+				
+		
+	</target>
+
+	<target name="publish" depends="customGrabjar">
+		<ant antfile="../TipiBuild/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
+	</target>
+</project>
