@@ -1,0 +1,323 @@
+<tml documentImplementation="SAXP">
+   <header>
+      <transaction rpc_usr="unknown" rpc_name="GetInboxMessages" rpc_pwd="unknown"/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="Page" type="simple">
+      <property direction="in" name="CurrentPage" value="1" type="integer"/>
+      <property direction="out" name="PageCount" value="6" type="integer"/>
+      <property direction="out" name="PageSize" value="15" type="integer"/>
+   </message>
+   <message name="MailBox" type="simple">
+      <property direction="in" name="FolderName" value="INBOX" type="string"/>
+      <property direction="in" name="MessageCount" value="77" type="string"/>
+      <property direction="in" name="NewMessageCount" value="0" type="string"/>
+      <property direction="in" name="UnreadMessageCount" value="0" type="string"/>
+      <property direction="in" name="" value="INBOX" type="string"/>
+      <message name="Mail" type="array">
+         <message index="0" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Adreswijzigingen district Oost januari 2012" type="string"/>
+            <property direction="in" name="ContentType" value="multipart/mixed; 
+	boundary=&quot;----=_Part_5248_1118927619.1328170451343&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2012-02-02 09:14:11.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="77" type="integer"/>
+            <property direction="in" name="From" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="1" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Nieuwe versie aanvullende instructies werkgroep spelregels veldvoetbal - wedstrijdofficials" type="string"/>
+            <property direction="in" name="ContentType" value="multipart/mixed; 
+	boundary=&quot;----=_Part_77628_108610380.1327656096717&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2012-01-27 10:21:36.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="76" type="integer"/>
+            <property direction="in" name="From" value="Oost@knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="Oost@knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="2" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Algemene Berichten district Oost editie 6 " type="string"/>
+            <property direction="in" name="ContentType" value="multipart/mixed; 
+	boundary=&quot;----=_Part_6184_1955660410.1325841359028&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2012-01-06 10:15:59.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="75" type="integer"/>
+            <property direction="in" name="From" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="3" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Zorgverzekering 2012" type="string"/>
+            <property direction="in" name="ContentType" value="multipart/mixed; 
+	boundary=&quot;----=_Part_5266_439207211.1324463019302&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2011-12-21 11:23:39.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="74" type="integer"/>
+            <property direction="in" name="From" value="Oost@knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="Oost@knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="4" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Overige Post Wedstrijdofficials - Aanpassing handleiding en spelregels top- en eredivisiezaalvoetbal" type="string"/>
+            <property direction="in" name="ContentType" value="multipart/mixed; 
+	boundary=&quot;----=_Part_5904_1063300154.1321888952420&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2011-11-21 16:22:32.00" type="date"/>
+            <propert14:36:30.583 [310268208@qtp-1068244514-4] DEBUG com.dexels.navajo.tipi.TipiContext - category: event    event: finished event: onActionPerformed in componenttipi://init/menu/data/mailBox
+y direction="in" name="MessageNumber" value="73" type="integer"/>
+            <property direction="in" name="From" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="5" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Algemene Berichten district Oost editie 5 " type="string"/>
+            <property direction="in" name="ContentType" value="multipart/mixed; 
+	boundary=&quot;----=_Part_539_316432358.1320397789962&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2011-11-04 10:09:49.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="72" type="integer"/>
+            <property direction="in" name="From" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="6" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Wedstrijdwijzigingen" type="string"/>
+            <property direction="in" name="ContentType" value="multipart/related; 
+	boundary=&quot;----=_Part_31123_300527120.1319806911058&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2011-10-28 15:01:51.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="71" type="integer"/>
+            <property direction="in" name="From" value="knvb-district-oost@district.knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="knvb-district-oost@district.knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="7" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Wedstrijdwijzigingen" type="string"/>
+            <property direction="in" name="ContentType" value="multipart/related; 
+	boundary=&quot;----=_Part_25983_1022106925.1319721628762&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2011-10-27 15:20:28.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="70" type="integer"/>
+            <property direction="in" name="From" value="knvb-district-oost@district.knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="knvb-district-oost@district.knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="8" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Overige Post Wedstrijdofficials - Technische problemen official evaluatie formulier" type="string"/>
+            <property direction="in" name="ContentType" value="multipart/mixed; 
+	boundary=&quot;----=_Part_8140_1641319689.1319439855699&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2011-10-24 09:04:15.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="69" type="integer"/>
+            <property direction="in" name="From" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="9" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Overige Post Wedstrijdofficials - verlenging scheidsrechtersactie Nederland ‚Äì Zwitserland" type="string"/>
+            <property direction="in" name="ContentType" value="multipart/mixed; 
+	boundary=&quot;----=_Part_25580_1740703680.1319110326533&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2011-10-20 13:32:06.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="68" type="integer"/>
+            <property direction="in" name="From" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="10" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Overige Post Wedstrijdofficials - technische storing Official Evaluatie Formulier" type="string"/>
+            <property direction="in" name="ContentType" value="multipart/mixed; 
+	boundary=&quot;----=_Part_25047_1989605655.1319096749276&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2011-10-20 09:45:49.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="67" type="integer"/>
+            <property direction="in" name="From" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="11" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Wedstrijdwijzigingen" type="string"/>
+            <property direction="in" name="ContentType" value="multipart/related; 
+	boundary=&quot;----=_Part_19498_129975587.1319031986810&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2011-10-19 15:46:26.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="66" type="integer"/>
+            <property direction="in" name="From" value="knvb-district-oost@district.knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="knvb-district-oost@district.knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="12" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Overige Post Wedstrijdofficials - Belaagde scheidsrechter krijgt juridische bijstand" type="string"/>
+            <property direction="in" name="ContentType" value="multipart/mixed; 
+	boundary=&quot;----=_Part_10042_2117503408.1318947867288&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2011-10-18 16:24:27.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="65" type="integer"/>
+            <property direction="in" name="From" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="13" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Overige Post Wedstrijdofficials - Spelregels/Aanvullende instructies werkgroep spelregels" type="string"/>
+            <property direction="in" name="ContentType" value="multipart/mixed; 
+	boundary=&quot;----=_Part_7921_1248527435.1318845498232&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2011-10-17 11:58:18.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="64" type="integer"/>
+            <property direction="in" name="From" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+         <message index="14" name="Mail" type="array_element">
+            <property direction="in" name="Subject" value="Overige Post Wedstrijdofficials - tevredenheidsonderzoek" type="string"/>
+            <property direction="in" name="ContentType" value="multipart/mixed; 
+	boundary=&quot;----=_Part_7444_71467284.1318254593396&quot;" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="ReceivedDate" type="date"/>
+            <property direction="in" name="SentDate" value="2011-10-10 15:49:53.00" type="date"/>
+            <property direction="in" name="MessageNumber" value="63" type="integer"/>
+            <property direction="in" name="From" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="ReplyTo" value="oost@knvb.nl" type="string"/>
+            <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>
+            <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+            <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+            <property direction="in" name="IsDraft" value="false" type="boolean"/>
+            <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+            <property direction="in" name="IsRecent" value="false" type="boolean"/>
+            <property direction="in" name="IsSeen" value="false" type="boolean"/>
+         </message>
+      </message>
+   </message>
+   <methods/>
+</tml>

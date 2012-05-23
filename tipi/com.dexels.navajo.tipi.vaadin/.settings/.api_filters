@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="com.dexels.navajo.tipi.vaadin" version="2">
+    <resource path="src/com/dexels/navajo/tipi/vaadin/components/TipiCalendarEvent.java" type="com.dexels.navajo.tipi.vaadin.components.TipiCalendarEvent">
+        <filter id="643842064">
+            <message_arguments>
+                <message_argument value="BasicEvent"/>
+                <message_argument value="TipiCalendarEvent"/>
+                <message_argument value="getCalendarEvent()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>

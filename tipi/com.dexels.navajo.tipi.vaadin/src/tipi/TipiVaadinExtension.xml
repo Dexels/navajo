@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="TipiVaadin" isMain="true" requiresMain="" project="TipiVaadin" version="0" title="Tipi Vaadin" vendor="Dexels" homepage="http://www.vaadin.com">
+	<description>
+		Standard vaadin implementation
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/vaadin/vaadinclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="vaadin-6.7.0.jar"/>
+		<jar path="borderlayout-0.3.jar"/>
+		<jar path="ContextMenu3.1.0.jar"/>
+		<jar path="operlayers-wrapper-0.9.1.jar"/>
+		<jar path="PagedTable-0.6.2.jar"/>
+		<jar path="Tidy.jar"/>
+		<jar path="vaadin-tinymce-1.4.jar"/>
+		<jar path="vaadin-chameleon-theme-1.1.0.jar"/>
+		<jar path="TipiVaadin.jar"/>
+	</jars>
+	<requires>
+		<require path="Tipi" id="Tipi"/>
+	</requires>
+	
+</extension>

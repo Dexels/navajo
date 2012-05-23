@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="lib/openlayers-wrapper-0.9.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/vaadin-calendar-cval-2.0-1.2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Tidy.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/vaadin-chameleon-theme-1.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/confirmdialog-1.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ContextMenu3.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/PagedTable-0.6.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/vaadin-tinymce-1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/borderlayout-0.3.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

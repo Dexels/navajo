@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<functiondef>
+    <function name="CreateEchoMailUrl" class="com.dexels.navajo.functions.CreateEchoMailUrl">
+        <description>Good question</description>
+        <input>context,navajo</input>
+        <result>string</result>
+    </function>
+
+    <function name="StripBody" class="com.dexels.navajo.functions.StripBody">
+        <description>Strips an html string, removing body tags and everything outside it</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="CreateEchoUrl" class="com.dexels.navajo.functions.CreateEchoUrl">
+        <description>Create an adressable entry for an expression</description>
+        <input>context,string</input>
+        <result>string</result>
+    </function>
+    <function name="CreateTitledBorder" class="com.dexels.navajo.functions.CreateTitledBorder">
+        <description>Create an adressable entry for an expression</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="GetScreenWidth" class="com.dexels.navajo.functions.GetScreenWidth">
+        <description>Width of the screen. Hardcoded for now</description>
+        <input></input>
+        <result>integer</result>
+    </function>
+    <function name="GetScreenHeight" class="com.dexels.navajo.functions.GetScreenHeight">
+        <description>Height of the screen. Hardcoded for now</description>
+        <input></input>
+        <result>integer</result>
+    </function>
+</functiondef>
