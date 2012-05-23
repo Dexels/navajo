@@ -1,0 +1,150 @@
+<plugin>
+      
+   <extension point="org.eclipse.ui.views">
+
+      <view name="TML browser" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
+         class="com.dexels.navajo.studio.script.plugin.views.TmlBrowser"
+         id="com.dexels.TmlBrowser"/>
+   </extension>
+<!--
+   <extension point="org.eclipse.ui.views">
+
+      <view name="TML Client View" icon="icons/dexels_function.gif" category="com.dexels.plugin.views"
+         class="com.dexels.navajo.studio.script.plugin.views.TmlClientView"
+         id="com.dexels.TmlClientView"/>
+   </extension>
+   
+-->
+  
+   <extension id="NavajoScriptBuilder" name="TSL Builder"
+      point="org.eclipse.core.resources.builders">
+      <builder hasNature="false">
+         <run class="com.dexels.navajo.studio.eclipse.NavajoBuilder"/>
+      </builder>
+   </extension>
+   <extension id="NavajoNature" name="Navajo Nature" point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run class="com.dexels.navajo.studio.eclipse.NavajoNature"/>
+      </runtime>
+      <builder id="NavajoScriptBuilder"/>
+   </extension>
+	
+   <extension point="org.eclipse.ui.preferencePages">
+      <page name="Navajo Browser Preferences"
+         class="com.dexels.navajo.studio.script.plugin.navajobrowser.preferences.NavajoPreferencePage"
+         id="com.dexels.NavajoPreferencePage"/>
+         
+   </extension>
+  <!--   <extension point="org.eclipse.ui.editors">
+      <editor name="TML Editor" icon="icons/dexels_tml.gif" extensions="tml"
+         contributorClass="com.dexels.navajo.studio.script.plugin.editors.MultiPageContributor"
+         class="com.dexels.navajo.studio.script.plugin.editors.TmlEditor"
+         id="com.dexels.TmlEditor"/>
+     <editor
+            class="com.dexels.navajo.studio.plugin.editors.TipiEditor"
+            icon="icons/dexels_tipi.gif"
+            default="true"
+            contributorClass="com.dexels.navajo.studio.plugin.editors.TipiEditorContributor"
+            name="Tipi Editor"
+            id="com.dexels.navajo.studio.plugin.editors.TipiEditor"
+            extensions="tipi"/>
+   </extension>
+  --> 
+   
+<!--
+  <extension point="org.eclipse.ui.propertyPages">
+      <page objectClass="org.eclipse.core.resources.IFile" icon="icons/sample.gif" name="Studio propeties"
+            nameFilter="*.*"  id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioPropertyPage"/>
+      <page objectClass="org.eclipse.core.resources.IFile" icon="icons/sample.gif" name="Studio propeties"
+            nameFilter="*.*"  id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioServerConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioServerConfig"/>
+      <page objectClass="org.eclipse.core.resources.IFile" icon="icons/sample.gif" name="Studio propeties"
+            nameFilter="*.*"  id="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig" class="com.dexels.navajo.studio.script.plugin.propertypages.NavajoStudioSqlConfig"/>
+   </extension>-->
+ <!--<extension point="org.eclipse.ui.decorators"> 
+    </extension>     -->
+
+
+
+
+
+<!-- Don't know why this does not work -->
+ 
+<!--
+<extension point="org.eclipse.ui.ide.markerResolution" id="tslFix">
+	<markerResolutionGenerator class="com.dexels.navajo.studio.eclipse.quickfix.TslFixGenerator" markerType="org.eclipse.core.resources.problemmarker">
+		<attribute name="aap" value="noot"/>
+	</markerResolutionGenerator>
+</extension>
+-->
+      
+  
+   
+  <!--   <extension id="aap" point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.problemmarker"/>
+  		<super type="org.eclipse.core.resources.textmarker"/> 
+      <persistent value="true"/>
+   </extension> 
+  <extension point="org.eclipse.ui.ide.markerResolution" id="aapFix">
+	  <markerResolutionGenerator class="com.dexels.navajo.studio.eclipse.quickfix.TslFixGenerator" markerType="com.dexels.plugin.TslMarker"/>
+	</extension> -->
+
+<!--   <extension point="org.eclipse.ui.commands">
+	   <keyConfiguration
+	      name="Navajo Configuration"
+	      parent="org.eclipse.ui.defaultAcceleratorConfiguration"
+	      description="Navajo configuration"
+	      id="com.dexels.navajoConfiguration">
+	   </keyConfiguration>
+	   <keyBinding
+	      string="Ctrl+Shift+D"
+	      contextId="org.eclipse.ui.globalScope"
+	      command="org.eclipse.jdt.ui.edit.text.java.sort.members"
+	      configuration="org.eclipse.faq.sampleConfiguration">
+	   </keyBinding>
+   </extension>   
+-->
+<!--
+<extension point = "org.eclipse.ui.editorActions">
+      <editorContribution 
+         id="com.dexels.runEditor" targetID="org.eclipse.ui.examples.readmetool.ReadmeEditor">        
+   <action id="org.eclipse.ui.examples.readmetool.ea1" 
+              label="%Editors.Action.label" 
+      toolbarPath="ReadmeEditor" 
+              icon="icons/obj16/editor.gif" 
+              tooltip="%Editors.Action.tooltip" 
+              class="org.eclipse.ui.examples.readmetool.EditorActionDelegate" 
+              /> 
+      </editorContribution>
+ </extension>
+-->
+
+
+
+	<extension point="org.eclipse.ui.contexts">
+		<context name="Navajo context" description="Navajo context description" id="com.dexels.navajoContext" parentId="org.eclipse.ui.contexts.window"/>
+	</extension>
+ <extension
+       point="org.eclipse.core.filebuffers.documentSetup">
+ </extension>
+ <extension
+       point="org.eclipse.ui.newWizards">
+    <category
+          id="com.dexels.navajo.dev.script"
+          name="Navajo Wizard">
+    </category>
+    <wizard
+          category="com.dexels.navajo.dev.script"
+          class="com.dexels.navajo.dev.script.wizards.NavajoScriptWizard"
+          icon="icons/sample.gif"
+          id="com.dexels.navajo.dev.script.wizards.NavajoScriptWizard"
+          name="NavajoScriptWizard">
+    </wizard>
+    <wizard
+          category="com.dexels.navajo.dev.script"
+          class="com.dexels.navajo.dev.script.wizards.NavajoProjectWizard"
+          icon="icons/sample.gif"
+          id="com.dexels.navajo.dev.script.wizards.NavajoProjectWizard"
+          name="Navajo new project wizard">
+    </wizard>
+ </extension>
+ </plugin>
