@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="substance" requiresMain="" project="TipiSubstance" version="0.9" title="Tipi Substance Look and Feel" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		This extension wraps the Substance swing lnf in a tipi wrapper, along with a 'setSkin' action
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/swing/substance/substanceclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="substance-6.jar"/>
+		<jar path="TipiSubstance.jar"/>
+		<jar path="trident.jar"/>
+	</jars>
+	<other>
+		<link href="https://substance.dev.java.net/"/>
+	</other>
+</extension>

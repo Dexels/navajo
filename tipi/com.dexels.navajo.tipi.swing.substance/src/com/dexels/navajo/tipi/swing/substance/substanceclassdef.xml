@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+	<tipiaction name="setTheme" class="TipiSetTheme" package="com.dexels.navajo.tipi.swing.substance"
+		deprecated="true">
+		<description> Deprecated, used to set Substance 4.3 themes. Use setSkin to utilize skins</description>
+		<param name="value" type="string" />
+	</tipiaction>
+	<tipiaction name="setSkin" class="TipiSetSkin" package="com.dexels.navajo.tipi.swing.substance">
+		<description> Sets the skin of the Substance look and feel. If the current L&amp;F is not substance, it will switch to it.
+		</description>
+        <param name="value" type="string"/>
+    </tipiaction>
+     <tipiaction name="loadSkins"  class="LoadSkins" package="com.dexels.navajo.tipi.swing.substance">
+     		<description>
+			Injects a navajo object listing all available skins in a selection property
+		</description>
+        <param name="service" type="string"/>
+    </tipiaction>  
+            
+</tid>
