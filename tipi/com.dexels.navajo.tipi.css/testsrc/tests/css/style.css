@@ -1,0 +1,11 @@
+#head {
+	enabled: '{cookie:/#330000}';
+}
+
+headlessbutton {
+	enabled: true;
+}
+
+JTextField {
+	background-color: green;
+}

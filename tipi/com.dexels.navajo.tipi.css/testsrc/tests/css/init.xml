@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipi.xsd">
+  <tml service="InlineTml">
+      <message name="aaaa">
+         <property description="Holadie!" name="bbbb" type="date" direction="in" />
+         <property description="Do the monkey!" name="cccc" type="money" direction="in" value="234.20" />
+         <property description="Holadie!" name="Binary" type="binary" value="10" direction="in" />
+      </message>
+      <message name="Table" type="array">
+         <message name="Table" index="1">
+            <property description="Holadie!" name="Money" type="money" value="0.99" direction="in" />
+         </message>
+      </message>
+   </tml>
+   <d.headless name="init" service="InlineTml">
+      <onInstantiate>
+         <showInfo text="'event1'"/>
+        <injectNavajo navajo="{navajo:/InlineTml}" service="'InlineTml'"/>
+        <applyCss styleSheet="{resource:/style.css}" component="{component:/.}"/>
+      </onInstantiate>
+      <onLoad>
+         <showInfo text="'event2'"/>
+         <showInfo text="{property:/InlineTml:Table@0/Money}"/>
+         <exit/>
+      </onLoad>
+	<c.headlessbutton id="head"/>
+	<c.headlessbutton id="head2"/>
+	<c.headlessbutton id="head3"/>
+    </d.headless>
+</tid>
