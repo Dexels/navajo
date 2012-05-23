@@ -1,0 +1,73 @@
+<project name="TipiBuild" default="copyTemplates" basedir=".">
+
+<!--	<property name="workspace" value="/Users/frank/Desktop/tmp/" />-->
+	<property name="workspace" value="/Users/frank/Documents/Spiritus/" />
+
+	<property name="templateDir" value="/Users/frank/Documents/Spiritus/TipiBuild/extensiontemplates/" />
+
+	<!-- params -->
+	<property name="extensionName" value="TipiRuby" />
+	<property name="extensionId" value="ruby" />
+	<property name="extensionTitle" value="Tipi Ruby Extension" />
+	<property name="extensionDescription" value="Tipi Ruby Extension. Will add Ruby runtime to the classpath" />
+	<property name="extensionVendor" value="Dexels Labs" />
+	<property name="extensionVendorHomePage" value="http://www.dexels.com" />
+	<property name="extensionHomePage" value="http://www.navajo.nl" />
+	<property name="extensionPackage" value="com/dexels/navajo/tipi/ruby" />
+	<property name="initialVersion" value="1.0.0" />
+	<property name="dependencies" value="DexelsVersionControl,NavajoDocument,Navajo,NavajoClient,NavajoTipi" />
+
+	
+	<!-- Derived -->
+
+	<property name="projectDir" value="${workspace}${extensionName}/" />
+
+
+	<target name="setup">
+		<mkdir dir="${projectDir}" />
+		<mkdir dir="${projectDir}/src" />
+		<mkdir dir="${projectDir}/compilelib" />
+		<mkdir dir="${projectDir}/lib" />
+		<mkdir dir="${projectDir}/testsrc" />
+		<mkdir dir="${projectDir}/src/tipi" />
+	</target>
+
+	<target name="copyTemplates" depends="setup">
+		<!--<copy todir="${projectDir}" overwrite="true" file="${templateDir}/version.xml">
+		   <filterchain>
+	           <replacetokens>
+	                <token key="initialVersion" value="${initialVersion}"/>
+	            </replacetokens>
+	        </filterchain>
+		</copy>-->
+
+		<copy todir="${projectDir}" overwrite="true">
+			<fileset dir="${templateDir}">
+				<include name="src/**" />
+				<include name="build.xml" />
+				<include name="classdef.xml" />
+				<include name="version.xml" />
+			</fileset>
+			<filterchain>
+				<replacetokens>
+					<token key="extensionName" value="${extensionName}" />
+					<token key="initialVersion" value="${initialVersion}" />
+					<token key="dependencies" value="${dependencies}" />
+					<token key="extensionId" value="${extensionId}" />
+					<token key="extensionTitle" value="${extensionTitle}" />
+					<token key="extensionDescription" value="${extensionDescription}" />
+					<token key="extensionVendor" value="${extensionVendor}" />
+					<token key="extensionVendorHomePage" value="${extensionVendorHomePage}" />
+					<token key="extensionPackage" value="${extensionPackage}" />
+					
+				</replacetokens>
+			</filterchain>
+		</copy>
+		<move tofile="${projectDir}/src/tipi/${extensionName}Extension.java" file="${projectDir}/src/tipi/TipiExtension.java" />
+		<move tofile="${projectDir}/src/tipi/${extensionName}Extension.xml" file="${projectDir}/src/tipi/TipiExtension.xml" />
+		<move tofile="${projectDir}/src/${extensionPackage}/${extensionId}classdef.xml" file="${projectDir}/classdef.xml" />
+		<copy todir="${projectDir}/lib" file="${templateDir}/keepme.txt"/>
+		<copy todir="${projectDir}/compilelib" file="${templateDir}/keepme.txt"/>
+		<copy todir="${projectDir}/testsrc" file="${templateDir}/keepme.txt"/>
+	</target>
+</project>

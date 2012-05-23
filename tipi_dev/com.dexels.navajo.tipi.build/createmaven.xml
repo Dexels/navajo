@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="TipiBuild" default="publish" basedir=".">
+	<property name="dist" value="dist/${ant.project.name}" />
+	<!--
+		<property name="repository" value="http://www.navajo.nl/Tipi" />
+	-->
+	<property name="version" value="1.0.0" />
+	<property name="path" value="distribution" />
+	
+	<target name="publish">
+	<delete dir="distribution"/>
+		
+	
+		<ant antfile="mavenbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish">
+			<property name="groupId" value="Navajo" />
+			<property name="artifactId" value="NavajoDocument" />
+			<property name="inputPath" value="../NavajoDocument/NavajoDocument.jar" />
+		</ant>
+		<ant antfile="mavenbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish">
+			<property name="groupId" value="Navajo" />
+			<property name="artifactId" value="NavajoClient" />
+			<property name="inputPath" value="../NavajoClient/NavajoClient.jar" />
+		</ant>
+		<ant antfile="mavenbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish">
+			<property name="groupId" value="Navajo" />
+			<property name="artifactId" value="NavajoServer" />
+			<property name="inputPath" value="../Navajo/NavajoServer.jar" />
+		</ant>
+		<ant antfile="mavenbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish">
+			<property name="groupId" value="Navajo" />
+			<property name="artifactId" value="NavajoRuntime" />
+			<property name="inputPath" value="../Navajo/NavajoRuntime.jar" />
+		</ant>
+		<ant antfile="mavenbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish">
+			<property name="groupId" value="Navajo" />
+			<property name="artifactId" value="NavajoFunctions" />
+			<property name="inputPath" value="../NavajoFunctions/NavajoFunctions.jar" />
+		</ant>
+		<ant antfile="mavenbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish">
+			<property name="groupId" value="Tipi" />
+			<property name="artifactId" value="Tipi" />
+			<property name="inputPath" value="../NavajoTipi/Tipi.jar" />
+		</ant>
+		<ant antfile="mavenbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish">
+			<property name="groupId" value="Tipi" />
+			<property name="artifactId" value="Tipi" />
+			<property name="inputPath" value="../NavajoTipi/Tipi.jar" />
+		</ant>
+		<ant antfile="mavenbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish">
+			<property name="groupId" value="Tipi" />
+			<property name="artifactId" value="TipiSwing" />
+			<property name="inputPath" value="../NavajoSwingTipi/TipiSwing.jar" />
+		</ant>
+		<ant antfile="mavenbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish">
+			<property name="groupId" value="Tipi" />
+			<property name="artifactId" value="TipiSwingClient" />
+			<property name="inputPath" value="../TipiSwingClient/TipiSwingClient.jar" />
+		</ant>
+		<ant antfile="mavenbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish">
+			<property name="groupId" value="Tipi" />
+			<property name="artifactId" value="AnimatedTransitions" />
+			<property name="inputPath" value="../AnimatedTransitions/AnimatedTransitions.jar" />
+		</ant>
+		<ant antfile="mavenbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish">
+			<property name="groupId" value="Tipi" />
+			<property name="artifactId" value="TimingFramework" />
+			<property name="inputPath" value="../TimingFramework/TimingFramework.jar" />
+		</ant>
+
+	</target>
+</project>

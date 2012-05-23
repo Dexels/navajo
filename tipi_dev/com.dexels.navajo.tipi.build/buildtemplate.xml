@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+
+
+<!-- When changing this file for another project:
+		1. Change the project name here:
+		2. That's it!
+	-->
+<project name="UploadTemplate" default="uploadzipped" basedir=".">
+	<property name="repository" value="http://spiritus.dexels.nl:41766/Tipi/Development" />
+	<property name="repositorySsh" value="navajo@spiritus.dexels.nl://var/www/html/Tipi/Development" />
+
+	<target name="zip">
+		<mkdir dir="dist"/>
+		<zip destfile="dist/TemplateJnlpProject.zip">
+			<fileset dir="./TemplateJnlpProject/">
+				<include name="**"/>
+			</fileset>
+		</zip>
+		<zip destfile="dist/TemplateEchoProject.zip">
+			<fileset dir="./TemplateEchoProject/">
+				<include name="**"/>
+			</fileset>
+		</zip>
+		<copy todir="dist/">
+			<fileset dir="./TemplateEchoProject/WEB-INF">
+				<include name="web.xml"/>
+			</fileset>
+		</copy>
+		
+	</target>
+	<target name="uploadunzipped">
+		<scp trust="true" sftp="true" verbose="true" todir="${repositorySsh}/">
+			<fileset dir=".">
+				<include name="TemplateJnlpProject/**" />
+				<include name="TemplateEchoProject/**" />
+			</fileset>
+		</scp>
+
+	</target>
+	<target name="uploadzipped" depends="zip">
+		<scp trust="true" sftp="true" verbose="true" todir="${repositorySsh}/">
+			<fileset dir="dist/">
+				<include name="**" />
+			</fileset>
+		</scp>
+
+	</target>
+
+
+</project>

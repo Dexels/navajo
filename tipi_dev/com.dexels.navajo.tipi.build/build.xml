@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+
+
+<!-- When changing this file for another project:
+		1. Change the project name here:
+		2. That's it!
+	-->
+<project name="TipiBuild" default="all" basedir=".">
+
+	<target name="clean">
+		<ant dir="../NavajoSwingTipi" target="clean" />
+		<ant dir="../NavajoRichTipi" target="clean" />
+		<ant dir="../TipiFlickr" target="clean" />
+		<ant dir="../TipiGeoSwing" target="clean" />
+		<!--		<ant antfile="buildcomponent.xml" dir="../TipiGoogle" target="clean" />-->
+		<ant dir="../TipiJabber" target="clean" />
+		<ant dir="../TipiJxLayer" target="clean" />
+		<ant dir="../TipiMail" target="clean" />
+		<ant dir="../TipiNativeSwing" target="clean" />
+		<ant dir="../TipiRss" target="clean" />
+		<ant dir="../TipiSubstance" target="clean" />
+		<ant dir="../TipiSvgBatik" target="clean" />
+		<ant dir="../TipiSwingX" target="clean" />
+		<ant dir="../TipiTools" target="clean" />
+	</target>
+
+	<target name="all">
+		<ant antfile="buildextension.xml" dir="../NavajoSwingTipi" target="publish" />
+		<ant antfile="buildextension.xml" dir="../NavajoRichTipi" target="publish" />
+		<ant antfile="buildextension.xml" dir="../TipiFlickr" target="publish" />
+		<ant antfile="buildextension.xml" dir="../TipiGeoSwing" target="publish" />
+		<!--		<ant antfile="buildextension.xml" dir="../TipiGoogle" target="publish" />-->
+		<ant antfile="buildextension.xml" dir="../TipiJabber" target="publish" />
+		<ant antfile="buildextension.xml" dir="../TipiJxLayer" target="publish" />
+		<ant antfile="buildextension.xml" dir="../TipiMail" target="publish" />
+		<!--<ant antfile="buildextension.xml" dir="../TipiNativeSwing" target="publish" />-->
+		<ant antfile="buildextension.xml" dir="../TipiRss" target="publish" />
+		<ant antfile="buildextension.xml" dir="../TipiSubstance" target="publish" />
+		<ant antfile="buildextension.xml" dir="../TipiSvgBatik" target="publish" />
+		<ant antfile="buildextension.xml" dir="../TipiSwingX" target="publish" />
+	<!--	<ant antfile="buildextension.xml" dir="../TipiTools" target="publish" />-->
+		<ant antfile="buildextension.xml" dir="../TipiSwingMig" target="publish" />
+
+	</target>
+
+</project>

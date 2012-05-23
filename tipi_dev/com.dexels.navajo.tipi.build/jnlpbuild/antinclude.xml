@@ -1,0 +1,58 @@
+<project name="TipiBuild" default="publish" basedir=".">
+  
+
+
+	<target name="sign">
+		<ant antfile="build.xml" target="archive" />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${dist}/${lib}" />
+		<copy todir="${dist}/${lib}">
+			
+			<fileset dir="lib" >
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir=".">
+				<include name="${archive}" />
+			</fileset>
+		</copy>
+		<copy todir="${dist}">
+			<fileset dir=".">
+				<include name="*.jnlp" />
+			</fileset>
+			<fileset dir="../TipiBuild">
+				<include name=".htaccess" />
+			</fileset>
+		</copy>
+		<signjar keystore="../TipiBuild/dexels_dummy_key" verbose="true" storepass="${storepass}" keypass="${keypass}" alias="${alias}">
+			<fileset dir="${dist}/${lib}">
+				<include name="**.jar" />
+			</fileset>
+		</signjar>
+	</target>
+	<target name="publish" depends="sign">
+		<!-- If this command does not work: Add de jsch-0.1.36.jar to the ant jars-->
+		<!-- and add the password to the and ant runtime: srv2pw=password -->
+		<!-- Make sure the dir exists... -->
+	    <echo  message="${basedir}/${dist}/**   :: ${basedir}"/>
+		<echo message="${deployRoot}${currentProject}"/>
+		<!-- need to do an extra step, to create the dir -->
+		<scp trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="${deployRoot}">
+			<fileset dir="..">
+				<include name="${currentProject}/**.jnlp" />
+			</fileset>
+		</scp>
+		<echo message="Dir should be present now: ${basedir}/${dist}"/>
+		<echo message="Remote: ${deployRoot}/${currentProject}"/>
+		<echo message="Local: ${basedir}/${dist}"/>
+		<scp trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="${deployRoot}/${currentProject}">
+			<fileset dir="${basedir}/${dist}">
+				<include name="**" />
+			</fileset>
+		</scp>
+			
+
+		<!-- Also copy a .htaccess file to the server, to help apache identify jnlp files-->
+
+	</target>
+	
+</project>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="@extensionId@" requiresMain="" project="@extensionName@" version="" title="@extensionTitle@" vendor="@extensionVendor@" homepage="@extensionVendorHomePage@">
+	<description>
+		@extensionDescription@
+	</description>
+	<includes>
+		<include path="@extensionPackage@/@extensionId@classdef.xml"/>
+	</includes>
+	<jars>
+		<!--  Add your jarfiles here -->
+		<!-- <jar path="myjar.jar"/> -->
+	</jars>
+	<other>
+		<link href="@extensionHomePage@"/>
+	</other>
+	
+	<requires>
+		<!--  Add required extensions here -->
+	</requires>
+</extension>

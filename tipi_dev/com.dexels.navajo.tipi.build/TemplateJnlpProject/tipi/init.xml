@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipi.xsd">
+   <d.frame name="init" >
+      <l.flow>
+                <c.button  text="'Welcome to Tipi'" tooltiptext="'Version 3.0'" >
+                  <onActionPerformed>
+                  		<showInfo text="'Welcome to Tipi!'"/>
+                  </onActionPerformed>
+               </c.button>
+      
+      </l.flow>
+   </d.frame>
+</tid>

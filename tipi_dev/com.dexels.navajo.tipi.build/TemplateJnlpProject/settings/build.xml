@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Aap" basedir=".." default="deployJnlp">
+	
+	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
+	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
+	<taskdef name="start" classname="org.apache.catalina.ant.StartTask" />
+	<taskdef name="pack" classname="com.sun.tools.apache.ant.pack200.Pack200Task" />
+
+	<tstamp>
+		<format property="build.timestamp" pattern="dd_MMM_yy_HH_mm_ss" />
+	</tstamp>
+
+	<fail message="This ant file is supposed to be run from the eclipse plugin">
+		<condition>
+			<not>
+				<isset property="eclipse.running" />
+			</not>
+		</condition>
+	</fail>
+	<taskdef name="buildDeployJnlp" classname="com.dexels.navajo.tipi.ant.projectbuilder.TipiBuildDeployJnlp" />
+	<taskdef name="buildWikiSource" classname="com.dexels.navajo.tipi.ant.projectbuilder.TipiBuildWikiSource" />
+
+	<property name="archive" value="${projectName}.jar" />
+
+	
+
+	<target name="deployAll">
+		<echo message="Deploying: ${tipiAppStore}${projectName}/${deployName}"/>
+		<delete dir="deploy/current" />
+		<buildDeployJnlp codebase="${deployTarget}" baseDir="${baseDir}" deployPath="${deployPath}" />
+
+		<mkdir dir="deploy" />
+		<mkdir dir="deploy/current" />
+		<mkdir dir="deploy/archived" />
+		<buildWikiSource sourceDir="tipi/" resourceDir="resource/" appCodebase="${tipiAppStore}${projectName}/resource/" docDir="deploy/current/source/" baseDir="${baseDir}" name="${projectName}" />
+		<copy todir="deploy/current">
+			<fileset dir=".">
+				<include name="tipi/**" />
+				<include name="resource/**" />
+				<include name="settings/**" />
+				<include name="lib/**" />
+				<include name="versions.xml" />
+			</fileset>
+		</copy>
+
+		<copy file="settings/template.html" tofile="deploy/current/index.html" />
+		<zip  destfile="${baseDir}/deploy/archived/${projectName}_${build.timestamp}.zip" basedir="${baseDir}/deploy/current" />
+	</target>
+
+
+	<target name="createJnlpTemplate">
+		<antcall target="createBasicTemplate"></antcall>
+		<replace file="deploy/current/index.html" token="@@APPLINK@@" value="${tipiAppStore}${projectName}${deployName}/DefaultLocal.jnlp" />
+		<replace file="deploy/current/index.html" token="@@PROFILELINKLIST@@" value="${profileLinkList}" />
+	</target>
+	
+	<target name="deployJnlp">
+		<antcall target="deployAll"></antcall>	
+		<antcall target="createJnlpTemplate"></antcall>	
+		<antcall target="deployUpload"></antcall>	
+	</target>
+
+	
+	<target name="createBasicTemplate">
+		<replace file="deploy/current/index.html" token="@@APPNAME@@" value="${deployName}" />
+		<replace file="deploy/current/index.html" token="@@TITLE@@" value="${title}" />
+		<replace file="deploy/current/index.html" token="@@VENDOR@@" value="${vendor}" />
+		<replace file="deploy/current/index.html" token="@@HOMEPAGE@@" value="${homepage}" />
+		<replace file="deploy/current/index.html" token="@@SPLASH@@" value="${splash}" />
+		<replace file="deploy/current/index.html" token="@@PROFILELINKLIST@@" value="${profileLinkList}" />
+		<replace file="deploy/current/index.html" token="@@TIMESTAMP@@" value="${build.timestamp}" />
+		<replace file="deploy/current/index.html" token="@@SOURCELINK@@" value="${tipiDoc}:${projectName}:info" />
+		<replace file="deploy/current/index.html" token="@@ICON@@" value="${icon}" />
+	</target>
+
+
+	<target name="deployUpload">
+		<!-- Dir creation disabled for now -->
+		
+<!--		<mkdir dir="${projectName}" />
+		<copy todir="${projectName}">
+			<fileset dir=".">
+				<include name=".project" />
+			</fileset>
+		</copy>
+		<eclipse.refreshLocal resource="${ant.project.name}" />
+		
+		<scp trust="true" sftp="true" verbose="true" password="${password}" todir="${deployTargetSsh}">
+			<fileset dir=".">
+				<include name="${projectName}/**" />
+			</fileset>
+		</scp>
+	-->	
+		
+		
+		
+		<!-- Doc stuff disabled for now -->
+<!--		<scp trust="true" sftp="true" verbose="true"  password="${password}" todir="${username}@${tipiDocSsh}">
+			<fileset dir=".">
+				<include name="${projectName}/**" />
+			</fileset>
+		</scp>
+			
+			<scp trust="true" sftp="true" verbose="true" todir="${username}:${password}@${tipiDocSsh}${projectName}">
+				<fileset dir="deploy/current/source">
+					<include name="**" />
+				</fileset>
+			</scp>
+-->		
+		<delete dir="${projectName}">
+		</delete>
+<!--		${username}:${password}@${tipiAppStoreSsh}${projectName}/${deployName}-->
+		<scp trust="true" sftp="true" verbose="true" password="${password}" todir="${deployTargetSsh}">
+			<fileset dir="deploy/current">
+				<include name="*.jnlp" />
+				<include name="lib/**" />
+				<include name="tipi/**" />
+				<include name="resource/**" />
+				<include name="index.html" />
+				<include name="versions.xml" />
+			</fileset>
+		</scp>
+
+	</target>
+
+	<target name="clean">
+		<delete dir="lib" />
+		<delete dir="WEB-INF" />
+		<delete dir=".tipiproject" />
+		<delete file="tipi/tipi.xsd" />
+		<delete file="Local.jnlp" />
+		<delete file="Remote.jnlp" />
+		<eclipse.refreshLocal resource="${projectName}" />
+	</target>
+	
+	
+	
+	
+	
+	<!-- ECHO STUFF -->
+
+	<target name="echocopy">
+		<antcall target="createEchoTemplate"></antcall>
+	</target>
+	
+	<target name="createEchoTemplate">
+		<antcall target="createBasicTemplate"></antcall>
+		<replace file="deploy/current/index.html" token="@@APPLINK@@" value="${tipiTomcatServer}${projectName}/app" />
+		<replace file="deploy/current/index.html" token="@@PROFILELINKLIST@@" value="${profileLinkList}" />
+	</target>
+	
+	<target name="createWar">
+		<war destfile="${baseDir}/deploy/${projectName}.war" basedir="${baseDir}/deploy/current" defaultexcludes="no"/>
+		<echo file="${basedir}/output" message="Deployment: server: ${tipiTomcatServer} war: ${baseDir}/deploy/${projectName}.war path=${projectName}"/>
+		<deploy url="${tipiTomcatManager}" update="true" username="${tipiTomcatUsername}" password="${tipiTomcatPassword}" path="/${projectName}" war="${baseDir}/deploy/${projectName}.war"/>
+	</target>
+	<target name="deployEcho">
+		<antcall target="deployAll"></antcall>	
+		<antcall target="copyEchoLibs"></antcall>	
+		<antcall target="createEchoTemplate"></antcall>	
+		<antcall target="createWar"></antcall>
+		<antcall target="deployUpload"></antcall>	
+	</target>
+
+	<target name="copyEchoLibs">
+		<copy todir="deploy/current">
+			<fileset dir=".">
+				<include name="WEB-INF/**" />
+				<include name="*.stylesheet" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="web">
+		<echo message="Deploying web style!"></echo>
+	</target>
+	
+
+</project>

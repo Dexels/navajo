@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project default="publish">
+
+	<taskdef name="retrieveVersion" classname="com.dexels.navajo.tipi.ant.extensionbuilder.RetrieveVersion" classpath="bin" />
+	<taskdef name="buildExtension" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionTask" classpath="bin" />
+	<taskdef name="buildDocumentation" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildExtensionDocumentationTask" classpath="bin" />
+	<taskdef name="buildTipiBeans" classname="com.dexels.navajo.tipi.ant.extensionbuilder.BuildTipiBeansTask" classpath="bin" />
+	<taskdef name="p200ant" classname="de.matthiasmann.p200ant.P200AntTask" classpath="p200ant.jar"/>
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" onerror="ignore" />
+	<property name="tipiSvnUrl" value="https://source.dexels.com/svn/repos" />
+	<property name="repository" value="https://source.dexels.com/Tipi/" />
+	<property name="repositorySsh" value="navajo@source.dexels.com:/var/www/html/Tipi/" />
+	<property name="documentationSsh" value="navajo@source.dexels.com:/var/www/html/Tipi/wiki/data/pages/tipidoc" />
+	<property file="../TipiBuild/sign.properties" />
+
+	<path id="projectlibs">
+	   <fileset dir="${lib}">
+	      <include name="**/*.jar"/>
+ 	   </fileset>
+	   <fileset dir="${compilelib}" >
+	      <include name="**/*.jar"/>
+ 	   </fileset>
+	</path>
+	<path id="dependencylibs">
+	   <fileset dir="${dependencylib}">
+	      <include name="**/*.jar"/>
+ 	   </fileset>
+	   <fileset dir="${dependencycompilelib}" >
+	      <include name="**/*.jar"/>
+ 	   </fileset>
+	</path>
+	
+	<target name="prepare">
+		<retrieveVersion/>
+		<echo message="Java version: ${java.version} "/>
+	
+		<!--		<fail unless="${ant.project.name}" message="Can't run without project. You didn't run genericbuild.xml by itself, did you?"/>-->
+		<property name="dist" value="dist/${ant.project.name}/${tipiComponentVersion}" />
+		<if>
+			<equals arg1="${doTagCvs}" arg2="true"/>
+			<then>
+				<echo file="cvsversion.properties" message="cvsVersion=${tipiComponentVersion}"/>
+				
+				<replace file="cvsversion.properties">
+					<replacefilter token="." value="_"/>
+				</replace>
+				<property file="cvsversion.properties"/>
+				<cvs command="tag -F ${ant.project.name}_${cvsVersion}"/>
+				<delete file="cvsversion.properties"/>
+			</then>
+		</if>
+
+		<!--  clean -->
+	</target>
+
+	<target name="grabjars" depends="prepare">
+		<mkdir dir="${dist}/lib" />
+
+		<echo message="Extra deployment jars: ${deployedDependencyJars}"/>
+		<echo message="Copying to ${dist}/lib "/>
+		<!-- TODO Create custom task to only copy the files referenced in the extension definition -->
+		<copy todir="${dist}/lib" verbose="true">
+			<fileset dir="lib">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir=".">
+				<include name="${ant.project.name}.jar"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${dist}/unsigned" />
+		<copy todir="${dist}/unsigned" verbose="true">
+			<fileset dir="${dist}/lib">
+				<include name="**" />
+			</fileset>
+		</copy>
+				<for list="${deployedDependencyJars}" delimiter="," param="currentjar">
+					<sequential>
+						<echo message="Current dep: @{currentjar}"/>
+
+						<copy todir="${dist}/lib">
+							<fileset dir="work/dependency/lib">
+								<include name="@{currentjar}"/>
+							</fileset>
+						</copy>
+						<copy todir="${dist}/unsigned">
+							<fileset dir="${dist}/lib">
+								<include name="@{currentjar}"/>
+							</fileset>
+						</copy>
+					</sequential>
+				</for>
+			
+		
+
+	</target>
+	
+	
+	<target name="buildTipi" depends="grabjars">
+		<!--  <buildXsd repository="http://www.navajo.nl/Tipi/"/> -->
+		<mkdir dir="${dist}" />
+		<buildExtension  repository="${repository}" destination="${dist}" version="${tipiComponentVersion}" />
+		<echo message="Building to: ${dist}" />
+		<echo message="Rep to: ${repository}Extensions/" />
+		<buildDocumentation version="${tipiComponentVersion}" distribution="${dist}" destination="${dist}/wikidoc" repository="${repository}Extensions/" />
+		<delete dir="${dist}/beans"/>
+		<buildTipiBeans version="${tipiComponentVersion}" distribution="${dist}" destination="${dist}/beans" repository="${repository}Extensions/" />
+	</target>
+	
+	<target name="compileBeans" depends="buildTipi">
+		<mkdir dir="${dist}/beansclasses"/>
+		<echo message="Classpath: ${work}/classes  AND ${dependencyclasses}"></echo>
+		<javac srcdir="${dist}/beans/javafiles" destdir="${dist}/beansclasses" debug="true" debuglevel="lines,vars,source">
+			<classpath refid="projectlibs" />
+			<classpath refid="dependencylibs" />
+			<classpath path="${dependencyclasses}"/>
+			<classpath path="${work}/classes"/>
+		</javac>
+		<copy todir="classes"> 
+			<fileset dir="${dist}/beansclasses">
+			</fileset>	
+		</copy>
+		<mkdir dir="${dist}/javadoc"/>
+	</target>
+	<target name="beansJavaDoc" depends="compileBeans">
+		<javadoc failonerror="false" verbose="false" destdir="${dist}/javadoc" author="true"  version="true" use="true"  windowtitle="Navajo API docs">
+		    <fileset dir="${dist}/beans/javafiles" defaultexcludes="yes">
+		    </fileset>
+
+		    <doctitle><![CDATA[<h1>Tipi Framework</h1>]]></doctitle>
+		    <bottom><![CDATA[<i>Copyright &#169; 2010 Dexels BV. All Rights Reserved.</i>]]></bottom>
+		    <tag name="todo" scope="all" description="To do:"/>
+		    <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="C:\tmp"/>
+		    <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+		  </javadoc>
+	</target>
+
+	<!-- add dep to beansJavaDoc to reactivate. Disabled for now, because it can not handle empty source dir -->
+	<target name="archiveBeans" depends="compileBeans,beansJavaDoc">
+		<jar destfile="${dist}/lib/${ant.project.name}Beans.jar">
+			<fileset dir="${dist}/beansclasses"/>
+		</jar>
+		<copy file="${dist}/lib/${ant.project.name}Beans.jar" todir="${dist}/unsigned"/>
+	</target>
+	
+	<target name="repackJars" depends="archiveBeans">
+
+		<p200ant repack="true" keepModificationTime="false" singleSegment="false" >
+		<fileset dir=".">
+			<include name="${dist}/lib/*.jar" />
+		</fileset>
+	</p200ant>
+	</target>
+	<target name="sign" depends="repackJars">
+	
+		<signjar keystore="${keystore}" verbose="false" storepass="${storepass}" keypass="${keypass}" alias="${alias}">
+			<fileset dir=".">
+				<include name="${dist}/lib/*.jar" />
+			</fileset>
+		</signjar>
+	</target>
+	<target name="packJars" depends="sign">
+	<!-- Don't pack the unsigned jars, for now. -->
+	    <p200ant  singleSegment="false">
+			<fileset dir=".">
+				<include name="${dist}/lib/*.jar" />
+			</fileset>
+	    </p200ant>
+	</target>
+	<target name="signPacked" depends="packJars">
+		<signjar keystore="../TipiBuild/dexels_dummy_key" verbose="false" storepass="dexels" keypass="dexels" alias="java">
+			<fileset dir=".">
+				<include name="${dist}/lib/*.jar.pack.gz" />
+			</fileset>
+		</signjar>
+	</target>
+		
+	<target name="publish" depends="packJars">
+		<echo message="Destination: ${repositorySsh}Extensions/ and keyfile: ${user.home}/.ssh/id_rsa"></echo>
+		<scp trust="true" verbose="true" sftp="true" todir="${repositorySsh}Extensions/"  keyfile="${user.home}/.ssh/id_rsa">
+			<fileset dir="dist">
+				<include name="${ant.project.name}/${tipiComponentVersion}/lib/**" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/unsigned/**" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/**.jnlp" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/definition.xml" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/projectinclude.zip" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/includes/**" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/index.html" />
+				<include name="${ant.project.name}/${tipiComponentVersion}/javadoc/**" />
+			</fileset>
+		</scp>
+
+
+		<echo message="Re: ${repositorySsh}Extensions/${ant.project.name}/${tipiComponentVersion}" />
+		<!--		<scp trust="true" sftp="true" verbose="true"-->
+		<!--			todir="${repositorySsh}/${ant.project.name}/${tipiComponentVersion}">-->
+		<!--			<fileset dir="dist">-->
+		<!--				<include name="${ant.project.name}/lib/**" />-->
+		<!--				<include name="${ant.project.name}/unsigned/**" />-->
+		<!--				<include name="${ant.project.name}/**.jnlp" />-->
+		<!--				<include name="${ant.project.name}/definition.xml" />-->
+		<!--				<include name="${ant.project.name}/includes/**" />-->
+		<!--				<include name="${ant.project.name}/index.html" />-->
+		<!--			</fileset>-->
+		<!--		</scp>-->
+		<echo message="Deploying documentation to: ${documentationSsh}" />
+		<echo message="Deploying documentation from: ./${dist}/wikidoc/" />
+		<scp trust="true" sftp="true" verbose="false" todir="${documentationSsh}/" file="${dist}/wikidoc/tipi.txt"  keyfile="${user.home}/.ssh/id_rsa">
+			<fileset dir="dist/${ant.project.name}/${tipiComponentVersion}/wikidoc">
+				<include name="**" />
+
+			</fileset>
+		</scp>
+		<echo message="Documentation deploy completed at repository: ${repositorySsh}Extensions/" />
+		<echo message="from: ${dist}" />
+
+		<scp trust="true" sftp="true" todir="${repositorySsh}Extensions/"  keyfile="${user.home}/.ssh/id_rsa">
+			<fileset dir="${dist}">
+				<include name="extensions.xml" />
+				<include name="typemap.xml" />
+			</fileset>
+		</scp>
+
+		<echo message="Tipi deploy completed at repository:" />
+		<echo message="JNLP deployed at: ${repository}/Extensions/${ant.project.name}/${ant.project.name}.jnlp" />
+	</target>
+</project>

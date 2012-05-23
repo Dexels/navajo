@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="TipiAntBuildTest" default="publish" basedir=".">
+  <property file="tipi.properties"/>
+	<taskdef name="buildXsd" classname="com.dexels.navajo.tipi.ant.projectbuilder.TipiBuildXsd" classpath="bin" />
+	<taskdef name="downloadJar" classname="com.dexels.navajo.tipi.ant.projectbuilder.TipiDownloadJarTask" classpath="bin"  />
+	<taskdef name="buildClasspath" classname="com.dexels.navajo.tipi.ant.projectbuilder.TipiBuildClasspathTask" classpath="bin"  />
+	<taskdef name="buildLocalJnlp" classname="com.dexels.navajo.tipi.ant.projectbuilder.TipiBuildLocalJnlp" classpath="bin"  />
+	<taskdef name="buildRemoteJnlp" classname="com.dexels.navajo.tipi.ant.projectbuilder.TipiBuildRemoteJnlp" classpath="bin"  />
+	<taskdef name="createMaven" classname="com.dexels.navajo.tipi.ant.repositorybuilder.CreateMavenTask" classpath="bin"  />
+
+	
+	<target name="publish" >
+		<createMaven groupId="${groupId}" artifactId="${artifactId}" version="${version}" path="${path}" inputPath="${inputPath}"/>
+		<checksum algorithm="sha1">
+		  <fileset dir="distribution">
+		    <include name="**/*.pom"/>
+		    <include name="**/*.xml"/>
+		    <include name="**/*.jar"/>
+		  </fileset>
+		</checksum>
+		<checksum algorithm="md5">
+		  <fileset dir="distribution">
+		    <include name="**/*.pom"/>
+		    <include name="**/*.xml"/>
+		    <include name="**/*.jar"/>
+		  </fileset>
+		</checksum>
+
+	</target>
+</project>
