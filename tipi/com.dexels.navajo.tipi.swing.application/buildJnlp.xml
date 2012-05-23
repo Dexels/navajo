@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Aug 9, 2011 9:30:15 PM                                                        
+
+     com.dexels.navajo.tipi    
+                   
+     frank                                                                
+     ====================================================================== -->
+<project name="com.dexels.navajo.tipi" default="default">
+	<description>
+            description
+    </description>
+
+	<property name="targetLocation" value="/Applications/MAMP/htdocs/Navajo"/>
+	<property name="exportLocation" value="/Users/frank/Desktop/dump5/"/>
+
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+	<target name="default" depends="depends" description="description">
+		<delete>
+			<fileset dir="${targetLocation}">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+
+		<copy todir="${targetLocation}">
+			<fileset dir="${exportLocation}/features" >
+				<include name="*.jnlp"/>
+			</fileset>
+			<fileset dir="${exportLocation}" >
+				<include name="plugins/**"/>
+			</fileset>
+
+		</copy>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: depends                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="depends">
+	</target>
+
+</project>

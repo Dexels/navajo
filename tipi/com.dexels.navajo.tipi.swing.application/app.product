@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product application="org.eclipse.ui.ide.workbench" useFeatures="false" includeLaunchers="true">
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>-consoleLog -console</programArgs>
+      <vmArgs>-Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dequinox.ds.print=true -Dtipi.context=club -Dorg.osgi.service.http.port=9090</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <plugins>
+      <plugin id="ch.qos.logback.classic"/>
+      <plugin id="ch.qos.logback.core"/>
+      <plugin id="ch.qos.logback.slf4j" fragment="true"/>
+      <plugin id="com.dexels.navajo.client"/>
+      <plugin id="com.dexels.navajo.core"/>
+      <plugin id="com.dexels.navajo.document"/>
+      <plugin id="com.dexels.navajo.function"/>
+      <plugin id="com.dexels.navajo.swing.editor"/>
+      <plugin id="com.dexels.navajo.tipi"/>
+      <plugin id="com.dexels.navajo.tipi.css"/>
+      <plugin id="com.dexels.navajo.tipi.css.tkui"/>
+      <plugin id="com.dexels.navajo.tipi.facilityoccupation"/>
+      <plugin id="com.dexels.navajo.tipi.jabber"/>
+      <plugin id="com.dexels.navajo.tipi.jxlayer"/>
+      <plugin id="com.dexels.navajo.tipi.mail"/>
+      <plugin id="com.dexels.navajo.tipi.swing"/>
+      <plugin id="com.dexels.navajo.tipi.swing.application"/>
+      <plugin id="com.dexels.navajo.tipi.swing.client"/>
+      <plugin id="com.dexels.navajo.tipi.swing.deps"/>
+      <plugin id="com.dexels.navajo.tipi.swing.editor"/>
+      <plugin id="com.dexels.navajo.tipi.swing.geo"/>
+      <plugin id="com.dexels.navajo.tipi.swing.mig"/>
+      <plugin id="com.dexels.navajo.tipi.swing.rich"/>
+      <plugin id="com.dexels.navajo.tipi.swing.rich.client"/>
+      <plugin id="com.dexels.navajo.tipi.swing.substance"/>
+      <plugin id="com.dexels.navajo.tipi.swing.swingx"/>
+      <plugin id="com.dexels.navajo.version"/>
+      <plugin id="javax.xml"/>
+      <plugin id="org.apache.commons.beanutils"/>
+      <plugin id="org.apache.commons.collections"/>
+      <plugin id="org.apache.commons.logging"/>
+      <plugin id="org.apache.xerces"/>
+      <plugin id="org.apache.xml.resolver"/>
+      <plugin id="org.apache.xml.serializer"/>
+      <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.services"/>
+      <plugin id="org.eclipse.osgi.util"/>
+      <plugin id="org.hamcrest.core"/>
+      <plugin id="org.junit"/>
+      <plugin id="org.slf4j.api"/>
+      <plugin id="org.slf4j.jcl"/>
+      <plugin id="org.w3c.css.sac"/>
+   </plugins>
+
+   <configurations>
+      <plugin id="ch.qos.logback.core" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.client" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.core" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.document" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.function" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.tipi" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.tipi.jabber" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.tipi.mail" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.tipi.swing" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.tipi.swing.application" autoStart="false" startLevel="5" />
+      <plugin id="com.dexels.navajo.tipi.swing.client" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.tipi.swing.deps" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.tipi.swing.mig" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.tipi.swing.rich" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.tipi.swing.rich.client" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.tipi.swing.substance" autoStart="true" startLevel="0" />
+      <plugin id="com.dexels.navajo.version" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+      <plugin id="org.hamcrest.core" autoStart="true" startLevel="0" />
+      <plugin id="org.junit" autoStart="true" startLevel="0" />
+      <plugin id="org.slf4j.api" autoStart="false" startLevel="0" />
+   </configurations>
+
+</product>
