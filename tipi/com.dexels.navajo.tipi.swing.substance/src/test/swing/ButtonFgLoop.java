@@ -11,6 +11,8 @@ import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.Timeline.RepeatBehavior;
 
 public class ButtonFgLoop extends JFrame {
+	private static final long serialVersionUID = -3033224449363795870L;
+
 	public ButtonFgLoop() {
 		this.setLayout(new FlowLayout());
 

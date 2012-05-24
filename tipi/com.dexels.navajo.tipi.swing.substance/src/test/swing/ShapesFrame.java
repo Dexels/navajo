@@ -17,10 +17,13 @@ import org.pushingpixels.trident.callback.TimelineCallbackAdapter;
 import org.pushingpixels.trident.swing.SwingRepaintTimeline;
 
 public class ShapesFrame extends JFrame {
+
+	private static final long serialVersionUID = -4515650346013651331L;
 	public static final Color COLOR_BLUE = new Color(128, 128, 255);
 	public static final Color COLOR_GREEN = new Color(128, 255, 128);
 
 	public class ShapesPanel extends JComponent {
+		private static final long serialVersionUID = 1144645279806180754L;
 		private List<MyShape> shapes;
 		private boolean toAddRectangle;
 

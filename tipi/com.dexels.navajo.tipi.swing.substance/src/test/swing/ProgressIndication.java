@@ -12,7 +12,16 @@ import org.pushingpixels.trident.interpolator.*;
 import org.pushingpixels.trident.swing.SwingRepaintTimeline;
 
 public class ProgressIndication extends JFrame {
+
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2281310168358051873L;
+
 	public static class ProgressPanel extends JPanel {
+		private static final long serialVersionUID = -1209806538306479118L;
+
 		private static final int INNER_HEIGHT = 60;
 
 		private static final int INNER_WIDTH = 300;

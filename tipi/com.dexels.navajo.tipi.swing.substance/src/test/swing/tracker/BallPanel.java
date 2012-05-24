@@ -6,6 +6,9 @@ import java.awt.geom.Ellipse2D;
 import javax.swing.JComponent;
 
 public class BallPanel extends JComponent {
+
+	private static final long serialVersionUID = 38177368256167984L;
+
 	private float ballY;
 
 	public static final int RADIUS = 20;

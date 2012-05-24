@@ -53,6 +53,8 @@ public class Snake {
 
 	private static class SnakePanel extends JPanel {
 
+		private static final long serialVersionUID = 1633196689346837763L;
+
 		private SnakePanelRectangle[][] grid;
 
 		private int ROWS = 10;

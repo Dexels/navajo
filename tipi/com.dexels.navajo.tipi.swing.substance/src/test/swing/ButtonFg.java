@@ -10,6 +10,8 @@ import javax.swing.*;
 import org.pushingpixels.trident.Timeline;
 
 public class ButtonFg extends JFrame {
+	private static final long serialVersionUID = -2527720331557045190L;
+
 	public ButtonFg() {
 		JButton button = new JButton("sample");
 		button.setForeground(Color.blue);

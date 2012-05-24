@@ -71,6 +71,7 @@ public class Spline implements TimelineEase {
 	 *             This exception is thrown when values beyond the allowed [0,1]
 	 *             range are passed in
 	 */
+	@SuppressWarnings("unchecked")
 	public Spline(float x1, float y1, float x2, float y2) {
 		if (x1 < 0 || x1 > 1.0f || y1 < 0 || y1 > 1.0f || x2 < 0 || x2 > 1.0f
 				|| y2 < 0 || y2 > 1.0f) {
@@ -135,7 +136,7 @@ public class Spline implements TimelineEase {
 	 * the Y values. See {@link getXY getXY} for the details.
 	 */
 	private float getY(float t) {
-		FloatPoint xy;
+//		FloatPoint xy;
 		float invT = (1 - t);
 		float b1 = 3 * t * (invT * invT);
 		float b2 = 3 * (t * t) * invT;

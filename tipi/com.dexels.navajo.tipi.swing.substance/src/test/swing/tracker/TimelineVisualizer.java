@@ -11,6 +11,7 @@ import org.pushingpixels.trident.Timeline.TimelineState;
 import org.pushingpixels.trident.callback.TimelineCallbackAdapter;
 
 public class TimelineVisualizer extends JComponent {
+	private static final long serialVersionUID = 2282635870270914424L;
 	private List<TimelineVisualizerDot> dots;
 
 	public TimelineVisualizer() {

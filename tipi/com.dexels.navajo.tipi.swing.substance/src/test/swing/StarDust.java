@@ -16,6 +16,9 @@ import org.pushingpixels.trident.callback.UIThreadTimelineCallbackAdapter;
 import org.pushingpixels.trident.swing.SwingRepaintTimeline;
 
 public class StarDust extends JFrame {
+
+	private static final long serialVersionUID = 1330833887791056046L;
+
 	public class Star {
 		private double x;
 		private double y;
@@ -84,6 +87,9 @@ public class StarDust extends JFrame {
 	private Deque<Star> stars;
 
 	private class MainPanel extends JPanel {
+
+		private static final long serialVersionUID = 8029300311373697360L;
+
 		@Override
 		protected void paintComponent(Graphics g) {
 			g.setColor(Color.black);

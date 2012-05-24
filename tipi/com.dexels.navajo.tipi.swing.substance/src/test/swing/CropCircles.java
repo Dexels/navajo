@@ -134,6 +134,8 @@ public class CropCircles {
 	}
 
 	public static class CropPanel extends JPanel {
+		private static final long serialVersionUID = 8524758225633685809L;
+
 		CropArc arc1;
 		CropArc arc2;
 		CropArc arc3;

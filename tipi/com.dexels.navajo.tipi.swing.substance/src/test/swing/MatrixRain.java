@@ -103,6 +103,7 @@ public class MatrixRain {
 	}
 
 	private static class MatrixPanel extends JPanel {
+		private static final long serialVersionUID = -728611647135093079L;
 		private List<Drop> drops;
 
 		public MatrixPanel() {

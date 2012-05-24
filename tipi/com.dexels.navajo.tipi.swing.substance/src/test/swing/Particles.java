@@ -188,6 +188,8 @@ public class Particles {
 	}
 
 	public static class ParticlesPanel extends JPanel {
+		private static final long serialVersionUID = 7698916368662175343L;
+
 		private List<Particle> particles;
 
 		boolean wasMouseInside;

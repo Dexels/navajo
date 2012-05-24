@@ -64,6 +64,7 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 
 	String name;
 
+	@SuppressWarnings("rawtypes")
 	List<AbstractFieldInfo> propertiesToInterpolate;
 
 	/**
@@ -116,6 +117,7 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 	}
 
 	private class Setter extends TimelineCallbackAdapter {
+		@SuppressWarnings("rawtypes")
 		@Override
 		public void onTimelineStateChanged(TimelineState oldState,
 				TimelineState newState, float durationFraction,
@@ -145,6 +147,7 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 			}
 		}
 
+		@SuppressWarnings("rawtypes")
 		@Override
 		public void onTimelinePulse(float durationFraction,
 				float timelinePosition) {
@@ -260,6 +263,7 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 		this(null);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Timeline(Object mainTimelineObject) {
 		this.mainObject = mainTimelineObject;
 
