@@ -22,7 +22,6 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
 
 
-@SuppressWarnings("deprecation")
 public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 //    private Component lastSelectedTab = null;
 
@@ -43,7 +42,6 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 			.getLogger(TipiTabbedQuestionList.class);
 	
     protected Object getGroupConstraints(Message groupMessage) {
-        // TODO Auto-generated method stub
         Property name = groupMessage.getProperty("Name");
         if (name != null) {
             if (name.getValue() == null) {

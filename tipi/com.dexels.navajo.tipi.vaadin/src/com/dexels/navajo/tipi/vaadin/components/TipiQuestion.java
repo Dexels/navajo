@@ -5,7 +5,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 
 
-@SuppressWarnings("deprecation")
 public class TipiQuestion extends TipiBaseQuestion {
     /**
 	 * 

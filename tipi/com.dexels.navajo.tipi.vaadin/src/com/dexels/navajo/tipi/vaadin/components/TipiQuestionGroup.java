@@ -23,7 +23,6 @@ import com.vaadin.ui.Panel;
  * @version 1.0
  */
 
-@SuppressWarnings("deprecation")
 public class TipiQuestionGroup extends TipiBaseQuestionGroup {
 
 	private static final long serialVersionUID = -2453065163545438139L;
