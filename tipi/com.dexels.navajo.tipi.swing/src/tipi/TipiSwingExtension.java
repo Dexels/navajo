@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.UIManager;
@@ -32,6 +31,7 @@ import com.dexels.navajo.tipi.tipixml.XMLParseException;
 public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		TipiExtension,TipiMainExtension {
 
+	@SuppressWarnings("rawtypes")
 	private final Set<ServiceRegistration> adapterRegs = new HashSet<ServiceRegistration>();
 	private static final long serialVersionUID = 3083008630338044274L;
 
@@ -44,6 +44,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		instance = this;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void start(BundleContext context) throws Exception {
 		logger.info("Registering Swing ");
@@ -65,6 +66,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 				
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		deregisterTipiExtension(context);
