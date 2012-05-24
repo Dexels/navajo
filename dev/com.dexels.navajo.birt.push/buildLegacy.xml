@@ -9,19 +9,19 @@
 	<property name="NavajoAdapters.build" value="${NavajoAdapters}/classes"/>
 	<property name="Navajo" value="${PROJECTHOME}/Navajo"/>
 	<property name="Navajo.build" value="${Navajo}/classes"/>
-	<property name="NavajoDocument" value="${PROJECTHOME}/NavajoDocument"/>
-	<property name="NavajoDocument.build" value="${NavajoDocument}/classes"/>
-	<property name="DexelsVersionControl" value="${PROJECTHOME}/DexelsVersionControl"/>
-	<property name="DexelsVersionControl.build" value="${DexelsVersionControl}/classes"/>
+	<property name="com.dexels.navajo.document" value="${PROJECTHOME}/com.dexels.navajo.document"/>
+	<property name="com.dexels.navajo.document.build" value="${com.dexels.navajo.document}/classes"/>
+	<property name="com.dexels.navajo.version" value="${PROJECTHOME}/com.dexels.navajo.version"/>
+	<property name="com.dexels.navajo.version.build" value="${com.dexels.navajo.version}/classes"/>
 	<path id="depend">
 		<fileset dir="${lib}">
 			<include name="**/*.jar"/>
 		</fileset>
 		<pathelement location="${Grus.build}"/>
 		<pathelement location="${NavajoAdapters.build}"/>
-		<pathelement location="${NavajoDocument.build}"/>
+		<pathelement location="${com.dexels.navajo.document.build}"/>
 		<pathelement location="${Navajo.build}"/>
-		<pathelement location="${DexelsVersionControl.build}"/>
+		<pathelement location="${com.dexels.navajo.version.build}"/>
 	</path>
 	<target name="init">
 		<tstamp/>

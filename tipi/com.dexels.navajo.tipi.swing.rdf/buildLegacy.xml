@@ -10,8 +10,8 @@
 	<property name="dist" location="dist"/>
 	<property name="NavajoClient" value="${PROJECTHOME}/NavajoClient" />
 	<property name="NavajoClient.build" value="${NavajoClient}/classes" />
-	<property name="NavajoDocument" value="${PROJECTHOME}/NavajoDocument" />
-	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
+	<property name="com.dexels.navajo.document" value="${PROJECTHOME}/com.dexels.navajo.document" />
+	<property name="com.dexels.navajo.document.build" value="${com.dexels.navajo.document}/classes" />
 	<property name="Navajo" value="${PROJECTHOME}/Navajo" />
 	<property name="Navajo.build" value="${Navajo}/classes" />
 	<property name="TipiSwingClient" value="${PROJECTHOME}/TipiSwingClient" />
@@ -22,25 +22,25 @@
 	<property name="TimingFramework.build" value="${TimingFramework}/classes" />
 	<property name="NavajoTipi" value="${PROJECTHOME}/NavajoTipi" />
 	<property name="NavajoTipi.build" value="${NavajoTipi}/classes" />
-	<property name="DexelsVersionControl" value="${PROJECTHOME}/DexelsVersionControl" />
-	<property name="DexelsVersionControl.build" value="${PROJECTHOME}/DexelsVersionControl/classes" />
+	<property name="com.dexels.navajo.version" value="${PROJECTHOME}/com.dexels.navajo.version" />
+	<property name="com.dexels.navajo.version.build" value="${PROJECTHOME}/com.dexels.navajo.version/classes" />
 	<path id="depend">
 		<!-- NavajoSwingTipi needs the libraries from the NavajoTipi project, OK? -->
 		<!--<fileset dir="${NavajoTipi}/lib">
 			<include name="**/*.jar"/>
 		</fileset>-->
 		<pathelement location="${NavajoClient.build}" />
-		<pathelement location="${NavajoDocument.build}" />
+		<pathelement location="${com.dexels.navajo.document.build}" />
 		<pathelement location="${Navajo.build}" />
 		<pathelement location="${TipiSwingClient.build}" />
 		<pathelement location="${NavajoTipi.build}" />
 		<pathelement location="${AnimatedTransitions.build}" />
 		<pathelement location="${TimingFramework.build}" />
-		<pathelement location="${DexelsVersionControl.build}" />
+		<pathelement location="${com.dexels.navajo.version.build}" />
 	</path>
 	<target name="init" >
 		<tstamp />
-		<mkdir dir="${NavajoDocument.build}" />
+		<mkdir dir="${com.dexels.navajo.document.build}" />
 		<mkdir dir="${NavajoClient.build}" />
 		<mkdir dir="${Navajo.build}" />
 		<mkdir dir="${TipiSwingClient.build}" />
@@ -50,7 +50,7 @@
 	<target name="clean" >
 		<delete file="${archive}" />
 		<delete dir="${NavajoClient.build}" />
-		<delete dir="${NavajoDocument.build}" />
+		<delete dir="${com.dexels.navajo.document.build}" />
 		<delete dir="${Navajo.build}" />
 		<delete dir="${TipiSwingClient.build}" />
 		<delete dir="${NavajoTipi.build}" />
@@ -58,8 +58,8 @@
 	    <delete dir="${dist}"/>
 	</target>
 	<target name="NavajoTipi" depends="init">
-		<!-- NavajoSwingClient sub-project should build NavajoDocument, 
-		 NavajoClient, Navajo, NavajoSwingClient and NavajoTipi
+		<!-- NavajoSwingClient sub-project should build com.dexels.navajo.document, 
+		 com.dexels.navajo.client, com.dexels.navajo.core, NavajoSwingClient and NavajoTipi
 		 sub-projects if necessary -->
 	<!--	<ant dir="${NavajoTipi}" target="archive" inheritAll="false">
 			<property name="PROJECTHOME" value="${PROJECTHOME}" />
@@ -85,14 +85,14 @@
 		<jar jarfile="${archive}">
 
 			<fileset dir="${build}" />
-			<fileset dir="${DexelsVersionControl.build}" />
+			<fileset dir="${com.dexels.navajo.version.build}" />
 			<service type="tipi.TipiExtension">
 				<provider classname="tipi.TipiSwingExtension" />
 			</service>
 			<manifest>
 
 				<attribute name="Built-By" value="Frank" />
-<!--				<attribute name="Class-Path" value="NavajoSwingTipi.jar,tipipackage.jar,NavajoRuntime.jar,NavajoSwingClient.jar,NavajoLogger.jar,NavajoDocument.jar" />
+<!--				<attribute name="Class-Path" value="NavajoSwingTipi.jar,tipipackage.jar,NavajoRuntime.jar,NavajoSwingClient.jar,NavajoLogger.jar,com.dexels.navajo.document.jar" />
 -->				<attribute name="Main-Class" value="tipi.MainApplication" />
 			</manifest>
 

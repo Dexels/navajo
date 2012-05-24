@@ -38,7 +38,7 @@
 
 	<!--
 	Upload all distribution files to a repository (using SCP)
-	Edit the build.properties file in DexelsVersionControl for locations / credentials.
+	Edit the build.properties file in com.dexels.navajo.version for locations / credentials.
 	-->
 	<property name="uploaddownloads" value="false"/>
 	
@@ -61,7 +61,7 @@
 	<property name="cleanupdependencies" value="true"/>
 	
 	<!--
-	A comma separated list of Navajo project (e.g. DexelsVersionControl,NavajoDocument,NavajoClient)
+	A comma separated list of Navajo project (e.g. com.dexels.navajo.version,com.dexels.navajo.document,NavajoClient)
 	You need to specify all of them, it will not include the dependencies of your dependencies (and so on..)
 	Make sure that the dependencies have been built properly (or set 'recursivebuild' to true)	
 	If there are no dependencies, supply an empty string.
@@ -76,9 +76,9 @@
 	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
 	-->
 
-	<property name="dependencies" value="DexelsVersionControl,NavajoDocument,Navajo" />
+	<property name="dependencies" value="../../navajo/core/com.dexels.navajo.version,../../navajo/core/com.dexels.navajo.document,../../navajo/core/com.dexels.navajo.core" />
 
-	<import file="../DexelsVersionControl/ant/navajobuild.xml" />
+	<import file="../../../navajo/core/com.dexels.navajo.version/ant/navajobuild.xml" />
 
 	<target name="afterdeploy">
 	  	<copy file="${archive}" todir="../GeoJsp/WebContent/WEB-INF/lib"/>

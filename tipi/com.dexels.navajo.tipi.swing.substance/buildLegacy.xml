@@ -40,7 +40,7 @@
 
 	<!--
 	Upload all distribution files to a repository (using SCP)
-	Edit the build.properties file in DexelsVersionControl for locations / credentials.
+	Edit the build.properties file in com.dexels.navajo.version for locations / credentials.
 	-->
 	<property name="uploaddownloads" value="false"/>
 	
@@ -63,7 +63,7 @@
 	<property name="cleanupdependencies" value="false"/>
 	
 	<!--
-	A comma separated list of Navajo project (e.g. DexelsVersionControl,NavajoDocument,NavajoClient)
+	A comma separated list of Navajo project (e.g. com.dexels.navajo.version,com.dexels.navajo.document,NavajoClient)
 	You need to specify all of them, it will not include the dependencies of your dependencies (and so on..)
 	Make sure that the dependencies have been built properly (or set 'recursivebuild' to true)	
 	If there are no dependencies, supply an empty string.
@@ -77,9 +77,9 @@
 	(for example WAR-files), and compilelibs will not. 
 	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
 	-->
-	<property name="dependencies" value="DexelsVersionControl,NavajoDocument,Navajo,NavajoClient,NavajoTipi,TipiSwingClient,NavajoSwingTipi" />
+	<property name="dependencies" value="com.dexels.navajo.version,com.dexels.navajo.document,com.dexels.navajo.core,com.dexels.navajo.client,NavajoTipi,TipiSwingClient,NavajoSwingTipi" />
 
-	<import file="../DexelsVersionControl/ant/navajobuild.xml" />
+	<import file="../com.dexels.navajo.version/ant/navajobuild.xml" />
 
 </project>
 <!-- EOF: $RCSfile$ -->

@@ -20,8 +20,8 @@
 	<property name="deploydependencylib" value="${dependencybase}/deploylib" />
 	<property name="dependencycompilelib" value="${dependencybase}/compilelib" />
 	<property name="archive" value="${ant.project.name}.jar" />
-	<property name="junitjar" value="../DexelsVersionControl/compilelib/junit.jar" />
-	<property file="../DexelsVersionControl/ant/build.properties" />
+	<property name="junitjar" value="../com.dexels.navajo.version/compilelib/junit.jar" />
+	<property file="../../../navajo/core/com.dexels.navajo.version/ant/build.properties" />
 	<property name="deployRoot" value="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}" />
 <!--	<taskdef name="antclipse" classname="net.sf.antcontrib.antclipse.ClassPathTask"/>
 -->	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" onerror="ignore" />
@@ -131,7 +131,7 @@
 		<for list="${dependencies}" delimiter="," param="currentdep">
 			<sequential>
 				<echo message="Current dependency: @{currentdep}"></echo>
-				<ant target="resolveDependency" antfile="../DexelsVersionControl/ant/navajobuild.xml" inheritall="true">
+				<ant target="resolveDependency" antfile="../../../navajo/core/com.dexels.navajo.version/ant/navajobuild.xml" inheritall="true">
 					<property name="currentdep" value="@{currentdep}" />
 				</ant>
 			</sequential>
