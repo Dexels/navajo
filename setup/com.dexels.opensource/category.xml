@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.dexels.navajo.core.feature_1.0.7.qualifier.jar" id="com.dexels.navajo.core.feature" version="1.0.7.qualifier">
+      <category name="navajo_opensource"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.dev.feature_2.0.4.qualifier.jar" id="com.dexels.navajo.dev.feature" version="2.0.4.qualifier">
+      <category name="dev"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.server.feature_1.0.4.qualifier.jar" id="com.dexels.navajo.server.feature" version="1.0.4.qualifier">
+      <category name="navajo_opensource"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.tipi.extensions.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.tipi.extensions.feature" version="1.0.0.qualifier">
+      <category name="tipi"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.tipi.dev.feature_0.1.0.qualifier.jar" id="com.dexels.navajo.tipi.dev.feature" version="0.1.0.qualifier">
+      <category name="dev"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.geo.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.geo.feature" version="1.0.0.qualifier">
+      <category name="other"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.language.feature_1.0.2.qualifier.jar" id="com.dexels.navajo.language.feature" version="1.0.2.qualifier">
+      <category name="dev"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.oda.feature_1.0.2.qualifier.jar" id="com.dexels.navajo.oda.feature" version="1.0.2.qualifier">
+      <category name="other"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.other.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.other.feature" version="1.0.0.qualifier">
+      <category name="other"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.resource.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.resource.feature" version="1.0.0.qualifier">
+      <category name="navajo_opensource"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.server.embedded.feature_1.0.1.qualifier.jar" id="com.dexels.navajo.server.embedded.feature" version="1.0.1.qualifier">
+      <category name="other"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.test.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.test.feature" version="1.0.0.qualifier">
+      <category name="other"/>
+   </feature>
+   <category-def name="navajo_opensource" label="Navajo OSS Components"/>
+   <category-def name="tipi" label="Tipi components"/>
+   <category-def name="dev" label="Developer tools"/>
+   <category-def name="other" label="Other Navajo Features"/>
+</site>
