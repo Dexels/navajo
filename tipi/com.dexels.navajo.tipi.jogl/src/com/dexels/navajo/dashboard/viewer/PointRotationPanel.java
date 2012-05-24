@@ -1,17 +1,13 @@
 package com.dexels.navajo.dashboard.viewer;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
 
 public class PointRotationPanel extends JComponent {
+
+	private static final long serialVersionUID = -427047306864000203L;
 	private int pointCount = 10;
 	private double x_scale = 1.0;
 	private double y_scale = 0.6;
@@ -44,8 +40,8 @@ public class PointRotationPanel extends JComponent {
 		double delta_radians = delta * rad_degree;
 		double alignment = 90 * rad_degree; // we center at 1 1/2 PI
 		
-		double x = Math.cos(delta_radians);
-		double y = Math.sin(delta_radians);
+//		double x = Math.cos(delta_radians);
+//		double y = Math.sin(delta_radians);
 		
 		ArrayList<Point2D.Double> points = new ArrayList<Point2D.Double>();
 		

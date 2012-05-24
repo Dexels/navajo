@@ -4,18 +4,16 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.net.URL;
-import java.util.HashMap;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
-import javax.media.opengl.fixedfunc.GLPointerFunc;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.jogamp.opengl.util.awt.TextRenderer;
 
 public class JOGLServerStatus {
-	private HashMap<String, String[]> authentication = new HashMap<String, String[]>();
+//	private HashMap<String, String[]> authentication = new HashMap<String, String[]>();
 	private TextRenderer textRenderer;
 	Navajo status;
 	Navajo serverLoad;
@@ -33,7 +31,7 @@ public class JOGLServerStatus {
 
 	public void setServerLoad(Navajo n) {
 		this.serverLoad = n;
-		Message load = serverLoad.getMessage("Result");
+//		Message load = serverLoad.getMessage("Result");
 	}
 
 	public void setServerName(String name) {

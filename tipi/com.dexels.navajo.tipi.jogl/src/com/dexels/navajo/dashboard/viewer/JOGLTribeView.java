@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -15,10 +14,6 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.nio.IntBuffer;
 import java.text.DecimalFormat;
@@ -39,13 +34,10 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
-
 import com.dexels.navajo.dashboard.viewer.images.ResourceLoader;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
-//
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
@@ -59,8 +51,9 @@ import com.jogamp.opengl.util.texture.TextureCoords;
 
 
 public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListener {
+	private static final long serialVersionUID = -8665532903536132430L;
 	private final String tribeIdentifier = "navajotribe";
-	private final static int CONFERENCE_ONTWIKKEL = 0;
+//	private final static int CONFERENCE_ONTWIKKEL = 0;
 	private final static int CONFERENCE_TEST = 1;
 	private final static int CONFERENCE_ACCEPTATIE = 2;
 	private final static int CONFERENCE_PRODUCTIE = 3;
@@ -311,10 +304,10 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		}
 		if ("UserList".equals(method)) {
 
-			int current = 0;
-			if (users != null) {
-				current = users.getArraySize();
-			}
+//			int current = 0;
+//			if (users != null) {
+//				current = users.getArraySize();
+//			}
 
 			clearExceptions();
 
@@ -602,16 +595,16 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 	/*
 	 * Debug function for outputting the current Frames Per Second
 	 */
-	private void displayFPSText(GLAutoDrawable drawable) {
-		if (++frameCount == 10) {
-			long endTime = System.currentTimeMillis();
-			float fps = 10.0f / (float) (endTime - startTime) * 1000;
-			frameCount = 0;
-			startTime = System.currentTimeMillis();
-			fpsText = format.format(fps);
-			// System.err.println("FPS: " + fpsText);
-		}
-	}
+//	private void displayFPSText(GLAutoDrawable drawable) {
+//		if (++frameCount == 10) {
+//			long endTime = System.currentTimeMillis();
+//			float fps = 10.0f / (float) (endTime - startTime) * 1000;
+//			frameCount = 0;
+//			startTime = System.currentTimeMillis();
+//			fpsText = format.format(fps);
+//			// System.err.println("FPS: " + fpsText);
+//		}
+//	}
 
 	private final void processCommand(String command) {
 		try {
@@ -1004,19 +997,16 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		drawString(gl, requestRate, (int) (xpos - (text_scale * textBounds.getWidth() / 2f)), y_pos, Color.gray, 1f, text_scale);
 	}
 
-	/*
-	 * Draw a message
-	 */
-	private final void drawMessageBalloon(GL gl1, String message, float xpos, float ypos) {
-		GL2 gl = gl1.getGL2();
-		gl.glBegin(GL.GL_LINES);
-		gl.glColor4f(1f, 1f, 1f, 0f);
-		gl.glVertex2d(xpos + 20, ypos - 5);
-		gl.glColor4f(1f, 1f, 1f, 1f);
-		gl.glVertex2d(xpos + 40, ypos - 10);
-		gl.glEnd();
-		drawString(gl, message, (int) (xpos + 45), (int) (ypos - 15), Color.red, 1f, .8f);
-	}
+//	private final void drawMessageBalloon(GL gl1, String message, float xpos, float ypos) {
+//		GL2 gl = gl1.getGL2();
+//		gl.glBegin(GL.GL_LINES);
+//		gl.glColor4f(1f, 1f, 1f, 0f);
+//		gl.glVertex2d(xpos + 20, ypos - 5);
+//		gl.glColor4f(1f, 1f, 1f, 1f);
+//		gl.glVertex2d(xpos + 40, ypos - 10);
+//		gl.glEnd();
+//		drawString(gl, message, (int) (xpos + 45), (int) (ypos - 15), Color.red, 1f, .8f);
+//	}
 
 	/*
 	 * Draw the planet icons that select a conference.
@@ -1371,7 +1361,6 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 

@@ -15,14 +15,15 @@ import javax.media.opengl.glu.GLU;
 
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureCoords;
 import com.jogamp.opengl.util.texture.TextureIO;
 
 public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventListener {
-    private boolean lightingEnabled;				// Lighting ON/OFF
-    private boolean lightingChanged = false;		// Lighting changed
+
+	private static final long serialVersionUID = -2008869951387194865L;
+	private boolean lightingEnabled;				// Lighting ON/OFF
+//    private boolean lightingChanged = false;		// Lighting changed
     private boolean blendingEnabled;				// Blending OFF/ON
-    private boolean blendingChanged = false;		// Blending changed
+//    private boolean blendingChanged = false;		// Blending changed
     
     protected String fpsText;
 	protected int fpsWidth;
@@ -37,17 +38,17 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
     private float xrot = 20f;				// X Rotation
     private float yrot = 45f;				// Y Rotation
 
-    private float xspeed = 0.5f;				// X Rotation Speed
-    private boolean increaseX;
-    private boolean decreaseX;
-
-    private float yspeed = 0.3f;				// Y Rotation Speed
-    private boolean increaseY;
-    private boolean decreaseY;
+//    private float xspeed = 0.5f;				// X Rotation Speed
+//    private boolean increaseX;
+//    private boolean decreaseX;
+//
+//    private float yspeed = 0.3f;				// Y Rotation Speed
+//    private boolean increaseY;
+//    private boolean decreaseY;
 
     private float z = -500.0f;			// Depth Into The Screen
-    private boolean zoomIn;
-    private boolean zoomOut;
+//    private boolean zoomIn;
+//    private boolean zoomOut;
 
     private float[] lightAmbient = {0.5f, 0.5f, 0.5f, 1.0f};
     private float[] lightDiffuse = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -64,6 +65,8 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 			public void run() {
 
 				canvas = new GLCanvas() {
+					private static final long serialVersionUID = -7213660598225377157L;
+
 					public Dimension getMaximumSize() {
 						return new Dimension(0, 0);
 					}
@@ -102,36 +105,36 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 
     public void toggleBlending() {
         blendingEnabled = !blendingEnabled;
-        blendingChanged = true;
+//        blendingChanged = true;
     }
 
     public void toggleLighting() {
         lightingEnabled = !lightingEnabled;
-        lightingChanged = true;
+//        lightingChanged = true;
     }
 
     public void increaseXspeed(boolean increase) {
-        increaseX = increase;
+//        increaseX = increase;
     }
 
     public void decreaseXspeed(boolean decrease) {
-        decreaseX = decrease;
+//        decreaseX = decrease;
     }
 
     public void increaseYspeed(boolean increase) {
-        increaseY = increase;
+//        increaseY = increase;
     }
 
     public void decreaseYspeed(boolean decrease) {
-        decreaseY = decrease;
+//        decreaseY = decrease;
     }
 
     public void zoomIn(boolean zoom) {
-        zoomIn = zoom;
+//        zoomIn = zoom;
     }
 
     public void zoomOut(boolean zoom) {
-        zoomOut = zoom;
+//        zoomOut = zoom;
     }
 
     public void switchFilter() {
@@ -164,7 +167,7 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE);					// Set The Blending Function For Translucency (new )
         
        
-        gl.glMatrixMode(gl.GL_MODELVIEW);
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
     }
 
 
@@ -179,7 +182,8 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
         gl.glRotatef(yrot, 0.0f, 1.0f, 0.0f);
 
         
-        TextureCoords tc = fireIcon.getImageTexCoords();
+//        TextureCoords tc = 
+        fireIcon.getImageTexCoords();
 
 
         fireIcon.enable();
@@ -234,8 +238,8 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 			frameCount = 0;
 			startTime = System.currentTimeMillis();
 			fpsText = format.format(fps);
-			int x = drawable.getWidth() - fpsWidth - 5;
-			int y = drawable.getHeight() - 30;
+//			int x = drawable.getWidth() - fpsWidth - 5;
+//			int y = drawable.getHeight() - 30;
 			System.err.println("FPS: " + fpsText);
 		}
 	}
@@ -281,7 +285,6 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 

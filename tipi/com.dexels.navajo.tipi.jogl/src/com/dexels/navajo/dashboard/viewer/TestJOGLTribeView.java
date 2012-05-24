@@ -53,6 +53,7 @@ import com.jogamp.opengl.util.texture.TextureIO;
 
 public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventListener {
 
+	private static final long serialVersionUID = -7457560373249638162L;
 	private GLCanvas canvas;
 	private Texture fireIcon;
 	private Texture tribeIcon;
@@ -66,7 +67,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 	private Message users;
 	private int mouseOverTribe = -1;
 	private int selectedTribe = -1;
-	private int selectedUser = -1;
+//	private int selectedUser = -1;
 	private PointRotationPanel rt;
 	private float theta = 0f;
 	private float pause_theta = 0f;
@@ -93,7 +94,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
     private float[] lightDiffuse = {1.0f, 1.0f, 1.0f, 1.0f};
     private float[] lightPosition = {0.0f, 0.0f, 2.0f, 1.0f};
     
-    private float z = -500f;  // Camera height
+//    private float z = -500f;  // Camera height
 
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable() {
@@ -134,7 +135,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 				System.err.println("Clicked: " + mouseOverTribe);
 
 				int tribe_id = (mouseOverTribe - mouseOverTribe % tribeModFactor) / 100;
-				int user_id = mouseOverTribe % tribeModFactor;
+//				int user_id = mouseOverTribe % tribeModFactor;
 
 				if(mouseOverTribe == 99){
 					if(orbiter.isRunning()){
@@ -146,11 +147,11 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 					return;
 				}
 				
-				if (user_id > 0) {
-					selectedUser = user_id;
-				} else {
-					selectedUser = -1;
-				}
+//				if (user_id > 0) {
+//					selectedUser = user_id;
+//				} else {
+//					selectedUser = -1;
+//				}
 				if (tribe_id > -1 && selectedTribe != tribe_id) {
 					focusOnTribe(tribe_id);
 				} else if (tribe_id > -1 && selectedTribe == -1) {
@@ -718,7 +719,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 	 */
 	public void processHits(int hits, int buffer[]) {
 		int i, j;
-		int ii = -1, jj = -1, names, ptr = 0;
+		int ii = -1,  names, ptr = 0;
 		if (hits > 0) {
 			for (i = 0; i < hits; i++) { /* for each hit */
 				names = buffer[ptr];
@@ -728,8 +729,9 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 				for (j = 0; j < names; j++) { /* for each name */
 					if (j == 0) /* set row and column */
 						ii = buffer[ptr];
-					else if (j == 1)
-						jj = buffer[ptr];
+					else if (j == 1) {
+//						jj = buffer[ptr];
+					}
 					ptr++;
 				}
 			}
@@ -835,7 +837,6 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
