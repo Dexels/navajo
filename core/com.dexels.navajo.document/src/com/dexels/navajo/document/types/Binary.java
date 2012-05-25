@@ -59,8 +59,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 
     public final static String TEXT = "plain/text";
 
-    private long expectedLength = 0;
-
     private FormatDescription currentFormatDescription;
     
     private final static HashMap<String,Binary> persistedBinaries = new HashMap<String,Binary>();
@@ -148,13 +146,11 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     
     private void loadBinaryFromStream(InputStream is, boolean close) throws IOException, FileNotFoundException {
         int b = -1;
-        long fileSize = 0;
         OutputStream fos = createTempFileOutputStream();
 		byte[] buffer = new byte[1024];
 		try {
 			while ((b = is.read(buffer, 0, buffer.length)) != -1) {
 				fos.write(buffer, 0, b);
-				fileSize += b;
 			}
 		} finally {
 
@@ -167,7 +163,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 				} catch (IOException e) {}
 			}
 		}
-        expectedLength = fileSize;
 
     	if(NavajoFactory.getInstance().isSandboxMode()) {
     		inMemory = ((ByteArrayOutputStream)fos).toByteArray();
@@ -207,7 +202,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 
     public Binary(File f, boolean lazy) throws IOException {
         super(Property.BINARY_PROPERTY);
-        expectedLength = f.length();
         if (lazy) {
             lazySourceFile = f;
         } else {
@@ -250,35 +244,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
          }
     }
 
-    /**
-     * Construct a new Binary object from a byte array, with a given subtype
-     * 
-     * @param data
-     *            byte[]
-     * @param subtype
-     *            String
-     *            @deprecated
-     */
-    @Deprecated
-	public Binary(byte[] data, String subtype) {
-        super(Property.BINARY_PROPERTY, subtype);
-        try {
-            OutputStream fos = createTempFileOutputStream();
-            fos.write(data);
-            fos.close();
-        } catch (IOException e) {
-        	logger.error("Error: ", e);
-        }
-
-        this.mimetype = getSubType("mime");
-        this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
-
-    }
-
-    
     public Binary(Reader reader, long length) throws IOException {
         super(Property.BINARY_PROPERTY);
-        expectedLength = length;
         parseFromReader(reader);
     }
     /**
@@ -320,7 +287,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
      * @throws IOException
      */
     private void copyBufferedBase64Resource(Writer out, PushbackReader in) throws IOException {
-         long progress = 0;
         int read;
         int iterations = 0;
         char[] buffer = new char[QDParser.PUSHBACK_SIZE];
@@ -329,18 +295,14 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
             iterations++;
             if (iterations % 100 == 0) {
 //                logger.info("Reading data. "+progress+"/"+expectedLength);
-                NavajoFactory.getInstance().fireBinaryProgress("Reading data", progress, expectedLength);
             }
             int ii = getIndexOf(buffer, '<');
 //            logger.info("Buffer size: "+buffer.length+" '<' index: "+ii+" read: "+read);
             if (ii==-1) {
                 out.write(buffer,0,read);
-                progress+=read;
             } else {
 //                debug("Writing", buffer, 0, ii);
                 out.write(buffer, 0, ii);
-                progress+=ii;
-                NavajoFactory.getInstance().fireBinaryProgress("Reading data", progress, expectedLength);
 //                debug("Pushback", buffer, ii, read-1);
                 in.unread(buffer, ii, read-ii);
                 break;
@@ -502,25 +464,15 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     private final void copyResource(String name, OutputStream out, InputStream in, long totalSize) throws IOException {
         byte[] buffer = new byte[1024];
         int read;
-        long size = 0;
         int iter = 0;
-        try {
         while ((read = in.read(buffer)) > -1) {
             out.write(buffer, 0, read);
-            size += read;
             iter++;
             if (iter % 100 == 0) {
-                NavajoFactory.getInstance().fireBinaryProgress(name, size, totalSize);
                 
             }
         }
-        //out.flush();
-
         in.close();
-        //out.flush();
-        } finally {
-            NavajoFactory.getInstance().fireBinaryFinished("Finished", totalSize);
-        }
     }
 
     public final void write(OutputStream to) throws IOException {
