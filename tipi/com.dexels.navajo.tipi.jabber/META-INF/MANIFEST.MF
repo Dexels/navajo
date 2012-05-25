@@ -12,7 +12,9 @@ Bundle-ClassPath: .,
  lib/smackx.jar
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: tipi.TipiJabberExtension
-Import-Package: com.dexels.navajo.document;version="2.2.0",
+Import-Package: com.dexels.navajo.client.jabber,
+ com.dexels.navajo.client.sessiontoken,
+ com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.version,
  javax.net,
  javax.net.ssl,

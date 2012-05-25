@@ -13,8 +13,8 @@ Export-Package: com.dexels.navajo.dnd,
  com.dexels.navajo.tipi.swingclient.components.sort,
  tipiswingclient
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.client;bundle-version="1.0.0"
-Import-Package: com.dexels.navajo.document;version="2.2.0",
+Import-Package: com.dexels.navajo.client,
+ com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.base;version="2.2.0",
  com.dexels.navajo.document.filter,
  com.dexels.navajo.document.metadata;version="2.2.0",

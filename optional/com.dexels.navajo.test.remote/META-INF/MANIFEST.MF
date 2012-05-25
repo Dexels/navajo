@@ -6,9 +6,9 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Include-Resource: lib
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.client,
- org.apache.ant;bundle-version="1.7.1"
-Import-Package: com.dexels.navajo.document;version="2.2.0",
+Require-Bundle: org.apache.ant;bundle-version="1.7.1"
+Import-Package: com.dexels.navajo.client,
+ com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.version,
  org.junit;version="4.8.2",
  org.junit.runner;version="4.8.2",

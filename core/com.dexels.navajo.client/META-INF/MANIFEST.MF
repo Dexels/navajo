@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-Name: Navajo Client
-Bundle-SymbolicName: com.dexels.navajo.client
+Bundle-SymbolicName: com.dexels.navajo.client2
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 3.3.0.qualifier
@@ -14,8 +14,7 @@ Export-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.nql,
  com.dexels.navajo.client.server,
  com.dexels.navajo.client.sessiontoken,
- com.dexels.navajo.client.systeminfo,
- com.jcraft.jzlib
+ com.dexels.navajo.client.systeminfo
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.version,
  org.junit,

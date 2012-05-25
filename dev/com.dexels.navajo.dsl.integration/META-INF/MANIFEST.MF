@@ -16,7 +16,6 @@ Require-Bundle: org.eclipse.core.runtime,
  com.dexels.navajo.dsl.tsl.ui;bundle-version="1.0.2",
  org.eclipse.ui;bundle-version="3.6.2",
  org.eclipse.jface.text;bundle-version="3.6.1",
- com.dexels.navajo.client;bundle-version="3.0.3",
  org.eclipse.ui.forms;bundle-version="3.5.2",
  com.dexels.navajo.core;bundle-version="2.9.3",
  org.eclipse.ui.ide;bundle-version="3.6.2",
@@ -27,4 +26,5 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.dexels.navajo.studio.script.plugin.views
-Import-Package: com.dexels.navajo.document;version="2.2.0"
+Import-Package: com.dexels.navajo.client,
+ com.dexels.navajo.document;version="2.2.0"

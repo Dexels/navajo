@@ -5,7 +5,8 @@ Bundle-SymbolicName: com.dexels.navajo.tipi.vaadin.embedded
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: com.dexels.navajo.document;version="2.2.0",
+Import-Package: com.dexels.navajo.client,
+ com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.version,
  javax.servlet;version="2.5.0",
@@ -13,7 +14,6 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  org.slf4j;version="1.6.1"
 Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  com.dexels.navajo.tipi.vaadin;bundle-version="0.1.0",
- com.dexels.navajo.client;bundle-version="3.0.5",
  com.dexels.navajo.core;bundle-version="2.9.4",
  com.dexels.navajo.function;bundle-version="2.0.5",
  org.eclipse.jetty.http;bundle-version="7.4.1",

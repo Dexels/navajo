@@ -7,13 +7,13 @@ Bundle-Activator: navajolistenerscontinuations.Version
 Bundle-ClassPath: .
 Include-Resource: lib
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.client,
- com.dexels.navajo.core,
+Require-Bundle: com.dexels.navajo.core,
  com.dexels.navajo.listeners;bundle-version="3.1.1"
 Export-Package: com.dexels.navajo.server.listener.http.continuation,
  navajolistenerscontinuations
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.version,
+ com.jcraft.jzlib,
  javax.management,
  javax.servlet;version="[2.5.0,4.0.0)",
  javax.servlet.http;version="[2.5.0,4.0.0)",

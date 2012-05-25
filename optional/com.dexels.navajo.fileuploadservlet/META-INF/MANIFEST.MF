@@ -4,7 +4,8 @@ Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.navajo.document;version="2.2.0",
+Import-Package: com.dexels.navajo.client,
+ com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0",
