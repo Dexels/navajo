@@ -1,5 +1,5 @@
 Bundle-Name: Navajo Document
-Bundle-SymbolicName: com.dexels.navajo.document2
+Bundle-SymbolicName: com.dexels.navajo.document
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 2.2.0.qualifier
