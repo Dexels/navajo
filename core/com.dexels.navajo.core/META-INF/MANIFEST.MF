@@ -71,14 +71,13 @@ Export-Package: com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.na
    org.w3c.dom,
    com.dexels.navajo.document"
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.version,
- com.dexels.navajo.authentication.api;bundle-version="1.0.0"
+Require-Bundle: com.dexels.navajo.authentication.api;bundle-version="1.0.0"
 Import-Package: com.dexels.navajo.document;version="2.2.0",
- com.dexels.navajo.document.base;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.nanoimpl;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.persistence;version="2.2.0",
+ com.dexels.navajo.version,
  javax.imageio,
  javax.imageio.spi,
  javax.management,
