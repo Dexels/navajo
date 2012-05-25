@@ -158,7 +158,7 @@ public class JSONHttpServlet extends TmlHttpServlet {
 		return result;
 	}
 
-	private final void callDirect(HttpServletRequest request,
+	private final void callDirectJSON(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
 		String service = request.getParameter("service");
@@ -167,30 +167,30 @@ public class JSONHttpServlet extends TmlHttpServlet {
 		String password = request.getParameter("password");
 		String callback = request.getParameter("callback");
 
-		System.err.println("in (JSON) callDirect(): service = " + service
+		logger.debug("in (JSON) callDirect(): service = " + service
 				+ ", username = " + username);
 
 		if (service == null) {
 
-			// System.err.println("Empty service specified, request originating from "
+			// logger.info("Empty service specified, request originating from "
 			// + request.getRemoteHost());
-			System.err.println("thread = " + Thread.currentThread().hashCode());
-			System.err.println("path = " + request.getPathInfo());
-			System.err.println("query = " + request.getQueryString());
-			System.err.println("protocol = " + request.getProtocol());
-			System.err.println("agent = " + request.getRemoteUser());
-			System.err.println("uri = " + request.getRequestURI());
-			System.err.println("method = " + request.getMethod());
-			System.err.println("contenttype = " + request.getContentType());
-			System.err.println("scheme = " + request.getScheme());
-			System.err.println("server = " + request.getServerName());
-			System.err.println("port = " + request.getServerPort());
-			System.err.println("contentlength = " + request.getContentLength());
+			logger.info("thread = " + Thread.currentThread().hashCode());
+			logger.info("path = " + request.getPathInfo());
+			logger.info("query = " + request.getQueryString());
+			logger.info("protocol = " + request.getProtocol());
+			logger.info("agent = " + request.getRemoteUser());
+			logger.info("uri = " + request.getRequestURI());
+			logger.info("method = " + request.getMethod());
+			logger.info("contenttype = " + request.getContentType());
+			logger.info("scheme = " + request.getScheme());
+			logger.info("server = " + request.getServerName());
+			logger.info("port = " + request.getServerPort());
+			logger.info("contentlength = " + request.getContentLength());
 			Enumeration<String> enm = request.getHeaderNames();
 			while (enm.hasMoreElements()) {
 				String key = enm.nextElement();
 				String header = request.getHeader(key);
-				System.err.println(">>" + key + "=" + header);
+				logger.info(">>" + key + "=" + header);
 			}
 			return;
 		}
@@ -198,12 +198,7 @@ public class JSONHttpServlet extends TmlHttpServlet {
 		if (username == null) {
 			username = "empty";
 			password = "";
-			// logger.log(Priority.FATAL,
-			// "Empty service specified, request originating from " +
-			// request.getRemoteHost());
-			// System.err.println("Empty service specified, request originating from "
-			// + request.getRemoteHost());
-			// return;
+
 		}
 
 		if ((type == null) || (type.equals(""))) {
@@ -330,7 +325,7 @@ public class JSONHttpServlet extends TmlHttpServlet {
 		} else {
 			long now = System.currentTimeMillis();
 			response.setDateHeader("Expires", now + 300000);
-			callDirect(request, response);
+			callDirectJSON(request, response);
 		}
 	}
 

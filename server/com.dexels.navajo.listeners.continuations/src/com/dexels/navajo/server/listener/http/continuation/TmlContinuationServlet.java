@@ -16,7 +16,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.listener.http.SchedulableServlet;
-import com.dexels.navajo.server.listener.http.SchedulerTools;
 import com.dexels.navajo.server.listener.http.TmlScheduler;
 import com.jcraft.jzlib.ZInputStream;
 
@@ -24,8 +23,7 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 
 	private static final long serialVersionUID = -8645365233991777113L;
 
-	private TmlScheduler myScheduler = null;
-
+	
 	
 	public static final String COMPRESS_GZIP = "gzip";
 	public static final String COMPRESS_JZLIB = "jzlib";
@@ -60,7 +58,7 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 			tmlRunner.endTransaction();
 			return;
 		}
-		boolean precheck = myScheduler.preCheckRequest(req);
+		boolean precheck = getTmlScheduler().preCheckRequest(req);
 		if(!precheck) {
 			req.getInputStream().close();
 			resp.getOutputStream().close();
@@ -94,7 +92,7 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 		// that is not really the case.
 		if(!jmxRegistered) {
 			JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "TmlCometServlet");
-			setTmlScheduler(SchedulerTools.createScheduler(this));
+//			setTmlScheduler(SchedulerTools.createScheduler(this.getServletContext()));
 			jmxRegistered = true;
 		}
 	}
@@ -137,7 +135,7 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 	
 	@Override
 	public TmlScheduler getTmlScheduler() {
-		return myScheduler;
+		return (TmlScheduler) getServletContext().getAttribute("tmlScheduler");
 	}
 
 //	@Override
@@ -148,11 +146,7 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 //	}
 
 
-	@Override
-	public void setTmlScheduler(TmlScheduler s) {
-		myScheduler = s;
-	}
-	
+
 
 	
 }

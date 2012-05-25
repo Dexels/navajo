@@ -1,5 +1,6 @@
 package com.dexels.navajo.server.listener.http.schedulers;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,7 +12,7 @@ import com.dexels.navajo.server.listener.http.TmlScheduler;
 public class DummyScheduler implements TmlScheduler {
 
 	@Override
-	public void initialize(HttpServlet servlet) {
+	public void initialize(ServletContext servlet) {
 
 	}
 

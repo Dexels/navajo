@@ -26,8 +26,6 @@ public abstract class BaseFileRequest implements AsyncRequest {
 		try {
 			tempFile = File.createTempFile("navajoRequest_", ".xml");
 			os = new FileOutputStream(tempFile);
-			System.err.println("Created tempfile: "
-					+ tempFile.getAbsolutePath());
 		} catch (FileNotFoundException e) {
 			logger.error("Error: ", e);
 			
@@ -60,7 +58,6 @@ public abstract class BaseFileRequest implements AsyncRequest {
 	public InputStream getRequestInputStream() throws IOException {
 		getRequestOutputStream().flush();
 		getRequestOutputStream().close();
-		System.err.println("Getting file: " + tempFile.getAbsolutePath());
 		FileInputStream fis = new FileInputStream(tempFile);
 		// return new ByteArrayInputStream(os.toByteArray());
 		return fis;

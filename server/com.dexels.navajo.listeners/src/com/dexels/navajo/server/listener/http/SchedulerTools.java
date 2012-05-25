@@ -2,7 +2,7 @@ package com.dexels.navajo.server.listener.http;
 
 import java.util.Collection;
 
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletContext;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -18,14 +18,14 @@ public class SchedulerTools {
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerTools.class);
 	
 	@SuppressWarnings("unchecked")
-	public static TmlScheduler createScheduler(HttpServlet servlet) {
-		String schedulerName = servlet.getInitParameter("schedulerClass");
+	public static TmlScheduler createScheduler(ServletContext context) {
+		String schedulerName = context.getInitParameter("schedulerClass");
 		if (schedulerName != null) {
 			try {
 				TmlScheduler injected = getSchedulerService(schedulerName);
 				if(injected!=null) {
 					logger.info("Returning scheduler service for: "+schedulerName);
-					injected.initialize(servlet);
+					injected.initialize(context);
 					return injected;
 				}
 				logger.info("No injected scheduler found. Falling back to Class.forName");
@@ -33,7 +33,7 @@ public class SchedulerTools {
 						.forName(schedulerName);
 				TmlScheduler scheduler = cc.newInstance();
 				SchedulerRegistry.setScheduler(scheduler);
-				scheduler.initialize(servlet);
+				scheduler.initialize(context);
 				logger.info("Scheduler initialized.");
 				return scheduler;
 			} catch (ClassNotFoundException e) {

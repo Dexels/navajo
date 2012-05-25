@@ -81,7 +81,7 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 				resultMessage, serviceName);
 		StringWriter sw = new StringWriter();
 		XMLDocumentUtils.write(laszlo, sw, false);
-		System.err.println("Laszlo created: " + sw.toString());
+		logger.info("Laszlo created: " + sw.toString());
 		try {
 			out.write(sw.toString());
 		} catch (IOException e) {
@@ -103,12 +103,6 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 
 		Date created = new java.util.Date();
 		long start = created.getTime();
-
-		// System.err.println("in doPost() thread = " +
-		// Thread.currentThread().hashCode() + ", " + request.getContentType() +
-		// ",
-		// " + request.getContentLength() + ", " + request.getMethod() + ", " +
-		// request.getRemoteUser());
 		String sendEncoding = request.getHeader("Accept-Encoding");
 		String recvEncoding = request.getHeader("Content-Encoding");
 		boolean useSendCompression = ((sendEncoding != null) && (sendEncoding
@@ -155,25 +149,19 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 			// Check for certificate.
 			Object certObject = request
 					.getAttribute("javax.servlet.request.X509Certificate");
-
-			// Call Dispatcher with parsed TML document as argument.
-			// System.err.println("Dispatching now!");
 			Header h = in.getHeader();
-			// h.write(System.err);
-
 			Navajo outDoc = dis.handle(in, certObject,
 					new ClientInfo(request.getRemoteAddr(), "unknown",
 							recvEncoding, pT, useRecvCompression,
 							useSendCompression, request.getContentLength(),
 							created));
-			// outDoc.write(System.err);
 
 			if (h != null
 					&& outDoc != null
 					&& outDoc.getHeader() != null
 					&& !Dispatcher.isSpecialwebservice(in.getHeader()
 							.getRPCName())) {
-				System.err.println("LASZLOSERVLET: ("
+				logger.info("LASZLOSERVLET: ("
 						+ dis.getApplicationId()
 						+ "): "
 						+ new java.util.Date()

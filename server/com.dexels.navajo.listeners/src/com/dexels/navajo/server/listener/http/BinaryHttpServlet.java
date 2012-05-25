@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 
 /**
@@ -33,12 +36,13 @@ import com.dexels.navajo.document.types.Binary;
 
 public final class BinaryHttpServlet extends HttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1777790776513645459L;
 	private String binaryPath;
+	
 
+	private final static Logger logger = LoggerFactory
+			.getLogger(BinaryHttpServlet.class);
+	
 	public BinaryHttpServlet() {
 	}
 
@@ -46,9 +50,8 @@ public final class BinaryHttpServlet extends HttpServlet {
 	}
 
 	protected void finalize() {
-		System.err.println("In BinaryHttpServlet finalize(), thread = "
-				+ Thread.currentThread().hashCode());
-		// logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
+		 logger.info("In BinaryHttpServlet finalize(), thread = "
+					+ Thread.currentThread().hashCode());
 	}
 
 	public void init(ServletConfig config) throws ServletException {

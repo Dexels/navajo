@@ -223,13 +223,12 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 					if (!isAborted()) {
 						writeOutput(in, outDoc);
 					} else {
-						System.err.println("Aborted: Can't write output!");
+						logger.warn("Aborted: Can't write output!");
 					}
 				} catch (NavajoDoneException e) {
 					// temp catch, to be able to pre
 					continuationFound = true;
-					System.err
-							.println("Navajo done in service runner. Thread disconnected...");
+					logger.info("Navajo done in service runner. Thread disconnected...");
 					throw (e);
 				} finally {
 					if (!continuationFound) {
@@ -297,14 +296,6 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 													// I.E. IT DOES NOT
 													// WORK...EH.. PROBABLY..
 
-		// System.err.println("Encoding using: "+recvEncoding);
-
-		// //OutputStream output = response.getOutputStream();
-		// File temp = null;
-		// temp = File.createTempFile("navajo", ".xml");
-		// FileOutputStream fos = new FileOutputStream(temp);
-
-		// try {
 		if (recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {
 			response.setHeader("Content-Encoding", COMPRESS_JZLIB);
 			out = new ZOutputStream(response.getOutputStream(),
@@ -313,7 +304,7 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 			response.setHeader("Content-Encoding", COMPRESS_GZIP);
 			out = new java.util.zip.GZIPOutputStream(response.getOutputStream());
 		} else {
-			System.err.println("No content encoding specified: ("
+			logger.warn("No content encoding specified: ("
 					+ sendEncoding + "/" + recvEncoding + ")");
 			out = response.getOutputStream();
 		}
@@ -352,23 +343,10 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 		copyResource(out, fis);
 
 		fis.close();
-
-		// outDoc.write(out);
-
 		temp.delete();
-
-		// response.setContentLength("DIT IS HET RESULTAAT VAN DE WEBSERVICE.".length());
-
-		// out.write("DIT IS HET RESULTAAT VAN DE WEBSERVICE.");
-
-		// response.flushBuffer();
-		// out.close();
-		//
 
 		long writeFinishedAt = System.currentTimeMillis();
 		long writeTime = writeFinishedAt - finishedScriptAt;
-
-		// System.err.println("Finished write at: "+writeTime);
 		TmlScheduler ts = getTmlScheduler();
 		String threadStatus = null;
 		if (ts != null) {
@@ -414,18 +392,7 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 					+ ")" + " (" + sendEncoding + "/" + recvEncoding +
 
 					")");
-			// System.err.println("Thread name: "+Thread.currentThread().getName());
 		}
-		// out = null;
-		// } finally {
-		// temp.delete();
-		// }
-		// output.close();
-
-		// ServletOutputStream outputStream = response.getOutputStream();
-		// outputStream.flush();
-		// outputStream.close();
-		// }
 	}
 
 	@Override
@@ -434,7 +401,7 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 			this.startedAt = System.currentTimeMillis();
 			execute();
 		} catch (NavajoDoneException e) {
-			System.err.println("NavajoDoneException caught. This thread fired a continuation. Another thread will finish it in the future.");
+			logger.info("NavajoDoneException caught. This thread fired a continuation. Another thread will finish it in the future.");
 		} catch (Exception e) {
 			logger.error("Error: ", e);
 			try {

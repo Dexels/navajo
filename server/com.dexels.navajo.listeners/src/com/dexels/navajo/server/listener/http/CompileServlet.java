@@ -67,12 +67,5 @@ public class CompileServlet extends HttpServlet implements Servlet {
 		return null;
 	}
 
-	public static void main(String[] args) {
-		String aap = "aap/noot/mies";
-		String prefix = aap.substring(0, aap.lastIndexOf("/"));
-		String script = aap.substring(aap.lastIndexOf("/") + 1, aap.length());
-		System.err.println("aap: " + aap);
-		System.err.println("prefix: " + prefix);
-		System.err.println("script: " + script);
-	}
+
 }
