@@ -29,3 +29,5 @@ Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  com.dexels.navajo.core;bundle-version="2.9.4"
 Bundle-ClassPath: lib/batik-swing.jar,
  lib/batik-anim.jar
+Export-Package: com.dexels.navajo.tipi.swing.svg,
+ com.dexels.navajo.tipi.swing.svg.impl
