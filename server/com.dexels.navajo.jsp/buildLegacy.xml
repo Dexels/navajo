@@ -76,9 +76,9 @@
 	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
 	-->
 
-	<property name="dependencies" value="com.dexels.navajo.version,com.dexels.navajo.document,NavajoClient" />
+	<property name="dependencies" value="../../navajo/core/com.dexels.navajo.version,../../navajo/core/com.dexels.navajo.document,../../navajo/core/com.dexels.navajo.client" />
 
-	<import file="../com.dexels.navajo.version/ant/navajobuild.xml" />
+	<import file="../../../navajo/core/com.dexels.navajo.version/ant/navajobuild.xml" />
 
 	<target name="afterdeploy">
 	  	<copy file="${archive}" todir="../GeoJsp/WebContent/WEB-INF/lib"/>
