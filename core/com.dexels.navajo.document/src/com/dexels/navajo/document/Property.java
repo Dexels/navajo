@@ -530,4 +530,6 @@ public void removePropertyChangeListener(PropertyChangeListener p);
 
 public void forcePropertyChange();
 
+// for evaluating expressions
+public Object peekEvaluatedValue();
 }
