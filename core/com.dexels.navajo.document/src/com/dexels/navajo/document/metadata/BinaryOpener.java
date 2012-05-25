@@ -1,4 +1,4 @@
-package metadata;
+package com.dexels.navajo.document.metadata;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,8 +8,8 @@ import java.util.StringTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import metadata.FormatDescription;
 
+import com.dexels.navajo.document.metadata.FormatDescription;
 import com.dexels.navajo.document.types.Binary;
 
 

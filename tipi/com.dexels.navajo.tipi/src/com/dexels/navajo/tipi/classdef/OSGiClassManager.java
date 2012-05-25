@@ -8,7 +8,6 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
-import navajo.ExtensionDefinition;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -23,6 +22,7 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
+import com.dexels.navajo.version.ExtensionDefinition;
 
 public class OSGiClassManager extends BaseClassManager implements IClassManager, Serializable {
 

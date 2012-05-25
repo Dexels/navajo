@@ -18,14 +18,16 @@ Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.0",
  org.eclipse.debug.ui;bundle-version="3.6.1",
  org.eclipse.osgi.services;bundle-version="3.2.100",
  org.eclipse.ui.editors;bundle-version="3.6.1",
- com.dexels.navajo.document;bundle-version="1.0.0",
  org.eclipse.jdt.core;bundle-version="3.6.1",
  com.dexels.navajo.tipi.swt.client;bundle-version="1.0.0",
  org.eclipse.ui.forms;bundle-version="3.5.2",
  org.eclipse.core.resources,
  com.dexels.navajo.birt.push;bundle-version="1.0.1"
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.core.resources,
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.nanoimpl;version="2.2.0",
+ com.dexels.navajo.document.types;version="2.2.0",
+ org.eclipse.core.resources,
  org.eclipse.debug.core
 Export-Package: com.dexels.navajo.studio.eclipse,
  com.dexels.navajo.studio.script.plugin,

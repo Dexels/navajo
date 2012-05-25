@@ -6,17 +6,19 @@ Bundle-Version: 1.0.2.qualifier
 Bundle-Activator: swtclient.Version
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: org.eclipse.jface.viewers,
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.metadata;version="2.2.0",
+ com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.version,
+ org.eclipse.jface.viewers,
  org.eclipse.swt,
  org.eclipse.swt.events,
  org.eclipse.swt.layout,
  org.eclipse.swt.widgets,
  org.eclipse.ui.forms.widgets,
  org.osgi.framework;version="1.5.0"
-Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.1",
- org.eclipse.ui;bundle-version="3.6.1",
- org.eclipse.ui.forms;bundle-version="3.5.2",
- com.dexels.navajo.version;bundle-version="1.0.10"
+Require-Bundle: org.eclipse.ui;bundle-version="3.6.1",
+ org.eclipse.ui.forms;bundle-version="3.5.2"
 Export-Package: com.dexels.navajo.swtclient;
   uses:="org.eclipse.swt.graphics,
    org.eclipse.jface.viewers,

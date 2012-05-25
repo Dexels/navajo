@@ -10,7 +10,9 @@ Export-Package: com.dexels.navajo.adapter,
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.0",
- com.dexels.navajo.document;bundle-version="1.0.1",
- com.dexels.navajo.client;bundle-version="1.0.0",
- com.dexels.navajo.version;bundle-version="1.0.7"
-Import-Package: org.osgi.framework;version="1.5.0"
+ com.dexels.navajo.client;bundle-version="1.0.0"
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
+ com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.version,
+ org.osgi.framework;version="1.5.0"

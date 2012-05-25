@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.version.ExtensionDefinition;
 
 public class TestFunctionFactory extends FunctionFactoryInterface {
 

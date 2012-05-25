@@ -8,11 +8,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
+import com.dexels.navajo.version.ExtensionDefinition;
 
 public final class ClassManager extends BaseClassManager implements Serializable, IClassManager {
 	

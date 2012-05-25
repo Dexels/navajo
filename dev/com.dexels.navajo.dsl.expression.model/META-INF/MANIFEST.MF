@@ -12,8 +12,8 @@ Export-Package: com.dexels.navajo.dsl.model.expression,
  com.dexels.navajo.dsl.model.expression.util,
  model
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.ecore;visibility:=reexport,
- com.dexels.navajo.document;bundle-version="1.0.4"
+ org.eclipse.emf.ecore;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.dexels.navajo.dsl.expression.ExpressionActivator
-Import-Package: org.eclipse.core.resources
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ org.eclipse.core.resources

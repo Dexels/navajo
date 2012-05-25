@@ -4,12 +4,10 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.5.qualifier
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.document,
- com.dexels.navajo.client,
+Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.tipi,
  com.dexels.navajo.core,
  com.dexels.navajo.tipi.swing.deps,
- com.dexels.navajo.version,
  com.dexels.navajo.tipi.swing;bundle-version="[1.0.41,2.0.0)",
  com.dexels.navajo.tipi.swing.client;bundle-version="1.0.3"
 Bundle-ClassPath: .,
@@ -19,7 +17,10 @@ Export-Package: com.dexels.navajo.tipi.swingx,
  org.jdesktop.swingx.painter,
  tipi
 Bundle-Activator: tipi.TipiSwingXExtension
-Import-Package: javax.swing,
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.version,
+ javax.swing,
  javax.swing.border,
  javax.swing.colorchooser,
  javax.swing.event,

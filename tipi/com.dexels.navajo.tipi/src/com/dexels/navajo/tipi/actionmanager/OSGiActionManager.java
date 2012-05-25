@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.actionmanager;
 
 import java.util.Collection;
 
-import navajo.ExtensionDefinition;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -11,6 +10,7 @@ import org.osgi.framework.ServiceReference;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.actions.TipiActionFactory;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
+import com.dexels.navajo.version.ExtensionDefinition;
 
 public class OSGiActionManager extends TipiActionManager implements IActionManager {
 

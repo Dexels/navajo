@@ -11,7 +11,8 @@ Bundle-Localization: plugin
 Export-Package: com.dexels.navajo.oda.impl;version="1.0.0.qualifier"
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.datatools.connectivity.oda;bundle-version="[3.3.0,4.0.0)",
- org.eclipse.datatools.connectivity.oda.profile;bundle-version="[3.2.0,4.0.0)",
- com.dexels.navajo.document;bundle-version="1.0.4"
+ org.eclipse.datatools.connectivity.oda.profile;bundle-version="[3.2.0,4.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.types;version="2.2.0"

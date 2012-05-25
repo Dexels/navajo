@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -13,6 +12,7 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiStandaloneToplevelContainer;
 import com.dexels.navajo.tipi.components.echoimpl.EchoTipiContext;
 import com.dexels.navajo.tipi.components.echoimpl.TipiEchoInstance;
+import com.dexels.navajo.version.ExtensionDefinition;
 
 /**
  * <p>Title: </p>

@@ -113,13 +113,7 @@
 			Supply the file path as destination, service is not used, use an empty string.
 		</description>
    </tipiclass>
-   <tipiclass studio-icon="messagestore.gif"  implements="basecomponent"  module="abstract" class="TipiShadowFilterImpl" name="filter" package="com.dexels.navajo.tipi.connectors" type="connector" childcount="0" layoutmanager="false" addtocontainer="false">
-      <values>
-         <value direction="in" name="messagePath" type="string" />
-         <value direction="in" name="simpleFilter" type="string" />
-      </values>
-      <methods />
-   </tipiclass>
+
    <!--     -->
    <tipiclass implements="datacomponent,basecomponent"  studio-icon="messagestore.gif" module="abstract" class="TipiHeadlessFrame" name="headless" package="com.dexels.navajo.tipi.components.core" type="tipi"
       childcount="*" layoutmanager="false" addtocontainer="false">

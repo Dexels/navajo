@@ -7,16 +7,17 @@ Export-Package: com.dexels.navajo.tipi.components.rich,
  com.dexels.navajo.tipi.components.rich.ui,
  tipi
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.document,
- com.dexels.navajo.client;bundle-version="1.0.0",
+Require-Bundle: com.dexels.navajo.client;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.2",
  com.dexels.navajo.function;bundle-version="2.0.1",
- com.dexels.navajo.version,
  com.dexels.navajo.tipi.swing;bundle-version="[1.0.43,2.0.0)",
  com.dexels.navajo.tipi;bundle-version="[1.0.43,2.0.0)",
  com.dexels.navajo.tipi.swing.rich.client;bundle-version="1.0.1"
 Bundle-Activator: tipi.TipiRichExtension
-Import-Package: javax.swing,
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.version,
+ javax.swing,
  javax.swing.plaf,
  javax.swing.text,
  org.osgi.framework;version="1.5.0"

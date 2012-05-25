@@ -16,7 +16,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
-import metadata.BinaryOpener;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
@@ -44,6 +43,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.metadata.BinaryOpener;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.gface.date.DatePickerCombo;

@@ -11,11 +11,11 @@ import java.util.zip.ZipInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import metadata.FormatDescription;
 
 import com.dexels.navajo.adapters.NavajoSvgRenderAdapter;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.metadata.FormatDescription;
 import com.dexels.navajo.document.nanoimpl.XMLParseException;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.geo.impl.AbstractKMLMap;

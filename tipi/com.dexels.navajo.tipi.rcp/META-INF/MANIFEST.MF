@@ -8,8 +8,8 @@ Bundle-Vendor: Dexels
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.dexels.navajo.tipi;bundle-version="1.0.64",
- com.dexels.navajo.document;bundle-version="2.0.1",
- com.dexels.navajo.core;bundle-version="2.9.4",
- com.dexels.navajo.version;bundle-version="1.0.10"
+ com.dexels.navajo.core;bundle-version="2.9.4"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.version

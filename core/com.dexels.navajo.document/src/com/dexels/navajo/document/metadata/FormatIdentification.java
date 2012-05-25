@@ -1,4 +1,4 @@
-package metadata;
+package com.dexels.navajo.document.metadata;
 
 import java.io.*;
 import java.util.*;

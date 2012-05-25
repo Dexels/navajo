@@ -1,9 +1,9 @@
-package metadata;
+package com.dexels.navajo.document.metadata;
 
 import java.io.*;
 
 /**
- * Read {@link metadata.FormatDescription} objects from a semicolon-separated text file.
+ * Read {@link com.dexels.navajo.document.metadata.FormatDescription} objects from a semicolon-separated text file.
  * @author Marco Schmidt
  */
 public class FormatDescriptionReader implements Serializable

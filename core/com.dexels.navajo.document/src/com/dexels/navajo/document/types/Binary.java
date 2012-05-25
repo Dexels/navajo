@@ -4,13 +4,13 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import metadata.*;
 
 import org.dexels.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.metadata.*;
 import com.dexels.navajo.document.saximpl.qdxml.*;
 
 /**
@@ -377,9 +377,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
             }
             if ( f != null ) {
             	if(NavajoFactory.getInstance().isSandboxMode()) {
-                	currentFormatDescription = metadata.FormatIdentification.identify(inMemory);
+                	currentFormatDescription = com.dexels.navajo.document.metadata.FormatIdentification.identify(inMemory);
             	} else {
-                	currentFormatDescription = metadata.FormatIdentification.identify(f);
+                	currentFormatDescription = com.dexels.navajo.document.metadata.FormatIdentification.identify(f);
             	}
             }
 //            logger.info("Guessed: "+currentFormatDescription.getMimeType());

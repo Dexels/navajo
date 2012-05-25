@@ -49,24 +49,25 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet>
 		<servlet-name>Comet</servlet-name>
 		<servlet-class>com.dexels.navajo.server.listener.http.continuation.TmlContinuationServlet</servlet-class>
-        <init-param>
-            <param-name>schedulerClass</param-name>
-            <param-value>com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler</param-value>
-        </init-param>
-        <init-param>
-            <param-name>priorityPoolSize</param-name>
-            <param-value>15</param-value>
-        </init-param>
-        <init-param>
-            <param-name>normalPoolSize</param-name>
-            <param-value>20</param-value>
-        </init-param>
-        <init-param>
-            <param-name>systemPoolSize</param-name>
-            <param-value>2</param-value>
-        </init-param>
         <async-supported>true</async-supported>
 	</servlet>
+
+	<context-param>
+	    <param-name>schedulerClass</param-name>
+	    <param-value>com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler</param-value>
+	</context-param>
+	<context-param>
+	    <param-name>priorityPoolSize</param-name>
+	    <param-value>15</param-value>
+	</context-param>
+	<context-param>
+	    <param-name>normalPoolSize</param-name>
+	    <param-value>20</param-value>
+	</context-param>
+	<context-param>
+	    <param-name>systemPoolSize</param-name>
+	    <param-value>2</param-value>
+	</context-param>
 	
 	<servlet>
 		<servlet-name>NavaDoc</servlet-name>

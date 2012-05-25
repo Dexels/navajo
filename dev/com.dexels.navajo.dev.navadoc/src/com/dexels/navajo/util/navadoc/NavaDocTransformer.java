@@ -19,7 +19,6 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringBufferInputStream;
 import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -32,7 +31,6 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.w3c.dom.Document;
@@ -40,9 +38,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-//import com.dexels.navajo.server.listener.soap.wsdl.Generate;
 import com.dexels.navajo.util.Generate;
 import com.dexels.navajo.util.navadoc.config.DocumentSet;
 
