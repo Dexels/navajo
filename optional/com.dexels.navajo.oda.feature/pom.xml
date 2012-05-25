@@ -11,7 +11,7 @@
 		<groupId>com.dexels.navajo.core</groupId>
 		<artifactId>com.dexels.navajo.super</artifactId>
 		<version>1.0.0</version>
-		<relativePath></relativePath>
+        <relativePath>../../setup/com.dexels.repository</relativePath>
 	</parent>
 	
 
