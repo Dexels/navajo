@@ -124,7 +124,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
   public final Set<Access> accessSet = Collections.newSetFromMap(new ConcurrentHashMap<Access,Boolean>());
 
   public  boolean useAuthorisation = true;
-  private  final String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
   public static java.util.Date startTime = new java.util.Date();
 
   public  long requestCount = 0;
