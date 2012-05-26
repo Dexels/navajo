@@ -5,9 +5,9 @@ import java.io.IOException;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContinuationPending;
 
-import com.dexels.navajo.listeners.SchedulerRegistry;
 import com.dexels.navajo.rhino.ContinuationRunnable;
 import com.dexels.navajo.rhino.ScriptEnvironment;
+import com.dexels.navajo.script.api.SchedulerRegistry;
 import com.dexels.navajo.server.Access;
 
 public class ContinuationMapUtils {

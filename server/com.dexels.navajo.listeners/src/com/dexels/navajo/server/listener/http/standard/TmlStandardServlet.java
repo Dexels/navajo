@@ -9,10 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.listeners.TmlRunnable;
-import com.dexels.navajo.server.listener.http.SchedulableServlet;
-import com.dexels.navajo.server.listener.http.SchedulerTools;
-import com.dexels.navajo.server.listener.http.TmlScheduler;
+import com.dexels.navajo.script.api.TmlRunnable;
+import com.dexels.navajo.script.api.TmlScheduler;
 
 public class TmlStandardServlet extends HttpServlet {
 

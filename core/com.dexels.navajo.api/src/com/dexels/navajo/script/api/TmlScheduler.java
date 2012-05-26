@@ -1,10 +1,7 @@
-package com.dexels.navajo.server.listener.http;
+package com.dexels.navajo.script.api;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-
-import com.dexels.navajo.script.api.Scheduler;
 
 
 /**

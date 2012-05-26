@@ -30,8 +30,8 @@ import java.util.Hashtable;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
-import com.dexels.navajo.listeners.SchedulerRegistry;
-import com.dexels.navajo.server.listener.http.TmlScheduler;
+import com.dexels.navajo.script.api.SchedulerRegistry;
+import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.listener.http.schedulers.DummyScheduler;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {

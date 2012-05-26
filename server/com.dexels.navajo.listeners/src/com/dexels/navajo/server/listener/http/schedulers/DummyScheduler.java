@@ -1,13 +1,12 @@
 package com.dexels.navajo.server.listener.http.schedulers;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.listeners.RequestQueue;
-import com.dexels.navajo.listeners.TmlRunnable;
-import com.dexels.navajo.server.listener.http.TmlScheduler;
+import com.dexels.navajo.script.api.RequestQueue;
+import com.dexels.navajo.script.api.TmlRunnable;
+import com.dexels.navajo.script.api.TmlScheduler;
 
 public class DummyScheduler implements TmlScheduler {
 

@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -23,9 +27,10 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.listeners.NavajoDoneException;
-import com.dexels.navajo.listeners.RequestQueue;
-import com.dexels.navajo.listeners.TmlRunnable;
+import com.dexels.navajo.script.api.NavajoDoneException;
+import com.dexels.navajo.script.api.RequestQueue;
+import com.dexels.navajo.script.api.TmlRunnable;
+import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.ClientInfo;
 import com.dexels.navajo.server.Dispatcher;
@@ -33,7 +38,6 @@ import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.FastDispatcher;
 import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.listener.http.AsyncRequest;
-import com.dexels.navajo.server.listener.http.TmlScheduler;
 import com.jcraft.jzlib.JZlib;
 import com.jcraft.jzlib.ZInputStream;
 import com.jcraft.jzlib.ZOutputStream;
@@ -50,6 +54,8 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 	
 	protected HttpServletResponse response;
 
+	private final Map<String,Object> attributes = new HashMap<String,Object>();
+	
 	public void setResponse(HttpServletResponse response) {
 		this.response = response;
 	}
@@ -456,12 +462,19 @@ public abstract class BaseServiceRunner extends BaseInMemoryRequest implements
 		return isAborted;
 	}
 
-	public Access getAccess() {
-		return access;
+	@Override
+	public Object getAttribute(String name) {
+		return attributes.get(name);
 	}
 
-	public void setAccess(Access access) {
-		this.access = access;
+	@Override
+	public void setAttribute(String name, Object value) {
+		attributes.put(name, value);
+	}
+
+	@Override
+	public Set<String> getAttributeNames() {
+		return Collections.unmodifiableSet(attributes.keySet());
 	}
 
 }

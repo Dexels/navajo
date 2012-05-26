@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.listeners.TmlRunnable;
+import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.listener.http.impl.BaseServiceRunner;
 
 public class TmlStandardRunner extends BaseServiceRunner implements TmlRunnable {
@@ -73,9 +74,5 @@ public class TmlStandardRunner extends BaseServiceRunner implements TmlRunnable 
 
 	}
 
-	@Override
-	public Object getAttribute(String name) {
-		return attributes.get(name);
-	}
 
 }

@@ -3,7 +3,7 @@ package com.dexels.navajo.server.listener.http;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.dexels.navajo.listeners.TmlRunnable;
+import com.dexels.navajo.script.api.TmlRunnable;
 
 public interface AsyncRequest {
 

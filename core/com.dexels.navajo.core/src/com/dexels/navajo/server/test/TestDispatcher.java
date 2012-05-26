@@ -8,7 +8,7 @@ import java.util.Set;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.listeners.TmlRunnable;
+import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.AfterWebServiceEmitter;
 import com.dexels.navajo.server.ClientInfo;

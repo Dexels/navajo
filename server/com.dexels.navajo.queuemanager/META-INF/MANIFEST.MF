@@ -10,6 +10,7 @@ Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.core;bundle-version="2.9.2",
  com.dexels.navajo.listeners;bundle-version="3.1.2"
 Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.script.api,
  com.dexels.navajo.version,
  javax.script,
  javax.servlet,

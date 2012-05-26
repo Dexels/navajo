@@ -1,30 +1,55 @@
 package com.dexels.navajo.adapter;
 
-import com.dexels.navajo.listeners.RequestQueue;
-import com.dexels.navajo.listeners.Scheduler;
-import com.dexels.navajo.listeners.SchedulerRegistry;
-import com.dexels.navajo.listeners.TmlRunnable;
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
-import com.dexels.navajo.server.*;
-import com.dexels.navajo.server.resource.ResourceManager;
-import com.dexels.navajo.util.AuditLog;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.adapter.navajomap.MessageMap;
-import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
-import com.dexels.navajo.client.*;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
-import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.adapter.navajomap.MessageMap;
+import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
+import com.dexels.navajo.client.ClientInterface;
+import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.mapping.AsyncMappable;
+import com.dexels.navajo.mapping.DependentResource;
+import com.dexels.navajo.mapping.GenericDependentResource;
+import com.dexels.navajo.mapping.HasDependentResources;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.mapping.MappingUtils;
+import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
+import com.dexels.navajo.script.api.RequestQueue;
+import com.dexels.navajo.script.api.Scheduler;
+import com.dexels.navajo.script.api.SchedulerRegistry;
+import com.dexels.navajo.script.api.TmlRunnable;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.AuthorizationException;
+import com.dexels.navajo.server.ConditionErrorException;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.NavajoConfigInterface;
+import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.resource.ResourceManager;
+import com.dexels.navajo.util.AuditLog;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -101,7 +126,8 @@ public boolean exists;
   protected Access access;
   
   private RequestQueue myRequestQueue;
-  
+  private final Map<String,Object> attributes = new HashMap<String,Object>();
+
   protected NavajoConfigInterface config;
   protected Navajo inMessage;
   protected Message msgPointer;
@@ -1400,16 +1426,7 @@ public String getUrl() {
 }
 
 
-public Access getAccess() {
-	// TODO Auto-generated method stub
-	return access;
-}
 
-
-public void setAccess(Access access) {
-	// TODO Auto-generated method stub
-	
-}
 
 
 public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException, UnsupportedEncodingException,
@@ -1430,7 +1447,17 @@ public void setRequestQueue(RequestQueue myQueue) {
 
 @Override
 public Object getAttribute(String name) {
-	// TODO Auto-generated method stub
-	return null;
+	return attributes.get(name);
 }
+
+@Override
+public void setAttribute(String name, Object value) {
+	attributes.put(name, value);
+}
+
+@Override
+public Set<String> getAttributeNames() {
+	return Collections.unmodifiableSet(attributes.keySet());
+}
+
 }

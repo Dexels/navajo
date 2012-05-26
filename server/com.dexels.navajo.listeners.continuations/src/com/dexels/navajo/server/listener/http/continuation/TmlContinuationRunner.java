@@ -17,13 +17,13 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.listeners.NavajoDoneException;
-import com.dexels.navajo.listeners.TmlRunnable;
+import com.dexels.navajo.script.api.NavajoDoneException;
+import com.dexels.navajo.script.api.TmlRunnable;
+import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.ClientInfo;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.FatalException;
-import com.dexels.navajo.server.listener.http.TmlScheduler;
 import com.dexels.navajo.server.listener.http.standard.TmlStandardRunner;
 import com.jcraft.jzlib.JZlib;
 import com.jcraft.jzlib.ZOutputStream;

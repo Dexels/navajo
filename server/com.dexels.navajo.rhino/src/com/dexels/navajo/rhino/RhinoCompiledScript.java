@@ -2,8 +2,8 @@ package com.dexels.navajo.rhino;
 
 import java.io.File;
 
-import com.dexels.navajo.listeners.NavajoDoneException;
 import com.dexels.navajo.mapping.CompiledScript;
+import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.server.Access;
 
 public class RhinoCompiledScript extends CompiledScript {

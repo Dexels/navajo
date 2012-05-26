@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContinuationPending;
@@ -16,9 +20,9 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.listeners.NavajoDoneException;
-import com.dexels.navajo.listeners.RequestQueue;
-import com.dexels.navajo.listeners.TmlRunnable;
+import com.dexels.navajo.script.api.NavajoDoneException;
+import com.dexels.navajo.script.api.RequestQueue;
+import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 
@@ -30,7 +34,8 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 	// private long scheduledAt;
 	private Access access;
 	private RequestQueue requestQueue;
-	
+	private final Map<String,Object> attributes = new HashMap<String,Object>();
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(ContinuationRunnable.class);
 	
@@ -120,6 +125,10 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 		}
 	}
 
+	private Access getAccess() {
+		return (Access) getAttribute("access");
+	}
+
 	public void continueScript(final Object functionResult)
 			throws ContinuationPending, NavajoDoneException {
 		Context context = Context.enter();
@@ -190,16 +199,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 
 	}
 
-	@Override
-	public Access getAccess() {
-		return access;
-	}
 
-	@Override
-	public void setAccess(Access access) {
-		this.access = access;
-
-	}
 
 	public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException,
 			FileNotFoundException, UnsupportedEncodingException,
@@ -220,10 +220,23 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 
 	}
 
-	@Override
-	public Object getAttribute(String name) {
-		// TODO not implemented
-		return null;
-	}
+@Override
+public Object getAttribute(String name) {
+	return attributes.get(name);
+}
+
+@Override
+public void setAttribute(String name, Object value) {
+	attributes.put(name, value);
+}
+
+@Override
+public Set<String> getAttributeNames() {
+	return Collections.unmodifiableSet(attributes.keySet());
+}
+
+public void setAccess(Access a) {
+	setAttribute("access", a);
+}
 
 }
