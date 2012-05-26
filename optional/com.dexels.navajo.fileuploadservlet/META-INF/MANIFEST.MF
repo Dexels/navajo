@@ -15,4 +15,3 @@ Import-Package: com.dexels.navajo.client,
  org.apache.commons.fileupload.servlet;version="1.2.0",
  org.osgi.framework;version="1.5.0"
 Bundle-ActivationPolicy: lazy
-Require-Bundle: com.dexels.navajo.client;bundle-version="3.1.1"
