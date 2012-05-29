@@ -17,4 +17,4 @@ Import-Package: com.dexels.navajo.client,
  javax.servlet;version="3.0.0",
  javax.servlet.http;version="3.0.0",
  org.slf4j;version="1.6.1"
-Require-Bundle: com.dexels.navajo.script.api;bundle-version="1.0.0"
+Require-Bundle: com.dexels.navajo.api;bundle-version="1.0.0"

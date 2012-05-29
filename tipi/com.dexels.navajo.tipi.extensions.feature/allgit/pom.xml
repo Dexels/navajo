@@ -19,7 +19,7 @@
 		<module>../../com.dexels.navajo.tipi.rcp.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.rss.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.ruby.feature/allgit</module>
-		<module>../../com.dexels.navajo.tipi.jcr.feature/allcvs</module>
+		<module>../../com.dexels.navajo.tipi.jcr.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.swing.charting.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.swing.cobra.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.swing.docking.feature/allgit</module>
@@ -37,7 +37,7 @@
                 <groupId>com.dexels.navajo.core</groupId>
                 <artifactId>com.dexels.navajo.super</artifactId>
                 <version>1.0.0</version>
-                <relativePath></relativePath>
+                <relativePath>../../../../navajo/setup/com.dexels.repository</relativePath>
         </parent>
 
 	
