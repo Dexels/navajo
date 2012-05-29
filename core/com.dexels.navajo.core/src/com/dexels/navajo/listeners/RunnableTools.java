@@ -3,9 +3,13 @@ package com.dexels.navajo.listeners;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.script.api.RequestQueue;
+import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.Access;
 
 public class RunnableTools {
@@ -71,13 +75,13 @@ public class RunnableTools {
 				return target.getUrl();
 			}
 
-			public Access getAccess() {
-				return target.getAccess();
-			}
-
-			public void setAccess(Access access) {
-				target.setAccess(access);
-			}
+//			public Access getAccess() {
+//				return target.getAccess();
+//			}
+//
+//			public void setAccess(Access access) {
+//				target.setAccess(access);
+//			}
 
 			public void setResponseNavajo(Navajo n) {
 				target.setResponseNavajo(n);
@@ -92,6 +96,16 @@ public class RunnableTools {
 			@Override
 			public Object getAttribute(String name) {
 				return target.getAttribute(name);
+			}
+
+			@Override
+			public void setAttribute(String name, Object value) {
+				target.setAttribute(name, value);
+			}
+
+			@Override
+			public Set<String> getAttributeNames() {
+				return Collections.unmodifiableSet(target.getAttributeNames());
 			}
 
 			
