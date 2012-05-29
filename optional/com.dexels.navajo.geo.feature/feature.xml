@@ -31,7 +31,7 @@
          unpack="false"/>
 
    <plugin
-         id="com.navajo.tools.geo"
+         id="com.dexels.navajo.geo"
          download-size="0"
          install-size="0"
          version="0.0.0"

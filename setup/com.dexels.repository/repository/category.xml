@@ -9,9 +9,6 @@
    <feature url="features/com.dexels.navajo.twitter.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.twitter.feature" version="1.0.0.qualifier">
       <category name="Navajo Optional Packages"/>
    </feature>
-   <feature url="features/com.dexels.navajo.geo.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.geo.feature" version="1.0.0.qualifier">
-      <category name="Navajo Optional Packages"/>
-   </feature>
    <feature url="features/com.dexels.navajo.enterprise.feature_1.0.3.qualifier.jar" id="com.dexels.navajo.enterprise.feature" version="1.0.3.qualifier">
       <category name="Navajo Enterprise"/>
    </feature>
@@ -84,17 +81,32 @@
    <feature url="features/com.dexels.navajo.tipi.dev.feature_0.1.0.qualifier.jar" id="com.dexels.navajo.tipi.dev.feature" version="0.1.0.qualifier">
       <category name="Tipi SDK"/>
    </feature>
-   <feature url="features/com.dexels.navajo.language.feature_1.0.2.qualifier.jar" id="com.dexels.navajo.language.feature" version="1.0.2.qualifier">
-      <category name="Navajo SDK"/>
-   </feature>
    <feature url="features/com.dexels.navajo.wsdl.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.wsdl.feature" version="1.0.0.qualifier">
       <category name="Navajo Enterprise"/>
    </feature>
-   <feature url="features/com.dexels.navajo.test.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.test.feature" version="1.0.0.qualifier">
-      <category name="Navajo SDK"/>
-   </feature>
    <feature url="features/com.dexels.navajo.other.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.other.feature" version="1.0.0.qualifier">
       <category name="Navajo Optional Packages"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.enterprise.other.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.enterprise.other.feature" version="1.0.0.qualifier">
+      <category name="Navajo Enterprise"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.tipi.css.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.tipi.css.feature" version="1.0.0.qualifier">
+      <category name="TipiOptional"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.tipi.extensions.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.tipi.extensions.feature" version="1.0.0.qualifier">
+      <category name="TipiOptional"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.tipi.jcr.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.tipi.jcr.feature" version="1.0.0.qualifier">
+      <category name="TipiOptional"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.tipi.jogl.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.tipi.jogl.feature" version="1.0.0.qualifier">
+      <category name="TipiOptional"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.tipi.rcp.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.tipi.rcp.feature" version="1.0.0.qualifier">
+      <category name="Tipi"/>
+   </feature>
+   <feature url="features/com.dexels.navajo.tipi.swing.rdf.feature_1.0.0.qualifier.jar" id="com.dexels.navajo.tipi.swing.rdf.feature" version="1.0.0.qualifier">
+      <category name="TipiOptional"/>
    </feature>
    <category-def name="Navajo Core" label="NavajoCore"/>
    <category-def name="Navajo SDK" label="Navajo SDK"/>

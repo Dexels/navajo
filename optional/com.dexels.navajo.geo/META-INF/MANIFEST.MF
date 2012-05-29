@@ -1,5 +1,5 @@
 Bundle-Name: Sportlink Geo Tools
-Bundle-SymbolicName: com.navajo.tools.geo
+Bundle-SymbolicName: com.dexels.navajo.geo
 Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.1.qualifier
