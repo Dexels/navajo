@@ -10,7 +10,6 @@ Require-Bundle: com.dexels.navajo.function;bundle-version="2.0.6",
 Bundle-ActivationPolicy: lazy
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
- com.dexels.navajo.document.base;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.version,
  org.osgi.framework;version="1.5.0",
