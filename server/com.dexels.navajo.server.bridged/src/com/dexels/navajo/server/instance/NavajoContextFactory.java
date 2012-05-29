@@ -20,7 +20,11 @@ import org.osgi.service.http.HttpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.server.LocalClientDispatcherWrapper;
 import com.dexels.navajo.server.api.NavajoServerContext;
 import com.dexels.navajo.server.api.impl.NavajoServerInstance;
 import com.dexels.navajo.server.listener.NavajoContextListener;
@@ -132,36 +136,40 @@ public class NavajoContextFactory implements ManagedServiceFactory {
 	
 	private NavajoServerContext createContext(HttpService httpService, String contextPath, String servletPath, String installPath) {
 		try {
-			httpContext = httpService.createDefaultHttpContext();
-			nqlServlet = new NqlServlet();
-			httpService.registerServlet(NQL_SERVLET_ALIAS, nqlServlet, null, httpContext);
-			legacyServlet = new TmlHttpServlet();
-			httpService.registerServlet(LEGACY_SERVLET_ALIAS, legacyServlet, null, httpContext);
-			
-			Dictionary<String, Object> wb = new Hashtable<String, Object>();
-			wb.put("schedulerClass","com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler");
-			wb.put("priorityPoolSize", "15");
-			wb.put("normalPoolSize", "20");
-			wb.put("systemPoolSize", "2");
+//			httpContext = httpService.createDefaultHttpContext();
+//			nqlServlet = new NqlServlet();
+//			httpService.registerServlet(NQL_SERVLET_ALIAS, nqlServlet, null, httpContext);
+//			legacyServlet = new TmlHttpServlet();
+//			httpService.registerServlet(LEGACY_SERVLET_ALIAS, legacyServlet, null, httpContext);
+//			
+//			Dictionary<String, Object> wb = new Hashtable<String, Object>();
+//			wb.put("schedulerClass","com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler");
+//			wb.put("priorityPoolSize", "15");
+//			wb.put("normalPoolSize", "20");
+//			wb.put("systemPoolSize", "2");
 //			TmlContinuationServlet tcs = new TmlContinuationServlet();
 //			httpService.registerServlet(SERVLET_ALIAS, tcs, wb, httpContext);
 		
 			
 			NavajoContextListener ncl = new NavajoContextListener();
-			ncl.init(nqlServlet.getServletContext(),contextPath,servletPath,installPath);
+			ncl.init(contextPath,servletPath,installPath);
 	
-//			servletContext = legacyServlet.getServletContext();
-//			String contextPath = servletContext.getContextPath();
-//			String servletContextPath = servletContext.getRealPath("");
-//			String installationPath = NavajoContextListener.getInstallationPath(contextPath);
 
 			NavajoServerContext nsc = NavajoContextListener.initializeServletContext(contextPath,servletPath,installPath);
 //			installationPath = NavajoContextListener.getInstallationPath(servletContext, null);
+
+//			LocalClientDispatcherWrapper lcdw = new LocalClientDispatcherWrapper(nsc.getDispatcher());
+//			Dictionary<String, Object> wb = new Hashtable<String, Object>();
+//			this.bundleContext.registerService(LocalClient.class.getName(), lcdw, wb);
 			logger.info(" OSGi HttpService started. Somebody should notice.");
+			
+			
+//			Navajo navajo = NavajoFactory.getInstance().createNavajo();
+//			navajo.addHeader(NavajoFactory.getInstance().createHeader(navajo, "club/InitUpdateClub", "unknown", "unknown", -1));
+//			Navajo result  = lcdw.call(navajo);
+//			result.write(System.err);
 			return nsc;
 			
-		} catch (ServletException e) {
-			logger.error("Problem instantiating server instance",e);
 		} catch (Throwable e) {
 			logger.error("Problem instantiating server instance",e);
 		}
