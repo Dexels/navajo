@@ -106,15 +106,16 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 
 	@Override
 	public int flushQueue() {
-		ArrayList list = new ArrayList();
+		List<Runnable> list = new ArrayList<Runnable>();
 		int size = tpe.getQueue().drainTo(list);
 		System.err.println("Drained " + size + " items. List size: " + list.size());
 		return size;
 	}
 
+	// Should make a conversion or something?
 	@Override
 	public List<TmlRunnable> getQueuedRequests() {
-		ArrayList runnable = new ArrayList();
+		List<TmlRunnable> runnable = new ArrayList<TmlRunnable>();
 		return runnable;
 //		Iterator iter = tpe.getQueue().iterator();
 //	    while ( iter.hasNext() ) {
