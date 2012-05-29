@@ -15,9 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.DispatcherInterface;
-
 public abstract class BaseNavajoServlet extends HttpServlet {
 
 	/**
@@ -37,9 +34,10 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseNavajoServlet.class);
-	protected static DispatcherInterface initDispatcher() {
-		return DispatcherFactory.getInstance();
-	}
+
+//	protected static DispatcherInterface initDispatcher() {
+//		return DispatcherFactory.getInstance();
+//	}
 
 	protected final void dumHttp(HttpServletRequest request, long index,
 			File dir) {

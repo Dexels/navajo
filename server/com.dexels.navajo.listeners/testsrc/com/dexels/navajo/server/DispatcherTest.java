@@ -1,7 +1,8 @@
 package com.dexels.navajo.server;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Assert;
 import org.junit.Before;

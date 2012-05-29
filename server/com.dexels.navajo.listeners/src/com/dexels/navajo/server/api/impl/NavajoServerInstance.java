@@ -3,6 +3,7 @@ package com.dexels.navajo.server.api.impl;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.api.NavajoServerContext;
 
+
 public class NavajoServerInstance implements NavajoServerContext {
 
 	private final String installationPath;

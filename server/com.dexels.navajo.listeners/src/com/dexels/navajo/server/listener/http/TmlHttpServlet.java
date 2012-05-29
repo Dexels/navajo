@@ -31,11 +31,11 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.server.ClientInfo;
+import com.dexels.navajo.script.api.ClientInfo;
+import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
-import com.dexels.navajo.server.FatalException;
 import com.jcraft.jzlib.JZlib;
 import com.jcraft.jzlib.ZInputStream;
 import com.jcraft.jzlib.ZOutputStream;
@@ -240,9 +240,8 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 
 		Navajo tbMessage = null;
 		DispatcherInterface dis = null;
-
+		dis = DispatcherFactory.getInstance();
 		try {
-			dis = initDispatcher();
 
 			tbMessage = constructFromRequest(request);
 			Header header = constructHeader(tbMessage, service, username,
@@ -429,7 +428,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 				throw new ServletException("Empty Navajo header.");
 			}
 
-			dis = initDispatcher();
+//			dis = initDispatcher();
 			if (dis == null) {
 				System.err
 						.println("SERIOUS: No dispatcher found. The navajo context did not initialize properly, check the logs to find out why!");
