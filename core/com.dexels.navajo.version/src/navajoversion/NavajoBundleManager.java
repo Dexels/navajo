@@ -1,4 +1,4 @@
-package com.dexels.navajo.version;
+package navajoversion;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -8,16 +8,15 @@ import java.util.Map;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.BundleListener;
 import org.osgi.framework.FrameworkEvent;
-import org.osgi.framework.FrameworkListener;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.version.AbstractVersion;
+import com.dexels.navajo.version.INavajoBundleManager;
+import com.dexels.navajo.version.NavajoBundleManagerFactory;
 
 public class NavajoBundleManager extends AbstractVersion implements INavajoBundleManager {
 
@@ -37,22 +36,6 @@ public class NavajoBundleManager extends AbstractVersion implements INavajoBundl
 		myBundleContext = bc;
 		instance = this;
 		logger.debug("Starting Dexels version manager");
-		bc.addBundleListener(new BundleListener() {
-			
-			@Override
-			public void bundleChanged(BundleEvent event) {
-//				logger.info("Bundle event: "+event.getType()+" bundle: "+event.getBundle().getSymbolicName()+" id: "+event.getBundle().getBundleId());
-			}
-		}
-		);
-		bc.addFrameworkListener(new FrameworkListener() {
-			
-			@Override
-			public void frameworkEvent(FrameworkEvent event) {
-//				logger.info("frameworkEvent: "+displayFrameworkEventType(event.getType())+" bundle: "+event.getBundle().getSymbolicName()+" id: "+event.getBundle().getBundleId());
-			
-			}
-		});
 		// TODO Service should be deregistered
 		NavajoBundleManagerFactory.initialize(bc);
 		registration = bc.registerService(INavajoBundleManager.class.getName(), this, null);
