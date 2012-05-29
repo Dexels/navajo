@@ -2,10 +2,13 @@ package com.dexels.navajo.adapter.messagemap;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
+import com.dexels.navajo.adapter.messagemap.PropertyAggregate.Aggregate;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -17,11 +20,86 @@ public class ResultMessage implements Mappable {
 	private Message msg;
 	private Message parentMsg;
 	private Navajo myNavajo;
+	private Map<String,PropertyAggregate> aggregates = null;
+	private boolean remove = false;
+	
+	public boolean isRemove() {
+		return remove;
+	}
+
+	public void setRemove(boolean remove) {
+		this.remove = remove;
+	}
+
 	public Message getMsg() {
 		return msg;
 	}
 
 	private String suppressProperties = null;
+	
+	public void setAggregates(Map<String,PropertyAggregate> agg) {
+		this.aggregates = agg;
+	}
+	
+	private Aggregate getAggregate(String name) {
+		PropertyAggregate propAg = aggregates.get(name);
+		if ( propAg != null ) {
+			List<Property> properties = msg.getAllProperties();
+			Map<String,Object> group = new TreeMap<String,Object>();
+			for ( int i = 0; i < msg.getAllProperties().size(); i++ ) {
+				group.put(properties.get(i).getName(), properties.get(i).getTypedValue());
+			}
+			Aggregate agg = propAg.getAggregate(group);
+			return agg;
+		} else {
+			return null;
+		}
+	}
+	
+	public int getCount(String name) {
+		Aggregate agg = getAggregate(name);
+		if ( agg != null ) {
+			return agg.getCount();
+		} else {
+			return 0;
+		}
+	}
+	
+	public double getAvg(String name) {
+		Aggregate agg = getAggregate(name);
+		if ( agg != null ) {
+			return agg.getAvg();
+		} else {
+			return 0;
+		}
+	}
+	
+	public double getSum(String name) {
+		Aggregate agg = getAggregate(name);
+		if ( agg != null ) {
+			return agg.getSum();
+		} else {
+			return 0;
+		}
+	}
+	
+	public Object getMin(String name) {
+		Aggregate agg = getAggregate(name);
+		if ( agg != null ) {
+			return agg.getMin();
+		} else {
+			return null;
+		}
+	}
+	
+	public Object getMax(String name) {
+		Aggregate agg = getAggregate(name);
+		if ( agg != null ) {
+			return agg.getMax();
+		} else {
+			return null;
+		}
+	}
 	
 	public void setMessage(Message m, String suppressProperties) {
 		this.msg = m;
