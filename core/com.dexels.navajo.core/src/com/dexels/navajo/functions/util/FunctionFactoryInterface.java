@@ -1,10 +1,10 @@
 package com.dexels.navajo.functions.util;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,9 @@ import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.version.ExtensionDefinition;
 
-public abstract class FunctionFactoryInterface {
+public abstract class FunctionFactoryInterface implements Serializable {
+
+	private static final long serialVersionUID = 6512562097288200226L;
 
 	private Map<String, FunctionDefinition> defaultConfig = null;
 //	protected final HashMap<String, String> defaultAdapterConfig = new HashMap<String, String>();

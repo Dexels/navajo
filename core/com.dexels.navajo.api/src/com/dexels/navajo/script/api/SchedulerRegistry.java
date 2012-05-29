@@ -1,6 +1,4 @@
-package com.dexels.navajo.listeners;
-
-import com.dexels.navajo.script.api.Scheduler;
+package com.dexels.navajo.script.api;
 
 /**
  * Class that is used to register the primary service scheduler.

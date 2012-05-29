@@ -67,6 +67,8 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.RemoteAsyncAnswer;
 import com.dexels.navajo.mapping.RemoteAsyncRequest;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
+import com.dexels.navajo.script.api.ClientInfo;
+import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;

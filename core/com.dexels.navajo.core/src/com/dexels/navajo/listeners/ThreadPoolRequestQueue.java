@@ -7,6 +7,10 @@ import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import com.dexels.navajo.script.api.RequestQueue;
+import com.dexels.navajo.script.api.Scheduler;
+import com.dexels.navajo.script.api.TmlRunnable;
+
 public class ThreadPoolRequestQueue extends RequestQueue {
 
 	private final ThreadPoolExecutor tpe;
