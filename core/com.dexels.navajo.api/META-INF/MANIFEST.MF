@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo API package
-Bundle-SymbolicName: com.dexels.navajo.script.api
+Bundle-SymbolicName: com.dexels.navajo.api
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
