@@ -121,7 +121,6 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.version.NavajoBundleManager;
 
 
 public final class ASTFunctionNode extends SimpleNode {

@@ -6,9 +6,7 @@ Bundle-Version: 1.1.0.qualifier
 Export-Package: com.dexels.navajo.client.async,
  navajoasyncclient
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.document,
- com.dexels.navajo.core;bundle-version="2.9.2",
- com.dexels.navajo.version
+Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.2"
 Bundle-ClassPath: lib/jetty-client-7.0.2.v20100331.jar,
  lib/jetty-http-7.0.2.v20100331.jar,
  lib/jetty-io-7.0.2.v20100331.jar,
@@ -18,6 +16,8 @@ Bundle-Activator: navajoasyncclient.Version
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.logger,
  com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.script.api,
+ com.dexels.navajo.version,
  org.eclipse.jetty.client;version="7.4.1.v20110513",
  org.eclipse.jetty.client.security;version="7.4.1.v20110513",
  org.eclipse.jetty.http;version="7.4.1.v20110513",

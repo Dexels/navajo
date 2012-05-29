@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import navajo.Version;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -15,11 +16,10 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.version.ExtensionDefinition;
-import com.dexels.navajo.version.NavajoBundleManager;
 
 public class OsgiFunctionFactory extends JarFunctionFactory {
 
-	
+	private static final long serialVersionUID = 7044347052933946219L;
 	private final static Logger logger = LoggerFactory
 			.getLogger(OsgiFunctionFactory.class);
 
@@ -38,7 +38,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	@Override
 	public List<XMLElement> getAllFunctionElements(String interfaceClass, String propertyKey)  {
 		List<XMLElement> result = new ArrayList<XMLElement>();
-		BundleContext context = NavajoBundleManager.getInstance().getBundleContext();
+		BundleContext context = Version.getDefaultBundleContext();
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass, null);
 			if(refs==null) {
@@ -63,7 +63,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	@Override
 	public List<XMLElement> getAllAdapterElements(String interfaceClass, String propertyKey)  {
 		List<XMLElement> result = new ArrayList<XMLElement>();
-		BundleContext context = NavajoBundleManager.getInstance().getBundleContext();
+		BundleContext context = Version.getDefaultBundleContext();
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass, null);
 			if(refs==null) {
@@ -87,7 +87,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
-		BundleContext context = NavajoBundleManager.getInstance().getBundleContext();
+		BundleContext context = navajo.Version.getDefaultBundleContext();
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass.getName(), "("+serviceKey+"="+name+")");
 			if(refs==null) {

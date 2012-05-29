@@ -14,16 +14,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.listeners.RequestQueue;
-import com.dexels.navajo.listeners.ThreadPoolRequestQueue;
-import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.queuemanager.NavajoSchedulingException;
 import com.dexels.navajo.queuemanager.QueueManager;
 import com.dexels.navajo.queuemanager.api.InputContext;
 import com.dexels.navajo.queuemanager.api.QueueContext;
+import com.dexels.navajo.script.api.RequestQueue;
+import com.dexels.navajo.script.api.ThreadPoolRequestQueue;
+import com.dexels.navajo.script.api.TmlRunnable;
+import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
-import com.dexels.navajo.server.listener.http.TmlScheduler;
 import com.dexels.navajo.server.resource.ResourceCheckerManager;
 import com.dexels.navajo.server.resource.ServiceAvailability;
 

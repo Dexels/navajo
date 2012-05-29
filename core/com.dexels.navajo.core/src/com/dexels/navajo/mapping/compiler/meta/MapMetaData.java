@@ -18,6 +18,8 @@ import java.util.logging.Level;
 
 import javax.imageio.spi.ServiceRegistry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -40,6 +42,10 @@ public class MapMetaData {
 	private static MapMetaData instance = null;
 //	private String configPath = null;
 	
+
+	private final static Logger logger = LoggerFactory
+			.getLogger(MapMetaData.class);
+	
 	private MapMetaData() {
 		// Create empty MapDefinition.
 		MapDefinition empty = new MapDefinition(this);
@@ -61,8 +67,15 @@ public class MapMetaData {
 			}
 			
 			try {
-				Iterator<?> iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
-						                                        myClassLoader);
+				Iterator<?> iter = null;
+				try {
+					iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
+							                                        myClassLoader);
+				} catch (Exception e) {
+					logger.warn("Unable to lookup providers in lecagy service. Normal in OSGi.");
+//					e.printStackTrace();
+					return;
+				}
 				while(iter.hasNext()) {
 					ExtensionDefinition ed = (ExtensionDefinition) iter.next();
 					//System.err.println("FOUND POSSIBLE ADAPTER EXTENSION: " + ed);

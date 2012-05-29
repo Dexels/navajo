@@ -3,7 +3,7 @@ package com.dexels.navajo.rhino;
 import java.io.IOException;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.listeners.TmlRunnable;
+import com.dexels.navajo.script.api.TmlRunnable;
 
 public abstract class BasicRunnable implements TmlRunnable {
 

@@ -32,7 +32,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceFactory;
 import org.osgi.framework.ServiceRegistration;
 
-import com.dexels.navajo.server.listener.http.TmlScheduler;
+import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler;
 
 

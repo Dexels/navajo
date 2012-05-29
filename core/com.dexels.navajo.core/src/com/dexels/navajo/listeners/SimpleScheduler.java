@@ -3,6 +3,9 @@ package com.dexels.navajo.listeners;
 import java.io.IOException;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.script.api.RequestQueue;
+import com.dexels.navajo.script.api.Scheduler;
+import com.dexels.navajo.script.api.TmlRunnable;
 
 public class SimpleScheduler implements Scheduler {
 

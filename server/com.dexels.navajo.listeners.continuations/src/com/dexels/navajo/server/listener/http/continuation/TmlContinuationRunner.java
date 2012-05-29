@@ -1,14 +1,8 @@
 package com.dexels.navajo.server.listener.http.continuation;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.continuation.Continuation;
 import org.eclipse.jetty.continuation.ContinuationSupport;
@@ -17,16 +11,13 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.listeners.NavajoDoneException;
-import com.dexels.navajo.listeners.TmlRunnable;
-import com.dexels.navajo.server.ClientInfo;
-import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.FatalException;
-import com.dexels.navajo.server.listener.http.TmlScheduler;
+import com.dexels.navajo.script.api.AsyncRequest;
+import com.dexels.navajo.script.api.ClientInfo;
+import com.dexels.navajo.script.api.FatalException;
+import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.script.api.NavajoDoneException;
+import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.listener.http.standard.TmlStandardRunner;
-import com.jcraft.jzlib.JZlib;
-import com.jcraft.jzlib.ZOutputStream;
 
 public class TmlContinuationRunner extends TmlStandardRunner {
 
@@ -37,14 +28,10 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TmlContinuationRunner.class);
 
-	public TmlContinuationRunner(HttpServletRequest request, Navajo inputDoc,
-			HttpServletResponse response, String sendEncoding,
-			String recvEncoding, Object cert) {
-		super(request, inputDoc, response, sendEncoding, recvEncoding, cert);
-		connectedAt = System.currentTimeMillis();
-		continuation = ContinuationSupport.getContinuation(request);
+	public TmlContinuationRunner(AsyncRequest request, LocalClient lc) {
+		super(request,lc);
+		continuation = ContinuationSupport.getContinuation(request.getHttpRequest());
 		continuation.setTimeout(Long.MAX_VALUE);
-
 	}
 	
 	@Override
@@ -52,11 +39,10 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		super.abort(reason);
 		try {
 			logger.warn("Abort: "+reason+" generating outdoc and resuming");
-			outDoc = DispatcherFactory.getInstance().generateErrorMessage(null, reason, -1, 0, null);
-//			endTransaction();
+			outDoc = getLocalClient().generateAbortMessage(reason);
 			resumeContinuation();
 		} catch (FatalException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -67,6 +53,12 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		try {
 			// writeOutput moved from execute to here, as the scheduler thread shouldn't touch the response output stream
 			writeOutput(getInputNavajo(), outDoc);
+			TmlScheduler ts = getTmlScheduler();
+			String schedulingStatus = null;
+			if(ts!=null) {
+				schedulingStatus = ts.getSchedulingStatus();
+			}
+			getRequest().writeOutput(getInputNavajo(), outDoc, scheduledAt, startedAt, schedulingStatus);
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		}
@@ -77,95 +69,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	}
 
 	
-	public InputStream getRequestInputStream() throws IOException {
-		return request.getInputStream();
-	}
-
-	// 
-	public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException, UnsupportedEncodingException, NavajoException {
-		OutputStream out = null;
-
-		response.setContentType("text/xml; charset=UTF-8");
-		response.setHeader("Connection", "close"); // THIS IS NOT SUPPORTED, I.E. IT DOES NOT WORK...EH.. PROBABLY..
-		// Should be refactored to a special filter.
-		
-		
-		//System.err.println("Content-Encoding: "+recvEncoding);
-//		System.err.println("Accept-Encoding: "+sendEncoding);
-	if ( recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {		
-		  response.setHeader("Content-Encoding", COMPRESS_JZLIB);
-		  out = new ZOutputStream(response.getOutputStream(), JZlib.Z_BEST_SPEED);
-	  } else if ( recvEncoding != null && recvEncoding.equals(COMPRESS_GZIP)) {
-
-		  response.setHeader("Content-Encoding", COMPRESS_GZIP);
-		  out = new java.util.zip.GZIPOutputStream(response.getOutputStream());
-	  }
-	  else {
-		  //System.err.println("No content encoding specified: (" + sendEncoding + "/" + recvEncoding + ")");
-		  out = response.getOutputStream();
-	  }
-	
-	
-	  long finishedScriptAt = System.currentTimeMillis();
-	  // postTime = 
-	  long postTime = scheduledAt - connectedAt;
-	  long queueTime = startedAt - scheduledAt;
-	  long serverTime = finishedScriptAt - connectedAt;
-
-	  if ( outDoc != null ) {
-		  outDoc.getHeader().setHeaderAttribute("postTime", ""+postTime);
-		  outDoc.getHeader().setHeaderAttribute("queueTime", ""+queueTime);
-		  outDoc.getHeader().setHeaderAttribute("serverTime", ""+serverTime);
-		  outDoc.getHeader().setHeaderAttribute("threadName", ""+Thread.currentThread().getName());
-	  }
-	  
-	  TmlScheduler ts = getTmlScheduler();
-	  String threadStatus = null;
-	  if(ts!=null) {
-		  threadStatus = ts.getSchedulingStatus();
-	  } else {
-		  threadStatus = "Schedule status unknown, no scheduler found.";
-	  }
-//	  int threadsActive = getActiveCount();
-	  //System.err.println("StreamClass: "+out.getClass().getName());
-	  //System.err.println("ResponseClass: "+response.getClass().getName());
-	  long startWrite = System.currentTimeMillis();
-	  if ( outDoc != null ) {
-		  outDoc.write(out);
-	  } else {
-		  System.err.println("WARNING. EMPTY OUTDOC FOUND.");
-	  }
-//	  out.flush();
-	  out.close();
-//	  response.getOutputStream().flush();
-//	  response.getOutputStream().close();
-//	  
-	  if ( inDoc != null && inDoc.getHeader() != null && outDoc != null && outDoc.getHeader() != null && !Dispatcher.isSpecialwebservice(inDoc.getHeader().getRPCName())) {
-		  System.err.println("(" + DispatcherFactory.getInstance().getApplicationId() + "): " + 
-				          new java.util.Date(connectedAt) + ": " +
-				          outDoc.getHeader().getHeaderAttribute("accessId") + ":" + 
-				          inDoc.getHeader().getRPCName() + "(" + inDoc.getHeader().getRPCUser() + "):" + 
-				          ( System.currentTimeMillis() - connectedAt ) + " ms. " + 
-				          "(st=" + outDoc.getHeader().getHeaderAttribute("serverTime") + 
-				          ",rpt=" + outDoc.getHeader().getHeaderAttribute("requestParseTime") + 
-				          ",at=" + outDoc.getHeader().getHeaderAttribute("authorisationTime") + 
-				          ",pt=" + outDoc.getHeader().getHeaderAttribute("processingTime") + 
-				          ",tc=" + outDoc.getHeader().getHeaderAttribute("threadCount") + 
-						  ",cpu=" + outDoc.getHeader().getHeaderAttribute("cpuload") + 
-						  ",cpt="+postTime+
-						  ",cqt="+queueTime+
-						  ",qst="+serverTime+
-						  ",cta="+threadStatus+
-						  ",cwt="+(System.currentTimeMillis()-startWrite)+")" + " (" + sendEncoding + "/" + recvEncoding +
-						  
-				  ")" );
-	  }
-
-	  
-
-	
-}
-
 	  /**
 	   * Handle a request.
 	   *
@@ -186,19 +89,12 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				  boolean continuationFound = false;
 				  try {
 					  
-					  String sendEncoding = request.getHeader("Accept-Encoding");
-				      String recvEncoding = request.getHeader("Content-Encoding");
-						
-				      TmlRunnable tml = getTmlRunnable();
-				      int queueSize = tml.getRequestQueue().getQueueSize();
-				      String queueId = tml.getRequestQueue().getId();
+				      int queueSize = getRequestQueue().getQueueSize();
+				      String queueId = getRequestQueue().getId();
 				      
-					  ClientInfo clientInfo = 	new ClientInfo(request.getRemoteAddr(), "unknown",
-								recvEncoding, (int) (scheduledAt - connectedAt), (int) (startedAt - scheduledAt), queueSize, queueId, ( recvEncoding != null && ( recvEncoding.equals(COMPRESS_GZIP) || recvEncoding.equals(COMPRESS_JZLIB))), 
-								( sendEncoding != null && ( sendEncoding.equals(COMPRESS_GZIP) || sendEncoding.equals(COMPRESS_JZLIB))), 
-								request.getContentLength(), new java.util.Date( connectedAt ) );
-					  
-					  outDoc = DispatcherFactory.getInstance().removeInternalMessages(DispatcherFactory.getInstance().handle(in, this,cert, clientInfo));
+					  ClientInfo clientInfo = getRequest().createClientInfo(scheduledAt, startedAt, queueSize, queueId);
+					  outDoc = getLocalClient().handleInternal(in, getRequest().getCert(), clientInfo);
+//					  outDoc = DispatcherFactory.getInstance().removeInternalMessages(DispatcherFactory.getInstance().handle(in, this,getRequest().getCert(), clientInfo));
 					  // Do do: Support async services in a more elegant way.
 				  } catch (NavajoDoneException e) {
 					  // temp catch, to be able to pre
@@ -253,12 +149,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		} catch(NavajoDoneException e) {
 			System.err.println("NavajoDoneException caught. This thread fired a continuation. Another thread will finish it in the future.");
 		} catch (Exception e) {
-			e.printStackTrace();
-			try {
-				response.sendError(500, e.getMessage());
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+			getRequest().fail(e);
 		}
 	}
 

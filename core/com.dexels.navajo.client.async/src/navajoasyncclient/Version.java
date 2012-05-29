@@ -1,13 +1,13 @@
 package navajoasyncclient;
 
+import org.osgi.framework.BundleContext;
+
 
 public class Version extends com.dexels.navajo.version.AbstractVersion  {
 
-	//	 Included packages.
 	
-	public Version() {
-		System.err.println("STarting aSynC client");
-	}
-	
+	public void start(BundleContext bundleContext) throws Exception {
+		super.start(bundleContext);
+	}	
 
 }

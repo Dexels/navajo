@@ -24,9 +24,8 @@ import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.DispatcherInterface;
-import com.dexels.navajo.server.FatalException;
+import com.dexels.navajo.script.api.FatalException;
+import com.dexels.navajo.script.api.LocalClient;
 
 @Deprecated
 /**
@@ -90,12 +89,12 @@ public class RestTmlServlet extends HttpServlet implements Servlet {
 			Header header = constructHeader(tbMessage, service, username,
 					password, -1);
 			tbMessage.addHeader(header);
-			DispatcherInterface dis = DispatcherFactory.getInstance();
-			if (dis == null) {
-				throw new ServletException("Navajo Server not initialized!");
-			}
-			Navajo resultMessage = dis.removeInternalMessages(dis
-					.handle(tbMessage));
+			LocalClient lc = (LocalClient) getServletContext().getAttribute("localClient");
+			if(lc==null) {
+				response.sendError(500,"No navajocontext configured (in NavajoFilterServlet)");
+				return;
+			}			
+			Navajo resultMessage = lc.call(tbMessage);
 			response.setContentType("text/xml");
 			ServletOutputStream outputStream = response.getOutputStream();
 

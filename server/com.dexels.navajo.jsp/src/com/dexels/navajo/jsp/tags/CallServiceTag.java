@@ -7,10 +7,11 @@ import javax.servlet.jsp.JspException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.script.api.LocalClient;
 
 public class CallServiceTag extends BaseNavajoTag {
 
@@ -45,14 +46,25 @@ public class CallServiceTag extends BaseNavajoTag {
 		}
 		System.err.println("Calling service: "+myService);
 		try {
+			Navajo navajo = null;
 			if (myNavajo==null) {
-				getNavajoContext().callService(myService);
+				navajo = NavajoFactory.getInstance().createNavajo();
+				navajo.addHeader(NavajoFactory.getInstance().createHeader(navajo, myService, null,null, -1));
 			} else {
-				Navajo navajo = getNavajoContext().getNavajo(myNavajo);
-				getNavajoContext().callService(myService, navajo);
+				navajo = getNavajoContext().getNavajo(myNavajo);
+				if(navajo==null) {
+					navajo = NavajoFactory.getInstance().createNavajo();
+					navajo.addHeader(NavajoFactory.getInstance().createHeader(navajo, myService, null, null, -1));
+				}
+				navajo.getHeader().setRPCName(myService);
 			}
-		} catch (ClientException e) {
-			throw new JspException("Navajo service error while calling service: "+myService,e);
+			LocalClient lc = (LocalClient) getPageContext().getServletContext().getAttribute("localClient");
+			resultNavajo = lc.call(navajo);
+			getNavajoContext().putNavajo(myService, resultNavajo);
+
+			
+		} catch (Throwable e) {
+			logger.error("Error: ", e);
 		}
 		resultNavajo = getNavajoContext().getNavajo(myService);
 		

@@ -56,8 +56,6 @@ import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.ChangeNotificationEvent;
 import com.dexels.navajo.events.types.NavajoExceptionEvent;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
-import com.dexels.navajo.listeners.NavajoDoneException;
-import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.Lock;
 import com.dexels.navajo.lockguard.LockDefinition;
@@ -69,6 +67,10 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.RemoteAsyncAnswer;
 import com.dexels.navajo.mapping.RemoteAsyncRequest;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
+import com.dexels.navajo.script.api.ClientInfo;
+import com.dexels.navajo.script.api.FatalException;
+import com.dexels.navajo.script.api.NavajoDoneException;
+import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
@@ -124,7 +126,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
   public final Set<Access> accessSet = Collections.newSetFromMap(new ConcurrentHashMap<Access,Boolean>());
 
   public  boolean useAuthorisation = true;
-  private  final String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
   public static java.util.Date startTime = new java.util.Date();
 
   public  long requestCount = 0;
@@ -969,7 +970,7 @@ private ServiceHandler createHandler(String handler, Access access)
          
          // and vice versa, for the endTransaction;
          
-         origRunnable.setAccess(access);
+         origRunnable.setAttribute("access",access);
       	
       }
       

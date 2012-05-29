@@ -14,10 +14,19 @@ package com.dexels.navajo.adapter;
  * The purpose of this adapter is to use it for checking data changes between
  * an original query and the subsequent update.
  */
-import com.dexels.navajo.server.*;
-import com.dexels.navajo.document.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Method;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.server.AuthorizationException;
+import com.dexels.navajo.server.ConditionErrorException;
+import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.server.UserException;
 
 public class VersionedNavajoMap extends NavajoMap {
 

@@ -55,7 +55,7 @@ public class ClasspathFieldEditor extends ListFieldEditor implements NavajoPlugi
             if (new File(lastPath).exists())
                 dialog.setFilterPath(lastPath);
         }
-        String file = dialog.open();
+        dialog.open();
 
         if (dialog.getFileNames().length != 0) {
             lastPath = dialog.getFilterPath();
