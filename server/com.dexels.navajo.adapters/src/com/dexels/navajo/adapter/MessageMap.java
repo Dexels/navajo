@@ -1,8 +1,16 @@
 package com.dexels.navajo.adapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
+import com.dexels.navajo.adapter.messagemap.PropertyAggregate;
 import com.dexels.navajo.adapter.messagemap.ResultMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -57,6 +65,10 @@ public class MessageMap implements Mappable {
 	private boolean removeSource = false;
 	private String joinType = INNER_JOIN;
 	private String suppressProperties = null;
+	
+	private String groupBy = null;
+	private List<String> groupByProperties = null;
+	
 	private boolean removeDuplicates = false;
 	
 	private Access myAccess;
@@ -230,16 +242,67 @@ public class MessageMap implements Mappable {
 			}
 		}
 		
-		if ( removeDuplicates ) {
+		if ( groupBy != null ) {
+
+			removeDuplicates = true;
+			Map<String,PropertyAggregate> aggregates = new HashMap<String,PropertyAggregate>();
+			
 			for ( int i = 0; i < resultingMessage.size(); i++ ) {
+
+				Map<String,Object> group = new TreeMap<String,Object>();
 				
-				int hashCode = getMessageHash(resultingMessage.get(i).getMsg());
-				for ( int j = i; j < resultingMessage.size(); j++ ) {
-					if ( getMessageHash(resultingMessage.get(j).getMsg()) == hashCode ) {
-						resultingMessage.remove(j);
-						break;
+				ResultMessage rm = resultingMessage.get(i);
+				Message m = rm.getMsg();
+				List<Property> properties = m.getAllProperties();
+				
+				for ( int j = 0; j < properties.size(); j++ ) {
+					Property p = properties.get(j);
+					if ( groupByProperties.contains(p.getName()) ) {
+						group.put(p.getName(), p.getTypedValue());
+					} 
+				}
+				
+				for  (int j = 0; j < properties.size(); j++ ) {
+					Property p = properties.get(j);
+					if (!groupByProperties.contains(p.getName()) ) {
+						PropertyAggregate pa = aggregates.get(p.getName());
+						if ( pa == null ) {
+							pa = new PropertyAggregate();
+							aggregates.put(p.getName(), pa);
+						}
+						pa.addProperty(p, group);
+						m.removeProperty(p);
 					}
 				}
+				
+			}
+			
+			for ( int i = 0 ; i < resultingMessage.size(); i++ ) {
+				resultingMessage.get(i).setAggregates(aggregates);
+			}
+		}
+		
+				
+		if ( removeDuplicates ) {
+
+			for ( int i = 0; i < resultingMessage.size(); i++ ) {
+
+				if ( !resultingMessage.get(i).isRemove() ) {
+					int hashCode = getMessageHash(resultingMessage.get(i).getMsg());
+					for ( int j = i+1; j < resultingMessage.size(); j++ ) {
+						if ( getMessageHash(resultingMessage.get(j).getMsg()) == hashCode ) {
+							resultingMessage.get(j).setRemove(true);
+						} 
+					}
+				}
+			}
+		}
+		
+		Iterator<ResultMessage> iter = resultingMessage.iterator();
+		while ( iter.hasNext() ) {
+			ResultMessage c = iter.next();
+			if ( c.isRemove() ) {
+				iter.remove();
 			}
 		}
 		
@@ -253,7 +316,7 @@ public class MessageMap implements Mappable {
 	private int getMessageHash(Message m) {
 		int hashCode = 0;
 		for ( int i = 0; i < m.getAllProperties().size(); i++ ) {
-			hashCode += m.getAllProperties().get(i).hashCode();
+			hashCode += m.getAllProperties().get(i).getValue().hashCode();
 		}
 		return hashCode;
 	}
@@ -351,4 +414,15 @@ public class MessageMap implements Mappable {
 		this.suppressProperties = suppressProperties;
 	}
 
+	public void setGroupBy(String groupBy) {
+		if ( groupBy != null ) {
+			this.groupBy = groupBy;
+			String [] props = groupBy.split(",");
+			groupByProperties = new ArrayList<String>();
+			for ( int i = 0; i < props.length; i++ ) {
+				groupByProperties.add(props[i]);
+			}
+		}
+	}
+	
 }
