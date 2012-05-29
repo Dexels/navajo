@@ -5,11 +5,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.script.api.FatalException;
 
 public class FastDispatcher {
 
 	/**
 	 * Non blocking handle.
+	 * NOT USES? Seems on functional.
 	 * 
 	 * @param in
 	 * @param responseOutputStream

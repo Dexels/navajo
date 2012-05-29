@@ -10,7 +10,8 @@ import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.listeners.SchedulerRegistry;
+import com.dexels.navajo.script.api.SchedulerRegistry;
+import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.listener.http.schedulers.DummyScheduler;
 
 public class SchedulerTools {

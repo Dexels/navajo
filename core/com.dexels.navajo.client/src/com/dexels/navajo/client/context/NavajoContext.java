@@ -99,12 +99,13 @@ public class NavajoContext implements ClientContext {
 		Navajo n = myClient.doSimpleSend(input, service);
 		logger.debug("Send complete!");
 		n.getHeader().setRPCName(service);
-		Navajo old = myNavajoMap.get(service);
-		if(old!=null) {
-			myInverseNavajoMap.remove(old);
-		}
-		myNavajoMap.put(service, n);
-		myInverseNavajoMap.put(n, service);
+		putNavajo(service, n);
+//		Navajo old = myNavajoMap.get(service);
+//		if(old!=null) {
+//			myInverseNavajoMap.remove(old);
+//		}
+//		myNavajoMap.put(service, n);
+//		myInverseNavajoMap.put(n, service);
 		long time2 = System.currentTimeMillis() - time;
 		logger.debug("Call took: "+time2+" millis!");
 	}
@@ -117,6 +118,15 @@ public class NavajoContext implements ClientContext {
 		return myNavajoMap.containsKey(name);
 	}
 	
+	public void putNavajo(String service, Navajo n) {
+		Navajo old = myNavajoMap.get(service);
+		if(old!=null) {
+			myInverseNavajoMap.remove(old);
+		}
+		myNavajoMap.put(service, n);
+		myInverseNavajoMap.put(n, service);
+		
+	}
 	public boolean getHasChildren(){
 		try{
 			Message top = getMessage();

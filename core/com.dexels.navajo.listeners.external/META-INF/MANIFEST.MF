@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: External parts of Listener
+Bundle-SymbolicName: com.dexels.navajo.listeners.external
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: DEXELS
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: com.dexels.navajo.server.listener.http.impl,
+ com.dexels.navajo.server.listener.http.standard,
+ com.dexels.navajo.server.listener.nql;uses:="javax.servlet.http"
+Import-Package: com.dexels.navajo.client,
+ com.dexels.navajo.client.nql,
+ com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
+ com.dexels.navajo.version,
+ com.jcraft.jzlib,
+ javax.servlet;version="3.0.0",
+ javax.servlet.http;version="3.0.0",
+ org.slf4j;version="1.6.1"
+Require-Bundle: com.dexels.navajo.script.api;bundle-version="1.0.0"

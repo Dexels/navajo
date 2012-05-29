@@ -24,7 +24,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.listener.NavajoContextListener;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
 import com.dexels.navajo.server.listener.nql.NqlServlet;
-import com.dexels.navajo.version.NavajoBundleManager;
 
 public class ServerInstanceImpl implements ServerInstance {
 //	private String projectName;
@@ -69,7 +68,7 @@ public class ServerInstanceImpl implements ServerInstance {
 				
 				@Override
 				public void lifeCycleStopped(LifeCycle l) {
-					NavajoBundleManager.getInstance().uninstallAdapterBundles();
+//					NavajoBundleManager.getInstance().uninstallAdapterBundles();
 //					EmbeddedServerActivator.getDefault().deregisterServerInstance(project);
 				}
 				

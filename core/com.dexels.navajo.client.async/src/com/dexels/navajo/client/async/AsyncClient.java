@@ -16,9 +16,9 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.listeners.NavajoResponseCallback;
-import com.dexels.navajo.listeners.SchedulerRegistry;
-import com.dexels.navajo.listeners.TmlRunnable;
+import com.dexels.navajo.script.api.NavajoResponseCallback;
+import com.dexels.navajo.script.api.SchedulerRegistry;
+import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.Access;
 
 public class AsyncClient {

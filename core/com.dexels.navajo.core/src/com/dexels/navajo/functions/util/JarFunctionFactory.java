@@ -1,13 +1,13 @@
 package com.dexels.navajo.functions.util;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
 import javax.imageio.spi.ServiceRegistry;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +18,13 @@ import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.version.ExtensionDefinition;
 
-public class JarFunctionFactory extends FunctionFactoryInterface {
+public class JarFunctionFactory extends FunctionFactoryInterface implements Serializable {
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5200898919345188706L;
 	private final static Logger logger = LoggerFactory
 			.getLogger(JarFunctionFactory.class);
 	

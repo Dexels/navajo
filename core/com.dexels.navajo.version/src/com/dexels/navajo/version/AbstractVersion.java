@@ -10,33 +10,23 @@ public abstract class AbstractVersion extends BaseVersion implements BundleActiv
 
 	
 	protected BundleContext context = null;
-	protected static BundleContext defaultContext = null;
-	protected static AbstractVersion instance = null;
+//	protected BundleContext defaultContext = null;
 	
 	public void start(BundleContext bc) throws Exception {
 		context = bc;
-		defaultContext = bc;
+//		defaultContext = bc;
 		if(bc==null) {
 			logger.debug("Bundle started in non-osgi environment: {}",getClass().getName());
 		} else {
 			logger.debug("Bundle started: {}",bc.getBundle().toString());
 		}
-		instance = this;
 	}
 
-	public AbstractVersion getActivatorInstance() {
-		return instance;
-	}
+
 	public BundleContext getBundleContext() {
 		return context;
 	}
 
-	// TODO test, I am not at all sure if this works well.
-	public static BundleContext getDefaultBundleContext() {
-		return defaultContext;
-	}
-
-	
 	public void stop(BundleContext arg0) throws Exception {
 		context = null;
 		

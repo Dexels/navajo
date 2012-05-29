@@ -1,7 +1,0 @@
-<tml documentImplementation="SAXP">
-   <header>
-      <transaction rpc_name="triplea/InitAuthenticate"/>
-      <callback/>
-      <client/>
-   </header>
-</tml>

@@ -20,13 +20,13 @@ import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.LocalClient;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.server.LocalClientDispatcherWrapper;
 import com.dexels.navajo.server.api.NavajoServerContext;
 import com.dexels.navajo.server.api.impl.NavajoServerInstance;
-import com.dexels.navajo.server.listener.internal.LocalClientDispatcherWrapper;
 import com.dexels.navajo.version.AbstractVersion;
 
 public class NavajoContextListener implements ServletContextListener {
@@ -55,12 +55,12 @@ public class NavajoContextListener implements ServletContextListener {
 		String installPath = getInstallationPath(contextPath);
 		String servletContextPath = sc.getServletContext().getRealPath("");
 
-		init(sc.getServletContext(),contextPath,servletContextPath,installPath);
+		init(contextPath,servletContextPath,installPath);
 	}
 
-	public void init(ServletContext sc,String contextPath, String servletContextPath, String installPath) {
+	public void init(String contextPath, String servletContextPath, String installPath) {
 		logger.info("==========================================================");
-		logger.info("INITIALIZING NAVAJO INSTANCE: "+ sc.getContextPath());
+		logger.info("INITIALIZING NAVAJO INSTANCE: "+contextPath);
 		logger.info("==========================================================");
 //		String contextPath = sc.getContextPath();
 //
@@ -80,7 +80,7 @@ public class NavajoContextListener implements ServletContextListener {
 		unregisterInstanceOSGi();
 		logger.warn("Destroying Navajo extensions. I'm not sure if this is wise in OSGi.");
 		if(Version.getDefaultBundleContext()!=null) {
-			logger.info("Prevending extension shutdown. OSGi detected, they can fend for themselves.");
+			logger.info("Preventing extension shutdown. OSGi detected, they can fend for themselves.");
 			return;
 		}
 		AbstractVersion.shutdownNavajoExtension("navajo");
@@ -113,8 +113,8 @@ public class NavajoContextListener implements ServletContextListener {
 			DispatcherInterface dispatcher = initDispatcher(servletContextPath, servletContextPath, installationPath);
 			NavajoServerInstance nsi = new NavajoServerInstance(installationPath, dispatcher);
 			registerInstanceOSGi(nsi,contextPath);
-			LocalClientDispatcherWrapper lcdw = new LocalClientDispatcherWrapper(dispatcher);
-			registerLocalClient(lcdw);
+//			LocalClientDispatcherWrapper lcdw = new LocalClientDispatcherWrapper(dispatcher);
+//			registerLocalClient(lcdw);
 			// TODO Add dereg code
 	
 			return nsi;
@@ -124,16 +124,16 @@ public class NavajoContextListener implements ServletContextListener {
 		return null;
 	}
 
-	private static void registerLocalClient(LocalClientDispatcherWrapper lcdw) {
-		BundleContext bc = navajolisteners.Version.getDefaultBundleContext();
-		if(bc==null) {
-			logger.warn("No OSGi environment found. Are we in J2EE mode?");
-			return;
-		}		
-        Dictionary<String, Object> properties = new Hashtable<String, Object>();
-        localClientInstance = bc.registerService(LocalClient.class.getName(), lcdw,properties);
-		logger.info("Local client service registration complete!");
-		}
+	//	private static void registerLocalClient(LocalClientDispatcherWrapper lcdw) {
+	//		BundleContext bc = navajolisteners.Version.getDefaultBundleContext();
+	//		if(bc==null) {
+	//			logger.warn("No OSGi environment found. Are we in J2EE mode?");
+	//			return;
+	//		}		
+	//        Dictionary<String, Object> properties = new Hashtable<String, Object>();
+	//        localClientInstance = bc.registerService(LocalClient.class.getName(), lcdw,properties);
+	//		logger.info("Local client service registration complete!");
+	//		}
 
 	private static void registerInstanceOSGi(NavajoServerInstance nsi, String contextPath) {
 		BundleContext bc = navajolisteners.Version.getDefaultBundleContext();
