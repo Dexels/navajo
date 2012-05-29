@@ -41,6 +41,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@SuppressWarnings("rawtypes")
 	private ServiceRegistration reference;
 
+	private static BundleContext bundleContext;
 
 	public Version() {
 		// javax.mail.Address a;
@@ -50,14 +51,19 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	
 	@Override
-	public void start(BundleContext bc) throws Exception {
-		super.start(bc);
-		if(bc!=null) {
-			DummyScheduler ds = new DummyScheduler();
-			 Dictionary<String, Object> wb = new Hashtable<String, Object>();
-			 wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.DummyScheduler");
-			reference = bc.registerService(TmlScheduler.class.getName(), ds, wb);
-		}
+	public void start(BundleContext bc) {
+		try {
+			super.start(bc);
+			bundleContext = bc;
+			if(bc!=null) {
+				DummyScheduler ds = new DummyScheduler();
+				 Dictionary<String, Object> wb = new Hashtable<String, Object>();
+				 wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.DummyScheduler");
+				reference = bc.registerService(TmlScheduler.class.getName(), ds, wb);
+			}
+			} catch (Throwable e) {
+				logger.error("Error: ", e);
+			}
 	}
 
 
@@ -65,6 +71,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		if(reference!=null) {
 			reference.unregister();
 		}
+		bundleContext = null;
+
 	}
 	
 	@Override
@@ -74,7 +82,9 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		SchedulerRegistry.setScheduler(null);
 	}
 
-
+	public static BundleContext getDefaultBundleContext() {
+		return bundleContext;
+	}
 
 
 }

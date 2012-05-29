@@ -223,6 +223,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	private static ServiceRegistration dispatcherRegistration;
 	private ServiceRegistration dummyStats;
 	
+	private static BundleContext bundleContext;
+
 	
 	public static String getDescription() {
 		return MAJOR + "." + MINOR + "." + PATCHLEVEL + " (" + SPECIAL_VERSION + ")";
@@ -372,7 +374,9 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		}
 	}
 	
-
+	public static BundleContext getDefaultBundleContext() {
+		return bundleContext;
+	}
 	
 	
 }

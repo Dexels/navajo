@@ -84,16 +84,20 @@ import com.dexels.navajo.parser.FunctionInterface;
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 
+	private static BundleContext bundleContext;
+	
 	public Version() {
 		setReleaseDate(RELEASEDATE);
 	}
 
 
 	// TODO Refactor into more reusable code
+
 	
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
+		bundleContext = bc;
 		try {
 			FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
 			fi.init();
@@ -146,6 +150,11 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	public void shutdown() {
 		GrusManager.getInstance().shutdown();
 		SQLMap.terminateFixedBroker();
+	}
+
+
+	public static BundleContext getDefaultBundleContext() {
+		return bundleContext;
 	}
 	
 
