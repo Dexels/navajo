@@ -18,7 +18,6 @@ import java.util.logging.Level;
 
 import javax.imageio.spi.ServiceRegistry;
 
-import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -26,6 +25,7 @@ import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 import com.dexels.navajo.util.AuditLog;
+import com.dexels.navajo.version.ExtensionDefinition;
 
 /**
  * This class holds the metadata for adapters that can be used in new navasript 'style' scripts.

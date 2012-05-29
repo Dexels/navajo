@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.continuation.Continuation;
 import org.eclipse.jetty.continuation.ContinuationSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -30,6 +32,10 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 
 	private final Continuation continuation;
 	private Navajo outDoc;
+	
+
+	private final static Logger logger = LoggerFactory
+			.getLogger(TmlContinuationRunner.class);
 
 	public TmlContinuationRunner(HttpServletRequest request, Navajo inputDoc,
 			HttpServletResponse response, String sendEncoding,
@@ -45,7 +51,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	public void abort(String reason) {
 		super.abort(reason);
 		try {
-			System.err.println("Abort: "+reason+" generating outdoc and resuming");
+			logger.warn("Abort: "+reason+" generating outdoc and resuming");
 			outDoc = DispatcherFactory.getInstance().generateErrorMessage(null, reason, -1, 0, null);
 //			endTransaction();
 			resumeContinuation();

@@ -3,7 +3,8 @@ package com.dexels.navajo.adapter;
 import java.io.InputStream;
 import java.util.List;
 
-import navajo.ExtensionDefinition;
+import com.dexels.navajo.version.ExtensionDefinition;
+
 
 /**
  * Reference to the XML definition file for this set of adapters defined in this project.

@@ -4,10 +4,10 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.4.qualifier
 Bundle-Vendor: Dexels
-Import-Package: org.osgi.framework;version="1.5.0"
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.version,
+ org.osgi.framework;version="1.5.0"
 Require-Bundle: com.dexels.navajo.tipi;bundle-version="[1.0.43,2.0.0)",
  com.dexels.navajo.tipi.swing;bundle-version="1.0.41",
- com.dexels.navajo.document;bundle-version="1.0.3",
- com.dexels.navajo.version;bundle-version="1.0.6",
  com.dexels.navajo.core;bundle-version="2.9.4"
 Bundle-ClassPath: lib/javadocking.jar

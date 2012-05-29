@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.components.swingimpl.embed;
 import java.io.IOException;
 import java.util.List;
 
-import navajo.ExtensionDefinition;
 import tipi.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.tipi.TipiException;
@@ -11,6 +10,7 @@ import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiUserInterface;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
+import com.dexels.navajo.version.ExtensionDefinition;
 
 /**
  * <p>

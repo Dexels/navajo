@@ -3,7 +3,8 @@ package com.dexels.navajo.adapter.core;
 import java.io.InputStream;
 import java.util.List;
 
-import navajo.ExtensionDefinition;
+import com.dexels.navajo.version.ExtensionDefinition;
+
 
 public class NavajoCoreAdapterLibrary implements ExtensionDefinition {
 

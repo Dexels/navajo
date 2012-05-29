@@ -2,7 +2,6 @@ package com.dexels.navajo.echoclient.components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,7 +49,6 @@ import nextapp.echo2.app.text.TextComponent;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.document.base.BasePropertyImpl;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
@@ -1217,13 +1215,6 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				s.setSelected(false);
 			}
 		}
-		System.err.println("Resulting property:");
-		if (p instanceof BasePropertyImpl) {
-			BasePropertyImpl bpi = (BasePropertyImpl) p;
-			StringWriter sw = new StringWriter();
-			bpi.write(sw);
-			System.err.println("PROP: " + sw.toString());
-		}
 	}
 
 	protected void updateCheckboxButtonList(CheckBox rb,
@@ -1241,13 +1232,6 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			}
 		}
 		p.setSelected(selectedKeys);
-		System.err.println("Resulting property:");
-		if (p instanceof BasePropertyImpl) {
-			BasePropertyImpl bpi = (BasePropertyImpl) p;
-			StringWriter sw = new StringWriter();
-			bpi.write(sw);
-			System.err.println("PROP: " + sw.toString());
-		}
 	}
 
 	private void createComboBox(Property p) throws NavajoException {

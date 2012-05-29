@@ -4,10 +4,8 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.7.qualifier
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.document,
- com.dexels.navajo.tipi;bundle-version="1.0.43",
+Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  com.dexels.navajo.core;bundle-version="2.9.2",
- com.dexels.navajo.version;bundle-version="1.0.5",
  com.dexels.navajo.tipi.swing;bundle-version="[1.0.41,1.2.0)"
 Bundle-ClassPath: .,
  lib/miglayout-3.6-swing.jar
@@ -16,6 +14,8 @@ Export-Package: com.dexels.navajo.tipi.mig,
  net.miginfocom.layout,
  net.miginfocom.swing,
  tipi
-Import-Package: javax.swing,
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.version,
+ javax.swing,
  javax.swing.border,
  org.osgi.framework;version="1.5.0"

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -80,7 +80,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	}
 
 	@Override
-	public void initialize(HttpServlet servlet) {
+	public void initialize(ServletContext context) {
 		// This must be done later
 		JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "PriorityScheduler");
 		// =====
@@ -88,7 +88,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		int poolSize;
 		
 		// Start normal pool.
-		String stringPoolSize = servlet.getInitParameter("normalPoolSize");
+		String stringPoolSize = context.getInitParameter("normalPoolSize");
 		if (stringPoolSize == null) {
 			poolSize = DEFAULT_POOL_SIZE;
 		} else {
@@ -97,7 +97,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		normalPool = ThreadPoolRequestQueue.create(this, "normalThead", 3, poolSize);
 		
 		// Start priority pool.
-		stringPoolSize = servlet.getInitParameter("priorityPoolSize");
+		stringPoolSize = context.getInitParameter("priorityPoolSize");
 		if (stringPoolSize == null) {
 			poolSize = DEFAULT_POOL_SIZE;
 		} else {
@@ -106,7 +106,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		priorityPool = ThreadPoolRequestQueue.create(this, "priorityThread", 8, poolSize);
 		
 		// Start system pool.
-		stringPoolSize = servlet.getInitParameter("systemPoolSize");
+		stringPoolSize = context.getInitParameter("systemPoolSize");
 		if (stringPoolSize == null) {
 			poolSize = DEFAULT_POOL_SIZE;
 		} else {

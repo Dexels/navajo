@@ -4,9 +4,7 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.1.1.qualifier
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.document,
- com.dexels.navajo.core;bundle-version="2.9.2",
- com.dexels.navajo.version;bundle-version="1.0.5"
+Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.2"
 Export-Package: com.dexels.navajo.swingeditor,
  de.xeinfach.kafenio,
  de.xeinfach.kafenio.action,
@@ -18,7 +16,10 @@ Export-Package: com.dexels.navajo.swingeditor,
  gnu.regexp
 Bundle-ClassPath: lib/gnu-regexp-1.1.4.jar,
  .
-Import-Package: javax.swing,
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.version,
+ javax.swing,
  javax.swing.border,
  javax.swing.colorchooser,
  javax.swing.event,

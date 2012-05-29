@@ -21,11 +21,16 @@ Export-Package: com.dexels.navajo.server.api.impl,
  com.dexels.navajo.server.listener.nql;uses:="javax.servlet.http",
  navajolisteners;uses:="dexels"
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.core,
- com.dexels.navajo.client;bundle-version="3.0.5",
- com.dexels.navajo.document;bundle-version="1.0.0",
- com.dexels.navajo.version;bundle-version="1.0.7"
-Import-Package: javax.management,
+Require-Bundle: com.dexels.navajo.core
+Import-Package: com.dexels.navajo.client,
+ com.dexels.navajo.client.nql,
+ com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
+ com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.persistence;version="2.2.0",
+ com.dexels.navajo.version,
+ com.jcraft.jzlib,
+ javax.management,
  javax.servlet;version="[2.5.0,4.0.0)",
  javax.servlet.http;version="[2.5.0,4.0.0)",
  org.junit,

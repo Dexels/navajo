@@ -16,9 +16,9 @@ import java.util.StringTokenizer;
 
 import javax.swing.JFileChooser;
 
-import metadata.FormatDescription;
 
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.metadata.FormatDescription;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;

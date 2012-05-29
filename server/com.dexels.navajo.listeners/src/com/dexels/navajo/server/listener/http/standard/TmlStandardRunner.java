@@ -8,6 +8,9 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.listeners.TmlRunnable;
 import com.dexels.navajo.server.listener.http.impl.BaseServiceRunner;
@@ -16,7 +19,11 @@ public class TmlStandardRunner extends BaseServiceRunner implements TmlRunnable 
 
 	private Navajo inputDoc;
 	private HashMap<String, Object> attributes = new HashMap<String, Object>();
+	
 
+	private final static Logger logger = LoggerFactory
+			.getLogger(TmlStandardRunner.class);
+	
 	public TmlStandardRunner(HttpServletRequest request, Navajo inputDoc,
 			HttpServletResponse response, String sendEncoding,
 			String recvEncoding, Object cert) {
@@ -52,7 +59,7 @@ public class TmlStandardRunner extends BaseServiceRunner implements TmlRunnable 
 
 	@Override
 	public void dumpBuffer() {
-		System.err.println("Not implemented");
+		logger.warn("Not implemented");
 	}
 
 	@Override

@@ -15,7 +15,6 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import navajo.ExtensionDefinition;
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.app.Style;
 import nextapp.echo2.app.Window;
@@ -30,6 +29,7 @@ import tipi.TipiEchoExtension;
 import com.dexels.navajo.echoclient.components.Styles;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.version.ExtensionDefinition;
 
 /**
  * <p>

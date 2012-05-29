@@ -37,7 +37,7 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseNavajoServlet.class);
-	protected DispatcherInterface initDispatcher() {
+	protected static DispatcherInterface initDispatcher() {
 		return DispatcherFactory.getInstance();
 	}
 
@@ -63,17 +63,17 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 					fw.write(sb.toString());
 					fw.close();
 				} else {
-					System.err.println(sb.toString());
+					logger.info(sb.toString());
 				}
 			} catch (IOException ioe) {
 				logger.error("Error: ", ioe);
 			}
 		} else {
-			System.err.println("EMPTY REQUEST OBJECT!!");
+			logger.warn("EMPTY REQUEST OBJECT!!");
 		}
 	}
 
-	protected final void copyResource(OutputStream out, InputStream in) {
+	protected static final void copyResource(OutputStream out, InputStream in) {
 		BufferedInputStream bin = new BufferedInputStream(in);
 		BufferedOutputStream bout = new BufferedOutputStream(out);
 		byte[] buffer = new byte[1024];

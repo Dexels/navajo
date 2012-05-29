@@ -7,10 +7,12 @@ Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.jsp.tags,
  navajojsp
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.document,
- com.dexels.navajo.client;bundle-version="1.0.0",
- com.dexels.navajo.version;bundle-version="1.0.8"
-Import-Package: javax.servlet,
+Import-Package: com.dexels.navajo.client,
+ com.dexels.navajo.client.context,
+ com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.version,
+ javax.servlet,
  javax.servlet.http,
  javax.servlet.jsp,
  javax.servlet.jsp.tagext,

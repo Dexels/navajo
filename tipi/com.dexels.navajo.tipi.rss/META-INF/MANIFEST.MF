@@ -5,12 +5,13 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.7.qualifier
 Bundle-Vendor: Dexels
 Bundle-ActivationPolicy: lazy
-Require-Bundle: com.dexels.navajo.version;bundle-version="1.0.6",
- com.dexels.navajo.tipi;bundle-version="1.0.43",
- com.dexels.navajo.document;bundle-version="1.0.3",
+Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  com.dexels.navajo.core;bundle-version="2.9.4"
 Bundle-ClassPath: .,
  lib/rssutils.jar
-Import-Package: org.osgi.framework;version="1.5.0"
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.version,
+ org.osgi.framework;version="1.5.0"
 Bundle-Activator: tipi.TipiRssExtension
 Export-Package: com.dexels.navajo.tipi.rss

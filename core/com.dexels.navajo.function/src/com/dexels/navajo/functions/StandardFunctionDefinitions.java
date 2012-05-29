@@ -5,7 +5,8 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import navajo.ExtensionDefinition;
+import com.dexels.navajo.version.ExtensionDefinition;
+
 
 public class StandardFunctionDefinitions implements ExtensionDefinition, Serializable {
 

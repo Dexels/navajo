@@ -7,11 +7,11 @@ Bundle-ClassPath: .
 Include-Resource: lib
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.client,
- com.dexels.navajo.document;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.2",
- com.dexels.navajo.version;bundle-version="1.0.4",
  com.dexels.navajo.listeners;bundle-version="3.1.2"
-Import-Package: javax.script,
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.version,
+ javax.script,
  javax.servlet,
  javax.servlet.http,
  org.osgi.framework;version="1.5.0",

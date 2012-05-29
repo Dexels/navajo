@@ -26,7 +26,6 @@ public abstract class NavajoFactory {
   protected File tempDir = null;
   protected static final HashMap<String,NavajoFactory> alternativeFactories = new HashMap<String,NavajoFactory>();
   protected Map<String,String> defaultSubTypes = new HashMap<String,String>();
-  protected final ArrayList<BinaryProgressListener> myBinaryActivityListeners = new ArrayList<BinaryProgressListener>();
 
   private final Map<String,byte[]> binaryStorage = new HashMap<String,byte[]>();
   private boolean sandboxMode = false;
@@ -611,43 +610,6 @@ public abstract class NavajoFactory {
   public abstract Point createPoint(Property p) throws NavajoException;
 
  
-  /**
-   * Fires an binary progress event event to all listeners
-   * @param b boolean
-   * @param service String
-   * @param progress long
-   * @param total long
-   */
-  public void fireBinaryProgress(String service, long progress, long total) {
-           for (int i = 0; i < myBinaryActivityListeners.size(); i++) {
-      BinaryProgressListener current = myBinaryActivityListeners.get(i);
-      current.fireBinaryProgress(service,progress,total);
-    }
-  }
-
-  /**
-   * Add activitylistener
-   * @param al ActivityListener
-   */
-  public final void addBinaryActivityListener(BinaryProgressListener al) {
-      myBinaryActivityListeners.add(al);
-  }
-
-  /**
-   * Remove activitylistener
-   * @param al ActivityListener
-   */
-  public final void removeBinaryActivityListener(BinaryProgressListener al) {
-      myBinaryActivityListeners.remove(al);
-  }
-
-public void fireBinaryFinished(String message, long expectedLength) {
-    for (int i = 0; i < myBinaryActivityListeners.size(); i++) {
-        BinaryProgressListener current = myBinaryActivityListeners.get(i);
-        current.fireBinaryFinished(message,expectedLength);
-      }
-   
-}
 
 public void storeHandle(String name, byte[] data) {
 	binaryStorage.put(name,data);

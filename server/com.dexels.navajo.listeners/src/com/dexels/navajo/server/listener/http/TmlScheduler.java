@@ -1,5 +1,6 @@
 package com.dexels.navajo.server.listener.http;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,7 +17,7 @@ public interface TmlScheduler extends Scheduler {
 	 * Called first upon creation. Put any initialization code in this method.
 	 * We pass the servlet so you can retrieve other initParameters.
 	 */
-	public void initialize(HttpServlet servlet);
+	public void initialize(ServletContext servlet);
 
 	/**
 	 * Called first when a request arrives, only the headers have been loaded,

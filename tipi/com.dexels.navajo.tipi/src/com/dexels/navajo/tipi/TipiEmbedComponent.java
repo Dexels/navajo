@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -23,6 +22,7 @@ import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TmlResourceLoader;
 import com.dexels.navajo.tipi.internal.ZipResourceLoader;
+import com.dexels.navajo.version.ExtensionDefinition;
 
 public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 

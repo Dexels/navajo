@@ -80,7 +80,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 	}
 
 	protected void finalize() {
-		System.err.println("In TmlHttpServlet finalize(), thread = "
+		logger.info("In TmlHttpServlet finalize(), thread = "
 				+ Thread.currentThread().hashCode());
 		try {
 			super.finalize();
@@ -95,7 +95,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		resultMessage.write(out);
 	}
 
-	private final Navajo constructFromRequest(HttpServletRequest request)
+	private static final Navajo constructFromRequest(HttpServletRequest request)
 			throws NavajoException {
 
 		Navajo result = NavajoFactory.getInstance().createNavajo();
@@ -158,13 +158,13 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		return result;
 	}
 
-	protected Header constructHeader(Navajo tbMessage, String service,
+	protected static Header constructHeader(Navajo tbMessage, String service,
 			String username, String password, long expirationInterval) {
 		return NavajoFactory.getInstance().createHeader(tbMessage, service,
 				username, password, expirationInterval);
 	}
 
-	private final void callDirect(HttpServletRequest request,
+	public static final void callDirect(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
 		String service = request.getParameter("service");
@@ -172,30 +172,30 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
-		System.err.println("in callDirect(): service = " + service
+		logger.info("in callDirect(): service = " + service
 				+ ", username = " + username);
 
 		if (service == null) {
 
-			// System.err.println("Empty service specified, request originating from "
+			// logger.info("Empty service specified, request originating from "
 			// + request.getRemoteHost());
-			System.err.println("thread = " + Thread.currentThread().hashCode());
-			System.err.println("path = " + request.getPathInfo());
-			System.err.println("query = " + request.getQueryString());
-			System.err.println("protocol = " + request.getProtocol());
-			System.err.println("agent = " + request.getRemoteUser());
-			System.err.println("uri = " + request.getRequestURI());
-			System.err.println("method = " + request.getMethod());
-			System.err.println("contenttype = " + request.getContentType());
-			System.err.println("scheme = " + request.getScheme());
-			System.err.println("server = " + request.getServerName());
-			System.err.println("port = " + request.getServerPort());
-			System.err.println("contentlength = " + request.getContentLength());
+			logger.info("thread = " + Thread.currentThread().hashCode());
+			logger.info("path = " + request.getPathInfo());
+			logger.info("query = " + request.getQueryString());
+			logger.info("protocol = " + request.getProtocol());
+			logger.info("agent = " + request.getRemoteUser());
+			logger.info("uri = " + request.getRequestURI());
+			logger.info("method = " + request.getMethod());
+			logger.info("contenttype = " + request.getContentType());
+			logger.info("scheme = " + request.getScheme());
+			logger.info("server = " + request.getServerName());
+			logger.info("port = " + request.getServerPort());
+			logger.info("contentlength = " + request.getContentLength());
 			Enumeration<String> enm = request.getHeaderNames();
 			while (enm.hasMoreElements()) {
 				String key = enm.nextElement();
 				String header = request.getHeader(key);
-				System.err.println(">>" + key + "=" + header);
+				logger.info(">>" + key + "=" + header);
 			}
 			return;
 		}
@@ -206,7 +206,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			// logger.log(Priority.FATAL,
 			// "Empty service specified, request originating from " +
 			// request.getRemoteHost());
-			// System.err.println("Empty service specified, request originating from "
+			// logger.info("Empty service specified, request originating from "
 			// + request.getRemoteHost());
 			// return;
 		}
@@ -250,7 +250,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			tbMessage.addHeader(header);
 			Navajo resultMessage = dis.removeInternalMessages(dis
 					.handle(tbMessage));
-			// System.err.println(resultMessage.toString());
+			// logger.info(resultMessage.toString());
 			// resultMessage.write(out);
 			String dataPath = request.getParameter("dataPath");
 			if (dataPath != null) {
@@ -363,7 +363,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 				r.close();
 				r = null;
 			} else {
-				System.err.println("Warning: Using non-streaming mode for "
+				logger.info("Warning: Using non-streaming mode for "
 						+ request.getRequestURI() + ", file written: "
 						+ logfileIndex + ", total size: " + bytesWritten);
 				InputStream is = request.getInputStream();
@@ -482,7 +482,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 					&& outDoc.getHeader() != null
 					&& !Dispatcher.isSpecialwebservice(in.getHeader()
 							.getRPCName())) {
-				System.err.println("("
+				logger.info("("
 						+ dis.getApplicationId()
 						+ "): "
 						+ new java.util.Date()

@@ -5,9 +5,10 @@ Bundle-SymbolicName: com.dexels.navajo.dsl.navajomanager
 Bundle-Version: 1.0.1.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: com.dexels.navajo.document;bundle-version="1.0.4",
- com.google.inject;bundle-version="2.0.0",
+Require-Bundle: com.google.inject;bundle-version="2.0.0",
  org.eclipse.core.runtime;bundle-version="3.6.0",
  org.eclipse.core.resources;bundle-version="3.6.1",
  com.dexels.navajo.dsl.expression.model;bundle-version="1.0.0"
 Export-Package: com.dexels.navajo.dsl.expression.proposals
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.nanoimpl;version="2.2.0"

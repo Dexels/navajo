@@ -14,8 +14,7 @@ import com.dexels.navajo.server.listener.http.SchedulableServlet;
 import com.dexels.navajo.server.listener.http.SchedulerTools;
 import com.dexels.navajo.server.listener.http.TmlScheduler;
 
-public class TmlStandardServlet extends HttpServlet implements
-		SchedulableServlet {
+public class TmlStandardServlet extends HttpServlet {
 
 	/**
 	 * 
@@ -32,7 +31,6 @@ public class TmlStandardServlet extends HttpServlet implements
 			resp.getOutputStream().close();
 			return;
 		}
-		System.err.println("Precheck complete");
 		Navajo inputDoc = NavajoFactory.getInstance().createNavajo(req.getInputStream());
 		req.getInputStream().close();
 
@@ -49,28 +47,10 @@ public class TmlStandardServlet extends HttpServlet implements
 			resp.getOutputStream().close();
 			return;
 		}
-		System.err.println("Check complete");
-
-		System.err.println("Runnable created");
 		getTmlScheduler().run(tr);
-		System.err.println("Post finished");
 	}
 
-	@Override
 	public TmlScheduler getTmlScheduler() {
 		return myScheduler;
 	}
-
-	@Override
-	public void init() throws ServletException {
-		super.init();
-		setTmlScheduler(SchedulerTools.createScheduler(this));
-
-	}
-
-	@Override
-	public void setTmlScheduler(TmlScheduler s) {
-		myScheduler = s;
-	}
-
 }

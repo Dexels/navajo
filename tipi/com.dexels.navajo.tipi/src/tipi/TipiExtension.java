@@ -2,9 +2,9 @@ package tipi;
 
 import java.io.Serializable;
 
-import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.version.ExtensionDefinition;
 
 public interface TipiExtension extends Comparable<TipiExtension>,
 		ExtensionDefinition, Serializable {

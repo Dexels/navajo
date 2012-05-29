@@ -5,9 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +24,6 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.document.base.BasePropertyImpl;
-import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 
 /**
  * <p>
@@ -132,30 +128,30 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 			myProperty.removePropertyChangeListener(myPropertyListener);
 			myPropertyListener = null;
 		}
-		myPropertyListener = new SerializablePropertyChangeListener() {
-
-			private static final long serialVersionUID = 5612713468556136254L;
-
-			public void propertyChange(PropertyChangeEvent evt) {
-				System.err.println("CHANGE DETECTED: " + evt.getPropertyName()
-						+ " old: " + evt.getOldValue() + " new: "
-						+ evt.getNewValue());
-				Thread.dumpStack();
-				System.err.println("OLDVALCLASS: "
-						+ evt.getOldValue().getClass());
-				System.err.println("NEWVALCLASS: "
-						+ evt.getNewValue().getClass());
-				BasePropertyImpl pp = (BasePropertyImpl) p;
-				try {
-					StringWriter stringWriter = new StringWriter();
-					pp.write(stringWriter);
-					System.err.println("s: " + stringWriter.toString());
-				} catch (NavajoException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		p.addPropertyChangeListener(myPropertyListener);
+//		myPropertyListener = new SerializablePropertyChangeListener() {
+//
+//			private static final long serialVersionUID = 5612713468556136254L;
+//
+//			public void propertyChange(PropertyChangeEvent evt) {
+//				System.err.println("CHANGE DETECTED: " + evt.getPropertyName()
+//						+ " old: " + evt.getOldValue() + " new: "
+//						+ evt.getNewValue());
+//				Thread.dumpStack();
+//				System.err.println("OLDVALCLASS: "
+//						+ evt.getOldValue().getClass());
+//				System.err.println("NEWVALCLASS: "
+//						+ evt.getNewValue().getClass());
+//				BasePropertyImpl pp = (BasePropertyImpl) p;
+//				try {
+//					StringWriter stringWriter = new StringWriter();
+//					pp.write(stringWriter);
+//					System.err.println("s: " + stringWriter.toString());
+//				} catch (NavajoException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		};
+//		p.addPropertyChangeListener(myPropertyListener);
 
 		try {
 			selectedModel.clear();

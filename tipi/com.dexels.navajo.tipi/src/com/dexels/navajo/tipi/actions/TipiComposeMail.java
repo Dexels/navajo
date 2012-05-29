@@ -1,8 +1,7 @@
 package com.dexels.navajo.tipi.actions;
 
-import metadata.BinaryOpener;
-
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.metadata.BinaryOpener;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 

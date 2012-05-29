@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import metadata.FormatDescription;
 
+import com.dexels.navajo.document.metadata.FormatDescription;
 import com.dexels.navajo.document.types.Binary;
 
 //TODO move and promote

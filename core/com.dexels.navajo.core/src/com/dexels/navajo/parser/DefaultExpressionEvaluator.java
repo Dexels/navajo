@@ -168,11 +168,8 @@ public final class DefaultExpressionEvaluator
     List<Property> refreshQueue = null;
     for (int i = 0; i < queue.size(); i++) {
       Property current = queue.get(i);
-      if (!(current instanceof com.dexels.navajo.document.base.BasePropertyImpl)) {
-		System.err.println("WTF??! "+current.getClass());
-	}
-      o = ( (com.dexels.navajo.document.base.BasePropertyImpl) current).
-          peekEvaluatedValue();
+   
+      o = current.peekEvaluatedValue();
       try {
         try {
 			current.refreshExpression();
@@ -185,8 +182,8 @@ public final class DefaultExpressionEvaluator
     } catch (Throwable e) {
     	System.err.println("Expression changed");
 	}
-      p = ( (com.dexels.navajo.document.base.BasePropertyImpl) current).
-          peekEvaluatedValue();
+      p = current.peekEvaluatedValue();
+      
       if (o == null && p == null) {
         continue;
       }

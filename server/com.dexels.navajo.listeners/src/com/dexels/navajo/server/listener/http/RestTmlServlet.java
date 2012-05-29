@@ -55,31 +55,31 @@ public class RestTmlServlet extends HttpServlet implements Servlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
-		System.err.println(">in callDirect(): service = " + service
+		logger.info(">in callDirect(): service = " + service
 				+ ", username = " + username + " class: "
 				+ getClass().getName());
 
 		if (service == null) {
 
-			// System.err.println("Empty service specified, request originating from "
+			// logger.info("Empty service specified, request originating from "
 			// + request.getRemoteHost());
-			System.err.println("thread = " + Thread.currentThread().hashCode());
-			System.err.println("path = " + request.getPathInfo());
-			System.err.println("query = " + request.getQueryString());
-			System.err.println("protocol = " + request.getProtocol());
-			System.err.println("agent = " + request.getRemoteUser());
-			System.err.println("uri = " + request.getRequestURI());
-			System.err.println("method = " + request.getMethod());
-			System.err.println("contenttype = " + request.getContentType());
-			System.err.println("scheme = " + request.getScheme());
-			System.err.println("server = " + request.getServerName());
-			System.err.println("port = " + request.getServerPort());
-			System.err.println("contentlength = " + request.getContentLength());
+			logger.info("thread = " + Thread.currentThread().hashCode());
+			logger.info("path = " + request.getPathInfo());
+			logger.info("query = " + request.getQueryString());
+			logger.info("protocol = " + request.getProtocol());
+			logger.info("agent = " + request.getRemoteUser());
+			logger.info("uri = " + request.getRequestURI());
+			logger.info("method = " + request.getMethod());
+			logger.info("contenttype = " + request.getContentType());
+			logger.info("scheme = " + request.getScheme());
+			logger.info("server = " + request.getServerName());
+			logger.info("port = " + request.getServerPort());
+			logger.info("contentlength = " + request.getContentLength());
 			Enumeration<String> enm = request.getHeaderNames();
 			while (enm.hasMoreElements()) {
 				String key = enm.nextElement();
 				String header = request.getHeader(key);
-				System.err.println(">>" + key + "=" + header);
+				logger.info(">>" + key + "=" + header);
 			}
 			return;
 		}
