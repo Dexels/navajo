@@ -32,7 +32,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 	private final ContinuationPending pending;
 	private ScriptEnvironment environment;
 	// private long scheduledAt;
-	private Access access;
+//	private Access access;
 	private RequestQueue requestQueue;
 	private final Map<String,Object> attributes = new HashMap<String,Object>();
 
@@ -116,7 +116,6 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 				originalRunnable.writeOutput(getAccess().getInDoc(),
 						getAccess().getOutputDoc());
 			} catch (NavajoException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			originalRunnable.endTransaction();
@@ -204,7 +203,6 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 	public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException,
 			FileNotFoundException, UnsupportedEncodingException,
 			NavajoException {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException(
 				"This runnable is not capable of writing the output, it is not linked to any stream.");
 	}

@@ -16,9 +16,12 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@SuppressWarnings("rawtypes")
 	private ServiceRegistration handler;
 
+	private static BundleContext defaultContext = null;
+	
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
+		defaultContext = bc;
 		System.err.println("Starting Navajo Rhino");
 //		FunctionFactoryInterface fi= 
 		FunctionFactoryFactory.getInstance();
@@ -44,6 +47,11 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		if(handler!=null) {
 			handler.unregister();
 		}
+		defaultContext = null;
+	}
+	
+	public static BundleContext getDefaultContext() {
+		return defaultContext;
 	}
 	
 }

@@ -10,8 +10,7 @@ Export-Package: com.dexels.navajo.rhino,
  com.dexels.navajo.rhino.include,
  navajorhino
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.0",
- com.dexels.navajo.adapters;bundle-version="1.0.5"
+Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.0"
 Bundle-ClassPath: lib/js.jar,
  .
 Import-Package: com.dexels.navajo.client,

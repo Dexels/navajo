@@ -28,7 +28,6 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
-import com.dexels.navajo.jdbc.JDBCFactory;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.MappingException;
@@ -495,7 +494,7 @@ public abstract class ScriptEnvironment implements Serializable {
 		logger.debug("Creating map for class: "+className);
 		try {
 			
-			if("com.dexels.navajo.adapter.SQLMap".equals(className) && JDBCFactory.useOSGi() ) {
+			if("com.dexels.navajo.adapter.SQLMap".equals(className) && navajorhino.Version.getDefaultContext()!=null ) {
 				System.err.println("REPLACE!");
 				className = "com.dexels.navajo.adapter.JDBCMap";
 			}
