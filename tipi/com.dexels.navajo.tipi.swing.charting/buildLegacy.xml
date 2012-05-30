@@ -79,7 +79,7 @@
 	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
 	-->	<property name="dependencies" value="com.dexels.navajo.version,com.dexels.navajo.document,com.dexels.navajo.core,com.dexels.navajo.client,NavajoFunctions,NavajoTipi,NavajoSwingTipi" />
 
-	<import file="../com.dexels.navajo.version/ant/navajobuild.xml" />
+	<import file="../../../navajo/core/com.dexels.navajo.version/ant/navajobuild.xml" />
 
 </project>
 <!-- EOF: $RCSfile$ -->

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<project name="TipiGeoSwing" default="archive" basedir="../TipiGeoSwing">
+<project name="TipiSwingGeo" default="archive" basedir="../com.dexels.navajo.tipi.swing.geo">
 
 	<!--
 	This file is suitable for copying / pasting to other projects.
@@ -77,9 +77,9 @@
 	Note: The difference between 'libs' and 'compilelibs' is that the libs will also be included in deploys
 	(for example WAR-files), and compilelibs will not. 
 	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
-	-->	<property name="dependencies" value="com.dexels.navajo.version,com.dexels.navajo.document,com.dexels.navajo.core,com.dexels.navajo.client,NavajoFunctions,NavajoTipi,TipiSwingClient,NavajoSwingTipi,TipiSwingX" />
+	-->	<property name="dependencies" value="../core/com.dexels.navajo.version,../core/com.dexels.navajo.document,../core/com.dexels.navajo.core,../core/com.dexels.navajo.client,../core/com.dexels.navajo.function,com.dexels.navajo.tipi,com.dexels.navajo.tipi.swing.client,com.dexels.navajo.tipi.swing,com.dexels.navajo.tipi.swing.swingx" />
 
-	<import file="../com.dexels.navajo.version/ant/navajobuild.xml" />
+	<import file="../../core/com.dexels.navajo.version/ant/navajobuild.xml" />
 
 </project>
 <!-- EOF: $RCSfile$ -->

@@ -83,7 +83,7 @@
 	-->
 	<property name="dependencies" value="com.dexels.navajo.version,com.dexels.navajo.document,com.dexels.navajo.core,com.dexels.navajo.client,NavajoFunctions,NavajoTipi" />
 
-	<import file="../com.dexels.navajo.version/ant/navajobuild.xml" />
+	<import file="../../../navajo/core/com.dexels.navajo.version/ant/navajobuild.xml" />
 	<target name="afterdeploy">
 		<copy file="TipiVaadin.jar" todir="../VaadinTest/WebContent/WEB-INF/lib"></copy>
 	</target>

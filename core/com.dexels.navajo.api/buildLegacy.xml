@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<project name="TipiJabber" default="archive" basedir=".">
+<project name="NavajoApi" default="archive" basedir=".">
+
 
 	<!--
 	This file is suitable for copying / pasting to other projects.
 	Make sure you update the project name above, otherwise it might overwrite existing files on the server
 	-->
 	
-	<!-- Use tipi extension post processing. -->
-	<property name="tipiExtension" value="true" />
-	<property name="deployedDependencyJars" value="" />
-
+	
 	<!-- Skip all unit tests. -->
 	<property name="notests" value="false" />
 
@@ -36,7 +34,7 @@
 	<!--
 	Create a zip-file of the source and the test source
 	-->
-	<property name="createbinaryzip" value="false"/>
+	<property name="createsourcezip" value="false"/>
 
 	<!--
 	Upload all distribution files to a repository (using SCP)
@@ -60,7 +58,7 @@
 	Cleans up dependencies after building. They can safely be discarded, but they can prove useful
 	for debugging building problems
 	-->
-	<property name="cleanupdependencies" value="false"/>
+	<property name="cleanupdependencies" value="true"/>
 	
 	<!--
 	A comma separated list of Navajo project (e.g. com.dexels.navajo.version,com.dexels.navajo.document,NavajoClient)
@@ -77,7 +75,7 @@
 	(for example WAR-files), and compilelibs will not. 
 	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
 	-->
-	<property name="dependencies" value="../core/com.dexels.navajo.version,../core/com.dexels.navajo.document,../core/com.dexels.navajo.core,../core/com.dexels.navajo.client,com.dexels.navajo.tipi" />
+	<property name="dependencies" value="../../navajo/core/com.dexels.navajo.version,../../navajo/core/com.dexels.navajo.document" />
 
 	<import file="../../../navajo/core/com.dexels.navajo.version/ant/navajobuild.xml" />
 

@@ -76,7 +76,7 @@
 	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
 	-->
 
-	<property name="dependencies" value="../../navajo/core/com.dexels.navajo.version,../../navajo/core/com.dexels.navajo.document,../../navajo/core/com.dexels.navajo.core" />
+	<property name="dependencies" value="../../navajo/core/com.dexels.navajo.version,../../navajo/core/com.dexels.navajo.document,../../navajo/core/com.dexels.navajo.core,../../navajo/core/com.dexels.navajo.api,../../navajo/core/com.dexels.navajo.api" />
 
 	<import file="../../../navajo/core/com.dexels.navajo.version/ant/navajobuild.xml" />
 

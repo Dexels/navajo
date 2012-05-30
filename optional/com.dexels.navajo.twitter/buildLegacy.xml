@@ -77,7 +77,7 @@
 	-->
 	<property name="dependencies" value="com.dexels.navajo.version,com.dexels.navajo.document,com.dexels.navajo.core,com.dexels.navajo.client,com.dexels.navajo.listeners,NavajoAdapters" />
 
-	<import file="../com.dexels.navajo.version/ant/navajobuild.xml" />
+	<import file="../../../navajo/core/com.dexels.navajo.version/ant/navajobuild.xml" />
 
 </project>
 <!-- EOF: $RCSfile$ -->

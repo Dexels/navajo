@@ -74,7 +74,7 @@
 	(for example WAR-files), and compilelibs will not. 
 	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
 	-->	
-	<property name="dependencies" value="../../com.dexels.navajo.version,../../com.dexels.navajo.document,../../com.dexels.navajo.core,../../com.dexels.navajo.client.async" />
+	<property name="dependencies" value="../../navajo/core/com.dexels.navajo.version,../../navajo/core/com.dexels.navajo.document,../../navajo/core/com.dexels.navajo.api,../../navajo/core/com.dexels.navajo.core" />
 
 	<import file="../../../navajo/core/com.dexels.navajo.version/ant/navajobuild.xml" />
 
