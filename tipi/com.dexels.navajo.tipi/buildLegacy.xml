@@ -19,8 +19,8 @@
 
 	<target name="init">
 		<mkdir dir="com/dexels/navajo/functions/"/>
-		<copy file="../NavajoFunctions/src/com/dexels/navajo/functions/functions.xml" todir="src/com/dexels/navajo/functions/"/>
-		<ant target="init" antfile="../com.dexels.navajo.version/ant/navajobuild.xml"></ant>
+		<copy file="../../core/com.dexels.navajo.function/src/com/dexels/navajo/functions/functions.xml" todir="src/com/dexels/navajo/functions/"/>
+		<ant target="init" antfile="../../core/com.dexels.navajo.version/ant/navajobuild.xml"></ant>
 	</target>
 	
 	<!-- Skip all unit tests. -->
@@ -83,8 +83,8 @@
 		that the libs will also be included in deploys (for example WAR-files), and compilelibs will not. Examples of
 		compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
 	-->
-	<property name="dependencies" value="com.dexels.navajo.version,com.dexels.navajo.document,com.dexels.navajo.core,com.dexels.navajo.client,NavajoFunctions" />
+	<property name="dependencies" value="../core/com.dexels.navajo.version,../core/com.dexels.navajo.document,../core/com.dexels.navajo.core,../core/com.dexels.navajo.client" />
 
-	<import file="../com.dexels.navajo.version/ant/navajobuild.xml" />
+	<import file="../../core/com.dexels.navajo.version/ant/navajobuild.xml" />
 </project>
 	<!-- EOF: $RCSfile$ -->

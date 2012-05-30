@@ -88,8 +88,7 @@ Export-Package: com.dexels.navajo.tipi;
    com.dexels.navajo.tipi.tipixml",
  tipipackage;uses:="com.dexels.navajo.version,org.osgi.framework,tipi"
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.2",
- com.dexels.navajo.function;bundle-version="2.0.1";resolution:=optional
+Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.2"
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
