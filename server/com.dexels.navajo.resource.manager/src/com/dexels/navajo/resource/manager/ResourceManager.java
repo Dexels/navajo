@@ -1,10 +1,13 @@
 package com.dexels.navajo.resource.manager;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Dictionary;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -27,10 +30,24 @@ public class ResourceManager {
 	private static final Logger logger = LoggerFactory.getLogger(ResourceManager.class);
 	private ConfigurationAdmin configAdmin;
 
+	private final Set<String> resourcePids = new HashSet<String>();
+	
 	private BundleContext bundleContext = null;
 	
 	public void activate(ComponentContext cc) {
 		this.bundleContext = cc.getBundleContext();
+	}
+	
+	public void deactivate() {
+		for (String pid : resourcePids) {
+			try {
+				Configuration c = configAdmin.getConfiguration(pid);
+				c.delete();
+			} catch (IOException e) {
+				logger.error("Error deregistering configuration: "+pid);
+			}
+		}
+	
 	}
 	
 	public void loadResourceTml(InputStream is) {
@@ -65,8 +82,10 @@ public class ResourceManager {
 		settings.put("name", "navajo.resource."+name);
 		String type = (String)dataSource.getProperty("type").getTypedValue();
 		Configuration cc = configAdmin.createFactoryConfiguration("navajo.resource."+type,null);
+		resourcePids.add(cc.getPid());
 		cc.update(settings);
 		logger.info("Data source settings for source: {} : {}",name,settings);
+		
 //		ResourceReference rr = new ResourceReference(name,type ,settings);
 //		addResourceReference(rr);
 	}

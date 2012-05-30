@@ -46,6 +46,16 @@ public class NavajoContextComponent {
 
 	public void deactivate() {
 		logger.info("Deactivating context!");
+		try {
+			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient");
+			if(config!=null) {
+				config.delete();
+				logger.info("Removed local client registration");
+			}
+		} catch (IOException e) {
+			logger.error("Error deactivating config: ", e);
+		}
+		
 	}
 
 	

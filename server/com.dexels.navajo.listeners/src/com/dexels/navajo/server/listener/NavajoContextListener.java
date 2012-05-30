@@ -78,7 +78,6 @@ public class NavajoContextListener implements ServletContextListener {
 	public static void destroyContext(ServletContext sc) {
 		logger.info("Destroying Navajo instance");
 		unregisterInstanceOSGi();
-		logger.warn("Destroying Navajo extensions. I'm not sure if this is wise in OSGi.");
 		if(Version.getDefaultBundleContext()!=null) {
 			logger.info("Preventing extension shutdown. OSGi detected, they can fend for themselves.");
 			return;
