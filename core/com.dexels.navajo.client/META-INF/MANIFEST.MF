@@ -9,7 +9,6 @@ Bundle-ClassPath: .,
  lib/jzlib.jar
 Export-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.context,
- com.dexels.navajo.client.jabber,
  com.dexels.navajo.client.logger,
  com.dexels.navajo.client.nql,
  com.dexels.navajo.client.server,

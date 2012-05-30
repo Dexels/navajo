@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Jabber related part of client
+Bundle-SymbolicName: com.dexels.navajo.client.jabber
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: navajoclientjabber.Version
+Bundle-Vendor: DEXELS
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: com.dexels.navajo.client,
+ com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.version,
+ org.jivesoftware.smack,
+ org.jivesoftware.smack.packet,
+ org.jivesoftware.smackx,
+ org.jivesoftware.smackx.muc,
+ org.jivesoftware.smackx.packet,
+ org.osgi.framework;version="1.3.0",
+ org.slf4j;version="1.6.1"
+Export-Package: com.dexels.navajo.client.jabber
