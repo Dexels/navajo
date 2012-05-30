@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.dexels.navajo.core</groupId>
+	<artifactId>com.dexels.navajo.super</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+	<properties>
+		<tycho-version>0.15.0-SNAPSHOT</tycho-version>
+		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
+<!-- 		<forceContextQualifier>20120229-1926</forceContextQualifier> -->
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>tycho_spiritus</id>
+			<url>https://source.dexels.com/nexus/content/repositories/tycho/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+				<pluginRepository>
+			<id>tycho</id>
+			<url>http://repository.sonatype.org/content/groups/sonatype-public-grid</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+
+	<repositories>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>Central Spiritus</name>
+			<url>https://source.dexels.com/nexus/content/repositories/central/</url>
+			<layout>default</layout>
+		</repository>
+
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>never</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</snapshots>
+			<id>karaf</id>
+			<name>Karaf</name>
+			<url>https://source.dexels.com/nexus/content/repositories/karaf/</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>never</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</snapshots>
+			<id>spiritus</id>
+			<name>Spiritus</name>
+			<url>https://source.dexels.com/nexus/content/repositories/navajo/</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>false</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</snapshots>
+			<id>spiritusSnapshot</id>
+			<name>Spiritus</name>
+			<url>https://source.dexels.com/nexus/content/repositories/navajo_snapshot/</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+
+	<!-- -->
+	<build>
+		<plugins>
+			<!-- -->
+
+			<plugin>
+				<groupId>${tycho-groupid}</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<resolver>p2</resolver>
+					<target>
+						<artifact>
+							<groupId>com.dexels.navajo.core</groupId>
+							<artifactId>targetplatform</artifactId>
+							<version>0.9.1-SNAPSHOT</version>
+							<classifier>navajo_target</classifier>
+						</artifact>
+					</target>
+					<ignoreTychoRepositories>false</ignoreTychoRepositories>
+					<filters>
+
+
+						<!-- example 2: remove all providers of the package javax.persistence except the bundle javax.persistence -->
+						<filter>
+							<type>java-package</type>
+							<id>javax.persistence</id>
+							<restrictTo>
+								<type>eclipse-plugin</type>
+								<id>javax.persistence</id>
+							</restrictTo>
+						</filter>
+
+						<!-- example 3: work around Equinox bug 348045 -->
+						<filter>
+							<type>p2-installable-unit</type>
+							<id>org.eclipse.equinox.servletbridge.extensionbundle</id>
+							<removeAll />
+						</filter>
+					</filters>
+
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>${tycho-groupid}</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>${tycho-groupid}</groupId>
+				<artifactId>tycho-compiler-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>${tycho-groupid}</groupId>
+				<artifactId>tycho-p2-publisher-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<publishArtifacts>true</publishArtifacts>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>${tycho-groupid}</groupId>
+				<artifactId>tycho-p2-director-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<!-- <executions> <execution> <id>materialize-products</id> <goals> <goal>materialize-products</goal> </goals> </execution> <execution> 
+					<id>archive-products</id> <goals> <goal>archive-products</goal> </goals> </execution> </executions> <configuration> <products> <product> 
+					<id>navajo</id> </product> </products> </configuration> -->
+			</plugin>
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.5</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-ssh</artifactId>
+						<version>1.0-beta-7</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.3.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<supportedProjectTypes>
+						<supportedProjectType>jar</supportedProjectType>
+						<supportedProjectType>bundle</supportedProjectType>
+						<supportedProjectType>eclipse-plugin</supportedProjectType>
+						<supportedProjectType>eclipse-feature</supportedProjectType>
+					</supportedProjectTypes>
+					<instructions>
+						<Bundle-Description>Navajo Suite</Bundle-Description>
+					</instructions>
+
+					<!-- OBR -->
+					
+					<remoteOBR>repo-rel</remoteOBR>
+					<prefixUrl>https://source.dexels.com/nexus/content/repositories/navajo_snapshot</prefixUrl>
+					<ignoreLock>true</ignoreLock>
+				</configuration>
+				<executions>
+					<execution>
+						<id>bundle-deploy</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jarsigner-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<id>sign</id>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<keystore>~/.m2/sportlink.ks</keystore>
+					<alias>server</alias>
+					<storepass>sp0rtl1nk</storepass>
+					<keypass></keypass>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+		<extensions>
+			<!-- Enabling the use of FTP -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>2.2</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav-jackrabbit</artifactId>
+				<version>2.2</version>
+			</extension>
+		</extensions>
+	</build>
+
+
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>dexels</id>
+			<name>Dexels Repository</name>
+			<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
+			<url>https://source.dexels.com/nexus/content/repositories/navajo/</url>
+			<layout>default</layout>
+		</repository>
+		<snapshotRepository>
+			<uniqueVersion>true</uniqueVersion>
+			<id>dexels_snap</id>
+			<name>Dexels Snapshots</name>
+			<url>https://source.dexels.com/nexus/content/repositories/navajo_snapshot</url>
+			<layout>legacy</layout>
+		</snapshotRepository>
+	</distributionManagement>
+</project>
