@@ -4,7 +4,7 @@ Bundle-Category: sling
 Bundle-Name: Navajo Branding Fragment
 Bundle-Vendor: Dexels
 Fragment-Host: org.apache.felix.webconsole
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Bundle-ManifestVersion: 2
 Bundle-Description: Dexels Branding for Webconsole
 Bundle-DocURL: https://github.com/Dexels/navajo/
