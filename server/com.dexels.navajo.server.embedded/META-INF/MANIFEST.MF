@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Embedded
 Bundle-SymbolicName: com.dexels.navajo.server.embedded; singleton:=true
-Bundle-Version: 1.0.3
+Bundle-Version: 1.0.4.qualifier
 Bundle-Activator: com.dexels.navajo.server.embedded.EmbeddedServerActivator
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

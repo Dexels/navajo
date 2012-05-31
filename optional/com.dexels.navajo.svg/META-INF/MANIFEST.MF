@@ -2,7 +2,7 @@ Bundle-Name: Navajo Svg to PNG and PDF Renderer
 Bundle-SymbolicName: com.dexels.navajo.svg
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.2
+Bundle-Version: 1.0.3.qualifier
 Include-Resource: lib
 Export-Package: com.dexels.navajo.adapters
 Bundle-Vendor: Dexels

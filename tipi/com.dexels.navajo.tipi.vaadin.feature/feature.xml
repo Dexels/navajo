@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.vaadin.feature"
       label="Tipi Vaadin Feature"
-      version="1.0.3"
+      version="1.0.4.qualifier"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

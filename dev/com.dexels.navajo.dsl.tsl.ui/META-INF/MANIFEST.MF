@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: com.dexels.navajo.dsl.tsl.ui
 Bundle-Vendor: Dexels
-Bundle-Version: 1.1.0
+Bundle-Version: 1.1.1.qualifier
 Bundle-SymbolicName: com.dexels.navajo.dsl.tsl.ui; singleton:=true
 Require-Bundle: com.dexels.navajo.dsl.tsl;visibility:=reexport,
  org.eclipse.xtext.ui,

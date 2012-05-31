@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.geo.feature"
       label="Navajo Geocoding related tools and adapters"
-      version="1.0.2"
+      version="1.0.3.qualifier"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

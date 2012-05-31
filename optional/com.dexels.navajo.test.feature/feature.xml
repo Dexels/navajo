@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.test.feature"
       label="Navajo Testing Framework"
-      version="1.0.1"
+      version="1.0.2.qualifier"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

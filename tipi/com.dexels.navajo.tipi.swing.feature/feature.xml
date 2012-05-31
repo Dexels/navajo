@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.swing.feature"
       label="Tipi Swing Feature"
-      version="1.2.0"
+      version="1.2.1.qualifier"
       provider-name="DEXELS">
 
    <description url="http://www.example.com/description">

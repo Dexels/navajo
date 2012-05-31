@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.feature"
       label="Tipi Core Feature"
-      version="1.1.15"
+      version="1.1.16.qualifier"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

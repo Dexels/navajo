@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dexels.navajo</groupId>
 	<artifactId>com.dexels.navajo.super</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
 		<tycho-version>0.15.0-SNAPSHOT</tycho-version>
@@ -228,7 +228,7 @@
 				<configuration>
 					<keystore>~/.m2/sportlink.ks</keystore>
 					<alias>server</alias>
-					<storepass>sp0rtl1nk</storepass>
+					<storepass>${storepass}</storepass>
 					<keypass></keypass>
 				</configuration>
 			</plugin>

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin.name
 Bundle-SymbolicName: com.dexels.navajo.oda; singleton:=true
-Bundle-Version: 1.0.3
+Bundle-Version: 1.0.4.qualifier
 Bundle-ClassPath: .,
  src
 Bundle-Activator: com.dexels.navajo.oda.Activator

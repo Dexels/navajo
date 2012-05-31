@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.echo.feature"
       label="Echo2 based tipi implementation"
-      version="1.0.27"
+      version="1.0.28.qualifier"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

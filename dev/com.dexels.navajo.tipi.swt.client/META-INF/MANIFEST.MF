@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo SWT Client
 Bundle-SymbolicName: com.dexels.navajo.tipi.swt.client
-Bundle-Version: 1.0.3
+Bundle-Version: 1.0.4.qualifier
 Bundle-Activator: swtclient.Version
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

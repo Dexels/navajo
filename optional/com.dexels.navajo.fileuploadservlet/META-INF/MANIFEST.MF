@@ -2,7 +2,7 @@ Bundle-Name: Navajo File Upload
 Bundle-SymbolicName: com.dexels.navajo.fileuploadservlet
 Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.2.qualifier
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",

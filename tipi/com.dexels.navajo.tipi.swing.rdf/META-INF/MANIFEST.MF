@@ -2,7 +2,7 @@ Bundle-Name: Navajo RDF Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.rdf
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.2.qualifier
 Bundle-Activator: tipi.TipiSwingExtension
 Export-Package: com.dexels.navajo.tipi.components.swingimpl,
  com.dexels.navajo.tipi.components.swingimpl.parsers,
