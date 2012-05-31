@@ -80,11 +80,6 @@
 
 	<import file="../../../navajo/core/com.dexels.navajo.version/ant/navajobuild.xml" />
 
-	<target name="afterdeploy">
-	  	<copy file="${archive}" todir="../GeoJsp/WebContent/WEB-INF/lib"/>
-	  	<copy file="${archive}" todir="../NavajoServerContext/WebContent/WEB-INF/lib"/>
-	</target>
-	
 	
 </project>
 <!-- EOF: $RCSfile$ -->

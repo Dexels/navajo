@@ -80,14 +80,6 @@
 
 	<import file="../../../navajo/core/com.dexels.navajo.version/ant/navajobuild.xml" />
 
-	<target name="afterdeploy">
-		<copy todir="../NavajoServer/sample/Server/WEB-INF/tld/">
-			<fileset dir="WEB-INF/tags">
-				<include name="*.tld"/>
-			</fileset>
-		</copy>
-	</target>
-	
 	
 </project>
 <!-- EOF: $RCSfile$ -->
