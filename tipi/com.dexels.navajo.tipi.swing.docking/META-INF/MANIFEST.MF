@@ -2,7 +2,7 @@ Bundle-Name: Navajo Tipi Swing Docking wrapper
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.docking
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.4.qualifier
+Bundle-Version: 1.0.5
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.version,

@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.swing.cobra.feature"
       label="Cobra browser for Tipi"
-      version="1.0.0.qualifier"
+      version="1.0.10"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

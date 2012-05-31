@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.jabber.feature"
       label="Jabber tools for Tipi"
-      version="1.0.0.qualifier"
+      version="1.0.12"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

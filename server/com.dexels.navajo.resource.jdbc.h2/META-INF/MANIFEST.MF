@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JDBC Driver for H2 database
 Bundle-SymbolicName: com.dexels.navajo.resource.jdbc.h2
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.1
 Bundle-Activator: com.dexels.navajo.resource.jdbc.h2.Activator
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

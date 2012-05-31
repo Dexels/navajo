@@ -2,7 +2,7 @@ Bundle-Name: Navajo Development Environment
 Bundle-SymbolicName: com.dexels.navajo.dev.script;singleton:=true
 Bundle-Description: 
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.0.4.qualifier
+Bundle-Version: 2.0.5
 Bundle-Activator: com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.0",

@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.flickr.feature"
       label="Flickr integration"
-      version="1.0.0.qualifier"
+      version="1.0.19"
       provider-name="DEXELS">
 
    <description url="http://www.example.com/description">

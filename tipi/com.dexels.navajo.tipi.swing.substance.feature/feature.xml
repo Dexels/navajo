@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.swing.substance.feature"
       label="Substance Look and Feel for Tipi"
-      version="1.0.0.qualifier"
+      version="1.1.5"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

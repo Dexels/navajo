@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.mail.feature"
       label="POP based mail client for tipi"
-      version="1.0.21.qualifier"
+      version="1.0.24"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

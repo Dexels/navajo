@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.swing.svg.feature"
       label="Batik based SVG client"
-      version="1.0.0.qualifier"
+      version="1.0.6"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

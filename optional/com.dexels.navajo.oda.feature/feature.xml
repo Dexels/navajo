@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.oda.feature"
       label="Birt ODA Driver"
-      version="1.0.2.qualifier"
+      version="1.0.3"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

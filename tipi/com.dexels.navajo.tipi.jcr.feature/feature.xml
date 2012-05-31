@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.jcr.feature"
       label="Feature for Tipi JCR integration"
-      version="1.0.0.qualifier"
+      version="1.0.1"
       provider-name="DEXELS">
 
    <description url="http://www.example.com/description">

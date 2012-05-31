@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.core.feature"
       label="Navajo Core Feature"
-      version="1.0.7.qualifier"
+      version="1.0.8"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

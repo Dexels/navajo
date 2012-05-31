@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.swing.rich.feature"
       label="Rich UI support"
-      version="1.0.0.qualifier"
+      version="1.0.10"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

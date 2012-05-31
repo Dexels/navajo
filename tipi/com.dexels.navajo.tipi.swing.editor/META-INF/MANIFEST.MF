@@ -2,7 +2,7 @@ Bundle-Name: Navajo Swing Tipi Swing Editor
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.editor
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.26.qualifier
+Bundle-Version: 1.1.2
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  com.dexels.navajo.core;bundle-version="2.9.2",

@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.server.embedded.feature"
       label="Embedded Server"
-      version="1.0.1.qualifier"
+      version="1.0.3"
       provider-name="DEXELS">
 
    <description url="http://www.dexels.com/">

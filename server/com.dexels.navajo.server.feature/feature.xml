@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.server.feature"
       label="Navajo Server Feature"
-      version="1.0.4.qualifier"
+      version="1.0.5"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

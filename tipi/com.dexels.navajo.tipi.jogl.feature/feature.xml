@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.tipi.jogl.feature"
       label="Tipi JOGL components"
-      version="1.0.0.qualifier"
+      version="1.0.1"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">
