@@ -1,5 +1,5 @@
 Bundle-Name: Navajo Remote Test Library
-Bundle-SymbolicName: com.dexels.navajo.test.integration
+Bundle-SymbolicName: com.dexels.navajo.test.remote
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0.qualifier
