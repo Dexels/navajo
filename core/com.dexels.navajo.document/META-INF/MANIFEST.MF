@@ -18,8 +18,8 @@ Export-Package: com.dexels.navajo.document;version="2.2.0",
  org.dexels.utils;version="2.2.0"
 Import-Package: com.dexels.navajo.version,
  org.hamcrest.core;version="1.1.0",
- org.junit,
- org.junit.runner,
- org.junit.runners,
+ org.junit;resolution:=optional,
+ org.junit.runner;resolution:=optional,
+ org.junit.runners;resolution:=optional,
  org.osgi.framework;version="1.5.0",
  org.slf4j

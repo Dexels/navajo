@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.gef,
  org.eclipse.emf.ecore;bundle-version="2.6.1",
  org.eclipse.emf.ecore.change;bundle-version="2.5.1",
- org.junit
+ org.junit;bundle-version="4.8.2";resolution:=optional
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
