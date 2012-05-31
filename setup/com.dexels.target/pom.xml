@@ -2,14 +2,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.dexels.navajo.core</groupId>
+		<groupId>com.dexels.navajo</groupId>
 		<artifactId>com.dexels.navajo.super</artifactId>
 		<version>1.0.0</version>
 		<relativePath>../../../navajo/setup/com.dexels.repository</relativePath>
 	</parent>
 	
 	<artifactId>targetplatform</artifactId>
-	<version>0.9.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<name>Tycho build examples - Target platform</name>
 

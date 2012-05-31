@@ -2,7 +2,7 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.dexels.navajo.core</groupId>
+	<groupId>com.dexels.navajo</groupId>
 	<artifactId>com.dexels.navajo.super</artifactId>
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
@@ -108,7 +108,7 @@
 					<resolver>p2</resolver>
 					<target>
 						<artifact>
-							<groupId>com.dexels.navajo.core</groupId>
+							<groupId>com.dexels.navajo</groupId>
 							<artifactId>targetplatform</artifactId>
 							<version>0.9.1-SNAPSHOT</version>
 							<classifier>navajo_target</classifier>
@@ -258,6 +258,7 @@
 			<name>Dexels Repository</name>
 			<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
 			<url>https://source.dexels.com/nexus/content/repositories/navajo/</url>
+ 
 			<layout>default</layout>
 		</repository>
 		<snapshotRepository>
