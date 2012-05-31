@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.dexels.navajo.core</groupId>
+	<groupId>com.dexels.navajo</groupId>
 	<artifactId>com.dexels.navajo.tipi.swing.geo.aggr</artifactId>
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
@@ -16,7 +16,7 @@
 	</modules>
 	
         <parent>
-                <groupId>com.dexels.navajo.core</groupId>
+                <groupId>com.dexels.navajo</groupId>
                 <artifactId>com.dexels.navajo.super</artifactId>
                 <version>1.0.0</version>
                 <relativePath>../../../../navajo/setup/com.dexels.repository</relativePath>

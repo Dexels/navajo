@@ -91,9 +91,6 @@
 						</copy>
 					</sequential>
 				</for>
-			
-		
-
 	</target>
 	
 	
@@ -154,7 +151,7 @@
 	</target>
 	<target name="sign" depends="repackJars">
 	
-		<signjar keystore="${keystore}" verbose="false" storepass="${storepass}" keypass="${keypass}" alias="${alias}">
+		<signjar keystore="${keystore}" verbose="false" storepass="${storepass}" keypass="${keypass}" alias="server">
 			<fileset dir=".">
 				<include name="${dist}/lib/*.jar" />
 			</fileset>

@@ -7,7 +7,7 @@
 	<version>1.0.1-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 	<parent>
-		<groupId>com.dexels.navajo.core</groupId>
+		<groupId>com.dexels.navajo</groupId>
 		<artifactId>com.dexels.navajo.super</artifactId>
 		<version>1.0.0</version>
 		<relativePath>../../../navajo/setup/com.dexels.repository</relativePath>
