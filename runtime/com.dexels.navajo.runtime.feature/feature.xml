@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.dexels.navajo.mongo.feature"
-      label="MongoDb integration feature"
-      version="1.0.0.qualifier"
+      id="com.dexels.navajo.runtime.feature"
+      label="Runtime feature"
+      version="1.0.1.qualifier"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">
@@ -18,17 +18,17 @@
    </license>
 
    <plugin
-         id="com.dexels.navajo.mongo"
+         id="com.dexels.navajo.runtime.osgi"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0.qualifier"
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.mongo.navajostore"
+         id="com.dexels.navajo.runtime.osgi.j2ee"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0.qualifier"
          unpack="false"/>
 
 </feature>

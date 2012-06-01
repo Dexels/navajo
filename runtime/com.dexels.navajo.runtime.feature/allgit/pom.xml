@@ -4,22 +4,18 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>temp</groupId>
-	<artifactId>com.dexels.navajo.mongo.aggr</artifactId>
+	<artifactId>com.dexels.navajo.runtime.aggr</artifactId>
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
-
 	<modules>
-		<module>../../com.dexels.navajo.mongo</module>
-		<module>../../com.dexels.navajo.mongo.navajostore</module>
-		<module>../</module>
+		<module>../../com.dexels.navajo.runtime.osgi</module>
+		<module>../../com.dexels.navajo.runtime.osgi.j2ee</module>
+		<!-- <module>../</module>-->
 	</modules>
-	
-        <parent>
-                <groupId>com.dexels.navajo</groupId>
-                <artifactId>com.dexels.navajo.super</artifactId>
-                <version>1.0.0</version>
-                <relativePath>../../../setup/com.dexels.repository</relativePath>
-        </parent>
-
-	
+	<parent>
+		<groupId>com.dexels.navajo</groupId>
+		<artifactId>com.dexels.navajo.super</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../../../setup/com.dexels.repository</relativePath>
+	</parent>
 </project>
