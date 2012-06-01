@@ -7,7 +7,8 @@ Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Main-Class: com.dexels.navajo.osgi.runtime.FrameworkInstance
 Require-Bundle: org.apache.felix.fileinstall;bundle-version="3.2.0",
- org.apache.felix.gogo.command;bundle-version="0.12.0"
+ org.apache.felix.gogo.command;bundle-version="0.12.0",
+ org.apache.felix.framework;bundle-version="4.0.2"
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.script.api,
  com.dexels.navajo.version,

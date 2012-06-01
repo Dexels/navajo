@@ -64,7 +64,7 @@ public class WebFrameworkInstance extends FrameworkInstance {
 
 
 	@Override
-	protected Map<String, Object> createConfig() throws Exception {
+	protected Map createConfig() throws Exception {
 		Map<String, Object> config = super.createConfig();
 		config.put("SYSTEMBUNDLE_ACTIVATORS_PROP",
 				Arrays.asList(new ProvisionActivator(this.context)));

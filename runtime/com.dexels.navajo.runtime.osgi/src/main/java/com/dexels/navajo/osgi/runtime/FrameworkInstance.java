@@ -16,8 +16,10 @@
  */
 package com.dexels.navajo.osgi.runtime;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,10 +27,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.felix.framework.Felix;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.launch.Framework;
+import org.osgi.framework.launch.FrameworkFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,7 +113,7 @@ public class FrameworkInstance {
 
 	protected void doStart() throws Exception {
 
-		Framework felixFramework =  new Felix(createConfig());
+		Framework felixFramework = getFrameworkFactory().newFramework(createConfig()); //  new Felix(createConfig());
 		felixFramework.init();
 		felixFramework.start();
 		this.framework = felixFramework;
@@ -132,7 +134,7 @@ public class FrameworkInstance {
 	}
 
 	// TODO: add some config properties
-	protected Map<String, Object> createConfig() throws Exception {
+	protected  Map createConfig() throws Exception {
 		Properties props = new Properties();
 //		props.load(getResource("default.properties"));
 		props.load(getResource("framework.properties"));
@@ -185,7 +187,35 @@ public class FrameworkInstance {
 	}
 
 	protected void log(String message, Throwable cause) {
-		
 		logger.info(message,cause);
 	}
+
+	  private static FrameworkFactory getFrameworkFactory() throws Exception
+	    {
+	        java.net.URL url = FrameworkInstance.class.getClassLoader().getResource(
+	            "META-INF/services/org.osgi.framework.launch.FrameworkFactory");
+	        if (url != null)
+	        {
+	            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+	            try
+	            {
+	                for (String s = br.readLine(); s != null; s = br.readLine())
+	                {
+	                    s = s.trim();
+	                    // Try to load first non-empty, non-commented line.
+	                    if ((s.length() > 0) && (s.charAt(0) != '#'))
+	                    {
+	                        return (FrameworkFactory) Class.forName(s).newInstance();
+	                    }
+	                }
+	            }
+	            finally
+	            {
+	                if (br != null) br.close();
+	            }
+	        }
+
+	        throw new Exception("Could not find framework factory.");
+	    }
+
 }
