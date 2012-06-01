@@ -11,6 +11,7 @@
 	<modules>
 		<module>../../com.dexels.navajo.tipi.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.swing.feature/allgit</module>
+		<module>../../com.dexels.navajo.tipi.vaadin.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.css.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.echo.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.flickr.feature/allgit</module>
