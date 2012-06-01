@@ -15,7 +15,6 @@ Export-Package: com.dexels.navajo.dnd,
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
- com.dexels.navajo.document.base;version="2.2.0",
  com.dexels.navajo.document.filter,
  com.dexels.navajo.document.metadata;version="2.2.0",
  com.dexels.navajo.document.notifier,
