@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+        <activeProfiles>
+                <activeProfile>dexels</activeProfile>
+        </activeProfiles>
+        <servers>
+                <server>
+                        <id>dexels_snap</id>
+                        <username>deployment</username>
+                        <password>*********</password>
+                </server>
+                <server>
+                        <id>dexels</id>
+                        <username>deployment</username>
+                        <password>*********</password>
+                </server>
+        </servers>
+        <profiles>
+                <profile>
+                        <id>dexels</id>
+                        <properties>
+                                <storepass>*********</storepass>
+                        </properties>
+                        <repositories>
+                                <repository>
+                                        <releases>
+                                                <enabled>true</enabled>
+                                        </releases>
+                                        <snapshots>
+                                                <enabled>false</enabled>
+                                        </snapshots>
+                                        <id>central</id>
+                                        <name>Central Spiritus</name>
+                                        <url>https://source.dexels.com/nexus/content/groups/public/</url>
+                                </repository>
+                        </repositories>
+                        <pluginRepositories>
+                                <pluginRepository>
+                                        <id>jboss-public-repository-group</id>
+                                        <name>JBoss Public Repository Group</name>
+                                        <url>https://source.dexels.com/nexus/content/groups/public/</url>
+                                        <releases>
+                                                <enabled>true</enabled>
+                                        </releases>
+                                        <snapshots>
+                                                <enabled>false</enabled>
+                                        </snapshots>
+                                </pluginRepository>
+                        </pluginRepositories>
+                </profile>
+        </profiles>
+</settings>
+~                    
