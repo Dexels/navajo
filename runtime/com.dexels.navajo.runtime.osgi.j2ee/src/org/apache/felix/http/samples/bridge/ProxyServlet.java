@@ -60,35 +60,11 @@ public final class ProxyServlet
     protected void service(final HttpServletRequest req, HttpServletResponse res)
         throws ServletException, IOException
     {
-//    	System.err.println("Request: "+req);
-//    	System.err.println("Contextpath: "+req.getContextPath());
-//    	System.err.println("PathIndo: "+req.getPathInfo());
-//    	System.err.println("PathQuert: "+req.getQueryString());
-//    	System.err.println("servletPath: "+req.getServletPath());
-//    	System.err.println("requri: "+req.getRequestURI());
-//    	System.err.println("requrl: "+req.getRequestURL());
-//    	
-//    	getServletContext().log("SERVICE OF PROXY DETECTED!");
 
-    	HttpServletRequestWrapper hsrw = new HttpServletRequestWrapper(req){
-
-			@Override
-			public String getPathInfo() {
-				return req.getPathInfo();
-			}
-
-			@Override
-			public String getServletPath() {
-				return super.getServletPath();
-			}
-    		
-    	};
     	HttpServlet dispatcher = this.tracker.getDispatcher();
         if (dispatcher != null) {
             dispatcher.service(req, res);
         } else {
-//        	getServletContext().log("OEMPALOEMPA!");
-        	
         	res.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
         }
     }

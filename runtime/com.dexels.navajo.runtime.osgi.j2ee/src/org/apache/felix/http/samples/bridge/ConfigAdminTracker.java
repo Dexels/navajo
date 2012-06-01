@@ -4,19 +4,13 @@ import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
-import javax.servlet.ServletContext;
-
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
-import org.osgi.framework.Filter;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.script.api.LocalClient;
 
 
 public class ConfigAdminTracker extends ServiceTracker {
@@ -40,16 +34,6 @@ public class ConfigAdminTracker extends ServiceTracker {
         }
 
 
-	
-    private static Filter createFilter(BundleContext context)
-            throws Exception
-        {
-            StringBuffer str = new StringBuffer();
-            str.append("("+Constants.OBJECTCLASS).append("=");
-            str.append(org.osgi.service.cm.ConfigurationAdmin.class.getName()).append(")");
-            logger.info("Filter created: "+str);
-            return context.createFilter(str.toString());
-        }
     
     public Object addingService(ServiceReference ref)
     {
