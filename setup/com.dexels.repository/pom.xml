@@ -235,19 +235,6 @@
 
 		</plugins>
 
-		<extensions>
-			<!-- Enabling the use of FTP -->
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh</artifactId>
-				<version>2.2</version>
-			</extension>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-webdav-jackrabbit</artifactId>
-				<version>2.2</version>
-			</extension>
-		</extensions>
 	</build>
 
 
@@ -269,4 +256,19 @@
 			<layout>legacy</layout>
 		</snapshotRepository>
 	</distributionManagement>
+	<organization>
+		<name>Dexels</name>
+		<url>http://www.dexels.com</url>
+	</organization>
+	<scm>
+		<url>https://github.com/Dexels/navajo/</url>
+	</scm>
+	<issueManagement>
+		<system>github</system>
+		<url>https://github.com/Dexels/navajo/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>jenkins</system>
+		<url>https://source.dexels.com/jenkins/</url>
+	</ciManagement>
 </project>
