@@ -8,9 +8,9 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.tipi,
  com.dexels.navajo.core,
- com.dexels.navajo.tipi.swing;bundle-version="1.0.43",
- com.dexels.navajo.tipi.swing.deps;bundle-version="1.0.0",
- com.dexels.navajo.tipi.swing.client;bundle-version="1.0.3"
+ com.dexels.navajo.tipi.swing;bundle-version="[1.2.0,2.0.0)",
+ com.dexels.navajo.tipi.swing.deps;bundle-version="[1.2.0,2.0.0)",
+ com.dexels.navajo.tipi.swing.client;bundle-version="[1.2.0,2.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/gnujaxp.jar,
  lib/iText-2.1.5.jar,
