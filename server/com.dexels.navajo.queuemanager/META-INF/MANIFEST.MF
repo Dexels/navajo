@@ -2,13 +2,11 @@ Bundle-Name: Navajo Queue Manager
 Bundle-SymbolicName: com.dexels.navajo.queuemanager
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.5.qualifier
+Bundle-Version: 1.0.6.qualifier
 Bundle-ClassPath: .
 Include-Resource: lib
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.client,
- com.dexels.navajo.core;bundle-version="2.9.2",
- com.dexels.navajo.listeners;bundle-version="3.1.2"
+Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.2"
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.script.api,
  com.dexels.navajo.version,
