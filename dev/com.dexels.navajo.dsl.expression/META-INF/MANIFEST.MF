@@ -4,7 +4,6 @@ Bundle-Name: com.dexels.navajo.dsl.expression
 Bundle-Vendor: Dexels
 Bundle-Version: 1.1.1.qualifier
 Bundle-SymbolicName: com.dexels.navajo.dsl.expression; singleton:=true
-Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext;bundle-version="1.0.1",
  org.apache.commons.logging;resolution:=optional,
  org.eclipse.emf.codegen.ecore;resolution:=optional,

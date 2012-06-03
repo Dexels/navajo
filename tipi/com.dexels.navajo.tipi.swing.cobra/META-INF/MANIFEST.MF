@@ -10,7 +10,6 @@ Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.tipi.swing.deps,
  com.dexels.navajo.tipi.swing;bundle-version="1.0.41",
  com.dexels.navajo.tipi.swing.client;bundle-version="1.0.3"
-Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/cobra.jar,
  lib/js.jar
 Import-Package: com.dexels.navajo.document;version="2.2.0",

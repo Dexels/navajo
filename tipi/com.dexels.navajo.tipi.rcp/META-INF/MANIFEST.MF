@@ -10,6 +10,5 @@ Require-Bundle: org.eclipse.ui,
  com.dexels.navajo.tipi;bundle-version="1.0.64",
  com.dexels.navajo.core;bundle-version="2.9.4"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ActivationPolicy: lazy
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.version

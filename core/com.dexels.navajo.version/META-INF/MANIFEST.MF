@@ -7,6 +7,5 @@ Bundle-Activator: navajoversion.NavajoBundleManager
 Export-Package: com.dexels.navajo.version;uses:="org.osgi.framework,org.slf4j"
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .
-Bundle-ActivationPolicy: lazy
 Import-Package: org.osgi.framework,
  org.slf4j;version="1.6.1"

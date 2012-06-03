@@ -9,7 +9,6 @@ Require-Bundle: com.dexels.navajo.tipi.echo.client;bundle-version="1.0.1",
  com.dexels.navajo.core;bundle-version="2.9.4",
  com.dexels.navajo.client;bundle-version="3.0.6",
  javax.servlet;bundle-version="2.5.0"
-Bundle-ActivationPolicy: lazy
 Export-Package: com.dexels.navajo.functions,
  com.dexels.navajo.tipi.actions,
  com.dexels.navajo.tipi.components.echoimpl,

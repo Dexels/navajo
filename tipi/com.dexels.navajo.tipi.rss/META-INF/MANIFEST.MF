@@ -4,7 +4,6 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.9.qualifier
 Bundle-Vendor: Dexels
-Bundle-ActivationPolicy: lazy
 Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  com.dexels.navajo.core;bundle-version="2.9.4"
 Bundle-ClassPath: .,

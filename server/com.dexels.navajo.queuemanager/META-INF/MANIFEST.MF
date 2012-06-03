@@ -20,4 +20,3 @@ Export-Package: com.dexels.navajo.queuemanager,
  com.dexels.navajo.server.listener.http.schedulers.priority,
  navajoqueuemanager
 Bundle-Activator: navajoqueuemanager.Version
-Bundle-ActivationPolicy: lazy

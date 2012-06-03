@@ -17,4 +17,3 @@ Import-Package: com.dexels.navajo.client,
 Export-Package: com.dexels.navajo.queuemanager,
  com.dexels.navajo.queuemanager.api,
  navajoqueuemanager
-Bundle-ActivationPolicy: lazy

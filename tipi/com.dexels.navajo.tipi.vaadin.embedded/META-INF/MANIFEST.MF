@@ -27,4 +27,3 @@ Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
 Export-Package: com.dexels.navajo.tipi.vaadin.embedded
 Bundle-ClassPath: .
 Bundle-Activator: com.dexels.navajo.tipi.vaadin.embedded.activator.Activator
-Bundle-ActivationPolicy: lazy

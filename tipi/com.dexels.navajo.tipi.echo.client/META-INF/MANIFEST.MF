@@ -7,7 +7,6 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.function;bundle-version="2.0.6",
  com.dexels.navajo.tipi;bundle-version="1.0.63",
  javax.servlet;bundle-version="2.5.0"
-Bundle-ActivationPolicy: lazy
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",

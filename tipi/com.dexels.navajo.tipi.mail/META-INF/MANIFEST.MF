@@ -7,7 +7,6 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  com.dexels.navajo.client;bundle-version="3.0.5",
  com.dexels.navajo.core;bundle-version="2.9.4"
-Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/mail.jar
 Export-Package: com.dexels.navajo.tipi.mail

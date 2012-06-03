@@ -17,4 +17,3 @@ Bundle-ClassPath: lib/catalina-ant.jar,
  lib/p200ant.jar,
  .
 Bundle-Activator: com.dexels.tipi.plugin.TipiPluginActivator
-Bundle-ActivationPolicy: lazy

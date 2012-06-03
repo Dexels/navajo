@@ -21,7 +21,6 @@ Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.0",
  org.eclipse.ui.forms;bundle-version="3.5.2",
  org.eclipse.core.resources,
  com.dexels.navajo.birt.push;bundle-version="1.0.1"
-Bundle-ActivationPolicy: lazy
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.context,
  com.dexels.navajo.document;version="2.2.0",

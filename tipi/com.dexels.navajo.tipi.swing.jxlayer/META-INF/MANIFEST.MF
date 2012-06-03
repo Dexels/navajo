@@ -8,7 +8,6 @@ Require-Bundle: com.dexels.navajo.tipi,
  com.dexels.navajo.core,
  com.dexels.navajo.tipi.swing;bundle-version="1.0.41",
  com.dexels.navajo.tipi.swing.swingx;bundle-version="1.0.0"
-Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/jxlayer.jar,
  lib/filters.jar

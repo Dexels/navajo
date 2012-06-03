@@ -7,7 +7,6 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.tipi,
  com.dexels.navajo.core
-Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/flickrapi-1.0b4.jar,
  .
 Bundle-Activator: tipi.TipiFlickrExtension

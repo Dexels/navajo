@@ -16,7 +16,6 @@ Require-Bundle: com.dexels.navajo.tipi,
  com.dexels.navajo.tipi.swing.client;bundle-version="1.0.3",
  com.dexels.navajo.tipi.swing;bundle-version="1.1.7",
  com.dexels.navajo.tipi.jogl;bundle-version="1.0.0"
-Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/gluegen-rt.jar,
  lib/jogl.jar

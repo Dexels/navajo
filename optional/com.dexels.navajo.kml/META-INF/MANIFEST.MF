@@ -15,7 +15,6 @@ Import-Package: com.dexels.navajo.client,
  junit.framework,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"
-Bundle-ActivationPolicy: lazy
 Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.5",
  com.dexels.navajo.core;bundle-version="2.9.4",
  com.dexels.navajo.listeners;bundle-version="3.1.5",
