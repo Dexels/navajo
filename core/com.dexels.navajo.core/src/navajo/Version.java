@@ -17,6 +17,10 @@ import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
+import com.dexels.navajo.server.enterprise.scheduler.ClockInterface;
+import com.dexels.navajo.server.enterprise.scheduler.DummyClock;
+import com.dexels.navajo.server.enterprise.scheduler.DummyTaskRunner;
+import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
 import com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
@@ -224,6 +228,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	private ServiceRegistration dummyStats;
 	
 	private static BundleContext bundleContext;
+	private ServiceRegistration clockRegistration;
+	private ServiceRegistration taskRunnerRegistration;
 
 	
 	public static String getDescription() {
@@ -241,7 +247,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	
 	@Override
 	public void start(BundleContext bc) throws Exception {
-		try {
 			super.start(bc);
 			FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
 			fi.init();
@@ -272,11 +277,9 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 			wb.put("threadClass","com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner");
 			wb.put("name","dummy");
 			dummyStats = bc.registerService(StatisticsRunnerInterface.class.getName(), ptps, wb);
-		} catch (Throwable e) {
-			// TODO Should remove this, but it's an experiment
-			e.printStackTrace();
-		}		
 
+			registerClock();
+			registerTaskRunner();
 
 	}
 
@@ -334,9 +337,19 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 		  JabberWorkerFactory.shutdown();
 		  DispatcherFactory.shutdown();
+		  
 	
 	}
 
+
+	
+
+	@Override
+	public void stop(BundleContext arg0) throws Exception {
+		super.stop(arg0);
+		deregisterTaskRunner();
+		deregisterClock();
+	}
 
 
 	public static void registerNavajoConfig(NavajoConfigInterface nc) {
@@ -378,5 +391,32 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		return bundleContext;
 	}
 	
+	private void registerClock() {
+		Dictionary<String, Object> properties = new Hashtable<String, Object>();
+		properties.put("service.ranking", Integer.MIN_VALUE);
+		ClockInterface c = new DummyClock();
+		clockRegistration = getDefaultBundleContext().registerService(ClockInterface.class, c, properties);
+	}
 	
+	private void deregisterClock() {
+		if(clockRegistration!=null) {
+			clockRegistration.unregister();
+		}
+	}
+	
+	private void registerTaskRunner() {
+		Dictionary<String, Object> properties = new Hashtable<String, Object>();
+		properties.put("service.ranking", Integer.MIN_VALUE);
+		TaskRunnerInterface c = new DummyTaskRunner();
+		taskRunnerRegistration = getDefaultBundleContext().registerService(TaskRunnerInterface.class, c, properties);
+	}
+	
+	private void deregisterTaskRunner() {
+		if(taskRunnerRegistration!=null) {
+			taskRunnerRegistration.unregister();
+		}
+	}
+	
+	
+
 }
