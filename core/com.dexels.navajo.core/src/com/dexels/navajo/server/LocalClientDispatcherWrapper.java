@@ -2,8 +2,6 @@ package com.dexels.navajo.server;
 
 import java.util.Dictionary;
 
-import org.osgi.service.cm.ConfigurationException;
-import org.osgi.service.cm.ManagedService;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +10,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
-import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.api.NavajoServerContext;
 
 public class LocalClientDispatcherWrapper implements LocalClient {
