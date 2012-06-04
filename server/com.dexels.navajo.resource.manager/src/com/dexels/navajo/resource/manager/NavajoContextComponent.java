@@ -86,7 +86,6 @@ public class NavajoContextComponent {
 			logger.debug("Looking for client.properties in: "+navajoServerContext.getInstallationPath());
 			File install = new File(navajoServerContext.getInstallationPath(),"config/client.properties");
 			fis = new FileInputStream(install);
-			resourceManager.loadResourceTml(fis);
 			ResourceBundle b = new PropertyResourceBundle(fis);
 			if(! b.containsKey("username")) {
 				logger.error("No username found in client.properties");
