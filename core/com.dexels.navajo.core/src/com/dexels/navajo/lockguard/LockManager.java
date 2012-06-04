@@ -31,7 +31,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -63,6 +67,10 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 	private final static String id = "Navajo LockManager";
 	
 	private static Object semaphore = new Object();
+	
+
+	private final static Logger logger = LoggerFactory
+			.getLogger(LockManager.class);
 	
 	public LockManager() {
 		super(id);
@@ -96,7 +104,6 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	private final void readDefinitions() {
 
 		FileInputStream in = null;
@@ -110,7 +117,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 			
 			Navajo definition = NavajoFactory.getInstance().createNavajo( in  );
 								
-			ArrayList all = definition.getMessage("Locks").getAllMessages();
+			List<Message> all = definition.getMessage("Locks").getAllMessages();
 			for ( int i = 0; i < all.size(); i++ ) {
 				Message lock = (Message) all.get(i);
 				String ws = lock.getProperty("WebservicePattern").getValue();
@@ -118,9 +125,9 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 				boolean matchRequest = ((Boolean) lock.getProperty("MatchRequest").getTypedValue()).booleanValue();
 				int maxInstance = ((Integer) lock.getProperty("MaxInstanceCount").getTypedValue()).intValue();
 				int timeOut = ((Integer) lock.getProperty("TimeOut").getTypedValue()).intValue();
-				HashMap excludeMessages = new HashMap();
+				Map<String,String> excludeMessages = new HashMap<String,String>();
 				if ( matchRequest && lock.getMessage("ExcludedMessages") != null ) {
-					ArrayList excludedMessagesList = lock.getMessage("ExcludedMessages").getAllMessages();
+					List<Message> excludedMessagesList = lock.getMessage("ExcludedMessages").getAllMessages();
 					for (int j = 0; j < excludedMessagesList.size(); j++) {
 						Message ex = (Message) excludedMessagesList.get(j);
 						String mn = ex.getProperty("MessageName").getValue();
@@ -181,7 +188,6 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 	 * @param a
 	 * @return
 	 */
-	@SuppressWarnings({ "unchecked", "unchecked" })
 	public final Lock [] grantAccess(final Access a) throws LocksExceeded {
 		
 		while ( readingDefinitions ) {
@@ -190,13 +196,12 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 				Thread.sleep(100);
 				System.err.println("Waiting while definitions are read");
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-		final ArrayList lockList = new ArrayList();
-		final Iterator iter = lockDefinitions.values().iterator();
+		final List<Lock> lockList = new ArrayList<Lock>();
+		final Iterator<LockDefinition> iter = lockDefinitions.values().iterator();
 		
 		// Try ty acquire locks in parallel.
 		final TotalDefinitions totalDefinitions = new TotalDefinitions();
@@ -210,22 +215,15 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 				public void run() {
 					Lock l;
 					try {
-						//System.err.println("Trying to acquire lock for: " + ld);
 						l = LockStore.getStore().addLock(a, ld, 0 );
 						if ( l != null && !( a.getException() != null && a.getException() instanceof LocksExceeded )) {
 							lockList.add(l);
-							//System.err.println(">>>> Got lock for: " + ld);
-						} else {
-							//System.err.println("Not lock for: " + ld);
 						}
 					} catch (LocksExceeded e) {
-						// TODO Auto-generated catch block
-						//e.printStackTrace();
-						//System.err.println(">>>> Locks exceeded lock for: " + ld);
+						logger.error("Max # of locks exceeded: ",e);
 					} finally {
 						synchronized (totalDefinitions) {
 							totalDefinitions.count--;
-							//System.err.println("DECREASED totalDefinitions, count = " + totalDefinitions.count );
 							totalDefinitions.notifyAll();
 						}	
 					}
@@ -233,20 +231,15 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 			}.start();
 		}
 		
-		// Lockdefinition barrier.
-		//System.err.println("ABOUT TO WAIT FOR ALL LOCKS.....");
 		while ( totalDefinitions.count > 0 ) { // barrier condition.
 			synchronized (totalDefinitions) {
 				try {
 					totalDefinitions.wait(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error("Interrupted: ",e);
 				}
 			}
 		}
-		//System.err.println("GOT 'M ALL... OR NOT: " + a.getException());
-		
 		// If a LocksExceeded exception was thrown by one of the lock threads, clean up locks and throw exception...
 		if ( a.getException() != null && a.getException() instanceof LocksExceeded ) {
 			// Remove previously set locks and throw exception.

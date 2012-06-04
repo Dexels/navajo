@@ -1,6 +1,7 @@
 package com.dexels.navajo.listeners;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -109,15 +110,16 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 
 	@Override
 	public int flushQueue() {
-		ArrayList list = new ArrayList();
+		Collection<Runnable> list = new ArrayList<Runnable>();
 		int size = tpe.getQueue().drainTo(list);
 		System.err.println("Drained " + size + " items. List size: " + list.size());
 		return size;
 	}
 
+	// TODO Why isn't this connected? Fix or document.
 	@Override
 	public List<TmlRunnable> getQueuedRequests() {
-		ArrayList runnable = new ArrayList();
+		List<TmlRunnable> runnable = new ArrayList<TmlRunnable>();
 		return runnable;
 //		Iterator iter = tpe.getQueue().iterator();
 //	    while ( iter.hasNext() ) {

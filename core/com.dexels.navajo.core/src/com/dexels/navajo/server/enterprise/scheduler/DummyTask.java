@@ -5,6 +5,8 @@ import com.dexels.navajo.server.UserException;
 
 public class DummyTask implements TaskInterface {
 
+	private static final long serialVersionUID = 4518273204586299917L;
+
 	public TaskInterface getInstance() {
 		return new DummyTask();
 	}
@@ -28,37 +30,30 @@ public class DummyTask implements TaskInterface {
 	}
 
 	public void run() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public String getTriggerDescription() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getUsername() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getWebservice() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public boolean isActive() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean isRunning() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void runTask() {
-		// TODO Auto-generated method stub
 		
 	}
 

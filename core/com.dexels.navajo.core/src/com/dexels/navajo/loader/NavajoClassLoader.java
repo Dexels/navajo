@@ -80,7 +80,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     
     private static int instances = 0;
     
-	private volatile Class myScriptClass = null;
+	private volatile Class<?> myScriptClass = null;
     
     /**
      * beta flag denotes whether beta versions of jar files should be used (if present).
@@ -140,8 +140,7 @@ public class NavajoClassLoader extends MultiClassLoader {
      * @return
      * @throws ClassNotFoundException
      */
-    @SuppressWarnings("unchecked")
-	public final Class getCompiledNavaScript(String script) throws ClassNotFoundException {
+	public final Class<?> getCompiledNavaScript(String script) throws ClassNotFoundException {
 
       if ( myScriptClass != null ) {
     	  return myScriptClass;
@@ -182,7 +181,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     			  rb += chunk;
     		  }
     		  
-    		  Class c = loadClass(b, className, true, false);
+    		  Class<?> c = loadClass(b, className, true, false);
 			 
     		  myScriptClass = c;
     		  
@@ -192,7 +191,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     		  //e.printStackTrace();
     		  // Try normal classloader...
     		  try {
-    			  Class c = getClass(className);
+    			  Class<?> c = getClass(className);
     			  return c;
     		  } catch (Exception e2) {
     			  throw new ClassNotFoundException("Could not find script: " + script,e2);
@@ -210,8 +209,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     /**
      * Always use this method to load a class. It uses the cache first before retrieving the class from a jar resource.
      */
-    @SuppressWarnings("unchecked")
-	public Class getClass(String className) throws ClassNotFoundException {
+	public Class<?> getClass(String className) throws ClassNotFoundException {
     	try {
     		return Class.forName(className, false, this);
     	} catch (ClassNotFoundException cnfe) {

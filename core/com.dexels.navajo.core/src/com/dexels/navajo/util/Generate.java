@@ -4,15 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.io.StringBufferInputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -274,20 +268,19 @@ public class Generate {
           return d;
   }
 
-  @SuppressWarnings("unchecked")
-  public void createMessageDefinition(Document d, String name, HashSet parts) {
-      Element e = d.createElement("wsdl_message");
-      d.appendChild(e);
-      e.setAttribute("name", name);
-      Iterator iter = parts.iterator();
-      while (iter.hasNext()) {
-        Element c = d.createElement("wsdl_part");
-        String partName = iter.next().toString();
-        c.setAttribute("name", partName);
-        c.setAttribute("type", partName);
-        e.appendChild(c);
-      }
-  }
+//  public void createMessageDefinition(Document d, String name, HashSet parts) {
+//      Element e = d.createElement("wsdl_message");
+//      d.appendChild(e);
+//      e.setAttribute("name", name);
+//      Iterator iter = parts.iterator();
+//      while (iter.hasNext()) {
+//        Element c = d.createElement("wsdl_part");
+//        String partName = iter.next().toString();
+//        c.setAttribute("name", partName);
+//        c.setAttribute("type", partName);
+//        e.appendChild(c);
+//      }
+//  }
 
   public Navajo getInputPart(Navajo result, InputStream is) {
 	  
@@ -356,56 +349,42 @@ public class Generate {
 	  }
   }
 
-  @SuppressWarnings({ "unchecked", "deprecation" })
-  public static void main(String args[]) throws Exception {
-
-      Generate gen = new Generate();
-
-    
-      
-      // Determine input messages:
-      FileInputStream fis = new FileInputStream("/home/arjen/projecten/NavajoStandardEdition/scripts/holiday/ProcessHolidayRequest.xml");
-      Navajo inputDoc = gen.getInputPart(null, fis);
-      fis.close();
-      ArrayList msgs = inputDoc.getAllMessages();
-      HashSet inputMessages = new HashSet();
-      for (int i = 0; i < msgs.size(); i++) {
-        inputMessages.add(((Message) msgs.get(i)).getName());
-      }
-      //inputDoc.write(System.err);
-      fis = new FileInputStream("/home/arjen/projecten/NavajoStandardEdition/scripts/holiday/ProcessHolidayRequest.xml");
-      Navajo outputDoc = gen.getOutputPart(fis);
-      fis.close();
-     
-      System.out.println(outputDoc.toString());
-
-      //Document input = (Document) result.getMessageBuffer();
-      //String inputMessage = "get"+"ProcessInsertKernMember"+"In";
-      //gen.createMessageDefinition(input, inputMessage, inputMessages);
-      //String outputMessage = "get"+"ProcessInsertKernMember"+"Out";
-      //gen.createMessageDefinition(input, outputMessage, outputMessages);
-
-      javax.xml.parsers.DocumentBuilderFactory builderFactory  = DocumentBuilderFactory.newInstance();
-      javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
-      
-      Document dIn = builder.parse(new StringBufferInputStream(inputDoc.toString()));
-      
-      Document dOut = builder.parse(new StringBufferInputStream(outputDoc.toString()));
-      
-      System.err.println("INPUT XML:");
-      inputDoc.write(System.err);
-      
-      System.err.println("OUTPUT XML:");
-      outputDoc.write(System.err);
-      
-//      String xmlInput = XMLDocumentUtils.transform(dIn, new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
-//      String xmlOutput = XMLDocumentUtils.transform(dOut, new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
+//  @SuppressWarnings({  "deprecation", "unused" })
+//  public static void main(String args[]) throws Exception {
 //
-//      System.err.println("XML INPUT:");
-//      System.err.println(xmlInput);
+//      Generate gen = new Generate();
 //
-//      System.err.println("XML OUTPUT:");
+//    
+//      
+//      // Determine input messages:
+//      FileInputStream fis = new FileInputStream("/home/arjen/projecten/NavajoStandardEdition/scripts/holiday/ProcessHolidayRequest.xml");
+//      Navajo inputDoc = gen.getInputPart(null, fis);
+//      fis.close();
+//      List<Message> msgs = inputDoc.getAllMessages();
+//      Set<String> inputMessages = new HashSet<String>();
+//      for (int i = 0; i < msgs.size(); i++) {
+//        inputMessages.add(((Message) msgs.get(i)).getName());
+//      }
+//      //inputDoc.write(System.err);
+//      fis = new FileInputStream("/home/arjen/projecten/NavajoStandardEdition/scripts/holiday/ProcessHolidayRequest.xml");
+//      Navajo outputDoc = gen.getOutputPart(fis);
+//      fis.close();
+//     
+//      System.out.println(outputDoc.toString());
 //
-//      System.err.println(xmlOutput);
-  }
+//      javax.xml.parsers.DocumentBuilderFactory builderFactory  = DocumentBuilderFactory.newInstance();
+//      javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
+//      
+//      Document dIn = builder.parse(new StringBufferInputStream(inputDoc.toString()));
+//      
+//      Document dOut = builder.parse(new StringBufferInputStream(outputDoc.toString()));
+//      
+//      System.err.println("INPUT XML:");
+//      inputDoc.write(System.err);
+//      
+//      System.err.println("OUTPUT XML:");
+//      outputDoc.write(System.err);
+//      
+//
+//  }
 }

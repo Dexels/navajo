@@ -10,6 +10,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -25,14 +26,13 @@ public final class JarResources {
     public boolean debugOn = false;
 
     // jar resource mapping tables
-    private Hashtable htSizes = new Hashtable();
+    private Hashtable<String,Integer> htSizes = new Hashtable<String,Integer>();
 
-    private Hashtable htJarContents = new Hashtable();
+    private Hashtable<String,byte[]> htJarContents = new Hashtable<String,byte[]>();
 
     // a jar file
     private File jarFile;
     
-    private int totalSize = 0;
 
     /**
      * creates a JarResources. It extracts all resources from a Jar into an
@@ -49,7 +49,7 @@ public final class JarResources {
     }
 
     public URL getJarURL() throws MalformedURLException {
-        return jarFile.toURL();
+        return jarFile.toURI().toURL();
     }
 
     public URL getPathURL(String path) throws MalformedURLException {
@@ -78,12 +78,12 @@ public final class JarResources {
     /**
      * Path "/" means, get first level files/directories.
      */
-    public final Iterator getResources(String path) {
-        HashSet inPath = new HashSet();
-        Iterator iter = getResources();
+    public final Iterator<String> getResources(String path) {
+        Set<String> inPath = new HashSet<String>();
+        Iterator<String> iter = getResources();
 
         while (iter.hasNext()) {
-            String orig = (String) iter.next();
+            String orig =  iter.next();
             String name = orig;
 
             name = "/" + orig;
@@ -108,11 +108,11 @@ public final class JarResources {
         return inPath.iterator();
     }
 
-    public final Iterator getResources() {
+    public final Iterator<String> getResources() {
         return htJarContents.keySet().iterator();
     }
 
-    public final Iterator getDirectories() {
+    public final Iterator<String> getDirectories() {
         return null;
     }
 
@@ -130,7 +130,7 @@ public final class JarResources {
         ZipFile zf = null;
         try {
             zf = new ZipFile(jarFile);
-            Enumeration e = zf.entries();
+            Enumeration<? extends ZipEntry> e = zf.entries();
 
             while (e.hasMoreElements()) {
                 ZipEntry ze = (ZipEntry) e.nextElement();
@@ -170,8 +170,6 @@ public final class JarResources {
                     size = ((Integer) htSizes.get(ze.getName())).intValue();
                 }
                 byte[] b = new byte[(int) size];
-                
-                totalSize += size;
                 
                 int rb = 0;
                 int chunk = 0;
@@ -214,34 +212,6 @@ public final class JarResources {
 
 //        System.err.println("Size of JarResources " + jarFile.getAbsolutePath() + " : " + totalSize);
         
-    }
-
-    /**
-     * Dumps a zip entry into a string.
-     * 
-     * @param ze
-     *            a ZipEntry
-     */
-    private final String dumpZipEntry(ZipEntry ze) {
-        StringBuffer sb = new StringBuffer();
-
-        if (ze.isDirectory()) {
-            sb.append("d ");
-        } else {
-            sb.append("f ");
-        }
-        if (ze.getMethod() == ZipEntry.STORED) {
-            sb.append("stored   ");
-        } else {
-            sb.append("defalted ");
-        }
-        sb.append(ze.getName());
-        sb.append("\t");
-        sb.append("" + ze.getSize());
-        if (ze.getMethod() == ZipEntry.DEFLATED) {
-            sb.append("/" + ze.getCompressedSize());
-        }
-        return (sb.toString());
     }
 
     /**

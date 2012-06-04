@@ -96,8 +96,6 @@ public final class Util {
     }
 
     public static void main(String args[]) throws Exception {
-        java.util.Date d = new java.util.Date();
-      //  System.out.println(formatDate(d));
         for (int i = 0; i < 10; i++)
         System.err.println(getRandomGuid());
     }

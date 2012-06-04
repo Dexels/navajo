@@ -11,6 +11,10 @@ import com.dexels.navajo.version.ExtensionDefinition;
 
 public class TestFunctionFactory extends FunctionFactoryInterface {
 
+	private static final long serialVersionUID = -294365840864600493L;
+
+
+
 	public void init() {
 		
 		// Read config file.

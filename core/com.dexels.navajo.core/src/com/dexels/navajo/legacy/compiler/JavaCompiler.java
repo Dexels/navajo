@@ -72,6 +72,9 @@ import java.util.ArrayList;
  * @author Anil K. Vijendran
  * @author Sam Ruby
  */
+@SuppressWarnings({"rawtypes"})
+
+
 public interface JavaCompiler {
 
     /**

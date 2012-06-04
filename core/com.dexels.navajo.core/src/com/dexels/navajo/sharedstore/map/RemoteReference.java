@@ -33,7 +33,7 @@ public class RemoteReference implements Serializable {
 	private String guid;
 	private Object host;
 	private boolean keepRemote = false;
-	private volatile static Map myObjectRegistry = new HashMap();
+	private volatile static Map<String,Object> myObjectRegistry = new HashMap<String,Object>();
 	
 	/**
 	 * The 'remote' constructor.

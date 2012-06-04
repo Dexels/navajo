@@ -8,6 +8,8 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 
+@SuppressWarnings("rawtypes")
+
 public class TestAdapter implements Mappable {
 
 	public String id;

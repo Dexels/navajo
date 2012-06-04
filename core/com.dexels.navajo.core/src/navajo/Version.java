@@ -213,6 +213,8 @@ import com.dexels.navajo.util.AuditLog;
  * 
  */
 
+@SuppressWarnings("rawtypes")
+
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	public static final int MAJOR = 9;

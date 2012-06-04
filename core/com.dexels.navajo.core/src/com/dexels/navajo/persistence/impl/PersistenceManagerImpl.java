@@ -115,7 +115,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 					if ( TribeManagerFactory.getInstance().getIsChief() ) {
 						sharedPersistenceStore.removeAll(CACHE_PATH); // Remove all cached entries when restarted.
 					}
-					inMemoryCache = new SharedTribalMap(MEMORY_CACHE_ID);
+					inMemoryCache = new SharedTribalMap<String,PersistentEntry>(MEMORY_CACHE_ID);
 					accessFrequency = new SharedTribalMap<String,Frequency>(FREQUENCE_MAP_ID);
 					inMemoryCache = SharedTribalMap.registerMap(inMemoryCache, false);
 					accessFrequency = SharedTribalMap.registerMap(accessFrequency, false);

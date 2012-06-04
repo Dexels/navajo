@@ -78,6 +78,8 @@ import java.util.ArrayList;
  *
  * @author Anil K. Vijendran
  */
+@SuppressWarnings({"unchecked","rawtypes"})
+
 public class SunJavaCompiler implements JavaCompiler {
 
     String encoding;
@@ -90,7 +92,7 @@ public class SunJavaCompiler implements JavaCompiler {
     private Class compilerClass;
 
     
-    public void setCompilerClass(Class c) {
+	public void setCompilerClass(Class c) {
         compilerClass = c;
     }
     

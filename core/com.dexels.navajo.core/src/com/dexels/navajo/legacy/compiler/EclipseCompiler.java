@@ -18,6 +18,9 @@ import java.util.ArrayList;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
+@SuppressWarnings({"unchecked","rawtypes"})
+
+
 public class EclipseCompiler implements JavaCompiler {
 
     String encoding;
@@ -28,7 +31,7 @@ public class EclipseCompiler implements JavaCompiler {
     boolean classDebugInfo=false;
 
     ClassLoader loader=null;
-    private Class compilerClass;
+	private Class compilerClass;
 
     public void setCompilerClass(Class c) {
         compilerClass = c;
@@ -151,7 +154,7 @@ public class EclipseCompiler implements JavaCompiler {
     
     }
     
-    public boolean compile(String source) {
+	public boolean compile(String source) {
 
         try {
             Class c;

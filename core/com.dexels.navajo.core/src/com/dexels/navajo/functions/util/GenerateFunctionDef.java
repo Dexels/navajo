@@ -12,6 +12,7 @@ import com.dexels.navajo.parser.FunctionInterface;
 
 public class GenerateFunctionDef {
 
+	@SuppressWarnings("rawtypes")
 	public static Class[] getClasses(String pckgname) throws ClassNotFoundException {
 		ArrayList<Class> classes = new ArrayList<Class>();
 //		Get a File object for the package
@@ -60,7 +61,7 @@ public class GenerateFunctionDef {
         <usage>Abs(Float|Integer)</usage>
         </function>
 	 */
-	public static XMLElement generateFunctionDefinition(Class c) throws Exception{
+	public static XMLElement generateFunctionDefinition(Class<FunctionInterface> c) throws Exception{
 		
 		XMLElement def = new CaseSensitiveXMLElement("function");
 		def.setAttribute("name", c.getSimpleName());
@@ -77,7 +78,7 @@ public class GenerateFunctionDef {
 		def.addChild(input);
 		try {
 			FunctionInterface fi = (FunctionInterface) c.newInstance();
-			Class [][] inputTypes = fi.getTypes();
+			Class<?> [][] inputTypes = fi.getTypes();
 			if ( inputTypes != null ) {
 				NavajoFactory nf = NavajoFactory.getInstance();
 				StringBuffer sb = new StringBuffer();
@@ -103,7 +104,7 @@ public class GenerateFunctionDef {
 		def.addChild(result);
 		try {
 			FunctionInterface fi = (FunctionInterface) c.newInstance();
-			Class [] returnTypes = fi.getReturnType();
+			Class<?> [] returnTypes = fi.getReturnType();
 			if ( returnTypes != null ) {
 				NavajoFactory nf = NavajoFactory.getInstance();
 				StringBuffer sb = new StringBuffer();
@@ -125,11 +126,12 @@ public class GenerateFunctionDef {
 		return def;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void main(String [] args) throws Exception {
 		
 		CaseSensitiveXMLElement functions = new CaseSensitiveXMLElement("functiondef");
 		
-		Class [] all = getClasses("com.dexels.navajo.functions");
+		Class<FunctionInterface> [] all = getClasses("com.dexels.navajo.functions");
 		for (int i = 0; i < all.length; i++) {
 			System.err.println(all[i]);
 			if (FunctionInterface.class.isAssignableFrom(all[i]) ) {

@@ -9,6 +9,8 @@ import com.dexels.navajo.sharedstore.SharedStoreFactory;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;
 import com.dexels.navajo.sharedstore.SharedStoreLock;
 
+@SuppressWarnings({"rawtypes","unchecked"})
+
 public class SharedTribalMap<K,V> extends HashMap {
 
 	public int size;

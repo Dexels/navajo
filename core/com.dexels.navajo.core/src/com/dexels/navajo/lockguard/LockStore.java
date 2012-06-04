@@ -24,7 +24,7 @@
  */
 package com.dexels.navajo.lockguard;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -54,11 +54,10 @@ public abstract class LockStore {
 		return matches(myRequest, otherRequest, ld) && matches(otherRequest, myRequest, ld);
 	}
 	
-	@SuppressWarnings("unchecked")
 	private boolean matches( Navajo myRequest, Navajo otherRequest, LockDefinition ld) {
 		
 		try {
-			ArrayList allMessages = myRequest.getAllMessages();
+			List<Message> allMessages = myRequest.getAllMessages();
 			
 			for (int i = 0; i < allMessages.size(); i++) {
 				Message m = (Message) allMessages.get(i);

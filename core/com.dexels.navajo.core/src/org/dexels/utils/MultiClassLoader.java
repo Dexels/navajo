@@ -52,38 +52,25 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
 
 
 
-    public Class loadClass(String className) throws ClassNotFoundException {
+    public Class<?> loadClass(String className) throws ClassNotFoundException {
         return (loadClass(className, true, false));
     }
 
-    public Class loadClass(String className, boolean resolveIt) throws ClassNotFoundException {
+    public Class<?> loadClass(String className, boolean resolveIt) throws ClassNotFoundException {
         return (loadClass(className, resolveIt, false));
     }
 
     // ---------- Abstract Implementation ---------------------
 
-    public synchronized Class loadClass(String className, boolean resolveIt, boolean useCache) throws ClassNotFoundException {
+    public synchronized Class<?> loadClass(String className, boolean resolveIt, boolean useCache) throws ClassNotFoundException {
        byte[]  classBytes;
-
-        // ----- Try to load it from preferred source
-        // Note loadClassBytes() is an abstract method
-
-       Class   result;
-
-//       result = (Class) classes.get(className);
-//       if (result != null) {
-//    	   System.err.println(this.hashCode() + ": Found " + className + " in cache!!!!!!!!");
-//         return result;
-//       }
-
-        classBytes = loadClassBytes(className);
-        return loadClass(classBytes, className, resolveIt, useCache);
+       classBytes = loadClassBytes(className);
+       return loadClass(classBytes, className, resolveIt, useCache);
     }
 
-    public synchronized Class loadClass(byte [] classBytes, String className,
+    public synchronized Class<?> loadClass(byte [] classBytes, String className,
             boolean resolveIt, boolean useCache) throws ClassNotFoundException {
-
-        Class   result;
+        Class<?>   result;
  
         //System.err.println(this.hashCode() + ": in loadClass(), className " + className);
        

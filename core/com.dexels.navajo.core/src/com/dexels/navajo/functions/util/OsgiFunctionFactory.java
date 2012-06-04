@@ -35,6 +35,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List<XMLElement> getAllFunctionElements(String interfaceClass, String propertyKey)  {
 		List<XMLElement> result = new ArrayList<XMLElement>();
@@ -60,6 +61,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 		return result;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List<XMLElement> getAllAdapterElements(String interfaceClass, String propertyKey)  {
 		List<XMLElement> result = new ArrayList<XMLElement>();
@@ -104,7 +106,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	
 	@Override
 	public  Class<?> getAdapterClass(String adapterClassName, ClassLoader cl) throws ClassNotFoundException {
-			Class osgiResolution = (Class) getComponent(adapterClassName, "adapterClass", Class.class);
+			Class<?> osgiResolution = (Class<?>) getComponent(adapterClassName, "adapterClass", Class.class);
 			if (osgiResolution==null) {
 				System.err.println("OSGi failed. Going old skool");
 				return super.getAdapterClass(adapterClassName, cl);
@@ -117,30 +119,5 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	public void parseFunction(Map<String, FunctionDefinition> fuds,
 			ExtensionDefinition fd, XMLElement element) {
 		super.parseFunction(fuds, fd, element);
-		
-//		Vector<XMLElement> def = element.getChildren();
-//		String name = (String) element.getAttribute("name");
-//		String object = (String) element.getAttribute("class");
-//		String description = null;
-//		String inputParams = null;
-//		String resultParam = null;
-//		for (int j = 0; j < def.size(); j++) {
-//			// TODO Check tag name?
-//			if ( def.get(j).getName().equals("description")) {
-//				description =  def.get(j).getContent();
-//			}
-//			if ( def.get(j).getName().equals("input")) {
-//				inputParams =  def.get(j).getContent();
-//			}
-//			if ( def.get(j).getName().equals("result")) {
-//				resultParam =  def.get(j).getContent();
-//			}
-//		}
-//		if ( name != null ) {
-//			FunctionDefinition functionDefinition = new FunctionDefinition(object, description, inputParams, resultParam,fd);
-//			functionDefinition.setXmlElement(element);
-//			fuds.put(name, functionDefinition);
-//			
-//		}
 	}
 }

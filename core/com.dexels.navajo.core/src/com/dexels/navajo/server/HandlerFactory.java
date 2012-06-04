@@ -19,6 +19,7 @@ public class HandlerFactory {
 			.getLogger(HandlerFactory.class);
 	private final static Map<String,ServiceHandler> handlerRepository = new HashMap<String, ServiceHandler>();
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static ServiceHandler createHandler(String handler, NavajoConfigInterface navajoConfig, Access access)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 
@@ -50,9 +51,9 @@ public class HandlerFactory {
 		Class<? extends ServiceHandler> c;
 
 		if (access.betaUser) {
-			c = navajoConfig.getBetaClassLoader().getClass(handler);
+			c = (Class<? extends ServiceHandler>) navajoConfig.getBetaClassLoader().getClass(handler);
 		} else {
-			c = navajoConfig.getClassloader().getClass(handler);
+			c = (Class<? extends ServiceHandler>) navajoConfig.getClassloader().getClass(handler);
 		}
 
 		ServiceHandler sh = c.newInstance();
