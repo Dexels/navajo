@@ -55,6 +55,16 @@
 			<version>LATEST</version>
 		</dependency>
 		<dependency>
+			<groupId>com.dexels.navajo</groupId>
+			<artifactId>com.dexels.navajo.runtime.osgi</artifactId>
+			<version>1.0.3-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dexels.navajo</groupId>
+			<artifactId>com.dexels.navajo.runtime.osgi.j2ee</artifactId>
+			<version>1.0.3-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
@@ -102,7 +112,11 @@
 			<type>war</type>
 			<scope>runtime</scope>
 		</dependency>
-
+		<dependency>
+		    <groupId>com.jcraft</groupId>
+		    <artifactId>jzlib</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.felix.http.samples.bridge;
+package com.dexels.navajo.runtime.osgi.j2ee;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +24,8 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.Filter;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
+
+@SuppressWarnings({"rawtypes","unchecked"})
 
 public final class DispatcherTracker
     extends ServiceTracker

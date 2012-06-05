@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.felix.http.samples.bridge;
+package com.dexels.navajo.runtime.osgi.j2ee;
 
 import java.util.EventListener;
 

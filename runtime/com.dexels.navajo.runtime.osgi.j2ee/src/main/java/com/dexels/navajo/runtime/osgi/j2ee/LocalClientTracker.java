@@ -1,4 +1,4 @@
-package org.apache.felix.http.samples.bridge;
+package com.dexels.navajo.runtime.osgi.j2ee;
 
 import javax.servlet.ServletContext;
 
@@ -13,24 +13,23 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.script.api.LocalClient;
 
 
+@SuppressWarnings({"rawtypes","unchecked"})
+
 public class LocalClientTracker extends ServiceTracker {
 	
-	//TODO Delete this class, never got it to work, no idea why. Rewrote it as a DS component.
 
 	private final ServletContext servletContext;
-	private BundleContext bundleContext;
 	
 	
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(LocalClientTracker.class);
 	
-    public LocalClientTracker(BundleContext bundleContext, ServletContext servletContext)
+	public LocalClientTracker(BundleContext bundleContext, ServletContext servletContext)
             throws Exception
         {
             super(bundleContext, createFilter(bundleContext), null);
             this.servletContext = servletContext;
-            this.bundleContext = bundleContext;
         }
 
 
@@ -43,7 +42,9 @@ public class LocalClientTracker extends ServiceTracker {
             str.append(LocalClient.class.getName()).append(")");
             return context.createFilter(str.toString());
         }
-    public Object addingService(ServiceReference ref)
+    
+    
+	public Object addingService(ServiceReference ref)
     {
     	LocalClient service = (LocalClient)super.addingService(ref);
         if (service instanceof LocalClient) {
@@ -57,7 +58,7 @@ public class LocalClientTracker extends ServiceTracker {
         return service;
     }
 
-    @Override
+	@Override
     public void removedService(ServiceReference ref, Object service)
     {
         if (service instanceof LocalClient) {

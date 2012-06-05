@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.felix.http.samples.bridge;
+package com.dexels.navajo.runtime.osgi.j2ee;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

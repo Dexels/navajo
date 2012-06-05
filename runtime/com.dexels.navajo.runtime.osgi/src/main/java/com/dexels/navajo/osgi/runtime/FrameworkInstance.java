@@ -111,6 +111,7 @@ public class FrameworkInstance {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void doStart() throws Exception {
 
 		Framework felixFramework = getFrameworkFactory().newFramework(createConfig()); //  new Felix(createConfig());
@@ -134,6 +135,7 @@ public class FrameworkInstance {
 	}
 
 	// TODO: add some config properties
+	@SuppressWarnings("rawtypes")
 	protected  Map createConfig() throws Exception {
 		Properties props = new Properties();
 //		props.load(getResource("default.properties"));

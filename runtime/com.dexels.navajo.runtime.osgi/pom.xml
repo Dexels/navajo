@@ -5,20 +5,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>com.dexels.navajo.runtime.osgi</artifactId>
 	<groupId>com.dexels.navajo</groupId>
-	<version>1.0.2-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<version>1.0.3-SNAPSHOT</version>
+	<packaging>eclipse-plugin</packaging>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifestFile>META-INF/MANIFEST.MF</manifestFile>
-          </archive>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  	<parent>
+		<groupId>com.dexels.navajo</groupId>
+		<artifactId>com.dexels.navajo.super</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../../setup/com.dexels.repository</relativePath>
+	</parent>
 </project>

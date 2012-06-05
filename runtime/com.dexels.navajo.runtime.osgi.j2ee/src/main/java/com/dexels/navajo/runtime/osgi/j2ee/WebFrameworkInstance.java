@@ -1,12 +1,17 @@
-package org.apache.felix.http.samples.bridge;
+package com.dexels.navajo.runtime.osgi.j2ee;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.osgi.runtime.FrameworkInstance;
 
@@ -15,7 +20,10 @@ public class WebFrameworkInstance extends FrameworkInstance {
 	private final ServletContext context;
 	private ServiceRegistration<ServletContext> servletContextRegistration;
 	private final static String BUNDLEDIR = "WEB-INF/bundles/";
+	
 
+	private final static Logger logger = LoggerFactory
+			.getLogger(WebFrameworkInstance.class);
 	
 	public WebFrameworkInstance(ServletContext context) {
 		super(context.getRealPath(BUNDLEDIR));
@@ -63,11 +71,42 @@ public class WebFrameworkInstance extends FrameworkInstance {
 	}
 
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected Map createConfig() throws Exception {
 		Map<String, Object> config = super.createConfig();
+		Properties props = new Properties();
+		logger.warn("PARENT CONFIG: ");
+		for (Entry<String,Object> e : config.entrySet()) {
+			logger.warn("Key: "+e.getKey()+" Value: >"+e.getValue()+"<");
+		}
+		logger.warn("END OF CONFIG");
+		
+//		props.load(getResource("default.properties"));
+		String path = context.getRealPath("WEB-INF/framework.properties");
+		try {
+			FileInputStream fis = new FileInputStream(path);
+			props.load(fis);
+			fis.close();
+			for (Object key : props.keySet()) {
+				String value = (String) props.get(key);
+				config.put(key.toString(), value);
+				System.err.println("putting: "+key+" value: "+value);
+			}		
+			
+		} catch (IOException e) {
+			context.log("Error reading framework.properties at: "+path, e);
+		}
+
+
 		config.put("SYSTEMBUNDLE_ACTIVATORS_PROP",
 				Arrays.asList(new ProvisionActivator(this.context)));
+		System.err.println("Final map: "+config);
+		logger.warn("ACTUAL CONFIG: ");
+		for (Entry<String,Object> e : config.entrySet()) {
+			logger.warn("Key: "+e.getKey()+" Value: >"+e.getValue()+"<");
+		}
+		logger.warn("END OF CONFIG");
 
 		return config;
 	}

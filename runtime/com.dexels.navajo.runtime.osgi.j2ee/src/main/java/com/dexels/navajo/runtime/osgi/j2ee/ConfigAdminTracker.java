@@ -1,4 +1,4 @@
-package org.apache.felix.http.samples.bridge;
+package com.dexels.navajo.runtime.osgi.j2ee;
 
 import java.io.IOException;
 import java.util.Dictionary;
@@ -12,10 +12,10 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 
 public class ConfigAdminTracker extends ServiceTracker {
 
-	private final BundleContext bundleContext;
 	private final String contextPath;
 	private final String servletContextPath;
 	private final String installationPath;
@@ -23,6 +23,7 @@ public class ConfigAdminTracker extends ServiceTracker {
 	private final static Logger logger = LoggerFactory
 			.getLogger(ConfigAdminTracker.class);
 	
+
     public ConfigAdminTracker(BundleContext bundleContext,String contextPath,String servletContextPath, String installationPath) 
             throws Exception
         {
@@ -30,7 +31,6 @@ public class ConfigAdminTracker extends ServiceTracker {
            	this.contextPath = contextPath;
     		this.servletContextPath = servletContextPath;
     		this.installationPath = installationPath;
-            this.bundleContext = bundleContext;
         }
 
 
