@@ -22,7 +22,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
 		defaultContext = bc;
-		System.err.println("Starting Navajo Rhino");
 //		FunctionFactoryInterface fi= 
 		FunctionFactoryFactory.getInstance();
 //		RhinoRepository rp = new RhinoRepository();
