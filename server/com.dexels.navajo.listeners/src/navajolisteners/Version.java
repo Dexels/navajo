@@ -27,11 +27,14 @@ package navajolisteners;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import javax.servlet.Servlet;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.script.api.SchedulerRegistry;
 import com.dexels.navajo.script.api.TmlScheduler;
+import com.dexels.navajo.server.listener.http.TmlHttpServlet;
 import com.dexels.navajo.server.listener.http.schedulers.DummyScheduler;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
@@ -40,6 +43,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	@SuppressWarnings("rawtypes")
 	private ServiceRegistration reference;
+
+	private ServiceRegistration<?> legacyPostman;
 
 	private static BundleContext bundleContext;
 
@@ -60,6 +65,14 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 				 Dictionary<String, Object> wb = new Hashtable<String, Object>();
 				 wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.DummyScheduler");
 				reference = bc.registerService(TmlScheduler.class.getName(), ds, wb);
+
+				
+				 Dictionary<String, Object> listener = new Hashtable<String, Object>();
+				 listener.put("alias", "/PostmanLegacy");
+				TmlHttpServlet tmlHttpServlet = new TmlHttpServlet();
+				tmlHttpServlet.setBundleContext(bc);
+				legacyPostman = bc.registerService(Servlet.class.getName(), tmlHttpServlet, listener);
+
 			}
 			} catch (Throwable e) {
 				logger.error("Error: ", e);
@@ -71,13 +84,15 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		if(reference!=null) {
 			reference.unregister();
 		}
+		if(legacyPostman!=null) {
+			legacyPostman.unregister();
+		}
 		bundleContext = null;
 
 	}
 	
 	@Override
 	public void shutdown() {
-
 		super.shutdown();
 		SchedulerRegistry.setScheduler(null);
 	}
@@ -86,5 +101,9 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		return bundleContext;
 	}
 
+
+	public static boolean hasOSGiBundleContext() {
+		return bundleContext!=null;
+	}
 
 }

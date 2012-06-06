@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -21,11 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
-import com.dexels.navajo.server.LocalClientDispatcherWrapper;
-import com.dexels.navajo.server.api.NavajoServerContext;
 import com.dexels.navajo.server.api.impl.NavajoServerInstance;
 import com.dexels.navajo.version.AbstractVersion;
 
@@ -55,29 +50,34 @@ public class NavajoContextListener implements ServletContextListener {
 		String installPath = getInstallationPath(contextPath);
 		String servletContextPath = sc.getServletContext().getRealPath("");
 
-		init(contextPath,servletContextPath,installPath);
+		init(contextPath,servletContextPath,installPath,sc.getServletContext());
 	}
 
-	public void init(String contextPath, String servletContextPath, String installPath) {
+	public void init(String contextPath, String servletContextPath, String installPath, ServletContext servletContext) {
 		logger.info("==========================================================");
 		logger.info("INITIALIZING NAVAJO INSTANCE: "+contextPath);
 		logger.info("==========================================================");
-//		String contextPath = sc.getContextPath();
-//
-//		String installPath = getInstallationPath(contextPath);
-//		String servletContextPath = sc.getRealPath("");
-
 		if (!isValidInstallationForContext(installPath)) {
 			logger.info("No valid installation found, abandoning further Context initialization.");
 			return;
 		}
-
 		initializeServletContext(contextPath,servletContextPath,installPath);
+		DispatcherInterface dispatcher = initDispatcher(servletContextPath, servletContextPath, installPath);
+		NavajoServerInstance nsi = new NavajoServerInstance(installPath, dispatcher);
+		servletContext.setAttribute("navajoServerInstance", nsi);
+		
+
 	}
 
 	public static void destroyContext(ServletContext sc) {
 		logger.info("Destroying Navajo instance");
+		NavajoServerInstance nsi = (NavajoServerInstance) sc.getAttribute("navajoServerInstance");
+		if(nsi==null) {
+			logger.warn("No navajo server instance found when shutting down context. Did the startup fail?");
+		}
 		unregisterInstanceOSGi();
+		sc.removeAttribute("navajoServerInstance");
+		
 		if(Version.getDefaultBundleContext()!=null) {
 			logger.info("Preventing extension shutdown. OSGi detected, they can fend for themselves.");
 			return;
@@ -111,11 +111,6 @@ public class NavajoContextListener implements ServletContextListener {
 		try {
 			DispatcherInterface dispatcher = initDispatcher(servletContextPath, servletContextPath, installationPath);
 			NavajoServerInstance nsi = new NavajoServerInstance(installationPath, dispatcher);
-			registerInstanceOSGi(nsi,contextPath);
-//			LocalClientDispatcherWrapper lcdw = new LocalClientDispatcherWrapper(dispatcher);
-//			registerLocalClient(lcdw);
-			// TODO Add dereg code
-	
 			return nsi;
 		} catch (Exception e) {
 			logger.error("Error initializing dispatcher", e);
@@ -123,30 +118,7 @@ public class NavajoContextListener implements ServletContextListener {
 		return null;
 	}
 
-	//	private static void registerLocalClient(LocalClientDispatcherWrapper lcdw) {
-	//		BundleContext bc = navajolisteners.Version.getDefaultBundleContext();
-	//		if(bc==null) {
-	//			logger.warn("No OSGi environment found. Are we in J2EE mode?");
-	//			return;
-	//		}		
-	//        Dictionary<String, Object> properties = new Hashtable<String, Object>();
-	//        localClientInstance = bc.registerService(LocalClient.class.getName(), lcdw,properties);
-	//		logger.info("Local client service registration complete!");
-	//		}
 
-	private static void registerInstanceOSGi(NavajoServerInstance nsi, String contextPath) {
-		BundleContext bc = navajolisteners.Version.getDefaultBundleContext();
-		if(bc==null) {
-			logger.warn("No OSGi environment found. Are we in J2EE mode?");
-			return;
-		}
-        Dictionary<String, Object> properties = new Hashtable<String, Object>();
-        properties.put("navajoContextPath", contextPath);
-        properties.put("installationPath", nsi.getInstallationPath());
-        properties.put("serverId", nsi.getDispatcher().getServerId());
-        navajoServerInstance = bc.registerService(NavajoServerContext.class.getName(), nsi,properties);
-		logger.info("Service registration complete!");
-	}
 
 	private static void unregisterInstanceOSGi() {
 		BundleContext bc = navajolisteners.Version.getDefaultBundleContext();
@@ -154,12 +126,10 @@ public class NavajoContextListener implements ServletContextListener {
 			logger.warn("No OSGi environment found. Are we in J2EE mode?");
 			return;
 		}
-		if(navajoServerInstance!=null) {
-			navajoServerInstance.unregister();
-		}
 		if(localClientInstance!=null) {
 			localClientInstance.unregister();			
 		}
+		
 	}
 		
 	public static DispatcherInterface initializeContext(String rootPath,
