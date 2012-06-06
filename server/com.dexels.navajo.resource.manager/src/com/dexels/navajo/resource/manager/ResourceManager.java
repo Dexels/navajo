@@ -1,5 +1,7 @@
 package com.dexels.navajo.resource.manager;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -7,6 +9,8 @@ import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.sql.DataSource;
@@ -24,6 +28,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.server.api.NavajoServerContext;
 
 public class ResourceManager {
 	
@@ -31,7 +36,8 @@ public class ResourceManager {
 	private ConfigurationAdmin configAdmin;
 
 	private final Set<String> resourcePids = new HashSet<String>();
-	
+	private NavajoServerContext navajoServerContext;
+
 	private BundleContext bundleContext = null;
 	
 	public void activate(ComponentContext cc) {
@@ -39,6 +45,7 @@ public class ResourceManager {
 	}
 	
 	public void deactivate() {
+		logger.info("Deactivating context!");
 		for (String pid : resourcePids) {
 			try {
 				Configuration c = configAdmin.getConfiguration(pid);
@@ -47,9 +54,18 @@ public class ResourceManager {
 				logger.error("Error deregistering configuration: "+pid);
 			}
 		}
-	
+		try {
+			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient");
+			if(config!=null) {
+				config.delete();
+				logger.info("Removed local client registration");
+			}
+		} catch (IOException e) {
+			logger.error("Error deactivating config: ", e);
+		}
 	}
-	
+
+
 	public void loadResourceTml(InputStream is) {
 		Navajo n = NavajoFactory.getInstance().createNavajo(is);
 		loadResourceTml(n);
@@ -120,7 +136,101 @@ public class ResourceManager {
 		return bundleContext.getService(ss);
 	}
 
+	
+	public void setNavajoContext(NavajoServerContext navajoServerContext) {
+		this.navajoServerContext = navajoServerContext;
+	}
+	
+
 	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.configAdmin = configAdmin;
 	}
+
+	public void clearConfigAdmin(ConfigurationAdmin configAdmin) {
+		this.configAdmin = null;
+	}
+
+	public void activateManager() {
+		logger.info("Activating context>>>>>>>>>>>>>>>>>>>>>>!");
+		setupResources();
+		setupTesterUser();
+	}
+
+
+
+	
+	private void setupResources() {
+		FileInputStream fis = null;
+		try {
+			logger.info("Looking for datasources in: "+navajoServerContext.getInstallationPath());
+			File install = new File(navajoServerContext.getInstallationPath(),"config/datasources.xml");
+			fis = new FileInputStream(install);
+			loadResourceTml(fis);
+			fis.close();
+		} catch (IOException e) {
+			logger.error("Error reading datasources file: ", e);
+		} finally {
+			if(fis!=null) {
+				try {
+					fis.close();
+				} catch (IOException e) {
+					logger.error("Error closing datasources file: ", e);
+				}
+			}
+		}
+	}
+
+	private void setupTesterUser() {
+		FileInputStream fis = null;
+		try {
+			logger.debug("Looking for client.properties in: "+navajoServerContext.getInstallationPath());
+			File install = new File(navajoServerContext.getInstallationPath(),"config/client.properties");
+			fis = new FileInputStream(install);
+			ResourceBundle b = new PropertyResourceBundle(fis);
+			if(! b.containsKey("username")) {
+				logger.error("No username found in client.properties");
+			}
+			
+			processClientBundle(b);
+			fis.close();
+		} catch (IOException e) {
+			logger.error("Error reading client.properies file: ", e);
+		} finally {
+			if(fis!=null) {
+				try {
+					fis.close();
+				} catch (IOException e) {
+					logger.error("Error closing client.properties file: ", e);
+				}
+			}
+			
+		}
+	}
+	
+	private void processClientBundle(ResourceBundle b) {
+		try {
+			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient");
+			Dictionary dt = new Hashtable<String,String>();
+			for(String key : b.keySet()) {
+				logger.info("Key: "+key+" value: "+b.getString(key));
+			}
+			
+			dt.put("user", b.getString("username"));
+			dt.put("password", b.getString("password"));
+			config.update(dt);
+			logger.info("client module registration complete.");
+		} catch (IOException e) {
+			logger.error("Adding configuration for client.properties: ", e);
+		}
+		
+		
+	}
+
+
+	public void removeNavajoContext(NavajoServerContext navajoServerContext) {
+		this.navajoServerContext = null;
+	}
+
+
+
 }
