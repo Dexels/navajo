@@ -3,7 +3,7 @@ Bundle-Name: Navajo Client
 Bundle-SymbolicName: com.dexels.navajo.client
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.4.2.qualifier
+Bundle-Version: 3.4.3.qualifier
 Bundle-Activator: navajoclient.Version
 Bundle-ClassPath: .,
  lib/jzlib.jar
@@ -15,8 +15,6 @@ Export-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.sessiontoken,
  com.dexels.navajo.client.systeminfo
 Bundle-Vendor: Dexels
-Require-Bundle: org.igniterealtime.smack;bundle-version="3.2.2",
- org.igniterealtime.smack-ext;bundle-version="3.2.2"
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.version,
