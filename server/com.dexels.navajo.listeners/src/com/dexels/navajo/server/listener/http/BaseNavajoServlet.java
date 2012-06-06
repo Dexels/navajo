@@ -22,12 +22,12 @@ public abstract class BaseNavajoServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = -3874256795878319625L;
 
-	protected String configurationPath = "";
-	protected String rootPath = null;
-	protected boolean extremeEdition = false;
-	protected static boolean streamingMode = true;
+//	protected String configurationPath = "";
+//	protected String rootPath = null;
+//	protected boolean extremeEdition = false;
+//	protected static boolean streamingMode = true;
 
-	public static final String DEFAULT_SERVER_XML = "config/server.xml";
+//	public static final String DEFAULT_SERVER_XML = "config/server.xml";
 
 	public static final String COMPRESS_GZIP = "gzip";
 	public static final String COMPRESS_JZLIB = "jzlib";

@@ -20,6 +20,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +35,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
+import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
@@ -69,12 +72,14 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 	public static final String COMPRESS_NONE = "";
 
 	public static final String DEFAULT_SERVER_XML = "config/server.xml";
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(TmlHttpServlet.class);
 	private static boolean streamingMode = true;
 	private static long logfileIndex = 0;
 	private static long bytesWritten = 0;
+
+	private BundleContext bundleContext;
 
 	public TmlHttpServlet() {
 	}
@@ -164,7 +169,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 				username, password, expirationInterval);
 	}
 
-	public static final void callDirect(HttpServletRequest request,
+	private final void callDirect(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
 		String service = request.getParameter("service");
@@ -172,8 +177,8 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
-		logger.info("in callDirect(): service = " + service
-				+ ", username = " + username);
+		logger.info("in callDirect(): service = " + service + ", username = "
+				+ username);
 
 		if (service == null) {
 
@@ -247,8 +252,10 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			Header header = constructHeader(tbMessage, service, username,
 					password, expirationInterval);
 			tbMessage.addHeader(header);
-			Navajo resultMessage = dis.removeInternalMessages(dis
-					.handle(tbMessage));
+//			Navajo resultMessage = dis.removeInternalMessages(dis
+//					.handle(tbMessage));
+			
+			Navajo resultMessage = handleTransaction(dis, tbMessage, null, null);
 			// logger.info(resultMessage.toString());
 			// resultMessage.write(out);
 			String dataPath = request.getParameter("dataPath");
@@ -428,7 +435,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 				throw new ServletException("Empty Navajo header.");
 			}
 
-//			dis = initDispatcher();
+			dis = DispatcherFactory.getInstance();
 			if (dis == null) {
 				System.err
 						.println("SERIOUS: No dispatcher found. The navajo context did not initialize properly, check the logs to find out why!");
@@ -439,18 +446,17 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 					.getAttribute("javax.servlet.request.X509Certificate");
 
 			// Call Dispatcher with parsed TML document as argument.
-			Navajo outDoc = dis.removeInternalMessages(dis.handle(
-					in,
-					certObject,
-					new ClientInfo(request.getRemoteAddr(), "unknown",
-							recvEncoding, pT,
-							(recvEncoding != null && (recvEncoding
-									.equals(COMPRESS_GZIP) || recvEncoding
-									.equals(COMPRESS_JZLIB))),
-							(sendEncoding != null && (sendEncoding
-									.equals(COMPRESS_GZIP) || sendEncoding
-									.equals(COMPRESS_JZLIB))), request
-									.getContentLength(), created)));
+			ClientInfo clientInfo = new ClientInfo(request.getRemoteAddr(),
+					"unknown", recvEncoding, pT,
+					(recvEncoding != null && (recvEncoding
+							.equals(COMPRESS_GZIP) || recvEncoding
+							.equals(COMPRESS_JZLIB))),
+					(sendEncoding != null && (sendEncoding
+							.equals(COMPRESS_GZIP) || sendEncoding
+							.equals(COMPRESS_JZLIB))),
+					request.getContentLength(), created);
+
+			Navajo outDoc = handleTransaction(dis, in, certObject, clientInfo);
 
 			response.setContentType("text/xml; charset=UTF-8");
 			response.setHeader("Accept-Ranges", "none");
@@ -522,7 +528,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 				FatalException fe = (FatalException) e;
 				if (fe.getMessage().equals("500.13")) {
 					// Server too busy.
-					throw new ServletException("500.13",e);
+					throw new ServletException("500.13", e);
 				}
 			}
 			throw new ServletException(e);
@@ -543,5 +549,34 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 				}
 			}
 		}
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Navajo handleTransaction(DispatcherInterface dis, Navajo in,
+			Object certObject, ClientInfo clientInfo) throws FatalException {
+		if(this.bundleContext!=null) {
+			// OSGi environment:
+			ServiceReference sr = bundleContext.getServiceReference(LocalClient.class.getName());
+			if(sr==null) {
+				logger.warn("Resolving localclient service failed. Falling back to regular.");
+				return fallbackHandleTransaction(dis, in, certObject, clientInfo);
+			}
+			LocalClient lc =  (LocalClient)bundleContext.getService(sr);
+			Navajo nn = lc.handleInternal(in, certObject, clientInfo);
+			bundleContext.ungetService(sr);
+			lc = null;
+			return nn;
+		}
+		return fallbackHandleTransaction(dis, in, certObject, clientInfo);
+	}
+
+	private Navajo fallbackHandleTransaction(DispatcherInterface dis, Navajo in,
+			Object certObject, ClientInfo clientInfo) throws FatalException {
+		Navajo outDoc = dis.removeInternalMessages(dis.handle(in, certObject,clientInfo));
+		return outDoc;
+	}
+	
+	public void setBundleContext(BundleContext bc) {
+		this.bundleContext = bc;
 	}
 }
