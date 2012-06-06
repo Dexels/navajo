@@ -15,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,7 +24,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-//import com.dexels.navajo.server.listener.soap.wsdl.Generate;
 import com.dexels.navajo.util.navadoc.config.ConfigurationException;
 import com.dexels.navajo.util.navadoc.config.DocumentSet;
 import com.dexels.navajo.util.navadoc.config.NavaDocConfigurator;
@@ -58,12 +56,12 @@ public class NavaDoc {
 
     config.configure();
 
-    final Map setMap = config.getDocumentSetMap();
-    final Set keys = setMap.keySet();
-    final Iterator iter = keys.iterator();
+    final Map<String,DocumentSet> setMap = config.getDocumentSetMap();
+    final Set<String> keys = setMap.keySet();
+    final Iterator<String> iter = keys.iterator();
     while (iter.hasNext()) {
-      final String name = (String) iter.next();
-      final DocumentSet dset = (DocumentSet) setMap.get(name);
+      final String name =  iter.next();
+      final DocumentSet dset = setMap.get(name);
     
       // set-up an index DOM
       try {
@@ -78,17 +76,15 @@ public class NavaDoc {
       this.setTransformer(dset);
       this.document(dset);
 
-      // output index pages     
-     NavaDocOutputter idxOut =
-          new NavaDocOutputter(this.index,   
-        		               dset.getPathConfiguration().getPath(NavaDocConstants.TARGET_PATH_ELEMENT));
+      new NavaDocOutputter(this.index,   
+			               dset.getPathConfiguration().getPath(NavaDocConstants.TARGET_PATH_ELEMENT));
      
      Iterator<String> it = indices.keySet().iterator();
      while(it.hasNext()){
     	 String key = it.next(); 
     	 NavaDocIndexDOM current = indices.get(key);
     	 current.createBreadCrumb(key);
-    	 NavaDocOutputter idOut = new NavaDocOutputter(current, new File(dset.getPathConfiguration().getPath(NavaDocConstants.TARGET_PATH_ELEMENT).getAbsolutePath() + "/" + key));
+    	 new NavaDocOutputter(current, new File(dset.getPathConfiguration().getPath(NavaDocConstants.TARGET_PATH_ELEMENT).getAbsolutePath() + "/" + key));
      }
     }
 
@@ -219,9 +215,7 @@ public class NavaDoc {
 
     final File tPath = dset.getPathConfiguration().getPath(NavaDocConstants.
         TARGET_PATH_ELEMENT);
-    final File sPath = dset.getPathConfiguration().getPath(NavaDocConstants.
-        SVC_PATH_ELEMENT);
-    final Iterator iter = this.list.iterator();
+    final Iterator<String> iter = this.list.iterator();
     
     while (iter.hasNext()) {
     	NavaDocIndexDOM currentindex = index;
@@ -265,8 +259,7 @@ public class NavaDoc {
       
       if ( !transformer.up2dateCheck( sname, tPath.getAbsolutePath(), currentindex ) ) {
     	  this.transformer.transformWebService(sname);
-    	  NavaDocOutputter outputter = new NavaDocOutputter(this.transformer, tPath);
-//    	
+    	  new NavaDocOutputter(this.transformer, tPath);
       }
  
     }

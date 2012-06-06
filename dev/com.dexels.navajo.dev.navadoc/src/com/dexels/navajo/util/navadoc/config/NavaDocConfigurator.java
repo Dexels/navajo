@@ -48,7 +48,7 @@ public class NavaDocConfigurator {
 
 //    private NodeList docProps = null;
 
-    private Map setMap = new HashMap();
+    private Map<String,DocumentSet> setMap = new HashMap<String,DocumentSet>();
 
     private DocumentSet defaultSet = null;
 
@@ -132,7 +132,7 @@ public class NavaDocConfigurator {
     /**
      * @return a Map containing all the configured DocumentSets
      */
-    public Map getDocumentSetMap() {
+    public Map<String,DocumentSet> getDocumentSetMap() {
         return ( this.setMap );
     }
 

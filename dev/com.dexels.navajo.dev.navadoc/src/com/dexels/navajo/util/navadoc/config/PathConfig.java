@@ -19,19 +19,17 @@ package com.dexels.navajo.util.navadoc.config;
  * @version $Id$
  */
 
-import com.dexels.navajo.util.navadoc.NavaDocConstants;
-
 import java.io.File;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-// DOM
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.w3c.dom.Node;
-import java.util.Set;
-import java.util.Iterator;
+import com.dexels.navajo.util.navadoc.NavaDocConstants;
 
 public class PathConfig {
 
@@ -44,7 +42,7 @@ public class PathConfig {
 
     private File base = new File( "." );
 
-    private Map pathMap = new HashMap();
+    private Map<String,File> pathMap = new HashMap<String,File>();
 
     // --------------------------------------------------------------
     // constructors
@@ -76,8 +74,8 @@ public class PathConfig {
     public String toString() {
         final StringBuffer s = new StringBuffer( "<path-config>" );
 
-        final Set keys = this.pathMap.keySet();
-        final Iterator iter = keys.iterator();
+        final Set<String> keys = this.pathMap.keySet();
+        final Iterator<String> iter = keys.iterator();
         while ( iter.hasNext() ) {
             final String name = (String) iter.next();
             final File path = (File) this.pathMap.get( name );

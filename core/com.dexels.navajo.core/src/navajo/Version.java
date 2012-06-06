@@ -250,6 +250,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void start(BundleContext bc) throws Exception {
 			super.start(bc);
+			bundleContext = bc;
+
 			FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
 			fi.init();
 			
@@ -351,6 +353,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		super.stop(arg0);
 		deregisterTaskRunner();
 		deregisterClock();
+		bundleContext = null;
 	}
 
 

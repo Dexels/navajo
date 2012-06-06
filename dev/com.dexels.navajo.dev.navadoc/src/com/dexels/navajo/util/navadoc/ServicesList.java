@@ -4,16 +4,13 @@ package com.dexels.navajo.util.navadoc;
 
 import java.io.File;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import com.dexels.navajo.util.navadoc.NavaDoc;
-import com.dexels.navajo.util.navadoc.NavaDocConstants;
 import com.dexels.navajo.util.navadoc.config.ConfigurationException;
 
-public class ServicesList extends TreeSet {
+public class ServicesList extends TreeSet<String> {
 
-  private File path = null;
+	private static final long serialVersionUID = -5771887510629251140L;
+	private File path = null;
   private int rootPathNameLength;
   
   public ServicesList( File p  )

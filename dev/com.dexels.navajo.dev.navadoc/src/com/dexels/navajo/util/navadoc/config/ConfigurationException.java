@@ -13,7 +13,8 @@ package com.dexels.navajo.util.navadoc.config;
 
 public class ConfigurationException extends Exception {
 
-  private String configUri = null;
+	private static final long serialVersionUID = 937936443703502043L;
+	private String configUri = null;
 
   public ConfigurationException( String msg ) {
     super( msg );

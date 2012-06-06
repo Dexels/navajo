@@ -36,6 +36,7 @@ public abstract class AbstractVersion extends BaseVersion implements BundleActiv
 		return context!=null;
 	}
 
+	
 	@Override
 	public int getMajor() {
 		return context.getBundle().getVersion().getMajor();
@@ -73,6 +74,7 @@ public abstract class AbstractVersion extends BaseVersion implements BundleActiv
 	  @SuppressWarnings("unchecked")
 	public static void shutdownNavajoExtension(String name) {
 		  // This should be replaced by OSGi bundle management
+		  logger.warn("Extension shutdown of: "+name);
 		  try {
 			Class <? extends AbstractVersion> version = (Class<? extends AbstractVersion>) Class.forName(name.toLowerCase()+".Version");
 			AbstractVersion v = version.newInstance();

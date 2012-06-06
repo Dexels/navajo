@@ -1,9 +1,9 @@
 package com.dexels.navajo.util.navadoc;
 
 
+import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.DifferenceListener;
 import org.w3c.dom.Node;
-import org.custommonkey.xmlunit.Difference;
 
 /**
  * <p>Title: NavaDocDifferenceListener</p>

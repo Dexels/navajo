@@ -20,8 +20,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Enumeration;
-import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -59,7 +57,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   protected Transformer transformer = null;
 
   // notes/description of the current web service
-  private String notes = null;
+//  private String notes = null;
 
   // error information
   private String errorText = null;
@@ -84,8 +82,6 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     this.transformer =
         tFactory.newTransformer( new StreamSource( this.styleSheetPath ) );
    
-    this.dumpProperties();
-
   } // public NavaDocTransformer
 
   public NavaDocTransformer( File styPath, File svcPath, String ind )
@@ -318,8 +314,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	this.transformer.transform( domSrc, domRes );
 //    	this.divMain.appendChild( span );
     	
-    	final Element root = sDoc.getDocumentElement();
-    	this.notes = root.getAttribute( NavaDocConstants.NOTES_ATTR );
+//    	final Element root = sDoc.getDocumentElement();
     	
     	// Generate INPUT/OUTPUT PARTS:
     	 
@@ -399,17 +394,6 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
   } // public void transformWebService()
 
-  // debugging
-  public void dumpProperties() {
-    Properties props = this.transformer.getOutputProperties();
-    Enumeration enm = props.propertyNames();
-
-    while ( enm.hasMoreElements() ) {
-      String s = (String) enm.nextElement();
-
-     
-    }
-  } // public void dumpProperties()
 
   // ----------------------------------------------------  private methods
 

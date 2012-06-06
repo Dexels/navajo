@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -39,7 +38,7 @@ public class DocumentSet {
   private boolean isDefault = false;
 
   // other properties, usually optional
-  private Map propMap = new HashMap();
+  private Map<String,String> propMap = new HashMap<String,String>();
 
   private PathConfig pathConfig;
 
@@ -66,8 +65,8 @@ public class DocumentSet {
          this.description + "'");
     s.append(" isDefault = " + (this.isDefault ? "true" : "false"));
     if (this.propMap.size() > 0) {
-      final Set keys = this.propMap.keySet();
-      final Iterator iter = keys.iterator();
+      final Set<String> keys = this.propMap.keySet();
+      final Iterator<String> iter = keys.iterator();
       while (iter.hasNext()) {
         final String name = (String) iter.next();
         final String value = (String)this.propMap.get(name);

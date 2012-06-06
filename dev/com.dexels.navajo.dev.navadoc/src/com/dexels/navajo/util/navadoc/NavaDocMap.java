@@ -1,13 +1,8 @@
 package com.dexels.navajo.util.navadoc;
 
-import java.io.FileNotFoundException;
-
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 
 public class NavaDocMap implements Mappable{

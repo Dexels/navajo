@@ -16,16 +16,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import com.dexels.navajo.util.navadoc.config.PathConfig;
-
-import sun.security.action.GetIntegerAction;
 
 //import com.dexels.navajo.server.listener.soap.wsdl.Generate;
 
