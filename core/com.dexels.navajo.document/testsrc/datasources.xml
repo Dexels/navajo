@@ -1,0 +1,75 @@
+<tml>
+    <message name="datasources">
+
+<!-- url,initialPoolSize,user,password,maxIdleTime,maxPoolSize,maxStatements,minPoolSize 
+
+
+-->
+        <message name="h2_test">
+            <property name="url" value="jdbc:h2:~/test"/>
+            <property name="type" value="h2"/>
+            <property name="user" value="user"/>
+            <property name="password" value="pass"/>
+		</message>
+        <message name="test">
+            <property name="url" value="jdbc:mysql://localhost/test"/>
+            <property name="type" value="mysql"/>
+            <property name="user" value="user"/>
+            <property name="password" value="pass"/>
+		</message>
+        <message name="mysql_swingstreet">
+            <property name="url" value="jdbc:mysql://localhost/swingstreet"/>
+            <property name="type" value="mysql"/>
+            <property name="user" value="user"/>
+            <property name="password" value="pass"/>
+		</message>
+        <message name="navajostore">
+            <property name="type" value="mongodb"/>
+            <property name="host" value="127.0.0.1"/>
+            <property name="database" value="navajostore"/>
+		</message>
+        <message name="default">
+            <property name="type" value="oracle"/>
+            <property name="url" value="jdbc:oracle:thin:@10.0.0.1:1521:1521:aardnoot"/>
+            <property name="user" value="user"/>
+            <property name="password" value="pass"/>
+	</message>
+        <message name="sportlinkkernel">
+            <property name="type" value="oracle"/>
+            <property name="url" value="jdbc:oracle:thin:@10.0.0.1:1521:aardnoot"/>
+            <property name="user" value="user"/>
+            <property name="password" value="pass"/>
+	</message>
+        <message name="authorization">
+            <property name="type" value="oracle"/>
+            <property name="url" value="jdbc:oracle:thin:@10.0.0.1:1521:aardnoot"/>
+            <property name="user" value="user"/>
+            <property name="password" value="pass"/>
+	</message>
+
+
+<!-- 
+        <message name="default">
+            <property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+            <property name="url" value="jdbc:derby:default;create=true"/>
+            <property name="username" value=""/>
+            <property name="password" value=""/>
+            <property name="logfile" value="derbylog"/>
+            <property name="refresh" type="float" value="0.00001"/>
+            <property name="min_connections" type="integer" value="1"/>
+            <property name="max_connections" type="integer" value="10"/>
+        </message>
+        <message name="navajostore">
+            <property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+            <property name="url" value="jdbc:derby:default;create=true"/>
+            <property name="username" value=""/>
+            <property name="password" value=""/>
+            <property name="logfile" value="derbylog"/>
+            <property name="refresh" type="float" value="0.00001"/>
+            <property name="min_connections" type="integer" value="1"/>
+            <property name="max_connections" type="integer" value="10"/>
+        </message>
+        
+         -->
+     </message>
+</tml>
