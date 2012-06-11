@@ -10,7 +10,7 @@
 	<!-- Use tipi extension post processing. -->
 	<property name="tipiExtension" value="true" />
 	<property name="deployedDependencyJars"
-		value="com.dexels.navajo.version.jar,com.dexels.navajo.document.jar,NavajoClient.jar,NavajoFunctions.jar,Navajo.jar,jzlib.jar,osgi.jar,slf4j-api-1.6.1.jar,slf4j-simple-1.6.1.jar" />
+		value="DexelsVersionControl.jar,NavajoDocument.jar,NavajoClient.jar,NavajoClientJabber.jar,NavajoFunctions.jar,Navajo.jar,jzlib.jar,osgi.jar,slf4j-api-1.6.1.jar,slf4j-simple-1.6.1.jar" />
 	<!--  <property name="doUploadTipi" value="true"/>-->
 	
 	<target name="customGrabjar">
@@ -38,7 +38,7 @@
 	Set to true to call the build scripts on all dependencies too.
 	Not very efficient, but thorough.
 	-->
-	<property name="recursivebuild" value="false" />
+	<property name="recursivebuild" value="true" />
 
 	<!--
 	Create a zip-file of the binary jar, and all its dependencies.
@@ -83,7 +83,7 @@
 		that the libs will also be included in deploys (for example WAR-files), and compilelibs will not. Examples of
 		compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
 	-->
-	<property name="dependencies" value="../core/com.dexels.navajo.version,../core/com.dexels.navajo.document,../core/com.dexels.navajo.core,../core/com.dexels.navajo.client" />
+	<property name="dependencies" value="../core/com.dexels.navajo.version,../core/com.dexels.navajo.document,../core/com.dexels.navajo.core,../core/com.dexels.navajo.client,../core/com.dexels.navajo.client.jabber,../core/com.dexels.navajo.function" />
 
 	<import file="../../core/com.dexels.navajo.version/ant/navajobuild.xml" />
 </project>
