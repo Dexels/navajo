@@ -1,0 +1,8 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo Server Context/Instance" name="Navajo Server Context" id="com.dexels.navajo.tipi.swing.application" >
+    <AD name="tipi.context"    id="tipi.context"   required="true"  type="String" default="club"/>   
+  </OCD>
+  <Designate pid="com.dexels.navajo.tipi.swing.application">
+     <Object ocdref="com.dexels.navajo.tipi.swing.application"/>
+  </Designate>
+</metatype:MetaData>
