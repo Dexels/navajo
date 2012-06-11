@@ -31,6 +31,7 @@ public class ServiceRegistrationUtils {
 		props.put("extensionClass", extension.getClass().getName());
 		// getIncludes();
 		for (String include : extension.getIncludes()) {
+			
 //			System.err.println("PARSING: " + include + " from ext: " + extension.getClass().getName());
 			readDefinitionFile(extension, include,context);
 		}

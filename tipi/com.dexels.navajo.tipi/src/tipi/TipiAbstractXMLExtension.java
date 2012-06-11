@@ -7,6 +7,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
@@ -22,6 +25,11 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 	private String requiresMain = null;
 	private String description = null;
 	private String project = "";
+	
+	
+
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiAbstractXMLExtension.class);
 	
 //	private final static Logger logger = LoggerFactory.getLogger(TipiAbstractXMLExtension.class);
 
@@ -91,7 +99,13 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 		if (includes != null && !includes.isEmpty()) {
 			XMLElement include = includes.get(0);
 			for (XMLElement element : include.getChildren()) {
-				this.includes.add(element.getStringAttribute("path"));
+				boolean external = element.getBooleanAttribute("external", "true", "false", false);
+				String path = element.getStringAttribute("path");
+				if(external && getBundleContext()!=null) {
+					logger.debug("Skipping external element: "+path);
+				} else {
+					this.includes.add(path);
+				}
 			}
 		}
 

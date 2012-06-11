@@ -8,7 +8,10 @@
 	
 		<include path="com/dexels/navajo/tipi/actions/actiondef.xml"/>
 		<include path="com/dexels/navajo/tipi/classdef.xml"/>
-		<include path="com/dexels/navajo/functions/functions.xml"/>
+		<!-- The external flag will indicate that it doesn't actually reside in the tipi bundle.
+		That means that it will be skipped in OSGi mode, as it will be the responsibility of that other bundle
+		to register / deregister its components -->
+		<include path="com/dexels/navajo/functions/functions.xml" external="true"/>
 	</includes>
 	<jars>
 		<jar path="org.osgi.core-4.3.0.jar"/>
