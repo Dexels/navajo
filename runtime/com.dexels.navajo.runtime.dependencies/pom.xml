@@ -175,8 +175,8 @@
 			<version>LATEST</version>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- <dependency> <groupId>org.mozilla</groupId> <artifactId>rhino</artifactId> 
-			<version>1.7R3</version><scope>runtime</scope> </dependency> -->
+		<dependency> <groupId>org.mozilla</groupId> <artifactId>rhino</artifactId> 
+			<version>1.7R3</version><scope>runtime</scope> </dependency> 
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.rhino.continuations</artifactId>
