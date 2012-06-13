@@ -17,3 +17,5 @@ Import-Package: com.dexels.navajo.client,
  org.osgi.framework;version="1.3.0",
  org.slf4j;version="1.6.1"
 Export-Package: com.dexels.navajo.client.jabber
+Require-Bundle: org.igniterealtime.smack;bundle-version="3.2.2",
+ org.igniterealtime.smackx;bundle-version="3.2.2"

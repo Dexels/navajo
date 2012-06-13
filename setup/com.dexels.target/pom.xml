@@ -9,7 +9,7 @@
 	</parent>
 	
 	<artifactId>targetplatform</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Tycho build examples - Target platform</name>
 
@@ -31,7 +31,7 @@
 								<artifact>
 									<file>navajo_spiritus.target</file>
 									<type>target</type>
-									<classifier>navajo_target</classifier>
+									<classifier>navajo_spiritus</classifier>
 								</artifact>
 							</artifacts>
 						</configuration>

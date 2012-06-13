@@ -5,11 +5,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dexels</groupId>
 	<artifactId>com.dexels.opensource</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
-	
+		<module>../../com.dexels.target/</module>	
 		<module>../../../core/com.dexels.navajo.core.feature/allgit/</module>
 		<module>../../../server/com.dexels.navajo.server.feature/allgit/</module>
 		<module>../../../tipi/com.dexels.navajo.tipi.extensions.feature/allgit/</module>

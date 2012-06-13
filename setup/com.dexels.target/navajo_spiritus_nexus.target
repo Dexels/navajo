@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="Navajo Develop" sequenceNumber="583">
+<target name="Navajo Develop Nexus" sequenceNumber="577">
 <locations>
 <location includeAllPlatforms="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.xpand.feature.group" version="1.1.1.v201108020519"/>
@@ -302,8 +302,58 @@
 <repository location="https://source.dexels.com/eclipse/xtext2/"/>
 </location>
 <location includeAllPlatforms="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.3.7.RELEASE"/>
-<repository location="https://source.dexels.com/eclipse/3rdparty"/>
+<unit id="javax.xml.ws" version="2.1.0.v200902101523"/>
+<unit id="javax.persistence.source" version="1.0.0.v200905011740"/>
+<unit id="javax.jws" version="2.0.0.v201005080400"/>
+<unit id="javax.persistence" version="1.0.0.v200905011740"/>
+<unit id="javax.wsdl" version="1.6.2.v201012040545"/>
+<unit id="javax.servlet" version="3.0.0.v201103241727"/>
+<unit id="javax.security.auth.message" version="1.0.0.v201104181300"/>
+<unit id="javax.management" version="1.2.0.v20100427-1100"/>
+<unit id="javax.annotation.source" version="1.1.0.v201105051105"/>
+<unit id="javax.mail.glassfish" version="1.4.1.v201005082020"/>
+<unit id="javax.management.remote" version="1.0.0.v20100427-1100"/>
+<unit id="javax.xml.soap" version="1.3.0.v201105210645"/>
+<unit id="javax.ws.rs" version="1.1.1.v20101004-1200"/>
+<unit id="javax.xml" version="1.3.4.v201005080400"/>
+<unit id="javax.activation.source" version="1.1.0.v201105071233"/>
+<unit id="javax.servlet.source" version="3.0.0.v201103241727"/>
+<unit id="javax.transaction" version="1.1.1.v201105210645"/>
+<unit id="javax.inject" version="1.0.0.v20091030"/>
+<unit id="javax.servlet.jsp.jstl.source" version="1.2.0.v201105211821"/>
+<unit id="javax.ws.rs.source" version="1.1.1.v20101004-1200"/>
+<unit id="javax.activation" version="1.1.0.v201105071233"/>
+<unit id="javax.security.auth.message.source" version="1.0.0.v201104181300"/>
+<unit id="javax.servlet.jsp" version="2.2.0.v201103241009"/>
+<unit id="javax.wsdl.source" version="1.6.2.v201012040545"/>
+<unit id="javax.annotation" version="1.1.0.v201105051105"/>
+<unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
+<unit id="javax.el.source" version="2.2.0.v201105051105"/>
+<unit id="javax.mail" version="1.4.0.v201005080615"/>
+<unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
+<unit id="javax.xml.rpc" version="1.1.0.v201005080400"/>
+<unit id="javax.servlet.jsp.jstl" version="1.2.0.v201105211821"/>
+<unit id="javax.inject.source" version="1.0.0.v20091030"/>
+<unit id="javax.jws.source" version="2.0.0.v201005080400"/>
+<unit id="javax.xml.bind.source" version="2.2.0.v201105210648"/>
+<unit id="javax.servlet.jsp.source" version="2.2.0.v201103241009"/>
+<unit id="javax.transaction.source" version="1.1.1.v201105210645"/>
+<unit id="javax.el" version="2.2.0.v201105051105"/>
+<unit id="javax.mail.glassfish.source" version="1.4.1.v201005082020"/>
+<unit id="org.codehaus.jackson.smile" version="1.6.0.v20101005-0925"/>
+<unit id="org.codehaus.jackson.core.source" version="1.6.0.v20101005-0925"/>
+<unit id="org.codehaus.jackson.mapper.source" version="1.6.0.v20101005-0925"/>
+<unit id="org.codehaus.jackson.xc.source" version="1.6.0.v20101005-0925"/>
+<unit id="org.codehaus.jackson.jaxrs.source" version="1.6.0.v20101005-1100"/>
+<unit id="org.codehaus.jackson.xc" version="1.6.0.v20101005-0925"/>
+<unit id="org.codehaus.jackson.smile.source" version="1.6.0.v20101005-0925"/>
+<unit id="com.google.gwtjsonrpc" version="1.2.2.v201105211953"/>
+<unit id="org.codehaus.jackson.jaxrs" version="1.6.0.v20101005-1100"/>
+<unit id="org.json" version="1.0.0.v201011060100"/>
+<unit id="org.codehaus.jackson.core" version="1.6.0.v20101005-0925"/>
+<unit id="com.google.gwtjsonrpc.source" version="1.2.2.v201105211953"/>
+<unit id="org.codehaus.jackson.mapper" version="1.6.0.v20101005-0925"/>
+<repository location="https://source.dexels.com/nexus/content/groups/p2/"/>
 </location>
 </locations>
 <includeBundles>
