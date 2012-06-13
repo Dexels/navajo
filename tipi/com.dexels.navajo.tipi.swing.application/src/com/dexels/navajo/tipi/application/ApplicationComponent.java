@@ -36,7 +36,7 @@ public class ApplicationComponent {
 			"tipi.TipiJabberExtension",
 			"tipi.TipiMailExtension",
 			"tipi.TipiRichExtension",
-			"tipi.TipiCssExtension",
+//			"tipi.TipiCssExtension",
 			"tipi.TipiSubstanceExtension"
 			};
 	
@@ -58,9 +58,9 @@ public class ApplicationComponent {
 			instance.close();
 		}
 		isActive = true;
-		if(verifyOptionalDeps()) {
+//		if(verifyOptionalDeps()) {
 			bootApplication((String) properties.get("tipi.context"));
-		}
+//		}
 
 	}
 
@@ -91,9 +91,9 @@ public class ApplicationComponent {
 	public void addTipiExtension(TipiExtension te) {
 		logger.info("Adding extension: "+te.getId()+" current size: "+extensionList.size());
 		extensionList.put(te.getClass().getCanonicalName(),te);
-		if(verifyOptionalDeps()) {
-			bootApplication((String) properties.get("tipi.context"));
-		}
+//		if(verifyOptionalDeps()) {
+//			bootApplication((String) properties.get("tipi.context"));
+//		}
 
 	}
 
