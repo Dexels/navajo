@@ -41,10 +41,6 @@
 		</description>
    </tipiaction>
 
-   <tipiaction name="registerPush" class="TipiRegisterPush" package="com.dexels.navajo.tipi.actions">
-      <param name="agentId" type="string" default="" />
-    </tipiaction>
-  
 
    <tipiaction name="sleep" class="TipiSleep" package="com.dexels.navajo.tipi.actions">
 		<description>

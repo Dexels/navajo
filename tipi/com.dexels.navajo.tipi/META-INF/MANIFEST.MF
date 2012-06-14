@@ -90,7 +90,6 @@ Export-Package: com.dexels.navajo.tipi;
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.2"
 Import-Package: com.dexels.navajo.client,
- com.dexels.navajo.client.jabber,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.metadata;version="2.2.0",

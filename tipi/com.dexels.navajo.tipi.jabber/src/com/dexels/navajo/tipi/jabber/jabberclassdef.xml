@@ -46,4 +46,8 @@
          <method name="listRooms"/>
       </methods>
    </tipiclass>
+   
+   <tipiaction name="registerPush" class="TipiRegisterPush" package="com.dexels.navajo.tipi.actions">
+      <param name="agentId" type="string" default="" />
+    </tipiaction>
 </tid>
