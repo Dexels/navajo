@@ -217,14 +217,6 @@ import com.dexels.navajo.util.AuditLog;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
-	public static final int MAJOR = 9;
-	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 0;
-	public static final String SPECIAL_VERSION = "Navajo 9.2 Release Candidate I";
-	
-	public static final String VENDOR = "Dexels";
-	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2010-08-26";
 	private static ServiceRegistration navajoConfig;
 	private static ServiceRegistration dispatcherRegistration;
 	private ServiceRegistration dummyStats;
@@ -234,10 +226,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	private ServiceRegistration taskRunnerRegistration;
 
 	
-	public static String getDescription() {
-		return MAJOR + "." + MINOR + "." + PATCHLEVEL + " (" + SPECIAL_VERSION + ")";
-	}
-	
+
 	
 	public static boolean osgiActive() {
 		try {
@@ -251,7 +240,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	public void start(BundleContext bc) throws Exception {
 			super.start(bc);
 			bundleContext = bc;
-
+			
 			FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
 			fi.init();
 			
@@ -377,8 +366,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	public static void registerDispatcher(DispatcherInterface instance) {
 		Dictionary<String, Object> properties = new Hashtable<String, Object>();
-		properties.put("edition", instance.getEdition());
-		properties.put("product", instance.getProduct());
+//		properties.put("edition", instance.getEdition());
+//		properties.put("product", instance.getProduct());
 		properties.put("applicationId", instance.getApplicationId());
 		properties.put("serverId", instance.getServerId());
 		try {

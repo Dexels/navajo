@@ -2,10 +2,13 @@ package com.dexels.navajo.functions.util;
 
 
 import java.security.AccessControlException;
+import java.util.Map;
 
 import navajo.Version;
 
 import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.version.ExtensionDefinition;
 
 
 public class FunctionFactoryFactory {
@@ -15,6 +18,8 @@ public class FunctionFactoryFactory {
 	
 	private FunctionFactoryFactory() {	
 	}
+	
+
 		
 	@SuppressWarnings("unchecked")
 	public static FunctionFactoryInterface getInstance() {

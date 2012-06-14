@@ -170,7 +170,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 
 	@SuppressWarnings("unchecked")
 	public FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws TMLExpressionException {
-		// This method is only used for non osgi resolution
+		// This method is only used for non osgi resolution >>> No it's not.
 		try {
 			FunctionDefinition fd = getDef(functionName);
 			Class<FunctionInterface> myClass = (Class<FunctionInterface>) Class.forName(fd.getObject(), true, cl);

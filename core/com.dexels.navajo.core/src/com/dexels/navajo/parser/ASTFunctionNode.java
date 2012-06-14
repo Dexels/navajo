@@ -115,11 +115,15 @@ package com.dexels.navajo.parser;
  *
  */
 
+import navajo.Version;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
+import com.dexels.navajo.functions.util.OSGiFunctionFactoryFactory;
+import com.dexels.navajo.functions.util.OsgiFunctionFactory;
 import com.dexels.navajo.server.DispatcherFactory;
 
 
@@ -152,7 +156,13 @@ public final class ASTFunctionNode extends SimpleNode {
 
 		
 		FunctionFactoryInterface fff = FunctionFactoryFactory.getInstance();
-		FunctionInterface  f = fff.getInstance(cl, functionName);
+		FunctionInterface f = null;
+		
+		if(Version.osgiActive()) {
+			f = OSGiFunctionFactoryFactory.getFunctionInterface(functionName);
+		} else {
+			f = fff.getInstance(cl, functionName);
+		}
 		f.inMessage = doc;
 		f.currentMessage = parentMsg;
 		f.reset();
