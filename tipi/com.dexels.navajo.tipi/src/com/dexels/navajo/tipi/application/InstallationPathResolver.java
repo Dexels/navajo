@@ -83,13 +83,16 @@ public class InstallationPathResolver {
 		return parseContext(result);
 	}
 	
+	// TODO This is a list, the first element is the path, second is the deployment, third the instance
+	// e.g.: /Users/frank/git/sportlink/applications/com.sportlink.club|test|knvb
+	
 	public static List<String> parseContext(String context) {
 		StringTokenizer st = new StringTokenizer(context, "|");
 		List<String> result = new LinkedList<String>();
 		while (st.hasMoreTokens()) {
 			String part =st.nextToken();
 			result.add(part);
-			
+
 		}
 		return result;
 	}
