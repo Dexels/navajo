@@ -60,7 +60,7 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 		this.otherRoot = otherRoot;
 	}
 
-	public SwingTipiApplicationInstance(String applicationContext, BundleContext bc) {
+	public SwingTipiApplicationInstance(BundleContext bc) {
 //		this.applicationContext = applicationContext;
 		this.definition = "init";
 		this.definitionPath="start.xml";

@@ -57,10 +57,19 @@ public class MainApplication {
 			applicationProfile = installationSettings.get(2);
 		}
 
-		SwingTipiApplicationInstance stai = new SwingTipiApplicationInstance(applicationContext,bc);
+		SwingTipiApplicationInstance stai = new SwingTipiApplicationInstance(bc);
 //		public static void processSettings(String deploy, String profile,  File installationFolder, TipiContext context) throws IOException {
 		File installationFolder = new File(installationPath);
 		BaseTipiApplicationInstance.processSettings(applicationDeploy, applicationProfile, installationFolder, stai);
+		stai.setInstallationFolder(installationFolder);
+		return stai;
+	}
+	
+	public static SwingTipiApplicationInstance runApp(BundleContext bc, String installationPath,String deploy,String profile) throws IOException {
+		SwingTipiApplicationInstance stai = new SwingTipiApplicationInstance(bc);
+//		public static void processSettings(String deploy, String profile,  File installationFolder, TipiContext context) throws IOException {
+		File installationFolder = new File(installationPath);
+		BaseTipiApplicationInstance.processSettings(deploy, profile, installationFolder, stai);
 		stai.setInstallationFolder(installationFolder);
 		return stai;
 	}

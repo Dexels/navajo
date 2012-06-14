@@ -23,4 +23,16 @@ public class TipiSwingWrapper {
 		}
 		return null;
 	}
+
+	public static SwingTipiApplicationInstance runApp(BundleContext bc, String installationPath,String deploy,String profile) {
+		try {
+			SwingTipiApplicationInstance applicationInstance = MainApplication.runApp(bc, installationPath,deploy,profile);
+			applicationInstance.setBundleContext(bc);
+			applicationInstance.setCurrentContext(applicationInstance.createContext());
+			return applicationInstance;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

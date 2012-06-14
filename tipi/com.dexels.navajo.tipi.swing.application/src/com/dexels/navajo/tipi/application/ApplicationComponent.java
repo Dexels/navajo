@@ -58,8 +58,13 @@ public class ApplicationComponent {
 			instance.close();
 		}
 		isActive = true;
+		String contextPath = (String) c.getProperties().get("tipi.context");
+		String deployment = (String) c.getProperties().get("deployment");
+		String profile = (String) c.getProperties().get("profile");
 //		if(verifyOptionalDeps()) {
-			bootApplication((String) properties.get("tipi.context"));
+		if(contextPath!=null) {
+			bootApplication(contextPath,deployment,profile);
+		}
 //		}
 
 	}
@@ -119,8 +124,8 @@ public class ApplicationComponent {
 		this.coreExtension = null;
 	}
 	
-	private void bootApplication(final String context) {
-		logger.info("====================\nStarting application\n====================\n context: "+context);
+	private void bootApplication(final String contextPath, final String deploy, final String profile) {
+		logger.info("====================\nStarting application\n====================\n context: "+contextPath);
 		this.isRunning = true;
 		Thread t = new Thread() {
 
@@ -129,7 +134,7 @@ public class ApplicationComponent {
 			public void run() {
 				try {
 					System.err.println("Extensionlist at boot time: "+extensionList);
-					instance = TipiSwingWrapper.runApp(componentContext.getBundleContext(),context);
+					instance = TipiSwingWrapper.runApp(componentContext.getBundleContext(),contextPath,deploy,profile);
 					instance.getCurrentContext().switchToDefinition(instance.getDefinition());
 				} catch (TipiException e) {
 					e.printStackTrace();
