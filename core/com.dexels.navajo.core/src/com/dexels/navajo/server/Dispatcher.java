@@ -42,8 +42,6 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
-import navajo.Version;
-
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.Header;
@@ -100,7 +98,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
   public static final String FILE_VERSION = "$Id$";
   public static final String vendor  = "Dexels BV";
   public static final String product = "Navajo Service Delivery Platform";
-  public static final String version = Version.getDescription();
   public volatile static String edition;
   
   public boolean enabled = false;
@@ -1458,21 +1455,21 @@ public String getServerId() {
 		return result;
 	}
 
-  public  String getVersion() {
-	  return version;
-  }
-
-  public  String getVendor() {
-	  return vendor;
-  }
-
-  public  String getProduct() {
-	  return product;
-  }
-
-  public  String getEdition() {
-	  return edition;
-  }
+//  public  String getVersion() {
+//	  return "";
+//  }
+//
+//  public  String getVendor() {
+//	  return vendor;
+//  }
+//
+//  public  String getProduct() {
+//	  return product;
+//  }
+//
+//  public  String getEdition() {
+//	  return edition;
+//  }
 
   public boolean getEnabled() {
 	  return ((Dispatcher) DispatcherFactory.getInstance()).enabled;

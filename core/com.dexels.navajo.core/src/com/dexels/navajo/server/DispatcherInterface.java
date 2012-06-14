@@ -96,10 +96,10 @@ public interface DispatcherInterface extends ResourceManager {
 	/*
 	 * Product information.
 	 */
-	public  String getVersion();
-	public  String getVendor();
-	public  String getProduct();
-	public  String getEdition();
+//	public  String getVersion();
+//	public  String getVendor();
+//	public  String getProduct();
+//	public  String getEdition();
 	
 	
 	  public  Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException;

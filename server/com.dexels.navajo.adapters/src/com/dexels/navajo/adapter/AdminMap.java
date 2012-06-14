@@ -265,13 +265,13 @@ public AsyncProxy [] getAsyncThreads() {
   }
 
   public String getProductName() {
-    return com.dexels.navajo.server.DispatcherFactory.getInstance().getProduct();
+    return "Undefined, check OSGi";
   }
   public String getVendor() {
-    return com.dexels.navajo.server.DispatcherFactory.getInstance().getVendor();
+	    return "Undefined, check OSGi";
   }
   public String getVersion() {
-	return DispatcherFactory.getInstance().getVersion() + " (" + DispatcherFactory.getInstance().getEdition() + ")";
+	    return "Undefined, check OSGi";
   }
   public String getRepository() {
     if (com.dexels.navajo.server.DispatcherFactory.getInstance().getNavajoConfig().getRepository() != null) {
