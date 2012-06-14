@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" deactivate="deactivate" name="com.dexels.navajo.runtime.obr">
+   <implementation class="com.dexels.navajo.runtime.obr.ObrComponent"/>
+   <reference bind="addRepositoryAdmin" cardinality="1..1" interface="org.osgi.service.obr.RepositoryAdmin" name="RepositoryAdmin" policy="static" unbind="clearRepositoryAdmin"/>
+   <property name="service.pid" type="String" value="navajo.factory"/>
+   <reference bind="addConfigurationAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="static" unbind="clearConfigurationAdmin"/>
+</scr:component>
