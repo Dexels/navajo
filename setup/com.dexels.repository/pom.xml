@@ -42,10 +42,10 @@
 			</snapshots>
 			<id>central</id>
 			<name>Central Spiritus</name>
-			<url>https://source.dexels.com/nexus/content/repositories/central/</url>
+			<url>https://source.dexels.com/nexus/content/groups/public/</url>
 			<layout>default</layout>
 		</repository>
-
+		<!-- 
 		<repository>
 			<releases>
 				<enabled>true</enabled>
@@ -94,6 +94,7 @@
 			<url>https://source.dexels.com/nexus/content/repositories/navajo_snapshot/</url>
 			<layout>default</layout>
 		</repository>
+		-->
 	</repositories>
 
 	<!-- -->
