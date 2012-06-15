@@ -17,52 +17,52 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.version</artifactId>
-			<version>LATEST</version>
+			<version>[1.0.0,2.0.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.document</artifactId>
-			<version>LATEST</version>
+			<version>[1.0.0,2.0.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.api</artifactId>
-			<version>LATEST</version>
+			<version>[1.0.0,2.0.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.jsp</artifactId>
-			<version>LATEST</version>
+			<version>[1.0.0,2.0.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.jsp.server</artifactId>
-			<version>LATEST</version>
+			<version>[1.0.0,2.0.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.client</artifactId>
-			<version>LATEST</version>
+			<version>[1.0.0,2.0.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.listeners.continuations</artifactId>
-			<version>LATEST</version>
+			<version>[1.0.0,2.0.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.listeners.external</artifactId>
-			<version>LATEST</version>
+			<version>[1.0.0,2.0.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.runtime.osgi</artifactId>
-			<version>1.0.3-SNAPSHOT</version>
+			<version>[1.0.0,2.0.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.runtime.osgi.j2ee</artifactId>
-			<version>1.0.3-SNAPSHOT</version>
+			<version>[1.0.0,2.0.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>jstl</groupId>
@@ -113,9 +113,9 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-		    <groupId>com.jcraft</groupId>
-		    <artifactId>jzlib</artifactId>
-		    <version>1.1.1</version>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jzlib</artifactId>
+			<version>1.1.1</version>
 		</dependency>
 	</dependencies>
 
