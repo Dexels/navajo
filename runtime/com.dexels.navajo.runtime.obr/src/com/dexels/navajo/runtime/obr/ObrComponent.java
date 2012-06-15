@@ -33,6 +33,8 @@ public class ObrComponent {
 			.getLogger(ObrComponent.class);
 
 	public void activate(ComponentContext cc) {
+		long stamp = System.currentTimeMillis();
+		
 		Dictionary properties = cc.getProperties();
 		 
 		logger.info("Obr Component activated.");
@@ -60,6 +62,8 @@ public class ObrComponent {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		logger.info("Activating OBR took: "+(System.currentTimeMillis()-stamp) +" millis. ");
 	}
 
 	private void setupTipi(String contextPath, String deployment, String profile)
@@ -94,7 +98,7 @@ public class ObrComponent {
 		s.put("tipi.context", contextPath);
 		s.put("deployment", deployment);
 		s.put("profile", profile);
-		Configuration cc = myConfigurationAdmin.getConfiguration("com.dexels.navajo.tipi.swing.application");
+		Configuration cc = myConfigurationAdmin.getConfiguration("com.dexels.navajo.tipi.swing.application",null);
 		cc.update(s);
 
 //		String contextPath = (String) properties.get("contextPath");

@@ -1,15 +1,22 @@
 package com.dexels.navajo.runtime.homecontext;
 
 import org.osgi.service.component.ComponentContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SystemPropertyContextIdentifier implements ContextIdentifier {
 
+	
+
+	private final static Logger logger = LoggerFactory
+			.getLogger(SystemPropertyContextIdentifier.class);
 	private String componentName;
 	private ComponentContext componentContext = null;
 	public void activate(ComponentContext cc) {
 		componentName = (String) cc.getProperties().get("component.name");
 		this.componentContext = cc;
 		String myContext = getContextPath();
+		logger.info("Starting system property identifier");
 //		if(myContext==null) {
 //			cc.disableComponent(componentName);
 //		}

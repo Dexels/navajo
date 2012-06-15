@@ -11,7 +11,6 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -31,8 +30,8 @@ public class ContextPathManager {
 			.getLogger(ContextPathManager.class);
 	
 	public void activate() throws IOException {
-		logger.info("Activating");
-		injectAll(new String[]{"navajo","tipi"});
+		logger.info("Activating. My context is: "+System.getProperty("navajo.context"));
+		injectAll(new String[]{"navajo"});
 
 	}
 
@@ -71,7 +70,7 @@ public class ContextPathManager {
 
 	
 	private void inject(Map<String, String> systemContexts, String resourceType) throws IOException {
-		Configuration c = configurationAdmin.getConfiguration("com.dexels.navajo.runtime.obr");
+		Configuration c = configurationAdmin.getConfiguration( "com.dexels.navajo.runtime.obr",null);
 		Dictionary<String, Object> d = new Hashtable<String,Object>();
 		Set<String> myContexts = getContexts();
 		for (String cxt : myContexts) {

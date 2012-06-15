@@ -55,7 +55,7 @@ public class ResourceManager {
 			}
 		}
 		try {
-			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient");
+			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient",null);
 			if(config!=null) {
 				config.delete();
 				logger.info("Removed local client registration");
@@ -209,7 +209,7 @@ public class ResourceManager {
 	
 	private void processClientBundle(ResourceBundle b) {
 		try {
-			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient");
+			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient",null);
 			Dictionary dt = new Hashtable<String,String>();
 			for(String key : b.keySet()) {
 				logger.info("Key: "+key+" value: "+b.getString(key));
