@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dexels.navajo</groupId>
 	<artifactId>com.dexels.navajo.super</artifactId>
@@ -9,7 +10,7 @@
 	<properties>
 		<tycho-version>0.15.0</tycho-version>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
-<!-- 		<forceContextQualifier>20120229-1926</forceContextQualifier> -->
+		<!-- <forceContextQualifier>20120229-1926</forceContextQualifier> -->
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -21,7 +22,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
-				<pluginRepository>
+		<pluginRepository>
 			<id>tycho</id>
 			<url>http://repository.sonatype.org/content/groups/sonatype-public-grid</url>
 			<snapshots>
@@ -118,7 +119,8 @@
 					<filters>
 
 
-						<!-- example 2: remove all providers of the package javax.persistence except the bundle javax.persistence -->
+						<!-- example 2: remove all providers of the package javax.persistence 
+							except the bundle javax.persistence -->
 						<filter>
 							<type>java-package</type>
 							<id>javax.persistence</id>
@@ -165,76 +167,66 @@
 				<groupId>${tycho-groupid}</groupId>
 				<artifactId>tycho-p2-director-plugin</artifactId>
 				<version>${tycho-version}</version>
-				<!-- <executions> <execution> <id>materialize-products</id> <goals> <goal>materialize-products</goal> </goals> </execution> <execution> 
-					<id>archive-products</id> <goals> <goal>archive-products</goal> </goals> </execution> </executions> <configuration> <products> <product> 
+				<!-- <executions> <execution> <id>materialize-products</id> <goals> <goal>materialize-products</goal> 
+					</goals> </execution> <execution> <id>archive-products</id> <goals> <goal>archive-products</goal> 
+					</goals> </execution> </executions> <configuration> <products> <product> 
 					<id>navajo</id> </product> </products> </configuration> -->
 			</plugin>
-			<plugin>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.5</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.wagon</groupId>
-						<artifactId>wagon-ssh</artifactId>
-						<version>1.0-beta-7</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-<!-- 		<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<version>2.3.7</version>
-				<extensions>true</extensions>
-				<configuration>
-					<supportedProjectTypes>
-						<supportedProjectType>jar</supportedProjectType>
-						<supportedProjectType>bundle</supportedProjectType>
-						<supportedProjectType>eclipse-plugin</supportedProjectType>
-						<supportedProjectType>eclipse-feature</supportedProjectType>
-					</supportedProjectTypes>
-					<instructions>
-						<Bundle-Description>Navajo Suite</Bundle-Description>
-					</instructions>
 
-					<remoteOBR>repo-rel</remoteOBR>
-					<prefixUrl>https://source.dexels.com/nexus/content/repositories/navajo_snapshot</prefixUrl>
-					<ignoreLock>true</ignoreLock>
-				</configuration>
-				<executions>
-					<execution>
-						<id>bundle-deploy</id>
-						<phase>deploy</phase>
-						<goals>
-							<goal>deploy</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
- -->	
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jarsigner-plugin</artifactId>
-				<version>1.2</version>
-				<executions>
-					<execution>
-						<id>sign</id>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<keystore>~/.m2/sportlink.ks</keystore>
-					<alias>server</alias>
-					<storepass>${storepass}</storepass>
-					<keypass></keypass>
-				</configuration>
-			</plugin>
-
+			<!-- Disabled, handles by Nexus now <plugin> <groupId>org.apache.felix</groupId> 
+				<artifactId>maven-bundle-plugin</artifactId> <version>2.3.7</version> <extensions>true</extensions> 
+				<configuration> <supportedProjectTypes> <supportedProjectType>jar</supportedProjectType> 
+				<supportedProjectType>bundle</supportedProjectType> <supportedProjectType>eclipse-plugin</supportedProjectType> 
+				<supportedProjectType>eclipse-feature</supportedProjectType> </supportedProjectTypes> 
+				<instructions> <Bundle-Description>Navajo Suite</Bundle-Description> </instructions> 
+				<remoteOBR>repo-rel</remoteOBR> <prefixUrl>https://source.dexels.com/nexus/content/repositories/navajo_snapshot</prefixUrl> 
+				<ignoreLock>true</ignoreLock> </configuration> <executions> <execution> <id>bundle-deploy</id> 
+				<phase>deploy</phase> <goals> <goal>deploy</goal> </goals> </execution> </executions> 
+				</plugin> -->
 		</plugins>
 
 	</build>
+	<profiles>
+		<profile>
+			<id>dexels</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jarsigner-plugin</artifactId>
+						<version>1.2</version>
+						<executions>
+							<execution>
+								<id>sign</id>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<keystore>~/.m2/sportlink.ks</keystore>
+							<alias>server</alias>
+							<storepass>${storepass}</storepass>
+							<keypass></keypass>
+						</configuration>
+					</plugin>
 
+
+					<plugin>
+						<artifactId>maven-deploy-plugin</artifactId>
+						<version>2.5</version>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.maven.wagon</groupId>
+								<artifactId>wagon-ssh</artifactId>
+								<version>1.0-beta-7</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<distributionManagement>
 		<repository>
@@ -243,7 +235,7 @@
 			<name>Dexels Repository</name>
 			<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
 			<url>https://source.dexels.com/nexus/content/repositories/navajo/</url>
- 
+
 			<layout>default</layout>
 		</repository>
 		<snapshotRepository>
