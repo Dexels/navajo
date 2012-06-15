@@ -14,6 +14,7 @@
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+	<!-- 
 	<pluginRepositories>
 		<pluginRepository>
 			<id>tycho_spiritus</id>
@@ -30,7 +31,7 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
-
+ -->
 
 	<repositories>
 		<repository>
@@ -45,56 +46,7 @@
 			<url>https://source.dexels.com/nexus/content/groups/public/</url>
 			<layout>default</layout>
 		</repository>
-		<!-- 
-		<repository>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-				<updatePolicy>never</updatePolicy>
-				<checksumPolicy>fail</checksumPolicy>
-			</snapshots>
-			<id>karaf</id>
-			<name>Karaf</name>
-			<url>https://source.dexels.com/nexus/content/repositories/karaf/</url>
-			<layout>default</layout>
-		</repository>
-		<repository>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-				<updatePolicy>never</updatePolicy>
-				<checksumPolicy>fail</checksumPolicy>
-			</snapshots>
-			<id>spiritus</id>
-			<name>Spiritus</name>
-			<url>https://source.dexels.com/nexus/content/repositories/navajo/</url>
-			<layout>default</layout>
-		</repository>
-		<repository>
-			<releases>
-				<enabled>false</enabled>
-				<updatePolicy>always</updatePolicy>
-				<checksumPolicy>warn</checksumPolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-				<checksumPolicy>fail</checksumPolicy>
-			</snapshots>
-			<id>spiritusSnapshot</id>
-			<name>Spiritus</name>
-			<url>https://source.dexels.com/nexus/content/repositories/navajo_snapshot/</url>
-			<layout>default</layout>
-		</repository>
-		-->
+
 	</repositories>
 
 	<!-- -->
