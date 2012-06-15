@@ -9,19 +9,50 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../../com.dexels.target/</module>	
-		<module>../../../core/com.dexels.navajo.core.feature/allgit/</module>
-		<module>../../../server/com.dexels.navajo.server.feature/allgit/</module>
-		<module>../../../tipi/com.dexels.navajo.tipi.extensions.feature/allgit/</module>
-		<module>../../../tipi_dev/com.dexels.navajo.tipi.dev.feature/allgit/</module>
-		<module>../../../dev/com.dexels.navajo.dev.feature/allgit/</module>
-		<module>../../../runtime/com.dexels.navajo.runtime.feature/allgit/</module>
+		<module>setup/com.dexels.target/</module>	
+		<module>core/com.dexels.navajo.core.feature/allgit/</module>
+		<module>server/com.dexels.navajo.server.feature/allgit/</module>
+		<module>tipi/com.dexels.navajo.tipi.extensions.feature/allgit/</module>
+		<module>tipi_dev/com.dexels.navajo.tipi.dev.feature/allgit/</module>
+		<module>dev/com.dexels.navajo.dev.feature/allgit/</module>
+		<module>runtime/com.dexels.navajo.runtime.feature/allgit/</module>
 	</modules>
 	<parent>
 		<groupId>com.dexels.navajo</groupId>
 		<artifactId>com.dexels.navajo.super</artifactId>
 		<version>1.0.0</version>
-		<relativePath>../../../setup/com.dexels.repository</relativePath>
+		<relativePath>setup/com.dexels.repository</relativePath>
 	</parent>
 	
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4.3</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <!-- here the phase you need -->
+            <phase>install</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>runtime/com.dexels.navajo.runtime.war/target/</directory>
+                  <filtering>false</filtering>
+ <includes>
+          <include>**/*.war</include>
+        </includes>
+                </resource>
+              </resources>              
+            </configuration>            
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

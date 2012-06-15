@@ -24,4 +24,35 @@
 		<relativePath>setup/com.dexels.repository</relativePath>
 	</parent>
 	
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4.3</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <!-- here the phase you need -->
+            <phase>install</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>runtime/com.dexels.navajo.runtime.war/target/</directory>
+                  <filtering>false</filtering>
+ <includes>
+          <include>**/*.war</include>
+        </includes>
+                </resource>
+              </resources>              
+            </configuration>            
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
