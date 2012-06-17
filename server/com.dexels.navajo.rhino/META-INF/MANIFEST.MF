@@ -7,13 +7,10 @@ Bundle-Activator: navajorhino.Version
 Include-Resource: lib
 Export-Package: com.dexels.navajo.rhino,
  com.dexels.navajo.rhino.flow,
- com.dexels.navajo.rhino.include,
- navajorhino,
- org.mozilla.javascript;version="1.7.2"
+ com.dexels.navajo.rhino.include
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.0"
-Bundle-ClassPath: lib/js.jar,
- .
+Bundle-ClassPath: .
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
@@ -21,6 +18,7 @@ Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.script.api,
  com.dexels.navajo.version,
  javax.script,
+ org.mozilla.javascript,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1",
  org.xml.sax

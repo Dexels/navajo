@@ -88,7 +88,7 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.adapters</artifactId>
-			<version>1.0.7-SNAPSHOT</version>
+			<version>[1.0.0,2.0.0)</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -175,8 +175,6 @@
 			<version>[1.0.0,2.0.0)</version>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency> <groupId>org.mozilla</groupId> <artifactId>rhino</artifactId> 
-			<version>1.7R3</version><scope>runtime</scope> </dependency> 
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.rhino.continuations</artifactId>
@@ -260,8 +258,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.mozilla</groupId>
-			<artifactId>rhino</artifactId>
-			<version>1.7R3</version>
+			<artifactId>org.mozilla.javascript</artifactId>
+			<version>1.7.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
@@ -370,6 +368,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
