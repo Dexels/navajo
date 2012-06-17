@@ -84,16 +84,6 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 	public TmlHttpServlet() {
 	}
 
-	protected void finalize() {
-		logger.info("In TmlHttpServlet finalize(), thread = "
-				+ Thread.currentThread().hashCode());
-		try {
-			super.finalize();
-		} catch (Throwable e) {
-			logger.error("Error: ", e);
-		}
-	}
-
 	protected void writeOutput(Navajo resultMessage,
 			java.io.OutputStreamWriter out, String serviceName)
 			throws NavajoException {
