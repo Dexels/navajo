@@ -2,8 +2,8 @@ package com.dexels.navajo.adapter;
 
 import java.text.SimpleDateFormat;
 
-import junit.framework.Assert;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.dexels.navajo.adapter.messagemap.ResultMessage;
