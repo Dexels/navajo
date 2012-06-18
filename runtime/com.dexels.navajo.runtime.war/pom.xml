@@ -13,7 +13,6 @@
 		<relativePath>../../setup/com.dexels.repository</relativePath>
 	</parent>
 	<dependencies>
-
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.version</artifactId>
@@ -64,6 +63,7 @@
 			<artifactId>com.dexels.navajo.runtime.osgi.j2ee</artifactId>
 			<version>[1.0.0,2.0.0)</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>

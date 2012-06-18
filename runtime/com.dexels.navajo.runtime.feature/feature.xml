@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.runtime.feature"
       label="Runtime feature"
-      version="1.0.1.qualifier"
+      version="1.0.2.qualifier"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">
@@ -18,17 +18,31 @@
    </license>
 
    <plugin
+         id="com.dexels.navajo.runtime.homecontext"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="com.dexels.navajo.runtime.osgi"
          download-size="0"
          install-size="0"
-         version="1.0.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="com.dexels.navajo.runtime.osgi.j2ee"
          download-size="0"
          install-size="0"
-         version="1.0.0.qualifier"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.dexels.navajo.runtime.provisioning"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>

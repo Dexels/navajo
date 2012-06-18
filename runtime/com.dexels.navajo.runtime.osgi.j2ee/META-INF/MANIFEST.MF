@@ -9,6 +9,7 @@ Require-Bundle: org.apache.felix.fileinstall;bundle-version="3.2.0",
  org.apache.felix.gogo.command;bundle-version="0.12.0"
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.osgi.runtime,
+ com.dexels.navajo.runtime.homecontext,
  com.dexels.navajo.script.api,
  com.dexels.navajo.version,
  javax.servlet;version="3.0.0",
