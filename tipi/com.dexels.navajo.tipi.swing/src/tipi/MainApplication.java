@@ -18,6 +18,8 @@ import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
 
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.application.InstallationPathResolver;
@@ -28,6 +30,10 @@ public class MainApplication {
 
 	// TODO Remove evil static
 	private static SwingTipiApplicationInstance myApplication = null;
+	
+
+	private final static Logger logger = LoggerFactory
+			.getLogger(MainApplication.class);
 
 	static public void main(String[] args) throws Exception {
 		// TODO Refactor Formatters in NavajoFactory, so this can be done later.
@@ -69,6 +75,7 @@ public class MainApplication {
 		SwingTipiApplicationInstance stai = new SwingTipiApplicationInstance(bc);
 //		public static void processSettings(String deploy, String profile,  File installationFolder, TipiContext context) throws IOException {
 		File installationFolder = new File(installationPath);
+		logger.info("Using installationfolder: "+installationFolder.getAbsolutePath());
 		BaseTipiApplicationInstance.processSettings(deploy, profile, installationFolder, stai);
 		stai.setInstallationFolder(installationFolder);
 		return stai;

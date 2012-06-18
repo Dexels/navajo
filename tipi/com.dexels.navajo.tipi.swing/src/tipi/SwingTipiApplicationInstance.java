@@ -28,6 +28,7 @@ import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiUserInterface;
 import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
 import com.dexels.navajo.tipi.components.swingimpl.TipiScreen;
+import com.dexels.navajo.tipi.internal.FileResourceLoader;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
@@ -118,10 +119,10 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 //		logger.info("Using install: "+install.getAbsolutePath());
 
 		// TODO Fix support for HTTP based runs
-//		File tipi = new File(tipiInstallationFolder,"tipi");
-//		File resource = new File(tipiInstallationFolder,"resource");
-//		context.setTipiResourceLoader(new FileResourceLoader(tipi));
-//		context.setGenericResourceLoader(new FileResourceLoader(resource));
+		File tipi = new File(tipiInstallationFolder,"tipi");
+		File resource = new File(tipiInstallationFolder,"resource");
+		context.setTipiResourceLoader(new FileResourceLoader(tipi));
+		context.setGenericResourceLoader(new FileResourceLoader(resource));
 
 		
 		//		BaseTipiApplicationInstance.processSettings(deploy, profile, installationFolder, extensionContainer)

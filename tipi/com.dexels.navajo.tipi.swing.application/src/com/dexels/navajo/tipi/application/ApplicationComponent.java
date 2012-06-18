@@ -90,6 +90,10 @@ public class ApplicationComponent {
 
 	public void deactivate() {
 		logger.info("Deactivating tipi Application");
+		if(instance!=null) {
+			instance.close();
+			instance = null;
+		}
 		isActive = false;
 	}
 
@@ -126,6 +130,10 @@ public class ApplicationComponent {
 	
 	private void bootApplication(final String contextPath, final String deploy, final String profile) {
 		logger.info("====================\nStarting application\n====================\n context: "+contextPath);
+		if(instance!=null) {
+			logger.error("ALReady running! Ignoring start");
+			return;
+		}
 		this.isRunning = true;
 		Thread t = new Thread() {
 
@@ -143,7 +151,5 @@ public class ApplicationComponent {
 		};
 		t.start();
 	}
-
-
 
 }
