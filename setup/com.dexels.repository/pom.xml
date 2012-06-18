@@ -64,7 +64,7 @@
 						<artifact>
 							<groupId>com.dexels.navajo</groupId>
 							<artifactId>targetplatform</artifactId>
-							<version>1.0.3-SNAPSHOT</version>
+							<version>1.0.4-SNAPSHOT</version>
 							<classifier>navajo_spiritus</classifier>
 						</artifact>
 					</target>
