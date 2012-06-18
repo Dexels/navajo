@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" immediate="true" name="com.dexels.navajo.runtime.systemPropertyContextIdentifier">
-   <implementation class="com.dexels.navajo.runtime.homecontext.SystemPropertyContextIdentifier"/>
+   <implementation class="com.dexels.navajo.runtime.homecontext.impl.SystemPropertyContextIdentifier"/>
    <service>
       <provide interface="com.dexels.navajo.runtime.homecontext.ContextIdentifier"/>
    </service>

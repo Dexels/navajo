@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" deactivate="deactivate" immediate="true" name="navajo.server.http.osgi">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" deactivate="deactivate" immediate="true" modified="modified" name="navajo.server.http.osgi">
    <implementation class="com.dexels.navajo.server.instance.NavajoHttpServiceContextComponent" />
-   <property name="aap" type="String" value="value"/>
-   <property name="service.pid" type="String" value="navajo.server.http.osgi"/>
    <service>
       <provide interface="com.dexels.navajo.server.api.NavajoServerContext"/>
    </service>
+   <reference bind="addConfigurationAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="dynamic" unbind="clearConfigurationAdmin"/>
  </scr:component>

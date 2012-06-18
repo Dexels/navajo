@@ -5,12 +5,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -23,15 +26,13 @@ import org.slf4j.LoggerFactory;
 public class ContextPathManager {
 	
 	private ConfigurationAdmin configurationAdmin = null;
-	private final Set<ContextIdentifier> contextIdentifiers = new HashSet<ContextIdentifier>();
 	private final Set<Configuration> configurations = new HashSet<Configuration>();
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(ContextPathManager.class);
 	
 	public void activate() throws IOException {
-		logger.info("Activating. My context is: "+System.getProperty("navajo.context"));
-		injectAll(new String[]{"navajo"});
+		injectAll(new String[]{"com.dexels.navajo.runtime.provisioning.push","com.dexels.navajo.runtime.provisioning.pull"});
 
 	}
 
@@ -43,16 +44,16 @@ public class ContextPathManager {
 		}
 	}
 
-	private Set<String> getContexts() {
-		Set<String> result = new HashSet<String>();
-		for (ContextIdentifier ci : contextIdentifiers) {
-			String path = ci.getContextPath();
-			if(path!=null) {
-				result.add(path);
-			}
-		}
-		return result;
-	}
+//	private Set<String> getContexts() {
+//		Set<String> result = new HashSet<String>();
+//		for (ContextIdentifier ci : contextIdentifiers) {
+//			String path = ci.getContextPath();
+//			if(path!=null) {
+//				result.add(path);
+//			}
+//		}
+//		return result;
+//	}
 	
 	// TODO do this in a more thread safe manner?
 	public void deactivate() {
@@ -69,16 +70,16 @@ public class ContextPathManager {
 	
 
 	
-	private void inject(Map<String, String> systemContexts, String resourceType) throws IOException {
-		Configuration c = configurationAdmin.getConfiguration( "com.dexels.navajo.runtime.obr",null);
-		Dictionary<String, Object> d = new Hashtable<String,Object>();
-		Set<String> myContexts = getContexts();
-		for (String cxt : myContexts) {
+	private void inject(Map<String, String> systemContexts, String provisioningType) throws IOException {
+		for (String cxt : systemContexts.keySet()) {
 			String context = systemContexts.get(cxt);
 			if(context==null) {
-				logger.warn("Skipping context: "+cxt+" as it is null.");
+				logger.error("Skipping context: "+context+" as it is null. And THAT is weird.");
 			} else {
+				Configuration c = configurationAdmin.createFactoryConfiguration(provisioningType,null);
+				Dictionary<String, Object> d = new Hashtable<String,Object>();
 				List<String> contextPath = parseContext(context);
+				d.put("contextName", cxt);
 				d.put("contextPath", contextPath.get(0));
 				if(contextPath.size()>1) {
 					d.put("deployment", contextPath.get(1));
@@ -86,15 +87,16 @@ public class ContextPathManager {
 				if(contextPath.size()>2) {
 					d.put("profile", contextPath.get(2));
 				}
+				d.put("provisioningType", provisioningType);
+				configurations.add(c);
+				c.update(d);
+
 			}
 		}
-		if(d.get("contextPath")==null) {
-			logger.warn("No system context found for resourceType: "+resourceType+" skipping injection");
-			return;
-		}
-		d.put("resourceType", resourceType);
-		configurations.add(c);
-		c.update(d);
+//		if(d.get("contextPath")==null) {
+//			logger.warn("No system context found for provisioningType: "+provisioningType+" skipping injection");
+//			return;
+//		}
 	}
 
 
@@ -107,39 +109,50 @@ public class ContextPathManager {
 		configurationAdmin = null;
 	}
 
-	// TODO, refine this to support multiple context identifiers
-	public void removeContextIdentifier(ContextIdentifier ci) {
-		contextIdentifiers.remove(ci);
-	}
-
-	public void addContextIdentifier(ContextIdentifier ci) {
-		contextIdentifiers.add(ci);
-	}
-
 	
-	private Map<String, String> loadSystemContexts(String resourceType) throws IOException {
+	private Map<String, String> loadSystemContexts(String provisioningType) throws IOException {
 		File home = new File(System.getProperty( "user.home"));
-		File navajo = new File(home, resourceType+".properties");
+		
+		File navajo = new File(home, getPropertyNameForType(provisioningType)+".properties");
 		Map<String, String> systemContexts = new HashMap<String, String>();
 		if (!navajo.exists()) {
 			return systemContexts;
 		}
 		BufferedReader br = new BufferedReader(new FileReader(navajo));
-
-		while (true) {
-			String line = br.readLine();
-			if (line == null) {
-				break;
-			}
-			String[] r = line.split("=");
-			systemContexts.put(r[0], r[1]);
-		}
+		ResourceBundle rb = new PropertyResourceBundle(br);
+		Enumeration<String> keys = rb.getKeys();
+		while (keys.hasMoreElements()) {
+			String key =  keys.nextElement();
+			String value = rb.getString(key);
+			systemContexts.put(key,value);
+				}
+//		while (true) {
+//			String line = br.readLine();
+//			if (getPropertyNameForType(line) == null) {
+//				break;
+//			}
+//			logger.info("Line: "+line);
+//			String[] r = getPropertyNameForType(line).split("=");
+//			systemContexts.put(r[0], r[1]);
+//		}
 
 		br.close();
 		return systemContexts;
 	}
+
+
+	/**
+	 * Not beautiful.
+	 * @param provisioningType
+	 * @return
+	 */
+	private String getPropertyNameForType(String provisioningType) {
+		if(provisioningType.endsWith("push")) {
+			return "navajo";
+		} return "tipi";
+	}
 	
-	private static List<String> parseContext(String context) {
+	private List<String> parseContext(String context) {
 		StringTokenizer st = new StringTokenizer(context, "|");
 		List<String> result = new LinkedList<String>();
 		while (st.hasMoreTokens()) {

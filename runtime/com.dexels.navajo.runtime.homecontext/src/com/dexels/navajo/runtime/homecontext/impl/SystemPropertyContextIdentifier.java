@@ -1,8 +1,10 @@
-package com.dexels.navajo.runtime.homecontext;
+package com.dexels.navajo.runtime.homecontext.impl;
 
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.runtime.homecontext.ContextIdentifier;
 
 public class SystemPropertyContextIdentifier implements ContextIdentifier {
 

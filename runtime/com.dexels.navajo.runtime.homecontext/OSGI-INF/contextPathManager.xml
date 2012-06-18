@@ -2,5 +2,4 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="com.dexels.navajo.runtime.homecontext.contextPathManager">
    <implementation class="com.dexels.navajo.runtime.homecontext.ContextPathManager"/>
    <reference bind="setConfigAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="dynamic" unbind="removeConfigAdmin"/>
-   <reference bind="addContextIdentifier" cardinality="1..n" interface="com.dexels.navajo.runtime.homecontext.ContextIdentifier" name="ContextIdentifier" policy="dynamic" unbind="removeContextIdentifier"/>
 </scr:component>

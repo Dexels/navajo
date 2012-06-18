@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="com.dexels.navajo.contextPathManager">
-   <implementation class="com.dexels.navajo.server.instance.ContextPathManager"/>
-   <reference bind="setServletContext" cardinality="1..1" interface="javax.servlet.ServletContext" name="ServletContext" policy="dynamic" unbind="removeServletContext"/>
-   <reference bind="setConfigAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="dynamic" unbind="removeConfigAdmin"/>
-</scr:component>

@@ -1,9 +1,14 @@
 package com.dexels.navajo.server.instance;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Properties;
 
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +23,16 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 	private static final Logger logger = LoggerFactory.getLogger(NavajoHttpServiceContextComponent.class);
 	
 	private NavajoServerInstance wrapped = null;
+	private ConfigurationAdmin myConfigurationAdmin = null;
+	private Configuration fileInstallConfiguration = null;
 	
 	public void activate(ComponentContext c) {
 		logger.info("Activating HTTP server component");
 		updated(c.getProperties());
+	}
+	
+	public void modified() {
+		logger.info("Navajo HTTP service modified. Why?");
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -40,15 +51,32 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 			String contextPath = (String)settings.get("contextPath");
 			String servletContextPath = (String)settings.get("servletContextPath");
 			String installPath = (String)settings.get("installationPath");
+			addAdapterListener(installPath);
 			logger.info("Instantiate server: "+contextPath+" installpath: "+installPath);
 			wrapped = NavajoContextListener.initializeServletContext(contextPath,servletContextPath,installPath);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Starting navajo server: ", e);
 		}
 	}
 	
-	public void deactivate() {
+	private void addAdapterListener(String installPath) throws IOException {
+		fileInstallConfiguration = myConfigurationAdmin.createFactoryConfiguration("org.apache.felix.fileinstall",null);
+		Dictionary d = fileInstallConfiguration.getProperties();
+		if(d==null) {
+			d = new Hashtable();
+		}
+		File cp = new File(installPath);
+		File adapters = new File(cp,"adapters");
+		d.put("felix.fileinstall.dir",adapters.getAbsolutePath() );
+		fileInstallConfiguration.update(d);	
+		
+	}
+
+	public void deactivate() throws IOException {
 		logger.info("Deactivating service component");
+		if(fileInstallConfiguration!=null) {
+			fileInstallConfiguration.delete();
+		}
 	}
 
 	@Override
@@ -61,5 +89,12 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 		return wrapped.getInstallationPath();
 	}
 
+	public void addConfigurationAdmin(ConfigurationAdmin admin) {
+		this.myConfigurationAdmin = admin;
+	}
+
+	public void clearConfigurationAdmin(ConfigurationAdmin admin) {
+		this.myConfigurationAdmin = null;
+	}
 
 }

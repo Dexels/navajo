@@ -2,7 +2,7 @@
   <OCD description="Navajo Server Context/Instance" name="Navajo Server Context" id="navajo.server.http.osgi" >
     <AD name="contextPath"    id="contextPath"   required="true"  type="String" default="/"/>   
     <AD name="servletContextPath"  id="servletContextPath" required="false" type="String" />
-    <AD name="installationPath"  id="installationPath" required="true" type="String" default="/Users/frank/Documents/workspace-indigo/sportlink-serv/navajo-tester/auxilary"/>
+    <AD name="installationPath"  id="installationPath" required="true" type="String" default="/mypath"/>
   </OCD>
   <Designate pid="navajo.server.http.osgi">
      <Object ocdref="navajo.server.http.osgi"/>
