@@ -1103,11 +1103,6 @@ public final void switchServer(boolean force) {
 		
 		return doSimpleSend(out, method);
 	}
-	
-	public void finalize() {
-//		killed = true;
-	}
-	
 	public void dispose() {
 //		killed = true;
 	}
