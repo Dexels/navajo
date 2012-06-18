@@ -59,6 +59,9 @@ public class CallServiceTag extends BaseNavajoTag {
 				navajo.getHeader().setRPCName(myService);
 			}
 			LocalClient lc = (LocalClient) getPageContext().getServletContext().getAttribute("localClient");
+			if(lc==null) {
+				throw new JspException("Error: No LocalClient found in Call Service: Has a navajo context been defined?");
+			}
 			resultNavajo = lc.call(navajo);
 			getNavajoContext().putNavajo(myService, resultNavajo);
 
