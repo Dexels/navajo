@@ -14,11 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.osgi.runtime.FrameworkInstance;
+import com.dexels.navajo.runtime.homecontext.ContextIdentifier;
 
 public class WebFrameworkInstance extends FrameworkInstance {
 
 	private final ServletContext context;
 	private ServiceRegistration<ServletContext> servletContextRegistration;
+	private ServiceRegistration<ContextIdentifier> servletContextIdentifierRegistration;
 	private final static String BUNDLEDIR = "WEB-INF/bundles/";
 	
 
@@ -43,6 +45,13 @@ public class WebFrameworkInstance extends FrameworkInstance {
 		lct.open();
 
 		servletContextRegistration = (ServiceRegistration<ServletContext>) framework.getBundleContext().registerService(ServletContext.class.getName(), context, null);
+		servletContextIdentifierRegistration = (ServiceRegistration<ContextIdentifier>) framework.getBundleContext().registerService(ContextIdentifier.class.getName(), new ContextIdentifier() {
+			@Override
+			public String getContextPath() {
+
+				return context.getContextPath();
+			}
+		}, null);
 	}
 
 	protected void log(String message, Throwable cause) {
@@ -64,6 +73,7 @@ public class WebFrameworkInstance extends FrameworkInstance {
 	
 	protected void doStop() throws Exception {
 		servletContextRegistration.unregister();
+		servletContextIdentifierRegistration.unregister();
 		if (this.context != null) {
 			this.context.removeAttribute("org.osgi.framework.BundleContext");
 		}
