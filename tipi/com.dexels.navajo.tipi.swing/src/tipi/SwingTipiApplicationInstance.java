@@ -119,10 +119,10 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 //		logger.info("Using install: "+install.getAbsolutePath());
 
 		// TODO Fix support for HTTP based runs
-		File tipi = new File(tipiInstallationFolder,"tipi");
-		File resource = new File(tipiInstallationFolder,"resource");
-		context.setTipiResourceLoader(new FileResourceLoader(tipi));
-		context.setGenericResourceLoader(new FileResourceLoader(resource));
+//		File tipi = new File(tipiInstallationFolder,"tipi");
+//		File resource = new File(tipiInstallationFolder,"resource");
+//		context.setTipiResourceLoader(new FileResourceLoader(tipi));
+//		context.setGenericResourceLoader(new FileResourceLoader(resource));
 
 		
 		//		BaseTipiApplicationInstance.processSettings(deploy, profile, installationFolder, extensionContainer)
