@@ -1,10 +1,12 @@
 package com.dexels.navajo.datasource;
 
-import javax.activation.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import javax.activation.DataSource;
 
 import com.dexels.navajo.document.types.Binary;
-
-import java.io.*;
 
 public class BinaryDataSource implements DataSource {
 

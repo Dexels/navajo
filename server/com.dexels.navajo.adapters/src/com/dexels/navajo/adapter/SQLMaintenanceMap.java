@@ -1,12 +1,22 @@
 package com.dexels.navajo.adapter;
 
 
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.*;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import com.dexels.navajo.adapter.sqlmap.SQLMapDatasourceMap;
-import com.dexels.navajo.document.*;
-import java.util.*;
-import java.io.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.NavajoConfigInterface;
+import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.UserException;
 
 /**
  * <p>Title: Navajo Product Project</p>

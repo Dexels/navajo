@@ -1,13 +1,9 @@
 package com.dexels.navajo.adapter.messagemap;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import org.junit.Assert;
 import org.junit.Test;

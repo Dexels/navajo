@@ -1,13 +1,18 @@
 package com.dexels.navajo.adapter;
 
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
-import com.dexels.navajo.mapping.MappableException;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.UserException;
 
 /**
  * <p>Title: </p>

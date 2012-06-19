@@ -26,7 +26,9 @@ package com.dexels.navajo.adapter;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
 
 import com.dexels.navajo.adapter.xmlmap.TagMap;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;

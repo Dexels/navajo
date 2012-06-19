@@ -1,27 +1,44 @@
 package com.dexels.navajo.adapter;
 
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
-import com.dexels.navajo.server.UserException;
-import com.dexels.navajo.adapter.mailmap.AttachementMap;
-import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
-import com.dexels.navajo.util.AuditLog;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 
-import javax.mail.*;
-import javax.activation.*;
-import javax.mail.internet.*;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.Authenticator;
+import javax.mail.BodyPart;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
 import org.w3c.dom.Document;
-import com.dexels.navajo.document.types.Binary;
+
+import com.dexels.navajo.adapter.mailmap.AttachementMap;
+import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
 import com.dexels.navajo.datasource.BinaryDataSource;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.mapping.DependentResource;
+import com.dexels.navajo.mapping.GenericDependentResource;
+import com.dexels.navajo.mapping.HasDependentResources;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
+import com.dexels.navajo.util.AuditLog;
 
 /**
  * Title:        Thispas/Navajo Servlets

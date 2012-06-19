@@ -1,12 +1,13 @@
 package com.dexels.navajo.adapter;
 
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
-import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.mapping.AsyncMappable;
 import java.util.Iterator;
 import java.util.Map;
+
+import com.dexels.navajo.mapping.AsyncMappable;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.UserException;
 
 /**
  * <p>Title: </p>

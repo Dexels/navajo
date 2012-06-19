@@ -1,18 +1,22 @@
 package com.dexels.navajo.adapter;
 
-import com.dexels.navajo.mapping.Mappable;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Stack;
+
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.mapping.CompiledScript;
+import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.MappableTreeNode;
-import com.dexels.navajo.document.*;
-import java.util.Stack;
-import java.util.Iterator;
-import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.MappingException;
-import java.util.Set;
+import com.dexels.navajo.mapping.MappingUtils;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.UserException;
 
 public final class AccessMap implements Mappable {
 

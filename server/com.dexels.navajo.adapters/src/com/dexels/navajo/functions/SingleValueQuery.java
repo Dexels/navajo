@@ -1,11 +1,11 @@
 package com.dexels.navajo.functions;
 
+import java.util.StringTokenizer;
+
 import com.dexels.navajo.jdbc.JDBCFactory;
 import com.dexels.navajo.jdbc.JDBCMappable;
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.adapter.JDBCMap;
-import com.dexels.navajo.adapter.SQLMap;
-import java.util.*;
+import com.dexels.navajo.parser.FunctionInterface;
+import com.dexels.navajo.parser.TMLExpressionException;
 
 /**
  * <p>Title: <h3>SingleValueQuery</h3><br></p>

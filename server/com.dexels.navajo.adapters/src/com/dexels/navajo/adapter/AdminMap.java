@@ -1,8 +1,19 @@
 package com.dexels.navajo.adapter;
 
-import com.dexels.navajo.loader.NavajoClassLoader;
-import com.dexels.navajo.mapping.Mappable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.loader.NavajoClassLoader;
+import com.dexels.navajo.mapping.AsyncMappable;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
@@ -10,20 +21,6 @@ import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerInterface;
-import com.dexels.navajo.mapping.MappableException;
-
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.dexels.navajo.mapping.AsyncMappable;
-import com.dexels.navajo.parser.DefaultExpressionEvaluator;
-
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
 
 public class AdminMap implements Mappable {
 

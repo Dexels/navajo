@@ -12,11 +12,12 @@ package com.dexels.navajo.adapter;
  * @version $Id$
  */
 
-import com.dexels.navajo.server.UserException;
-import java.text.MessageFormat;
-import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.MessageFormat;
+
+import com.dexels.navajo.server.UserException;
 
 public class SequencedInsertMap extends JDBCMap {
 

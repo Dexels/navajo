@@ -2,7 +2,6 @@ package com.dexels.navajo.adapter;
 
 import java.text.SimpleDateFormat;
 
-
 import org.junit.Assert;
 import org.junit.Test;
 

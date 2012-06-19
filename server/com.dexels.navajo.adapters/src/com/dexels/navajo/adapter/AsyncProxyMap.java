@@ -1,8 +1,12 @@
 package com.dexels.navajo.adapter;
 
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.*;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.mapping.AsyncMappable;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.UserException;
 
 /**
  * <p>Title: </p>

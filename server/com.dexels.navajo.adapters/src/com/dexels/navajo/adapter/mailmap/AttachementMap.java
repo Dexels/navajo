@@ -2,12 +2,12 @@ package com.dexels.navajo.adapter.mailmap;
 
 import java.io.Serializable;
 
-import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.adapter.MailMap;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
-import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.document.types.Binary;
 
 /**
  * <p>Title: </p>

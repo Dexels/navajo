@@ -13,22 +13,27 @@ package com.dexels.navajo.adapter;
  *
  */
 
+import java.sql.Blob;
+import java.sql.CallableStatement;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
-import java.io.OutputStream;
-import java.sql.*;
 
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.server.*;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Memo;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.NavajoType;
+import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
-import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.document.types.Memo;
 
 public class SPMap extends SQLMap {
 

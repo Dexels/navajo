@@ -2,13 +2,10 @@ package com.dexels.navajo.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import com.dexels.navajo.adapter.messagemap.PropertyAggregate;
 import com.dexels.navajo.adapter.messagemap.ResultMessage;

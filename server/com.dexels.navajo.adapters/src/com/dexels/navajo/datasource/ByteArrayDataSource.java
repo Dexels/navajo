@@ -1,7 +1,13 @@
 package com.dexels.navajo.datasource;
 
-import javax.activation.*;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+
+import javax.activation.DataSource;
 
 public class ByteArrayDataSource implements DataSource {
 

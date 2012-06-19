@@ -1,14 +1,22 @@
 package com.dexels.navajo.adapter;
 
-import com.dexels.navajo.mapping.Mappable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
-import java.io.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.parser.*;
-import java.util.*;
 
 /**
  * <p>Title: </p>
