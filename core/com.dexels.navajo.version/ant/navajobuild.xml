@@ -331,10 +331,10 @@
 				<if>
 					<equals arg1="${doUploadTipi}" arg2="true"/>
 					<then>
-						<ant antfile="../../tipi_dev/com.dexels.navajo.tipi.build/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
+						<ant antfile="../../../navajo/tipi_dev/com.dexels.navajo.tipi.build/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
 					</then>
 					<else>
-						<ant antfile="../../tipi_dev/com.dexels.navajo.tipi.build/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="packJars" />
+						<ant antfile="../../../navajo/tipi_dev/com.dexels.navajo.tipi.build/genericbuild.xml" dir="." inheritall="true" inheritrefs="true" target="packJars" />
 					</else>
 				</if>
 

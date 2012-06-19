@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<project name="TipiMail" default="archive" basedir="../TipiMail">
+<project name="TipiMail" default="archive" basedir="../com.dexels.navajo.tipi.mail">
 
 	<!--
 	This file is suitable for copying / pasting to other projects.
@@ -77,7 +77,8 @@
 	Note: The difference between 'libs' and 'compilelibs' is that the libs will also be included in deploys
 	(for example WAR-files), and compilelibs will not. 
 	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
-	-->	<property name="dependencies" value="com.dexels.navajo.version,com.dexels.navajo.document,com.dexels.navajo.core,com.dexels.navajo.client,NavajoTipi" />
+	-->	
+	<property name="dependencies" value="../core/com.dexels.navajo.version,../core/com.dexels.navajo.document,../core/com.dexels.navajo.core,../core/com.dexels.navajo.client,../core/com.dexels.navajo.functions,com.dexels.navajo.tipi" />
 
 	<import file="../../../navajo/core/com.dexels.navajo.version/ant/navajobuild.xml" />
 
