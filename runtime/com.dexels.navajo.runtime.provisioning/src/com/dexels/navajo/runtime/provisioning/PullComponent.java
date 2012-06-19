@@ -2,7 +2,6 @@ package com.dexels.navajo.runtime.provisioning;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -10,10 +9,8 @@ import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
 import java.util.Set;
 
-import org.osgi.framework.BundleContext;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
@@ -31,23 +28,18 @@ public class PullComponent {
 
 	private RepositoryAdmin myRepositoryAdmin = null;
 	private ConfigurationAdmin myConfigurationAdmin = null;
-	private BundleContext bundleContext;
 	private final Set<ContextIdentifier> contextIdentifiers = new HashSet<ContextIdentifier>();
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(PullComponent.class);
 
+	@SuppressWarnings("rawtypes")
 	public void activate(ComponentContext cc) {
 		long stamp = System.currentTimeMillis();
 		
 		Dictionary properties = cc.getProperties();
 		 
 		logger.info("Obr Component activated.");
-		this.bundleContext = cc.getBundleContext();
-//		for (Entry<String, Object> element : properties.entrySet()) {
-//			logger.info("Key: " + element.getKey() + " value: "
-//					+ element.getValue());
-//		}
 		String contextPath = (String) properties.get("contextPath");
 		String deployment = (String) properties.get("deployment");
 		String profile = (String) properties.get("profile");
@@ -204,11 +196,11 @@ public class PullComponent {
 	private void debugRepository(Repository repository) {
 		logger.info("Repository: " + repository.getName() + " url: "
 				+ repository.getURL());
-		Resource[] r = repository.getResources();
+//		Resource[] r = repository.getResources();
 
-		for (Resource resource : r) {
-			// logger.info("Resource: "+resource.getSymbolicName()+" - "+resource.getId()+" pres: "+resource.getPresentationName());
-		}
+//		for (Resource resource : r) {
+//			// logger.info("Resource: "+resource.getSymbolicName()+" - "+resource.getId()+" pres: "+resource.getPresentationName());
+//		}
 	}
 
 	public void addRepositoryAdmin(RepositoryAdmin admin) {
