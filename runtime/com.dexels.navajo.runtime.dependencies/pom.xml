@@ -150,6 +150,13 @@
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
+			<artifactId>com.dexels.navajo.webconsole.branding</artifactId>
+			<version>[1.0.0,2.0.0)</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.resource</artifactId>
 			<version>[1.0.0,2.0.0)</version>
 			<scope>runtime</scope>
@@ -288,6 +295,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
+<!-- 
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.gogo.runtime</artifactId>
@@ -307,7 +315,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
-
+ -->
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.http.api</artifactId>

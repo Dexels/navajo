@@ -48,10 +48,11 @@ public class WebFrameworkInstance extends FrameworkInstance {
 		servletContextIdentifierRegistration = (ServiceRegistration<ContextIdentifier>) framework.getBundleContext().registerService(ContextIdentifier.class.getName(), new ContextIdentifier() {
 			@Override
 			public String getContextPath() {
-
+				logger.info("Identifying current context as: "+context.getContextPath());
 				return context.getContextPath();
 			}
 		}, null);
+		logger.info("ContextIdentifier registered");
 	}
 
 	protected void log(String message, Throwable cause) {
@@ -72,12 +73,14 @@ public class WebFrameworkInstance extends FrameworkInstance {
 	}
 	
 	protected void doStop() throws Exception {
+		log("**** SHUTTING DOWN WEBCONTEXT OF OSGI ****", null);
 		servletContextRegistration.unregister();
 		servletContextIdentifierRegistration.unregister();
 		if (this.context != null) {
 			this.context.removeAttribute("org.osgi.framework.BundleContext");
 		}
 		super.doStop();
+		log("**** SHUTTING DOWN WEBCONTEXT OF OSGI COMPLETE ****", null);
 	}
 
 
