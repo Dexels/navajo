@@ -319,7 +319,6 @@ public class NavajoContext implements ClientContext {
 	public void setupClient(String server, String username, String password,String requestServerName,int requestServerPort, String requestContextPath, String postmanPath, boolean debugAll) {
 
 		//		Thread.dumpStack();
-		logger.info("Setupclient: "+server+" user: "+username+" pass: "+password);
 		NavajoClientFactory.resetClient();
 //			NavajoClientFactory.createDefaultClient()
 		 myClient = NavajoClientFactory.getClient();
@@ -338,7 +337,6 @@ public class NavajoContext implements ClientContext {
 		}
 		myClient.setServerUrl(server);		
 		myClient.setRetryAttempts(0);
-		logger.info("User: {} : {}",myClient.getUsername(),myClient.getPassword());
 		this.debugAll = debugAll;
 	}
 	
