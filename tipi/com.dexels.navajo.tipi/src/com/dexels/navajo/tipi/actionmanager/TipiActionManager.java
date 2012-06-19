@@ -41,7 +41,7 @@ public class TipiActionManager implements Serializable, IActionManager {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.tipi.actionmanager.IActionManager#addAction(com.dexels.navajo.tipi.tipixml.XMLElement, navajo.ExtensionDefinition)
+	 * @see com.dexels.navajo.tipi.actionmanager.IActionManager#addAction(com.dexels.navajo.tipi.tipixml.XMLElement, com.dexels.navajo.version.ExtensionDefinition)
 	 */
 	@Override
 	public void addAction(XMLElement actionDef,ExtensionDefinition ed) throws ClassNotFoundException {

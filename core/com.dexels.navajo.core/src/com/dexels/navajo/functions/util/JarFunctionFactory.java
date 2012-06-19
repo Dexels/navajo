@@ -130,7 +130,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 		
 		try {
 			// TODO Detect OSGi mode
-			Iterator<?> iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader),myClassLoader);
+			Iterator<?> iter = ServiceRegistry.lookupProviders(Class.forName("com.dexels.navajo.version.ExtensionDefinition", true, myClassLoader),myClassLoader);
 			while(iter.hasNext()) {
 				ExtensionDefinition ed = (ExtensionDefinition) iter.next();
 				readDefinitionFile(fuds, ed);

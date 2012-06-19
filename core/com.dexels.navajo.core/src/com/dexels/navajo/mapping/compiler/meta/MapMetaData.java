@@ -69,7 +69,7 @@ public class MapMetaData {
 			try {
 				Iterator<?> iter = null;
 				try {
-					iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
+					iter = ServiceRegistry.lookupProviders(Class.forName("com.dexels.navajo.version.ExtensionDefinition", true, myClassLoader), 
 							                                        myClassLoader);
 				} catch (Exception e) {
 					logger.warn("Unable to lookup providers in lecagy service. Normal in OSGi.");

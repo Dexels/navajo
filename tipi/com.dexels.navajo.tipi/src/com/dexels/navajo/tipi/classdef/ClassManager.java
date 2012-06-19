@@ -72,7 +72,7 @@ public final class ClassManager extends BaseClassManager implements Serializable
 	}
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.tipi.classdef.IClassManager#addTipiClassDefinition(com.dexels.navajo.tipi.tipixml.XMLElement, navajo.ExtensionDefinition)
+	 * @see com.dexels.navajo.tipi.classdef.IClassManager#addTipiClassDefinition(com.dexels.navajo.tipi.tipixml.XMLElement, com.dexels.navajo.version.ExtensionDefinition)
 	 */
 	@Override
 	public final void addTipiClassDefinition(XMLElement xe,
