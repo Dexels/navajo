@@ -29,8 +29,12 @@ public final class StartupListener
 
     public void contextInitialized(ServletContextEvent event)
     {
-        this.service = new WebFrameworkInstance(event.getServletContext());
-        this.service.start();
+        try {
+			this.service = new WebFrameworkInstance(event.getServletContext());
+			this.service.start();
+		} catch (Throwable e) {
+			event.getServletContext().log("Error starting context", e);
+		}
     }
 
     public void contextDestroyed(ServletContextEvent event)
