@@ -61,7 +61,7 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.runtime.osgi.j2ee</artifactId>
-			<version>[1.0.0,2.0.0)</version>
+			<version>[1.0.4-SNAPSHOT,2.0.0)</version>
 		</dependency>
 		
 		<dependency>
