@@ -42,6 +42,10 @@ public class ResourceManager {
 	
 	public void activate(ComponentContext cc) {
 		this.bundleContext = cc.getBundleContext();
+		System.err.println("Bundlecontext: "+bundleContext);
+		setupResources();
+		setupTesterUser();
+
 	}
 	
 	public void deactivate() {
@@ -107,16 +111,16 @@ public class ResourceManager {
 	}
 
 	public DataSource getDataSource(String shortName) throws InvalidSyntaxException {
-		ServiceReference<DataSource> ss = getDataSourceReference(shortName);
-		return bundleContext.getService(ss);
+		ServiceReference ss = getDataSourceReference(shortName);
+		return (DataSource)bundleContext.getService(ss);
 	}
-	public ServiceReference<DataSource> getDataSourceReference(String shortName) throws InvalidSyntaxException {
+	public ServiceReference getDataSourceReference(String shortName) throws InvalidSyntaxException {
 		logger.debug("Getting datasource reference: "+shortName);
-		Collection<ServiceReference<DataSource>> dlist = bundleContext.getServiceReferences(DataSource.class,"(name=navajo.resource."+shortName+")");
-		if(dlist.size()!=1) {
-			logger.info("Matched: {} datasources.",dlist.size());
+		ServiceReference<?>[] dlist = bundleContext.getServiceReferences(DataSource.class.getName(),"(name=navajo.resource."+shortName+")");
+		if(dlist.length!=1) {
+			logger.info("Matched: {} datasources.",dlist.length);
 		}
-		ServiceReference<DataSource> dref = dlist.iterator().next();
+		ServiceReference dref = dlist[0];
 		return dref;
 	}
 

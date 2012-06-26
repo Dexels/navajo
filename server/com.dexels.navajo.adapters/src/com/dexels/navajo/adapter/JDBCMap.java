@@ -986,6 +986,7 @@ public boolean isUpdateOnly() {
       }
     }
     catch (SQLException sqle) {
+    	logger.error("SQL Problem: ");
       AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access") );
       throw new UserException( -1, sqle.getMessage(),sqle);
     }
