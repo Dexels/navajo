@@ -22,7 +22,7 @@ import org.osgi.service.obr.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.runtime.homecontext.ContextIdentifier;
+import com.dexels.navajo.osgi.runtime.ContextIdentifier;
 
 public class PullComponent {
 
@@ -71,13 +71,23 @@ public class PullComponent {
 	private boolean hasContext(String contextName) {
 		for (ContextIdentifier c : contextIdentifiers) {
 			String con = c.getContextPath();
-			if(contextName.equals(con)) {
+			String ctxName = contextName;
+			if(ctxName.equals(con)) {
 				return true;
 			}
+			if(con!=null && con.startsWith("/")) {
+				con = con.substring(1);
+			}
+			if(ctxName.startsWith("/")) {
+				ctxName = ctxName.substring(1);
+			}
+			if(ctxName.equals(con)) {
+				return true;
+			}
+			
 		}
 		return false;
 	}
-	
 	
 	private void setupTipi(String contextPath, String deployment, String profile)
 			throws Exception {

@@ -42,6 +42,9 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.Header;
@@ -100,6 +103,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
   public static final String product = "Navajo Service Delivery Platform";
   public volatile static String edition;
   
+
+private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
+
   public boolean enabled = false;
   public boolean shutdown = false;
   
@@ -919,7 +925,7 @@ private ServiceHandler createHandler(String handler, Access access)
           }
           
           if ( navajoConfig.getRepository() == null ) {
-        	  System.err.println("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
+        	  logger.error ("Bad initialization or missing repository");
         	  throw new FatalException("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
           }
           access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);

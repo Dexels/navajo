@@ -3,12 +3,20 @@ package com.dexels.navajo.server.enterprise.scheduler;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.util.AuditLog;
 
 public class TaskRunnerFactory {
 
 	private static volatile TaskRunnerInterface instance = null;
 	private static Object semaphore = new Object();
+	
+
+	private final static Logger logger = LoggerFactory
+			.getLogger(TaskRunnerFactory.class);
+	
 	/**
 	 * Beware, this functions should only be called from the authorized class that can enable this thread(!).
 	 * 
@@ -31,7 +39,7 @@ public class TaskRunnerFactory {
 					Method m = c.getMethod("getInstance",(Class[])null);
 					ClockInterface myClock = (ClockInterface) m.invoke(dummy, (Object[])null);
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+
 					AuditLog.log("INIT", "WARNING: Clock not available", Level.WARNING);
 				}	
 				try {
@@ -39,9 +47,12 @@ public class TaskRunnerFactory {
 					TaskRunnerInterface dummy = (TaskRunnerInterface) c.newInstance();
 					Method m = c.getMethod("getInstance",(Class[]) null);
 					instance = (TaskRunnerInterface) m.invoke(dummy, (Object[])null);
+				} catch (ClassNotFoundException e) {
+					logger.warn("Task runner not available from classpath");
+					instance = new DummyTaskRunner();
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
-					AuditLog.log("INIT", "WARNING: Scheduler not available", Level.WARNING);
+					logger.error("Task runner not available from classpath",e);
+					AuditLog.log("INIT", "WARNING: Task runner not available from classpath", Level.WARNING);
 					instance = new DummyTaskRunner();
 				}	
 				try {
@@ -49,6 +60,8 @@ public class TaskRunnerFactory {
 					Object dummy = c.newInstance();
 					Method m = c.getMethod("getInstance", (Class[])null);
 					m.invoke(dummy, (Object[])null);
+				} catch (ClassNotFoundException e) {
+					logger.warn("Workflow manager not available");
 				} catch (Exception e) {
 					e.printStackTrace(System.err);
 					AuditLog.log("INIT", "WARNING: Workflow not available", Level.WARNING);
@@ -58,6 +71,8 @@ public class TaskRunnerFactory {
 					Object dummy = c.newInstance();
 					Method m = c.getMethod("getInstance", (Class[])null);
 					m.invoke(dummy, (Object[])null);
+				} catch (ClassNotFoundException e) {
+					logger.warn("Listener Runner not available from classpath");
 				} catch (Exception e) {
 					e.printStackTrace(System.err);
 					AuditLog.log("INIT", "WARNING: Listener Runner not available", Level.WARNING);

@@ -12,7 +12,7 @@ import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.runtime.homecontext.ContextIdentifier;
+import com.dexels.navajo.osgi.runtime.ContextIdentifier;
 
 public class PushComponent {
 
@@ -25,11 +25,13 @@ public class PushComponent {
 			.getLogger(PushComponent.class);
 	private Configuration factoryConfiguration;
 
+	private Dictionary properties;
+
 	@SuppressWarnings("rawtypes")
 	public void activate(ComponentContext cc) {
 		long stamp = System.currentTimeMillis();
 		
-		Dictionary properties = cc.getProperties();
+		properties = cc.getProperties();
 		 
 		logger.info("Push configuration component created.");
 		String contextPath = (String) properties.get("contextPath");
@@ -50,18 +52,35 @@ public class PushComponent {
 		logger.info("Activating push provisioning took: "+(System.currentTimeMillis()-stamp) +" millis. ");
 	}
 
+	// Check regardless of leading slashes TODO Check for pull
 	private boolean hasContext(String contextName) {
+		logger.info("# of ci's: "+contextIdentifiers.size());
+		logger.info("ci's: "+contextIdentifiers);
+
 		for (ContextIdentifier c : contextIdentifiers) {
 			String con = c.getContextPath();
-			if(contextName.equals(con)) {
+			logger.info("Checking context identifier: "+c.getClass()+" checking for: "+contextName+" against: "+con);
+//			Thread.dumpStack();
+			String ctxName = contextName;
+			if(ctxName.equals(con)) {
 				return true;
 			}
+			if(con!=null && con.startsWith("/")) {
+				con = con.substring(1);
+			}
+			if(ctxName.startsWith("/")) {
+				ctxName = ctxName.substring(1);
+			}
+			if(ctxName.equals(con)) {
+				return true;
+			}
+			
 		}
 		return false;
 	}
 	
 	private void injectConfig(String contextPath, String servletContextPath, String installationPath) throws IOException {
-		factoryConfiguration = myConfigurationAdmin.getConfiguration("navajo.server.http.osgi");
+		factoryConfiguration = myConfigurationAdmin.getConfiguration("navajo.server.http.osgi",null);
 		Dictionary<String, String> d = new Hashtable<String,String>();
 		d.put("contextPath", contextPath);
 		if(servletContextPath!=null) {

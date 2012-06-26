@@ -28,7 +28,7 @@
           <!-- start: skip link navigation -->
 
         </div>
-        <h2>Navajo Error <a href="index.jsp">[[Restart]]</a> <a href="tml/reset.jsp">[[Destroy Session]]</a> </h2>
+        <h2><a href="index.jsp">Navajo Error <c:import url="writeversion.jsp" /></a> <a href="osgi/system/console">[[OSGI CONSOLE]]</a><a href="reset.jsp">[[Destroy Session]]</a></h2>
         
       </div>
       <div id="nav">

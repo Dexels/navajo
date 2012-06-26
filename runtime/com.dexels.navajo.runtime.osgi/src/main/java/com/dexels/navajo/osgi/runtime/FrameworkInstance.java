@@ -26,21 +26,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FrameworkInstance {
 	protected Framework framework;
 //	private final static String APPSERVERBUNDLEDIR = "bundles/";
 //	private final static String EXPLICITBUNDLEDIR = "WEB-INF/explicit/";
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(FrameworkInstance.class);
 	private final String bundlePath;
 	
 	public FrameworkInstance(String path) {
@@ -96,10 +93,9 @@ public class FrameworkInstance {
 	public final void start() {
 		try {
 			doStart();
-//			install("org.apache.felix.configadmin-1.2.8.jar");
-//			install("org.apache.felix.fileinstall-3.2.0.jar");
 		} catch (Exception e) {
 			log("Failed to start framework", e);
+			e.printStackTrace();
 		}
 	}
 
@@ -145,7 +141,7 @@ public class FrameworkInstance {
 		for (Object key : props.keySet()) {
 			String value = (String) props.get(key);
 			map.put(key.toString(), value);
-			System.err.println("putting: "+key+" value: "+value);
+//			System.err.println("putting: "+key+" value: "+value);
 		}
 //		StringBuffer bundlePath = new StringBuffer();
 //		String resolvedBundlePath = getFilePath(BUNDLEDIR).toString();
@@ -189,7 +185,10 @@ public class FrameworkInstance {
 	}
 
 	protected void log(String message, Throwable cause) {
-		logger.info(message,cause);
+		System.err.println("Message: "+message);
+		if(cause!=null) {
+			cause.printStackTrace();
+		}
 	}
 
 	  private static FrameworkFactory getFrameworkFactory() throws Exception

@@ -9,8 +9,6 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.util.tracker.ServiceTracker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 
@@ -20,8 +18,8 @@ public class ConfigAdminTracker extends ServiceTracker {
 	private final String servletContextPath;
 	private final String installationPath;
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(ConfigAdminTracker.class);
+//	private final static Logger logger = LoggerFactory
+//			.getLogger(ConfigAdminTracker.class);
 	
 
     public ConfigAdminTracker(BundleContext bundleContext,String contextPath,String servletContextPath, String installationPath) 
@@ -37,15 +35,16 @@ public class ConfigAdminTracker extends ServiceTracker {
     
     public Object addingService(ServiceReference ref)
     {
-    	logger.info("Some kind of service detected: "+ref);
+//    	logger.info("Some kind of service detected: "+ref);
     	ConfigurationAdmin service = (ConfigurationAdmin)super.addingService(ref);
         if (service instanceof ConfigurationAdmin) {
-        	logger.info("Injecting config!");
+//        	logger.info("Injecting config!");
         	ConfigurationAdmin ca = (ConfigurationAdmin)service;
         	try {
 				injectConfig(ca);
 			} catch (IOException e) {
-				logger.error("Unable to inject config data! ", e);
+//				logger.error("Unable to inject config data! ", e);
+				e.printStackTrace();
 			}
         }
 
@@ -64,7 +63,7 @@ public class ConfigAdminTracker extends ServiceTracker {
     public void removedService(ServiceReference ref, Object service)
     {
         if (service instanceof ConfigurationAdmin) {
-        	logger.info("Config admin is leaving?!");
+//        	logger.info("Config admin is leaving?!");
         }
 
         super.removedService(ref, service);

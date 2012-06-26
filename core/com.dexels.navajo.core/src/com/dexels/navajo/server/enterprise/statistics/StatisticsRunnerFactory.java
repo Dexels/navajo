@@ -39,6 +39,8 @@ public class StatisticsRunnerFactory {
 						logger.info("Falling back to old school mode.");
 						instance = getStatisticsRunnerInstance(storePath, parameters,
 								storeClass);
+					} catch (ClassNotFoundException e) {
+						logger.warn("Statistics runner not available from classpath.");
 					} catch (Exception e) {
 						AuditLog.log("INIT", "WARNING: StatisticsRunnner not available", e,Level.WARNING);
 						instance = new DummyStatisticsRunner();
@@ -75,7 +77,7 @@ public class StatisticsRunnerFactory {
 			return null;
 		}
 		ServiceReference[] c = bc.getServiceReferences(StatisticsRunnerInterface.class.getName(), "(threadClass=com.dexels.navajo.server.statistics.StatisticsRunner)");
-		if(c.length==0) {
+		if(c== null ||  c.length==0) {
 			return null;
 		}
 		ServiceReference srir = c[0];

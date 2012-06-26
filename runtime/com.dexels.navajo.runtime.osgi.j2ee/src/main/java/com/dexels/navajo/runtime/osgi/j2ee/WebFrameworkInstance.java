@@ -4,17 +4,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
 import org.osgi.framework.ServiceRegistration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.osgi.runtime.ContextIdentifier;
 import com.dexels.navajo.osgi.runtime.FrameworkInstance;
-import com.dexels.navajo.runtime.homecontext.ContextIdentifier;
+import com.dexels.navajo.runtime.osgi.j2ee.impl.ServletContextIdentifier;
 
 public class WebFrameworkInstance extends FrameworkInstance {
 
@@ -24,8 +22,6 @@ public class WebFrameworkInstance extends FrameworkInstance {
 	private final static String BUNDLEDIR = "WEB-INF/bundles/";
 	
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(WebFrameworkInstance.class);
 	
 	public WebFrameworkInstance(ServletContext context) {
 		super(context.getRealPath(BUNDLEDIR));
@@ -41,20 +37,23 @@ public class WebFrameworkInstance extends FrameworkInstance {
 			log("Setting "+"org.osgi.framework.BundleContext"+" : "+getBundleContext(),null);
 			context.setAttribute("org.osgi.framework.BundleContext",getBundleContext());
 		}
-		LocalClientTracker lct = new LocalClientTracker(framework.getBundleContext(), context);
-		lct.open();
+		try {
+			log("Reg client tracker",null);
+			LocalClientTracker lct = new LocalClientTracker(framework.getBundleContext(), context);
+			lct.open();
+			log("Reg client tracker opened",null);
 
-		servletContextRegistration = (ServiceRegistration<ServletContext>) framework.getBundleContext().registerService(ServletContext.class.getName(), context, null);
-		servletContextIdentifierRegistration = (ServiceRegistration<ContextIdentifier>) framework.getBundleContext().registerService(ContextIdentifier.class.getName(), new ContextIdentifier() {
-			@Override
-			public String getContextPath() {
-				logger.info("Identifying current context as: "+context.getContextPath());
-				return context.getContextPath();
-			}
-		}, null);
-		logger.info("ContextIdentifier registered");
+			servletContextRegistration = (ServiceRegistration<ServletContext>) framework.getBundleContext().registerService(ServletContext.class.getName(), context, null);
+			log("servlet cr registered",null);
+//			servletContextIdentifierRegistration = (ServiceRegistration<ContextIdentifier>) framework.getBundleContext().registerService(ContextIdentifier.class.getName(), new ServletContextIdentifier(context), null);
+//			log("servlet ci registered",null);
+//			log("**************** ContextIdentifier registered",null);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
+	@Override
 	protected void log(String message, Throwable cause) {
 		
 		
@@ -72,15 +71,25 @@ public class WebFrameworkInstance extends FrameworkInstance {
 		}
 	}
 	
+	@Override
 	protected void doStop() throws Exception {
 		log("**** SHUTTING DOWN WEBCONTEXT OF OSGI ****", null);
-		servletContextRegistration.unregister();
-		servletContextIdentifierRegistration.unregister();
+		// TODO Null check?
+		if(servletContextRegistration==null) {
+			log("Problem while deregistering servletContext", null);
+		} else {
+			servletContextRegistration.unregister();
+		}
+		if(servletContextIdentifierRegistration==null) {
+			log("Problem while deregistering servletContextIdentifier", null);
+		} else {
+			servletContextIdentifierRegistration.unregister();
+		}
 		if (this.context != null) {
 			this.context.removeAttribute("org.osgi.framework.BundleContext");
 		}
-		super.doStop();
 		log("**** SHUTTING DOWN WEBCONTEXT OF OSGI COMPLETE ****", null);
+		super.doStop();
 	}
 
 
@@ -89,11 +98,11 @@ public class WebFrameworkInstance extends FrameworkInstance {
 	protected Map createConfig() throws Exception {
 		Map<String, Object> config = super.createConfig();
 		Properties props = new Properties();
-		logger.warn("PARENT CONFIG: ");
-		for (Entry<String,Object> e : config.entrySet()) {
-			logger.warn("Key: "+e.getKey()+" Value: >"+e.getValue()+"<");
-		}
-		logger.warn("END OF CONFIG");
+//		logger.warn("PARENT CONFIG: ");
+//		for (Entry<String,Object> e : config.entrySet()) {
+//			logger.warn("Key: "+e.getKey()+" Value: >"+e.getValue()+"<");
+//		}
+//		logger.warn("END OF CONFIG");
 		
 //		props.load(getResource("default.properties"));
 		String path = context.getRealPath("WEB-INF/framework.properties");
@@ -104,7 +113,7 @@ public class WebFrameworkInstance extends FrameworkInstance {
 			for (Object key : props.keySet()) {
 				String value = (String) props.get(key);
 				config.put(key.toString(), value);
-				System.err.println("putting: "+key+" value: "+value);
+//				System.err.println("putting: "+key+" value: "+value);
 			}		
 			
 		} catch (IOException e) {
@@ -114,12 +123,12 @@ public class WebFrameworkInstance extends FrameworkInstance {
 
 		config.put("SYSTEMBUNDLE_ACTIVATORS_PROP",
 				Arrays.asList(new ProvisionActivator(this.context)));
-		System.err.println("Final map: "+config);
-		logger.warn("ACTUAL CONFIG: ");
-		for (Entry<String,Object> e : config.entrySet()) {
-			logger.warn("Key: "+e.getKey()+" Value: >"+e.getValue()+"<");
-		}
-		logger.warn("END OF CONFIG");
+//		System.err.println("Final map: "+config);
+//		logger.warn("ACTUAL CONFIG: ");
+//		for (Entry<String,Object> e : config.entrySet()) {
+//			logger.warn("Key: "+e.getKey()+" Value: >"+e.getValue()+"<");
+//		}
+//		logger.warn("END OF CONFIG");
 
 		return config;
 	}

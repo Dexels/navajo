@@ -40,5 +40,11 @@ public final class StartupListener
     public void contextDestroyed(ServletContextEvent event)
     {
         this.service.stop();
+        // see if this helps TODO think of something better
+        try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
     }
 }

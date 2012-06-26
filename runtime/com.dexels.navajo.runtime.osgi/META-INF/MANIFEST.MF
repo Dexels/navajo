@@ -7,8 +7,7 @@ Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Main-Class: com.dexels.navajo.osgi.runtime.FrameworkInstance
 Import-Package: org.osgi.framework;version="1.6.0",
- org.osgi.framework.launch;version="1.0.0",
- org.slf4j;version="1.6.1"
+ org.osgi.framework.launch;version="1.0.0"
 Bundle-ClassPath: .,
  resources/
 Export-Package: com.dexels.navajo.osgi.runtime

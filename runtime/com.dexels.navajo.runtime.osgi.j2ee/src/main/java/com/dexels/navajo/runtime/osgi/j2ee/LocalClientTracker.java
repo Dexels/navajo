@@ -7,8 +7,6 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.Filter;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.script.api.LocalClient;
 
@@ -22,8 +20,6 @@ public class LocalClientTracker extends ServiceTracker {
 	
 	
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(LocalClientTracker.class);
 	
 	public LocalClientTracker(BundleContext bundleContext, ServletContext servletContext)
             throws Exception
@@ -51,7 +47,7 @@ public class LocalClientTracker extends ServiceTracker {
         	if(servletContext!=null) {
                 servletContext.setAttribute("localClient", service);
         	} else {
-        		logger.error("Local client detected but no servlet context");
+        		System.err.println("Local client detected but no servlet context");
         	}
         }
 

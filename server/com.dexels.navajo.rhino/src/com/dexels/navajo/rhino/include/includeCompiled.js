@@ -17,7 +17,7 @@ function callMap(mapClass, callback) {
 	} catch(e) {
 		//e.rhinoException.printStackTrace();
 		env.killMap(map);
-		//env.logException("Map problem:",e.rhinoException);
+		env.logException("Map problem:",e.rhinoException);
 		throw (e.rhinoException);
 	}
 	// TODO: Handle exceptions and call kill()
@@ -298,7 +298,7 @@ function addParam(propertyName,value, attributes,callback) {
 
 // only used for 'expression-style' fields
 function addField(fieldName,value) {
-	//env.log("setting field: "+fieldName+" value: "+value);
+	env.log("setting field: "+fieldName+" value: "+value);
 	env.addField(fieldName,value);
 }
 

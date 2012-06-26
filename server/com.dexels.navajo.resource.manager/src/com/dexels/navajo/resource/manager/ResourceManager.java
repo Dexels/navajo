@@ -111,6 +111,7 @@ public class ResourceManager {
 		return bundleContext.getService(ss);
 	}
 	public ServiceReference<DataSource> getDataSourceReference(String shortName) throws InvalidSyntaxException {
+		logger.debug("Getting datasource reference: "+shortName);
 		Collection<ServiceReference<DataSource>> dlist = bundleContext.getServiceReferences(DataSource.class,"(name=navajo.resource."+shortName+")");
 		if(dlist.size()!=1) {
 			logger.info("Matched: {} datasources.",dlist.size());
@@ -182,9 +183,9 @@ public class ResourceManager {
 
 	private void setupTesterUser() {
 		FileInputStream fis = null;
+		logger.debug("Looking for client.properties in: "+navajoServerContext.getInstallationPath());
+		File install = new File(navajoServerContext.getInstallationPath(),"config/client.properties");
 		try {
-			logger.debug("Looking for client.properties in: "+navajoServerContext.getInstallationPath());
-			File install = new File(navajoServerContext.getInstallationPath(),"config/client.properties");
 			fis = new FileInputStream(install);
 			ResourceBundle b = new PropertyResourceBundle(fis);
 			if(! b.containsKey("username")) {
@@ -194,13 +195,13 @@ public class ResourceManager {
 			processClientBundle(b);
 			fis.close();
 		} catch (IOException e) {
-			logger.error("Error reading client.properies file: ", e);
+			logger.error("Error reading client.properies file. "+install.getAbsolutePath());
 		} finally {
 			if(fis!=null) {
 				try {
 					fis.close();
 				} catch (IOException e) {
-					logger.error("Error closing client.properties file: ", e);
+					logger.error("Error closing client.properties file. ");
 				}
 			}
 			

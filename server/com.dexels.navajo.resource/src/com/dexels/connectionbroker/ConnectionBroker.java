@@ -1,8 +1,6 @@
 package com.dexels.connectionbroker;
 
 import java.sql.SQLException;
-import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -21,19 +19,16 @@ public class ConnectionBroker {
 	private final Map<String,DataSourceFactory> driverMap = new HashMap<String,DataSourceFactory>();
 	
 	
-	@SuppressWarnings("rawtypes")
 	public void activate(ComponentContext context) {
-		Dictionary properties = context.getProperties();
-			logger.info("Actiating: "+properties);
-			Enumeration en = properties.keys();
-			while(en.hasMoreElements()) {
-				String key = (String)en.nextElement();
-				System.err.println("KEy: "+key+" val: "+properties.get(key));
-			}
+//		Dictionary properties = context.getProperties();
+//			Enumeration en = properties.keys();
+//			while(en.hasMoreElements()) {
+//				String key = (String)en.nextElement();
+//			}
 	}
 	
 	public void registerDriver(DataSourceFactory df) {
-		logger.info("Registering driver: "+df.getClass()+" : "+DataSourceFactory.JDBC_DESCRIPTION);
+		logger.debug("Registering driver: "+df.getClass()+" : "+DataSourceFactory.JDBC_DESCRIPTION);
 		String name = df.getClass().getName();
 		driverMap.put(name, df);
 //		try {

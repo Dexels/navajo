@@ -12,11 +12,16 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Stack;
 
+import navajorhino.Version;
+
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContinuationPending;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -498,11 +503,10 @@ public abstract class ScriptEnvironment implements Serializable {
 				System.err.println("REPLACE!");
 				className = "com.dexels.navajo.adapter.JDBCMap";
 			}
-			ClassLoader cl = DispatcherFactory.getInstance().getNavajoConfig()
-					.getClassloader();
 			// Note, the ClassLoader is not actually used by OSGi
-			Class<?> mclass = FunctionFactoryFactory.getInstance()
-					.getAdapterClass(className, cl);
+			Class<?> mclass = getOSGiClass(className);
+			
+			
 			// Class<?> mclass = Class.forName(className, true, cl);
 			Object obj = mclass.newInstance();
 			logger.debug("Returning instantiate map: "+obj);
@@ -515,6 +519,32 @@ public abstract class ScriptEnvironment implements Serializable {
 		return null;
 	}
 
+	private Class<?> getOSGiClass(String className) throws ClassNotFoundException {
+		if(!hasOSGi()) {
+			ClassLoader cl = DispatcherFactory.getInstance().getNavajoConfig()
+					.getClassloader();
+			return FunctionFactoryFactory.getInstance()
+					.getAdapterClass(className, cl);
+		}
+		ServiceReference[] sr;
+		try {
+			sr = Version.getDefaultContext().getAllServiceReferences(Class.class.getName(), "(adapterClass="+className+")");
+		} catch (InvalidSyntaxException e) {
+			logger.error("Can not parse filter.",e);
+			return null;
+		}
+		if(sr.length==0) {
+			return null;
+		}
+		Class<?> c = Version.getDefaultContext().getService(sr[0]);
+		return c;
+	}
+
+	private boolean hasOSGi() {
+		return Version.getDefaultContext()!=null;
+		
+	}
+	
 	public void scheduleCallback(Function f) {
 		System.err.println("Schedulecallback!!!!!");
 

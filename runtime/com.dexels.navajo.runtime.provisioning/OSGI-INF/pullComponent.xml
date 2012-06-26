@@ -3,5 +3,5 @@
    <implementation class="com.dexels.navajo.runtime.provisioning.PullComponent"/>
    <reference bind="addRepositoryAdmin" cardinality="1..1" interface="org.osgi.service.obr.RepositoryAdmin" name="RepositoryAdmin" policy="static" unbind="clearRepositoryAdmin"/>
    <reference bind="addConfigurationAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="static" unbind="clearConfigurationAdmin"/>
-   <reference bind="addContextIdentifier" cardinality="1..n" interface="com.dexels.navajo.runtime.homecontext.ContextIdentifier" name="ContextIdentifier" policy="dynamic" unbind="removeContextIdentifier"/>
+   <reference bind="addContextIdentifier" cardinality="1..n" interface="com.dexels.navajo.osgi.runtime.ContextIdentifier" name="ContextIdentifier" policy="dynamic" unbind="removeContextIdentifier"/>
 </scr:component>
