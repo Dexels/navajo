@@ -1,0 +1,11 @@
+<adapterdef>
+
+
+    <map>
+        <tagname>monkey</tagname>
+        <object>com.dexels.navajo.example.adapter.MonkeyAdapter</object>
+        <values>
+        </values>
+    </map>
+
+</adapterdef>

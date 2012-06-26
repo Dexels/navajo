@@ -3,8 +3,8 @@
 		<message name="default">
 			<property name="url" value="jdbc:h2:~/test" />
 			<property name="type" value="h2" />
-			<property name="user" value="root" />
-			<property name="password" value="root" />
+			<property name="user" value="sa" />
+			<property name="password" value="" />
 		</message>
 		<message name="navajostore">
 			<property name="type" value="mongodb" />
