@@ -1,0 +1,10 @@
+<navascript>
+	<message name="Result">
+		<map.ftp server="'spiritus.dexels.nl'" username="'frank'" password="'xxxxxxxx'" filename="'image.png'">
+		<field name="content" type="binary">
+				<expression
+					value="ToBinaryFromUrl('http://www.dexels.com/templates/rt_mynxx_j15/images/light/logo.png')" />
+			</field>
+		   </map.ftp>
+	</message>
+</navascript>

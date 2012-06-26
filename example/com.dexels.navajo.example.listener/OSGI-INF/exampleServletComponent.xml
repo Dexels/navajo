@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" immediate="true" name="com.dexels.navajo.example.listener">
+   <implementation class="com.dexels.navajo.example.listener.ExampleServlet"/>
+   <reference bind="setClient" cardinality="1..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="dynamic" unbind="clearClient"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="alias" type="String" value="/example"/>
+</scr:component>

@@ -1,0 +1,15 @@
+<tml>
+	<message name="datasources">
+		<message name="default">
+			<property name="url" value="jdbc:h2:~/test" />
+			<property name="type" value="h2" />
+			<property name="user" value="root" />
+			<property name="password" value="root" />
+		</message>
+		<message name="navajostore">
+			<property name="type" value="mongodb" />
+			<property name="host" value="127.0.0.1" />
+			<property name="database" value="navajostore" />
+		</message>
+	</message>
+</tml>

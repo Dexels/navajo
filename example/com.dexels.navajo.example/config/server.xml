@@ -1,0 +1,58 @@
+<tml>
+    <message name="server-configuration">
+        <property name="documentClass" value="com.dexels.navajo.document.base.BaseNavajoFactoryImpl"/>
+        <property name="instance_name" value="KNVBOntwikkel"/>
+        <property name="instance_group" value="KNVB"/>
+        <message name="paths">
+            <property name="scripts" value="scripts"/>
+            <property name="compiled-scripts" value="compiled"/>
+            <property name="adapters" value="adapters"/>
+            <property name="configuration" value="config"/>
+            <property name="logging" value="/tmp"/>
+            <property name="tmp" value="tmp"/>
+            <property name="navajostore" value="log/navajo"/>
+        </message>
+        <message name="navajostore">
+            <property name="dbpath" value="log/navajo"/>
+            <property name="dbport" value="7001"/>
+            <property name="store" value="com.dexels.navajo.adapter.navajostore.OracleStore"/>
+        </message>
+        <message name="maintenance-services">
+            <property name="navajo_showusers" value="navajo_showusers.xml"/>
+            <property name="navajo_showparameters" value="navajo_showparameters.xml"/>
+            <property name="navajo_find_value" value="navajo_find_value.xml"/>
+            <property name="navajo_logon" value="navajo_logon.xml"/>
+        </message>
+        <message name="special-users">
+            <property name="beta" value="beta"/>
+        </message>
+        <message name="description-provider">
+         <property name="class" value="com.dexels.navajo.adapter.descriptionprovider.FastDescriptionProvider" direction="in"/>
+         <property name="Datasource" value="navajostore" direction="in" type="string"/>
+        </message>
+        <message name="repository">
+            <property name="class" value="com.dexels.navajo.server.SimpleRepository"/>
+        </message>
+        <message name="persistence-manager">
+            <property name="class" value="com.dexels.navajo.persistence.impl.PersistenceManagerImpl"/>
+        </message>
+        <message name="logging">
+            <property name="level" value="4"/>
+            <property name="filename" value="navajolog"/>
+        </message>
+        <message name="parameters">
+             <property name="use_compression" value="true"/>
+             <property name="script_version" value="2.0"/>
+             <!-- define async map object timeout in seconds -->
+             <property name="async_timeout" value="3600"/>
+             <property name="compile_scripts" value="true"/>
+             <property name="use_log4j" value="true"/>
+             <property name="hot_compile" value="true"/>
+             <property name="enable_locks" value="false"/>
+             <property name="enable_statistics" value="true"/>
+             <property name="enable_integrity" value="true"/>
+             <property name="enable_async" value="true"/>
+     		<property name="compilation_language" value="javascript" />
+        </message>
+    </message>
+</tml>
