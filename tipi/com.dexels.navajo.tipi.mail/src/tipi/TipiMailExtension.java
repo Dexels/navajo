@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
-
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
@@ -59,7 +58,7 @@ public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiE
 			 ServiceRegistration sr  = context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
 			 registrations.add(sr);
 		}
-		
+//		TestMail.main(new String[]{});
 	}
 
 	@SuppressWarnings("rawtypes")
