@@ -967,6 +967,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	}
 	public final Map<String,String> getSubTypes() {
+		if(subtypeMap==null) {
+			return  new HashMap<String, String>();
+		}
 		return new HashMap<String, String>(subtypeMap);
 	}	
 
