@@ -1,57 +1,30 @@
-/*
- * ImageScaler.java - Copyright (c) 2004 Torsten  - dode@luniks.net
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 package com.dexels.navajo.functions.scale;
 
 //import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.AreaAveragingScaleFilter;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageProducer;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Iterator;
 
-import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageWriter;
-import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 
 import com.dexels.navajo.document.types.Binary;
 
-/**
- * Class to demonstrate a way to scale an image without the
- * requirement of a graphical environment and without enabling
- * the headless support available since Java 1.4
- * @author www.luniks.net
+/** Class which scales images and keeping transparency
+ * @author Erik Versteeg
  */
 public class ImageScaler {
-    
-    
-    
-    
-    
-    private static Binary scale(Binary b, int width, int height, boolean keepAspect, double compressionQuality, boolean alsoScaleUp) throws IOException {
-        if (b==null || b.getLength()<=0) {
+    private static Binary scale(Binary b, int width, int height, boolean keepAspect, boolean alsoScaleUp, boolean clipToCenter, boolean cropToCenter) throws IOException {
+    	if (b==null || b.getLength()<=0) {
             return null;
         }
         InputStream is = null;
@@ -65,7 +38,7 @@ public class ImageScaler {
         	os = c.getOutputStream();
         	ios = ImageIO.createImageOutputStream(os);
         	os.flush();
-        	ImageScaler.scale(iis, ios, width, height, keepAspect, (float)compressionQuality);
+            ImageScaler.scale(iis, ios, width, height, keepAspect, alsoScaleUp, clipToCenter, cropToCenter);
         	ios.flush();
         	ios.close();
         	ios = null;
@@ -104,117 +77,380 @@ public class ImageScaler {
         }
     }
 
-    public static Binary scaleToMax(Binary b, int width, int height, double compressionQuality) throws IOException {
-        if (width>height) {
-            height = width;
-        }
-        if (height>width) {
-            width = height;
-        }
-        return scale(b,width,height,true,compressionQuality,false);
-    }
-
-    public static Binary scaleToMin(Binary b, int width, int height, double compressionQuality) throws IOException {
-        return scale(b,width,height,true,compressionQuality,true);
-    }
-
-    public static Binary scaleFree(Binary b, int width, int height, double compressionQuality) throws IOException {
-        return scale(b,width,height,false,compressionQuality,true);
-    }
-  
-  /**
-   * Reads an image of format GIF, JPEG or PNG, scales and saves it
-   * as a JPEG image where no graphical environment is available
-   * without enabling headless support.
-   * Works thanks to the class ImageGenerator from j3d.org
-   * @param infile the image file to be used as input
-   * @param outfile write the scaled image to this file
-   * @param width the width to scale to
-   * @param height the height to scale to
-   * @param keepAspect if the aspect should be kept or not
-   * @param quality the compression quality
- * @throws IOException 
-   * @see org.j3d.util.ImageGenerator
-   */
-  public static void scale(ImageInputStream infile,
-                          ImageOutputStream outfile,
-                           int width,
-                           int height,
-                           boolean keepAspect,
-                           float quality) throws IOException {
-
-    BufferedImage original = ImageIO.read(infile);
-    if(original == null) {
-      throw new IOException("Unsupported file format!");
-    }
-    
-    ImageWriter writer =  null;
-    try {
-    	BufferedImage scaled = scale(width, height, keepAspect, original);
-    	JPEGImageWriteParam param = new JPEGImageWriteParam(null);
-    	param.setCompressionMode(JPEGImageWriteParam.MODE_EXPLICIT);
-    	param.setCompressionQuality(quality);
-    	Iterator<ImageWriter> it = ImageIO.getImageWritersBySuffix("jpg");
-    	writer = (ImageWriter)it.next();
-    	writer.setOutput(outfile);
-    	IIOImage iioi = new IIOImage(scaled, null, null); 
-    	writer.write(null, iioi , param);
-    	writer.dispose();
-    } finally {
-    	if ( writer != null  ) {
-    		writer.dispose();
-    	}
-    }
-  }
-
-	public static BufferedImage scale(int width, int height, boolean keepAspect, Image original, int originalWidth, int originalHeight) {
-		
-		if (width > originalWidth) {
-			width = originalWidth;
+	public static Binary scaleToMax(Binary b, int width, int height, double compressionQuality) throws IOException {
+		if (width > height) {
+			height = width;
 		}
-		if (height > originalHeight) {
-			height = originalHeight;
+		if (height > width) {
+			width = height;
+		}
+		return scale(b, width, height, true, false, false, false);
+	}
+	
+	public static Binary scaleToMin(Binary b, int width, int height, double compressionQuality) throws IOException {
+		return scale(b, width, height, true, true, false, false);
+	}
+	
+	public static Binary scaleFree(Binary b, int width, int height, double compressionQuality) throws IOException {
+		return scale(b, width, height, false, true, false, false);
+	}
+	
+	public static Binary scaleClipped(Binary b, int width, int height) throws IOException {
+		return scale(b, width, height, false, false, true, false);
+	}
+	
+	public static Binary scaleCropped(Binary b, int width, int height) throws IOException {
+		return scale(b, width, height, false, false, true, true);
+	}
+
+	/**
+	 * Convenience method to determine which actual method needs to be called
+	 * @param infile
+	 * @param outfile
+	 * @param width
+	 * @param height
+	 * @param keepAspect
+	 * @param alsoScaleUp
+	 * @param clipToCenter
+	 * @param cropToCenter
+	 * @throws IOException
+	 */
+	private static void scale(ImageInputStream infile,
+							  ImageOutputStream outfile, 
+							  int width,
+							  int height,
+							  boolean keepAspect,
+							  boolean alsoScaleUp,
+							  boolean clipToCenter,
+							  boolean cropToCenter) throws IOException {
+		
+		if (clipToCenter) {
+			scaleClip(infile, outfile, width, height);
+		} else if (cropToCenter) {
+			scaleCrop(infile, outfile, width, height);
+		} else {
+			scale(infile, outfile, width, height, keepAspect, alsoScaleUp);
+		}
+	}
+	
+
+	/**
+    * Reads an image of format GIF, JPEG or PNG, scales and saves it
+    * If necessary the image will be cropped to fit the given size
+    * @param infile the image file to be used as input
+    * @param outfile write the scaled image to this file
+    * @param width the width to scale to
+    * @param height the height to scale to
+    * @throws IOException 
+    */
+	private static void scaleCrop(ImageInputStream infile,
+							      ImageOutputStream outfile, 
+							      int width,
+							      int height) throws IOException {
+		
+		BufferedImage original = ImageIO.read(infile);
+		if (original == null) {
+			throw new IOException("Unsupported file format!");
 		}
 		
+		float factorX = (float)original.getWidth() / width;
+		float factorY = (float)original.getHeight() / height;
+		factorX = Math.max(factorX, factorY);
+		factorY = factorX;
+//		System.out.println("factorX: " + factorX + " - factorY: " + factorY);
+		Dimension dim = getNewCroppedDimension(width, height, original.getWidth(), original.getHeight(), factorX, factorY);
+		original = ImageScaler.getScaledBufferedImage(original, (int)dim.getWidth(), (int)dim.getHeight());
+
+		// Scale the img and then clip and center
+		// determine the x and y
+		// if 1 of them is generating an error because of the size (which is out of bounds),
+		// then create a new img with the requested dimension
+		boolean createNewImg = false;
+		int x = ((original.getWidth() - width) / 2);
+		int y = ((original.getHeight() - height) / 2);
+		if ((x + width) > original.getWidth() || (y + height) > original.getHeight()) {
+			createNewImg = true;
+		}
 		
-		float factorX = (float)originalWidth / width;
-		float factorY = (float)originalHeight / height;
-		if(keepAspect) {
+		if (createNewImg) {
+			// determine the dimensions
+			int w = width > original.getWidth() ? original.getWidth() : width;
+			int h = height > original.getHeight() ? original.getHeight() : height;
+			x = x < 0 ? 0 : x;
+			y = y < 0 ? 0 : y;
+			BufferedImage newImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g = newImg.createGraphics();
+			g.setColor(Color.decode("#ff0000"));
+			g.fillRect(0, 0, width, height);
+			g.drawImage(original.getSubimage(x, y, w, h), ((width - w) / 2), ((height - h) / 2), null);
+			original = newImg;
+		} else {
+			original = original.getSubimage(x, y, width, height);
+		}
+		
+//		System.out.println("x: " + x + " - y: " + y + " - originalWidth: " + original.getWidth() + " - originalHeight: " + original.getHeight());
+
+		scale(original, outfile, width, height, 1, 1);
+	}
+	
+	/**
+	 * Calculates the new width and height taking all situations in consideration
+	 * The largest possible image will be scaled and the aspect ratio will be maintained
+	 * After that the image will be, if necessary, cropped to the given size
+	 * @param width
+	 * @param height
+	 * @param originalWidth
+	 * @param originalHeight
+	 * @param factorX
+	 * @param factorY
+	 * @return Dimension
+	 */
+	private static Dimension getNewCroppedDimension(int width, int height, int originalWidth, int originalHeight, float factorX, float factorY) {
+		Dimension dim = new Dimension();
+		int newWidth = width;
+		int newHeight = height;
+		
+		if ((width < originalWidth) && (height < originalHeight)) {
+			if (width > height) {
+				float newFactor = ((float)originalWidth / (float)width);
+				if ((originalHeight / newFactor) > height) {
+					newFactor = ((float)originalHeight / (float)height);
+					newWidth = (int)(originalWidth / newFactor);
+				} else {
+					newHeight = (int)(originalHeight / newFactor);
+				}
+			} else {
+				float newFactor = ((float)originalHeight / (float)height);
+				if ((originalWidth / newFactor) > width) {
+					newFactor = ((float)originalWidth / (float)width);
+					newHeight = (int)(originalHeight / newFactor);
+				} else {
+					newWidth = (int)(originalWidth / newFactor);
+				}
+			}
+		} else if ((width >= originalWidth) && (height >= originalHeight)) {
+			newWidth = originalWidth;
+			newHeight = originalHeight;
+		} else if (width >= originalWidth) {
+			newWidth = originalWidth;
+			// check if the new value will be correct
+			if ((height * factorY) > originalHeight) {
+				newWidth = (int)(originalWidth / factorX);
+			} else {
+				newWidth = (int)(originalWidth / factorX);
+			}
+		} else if (height >= originalHeight) {
+			newHeight = originalHeight;
+			// check if the new value will be correct
+			if ((width * factorX) > originalWidth) {
+				newHeight = (int)(originalHeight / factorY);
+			} else {
+				newHeight = (int)(originalHeight / factorY);
+			}
+		}
+
+		dim.setSize(newWidth, newHeight);
+		return dim;
+	}
+	
+	/**
+    * Reads an image of format GIF, JPEG or PNG, scales and saves it
+    * The image will be scaled and fit the given size as large as possible
+    * @param infile the image file to be used as input
+    * @param outfile write the scaled image to this file
+    * @param width the width to scale to
+    * @param height the height to scale to
+    * @throws IOException 
+    */
+	private static void scaleClip(ImageInputStream infile,
+			 				      ImageOutputStream outfile, 
+							      int width,
+							      int height) throws IOException {
+
+		BufferedImage original = ImageIO.read(infile);
+		if (original == null) {
+			throw new IOException("Unsupported file format!");
+		}
+		
+		float factorX = (float)original.getWidth() / width;
+		float factorY = (float)original.getHeight() / height;
+		factorX = Math.max(factorX, factorY);
+		factorY = factorX;
+		Dimension dim = getNewClippedDimension(width, height, original.getWidth(), original.getHeight(), factorX, factorY);
+		original = ImageScaler.getScaledBufferedImage(original, (int)dim.getWidth(), (int)dim.getHeight());
+
+		// Scale the img and then clip and center
+		// determine the x and y
+		// if 1 of them is generating an error because of the size (which is out of bounds),
+		// then create a new img with the requested dimension
+		boolean createNewImg = false;
+		int x = ((original.getWidth() - width) / 2);
+		int y = ((original.getHeight() - height) / 2);
+		if ((x + width) > original.getWidth() || (y + height) > original.getHeight()) {
+			createNewImg = true;
+		}
+		
+		if (createNewImg) {
+			// determine the dimensions
+			int w = width > original.getWidth() ? original.getWidth() : width;
+			int h = height > original.getHeight() ? original.getHeight() : height;
+			x = x < 0 ? 0 : x;
+			y = y < 0 ? 0 : y;
+			BufferedImage newImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g = newImg.createGraphics();
+//			g.setColor(Color.decode("#ff0000"));
+//			g.fillRect(0, 0, width, height);
+			g.drawImage(original.getSubimage(x, y, w, h), ((width - w) / 2), ((height - h) / 2), null);
+			original = newImg;
+		} else {
+			original = original.getSubimage(x, y, width, height);
+		}
+
+		scale(original, outfile, width, height, 1, 1);
+	}
+	
+	/**
+	 * Calculates the new width and height taking all situations in consideration
+	 * The largest possible image will be scaled and the aspect ratio will be maintained
+	 * @param width
+	 * @param height
+	 * @param originalWidth
+	 * @param originalHeight
+	 * @param factorX
+	 * @param factorY
+	 * @return Dimension
+	 */
+	private static Dimension getNewClippedDimension(int width, int height, int originalWidth, int originalHeight, float factorX, float factorY) {
+		Dimension dim = new Dimension();
+		int newWidth = width;
+		int newHeight = height;
+		
+		if ((width < originalWidth) && (height < originalHeight)) {
+			if (width > height) {
+				float newFactor = ((float)originalWidth / (float)width);
+				if ((originalHeight / newFactor) > height) {
+					newFactor = ((float)originalHeight / (float)height);
+					newWidth = (int)(originalWidth / newFactor);
+				} else {
+					newHeight = (int)(originalHeight / newFactor);
+				}
+			} else {
+				float newFactor = ((float)originalHeight / (float)height);
+				if ((originalWidth / newFactor) > width) {
+					newFactor = ((float)originalWidth / (float)width);
+					newHeight = (int)(originalHeight / newFactor);
+				} else {
+					newWidth = (int)(originalWidth / newFactor);
+				}
+			}
+		} else if ((width >= originalWidth) && (height >= originalHeight)) {
+			newWidth = originalWidth;
+			newHeight = originalHeight;
+		} else if (width >= originalWidth) {
+			newWidth = originalWidth;
+			// check if the new value will be correct
+			if ((height * factorY) > originalHeight) {
+				newWidth = (int)(originalWidth / factorX);
+			} else {
+				newWidth = (int)(originalWidth / factorX);
+			}
+		} else if (height >= originalHeight) {
+			newHeight = originalHeight;
+			// check if the new value will be correct
+			if ((width * factorX) > originalWidth) {
+				newHeight = (int)(originalHeight / factorY);
+			} else {
+				newHeight = (int)(originalHeight / factorY);
+			}
+		}
+
+		dim.setSize(newWidth, newHeight);
+		return dim;
+	}
+
+	/**
+	 * Reads an image of format GIF, JPEG or PNG, scales and saves it
+	 * @param infile the image file to be used as input
+	 * @param outfile write the scaled image to this file
+	 * @param width the width to scale to
+	 * @param height the height to scale to
+	 * @param keepAspect if the aspect should be kept or not
+	 * @param alsoScaleUp if allowed to scale up or not
+	 * @throws IOException
+	 */
+	private static void scale(ImageInputStream infile,
+							  ImageOutputStream outfile, 
+							  int width, 
+							  int height,
+							  boolean keepAspect, 
+							  boolean alsoScaleUp) throws IOException {
+
+		BufferedImage original = ImageIO.read(infile);
+		if (original == null) {
+			throw new IOException("Unsupported file format!");
+		}
+
+		if (!alsoScaleUp) {
+			if (width > original.getWidth()) {
+				width = original.getWidth();
+			}
+			if (height > original.getHeight()) {
+				height = original.getHeight();
+			}
+		}
+
+		float factorX = (float) original.getWidth() / width;
+		float factorY = (float) original.getHeight() / height;
+		if (keepAspect) {
 			factorX = Math.max(factorX, factorY);
 			factorY = factorX;
 		}
+
+		scale(original, outfile, width, height, factorX, factorY);
+	}
+
+	/**
+	 * Method that actually creates the new image
+	 * @param original
+	 * @param outfile
+	 * @param width
+	 * @param height
+	 * @param factorX
+	 * @param factorY
+	 * @throws IOException
+	 */
+	private static void scale(BufferedImage original,
+							  ImageOutputStream outfile,
+							  int width,
+							  int height,
+							  float factorX,
+ 							  float factorY) throws IOException {
 		
-		// The scaling will be nice smooth with this filter
-		AreaAveragingScaleFilter scaleFilter =
-			new AreaAveragingScaleFilter(Math.round(originalWidth / factorX),
-					Math.round(originalHeight / factorY));
-		ImageProducer producer = new FilteredImageSource(original.getSource(),
-				scaleFilter);
-		ImageGenerator generator = new ImageGenerator();
-		producer.startProduction(generator);
-		BufferedImage scaled = generator.getImage();
-		return scaled;
+		BufferedImage out = ImageScaler.getScaledBufferedImage(original, Math.round(original.getWidth() / factorX), Math.round(original.getHeight() / factorY));
+		ImageIO.write(out, "png", outfile);
 	}
-  
-	public static BufferedImage scale(int width, int height, boolean keepAspect, BufferedImage original) {
-		return scale(width, height, keepAspect, original, original.getWidth(), original.getHeight());
+	
+	/**
+	 * Creates a new BufferedImage object based on the given dimensions
+	 * @param original
+	 * @param width
+	 * @param height
+	 * @param factorX
+	 * @param factorY
+	 * @return BufferedImage
+	 */
+	private static BufferedImage getScaledBufferedImage(BufferedImage original,
+												        int width,
+												        int height) {
+		
+		GraphicsConfiguration gc = original.createGraphics().getDeviceConfiguration();
+		BufferedImage out = gc.createCompatibleImage(width, height, Transparency.BITMASK);
+		Graphics2D g2d = out.createGraphics();
+		g2d.setComposite(AlphaComposite.Src);
+		g2d.drawImage(original.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH), 0, 0, width, height, null);
+		g2d.dispose();
+		return out;
 	}
-  
-  /**
-   * Converts a java.awt.Image to a java.awt.image.BufferedImage.
-   * Requires a graphics context. Not used in this class.
-   * @param image the Image to convert to a BufferedImage
-   * @return the BufferedImage the Image has been converted to
-   */
-//  public static BufferedImage convert(Image image) {
-//    BufferedImage bi = new BufferedImage(image.getWidth(null),
-//                                         image.getHeight(null),
-//                                         BufferedImage.TYPE_INT_RGB);
-//    Graphics g = bi.getGraphics();
-//    g.drawImage(image, 0, 0, null);
-//    g.dispose();
-//    return bi;
-//  }
 
   /**
    * Just for testing...
@@ -235,6 +471,27 @@ public class ImageScaler {
 //    }
 //    catch(Exception e) {
 //    }
+	  Binary b = null;
+	try {
+		b = new Binary(new File("C:/Users/Erik/Desktop/logo.gif"));
+//		b = new Binary(new File("C:/Users/Erik/Desktop/DSC_0009.jpg"));
+//		b = new Binary(new File("C:/Users/Erik/Desktop/logo1.png"));
+	} catch (IOException e1) {
+		e1.printStackTrace();
+	}
+      Integer width = 400;
+      Integer height = 400;
+
+      try {
+//          Binary res = ImageScaler.scaleToMax(b, width.intValue(), height.intValue(), 1);
+//          Binary res = ImageScaler.scaleFree(b, width.intValue(), height.intValue(), 1);
+//          Binary res = ImageScaler.scaleClipped(b, width.intValue(), height.intValue());
+          Binary res = ImageScaler.scaleCropped(b, width.intValue(), height.intValue());
+          res.write(res.getOutputStream());
+          System.out.println("Filename: " + res.getFile().getAbsolutePath() + res.getFile().getName());
+      } catch (IOException e) {
+      }
+	  
   }
 }
 

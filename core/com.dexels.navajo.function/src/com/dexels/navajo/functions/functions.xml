@@ -221,6 +221,16 @@
         <input>binary,integer,integer</input>
         <result>binary</result>
     </function>
+    <function name="ScaleImageClipped" class="com.dexels.navajo.functions.ScaleImageClipped">
+        <description>Scales an image to the specified dimensions (with transparency if needed). Keeps aspect ratio, and uses the largest value of the dimensions</description>
+        <input>binary,integer,integer</input>
+        <result>binary</result>
+    </function>
+    <function name="ScaleImageClipped" class="com.dexels.navajo.functions.ScaleImageCropped">
+        <description>Scales an image to the specified dimensions (with transparency if needed). Keeps aspect ratio, and crops the image to the new size if necessary</description>
+        <input>binary,integer,integer</input>
+        <result>binary</result>
+    </function>
     <function name="Round" class="com.dexels.navajo.functions.Round">
         <description>With this function a floating point value can be rounded to a given number of digits. Round(2.372, 2) = 2.37</description>
         <input>float,integer</input>
