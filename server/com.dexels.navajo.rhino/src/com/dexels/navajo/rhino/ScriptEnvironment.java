@@ -533,7 +533,7 @@ public abstract class ScriptEnvironment implements Serializable {
 			logger.error("Can not parse filter.",e);
 			return null;
 		}
-		if(sr.length==0) {
+		if(sr==null || sr.length==0) {
 			return null;
 		}
 		Class<?> c = Version.getDefaultContext().getService(sr[0]);
