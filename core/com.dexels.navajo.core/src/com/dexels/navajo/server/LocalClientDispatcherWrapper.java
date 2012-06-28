@@ -1,8 +1,8 @@
 package com.dexels.navajo.server;
 
 import java.util.Dictionary;
+import java.util.Map;
 
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,19 +76,18 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 		this.serverContext = null;
 	}
 	
-	public void activate(ComponentContext cc) {
-		Dictionary properties =  cc.getProperties();
+	public void activate(Map<String,String> properties) {
+//		Dictionary properties =  cc.getProperties();
 		user = (String) properties.get("user");
 		pass = (String) properties.get("password");
 		logger.info(">>>>>>>>>LocalClient activated"+user+" / "+pass);
 	}
-	public void modified(ComponentContext cc) {
-		Dictionary properties =  cc.getProperties();
+	public void modified(Map<String,String> properties) {
 		user = (String) properties.get("user");
 		pass = (String) properties.get("password");
 //		logger.info(">>>>>>>>>LocalClient modified: "+user+" / "+pass);
 	}
-	public void deactivate(ComponentContext cc) {
+	public void deactivate() {
 		
 //		logger.info(">>>>>>>>>LocalClient DEactivated. No action taken");
 	}

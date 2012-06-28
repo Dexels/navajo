@@ -55,50 +55,56 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 	@Override
 	protected void doPost(final HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		performInitialization();
-		TmlContinuationRunner tmlRunner = (TmlContinuationRunner) req.getAttribute("tmlRunner");
-		if(tmlRunner!=null) {
+		try {
+			performInitialization();
+			TmlContinuationRunner tmlRunner = (TmlContinuationRunner) req.getAttribute("tmlRunner");
+			if(tmlRunner!=null) {
 //			tmlRunner.setResponse(resp);
-			tmlRunner.endTransaction();
-			return;
-		}
-		
-		final LocalClient lc = (LocalClient) req.getServletContext().getAttribute("localClient");
-		if(lc==null) {
-			resp.sendError(500, "No local client registered in servlet context");
-			return;
-		}
-		boolean precheck = getTmlScheduler().preCheckRequest(req);
-		if (!precheck) {
-			req.getInputStream().close();
-			resp.getOutputStream().close();
-			return;
-		}
-		
-		Object certObject = req
-				.getAttribute("javax.servlet.request.X509Certificate");
-		String recvEncoding = req.getHeader("Content-Encoding");
-		String sendEncoding = req.getHeader("Accept-Encoding");
-		AsyncRequest request = new BaseRequestImpl(lc,req, resp, sendEncoding, recvEncoding, certObject){
-
-			@Override
-			public TmlRunnable instantiateRunnable() {
-				String remoteAddress = req.getRemoteAddr();
-				TmlContinuationRunner tr = new TmlContinuationRunner(this,lc);
-				req.setAttribute("tmlRunner", tr);
+				tmlRunner.endTransaction();
+				return;
+			}
 			
-				tr.suspendContinuation();
-				return tr;
-			}};
+			final LocalClient lc = (LocalClient) req.getServletContext().getAttribute("localClient");
+			if(lc==null) {
+				resp.sendError(500, "No local client registered in servlet context");
+				return;
+			}
+			logger.info("local client found");
+			boolean precheck = getTmlScheduler().preCheckRequest(req);
+			if (!precheck) {
+				req.getInputStream().close();
+				resp.getOutputStream().close();
+				return;
+			}
+			logger.info("precheck passed");
 
-		boolean check = getTmlScheduler().checkNavajo(request.getInputDocument());
-		if (!check) {
-			resp.getOutputStream().close();
-			return;
+			Object certObject = req
+					.getAttribute("javax.servlet.request.X509Certificate");
+			String recvEncoding = req.getHeader("Content-Encoding");
+			String sendEncoding = req.getHeader("Accept-Encoding");
+			AsyncRequest request = new BaseRequestImpl(lc,req, resp, sendEncoding, recvEncoding, certObject){
+
+				@Override
+				public TmlRunnable instantiateRunnable() {
+					String remoteAddress = req.getRemoteAddr();
+					TmlContinuationRunner tr = new TmlContinuationRunner(this,lc);
+					req.setAttribute("tmlRunner", tr);
+				
+					tr.suspendContinuation();
+					return tr;
+				}};
+
+			boolean check = getTmlScheduler().checkNavajo(request.getInputDocument());
+			if (!check) {
+				resp.getOutputStream().close();
+				return;
+			}
+
+			logger.info("submitting to queue");
+			getTmlScheduler().submit(request.instantiateRunnable(),false);
+		} catch (Throwable e) {
+			logger.error("Servlet call failed dramatically",e);
 		}
-
-		
-		getTmlScheduler().submit(request.instantiateRunnable(),false);
 	}
 
 	private void performInitialization() {
