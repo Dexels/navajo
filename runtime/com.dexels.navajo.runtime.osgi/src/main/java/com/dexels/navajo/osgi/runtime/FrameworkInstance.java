@@ -29,7 +29,10 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.BundleListener;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 
@@ -44,7 +47,7 @@ public class FrameworkInstance {
 		bundlePath = path;
 	}
 	
-	protected Object getBundleContext() {
+	protected BundleContext getBundleContext() {
 		if(framework==null) {
 			log("Can't retrieve bundleContext: Framework isn't running.",null);
 			return null;
@@ -55,23 +58,23 @@ public class FrameworkInstance {
 	public static void main(String[] args) throws BundleException,
 			MalformedURLException, InterruptedException {
 		FrameworkInstance fs = new FrameworkInstance("bundle");
+
 		fs.start();
 	}
 
 	
-//	public Bundle install(String path) throws MalformedURLException {
-//		Bundle installedBundle;
-//		try {
-//			String url = getUrl( path).toString();
-//			System.err.println("url: "+url);
-//			installedBundle = framework.getBundleContext().installBundle(url);
-//			installedBundle.start();
-//			return installedBundle;
-//		} catch (BundleException e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
+	public Bundle installFromUrl(String url) throws MalformedURLException {
+		Bundle installedBundle;
+		try {
+			System.err.println("url: "+url);
+			installedBundle = framework.getBundleContext().installBundle(url);
+			installedBundle.start();
+			return installedBundle;
+		} catch (BundleException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	private Bundle installFromClasspath(String path) throws BundleException {
 		InputStream is = getClass().getClassLoader().getResourceAsStream(path);
@@ -114,6 +117,13 @@ public class FrameworkInstance {
 		felixFramework.init();
 		felixFramework.start();
 		this.framework = felixFramework;
+		framework.getBundleContext().addBundleListener(new BundleListener() {
+			
+			@Override
+			public void bundleChanged(BundleEvent be) {
+				System.err.println("Bundle event");
+			}
+		});
 //		log("TRACKERS registered!",null);
 //		install("org.apache.felix.configadmin-1.2.8.jar");
 //		install("org.apache.felix.fileinstall-3.2.0.jar");
