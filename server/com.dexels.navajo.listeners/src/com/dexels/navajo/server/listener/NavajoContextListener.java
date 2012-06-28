@@ -22,6 +22,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.api.impl.NavajoServerInstance;
+import com.dexels.navajo.server.listener.http.SchedulerTools;
 import com.dexels.navajo.version.AbstractVersion;
 
 public class NavajoContextListener implements ServletContextListener {
@@ -65,7 +66,7 @@ public class NavajoContextListener implements ServletContextListener {
 		DispatcherInterface dispatcher = initDispatcher(servletContextPath, servletContextPath, installPath);
 		NavajoServerInstance nsi = new NavajoServerInstance(installPath, dispatcher);
 		servletContext.setAttribute("navajoServerInstance", nsi);
-		
+		SchedulerTools.initializeScheduler(servletContext);
 
 	}
 
@@ -111,6 +112,7 @@ public class NavajoContextListener implements ServletContextListener {
 		try {
 			DispatcherInterface dispatcher = initDispatcher(servletContextPath, servletContextPath, installationPath);
 			NavajoServerInstance nsi = new NavajoServerInstance(installationPath, dispatcher);
+
 			return nsi;
 		} catch (Exception e) {
 			logger.error("Error initializing dispatcher", e);

@@ -17,6 +17,15 @@ import com.dexels.navajo.server.listener.http.schedulers.DummyScheduler;
 public class SchedulerTools {
 
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerTools.class);
+
+	
+	public static TmlScheduler initializeScheduler(ServletContext context) {
+		TmlScheduler ts = (TmlScheduler) SchedulerRegistry.getScheduler();
+		if(ts!=null) {
+			return ts;
+		}
+		return createScheduler(context);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public static TmlScheduler createScheduler(ServletContext context) {
