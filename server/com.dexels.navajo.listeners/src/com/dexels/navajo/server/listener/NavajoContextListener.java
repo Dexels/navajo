@@ -75,6 +75,7 @@ public class NavajoContextListener implements ServletContextListener {
 			lcdw.setContext(nsi);
 			try {
 				lcdw.activate(nsi.getClientSettingMap());
+				servletContext.setAttribute("localClient", lcdw);
 			} catch (IOException e) {
 				logger.error("Error reading client settings: ",e);
 			}

@@ -66,6 +66,7 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 			
 			final LocalClient lc = (LocalClient) req.getServletContext().getAttribute("localClient");
 			if(lc==null) {
+				logger.error("No localclient found");
 				resp.sendError(500, "No local client registered in servlet context");
 				return;
 			}
@@ -156,7 +157,10 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 //	
 	@Override
 	public TmlScheduler getTmlScheduler() {
-		return (TmlScheduler) getServletContext().getAttribute("tmlScheduler");
+		TmlScheduler attribute = (TmlScheduler) getServletContext().getAttribute("tmlScheduler");
+		if(attribute==null) {
+		}
+		return attribute;
 	}
 
 //	@Override

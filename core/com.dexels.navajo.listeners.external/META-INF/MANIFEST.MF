@@ -13,7 +13,7 @@ Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.version,
- com.jcraft.jzlib,
+ com.jcraft.jzlib;version="1.1.1",
  javax.servlet;version="3.0.0",
  javax.servlet.http;version="3.0.0",
  org.slf4j;version="1.6.1"

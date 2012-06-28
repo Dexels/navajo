@@ -45,6 +45,7 @@ public class SchedulerTools {
 				SchedulerRegistry.setScheduler(scheduler);
 				scheduler.initialize(context);
 				logger.info("Scheduler initialized.");
+				context.setAttribute("tmlScheduler", scheduler);
 				return scheduler;
 			} catch (ClassNotFoundException e) {
 				logger.error("Error: ", e);

@@ -37,7 +37,7 @@ public class NavajoServerInstance implements NavajoServerContext {
 	public Map<String,String> getClientSettingMap() throws IOException {
 		Map<String,String> res = new HashMap<String, String>();
 		ResourceBundle rs = getClientSettingsBundle();
-		res.put("username",rs.getString("username"));
+		res.put("user",rs.getString("username"));
 		res.put("password",rs.getString("password"));
 
 		return res;
