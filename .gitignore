@@ -2,4 +2,4 @@ target/
 classes/
 bin/
 .DS_Store
-navajodeploy.war
+*.war
