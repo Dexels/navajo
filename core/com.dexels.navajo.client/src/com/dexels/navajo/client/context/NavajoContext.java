@@ -49,6 +49,10 @@ public class NavajoContext implements ClientContext {
 		callService(service,null);
 	}
 	
+	public void useCompression(boolean b) {
+		myClient.setAllowCompression(b);
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.client.context.ClientContext#getNavajos()
 	 */
@@ -96,7 +100,9 @@ public class NavajoContext implements ClientContext {
 		}
 		
 		long time = System.currentTimeMillis();
+		input.write(System.err);
 		Navajo n = myClient.doSimpleSend(input, service);
+
 		logger.debug("Send complete!");
 		n.getHeader().setRPCName(service);
 		putNavajo(service, n);
