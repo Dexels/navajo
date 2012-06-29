@@ -59,6 +59,9 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 		this.cert = cert;
 		this.connectedAt = System.currentTimeMillis();
 		setUrl(createUrl(this.request));
+		
+		copyResource( getRequestOutputStream(), request.getInputStream());
+		
 		this.inDoc = parseInputNavajo();
 	}
 
@@ -102,6 +105,7 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 		BufferedReader r;
 		InputStream is = getRequestInputStream();
 		Navajo in = null;
+		logger.info("Send encoding: "+sendEncoding);
 		if (sendEncoding != null
 				&& sendEncoding.equals(AsyncRequest.COMPRESS_JZLIB)) {
 			r = new BufferedReader(new java.io.InputStreamReader(
