@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.client</artifactId>
-			<version>[3.0.0-SNAPSHOT,4.0.0)</version>
+			<version>[3.4.4-SNAPSHOT,4.0.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
