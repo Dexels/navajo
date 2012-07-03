@@ -14,10 +14,11 @@ public class EmbeddedServerActivator implements BundleActivator {
 	public void start(BundleContext context) throws Exception {
 		System.err.println("Starting server activator");
 		ServerInstanceImpl sii = new ServerInstanceImpl(null);
-		int port = sii.startServer("/Users/frank/NavajoEnterprise_2_4_6/");
+		int port = sii.startServer("/Users/frank/Documents/workspace-pinkdemo/sportlink-serv/navajo-tester/auxilary");
 		String ss = "localhost:"+port+"/Postman";
 		ClientInterface ci = NavajoClientFactory.getClient();
 		ci.setServerUrl(ss);
+		System.err.println("Resulting url: "+ss);
 		ci.setUsername("aap");
 		ci.setPassword("noor");
 		Navajo res = ci.doSimpleSend("InitNavajoDemo");

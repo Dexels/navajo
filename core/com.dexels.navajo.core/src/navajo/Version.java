@@ -356,7 +356,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 				navajoConfig = getDefaultBundleContext().registerService(NavajoConfigInterface.class.getName(), nc, properties);
 			}else {
 				logger.warn("Could NOT find default bundle context. No OSGi?");
-				Thread.dumpStack();
 			}
 		} catch (Throwable t) {
 			logger.warn("Could NOT find method getDefaultBundleContext(). No OSGi?");

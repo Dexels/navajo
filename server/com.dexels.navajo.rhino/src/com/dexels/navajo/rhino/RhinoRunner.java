@@ -49,10 +49,6 @@ public class RhinoRunner {
 			InterruptedException, NavajoException, UserException,
 			SystemException, AuthorizationException, ClassNotFoundException,
 			NavajoDoneException {
-		// System.err.println("Version: " + System.getProperty("java.version"));
-		//
-		// com.dexels.navajo.functions.SingleValueQuery s;
-
 		Class.forName("com.dexels.navajo.functions.ToBinary", true,
 				RhinoRunner.class.getClassLoader());
 
@@ -107,17 +103,12 @@ public class RhinoRunner {
 		try {
 			n = t.runBlockingScript(new FileInputStream(new File(a.getRpcName()
 					+ ".js")), a);
-			System.err.println("Main finished");
 			return n;
 		} catch (NavajoDoneException e) {
-			// e.printStackTrace();
-			System.err
-					.println("Continuation happened... I'll just wait for a while...");
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				logger.warn("Interrupted");
 			}
 			return null;
 		}
@@ -256,7 +247,8 @@ public class RhinoRunner {
 					if (o instanceof RuntimeException) {
 						RuntimeException t = (RuntimeException) o;
 						throw t;
-					}
+					} 
+					generateErrorMessage("Break Error detected: " + e.getMessage(), e,a);
 				}
 			}
 			// this only happens when the entire scripts runs without
@@ -290,13 +282,12 @@ public class RhinoRunner {
 		} catch (WrappedException e) {
 			generateErrorMessage("Wrapped error: " + e.getCause().getMessage(),e.getCause(), a);
 			NavajoScopeManager.getInstance().releaseScope(globalScope);
-			e.printStackTrace();
+			logger.error("Wrapped error: ",e);
 			return scriptEnvironment;
 		} catch (Throwable e) {
 			logger.error("Unknown error:", e);
 			generateErrorMessage("Unknown error:" + e.getMessage(), e, a);
 			NavajoScopeManager.getInstance().releaseScope(globalScope);
-			e.printStackTrace();
 			return scriptEnvironment;
 		} finally {
 			if (Context.getCurrentContext() != null) {
@@ -370,7 +361,6 @@ public class RhinoRunner {
 				}
 			});
 		} catch (IOException e) {
-			e.printStackTrace();
 			throw new SystemException(-1, "Error running rhino: ", e);
 		}
 	}

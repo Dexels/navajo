@@ -7,6 +7,7 @@ import javax.servlet.jsp.JspException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -38,13 +39,24 @@ public class CallServiceTag extends BaseNavajoTag {
 		myNavajo = navajo;
 	}
 
-	
-	public int doStartTag() throws JspException {
-		assertTest();
+	public void callOldStyle() throws JspException {
 		if(myService==null || "".equals(myService)) {
 			throw new JspException("Error calling service: No service supplied!");
 		}
 		System.err.println("Calling service: "+myService);
+		try {
+			if (myNavajo==null) {
+				getNavajoContext().callService(myService);
+			} else {
+				Navajo navajo = getNavajoContext().getNavajo(myNavajo);
+				getNavajoContext().callService(myService, navajo);
+			}
+		} catch (ClientException e) {
+			throw new JspException("Navajo service error while calling service: "+myService,e);
+		}
+	}
+	
+	public void callNewStyle() {
 		try {
 			Navajo navajo = null;
 			if (myNavajo==null) {
@@ -60,6 +72,7 @@ public class CallServiceTag extends BaseNavajoTag {
 			}
 			LocalClient lc = (LocalClient) getPageContext().getServletContext().getAttribute("localClient");
 			if(lc==null) {
+				
 				throw new JspException("Error: No LocalClient found in Call Service: Has a navajo context been defined?");
 			}
 			resultNavajo = lc.call(navajo);
@@ -68,6 +81,19 @@ public class CallServiceTag extends BaseNavajoTag {
 			
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
+		}
+	}
+ 	public int doStartTag() throws JspException {
+		assertTest();
+		if(myService==null || "".equals(myService)) {
+			throw new JspException("Error calling service: No service supplied!");
+		}
+		System.err.println("Calling service: "+myService);
+		LocalClient lc = (LocalClient) getPageContext().getServletContext().getAttribute("localClient");
+		if(lc==null) {
+			callOldStyle();
+		} else {
+			callNewStyle();
 		}
 		resultNavajo = getNavajoContext().getNavajo(myService);
 		

@@ -19,9 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.server.LocalClientDispatcherWrapper;
 import com.dexels.navajo.server.api.impl.NavajoServerInstance;
+import com.dexels.navajo.server.listener.http.SchedulerTools;
 import com.dexels.navajo.version.AbstractVersion;
 
 public class NavajoContextListener implements ServletContextListener {
@@ -54,7 +57,7 @@ public class NavajoContextListener implements ServletContextListener {
 	}
 
 	public void init(String contextPath, String servletContextPath, String installPath, ServletContext servletContext) {
-		logger.info("==========================================================");
+		logger.info("=================	=========================================");
 		logger.info("INITIALIZING NAVAJO INSTANCE: "+contextPath);
 		logger.info("==========================================================");
 		if (!isValidInstallationForContext(installPath)) {
@@ -65,8 +68,18 @@ public class NavajoContextListener implements ServletContextListener {
 		DispatcherInterface dispatcher = initDispatcher(servletContextPath, servletContextPath, installPath);
 		NavajoServerInstance nsi = new NavajoServerInstance(installPath, dispatcher);
 		servletContext.setAttribute("navajoServerInstance", nsi);
-		
-
+		SchedulerTools.createScheduler(servletContext);
+		if(!Version.hasOSGiBundleContext()) {
+			logger.info("No OSGi detected. Manually inserting LocalClientWrapper into ServletContext");
+			LocalClientDispatcherWrapper lcdw = new LocalClientDispatcherWrapper();
+			lcdw.setContext(nsi);
+			try {
+				lcdw.activate(nsi.getClientSettingMap());
+				servletContext.setAttribute("localClient", lcdw);
+			} catch (IOException e) {
+				logger.error("Error reading client settings: ",e);
+			}
+		}
 	}
 
 	public static void destroyContext(ServletContext sc) {

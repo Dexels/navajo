@@ -16,6 +16,7 @@
 		<module>tipi_dev/com.dexels.navajo.tipi.dev.feature/allgit/</module>
 		<module>dev/com.dexels.navajo.dev.feature/allgit/</module>
 		<module>runtime/com.dexels.navajo.runtime.feature/allgit/</module>
+		<module>server/com.dexels.navajo.server.deploy</module>
 	</modules>
 	<parent>
 		<groupId>com.dexels.navajo</groupId>
