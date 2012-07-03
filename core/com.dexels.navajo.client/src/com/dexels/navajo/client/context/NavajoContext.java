@@ -53,6 +53,11 @@ public class NavajoContext implements ClientContext {
 		myClient.setAllowCompression(b);
 	}
 	
+	
+	public void setForceGzip(boolean forceGzip) {
+		myClient.setForceGzip(forceGzip);
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.client.context.ClientContext#getNavajos()
 	 */
@@ -328,7 +333,7 @@ public class NavajoContext implements ClientContext {
 		NavajoClientFactory.resetClient();
 //			NavajoClientFactory.createDefaultClient()
 		 myClient = NavajoClientFactory.getClient();
-		 myClient.setAllowCompression(false);
+//		 myClient.setAllowCompression(false);
 		 if (username == null) {
 			username = "demo";
 		}
