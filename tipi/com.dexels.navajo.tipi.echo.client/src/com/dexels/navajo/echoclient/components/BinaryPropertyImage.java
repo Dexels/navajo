@@ -73,7 +73,7 @@ public class BinaryPropertyImage extends StreamImageReference {
 		} else {
 			// Binary b = new Binary(myBinary.getDataAsStream(),false);
 
-			Binary b = ImageScaler.scaleToMax(myBinary, width, height, 0.8);
+			Binary b = ImageScaler.scaleToMax(myBinary, width, height);
 			if (b != null) {
 				System.err.println("Good binary: rendering. Size: "
 						+ myBinary.getLength() + " width: " + width
