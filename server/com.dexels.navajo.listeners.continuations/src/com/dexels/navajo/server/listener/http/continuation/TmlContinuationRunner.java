@@ -52,7 +52,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	public void endTransaction() throws IOException {
 		try {
 			// writeOutput moved from execute to here, as the scheduler thread shouldn't touch the response output stream
-			writeOutput(getInputNavajo(), outDoc);
+//			writeOutput(getInputNavajo(), outDoc);
 			TmlScheduler ts = getTmlScheduler();
 			String schedulingStatus = null;
 			if(ts!=null) {
