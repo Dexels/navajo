@@ -16,8 +16,6 @@ import com.dexels.navajo.parser.TMLExpressionException;
  *
  */
 public class ScaleImageMax extends FunctionInterface {
-    private final static double DEFAULT_COMPRESSION = 0.8;
-
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
@@ -44,7 +42,7 @@ public class ScaleImageMax extends FunctionInterface {
         Integer height = (Integer)getOperand(2);
 
         try {
-            Binary res =ImageScaler.scaleToMax(b, width.intValue(), height.intValue(), DEFAULT_COMPRESSION);
+            Binary res =ImageScaler.scaleToMax(b, width.intValue(), height.intValue());
             return res;
         } catch (IOException e) {
       	  return null;

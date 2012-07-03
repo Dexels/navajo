@@ -221,7 +221,7 @@
         <input>binary,integer,integer</input>
         <result>binary</result>
     </function>
-    <function name="ScaleImageClipped" class="com.dexels.navajo.functions.ScaleImageClipped">
+    <function name="ScaleImageCentered" class="com.dexels.navajo.functions.ScaleImageCentered">
         <description>Scales an image to the specified dimensions (with transparency if needed). Keeps aspect ratio, and uses the largest value of the dimensions</description>
         <input>binary,integer,integer</input>
         <result>binary</result>

@@ -1,8 +1,6 @@
 package com.dexels.navajo.functions.scale;
 
-//import java.awt.Graphics;
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -77,7 +75,7 @@ public class ImageScaler {
         }
     }
 
-	public static Binary scaleToMax(Binary b, int width, int height, double compressionQuality) throws IOException {
+	public static Binary scaleToMax(Binary b, int width, int height) throws IOException {
 		if (width > height) {
 			height = width;
 		}
@@ -87,20 +85,20 @@ public class ImageScaler {
 		return scale(b, width, height, true, false, false, false);
 	}
 	
-	public static Binary scaleToMin(Binary b, int width, int height, double compressionQuality) throws IOException {
+	public static Binary scaleToMin(Binary b, int width, int height) throws IOException {
 		return scale(b, width, height, true, true, false, false);
 	}
 	
-	public static Binary scaleFree(Binary b, int width, int height, double compressionQuality) throws IOException {
+	public static Binary scaleFree(Binary b, int width, int height) throws IOException {
 		return scale(b, width, height, false, true, false, false);
 	}
 	
-	public static Binary scaleClipped(Binary b, int width, int height) throws IOException {
+	public static Binary scaleCentered(Binary b, int width, int height) throws IOException {
 		return scale(b, width, height, false, false, true, false);
 	}
 	
-	public static Binary scaleCropped(Binary b, int width, int height) throws IOException {
-		return scale(b, width, height, false, false, true, true);
+	public static Binary scaleCropped(Binary b, int width, int height) throws IOException{
+		return scale(b, width, height, false, false, false, true);
 	}
 
 	/**
@@ -125,7 +123,7 @@ public class ImageScaler {
 							  boolean cropToCenter) throws IOException {
 		
 		if (clipToCenter) {
-			scaleClip(infile, outfile, width, height);
+			scaleCenter(infile, outfile, width, height);
 		} else if (cropToCenter) {
 			scaleCrop(infile, outfile, width, height);
 		} else {
@@ -153,102 +151,59 @@ public class ImageScaler {
 			throw new IOException("Unsupported file format!");
 		}
 		
-		float factorX = (float)original.getWidth() / width;
-		float factorY = (float)original.getHeight() / height;
-		factorX = Math.max(factorX, factorY);
-		factorY = factorX;
-//		System.out.println("factorX: " + factorX + " - factorY: " + factorY);
-		Dimension dim = getNewCroppedDimension(width, height, original.getWidth(), original.getHeight(), factorX, factorY);
-		original = ImageScaler.getScaledBufferedImage(original, (int)dim.getWidth(), (int)dim.getHeight());
-
-		// Scale the img and then clip and center
-		// determine the x and y
-		// if 1 of them is generating an error because of the size (which is out of bounds),
-		// then create a new img with the requested dimension
-		boolean createNewImg = false;
-		int x = ((original.getWidth() - width) / 2);
-		int y = ((original.getHeight() - height) / 2);
-		if ((x + width) > original.getWidth() || (y + height) > original.getHeight()) {
-			createNewImg = true;
-		}
+		Dimension dim = ImageScaler.getNewCroppedDimension(width, height, original.getWidth(), original.getHeight());
+//		System.out.println("width: " + width + "\nheight: " + height + "\nnewWidth: " + dim.getWidth() + "\nnewHeight: " + dim.getHeight() + "\noriginalWidth: " + original.getWidth() + "\noriginalHeight: " + original.getHeight());
 		
-		if (createNewImg) {
-			// determine the dimensions
-			int w = width > original.getWidth() ? original.getWidth() : width;
-			int h = height > original.getHeight() ? original.getHeight() : height;
-			x = x < 0 ? 0 : x;
-			y = y < 0 ? 0 : y;
-			BufferedImage newImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g = newImg.createGraphics();
-			g.setColor(Color.decode("#ff0000"));
-			g.fillRect(0, 0, width, height);
-			g.drawImage(original.getSubimage(x, y, w, h), ((width - w) / 2), ((height - h) / 2), null);
-			original = newImg;
-		} else {
-			original = original.getSubimage(x, y, width, height);
-		}
-		
-//		System.out.println("x: " + x + " - y: " + y + " - originalWidth: " + original.getWidth() + " - originalHeight: " + original.getHeight());
+		original = ImageScaler.getSubScaledBufferedImage(original, width, height, (int)dim.getWidth(), (int)dim.getHeight());
 
 		scale(original, outfile, width, height, 1, 1);
 	}
 	
 	/**
-	 * Calculates the new width and height taking all situations in consideration
-	 * The largest possible image will be scaled and the aspect ratio will be maintained
-	 * After that the image will be, if necessary, cropped to the given size
-	 * @param width
-	 * @param height
+	 * Calculates the new width and height while possibly cropping the image to make it fit
+	 * @param desiredWidth
+	 * @param desiredHeight
 	 * @param originalWidth
 	 * @param originalHeight
-	 * @param factorX
-	 * @param factorY
 	 * @return Dimension
 	 */
-	private static Dimension getNewCroppedDimension(int width, int height, int originalWidth, int originalHeight, float factorX, float factorY) {
+	private static Dimension getNewCroppedDimension(int desiredWidth, int desiredHeight, int originalWidth, int originalHeight) {
 		Dimension dim = new Dimension();
-		int newWidth = width;
-		int newHeight = height;
+		boolean isLandscape = ImageScaler.isLandscape(originalWidth, originalHeight);
+		int newWidth = desiredWidth;
+		int newHeight = desiredHeight;
+		float factor = 0;
 		
-		if ((width < originalWidth) && (height < originalHeight)) {
-			if (width > height) {
-				float newFactor = ((float)originalWidth / (float)width);
-				if ((originalHeight / newFactor) > height) {
-					newFactor = ((float)originalHeight / (float)height);
-					newWidth = (int)(originalWidth / newFactor);
-				} else {
-					newHeight = (int)(originalHeight / newFactor);
-				}
-			} else {
-				float newFactor = ((float)originalHeight / (float)height);
-				if ((originalWidth / newFactor) > width) {
-					newFactor = ((float)originalWidth / (float)width);
-					newHeight = (int)(originalHeight / newFactor);
-				} else {
-					newWidth = (int)(originalWidth / newFactor);
-				}
-			}
-		} else if ((width >= originalWidth) && (height >= originalHeight)) {
-			newWidth = originalWidth;
-			newHeight = originalHeight;
-		} else if (width >= originalWidth) {
-			newWidth = originalWidth;
-			// check if the new value will be correct
-			if ((height * factorY) > originalHeight) {
-				newWidth = (int)(originalWidth / factorX);
-			} else {
-				newWidth = (int)(originalWidth / factorX);
-			}
-		} else if (height >= originalHeight) {
-			newHeight = originalHeight;
-			// check if the new value will be correct
-			if ((width * factorX) > originalWidth) {
-				newHeight = (int)(originalHeight / factorY);
-			} else {
-				newHeight = (int)(originalHeight / factorY);
-			}
+		// First do a basic scaling operation and then check if it's within the allowed dimension
+		if (isLandscape) {
+			factor = ImageScaler.getAspectRatioFactor(originalWidth, desiredWidth);
+			newHeight = (int) (originalHeight / factor);
+		} else {
+			factor = ImageScaler.getAspectRatioFactor(originalHeight, desiredHeight);
+			newWidth = (int) (originalWidth / factor);
 		}
-
+		
+		// So now check and correct if necessary
+		if ((newHeight > originalHeight) && (newWidth > originalWidth)) {
+			newWidth = originalWidth;
+			newHeight = originalHeight;
+		
+		} else if (isLandscape && ((newHeight > originalHeight) ||
+								   ((newHeight < desiredHeight) && (desiredHeight <= originalHeight)) ||
+								   ((newHeight > desiredHeight) && (desiredHeight <= originalHeight))
+								   )) {
+			newHeight = desiredHeight > originalHeight ? originalHeight : desiredHeight;
+			newWidth = (int)(originalWidth / ImageScaler.getAspectRatioFactor(originalHeight, desiredHeight));
+		
+		} else if (!isLandscape && ((newWidth > originalWidth) ||
+								    ((newWidth < desiredWidth) && (desiredWidth <= originalWidth)) ||
+								    ((newWidth > desiredWidth) && (desiredWidth <= originalWidth))
+								    )) {
+			newWidth = desiredWidth > originalWidth ? originalWidth : desiredWidth;
+			newHeight = (int)(originalHeight / ImageScaler.getAspectRatioFactor(originalWidth, desiredWidth));
+			
+		}
+		
 		dim.setSize(newWidth, newHeight);
 		return dim;
 	}
@@ -262,21 +217,17 @@ public class ImageScaler {
     * @param height the height to scale to
     * @throws IOException 
     */
-	private static void scaleClip(ImageInputStream infile,
-			 				      ImageOutputStream outfile, 
-							      int width,
-							      int height) throws IOException {
+	private static void scaleCenter(ImageInputStream infile,
+			 				        ImageOutputStream outfile, 
+							        int width,
+							        int height) throws IOException {
 
 		BufferedImage original = ImageIO.read(infile);
 		if (original == null) {
 			throw new IOException("Unsupported file format!");
 		}
 		
-		float factorX = (float)original.getWidth() / width;
-		float factorY = (float)original.getHeight() / height;
-		factorX = Math.max(factorX, factorY);
-		factorY = factorX;
-		Dimension dim = getNewClippedDimension(width, height, original.getWidth(), original.getHeight(), factorX, factorY);
+		Dimension dim = ImageScaler.getNewCenteredDimension(width, height, original.getWidth(), original.getHeight());
 		original = ImageScaler.getScaledBufferedImage(original, (int)dim.getWidth(), (int)dim.getHeight());
 
 		// Scale the img and then clip and center
@@ -312,52 +263,54 @@ public class ImageScaler {
 	/**
 	 * Calculates the new width and height taking all situations in consideration
 	 * The largest possible image will be scaled and the aspect ratio will be maintained
-	 * @param width
-	 * @param height
+	 * @param desiredWidth
+	 * @param desiredHeight
 	 * @param originalWidth
 	 * @param originalHeight
-	 * @param factorX
-	 * @param factorY
 	 * @return Dimension
 	 */
-	private static Dimension getNewClippedDimension(int width, int height, int originalWidth, int originalHeight, float factorX, float factorY) {
+	private static Dimension getNewCenteredDimension(int desiredWidth, int desiredHeight, int originalWidth, int originalHeight) {
 		Dimension dim = new Dimension();
-		int newWidth = width;
-		int newHeight = height;
+		int newWidth = desiredWidth;
+		int newHeight = desiredHeight;
+		float factorX = ImageScaler.getAspectRatioFactor(originalWidth, desiredWidth);
+		float factorY = ImageScaler.getAspectRatioFactor(originalHeight, desiredHeight);
+		factorX = Math.max(factorX, factorY);
+		factorY = factorX; // looks silly, but it is needed in some cases
 		
-		if ((width < originalWidth) && (height < originalHeight)) {
-			if (width > height) {
-				float newFactor = ((float)originalWidth / (float)width);
-				if ((originalHeight / newFactor) > height) {
-					newFactor = ((float)originalHeight / (float)height);
+		if ((desiredWidth < originalWidth) && (desiredHeight < originalHeight)) {
+			if (desiredWidth > desiredHeight) {
+				float newFactor = ((float)originalWidth / (float)desiredWidth);
+				if ((originalHeight / newFactor) > desiredHeight) {
+					newFactor = ((float)originalHeight / (float)desiredHeight);
 					newWidth = (int)(originalWidth / newFactor);
 				} else {
 					newHeight = (int)(originalHeight / newFactor);
 				}
 			} else {
-				float newFactor = ((float)originalHeight / (float)height);
-				if ((originalWidth / newFactor) > width) {
-					newFactor = ((float)originalWidth / (float)width);
+				float newFactor = ((float)originalHeight / (float)desiredHeight);
+				if ((originalWidth / newFactor) > desiredWidth) {
+					newFactor = ((float)originalWidth / (float)desiredWidth);
 					newHeight = (int)(originalHeight / newFactor);
 				} else {
 					newWidth = (int)(originalWidth / newFactor);
 				}
 			}
-		} else if ((width >= originalWidth) && (height >= originalHeight)) {
+		} else if ((desiredWidth >= originalWidth) && (desiredHeight >= originalHeight)) {
 			newWidth = originalWidth;
 			newHeight = originalHeight;
-		} else if (width >= originalWidth) {
+		} else if (desiredWidth >= originalWidth) {
 			newWidth = originalWidth;
 			// check if the new value will be correct
-			if ((height * factorY) > originalHeight) {
+			if ((desiredHeight * factorY) > originalHeight) {
 				newWidth = (int)(originalWidth / factorX);
 			} else {
 				newWidth = (int)(originalWidth / factorX);
 			}
-		} else if (height >= originalHeight) {
+		} else if (desiredHeight >= originalHeight) {
 			newHeight = originalHeight;
 			// check if the new value will be correct
-			if ((width * factorX) > originalWidth) {
+			if ((desiredWidth * factorX) > originalWidth) {
 				newHeight = (int)(originalHeight / factorY);
 			} else {
 				newHeight = (int)(originalHeight / factorY);
@@ -399,8 +352,8 @@ public class ImageScaler {
 			}
 		}
 
-		float factorX = (float) original.getWidth() / width;
-		float factorY = (float) original.getHeight() / height;
+		float factorX = ImageScaler.getAspectRatioFactor(original.getWidth(), width);
+		float factorY = ImageScaler.getAspectRatioFactor(original.getHeight(), height);
 		if (keepAspect) {
 			factorX = Math.max(factorX, factorY);
 			factorY = factorX;
@@ -435,8 +388,6 @@ public class ImageScaler {
 	 * @param original
 	 * @param width
 	 * @param height
-	 * @param factorX
-	 * @param factorY
 	 * @return BufferedImage
 	 */
 	private static BufferedImage getScaledBufferedImage(BufferedImage original,
@@ -446,47 +397,92 @@ public class ImageScaler {
 		GraphicsConfiguration gc = original.createGraphics().getDeviceConfiguration();
 		BufferedImage out = gc.createCompatibleImage(width, height, Transparency.BITMASK);
 		Graphics2D g2d = out.createGraphics();
+//		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+//		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2d.setComposite(AlphaComposite.Src);
-		g2d.drawImage(original.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH), 0, 0, width, height, null);
+        if (original.getTransparency() == Transparency.BITMASK) {
+    		g2d.drawImage(original.getScaledInstance(width, height, BufferedImage.SCALE_REPLICATE), 0, 0, width, height, null);
+        } else {
+    		g2d.drawImage(original.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH), 0, 0, width, height, null);
+        }
 		g2d.dispose();
 		return out;
 	}
-
+	
+	/**
+	 * Scales the image and then crops (and centers) it if necessary
+	 * @param original
+	 * @param totalWidth
+	 * @param totalHeight
+	 * @param imgWidth
+	 * @param imgHeight
+	 * @return BufferedImage
+	 */
+	private static BufferedImage getSubScaledBufferedImage(BufferedImage original,
+												           int totalWidth,
+												           int totalHeight,
+												           int imgWidth,
+												           int imgHeight) {
+		
+		BufferedImage image = ImageScaler.getScaledBufferedImage(original, imgWidth, imgHeight);
+		int x = (imgWidth < totalWidth) ? 0 : ((totalWidth - imgWidth) / 2);
+		int y = (imgHeight < totalHeight) ? 0 : ((totalHeight - imgHeight) / 2);
+		image = image.getSubimage(Math.abs(x), Math.abs(y), (totalWidth <= image.getWidth() ? totalWidth : image.getWidth()), (totalHeight <= image.getHeight() ? totalHeight : image.getHeight()));
+		
+		BufferedImage newImg = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = newImg.createGraphics();
+//		g.setColor(Color.decode("#ff0000"));
+//		g.fillRect(0, 0, totalWidth, totalHeight);
+		// calculate the correct x and y
+		x = ((totalWidth - image.getWidth()) / 2);
+		y = ((totalHeight - image.getHeight()) / 2);
+		g.drawImage(image, Math.abs(x), Math.abs(y), null);
+		return newImg;
+	}
+	
+	/**
+	 * Determines if the image is landscape or portrait
+	 * If landscape, then value is true otherwise....you'll know
+	 * @param width
+	 * @param height
+	 * @return boolean
+	 */
+	private static boolean isLandscape(int width, int height) {
+		return (width >= height);
+	}
+	
+	/**
+	 * Computes the ratio factor
+	 * @param originalSize
+	 * @param size
+	 * @return float
+	 */
+	private static float getAspectRatioFactor(int originalSize, int size) {
+		return (float) originalSize / size;
+	}
+    
+    
   /**
    * Just for testing...
    */
   public static void main(String[] args) {
-//    if(args.length < 6) {
-//      System.out.println("Usage: ImageScaler <infile> <outfile> " +
-//                         "<width> <height> <keep aspect> <quality>");
-//      return;
-//    }
-//    try {
-//      scale(new File(args[0]),
-//            new File(args[1]),
-//            Integer.parseInt(args[2]),
-//            Integer.parseInt(args[3]),
-//            Boolean.valueOf(args[4]).booleanValue(),
-//            Float.parseFloat(args[5]));
-//    }
-//    catch(Exception e) {
-//    }
-	  Binary b = null;
+	Binary b = null;
 	try {
-		b = new Binary(new File("C:/Users/Erik/Desktop/logo.gif"));
-//		b = new Binary(new File("C:/Users/Erik/Desktop/DSC_0009.jpg"));
-//		b = new Binary(new File("C:/Users/Erik/Desktop/logo1.png"));
+//		b = new Binary(new File("C:/Users/Erik/Desktop/logo.gif"));
+//		b = new Binary(new File("C:/Users/Erik/Desktop/Naamloos.png"));
+//		b = new Binary(new File("C:/_GedeeldeMap/DSC_0001.jpg"));
+		b = new Binary(new File("C:/Users/Erik/Desktop/logo1.png"));
 	} catch (IOException e1) {
 		e1.printStackTrace();
 	}
-      Integer width = 400;
-      Integer height = 400;
+      Integer width = 600;
+      Integer height = 800;
 
       try {
 //          Binary res = ImageScaler.scaleToMax(b, width.intValue(), height.intValue(), 1);
 //          Binary res = ImageScaler.scaleFree(b, width.intValue(), height.intValue(), 1);
-//          Binary res = ImageScaler.scaleClipped(b, width.intValue(), height.intValue());
-          Binary res = ImageScaler.scaleCropped(b, width.intValue(), height.intValue());
+          Binary res = ImageScaler.scaleCentered(b, width.intValue(), height.intValue());
+//          Binary res = ImageScaler.scaleCropped(b, width.intValue(), height.intValue());
           res.write(res.getOutputStream());
           System.out.println("Filename: " + res.getFile().getAbsolutePath() + res.getFile().getName());
       } catch (IOException e) {

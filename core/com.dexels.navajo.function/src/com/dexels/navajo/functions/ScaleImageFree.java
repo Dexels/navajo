@@ -19,8 +19,6 @@ import com.dexels.navajo.parser.TMLExpressionException;
  *
  */
 public class ScaleImageFree extends FunctionInterface {
-    private final static double DEFAULT_COMPRESSION = 0.8;
-    
 	private final static Logger logger = LoggerFactory
 			.getLogger(ScaleImageFree.class);
 	/* (non-Javadoc)
@@ -49,7 +47,7 @@ public class ScaleImageFree extends FunctionInterface {
         Integer height = (Integer)getOperand(2);
 
         try {
-            Binary res =ImageScaler.scaleFree(b, width.intValue(), height.intValue(), DEFAULT_COMPRESSION);
+            Binary res =ImageScaler.scaleFree(b, width.intValue(), height.intValue());
             return res;
         } catch (IOException e) {
         	logger.error("Error: ", e);
