@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <functiondef>
+	<function name="CallService" class="com.dexels.navajo.functions.CallService">
+        <description>Calls a service using request Navajo and evaluates an expression</description>
+        <input>string,string</input>
+        <result>any</result>
+    </function>
     <function name="NavajoRequestToString" class="com.dexels.navajo.functions.NavajoRequestToString">
         <description>Serializes a Navajo request to a string</description>
         <input>empty</input>

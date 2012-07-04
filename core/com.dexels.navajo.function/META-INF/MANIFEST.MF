@@ -9,7 +9,8 @@ Export-Package: com.dexels.navajo.functions,
  com.dexels.navajo.functions.test,
  navajofunctions
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.0"
+Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.0",
+ com.dexels.navajo.api;bundle-version="1.0.2"
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
