@@ -361,5 +361,28 @@ public interface Navajo
   public Navajo merge(Navajo with) throws NavajoException;
   
   public Map<String,Message> getMessages();
+  
+  /**
+   * Add another Navajo object using a unique key for later reference.
+   * 
+   * @param key
+   * @param value
+   */
+  public void addNavajo(String key, Navajo value);
+  
+  /**
+   * Get a previously added Navajo object using unique key.
+   * 
+   * @param key
+   * @return
+   */
+  public Navajo getNavajo(String key);
 
+  /**
+   * Remove a previously added Navajo object.
+   * 
+   * @param key
+   */
+  public void removeNavajo(String key);
+  
 }
