@@ -23,7 +23,6 @@ public class CallService extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		Navajo input = null;
 		Operand result = null;
 		String serviceName = null;
 		String expression = null;
@@ -40,21 +39,19 @@ public class CallService extends FunctionInterface {
 		if ( !(getOperand(1) instanceof String) ) {
 			throw new TMLExpressionException("Invalid expression defined.");
 		}
-		input = getNavajo();
+	
 		serviceName = (String) getOperand(0);
 		expression = (String) getOperand(1);
 		
-
 		try {
 			
-			Navajo response = null;
-			if ( input.getNavajo(serviceName) != null ) {
-				response = input.getNavajo(serviceName);
-			} else {
+			Navajo response = getNavajo().getNavajo(serviceName);
+			if ( response == null ) {
 				DispatcherInterface dispatcher = DispatcherFactory.getInstance();
+				Navajo input = getNavajo().copy();
 				input.getHeader().setRPCName(serviceName);
 				response = dispatcher.handle(input, true);
-				input.addNavajo(serviceName, response);
+				getNavajo().addNavajo(serviceName, response);
 			}
 			
 			result = Expression.evaluate(expression, response, null, null);
