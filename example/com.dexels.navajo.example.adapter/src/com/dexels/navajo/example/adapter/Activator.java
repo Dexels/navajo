@@ -43,7 +43,6 @@ public class Activator implements BundleActivator {
 				 Dictionary<String, Object> props = new Hashtable<String, Object>();
 				 props.put("adapterName", adapterName);
 				 props.put("adapterClass", c.getName());
-				 System.err.println("registering: "+adapterName);
 				 if(adapterClass!=null) {
 					context.registerService(Class.class.getName(), c, props);
 				}
