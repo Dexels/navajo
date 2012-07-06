@@ -6,9 +6,6 @@ Bundle-Version: 1.0.3.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Main-Class: com.dexels.navajo.osgi.runtime.FrameworkInstance
-Import-Package: org.osgi.framework;version="1.6.0",
- org.osgi.framework.launch;version="1.0.0",
- org.osgi.service.obr;version="1.0.0"
 Bundle-ClassPath: .,
- resources/
+ src/main/resources/
 Export-Package: com.dexels.navajo.osgi.runtime

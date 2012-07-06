@@ -156,7 +156,6 @@ public class PullComponent {
 			}
 			return true;
 		}
-
 	}
 
 	public void deactivate() {
