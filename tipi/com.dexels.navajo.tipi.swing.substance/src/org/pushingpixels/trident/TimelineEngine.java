@@ -924,6 +924,7 @@ class TimelineEngine {
 		}
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	void runTimelineOperation(Timeline timeline,
 			TimelineOperationKind operationKind, Runnable operationRunnable) {
 		synchronized (LOCK) {
