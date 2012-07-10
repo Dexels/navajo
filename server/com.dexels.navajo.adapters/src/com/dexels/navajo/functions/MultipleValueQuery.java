@@ -6,6 +6,7 @@ import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.jdbc.JDBCMappable;
 import com.dexels.navajo.parser.TMLExpressionException;
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 public final class MultipleValueQuery extends SingleValueQuery {
 
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {

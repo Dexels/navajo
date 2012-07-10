@@ -30,6 +30,7 @@ import com.dexels.navajo.server.Access;
  * ====================================================================
  */
 
+@SuppressWarnings({"unused"})
 public final class SessionIdentification {
 
   private static final String oracleSid = "SELECT sid, serial# FROM v$session WHERE client_info = ?";

@@ -23,6 +23,7 @@ import com.dexels.navajo.server.UserException;
  *
  */
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class ResultSetMap implements Mappable {
 
     public String columnName;
@@ -31,7 +32,7 @@ public class ResultSetMap implements Mappable {
     public RecordMap [] records;
 
     private HashMap values = new HashMap();
-    private ArrayList order = new ArrayList();
+	private ArrayList order = new ArrayList();
 
     public final void load(Access access) throws MappableException, UserException {}
 

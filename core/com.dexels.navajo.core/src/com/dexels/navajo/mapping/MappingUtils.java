@@ -37,7 +37,7 @@ import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"rawtypes", "unchecked"})
 public final class MappingUtils {
 
     public static final String getStrippedPropertyName(String name) {

@@ -37,6 +37,7 @@ import com.dexels.navajo.server.UserException;
  * ====================================================================
  */
 
+@SuppressWarnings({"unused", "rawtypes", "unchecked"})
 public class DbTable implements Mappable {
 
   public String name;

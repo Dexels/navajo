@@ -26,15 +26,18 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
+import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
+import com.dexels.navajo.adapter.sqlmap.SQLMapHelper;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.document.types.Memo;
-import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.document.types.NavajoType;
+import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.Repository;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
+@SuppressWarnings({"rawtypes", "unchecked", "unused"})
 public class SPMap extends SQLMap {
 
   public String outputParameter;
@@ -44,6 +47,7 @@ public class SPMap extends SQLMap {
   protected final static int OUTPUT_PARAM = 1;
   protected final static int INOUT_PARAM = 2;
   private static int openCallStatements = 0;
+  private boolean isLegacyMode;
 
   protected ArrayList parameterTypes = new ArrayList();
 
@@ -53,8 +57,11 @@ public class SPMap extends SQLMap {
 
   private static Object semaphore = new Object();
   
-  public void load(Access access) throws com.dexels.navajo.server.
-		  UserException, com.dexels.navajo.mapping.MappableException {
+  public SPMap() {
+	  this.isLegacyMode = SQLMapConstants.isLegacyMode();
+  }
+  
+  public void load(Access access) throws UserException, MappableException {
 	  
 	  super.load(access);
 	  synchronized ( semaphore  ) {
@@ -180,69 +187,30 @@ public class SPMap extends SQLMap {
 
         }
         if (parameters != null) {
+        	int spIndex = 0;
 
-          int spIndex = 0;
-
-          for (int i = 0; i < parameters.size(); i++) {
-            Object param = parameters.get(i);
-            int type = ( (Integer) parameterTypes.get(i)).intValue();
-
-            if (debug) {
-              System.out.println("Setting parameter: " + param + "(" +
-                                 (param != null ? param.getClass().toString() :
-                                  "") + "), type = " + type);
-
-            }
-            if (type == INPUT_PARAM) {
-              spIndex++;
-              if ( (param == null) || (param instanceof NavajoType && ((NavajoType) param).isEmpty() && !(param instanceof Binary) ) ) {
-            	  callStatement.setNull(i + 1, Types.VARCHAR );//getSpParameterType(spName, spIndex));
-              }
-              else
-              if (param instanceof String) {
-                callStatement.setString(i + 1, (String) param);
-              }
-              else if (param instanceof Integer) {
-                callStatement.setInt(i + 1, ( (Integer) param).intValue());
-              }
-              else if (param instanceof Double) {
-                // System.out.println(i + " : param instanceof Double");
-                callStatement.setDouble(i + 1, ( (Double) param).doubleValue());
-              }
-              else if (param instanceof java.util.Date) {
-                java.sql.Timestamp timeStamp = new java.sql.Timestamp( ( (java.
-                    util.Date) param).getTime());
-                callStatement.setTimestamp(i + 1, timeStamp);
-              }
-              else if (param instanceof Boolean) {
-                callStatement.setBoolean(i + 1, ( (Boolean) param).booleanValue());
-              }
-              else if (param instanceof ClockTime) {
-                java.util.Date dValue = ((ClockTime) param).dateValue();
-                java.sql.Timestamp timeStamp = new java.sql.Timestamp(dValue.getTime());
-                callStatement.setTimestamp(i + 1, timeStamp);
-              }
-              else if (param instanceof Money) {
-                callStatement.setDouble(i + 1, ((Money) param).doubleValue());
-              }
-              else if (param instanceof Memo) {
-                callStatement.setString(i + 1, ( (Memo) param).toString());
-              }
-              else if (param instanceof Binary) {
-                // Following code is copied from SQLMap
-                if (debug) {
-                   Access.writeToConsole(myAccess, "TRYING TO INSERT A BLOB (NEW STYLE)....\n");
-                } 
-                setBlob(callStatement, i,(Binary) param);
-              }
-            }
-            else {
-              int sqlType = ( (Integer) lookupTable.get( (String) param)).
-                  intValue();
-              callStatement.registerOutParameter(i + 1, sqlType);
-              
-            }
-          }
+	  		System.out.println("************************* Entering SPMap.getResultSet");
+			for (int i = 0; i < parameters.size(); i++) {
+				Object param = parameters.get(i);
+	            int type = ( (Integer) parameterTypes.get(i)).intValue();
+	            if (debug) {
+	              System.out.println("Setting parameter: " + param + "(" + (param != null ? param.getClass().toString() : "") + "), type = " + type);
+	            }
+	            if (type == INPUT_PARAM) {
+	                spIndex++;
+					SQLMapHelper.setParameter(callStatement,
+													param, 
+													i, 
+													this.getClass(),
+													myConnectionBroker.getDbIdentifier(), 
+													this.isLegacyMode,
+													this.debug, 
+													this.myAccess);
+	            } else {
+	              int sqlType = ( (Integer) lookupTable.get( (String) param)).intValue();
+	              callStatement.registerOutParameter(i + 1, sqlType);
+	            }
+			}
         }
 
         if (query != null) {
@@ -265,8 +233,7 @@ public class SPMap extends SQLMap {
 
         remainCount = 0;
         while (rs.next()) {
-          if ( (index >= startIndex)
-              && ( (endIndex == INFINITE) || (index <= endIndex))) {
+          if ( (index >= startIndex) && ( (endIndex == INFINITE) || (index <= endIndex))) {
             ResultSetMap rm = new ResultSetMap();
 
             for (int i = 1; i < (columns + 1); i++) {
@@ -277,72 +244,7 @@ public class SPMap extends SQLMap {
               java.util.Calendar c = java.util.Calendar.getInstance();
 
               if (rs.getString(i) != null) {
-                switch (type) {
-                  case Types.INTEGER:
-                  case Types.SMALLINT:
-                  case Types.TINYINT:
-                  case Types.NUMERIC:
-                    value = new Integer(rs.getInt(i));
-                    break;
-
-                  case Types.VARCHAR:
-                  case Types.CHAR:
-                    if (rs.getString(i) != null) {
-                      value = new String(rs.getString(i));
-                    }
-                    break;
-
-                  case Types.FLOAT:
-                  case Types.DOUBLE:
-                  case Types.DECIMAL:
-                    value = new Double(rs.getString(i));
-                    break;
-
-                  case Types.DATE:
-                    if (rs.getDate(i) != null) {
-                      Date d = rs.getDate(i, c);
-                      long l = d.getTime();
-
-                      value = new java.util.Date(l);
-                    }
-                    break;
-
-                  case -101: // For Oracle; timestamp with timezone, treat this as clocktime.
-                     if (rs.getTimestamp(i) != null) {
-                       Timestamp ts = rs.getTimestamp(i, c);
-                       long l = ts.getTime();
-                       value = new ClockTime(new java.util.Date(l));
-                     }
-                     break;
-
-                  case Types.TIMESTAMP:
-                    if (rs.getTimestamp(i) != null) {
-                      Timestamp ts = rs.getTimestamp(i, c);
-                      long l = ts.getTime();
-                      value = new java.util.Date(l);
-                    }
-                    break;
-
-                  case Types.BIT:
-                    value = new Boolean(rs.getBoolean(i));
-                    break;
-
-                  case Types.BLOB:
-                      try {
-                        Blob b = rs.getBlob(i);
-                        value = new Binary(b.getBinaryStream());
-                      }
-                      catch (Throwable e) {
-                        value = null;
-                      }
-                      break;
-
-                  default:
-                    if (rs.getString(i) != null) {
-                      value = new String(rs.getString(i));
-                    }
-                    break;
-                }
+            	  value = SQLMapHelper.getColumnValue(rs, type, i);
               }
               rm.addValue(param.toUpperCase(), value);
             }
@@ -381,6 +283,12 @@ public class SPMap extends SQLMap {
     // System.out.println("finished " + total + " seconds. Average query time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
     return resultSet;
   }
+
+  
+    private boolean isLegacyMode() {
+		Repository r = DispatcherFactory.getInstance().getNavajoConfig().getRepository();
+		return r.useLegacyDateMode();
+	}
 
   public void setQuery(String newQuery) throws UserException {
 //    if ( (this.query != null) || (this.update != null)) {
