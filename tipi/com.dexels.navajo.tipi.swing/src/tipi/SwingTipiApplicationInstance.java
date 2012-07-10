@@ -103,8 +103,6 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 		context.setAppletRoot(appletRoot);
 		context.setOtherRoot(otherRoot);
 
-//		TipiSwingExtension.getInstance().getTipiExtensionRegistry().loadExtensions(context);
-		
 		SwingTipiUserInterface stui = new SwingTipiUserInterface(context);
 		SwingClient.setUserInterface(stui);
 		context.setDefaultTopLevel(new TipiScreen());
@@ -112,17 +110,20 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 		// context.parseRequiredIncludes();
 		// context.processRequiredIncludes();
 
-		context.processProperties(properties);
 
 		context.systemPropertyMap.putAll(systemProperties);
+		context.processProperties(properties);
 
-//		logger.info("Using install: "+install.getAbsolutePath());
+		logger.info("Using install: "+tipiInstallationFolder.getAbsolutePath());
 
+		
+		System.err.println("Systemprop: "+context.systemPropertyMap);
 		// TODO Fix support for HTTP based runs
-//		File tipi = new File(tipiInstallationFolder,"tipi");
-//		File resource = new File(tipiInstallationFolder,"resource");
-//		context.setTipiResourceLoader(new FileResourceLoader(tipi));
-//		context.setGenericResourceLoader(new FileResourceLoader(resource));
+		logger.warn("********** ENTERING FILE BASED MODE **********");
+		File tipi = new File(tipiInstallationFolder,"tipi");
+		File resource = new File(tipiInstallationFolder,"resource");
+		context.setTipiResourceLoader(new FileResourceLoader(tipi));
+		context.setGenericResourceLoader(new FileResourceLoader(resource));
 
 		
 		//		BaseTipiApplicationInstance.processSettings(deploy, profile, installationFolder, extensionContainer)
