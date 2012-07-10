@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.sql.DataSource;
+
+import org.apache.felix.framework.Felix;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -150,8 +153,8 @@ public class FrameworkInstance {
 	@SuppressWarnings("unchecked")
 	protected void doStart() throws Exception {
 
-		Framework felixFramework = getFrameworkFactory().newFramework(
-				createConfig()); // new Felix(createConfig());
+		Felix felixFramework = new Felix(createConfig()); //getFrameworkFactory().newFramework(
+//				createConfig()); // new Felix(createConfig());
 		felixFramework.init();
 		felixFramework.start();
 		this.framework = felixFramework;
@@ -223,7 +226,6 @@ public class FrameworkInstance {
 				"slf4j-api-1.6.4.jar",
 				"slf4j-simple-1.6.4.jar"
 				});
-		;
 
 		configurationInjectionService = null;
 		try {
@@ -233,30 +235,34 @@ public class FrameworkInstance {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		startTipi("/Users/frank/Documents/workspace42/SportlinkClub", "test", "knvb");
+		Thread t = new Thread(){
 
-		if (configurationInjectionService != null) {
-			System.err.println("Admin found");
-		} else {
-			System.err.println("nope");
-		}
-		if (repositoryAdmin != null) {
-			System.err.println("Repo found");
-		} else {
-			System.err.println("No repo found");
-		}
-		repositoryAdmin
-				.addRepository(new URL(
-						"https://source.dexels.com/nexus/content/shadows/navajo_snapshot_obr/.meta/obr.xml"));
-		repositoryAdmin
-				.addRepository(new URL(
-						"https://source.dexels.com/nexus/content/shadows/thirdparty_obr/.meta/obr.xml"));
+			@Override
+			public void run() {
+				try {
 
-		String deps = "(&(symbolicname=com.dexels.navajo.api)(version>=1.0.2)),(&(symbolicname=com.dexels.navajo.tipi.swing.mig)(version>=1.0.9)),(&(symbolicname=com.dexels.navajo.tipi.swing.application)(version>=1.2.2)),(&(symbolicname=com.dexels.navajo.tipi.swing.geo)(version>=1.0.11)),(&(symbolicname=com.dexels.navajo.tipi.swing.editor)(version>=1.1.3)),(&(symbolicname=com.dexels.navajo.tipi.jabber)(version>=1.0.13)),(&(symbolicname=com.dexels.navajo.tipi.mail)(version>=1.0.25)),(&(symbolicname=com.dexels.navajo.tipi.swing.rich)(version>=1.0.11)),(&(symbolicname=com.dexels.navajo.tipi.swing.substance)(version>=1.1.7))";
+					Thread.sleep(5000);
+					repositoryAdmin.addRepository(new URL("http://source.dexels.com:8081/nexus/content/shadows/thirdparty_obr/.meta/obr.xml"));
+
+					String gogo = "(&(symbolicname=org.apache.felix.gogo.runtime)(version>=0.10.0)),(&(symbolicname=org.apache.felix.gogo.shell)(version>=0.10.0)),(&(symbolicname=org.apache.felix.gogo.command)(version>=0.12.0))";
+					resolveAtomic(gogo);
+					System.err.println("Deploying tipi update");
+					repositoryAdmin.addRepository(new URL("http://source.dexels.com:8081/nexus/content/shadows/navajo_snapshot_obr/.meta/obr.xml"));
+					String deps = "(&(symbolicname=com.dexels.navajo.api)(version>=1.0.2)),(&(symbolicname=com.dexels.navajo.tipi.swing.mig)(version>=1.0.9)),(&(symbolicname=com.dexels.navajo.tipi.swing.application)(version>=1.2.2)),(&(symbolicname=com.dexels.navajo.tipi.swing.geo)(version>=1.0.11)),(&(symbolicname=com.dexels.navajo.tipi.swing.editor)(version>=1.1.3)),(&(symbolicname=com.dexels.navajo.tipi.jabber)(version>=1.0.13)),(&(symbolicname=com.dexels.navajo.tipi.mail)(version>=1.0.25)),(&(symbolicname=com.dexels.navajo.tipi.swing.rich)(version>=1.0.11)),(&(symbolicname=com.dexels.navajo.tipi.swing.substance)(version>=1.1.8))";
+					resolveAtomic(deps);
+					System.err.println("done");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}};
+		t.start();
+	}
+
+	private void resolveAtomic(String deps) {
 		Resolver resolver = repositoryAdmin.resolver();
 		installDependency(resolver, deps.split(","), true);
 		resolver.deploy(true);
-
-		startTipi("/Users/frank/Documents/workspace42/SportlinkClub", "test", "knvb");
 	}
 
 	private boolean installDependency(Resolver resolver, String[] dependencies,
