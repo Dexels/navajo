@@ -204,6 +204,7 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 		copyResource(out, fis);
 
 		fis.close();
+		out.close();
 		temp.delete();
 
 		long writeFinishedAt = System.currentTimeMillis();
@@ -288,7 +289,7 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 
 	@Override
 	public void endTransaction() throws IOException {
-		response.getOutputStream().close();
+//		response.getOutputStream().close();
 		
 	}
 

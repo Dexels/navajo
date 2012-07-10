@@ -90,6 +90,16 @@
 		</dependency>
 
 		<dependency>
+		  <groupId>org.igniterealtime.smack</groupId>
+		  <artifactId>smack</artifactId>
+		  <version>3.2.2</version>
+		</dependency>
+		<dependency>
+		  <groupId>org.igniterealtime.smack</groupId>
+		  <artifactId>smackx</artifactId>
+		  <version>3.2.2</version>
+		</dependency>
+		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.adapters</artifactId>
 			<version>[1.0.0,2.0.0)</version>

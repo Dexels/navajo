@@ -31,6 +31,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
   protected String myErrorDescription;
   private List<PropertyChangeListener> myPropertyDataListeners;
   private final NavajoFactory myFactory;
+  private HashMap<String,Navajo> navajoMap = new HashMap<String,Navajo>();
   
 private final static Logger logger = LoggerFactory
 		.getLogger(BaseNavajoImpl.class);
@@ -629,6 +630,21 @@ public Navajo merge(Navajo with) throws NavajoException {
 
 public Map<String,Message> getMessages() {
 	return getRootMessage().getMessages();
+}
+
+@Override
+public void addNavajo(String key, Navajo value) {
+	navajoMap.put(key, value);
+}
+
+@Override
+public Navajo getNavajo(String key) {
+	return navajoMap.get(key);
+}
+
+@Override
+public void removeNavajo(String key) {
+	navajoMap.remove(key);
 }
 
 

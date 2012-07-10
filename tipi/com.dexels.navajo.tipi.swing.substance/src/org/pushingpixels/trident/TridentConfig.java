@@ -88,14 +88,12 @@ public class TridentConfig {
 					.getResources("META-INF/trident-plugin.properties");
 			while (urls.hasMoreElements()) {
 				URL pluginUrl = (URL) urls.nextElement();
-				System.err.println("Got url: "+pluginUrl);
 				BufferedReader reader = null;
 				try {
 					reader = new BufferedReader(new InputStreamReader(pluginUrl
 							.openStream()));
 					while (true) {
 						String line = reader.readLine();
-						System.err.println("Line: "+line);
 						if (line == null)
 							break;
 						String[] parts = line.split("=");

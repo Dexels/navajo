@@ -23,6 +23,10 @@ public class InstallationPathResolver {
 
 
 	public static List<String> getInstallationFromPath(String fullContext) throws IOException, TipiException {
+		String forcedPath = System.getProperty("tipi.vaadin.context");
+		if(forcedPath!=null) {
+			return parseContext(forcedPath);
+		}
 		Map<String,String> systemContexts = loadSystemContexts();
 		logger.info("Resolving context paths. Input: "+fullContext+" paths: "+systemContexts);
 		String contextPath = fullContext.startsWith("/")?fullContext.substring(1):fullContext;

@@ -1,6 +1,5 @@
 package tipi;
 
-import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -11,8 +10,6 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
-import org.pushingpixels.trident.TridentConfig;
-import org.pushingpixels.trident.interpolator.PropertyInterpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,10 +33,8 @@ public class TipiSubstanceExtension extends TipiAbstractXMLExtension implements 
 	
 	public void initialize(TipiContext tc) {
 		// Do nothing
- 
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void start(BundleContext context) throws Exception {
 		registerTipiExtension(context);
@@ -67,15 +62,15 @@ public class TipiSubstanceExtension extends TipiAbstractXMLExtension implements 
 		d.put("name", "BusinessBlackSteel");
 		d.put("className", SubstanceBusinessBlackSteelLookAndFeel.class.getName());
 		black = context.registerService(LookAndFeelWrapper.class, lafw, d);
-		logger.info("Registered LAF class: "+SubstanceBusinessBlackSteelLookAndFeel.class.getName());
+//		logger.info("Registered LAF class: "+SubstanceBusinessBlackSteelLookAndFeel.class.getName());
 
-		Collection<PropertyInterpolator> c = TridentConfig.getInstance().getPropertyInterpolators();
-		if(c.isEmpty()) {
-			logger.warn("No interpolators present");
-		}
-		for (PropertyInterpolator propertyInterpolator : c) {
-			logger.warn("Found: {}",propertyInterpolator.getClass());
-		}
+//		Collection<PropertyInterpolator> c = TridentConfig.getInstance().getPropertyInterpolators();
+//		if(c.isEmpty()) {
+//			logger.warn("No interpolators present");
+//		}
+//		for (PropertyInterpolator propertyInterpolator : c) {
+//			logger.warn("Found: {}",propertyInterpolator.getClass());
+//		}
 	}
 
 	@Override

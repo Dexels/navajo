@@ -80,16 +80,13 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 //		Dictionary properties =  cc.getProperties();
 		user = (String) properties.get("user");
 		pass = (String) properties.get("password");
-		logger.info(">>>>>>>>>LocalClient activated"+user+" / "+pass);
 	}
 	public void modified(Map<String,String> properties) {
 		user = (String) properties.get("user");
 		pass = (String) properties.get("password");
-//		logger.info(">>>>>>>>>LocalClient modified: "+user+" / "+pass);
 	}
 	public void deactivate() {
 		
-//		logger.info(">>>>>>>>>LocalClient DEactivated. No action taken");
 	}
 
 

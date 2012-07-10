@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.slf4j.Logger;
@@ -402,13 +403,22 @@ public static final int DIRECT_PROTOCOL = 0;
     	logger.warn("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
     }
     if (useCompression) {
-    	con.setRequestProperty("Accept-Encoding", "jzlib");
-    	con.setRequestProperty("Content-Encoding", "jzlib");
+    	if(forceGzip) {
+        	con.setRequestProperty("Content-Encoding", "gzip");
+        	con.setRequestProperty("Accept-Encoding", "gzip");
+    	} else {
+        	con.setRequestProperty("Content-Encoding", "jzlib");
+        	con.setRequestProperty("Accept-Encoding", "jzlib");
+    	}
     	//con.connect();
     	   
     	BufferedWriter out = null;
     	try {
-    		out = new BufferedWriter(new OutputStreamWriter(new ZOutputStream(con.getOutputStream(), JZlib.Z_BEST_SPEED), "UTF-8"));
+    		if (forceGzip) {
+        		out = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(con.getOutputStream()), "UTF-8"));
+			} else {
+	    		out = new BufferedWriter(new OutputStreamWriter(new ZOutputStream(con.getOutputStream(), JZlib.Z_BEST_SPEED), "UTF-8"));
+			}
     		d.write(out, condensed, d.getHeader().getRPCName());
     	} finally  {
     		if ( out != null ) {
@@ -426,13 +436,8 @@ public static final int DIRECT_PROTOCOL = 0;
     	BufferedWriter os = null;
     	try {
 //    		logger.info("Using no compression!");
-    		if(forceGzip) {
-    	    	con.setRequestProperty("Accept-Encoding", "gzip");
-        		os = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(con.getOutputStream()), "UTF-8"));
-
-    		} else {
-        		os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
-    		}
+    		
+      		os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
 //    		os.write("apenootjes");
     		
     		
@@ -461,7 +466,12 @@ public static final int DIRECT_PROTOCOL = 0;
     		throw new IOException(readErrorStream(con));
     	} else {
     		if ( useCompression ) {
-    			in = new ZInputStream(con.getInputStream());
+    			if (forceGzip) {
+        			in = new GZIPInputStream(con.getInputStream());
+				} else {
+	    			in = new ZInputStream(con.getInputStream());
+				}
+    			
     		} else {
     			in = con.getInputStream();
     		}
