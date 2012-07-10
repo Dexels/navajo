@@ -270,13 +270,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		if (myThreadPool == null) {
 			myThreadPool = new TipiThreadPool(this, getPoolSize());
 		}
-		System.err.println("Core extensions: " + coreExtensionList.size());
-		System.err.println("Main extensions: " + mainExtensionList.size());
-		if (coreExtensionList.isEmpty()) {
-			System.err
-					.println("Beware: no extensions. Running without jars? Entering fake mode...");
-			fakeJars = true;
-		}
+//		System.err.println("Core extensions: " + coreExtensionList.size());
+//		System.err.println("Main extensions: " + mainExtensionList.size());
+//		if (coreExtensionList.isEmpty()) {
+//			System.err
+//					.println("Beware: no extensions. Running without jars? Entering fake mode...");
+//			fakeJars = true;
+//		}
 		// fakeExtensions();
 		// System.err.println("Warning: Fake mode forced!");
 		// fakeExtensions();
