@@ -506,7 +506,7 @@ public class SwingTipiContext extends TipiContext {
 		String laf = null;
 
 		try {
-			laf = System.getProperty("tipilaf");
+			laf = getSystemProperty("tipilaf");
 		} catch (SecurityException e) {
 
 		}
