@@ -32,6 +32,7 @@ import com.dexels.navajo.server.UserException;
  * ====================================================================
  */
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class DbCatalog implements Mappable {
 
   public String name;

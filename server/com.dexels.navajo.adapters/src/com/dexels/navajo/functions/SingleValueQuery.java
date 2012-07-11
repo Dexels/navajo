@@ -106,6 +106,7 @@ public class SingleValueQuery extends FunctionInterface {
 	  sql.setDebug(false);
 	  Object result = null;
 	  try {
+		  
 		  if (sql.getRowCount() > 0) {
 			  result = sql.getColumnValue(new Integer(0));
 		  } else {

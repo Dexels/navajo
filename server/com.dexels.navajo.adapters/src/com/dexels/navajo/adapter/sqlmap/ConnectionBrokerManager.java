@@ -19,6 +19,7 @@ import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.server.resource.ServiceAvailability;
 
 
+@SuppressWarnings({"unused"})
 public class ConnectionBrokerManager extends Object implements ResourceManager, ConnectionBrokerManagerMBean {
 
   private Map<String,SQLMapBroker> brokerMap = Collections.synchronizedMap(new HashMap<String,SQLMapBroker>());

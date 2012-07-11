@@ -22,6 +22,7 @@ import com.dexels.navajo.server.UserException;
  * @version 1.0
  */
 
+@SuppressWarnings({"rawtypes", "unchecked", "unused"})
 public class DatabaseInfo implements Mappable {
 
   public String vendor = "";
