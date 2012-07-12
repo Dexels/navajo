@@ -26,7 +26,6 @@ public class TipiSubstanceExtension extends TipiAbstractXMLExtension implements 
 
 	public TipiSubstanceExtension() {
 //		loadDescriptor();
-		System.err.println("Created: TipiSubstanceExtension");
 		UIManager.getLookAndFeelDefaults().put("ClassLoader", SubstanceBusinessBlackSteelLookAndFeel.class.getClassLoader());
 
 	}
