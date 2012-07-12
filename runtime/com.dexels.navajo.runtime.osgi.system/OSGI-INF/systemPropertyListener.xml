@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="com.dexels.navajo.runtime.osgi.system">
+   <implementation class="com.dexels.navajo.runtime.osgi.system.SystemPropertyComponent"/>
+   <reference bind="setConfigurationInterface" cardinality="1..1" interface="com.dexels.navajo.osgi.runtime.ConfigurationInjectionInterface" name="ConfigurationInjectionInterface" policy="static" unbind="clearConfigurationInterface"/>
+</scr:component>
