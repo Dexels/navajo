@@ -12,6 +12,8 @@ import java.util.Set;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import tipi.ServiceRegistrationUtils;
 import tipi.TipiExtension;
@@ -28,7 +30,10 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 
 	private static final long serialVersionUID = 6641134165918021831L;
 	private transient final BundleContext myBundleContext;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(OSGiClassManager.class);
+	
 	public OSGiClassManager(BundleContext bc, TipiContext tc) {
 		super(tc);
 		myBundleContext = bc;
@@ -65,13 +70,11 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 
 	@Override
 	public Map<String, FunctionDefinition> getFunctionDefMap() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void clearClassMap() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -111,32 +114,11 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 		if(clas==null) {
 			return null;
 		}
-//		String fullDef = pack + "." + clas;
-//		ExtensionDefinition ed = getExtension(name);
 		Class<?> classInstance = (Class<?>) xe.getObjectAttribute("classInstance");
 		if(classInstance==null) {
-			System.err.println("Oh dear, containing class not found "+xe);
+			logger.warn("Oh dear, containing class not found "+xe);
 		}
 		return classInstance;
-		//		try {
-//			if (b) {
-//				ClassLoader cl = b.getBundleContext().ge .getClass().getClassLoader();
-//				cc = Class.forName(fullDef, true, cl);
-//				return cc;
-//			}
-//			System.err
-//					.println("FALLBACK: Loading class without Extension definition");
-//			
-//			cc = Class.forName(fullDef, true, myContext.getClassLoader());
-//		} catch (ClassNotFoundException ex) {
-//			System.err.println("Error loading class: " + fullDef);
-//			ex.printStackTrace();
-//		} catch (SecurityException ex) {
-//			System.err.println("Security Error loading class: " + fullDef);
-//			ex.printStackTrace();
-//
-//		}
-//		return cc;
 	}
 	
 	@Override
@@ -166,7 +148,6 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
 		ServiceRegistrationUtils.parseParser(myBundleContext,props,xe,(TipiExtension) te);
 		TipiTypeParser ttp = super.parseParser(xe,te);
-//		System.err.println("Ignoring inline parser!");
 		return ttp;
 	}
 	
@@ -197,7 +178,7 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 		
 
 		if (ttp == null) {
-			System.err.println("Unknown type: " + name);
+			logger.warn("Unknown type: " + name);
 			return null;
 		}
 		Object o = ttp.parse(source, expression, te);

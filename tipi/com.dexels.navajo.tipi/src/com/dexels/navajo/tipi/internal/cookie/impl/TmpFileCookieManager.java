@@ -14,11 +14,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 
 public class TmpFileCookieManager implements CookieManager {
 	protected final Map<String, String> cookieMap = new HashMap<String, String>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TmpFileCookieManager.class);
+	
 	private File cookieFile = null;
 
 	public String getCookie(String key) {
@@ -29,7 +35,6 @@ public class TmpFileCookieManager implements CookieManager {
 	public void setCookie(String key, String value) {
 		cookieMap.put(key, value);
 		try {
-			// System.err.println("Saving the cookies!");
 			saveCookies();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -94,7 +99,7 @@ public class TmpFileCookieManager implements CookieManager {
 	public void deleteCookies() throws IOException {
 		cookieFile.delete();
 		cookieMap.clear();
-		System.err.println("Tmp file cookies deleted!");
+		logger.info("Tmp file cookies deleted!");
 	}
 
 }

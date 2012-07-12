@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -24,6 +27,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiTimerImpl extends TipiHeadlessComponentImpl implements
 		Runnable {
 	private static final long serialVersionUID = 4898398670800512047L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTimerImpl.class);
 	private boolean isRunning;
 	private long interval = 1000; // standard is one second
 	private Thread t;
@@ -51,8 +57,7 @@ public class TipiTimerImpl extends TipiHeadlessComponentImpl implements
 				this.performTipiEvent("onTimer", null, true);
 				Thread.sleep(interval);
 			} catch (Exception e) {
-				System.err.println("Timer had an exception, stopping");
-				e.printStackTrace();
+				logger.error("Timer had an exception, stopping",e);
 				isRunning = false;
 			}
 		}

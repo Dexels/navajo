@@ -110,14 +110,12 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 	public boolean isValid() {
 		List<TipiBaseQuestion> l = new ArrayList<TipiBaseQuestion>();
 		recursiveListQuestions(this, l);
-		// System.err.println("QUESTIONS:::: "+l.size());
 		for (int i = 0; i < l.size(); i++) {
 			TipiBaseQuestion tq = l.get(i);
 			if (!tq.isRecursiveValid()) {
 				return false;
 			}
 		}
-		// System.err.println("No invalid questions found. Group is valid.");
 		return true;
 	}
 

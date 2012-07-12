@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -29,11 +32,12 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiNewCallService extends TipiAction {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6767560777929847564L;
 
+	private static final long serialVersionUID = -6767560777929847564L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiNewCallService.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -70,7 +74,7 @@ public class TipiNewCallService extends TipiAction {
 			if (c) {
 				Navajo n = myContext.getNavajo(service);
 				if (n != null) {
-					System.err.println("Returning CACHED service : " + service);
+					logger.info("Returning CACHED service : " + service);
 					myContext.loadNavajo(n, service);
 					return;
 					// return n;
@@ -86,7 +90,7 @@ public class TipiNewCallService extends TipiAction {
 		TipiConnector defaultConnector = myContext.getDefaultConnector();
 		if (connector.value == null) {
 			// long timeStamp = System.currentTimeMillis();
-			System.err.println("No connector");
+			logger.info("No connector");
 			if (defaultConnector == null) {
 				throw new IllegalStateException(
 						"No default tipi connector found!");
@@ -96,7 +100,7 @@ public class TipiNewCallService extends TipiAction {
 			TipiConnector ttt = myContext
 					.getConnector((String) connector.value);
 			if (ttt == null) {
-				System.err.println("Warning: connector: "
+				logger.warn("Warning: connector: "
 						+ (String) connector.value
 						+ " not found, reverting to default connector");
 

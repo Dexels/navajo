@@ -18,8 +18,8 @@ import com.dexels.navajo.tipi.TipiException;
 
 public class InstallationPathResolver {
 
-	private static final Logger logger = LoggerFactory.getLogger(InstallationPathResolver.class); 
-	
+	private final static Logger logger = LoggerFactory
+			.getLogger(InstallationPathResolver.class);
 
 
 	public static List<String> getInstallationFromPath(String fullContext) throws IOException, TipiException {
@@ -72,7 +72,7 @@ public class InstallationPathResolver {
 		}
 		String result = systemContexts.get(key);
 		if(result!=null) {
-			System.err.println("Path "+contextPath+" resolved: "+result);
+			logger.info("Path "+contextPath+" resolved: "+result);
 			return parseContext(result);
 		}
 		result = systemContexts.get(contextPath);

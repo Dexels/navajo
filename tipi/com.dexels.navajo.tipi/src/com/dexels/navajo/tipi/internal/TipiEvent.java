@@ -261,7 +261,6 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 			// ignore
 			throw e;
 		} catch (TipiBreakException e) {
-			System.err.println("break detected");
 			throw e;
 		} catch (Throwable ex) {
 			dumpStack(ex.getMessage());

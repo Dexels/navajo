@@ -63,20 +63,12 @@ public class TipiActionFactory implements Serializable {
 		myName = (String) actionDef.getAttribute("name");
 		String clas = (String) actionDef.getAttribute("class");
 		String fullDef = pack + "." + clas;
-		
-		// System.err.println("Adding action: " + fullDef);
-		// context.setSplashInfo("Adding action: " + fullDef);
-//		ClassLoader extensionLoader = ed.getExtensionClassloader();
-//		if (extensionLoader == null) {
-//			extensionLoader = getClass().getClassLoader();
-//		}
 		myActionClass = Class.forName(fullDef, true, ed.getClass().getClassLoader());
 
 		List<XMLElement> children = actionDef.getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement currentParam = children.get(i);
 			TipiValue tv = new TipiValue(null);
-			// assert "param".equals(currentParam.getName());
 			tv.load(currentParam);
 			myDefinedParams.put(tv.getName(), tv);
 		}
@@ -117,7 +109,6 @@ public class TipiActionFactory implements Serializable {
 		for (int i = 0; i < c.size(); i++) {
 			XMLElement x = c.get(i);
 			TipiValue instanceValue = new TipiValue(tc, x);
-			// System.err.println("ADDING INSTANCE: "+x.toString());
 			TipiValue defined = myDefinedParams.get(x.getAttribute("name"));
 			String val = (String) x.getAttribute("value");
 			if (defined != null) {
@@ -126,42 +117,21 @@ public class TipiActionFactory implements Serializable {
 
 			}
 			if (defined == null) {
-				// System.err.println("Parameter: "+x.getAttribute("name")+"
-				// unknown in action: "+myName);
-
 				newAction.addParameter(instanceValue);
 				continue;
 			}
 			defined.typeCheck(val);
-
-			// if (instanceValue==null) {
-			// continue;
-			// }
-			// if (val==null || defined.getDefaultValue()==null) {
-			// continue;
-			// }
-			// if (val.equals(defined.getDefaultValue())) {
-			// System.err.println("Skipping defaultvalue: "+val+" TipiVal:
-			// "+defined.getName());
-			// continue;
-			// }
 			newAction.addParameter(instanceValue);
 		}
-		// Enumeration ee = instance.enumerateAttributeNames();
-
-		// }
 		for (Iterator<String> iterator = instance.enumerateAttributeNames(); iterator
 				.hasNext();) {
 			String element = iterator.next();
-			// System.err.println("Checking inline element: "+element);
 			if ("type".equals(element)) {
 				continue;
 			}
 			String name = element;
 			String value = instance.getStringAttribute(name, null);
-			// System.err.println("ADDING INLINE INSTANCE: "+name+" / "+value);
 			TipiValue defined = myDefinedParams.get(element);
-			// String val = (String)instance.getAttribute("value");
 			if (value == null) {
 
 			}
@@ -179,26 +149,6 @@ public class TipiActionFactory implements Serializable {
 			newAction.addParameter(instanceValue);
 			defined.typeCheck(value);
 		}
-
-		// Check presence of required parameters.
-		// Iterator it = myDefinedParams.values().iterator();
-		// while (it.hasNext()) {
-		// TipiValue current = (TipiValue) it.next();
-		// if (current.isRequired()) {
-		// if (!newAction.hasParameter(current.getName())) {
-		// throw new TipiException("Can not instantiate actionclass: " +
-		// newAction + " parameter: " + current.getName() + " missing!");
-		// }
-		// // Check for non required parameters not in the instance: Add them
-		// with the default value
-		// }
-		// else {
-		// if (!newAction.hasParameter(current.getName())) {
-		// // REMOBED THE CLONE
-		// newAction.addParameter( (TipiValue) current);
-		// }
-		// }
-		// }
 		return newAction;
 	}
 

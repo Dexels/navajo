@@ -27,12 +27,10 @@ import javax.imageio.spi.ServiceRegistry;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import tipi.TipiApplicationInstance;
-import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
 import tipipackage.ITipiExtensionContainer;
 
@@ -147,8 +145,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	protected TipiErrorHandler eHandler;
 	private String errorHandler;
 
-	private long parseTime = 0;
-
 	/**
 	 * Lists the toplevel components in the current implementation
 	 */
@@ -258,29 +254,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 		myParentContext = parent;
 		initializeExtensions(preload.iterator());
-
-		// try {
-		// initializeExtensions(ServiceRegistry.lookupProviders(TipiExtension.class,ClassLoader.getSystemClassLoader()));
-		// } catch (SecurityException e1) {
-		// System.err.println("Can't reach the system class loader. Bugger. Security issues.");
-		// }
-
 		clientInterface = NavajoClientFactory.createDefaultClient();
 
 		if (myThreadPool == null) {
 			myThreadPool = new TipiThreadPool(this, getPoolSize());
 		}
-		System.err.println("Core extensions: " + coreExtensionList.size());
-		System.err.println("Main extensions: " + mainExtensionList.size());
-		if (coreExtensionList.isEmpty()) {
-			System.err
-					.println("Beware: no extensions. Running without jars? Entering fake mode...");
-			fakeJars = true;
-		}
-		// fakeExtensions();
-		// System.err.println("Warning: Fake mode forced!");
-		// fakeExtensions();
-
 		NavajoFactory.getInstance().setExpressionEvaluator(
 				new DefaultExpressionEvaluator());
 		tipiResourceLoader = new ClassPathResourceLoader();
@@ -308,64 +286,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	protected void addMainExtension(TipiExtension te) {
 		mainExtensionList.add(te);
 	}
-
-	@SuppressWarnings("unused")
-	private void fakeExtensions() {
-
-		// fakeExtension(coreExtensionList, "tipi.TipiExtension");
-		coreExtensionList.add(new TipiCoreExtension());
-		fakeExtension(mainExtensionList, "tipi.TipiSwingExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiJabberExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiRssExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiMailExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiNativeSwingExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiSubstanceExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiToolsExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiGoogleExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiYoutubeExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiFlickrExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiSwingXExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiGeoSwingExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiSvgBatikExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiRichExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiCalendarExtension");
-		fakeExtension(optionalExtensionList,
-				"tipi.TipiFacilityOccupationExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiJxLayerExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiSwingMigExtension");
-		fakeExtension(optionalExtensionList, "tipi.TipiJoglExtension");
-
-		// fakeExtension(optionalExtensionList,
-		// "tipi.TipiStadiumDesignerExtension");
-
-		fakeExtension(mainExtensionList, "tipi.TipiEchoExtension");
-
-		// initialize again
-		appendIncludes(coreExtensionList);
-		appendIncludes(mainExtensionList);
-		appendIncludes(optionalExtensionList);
-	}
-
-	private void fakeExtension(List<TipiExtension> extensionList,
-			String extensionName) {
-		try {
-			TipiExtension tipiExtension = (TipiExtension) Class.forName(
-					extensionName).newInstance();
-			checkExtension(tipiExtension, extensionList);
-			System.err.println("Extension faked succesfully: "
-					+ tipiExtension.getDescription());
-			extensionList.add(tipiExtension);
-			tipiExtension.initialize(this);
-		} catch (Exception e) {
-			if (e instanceof ClassNotFoundException) {
-			} else {
-				e.printStackTrace();
-			}
-
-		}
-	}
-
-	// TODO Refactor this to AppInstance
 	private void initializeExtensions(Iterator<TipiExtension> tt) {
 		coreExtensionList = new ArrayList<TipiExtension>();
 		mainExtensionList = new ArrayList<TipiExtension>();
@@ -405,8 +325,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	
 	public void addOptionalInclude(TipiExtension te) {
 		optionalExtensionList.add(te);
-		System.err.println("Adding optional include:" + te.getId()
-				+ " to context: " + this.hashCode());
 		processRequiredIncludes(te);
 
 	}
@@ -580,18 +498,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 
 	public void clearLazyDefinitionCache() {
-		System.err.println("Flushing lazy definition cache!");
+		logger.info("Flushing lazy definition cache!");
 		Set<String> iterSet = new HashSet<String>(tipiComponentMap.keySet());
 		for (Iterator<String> iter = iterSet.iterator(); iter.hasNext();) {
 			String definitionName = iter.next();
-			// XMLElement def = tipiComponentMap.get(definitionName);
-			// String lazyLocation = lazyMap.get(definitionName);
-			// if (lazyLocation != null && def != null) {
-			// System.err.println("Removing: "+definitionName);
 			tipiComponentMap.remove(definitionName);
-			// } else {
-
-			// }
 		}
 	}
 
@@ -601,24 +512,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			boolean overwrite) {
 		systemPropertyMap.put(name, value);
 
-		// no reason to actually change system properties, right?
-//		try {
-//			if (System.getProperty(name) != null) {
-//				if (overwrite) {
-//					System.setProperty(name, value);
-//				}
-//			} else {
-//				System.setProperty(name, value);
-//			}
-//		} catch (SecurityException e) {
-//			// System.err.println("No system propery access allowed.");
-//		}
 	}
 
+	
 	public final void setSystemPropertyLocal(String name, String value) {
 		systemPropertyMap.put(name, value);
-		System.err.println("Local properties for context: " + getClass()
-				+ " hash: " + hashCode() + " map: " + systemPropertyMap);
 	}
 
 	public void setSystemProperty(String name, String value) {
@@ -657,13 +555,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		String sublocale = (String) attemptGenericEvaluate(config
 				.getStringAttribute("sublocale", "''"));
 		setSystemProperty("tipi.client.sublocale", cfg, false);
-//
-//		Object keystore = attemptGenericEvaluate(config.getStringAttribute(
-//				"keystore", ""));
-
-//		String storepass = (String) attemptGenericEvaluate(config
-//				.getStringAttribute("storepass", ""));
-//		setSystemProperty("tipi.client.storepass", storepass, false);
 		navajoServer = (String) attemptGenericEvaluate(config
 				.getStringAttribute("server", ""));
 		setSystemProperty("tipi.client.server", navajoServer, false);
@@ -674,7 +565,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				.getStringAttribute("password", ""));
 		setSystemProperty("tipi.client.password", navajoPassword, false);
 
-		System.err.println("Connecting to server: " + navajoServer);
+		logger.info("Connecting to server: " + navajoServer);
 		if (!impl.equals("direct")) {
 			if (impl.equals("socket")) {
 				throw new UnsupportedOperationException(
@@ -985,10 +876,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		// Try the classloader first, the
 		URL u = getClass().getClassLoader().getResource(location);
 
-		if (u == null) {
-			// System.err.println("getResourceURL: "+location+" not found in
-			// classpath, continuing");
-		} else {
+		if (u != null) {
 			return u;
 		}
 
@@ -1057,26 +945,25 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 		if (isLazy && getTipiDefinition(componentName) != null) {
 			// already present.
-			System.err.println("Not reparsing lazy: " + componentName);
+			logger.info("Not reparsing lazy: " + componentName);
 			return;
 		}
 		parseLibrary(location, true, componentName, isLazy, tipiExtension);
 	}
 
 	public void processRequiredIncludes(TipiExtension tipiExtension) {
-		System.err.println("Adding extension: "+tipiExtension.getId());
+		logger.debug("Adding extension: "+tipiExtension.getId());
 		List<String> includes = new LinkedList<String>();
 		String[] ss = tipiExtension.getIncludes();
 		if (ss == null || ss.length == 0) {
-			System.err.println("Warning: extension: " + tipiExtension.getId()
+			logger.warn("Warning: extension: " + tipiExtension.getId()
 					+ " - " + tipiExtension.getDescription()+" class: ("+tipiExtension.getClass()+")"
 					+ " has no includes!");
 			return;
 		}
-		System.err.println("Processing includes");
 //		Thread.dumpStack();
 		for (int i = 0; i < ss.length; i++) {
-			System.err.println("Adding include: " + ss[i]);
+			logger.debug("Adding include: " + ss[i]);
 			includes.add(ss[i]);
 		}
 
@@ -1127,7 +1014,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					doc.parseFromReader(isr);
 					doc.setTitle(definition);
 					stamp = System.currentTimeMillis() - stamp;
-					parseTime += stamp;
 					isr.close();
 				}
 				/** @todo Throw these exceptions */
@@ -1224,7 +1110,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				type = instance.getName().substring(2,
 						instance.getName().length());
 			} else {
-				System.err.println("WARNING, STRANGE LAYOUT TAG: " + instance);
+				logger.warn("WARNING, STRANGE LAYOUT TAG: " + instance);
 			}
 		}
 		TipiLayout tl = (TipiLayout) instantiateClass(type, null, instance, cc);
@@ -1268,9 +1154,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		if (!clas.equals("")) {
 			TipiComponent tc = (TipiComponent) instantiateClass(clas, name,
 					instance, parent);
-			// tc.setHomeComponent(true);
-			// System.err.println("Instantiating component by definition:
-			// "+clas);
 			XMLElement classDef = getClassManager().getAssembledClassDef(clas);
 
 			/**
@@ -1491,36 +1374,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		throw new TipiException("INSTANTIATING UNKOWN SORT OF CLASS THING.");
 	}
 
-	//
-	// public Class<?> getTipiClass(String name) {
-	// Class<?> cc = tipiClassMap.get(name);
-	// if (cc != null) {
-	// return cc;
-	// }
-	// XMLElement xe = tipiClassDefMap.get(name);
-	// if (xe == null) {
-	// return null;
-	// }
-	// String pack = (String) xe.getAttribute("package");
-	// String clas = (String) xe.getAttribute("class");
-	// String fullDef = pack + "." + clas;
-	// try {
-	// cc = Class.forName(fullDef, true, getClassLoader());
-	// tipiClassMap.put(name, cc);
-	// } catch (ClassNotFoundException ex) {
-	// System.err.println("Error loading class: " + fullDef);
-	// ex.printStackTrace();
-	// } catch (SecurityException ex) {
-	// System.err.println("Security Error loading class: " + fullDef);
-	// ex.printStackTrace();
-	//
-	// }
-	// return cc;
-	// }
-
-	// public Iterator<String> getTipiClassDefIterator() {
-	// return tipiClassDefMap.keySet().iterator();
-
 	public void addTipiInstance(String service, TipiDataComponent instance) {
 		if (tipiInstanceMap.containsKey(service)) {
 			List<TipiDataComponent> al = tipiInstanceMap.get(service);
@@ -1717,13 +1570,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		fireTipiStructureChanged(tc);
 
 		if (errorHandler != null) {
-			try {
-				System.err
-						.println("Error handlers are deprecated remove 'error' attribute!");
-			} catch (Exception e) {
-				System.err.println("Error instantiating TipiErrorHandler!");
-				e.printStackTrace();
-			}
+			logger.warn("Error handlers are deprecated remove 'error' attribute: It is ignored.");
 		}
 	}
 
@@ -1771,7 +1618,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		Navajo reply = null;
 		try {
 			if (hosturl != null && !"".equals(hosturl)) {
-					System.err.println("CONNECTING TO: " + navajoServer);
 					hosturl = navajoServer;
 					username = navajoUsername;
 					password = navajoPassword;
@@ -1783,8 +1629,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 							expirtationInterval);
 					getClient().setServerUrl(url);
 					debugLog("data", "simpleSend to host: " + hosturl
-							+ " username: " + username + " password: "
-							+ password + " method: " + service);
+							+ " username: " + username + " method: " + service);
 			} else {
 				reply = getClient().doSimpleSend(n, service, ch,
 						expirtationInterval);
@@ -1792,7 +1637,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 						+ getClient().getClientName() + " method: " + service);
 			}
 		} catch (Throwable ex) {
-			ex.printStackTrace();
+			logger.error("Sending problem:",ex);
 			if (eHandler != null && Exception.class.isInstance(ex)) {
 				debugLog("data", "send error occurred:" + ex.getMessage()
 						+ " method: " + service);
@@ -1801,7 +1646,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					throw new TipiBreakException(TipiBreakException.USER_BREAK);
 				}
 			}
-			ex.printStackTrace();
 		}
 		if (reply == null) {
 			reply = NavajoFactory.getInstance().createNavajo();
@@ -1822,8 +1666,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			throws TipiBreakException {
 
 		fireNavajoSent(n, method);
-		String ress = getSystemProperty("navajo.globals.CoreSysPostmanURI");
-		System.err.println("Result: " + ress);
 		Navajo reply = doSimpleSend(n, method, null, expirationInterval,
 				hosturl, username, password, keystore, keypass, breakOnError);
 		fireNavajoReceived(reply, method);
@@ -1868,7 +1710,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			try {
 				compNavajo = createNavajoListNavajo();
 				loadNavajo(compNavajo, "NavajoListNavajo");
-				System.err.println("Firing navajo: " + method);
+				logger.debug("Firing navajo: " + method);
 
 			} catch (NavajoException e) {
 				e.printStackTrace();
@@ -1896,7 +1738,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			}
 			String errorMessage = eHandler.hasErrors(reply);
 			if (errorMessage != null) {
-				System.err.println("Errors detected. ");
+				logger.error("Errors detected. ");
 				boolean hasUserDefinedErrorHandler = false;
 				List<TipiDataComponent> tipis = getTipiInstancesByService(method);
 				if (tipis != null) {
@@ -1916,7 +1758,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					}
 				}
 				if (!hasUserDefinedErrorHandler) {
-					System.err.println("Delivering usererror: \n"
+					logger.error("Delivering usererror: \n"
 							+ errorMessage);
 					showWarning(errorMessage, "Invoerfout");
 				}
@@ -1926,16 +1768,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				}
 				return;
 			}
-			// } else {
-			// // System.err.println("No error handler!");
-			// }
 			try {
 				loadTipiMethod(reply, method);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		} else {
-			System.err.println("Trying to load null navajo.");
+			logger.error("Trying to load null navajo.");
 		}
 
 	}
@@ -1967,11 +1806,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			fireNavajoReceived(reply, method);
 			return;
 		}
-		//
-		// for (TipiDataComponent tipiDataComponent : tipiList) {
-		// System.err.println("Delivering to: "+tipiDataComponent.getPath());
-		// }
-
 		for (int i = 0; i < tipiList.size(); i++) {
 			TipiDataComponent t = tipiList.get(i);
 			debugLog("data    ", "delivering data from method: " + method
@@ -1979,7 +1813,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			try {
 				t.loadData(reply, method);
 			} catch (TipiBreakException e) {
-				System.err.println("Data refused by component");
+				logger.warn("Data refused by component");
 			}
 		}
 
@@ -1989,8 +1823,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	private void unloadNavajo(Navajo reply, String method)
 			throws NavajoException {
 		if (reply.getHeader() == null) {
-			Thread.dumpStack();
-			System.err.println("WTF!!!!! WHY DOESN'T IT HAVE A HEADER?!");
+			logger.error("WTF!!!!! WHY DOESN'T IT HAVE A HEADER?!");
 		} else {
 			unlink(reply);
 
@@ -2043,19 +1876,15 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			tc.setCurrentEvent(event);
 			o = Expression.evaluate(expr, n, null, currentMessage, null, tc);
 			if (o == null) {
-				System.err.println("Expression evaluated to null operand!");
+				logger.debug("Expression evaluated to null operand!");
 				return null;
 			}
 			// }
 		} catch (Exception ex) {
-			System.err.println("Not happy while evaluating expression: " + expr
-					+ " message: " + ex.getMessage());
-			ex.printStackTrace();
+			logger.error("Not happy while evaluating expression: " + expr, ex.getMessage());
 			return o;
 		} catch (Error ex) {
-			System.err.println("Not happy while evaluating expression: " + expr
-					+ " message: " + ex.getMessage());
-			ex.printStackTrace();
+			logger.error("Not happy while evaluating expression: " + expr,ex);
 			return o;
 		}
 		if (o.type.equals(Property.STRING_PROPERTY)) {
@@ -2314,15 +2143,14 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 
 	protected static void printIndent(int indent, String text) {
+		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < indent; i++) {
-			System.err.print(" ");
+			sb.append(" ");
 		}
-		System.err.println(text);
+		logger.info(sb.toString()+ text);
 	}
 
 	public void exit() {
-		System.err.println("Parsing took: " + parseTime);
-		// System.exit(0);
 	}
 
 	public void addShutdownListener(ShutdownListener sl) {
@@ -2610,7 +2438,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public OutputStream writeTipiResource(String resourceName)
 			throws IOException {
-		System.err.println("Writing tipiResource: " + resourceName);
+		logger.info("Writing tipiResource: " + resourceName);
 		return tipiResourceLoader.writeResource(resourceName);
 	}
 
@@ -2644,9 +2472,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					.forName("com.dexels.navajo.tipi.tools.TipiXSDBuilder");
 			TipiContextAdapter tca = (TipiContextAdapter) c.newInstance();
 			tca.execute(this);
-			System.err.println("xsd builder loaded");
+			logger.info("xsd builder loaded");
 		} catch (Throwable e) {
-			// System.err.println("No xsdbuilder found!");
+			logger.error("Error loading XSD?",e);
 		}
 
 	}
@@ -2890,20 +2718,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		if (slaveValue != null && masterValue != null) {
 			if (!slaveValue.equals(masterValue)) {
 				if (slave.getType().equals(Property.EXPRESSION_PROPERTY)) {
-					System.err.println("Ignoring link for expression property");
+					logger.info("Ignoring link for expression property");
 				} else {
-					System.err.println("Link: " + slaveValue + " to: "
+					logger.info("Link: " + slaveValue + " to: "
 							+ masterValue);
-					System.err.println("slaveClass: " + slaveValue.getClass()
-							+ " masterClass: " + masterValue.getClass());
-					try {
-						System.err.println("slaveHash: "
-								+ slave.getFullPropertyName() + " masterHash: "
-								+ master.getFullPropertyName());
-					} catch (NavajoException e) {
-						e.printStackTrace();
-					}
-
 					slave.setAnyValue(masterValue);
 				}
 			}
@@ -3117,7 +2935,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 
 	public void showFatalStartupError(String message) {
-		System.err.println("Error starting up: " + message);
+		logger.error("Error starting up: " + message);
 	}
 
 	public ScriptEngine getScriptingEngine(String engine) {

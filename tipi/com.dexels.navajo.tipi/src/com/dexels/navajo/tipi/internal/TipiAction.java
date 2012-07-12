@@ -62,17 +62,13 @@ public abstract class TipiAction extends TipiAbstractExecutable {
 		}
 	}
 
-	// protected TipiCondition myCondition;
 	protected abstract void execute(TipiEvent event) throws TipiBreakException,
 			TipiException,TipiSuspendException;
 
-	// protected TipiActionBlock myActionBlock;
 
 	public static final boolean INLINE_ACTIONS = true;
 
 	public void addParameter(TipiValue tv) {
-		// System.err.println("ADDING PARAMETER:\n"+tv.toString());
-		// Thread.dumpStack();
 		parameterMap.put(tv.getName(), tv);
 	}
 
@@ -85,10 +81,9 @@ public abstract class TipiAction extends TipiAbstractExecutable {
 		myContext.debugLog("action", myType);
 		setEvent(te);
 		if (getComponent().isDisposed()) {
-			System.err.println("\n**** BREAKING. COMPONENT DISPOSED: "
+			logger.error("\n**** BREAKING. COMPONENT DISPOSED: "
 					+ getComponent().getPath() + " performing action: "
 					+ getClass().getName());
-			// Thread.dumpStack();
 			getStackElement().dumpStack("Component disposed: ");
 			throw new TipiBreakException(TipiBreakException.COMPONENT_DISPOSED);
 		}
@@ -204,11 +199,9 @@ public abstract class TipiAction extends TipiAbstractExecutable {
 	private void constructStack(Stack<TipiExecutable> tex) {
 		
 		tex.push(this);
-		System.err.println("pushed: "+this);
 		TipiExecutable par = getParent();
 		while(par!=null) {
 			tex.push(par);
-			System.err.println("pushed parent: "+par);
 			par = par.getParent();
 		}
 	}

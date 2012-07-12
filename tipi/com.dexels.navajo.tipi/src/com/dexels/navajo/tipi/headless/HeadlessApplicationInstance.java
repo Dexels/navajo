@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
 
@@ -18,10 +21,10 @@ import com.dexels.navajo.tipi.internal.FileResourceLoader;
 
 public class HeadlessApplicationInstance {
 
-	/**
-	 * @param args
-	 * @throws Exception
-	 */
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(HeadlessApplicationInstance.class);
+
 	public static void main(String[] args) throws Exception {
 		List<TipiExtension> ll = new ArrayList<TipiExtension>();
 		ll.add(new TipiCoreExtension());
@@ -63,7 +66,7 @@ public class HeadlessApplicationInstance {
 		InputStream tipiResourceStream = context
 				.getTipiResourceStream(definitionPath);
 		if (tipiResourceStream == null) {
-			System.err.println("Error starting up: Can not load tipi");
+			logger.error("Error starting up: Can not load tipi");
 		} else {
 			context.parseStream(tipiResourceStream,null);
 			context.switchToDefinition(definition);
@@ -100,11 +103,10 @@ public class HeadlessApplicationInstance {
 					String value = st.nextToken();
 					result.put(name, value);
 				} catch (NoSuchElementException ex) {
-					System.err.println("Error parsing system property");
+					logger.error("Error parsing system property",ex);
 				} catch (SecurityException se) {
-					System.err
-							.println("Security exception: " + se.getMessage());
-					se.printStackTrace();
+					logger.error("Security exception: " + se.getMessage(),se);
+					
 				}
 			}
 		}

@@ -8,6 +8,9 @@ package com.dexels.navajo.tipi.internal;
 
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
@@ -16,14 +19,17 @@ import com.dexels.navajo.tipi.TipiStorageManager;
 public class TipiNullStorageManager implements TipiStorageManager, Serializable {
 
 	private static final long serialVersionUID = -5812574497740827700L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiNullStorageManager.class);
+	
 	public Navajo getStorageDocument(String id) throws TipiException {
-		System.err.println("TipiNullStorageManager: Asked for: " + id);
+		logger.warn("TipiNullStorageManager: Asked for: " + id);
 		return null;
 	}
 
 	public void setStorageDocument(String id, Navajo n) throws TipiException {
-		System.err.println("TipiNullStorageManager: Stored: " + id);
+		logger.warn("TipiNullStorageManager: Stored: " + id);
 	}
 
 	public void setInstanceId(String id) {

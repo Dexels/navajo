@@ -70,11 +70,6 @@ public abstract class BaseAdapter {
 		if (id.equals(myComponent.getId())) {
 			return this;
 		}
-		// BaseAdapter b = getChild(id);
-		// if(b!=null) {
-		// System.err.println("Found child...");
-		// return b;
-		// }
 		List<BaseAdapter> ch = getChildren();
 		for (BaseAdapter baseAdapter : ch) {
 			BaseAdapter bb = baseAdapter.find(id);

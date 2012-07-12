@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>com.dexels.navajo.runtime.provisioning</artifactId>
 	<groupId>com.dexels.navajo</groupId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.2</version>
 	<packaging>eclipse-plugin</packaging>
 
   	<parent>

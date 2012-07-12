@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -25,18 +28,21 @@ public class TipiDumpStack extends TipiAction {
 	 * 
 	 */
 	private static final long serialVersionUID = 3731646268988692805L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiDumpStack.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
-		System.err.println("JAVA SAYS:");
+		logger.error("JAVA SAYS:");
 		Thread.dumpStack();
-		System.err.println("TIPI SAYS:");
+		logger.error("TIPI SAYS:");
 		dumpStack("Dumpstack");
 
-		System.err.println("Event params: ");
+		logger.error("Event params: ");
 		for (String s : event.getEventKeySet()) {
-			System.err.println("Param: " + s + " value: "
+			logger.error("Param: " + s + " value: "
 					+ event.getEventParameter(s));
 
 		}

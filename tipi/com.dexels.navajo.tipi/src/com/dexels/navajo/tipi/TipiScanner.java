@@ -16,6 +16,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -34,7 +36,10 @@ public class TipiScanner {
 
 	private static HashSet<String> preloadSet = new HashSet<String>();
 	private static int conflictcount = 0;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiScanner.class);
+	
 	/**
 	 * @param args
 	 * @throws FileNotFoundException
@@ -44,14 +49,14 @@ public class TipiScanner {
 		
 		 preloadSet.addAll(revResults.keySet());
 
-		System.err.println("preload: " + preloadSet);
+		logger.info("preload: " + preloadSet);
 
 		boolean rewriteSource = true;
 
 		File folder = new File(base,"tipi");
 		scanFolder(folder, rewriteSource);
 
-		System.err.println("Size: " + results.size() + " conflicts: "
+		logger.info("Size: " + results.size() + " conflicts: "
 				+ conflictcount);
 		String outputFile = "lang/tipi_lang";
 		dumpCurrent(base,outputFile, "nl", "");
@@ -95,7 +100,7 @@ public class TipiScanner {
 
 			String element = iter.next();
 			fw.write(element + " " + results.get(element) + "\n");
-			System.err.println("Result: " + element + " results: "
+			logger.info("Result: " + element + " results: "
 					+ results.get(element));
 		}
 		fw.flush();
@@ -105,14 +110,14 @@ public class TipiScanner {
 		fw = new FileWriter(usageFile);
 		s = usageMap.keySet();
 		ss = new TreeSet<String>(s);
-		System.err.println("Writing: " + ss.size());
+		logger.info("Writing: " + ss.size());
 		for (Iterator<String> iter = ss.iterator(); iter.hasNext();) {
 
 			String element = iter.next();
 			String label = revResults.get(element);
 			fw.write(label + "\t" + stripQuotes(element)
 					+ "\t" + writeList(usageMap.get(element)) + "\n");
-			System.err.println("Result: " + element + " results: "
+			logger.info("Result: " + element + " results: "
 					+ results.get(element));
 		}
 		fw.flush();
@@ -173,7 +178,7 @@ public class TipiScanner {
 
 	public static void scanFolder(File dir, boolean rewriteSource)
 			throws IOException, NavajoException {
-		System.err.println("Scanning folder: " + dir);
+		logger.info("Scanning folder: " + dir);
 		File[] contents = dir.listFiles();
 		for (int i = 0; i < contents.length; i++) {
 			if (contents[i].getName().endsWith(".xml")) {
@@ -188,7 +193,7 @@ public class TipiScanner {
 
 	private static void scanFile(File file, boolean rewriteSource)
 			throws IOException, NavajoException {
-		System.err.println("Checking file: " + file);
+		logger.info("Checking file: " + file);
 		FileInputStream fr = new FileInputStream(file);
 		Document d;
 		try {
@@ -208,7 +213,7 @@ public class TipiScanner {
 		fr.close();
 		if (rewriteSource) {
 			File filePtr = new File(file.getAbsolutePath());
-			System.err.println("> " + filePtr);
+			logger.info("> " + filePtr);
 			FileWriter fw = new FileWriter(filePtr, false);
 			XMLDocumentUtils.write(d, fw, false);
 			fw.flush();
@@ -259,7 +264,7 @@ public class TipiScanner {
 			if (checkValue(value)) {
 				totalStrings.add(value);
 				if (revResults.containsKey(value) || preloadSet.contains(value)) {
-					System.err.println("Already found: " + value);
+					logger.info("Already found: " + value);
 					usageMap.get(value).add(filename);
 					String revRes = revResults.get(value);
 
@@ -272,16 +277,16 @@ public class TipiScanner {
 					String generatedKey = generateKey(xe, filename, key);
 					while (results.containsKey(generatedKey)) {
 						conflictcount++;
-						// System.err.println("Oh dear: conflict");
+						// logger.info("Oh dear: conflict");
 						generatedKey = randomizeKey(
 								generatedKey,
 								new String[] { xe.getAttribute("id"),
 										xe.getAttribute("name") });
 					}
-					System.err.println("Adding to results: " + generatedKey);
+					logger.info("Adding to results: " + generatedKey);
 					results.put(generatedKey, value);
 					revResults.put(value, generatedKey);
-					System.err.println("Setting attribute: " + key
+					logger.info("Setting attribute: " + key
 							+ " to value: {label:/" + generatedKey + "} ");
 					xe.setAttribute(key, "{label:/" + generatedKey + "}");
 				}
@@ -291,7 +296,7 @@ public class TipiScanner {
 	}
 
 	private static boolean checkValue(String value) {
-		// System.err.println("Checking value: " + value);
+		// logger.info("Checking value: " + value);
 		if (value.contains("{") && value.contains("}")) {
 			return false;
 		}
@@ -313,7 +318,7 @@ public class TipiScanner {
 			for (int i = 0; i < possibleIds.length; i++) {
 				if (possibleIds[i] != null) {
 					if (!results.containsKey(key + "_" + possibleIds[i])) {
-						// System.err.println("Oh dear: conflict");
+						// logger.info("Oh dear: conflict");
 						return key + "_" + possibleIds[i];
 					}
 
@@ -385,7 +390,7 @@ public class TipiScanner {
 		}
 
 		if (sb.length() == 0) {
-			System.err.println("HUH: " + xe);
+			logger.info("HUH: " + xe);
 		}
 		sb.append(key);
 		return sb.toString();

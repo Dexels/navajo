@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiEventListener;
@@ -53,6 +56,10 @@ public class TipiThreadPool implements Serializable {
 
 	private boolean running = true;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiThreadPool.class);
+	
 	// private Thread myShutdownThread = null;
 
 	// for use with echo
@@ -126,7 +133,6 @@ public class TipiThreadPool implements Serializable {
 					myContext.threadEnded(Thread.currentThread());
 					wait();
 				} catch (InterruptedException ex) {
-					// System.err.println("interrupted");
 				}
 			} else {
 				return te;
@@ -203,12 +209,12 @@ public class TipiThreadPool implements Serializable {
 	public void dumpEventStacks() {
 		for (TipiThread t : myThreadCollection) {
 			Stack<TipiExecutable> te = eventStackMap.get(t);
-			System.err.println("Dumping: " + t.getName());
+			logger.info("Dumping: " + t.getName());
 			for (TipiExecutable tipiExecutable : te) {
-				System.err.println("EXE: "
+				logger.info("EXE: "
 						+ tipiExecutable.getEvent().getEventName());
 			}
-			System.err.println("End of dump: " + t.getName());
+			logger.info("End of dump: " + t.getName());
 		}
 
 	}

@@ -5,6 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Operand;
@@ -30,7 +33,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiDumpNavajo extends TipiAction {
 	private static final long serialVersionUID = -4736771823288001142L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiDumpNavajo.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -58,7 +64,7 @@ public class TipiDumpNavajo extends TipiAction {
 			w.println("********** DEBUG ************* ");
 			w.println("Supplied navajo: ");
 			if (nn == null) {
-				System.err.println("Null navajo supplied in dumpnavajo");
+				logger.warn("Null navajo supplied in dumpnavajo");
 			} else {
 				try {
 					nn.write(w);

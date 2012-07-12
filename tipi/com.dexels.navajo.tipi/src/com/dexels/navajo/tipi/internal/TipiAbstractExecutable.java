@@ -231,21 +231,15 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 	@Override
 	public void continueAction(TipiEvent original)
 			throws TipiBreakException, TipiException, TipiSuspendException {
-//		System.err.println(":::: "+stack);
-//		TipiExecutable me = stack.firstElement();
-		
 		
 		if(getParent()!=null) {
 			int ind = getParent().getExeIndex(this);
 			if(ind<0) {
-				System.err.println("Rolling on");
-//				throw new IllegalStateException("No such exe");
 				return;
 			}
 			List<TipiExecutable> ll = getParent().getExecutables();
 			for (int i = ind+1; i < ll.size(); i++) {
 				TipiExecutable current = ll.get(i);
-//				getParent().performAction(original, getParent().getParent(), i);
 				current.performAction(original, getParent(), i);
 			}
 			getParent().continueAction(original);

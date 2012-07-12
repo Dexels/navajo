@@ -72,7 +72,6 @@ public class TipiAddPropertyToMessage extends TipiAction {
 		Message parentMessage = null;
 		Property p = m.getProperty(path);
 		if (p != null) {
-			System.err.println("Property exists!");
 			parentMessage = p.getParentMessage();
 			parentMessage.removeProperty(p);
 		} else {
@@ -113,31 +112,11 @@ public class TipiAddPropertyToMessage extends TipiAction {
 
 	public static void main(String[] args) {
 		String path = "1234/5678/90ab";
-		System.err.println(path);
+		System.out.println(path);
 		String name = path.substring(path.lastIndexOf("/") + 1, path.length());
 		String pp = path.substring(0, path.lastIndexOf("/"));
-		System.err.println(name);
-		System.err.println(pp);
+		System.out.println(name);
+		System.out.println(pp);
 
 	}
 }
-// <tipiaction name="addProperty" class="TipiAddProperty"
-// package="com.dexels.navajo.tipi.actions">
-// <param name="path" type="string" required="true"/>
-// <param name="value" type="object" required="true"/>
-// <param name="navajo" type="navajo required="true""/>
-// </tipiaction>
-//
-// <tipiaction name="addPropertyToMessage" class="TipiAddPropertyToMessage"
-// package="com.dexels.navajo.tipi.actions">
-// <param name="path" type="string" required="true"/>
-// <param name="value" type="object" required="true"/>
-// <param name="message" type="message" required="true"/>
-// </tipiaction>
-//
-// <tipiaction name="insertMessage" class="TipiInsertMessage"
-// package="com.dexels.navajo.tipi.actions">
-// <param name="path" type="string" required="true"/>
-// <param name="value" type="object" required="true"/>
-// <param name="message" type="message" required="true"/>
-// </tipiaction>

@@ -298,7 +298,6 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
-				// removeInstantiatedChildren();
 				myNavajo = n;
 				Message m = n.getMessage(messagePath);
 				if (m == null) {
@@ -310,18 +309,13 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 				for (int i = 0; i < m.getArraySize(); i++) {
 					Message current = m.getMessage(i);
 					String id = current.getProperty("Id").getValue();
-					// System.err.println("Instantiating with id: "+id+"
-					// definition name: "+questionGroupDefinitionName);
 					TipiDataComponent tc = null;
 					try {
 						tc = (TipiDataComponent) TipiInstantiateTipi
 								.instantiateByDefinition(me, false, id,
 										questionGroupDefinitionName,
 										getGroupConstraints(current), null);
-						// System.err.println("Created component:
-						// "+tc.getClass()+" container: "+tc.getContainer());
 						tc.setValue("messagePath", current.getFullMessageName());
-						// tc.setPrefix(current.getFullMessageName());
 						tc.setValue("questionDefinitionName",
 								questionDefinitionName);
 						tc.setValue("questionGroupDefinitionName",
@@ -334,7 +328,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 							// subsequent changes will be caught. Assume valid
 							myValidGroups.add(tqg);
 						} else {
-							System.err.println("This is _not_ good");
+							logger.error("This is _not_ good");
 						}
 						tc.loadData(n, method);
 					} catch (TipiException e) {

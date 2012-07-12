@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.tipi.TipiContext;
@@ -23,6 +26,10 @@ public final class ClassManager extends BaseClassManager implements Serializable
 	private final Map<String, FunctionDefinition> functionDefinitionMap = new HashMap<String, FunctionDefinition>();
 	private final Map<String, ExtensionDefinition> extensionMapper = new HashMap<String, ExtensionDefinition>();
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ClassManager.class);
+	
 	public ClassManager(TipiContext context) {
 		super(context);
 		assert (context != null);
@@ -40,8 +47,8 @@ public final class ClassManager extends BaseClassManager implements Serializable
 	public XMLElement getClassDef(String name) {
 		XMLElement xmlElement = tipiClassDefMap.get(name);
 		if (xmlElement == null) {
-			System.err.println("Missing classdef: " + name);
-			System.err.println("tipiClass: " + tipiClassDefMap.keySet());
+			logger.warn("Missing classdef: " + name);
+			logger.warn("tipiClass: " + tipiClassDefMap.keySet());
 		}
 		return xmlElement;
 	}
@@ -122,11 +129,9 @@ public final class ClassManager extends BaseClassManager implements Serializable
 			
 			cc = Class.forName(fullDef, true, myContext.getClassLoader());
 		} catch (ClassNotFoundException ex) {
-			System.err.println("Error loading class: " + fullDef);
-			ex.printStackTrace();
+			logger.error("Error loading class: " + fullDef,ex);
 		} catch (SecurityException ex) {
-			System.err.println("Security Error loading class: " + fullDef);
-			ex.printStackTrace();
+			logger.error("Security Error loading class: " + fullDef,ex);
 
 		}
 		return cc;

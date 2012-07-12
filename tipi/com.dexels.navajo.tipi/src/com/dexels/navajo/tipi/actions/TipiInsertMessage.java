@@ -79,11 +79,11 @@ public class TipiInsertMessage extends TipiAction {
 
 	public static void main(String[] args) {
 		String path = "1234/5678/90ab";
-		System.err.println(path);
+		System.out.println(path);
 		String name = path.substring(path.lastIndexOf("/") + 1, path.length());
 		String pp = path.substring(0, path.lastIndexOf("/"));
-		System.err.println(name);
-		System.err.println(pp);
+		System.out.println(name);
+		System.out.println(pp);
 
 	}
 }

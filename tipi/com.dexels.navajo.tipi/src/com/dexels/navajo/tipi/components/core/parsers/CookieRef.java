@@ -29,13 +29,10 @@ public class CookieRef implements TipiReference {
 	public CookieRef(String key, TipiContext myContext) {
 		this.myContext = myContext;
 		this.myKey = key;
-		System.err.println("Cookie ref found...: " + key);
 	}
 
 	public void setValue(Object val) {
 		myContext.setCookie(myKey, (String) val);
-		System.err.println("Current cookie: " + myKey
-				+ " will be set to value: " + val);
 	}
 
 	public Object getValue() {

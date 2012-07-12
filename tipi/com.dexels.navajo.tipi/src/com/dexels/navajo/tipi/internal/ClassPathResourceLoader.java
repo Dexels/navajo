@@ -22,10 +22,10 @@ public class ClassPathResourceLoader implements TipiResourceLoader, Serializable
 
 	private URL getClassResourceURL(String location) {
 		ClassLoader classLoader = getClass().getClassLoader();
+		// this is nuts... right?
 		if (classLoader == null) {
-			System.err.println("Null classloader detected!");
 			classLoader = ClassLoader.getSystemClassLoader();
-
+			
 		}
 		return classLoader.getResource(location);
 	}

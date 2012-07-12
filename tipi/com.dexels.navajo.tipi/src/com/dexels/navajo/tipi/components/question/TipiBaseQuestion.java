@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
@@ -37,43 +40,28 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -5862387049579716030L;
-
 	private String messagePath = null;
-
 	private String questionDefinitionName = null;
-
-	// private TipiQuestionGroup questionGroupPath = null;
 	private TipiBaseQuestionGroup questionGroup = null;
-
 	private TipiBaseQuestionList myQuestionList = null;
-
-	// private final ArrayList mySubQuestions = new ArrayList();
-
-	// private String enabledCondition = null;
-
 	private String visibleCondition = null;
-
 	private String validationCondition = null;
-
 	private Message myMessage = null;
-
 	private String myId;
-
-	// private PropertyComponent valueComponent = null;
-
 	private String subQuestionPath;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiBaseQuestion.class);
+	
 	public TipiBaseQuestion() {
 		super();
 	}
 
 	public void setComponentValue(String name, Object object) {
 		if (name.equals("messagePath")) {
-			// System.err.println("Messagepath: >" + object + "<");
 			messagePath = (String) object;
 		}
 		if (name.equals("questionDefinitionName")) {
@@ -141,8 +129,6 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 			Property pp = m.getProperty(o.getPropertyName());
 			if (pp != null) {
 				o.setProperty(pp);
-			} else {
-				System.err.println("No such property");
 			}
 			if ("Value".equals(o.getPropertyName())) {
 				// valueComponent = o;
@@ -152,9 +138,6 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 						Map<String, Object> source, boolean sync)
 						throws TipiException {
 					updateQuestionList();
-					// System.err.println("Forwarding tipi event");
-
-					// performTipiEvent(eventtype, source, sync);
 					return true;
 				}
 
@@ -170,7 +153,6 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		if (subQuestionPath != null) {
 			tdc = (TipiDataComponent) getTipiComponentByPath(subQuestionPath);
 		} else {
-			// System.err.println("NO SUBQUESTION PANEL DEFINED");
 		}
 		Message question = m.getMessage("Question");
 
@@ -179,13 +161,10 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 				Message current = question.getMessage(i);
 				Property idProp = current.getProperty("Id");
 				if (idProp == null) {
-					System.err.println("No id property found. Message: ");
 					continue;
 				}
 				myId = idProp.getValue();
 				try {
-					// System.err.println("USING SUBQUESTION COMPONENT:
-					// "+tdc.getPath());
 					TipiBaseQuestion tc = (TipiBaseQuestion) TipiInstantiateTipi
 							.instantiateByDefinition(tdc, false, myId,
 									questionDefinitionName, null, null);
@@ -210,16 +189,12 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 	public void updateQuestionGroup() {
 		if (questionGroup != null) {
 			questionGroup.updateQuestions();
-		} else {
-			System.err.println("Not found");
 		}
 	}
 
 	public void updateQuestionList() {
 		if (myQuestionList != null) {
 			myQuestionList.updateQuestionList();
-		} else {
-			System.err.println("Not found");
 		}
 	}
 
@@ -244,8 +219,6 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		if (visibleCondition != null) {
 			setQuestionVisible(isRelevant());
 		}
-		// System.err.println("In updateQuestions");
-		// Thread.dumpStack();
 		boolean invalidFound = false;
 		List<TipiComponent> subQ = getSubQuestionList();
 		for (int i = 0; i < subQ.size(); i++) {
@@ -253,7 +226,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 			tq.updateSubQuestions();
 			if (tq.isValid() == false) {
 				invalidFound = true;
-				System.err.println("FOUND AN INVALID CHILD: " + tq.getPath());
+				logger.warn("FOUND AN INVALID CHILD: " + tq.getPath());
 			}
 		}
 		if (invalidFound) {
@@ -273,7 +246,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		if (subQuestionPath != null) {
 			tdc = getTipiComponentByPath(subQuestionPath);
 			if (tdc == null) {
-				System.err.println("::: NULL subcomponent");
+				logger.info("::: NULL subcomponent");
 			} else {
 				recursiveListQuestions(tdc, subQ);
 			}
@@ -326,7 +299,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 				boolean result = ((Boolean) o.value).booleanValue();
 				return result;
 			}
-			System.err.println("No evaluation. Shit.");
+			logger.error("No evaluation. Shit.");
 			return true;
 		}
 		return true;

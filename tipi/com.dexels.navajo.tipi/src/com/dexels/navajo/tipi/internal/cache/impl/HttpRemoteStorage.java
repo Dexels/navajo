@@ -8,11 +8,17 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.internal.cache.RemoteStorage;
 
 public class HttpRemoteStorage implements RemoteStorage {
 	private URL baseUrl = null;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(HttpRemoteStorage.class);
+	
 	public HttpRemoteStorage(URL base) {
 		baseUrl = base;
 	}
@@ -22,7 +28,7 @@ public class HttpRemoteStorage implements RemoteStorage {
 		URL u = new URL(baseUrl, location);
 		InputStream is = null;
 		try {
-			System.err.println("Opening location: " + u);
+			logger.info("Opening location: " + u);
 			URLConnection uc = u.openConnection();
 			uc.addRequestProperty("Accept-Encoding", "gzip");
 			metadata.put("length", uc.getContentLength());
@@ -33,7 +39,7 @@ public class HttpRemoteStorage implements RemoteStorage {
 			is = uc.getInputStream();
 
 		} catch (FileNotFoundException e) {
-			System.err.println("Remote location: " + location + " not found");
+			logger.error("Remote location: " + location + " not found",e);
 		}
 		return is;
 	}

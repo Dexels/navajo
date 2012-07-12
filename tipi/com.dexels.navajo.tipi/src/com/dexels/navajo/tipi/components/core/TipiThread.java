@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.components.core;
 import java.io.Serializable;
 import java.util.Stack;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiEventListener;
@@ -35,6 +38,10 @@ public class TipiThread extends Thread implements Comparable<TipiThread>, Serial
 	private final String myName;
 	private final TipiContext myContext;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiThread.class);
+	
 	public TipiThread(TipiContext context, String name, ThreadGroup group,
 			TipiThreadPool tp) {
 		super(group, name);
@@ -75,8 +82,7 @@ public class TipiThread extends Thread implements Comparable<TipiThread>, Serial
 							if (!(ex instanceof TipiBreakException)) {
 								ex.printStackTrace();
 								te.dumpStack("Problem: " + ex.getMessage());
-								System.err.println("Exception caught: "
-										+ ex.getMessage());
+								logger.error("Exception caught",ex);
 							}
 						} finally {
 							TipiEventListener tel = myPool.getEventListener(te);
@@ -107,9 +113,8 @@ public class TipiThread extends Thread implements Comparable<TipiThread>, Serial
 				shutdown();
 				return;
 			} catch (Throwable t) {
-				System.err.println("Caught uncaught exception in thread:");
+				logger.error("Caught uncaught exception in thread:",t);
 				t.printStackTrace();
-				// System.err.println("Reviving dying thread...");
 			}
 		}
 	}
