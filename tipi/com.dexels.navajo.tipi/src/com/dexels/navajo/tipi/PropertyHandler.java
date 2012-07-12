@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi;
 import java.beans.PropertyChangeEvent;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 
@@ -12,7 +15,10 @@ public class PropertyHandler implements SerializablePropertyChangeListener {
 	private Property myProperty;
 	private Set<PropertyLinkRequest> myMapping;
 	private final TipiComponent myComponent;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PropertyHandler.class);
+	
 	public PropertyHandler(TipiComponent tc, Property p) {
 		this(tc, p, null);
 	}
@@ -25,7 +31,7 @@ public class PropertyHandler implements SerializablePropertyChangeListener {
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {
-		System.err.println("EVENT: " + evt.getPropertyName() + "val: "
+		logger.debug("EVENT: " + evt.getPropertyName() + "val: "
 				+ evt.getNewValue());
 		updateAspect(evt.getPropertyName(), evt.getNewValue());
 

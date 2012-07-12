@@ -2,6 +2,9 @@ package com.dexels.navajo.tipi.actions;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -26,7 +29,10 @@ public class TipiRuntime extends TipiAction {
 	 * 
 	 */
 	private static final long serialVersionUID = -560275660312305221L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiRuntime.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -35,7 +41,7 @@ public class TipiRuntime extends TipiAction {
 		try {
 			o = evaluate(txt, event);
 		} catch (Exception ex) {
-			System.err.println("Error evaluating[" + txt
+			logger.error("Error evaluating[" + txt
 					+ "] inserting as plain text only");
 			ex.printStackTrace();
 		}
@@ -48,10 +54,9 @@ public class TipiRuntime extends TipiAction {
 		try {
 			Runtime rt = Runtime.getRuntime();
 			Process ps = rt.exec(command);
-			System.err.println("Command exited: " + ps.exitValue());
+			logger.info("Command exited: " + ps.exitValue());
 		} catch (IOException ioe) {
-			System.err.println("Execution failed! stack:");
-			ioe.printStackTrace();
+			logger.error("Execution failed! stack:",ioe);
 		}
 	}
 }

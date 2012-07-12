@@ -40,7 +40,6 @@ public class TipiFireEvent extends TipiAction {
 			TipiComponent tp = (TipiComponent) evaluate(getParameter("path")
 					.getValue(), event).value;
 			if (tp != null) {
-				// System.err.println("ATTEMPTING TO DISPOSE: " + tp.getPath());
 			} else {
 				throw new TipiException("fireEvent: Component not found!");
 			}
@@ -48,7 +47,6 @@ public class TipiFireEvent extends TipiAction {
 			String type = (String) evaluate(getParameter("type").getValue(),
 					event).value;
 			if (type != null) {
-				// System.err.println("ATTEMPTING TO DISPOSE: " + tp.getPath());
 			} else {
 				throw new TipiException("fireEvent: type parameter not found!");
 			}

@@ -13,6 +13,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
@@ -28,6 +31,8 @@ public class TipiFileStorageManager implements TipiStorageManager, Serializable 
 	private final boolean debugMode = true;
 	private final File savingFolder;
 	private String instanceId = "default";
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiFileStorageManager.class);
 
 	public TipiFileStorageManager(File savingFolder) {
 		this.savingFolder = savingFolder;
@@ -93,7 +98,7 @@ public class TipiFileStorageManager implements TipiStorageManager, Serializable 
 			base.mkdirs();
 		}
 		if (debugMode) {
-			System.err.println("Saving navajo to file: " + out);
+			logger.info("Saving navajo to file: " + out);
 			try {
 				n.write(System.err);
 			} catch (NavajoException e) {

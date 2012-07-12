@@ -58,7 +58,6 @@ public class FindComponent extends FunctionInterface {
 		TipiComponent tc = (TipiComponent) pp;
 		String id = (String) o;
 		TipiComponent result = tc.findTipiComponentById(id);
-		System.err.println("Found: " + result.toString());
 		return result;
 	}
 

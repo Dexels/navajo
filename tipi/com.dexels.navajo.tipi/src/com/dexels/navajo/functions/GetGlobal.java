@@ -4,6 +4,9 @@
  */
 package com.dexels.navajo.functions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.tipi.TipiContext;
@@ -14,6 +17,10 @@ import com.dexels.navajo.tipi.TipiContext;
  */
 public class GetGlobal extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GetGlobal.class);
+	
 	public String remarks() {
 		return "Gets a certain global value";
 	}
@@ -39,7 +46,7 @@ public class GetGlobal extends FunctionInterface {
 			return context.getGlobalValue(ss);
 
 		} else {
-			System.err.println("huh? param: " + pp.getClass());
+			logger.warn("Expected string param, found: " + pp.getClass());
 		}
 		throw new TMLExpressionException(this, "Invalid operand: "
 				+ pp.getClass().getName());

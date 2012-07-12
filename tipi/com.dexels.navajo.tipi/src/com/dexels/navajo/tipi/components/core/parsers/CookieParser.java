@@ -31,31 +31,11 @@ public class CookieParser extends TipiTypeParser {
 		return parseCookie(expression,source);
 	}
 
-	// private Object parseBorder(String s) {
-	// return parseBorder(s);
-	// }
-
 	public Object parseCookie(String s, TipiComponent source) {
 		if (s == null) {
 			return null;
 		}
 		return source.getContext().getCookie(s);
-		// Command c = new Command(){};
-		// ContainerContext containerContext = (ContainerContext)
-		// ((EchoTipiContext
-		// )myContext).getInstance().getContextProperty(ContainerContext
-		// .CONTEXT_PROPERTY_NAME);
-		// if(containerContext==null) {
-		// System.err.println("No containerContext!");
-		// }
-		// Cookie[] cc = containerContext.getCookies();
-		//
-		// for (int i = 0; i < cc.length; i++) {
-		// if(cc[i].getName().equals(s)) {
-		// return cc[i].getValue();
-		// }
-		// }
-		// return null;
 	}
 
 }

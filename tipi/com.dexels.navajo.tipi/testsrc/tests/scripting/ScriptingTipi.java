@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
@@ -13,7 +15,9 @@ import tipi.TipiExtension;
 import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
 
 public class ScriptingTipi extends AbstractTipiTest {
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ScriptingTipi.class);
 	@Before
 	public void setUp() throws Exception {
 		List<TipiExtension> elist = new ArrayList<TipiExtension>();
@@ -22,7 +26,7 @@ public class ScriptingTipi extends AbstractTipiTest {
 		elist.add(ed);
 
 		setContext("init", new File("testsrc/tests/scripting"),elist);
-		System.err.println("Settup complete");
+		logger.info("Setup complete");
 	}
 
 	@Test

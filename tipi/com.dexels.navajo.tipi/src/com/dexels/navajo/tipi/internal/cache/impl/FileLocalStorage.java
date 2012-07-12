@@ -29,7 +29,6 @@ public class FileLocalStorage implements LocalStorage {
 	}
 
 	public void flushAll() {
-		System.err.println("FLUSHALL: todo: Implement");
 	}
 
 	public InputStream getLocalData(String location) throws IOException {
@@ -56,8 +55,6 @@ public class FileLocalStorage implements LocalStorage {
 
 	public void storeData(String location, InputStream data,
 			Map<String, Object> metadata) throws IOException {
-		System.err.println("File storage. Storing: " + metadata.get("length")
-				+ " bytes.");
 		File f = new File(baseFile, convertPath(location));
 		FileOutputStream fos = new FileOutputStream(f);
 		copyResource(fos, data);

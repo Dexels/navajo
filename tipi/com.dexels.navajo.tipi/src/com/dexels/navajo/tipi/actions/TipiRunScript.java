@@ -9,6 +9,9 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiException;
@@ -30,11 +33,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /** @todo Refactor, move to NavajoSwingTipi */
 public class TipiRunScript extends TipiAction {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1644143195033337886L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiRunScript.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -43,7 +46,7 @@ public class TipiRunScript extends TipiAction {
 		ScriptEngine scr = myContext.getScriptingEngine(engine);
 		Reader script = null;
 		if (scr == null) {
-			System.err.println("No engine!");
+			logger.warn("No engine for tipi scripting!");
 			return;
 		}
 		URL scriptPath = (URL) getEvaluatedParameterValue("script", event);
@@ -82,31 +85,10 @@ public class TipiRunScript extends TipiAction {
 		scr.put("root", root);
 		scr.put("params", event.getEvaluatedParameters());
 
-		System.err.println("Server spinup: "
+		logger.info("Server spinup: "
 				+ (System.currentTimeMillis() - startup));
-
-		// String adapterPath = getContext().getT
-		// DispatcherFactory.getInstance().getNavajoConfig().getAdapterPath();
-		// String includePath = adapterPath +
-		// se.getFactory().getLanguageName()+"/include";
-		// se.eval("$LOAD_PATH.push('"+includePath+"');" +
-		// "$LOAD_PATH.push('"+DispatcherFactory.getInstance().getNavajoConfig().getScriptPath()+"');");
-		// System.err.println("Added include path: "+includePath);
 		long start = System.currentTimeMillis();
 		try {
-			// boolean compilable = scr instanceof Compilable;
-			// if(compilable) {
-			// Compilable cc = (Compilable)scr;
-			// CompiledScript ccc = cc.compile(getText());
-			// System.err.println("Compile took: "+(System.currentTimeMillis() -
-			// start));
-			// start = System.currentTimeMillis();
-			// ccc.eval();
-			// System.err.println("Run took: "+(System.currentTimeMillis() -
-			// start));
-			// }
-			// System.err.println("Compilabel: "+compilable);
-
 			if (script != null) {
 				scr.eval(script);
 			} else {
@@ -120,10 +102,10 @@ public class TipiRunScript extends TipiAction {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.err.println("Eval took: "
+			logger.debug("Eval took: "
 					+ (System.currentTimeMillis() - start));
 		} catch (ScriptException e) {
-			System.err.println("Scripting engine fail: " + e.getMessage());
+			logger.error("Scripting engine fail: " + e.getMessage());
 			throw new TipiException("Scripting engine fail: " + e.getMessage(),
 					e);
 		}
@@ -142,12 +124,12 @@ public class TipiRunScript extends TipiAction {
 					+ (functions ? "function" : ""), b);
 
 		} catch (ClassNotFoundException e) {
-			System.err.println("No actions for extension: "
+			logger.warn("No actions for extension: "
 					+ t.getProjectName());
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 }

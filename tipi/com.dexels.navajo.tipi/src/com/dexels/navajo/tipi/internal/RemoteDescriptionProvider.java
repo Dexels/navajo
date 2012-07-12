@@ -3,11 +3,17 @@ package com.dexels.navajo.tipi.internal;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.tipi.TipiContext;
 
 public class RemoteDescriptionProvider extends BaseDescriptionProvider {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(RemoteDescriptionProvider.class);
 	public RemoteDescriptionProvider(TipiContext myContext) {
 		super(myContext);
 	}
@@ -25,7 +31,7 @@ public class RemoteDescriptionProvider extends BaseDescriptionProvider {
 			value = myContext.XMLUnescape(value);
 			addDescription(name, value);
 		}
-		System.err.println("# of descriptions: " + myDescriptionMap.size());
+		logger.info("# of descriptions: " + myDescriptionMap.size());
 	}
 
 }

@@ -39,7 +39,6 @@ public class TipiLoadNavajoList extends TipiAction {
 			context = (TipiContext) contextParam.value;
 			if (context == null) {
 				context = myContext;
-				System.err.println("CONTEXT RESOLVED!");
 			}
 
 		} else {

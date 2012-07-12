@@ -52,34 +52,28 @@ public class TipiAnonymousAction implements TipiExecutable {
 	}
 
 	public TipiStackElement getStackElement() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void setStackElement(TipiStackElement myStackElement) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void dumpStack(String message) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void setComponent(TipiComponent c) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void setExecutionIndex(int i) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public int getExecutionIndex() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -87,25 +81,21 @@ public class TipiAnonymousAction implements TipiExecutable {
 
 	@Override
 	public void setParent(TipiExecutable tipiAbstractExecutable) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public TipiExecutable getParent() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<TipiExecutable> getExecutables() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public int getExeIndex(TipiExecutable child) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

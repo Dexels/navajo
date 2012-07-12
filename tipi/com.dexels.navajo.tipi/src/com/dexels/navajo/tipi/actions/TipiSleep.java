@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -21,11 +24,12 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiSleep extends TipiAction {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4260115036720073332L;
 
+	private static final long serialVersionUID = 4260115036720073332L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSleep.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -35,7 +39,7 @@ public class TipiSleep extends TipiAction {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.err.println("Slept for: " + sleep + " millis!");
+		logger.info("Slept for: " + sleep + " millis!");
 	}
 
 }

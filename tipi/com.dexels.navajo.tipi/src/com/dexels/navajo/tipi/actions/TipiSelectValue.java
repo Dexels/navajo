@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
@@ -30,11 +33,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public final class TipiSelectValue extends TipiAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -715158704987233287L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSelectValue.class);
+	
 	public final void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -97,8 +100,6 @@ public final class TipiSelectValue extends TipiAction {
 					keys.add(selection.getValue());
 				}
 				try {
-					System.err.println("Setting selected: " + keys + " size: "
-							+ s.size());
 					p.setSelected(keys);
 				} catch (NavajoException e) {
 					e.printStackTrace();
@@ -118,33 +119,24 @@ public final class TipiSelectValue extends TipiAction {
 		if (evaluated.value instanceof Property) {
 			Property p = (Property) evaluated.value;
 			try {
-				// System.err.println("In set by name: "+p.getFullPropertyName()+
-				// " cardinality: "+p.getCardinality());
-				// System.err.println("NAME: "+evaluatedName.value);
-				// System.err.println("CLASS: "+evaluatedName.value.getClass());
 				if (evaluatedName.value instanceof String) {
-					// System.err.println("String found: "+evaluatedName.value);
 					Selection s = p.getSelection((String) evaluatedName.value);
 					p.setSelected(s);
 				}
 				if (evaluatedName.value instanceof ArrayList) {
 					ArrayList<Selection> l = (ArrayList<Selection>) evaluatedName.value;
-					// System.err.println("ArrayList Found");
 					if (l.size() == 0) {
-						// System.err.println("Empty");
 						p.setSelected(new ArrayList<String>());
 					}
 					if (l.size() == 1) {
 						Selection ss = l.get(0);
-						// System.err.println("Single. Setting to name: "+ss.
-						// getValue());
 						Selection s = p.getSelection(ss.getValue());
 						p.setSelected(s);
 					}
 				}
 
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 
 		} else {

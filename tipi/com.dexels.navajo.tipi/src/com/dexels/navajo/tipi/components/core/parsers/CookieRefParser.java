@@ -29,7 +29,6 @@ public class CookieRefParser extends TipiTypeParser {
 
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		CookieRef cookieRef = new CookieRef(expression, source.getContext());
-		System.err.println("CookieRef parsed succesfully");
 		return cookieRef;
 	}
 

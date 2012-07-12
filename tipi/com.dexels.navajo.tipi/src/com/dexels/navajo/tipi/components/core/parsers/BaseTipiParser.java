@@ -2,6 +2,9 @@ package com.dexels.navajo.tipi.components.core.parsers;
 
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -18,7 +21,10 @@ abstract class BaseTipiParser extends TipiTypeParser {
 	 */
 	private static final long serialVersionUID = 9187081393823143951L;
 	private static final String TIPI_HOME_SYMBOL = "~";
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseTipiParser.class);
+	
 	protected TipiDataComponent getTipiByPath(TipiComponent source, String path) {
 		return (TipiDataComponent) getTipiComponent(source, path);
 	}
@@ -32,9 +38,6 @@ abstract class BaseTipiParser extends TipiTypeParser {
 		if (path.startsWith(TIPI_HOME_SYMBOL + "/")) {
 			TipiComponent sourceComponent = source.getHomeComponent();
 			String pathExpression = path.substring(2, path.length());
-			// System.err.println("Home component: "+source.getPath()+
-			// " expression: "+pathExpression);
-			// myContext.debugTipiComponentTree(source, 5);
 			return sourceComponent.getTipiComponentByPath(pathExpression);
 		}
 		if (path.startsWith(".")) { // Relative path
@@ -119,7 +122,7 @@ abstract class BaseTipiParser extends TipiTypeParser {
 			if (n != null) {
 				return n.getMessage(messagePath);
 			} else {
-				System.err.println("No navajo..");
+				logger.warn("No navajo found in getMessageByPath");
 				return null;
 			}
 

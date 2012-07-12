@@ -11,6 +11,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -31,7 +34,9 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 	// public final String authorId;
 	private String instanceId;
 	private TipiContext myContext;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiGeneralAspManager.class);
 	public static final String TYPE_SETTING = "TIPI_SETTING";
 
 	public TipiGeneralAspManager(String scriptPrefix) {
@@ -46,7 +51,7 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 					scriptPrefix + STORAGE_QUERY_SERVICE);
 			Message err = reply.getMessage("error");
 			if (err != null) {
-				System.err.println("SERVER ERROR: ");
+				logger.error("SERVER ERROR: ");
 				err.write(System.err);
 				throw new TipiException(
 						"Server-side error while storing settings: "
@@ -92,7 +97,7 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 					scriptPrefix + STORAGE_UPDATE_SERVICE);
 			Message err = reply.getMessage("error");
 			if (err != null) {
-				System.err.println("SERVER ERROR: ");
+				logger.error("SERVER ERROR: ");
 				err.write(System.err);
 				throw new TipiException(
 						"Server-side error while storing settings: "
@@ -176,7 +181,7 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 	}
 
 	public void setInstanceId(String id) {
-		System.err.println("Setting sublocale to: " + id);
+		logger.info("Setting sublocale to: " + id);
 		instanceId = id;
 	}
 

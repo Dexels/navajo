@@ -5,13 +5,19 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import tipi.TipiExtension;
 
 public class TipiManualExtensionRegistry implements ITipiExtensionRegistry, Serializable {
 
 	private static final long serialVersionUID = 3925646413574906584L;
 	private final List<TipiExtension> registeredExtensions = new LinkedList<TipiExtension>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiManualExtensionRegistry.class);
+	
 	@Override
 	public void registerTipiExtension(TipiExtension te) {
 		registeredExtensions.add(te);
@@ -27,7 +33,7 @@ public class TipiManualExtensionRegistry implements ITipiExtensionRegistry, Seri
 	@Override
 	public void debugExtensions() {
 		for (TipiExtension te : registeredExtensions) {
-			System.err.println("Registered extension: " + te.getId());
+			logger.info("Registered extension: " + te.getId());
 		}
 	}
 	

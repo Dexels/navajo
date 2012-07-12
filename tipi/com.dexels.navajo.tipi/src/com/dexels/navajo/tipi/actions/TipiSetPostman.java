@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -22,10 +25,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiSetPostman extends TipiAction {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 649367657900764240L;
+
+	private final static Logger logger = LoggerFactory
+		.getLogger(TipiSetPostman.class);
 
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
@@ -39,7 +42,7 @@ public class TipiSetPostman extends TipiAction {
 		myContext.getClient().setServerUrl("" + serv.value);
 		myContext.getClient().setUsername("" + user.value);
 		myContext.getClient().setPassword("" + pass.value);
-		System.err.println("Created new client pointing to: " + serv.value
+		logger.info("Created new client pointing to: " + serv.value
 				+ " using username: " + user.value);
 	}
 }

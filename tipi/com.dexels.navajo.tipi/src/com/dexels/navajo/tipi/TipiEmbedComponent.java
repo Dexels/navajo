@@ -6,11 +6,14 @@
  */
 package com.dexels.navajo.tipi;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -24,6 +27,7 @@ import com.dexels.navajo.tipi.internal.TmlResourceLoader;
 import com.dexels.navajo.tipi.internal.ZipResourceLoader;
 import com.dexels.navajo.version.ExtensionDefinition;
 
+@Deprecated
 public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 
 	private static final long serialVersionUID = 2148011051191091478L;
@@ -32,7 +36,9 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 	private static final String NAVAJO_PROPERTY_NAME = null;
 	private static final String NAVAJONAME_PROPERTY_NAME = null;
 	protected TipiStandaloneToplevelContainer stc = null;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiEmbedComponent.class);
 	private String tipiCodeBase;
 	private String resourceCodeBase;
 
@@ -236,7 +242,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 
 	private void parseLocation(String loc, ExtensionDefinition ed)
 			throws IOException, TipiException {
-		System.err.println("Parsing: " + loc);
+		logger.info("Parsing: " + loc);
 		InputStream tipiResourceStream = stc.getContext()
 				.getTipiResourceStream(loc);
 		stc.getContext().parseStream(tipiResourceStream, ed);

@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -26,21 +29,20 @@ public class TipiDispose extends TipiAction {
 	 * 
 	 */
 	private static final long serialVersionUID = 2702919442460647651L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiDispose.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
 		try {
 			TipiComponent tp = (TipiComponent) getEvaluatedParameterValue(
 					"path", event);
-			// String pathVal = getParameter("path").getValue();
-			// TipiComponent tp = (TipiComponent) evaluate(pathVal,
-			// event).value;
 			if (tp != null) {
-				// System.err.println("ATTEMPTING TO DISPOSE: " + tp.getPath());
 				myContext.disposeTipiComponent(tp);
 			} else {
-				System.err.println("ATTEMPTING TO DISPOSE NULL component. ");
+				logger.warn("ATTEMPTING TO DISPOSE NULL component. ");
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
