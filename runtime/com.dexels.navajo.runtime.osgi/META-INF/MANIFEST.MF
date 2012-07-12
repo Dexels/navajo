@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Wrapper to deploy an OSGi based Navajo instance a generic java runtime
 Bundle-SymbolicName: com.dexels.navajo.runtime.osgi
-Bundle-Version: 1.0.3.qualifier
+Bundle-Version: 1.0.4
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Main-Class: com.dexels.navajo.osgi.runtime.FrameworkInstance

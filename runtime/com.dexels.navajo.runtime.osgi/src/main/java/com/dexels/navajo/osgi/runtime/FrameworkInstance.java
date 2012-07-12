@@ -20,11 +20,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -32,17 +30,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.sql.DataSource;
-
 import org.apache.felix.framework.Felix;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.BundleListener;
 import org.osgi.framework.Constants;
-import org.osgi.framework.ServiceEvent;
-import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Version;
 import org.osgi.framework.launch.Framework;
@@ -52,6 +44,8 @@ import org.osgi.service.obr.Requirement;
 import org.osgi.service.obr.Resolver;
 import org.osgi.service.obr.Resource;
 import org.osgi.util.tracker.ServiceTracker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FrameworkInstance {
 	protected Framework framework;
@@ -62,7 +56,10 @@ public class FrameworkInstance {
 
 	private ServiceTracker configurationInjectorTracker;
 	private ServiceTracker obrTracker;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(FrameworkInstance.class);
+	
 	private ConfigurationInjectionInterface configurationInjectionService;
 
 	private RepositoryAdmin repositoryAdmin = null;
@@ -86,35 +83,43 @@ public class FrameworkInstance {
 	public static void main(String[] args) throws BundleException,
 			MalformedURLException, InterruptedException {
 		FrameworkInstance fs = new FrameworkInstance("bundle");
-
+		logger.info("Test 1 2!");
 		fs.start();
 	}
 
-	public Bundle installFromUrl(String url) throws MalformedURLException {
-		Bundle installedBundle;
-		try {
-			System.err.println("url: " + url);
-			installedBundle = framework.getBundleContext().installBundle(url);
-			installedBundle.start();
-			return installedBundle;
-		} catch (BundleException e) {
-			e.printStackTrace();
+	// this seems inefficient, don't know if there is a better way
+	private Bundle installIfNeeded(BundleInstall install) throws BundleException {
+		Bundle[] bundles = framework.getBundleContext().getBundles();
+		logger.info("Looking if bundle: "+install.getSymbolicName()+" already exists. Looking through "+bundles.length+" bundles.");
+		for (Bundle bundle : bundles) {
+			if(install.getSymbolicName().equals(bundle.getSymbolicName())) {
+				logger.info("symbolic name matched");
+				if(install.getVersion().equals(bundle.getVersion())) {
+					logger.info("Version matched, not reinstalling");
+					return bundle;
+				} else {
+					logger.info("but different version installed: "+bundle.getVersion()+" offered: "+install.getVersion());
+					bundle.uninstall();
+					logger.info("Uninstalled previous version.");
+				}
+			}
 		}
-		return null;
+		logger.info("not found");
+		return installFromClasspath(install);
 	}
-
-	private Bundle installFromClasspath(String path) throws BundleException {
-		InputStream is = getClass().getClassLoader().getResourceAsStream(path);
-		Bundle installedBundle = framework.getBundleContext().installBundle(
-				path, is);
+	
+	private Bundle installFromClasspath(BundleInstall bundleInstall) throws BundleException {
+		InputStream is = getClass().getClassLoader().getResourceAsStream(bundleInstall.getPath());
+		Bundle installedBundle = framework.getBundleContext().installBundle(bundleInstall.getPath(), is);
+		logger.info("Bundle installed: "+installedBundle.getSymbolicName());
 		return installedBundle;
 	}
 
-	public void installAndStartFromClasspath(String[] paths)
+	public void installAndStartFromClasspath(BundleInstall[] install)
 			throws BundleException {
 		List<Bundle> installed = new ArrayList<Bundle>();
-		for (String path : paths) {
-			Bundle b = installFromClasspath(path);
+		for (BundleInstall path : install) {
+			Bundle b = installIfNeeded(path);
 			installed.add(b);
 		}
 		for (Bundle bundle : installed) {
@@ -124,12 +129,11 @@ public class FrameworkInstance {
 		}
 	}
 	
-	public void startTipi(String path, String deployment, String profile) throws IOException {
+	public void startSwingTipi(String path, String deployment, String profile) throws IOException {
 		Dictionary<String,String> properties = new Hashtable<String,String>();
 		properties.put("tipi.context", path);
 		properties.put("deployment", deployment);
 		properties.put("profile", profile);
-		
 		configurationInjectionService.addConfiguration("com.dexels.navajo.tipi.swing.application", properties);
 	}
 
@@ -153,51 +157,16 @@ public class FrameworkInstance {
 	@SuppressWarnings("unchecked")
 	protected void doStart() throws Exception {
 
-		Felix felixFramework = new Felix(createConfig()); //getFrameworkFactory().newFramework(
-//				createConfig()); // new Felix(createConfig());
+		Framework felixFramework = getFrameworkFactory().newFramework(createConfig());
 		felixFramework.init();
 		felixFramework.start();
 		this.framework = felixFramework;
-//		framework.getBundleContext().addBundleListener(new BundleListener() {
-//
-//			@Override
-//			public void bundleChanged(BundleEvent be) {
-//				System.err.println("Bundle event");
-//			}
-//		});
-//
-//		framework.getBundleContext().addServiceListener(new ServiceListener() {
-//
-//			@Override
-//			public void serviceChanged(ServiceEvent se) {
-//				ServiceReference<?> serviceReference = se.getServiceReference();
-//
-//				System.err.println("Service event: " + se.getType());
-//				if (serviceReference != null) {
-//					String[] keys = serviceReference.getPropertyKeys();
-//					for (String string : keys) {
-//						Object value = serviceReference.getProperty(string);
-//						System.err.println("Key: " + string + " value: "
-//								+ value);
-//						if (value instanceof String[]) {
-//							String[] val = (String[]) value;
-//							for (String element : val) {
-//								System.err.println("item: " + element);
-//							}
-//						}
-//					}
-//				}
-//			}
-//		});
-//
+
 		configurationInjectorTracker = new ServiceTracker(
 				framework.getBundleContext(),
-				framework
-						.getBundleContext()
-						.createFilter(
-								"(objectClass=com.dexels.navajo.osgi.runtime.ConfigurationInjectionInterface)"),
+				framework.getBundleContext().createFilter("(objectClass=com.dexels.navajo.osgi.runtime.ConfigurationInjectionInterface)"),
 				null) {
-			@Override
+			@Override 
 			public Object addingService(ServiceReference reference) {
 				return super.addingService(reference);
 			}
@@ -217,46 +186,60 @@ public class FrameworkInstance {
 		};
 		obrTracker.open();
 
-		installAndStartFromClasspath(new String[] {
-				"org.apache.felix.scr-1.6.0.jar",
-				"org.apache.felix.configadmin-1.2.8.jar",
-				"org.apache.felix.fileinstall-3.2.0.jar",
-				"org.apache.felix.bundlerepository-1.6.6.jar",
-				"com.dexels.navajo.runtime.provisioning_1.0.1.jar",
-				"slf4j-api-1.6.4.jar",
-				"slf4j-simple-1.6.4.jar"
+		installAndStartFromClasspath(new BundleInstall[] {
+				new BundleInstall("org.apache.felix.scr-1.6.0.jar","org.apache.felix.scr","1.6.0"),
+				new BundleInstall("org.apache.felix.configadmin-1.2.8.jar","org.apache.felix.configadmin","1.2.8"),
+				new BundleInstall("org.apache.felix.bundlerepository-1.6.6.jar","org.apache.felix.bundlerepository","1.6.6"),
+				new BundleInstall("com.dexels.navajo.runtime.provisioning-1.0.2.jar","com.dexels.navajo.runtime.provisioning","1.0.2"),
+				new BundleInstall("org.apache.felix.configadmin-1.2.8.jar","org.apache.felix.configadmin","1.2.8")
+//				new BundleInstall("slf4j-simple-1.6.4.jar","slf4j-simple","1.6.4")
 				});
+
+//		"org.apache.felix.fileinstall-3.2.0.jar",
+//		"slf4j-api-1.6.4.jar",
 
 		configurationInjectionService = null;
 		try {
 			configurationInjectionService = (ConfigurationInjectionInterface) configurationInjectorTracker
 					.waitForService(2000);
+			configurationInjectionService.removeConfigutation("com.dexels.navajo.tipi.swing.application");
 			repositoryAdmin = (RepositoryAdmin) obrTracker.waitForService(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		startTipi("/Users/frank/Documents/workspace42/SportlinkClub", "test", "knvb");
-		Thread t = new Thread(){
+		String tipiDirective = "/Users/frank/Documents/workspace42/SportlinkClub|test|knvb";
+		String repositories = "https://source.dexels.com/nexus/content/shadows/thirdparty_obr/.meta/obr.xml,https://source.dexels.com/nexus/content/shadows/navajo_snapshot_obr/.meta/obr.xml";
+		String deps = "(&(symbolicname=org.apache.felix.gogo.runtime)(version>=0.10.0)),(&(symbolicname=org.apache.felix.gogo.shell)(version>=0.10.0)),(&(symbolicname=org.apache.felix.gogo.command)(version>=0.12.0)),(&(symbolicname=com.dexels.navajo.api)(version>=1.0.2)),(&(symbolicname=com.dexels.navajo.tipi.swing.mig)(version>=1.0.9)),(&(symbolicname=com.dexels.navajo.tipi.swing.application)(version>=1.2.2)),(&(symbolicname=com.dexels.navajo.tipi.swing.geo)(version>=1.0.11)),(&(symbolicname=com.dexels.navajo.tipi.swing.editor)(version>=1.1.3)),(&(symbolicname=com.dexels.navajo.tipi.jabber)(version>=1.0.13)),(&(symbolicname=com.dexels.navajo.tipi.mail)(version>=1.0.25)),(&(symbolicname=com.dexels.navajo.tipi.swing.rich)(version>=1.0.11)),(&(symbolicname=com.dexels.navajo.tipi.swing.substance)(version>=1.1.8))";
+		checkDependencies(repositories,deps);
+		startTipi(tipiDirective);
+	}
 
-			@Override
-			public void run() {
-				try {
+	private void startTipi(String tipiDirective) throws IOException {
+		String[] dir = tipiDirective.split("\\|");
+		System.err.println(">> "+dir[0]);
+		System.err.println(">>> "+dir[1]);
+		startSwingTipi(dir[0], dir[1], dir[2]);
+	}
 
-					Thread.sleep(5000);
-					repositoryAdmin.addRepository(new URL("http://source.dexels.com:8081/nexus/content/shadows/thirdparty_obr/.meta/obr.xml"));
+	private void checkDependencies(String repositoryList, String dependencyList) throws IOException, Exception, MalformedURLException {
+//		startSwingTipi("/Users/frank/Documents/workspace42/SportlinkClub", "test", "knvb");
+		String[] repositories = repositoryList.split(",");
+		String[] dependencies = dependencyList.split(",");
+		for (String repo : repositories) {
+			repositoryAdmin.addRepository(new URL(repo));
+		}
+		for (String dep : dependencies) {
+			resolveAtomic(dep);
+		}
+		repositoryAdmin.addRepository(new URL("https://source.dexels.com/nexus/content/shadows/thirdparty_obr/.meta/obr.xml"));
 
-					String gogo = "(&(symbolicname=org.apache.felix.gogo.runtime)(version>=0.10.0)),(&(symbolicname=org.apache.felix.gogo.shell)(version>=0.10.0)),(&(symbolicname=org.apache.felix.gogo.command)(version>=0.12.0))";
-					resolveAtomic(gogo);
-					System.err.println("Deploying tipi update");
-					repositoryAdmin.addRepository(new URL("http://source.dexels.com:8081/nexus/content/shadows/navajo_snapshot_obr/.meta/obr.xml"));
-					String deps = "(&(symbolicname=com.dexels.navajo.api)(version>=1.0.2)),(&(symbolicname=com.dexels.navajo.tipi.swing.mig)(version>=1.0.9)),(&(symbolicname=com.dexels.navajo.tipi.swing.application)(version>=1.2.2)),(&(symbolicname=com.dexels.navajo.tipi.swing.geo)(version>=1.0.11)),(&(symbolicname=com.dexels.navajo.tipi.swing.editor)(version>=1.1.3)),(&(symbolicname=com.dexels.navajo.tipi.jabber)(version>=1.0.13)),(&(symbolicname=com.dexels.navajo.tipi.mail)(version>=1.0.25)),(&(symbolicname=com.dexels.navajo.tipi.swing.rich)(version>=1.0.11)),(&(symbolicname=com.dexels.navajo.tipi.swing.substance)(version>=1.1.8))";
-					resolveAtomic(deps);
-					System.err.println("done");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}};
-		t.start();
+//		String gogo = "(&(symbolicname=org.apache.felix.gogo.runtime)(version>=0.10.0)),(&(symbolicname=org.apache.felix.gogo.shell)(version>=0.10.0)),(&(symbolicname=org.apache.felix.gogo.command)(version>=0.12.0))";
+//		resolveAtomic(gogo);
+//		logger.info("Deploying tipi update");
+//		repositoryAdmin.addRepository(new URL("https://source.dexels.com/nexus/content/shadows/navajo_snapshot_obr/.meta/obr.xml"));
+//		String deps = "(&(symbolicname=com.dexels.navajo.api)(version>=1.0.2)),(&(symbolicname=com.dexels.navajo.tipi.swing.mig)(version>=1.0.9)),(&(symbolicname=com.dexels.navajo.tipi.swing.application)(version>=1.2.2)),(&(symbolicname=com.dexels.navajo.tipi.swing.geo)(version>=1.0.11)),(&(symbolicname=com.dexels.navajo.tipi.swing.editor)(version>=1.1.3)),(&(symbolicname=com.dexels.navajo.tipi.jabber)(version>=1.0.13)),(&(symbolicname=com.dexels.navajo.tipi.mail)(version>=1.0.25)),(&(symbolicname=com.dexels.navajo.tipi.swing.rich)(version>=1.0.11)),(&(symbolicname=com.dexels.navajo.tipi.swing.substance)(version>=1.1.8))";
+//		resolveAtomic(deps);
+		logger.info("done");
 	}
 
 	private void resolveAtomic(String deps) {
@@ -278,12 +261,13 @@ public class FrameworkInstance {
 	}
 
 	public boolean exec(Resolver resolver, String args) {
+	
 		Resource[] resources = repositoryAdmin.discoverResources(args);
 		if ((resources != null) && (resources.length > 0)) {
 			resolver.add(resources[0]);
 			if (resolver.resolve()) {
 				for (Resource res : resolver.getRequiredResources()) {
-					System.err.println("Deploying dependency: "
+					logger.info("Deploying dependency: "
 							+ res.getPresentationName() + " ("
 							+ res.getSymbolicName() + ") " + res.getVersion());
 					resolver.add(res);
@@ -291,16 +275,16 @@ public class FrameworkInstance {
 				return true;
 
 			} else {
-				System.err.println("Can not resolve " + resources[0].getId()
+				logger.info("Can not resolve " + resources[0].getId()
 						+ " reason: ");
 				for (Requirement req : resolver.getUnsatisfiedRequirements()) {
-					System.err.println("missing " + req.getName() + " "
+					logger.info("missing " + req.getName() + " "
 							+ req.getFilter());
 				}
 				return false;
 			}
 		} else {
-			System.err.println("No such resource");
+			logger.info("No such resource");
 			return false;
 		}
 	}
@@ -319,27 +303,15 @@ public class FrameworkInstance {
 	@SuppressWarnings("rawtypes")
 	protected Map createConfig() throws Exception {
 		Properties props = new Properties();
-		// props.load(getResource("default.properties"));
 		props.load(getResource("framework.properties"));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		for (Object key : props.keySet()) {
 			String value = (String) props.get(key);
 			map.put(key.toString(), value);
-			// System.err.println("putting: "+key+" value: "+value);
 		}
-		// StringBuffer bundlePath = new StringBuffer();
-		// String resolvedBundlePath = getFilePath(BUNDLEDIR).toString();
-		// bundlePath.append(resolvedBundlePath);
-		// if (context == null) {
-		// // We have no 'containing' appserver, so we build our own. Append
-		// // the appserver bundle path.
-		// String localBundlePath = getFilePath(APPSERVERBUNDLEDIR).toString();
-		// bundlePath.append(",");
-		// bundlePath.append(localBundlePath);
-		// }
+		logger.info(">> "+map);
 		log("Bundles at: " + bundlePath, null);
-		// System.err.println("Resolved: " + bundlePath.toString());
 		map.put("felix.fileinstall.dir", bundlePath);
 		map.put("felix.fileinstall.log.level", "2");
 		map.put("felix.fileinstall.noInitialDelay", "true");
@@ -348,30 +320,13 @@ public class FrameworkInstance {
 		return map;
 	}
 
-	// felix.fileinstall.dir
-
-	// private URL getUrl(String path) throws MalformedURLException {
-	// return getFilePath(path).toURI().toURL();
-	// }
-	//
-	// private File getFilePath(String path) {
-	// if (this.context == null) {
-	// File f = new File(System.getProperty("user.dir"));
-	// File res = new File(f, path);
-	// // TODO: This stream should be closed, is that going well?
-	// return res;
-	// }
-	// File f = new File(this.context.getRealPath(path));
-	// return f;
-	// }
-
 	private InputStream getResource(String path) throws IOException {
 		return FrameworkInstance.class.getClassLoader().getResourceAsStream(
 				path);
 	}
 
 	protected void log(String message, Throwable cause) {
-		System.err.println("Message: " + message);
+		logger.info("Message: " + message);
 		if (cause != null) {
 			cause.printStackTrace();
 		}
@@ -401,6 +356,28 @@ public class FrameworkInstance {
 		}
 
 		throw new Exception("Could not find framework factory.");
+	}
+	
+	private class BundleInstall {
+		
+		public BundleInstall(String path,String symbolicName, String version) {
+			this.path = path;
+			this.symbolicName = symbolicName;
+			this.version = Version.parseVersion(version);
+		}
+		
+		public String getPath() {
+			return path;
+		}
+		public String getSymbolicName() {
+			return symbolicName;
+		}
+		public Version getVersion() {
+			return version;
+		}
+		private String path;
+		private String symbolicName;
+		private Version version;
 	}
 
 }
