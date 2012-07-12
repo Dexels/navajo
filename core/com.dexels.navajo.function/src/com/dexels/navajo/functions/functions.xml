@@ -667,4 +667,9 @@
         <input>string,string,string</input>
         <result>string</result>
     </function>
+    <function name="StripTime" class="com.dexels.navajo.functions.StripTime">
+        <description>StripTime(date|string,[string])</description>
+        <input>date|string,[string]</input>
+        <result>date</result>
+    </function>
 </functiondef>
