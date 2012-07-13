@@ -31,8 +31,8 @@ public class WebFrameworkInstance extends FrameworkInstance {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void doStart() throws Exception {
-		super.doStart();
+	protected void doStart(String directive) throws Exception {
+		super.doStart(directive);
 		if (context != null) {
 			log("Setting "+"org.osgi.framework.BundleContext"+" : "+getBundleContext(),null);
 			context.setAttribute("org.osgi.framework.BundleContext",getBundleContext());
