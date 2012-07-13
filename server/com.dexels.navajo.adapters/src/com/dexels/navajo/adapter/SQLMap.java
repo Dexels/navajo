@@ -704,7 +704,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 
 		ResultSetMap rm = resultSet[resultSetIndex];
-		System.out.println("************************************** getColumnValue(Integer) : " + rm.getColumnValue(index));
+		if ( debug ) {
+			System.out.println("************************************** getColumnValue(Integer) : " + rm.getColumnValue(index));
+		}
 		return rm.getColumnValue(index);
 
 	}
@@ -719,8 +721,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 
 		ResultSetMap rm = resultSet[resultSetIndex];
-		System.out.println("************************************** getColumnValue(String) : " + rm.getColumnValue(columnName));
-
+		if ( debug ) {
+			System.out.println("************************************** getColumnValue(String) : " + rm.getColumnValue(columnName));
+		}
 		return rm.getColumnValue(columnName);
 	}
 
@@ -936,7 +939,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	}
 
 	private final void setStatementParameters(PreparedStatement statement) throws java.sql.SQLException {
-		System.out.println("************************* Entering SQLMap.setStatementParameters");
+		if ( debug ) {
+			System.out.println("************************* Entering SQLMap.setStatementParameters");
+		}
 		if (parameters != null) {
 			// System.err.println("parameters = " + parameters);
 			for (int i = 0; i < parameters.size(); i++) {
@@ -986,7 +991,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			if (this.debug) {
 				Access.writeToConsole(myAccess, this.getClass() + ": detected batch mode, trying a batch update\n");
 			}
-			System.out.println("************************* Entering SQLMap.getDBResultSet");
+			if ( debug ) {
+				System.out.println("************************* Entering SQLMap.getDBResultSet");
+			}
 			this.helper = new SQLBatchUpdateHelper(this.update, 
 												   this.con,
 												   this.parameters, 

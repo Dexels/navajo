@@ -534,7 +534,9 @@ public final Object getColumnName(final Integer index) throws UserException {
 
 
 	private final void setStatementParameters(PreparedStatement statement) throws java.sql.SQLException {
-		System.out.println("************************* Entering JDBCMap.setStatementParameters");
+		if ( debug ) {
+			System.out.println("************************* Entering JDBCMap.setStatementParameters");
+		}
 		if (parameters != null) {
 			// System.err.println("parameters = " + parameters);
 			for (int i = 0; i < parameters.size(); i++) {
