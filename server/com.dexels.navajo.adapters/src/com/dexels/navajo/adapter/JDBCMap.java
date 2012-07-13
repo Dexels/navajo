@@ -1045,4 +1045,11 @@ public final Object getColumnName(final Integer index) throws UserException {
 	public ArrayList getBinaryStreamList() {
 		return binaryStreamList;
 	}
+
+
+    @Override
+    public String getDbIdentifier() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

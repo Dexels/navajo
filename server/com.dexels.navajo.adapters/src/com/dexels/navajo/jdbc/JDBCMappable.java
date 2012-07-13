@@ -121,5 +121,7 @@ public interface JDBCMappable {
 	public boolean getDebug();
 
 	public void setEndIndex(int i);
+	
+	public String getDbIdentifier();
 
 }

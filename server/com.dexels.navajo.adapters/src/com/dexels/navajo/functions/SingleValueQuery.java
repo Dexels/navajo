@@ -22,11 +22,15 @@ public class SingleValueQuery extends FunctionInterface {
 
   public static final String DATASOURCEDELIMITER = ":";
   public static final String USERDELIMITER = "@";
+  private String dbIdentifier = null;
+  
+  public String getDbIdentifier() { return this.dbIdentifier; }
+  public void setDbIdentifier(String dbIdentifier) {
+      this.dbIdentifier = dbIdentifier;
+  }
 
   
   protected final JDBCMappable evaluateQuery() throws com.dexels.navajo.parser.TMLExpressionException {
-
-	  
 	  String query = "";
 	  JDBCMappable sql = null;
 
@@ -100,9 +104,8 @@ public class SingleValueQuery extends FunctionInterface {
   }
   
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-
-
 	  JDBCMappable sql = evaluateQuery();
+	  setDbIdentifier(sql.getDbIdentifier());
 	  sql.setDebug(false);
 	  Object result = null;
 	  try {
@@ -136,11 +139,8 @@ public class SingleValueQuery extends FunctionInterface {
   public String remarks() {
     return "A query can be supplied to this function that executes a SQL parameter with a given number of parameters";
   }
-
+  
   // ----------------------------------------------------------- private methods
 
-
-} // public class SingleValueQuery extends FunctionInterface
-
-// EOF: $RCSfile$ //
+}
 

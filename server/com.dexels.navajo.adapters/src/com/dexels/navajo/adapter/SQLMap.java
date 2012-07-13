@@ -241,7 +241,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * Try to get the database identifier
 	 * @return String
 	 */
-	private String getDbIdentifier() {
+	public String getDbIdentifier() {
 		if (this.dbIdentifier == null) {
 			try {
 				Connection con = getConnection();

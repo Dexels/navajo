@@ -16,8 +16,16 @@ public class SQLMapConstants {
 	public final static String MYSQLDB = "mysql";
 
 	public static boolean isLegacyMode() {
-		Repository r = DispatcherFactory.getInstance().getNavajoConfig().getRepository();
-		return r.useLegacyDateMode();
+		try {
+    	    Repository r = DispatcherFactory.getInstance().getNavajoConfig().getRepository();
+    		if (r != null) {
+    		    r.useLegacyDateMode();
+    		}
+		} catch (NullPointerException e) {
+		    // TODO: figure out a nice solution here
+		    return true;
+		}
+		return true;
 	}
 	
 	public static String getDbIdentifierFromConnection(Connection con) {
