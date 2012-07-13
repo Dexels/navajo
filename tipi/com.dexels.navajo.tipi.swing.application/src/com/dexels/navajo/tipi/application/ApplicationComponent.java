@@ -30,9 +30,6 @@ public class ApplicationComponent {
 	private TipiApplicationInstance instance;
 
 	private ComponentContext componentContext;
-	private final Map<String,TipiExtension> extensionList = new HashMap<String,TipiExtension>();
-	private TipiMainExtension mainExtension;
-	private TipiCoreExtension coreExtension;
 
 
 	private boolean isRunning = false;
@@ -61,6 +58,7 @@ public class ApplicationComponent {
 				if(tipiBoot!=null) {
 					logger.info("Found a system var, booting after all.");
 					if(contextPath!=null) {
+						boot.delete();
 						bootApplication(contextPath,deployment,profile);
 					}
 				}
@@ -105,7 +103,6 @@ public class ApplicationComponent {
 			@Override
 			public void run() {
 				try {
-					System.err.println("Extensionlist at boot time: "+extensionList);
 					instance = TipiSwingWrapper.runApp(componentContext.getBundleContext(),contextPath,deploy,profile);
 					instance.getCurrentContext().switchToDefinition(instance.getDefinition());
 				} catch (TipiException e) {
