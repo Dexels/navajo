@@ -31,7 +31,7 @@ public final class StartupListener
     {
         try {
 			this.service = new WebFrameworkInstance(event.getServletContext());
-			this.service.start();
+			this.service.start("");
 		} catch (Throwable e) {
 			event.getServletContext().log("Error starting context", e);
 		}

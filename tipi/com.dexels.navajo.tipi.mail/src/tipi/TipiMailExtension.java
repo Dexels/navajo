@@ -7,8 +7,6 @@ import java.util.Set;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.functions.MailFunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionDefinition;
@@ -26,8 +24,6 @@ public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiE
 	@SuppressWarnings("rawtypes")
 	private final Set<ServiceRegistration> registrations = new HashSet<ServiceRegistration>();
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(TipiMailExtension.class);
 	
 	public static TipiMailExtension getInstance() {
 		return instance;
@@ -43,7 +39,6 @@ public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiE
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void start(BundleContext context) throws Exception {
-		logger.info("Starting mail tipi bundle");
 		registerTipiExtension(context);
 		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
 		fi.init();

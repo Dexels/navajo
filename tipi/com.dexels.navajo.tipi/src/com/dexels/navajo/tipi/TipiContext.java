@@ -2467,15 +2467,15 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		eHandler.setContext(this);
 		eHandler.initResource();
 
-		try {
-			Class<?> c = Class
-					.forName("com.dexels.navajo.tipi.tools.TipiXSDBuilder");
-			TipiContextAdapter tca = (TipiContextAdapter) c.newInstance();
-			tca.execute(this);
-			logger.info("xsd builder loaded");
-		} catch (Throwable e) {
-			logger.error("Error loading XSD?",e);
-		}
+//		try {
+//			Class<?> c = Class
+//					.forName("com.dexels.navajo.tipi.tools.TipiXSDBuilder");
+//			TipiContextAdapter tca = (TipiContextAdapter) c.newInstance();
+//			tca.execute(this);
+//			logger.info("xsd builder loaded");
+//		} catch (Throwable e) {
+//			logger.error("Error loading XSD?",e);
+//		}
 
 	}
 
