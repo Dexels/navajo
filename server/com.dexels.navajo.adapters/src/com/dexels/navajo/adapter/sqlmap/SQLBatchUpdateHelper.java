@@ -251,7 +251,6 @@ public class SQLBatchUpdateHelper {
 									Class classHoldingBinaryStreamList) throws SQLException {
 		if (this.debug) {
 			System.out.println("parameter " + this.pptr + " = " + param);
-			System.out.println("************************* Entering SQLBatchUpdateHelper.setParameter");
 		}
 		
 		SQLMapHelper.setParameter(pre, 
