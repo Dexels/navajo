@@ -39,55 +39,13 @@ import com.dexels.navajo.parser.FunctionInterface;
  * ====================================================================
  */
 
-/**
- * VERSION HISTORY
- *
- * 3.1.1 Added support for SOAP attachments
- * 
- * 3.1.0 Now using ALTER Session to set default schema instead of using different connection brokers per username 
- *       (NOTE THAT THIS SOLUTION IS ORACLE SPECIFIC)
- *       
- * 3.0.0 Introduced Grus Manager as a Single Threaded Broker solution.
- * 		 Removed unnecessary synchronized blocks in ConnectionBrokerManager.
- * 
- * 2.2.8 Use Acces object private Console writer instead of System.err for logging. Used in SQLMap and SPMap.
- *       OracleStore now writes additional console value into navajolog table.
- *       
- * 2.1.0 Added generic property support to NavajoMap. You can now use $property('xyz') and field name="property" inside
- * scripts instead of its typed counter parts.
- *
- * 2.1.1 Null release (experimented with open resultsets problem in Oracle when autocommit is false and
- * using SPMap (CallableStatement).
- *
- * 2.2.0 NavajoMap When speciying useCurrentOutdoc the __globals__ and __parms__ messages also get copied.
- *       MailMap, refactored attachment stuff, now always use AttachmentMap
- *
- * 2.2.1 SQLMap with new support for getting 'binary' content of a recordset.
- *
- * 2.2.2 Added FTPMap. NavajoMap now has appendParms to append result to current params block.
- *
- * 2.2.3 Fixed security issue in MailMap for empty text body.
- *
- * 2.2.4 TEMPORARY FIX! In it's current form the CV32 does not work properly with the previous version
- *                      Therefore version 1.19 of MailMap.java was restored (instead of 1.21) and the
- *                      fix of 2.2.3 was applied to version 1.19.
- *                      When CV32 new style is introduced version 1.21 can overwrite version 1.22 of
- *                      the file MailMap.java
- * 
- * 2.2.5 Implemented setContent() in FileMap.
- * 
- * 2.2.6 Supports kill (due to time-out) connection brokers and reviving those.
- * 
- * 2.2.7 Added support for non-broker mode of SQLMap.
- *
- */
+
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 
 	private static BundleContext bundleContext;
 	
 	public Version() {
-		setReleaseDate(RELEASEDATE);
 	}
 
 

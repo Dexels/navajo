@@ -38,19 +38,7 @@ import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.parser.FunctionInterface;
 
-/**
- * VERSION HISTORY
- * 
- * 2.0.0. Now using function type signatures and XML definitions.
- * 
- * 1.0.1. Added GetVersionInfo function.
- * 
- * 1.1.0. Added various new functions (GetProperty, FromSeconds, ToSeconds, Base64Encode).
- * 
- * 1.1.1. Added IsNull function.
- * 
- * 1.1.2. Fix in ToClockTime
- */
+
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@SuppressWarnings("rawtypes")
 	private final Set<ServiceRegistration> serviceRegistrations = new HashSet<ServiceRegistration>();
@@ -59,7 +47,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	//Included packages.
 	
 	public Version() {
-		setReleaseDate(RELEASEDATE);
 		
 	}
 	
