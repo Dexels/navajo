@@ -188,8 +188,9 @@ public class SPMap extends SQLMap {
         }
         if (parameters != null) {
         	int spIndex = 0;
-
-	  		System.out.println("************************* Entering SPMap.getResultSet");
+        	if ( debug ) {
+        		System.out.println("************************* Entering SPMap.getResultSet");
+        	}
 			for (int i = 0; i < parameters.size(); i++) {
 				Object param = parameters.get(i);
 	            int type = ( (Integer) parameterTypes.get(i)).intValue();

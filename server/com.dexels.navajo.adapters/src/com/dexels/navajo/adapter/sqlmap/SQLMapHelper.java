@@ -60,18 +60,20 @@ public class SQLMapHelper {
 			}
 		}
 		
-		if (idx == 0) {
-			System.out.println("*************************** statement         = " + statement.toString());
-			System.out.println("*************************** dbIdentifier      = " + dbIdentifier);
-			System.out.println("*************************** myAccess          = " + access.accessID);
-			System.out.println("*************************** isLegacyMode      = " + isLegacyMode);
-			System.out.println("*************************** debug             = " + debug);
+		if ( debug ) {
+			if (idx == 0) {
+				System.out.println("*************************** statement         = " + statement.toString());
+				System.out.println("*************************** dbIdentifier      = " + dbIdentifier);
+				System.out.println("*************************** myAccess          = " + access.accessID);
+				System.out.println("*************************** isLegacyMode      = " + isLegacyMode);
+				System.out.println("*************************** debug             = " + debug);
+			}
+			System.out.println("*************************** idx               = " + idx);
+			System.out.println("*************************** param             = " + param + " (" + ( (param != null) ? param.getClass().getName() : "") + ")");
+			System.out.println("*************************** binaryStreamList  = " + classHoldingBinaryStreamList.getName());
 		}
-		System.out.println("*************************** idx               = " + idx);
-		System.out.println("*************************** param             = " + param + " (" + ( (param != null) ? param.getClass().getName() : "") + ")");
-		System.out.println("*************************** binaryStreamList  = " + classHoldingBinaryStreamList.getName());
 		
-		if ((param == null) || (param instanceof NavajoType && ((NavajoType) param).isEmpty())) {
+		if ((param == null) || (param instanceof NavajoType && !(param instanceof Binary) && ((NavajoType) param).isEmpty())) {
 			if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier)) { 
 				if (debug) {
 					Access.writeToConsole(access, "Had to do something in order to not get the cast error from a null value, because it concerns " + dbIdentifier + "\n");
