@@ -242,16 +242,12 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * @return String
 	 */
 	public String getDbIdentifier() {
-		if (this.dbIdentifier == null) {
-			try {
-				Connection con = getConnection();
-				if (con != null) {
-					this.dbIdentifier = SQLMapConstants.getDbIdentifierFromConnection(con);
-				}
-			} catch (SQLException e) {
-			}
+		
+		if ( this.myConnectionBroker != null ) {
+			return this.myConnectionBroker.getDbIdentifier();
+		} else {
+			return null;
 		}
-		return this.dbIdentifier;
 	}
 	
 	private void createDataSource(Message body, NavajoConfigInterface config) throws Throwable {
@@ -820,6 +816,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			if (con == null) {
 				throw new UserException(-1, "Invalid transaction context set: " + transactionContext);
 			}
+			// Set myConnectionBroker.
+			myConnectionBroker = DbConnectionBroker.getConnectionBroker(transactionContext);
 			// Make sure to set connection id.
 			this.connectionId = transactionContext;
 		}
