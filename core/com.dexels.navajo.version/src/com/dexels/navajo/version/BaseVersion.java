@@ -1,11 +1,10 @@
 package com.dexels.navajo.version;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.version.AbstractVersion;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -39,28 +38,9 @@ public abstract class BaseVersion implements Comparable<AbstractVersion> {
 	protected final static Logger logger = LoggerFactory.getLogger("com.dexels.navajo.version");
 
 	
-	/**
-	 * Major release increases when actually new funcionality is introduced.
-	 * @return
-	 */
-	public abstract int getMajor();
-	/*
-	 * Minor release denotes small functional changes.
-	 * Odd release numbers denote production candidates (unstable).
-	 * Even release numbers denote a production release (stable).
-	 */
-	public abstract int getMinor();
-	/**
-	 * Patchlevel denotes increase with each bug fix on major/minor release.
-	 * @return
-	 */
-	public abstract int getPatchLevel();
-	public abstract String getVendor();
-	
 	// List of versions of included packages.
 	private ArrayList<AbstractVersion> includedPackages = new ArrayList<AbstractVersion>();
 	
-	private String specialVersion = null;
 	
 	public void addIncludes(String [] versionClasses) {
 		for (int i = 0; i < versionClasses.length; i++) {
@@ -106,45 +86,8 @@ public abstract class BaseVersion implements Comparable<AbstractVersion> {
 		}
 	}
 	
-	public void setReleaseDate(String s) {
-		this.RELEASEDATE = s;
-	}
-	
-	public void setSpecialVersion(String v) {
-		specialVersion = v;
-	}
-	
-	public Date getReleaseDate() {
-		try {
-			return new SimpleDateFormat("yyyy-MM-dd").parse(RELEASEDATE);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-	
-	public abstract String getProductName();
-	
-	public String getSpecialVersion() {
-		return this.specialVersion;
-	}
-	
-	public String toString() {
-		return getProductName() + (specialVersion != null ? " (" + specialVersion + ") " : "") + " " + getMajor() + "." + getMinor() + "." + getPatchLevel() + "/" + getVendor() + " (" + getReleaseDate() + ")";
-	}
-	
-	public String getVersion() {
-		return getMajor() + "." + getMinor() + "." + getPatchLevel();
-	}
-	
-	public String versionString() {
-		StringBuffer s = new StringBuffer();
-		s.append(toString()+"\n");
-		AbstractVersion [] d = getIncludePackages();
-		for (int i = 0; i < d.length; i++) {
-			s.append("\t"+d[i].toString()+"\n");
-		}
-		return s.toString();
-	}
+
+
 	
 	protected void buildIncludeTree(Set<AbstractVersion> t) {
 		//logger.info(this.getClass().getName() + ": in buildIncludeTree: " + t.size());

@@ -4,13 +4,16 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 
-
-public abstract class AbstractVersion extends BaseVersion implements BundleActivator {
+/**
+ * Is no more abstract, should refactor FIXME
+ * @author frank
+ *
+ */
+public  class AbstractVersion extends BaseVersion implements BundleActivator {
 
 
 	
 	protected BundleContext context = null;
-//	protected BundleContext defaultContext = null;
 	
 	public void start(BundleContext bc) throws Exception {
 		context = bc;
@@ -36,31 +39,7 @@ public abstract class AbstractVersion extends BaseVersion implements BundleActiv
 		return context!=null;
 	}
 
-	
-	@Override
-	public int getMajor() {
-		return context.getBundle().getVersion().getMajor();
-	}
 
-	@Override
-	public int getMinor() {
-		return context.getBundle().getVersion().getMajor();
-	}
-
-	@Override
-	public int getPatchLevel() {
-		return context.getBundle().getVersion().getMicro();
-	}
-
-	@Override
-	public String getVendor() {
-		return "Dexels";
-	}
-
-	@Override
-	public String getProductName() {
-		return context.getBundle().getSymbolicName();
-	}
 
 	public void shutdown() {
 		if(context==null) {
@@ -74,7 +53,7 @@ public abstract class AbstractVersion extends BaseVersion implements BundleActiv
 	  @SuppressWarnings("unchecked")
 	public static void shutdownNavajoExtension(String name) {
 		  // This should be replaced by OSGi bundle management
-		  logger.warn("Extension shutdown of: "+name);
+		  logger.warn("non-OSGi Extension shutdown of: "+name);
 		  try {
 			Class <? extends AbstractVersion> version = (Class<? extends AbstractVersion>) Class.forName(name.toLowerCase()+".Version");
 			AbstractVersion v = version.newInstance();
