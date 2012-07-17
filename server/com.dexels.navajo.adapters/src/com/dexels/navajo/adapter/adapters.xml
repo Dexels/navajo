@@ -80,6 +80,7 @@
         <tagname>csv</tagname>
         <object>com.dexels.navajo.adapter.CSVMap</object>
         <values>
+            <value name="skipFirstRow" type="boolean" required="false" direction="in"/>
             <value name="fileName" type="string" required="true" direction="in"/>
             <value name="separator" type="string" required="true" direction="in"/>
             <value name="update" type="boolean" required="false" direction="in"/>
