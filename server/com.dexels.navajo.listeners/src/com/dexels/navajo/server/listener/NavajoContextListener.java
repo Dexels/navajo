@@ -148,7 +148,6 @@ public class NavajoContextListener implements ServletContextListener {
 	public static DispatcherInterface initializeContext(String rootPath,
 			String servletPath) throws NavajoException {
 		return DispatcherFactory.getInstance(rootPath, DEFAULT_SERVER_XML,
-				new com.dexels.navajo.server.FileInputStreamReader(),
 				servletPath);
 	}
 
@@ -161,7 +160,6 @@ public class NavajoContextListener implements ServletContextListener {
 			// DEFAULT_SERVER_XML
 			return DispatcherFactory.getInstance(new File(configurationPath),
 					DEFAULT_SERVER_XML,
-					new com.dexels.navajo.server.FileInputStreamReader(),
 					servletContextRootPath);
 		} else {
 			return initializeContext(rootPath, servletContextRootPath);
