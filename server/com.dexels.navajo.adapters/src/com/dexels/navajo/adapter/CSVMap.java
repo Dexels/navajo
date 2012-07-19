@@ -50,6 +50,7 @@ public class CSVMap implements Mappable {
 	public int entryCount;
 	public boolean includeEmpty;
 	public boolean skipFirstRow;
+	public int maximumImportCount;
 
 	private boolean update = false;
 	private List<CSVEntryMap> draftEntries = null;
@@ -98,15 +99,17 @@ public class CSVMap implements Mappable {
 				int lineCount = 0;
 				List<CSVEntryMap> entryList = new ArrayList<CSVEntryMap>();
 				while ((line = buffer.readLine()) != null) {
-					if (isSkipFirstRow() && lineCount == 0) {
-					    // First line will be skipped. Probably contains headers
-					} else {
-    				    if (includeEmpty) {
-    						parseLineWithEmpty(line, entryList);
+				    if (maximumImportCount == 0 || (lineCount <= maximumImportCount)) {
+    					if (isSkipFirstRow() && lineCount == 0) {
+    					    // First line will be skipped. Probably contains headers
     					} else {
-    						parseLineDefault(line, entryList);
+        				    if (includeEmpty) {
+        						parseLineWithEmpty(line, entryList);
+        					} else {
+        						parseLineDefault(line, entryList);
+        					}
     					}
-					}
+				    }
 					lineCount++;
 				}
 				entries = new CSVEntryMap[entryList.size()];
@@ -247,5 +250,13 @@ public class CSVMap implements Mappable {
 
     public void setSkipFirstRow(boolean skipFirstRow) {
         this.skipFirstRow = skipFirstRow;
+    }
+
+    public int getMaximumImportCount() {
+        return maximumImportCount;
+    }
+
+    public void setMaximumImportCount(int maximumImportCount) {
+        this.maximumImportCount = maximumImportCount;
     }
 }
