@@ -5,7 +5,8 @@ Bundle-SymbolicName: com.dexels.navajo.compiler.tsl
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: org.apache.commons.io,
+Import-Package: javax.tools,
+ org.apache.commons.io,
  org.apache.tools.ant,
  org.osgi.framework;version="1.6.0",
  org.osgi.framework.wiring;version="1.0.0",

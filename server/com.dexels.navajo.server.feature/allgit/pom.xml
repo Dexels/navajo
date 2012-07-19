@@ -27,6 +27,7 @@
 		<module>../../com.dexels.navajo.authentication.api</module>
 		<module>../../com.dexels.navajo.rhino.continuations</module>
 		<module>../../com.dexels.navajo.webconsole.branding</module>
+		<module>../../com.dexels.navajo.compiler.tsl</module>
 		<module>../</module>
 
 	</modules>
