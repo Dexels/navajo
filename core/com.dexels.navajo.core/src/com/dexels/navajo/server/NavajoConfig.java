@@ -2,6 +2,7 @@ package com.dexels.navajo.server;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -677,6 +678,12 @@ public final class NavajoConfig implements NavajoConfigInterface {
       output.close();
     }
 
+    @Override
+	public void writeOutput(String scriptName, String suffix, InputStream is)
+			throws IOException {
+    	logger.error("writeOutput is not implemented here. ");
+    }
+    
     public final Navajo readConfig(String name) throws IOException {
     	InputStream is = inputStreamReader.getResource(getConfigPath() + name);
     	try {

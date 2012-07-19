@@ -2601,7 +2601,7 @@ public String mapNode(int ident, Element n) throws Exception {
 	    		is = navajoIOConfig.getScript(packagePath+"/"+script);
 	    	}
 	    	
-	    	InputStream sis = navajoIOConfig.getScript(packagePath+script);
+	    	InputStream sis = navajoIOConfig.getScript(packagePath+"/"+script);
 	    	if ( ScriptInheritance.containsInject(sis)) {
 	    		// Inheritance preprocessor before compiling.
 	    		InputStream ais = null;

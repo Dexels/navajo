@@ -61,4 +61,10 @@ public class LegacyNavajoIOConfig implements NavajoIOConfig {
 		return DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath();
 	}
 
+	@Override
+	public void writeOutput(String scriptName, String suffix, InputStream is)
+			throws IOException {
+		DispatcherFactory.getInstance().getNavajoConfig().writeOutput(scriptName, suffix, is);
+	}
+
 }

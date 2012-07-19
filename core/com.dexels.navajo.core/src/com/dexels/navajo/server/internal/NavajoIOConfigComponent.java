@@ -2,9 +2,12 @@ package com.dexels.navajo.server.internal;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +47,8 @@ public class NavajoIOConfigComponent implements NavajoIOConfig {
 	@Override
     public final InputStream getScript(String name) throws IOException {
     	InputStream input;
-		logger.debug("Not beta");
-		String path = getScriptPath() + name + ".xml";
+		logger.debug("Not beta: "+name);
+		String path = getScriptPath() +"/" +name + ".xml";
 		input = inputStreamReader.getResource(path);
 		if(input==null) {
     		path = getScriptPath() + name + ".tsl";
@@ -124,6 +127,17 @@ public class NavajoIOConfigComponent implements NavajoIOConfig {
 		return fix;
 
     }
+
+	@Override
+	public void writeOutput(String scriptName, String suffix, InputStream is) throws IOException {
+	   	File opath = new File(getCompiledScriptPath());
+	   	final String path = opath.getAbsolutePath()+"/"+scriptName+suffix;
+		File fin = new File(path);
+	   	FileOutputStream fos = new FileOutputStream(fin);
+	   	IOUtils.copy(is, fos);
+	   	fos.close();
+	   	is.close();
+	}
 
 
 }

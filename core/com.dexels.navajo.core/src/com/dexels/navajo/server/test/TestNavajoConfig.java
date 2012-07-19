@@ -349,4 +349,11 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 		return null;
 	}
 
+	@Override
+	public void writeOutput(String scriptName, String suffix, InputStream is)
+			throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
