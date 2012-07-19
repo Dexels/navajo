@@ -470,7 +470,7 @@ public final class GenericHandler extends ServiceHandler {
 						loader = null;
 					}
 
-					com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
+					com.dexels.navajo.compiler.internal.NavajoCompiler compiler = new com.dexels.navajo.compiler.internal.NavajoCompiler();
 					try {
 						compiler.compile(a, DispatcherFactory.getInstance().getNavajoConfig(), sourceFileName);
 						compilerErrors = compiler.errors;

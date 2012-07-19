@@ -37,6 +37,8 @@ import java.util.HashSet;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -64,8 +66,10 @@ import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
+import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.internal.LegacyNavajoIOConfig;
 
 public class TslCompiler {
 
@@ -106,14 +110,31 @@ public class TslCompiler {
   
   private static String VERSION = "$Id$";
 
-  public TslCompiler(ClassLoader loader) {
-    this.loader = loader;
-    messageListCounter = 0;
-    if (loader == null) {
-      this.loader = this.getClass().getClassLoader();
-    }
-  }
+  private final NavajoIOConfig navajoIOConfig;
+  
+  
+  private final static Logger logger = LoggerFactory.getLogger(TslCompiler.class);
 
+  public TslCompiler(ClassLoader loader) {
+	    this.navajoIOConfig = new LegacyNavajoIOConfig();
+	    initialize(loader);
+  }
+  public TslCompiler(ClassLoader loader, NavajoIOConfig config) {
+	    this.navajoIOConfig = config;
+	    initialize(loader);
+  }
+private void initialize(ClassLoader loader) {
+	this.loader = loader;
+	messageListCounter = 0;
+	if (loader == null) {
+	  this.loader = this.getClass().getClassLoader();
+	}
+}
+  
+  public NavajoIOConfig getNavajoIOConfig() {
+	  return this.navajoIOConfig;
+  }
+  
   private String replaceQuotes(String str) {
 
 	  if ( str.startsWith("#")) {
@@ -2570,17 +2591,17 @@ public String mapNode(int ident, Element n) throws Exception {
 	    	if ( MapMetaData.isMetaScript(script, scriptPath, packagePath) ) {
 	    		scriptType = "navascript";
 	    		MapMetaData mmd = MapMetaData.getInstance();
-	    		InputStream metais = DispatcherFactory.getInstance().getNavajoConfig().getScript(packagePath+"/"+script);
+	    		InputStream metais = navajoIOConfig.getScript(packagePath+"/"+script);
 
 	    		String intermed = mmd.parse(fullScriptPath,metais);
 	    		metais.close();
 				is = new ByteArrayInputStream(intermed.getBytes());
 	    	} else {
 //	    		is = new FileInputStream(fullScriptPath);
-	    		is = DispatcherFactory.getInstance().getNavajoConfig().getScript(packagePath+"/"+script);
+	    		is = navajoIOConfig.getScript(packagePath+"/"+script);
 	    	}
 	    	
-	    	InputStream sis = DispatcherFactory.getInstance().getNavajoConfig().getScript(packagePath+script);
+	    	InputStream sis = navajoIOConfig.getScript(packagePath+script);
 	    	if ( ScriptInheritance.containsInject(sis)) {
 	    		// Inheritance preprocessor before compiling.
 	    		InputStream ais = null;
@@ -2618,11 +2639,11 @@ public String mapNode(int ident, Element n) throws Exception {
 
 
   public static String compileToJava(String script,
-                                        String input, String output, String packagePath, NavajoClassLoader classLoader) throws Exception {
+                                        String input, String output, String packagePath, NavajoClassLoader classLoader, NavajoIOConfig navajoIOConfig) throws Exception {
      // File dir = new File(output);
     String javaFile = output + "/" + script + ".java";
      //ArrayList javaList = new ArrayList();
-   TslCompiler tslCompiler = new TslCompiler(classLoader);
+   TslCompiler tslCompiler = new TslCompiler(classLoader,navajoIOConfig);
      try {
        String bareScript;
 
@@ -2631,12 +2652,13 @@ public String mapNode(int ident, Element n) throws Exception {
        } else {
          bareScript = script;
        }
-       tslCompiler.compileScript(bareScript, input, output,packagePath, DispatcherFactory.getInstance().getNavajoConfig().getConfigPath());
+       tslCompiler.compileScript(bareScript, input, output,packagePath, navajoIOConfig.getConfigPath());
         return javaFile;
      }
      catch (Throwable ex) {
-       System.err.println("Error compiling script: "+script);
+       logger.error("Error compiling script: "+script,ex);
        //System.err.println("delete javaFile: "+javaFile.toString());
+       // Isn't this what 'finally' is for?
        File f = new File(javaFile);
        if (f.exists()) {
 		f.delete();
@@ -2649,7 +2671,7 @@ public String mapNode(int ident, Element n) throws Exception {
   }
   
   private static void compileStandAlone(boolean all, String script,
-                                        String input, String output, String packagePath, String[] extraclasspath) {
+                                        String input, String output, String packagePath, String[] extraclasspath, String configPath) {
      try {
       TslCompiler tslCompiler = new TslCompiler(null);
         try {
@@ -2663,7 +2685,7 @@ public String mapNode(int ident, Element n) throws Exception {
 
           //System.err.println("About to compile script: "+bareScript);
           //System.err.println("Using package path: "+packagePath);
-          tslCompiler.compileScript(bareScript, input, output,packagePath,DispatcherFactory.getInstance().getNavajoConfig().getConfigPath());
+		tslCompiler.compileScript(bareScript, input, output,packagePath,configPath);
           
           ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
         }
@@ -2726,7 +2748,7 @@ public String mapNode(int ident, Element n) throws Exception {
     }
   }
 
-  public static ArrayList<String> compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader) {
+  public static ArrayList<String> compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig) {
     System.err.println("Entering compiledirectory: " + currentDir + " output: " +
                        outputPath + " offset: " + offsetPath);
     ArrayList<String> files = new ArrayList<String>();
@@ -2740,7 +2762,7 @@ public String mapNode(int ident, Element n) throws Exception {
           System.err.println("Entering directory: " + current.getName());
           ArrayList<String> subDir = compileDirectoryToJava(currentDir, outputPath,
               offsetPath.equals("") ? current.getName() :
-              (offsetPath + "/" + current.getName()),classLoader);
+              (offsetPath + "/" + current.getName()),classLoader,navajoConfig);
           files.addAll(subDir);
         }
         else {
@@ -2763,7 +2785,7 @@ public String mapNode(int ident, Element n) throws Exception {
             String javaFile = null;
             try {
                 javaFile = compileToJava(compileName, currentDir.toString(),
-                              outputPath.toString(), offsetPath,classLoader);
+                              outputPath.toString(), offsetPath,classLoader,navajoConfig);
                 files.add(javaFile);
             } catch (Exception e) {
                
@@ -2776,7 +2798,7 @@ public String mapNode(int ident, Element n) throws Exception {
     return files;
   }
 
-  public static void fastCompileDirectory(File currentDir, File outputPath, String offsetPath, String[] extraclasspath, NavajoClassLoader classLoader) {
+  public static void fastCompileDirectory(File currentDir, File outputPath, String offsetPath, String[] extraclasspath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig) {
 
     StringBuffer classPath = new StringBuffer();
     classPath.append(System.getProperty("java.class.path"));
@@ -2788,7 +2810,7 @@ public String mapNode(int ident, Element n) throws Exception {
       }
     }
 
-    ArrayList<String> javaFiles =  compileDirectoryToJava(currentDir, outputPath, offsetPath,classLoader);
+    ArrayList<String> javaFiles =  compileDirectoryToJava(currentDir, outputPath, offsetPath,classLoader,navajoConfig);
     System.err.println("javaFiles: "+javaFiles);
     JavaCompiler compiler = new SunJavaCompiler();
 //    StringBuffer javaBuffer = new StringBuffer();
@@ -2810,7 +2832,7 @@ public String mapNode(int ident, Element n) throws Exception {
 
   }
 
-  public static void compileDirectory(File currentDir, File outputPath, String offsetPath, String[] classpath) {
+  public static void compileDirectory(File currentDir, File outputPath, String offsetPath, String[] classpath,String configPath) {
     System.err.println("Entering compiledirectory: "+currentDir+" output: "+outputPath+" offset: "+offsetPath);
 
     File[] scripts = null;
@@ -2821,7 +2843,7 @@ public String mapNode(int ident, Element n) throws Exception {
         File current = scripts[i];
         if (current.isDirectory()) {
           System.err.println("Entering directory: "+current.getName());
-          compileDirectory(currentDir, outputPath, offsetPath.equals("") ? current.getName() : (offsetPath + "/"+ current.getName()),classpath);
+          compileDirectory(currentDir, outputPath, offsetPath.equals("") ? current.getName() : (offsetPath + "/"+ current.getName()),classpath, configPath);
         } else {
           if (current.getName().endsWith(".xml")) {
             String name = current.getName().substring(0,current.getName().indexOf("."));
@@ -2837,7 +2859,7 @@ public String mapNode(int ident, Element n) throws Exception {
             } else {
               compileName = offsetPath+"/"+name;
             }
-            compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath,classpath);
+            compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath,classpath,configPath);
           }
         }
       }
@@ -2897,9 +2919,10 @@ public String mapNode(int ident, Element n) throws Exception {
   }
 
 public static void main(String[] args) throws Exception {
-
+	NavajoIOConfig config = new LegacyNavajoIOConfig();
     System.err.println("today = " + new java.util.Date());
-   
+    final String configPath = config.getConfigPath();
+
    if (args.length == 0) {
      System.out.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler <scriptDir> <compiledDir> [-all | scriptName]");
      System.err.println("NOTE: Startupswitch for extra class path (eg for adding an adaper jar) has not been implemented yet");
@@ -2920,7 +2943,7 @@ public static void main(String[] args) throws Exception {
    if (all) {
      File scriptDir = new File(input);
      File outDir = new File(output);
-     compileDirectory(scriptDir, outDir, "",null);
+     compileDirectory(scriptDir, outDir, "",null,configPath);
    }
  }
 

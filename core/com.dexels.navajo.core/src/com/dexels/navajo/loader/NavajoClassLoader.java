@@ -37,8 +37,12 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import navajo.Version;
+
 import org.dexels.utils.JarResources;
 import org.dexels.utils.MultiClassLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -76,6 +80,10 @@ public class NavajoClassLoader extends MultiClassLoader {
     protected HashSet<JarResources> jarResources = null;
     protected HashSet<JarResources> betaJarResources = null;
     
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoClassLoader.class);
+	
     private boolean noCaching = false;
     
     private static int instances = 0;
@@ -111,7 +119,11 @@ public class NavajoClassLoader extends MultiClassLoader {
         this.beta = false;
         this.compiledScriptPath = compiledScriptPath;
         instances++;
-        initializeJarResources();
+        if(Version.getDefaultBundleContext()!=null) {
+        	logger.info("OSGi environment detected. Disabling traditional jar discovery.");
+        } else {
+            initializeJarResources();
+        }
     }
 
     public void setNoCaching() {

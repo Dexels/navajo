@@ -41,7 +41,7 @@ public class DispatcherFactory {
 	 * @return
 	 * @throws NavajoException
 	 */
-	public static DispatcherInterface getInstance(File rootPath, String serverXmlPath, InputStreamReader fileInputStreamReader, String servletContextRootPath) throws NavajoException {
+	public static DispatcherInterface getInstance(File rootPath, String serverXmlPath, String servletContextRootPath) throws NavajoException {
 		if (instance != null) {
 			return instance;
 		}
@@ -64,14 +64,14 @@ public class DispatcherFactory {
 		}
 
 		
-		createInstance(absRootPath, fileInputStreamReader, configurationUrl,servletContextRootPath);
+		createInstance(absRootPath, configurationUrl,servletContextRootPath);
 		return instance;
 	}
 	
 	public static void shutdown() {
 		instance = null;
 		scriptEngineFactory = null;
-		NavajoConfig.terminate();
+//		NavajoConfig.terminate();
 	}
 	
 	public static ScriptEngineManager getScriptEngineManager() {
@@ -90,7 +90,7 @@ public class DispatcherFactory {
 	 * @return
 	 * @throws NavajoException
 	 */
-	public static DispatcherInterface getInstance(String rootPath, String serverXmlPath, InputStreamReader fileInputStreamReader, String servletContextRootPath) throws NavajoException {
+	public static DispatcherInterface getInstance(String rootPath, String serverXmlPath, String servletContextRootPath) throws NavajoException {
 
 		if (instance != null) {
 			return instance;
@@ -126,12 +126,12 @@ public class DispatcherFactory {
 			rootPath = rootPath+ "/";
 		}
 
-		createInstance(rootPath, fileInputStreamReader, configurationUrl,servletContextRootPath);
+		createInstance(rootPath, configurationUrl,servletContextRootPath);
 
 		return instance;
 	}
 
-	private static void createInstance(String rootPath, InputStreamReader fileInputStreamReader, URL configurationUrl,String servletContextRootPath)
+	private static void createInstance(String rootPath, URL configurationUrl,String servletContextRootPath)
 			throws NavajoException {
 		synchronized (semaphore) {
 			if (instance == null) {
@@ -142,7 +142,7 @@ public class DispatcherFactory {
 				  try {
 					  // Read configuration file.
 					  is = configurationUrl.openStream();
-					  nc = new NavajoConfig(fileInputStreamReader, null, is, rootPath,servletContextRootPath); 
+					  nc = new NavajoConfig( null, is, rootPath,servletContextRootPath); 
 					  navajo.Version.registerNavajoConfig(nc);
 				  }
 				  catch (Exception se) {

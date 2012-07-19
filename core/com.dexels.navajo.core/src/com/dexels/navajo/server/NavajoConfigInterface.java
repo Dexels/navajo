@@ -16,14 +16,11 @@ import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProvid
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
 
-public interface NavajoConfigInterface {
+public interface NavajoConfigInterface extends NavajoIOConfig {
 
 	// Read/write configuration.
 	public Navajo readConfig(String s) throws IOException;
 	public void writeConfig(String name, Navajo conf) throws IOException;
-	public String getConfigPath();
-	public String getRootPath();
-   public InputStream getResourceBundle(String name) throws IOException;
 
 	// Indentity methods.
 	public String getInstanceName();
@@ -46,8 +43,6 @@ public interface NavajoConfigInterface {
 	public double getCurrentCPUload();
 	
 	public boolean needsFullAccessLog(Access a);
-	public InputStream getScript(String name) throws IOException;
-	public InputStream getConfig(String name) throws IOException;
 	 
 	// Webservice, user monitoring options
 	public void setMonitorOn(boolean b);
@@ -64,16 +59,13 @@ public interface NavajoConfigInterface {
    
 	// Setters/getters.
 	public void setStatisticsRunnerEnabled(boolean b);
-	public String getAdapterPath();
-	public String getClassPath();
-	public File getJarFolder();
-	public String getScriptPath();
+
 	public String getResourcePath();
 	public HashMap<String,String> getProperties();
 	public String getBetaUser();
-	public String getCompiledScriptPath();
 	public int getMaxAccessSetSize();
 	public float getAsyncTimeout();
+	@Deprecated
 	public String getDbPath();
 	public void doClearCache();
 	public void doClearScriptCache();

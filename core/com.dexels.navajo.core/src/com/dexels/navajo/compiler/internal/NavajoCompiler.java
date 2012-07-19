@@ -1,4 +1,4 @@
-package com.dexels.navajo.compiler;
+package com.dexels.navajo.compiler.internal;
 
 /**
  * <p>Title: Navajo Product Project</p>

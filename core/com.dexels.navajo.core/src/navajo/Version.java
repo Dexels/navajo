@@ -14,7 +14,6 @@ import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.GenericThread;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 import com.dexels.navajo.server.enterprise.scheduler.ClockInterface;
@@ -322,7 +321,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		  // - OSGi package lifecycles
 		  // right now I just dug up 
 
-		  NavajoConfig.terminate();
+//		  NavajoConfig.terminate();
 		  
 		  DispatcherFactory.getInstance().shutdown();
 		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");

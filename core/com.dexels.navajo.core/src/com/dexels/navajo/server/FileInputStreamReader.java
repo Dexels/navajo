@@ -21,10 +21,6 @@ public class FileInputStreamReader implements InputStreamReader {
       filePath = System.getProperty("user.dir");
   }
     
-  public FileInputStreamReader(String path) {
-      filePath = path;
-  }
-
 public InputStream getResource(String name) {
     try {
     	File f = new File(name);
