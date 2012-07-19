@@ -177,6 +177,22 @@ public final class DbConnectionBroker extends Object
 		return null;
 	}
 	
+	/** 
+	 * Fetch DbConnectionBroker based on connectionId
+	 * 
+	 * @param connectionId
+	 * @return
+	 */
+	public static DbConnectionBroker getConnectionBroker(int connectionId) {
+		
+		DbConnectionBroker broker = transactionContextBrokerMap.get(connectionId);
+		if ( broker == null ) {
+			System.err.println("COULD NOT FIND BROKER FOR CONNECTION ID: " + connectionId);
+			return null;
+		}
+		return broker;
+	}
+	
 	public final synchronized void refreshConnections() {
 		
 		long maxAge = (long) (System.currentTimeMillis() - this.timeoutDays * 86400000L);

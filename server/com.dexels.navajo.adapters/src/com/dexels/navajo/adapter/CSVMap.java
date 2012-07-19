@@ -49,6 +49,8 @@ public class CSVMap implements Mappable {
 	public String separator;
 	public int entryCount;
 	public boolean includeEmpty;
+	public boolean skipFirstRow;
+	public int maximumImportCount;
 
 	private boolean update = false;
 	private List<CSVEntryMap> draftEntries = null;
@@ -72,6 +74,15 @@ public class CSVMap implements Mappable {
 	public int getEntryCount() {
 		return entries.length;
 	}
+	
+	public int getEntryFieldCount() {
+	    int result = -1;
+	    if (entries != null && entries.length > 0) {
+	        CSVEntryMap e = (CSVEntryMap) entries[0];
+	        result = e.getEntrySize();
+	    }
+	    return result;
+	}
 
 	public CSVEntryMap[] getEntries() throws UserException {
 		try {
@@ -85,13 +96,21 @@ public class CSVMap implements Mappable {
 			if (f != null) {
 				BufferedReader buffer = new BufferedReader(f);
 				String line = "";
+				int lineCount = 0;
 				List<CSVEntryMap> entryList = new ArrayList<CSVEntryMap>();
 				while ((line = buffer.readLine()) != null) {
-					if (includeEmpty) {
-						parseLineWithEmpty(line, entryList);
-					} else {
-						parseLineDefault(line, entryList);
-					}
+				    if (maximumImportCount == 0 || (lineCount <= maximumImportCount)) {
+    					if (isSkipFirstRow() && lineCount == 0) {
+    					    // First line will be skipped. Probably contains headers
+    					} else {
+        				    if (includeEmpty) {
+        						parseLineWithEmpty(line, entryList);
+        					} else {
+        						parseLineDefault(line, entryList);
+        					}
+    					}
+				    }
+					lineCount++;
 				}
 				entries = new CSVEntryMap[entryList.size()];
 				entries = (CSVEntryMap[]) entryList.toArray(entries);
@@ -206,14 +225,14 @@ public class CSVMap implements Mappable {
 		Mappable csv = new CSVMap();
 		((CSVMap) csv).setSeparator(";");
 		((CSVMap) csv).setIncludeEmpty(false);
+		((CSVMap) csv).setSkipFirstRow(false);
 
-		Binary b = new Binary(new File("c:/csvtheanimals.csv"));
+		Binary b = new Binary(new File("C:/Temp/csv_personen.csv"));
 		((CSVMap) csv).setFileContent(b);
 		Mappable[] all = ((CSVMap) csv).getEntries();
 		for (int i = 0; i < all.length; i++) {
 			CSVEntryMap entryMap = ((CSVEntryMap) all[i]);
-			System.err.println("a = >" + entryMap.getEntry(new Integer(0)) + "< - >" + entryMap.getEntry(new Integer(1)) + "< - >"
-					+ entryMap.getEntry(new Integer(2))+"<");
+			System.err.println("a = >" + entryMap.getEntry(new Integer(0)) + "< - >" + entryMap.getEntry(new Integer(1)) + "< - >" + entryMap.getEntry(new Integer(2))+"<");
 		}
 	}
 
@@ -224,4 +243,20 @@ public class CSVMap implements Mappable {
 	public void setIncludeEmpty(boolean includeEmpty) {
 		this.includeEmpty = includeEmpty;
 	}
+
+    public boolean isSkipFirstRow() {
+        return skipFirstRow;
+    }
+
+    public void setSkipFirstRow(boolean skipFirstRow) {
+        this.skipFirstRow = skipFirstRow;
+    }
+
+    public int getMaximumImportCount() {
+        return maximumImportCount;
+    }
+
+    public void setMaximumImportCount(int maximumImportCount) {
+        this.maximumImportCount = maximumImportCount;
+    }
 }
