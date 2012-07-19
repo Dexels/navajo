@@ -17,6 +17,7 @@ public class Activator implements BundleActivator {
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 

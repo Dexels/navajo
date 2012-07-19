@@ -28,6 +28,7 @@ package com.dexels.navajo.mapping;
 import java.lang.management.ThreadInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -395,7 +396,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
       Exception {
     if (conditionArray != null) {
       //System.err.println("CHECKING CONDITIONS......, conditionArray = " + conditionArray.length);
-      ArrayList conditions = new ArrayList();
+      List<ConditionData> conditions = new ArrayList<ConditionData>();
       for (int i = 0; i < conditionArray.length; i++) {
         boolean check = (conditionArray[i].equals("") ? true :
                          Condition.evaluate(conditionArray[i], inMessage));

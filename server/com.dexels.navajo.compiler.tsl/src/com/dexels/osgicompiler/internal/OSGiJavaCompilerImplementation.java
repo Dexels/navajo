@@ -1,6 +1,5 @@
 package com.dexels.osgicompiler.internal;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,12 +11,12 @@ import java.util.Locale;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
+import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
+import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
-import javax.tools.JavaCompiler.CompilationTask;
-import javax.tools.JavaFileObject.Kind;
 
 import org.apache.commons.io.IOUtils;
 import org.osgi.framework.BundleContext;
@@ -90,30 +89,29 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		return baos.toByteArray();
 	}
 	
-	private void test() throws IOException {
-		byte[] jfo = compile("mathtest/Calculator",getExampleCode());
-		if (jfo==null) {
-			logger.error("compilation failed.");
-		} else {
-			logger.info("compilation ok: "+jfo.length);
-		}
-	}
+//	private void test() throws IOException {
+//		byte[] jfo = compile("mathtest/Calculator",getExampleCode());
+//		if (jfo==null) {
+//			logger.error("compilation failed.");
+//		} else {
+//			logger.info("compilation ok: "+jfo.length);
+//		}
+//	}
 
-	private InputStream getExampleCode() {
-        String example = 									
-        		"package mathtest;\n"+
-                "public class Calculator { \n"
-               + "  public void testAdd() { "
-               + "    System.out.println(200+300); \n"
-               + "    org.apache.commons.io.IOUtils aaaa; \n"
-//               + "   testcompiler.Activator a = new testcompiler.Activator();} \n"
-             + "   } \n"
-               + "  public static void main(String[] args) { \n"
-               + "    Calculator cal = new Calculator(); \n"
-               + "    cal.testAdd(); \n"
-               + "  } " + "} ";	
-        return new ByteArrayInputStream(example.getBytes());
-	}
+//	private InputStream getExampleCode() {
+//        String example = 									
+//        		"package mathtest;\n"+
+//                "public class Calculator { \n"
+//               + "  public void testAdd() { "
+//               + "    System.out.println(200+300); \n"
+//               + "    org.apache.commons.io.IOUtils aaaa; \n"
+//             + "   } \n"
+//               + "  public static void main(String[] args) { \n"
+//               + "    Calculator cal = new Calculator(); \n"
+//               + "    cal.testAdd(); \n"
+//               + "  } " + "} ";	
+//        return new ByteArrayInputStream(example.getBytes());
+//	}
 	
     private  JavaFileObject getJavaSourceFileObject(String className, InputStream contents) throws IOException
     {

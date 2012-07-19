@@ -3,15 +3,8 @@ package com.dexels.navajo.compiler.tsl.internal;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.JavaCompiler;
-import com.dexels.navajo.compiler.ScriptCompiler;
-import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.osgicompiler.OSGiJavaCompiler;
 
@@ -20,10 +13,6 @@ public class JavaCompilerComponent implements JavaCompiler {
 	private NavajoIOConfig navajoIOConfig = null;
 	private OSGiJavaCompiler javaCompiler = null;
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(JavaCompilerComponent.class);
-
-	
 	public void setIOConfig(NavajoIOConfig config) {
 		this.navajoIOConfig = config;
 	}

@@ -42,7 +42,6 @@ public class TslCompileException extends Exception {
     private int endOffset;
     private XMLElement mySource;
     private final int code;
-    @SuppressWarnings("unchecked")
 	private Map solutions = null;
     private String offendingAttribute = null;
     
@@ -81,11 +80,10 @@ public class TslCompileException extends Exception {
      * @return
      */
     public XMLElement getSource() {
-        // TODO Auto-generated method stub
         return mySource;
     }
     
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public void setAttributeProblem(String attributeName, Map alternatives, XMLElement n) {
         offendingAttribute = attributeName;
         solutions = alternatives;
@@ -93,7 +91,7 @@ public class TslCompileException extends Exception {
         endOffset = n.getAttributeEndOffset(attributeName);
         System.err.println("Attribute problem: "+attributeName+" solutions: "+alternatives+" startOffset: "+startOffset+" endOff: "+endOffset);
     }
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public void setTagProblem(Map alternatives, XMLElement n) {
         offendingAttribute = null;
         solutions = alternatives;
@@ -106,7 +104,7 @@ public class TslCompileException extends Exception {
         return offendingAttribute!=null;
     }
     
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public Map getSolutions() {
         return solutions;
     }

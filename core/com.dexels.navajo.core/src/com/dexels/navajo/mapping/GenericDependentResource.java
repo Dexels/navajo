@@ -7,6 +7,7 @@ package com.dexels.navajo.mapping;
  * @author arjen
  *
  */
+@SuppressWarnings({"rawtypes","unchecked"})
 public class GenericDependentResource implements DependentResource {
 
 	private String type;

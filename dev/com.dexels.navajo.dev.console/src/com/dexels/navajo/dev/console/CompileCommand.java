@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.compiler.ScriptCompiler;
-import com.dexels.osgicompiler.OSGiJavaCompiler;
 
 public class CompileCommand {
 	

@@ -6,13 +6,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.compiler.ScriptCompiler;
 import com.dexels.navajo.compiler.ScriptEnumerator;
-import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class TslScriptEnumerator implements ScriptEnumerator {
 
+	@SuppressWarnings("unused")
 	private NavajoIOConfig navajoIOConfig = null;
 	
 	private final static Logger logger = LoggerFactory
@@ -29,13 +28,13 @@ public class TslScriptEnumerator implements ScriptEnumerator {
 	
 	public void activate() {
 		logger.info("ACTIVATE");
-//		TslCompiler.compileToJava(script, input, output, packagePath, getClass().getClassLoader(),navajoIOConfig);
 	}
 	
 	public static void main(String[] args) {
 		String script = "club/InitUpdateClub";
 		String pack = script.substring(0,script.lastIndexOf('/'));
 		System.err.println("pack: "+pack);
+//		this.navajoIOConfig;
 	}
 
 	@Override

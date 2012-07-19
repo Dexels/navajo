@@ -349,7 +349,7 @@ public class ScriptInheritance {
 		
 		// Remember tsl attributes.
 		HashMap<String,String> tslAttributes = new HashMap<String, String>();
-		Iterator all = before.enumerateAttributeNames();
+		Iterator<String> all = before.enumerateAttributeNames();
 		while ( all.hasNext() ) {
 			String name = all.next().toString();
 			String value = before.getAttribute(name)+"";

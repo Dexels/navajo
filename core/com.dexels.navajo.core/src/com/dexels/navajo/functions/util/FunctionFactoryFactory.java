@@ -2,13 +2,10 @@ package com.dexels.navajo.functions.util;
 
 
 import java.security.AccessControlException;
-import java.util.Map;
 
-import navajo.ExtensionDefinition;
 import navajo.Version;
 
 import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 
 
 public class FunctionFactoryFactory {
