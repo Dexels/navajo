@@ -172,8 +172,8 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 			response.setHeader("Content-Encoding", COMPRESS_GZIP);
 			out = new java.util.zip.GZIPOutputStream(response.getOutputStream());
 		} else {
-			logger.warn("No content encoding specified: (" + sendEncoding + "/"
-					+ recvEncoding + ")");
+//			logger.warn("No content encoding specified: (" + sendEncoding + "/"
+//					+ recvEncoding + ")");
 			out = response.getOutputStream();
 		}
 

@@ -11,6 +11,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 
+import navajo.ExtensionDefinition;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -26,7 +28,6 @@ import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.swing.laf.api.LookAndFeelWrapper;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		TipiExtension,TipiMainExtension {

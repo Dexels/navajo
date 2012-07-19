@@ -7,6 +7,8 @@ import java.util.Hashtable;
 import java.util.Set;
 
 
+import navajo.ExtensionDefinition;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
@@ -21,7 +23,6 @@ import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 public class TipiVaadinExtension extends TipiAbstractXMLExtension implements TipiExtension {
 

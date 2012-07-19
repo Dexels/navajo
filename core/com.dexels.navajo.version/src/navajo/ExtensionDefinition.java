@@ -1,4 +1,4 @@
-package com.dexels.navajo.version;
+package navajo;
 
 import java.io.InputStream;
 import java.io.Serializable;

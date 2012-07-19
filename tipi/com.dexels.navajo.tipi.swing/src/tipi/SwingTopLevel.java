@@ -2,6 +2,8 @@ package tipi;
 
 import java.io.IOException;
 
+import navajo.ExtensionDefinition;
+
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -9,7 +11,6 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiStandaloneToplevelContainer;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 public class SwingTopLevel implements TipiStandaloneToplevelContainer {
 

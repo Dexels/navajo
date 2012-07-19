@@ -3,7 +3,8 @@ package com.dexels.navajo.functions;
 import java.io.InputStream;
 import java.util.List;
 
-import com.dexels.navajo.version.ExtensionDefinition;
+import navajo.ExtensionDefinition;
+
 
 
 public class VaadinFunctionDefinition implements ExtensionDefinition {

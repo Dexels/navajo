@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import navajo.ExtensionDefinition;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +16,6 @@ import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.actions.TipiActionFactory;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 /**
  * <p>Title: </p>
@@ -41,7 +42,7 @@ public class TipiActionManager implements Serializable, IActionManager {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.tipi.actionmanager.IActionManager#addAction(com.dexels.navajo.tipi.tipixml.XMLElement, com.dexels.navajo.version.ExtensionDefinition)
+	 * @see com.dexels.navajo.tipi.actionmanager.IActionManager#addAction(com.dexels.navajo.tipi.tipixml.XMLElement, navajo.ExtensionDefinition)
 	 */
 	@Override
 	public void addAction(XMLElement actionDef,ExtensionDefinition ed) throws ClassNotFoundException {
