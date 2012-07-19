@@ -74,11 +74,12 @@ public class AsyncClient {
 		client.setTimeout(30000); // 30 seconds timeout; if no server reply, the
 											// request expires
 		// client.setThreadPool(executor);
-		try {
-			client.start();
-		} catch (Exception e) {
-			logger.error("Error: ", e);
-		}
+//		try {
+//			client.start();
+//		} catch (Exception e) {
+//			logger.error("Error: ", e);
+//		}
+		logger.warn("Skipped the 'start' method call, it seems to have vanished. Don't know if it's a problem.");
 	}
 
 	public void callService(String service, final NavajoResponseHandler continuation) throws IOException, NavajoException {
