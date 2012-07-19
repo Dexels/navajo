@@ -9,6 +9,8 @@ import java.util.Vector;
 
 import javax.imageio.spi.ServiceRegistry;
 
+import navajo.ExtensionDefinition;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +18,6 @@ import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 public class JarFunctionFactory extends FunctionFactoryInterface implements Serializable {
 
@@ -130,7 +131,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 		
 		try {
 			// TODO Detect OSGi mode
-			Iterator<?> iter = ServiceRegistry.lookupProviders(Class.forName("com.dexels.navajo.version.ExtensionDefinition", true, myClassLoader),myClassLoader);
+			Iterator<?> iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader),myClassLoader);
 			while(iter.hasNext()) {
 				ExtensionDefinition ed = (ExtensionDefinition) iter.next();
 				readDefinitionFile(fuds, ed);

@@ -4,7 +4,8 @@ Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.22.qualifier
 Bundle-Activator: com.dexels.navajo.version.AbstractVersion
-Export-Package: com.dexels.navajo.version;uses:="org.osgi.framework,org.slf4j"
+Export-Package: com.dexels.navajo.version;uses:="org.osgi.framework,org.slf4j",
+ navajo
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .
 Import-Package: org.osgi.framework,

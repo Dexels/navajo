@@ -23,11 +23,11 @@ public class HandlerFactory {
 	public static ServiceHandler createHandler(String handler, NavajoConfigInterface navajoConfig, Access access)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 
-		logger.info("handlerRepository contains: "+handlerRepository.size()+" handlers!");
+		//logger.info("handlerRepository contains: "+handlerRepository.size()+" handlers!");
 		ServiceHandler registeredHandler = handlerRepository.get(handler);
 		if(registeredHandler!=null) {
 			
-			logger.info("Using handler locally cached : "+registeredHandler.toString()+".");
+			//logger.info("Using handler locally cached : "+registeredHandler.toString()+".");
 			registeredHandler.setInput(access);
 			return registeredHandler;
 		}

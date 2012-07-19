@@ -4,7 +4,8 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.dexels.navajo.version.ExtensionDefinition;
+import navajo.ExtensionDefinition;
+
 
 
 public class PDFFunctionDefinitions implements ExtensionDefinition {

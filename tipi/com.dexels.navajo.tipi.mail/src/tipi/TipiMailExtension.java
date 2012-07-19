@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
+import navajo.ExtensionDefinition;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
@@ -14,7 +16,6 @@ import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiExtension {
 

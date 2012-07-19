@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import navajo.ExtensionDefinition;
 import navajo.Version;
 
 import org.osgi.framework.BundleContext;
@@ -15,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 public class OsgiFunctionFactory extends JarFunctionFactory {
 

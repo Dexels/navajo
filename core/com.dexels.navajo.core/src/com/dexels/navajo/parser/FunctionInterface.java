@@ -21,7 +21,7 @@ import com.dexels.navajo.document.NavajoFactory;
 
 public abstract class FunctionInterface {
 
-    private List<Object> operandList = null;
+    private ArrayList<Object> operandList = null;
     protected Navajo inMessage = null;
     protected Message currentMessage = null;
     
@@ -251,7 +251,7 @@ public abstract class FunctionInterface {
     
     public abstract Object evaluate() throws TMLExpressionException;
 
-    protected final List<?> getOperands() {
+    protected final ArrayList<?> getOperands() {
         return operandList;
     }
 

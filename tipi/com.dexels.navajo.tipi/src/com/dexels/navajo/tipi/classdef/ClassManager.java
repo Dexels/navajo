@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import navajo.ExtensionDefinition;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 public final class ClassManager extends BaseClassManager implements Serializable, IClassManager {
 	
@@ -79,7 +80,7 @@ public final class ClassManager extends BaseClassManager implements Serializable
 	}
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.tipi.classdef.IClassManager#addTipiClassDefinition(com.dexels.navajo.tipi.tipixml.XMLElement, com.dexels.navajo.version.ExtensionDefinition)
+	 * @see com.dexels.navajo.tipi.classdef.IClassManager#addTipiClassDefinition(com.dexels.navajo.tipi.tipixml.XMLElement, navajo.ExtensionDefinition)
 	 */
 	@Override
 	public final void addTipiClassDefinition(XMLElement xe,

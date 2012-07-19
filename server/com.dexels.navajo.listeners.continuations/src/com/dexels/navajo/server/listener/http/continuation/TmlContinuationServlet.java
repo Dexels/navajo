@@ -112,7 +112,7 @@ public class TmlContinuationServlet extends HttpServlet implements SchedulableSe
 		// Not nice. Not thread safe on hot startup. TODO Move it someplace else. 
 		// I can not do this in the servlet init because it requires the Navajo context to be up, and
 		// that is not really the case.
-		logger.warn("WARNING: Omitting JMX registry of comet servlet!");
+		//logger.warn("WARNING: Omitting JMX registry of comet servlet!");
 //		if(!jmxRegistered) {
 //			JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "TmlCometServlet");
 //			jmxRegistered = true;
