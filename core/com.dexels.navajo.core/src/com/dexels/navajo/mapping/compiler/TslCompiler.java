@@ -2639,7 +2639,7 @@ public String mapNode(int ident, Element n) throws Exception {
 
 
   public static String compileToJava(String script,
-                                        String input, String output, String packagePath, NavajoClassLoader classLoader, NavajoIOConfig navajoIOConfig) throws Exception {
+                                        String input, String output, String packagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig) throws Exception {
      // File dir = new File(output);
     String javaFile = output + "/" + script + ".java";
      //ArrayList javaList = new ArrayList();
