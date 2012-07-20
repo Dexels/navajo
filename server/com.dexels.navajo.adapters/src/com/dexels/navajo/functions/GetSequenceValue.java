@@ -51,10 +51,10 @@ public class GetSequenceValue extends SingleValueQuery {
         query.evaluate();
         String dbIdenitifier = query.getDbIdentifier();
         if (sequencename != null) {
-            if (dbIdenitifier.equals(SQLMapConstants.ORACLEDB)) {
-                sql = "SELECT " + sequencename + ".nextval FROM dual";
-            } else if (dbIdenitifier.equals(SQLMapConstants.POSTGRESDB)) {
+            if (SQLMapConstants.POSTGRESDB.equals(dbIdenitifier)) {
                 sql = "SELECT nextval('" + sequencename + "') FROM dual";
+            } else {
+            	sql = "SELECT " + sequencename + ".nextval FROM dual";
             }
         }
         
