@@ -50,11 +50,14 @@ public class CompileCommand {
 			return;
 		}
 		try {
+			long tm = System.currentTimeMillis();
 			compiler.compileTsl(script);
 			logger.info("Tsl compiling complete.");
 			
 			javaCompiler.compileJava(script);
-			logger.info("Compiling java ocmplete.");
+			long tm2 = System.currentTimeMillis() - tm;
+			logger.info("Compiling java complete. took: "+tm2+" millis.");
+			
 		} catch (Exception e) {
 			logger.error("Error: ", e);
 		}
