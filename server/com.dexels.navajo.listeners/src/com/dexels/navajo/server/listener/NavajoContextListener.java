@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.LocalClientDispatcherWrapper;
@@ -35,8 +34,6 @@ public class NavajoContextListener implements ServletContextListener {
 	public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 	public static final String DEFAULT_SERVER_XML = "config/server.xml";
 	private static final Logger logger = LoggerFactory.getLogger(NavajoContextListener.class);
-	@SuppressWarnings("rawtypes")
-	private static ServiceRegistration navajoServerInstance;
 	@SuppressWarnings("rawtypes")
 	private static ServiceRegistration localClientInstance;
 
