@@ -179,6 +179,7 @@ public class NavajoServerContext {
 			result.put(name, infoMap);
 			
 		}
+		bf.close();
 		return result;
 	}
 
