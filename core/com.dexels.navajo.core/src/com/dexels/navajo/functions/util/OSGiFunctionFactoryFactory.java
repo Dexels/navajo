@@ -26,7 +26,7 @@ public class OSGiFunctionFactoryFactory  {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
-		BundleContext context = navajo.Version.getDefaultBundleContext();
+		BundleContext context = navajocore.Version.getDefaultBundleContext();
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass.getName(), "("+serviceKey+"="+name+")");
 			if(refs==null) {

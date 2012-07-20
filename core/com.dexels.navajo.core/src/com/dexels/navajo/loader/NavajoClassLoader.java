@@ -37,7 +37,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import navajo.Version;
+import navajocore.Version;
 
 import org.dexels.utils.JarResources;
 import org.dexels.utils.MultiClassLoader;

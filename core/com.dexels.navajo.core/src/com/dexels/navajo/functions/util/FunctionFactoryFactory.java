@@ -3,7 +3,7 @@ package com.dexels.navajo.functions.util;
 
 import java.security.AccessControlException;
 
-import navajo.Version;
+import navajocore.Version;
 
 import com.dexels.navajo.parser.FunctionInterface;
 

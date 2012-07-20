@@ -115,7 +115,7 @@ package com.dexels.navajo.parser;
  *
  */
 
-import navajo.Version;
+import navajocore.Version;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;

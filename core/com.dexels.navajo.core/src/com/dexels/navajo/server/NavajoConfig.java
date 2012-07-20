@@ -212,7 +212,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		persistenceManager = PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", configPath);
     		
     		if(adapterClassloader == null) {
-    			if(!navajo.Version.osgiActive()) {
+    			if(!navajocore.Version.osgiActive()) {
         			adapterClassloader = new NavajoLegacyClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
         			logger.warn("Setting non-OSGi legacy adapter classloader: " + adapterClassloader);
     			} else {
@@ -221,7 +221,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		}
 
     		if(betaClassloader==null) {
-    			if(!navajo.Version.osgiActive()) {
+    			if(!navajocore.Version.osgiActive()) {
         			betaClassloader = new NavajoLegacyClassLoader(adapterPath, compiledScriptPath, true, getClass().getClassLoader());
     			} else {
     				adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
@@ -713,7 +713,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
      */
     public final synchronized void doClearCache() {
 
-    	if(!navajo.Version.osgiActive()) {
+    	if(!navajocore.Version.osgiActive()) {
     		adapterClassloader = new NavajoLegacyClassLoader(adapterPath, null, getClass().getClassLoader());
     		betaClassloader = new NavajoLegacyClassLoader(adapterPath, null, true, getClass().getClassLoader());
     		GenericHandler.doClearCache();

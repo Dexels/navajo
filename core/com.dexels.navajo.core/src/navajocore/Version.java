@@ -1,4 +1,4 @@
-package navajo;
+package navajocore;
 
 import java.util.Dictionary;
 import java.util.Hashtable;

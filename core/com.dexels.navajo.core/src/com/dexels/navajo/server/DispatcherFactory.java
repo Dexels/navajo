@@ -143,7 +143,7 @@ public class DispatcherFactory {
 					  // Read configuration file.
 					  is = configurationUrl.openStream();
 					  nc = new NavajoConfig( null, is, rootPath,servletContextRootPath); 
-					  navajo.Version.registerNavajoConfig(nc);
+					  navajocore.Version.registerNavajoConfig(nc);
 				  }
 				  catch (Exception se) {
 					  se.printStackTrace(System.err);
@@ -159,7 +159,7 @@ public class DispatcherFactory {
 				  }
 				  
 				instance = new Dispatcher(nc);
-				navajo.Version.registerDispatcher(instance);
+				navajocore.Version.registerDispatcher(instance);
 				((Dispatcher) instance).init();
 				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
 				NavajoFactory.getInstance().setTempDir(instance.getTempDir());

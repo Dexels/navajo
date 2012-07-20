@@ -3,7 +3,7 @@ package com.dexels.navajo.server;
 import java.util.HashMap;
 import java.util.Map;
 
-import navajo.Version;
+import navajocore.Version;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;

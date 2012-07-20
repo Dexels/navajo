@@ -3,7 +3,7 @@ Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 2.9.10.qualifier
-Bundle-Activator: navajo.Version
+Bundle-Activator: navajocore.Version
 Export-Package: com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.navajo.server.resource",
  com.dexels.navajo.compiler,
  com.dexels.navajo.events;uses:="junit.framework",
@@ -85,8 +85,8 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  javax.management.monitor,
  javax.management.openmbean,
  javax.management.remote,
- org.apache.commons.io,
  navajo,
+ org.apache.commons.io,
  org.junit;resolution:=optional,
  org.junit.runner;resolution:=optional,
  org.junit.runners;resolution:=optional,
