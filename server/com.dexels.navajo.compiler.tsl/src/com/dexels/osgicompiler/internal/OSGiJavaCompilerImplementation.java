@@ -6,12 +6,15 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.Locale;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
+import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
@@ -20,13 +23,15 @@ import javax.tools.ToolProvider;
 
 import org.apache.commons.io.IOUtils;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.compiler.tsl.custom.CustomClassLoader;
+import com.dexels.navajo.compiler.tsl.custom.CustomClassloaderJavaFileManager;
+import com.dexels.navajo.compiler.tsl.custom.CustomJavaFileObject;
 import com.dexels.osgicompiler.OSGiJavaCompiler;
-import com.dexels.osgicompiler.filemanager.impl.CustomClassloaderJavaFileManager;
-import com.dexels.osgicompiler.filemanager.impl.CustomJavaFileObject;
 
 public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 
@@ -38,6 +43,9 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 	private CustomClassloaderJavaFileManager customJavaFileManager;
 	private JavaCompiler compiler;
 	private DiagnosticListener<JavaFileObject> compilerOutputListener;
+	private ServiceRegistration<JavaFileManager> fileManagerRegistration;
+	private CustomClassLoader customClassLoader;
+	private ServiceRegistration<ClassLoader> customClassLoaderRegistration;
 
 	public OSGiJavaCompilerImplementation() {
 		
@@ -59,7 +67,14 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		};
 		fileManager = compiler.getStandardFileManager(compilerOutputListener, null, null);
 		customJavaFileManager = new CustomClassloaderJavaFileManager(context, getClass().getClassLoader(), fileManager);
-
+		this.customClassLoader = new CustomClassLoader(customJavaFileManager);
+		
+		this.fileManagerRegistration = this.context.registerService(JavaFileManager.class, customJavaFileManager, null);
+		
+//		(type=navajoScriptClassLoader)
+		Dictionary<String, String> nsc = new Hashtable<String, String>();
+		nsc.put("type", "navajoScriptClassLoader");
+		this.customClassLoaderRegistration = this.context.registerService(ClassLoader.class, customClassLoader, nsc);
 		// test the example, it shouldn't really be here, actually
 //		try {
 //			test();
@@ -74,6 +89,12 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 			customJavaFileManager.close();
 		} catch (IOException e) {
 			logger.error("Error closing custom file manager",e);
+		}
+		if(fileManagerRegistration!=null) {
+			fileManagerRegistration.unregister();
+		}
+		if(customClassLoaderRegistration!=null) {
+			customClassLoaderRegistration.unregister();
 		}
 	}
 	

@@ -4,5 +4,6 @@
    <service>
       <provide interface="com.dexels.navajo.compiler.ScriptCompiler"/>
    </service>
-   <reference bind="setIOConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoIOConfig" name="NavajoIOConfig" policy="static" unbind="clearIOConfig"/>
+   <reference bind="setIOConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoIOConfig" name="NavajoIOConfig" policy="dynamic" unbind="clearIOConfig"/>
+   <reference bind="setClassLoader" cardinality="1..1" interface="java.lang.ClassLoader" name="ClassLoader" policy="dynamic" target="(type=navajoScriptClassLoader)" unbind="clearClassLoader"/>
 </scr:component>

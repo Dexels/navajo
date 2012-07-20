@@ -52,8 +52,9 @@ public class Activator implements BundleActivator {
 
 			@Override
 			public void report(Diagnostic<? extends JavaFileObject> jfo) {
-
-				logger.warn("Compilation problem: "+jfo.getMessage(Locale.ENGLISH));
+				if(jfo.getKind()==javax.tools.Diagnostic.Kind.ERROR || jfo.getKind()==javax.tools.Diagnostic.Kind.MANDATORY_WARNING) {
+					logger.warn("Compilation problem: "+jfo.getMessage(Locale.ENGLISH));
+				}
 				
 			}
 			
@@ -97,6 +98,7 @@ public class Activator implements BundleActivator {
                + "  public void testAdd() { "
                + "    System.out.println(200+300); \n"
                + "    org.apache.commons.io.IOUtils aaaa; \n"
+               + "    com.dexels.navajo.adapter.NavajoAccess nao; \n"
 //               + "   testcompiler.Activator a = new testcompiler.Activator();} \n"
              + "   } \n"
                + "  public static void main(String[] args) { \n"

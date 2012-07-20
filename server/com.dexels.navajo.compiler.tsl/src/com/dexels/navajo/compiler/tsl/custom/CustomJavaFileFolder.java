@@ -8,7 +8,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
@@ -16,11 +18,17 @@ import javax.tools.JavaFileObject.Kind;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.wiring.BundleWiring;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CustomJavaFileFolder {
 	private final List<JavaFileObject> elements = new ArrayList<JavaFileObject>();
 	private final BundleContext context;
 	private String packageName;
+	private final Map<String,JavaFileObject> contentMap = new HashMap<String, JavaFileObject>();
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CustomJavaFileFolder.class);
 	
 	public CustomJavaFileFolder(BundleContext context, String packageName) throws IOException, URISyntaxException {
 		this.context = context;
@@ -28,7 +36,7 @@ public class CustomJavaFileFolder {
 		elements.addAll(findAll(packageName));
 	}
 
-	public List<JavaFileObject> getEntries() {
+	public Iterable<JavaFileObject> getEntries() {
 		return Collections.unmodifiableList(elements);
 	}
 	
@@ -49,19 +57,29 @@ public class CustomJavaFileFolder {
 			return result;
 	}
 	
+	public JavaFileObject getFile(String localName) {
+		return contentMap.get(localName);
+	}
+	
 	private void enumerateWiring(String packageName, List<JavaFileObject> result, Bundle b) throws URISyntaxException, IOException {
 		BundleWiring bw =  b.adapt(BundleWiring.class);
-		Collection<String> cc = bw.listResources(packageName, null, BundleWiring.LISTRESOURCES_RECURSE);
+		if(bw==null) {
+			logger.warn("Can not retrieve entries for bundle: "+b.getSymbolicName()+" id: "+b.getBundleId()+" as it doesn't seem to be resolved.");
+			return;
+		}
+		Collection<String> cc = bw.listResources(packageName, null, BundleWiring.LISTRESOURCES_LOCAL);
 		for (String resource : cc) {
 			URL u = b.getResource(resource);
 			if(u!=null) {
-					InputStream openStream = null;
+//					InputStream openStream = null;
 					try {
-						openStream = u.openStream();
-						final CustomJavaFileObject customJavaFileObject = new CustomJavaFileObject(resource, u.toURI(),openStream,Kind.CLASS);
+//						openStream = u.openStream();
+						
+						final CustomJavaFileObject customJavaFileObject = new CustomJavaFileObject(resource, u.toURI(),u,Kind.CLASS);
 						result.add(customJavaFileObject);
+						contentMap.put(resource, customJavaFileObject);
 					} catch (FileNotFoundException e) {
-						final CustomJavaFileObject customJavaFileObject = new CustomJavaFileObject(resource, u.toURI(),null,Kind.CLASS);
+						final CustomJavaFileObject customJavaFileObject = new CustomJavaFileObject(resource, u.toURI(),(URL)null,Kind.CLASS);
 						result.add(customJavaFileObject);
 					}
 			}

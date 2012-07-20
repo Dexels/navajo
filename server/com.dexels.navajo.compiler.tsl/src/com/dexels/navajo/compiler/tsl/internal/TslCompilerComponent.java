@@ -10,7 +10,7 @@ import com.dexels.navajo.server.NavajoIOConfig;
 public class TslCompilerComponent implements ScriptCompiler {
 
 	private NavajoIOConfig navajoIOConfig = null;
-	
+	private ClassLoader classLoader = null;
 	private final static Logger logger = LoggerFactory
 			.getLogger(TslCompilerComponent.class);
 	
@@ -20,10 +20,18 @@ public class TslCompilerComponent implements ScriptCompiler {
 	@Override
 	public void compileTsl(String script) throws Exception {
 		String packagePath = script.substring(0,script.lastIndexOf('/'));
-		String javaFile = TslCompiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, null, navajoIOConfig);
+		String javaFile = TslCompiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, classLoader, navajoIOConfig);
 		logger.info("Javafile: "+javaFile);
 	}
 	
+	public void setClassLoader(ClassLoader cls) {
+		this.classLoader = cls;
+	}
+
+	public void clearClassLoader(ClassLoader cls) {
+		this.classLoader = null;
+	}
+
 	public void setIOConfig(NavajoIOConfig config) {
 		this.navajoIOConfig = config;
 	}
@@ -33,8 +41,11 @@ public class TslCompilerComponent implements ScriptCompiler {
 	}
 	
 	public void activate() {
-//		logger.info("ACTIVATE");
-//		TslCompiler.compileToJava(script, input, output, packagePath, getClass().getClassLoader(),navajoIOConfig);
+		logger.debug("Activating TSL compiler");
+	}
+	
+	public void deactivate() {
+		logger.debug("Deactivating TSL compiler");
 	}
 	
 	public static void main(String[] args) {

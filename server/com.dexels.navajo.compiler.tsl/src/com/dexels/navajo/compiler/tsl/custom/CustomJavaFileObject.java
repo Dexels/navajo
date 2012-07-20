@@ -7,8 +7,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
+import java.net.URL;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
@@ -19,12 +21,30 @@ import org.apache.commons.io.IOUtils;
 public class CustomJavaFileObject implements JavaFileObject {
 	private final String binaryName;
 	private final URI uri;
-	private String name;
-	private ByteArrayOutputStream baos;
+	private final String name;
 	private Kind kind;
-
+	private byte[] localContents;
+	private URL lazyURL;
+	
+	
 	public CustomJavaFileObject(String javaObjectName, URI uri, InputStream is,
 			Kind kind) throws IOException {
+		this(javaObjectName,uri,kind);
+		if (is != null) {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+			IOUtils.copy(is, baos);
+			setContents(baos.toByteArray());
+		}
+	}
+
+	public CustomJavaFileObject(String javaObjectName, URI uri, URL contents,
+			Kind kind) throws IOException {
+		this(javaObjectName,uri,kind);
+		this.lazyURL = contents;
+	}	
+	
+	private CustomJavaFileObject(String javaObjectName, URI uri, Kind kind) {
 		this.uri = uri;
 		this.binaryName = javaObjectName;
 		this.kind = kind;
@@ -33,10 +53,9 @@ public class CustomJavaFileObject implements JavaFileObject {
 			stripName = stripName.substring(0, stripName.length() - 1);
 		}
 		name = javaObjectName.substring(javaObjectName.lastIndexOf('/') + 1);
-		if (is != null) {
-			baos = new ByteArrayOutputStream();
-			IOUtils.copy(is, baos);
-		}
+	}
+	private void setContents(byte[] byteArray) {
+		this.localContents = byteArray;
 	}
 
 	@Override
@@ -47,13 +66,25 @@ public class CustomJavaFileObject implements JavaFileObject {
 	@Override
 	public InputStream openInputStream() throws IOException {
 
-		final byte[] byteArray = baos.toByteArray();
-		return new ByteArrayInputStream(byteArray);
+		return getContents();
 	}
 
+	private InputStream getContents() throws IOException {
+		if(lazyURL!=null) {
+			return lazyURL.openStream();
+		}
+		return new ByteArrayInputStream(localContents);
+	}
+	
 	@Override
 	public OutputStream openOutputStream() throws IOException {
-		baos = new ByteArrayOutputStream();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream() {
+
+			@Override
+			public void close() throws IOException {
+				setContents( this.toByteArray());
+				super.close();
+			}};
 		return baos;
 	}
 
@@ -70,11 +101,10 @@ public class CustomJavaFileObject implements JavaFileObject {
 	@Override
 	public CharSequence getCharContent(boolean ignoreEncodingErrors)
 			throws IOException {
-		if (baos != null) {
-			byte[] b = baos.toByteArray();
-			return new String(b);
-		}
-		throw new UnsupportedOperationException();
+		final Reader lc = new InputStreamReader(getContents());
+		StringWriter sw = new StringWriter();
+		IOUtils.copy(lc, sw);
+		return sw.toString();
 	}
 
 	@Override
@@ -128,12 +158,4 @@ public class CustomJavaFileObject implements JavaFileObject {
 		return "CustomJavaFileObject{" + "uri=" + uri + '}';
 	}
 
-	public int getSize() {
-		if (baos == null) {
-			return -1;
-		} else {
-			return baos.size();
-		}
-
-	}
 }

@@ -90,9 +90,36 @@ public class CustomClassloaderJavaFileManager extends
 			binaryName = binaryName + ".java";
 		}
 		CustomJavaFileObject cjfo = fileMap.get(binaryName);
-		if (cjfo == null) {
+		if (cjfo != null) {
+			return cjfo;
 		}
-		return cjfo;
+    	String packageName = null;
+    	String localName = null;
+    	if(className.indexOf("/")>0) {
+    		packageName = className.substring(0,className.lastIndexOf("/"));
+    		localName = className.substring(className.lastIndexOf("/")+1);
+    	} else {
+    		packageName = "";
+    		localName = className;
+    	}
+    	CustomJavaFileFolder cjf = folderMap.get(packageName);
+		if (cjf == null) {
+			try {
+			cjf = new CustomJavaFileFolder(bundleContext,
+					packageName);
+			folderMap.put(packageName, cjf);
+			} catch(URISyntaxException e) {
+				logger.error("What? ",e);
+			}
+		}
+
+    	if(cjf!=null) {
+    		JavaFileObject jfo = cjf.getFile(binaryName);
+    		if(jfo!=null) {
+    			return jfo;
+    		}
+    	}
+		return null;
 	}
 
 	@Override
