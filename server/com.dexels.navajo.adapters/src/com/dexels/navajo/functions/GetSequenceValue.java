@@ -1,9 +1,10 @@
 package com.dexels.navajo.functions;
 
 import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
+import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
-public class GetSequenceValue extends SingleValueQuery {
+public class GetSequenceValue extends FunctionInterface {
     public GetSequenceValue() {}
     
     public String remarks() {
@@ -29,8 +30,8 @@ public class GetSequenceValue extends SingleValueQuery {
             sequencename = (String) o2;
         } else if (o1 instanceof String) { // No TransactionContext set.
             sql = (String) o1;
-            datasource = sql.substring(0, sql.indexOf(DATASOURCEDELIMITER));
-            sequencename = sql.substring(sql.indexOf(DATASOURCEDELIMITER) + 1);
+            datasource = sql.substring(0, sql.indexOf(SingleValueQuery.DATASOURCEDELIMITER));
+            sequencename = sql.substring(sql.indexOf(SingleValueQuery.DATASOURCEDELIMITER) + 1);
         } else
             throw new TMLExpressionException(this, "Invalid argument: " + o1);
 
@@ -51,10 +52,10 @@ public class GetSequenceValue extends SingleValueQuery {
         query.evaluate();
         String dbIdenitifier = query.getDbIdentifier();
         if (sequencename != null) {
-            if (dbIdenitifier.equals(SQLMapConstants.ORACLEDB)) {
-                sql = "SELECT " + sequencename + ".nextval FROM dual";
-            } else if (dbIdenitifier.equals(SQLMapConstants.POSTGRESDB)) {
+            if (SQLMapConstants.POSTGRESDB.equals(dbIdenitifier)) {
                 sql = "SELECT nextval('" + sequencename + "') FROM dual";
+            } else {
+            	sql = "SELECT " + sequencename + ".nextval FROM dual";
             }
         }
         
