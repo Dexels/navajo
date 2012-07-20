@@ -14,10 +14,8 @@ public class SystemPropertyContextIdentifier implements ContextIdentifier {
 	private final static Logger logger = LoggerFactory
 			.getLogger(SystemPropertyContextIdentifier.class);
 	private String componentName;
-	private ComponentContext componentContext = null;
 	public void activate(ComponentContext cc) {
 		componentName = (String) cc.getProperties().get("component.name");
-		this.componentContext = cc;
 		String myContext = getContextPath();
 		logger.info("Starting system property identifier. Using context: "+myContext);
 		if(myContext==null) {

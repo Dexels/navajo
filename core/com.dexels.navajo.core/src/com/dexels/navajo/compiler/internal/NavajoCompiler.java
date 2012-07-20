@@ -1,4 +1,4 @@
-package com.dexels.navajo.compiler;
+package com.dexels.navajo.compiler.internal;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -37,6 +37,7 @@ import com.dexels.navajo.legacy.compiler.SunJavaCompiler;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
+@Deprecated
 public class NavajoCompiler
 {
 		public static final String VERSION = "$Id$";

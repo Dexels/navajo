@@ -78,7 +78,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     public String rootPath;
     private PersistenceManager persistenceManager;
     private String betaUser;
-    private InputStreamReader inputStreamReader = null;
+    private final InputStreamReader inputStreamReader = new FileInputStreamReader();
     private String classPath = "";
     private boolean enableAsync = true;
     private boolean enableIntegrityWorker = true;
@@ -122,9 +122,8 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	 * 
 	 * @throws SystemException
 	 */
-	public NavajoConfig(InputStreamReader inputStreamReader, NavajoClassSupplier ncs, InputStream in, String externalRootPath, String servletContextRootPath)  throws SystemException {
+	public NavajoConfig(NavajoClassSupplier ncs, InputStream in, String externalRootPath, String servletContextRootPath)  throws SystemException {
 
-		this.inputStreamReader = inputStreamReader;
 		classPath = System.getProperty("java.class.path");
 		adapterClassloader = ncs;
 		// BIG NOTE: instance SHOULD be set at this point since instance needs to be known by classes
@@ -135,17 +134,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
 		
 	}
 
-	
-	public static void terminate() {
-		if(instance!=null) {
-			instance.shutdown();
-			instance=null;
-		}
-	}
-      
-	public void shutdown() {
-		// do shutdown stuff?
-	}
 	
     @SuppressWarnings("unchecked")
 	private void loadConfig(InputStream in, String externalRootPath, String servletContextPath)  throws SystemException{
@@ -224,7 +212,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		persistenceManager = PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", configPath);
     		
     		if(adapterClassloader == null) {
-    			if(!navajo.Version.osgiActive()) {
+    			if(!navajocore.Version.osgiActive()) {
         			adapterClassloader = new NavajoLegacyClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
         			logger.warn("Setting non-OSGi legacy adapter classloader: " + adapterClassloader);
     			} else {
@@ -233,7 +221,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		}
 
     		if(betaClassloader==null) {
-    			if(!navajo.Version.osgiActive()) {
+    			if(!navajocore.Version.osgiActive()) {
         			betaClassloader = new NavajoLegacyClassLoader(adapterPath, compiledScriptPath, true, getClass().getClassLoader());
     			} else {
     				adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
@@ -493,15 +481,9 @@ public final class NavajoConfig implements NavajoConfigInterface {
     /*
      * Gets the class path to be used for the compiling scripts.
      */
+    @Deprecated
     public final String getClassPath() {
       return this.classPath;
-    }
-
-    /*
-     * Returns the server.xml Navajo configuration document.
-     */
-    public final Navajo getConfiguration() {
-        return configuration;
     }
 
     /*
@@ -509,13 +491,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
      */
     public final String getCompiledScriptPath() {
         return compiledScriptPath;
-    }
-
-    /*
-     * Not used yet.
-     */
-    public final String getHibernatePath() {
-      return ( this.hibernatePath );
     }
 
     /*
@@ -626,48 +601,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
     }
     
     /*
-     * Gets the root path of the Navajo Installation if it exists.
-     */
-    private final File getRootDirectory() {
-    	File f = new File(getRootPath());
-    	if (f.exists()) {
-			return f;
-		}
-    	File workingDir = new File(System.getProperty("user.dir"));
-    	File rootDir = new File(workingDir,getRootPath());
-    	return rootDir;
-    }
-    
-    /*
-	 * Gets a resource from the 'navajo-tester' dir. For example authorization/authorization.xml
-	 * Its preferrable to the other filthy accessors, like:
-	 * new FileInputStream(new File(configPath + "/authorization/InputData.xml") )
-	 * 
-	 * @path
-	 */
-    public final InputStream getResource(String path) {
-    	try {
-    		File f = getResourceFile(path);
-    		if(!f.exists()) {
-    			return null;
-    		}
-			return new FileInputStream(f);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-    }
-    
-    /* 
-     * Same as the getResource(path), only it returns a file. It would be cleaner not to use this function,
-     * to make the navajo-config pure inputstream-based. 
-     * 
-     */
-    public final File getResourceFile(String path) {
-    	return new File(getRootDirectory(),path);
-    }
-    
-    /*
      * Gets the asynchronous service store instance.
      */
     public final com.dexels.navajo.mapping.AsyncStore getAsyncStore() {
@@ -698,69 +631,37 @@ public final class NavajoConfig implements NavajoConfigInterface {
        return StatisticsRunnerFactory.getInstance(dbPath, dbProperties, store);
    }
 
-    /*
-     * Gets an input stream for a specified script.
-     * 
-     */
+
     public final InputStream getScript(String name) throws IOException {
-      return getScript(name,false);
-    }
-
-    public final InputStream getScript(String name, boolean useBeta) throws IOException {
     	InputStream input;
-    	if (useBeta) {
-    		input = inputStreamReader.getResource(getScriptPath() + name + "_beta.xml");
-    		return input;
-    	} else {
-    		System.err.println("Not beta");
-    		String path = getScriptPath() + name + ".xml";
+		logger.debug("Not beta");
+		String path = getScriptPath() + name + ".xml";
+		input = inputStreamReader.getResource(path);
+		if(input==null) {
+    		path = getScriptPath() + name + ".tsl";
 			input = inputStreamReader.getResource(path);
-    		if(input==null) {
-        		path = getScriptPath() + name + ".tsl";
-    			input = inputStreamReader.getResource(path);
-    		}
-    		if(input==null) {
-    			System.err.println("No resource found");
-    			File f = new File(contextRoot,"scripts/"+name+".xml");
-    			if(!f.exists()) {
-    				f = new File(contextRoot,"scripts/"+name+".tsl");
-    			}
-    			System.err.println("Looking into contextroot: "+f.getAbsolutePath());
-    			if(f.exists()) {
-    				System.err.println("Retrieving script from servlet context: "+path);
-    				return new FileInputStream(f);
-    			}
-    		}
-    		return input;
-    	}
+		}
+		if(input==null) {
+			logger.debug("No resource found");
+			File f = new File(contextRoot,"scripts/"+name+".xml");
+			if(!f.exists()) {
+				f = new File(contextRoot,"scripts/"+name+".tsl");
+			}
+			logger.debug("Looking into contextroot: "+f.getAbsolutePath());
+			if(f.exists()) {
+				System.err.println("Retrieving script from servlet context: "+path);
+				return new FileInputStream(f);
+			}
+		}
+		return input;
     }
 
-    public final InputStream getTmlScript(String name) throws IOException {
-      return getTmlScript(name,false);
-    }
-    
     public File getContextRoot() {
    	 return contextRoot;
     }
 
-    public final InputStream getTmlScript(String name, boolean useBeta) throws IOException {
-    	InputStream input;
-    	if (useBeta) {
-    		input = inputStreamReader.getResource(getScriptPath() +  name + "_beta.tml");
-    		if (input == null)
-    			return getTmlScript(name, false);
-    		return input;
-    	} else {
-    		input = inputStreamReader.getResource(getScriptPath() + name + ".tml");
-    		return input;
-    	}
-    }
 
-    public final InputStream getTemplate(String name) throws IOException {
-      InputStream input = inputStreamReader.getResource(getScriptPath() + "/" + name + ".tmpl");
-      return input;
-    }
-
+    @Override
     public final InputStream getConfig(String name) throws IOException {
       InputStream input = inputStreamReader.getResource(getConfigPath() + "/" + name);
       return input;
@@ -777,6 +678,12 @@ public final class NavajoConfig implements NavajoConfigInterface {
       output.close();
     }
 
+    @Override
+	public void writeOutput(String scriptName, String suffix, InputStream is)
+			throws IOException {
+    	logger.error("writeOutput is not implemented here. ");
+    }
+    
     public final Navajo readConfig(String name) throws IOException {
     	InputStream is = inputStreamReader.getResource(getConfigPath() + name);
     	try {
@@ -806,7 +713,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
      */
     public final synchronized void doClearCache() {
 
-    	if(!navajo.Version.osgiActive()) {
+    	if(!navajocore.Version.osgiActive()) {
     		adapterClassloader = new NavajoLegacyClassLoader(adapterPath, null, getClass().getClassLoader());
     		betaClassloader = new NavajoLegacyClassLoader(adapterPath, null, true, getClass().getClassLoader());
     		GenericHandler.doClearCache();
@@ -821,16 +728,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     	GenericHandler.doClearCache();
     }
 
-    /*
-     * Not used.
-     */
-    public final synchronized void setNoScriptCaching() {
-        if (adapterClassloader instanceof NavajoClassLoader) {
-            if (adapterClassloader != null)
-                ((NavajoClassLoader) adapterClassloader).setNoCaching();
-        }
-  
-    }
+
     
     /**
      *
@@ -1014,12 +912,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
 		return instanceGroup;
 	}
 	
-
-	public static void main(String[] args) throws SystemException {
-		NavajoConfig nc = new NavajoConfig(null,null,null,null,null);
-		System.err.println(":: "+nc.getCurrentCPUload());
-	}
-
 	public float getAsyncTimeout() {
 		return asyncTimeout;
 	}

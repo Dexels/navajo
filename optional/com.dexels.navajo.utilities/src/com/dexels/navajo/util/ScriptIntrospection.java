@@ -60,8 +60,7 @@ public class ScriptIntrospection {
 				throw NavajoFactory.getInstance().createNavajoException(e);
 			}
 			
-			NavajoConfig nc = new NavajoConfig(new com.dexels.navajo.server.FileInputStreamReader(), 
-					(NavajoClassSupplier) null,
+			NavajoConfig nc = new NavajoConfig((NavajoClassSupplier) null,
 					configurationUrl.openStream(), rootPath,rootPath); 
 			TestDispatcher td = new TestDispatcher(nc);
 			new DispatcherFactory(td);

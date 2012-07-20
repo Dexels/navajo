@@ -1,0 +1,16 @@
+<project default="archive" basedir=".">
+	<path id="projectlibs">
+	   <fileset dir="javalibcp">
+	      <include name="**/*.jar"/>
+ 	   </fileset>
+	</path>
+
+    <target name="compile">
+		<javac srcdir="javasrc"  destdir="javadest" >
+			<
+		</javac>
+    </target>
+
+	<target name="archive" depends="compile">
+	</target> 
+</project>
