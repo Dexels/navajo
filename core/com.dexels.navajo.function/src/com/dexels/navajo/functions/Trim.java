@@ -51,6 +51,14 @@ public final Object evaluate()
     return "Trims a string";
   }
 
+  
+  public static void main(String[] args) throws TMLExpressionException {
+      Trim t = new Trim();
+      t.reset();
+      t.insertOperand("   aaap     ");
+      String res = (String) t.evaluate();
+      System.err.println(">"+res+"<");
+  }
 } // public class Trim extends FunctionInterface
 
 // EOF: $RCSfile$ //
