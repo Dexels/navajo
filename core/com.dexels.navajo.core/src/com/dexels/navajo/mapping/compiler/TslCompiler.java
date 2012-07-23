@@ -27,6 +27,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -2379,7 +2380,7 @@ public String mapNode(int ident, Element n) throws Exception {
  }
 
 
-  private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, String workingPath) throws SystemException{
+  private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, Writer fo) throws SystemException{
 	  
 	  boolean debugInput = false;
 	  boolean debugOutput = false;
@@ -2391,17 +2392,8 @@ public String mapNode(int ident, Element n) throws Exception {
 	  try {
 	      Document tslDoc = null;
 	      StringBuffer result = new StringBuffer();
-	      
-	      File dir = new File(workingPath);
-	      if (!dir.exists()) {
-	        dir.mkdirs();
-	      }
-	      
-	      File javaFile = new File(dir,packagePath+"/"+script+".java");
-	      javaFile.getParentFile().mkdirs();
-	      //System.err.println("Will create file: "+javaFile.toString());
 
-	      FileWriter fo = new FileWriter(javaFile);
+	      
 	      tslDoc = XMLDocumentUtils.createDocument(is, false);
 	     
 	      NodeList tsl = tslDoc.getElementsByTagName("tsl");
@@ -2616,7 +2608,19 @@ public String mapNode(int ident, Element n) throws Exception {
 		                 IncludeDependency.getScriptTimeStamp(inheritedScripts.get(i)) + "\"), \"" + 
 		                 inheritedScripts.get(i) + "\"));\n", "INHERIT"+inheritedScripts.get(i));
 			}
-			compileScript(is, packagePath, script, scriptPath, workingPath);
+		      
+		      File dir = new File(workingPath);
+		      if (!dir.exists()) {
+		        dir.mkdirs();
+		      }
+		      
+		      File javaFile = new File(dir,packagePath+"/"+script+".java");
+		      javaFile.getParentFile().mkdirs();
+		      //System.err.println("Will create file: "+javaFile.toString());
+
+		      FileWriter fo = new FileWriter(javaFile);
+
+			compileScript(is, packagePath, script, scriptPath, fo);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
