@@ -2570,7 +2570,7 @@ public String mapNode(int ident, Element n) throws Exception {
 	    } 
   }
     
-  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, String configPath) throws SystemException {
+  public void compileScript(String script, String scriptPath, String workingPath, String packagePath) throws SystemException {
 
 	    String fullScriptPath = scriptPath + "/" + packagePath + "/" + script + ".xml";
 	    
@@ -2656,7 +2656,7 @@ public String mapNode(int ident, Element n) throws Exception {
        } else {
          bareScript = script;
        }
-       tslCompiler.compileScript(bareScript, input, output,packagePath, navajoIOConfig.getConfigPath());
+       tslCompiler.compileScript(bareScript, input, output,packagePath);
         return javaFile;
      }
      catch (Throwable ex) {
@@ -2689,7 +2689,7 @@ public String mapNode(int ident, Element n) throws Exception {
 
           //System.err.println("About to compile script: "+bareScript);
           //System.err.println("Using package path: "+packagePath);
-		tslCompiler.compileScript(bareScript, input, output,packagePath,configPath);
+		tslCompiler.compileScript(bareScript, input, output,packagePath);
           
           ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
         }
