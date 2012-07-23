@@ -105,8 +105,12 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		CompilationTask task = compiler.getTask(null, customJavaFileManager, compilerOutputListener,new ArrayList<String>(), null, fileObjects);
 		task.call();
 		CustomJavaFileObject jfo = (CustomJavaFileObject) customJavaFileManager.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, className, Kind.CLASS);
+		if(jfo==null) {
+			return null;
+		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		IOUtils.copy(jfo.openInputStream(),baos);
+		
 		return baos.toByteArray();
 	}
 	

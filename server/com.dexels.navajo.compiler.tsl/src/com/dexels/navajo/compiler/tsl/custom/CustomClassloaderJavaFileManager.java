@@ -94,13 +94,10 @@ public class CustomClassloaderJavaFileManager extends
 			return cjfo;
 		}
     	String packageName = null;
-    	String localName = null;
     	if(className.indexOf("/")>0) {
     		packageName = className.substring(0,className.lastIndexOf("/"));
-    		localName = className.substring(className.lastIndexOf("/")+1);
     	} else {
     		packageName = "";
-    		localName = className;
     	}
     	CustomJavaFileFolder cjf = folderMap.get(packageName);
 		if (cjf == null) {

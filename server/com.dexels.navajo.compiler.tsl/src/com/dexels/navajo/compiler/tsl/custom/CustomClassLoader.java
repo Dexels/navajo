@@ -2,10 +2,10 @@ package com.dexels.navajo.compiler.tsl.custom;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
 
-import javax.tools.JavaFileManager.Location;
-import javax.tools.JavaFileObject.Kind;
 import javax.tools.JavaFileObject;
+import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardLocation;
 
 import org.apache.commons.io.IOUtils;
@@ -39,6 +39,7 @@ public class CustomClassLoader extends ClassLoader {
 	
 
     private byte[] loadClassData(String className) {
+    	logger.info("LOADING CLASS: "+className);
     	String name = className.replaceAll("\\.", "/");
 //    	logger.info(">>>>< "+name);
 //    	
@@ -67,7 +68,27 @@ public class CustomClassLoader extends ClassLoader {
 		}
     	return null;
     }
-    @Override
+    
+
+	@Override
+	protected URL findResource(String res) {
+    	String name = res.replaceAll("\\.", "/");
+    	logger.error("findResource not yet implemented!");
+    	try {
+//    		fileManager.getFo
+			JavaFileObject jfo = fileManager.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, name, Kind.CLASS);
+			if(jfo==null) {
+				return null;
+			}
+    	} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return super.findResource(res);
+	}
+
+
+
+	@Override
 	protected synchronized Class<?> loadClass(String name, boolean resolve)
 			throws ClassNotFoundException {
 		// TODO Auto-generated method stub

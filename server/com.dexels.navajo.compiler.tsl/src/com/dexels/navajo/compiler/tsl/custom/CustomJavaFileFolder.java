@@ -2,7 +2,7 @@ package com.dexels.navajo.compiler.tsl.custom;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -61,7 +61,8 @@ public class CustomJavaFileFolder {
 		return contentMap.get(localName);
 	}
 	
-	private void enumerateWiring(String packageName, List<JavaFileObject> result, Bundle b) throws URISyntaxException, IOException {
+	private void enumerateWiring(String packageName, List<JavaFileObject> result, Bundle b) throws IOException {
+//		List<CustomJavaFileObject> resultList = new ArrayList<CustomJavaFileObject>();
 		BundleWiring bw =  b.adapt(BundleWiring.class);
 		if(bw==null) {
 			logger.warn("Can not retrieve entries for bundle: "+b.getSymbolicName()+" id: "+b.getBundleId()+" as it doesn't seem to be resolved.");
@@ -72,15 +73,20 @@ public class CustomJavaFileFolder {
 			URL u = b.getResource(resource);
 			if(u!=null) {
 //					InputStream openStream = null;
+					URI uri = null;
 					try {
-//						openStream = u.openStream();
-						
-						final CustomJavaFileObject customJavaFileObject = new CustomJavaFileObject(resource, u.toURI(),u,Kind.CLASS);
-						result.add(customJavaFileObject);
-						contentMap.put(resource, customJavaFileObject);
-					} catch (FileNotFoundException e) {
-						final CustomJavaFileObject customJavaFileObject = new CustomJavaFileObject(resource, u.toURI(),(URL)null,Kind.CLASS);
-						result.add(customJavaFileObject);
+						uri = u.toURI();
+						try {
+//							openStream = u.openStream();
+							final CustomJavaFileObject customJavaFileObject = new CustomJavaFileObject(resource, uri,u,Kind.CLASS);
+							result.add(customJavaFileObject);
+							contentMap.put(resource, customJavaFileObject);
+						} catch (FileNotFoundException e) {
+							final CustomJavaFileObject customJavaFileObject = new CustomJavaFileObject(resource, uri,(URL)null,Kind.CLASS);
+							result.add(customJavaFileObject);
+						}
+					} catch (Exception e1) {
+						logger.warn("URI failed for URL: "+u+" ignoring.");
 					}
 			}
 		}

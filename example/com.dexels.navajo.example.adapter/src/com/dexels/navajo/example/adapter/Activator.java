@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
-import com.dexels.navajo.server.LocalClientDispatcherWrapper;
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;
