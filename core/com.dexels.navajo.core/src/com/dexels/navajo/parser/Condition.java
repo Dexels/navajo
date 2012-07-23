@@ -50,8 +50,7 @@ public final class Condition {
         }  catch (ParseException ce) {
             throw new SystemException(SystemException.PARSE_ERROR, "Condition syntax error: " + clause + "\n" + "After token " + ce.currentToken.toString() + "\n" + ce.getMessage(), ce);
         } catch (Throwable t) {
-            t.printStackTrace();
-            throw new TMLExpressionException("Invalid condition: " + clause + ".\nCause: " + t.getMessage());
+            throw new TMLExpressionException("Invalid condition: " + clause + ".\nCause: " + t.getMessage(),t);
         }
     }
 
