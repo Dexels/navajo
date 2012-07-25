@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -17,6 +20,11 @@ import java.net.URL;
 public class FileInputStreamReader implements InputStreamReader {
 
   private final String filePath;
+  
+private final static Logger logger = LoggerFactory
+		.getLogger(FileInputStreamReader.class);
+
+
   public FileInputStreamReader() {
       filePath = System.getProperty("user.dir");
   }
@@ -31,11 +39,11 @@ public InputStream getResource(String name) {
     	File dir = new File(filePath);
     	URL baseDir = dir.toURI().toURL();
     	URL res = new URL(baseDir,name);
-    	System.err.println("Resolved to res url: "+res.toString());
+    	logger.info("Resolved to res url: "+res.toString()+" while resolving name: "+name);
     	return res.openStream();
     } catch (Exception ioe) {
-//      ioe.printStackTrace();
-    	System.err.println("Could not load resource...: " + name + "(" + ioe.getMessage() + ")");
+    	
+    	logger.error("Could not load resource...: " + name + "(" + ioe.getMessage() + ")");
     	return null;
     }
   }
