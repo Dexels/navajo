@@ -78,7 +78,7 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 	@Override
 	public void updated(String pid, Dictionary settings)
 			throws ConfigurationException {
-		logger.info("Configuration received, pid: "+pid);
+//		logger.info("Configuration received, pid: "+pid);
 		try {
 			Object source = instantiate(bundleContext, pid,settings);
 			ServiceRegistration reg =  bundleContext.registerService(DB.class.getName(),(DB)source, settings);

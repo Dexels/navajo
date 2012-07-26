@@ -36,16 +36,11 @@ public class ResourceManagerTest {
 	private static ResourceManagerTest instance;
 	private static final Logger logger = LoggerFactory.getLogger(ResourceManagerTest.class);
 	
-
-	public ResourceManagerTest() {
-		logger.info("Resource Manager Test created");
-	}
 	public ResourceManager getResourceManager() {
 		return resourceManager;
 	}
 
 	public void activate(ComponentContext c) {
-		logger.info("Activating resource manager test");
 		this.componentContext = c;
 		this.bundleContext = componentContext.getBundleContext();
 

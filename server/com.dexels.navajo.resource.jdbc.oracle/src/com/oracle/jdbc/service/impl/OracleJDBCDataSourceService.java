@@ -58,7 +58,6 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
 
     @Override
     public DataSource createDataSource(Properties props) throws SQLException {
-    	logger.warn("Creating NON-pooled datasource. Pooling anyway");
 //    	OracleConnectionPoolDataSource source = new OracleConnectionPoolDataSource();
     	OracleConnectionPoolDataSource source = new OracleConnectionPoolDataSource();
         try {
@@ -74,7 +73,6 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
 
     @Override
     public ConnectionPoolDataSource createConnectionPoolDataSource(Properties props) throws SQLException {
-    	logger.warn("Creating pooled datasource!");
     	OracleConnectionPoolDataSource source = new OracleConnectionPoolDataSource();
         try {
 			return (ConnectionPoolDataSource) setup(source, props);
@@ -112,7 +110,7 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
     	if (props == null) {
             return null;
         }
-        logger.info("Oracle settings: "+props);
+//        logger.info("Oracle settings: "+props);
         if (props.containsKey(JDBC_DATABASE_NAME)) {
         	base.setDatabaseName(props.getProperty(JDBC_DATABASE_NAME));
         }
