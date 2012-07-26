@@ -687,4 +687,9 @@
         <input>date|string</input>
         <result>date</result>
     </function>
+    <function name="IsNumeric" class="com.dexels.navajo.functions.IsNumeric">
+        <description>IsNumeric(string|integer|double|float)</description>
+        <input>string|integer|double|float</input>
+        <result>boolean</result>
+    </function>
 </functiondef>
