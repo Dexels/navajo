@@ -52,7 +52,11 @@ public class InstallationPathResolver {
 				break;
 			}
 			String[] r = line.split("=");
-			systemContexts.put(r[0], r[1]);
+			if(r.length<2) {
+				logger.error("Bad line in tipi.properties: "+line+"\nIgnoring and continuing");
+			} else {
+				systemContexts.put(r[0], r[1]);
+			}
 		}
 		
 		br.close();
