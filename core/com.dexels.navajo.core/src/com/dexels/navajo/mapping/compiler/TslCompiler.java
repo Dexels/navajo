@@ -1339,7 +1339,6 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 									  fieldName + ";" + allDeps[a].getId());
 						  }
 					  } catch (Exception e) {
-//						  // TODO Auto-generated catch block
 //						  e.printStackTrace();
 					  } 
 				  } else {
@@ -1432,7 +1431,7 @@ public String fieldNode(int ident, Element n, String className,
             	localContextClass = Class.forName(className, false, loader);
             }
             
-          } catch (Exception e) { e.printStackTrace(System.err);throw new Exception("Could not find adapter: " + className); }
+          } catch (Exception e) { throw new Exception("Could not find adapter: " + className,e); }
           
           addDependency("dependentObjects.add( new JavaDependency( -1, \"" + className + "\"));\n", "JAVA"+className);
           
@@ -1501,8 +1500,7 @@ public String fieldNode(int ident, Element n, String className,
         }
       }
       catch (ClassNotFoundException e) {
-        e.printStackTrace();
-        throw new UserException(-1, "Error in script: could not find mappable object: " + className);
+        throw new UserException(-1, "Error in script: could not find mappable object: " + className,e);
       }
       
       if (mapPath!=null) {
@@ -1575,7 +1573,7 @@ public String fieldNode(int ident, Element n, String className,
     		  localContextClass = contextClass;
     	  }
 
-      } catch (Exception e) { e.printStackTrace(System.err);throw new Exception("Could not find adapter: " + className); }
+      } catch (Exception e) {throw new Exception("Could not find adapter: " + className,e); }
      
   
       String type = null;
@@ -2565,12 +2563,11 @@ public String mapNode(int ident, Element n) throws Exception {
 	      fo.write(result.toString());
 	      fo.close();
 	    } catch (Exception e) {
-	      e.printStackTrace();
-	      throw new SystemException(-1, "Error while generating Java code for script: " + script + ". Message: " + e.getMessage(), e);
+	      throw new SystemException(-1, "Error while generating Java code for script: " + script, e);
 	    } 
   }
     
-  public void compileScript(String script, String scriptPath, String workingPath, String packagePath) throws SystemException {
+  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, Writer outputWriter) throws SystemException {
 
 	    String fullScriptPath = scriptPath + "/" + packagePath + "/" + script + ".xml";
 	    
@@ -2589,11 +2586,11 @@ public String mapNode(int ident, Element n) throws Exception {
 	    		metais.close();
 				is = new ByteArrayInputStream(intermed.getBytes());
 	    	} else {
-//	    		is = new FileInputStream(fullScriptPath);
 	    		is = navajoIOConfig.getScript(packagePath+"/"+script);
 	    	}
 	    	
 	    	InputStream sis = navajoIOConfig.getScript(packagePath+"/"+script);
+	    	logger.info("Getting script: "+packagePath+"/"+script);
 	    	if ( ScriptInheritance.containsInject(sis)) {
 	    		// Inheritance preprocessor before compiling.
 	    		InputStream ais = null;
@@ -2608,23 +2605,10 @@ public String mapNode(int ident, Element n) throws Exception {
 		                 IncludeDependency.getScriptTimeStamp(inheritedScripts.get(i)) + "\"), \"" + 
 		                 inheritedScripts.get(i) + "\"));\n", "INHERIT"+inheritedScripts.get(i));
 			}
-		      
-		      File dir = new File(workingPath);
-		      if (!dir.exists()) {
-		        dir.mkdirs();
-		      }
-		      
-		      File javaFile = new File(dir,packagePath+"/"+script+".java");
-		      javaFile.getParentFile().mkdirs();
-		      //System.err.println("Will create file: "+javaFile.toString());
-
-		      FileWriter fo = new FileWriter(javaFile);
-
-			compileScript(is, packagePath, script, scriptPath, fo);
+			compileScript(is, packagePath, script, scriptPath, outputWriter);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new SystemException(-1, "Error while generating Java code for script: " + script + ". Message: " + e.getMessage(), e);
+			throw new SystemException(-1, "Error while generating Java code for script: " + script, e);
 		} finally {
 			if ( is != null ) {
 				try {
@@ -2642,11 +2626,9 @@ public String mapNode(int ident, Element n) throws Exception {
 //  }
 
 
-  public static String compileToJava(String script,
+  public String compileToJava(String script,
                                         String input, String output, String packagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig) throws Exception {
-     // File dir = new File(output);
     String javaFile = output + "/" + script + ".java";
-     //ArrayList javaList = new ArrayList();
    TslCompiler tslCompiler = new TslCompiler(classLoader,navajoIOConfig);
      try {
        String bareScript;
@@ -2656,7 +2638,11 @@ public String mapNode(int ident, Element n) throws Exception {
        } else {
          bareScript = script;
        }
-       tslCompiler.compileScript(bareScript, input, output,packagePath);
+       
+//       if(!packagePath.endsWith("/")) {
+//    	   packagePath = packagePath + "/";
+//       }
+       tslCompiler.compileScript(bareScript, input, output,packagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"));
         return javaFile;
      }
      catch (Throwable ex) {
@@ -2674,7 +2660,7 @@ public String mapNode(int ident, Element n) throws Exception {
     }
   }
   
-  private static void compileStandAlone(boolean all, String script,
+  private void compileStandAlone(boolean all, String script,
                                         String input, String output, String packagePath, String[] extraclasspath, String configPath) {
      try {
       TslCompiler tslCompiler = new TslCompiler(null);
@@ -2689,13 +2675,14 @@ public String mapNode(int ident, Element n) throws Exception {
 
           //System.err.println("About to compile script: "+bareScript);
           //System.err.println("Using package path: "+packagePath);
-		tslCompiler.compileScript(bareScript, input, output,packagePath);
+		Writer w = navajoIOConfig.getOutputWriter(output, packagePath, script, ".java");
+
+		tslCompiler.compileScript(bareScript, input, output,packagePath,w);
           
           ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
         }
         catch (Exception ex) {
           System.err.println("Error compiling script: "+script);
-          ex.printStackTrace();
           return;
         }
 //      }
@@ -2752,7 +2739,7 @@ public String mapNode(int ident, Element n) throws Exception {
     }
   }
 
-  public static ArrayList<String> compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig) {
+  public ArrayList<String> compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig) {
     System.err.println("Entering compiledirectory: " + currentDir + " output: " +
                        outputPath + " offset: " + offsetPath);
     ArrayList<String> files = new ArrayList<String>();
@@ -2802,7 +2789,7 @@ public String mapNode(int ident, Element n) throws Exception {
     return files;
   }
 
-  public static void fastCompileDirectory(File currentDir, File outputPath, String offsetPath, String[] extraclasspath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig) {
+  public void fastCompileDirectory(File currentDir, File outputPath, String offsetPath, String[] extraclasspath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig) {
 
     StringBuffer classPath = new StringBuffer();
     classPath.append(System.getProperty("java.class.path"));
@@ -2837,7 +2824,8 @@ public String mapNode(int ident, Element n) throws Exception {
   }
 
   public static void compileDirectory(File currentDir, File outputPath, String offsetPath, String[] classpath,String configPath) {
-    System.err.println("Entering compiledirectory: "+currentDir+" output: "+outputPath+" offset: "+offsetPath);
+	  TslCompiler compiler = new TslCompiler(null, new LegacyNavajoIOConfig());
+	System.err.println("Entering compiledirectory: "+currentDir+" output: "+outputPath+" offset: "+offsetPath);
 
     File[] scripts = null;
     File f = new File(currentDir,offsetPath);
@@ -2863,7 +2851,7 @@ public String mapNode(int ident, Element n) throws Exception {
             } else {
               compileName = offsetPath+"/"+name;
             }
-            compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath,classpath,configPath);
+            compiler.compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath,classpath,configPath);
           }
         }
       }
