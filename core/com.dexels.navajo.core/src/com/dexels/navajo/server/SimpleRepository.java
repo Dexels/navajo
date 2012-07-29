@@ -41,7 +41,6 @@ public class SimpleRepository implements Repository, GlobalManager {
 	}
 	
 	public void activate() {
-		logger.info("Activating SimpleRepository");
 	}
 
 	public void setNavajoConfig(NavajoConfigInterface config) {

@@ -1,12 +1,7 @@
 package com.dexels.navajo.server;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.HashMap;
@@ -19,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.loader.NavajoClassLoader;
@@ -41,7 +35,7 @@ import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
  * The default NavajoConfig class.
  * 
  */
-public final class NavajoConfig implements NavajoConfigInterface {
+public final class NavajoConfig extends FileNavajoConfig implements NavajoConfigInterface {
 
 	private static final int MAX_ACCESS_SET_SIZE = 50;
 	
@@ -78,7 +72,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
     public String rootPath;
     private PersistenceManager persistenceManager;
     private String betaUser;
-    private final InputStreamReader inputStreamReader = new FileInputStreamReader();
     private String classPath = "";
     private boolean enableAsync = true;
     private boolean enableIntegrityWorker = true;
@@ -264,7 +257,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 						}
 					}
 					} catch (Throwable e) {
-						System.err.println("WARNING: DescriptionProvider not available");
+						logger.warn("DescriptionProvider not available (normal in OSGi)");
 					}
 				}
 			} 
@@ -344,9 +337,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 					}
 				}
 			} else {
-				System.err.println("No jar path found");
 				jarFolder = new File(contextRoot,"WEB-INF/lib/");				
-				System.err.println("New jarfolder: "+jarFolder.getAbsolutePath());
 			}	
 		    					
     		maxAccessSetSize = (body.getProperty("parameters/max_webservices") == null ? MAX_ACCESS_SET_SIZE :
@@ -515,23 +506,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
         return properties;
     }
 
-    /**
-     * Opens a stream to the named bundle. (this method will add the .properties extension)
-     * Don't forget to close the stream when done.
-     * @param name
-     * @return
-     * @throws IOException
-     */
-    public InputStream getResourceBundle(String name) throws IOException {
-   	File adPath = new File(getAdapterPath());
-		File bundleFile = new File(adPath,name+".properties");
-		if(!bundleFile.exists()) {
-			System.err.println("Bundle: "+name+" not found. Resolved to non-existing file: "+bundleFile.getAbsolutePath());
-			return null;
-		}
-		FileInputStream fix = new FileInputStream(bundleFile);
-		return fix;
-    }
+
     /*
      * Gets the configuration path to the Navajo Instance.
      */
@@ -627,80 +602,18 @@ public final class NavajoConfig implements NavajoConfigInterface {
     /*
      * Gets the statistics runnner instance.
      */
+    @Override
     public final StatisticsRunnerInterface getStatisticsRunner() {
        return StatisticsRunnerFactory.getInstance(dbPath, dbProperties, store);
    }
 
-
-    public final InputStream getScript(String name) throws IOException {
-    	InputStream input;
-		logger.debug("Not beta");
-		String path = getScriptPath() + name + ".xml";
-		input = inputStreamReader.getResource(path);
-		if(input==null) {
-    		path = getScriptPath() + name + ".tsl";
-			input = inputStreamReader.getResource(path);
-		}
-		if(input==null) {
-			logger.debug("No resource found");
-			File f = new File(contextRoot,"scripts/"+name+".xml");
-			if(!f.exists()) {
-				f = new File(contextRoot,"scripts/"+name+".tsl");
-			}
-			logger.debug("Looking into contextroot: "+f.getAbsolutePath());
-			if(f.exists()) {
-				System.err.println("Retrieving script from servlet context: "+path);
-				return new FileInputStream(f);
-			}
-		}
-		return input;
-    }
-
+    @Override
     public File getContextRoot() {
    	 return contextRoot;
     }
 
 
-    @Override
-    public final InputStream getConfig(String name) throws IOException {
-      InputStream input = inputStreamReader.getResource(getConfigPath() + "/" + name);
-      return input;
-    }
 
-    public final void writeConfig(String name, Navajo conf) throws IOException {
-      Writer output = new FileWriter(new File(getConfigPath() + name));
-      try {
-        conf.write(output);
-      }
-      catch (NavajoException ex) {
-        throw new IOException(ex.getMessage());
-      }
-      output.close();
-    }
-
-    @Override
-	public void writeOutput(String scriptName, String suffix, InputStream is)
-			throws IOException {
-    	logger.error("writeOutput is not implemented here. ");
-    }
-    
-    public final Navajo readConfig(String name) throws IOException {
-    	InputStream is = inputStreamReader.getResource(getConfigPath() + name);
-    	try {
-    		if (is == null) {
-    			return null;
-    		}
-    		return NavajoFactory.getInstance().createNavajo(is);
-    	} finally {
-    		if ( is != null ) {
-    			try {
-    				is.close();
-    			} catch (Exception e) {
-    				// NOT INTERESTED.
-    			}
-    		}
-    	}
-    }
 
     private final String properDir(String in) {
         String result = in + (in.endsWith("/") ? "" : "/");
@@ -711,6 +624,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
      * Clears all NavajoClassLoaders instances. Both the general classloader as well as each instantiated script
      * classloader.
      */
+    @Override
     public final synchronized void doClearCache() {
 
     	if(!navajocore.Version.osgiActive()) {
@@ -724,6 +638,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     /*
      * Clears all script classloaders.
      */
+    @Override
     public final synchronized void doClearScriptCache() {
     	GenericHandler.doClearCache();
     }
@@ -762,6 +677,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
      * @param a the full access log candidate
      * @return whether full access log is required for access object.
      */
+    @Override
     public final boolean needsFullAccessLog(Access a) {
       // Check whether compiledscript has debugAll set or whether access object has debug all set.
       if ( a.isDebugAll() || ( a.getCompiledScript() != null && a.getCompiledScript().isDebugAll() ) ) {
@@ -787,6 +703,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
      *
      * @return
      */
+    @Override
     public final boolean isMonitorOn() {
       return monitorOn;
     }
@@ -796,6 +713,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
      *
      * @param monitorOn
      */
+    @Override
     public final void setMonitorOn(boolean monitorOn) {
       this.monitorOn = monitorOn;
     }
@@ -805,6 +723,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
      *
      * @return the current filter
      */
+    @Override
     public final String getMonitorUsers() {
       return monitorUsers;
     }
@@ -814,6 +733,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
      *
      * @param monitorUsers
      */
+    @Override
     public final void setMonitorUsers(String monitorUsers) {
       System.err.println("in setMonitorUsers(" + monitorUsers + ")");
       if (monitorUsers == null || monitorUsers.equals("")) {
@@ -837,6 +757,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
       * @param monitorWebservices
       */
 
+    @Override
     public final void setMonitorWebservices(String monitorWebservices) {
       System.err.println("in setMonitorWebservices(" + monitorWebservices + ")");
       if (monitorWebservices == null || monitorWebservices.equals("")) {
@@ -859,6 +780,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
      *
      * @return the current filter
      */
+    @Override
     public final String getMonitorWebservices() {
       return monitorWebservices;
     }
@@ -868,6 +790,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
      *
      * @return
      */
+    @Override
     public final int getMonitorExceedTotaltime() {
       return monitorExceedTotaltime;
     }
@@ -877,6 +800,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
      *
      * @param monitorExceedTotaltime
      */
+    @Override
     public final void setMonitorExceedTotaltime(int monitorExceedTotaltime) {
       this.monitorExceedTotaltime = monitorExceedTotaltime;
     }
@@ -884,23 +808,28 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	/**
 	 * @param classloader The classloader to set.
 	 */
+    @Override
 	public void setClassloader(NavajoClassSupplier classloader) {
 		this.adapterClassloader = classloader;
 	}
 	
+    @Override
 	public File getJarFolder() {
 		return jarFolder;
 	}
 
+    @Override
 	public String getInstanceName() {
 		return instanceName;
 	}
 
+    @Override
 	public DescriptionProviderInterface getDescriptionProvider() {
 //		System.err.println("Getting description provider. Config hash: "+hashCode());
 		return myDescriptionProvider;
 	}
 	
+    @Override
 	public double getCurrentCPUload() {
 		if ( myOs != null ) {
 			return ( myOs.getSystemLoadAverage() / myOs.getAvailableProcessors() );
@@ -908,30 +837,36 @@ public final class NavajoConfig implements NavajoConfigInterface {
 		else return 1.0;
 	}
 
+    @Override
 	public String getInstanceGroup() {
 		return instanceGroup;
 	}
 	
+    @Override
 	public float getAsyncTimeout() {
 		return asyncTimeout;
 	}
 
-	public boolean isEnableAsync() {
+	private boolean isEnableAsync() {
 		return enableAsync;
 	}
 
+    @Override
 	public boolean isEnableStatisticsRunner() {
 		return enableStatisticsRunner;
 	}
 
+    @Override
 	public String getDbPath() {
 		return dbPath;
 	}
 
+    @Override
 	public boolean isCompileScripts() {
 		return compileScripts;
 	}
 
+    @Override
 	public int getMaxAccessSetSize() {
 		return maxAccessSetSize;
 	}
@@ -940,6 +875,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 		this.maxAccessSetSize = maxAccessSetSize;
 	}
 
+    @Override
 	public Message getMessage(String msg) {
 		if ( body != null ) {
 			return body.getMessage(msg);
@@ -948,8 +884,9 @@ public final class NavajoConfig implements NavajoConfigInterface {
 		}
 	}
 
+    @Override
 	public String getCompilationLanguage() {
 		return compilationLanguage;
 	}
-	
+
 }

@@ -1,12 +1,8 @@
 package com.dexels.navajo.server;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.LockManager;
@@ -19,8 +15,6 @@ import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
 public interface NavajoConfigInterface extends NavajoIOConfig {
 
 	// Read/write configuration.
-	public Navajo readConfig(String s) throws IOException;
-	public void writeConfig(String name, Navajo conf) throws IOException;
 
 	// Indentity methods.
 	public String getInstanceName();
@@ -55,7 +49,6 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	public void setMonitorExceedTotaltime(int monitorExceedTotaltime);
 	
 	
-   public File getContextRoot();
    
 	// Setters/getters.
 	public void setStatisticsRunnerEnabled(boolean b);
