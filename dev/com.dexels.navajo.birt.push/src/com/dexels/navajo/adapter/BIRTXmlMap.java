@@ -149,6 +149,7 @@ public class BIRTXmlMap implements Mappable {
 	/*
 	 * For 'defined' reports, so the master page is left alone
 	 */
+	@SuppressWarnings("resource")
 	private Binary executeReport(String reportName, Map<String,Object> reportParams, Navajo input) throws NavajoException,
 			IOException {
 		Binary result = new Binary();
