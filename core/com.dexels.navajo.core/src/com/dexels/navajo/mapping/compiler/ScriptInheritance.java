@@ -285,7 +285,9 @@ public class ScriptInheritance {
 		// find inject tags.
 		
 		Vector<XMLElement> children = ( child == null ? subScript.getChildren() : child.getChildren() );
-		
+		if(!scriptPath.endsWith("/")) {
+			scriptPath = scriptPath+"/";
+		}
 		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i).getName().equalsIgnoreCase("inject")) {
 				XMLElement injectNode = children.get(i);

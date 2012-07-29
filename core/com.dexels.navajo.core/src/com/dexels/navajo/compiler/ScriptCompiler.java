@@ -1,5 +1,6 @@
 package com.dexels.navajo.compiler;
 
+
 /**
  * Interface for TSL compiling service
  * @author frank
@@ -7,6 +8,6 @@ package com.dexels.navajo.compiler;
  */
 public interface ScriptCompiler {
 
-	public abstract void compileTsl(String script) throws Exception;
+	void compileTsl(String scriptPath, String compileDate) throws Exception;
 
 }

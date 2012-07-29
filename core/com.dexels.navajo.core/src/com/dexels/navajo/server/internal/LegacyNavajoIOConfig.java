@@ -1,23 +1,12 @@
 package com.dexels.navajo.server.internal;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.FileNavajoConfig;
 import com.dexels.navajo.server.NavajoIOConfig;
 
-public class LegacyNavajoIOConfig implements NavajoIOConfig {
-
-	@Override
-	public InputStream getScript(String name) throws IOException {
-		return DispatcherFactory.getInstance().getNavajoConfig().getScript(name);
-	}
-
-	@Override
-	public InputStream getConfig(String name) throws IOException {
-		return DispatcherFactory.getInstance().getNavajoConfig().getConfig(name);
-	}
+public class LegacyNavajoIOConfig extends FileNavajoConfig implements NavajoIOConfig {
 
 	@Override
 	public String getConfigPath() {
@@ -27,11 +16,6 @@ public class LegacyNavajoIOConfig implements NavajoIOConfig {
 	@Override
 	public String getRootPath() {
 		return DispatcherFactory.getInstance().getNavajoConfig().getRootPath();
-	}
-
-	@Override
-	public InputStream getResourceBundle(String name) throws IOException {
-		return DispatcherFactory.getInstance().getNavajoConfig().getResourceBundle(name);
 	}
 
 	@Override
@@ -62,9 +46,9 @@ public class LegacyNavajoIOConfig implements NavajoIOConfig {
 	}
 
 	@Override
-	public void writeOutput(String scriptName, String suffix, InputStream is)
-			throws IOException {
-		DispatcherFactory.getInstance().getNavajoConfig().writeOutput(scriptName, suffix, is);
+	public File getContextRoot() {
+		return DispatcherFactory.getInstance().getNavajoConfig().getContextRoot();
 	}
+
 
 }
