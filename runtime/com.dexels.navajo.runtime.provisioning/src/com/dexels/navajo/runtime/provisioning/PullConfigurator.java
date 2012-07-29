@@ -5,7 +5,9 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.obr.RepositoryAdmin;
 
 public class PullConfigurator {
+	@SuppressWarnings("unused")
 	private ConfigurationAdmin myConfigurationAdmin = null;
+	@SuppressWarnings("unused")
 	private RepositoryAdmin myRepositoryAdmin = null;
 
 	public void addRepositoryAdmin(RepositoryAdmin admin) {
