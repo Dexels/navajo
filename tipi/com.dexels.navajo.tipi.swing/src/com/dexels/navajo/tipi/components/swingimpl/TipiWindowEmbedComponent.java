@@ -21,6 +21,7 @@ import com.dexels.navajo.tipi.components.core.ShutdownListener;
 import com.dexels.navajo.tipi.components.swingimpl.embed.TipiSwingStandaloneContainer;
 import com.dexels.navajo.tipi.components.swingimpl.swing.EmbeddedTipiFrame;
 
+@Deprecated
 public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 	/**
 	 * 

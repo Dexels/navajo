@@ -167,6 +167,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		super.performComponentMethod(name, compMeth, event);
 	}
 
+	@Deprecated
 	public void flatten(String serviceName, String server, String username,
 			String password, String pincode, String keystore, String keypass,
 			boolean isFinal) throws NavajoException, TipiBreakException {
