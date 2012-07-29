@@ -1,66 +1,53 @@
 package com.dexels.navajo.dev.console;
 
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.felix.service.command.CommandSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.compiler.JavaCompiler;
-import com.dexels.navajo.compiler.ScriptCompiler;
+import com.dexels.navajo.compiler.BundleCreator;
 
 public class CompileCommand {
 	
+//	import org.osgi.service.command.CommandProcessor;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(CompileCommand.class);
-	private final BundleContext context;
+	private BundleCreator bundleCreator = null;
 
-	public CompileCommand(BundleContext context) {
-		this.context = context;
+	public void setBundleCreator(BundleCreator bundleCreator) {
+		this.bundleCreator = bundleCreator;
 	}
 
-	private ServiceReference<ScriptCompiler> getScriptCompiler() {
-		return context.getServiceReference(ScriptCompiler.class);
+	public void clearBundleCreator(BundleCreator bundleCreator) {
+		this.bundleCreator = null;
 	}
-	
-	private ServiceReference<JavaCompiler> getJavaCompiler() {
-		return context.getServiceReference(JavaCompiler.class);
-	}
-	
-	public void compile(String script) {
-		ServiceReference<ScriptCompiler> sc = getScriptCompiler();
-		if(sc==null) {
-			logger.error("No script compiler service reference found.");
-			return;
-		}
-		ScriptCompiler compiler = context.getService(sc);
-		if(compiler==null) {
-			logger.error("Null compiler in service reference?!");
-			return;
-		}
-		ServiceReference<JavaCompiler> sc2 = getJavaCompiler();
-		if(sc2==null) {
-			logger.error("No java compiler service reference found.");
-			return;
-		}
-		JavaCompiler javaCompiler = context.getService(sc2);
-		if(javaCompiler==null) {
-			logger.error("Null java compiler in service reference?!");
-			return;
-		}
+
+	public void compile(CommandSession session, String script) {
 		try {
 			long tm = System.currentTimeMillis();
-			compiler.compileTsl(script);
-			logger.info("Tsl compiling complete.");
-			
-			javaCompiler.compileJava(script);
+			DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+			String formatted = df.format(new Date());
+			if(script.equals("/")) {
+				script = "";
+			}
+			List<String> success = new ArrayList<String>();
+			List<String> failures = new ArrayList<String>();
+			bundleCreator.createBundle(script,formatted,"xml",failures,success);
 			long tm2 = System.currentTimeMillis() - tm;
-			logger.info("Compiling java complete. took: "+tm2+" millis.");
-			
-		} catch (Exception e) {
-			logger.error("Error: ", e);
+			session.getConsole().println("Compiling java complete. took: "+tm2+" millis.");
+			session.getConsole().println("Succeeded: "+success.size()+" failed: "+failures.size());
+			session.getConsole().println("Avg: "+(1000 * (float)success.size() / tm2)+" scripts / sec");
+			for (String failed : failures) {
+				session.getConsole().println("Failed: "+failed);
+			}
+		} catch (Throwable e) {
+			e.printStackTrace(session.getConsole());
 		}
-		context.ungetService(sc);
 	}
 }
