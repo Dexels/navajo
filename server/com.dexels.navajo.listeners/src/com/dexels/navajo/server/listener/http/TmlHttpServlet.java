@@ -14,7 +14,6 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
-import java.util.zip.DeflaterInputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -40,8 +39,9 @@ import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
-import com.jcraft.jzlib.DeflaterOutputStream;
-import com.jcraft.jzlib.InflaterInputStream;
+import com.jcraft.jzlib.JZlib;
+import com.jcraft.jzlib.ZInputStream;
+import com.jcraft.jzlib.ZOutputStream;
 
 /**
  * Title:        Navajo
@@ -346,7 +346,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			if (streamingMode) {
 				if (sendEncoding != null && sendEncoding.equals(COMPRESS_JZLIB)) {
 					r = new BufferedReader(new java.io.InputStreamReader(
-							new InflaterInputStream(request.getInputStream())));
+							new ZInputStream(request.getInputStream())));
 				} else if (sendEncoding != null
 						&& sendEncoding.equals(COMPRESS_GZIP)) {
 					r = new BufferedReader(new java.io.InputStreamReader(
@@ -372,7 +372,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 					if (sendEncoding != null
 							&& sendEncoding.equals(COMPRESS_JZLIB)) {
 						r = new BufferedReader(new java.io.InputStreamReader(
-								new DeflaterInputStream(
+								new ZInputStream(
 										new ByteArrayInputStream(bytes))));
 					} else if (sendEncoding != null
 							&& sendEncoding.equals(COMPRESS_GZIP)) {
@@ -455,7 +455,8 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			if (recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {
 				response.setHeader("Content-Encoding", COMPRESS_JZLIB);
 				out = new BufferedWriter(new OutputStreamWriter(
-						new DeflaterOutputStream(response.getOutputStream()), "UTF-8"));
+						new ZOutputStream(response.getOutputStream(),
+								JZlib.Z_BEST_SPEED), "UTF-8"));
 			} else if (recvEncoding != null
 					&& recvEncoding.equals(COMPRESS_GZIP)) {
 				response.setHeader("Content-Encoding", COMPRESS_GZIP);
