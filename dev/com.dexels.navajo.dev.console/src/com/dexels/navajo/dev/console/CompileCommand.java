@@ -8,16 +8,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.felix.service.command.CommandSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.compiler.BundleCreator;
 
 public class CompileCommand {
 	
 //	import org.osgi.service.command.CommandProcessor;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(CompileCommand.class);
+//	private final static Logger logger = LoggerFactory
+//			.getLogger(CompileCommand.class);
 	private BundleCreator bundleCreator = null;
 
 	public void setBundleCreator(BundleCreator bundleCreator) {
