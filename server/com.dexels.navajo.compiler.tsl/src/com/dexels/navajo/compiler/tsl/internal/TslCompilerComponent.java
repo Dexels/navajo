@@ -1,8 +1,10 @@
 package com.dexels.navajo.compiler.tsl.internal;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -11,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.compiler.ScriptCompiler;
 import com.dexels.navajo.compiler.tsl.custom.PackageListener;
 import com.dexels.navajo.compiler.tsl.custom.PackageReportingClassLoader;
+import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.server.NavajoIOConfig;
 
@@ -18,43 +22,41 @@ public class TslCompilerComponent implements ScriptCompiler {
 
 	private NavajoIOConfig navajoIOConfig = null;
 	private ClassLoader classLoader = null;
-	private final static Logger logger = LoggerFactory
-			.getLogger(TslCompilerComponent.class);
-	
+	private final static Logger logger = LoggerFactory.getLogger(TslCompilerComponent.class);
+	private TslCompiler compiler;
+	String[] standardPackages = new String[]{"com.dexels.navajo.document","com.dexels.navajo.script.api","com.dexels.navajo.server","com.dexels.navajo.mapping","com.dexels.navajo.server.enterprise.tribe","com.dexels.navajo.mapping.compiler.meta"};
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String)
 	 */
 	@Override
-	public void compileTsl(String script) throws Exception {
+	public void compileTsl(String scriptPath, String compileDate) throws Exception {
 		String packagePath = null;
-		if(script.indexOf('/')>=0) {
-			packagePath = script.substring(0,script.lastIndexOf('/'));
+		String script = null;
+		if(scriptPath.indexOf('/')>=0) {
+			packagePath = scriptPath.substring(0,scriptPath.lastIndexOf('/'));
+			script = scriptPath.substring(scriptPath.lastIndexOf('/')+1);
 		} else {
 			packagePath ="";
+			script=scriptPath;
 		}
 		final Set<String> packages = new HashSet<String>();
+		for (String pkg : standardPackages) {
+			packages.add(pkg);
+		}
 		PackageReportingClassLoader prc = new PackageReportingClassLoader(classLoader);
 		prc.addPackageListener(new PackageListener() {
 			
 			@Override
 			public void packageFound(String name) {
-				System.err.println("PACKAGE FOUND: "+name);
 				packages.add(name);
 			}
 		});
-		
-		File output = new File(navajoIOConfig.getCompiledScriptPath());
-		File temp = new File(output,"temp");
-		System.err.println("::::: "+temp.getAbsolutePath());
-		if(temp.exists()) {
-			temp.delete();
-		}
-		temp.mkdirs();
-		
-		String javaFile = TslCompiler.compileToJava(script, navajoIOConfig.getScriptPath(), temp.getAbsolutePath(), packagePath, prc, navajoIOConfig);
-		logger.info("Javafile: "+javaFile);
-		System.err.println("Packages: "+packages);
-		generateManifest("Unknown","1.1.1", script,packages);
+		String scriptString = scriptPath.replaceAll("/", "_");
+		String javaFile = compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, prc, navajoIOConfig);
+//		logger.info("Javafile: "+javaFile);
+//		System.err.println("Packages: "+packages);
+		generateManifest(scriptString,"1.0.0",packagePath, script,packages,compileDate);
+		generateDs(packagePath, script);
 	}
 	
 	
@@ -79,25 +81,76 @@ public class TslCompilerComponent implements ScriptCompiler {
 //	Export-Package: com.dexels.osgicompiler
 	
 	
-	private void generateManifest(String description, String version, String script, Set<String> packages) {
-		String symbolicName = "navajo.script."+script.replaceAll("/", ".");
-		System.err.println("Bundle-SymbolicName: "+symbolicName);
-		System.err.println("Bundle-Version: "+version);
-		System.err.println("Bundle-Name: "+description);
-		System.err.println("Bundle-RequiredExecutionEnvironment: JavaSE-1.6");
+	private void generateManifest(String description, String version, String packagePath, String script, Set<String> packages, String compileDate) throws IOException {
+		String symbolicName = "navajo.script."+description;
+		PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, script, ".MF"));
+		
+		//		properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"
+		w.print("Manifest-Version: 1.0\r\n");
+		w.print("Bundle-SymbolicName: "+symbolicName+"\r\n");
+		w.print("Bundle-Version: "+version+"."+compileDate+"\r\n");
+		w.print("Bundle-Name: "+description+"\r\n");
+		w.print("Bundle-RequiredExecutionEnvironment: JavaSE-1.6\r\n");
+		w.print("Bundle-ManifestVersion: 2\r\n");
+		w.print("Bundle-ClassPath: .\r\n");
 		
 		StringBuffer sb = new StringBuffer();
 		Iterator<String> it = packages.iterator();
+		boolean first = true;
 		while (it.hasNext()) {
+			if(!first) {
+				sb.append(" ");
+			}
+			first = false;
 			String pck =  it.next();
 			sb.append(pck);
 			if(it.hasNext()) {
-				sb.append(",");
+				sb.append(",\r\n");
 			}
 			
 		}
-		System.err.println("Import-Package: "+sb.toString());
-		System.err.println("Service-Component: OSGI-INF/script.xml");
+		w.print("Import-Package: "+sb.toString()+"\r\n");
+		w.print("Service-Component: OSGI-INF/script.xml\r\n");
+		w.print("\r\n");
+		w.flush();
+		w.close();
+	}
+
+//	<?xml version="1.0" encoding="UTF-8"?>
+//	<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="club.InitUpdateClub">
+//	   <implementation class="com.dexels.navajo.server.CompiledScriptFactory"/>
+//	   <service>
+//	      <provide interface="com.dexels.navajo.server.CompiledScriptFactory"/>
+//	   </service>
+//	   <property name="serviceName" type="String" value="club.InitUpdateClub"/>
+//	</scr:component>
+//
+	
+	private void generateDs(String packagePath, String script) throws IOException {
+		String fullName = packagePath+"/"+script;
+		String symbolicName = fullName.replaceAll("/", ".");
+		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
+		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
+		xe.setAttribute("immediate", "true");
+		xe.setAttribute("name",symbolicName);
+		XMLElement implementation = new CaseSensitiveXMLElement("implementation");
+		xe.addChild(implementation);
+		implementation.setAttribute("class", symbolicName);
+		XMLElement service = new CaseSensitiveXMLElement("service");
+		xe.addChild(service);
+		XMLElement provide = new CaseSensitiveXMLElement("provide");
+		service.addChild(provide);
+		provide.setAttribute("interface", "com.dexels.navajo.server.CompiledScriptFactory");
+		XMLElement property = new CaseSensitiveXMLElement("property");
+		xe.addChild(property);
+		property.setAttribute("name", "serviceName");
+		property.setAttribute("type", "String");
+		property.setAttribute("value", symbolicName);
+		PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, script, ".xml"));
+		w.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		xe.write(w);
+		w.flush();
+		w.close();
 	}
 
 	public void setClassLoader(ClassLoader cls) {
@@ -116,8 +169,9 @@ public class TslCompilerComponent implements ScriptCompiler {
 		this.navajoIOConfig = null;
 	}
 	
-	public void activate() {
+	public void activate(Map<String,Object> properties) {
 		logger.debug("Activating TSL compiler");
+		compiler = new TslCompiler(classLoader, navajoIOConfig);
 	}
 	
 	public void deactivate() {

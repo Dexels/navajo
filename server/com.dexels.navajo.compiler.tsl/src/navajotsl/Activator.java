@@ -63,12 +63,12 @@ public class Activator implements BundleActivator {
 		customJavaFileManager = new CustomClassloaderJavaFileManager(context, getClass().getClassLoader(), fileManager);
 
 		// test the example, it shouldn't really be here, actually
-		JavaFileObject jfo = compile(getJavaSourceFileObject("mathtest/Calculator", getExampleCode()));
-		if (jfo==null) {
-			logger.error("compilation failed.");
-		} else {
-			logger.info("compilation ok.");
-		}
+//		JavaFileObject jfo = compile(getJavaSourceFileObject("mathtest/Calculator", getExampleCode()));
+//		if (jfo==null) {
+//			logger.error("compilation failed.");
+//		} else {
+//			logger.info("compilation ok.");
+//		}
 	}
 
 	private JavaFileObject compile(JavaFileObject javaSource) throws IOException {

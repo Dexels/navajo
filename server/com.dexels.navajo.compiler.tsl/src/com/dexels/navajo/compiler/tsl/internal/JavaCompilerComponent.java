@@ -47,15 +47,15 @@ public class JavaCompilerComponent implements JavaCompiler {
 	@Override
 	public void compileJava(String script) throws Exception {
 //		String pack = script.substring(0,script.lastIndexOf('/'));
-		final File file = new File(navajoIOConfig.getCompiledScriptPath()+"/temp/"+script+".java");
-		System.err.println("File: "+file.getAbsolutePath());
+		final File file = new File(navajoIOConfig.getCompiledScriptPath()+"/"+script+".java");
+//		System.err.println("File: "+file.getAbsolutePath());
 		FileInputStream fis = new FileInputStream(file);
 		byte[] bb = javaCompiler.compile(script, fis);
 		fis.close();
 		if(bb==null) {
 			logger.warn("Java compilation failed for script: "+script);
 		} else {
-			navajoIOConfig.writeOutput("temp/"+script, ".class", new ByteArrayInputStream(bb));			
+			navajoIOConfig.writeOutput(script, ".class", new ByteArrayInputStream(bb));			
 		}
 	}
 

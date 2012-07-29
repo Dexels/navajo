@@ -63,6 +63,10 @@ public class CustomJavaFileFolder {
 	
 	private void enumerateWiring(String packageName, List<JavaFileObject> result, Bundle b) throws IOException {
 //		List<CustomJavaFileObject> resultList = new ArrayList<CustomJavaFileObject>();
+		if(b.getSymbolicName().startsWith("navajo.script")) {
+			// ignore script bundles
+			return;
+		}
 		BundleWiring bw =  b.adapt(BundleWiring.class);
 		if(bw==null) {
 			logger.warn("Can not retrieve entries for bundle: "+b.getSymbolicName()+" id: "+b.getBundleId()+" as it doesn't seem to be resolved.");

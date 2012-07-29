@@ -39,23 +39,8 @@ public class CustomClassLoader extends ClassLoader {
 	
 
     private byte[] loadClassData(String className) {
-    	logger.info("LOADING CLASS: "+className);
     	String name = className.replaceAll("\\.", "/");
-//    	logger.info(">>>>< "+name);
-//    	
-//    	String packageName = null;
-//    	String localName = null;
-//    	if(name.indexOf("/")>0) {
-//    		packageName = name.substring(0,name.lastIndexOf("/"));
-//    		localName = name.substring(name.lastIndexOf("/")+1);
-//    	} else {
-//    		packageName = "";
-//    		localName = className;
-//    	}
-//    	System.err.println("Package: "+packageName);
-//    	System.err.println("localname: "+localName);
     	try {
-//    		fileManager.getFo
 			JavaFileObject jfo = fileManager.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, name, Kind.CLASS);
 			if(jfo==null) {
 				return null;
@@ -73,7 +58,7 @@ public class CustomClassLoader extends ClassLoader {
 	@Override
 	protected URL findResource(String res) {
     	String name = res.replaceAll("\\.", "/");
-    	logger.error("findResource not yet implemented!");
+    	logger.error("findResource not yet implemented: "+res+"\nor IS it?");
     	try {
 //    		fileManager.getFo
 			JavaFileObject jfo = fileManager.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, name, Kind.CLASS);

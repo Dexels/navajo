@@ -3,6 +3,8 @@ package com.dexels.osgicompiler.internal;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,11 +44,12 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 	private StandardJavaFileManager fileManager;
 	private CustomClassloaderJavaFileManager customJavaFileManager;
 	private JavaCompiler compiler;
-	private DiagnosticListener<JavaFileObject> compilerOutputListener;
+//	private DiagnosticListener<JavaFileObject> compilerOutputListener;
 	private ServiceRegistration<JavaFileManager> fileManagerRegistration;
 	private CustomClassLoader customClassLoader;
 	private ServiceRegistration<ClassLoader> customClassLoaderRegistration;
-
+	DiagnosticListener<JavaFileObject> compilerOutputListener;
+	
 	public OSGiJavaCompilerImplementation() {
 		
 	}
@@ -58,12 +61,9 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
 
 			@Override
-			public void report(Diagnostic<? extends JavaFileObject> jfo) {
-
-				logger.warn("Compilation problem: "+jfo.getMessage(Locale.ENGLISH));
-				
+			public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
+				logger.info("Problem in filemanager: "+diagnostic.getMessage(Locale.ENGLISH));
 			}
-			
 		};
 		fileManager = compiler.getStandardFileManager(compilerOutputListener, null, null);
 		customJavaFileManager = new CustomClassloaderJavaFileManager(context, getClass().getClassLoader(), fileManager);
@@ -101,11 +101,24 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 	public byte[] compile(String className, InputStream source) throws IOException {
 		 JavaFileObject javaSource = getJavaSourceFileObject(className, source);
 		 Iterable<? extends JavaFileObject> fileObjects = Arrays.asList(javaSource);
+		 final Writer sw = new StringWriter();
+		 DiagnosticListener<JavaFileObject> compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
 
+				@Override
+				public void report(Diagnostic<? extends JavaFileObject> jfo) {
+					try {
+						sw.write("Compilation problem: "+jfo.getMessage(Locale.ENGLISH)+"\n");
+					} catch (IOException e) {
+					}
+					
+				}
+				
+			};
 		CompilationTask task = compiler.getTask(null, customJavaFileManager, compilerOutputListener,new ArrayList<String>(), null, fileObjects);
 		task.call();
 		CustomJavaFileObject jfo = (CustomJavaFileObject) customJavaFileManager.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, className, Kind.CLASS);
 		if(jfo==null) {
+			logger.error("Compilation failed: \n"+sw.toString());
 			return null;
 		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
