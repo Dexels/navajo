@@ -677,4 +677,19 @@
         <input>string|integer,string</input>
         <result>boolean</result>
     </function>
+    <function name="IsDate" class="com.dexels.navajo.functions.IsDate">
+        <description>IsDate(date|string)</description>
+        <input>date|string</input>
+        <result>boolean</result>
+    </function>
+    <function name="ToDate" class="com.dexels.navajo.functions.ToDate">
+        <description>ToDate(date|string)</description>
+        <input>date|string</input>
+        <result>date</result>
+    </function>
+    <function name="IsNumeric" class="com.dexels.navajo.functions.IsNumeric">
+        <description>IsNumeric(string|integer|double|float)</description>
+        <input>string|integer|double|float</input>
+        <result>boolean</result>
+    </function>
 </functiondef>
