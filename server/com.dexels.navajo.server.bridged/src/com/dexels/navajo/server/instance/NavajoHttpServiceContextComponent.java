@@ -38,9 +38,9 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 	@SuppressWarnings("rawtypes")
 	public void updated(Dictionary settings) {
 		String pid = (String) settings.get("service.pid");
-		logger.info("Configuration received, pid: "+pid);
+//		logger.info("Configuration received, pid: "+pid);
 		try {
-			logger.info("Instantiating with pid: "+pid);
+//			logger.info("Instantiating with pid: "+pid);
 			Properties prop = new Properties(); 
 			Enumeration en = settings.keys();
 			while (en.hasMoreElements()) {
@@ -52,18 +52,18 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 			String servletContextPath = (String)settings.get("servletContextPath");
 			String installPath = (String)settings.get("installationPath");
 			addAdapterListener(installPath);
-			logger.info("Instantiate server: "+contextPath+" installpath: "+installPath);
+//			logger.info("Instantiate server: "+contextPath+" installpath: "+installPath);
 			wrapped = NavajoContextListener.initializeServletContext(contextPath,servletContextPath,installPath);
 		} catch (Exception e) {
-			logger.error("Starting navajo server: ", e);
+			logger.error("Error starting navajo server: ", e);
 		}
 	}
 	
 	private void addAdapterListener(String installPath) throws IOException {
 		fileInstallConfiguration = myConfigurationAdmin.createFactoryConfiguration("org.apache.felix.fileinstall",null);
-		Dictionary d = fileInstallConfiguration.getProperties();
+		Dictionary<String,Object> d = fileInstallConfiguration.getProperties();
 		if(d==null) {
-			d = new Hashtable();
+			d = new Hashtable<String,Object>();
 		}
 		File cp = new File(installPath);
 		File adapters = new File(cp,"adapters");
