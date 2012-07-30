@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import com.mongodb.DB;
 import com.mongodb.Mongo;
-import com.mongodb.MongoOptions;
 
 public class MongoManagedResourceFactory implements ManagedServiceFactory {
 
@@ -41,7 +40,7 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(MongoManagedResourceFactory.class);
-	private ServiceRegistration factoryRegistration;
+	private ServiceRegistration<ManagedServiceFactory> factoryRegistration;
 	
 	public MongoManagedResourceFactory(BundleContext bc, String pid, String name) {
 		this.bundleContext = bc;
@@ -50,7 +49,7 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 		
         Dictionary<String, Object> managedProperties = new Hashtable<String, Object>();
         managedProperties.put(Constants.SERVICE_PID, this.pid);
-        factoryRegistration = bundleContext.registerService(ManagedServiceFactory.class.getName(), this, managedProperties);
+        factoryRegistration = bundleContext.registerService(ManagedServiceFactory.class, this, managedProperties);
 
 	}
 	
@@ -98,7 +97,7 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 			String key = (String) en.nextElement();
 			prop.put(key, settings.get(key));
 		}
-		MongoOptions o = new MongoOptions();
+//		MongoOptions o = new MongoOptions();
 		
 		Mongo m = new Mongo((String) settings.get(HOST));
 		DB db = m.getDB((String) settings.get(DATABASE));
