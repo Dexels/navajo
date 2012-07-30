@@ -43,6 +43,16 @@ public class CommandHandler {
 		LoadCommand load = new LoadCommand();
 		load.setBundleCreator(bundleCreator);
 		registerCommand(load,"loadbundle");
+
+		FunctionListCommand func = new FunctionListCommand(bundleContext);
+		registerCommand(func,"functions");
+
+		AdapterListCommand adapter = new AdapterListCommand(bundleContext);
+		registerCommand(adapter,"adapters");
+
+		ScriptListCommand script = new ScriptListCommand(bundleContext);
+		registerCommand(script,"scripts");
+
 	}
 
 	private void registerCommand(Object c, String command) {

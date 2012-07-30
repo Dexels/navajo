@@ -18,10 +18,9 @@ public interface BundleCreator {
 
 	public static final String SCRIPTPROTOCOL = "script://";
 
-	
-
 	/**
 	 * Install a bundle of a specific script
+	 * @param force TODO
 	 * @param scriptPath
 	 * @throws BundleException
 	 * @throws FileNotFoundException
@@ -31,16 +30,16 @@ public interface BundleCreator {
 	
 //	public Collection<Long> installBundles(String scriptPrefix) throws BundleException;
 
-	void createBundle(String script, String compileDate, String extension,
-			List<String> failures, List<String> success) throws Exception;
+	public void createBundle(String script, String compileDate, String extension,
+			List<String> failures, List<String> success, List<String> skipped, boolean force) throws Exception;
 
 	public Date getBundleInstallationDate(String scriptPath);
 	public Date getScriptModificationDate(String scriptPath);
 	public Date getCompiledModificationDate(String scriptPath);
 
-	public void installBundles(File baseDir, List<String> failures, List<String> success) throws Exception;
-	public void installBundles(String scriptPath, List<String> failures,List<String> success) throws Exception;
+//	public void installBundles(File baseDir, List<String> failures, List<String> success) throws Exception;
+	public void installBundles(String scriptPath, List<String> failures,List<String> success, List<String> skipped, boolean force) throws Exception;
 	public void installBundle(File bundleFile, String scriptPath,
-			List<String> failures, List<String> success);
+			List<String> failures, List<String> success, List<String> skipped, boolean force);
 
 }

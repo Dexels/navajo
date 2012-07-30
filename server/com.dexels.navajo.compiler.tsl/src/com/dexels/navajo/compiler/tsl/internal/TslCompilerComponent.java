@@ -143,7 +143,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		provide.setAttribute("interface", "com.dexels.navajo.server.CompiledScriptFactory");
 		XMLElement property = new CaseSensitiveXMLElement("property");
 		xe.addChild(property);
-		property.setAttribute("name", "serviceName");
+		property.setAttribute("name", "navajo.scriptName");
 		property.setAttribute("type", "String");
 		property.setAttribute("value", symbolicName);
 		PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, script, ".xml"));

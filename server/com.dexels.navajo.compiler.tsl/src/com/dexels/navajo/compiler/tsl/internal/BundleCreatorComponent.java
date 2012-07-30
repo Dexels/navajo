@@ -70,12 +70,12 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	
 	@Override
-	public void createBundle(String script, String compileDate, String extension, List<String> failures, List<String> success) throws Exception {
+	public void createBundle(String script, String compileDate, String extension, List<String> failures, List<String> success, List<String> skipped, boolean force) throws Exception {
 		File scriptFolder = new File(navajoIOConfig.getScriptPath());
 		File f = new File(scriptFolder,script);
 
 		if(f.isDirectory()) {
-			compileAllIn(f,compileDate, failures,  success);
+			compileAllIn(f,compileDate, failures,  success,skipped,force);
 		} else {
 			File scriptFile = new File(scriptFolder,script+"."+extension);
 			if(!scriptFile.exists()) {
@@ -84,19 +84,21 @@ public class BundleCreatorComponent implements BundleCreator {
 			}
 			Date compiled = getCompiledModificationDate(script);
 			Date modified = getScriptModificationDate(script);
-			if(compiled!=null && compiled.after(modified)) {
+			if(!force && compiled!=null && compiled.after(modified)) {
 				logger.debug("Skipping up-to-date script: "+scriptFile.getAbsolutePath());
+				skipped.add(script);
 			} else {
 				scriptCompiler.compileTsl(script,compileDate);
 				javaCompiler.compileJava(script);
 				createBundleJar(script,compileDate);
+				success.add(script);
 			}
 
 		}
 	}
 	
 	
-	private void compileAllIn(File baseDir, String compileDate, List<String> failures, List<String> success) throws Exception {
+	private void compileAllIn(File baseDir, String compileDate, List<String> failures, List<String> success, List<String> skipped, boolean force) throws Exception {
 		final String extension = "xml";
 		File scriptPath = new File(navajoIOConfig.getScriptPath());
 		Iterator<File> it = FileUtils.iterateFiles(baseDir, new String[]{extension}, true);
@@ -109,8 +111,7 @@ public class BundleCreatorComponent implements BundleCreator {
 //			logger.info("File: "+relative);
 			String withoutEx = relative.substring(0,relative.lastIndexOf('.'));
 			try {
-				createBundle(withoutEx, compileDate,extension,failures,success);
-				success.add(relative);
+				createBundle(withoutEx, compileDate,extension,failures,success,skipped, force);
 			} catch (Exception e) {
 				logger.error("Error compiling script: "+relative,e);
 				failures.add("Error compiling script: "+relative);
@@ -120,26 +121,25 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 	
 	@Override
-	public void installBundles(String scriptPath, List<String> failures, List<String> success) throws Exception {
+	public void installBundles(String scriptPath, List<String> failures, List<String> success, List<String> skipped, boolean force) throws Exception {
 		final String extension = "jar";
 		File outputFolder = new File(navajoIOConfig.getCompiledScriptPath());
 		File f = new File(outputFolder,scriptPath);
 
 		if(f.isDirectory()) {
-			installBundles(f,failures,success);
+			installBundles(f,failures,success,skipped, force);
 		} else {
 			File jarFile = new File(outputFolder,scriptPath+"."+extension);
 			if(!jarFile.exists()) {
 				logger.error("Jar not found: "+scriptPath+" full path: "+jarFile.getAbsolutePath());
 				return;
 			}
-			installBundle(jarFile, scriptPath, failures, success);
+			installBundle(jarFile, scriptPath, failures, success,skipped, force);
 		}
 
 	}
 	
-	@Override
-	public void installBundles(File baseDir, List<String> failures, List<String> success) throws Exception {
+	private void installBundles(File baseDir, List<String> failures, List<String> success, List<String> skipped, boolean force) throws Exception {
 		final String extension = "jar";
 		File compiledScriptPath = new File(navajoIOConfig.getCompiledScriptPath());
 		Iterator<File> it = FileUtils.iterateFiles(baseDir, new String[]{extension}, true);
@@ -151,20 +151,25 @@ public class BundleCreatorComponent implements BundleCreator {
 			}
 //			logger.info("File: "+relative);
 			String withoutEx = relative.substring(0,relative.lastIndexOf('.'));
-			installBundle(file, withoutEx, failures, success);
+			installBundle(file, withoutEx, failures, success,skipped, force);
 
 		}
 	}
 
 	@Override
 	public void installBundle(File bundleFile, String scriptPath,
-			List<String> failures, List<String> success) {
+			List<String> failures, List<String> success, List<String> skipped, boolean force) {
 		try {
 			final String uri = SCRIPTPROTOCOL+scriptPath;
 			Bundle previous = bundleContext.getBundle(uri);
 			if(previous!=null) {
-				logger.info("Skipping bundle at: "+uri+" as it is already installed. Lastmod: "+new Date(previous.getLastModified())+" status: "+previous.getState());
-				return;
+				if (force) {
+					previous.uninstall();
+				} else {
+					logger.info("Skipping bundle at: "+uri+" as it is already installed. Lastmod: "+new Date(previous.getLastModified())+" status: "+previous.getState());
+					skipped.add(scriptPath);
+					return;
+				}
 			}
 			System.err.println("file: "+bundleFile.getName());
 			FileInputStream fis = new FileInputStream(bundleFile);
