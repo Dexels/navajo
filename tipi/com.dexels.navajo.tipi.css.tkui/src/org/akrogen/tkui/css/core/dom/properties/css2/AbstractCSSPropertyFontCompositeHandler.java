@@ -43,7 +43,7 @@ public abstract class AbstractCSSPropertyFontCompositeHandler extends
 	}
 
 	public boolean isCSSPropertyComposite(String property) {
-		return "font".equals(property);
+		return false; // "font".equals(property);
 	}
 
 	public String[] getCSSPropertiesNames(String property) {
