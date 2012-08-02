@@ -18,6 +18,8 @@ import org.apache.commons.io.IOUtils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
@@ -27,6 +29,8 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.compiler.ScriptCompiler;
+import com.dexels.navajo.mapping.CompiledScript;
+import com.dexels.navajo.server.CompiledScriptFactory;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class BundleCreatorComponent implements BundleCreator {
@@ -70,27 +74,28 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	
 	@Override
-	public void createBundle(String script, String compileDate, String extension, List<String> failures, List<String> success, List<String> skipped, boolean force) throws Exception {
+	public void createBundle(String script, String compileDate, String extension, List<String> failures, List<String> success, List<String> skipped, boolean force, boolean keepIntermediate) throws Exception {
 		File scriptFolder = new File(navajoIOConfig.getScriptPath());
 		File f = new File(scriptFolder,script);
-
+//		boolean isInDefaultPackage = script.indexOf('/')==-1;
 		if(f.isDirectory()) {
-			compileAllIn(f,compileDate, failures,  success,skipped,force);
+			compileAllIn(f,compileDate, failures,  success,skipped,force,keepIntermediate);
 		} else {
 			File scriptFile = new File(scriptFolder,script+"."+extension);
 			if(!scriptFile.exists()) {
-				logger.error("Script or folder not found: "+script+" full path: "+f.getAbsolutePath());
+				logger.error("Script or folder not found: "+script+" full path: "+scriptFile.getAbsolutePath());
 				return;
 			}
 			Date compiled = getCompiledModificationDate(script);
 			Date modified = getScriptModificationDate(script);
 			if(!force && compiled!=null && compiled.after(modified)) {
-				logger.debug("Skipping up-to-date script: "+scriptFile.getAbsolutePath());
+//				logger.debug("Skipping up-to-date script: "+scriptFile.getAbsolutePath());
 				skipped.add(script);
 			} else {
 				scriptCompiler.compileTsl(script,compileDate);
 				javaCompiler.compileJava(script);
-				createBundleJar(script,compileDate);
+				javaCompiler.compileJava(script+"Factory");
+				createBundleJar(script,compileDate,keepIntermediate);
 				success.add(script);
 			}
 
@@ -98,7 +103,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 	
 	
-	private void compileAllIn(File baseDir, String compileDate, List<String> failures, List<String> success, List<String> skipped, boolean force) throws Exception {
+	private void compileAllIn(File baseDir, String compileDate, List<String> failures, List<String> success, List<String> skipped, boolean force, boolean keepIntermediate) throws Exception {
 		final String extension = "xml";
 		File scriptPath = new File(navajoIOConfig.getScriptPath());
 		Iterator<File> it = FileUtils.iterateFiles(baseDir, new String[]{extension}, true);
@@ -111,7 +116,7 @@ public class BundleCreatorComponent implements BundleCreator {
 //			logger.info("File: "+relative);
 			String withoutEx = relative.substring(0,relative.lastIndexOf('.'));
 			try {
-				createBundle(withoutEx, compileDate,extension,failures,success,skipped, force);
+				createBundle(withoutEx, compileDate,extension,failures,success,skipped, force,keepIntermediate);
 			} catch (Exception e) {
 				logger.error("Error compiling script: "+relative,e);
 				failures.add("Error compiling script: "+relative);
@@ -125,16 +130,17 @@ public class BundleCreatorComponent implements BundleCreator {
 		final String extension = "jar";
 		File outputFolder = new File(navajoIOConfig.getCompiledScriptPath());
 		File f = new File(outputFolder,scriptPath);
-
-		if(f.isDirectory()) {
-			installBundles(f,failures,success,skipped, force);
+		File jarFile = new File(outputFolder,scriptPath+"."+extension);
+		
+		if(jarFile.exists()) {
+			installBundle(jarFile, scriptPath, failures, success,skipped, force);
 		} else {
-			File jarFile = new File(outputFolder,scriptPath+"."+extension);
-			if(!jarFile.exists()) {
+			if(f.isDirectory()) {
+				installBundles(f,failures,success,skipped, force);
+			} else {
 				logger.error("Jar not found: "+scriptPath+" full path: "+jarFile.getAbsolutePath());
 				return;
 			}
-			installBundle(jarFile, scriptPath, failures, success,skipped, force);
 		}
 
 	}
@@ -171,10 +177,10 @@ public class BundleCreatorComponent implements BundleCreator {
 					return;
 				}
 			}
-			System.err.println("file: "+bundleFile.getName());
+//			System.err.println("file: "+bundleFile.getName());
+			logger.info("Installing script: "+bundleFile.getName());
 			FileInputStream fis = new FileInputStream(bundleFile);
 			Bundle b;
-			System.err.println("uri: "+uri);
 			b = this.bundleContext.installBundle(uri, fis);
 			b.start();
 			success.add(b.getSymbolicName());
@@ -193,7 +199,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 	
 
-	private void createBundleJar(String scriptPath, String compileDate) throws IOException {
+	private void createBundleJar(String scriptPath, String compileDate, boolean keepIntermediateFiles) throws IOException {
 		String packagePath = null;
 		String script = null;
 		if(scriptPath.indexOf('/')>=0) {
@@ -203,14 +209,24 @@ public class BundleCreatorComponent implements BundleCreator {
 			packagePath ="";
 			script=scriptPath;
 		}
-		File out = new File(navajoIOConfig.getCompiledScriptPath());
-		File java = new File(out,scriptPath+".java");
+		String fixOffset = packagePath.equals("")?"defaultPackage":"";
+		File outB = new File(navajoIOConfig.getCompiledScriptPath());
+		File out = new File(outB,fixOffset);
+		
+		File java = new File(outB,scriptPath+".java");
+		File factoryJavaFile = new File(outB,scriptPath+"Factory.java");
 		File classFile = new File(out,scriptPath+".class");
-		File manifestFile = new File(out,scriptPath+".MF");
-		File dsFile = new File(out,scriptPath+".xml");
-		File bundleDir = new File(out,scriptPath);
+		File factoryClassFile = new File(out,scriptPath+"Factory.class");
+		File manifestFile = new File(outB,scriptPath+".MF");
+		File dsFile = new File(outB,scriptPath+".xml");
+		File bundleDir = new File(outB,scriptPath);
 		if(!bundleDir.exists()) {
 			bundleDir.mkdirs();
+		}
+		File bundlePackageFix = new File(bundleDir,fixOffset);
+		File bundlePackageDir = new File(bundlePackageFix,packagePath);
+		if(!bundlePackageDir.exists()) {
+			bundlePackageDir.mkdirs();
 		}
 		File packagePathFile = new File(bundleDir,packagePath);
 		if(!packagePathFile.exists()) {
@@ -227,18 +243,23 @@ public class BundleCreatorComponent implements BundleCreator {
 		File osgiinfScript = new File(osgiinf,"script.xml");
 		File metainfManifest = new File(metainf,"MANIFEST.MF");
 		
-		File classFileInPlace = new File(packagePathFile,script+".class");
+		File classFileInPlace = new File(bundlePackageDir,script+".class");
+		File factoryClassFileInPlace = new File(bundlePackageDir,script+"Factory.class");
 		FileUtils.copyFile(classFile, classFileInPlace);
+		FileUtils.copyFile(factoryClassFile, factoryClassFileInPlace);
 		FileUtils.copyFile(manifestFile, metainfManifest);
 		FileUtils.copyFile(dsFile, osgiinfScript);
-		final File jarFile = new File(out,scriptPath+".jar");
-		classFile.delete();
-		manifestFile.delete();
-		dsFile.delete();
-		java.delete();
-		//		bundleDir.delete();
+		final File jarFile = new File(outB,scriptPath+".jar");
 		addFolderToZip(bundleDir, null,jarFile, bundleDir.getAbsolutePath()+"/");
-		FileUtils.deleteDirectory(bundleDir);
+		if(!keepIntermediateFiles) {
+			classFile.delete();
+			manifestFile.delete();
+			dsFile.delete();
+			java.delete();
+			factoryJavaFile.delete();
+			factoryClassFile.delete();
+			FileUtils.deleteDirectory(bundleDir);
+		}
 	}
 
 
@@ -335,6 +356,78 @@ public class BundleCreatorComponent implements BundleCreator {
 			
 		} else {
 			logger.warn("No eventAdmin found to report installation error");
+		}
+	}
+
+	@Override
+	public void verifyScript(String scriptPath, List<String> failed,
+			List<String> success) {
+		File outputFolder = new File(navajoIOConfig.getScriptPath());
+		File f = new File(outputFolder,scriptPath);
+
+		if(f.isDirectory()) {
+			verifyScripts(f,failed,success);
+		} else {
+			verifySingleScript(scriptPath,failed,success);
+		}
+		
+	}
+
+	private void verifySingleScript(String scriptPath, List<String> failed,
+			List<String> success) {
+		scriptPath = scriptPath.replace('/', '.');
+		String filter = "(navajo.scriptName="+scriptPath+")";
+		try {
+			ServiceReference[] ssr = bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filter);
+//			
+//			Collection<ServiceReference<CompiledScriptFactory>> sr = bundleContext.getServiceReferences(CompiledScriptFactory.class, filter);
+//			if(sr.isEmpty()) {
+//				logger.warn("Can not locate service for script: "+scriptPath+" filter: "+filter);
+//				failed.add(scriptPath);
+//				return;
+//			}
+//			if(sr.size()>1) {
+//				logger.warn("MULTIPLE scripts with the same name detected, marking as failed. Filter: "+scriptPath);
+//				return;
+//			}
+//			logger.info("# of services: "+sr.size());
+//			final ServiceReference<CompiledScriptFactory> ref = sr.iterator().next();
+			
+
+
+			CompiledScriptFactory csf = bundleContext.getService(ssr[0]);
+			if(csf==null) {
+				logger.warn("Script with filter: "+filter+" found, but could not be resolved.");
+				return;
+			}
+			CompiledScript cs = csf.getCompiledScript();
+			logger.debug("Compiled script seems ok. "+cs.toString());
+			bundleContext.ungetService(ssr[0]);
+			success.add(scriptPath);
+		} catch (InvalidSyntaxException e) {
+			logger.error("Error parsing filter: "+filter,e);
+			failed.add(scriptPath);
+		} catch (Exception e) {
+			logger.error("Error instantiating script: "+scriptPath+" instantiation seems to have failed.",e);
+			failed.add(scriptPath);
+		}
+		
+	}
+
+	private void verifyScripts(File baseDir, List<String> failed, List<String> success) {
+		final String extension = "xml";
+		File compiledScriptPath = new File(navajoIOConfig.getScriptPath());
+		Iterator<File> it = FileUtils.iterateFiles(baseDir, new String[]{extension}, true);
+		while (it.hasNext()) {
+			File file = (File) it.next();
+			String relative = getRelative(file, compiledScriptPath);
+			if(!relative.endsWith(extension)) {
+				logger.warn("Odd: "+relative);
+			}
+//			logger.info("File: "+relative);
+			String withoutEx = relative.substring(0,relative.lastIndexOf('.'));
+			verifySingleScript(withoutEx, failed,success);
+
 		}
 	}
 
