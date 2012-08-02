@@ -30,6 +30,13 @@ public class ValidateAccountNumber extends FunctionInterface {
             throw new TMLExpressionException("Wrong number of arguments for function ValidateAccountNumber()");
         }
         
+        // No need to check if everything is missing
+        if ((o1 == null || o1.equals("")) && (o2 == null || o2.equals(""))) {
+            return Boolean.TRUE;
+        } else if (o1 == null && o2 != null) {
+            throw new TMLExpressionException("Accountnumber argument is missing or null ValidateAccountNumber()");
+        }
+        
         if (o2 instanceof String) {
             String accounttype_param = (String)o2;
             if (accounttype_param.equalsIgnoreCase("B") || accounttype_param.equalsIgnoreCase("BANK")) {
@@ -41,10 +48,15 @@ public class ValidateAccountNumber extends FunctionInterface {
             } else if (accounttype_param.equalsIgnoreCase("S") || accounttype_param.equalsIgnoreCase("SPAAR")) {
                 accounttype = ACCOUNTTYPE_SAVINGS;
             } else {
-                throw new TMLExpressionException("Unknown accounttype for function ValidateAccountNumber(): " + accounttype_param);
+                if (o1 != null && !o1.equals("")) {
+                    throw new TMLExpressionException("Unknown accounttype for function ValidateAccountNumber(): >" + accounttype_param + "<");
+                } else {
+                    // Feel free to implement something here
+                    return Boolean.TRUE;
+                }
             }
         } else {
-            throw new TMLExpressionException("Illegal argument (2) type for function ValidateAccountNumber(): " + o2.getClass().getName());
+            throw new TMLExpressionException("Illegal argument (2) type for function ValidateAccountNumber(): >" + o2.getClass().getName() + "<");
         }
         
         if (accounttype.equals(ACCOUNTTYPE_BANK)) {
@@ -84,19 +96,19 @@ public class ValidateAccountNumber extends FunctionInterface {
         return null;
     }
 
+    @SuppressWarnings("unused")
     public static void main(String [] args) {
 
-        String n = "123456789";
+        String n = null;
         int number = 123456789;
-        String type = "B";
+        String type = "G";
         ValidateAccountNumber e = new ValidateAccountNumber();
         e.reset();
-        e.insertOperand(number);
+        e.insertOperand(n);
         e.insertOperand(type);
         try {
             System.out.println(e.evaluate());
         } catch (TMLExpressionException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
       }
