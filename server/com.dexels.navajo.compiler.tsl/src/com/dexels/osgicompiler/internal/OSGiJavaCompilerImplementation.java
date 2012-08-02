@@ -109,6 +109,7 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 					try {
 						sw.write("Compilation problem: "+jfo.getMessage(Locale.ENGLISH)+"\n");
 					} catch (IOException e) {
+						logger.error("Compilation problem: ",e);
 					}
 					
 				}
