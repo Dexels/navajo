@@ -18,7 +18,7 @@ Import-Package: com.dexels.navajo.client,
 Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.5",
  com.dexels.navajo.core;bundle-version="2.9.4",
  com.dexels.navajo.listeners;bundle-version="3.1.5",
- com.dexels.navajo.svg;bundle-version="1.0.0"
+ com.dexels.navajo.svg;bundle-version="1.0.0";resolution:=optional
 Bundle-ClassPath: lib/milStd2525_png.jar,
  lib/omcorba.jar,
  lib/omj3d.jar,
