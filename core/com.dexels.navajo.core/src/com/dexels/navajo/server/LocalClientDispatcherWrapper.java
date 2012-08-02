@@ -62,7 +62,7 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 
 	@Override
 	public String getApplicationId() {
-		return DispatcherFactory.getInstance().getApplicationId();
+		return dispatcherInterface.getApplicationId();
 	}
 
 	
