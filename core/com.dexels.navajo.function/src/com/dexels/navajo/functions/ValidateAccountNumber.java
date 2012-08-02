@@ -41,7 +41,12 @@ public class ValidateAccountNumber extends FunctionInterface {
             } else if (accounttype_param.equalsIgnoreCase("S") || accounttype_param.equalsIgnoreCase("SPAAR")) {
                 accounttype = ACCOUNTTYPE_SAVINGS;
             } else {
-                throw new TMLExpressionException("Unknown accounttype for function ValidateAccountNumber(): " + accounttype_param);
+                if (o1 != null) {
+                    throw new TMLExpressionException("Unknown accounttype for function ValidateAccountNumber(): " + accounttype_param);
+                } else {
+                    // Feel free to implement something here
+                    return Boolean.TRUE;
+                }
             }
         } else {
             throw new TMLExpressionException("Illegal argument (2) type for function ValidateAccountNumber(): " + o2.getClass().getName());
@@ -56,7 +61,7 @@ public class ValidateAccountNumber extends FunctionInterface {
             }
         
         } else if (accounttype.equals(ACCOUNTTYPE_GIRO)) {
-            if (((String)o1).length() < 7) {
+            if (((String)o1).length() <= 7) {
                 return Boolean.FALSE;
             } else {
                 return Boolean.TRUE;
@@ -84,6 +89,7 @@ public class ValidateAccountNumber extends FunctionInterface {
         return null;
     }
 
+    @SuppressWarnings("unused")
     public static void main(String [] args) {
 
         String n = "123456789";
@@ -96,7 +102,6 @@ public class ValidateAccountNumber extends FunctionInterface {
         try {
             System.out.println(e.evaluate());
         } catch (TMLExpressionException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
       }
