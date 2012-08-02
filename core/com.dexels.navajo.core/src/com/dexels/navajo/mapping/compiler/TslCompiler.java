@@ -38,6 +38,8 @@ import java.util.HashSet;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import navajocore.Version;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -2407,9 +2409,16 @@ public String mapNode(int ident, Element n) throws Exception {
 	      String author = tslElt.getAttribute("author");
 	      
 	      broadcast = (tslElt.getAttribute("broadcast").indexOf("true") != -1);
+	      String actualPackagePath = packagePath;
+	      if (packagePath.equals("")) {
+	      	if(Version.osgiActive()) {
+	      		actualPackagePath = "defaultPackage";
+	      	}
+	      }
 
-	      String importDef = (packagePath.equals("") ? "" :
-	                          "package " + MappingUtils.createPackageName(packagePath) +
+	      
+	      String importDef = (actualPackagePath.equals("") ? "" :
+	                          "package " + MappingUtils.createPackageName(actualPackagePath) +
 	                          ";\n\n") +
 	          "import com.dexels.navajo.server.*;\n" +
 	          "import com.dexels.navajo.mapping.*;\n" +
@@ -2627,7 +2636,24 @@ public String mapNode(int ident, Element n) throws Exception {
 
 
   public String compileToJava(String script,
-                                        String input, String output, String packagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig) throws Exception {
+          String input, String output, String packagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig) throws Exception {
+	  return compileToJava(script, input, output, packagePath, packagePath, classLoader, navajoIOConfig);
+  }
+  
+  /**
+   * Only used by OSGi now
+   * @param script
+   * @param input
+   * @param output
+   * @param packagePath The package in the Java file. OSGi doesn't handle default packages well, so default package will be translated to 'defaultPackage'
+   * @param scriptPackagePath the path of the scriptFile from the scriptRoot
+   * @param classLoader
+   * @param navajoIOConfig
+   * @return
+   * @throws Exception
+   */
+  public String compileToJava(String script,
+                                        String input, String output, String packagePath, String scriptPackagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig) throws Exception {
     String javaFile = output + "/" + script + ".java";
    TslCompiler tslCompiler = new TslCompiler(classLoader,navajoIOConfig);
      try {
@@ -2642,7 +2668,8 @@ public String mapNode(int ident, Element n) throws Exception {
 //       if(!packagePath.endsWith("/")) {
 //    	   packagePath = packagePath + "/";
 //       }
-       tslCompiler.compileScript(bareScript, input, output,packagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"));
+
+       tslCompiler.compileScript(bareScript, input, output,scriptPackagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"));
         return javaFile;
      }
      catch (Throwable ex) {
