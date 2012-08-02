@@ -71,6 +71,13 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
         		localRp.setNavajoConfig(config);
         		return localRp;
         	}
+        	// Kind of weird, roundabout way to get to an instance
+        	if(instance!=null) {
+        		Repository r = instance.getRepository(className);
+        		if(r!=null) {
+        			return r;
+        		}
+        	}
         	Repository rp = (Repository) config.getClassloader().getClass(className).newInstance();
             rp.setNavajoConfig(config);
             System.out.println("Using alternative repository: " + className);
