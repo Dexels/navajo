@@ -61,7 +61,7 @@ public class ValidateAccountNumber extends FunctionInterface {
             }
         
         } else if (accounttype.equals(ACCOUNTTYPE_GIRO)) {
-            if (((String)o1).length() <= 7) {
+            if (((String)o1).length() < 7) {
                 return Boolean.FALSE;
             } else {
                 return Boolean.TRUE;
@@ -92,12 +92,12 @@ public class ValidateAccountNumber extends FunctionInterface {
     @SuppressWarnings("unused")
     public static void main(String [] args) {
 
-        String n = "123456789";
+        String n = "1234567";
         int number = 123456789;
-        String type = "B";
+        String type = "G";
         ValidateAccountNumber e = new ValidateAccountNumber();
         e.reset();
-        e.insertOperand(number);
+        e.insertOperand(n);
         e.insertOperand(type);
         try {
             System.out.println(e.evaluate());
