@@ -1,5 +1,6 @@
 package com.dexels.navajo.compiler;
 
+
 /**
  * Interface for TSL compiling service
  * @author frank
@@ -7,6 +8,5 @@ package com.dexels.navajo.compiler;
  */
 public interface JavaCompiler {
 
-	public abstract void compileJava(String script) throws Exception;
-
+	public void compileJava(String script) throws Exception;
 }
