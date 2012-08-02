@@ -31,7 +31,7 @@ public class JDBCFactory {
 	}
 	
 	public static JDBCMappable getJDBCMap() {
-		if(useOSGi()) {
+		if(false && useOSGi()) {
 			return new JDBCMap();
 		} else {
 			return new SQLMap();
