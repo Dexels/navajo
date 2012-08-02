@@ -47,8 +47,14 @@ public class JavaCompilerComponent implements JavaCompiler {
 	@Override
 	public void compileJava(String script) throws Exception {
 //		String pack = script.substring(0,script.lastIndexOf('/'));
+		// grab the file from the orig location
 		final File file = new File(navajoIOConfig.getCompiledScriptPath()+"/"+script+".java");
 //		System.err.println("File: "+file.getAbsolutePath());
+		// but alter the path dir for the compiler:
+		if(script.indexOf('/')==-1) {
+			logger.warn("Creating compiledScript for default package!");
+			script = "defaultPackage/"+script;
+		}
 		FileInputStream fis = new FileInputStream(file);
 		byte[] bb = javaCompiler.compile(script, fis);
 		fis.close();
@@ -58,5 +64,22 @@ public class JavaCompilerComponent implements JavaCompiler {
 			navajoIOConfig.writeOutput(script, ".class", new ByteArrayInputStream(bb));			
 		}
 	}
+	
+//	@Override
+//	public void compileFile(String filePath) throws IOException {
+//		final File file = new File(navajoIOConfig.getCompiledScriptPath()+"/"+filePath+".java");
+//		FileInputStream fis = new FileInputStream(file);
+//		if(filePath.indexOf('/')==-1) {
+//			logger.warn("Creating factory for default package!");
+//			filePath = "defaultPackage/"+filePath;
+//		}
+//		byte[] bb = javaCompiler.compile(filePath, fis);
+//		fis.close();
+//		if(bb==null) {
+//			logger.warn("Java compilation failed for script: "+filePath);
+//		} else {
+//			navajoIOConfig.writeOutput(filePath, ".class", new ByteArrayInputStream(bb));			
+//		}
+//	}
 
 }
