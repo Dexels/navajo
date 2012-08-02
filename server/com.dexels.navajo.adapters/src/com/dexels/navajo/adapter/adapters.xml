@@ -82,7 +82,8 @@
         <values>
             <value name="maximumImportCount" type="integer" required="false" direction="in"/>
             <value name="skipFirstRow" type="boolean" required="false" direction="in"/>
-            <value name="fileName" type="string" required="true" direction="in"/>
+            <value name="fileName" type="string" required="false" direction="in"/>
+            <value name="fileContent" type="binary" required="false" direction="in"/>
             <value name="separator" type="string" required="true" direction="in"/>
             <value name="update" type="boolean" required="false" direction="in"/>
             <value name="entries" map="csvline []" required="false" direction="out"/>
