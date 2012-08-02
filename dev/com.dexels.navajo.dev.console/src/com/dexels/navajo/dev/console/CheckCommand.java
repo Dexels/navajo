@@ -4,6 +4,7 @@ package com.dexels.navajo.dev.console;
 import java.util.Date;
 
 import org.apache.felix.service.command.CommandSession;
+import org.apache.felix.service.command.Descriptor;
 
 import com.dexels.navajo.compiler.BundleCreator;
 
@@ -22,6 +23,7 @@ public class CheckCommand {
 	}
 
 
+	@Descriptor(value = "Check the modification dates of a certain script.") 
 
 	public void check(CommandSession session, String script) {
 		Date installed = bundleCreator.getBundleInstallationDate(script);

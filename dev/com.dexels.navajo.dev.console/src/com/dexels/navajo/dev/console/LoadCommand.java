@@ -28,9 +28,8 @@ public class LoadCommand {
 		this.bundleCreator = null;
 	}
 
-
-	public void loadbundle(CommandSession session, @Descriptor(value = "Force installation if the script is already installed") @Parameter(names = { "-f", "--force" }, presentValue = "true", absentValue = "false") boolean force, String script) {
-		session.getConsole().println("-------------->");
+	@Descriptor(value = "install a script with a certain path.") 
+	public void loadbundle(CommandSession session, @Descriptor(value = "Force installation if the script is already installed") @Parameter(names = { "-f", "--force" }, presentValue = "true", absentValue = "false") boolean force,@Descriptor(value = "The path, prefix, or '/' to install everything")  String script) {
 		try {
 			if(script.equals("/")) {
 				script = "";
@@ -45,7 +44,7 @@ public class LoadCommand {
 			}
 			session.getConsole().println("Installed: "+success.size()+" bundles");
 			session.getConsole().println("Skipped: "+skipped.size()+" bundles");
-			session.getConsole().println("Failed: "+skipped.size()+" bundles");
+			session.getConsole().println("Failed: "+failed.size()+" bundles");
 
 		} catch (Throwable e) {
 			logger.error("Error: ", e);

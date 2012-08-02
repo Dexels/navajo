@@ -1,6 +1,4 @@
 package com.dexels.navajo.dev.console;
-import java.util.Collection;
-
 import org.apache.felix.service.command.CommandSession;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -29,7 +27,7 @@ public class ScriptListCommand {
 				ServiceReference<?>[] result = bundleContext.getServiceReferences("com.dexels.navajo.server.CompiledScriptFactory", serviceFilter);
 				for (ServiceReference<?> serviceReference : result) {
 					String name = (String) serviceReference.getProperty("symbolicName");
-					String adapterClass = (String) serviceReference.getProperty("adapterClass");
+//					String adapterClass = (String) serviceReference.getProperty("adapterClass");
 					session.getConsole().println(""+name+" class: (Not impl)");
 				}
 			 } catch (InvalidSyntaxException e) {

@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
+import com.dexels.navajo.script.api.LocalClient;
 
 public class CommandHandler {
 	private final static Logger logger = LoggerFactory
@@ -20,6 +21,8 @@ public class CommandHandler {
 	private final Collection<ServiceRegistration<?>> registeredCommands = new ArrayList<ServiceRegistration<?>>();
 	private BundleContext bundleContext;
 	
+	private LocalClient localClient;
+
 	public void setBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = bundleCreator;
 	}
@@ -28,6 +31,14 @@ public class CommandHandler {
 		this.bundleCreator = null;
 	}
 
+	public void setLocalClient(LocalClient lc) {
+		localClient  = lc;
+	}
+
+	public void clearLocalClient(LocalClient lc) {
+		localClient  = null;
+	}
+	
 	public void activate(ComponentContext context) {
 		this.bundleContext = context.getBundleContext();
 		logger.info("Command handler in business");
@@ -52,7 +63,14 @@ public class CommandHandler {
 
 		ScriptListCommand script = new ScriptListCommand(bundleContext);
 		registerCommand(script,"scripts");
-
+		com.dexels.navajo.server.CompiledScriptFactory a;
+		VerifyCommand verify = new VerifyCommand(bundleContext);
+		verify.setBundleCreator(bundleCreator);
+		registerCommand(verify,"verify");
+		
+		CallCommand cc = new CallCommand();
+		cc.setLocalClient(localClient);
+		registerCommand(cc, "call");
 	}
 
 	private void registerCommand(Object c, String command) {
