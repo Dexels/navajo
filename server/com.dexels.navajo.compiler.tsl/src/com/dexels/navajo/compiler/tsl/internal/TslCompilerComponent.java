@@ -15,6 +15,7 @@ import com.dexels.navajo.compiler.tsl.custom.PackageListener;
 import com.dexels.navajo.compiler.tsl.custom.PackageReportingClassLoader;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.server.NavajoIOConfig;
 
@@ -24,7 +25,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	private ClassLoader classLoader = null;
 	private final static Logger logger = LoggerFactory.getLogger(TslCompilerComponent.class);
 	private TslCompiler compiler;
-	String[] standardPackages = new String[]{"com.dexels.navajo.document","com.dexels.navajo.script.api","com.dexels.navajo.server","com.dexels.navajo.mapping","com.dexels.navajo.server.enterprise.tribe","com.dexels.navajo.mapping.compiler.meta"};
+	String[] standardPackages = new String[]{"com.dexels.navajo.document","com.dexels.navajo.script.api","com.dexels.navajo.server","com.dexels.navajo.mapping","com.dexels.navajo.server.enterprise.tribe","com.dexels.navajo.mapping.compiler.meta","com.dexels.navajo.parser","com.dexels.navajo.loader"};
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String)
 	 */
@@ -51,36 +52,65 @@ public class TslCompilerComponent implements ScriptCompiler {
 				packages.add(name);
 			}
 		});
+		String scriptPackage = packagePath;
+//       if("".equals(packagePath)) {
+//    	   scriptPackage = "defaultPackage";
+//       }
 		String scriptString = scriptPath.replaceAll("/", "_");
-		String javaFile = compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, prc, navajoIOConfig);
-//		logger.info("Javafile: "+javaFile);
+		String javaFile = compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc, navajoIOConfig);
+		//		logger.info("Javafile: "+javaFile);
 //		System.err.println("Packages: "+packages);
+		generateFactoryClass(script, packagePath);
+
 		generateManifest(scriptString,"1.0.0",packagePath, script,packages,compileDate);
 		generateDs(packagePath, script);
 	}
 	
-	
-//	Manifest-Version: 1.0
-//	Bundle-ManifestVersion: 2
-//	Bundle-Name: Tsl compiler for Navajo
-//	Bundle-SymbolicName: com.dexels.navajo.compiler.tsl
-//	Bundle-Version: 1.0.0.qualifier
-//	Bundle-Vendor: Dexels
-//	Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-//	Import-Package: javax.tools,
-//	 org.apache.commons.io,
-//	 org.apache.tools.ant,
-//	 org.osgi.framework;version="1.6.0",
-//	 org.osgi.framework.wiring;version="1.0.0",
-//	 org.osgi.service.cm;version="1.4.0",
-//	 org.osgi.service.component;version="1.2.0",
-//	 org.slf4j;version="1.6.1"
-//	Bundle-Activator: navajotsl.Activator
-//	Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.10"
-//	Service-Component: OSGI-INF/navajoTslCompiler.xml, OSGI-INF/javaCompiler.xml, OSGI-INF/javaCompilerComponent.xml
-//	Export-Package: com.dexels.osgicompiler
-	
-	
+	private void generateFactoryClass(String script, String packagePath) throws IOException {
+		
+		String javaPackagePath = packagePath.replaceAll("/", ".");
+//		public CompiledScript getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+//			Class<? extends CompiledScript> c;
+//			logger.info("About to load class: "+serviceName+" I am: "+getClass().getName());
+//			c = (Class<? extends CompiledScript>) Class.forName(getScriptName());
+//			CompiledScript instance = c.newInstance();
+//			return instance;
+//		}
+//		
+		
+		
+		PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, script+"Factory", ".java"));
+		if ("".equals(packagePath)) {
+			w.println("package defaultPackage;");
+		} else {
+			w.println("package "+javaPackagePath+";");
+		}
+		
+		w.println("import com.dexels.navajo.server.*;");
+		w.println("import com.dexels.navajo.mapping.*;");
+		w.println();
+		w.println("public class "+script+"Factory extends CompiledScriptFactory {");
+		w.println("	protected String getScriptName() {");
+		if ("".equals(packagePath)) {
+			w.println("		return \"defaultPackage."+ script+"\";");
+		} else {
+			w.println("		return \""+javaPackagePath+"."+ script+"\";");
+		}
+		w.println("	}");
+		w.println("public CompiledScript getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException {");
+		w.println("	Class<? extends CompiledScript> c;");
+		w.println("	c = (Class<? extends CompiledScript>) Class.forName(getScriptName());");
+		w.println("	CompiledScript instance = c.newInstance();");
+		w.println("	return instance;");
+		w.println("}");
+		w.println("");
+		w.println("");
+		
+		w.println("}");
+		w.flush();
+		w.close();
+		
+	}
 	private void generateManifest(String description, String version, String packagePath, String script, Set<String> packages, String compileDate) throws IOException {
 		String symbolicName = "navajo.script."+description;
 		PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, script, ".MF"));
@@ -127,15 +157,30 @@ public class TslCompilerComponent implements ScriptCompiler {
 //
 	
 	private void generateDs(String packagePath, String script) throws IOException {
-		String fullName = packagePath+"/"+script;
+		
+		String fullName;
+		if (packagePath.equals("")) {
+			fullName = script;
+		} else {
+			fullName = packagePath+"/"+script;
+
+		}
+		String javaPackagePath;
+		if("".equals(packagePath)) {
+			javaPackagePath = "defaultPackage";
+		} else {
+			javaPackagePath = packagePath.replaceAll("/", ".");
+		}
 		String symbolicName = fullName.replaceAll("/", ".");
 		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
 		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
 		xe.setAttribute("immediate", "true");
 		xe.setAttribute("name",symbolicName);
+		xe.setAttribute("activate", "activate");
+		xe.setAttribute("deactivate", "deactivate");
 		XMLElement implementation = new CaseSensitiveXMLElement("implementation");
 		xe.addChild(implementation);
-		implementation.setAttribute("class", symbolicName);
+		implementation.setAttribute("class",javaPackagePath+"."+script+"Factory");
 		XMLElement service = new CaseSensitiveXMLElement("service");
 		xe.addChild(service);
 		XMLElement provide = new CaseSensitiveXMLElement("provide");
