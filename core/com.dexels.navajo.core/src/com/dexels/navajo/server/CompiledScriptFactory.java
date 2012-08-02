@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.mapping.CompiledScript;
 
-public class CompiledScriptFactory {
+public abstract class CompiledScriptFactory {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(CompiledScriptFactory.class);
@@ -17,13 +17,20 @@ public class CompiledScriptFactory {
 	@SuppressWarnings("unchecked")
 	public CompiledScript getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Class<? extends CompiledScript> c;
-		c = (Class<? extends CompiledScript>) Class.forName(serviceName);
+		c = (Class<? extends CompiledScript>) Class.forName(getScriptName());
 		CompiledScript instance = c.newInstance();
 		return instance;
 	}
 	
+	protected abstract String getScriptName();
+	
 	public void activate(Map<String,String> properties) {
-		logger.info("Activating compiledscriptfactory");
-		serviceName = properties.get("serviceName");
+//		logger.info("Activating compiledscriptfactory");
+		serviceName = properties.get("navajo.scriptName");
+		
+	}
+
+	public void deactivate() {
+		logger.info("Deactivating script: "+serviceName);
 	}
 }
