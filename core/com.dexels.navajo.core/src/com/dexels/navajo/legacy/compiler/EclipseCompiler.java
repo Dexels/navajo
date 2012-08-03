@@ -11,6 +11,9 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @author Administrator
@@ -18,11 +21,11 @@ import java.util.ArrayList;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-@SuppressWarnings({"unchecked","rawtypes"})
-
-
 public class EclipseCompiler implements JavaCompiler {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(EclipseCompiler.class);
     String encoding;
     String classpath; // ignored
     String compilerPath;
@@ -144,12 +147,12 @@ public class EclipseCompiler implements JavaCompiler {
       return true;
        }
         catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
+        	logger.error("Error: ", ex);
             return false;
         }
         catch (Exception ex1) {
-            ex1.printStackTrace();
-            return false;
+        	logger.error("Error: ", ex1);
+        	return false;
         }
     
     }
@@ -199,12 +202,12 @@ public class EclipseCompiler implements JavaCompiler {
             return true;
         }
         catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-            return false;
+        	logger.error("Error: ", ex);
+        	return false;
         }
         catch (Exception ex1) {
-            ex1.printStackTrace();
-            return false;
+        	logger.error("Error: ", ex1);
+        	return false;
         }
     }
 

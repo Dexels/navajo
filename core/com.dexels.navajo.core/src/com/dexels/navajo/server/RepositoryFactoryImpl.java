@@ -83,8 +83,8 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
             System.out.println("Using alternative repository: " + className);
             return rp;
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Using default repository: SimpleRepository");
+        	logger.error("Error: ", e);
+        	System.out.println("Using default repository: SimpleRepository");
             // Use default Repository.
             Repository rp = new SimpleRepository();
 
@@ -120,8 +120,8 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
             rp.setNavajoConfig(config);
             return rp;
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        	logger.error("Error: ", e);
+        	return null;
         }
     }
 }

@@ -4,11 +4,17 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.FatalException;
 
 public class FastDispatcher {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(FastDispatcher.class);
 	/**
 	 * Non blocking handle.
 	 * NOT USES? Seems on functional.
@@ -33,8 +39,7 @@ public class FastDispatcher {
 			m.invoke(o, null);
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		
 	}

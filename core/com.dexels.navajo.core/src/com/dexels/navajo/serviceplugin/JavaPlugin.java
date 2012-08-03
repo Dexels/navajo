@@ -2,6 +2,9 @@ package com.dexels.navajo.serviceplugin;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -25,13 +28,17 @@ public abstract class JavaPlugin extends CompiledScript {
 
 	private Access myAccess;
 	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JavaPlugin.class);
+	
+	
 	protected final Message addMessage(Navajo n, String path) {
 		return addMessage(n,null,path);
 	}
 	
 	@Override
 	public ArrayList<Dependency> getDependentObjects() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -72,7 +79,7 @@ public abstract class JavaPlugin extends CompiledScript {
 				try {
 					n.addMessage(mm);
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 			} else {
 				parent.addMessage(mm);

@@ -72,7 +72,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 			try {
 				MapMetaData.getInstance().addMapDefinition(element);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 			if ( name != null ) {
 

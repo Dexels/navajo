@@ -5,6 +5,9 @@ package com.dexels.navajo.parser;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.bean.DomainObjectMapper;
@@ -12,6 +15,9 @@ import com.dexels.navajo.mapping.bean.DomainObjectMapper;
 @SuppressWarnings("unchecked")
 public final class ASTMappableNode extends SimpleNode {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ASTMappableNode.class);
     String val = "";
     MappableTreeNode mapObject;
     int args = 0;
@@ -49,7 +55,7 @@ public final class ASTMappableNode extends SimpleNode {
         	try {
         		oValue = MappingUtils.getAttributeValue(mapObject, val, parameterArray);
         	} catch (Exception e2) {
-        		e2.printStackTrace();
+        		logger.error("Error: ", e2);
         		// Maybe domainobjectmapper?
         		if ( mapObject.myObject instanceof DomainObjectMapper ) {
         			oValue = ((DomainObjectMapper) mapObject.myObject).getDomainObjectAttribute(val, parameterArray);

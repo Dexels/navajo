@@ -63,7 +63,7 @@ public class TaskRunnerFactory {
 				} catch (ClassNotFoundException e) {
 					logger.warn("Workflow manager not available");
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+					logger.error("Error: ", e);
 					AuditLog.log("INIT", "WARNING: Workflow not available", Level.WARNING);
 				}	
 				try {
@@ -74,7 +74,7 @@ public class TaskRunnerFactory {
 				} catch (ClassNotFoundException e) {
 					logger.warn("Listener Runner not available from classpath");
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+					logger.error("Error: ", e);
 					AuditLog.log("INIT", "WARNING: Listener Runner not available", Level.WARNING);
 				}	
 				

@@ -231,7 +231,7 @@ public final class Access implements java.io.Serializable, Mappable {
 					}
 				} 
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 	}
@@ -264,7 +264,7 @@ public final class Access implements java.io.Serializable, Mappable {
 				}
 				outputDoc = this.mergedDoc;
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		} else {
 			outputDoc = n;

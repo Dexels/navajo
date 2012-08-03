@@ -36,7 +36,7 @@ public class OSGiFunctionFactoryFactory  {
 			return context.getService(refs[0]);
 			
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return null;
 	}

@@ -30,6 +30,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoHealthCheckEvent;
 import com.dexels.navajo.mapping.Mappable;
@@ -59,6 +62,10 @@ public class GenericThread implements Runnable, Mappable {
 	public final static String WORKING = "Working";
 	public final static String DEAD = "Zombie";
 	public final static String NOTSTARTED = "Not running";
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GenericThread.class);
 	
 	private static Map<String,GenericThread> threadPool = Collections.synchronizedMap(new HashMap<String,GenericThread>());
 	
@@ -120,7 +127,7 @@ public class GenericThread implements Runnable, Mappable {
 					worker();
 					totalWorkTime += ( System.currentTimeMillis() - start );
 				} catch (Throwable t) {
-					t.printStackTrace(System.err);
+					logger.error("Error: ", t);
 				}
 				status = SLEEPING;
 				inactive();
@@ -178,7 +185,7 @@ public class GenericThread implements Runnable, Mappable {
 				try {
 					gt.kill();
 				} catch (Throwable t) {
-					t.printStackTrace(System.err);
+					logger.error("Error: ", t);
 				}
 			} 
 		}

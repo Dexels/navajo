@@ -8,6 +8,8 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,6 +35,10 @@ import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
  */
 
 public class Generate {
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(Generate.class);
 
   public Navajo generateNavajoOutput(String file) throws Exception {
 
@@ -318,8 +324,8 @@ public class Generate {
 		  
 		  return result;
 	  } catch (Exception e) {
-		  e.printStackTrace();
-		    return NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createNavajo();
+		  logger.error("Error: ", e);
+		  return NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createNavajo();
 	  }
   }
   
@@ -344,7 +350,7 @@ public class Generate {
 		  }
 		  return outputDoc;
 	  } catch (Exception e) {
-		  e.printStackTrace();
+		  logger.error("Error: ", e);
 		  return NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createNavajo();
 	  }
   }

@@ -1,5 +1,8 @@
 package com.dexels.navajo.events.types;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -9,11 +12,8 @@ import com.dexels.navajo.events.NavajoEvent;
 
 public class NavajoCompileScriptEvent implements NavajoEvent {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1224320416969244502L;
-	
+	private final static Logger logger = LoggerFactory.getLogger(NavajoCompileScriptEvent.class);
 	private String webservice;
 	
 	public NavajoCompileScriptEvent(String webservice) {
@@ -42,7 +42,7 @@ public class NavajoCompileScriptEvent implements NavajoEvent {
 					Property.STRING_PROPERTY, getWebservice(), 0, "", Property.DIR_OUT);
 			event.addProperty(webservice);
 		} catch (NavajoException e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 		return input;
 	}

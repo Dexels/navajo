@@ -2753,16 +2753,14 @@ public String mapNode(int ident, Element n) throws Exception {
 //      System.err.println("\n\nCLASSPATH: " + classPath.toString());
       compiler.compile(output + "/" + script + ".java");
       
-      System.err.println("Compilertext: "+myWriter.toString());
+      logger.info("Compilertext: "+myWriter.toString());
       
       
       //System.out.println("COMPILED JAVA FILE INTO CLASS FILE");
     }
     catch (Exception e) {
-      e.printStackTrace();
-      //System.out.println("Could not compile script " + script + ", reason: " +
-      //                   e.getMessage());
-      System.exit(1);
+    	logger.error("Error: ", e);
+    	System.exit(1);
     }
   }
 
@@ -2806,8 +2804,7 @@ public String mapNode(int ident, Element n) throws Exception {
                               outputPath.toString(), offsetPath,classLoader,navajoConfig);
                 files.add(javaFile);
             } catch (Exception e) {
-               
-                e.printStackTrace();
+               logger.error("Error: ", e);
             }
           }
         }

@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
@@ -73,6 +76,10 @@ class Frequency implements Serializable {
 
 public final class PersistenceManagerImpl implements PersistenceManager, NavajoListener {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PersistenceManagerImpl.class);
+	
 	/**
 	 * Public bean properties
 	 */
@@ -245,8 +252,8 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
             fileWrites++;
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        	logger.error("Error: ", e);
+        	return false;
         } finally {
         	if ( os != null ) {
 				try {
@@ -299,7 +306,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Error: ", e);
             return null;
         } 
         

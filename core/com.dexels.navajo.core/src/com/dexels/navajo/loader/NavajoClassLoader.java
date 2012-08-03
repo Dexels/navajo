@@ -275,8 +275,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 							JarResources d = new JarResources(files[i]);
 							jarResources.add(d);
 						} catch (Throwable e) {
-							System.err.println("Error opening zip file in adapters. Continuing with others");
-							e.printStackTrace();
+							logger.error("Error opening zip file in adapters. Continuing with others", e);
 						}
     				}
     			}
@@ -299,8 +298,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 							JarResources d = new JarResources(files[i]);
 	    					betaJarResources.add(d);
 						} catch (Throwable e) {
-							System.err.println("Error opening zip file in adapters. Continuing with others");
-							e.printStackTrace();
+							logger.error("Error opening zip file in adapters. Continuing with others", e);
 						}
     				}
     			}

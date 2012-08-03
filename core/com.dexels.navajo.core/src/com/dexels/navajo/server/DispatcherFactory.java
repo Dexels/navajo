@@ -146,7 +146,6 @@ public class DispatcherFactory {
 					  navajocore.Version.registerNavajoConfig(nc);
 				  }
 				  catch (Exception se) {
-					  se.printStackTrace(System.err);
 					  throw NavajoFactory.getInstance().createNavajoException(se);
 				  } finally {
 					  if ( is != null ) {

@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -100,6 +103,10 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public String[] ruleArray = null;
   public String[] codeArray = null;
   public String[] descriptionArray = null;
+
+  
+private final static Logger logger = LoggerFactory
+		.getLogger(CompiledScript.class);
 
   /**
    * This HashMap is used for user defined expressions in <definitions> section of a script.
@@ -239,7 +246,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
       }
     }
     catch (Exception e) {
-      e.printStackTrace(System.err);
+    	logger.error("Error: ", e);
     }
     if (mtn.getParent() != null) {
       callStoreOrKill(mtn.getParent(), storeOrKill);
@@ -424,7 +431,8 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
 
   /**
    * Pool for use of Navajo functions.
-   *
+   * TODO rewrite to OSGi services
+   * TODO use generics and stronger typing
    * @param name
    * @return
    */
@@ -433,7 +441,8 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
     if (f != null) {
       return f;
     }
-    f = Class.forName(name, false, classLoader).newInstance();
+    // Ignore
+    f = Class.forName(name, false, this.getClass().getClassLoader()).newInstance();
     functions.put(name, f);
     return f;
   }

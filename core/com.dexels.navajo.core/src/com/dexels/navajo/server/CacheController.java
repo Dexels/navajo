@@ -3,6 +3,9 @@ package com.dexels.navajo.server;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
@@ -49,6 +52,8 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 	
 	private long configTimestamp = -1;
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CacheController.class);
 	
 	public CacheController() {
 		super(id);
@@ -76,7 +81,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 			try {
 				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 			} catch (Throwable t) {
-				t.printStackTrace(System.err);
+				logger.error("Error: ", t);
 			} 
 			
 			instance.myId = id;
@@ -213,7 +218,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 			try {
 				readConfig();
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
+				logger.error("Error: ", e);
 			}
 		}
 		

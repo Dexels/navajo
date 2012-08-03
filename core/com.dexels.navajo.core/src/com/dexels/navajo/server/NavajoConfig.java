@@ -382,7 +382,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 
     		
     	} catch (Throwable t) {
-    		t.printStackTrace(System.err);
     		throw new SystemException(-1, "Error reading server.xml configuration", t);
     	}
     	//System.out.println("COMPILE SCRIPTS: " + compileScripts);

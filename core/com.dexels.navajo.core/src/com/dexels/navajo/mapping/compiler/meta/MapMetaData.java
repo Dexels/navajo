@@ -99,8 +99,7 @@ public class MapMetaData {
 					
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 	
 		}

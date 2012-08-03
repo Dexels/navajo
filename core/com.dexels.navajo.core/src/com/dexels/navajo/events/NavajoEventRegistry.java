@@ -11,6 +11,9 @@ import javax.management.Notification;
 import javax.management.NotificationBroadcasterSupport;
 import javax.management.NotificationListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.events.types.ChangeNotificationEvent;
 import com.dexels.navajo.events.types.LevelEvent;
 import com.dexels.navajo.server.enterprise.scheduler.tribe.NavajoEventProxyInterface;
@@ -39,6 +42,10 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	public static long notificationSequence = 0;
 	
 	private final static String id = "Navajo Event Registry";
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoEventRegistry.class);
 	
 	public static void clearInstance() {
 		instance = null;
@@ -163,7 +170,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 						}
 					}.start();
 				} catch (Throwable t) {
-					t.printStackTrace(System.err);
+					logger.error("Error: ", t);
 				}
 			}
 		}
@@ -201,7 +208,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 						nl.onNavajoEvent(ne);
 					}
 				} catch (Throwable t) {
-					t.printStackTrace(System.err);
+					logger.error("Error: ", t);
 				}
 			}
 		}

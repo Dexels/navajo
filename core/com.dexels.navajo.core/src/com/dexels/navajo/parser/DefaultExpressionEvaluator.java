@@ -58,8 +58,8 @@ public final class DefaultExpressionEvaluator
       return Expression.evaluate(clause, inMessage,(MappableTreeNode) mappableTreeNode,parent,currentParam);
     }
     catch (Throwable ex) {
-   	 ex.printStackTrace();
-      throw NavajoFactory.getInstance().createNavajoException("Parse error: " +
+    	
+    	throw NavajoFactory.getInstance().createNavajoException("Parse error: " +
           ex.getMessage() + "\n while parsing: " + clause,ex);
     }
   }

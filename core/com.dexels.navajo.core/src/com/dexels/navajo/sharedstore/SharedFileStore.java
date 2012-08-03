@@ -39,6 +39,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoObjectInputStream;
@@ -102,6 +105,10 @@ class FileComparator implements Comparator<File>{
  */
 public class SharedFileStore implements SharedStoreInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SharedFileStore.class);
+	
 	/**
 	 * The path name of the shared file store.
 	 */
@@ -366,7 +373,7 @@ public class SharedFileStore implements SharedStoreInterface {
 							//System.err.println("WROTE LOCK, RETURNING LOCK FOR " + ssl.parent + "/" + ssl.name + " TO " + ssl.owner );
 							return ssl;
 						} catch (Exception e) {
-							e.printStackTrace(System.err);
+							logger.error("Error: ", e);
 						}
 					} else if ( block ){
 						try {
@@ -440,7 +447,7 @@ public class SharedFileStore implements SharedStoreInterface {
 				oos.writeObject(o);
 				oos.reset();
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
+				logger.error("Error: ", e);
 				// TODO: Log exception!!
 				if ( f != null ) {
 					f.delete();
@@ -532,7 +539,7 @@ public class SharedFileStore implements SharedStoreInterface {
 				sw = new OutputStreamWriter(fos);
 				sw.write(str);
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
+				logger.error("Error: ", e);
 				if ( f != null ) {
 					f.delete();
 				}

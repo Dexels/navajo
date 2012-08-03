@@ -56,7 +56,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 			}
 			
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return result;
 	}
@@ -81,7 +81,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 				}
 			}
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return result;
 	}
@@ -99,7 +99,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 			return context.getService(refs[0]);
 			
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return null;
 	}

@@ -9,6 +9,9 @@ package com.dexels.navajo.mapping;
  * @version 1.0
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.server.Access;
 
 public class AsyncTest extends AsyncMappable {
@@ -16,6 +19,8 @@ public class AsyncTest extends AsyncMappable {
   public double result = 0.0;
   public double d = 1.0;
   public int iter = 1000000;
+  
+  private final static Logger logger = LoggerFactory.getLogger(AsyncTest.class);
 
   private float ready = (float) 0.0;
 
@@ -82,7 +87,7 @@ public class AsyncTest extends AsyncMappable {
     try {
       Thread.sleep(3000);
     } catch (Exception e) {
-      e.printStackTrace();
+    	logger.error("Error: ", e);
     }
   }
 

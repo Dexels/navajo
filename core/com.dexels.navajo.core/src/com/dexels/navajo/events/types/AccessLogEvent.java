@@ -1,5 +1,8 @@
 package com.dexels.navajo.events.types;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -18,6 +21,8 @@ public class AccessLogEvent implements NavajoEvent {
 
 	private static final long serialVersionUID = 8600682387835507176L;
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(AccessLogEvent.class);
 	private int accessLogCount;
 	
 	public AccessLogEvent(int accessLogCount) {
@@ -33,7 +38,7 @@ public class AccessLogEvent implements NavajoEvent {
 					Property.INTEGER_PROPERTY, this.accessLogCount+"", 0, "", Property.DIR_OUT);
 			event.addProperty(count);
 		} catch (NavajoException e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 		return input;
 	}

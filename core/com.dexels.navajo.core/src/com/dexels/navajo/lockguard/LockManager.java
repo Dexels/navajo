@@ -169,7 +169,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 				try {
 					JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 				} catch (Throwable t) {
-					t.printStackTrace(System.err);
+					logger.error("Error: ", t);
 				} 
 			}
 		}
@@ -196,7 +196,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 				Thread.sleep(100);
 				System.err.println("Waiting while definitions are read");
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 		

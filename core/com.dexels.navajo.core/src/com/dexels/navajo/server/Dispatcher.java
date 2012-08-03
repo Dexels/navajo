@@ -607,8 +607,8 @@ private ServiceHandler createHandler(String handler, Access access)
       return outMessage;
     }
     catch (Exception e) {
-      e.printStackTrace(System.err);
-      throw new FatalException(e.getMessage());
+    	logger.error("Error: ", e);
+    	throw new FatalException(e.getMessage());
     }
   }
 
@@ -621,7 +621,7 @@ private ServiceHandler createHandler(String handler, Access access)
       FatalException {
 
 	  if ( t != null ) {
-		  t.printStackTrace(System.err);
+		  logger.error("Error: ", t);
 	  }
 	  
     if (message == null) {
@@ -726,7 +726,7 @@ private ServiceHandler createHandler(String handler, Access access)
 
 		  return outMessage;
 	  } catch (Exception e) {
-		  e.printStackTrace(System.err);
+		  logger.error("Error: ", e);
 		  return null;
 	  }
   }
@@ -888,7 +888,7 @@ private ServiceHandler createHandler(String handler, Access access)
     				Navajo result = TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef());
     				return result;
     			} catch (Exception e) {
-    				e.printStackTrace();
+    				logger.error("Error: ", e);
     			}
 
     		} else {
@@ -1084,28 +1084,28 @@ private ServiceHandler createHandler(String handler, Access access)
     		return outMessage;
     	}
     	catch (Exception ee) {
-    		ee.printStackTrace();
+    		logger.error("Error: ", ee);
     		myException = ee;
     		return errorHandler(access, ee, inMessage);
     	}
     } catch (SystemException se) {
-    	se.printStackTrace(System.err);
+    	logger.error("Error: ", se);
     	myException = se;
     	try {
     		outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1,
     				(se.t != null ? se.t : se));
     		return outMessage;
     	}catch (Exception ee) {
-    		ee.printStackTrace();
+    		logger.error("Error: ", ee);
     		return errorHandler(access, ee, inMessage);
     	}
     }
     catch (Exception e) {
-    	e.printStackTrace(System.err);
+    	logger.error("Error: ", e);
     	myException = e;
     	return errorHandler(access, e, inMessage);
     } catch (Throwable e) {
-    	e.printStackTrace(System.err);
+    	logger.error("Error: ", e);
     	myException = e;
     	return errorHandler(access, e, inMessage);
     }
@@ -1190,7 +1190,7 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 		try {
 			navajoConfig.getDescriptionProvider().updatePropertyDescriptions(inMessage, outMessage);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -1455,7 +1455,7 @@ public String getServerId() {
 				result = timeSpecified > now;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 
 		return result;

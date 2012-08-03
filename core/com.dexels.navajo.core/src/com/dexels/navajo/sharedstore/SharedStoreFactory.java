@@ -24,6 +24,9 @@
  */
 package com.dexels.navajo.sharedstore;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.util.AuditLog;
 
 public class SharedStoreFactory {
@@ -31,6 +34,8 @@ public class SharedStoreFactory {
 	private static volatile SharedStoreInterface instance = null;
 	private static Object semaphore = new Object();
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SharedStoreFactory.class);
 	public final static void clear() {
 		instance = null;
 	}
@@ -48,7 +53,7 @@ public class SharedStoreFactory {
 			try {
 				instance = new SharedFileStore();
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
+				logger.error("Error: ", e);
 				AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, e.getMessage());
 			}
 		}

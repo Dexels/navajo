@@ -16,6 +16,9 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * JarResources: JarResources maps all resources included in a Zip or Jar file.
  * Additionaly, it provides a method to extract one as a blob.
@@ -33,7 +36,11 @@ public final class JarResources {
     // a jar file
     private File jarFile;
     
-
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(JarResources.class);
+	
+	
     /**
      * creates a JarResources. It extracts all resources from a Jar into an
      * internal hashtable, keyed by resource names.
@@ -144,7 +151,7 @@ public final class JarResources {
                 try {
                     zf.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                	logger.error("Error: ", e);
                 }
             }
         }
@@ -190,21 +197,21 @@ public final class JarResources {
                 try {
                     fis.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                	logger.error("Error: ", e);
                 }
             }
             if (bis != null) {
                 try {
                     bis.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                	logger.error("Error: ", e);
                 }
             }
             if (zis != null) {
                 try {
                     zis.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                	logger.error("Error: ", e);
                 }
             }
 

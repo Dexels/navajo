@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -53,6 +56,8 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
   private static int threadWait = 2000;
   private static final String id = "Navajo AsyncStore";
   
+  private final static Logger logger = LoggerFactory.getLogger(AsyncStore.class);
+
   private static Object semaphore = new Object();
   
   public AsyncStore() {
@@ -203,7 +208,7 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 		  try {
 			  element.setKill(true);
 		  } catch (Throwable e) {
-			  e.printStackTrace(System.err);
+			  logger.error("Error: ", e);
 		  }
 	  }
 	  objectStore.clear();
@@ -212,8 +217,7 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 	  try {
 		  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
 	  } catch (Throwable e) {
-		  // TODO Auto-generated catch block
-		  e.printStackTrace();
+		  logger.error("Error: ", e);
 	  }
 	  resetInstance();
 	  AuditLog.log(AuditLog.AUDIT_MESSAGE_ASYNC_RUNNER, "Killed");

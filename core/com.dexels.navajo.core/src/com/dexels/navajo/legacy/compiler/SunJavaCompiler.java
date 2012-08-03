@@ -67,6 +67,9 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //import com.sun.tools.javac.Main;
 
 /**
@@ -91,6 +94,9 @@ public class SunJavaCompiler implements JavaCompiler {
     ClassLoader loader=null;
     private Class compilerClass;
 
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(SunJavaCompiler.class);
     
 	public void setCompilerClass(Class c) {
         compilerClass = c;
@@ -195,12 +201,12 @@ public class SunJavaCompiler implements JavaCompiler {
             return true;
         }
         catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-            return false;
+        	logger.error("Error: ", ex);
+        	return false;
         }
         catch (Exception ex1) {
-            ex1.printStackTrace();
-            return false;
+        	logger.error("Error: ", ex1);
+        	return false;
         }
     }
 

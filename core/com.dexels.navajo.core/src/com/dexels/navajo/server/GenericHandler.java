@@ -127,13 +127,11 @@ public final class GenericHandler extends ServiceHandler {
         		cso.setClassLoader(loader);
         	}	
     	} catch (Exception e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();
+    		logger.error("Error: ", e);
     		return false;
     	}
     	if ( cso != null ) {
     		boolean result = cso.hasDirtyDependencies(a);
-    		//System.err.println(">>>>>>>>>>>>>>>>. hasDirtyDepedencies: " + result);
     		return result;
     	} else {
     		return false;
@@ -452,7 +450,6 @@ public final class GenericHandler extends ServiceHandler {
             }
             else {
             	AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, e.getMessage() + (!compilerErrors.toString().trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), Level.SEVERE, access.accessID);
-            	e.printStackTrace();
             	throw new SystemException( -1, e.getMessage() + (!compilerErrors.toString().trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), e);
             }
           }
