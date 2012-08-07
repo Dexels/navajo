@@ -1,6 +1,8 @@
 package com.dexels.navajo.tipi.cobra;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import org.xml.sax.SAXException;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.cobra.impl.NavajoHtmlRendererContext;
 import com.dexels.navajo.tipi.cobra.impl.TipiHtmlPanel;
@@ -150,8 +153,13 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 	private URL parkMultipart(com.dexels.navajo.document.Navajo pp, boolean doDeleteOnExit) throws IOException {
 		Map<String, String> replacementMap = new HashMap<String, String>();
 		File mailFile = File.createTempFile("index", ".html");
+		File mailFileOutput = File.createTempFile("indexProcessed", ".html");
+//		System.err.println("Mailfile: "+mailFile);
 		Message parts = pp.getMessage("Mail/Parts");
 		Binary body = (Binary) parts.getAllMessages().get(0).getProperty("Content").getTypedValue();
+		FileOutputStream foss = new FileOutputStream(mailFile);
+		body.write(foss);
+		foss.close();
 		for (int i = 1; i < parts.getAllMessages().size(); i++) {
 			Message currentPart = parts.getAllMessages().get(i);
 			String fileName = currentPart.getProperty("FileName").getValue();
@@ -171,7 +179,7 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 		String bodyText = new String(body.getData());
 		String replaced = replaceAttributes("src", bodyText, replacementMap);
 
-		PrintWriter fos = new PrintWriter(new FileWriter(mailFile));
+		PrintWriter fos = new PrintWriter(new FileWriter(mailFileOutput));
 		fos.print(replaced);
 		fos.flush();
 		fos.close();
@@ -199,4 +207,13 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 		return false;
 	}
 
+	public static void main(String[] args) throws IOException, InterruptedException {
+		TipiCobraBrowser tc = new TipiCobraBrowser();
+		final FileInputStream stream = new FileInputStream("tmlexample.xml");
+		Navajo emailNavajo = NavajoFactory.getInstance().createNavajo(stream);
+		stream.close();
+		URL u = tc.createNavajoUrl(emailNavajo);
+		System.err.println("u: "+u);
+		Thread.sleep(100000);
+	}
 }
