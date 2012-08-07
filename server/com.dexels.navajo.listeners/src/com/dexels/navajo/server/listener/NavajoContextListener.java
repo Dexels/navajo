@@ -54,7 +54,7 @@ public class NavajoContextListener implements ServletContextListener {
 	}
 
 	public void init(String contextPath, String servletContextPath, String installPath, ServletContext servletContext) {
-		logger.info("=================	=========================================");
+		logger.info("==========================================================");
 		logger.info("INITIALIZING NAVAJO INSTANCE: "+contextPath);
 		logger.info("==========================================================");
 		if (!isValidInstallationForContext(installPath)) {

@@ -24,6 +24,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -330,12 +331,15 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
+		MDC.clear();
 		Date created = new java.util.Date();
 		long start = created.getTime();
 
 		String sendEncoding = request.getHeader("Accept-Encoding");
 		String recvEncoding = request.getHeader("Content-Encoding");
 
+		MDC.put("Accept-Encoding", sendEncoding);
+		MDC.put("Content-Encoding", recvEncoding);
 		DispatcherInterface dis = null;
 		BufferedReader r = null;
 		BufferedWriter out = null;
