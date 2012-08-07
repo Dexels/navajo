@@ -31,6 +31,11 @@ public interface NavajoIOConfig {
 	void writeOutput(String scriptName, String suffix, InputStream is)
 			throws IOException;
 	
+	/**
+	 * Modification date of a script, returns null when missing
+	 * @param scriptPath
+	 * @return
+	 */
 	public Date getScriptModificationDate(String scriptPath);
 
 //	public Date getBundleModificationDate(String scriptPath) {

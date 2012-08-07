@@ -38,8 +38,6 @@ public class CompileCommand {
 			String script ) {
 		try {
 			long tm = System.currentTimeMillis();
-			DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-			String formatted = df.format(new Date());
 			if(script.equals("/")) {
 				script = "";
 			}
@@ -47,7 +45,7 @@ public class CompileCommand {
 			List<String> success = new ArrayList<String>();
 			List<String> failures = new ArrayList<String>();
 			List<String> skipped = new ArrayList<String>();
-			bundleCreator.createBundle(script,formatted,"xml",failures,success,skipped, force,keepIntermediateFiles);
+			bundleCreator.createBundle(script,new Date(),"xml",failures,success,skipped, force,keepIntermediateFiles);
 			long tm2 = System.currentTimeMillis() - tm;
 			session.getConsole().println("Compiling java complete. took: "+tm2+" millis.");
 			session.getConsole().println("Succeeded: "+success.size()+" failed: "+failures.size()+" skipped: "+skipped.size());

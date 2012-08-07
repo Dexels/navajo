@@ -3,6 +3,8 @@ package com.dexels.navajo.server;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import navajocore.Version;
 
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -424,8 +427,12 @@ public final class GenericHandler extends ServiceHandler {
         	if(cso==null) {
         		if(Version.osgiActive()) {
         			logger.warn("Script not found from OSGi registry while OSGi is active");
+        		} else {
+                	cso = compileScript(access, compilerErrors);
+                	if(cso==null) {
+                		logger.error("Can not find OSGi script for rpc: {} ",access.rpcName);
+                	}
         		}
-            	cso = compileScript(access, compilerErrors);
         	}
             outDoc = NavajoFactory.getInstance().createNavajo();
             access.setOutputDoc(outDoc);
@@ -472,8 +479,14 @@ public final class GenericHandler extends ServiceHandler {
 		}
 		if(sr==null || sr.length==0) {
 			logger.error("No service reference found for "+filter);
-			return null;
+			try {
+				CompiledScript ss = loadOnDemand(bundleContext, rpcName, filter);
+				return ss;
+			} catch (Exception e) {
+				logger.error("Service  "+filter,e);
+			}
 		}
+		
 		if(sr.length>1) {
 			logger.warn("Multiple references found for "+filter);
 		}
@@ -481,6 +494,16 @@ public final class GenericHandler extends ServiceHandler {
 		 CompiledScriptFactory csf = (CompiledScriptFactory) bundleContext.getService(sr[0]);
 		 if(csf==null ) {
 			 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter);
+			 BundleCreator bc = DispatcherFactory.getInstance().getBundleCreator();
+			 if(bc!=null) {
+				 try {
+					CompiledScript ss = bc.getOnDemandScriptService(rpcName);
+					return ss;
+				} catch (Exception e) {
+					logger.error("on demand script resolution failed.",e);
+				}
+				 
+			 }
 			 return null;
 		 }
 		 CompiledScript ss;
@@ -512,6 +535,24 @@ public final class GenericHandler extends ServiceHandler {
 		}
 		bundleContext.ungetService(sr[0]);
 		 return ss;
+	}
+
+	private CompiledScript loadOnDemand(BundleContext bundleContext, String rpcName, String filter) throws Exception {
+		BundleCreator bc = getBundleCreator();
+		CompiledScript sc = bc.getOnDemandScriptService(rpcName);
+		// wait for it..
+		
+//		Service
+//		sr = bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filter);
+		return sc;
+	}
+
+	/**
+	 * Bit of a hack, should be really DInjected
+	 * @return
+	 */
+	private BundleCreator getBundleCreator() {
+		return DispatcherFactory.getInstance().getBundleCreator();
 	}
 
 	private static String recompileJava(

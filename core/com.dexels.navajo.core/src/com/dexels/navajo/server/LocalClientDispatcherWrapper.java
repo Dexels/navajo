@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
@@ -16,6 +17,7 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 
 	private DispatcherInterface dispatcherInterface;
 	private NavajoServerContext serverContext;
+	private BundleCreator bundleCreator;
 	
 
 	private final static Logger logger = LoggerFactory
@@ -27,11 +29,23 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 //		this.dispatcherInterface = di;
 	}
 
+	public void setBundleCreator(BundleCreator bc) {
+		this.bundleCreator = bc;
+	}
+	
+	public void clearBundleCreator(BundleCreator bc) {
+		this.bundleCreator = null;
+	}
+	
 	@Override
 	public Navajo call(Navajo n) throws FatalException {
-		n.getHeader().setRPCUser(user);
-		n.getHeader().setRPCPassword(pass);
-		n.write(System.err);
+		if(n.getHeader().getRPCUser()==null || n.getHeader().getRPCUser().equals("")) {
+			n.getHeader().setRPCUser(user);
+		}
+		if(n.getHeader().getRPCPassword()==null || n.getHeader().getRPCPassword().equals("")) {
+			n.getHeader().setRPCPassword(pass);
+		}
+		dispatcherInterface.setBundleCreator(bundleCreator);
 		return dispatcherInterface.handle(n);
 	}
 

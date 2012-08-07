@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
 
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -236,6 +237,18 @@ public class TestDispatcher implements DispatcherInterface {
 	public Navajo handle(Navajo inMessage, boolean skipAuth,
 			AfterWebServiceEmitter emit, ClientInfo clientInfo)
 			throws FatalException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setBundleCreator(BundleCreator bc) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public BundleCreator getBundleCreator() {
 		// TODO Auto-generated method stub
 		return null;
 	}

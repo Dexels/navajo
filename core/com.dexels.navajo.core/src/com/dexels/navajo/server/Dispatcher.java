@@ -44,9 +44,11 @@ import java.util.logging.Level;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
 import com.dexels.navajo.broadcast.BroadcastMessage;
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -149,7 +151,10 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
   /**
    * Registered SNMP managers.
    */
-  private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>(); 
+  private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>();
+
+  // optional, can be null
+  private BundleCreator bundleCreator; 
    
   public Dispatcher(NavajoConfigInterface nc) {
 	  navajoConfig = nc;
@@ -201,6 +206,17 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  JabberWorkerFactory.getInstance();
 
   }
+  
+  @Override
+	public void setBundleCreator(BundleCreator bc) {
+		this.bundleCreator = bc;
+	}
+	
+  @Override
+	public BundleCreator getBundleCreator() {
+		return this.bundleCreator;
+	}
+
     
   protected final void init() {
 	  
@@ -1010,6 +1026,14 @@ private ServiceHandler createHandler(String handler, Access access)
         access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
         accessSet.add(access);
       
+        /**
+         * Add some MDC parameters to context
+         */
+        
+        MDC.put("accessId", access.accessID);
+        MDC.put("rpcName", access.getRpcName());
+        MDC.put("rpcUser", access.getRpcUser());
+        
         /**
          * Phase VIa: Check if scheduled webservice
          */
