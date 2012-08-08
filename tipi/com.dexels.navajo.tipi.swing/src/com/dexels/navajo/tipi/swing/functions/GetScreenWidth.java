@@ -1,4 +1,4 @@
-package com.dexels.navajo.functions;
+package com.dexels.navajo.tipi.swing.functions;
 
 import java.awt.Toolkit;
 

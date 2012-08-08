@@ -10,12 +10,12 @@ import navajo.ExtensionDefinition;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
-import com.dexels.navajo.functions.MailFunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.mail.functions.MailFunctionDefinition;
 
 public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiExtension {
 

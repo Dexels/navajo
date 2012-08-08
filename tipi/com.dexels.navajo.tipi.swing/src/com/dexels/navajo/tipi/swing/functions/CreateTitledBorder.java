@@ -1,18 +1,17 @@
-/*
- * Created on May 23, 2005
- *
- */
-package com.dexels.navajo.functions;
+package com.dexels.navajo.tipi.swing.functions;
+
+import java.awt.Color;
+
+import javax.swing.BorderFactory;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.tipi.TipiComponent;
 
 /**
  * @author frank
  * 
  */
-public class GetComponent extends FunctionInterface {
+public class CreateTitledBorder extends FunctionInterface {
 
 	/*
 	 * (non-Javadoc)
@@ -20,7 +19,7 @@ public class GetComponent extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
 	public String remarks() {
-		return "Resolves a tipi path to a TipiComponent. Source component is required to resolve context data.";
+		return "Creates a titled border based on a string";
 	}
 
 	/*
@@ -29,7 +28,7 @@ public class GetComponent extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
 	public String usage() {
-		return "GetComponent(TipiComponent source, String path)";
+		return "CreateTitledBorder(String title)";
 	}
 
 	// GetComponent({component://init/desktop},{event:/from})
@@ -43,21 +42,14 @@ public class GetComponent extends FunctionInterface {
 		if (pp == null) {
 			return null;
 		}
-		if (!(pp instanceof TipiComponent)) {
+		if (!(pp instanceof String)) {
 			throw new TMLExpressionException(this, "Invalid operand: "
 					+ pp.getClass().getName());
 		}
-		Object o = getOperand(1);
-		if (o == null) {
-			return null;
-		}
-		if (!(o instanceof String)) {
-			throw new TMLExpressionException(this, "Invalid operand: "
-					+ o.getClass().getName());
-		}
-		TipiComponent tc = (TipiComponent) pp;
-		String path = (String) o;
-		return tc.getTipiComponentByPath(path);
+		String title = (String) pp;
+		return BorderFactory.createTitledBorder(
+				BorderFactory.createLineBorder(Color.darkGray, 1), title);
+
 	}
 
 }

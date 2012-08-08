@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <functiondef>
-    <function name="GetPart" class="com.dexels.navajo.functions.GetPart">
+    <function name="GetPart" class="com.dexels.navajo.tipi.mail.functions.GetPart">
         <description>Gets a part of a multibody mime message</description>
         <input>binary,integer</input>
         <result>binary</result>
     </function>
-    <function name="GetMailNavajo" class="com.dexels.navajo.functions.GetMailNavajo">
+    <function name="GetMailNavajo" class="com.dexels.navajo.tipi.mail.functions.GetMailNavajo">
         <description>Returns a navajo, depicting the message along with its parts. It does not do any link replacements</description>
         <input>binary</input>
         <result>navajo</result>

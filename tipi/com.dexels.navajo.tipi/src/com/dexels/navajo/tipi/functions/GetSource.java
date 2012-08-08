@@ -2,17 +2,19 @@
  * Created on May 23, 2005
  *
  */
-package com.dexels.navajo.functions;
+package com.dexels.navajo.tipi.functions;
 
+import java.io.StringWriter;
+
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.tipi.TipiComponent;
 
 /**
  * @author frank
  * 
  */
-public class GetAttribute extends FunctionInterface {
+public class GetSource extends FunctionInterface {
 
 	/*
 	 * (non-Javadoc)
@@ -20,7 +22,7 @@ public class GetAttribute extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
 	public String remarks() {
-		return "Gets the attribute ref of a component";
+		return "Converts a navajo object to an xml string";
 	}
 
 	/*
@@ -29,10 +31,9 @@ public class GetAttribute extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
 	public String usage() {
-		return "GetAttribute(TipiComponent source, String attribute)";
+		return "GetSource(Navajo n)";
 	}
 
-	// GetComponent({component://init/desktop},{event:/from})
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -43,21 +44,21 @@ public class GetAttribute extends FunctionInterface {
 		if (pp == null) {
 			return null;
 		}
-		if (!(pp instanceof TipiComponent)) {
+		if (!(pp instanceof Navajo)) {
 			throw new TMLExpressionException(this, "Invalid operand: "
 					+ pp.getClass().getName());
 		}
-		Object o = getOperand(1);
-		if (o == null) {
-			return null;
+		Navajo n = (Navajo) pp;
+		StringWriter sw = new StringWriter();
+		try {
+			n.write(sw);
+			sw.flush();
+			sw.close();
+			return sw.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new TMLExpressionException("Error writing navajo: ", e);
 		}
-		if (!(o instanceof String)) {
-			throw new TMLExpressionException(this, "Invalid operand: "
-					+ o.getClass().getName());
-		}
-		TipiComponent tc = (TipiComponent) pp;
-		String name = (String) o;
-		return tc.getAttributeRef(name);
 	}
 
 }

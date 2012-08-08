@@ -1,4 +1,4 @@
-package com.dexels.navajo.functions;
+package com.dexels.navajo.tipi.mail.functions;
 
 import java.io.IOException;
 import java.io.InputStream;

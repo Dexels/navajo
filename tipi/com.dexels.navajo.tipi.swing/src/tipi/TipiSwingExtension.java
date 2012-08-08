@@ -10,7 +10,6 @@ import java.util.Set;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-
 import navajo.ExtensionDefinition;
 
 import org.osgi.framework.BundleContext;
@@ -20,12 +19,12 @@ import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.functions.TipiSwingFunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.swing.functions.TipiSwingFunctionDefinition;
 import com.dexels.navajo.tipi.swing.laf.api.LookAndFeelWrapper;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 

@@ -2,19 +2,17 @@
  * Created on May 23, 2005
  *
  */
-package com.dexels.navajo.functions;
+package com.dexels.navajo.tipi.functions;
 
-import java.io.StringWriter;
-
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.tipi.TipiComponent;
 
 /**
  * @author frank
  * 
  */
-public class GetSource extends FunctionInterface {
+public class GetComponentId extends FunctionInterface {
 
 	/*
 	 * (non-Javadoc)
@@ -22,7 +20,7 @@ public class GetSource extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
 	public String remarks() {
-		return "Converts a navajo object to an xml string";
+		return "Returns the id of a TipiComponent. ";
 	}
 
 	/*
@@ -31,7 +29,7 @@ public class GetSource extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
 	public String usage() {
-		return "GetSource(Navajo n)";
+		return "GetComponentId(TipiComponent source)";
 	}
 
 	/*
@@ -44,21 +42,12 @@ public class GetSource extends FunctionInterface {
 		if (pp == null) {
 			return null;
 		}
-		if (!(pp instanceof Navajo)) {
+		if (!(pp instanceof TipiComponent)) {
 			throw new TMLExpressionException(this, "Invalid operand: "
 					+ pp.getClass().getName());
 		}
-		Navajo n = (Navajo) pp;
-		StringWriter sw = new StringWriter();
-		try {
-			n.write(sw);
-			sw.flush();
-			sw.close();
-			return sw.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new TMLExpressionException("Error writing navajo: ", e);
-		}
+		TipiComponent tc = (TipiComponent) pp;
+		return tc.getId();
 	}
 
 }

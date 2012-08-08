@@ -2,7 +2,7 @@
  * Created on May 23, 2005
  *
  */
-package com.dexels.navajo.functions;
+package com.dexels.navajo.tipi.functions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

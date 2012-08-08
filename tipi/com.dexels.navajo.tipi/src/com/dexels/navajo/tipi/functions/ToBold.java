@@ -2,17 +2,16 @@
  * Created on May 23, 2005
  *
  */
-package com.dexels.navajo.functions;
+package com.dexels.navajo.tipi.functions;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.tipi.TipiComponent;
 
 /**
  * @author frank
  * 
  */
-public class GetComponentId extends FunctionInterface {
+public class ToBold extends FunctionInterface {
 
 	/*
 	 * (non-Javadoc)
@@ -20,7 +19,7 @@ public class GetComponentId extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
 	public String remarks() {
-		return "Returns the id of a TipiComponent. ";
+		return "Make text bold. Html-style";
 	}
 
 	/*
@@ -29,9 +28,10 @@ public class GetComponentId extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
 	public String usage() {
-		return "GetComponentId(TipiComponent source)";
+		return "ToBold(string) duh.";
 	}
 
+	// GetComponent({component://init/desktop},{event:/from})
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -39,15 +39,12 @@ public class GetComponentId extends FunctionInterface {
 	 */
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
-		if (pp == null) {
-			return null;
-		}
-		if (!(pp instanceof TipiComponent)) {
+
+		if (!(pp instanceof String)) {
 			throw new TMLExpressionException(this, "Invalid operand: "
 					+ pp.getClass().getName());
 		}
-		TipiComponent tc = (TipiComponent) pp;
-		return tc.getId();
+		return "<html><b>" + pp + "</b></html>";
 	}
 
 }
