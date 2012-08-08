@@ -1,8 +1,9 @@
-package com.dexels.navajo.adapter;
+package com.dexels.navajo.adapter.rhino;
 
 
 import java.io.IOException;
 
+import com.dexels.navajo.adapter.NavajoMapUpdated;
 import com.dexels.navajo.client.async.AsyncClient;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Continuation based service calls for Rhino
 Bundle-SymbolicName: com.dexels.navajo.rhino.continuations
 Bundle-Version: 1.0.3.qualifier
-Bundle-Activator: com.dexels.navajo.rhino.continuations.Activator
+Bundle-Activator: navajorhinocontinuations.Version
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.client,

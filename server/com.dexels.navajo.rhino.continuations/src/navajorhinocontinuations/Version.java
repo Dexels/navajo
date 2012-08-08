@@ -8,7 +8,7 @@ import java.util.Set;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
-import com.dexels.navajo.adapter.RhinoAdapterLibrary;
+import com.dexels.navajo.adapter.rhino.RhinoAdapterLibrary;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 
