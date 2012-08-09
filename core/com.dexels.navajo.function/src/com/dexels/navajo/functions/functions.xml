@@ -454,6 +454,11 @@
         <input>date|clocktime,string,string|empty</input>
         <result>string</result>
     </function>
+    <function name="FormatZipCode" class="com.dexels.navajo.functions.FormatZipCode">
+        <description>formats a date according to a format string plus an optional locale</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
     <function name="ForAll" class="com.dexels.navajo.functions.ForAll">
         <description>Evaluates a condition (expression evaluating to a boolean) under all the messages of an array message. It will return a &apos;AND&apos; of all the results</description>
         <input/>
