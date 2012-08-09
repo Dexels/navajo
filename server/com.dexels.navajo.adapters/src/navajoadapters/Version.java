@@ -7,8 +7,8 @@ import org.dexels.grus.GrusManager;
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.adapter.SQLMap;
-import com.dexels.navajo.adapter.StandardAdapterFunctionLibrary;
 import com.dexels.navajo.adapter.StandardAdapterLibrary;
+import com.dexels.navajo.adapter.functions.StandardAdapterFunctionLibrary;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;

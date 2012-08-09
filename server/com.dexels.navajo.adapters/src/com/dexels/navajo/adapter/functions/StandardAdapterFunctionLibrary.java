@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter;
+package com.dexels.navajo.adapter.functions;
 
 import java.io.InputStream;
 import java.util.List;
@@ -18,7 +18,7 @@ public class StandardAdapterFunctionLibrary implements ExtensionDefinition {
 	private transient ClassLoader extensionClassLoader = null;
 
 	public InputStream getDefinitionAsStream() {
-		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/adapter/adapterfunctions.xml");
+		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/adapter/functions/adapterfunctions.xml");
 	}
 
 	public String getConnectorId() {
