@@ -16,7 +16,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.context.NavajoContext;
+import com.dexels.navajo.client.context.NavajoRemoteContext;
 import com.dexels.navajo.jsp.server.impl.ScriptStatusImpl;
 
 public class NavajoServerContext {
@@ -28,6 +32,10 @@ public class NavajoServerContext {
 	private NavajoContext navajoContext;
 	private ScriptStatus scriptStatus;
 	private InstallerContext installerContext;
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoServerContext.class);
 	
 	public InstallerContext getInstallerContext() {
 		return installerContext;
@@ -109,8 +117,14 @@ public class NavajoServerContext {
 	
 	public void setupClient() throws IOException {
 		Map<String,String> settings = getClientSettings();
+		NavajoContext nc = getNavajoContext();
 		
-		getNavajoContext().setupClient(settings.get("server") , settings.get("username")  , settings.get("password"), settings.get("requestServerName"), Integer.parseInt(settings.get("requestServerPort")), settings.get("requestContextPath"),null, true);
+		if(nc instanceof NavajoRemoteContext) {
+			NavajoRemoteContext nrc = (NavajoRemoteContext)nc;
+			nrc.setupClient(settings.get("server") , settings.get("username")  , settings.get("password"), settings.get("requestServerName"), Integer.parseInt(settings.get("requestServerPort")), settings.get("requestContextPath"),null, true);
+		} else {
+			logger.warn("Setting up non-remote client, ignoring.");
+		}
 	}
 
 	public Map<String,String> getClientSettings() throws IOException {
