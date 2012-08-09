@@ -100,7 +100,7 @@
     <!-- FTP adapter -->
     <map>
         <tagname>ftp</tagname>
-        <object>com.dexels.navajo.adapter.FTPMap</object>
+        <object>com.dexels.navajo.enterprise.adapter.FTPMap</object>
         <values>
             <value name="server" type="string" required="true" direction="in"/>
             <value name="username" type="string" required="true" direction="in"/>
