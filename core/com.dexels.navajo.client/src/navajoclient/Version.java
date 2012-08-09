@@ -39,6 +39,7 @@ import org.osgi.service.cm.ManagedServiceFactory;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.context.ClientContext;
 import com.dexels.navajo.client.context.NavajoContext;
+import com.dexels.navajo.client.context.NavajoRemoteContext;
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
 
@@ -119,7 +120,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion implement
 			logger.info("Element: "+o+" : "+settings.get(o));
 		}
 		
-		NavajoContext nc = new NavajoContext();
+		NavajoRemoteContext nc = new NavajoRemoteContext();
 		nc.setupClient((String)settings.get("server"), (String)settings.get("username"), (String)settings.get("password"));
 		
 		ServiceRegistration reg = getBundleContext().registerService(ClientContext.class.getName(), nc, settings);

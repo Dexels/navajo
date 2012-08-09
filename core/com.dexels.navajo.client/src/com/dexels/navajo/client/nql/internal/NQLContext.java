@@ -1,4 +1,4 @@
-package com.dexels.navajo.client.nql;
+package com.dexels.navajo.client.nql.internal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,12 +12,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.context.ClientContext;
 import com.dexels.navajo.client.context.NavajoContext;
-import com.dexels.navajo.client.nql.command.CallCommand;
-import com.dexels.navajo.client.nql.command.FormatCommand;
-import com.dexels.navajo.client.nql.command.OutputCommand;
-import com.dexels.navajo.client.nql.command.ServiceCommand;
-import com.dexels.navajo.client.nql.command.SetValueCommand;
+import com.dexels.navajo.client.context.NavajoRemoteContext;
+import com.dexels.navajo.client.nql.NQLCommand;
+import com.dexels.navajo.client.nql.NqlContextApi;
+import com.dexels.navajo.client.nql.OutputCallback;
+import com.dexels.navajo.client.nql.internal.command.CallCommand;
+import com.dexels.navajo.client.nql.internal.command.FormatCommand;
+import com.dexels.navajo.client.nql.internal.command.OutputCommand;
+import com.dexels.navajo.client.nql.internal.command.ServiceCommand;
+import com.dexels.navajo.client.nql.internal.command.SetValueCommand;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -26,13 +31,12 @@ import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 
-public class NQLContext {
-	private final NavajoContext context;
+public class NQLContext implements NqlContextApi {
+	private ClientContext context;
 	private Navajo current = null;
 	private Object content = null;
 //	private Writer outputWriter = null;
 	private String mimeType = null;
-	private OutputCallback callback = null;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(NQLContext.class);
@@ -48,42 +52,22 @@ public class NQLContext {
 		return mimeType;
 	}
 
-	public void setCallback(OutputCallback callback) {
-		this.callback = callback;
+	public void setNavajoContext(ClientContext c) {
+		context = c;
 	}
 
+	public void clearNavajoContext(ClientContext c) {
+		context = null;
+	}
 
 	public NQLContext() {
-		context = new NavajoContext();
-		reset();
 	}
 	
 	public Navajo getNavajo() {
 		return current;
 	}
 	
-	private void reset() {
-		context.reset();
-		content = null;
-		current = null;
-	}
 
-	public void setup(String server, String username, String password) {
-		context.setupClient(server, username, password);
-	}
-	
-	/**
-	 * 
-	 * @param server Server can be null, then a suitable* server will be assembled from the requestParams
-	 * @param username
-	 * @param password
-	 * @param requestServerName
-	 * @param requestServerPort
-	 * @param requestContextPath
-	 */
-	public void setupClient(String server, String username, String password,String requestServerName,int requestServerPort, String requestContextPath,String postmanPath) {
-		context.setupClient(server, username, password,requestServerName,requestServerPort,requestContextPath,postmanPath, false);
-	}
 
 
 	public void output(String path) {
@@ -107,7 +91,7 @@ public class NQLContext {
 
 	// tml, btml, csv, tsv, json
 	
-	public void format(String type) throws IOException, NavajoException {
+	public void format(String type, OutputCallback callback) throws IOException, NavajoException {
 		if(callback==null) {
 			throw new UnsupportedOperationException("No outputWriter set.");
 		}
@@ -121,52 +105,52 @@ public class NQLContext {
 
 
 		if("json".equals(type)) {
-			setMimeType("application/json");
+			setMimeType("application/json",callback);
 			
-			writeJSON();
+			writeJSON(callback);
 			return;
 		}
 		if("csv".equals(type)) {
-			setMimeType("text/comma-separated-values");
+			setMimeType("text/comma-separated-values",callback);
 			writeCSV(callback.getOutputStream(),",","\n","\"");
 			return;
 		}
 		if("tsv".equals(type)) {
-			setMimeType("text/tab-separated-values");
+			setMimeType("text/tab-separated-values",callback);
 			writeCSV(callback.getOutputStream(),"\t","\n","");
 			return;
 		}
 		if("btml".equals(type)) {
-			setMimeType("text/xml");
+			setMimeType("text/xml",callback);
 			writeBTML(callback.getOutputStream());
 			return;
 		}
 		if("tml".equals(type)) {
-			setMimeType("text/xml");
+			setMimeType("text/xml",callback);
 			writeTML(callback.getOutputStream());
 			return;
 		}
 		if("binary".equals(type)) {
-			writeBinary(callback.getOutputStream());
+			writeBinary(callback.getOutputStream(),callback);
 			return;
 		}
 	}
 
-	public void setMimeType(String mime) {
+	public void setMimeType(String mime, OutputCallback callback) {
 		this.mimeType = mime;
 		if(callback!=null) {
 			callback.setOutputType(mime);
 		}
 	}
 	
-	public void setContentLength(long l) {
+	public void setContentLength(long l, OutputCallback callback) {
 		
 		if(callback!=null) {
 			callback.setContentLength(l);
 		}
 	}
 	
-	protected void writeJSON() throws IOException {
+	protected void writeJSON(OutputCallback callback) throws IOException {
 		Message m = null;
 		if(content instanceof Navajo) {
 			Navajo n = (Navajo)content;
@@ -177,14 +161,14 @@ public class NQLContext {
 		Writer w = new OutputStreamWriter(callback.getOutputStream());
 		m.writeJSON(w);
 		w.flush();
-		setMimeType("application/json");
+		setMimeType("application/json", callback);
 	}
 
-	private void writeBinary(OutputStream outputStream) throws IOException {
+	private void writeBinary(OutputStream outputStream, OutputCallback callback) throws IOException {
 		Binary b = (Binary)content;
-		setMimeType( b.getMimeType());
+		setMimeType( b.getMimeType(),callback);
 		if ( b != null && b.getLength() > 0 ) {
-			setContentLength(b.getLength());
+			setContentLength(b.getLength(),callback);
 		}
 		b.write(callback.getOutputStream());
 		outputStream.write(b.getData());
@@ -279,6 +263,10 @@ public class NQLContext {
 		p.setValue(value);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.client.nql.NqlContextApi#parseCommand(java.lang.String)
+	 */
+	@Override
 	public List<NQLCommand> parseCommand(String nql) {
 		List<NQLCommand> cmds = new ArrayList<NQLCommand>();
 		String[] elt = nql.split("\\|");
@@ -307,9 +295,10 @@ public class NQLContext {
 
 	public static void main(String[] args) throws NavajoException, ClientException, IOException {
 		NQLContext nq = new NQLContext();
+		NavajoRemoteContext nc = new NavajoRemoteContext();
 //		StringWriter sw = new StringWriter();
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		nq.setCallback(new OutputCallback(){
+		final OutputCallback outputCallback = new OutputCallback(){
 
 			public OutputStream getOutputStream() {
 				return baos;
@@ -322,27 +311,37 @@ public class NQLContext {
 			public void setContentLength(long l) {
 				logger.info("Content length detected: "+l);
 			}
-		});
+		};
 		
 		
-		nq.setup("penelope1.dexels.com/sportlink/knvb1_test/servlet/Postman", "ROOT", "R20T");
+		nc.setupClient("penelope1.dexels.com/sportlink/knvb1_test/servlet/Postman", "ROOT", "R20T");
+		nq.setNavajoContext(nc);
 		String nql = "service:club/InitSearchClubs|ClubSearch/ShortName:Hoek|service:club/ProcessSearchClubs|output:Club|format:csv";
 	
-		nq.executeCommand(nql);
+		nq.executeCommand(nql,outputCallback);
 		
 		String nql2 = "service:club/InitUpdateClub|Club/ClubIdentifier:BBFW63X|call:club/ProcessQueryClub|output:ClubData/Logo|format:binary";
-		nq.executeCommand(nql2);
+		nq.executeCommand(nql2,outputCallback);
 		logger.info("TYPE: "+nq.mimeType);
 		logger.info("Bytes written: "+baos.size());
 //		logger.info(sw.toString());
 		//	nq.getNavajo().write(System.err);
 	}
 
-	public void executeCommand(String nql) throws ClientException, NavajoException, IOException {
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.client.nql.NqlContextApi#executeCommand(java.lang.String)
+	 */
+	@Override
+	public void executeCommand(String nql, OutputCallback ob) throws ClientException, NavajoException, IOException {
 		List<NQLCommand>aa =  parseCommand(nql);
 		for (NQLCommand nqlCommand : aa) {
-			nqlCommand.execute(this);
+			nqlCommand.execute(this,ob);
 		}
+	}
+
+	@Override
+	public ClientContext getNavajoContext() {
+		return context;
 	}
 
 
