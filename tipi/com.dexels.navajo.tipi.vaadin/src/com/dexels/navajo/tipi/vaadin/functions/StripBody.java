@@ -1,4 +1,4 @@
-package com.dexels.navajo.functions;
+package com.dexels.navajo.tipi.vaadin.functions;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

@@ -1,4 +1,4 @@
-package com.dexels.navajo.functions;
+package com.dexels.navajo.tipi.vaadin.functions;
 
 import java.io.InputStream;
 import java.util.List;
@@ -13,7 +13,7 @@ public class VaadinFunctionDefinition implements ExtensionDefinition {
 	private transient ClassLoader extensionClassLoader = null;
 
 	public InputStream getDefinitionAsStream() {
-		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/functions/vaadinfunctions.xml");
+		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/tipi/vaadin/functions/vaadinfunctions.xml");
 	}
 
 	public String getConnectorId() {

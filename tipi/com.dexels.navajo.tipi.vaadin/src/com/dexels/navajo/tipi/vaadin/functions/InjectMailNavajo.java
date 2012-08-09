@@ -1,4 +1,4 @@
-package com.dexels.navajo.functions;
+package com.dexels.navajo.tipi.vaadin.functions;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

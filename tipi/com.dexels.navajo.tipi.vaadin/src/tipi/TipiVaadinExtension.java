@@ -17,12 +17,12 @@ import org.slf4j.LoggerFactory;
 import tipi.TipiAbstractXMLExtension;
 import tipi.TipiExtension;
 
-import com.dexels.navajo.functions.VaadinFunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.vaadin.functions.VaadinFunctionDefinition;
 
 public class TipiVaadinExtension extends TipiAbstractXMLExtension implements TipiExtension {
 
