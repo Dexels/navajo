@@ -19,6 +19,7 @@ import ch.qos.logback.classic.PatternLayout;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.context.NavajoContext;
+import com.dexels.navajo.client.context.NavajoRemoteContext;
 import com.dexels.navajo.client.server.ServerInstance;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.listener.NavajoContextListener;
@@ -30,7 +31,7 @@ public class ServerInstanceImpl implements ServerInstance {
 	private int port;
 	
 	private Server jettyServer;
-	private NavajoContext localContext;
+	private NavajoRemoteContext localContext;
 
 	private ServletContextHandler webappContextHandler;
 
@@ -106,7 +107,7 @@ public class ServerInstanceImpl implements ServerInstance {
 	}
 	
 	protected void setupClient(String server, String user, String pass) {
-		localContext = new NavajoContext();
+		localContext = new NavajoRemoteContext();
 		localContext.setupClient(server,user, pass);
 		
 	}
