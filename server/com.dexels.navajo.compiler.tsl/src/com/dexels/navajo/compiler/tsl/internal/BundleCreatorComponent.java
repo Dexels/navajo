@@ -86,8 +86,9 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 	
 	@Override
-	public void createBundle(String script, Date compilationDate, String scriptExtension, List<String> failures, List<String> success, List<String> skipped, boolean force, boolean keepIntermediate) throws Exception {
-
+	public void createBundle(String scriptName, Date compilationDate, String scriptExtension, List<String> failures, List<String> success, List<String> skipped, boolean force, boolean keepIntermediate) throws Exception {
+		
+		String script = scriptName.replaceAll("\\.", "/");
 		
 		
 		File scriptFolder = new File(navajoIOConfig.getScriptPath());
@@ -360,7 +361,8 @@ public class BundleCreatorComponent implements BundleCreator {
 		return new Date(jarFile.lastModified());
 	}
 
-	private File getScriptBundleJar(String scriptPath) {
+	private File getScriptBundleJar(String script) {
+		String scriptPath = script.replaceAll("\\.", "/");
 		final String extension = "jar";
 		File compiledScriptPath = new File(navajoIOConfig.getCompiledScriptPath());
 		File jarFile = new File(compiledScriptPath,scriptPath+"."+extension);
@@ -372,6 +374,9 @@ public class BundleCreatorComponent implements BundleCreator {
 		Date script = getScriptModificationDate(scriptPath);
 		if(script==null) {
 			throw new FileNotFoundException("Script "+scriptPath+" is missing!");
+		}
+		if(compiled==null) {
+			return true;
 		}
 		return compiled.compareTo(script) < 0;
 		

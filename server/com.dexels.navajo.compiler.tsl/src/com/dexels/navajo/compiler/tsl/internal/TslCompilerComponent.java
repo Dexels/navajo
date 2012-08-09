@@ -101,6 +101,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.println("	Class<? extends CompiledScript> c;");
 		w.println("	c = (Class<? extends CompiledScript>) Class.forName(getScriptName());");
 		w.println("	CompiledScript instance = c.newInstance();");
+		w.println("	super.initialize(instance);");
 		w.println("	return instance;");
 		w.println("}");
 		w.println("");
