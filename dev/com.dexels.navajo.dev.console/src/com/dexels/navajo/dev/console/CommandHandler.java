@@ -11,6 +11,7 @@ import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.client.nql.NqlContextApi;
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.script.api.LocalClient;
 
@@ -22,7 +23,17 @@ public class CommandHandler {
 	private BundleContext bundleContext;
 	
 	private LocalClient localClient;
+	private NqlContextApi nqlContext;
+	
+	public void setNqlContext(NqlContextApi n) {
+		this.nqlContext = n;
+	}
 
+	public void clearNqlContext(NqlContextApi n) {
+		this.nqlContext = null;
+	}
+
+	
 	public void setBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = bundleCreator;
 	}
@@ -63,7 +74,7 @@ public class CommandHandler {
 
 		ScriptListCommand script = new ScriptListCommand(bundleContext);
 		registerCommand(script,"scripts");
-		com.dexels.navajo.server.CompiledScriptFactory a;
+		
 		VerifyCommand verify = new VerifyCommand(bundleContext);
 		verify.setBundleCreator(bundleCreator);
 		registerCommand(verify,"verify");
@@ -71,6 +82,16 @@ public class CommandHandler {
 		CallCommand cc = new CallCommand();
 		cc.setLocalClient(localClient);
 		registerCommand(cc, "call");
+		
+		NqlCommand nql = new NqlCommand(bundleContext);
+		nql.setNqlContext(nqlContext);
+		registerCommand(nql,"nql");
+
+		
+		LoginCommand login = new LoginCommand(bundleContext);
+		login.setNqlContext(nqlContext);
+		registerCommand(login,"login");
+
 	}
 
 	private void registerCommand(Object c, String command) {

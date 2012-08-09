@@ -27,6 +27,8 @@ public class CallCommand {
 
 	
 	
+	// TODO, rewrite to use NavajoContext?
+	
 	
 	@Descriptor(value = "Call a script without input. It will bypass auth.") 
 

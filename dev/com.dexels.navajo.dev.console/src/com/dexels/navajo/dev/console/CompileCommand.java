@@ -1,13 +1,12 @@
 package com.dexels.navajo.dev.console;
 
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import  org.apache.felix.service.command.Descriptor;
+
 import org.apache.felix.service.command.CommandSession;
+import org.apache.felix.service.command.Descriptor;
 import org.apache.felix.service.command.Parameter;
 
 import com.dexels.navajo.compiler.BundleCreator;
