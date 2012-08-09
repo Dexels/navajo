@@ -742,6 +742,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 						Access.writeToConsole(myAccess, "batch mode did not provide a fully baked result set, sorry.\n");
 						Access.writeToConsole(myAccess, "SQL exception is '" + e.toString() + "'\n");
 						e.printStackTrace();
+						logger.warn("Some sql problem: ", e);
 					}
 					if (rs != null) {
 						rs.close();

@@ -22,6 +22,8 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import org.dexels.grus.DbConnectionBroker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.sqlmap.ConnectionBrokerManager;
 import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
@@ -233,6 +235,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	private static Object semaphore = new Object();
 	private static boolean initialized = false;
   
+	
+	private final static Logger logger = LoggerFactory.getLogger(SQLMap.class);
+	
 	public SQLMap() {
 		this.isLegacyMode = SQLMapConstants.isLegacyMode();
 	}
@@ -1141,11 +1146,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 								int type = meta.getColumnType(i);
 
 								Object value = null;
-								final String strVal = rs.getString(i);
-
-								if ((strVal != null && !rs.wasNull()) || type == Types.BLOB) {
+//								final String strVal = rs.getString(i);
+								
+//								if ((strVal != null && !rs.wasNull()) || type == Types.BLOB) {
 									value = SQLMapHelper.getColumnValue(rs, type, i);
-								}
+//								}
 								rm.addValue(param.toUpperCase(), value);
 							}
 							dummy.add(rm);
@@ -1168,6 +1173,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					if (debug) {
 						Access.writeToConsole(myAccess, "batch mode did not provide a fully baked result set, sorry.\n");
 						Access.writeToConsole(myAccess, "SQL exception is '" + e.toString() + "'\n");
+						logger.info("Sql problem that might or might not be a an actual problem: ",e);
 					}
 					if (rs != null) {
 						rs.close();
