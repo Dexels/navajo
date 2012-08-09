@@ -186,6 +186,10 @@ private final static Logger logger = LoggerFactory
   public void setClassLoader(NavajoClassSupplier loader) {
 	  this.classLoader = loader;
   }
+  
+  public NavajoClassSupplier getClassLoader() {
+	  return this.classLoader;
+  }
 
   public abstract void finalBlock(Access access) throws Exception;
 

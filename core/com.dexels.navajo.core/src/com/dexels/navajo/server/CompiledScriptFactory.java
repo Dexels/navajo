@@ -1,10 +1,12 @@
 package com.dexels.navajo.server;
 
+import java.io.File;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.CompiledScript;
 
 public abstract class CompiledScriptFactory {
@@ -15,11 +17,28 @@ public abstract class CompiledScriptFactory {
 	private String serviceName;
 	
 	@SuppressWarnings("unchecked")
-	public CompiledScript getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		Class<? extends CompiledScript> c;
-		c = (Class<? extends CompiledScript>) Class.forName(getScriptName());
-		CompiledScript instance = c.newInstance();
-		return instance;
+	public abstract CompiledScript getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException;
+	
+	
+	public final void initialize(CompiledScript instance){
+		instance.setClassLoader(new NavajoClassSupplier() {
+			
+			@Override
+			public File[] getJarFiles(String path, boolean beta) {
+				return null;
+			}
+			
+			@Override
+			public Class<?> getCompiledNavaScript(String className)
+					throws ClassNotFoundException {
+				return null;
+			}
+			
+			@Override
+			public Class<?> getClass(String className) throws ClassNotFoundException {
+				return Class.forName(className, true, CompiledScriptFactory.this.getClass().getClassLoader()); 
+			}
+		});
 	}
 	
 	protected abstract String getScriptName();

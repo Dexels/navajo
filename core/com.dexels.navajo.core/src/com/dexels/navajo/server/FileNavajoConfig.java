@@ -97,7 +97,9 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
     }
 
 	@Override
-	public Date getScriptModificationDate(String name) {
+	public Date getScriptModificationDate(String scriptPackage) {
+//		System.err.println("getScriptModificationDate: "+scriptPackage);
+		String name = scriptPackage.replaceAll("\\.", "/");
 		String scriptPath = getScriptPath();
 		if(!scriptPath.endsWith("/")) {
 			scriptPath = scriptPath+"/";

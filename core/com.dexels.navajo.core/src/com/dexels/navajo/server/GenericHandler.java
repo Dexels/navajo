@@ -437,6 +437,12 @@ public final class GenericHandler extends ServiceHandler {
             outDoc = NavajoFactory.getInstance().createNavajo();
             access.setOutputDoc(outDoc);
             access.setCompiledScript(cso);
+            if (cso.getClassLoader()==null) {
+				logger.error("No classloader present!");
+			} else {
+				logger.debug("Class supplier found.");
+			} ;
+            
             cso.run(access);
 
             return access.getOutputDoc();
@@ -462,7 +468,7 @@ public final class GenericHandler extends ServiceHandler {
           }
         }
 
-	private CompiledScript getOSGiService(String scriptName) {
+	private CompiledScript getOSGiService(String scriptName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		final BundleContext bundleContext = Version.getDefaultBundleContext();
 		if(bundleContext==null) {
 			logger.debug("No OSGi context found");
@@ -487,48 +493,36 @@ public final class GenericHandler extends ServiceHandler {
 			}
 		}
 		
-		if(sr.length>1) {
-			logger.warn("Multiple references found for "+filter);
+		if(sr!=null && sr.length>1) {
+			logger.warn("Multiple references ({}) found for {}",sr.length,filter);
 		}
 		
-		 CompiledScriptFactory csf = (CompiledScriptFactory) bundleContext.getService(sr[0]);
-		 if(csf==null ) {
-			 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter);
-			 BundleCreator bc = DispatcherFactory.getInstance().getBundleCreator();
-			 if(bc!=null) {
-				 try {
-					CompiledScript ss = bc.getOnDemandScriptService(rpcName);
-					return ss;
-				} catch (Exception e) {
-					logger.error("on demand script resolution failed.",e);
-				}
-				 
-			 }
-			 return null;
+		if(sr==null) {
+			logger.error("BundleContext is null. Why?!");
+		}
+		CompiledScriptFactory csf = null;
+		if(sr!=null) {
+			 csf = (CompiledScriptFactory) bundleContext.getService(sr[0]);
+			 if(csf!=null ) {
+				 return csf.getCompiledScript();
+			 }			
+		}
+		 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter);
+		 BundleCreator bc = DispatcherFactory.getInstance().getBundleCreator();
+		 if(bc!=null) {
+			 try {
+				CompiledScript ss = bc.getOnDemandScriptService(rpcName);
+				return ss;
+			} catch (Exception e) {
+				logger.error("on demand script resolution failed.",e);
+			}
 		 }
+		
+
 		 CompiledScript ss;
 		try {
 			ss = csf.getCompiledScript();
 			final CompiledScript ccs = ss;
-			ss.setClassLoader(new NavajoClassSupplier() {
-				
-				@Override
-				public File[] getJarFiles(String path, boolean beta) {
-					return null;
-				}
-				
-				@Override
-				public Class<?> getCompiledNavaScript(String className)
-						throws ClassNotFoundException {
-					return null;
-				}
-				
-				@Override
-				public Class<?> getClass(String className) throws ClassNotFoundException {
-					return Class.forName(className, true, ccs.getClass().getClassLoader()); 
-//					return null;
-				}
-			});
 		} catch (Exception e) {
 			 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter,e);
 			 return null;
@@ -539,11 +533,11 @@ public final class GenericHandler extends ServiceHandler {
 
 	private CompiledScript loadOnDemand(BundleContext bundleContext, String rpcName, String filter) throws Exception {
 		BundleCreator bc = getBundleCreator();
+		if(bc==null) {
+			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
+		}
 		CompiledScript sc = bc.getOnDemandScriptService(rpcName);
 		// wait for it..
-		
-//		Service
-//		sr = bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filter);
 		return sc;
 	}
 
