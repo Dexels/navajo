@@ -12,8 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
-import com.dexels.navajo.client.nql.NQLContext;
+import com.dexels.navajo.client.context.NavajoRemoteContext;
+import com.dexels.navajo.client.nql.NqlContextApi;
 import com.dexels.navajo.client.nql.OutputCallback;
+import com.dexels.navajo.client.nql.internal.NQLContext;
 import com.dexels.navajo.document.NavajoException;
 
 public class NqlServlet extends HttpServlet {
@@ -42,33 +44,36 @@ public class NqlServlet extends HttpServlet {
 			}
 			return;
 		}
-		NQLContext nc = new NQLContext();
-		nc.setupClient(server, username, password, req.getServerName(),
+		NavajoRemoteContext nrc = new NavajoRemoteContext();
+		nrc.setupClient(server, username, password, req.getServerName(),
 				req.getServerPort(), req.getContextPath(),"/PostmanLegacy");
 
-		nc.setCallback(new OutputCallback() {
-
-			public void setOutputType(String mime) {
-				resp.setContentType(mime);
-			}
-
-			public void setContentLength(long l) {
-				resp.setContentLength((int) l);
-				resp.setHeader("Accept-Ranges", "none");
-				resp.setHeader("Connection", "close");
-			}
-
-			public OutputStream getOutputStream() {
-				try {
-					return resp.getOutputStream();
-				} catch (IOException e) {
-					logger.error("Error: ", e);
-					return null;
-				}
-			}
-		});
+		
+		NqlContextApi nc = new NQLContext();
+		nc.setNavajoContext(nrc);
+		
 		try {
-			nc.executeCommand(query);
+			nc.executeCommand(query,new OutputCallback() {
+
+				public void setOutputType(String mime) {
+					resp.setContentType(mime);
+				}
+
+				public void setContentLength(long l) {
+					resp.setContentLength((int) l);
+					resp.setHeader("Accept-Ranges", "none");
+					resp.setHeader("Connection", "close");
+				}
+
+				public OutputStream getOutputStream() {
+					try {
+						return resp.getOutputStream();
+					} catch (IOException e) {
+						logger.error("Error: ", e);
+						return null;
+					}
+				}
+			});
 		} catch (ClientException e) {
 			logger.error("Error: ", e);
 		} catch (NavajoException e) {
