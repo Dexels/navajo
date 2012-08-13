@@ -1,23 +1,13 @@
 package navajotsl;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
-import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
-import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
-import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
-
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -25,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.tsl.custom.CustomClassloaderJavaFileManager;
-import com.dexels.navajo.compiler.tsl.custom.CustomJavaFileObject;
 
 
 public class Activator implements BundleActivator {
@@ -71,14 +60,14 @@ public class Activator implements BundleActivator {
 //		}
 	}
 
-	private JavaFileObject compile(JavaFileObject javaSource) throws IOException {
-		Iterable<? extends JavaFileObject> fileObjects = Arrays.asList(javaSource);
-
-		CompilationTask task = compiler.getTask(null, customJavaFileManager, compilerOutputListener,new ArrayList<String>(), null, fileObjects);
-		task.call();
-		CustomJavaFileObject jfo = (CustomJavaFileObject) customJavaFileManager.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, "mathtest.Calculator", Kind.CLASS);
-		return jfo;
-	}
+//	private JavaFileObject compile(JavaFileObject javaSource) throws IOException {
+//		Iterable<? extends JavaFileObject> fileObjects = Arrays.asList(javaSource);
+//
+//		CompilationTask task = compiler.getTask(null, customJavaFileManager, compilerOutputListener,new ArrayList<String>(), null, fileObjects);
+//		task.call();
+//		CustomJavaFileObject jfo = (CustomJavaFileObject) customJavaFileManager.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, "mathtest.Calculator", Kind.CLASS);
+//		return jfo;
+//	}
 	
 
 	/*
@@ -91,29 +80,28 @@ public class Activator implements BundleActivator {
 	}
 
 	
-	private InputStream getExampleCode() {
-        String example = 									
-        		"package mathtest;\n"+
-                "public class Calculator { \n"
-               + "  public void testAdd() { "
-               + "    System.out.println(200+300); \n"
-               + "    org.apache.commons.io.IOUtils aaaa; \n"
-               + "    com.dexels.navajo.adapter.NavajoAccess nao; \n"
-//               + "   testcompiler.Activator a = new testcompiler.Activator();} \n"
-             + "   } \n"
-               + "  public static void main(String[] args) { \n"
-               + "    Calculator cal = new Calculator(); \n"
-               + "    cal.testAdd(); \n"
-               + "  } " + "} ";	
-        return new ByteArrayInputStream(example.getBytes());
-	}
-	
-    private  JavaFileObject getJavaSourceFileObject(String className, InputStream contents) throws IOException
-    {
-        JavaFileObject so = null;
-            so = new CustomJavaFileObject(className+ Kind.SOURCE.extension, URI.create("file:///" + className.replace('.', '/')
-                    + Kind.SOURCE.extension), contents, Kind.SOURCE);
-        return so;
-    }
+//	private InputStream getExampleCode() {
+//        String example = 									
+//        		"package mathtest;\n"+
+//                "public class Calculator { \n"
+//               + "  public void testAdd() { "
+//               + "    System.out.println(200+300); \n"
+//               + "    org.apache.commons.io.IOUtils aaaa; \n"
+//               + "    com.dexels.navajo.adapter.NavajoAccess nao; \n"
+//             + "   } \n"
+//               + "  public static void main(String[] args) { \n"
+//               + "    Calculator cal = new Calculator(); \n"
+//               + "    cal.testAdd(); \n"
+//               + "  } " + "} ";	
+//        return new ByteArrayInputStream(example.getBytes());
+//	}
+//	
+//    private  JavaFileObject getJavaSourceFileObject(String className, InputStream contents) throws IOException
+//    {
+//        JavaFileObject so = null;
+//            so = new CustomJavaFileObject(className+ Kind.SOURCE.extension, URI.create("file:///" + className.replace('.', '/')
+//                    + Kind.SOURCE.extension), contents, Kind.SOURCE);
+//        return so;
+//    }
  
 }

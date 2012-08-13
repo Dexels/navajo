@@ -146,7 +146,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	
 	@Override
 	public void installBundles(String scriptPath, List<String> failures, List<String> success, List<String> skipped, boolean force) throws Exception {
-		final String extension = "jar";
+//		final String extension = "jar";
 		File outputFolder = new File(navajoIOConfig.getCompiledScriptPath());
 		File f = new File(outputFolder,scriptPath);
 		File jarFile = getScriptBundleJar(scriptPath);
@@ -455,6 +455,7 @@ public class BundleCreatorComponent implements BundleCreator {
 //		
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	
 	public CompiledScript getCompiledScript(String rpcName)
@@ -484,6 +485,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		return null;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private CompiledScript waitForService(String rpcName) throws Exception {
 		String filterString = "(navajo.scriptName="+rpcName+")";
 		logger.info("waiting for service...");
@@ -497,6 +499,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void verifySingleScript(String scriptPath, List<String> failed,
 			List<String> success) {
 		scriptPath = scriptPath.replace('/', '.');
@@ -548,7 +551,6 @@ public class BundleCreatorComponent implements BundleCreator {
 			if(!relative.endsWith(extension)) {
 				logger.warn("Odd: "+relative);
 			}
-//			logger.info("File: "+relative);
 			String withoutEx = relative.substring(0,relative.lastIndexOf('.'));
 			verifySingleScript(withoutEx, failed,success);
 

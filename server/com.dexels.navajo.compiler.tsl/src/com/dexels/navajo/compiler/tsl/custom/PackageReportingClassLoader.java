@@ -3,14 +3,11 @@ package com.dexels.navajo.compiler.tsl.custom;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class PackageReportingClassLoader extends ClassLoader {
 	private Set<PackageListener> packageListeners = new HashSet<PackageListener>();
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(PackageReportingClassLoader.class);
+//	private final static Logger logger = LoggerFactory
+//			.getLogger(PackageReportingClassLoader.class);
 	
 	public PackageReportingClassLoader(ClassLoader parent) {
 		super(parent);

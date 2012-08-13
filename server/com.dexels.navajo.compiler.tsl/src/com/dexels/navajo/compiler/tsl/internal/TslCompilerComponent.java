@@ -15,7 +15,6 @@ import com.dexels.navajo.compiler.tsl.custom.PackageListener;
 import com.dexels.navajo.compiler.tsl.custom.PackageReportingClassLoader;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.server.NavajoIOConfig;
 
@@ -57,7 +56,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 //    	   scriptPackage = "defaultPackage";
 //       }
 		String scriptString = scriptPath.replaceAll("/", "_");
-		String javaFile = compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc, navajoIOConfig);
+		compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc, navajoIOConfig);
 		//		logger.info("Javafile: "+javaFile);
 //		System.err.println("Packages: "+packages);
 		generateFactoryClass(script, packagePath);
