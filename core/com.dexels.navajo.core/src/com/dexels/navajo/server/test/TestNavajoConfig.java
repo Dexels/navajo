@@ -163,10 +163,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 		return null;
 	}
 
-	@Override
-	public HashMap<String, String> getProperties() {
-		return null;
-	}
 
 	@Override
 	public String getResourcePath() {

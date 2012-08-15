@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.HashMap;
-import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
@@ -288,15 +287,15 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     		
 	
     		//System.err.println("USing repository = " + repository);
-    		Message maintenance = body.getMessage("maintenance-services");
-    		
-    		if ( maintenance != null ) {
-    			List<Property> propertyList = maintenance.getAllProperties();
-    			for (int i = 0; i < propertyList.size(); i++) {
-    				Property prop = propertyList.get(i);
-    				properties.put(prop.getName(), scriptPath + prop.getValue());
-    			}
-    		}
+//    		Message maintenance = body.getMessage("maintenance-services");
+//    		
+//    		if ( maintenance != null ) {
+//    			List<Property> propertyList = maintenance.getAllProperties();
+//    			for (int i = 0; i < propertyList.size(); i++) {
+//    				Property prop = propertyList.get(i);
+//    				properties.put(prop.getName(), scriptPath + prop.getValue());
+//    			}
+//    		}
     		
 //    		Message security = body.getMessage("security");
 //    		if (security != null) {
@@ -464,6 +463,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     /*
      * Check whether asynchronous services are enabled.
      */
+    @Override
     public final boolean isAsyncEnabled() {
       return enableAsync;
     }
@@ -501,9 +501,9 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
         return resourcePath;
     }
     
-    public final HashMap<String,String> getProperties() {
-        return properties;
-    }
+//    public final HashMap<String,String> getProperties() {
+//        return properties;
+//    }
 
 
     /*

@@ -54,7 +54,7 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	public void setStatisticsRunnerEnabled(boolean b);
 
 	public String getResourcePath();
-	public HashMap<String,String> getProperties();
+//	public HashMap<String,String> getProperties();
 	public String getBetaUser();
 	public int getMaxAccessSetSize();
 	public float getAsyncTimeout();
