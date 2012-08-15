@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter;
+package com.dexels.navajo.birt.adapter;
 
 //import org.eclipse.birt.core.exception.BirtException;
 //import org.eclipse.birt.core.framework.Platform;

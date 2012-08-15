@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter;
+package com.dexels.navajo.birt.adapter;
 
 import java.io.*;
 

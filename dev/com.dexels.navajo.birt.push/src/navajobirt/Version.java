@@ -24,6 +24,19 @@
  */
 package navajobirt;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
+
+import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.adapter.StandardAdapterLibrary;
+import com.dexels.navajo.birt.BirtAdapterLibrary;
+import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
+import com.dexels.navajo.functions.util.FunctionFactoryInterface;
+
 /**
  * VERSION HISTORY
  * 
@@ -39,11 +52,61 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	public static final String PRODUCTNAME = "Navajo BIRT Adapter";
 	public static final String RELEASEDATE = "2006-04-09";
 	
-	//Included packages.
-	String [] includes = {"navajodocument.Version"};
+	private final static Logger logger = LoggerFactory.getLogger(Version.class);
 	
 	public Version() {
 		
 	}
+
+
+	@Override
+	public void start(BundleContext bc) throws Exception {
+
+		super.start(bc);
+	try{
+		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
+		fi.init();
+		
+		fi.clearFunctionNames();
+
+		BirtAdapterLibrary library = new BirtAdapterLibrary();
+		fi.injectExtension(library);
+		for(String adapterName: fi.getAdapterNames(library)) {
+//		FunctionDefinition fd = fi.getAdapterDefinition(adapterName,extensionDef);
+			FunctionDefinition fd = fi.getAdapterConfig(library).get(adapterName);
+//		FunctionDefinition fd = fi.getDef(extensionDef, adapterName);
+			
+			String adapterClass = fi.getAdapterClass(adapterName,library);
+			Class<?> c = null;
+			
+			try {
+				c = Class.forName(adapterClass);
+			} catch (Exception e) {
+				logger.error("Error loading class for adapterClass: "+adapterClass,e);
+			}
+			
+			 Dictionary<String, Object> props = new Hashtable<String, Object>();
+			 props.put("adapterName", adapterName);
+			 props.put("adapterClass", c.getName());
+
+			if(adapterClass!=null) {
+				context.registerService(Class.class.getName(), c, props);
+			}
+		}
+	} catch (Throwable e) {
+		logger.error("Trouble starting NavajoAdapters bundle",e);
+		e.printStackTrace();
+	}
+
+	}
+
+
+	@Override
+	public void stop(BundleContext arg0) throws Exception {
+		// TODO Auto-generated method stub
+		super.stop(arg0);
+	}
+	
+	
 
 }
