@@ -3,7 +3,6 @@ package com.dexels.navajo.jdbc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.adapter.JDBCMap;
 import com.dexels.navajo.adapter.SQLMap;
 
 public class JDBCFactory {
@@ -31,10 +30,11 @@ public class JDBCFactory {
 	}
 	
 	public static JDBCMappable getJDBCMap() {
-		if(false && useOSGi()) {
-			return new JDBCMap();
-		} else {
+		// Removed for now, as it isn't about OSGi per se, it's about using the resource framework or not. Right now, for java-compile SQLMap workd
+//		if(false && useOSGi()) {
+//			return new JDBCMap();
+//		} else {
 			return new SQLMap();
-		}
+//		}
 	}
 }
