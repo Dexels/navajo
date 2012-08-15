@@ -1033,6 +1033,9 @@ private ServiceHandler createHandler(String handler, Access access)
         MDC.put("accessId", access.accessID);
         MDC.put("rpcName", access.getRpcName());
         MDC.put("rpcUser", access.getRpcUser());
+        MDC.put("rootPath", getNavajoConfig().getRootPath());
+        MDC.put("instanceName", getNavajoConfig().getInstanceName());
+        MDC.put("instanceGroup", getNavajoConfig().getInstanceGroup());
         
         /**
          * Phase VIa: Check if scheduled webservice
