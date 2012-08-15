@@ -439,8 +439,6 @@ public final class GenericHandler extends ServiceHandler {
             access.setCompiledScript(cso);
             if (cso.getClassLoader()==null) {
 				logger.error("No classloader present!");
-			} else {
-				logger.debug("Class supplier found.");
 			} ;
             
             cso.run(access);
