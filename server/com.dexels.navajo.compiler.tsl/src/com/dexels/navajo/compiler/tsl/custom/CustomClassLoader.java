@@ -39,6 +39,7 @@ public class CustomClassLoader extends ClassLoader {
 	
 
     private byte[] loadClassData(String className) {
+
     	String name = className.replaceAll("\\.", "/");
     	try {
 			JavaFileObject jfo = fileManager.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, name, Kind.CLASS);

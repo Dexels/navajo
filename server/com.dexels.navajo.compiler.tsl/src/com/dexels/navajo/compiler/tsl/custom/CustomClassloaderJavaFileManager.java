@@ -3,7 +3,6 @@ package com.dexels.navajo.compiler.tsl.custom;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -101,22 +100,13 @@ public class CustomClassloaderJavaFileManager extends
     	}
     	CustomJavaFileFolder cjf = folderMap.get(packageName);
 		if (cjf == null) {
-			try {
 			cjf = new CustomJavaFileFolder(bundleContext,
 					packageName);
 			folderMap.put(packageName, cjf);
-			} catch(URISyntaxException e) {
-				logger.error("What? ",e);
-			}
 		}
 
-    	if(cjf!=null) {
-    		JavaFileObject jfo = cjf.getFile(binaryName);
-    		if(jfo!=null) {
-    			return jfo;
-    		}
-    	}
-		return null;
+		JavaFileObject jfo = cjf.getFile(binaryName);
+		return jfo;
 	}
 
 	@Override
@@ -155,7 +145,6 @@ public class CustomClassloaderJavaFileManager extends
 					recurse);
 		} else if (location == StandardLocation.CLASS_PATH
 				&& kinds.contains(JavaFileObject.Kind.CLASS)) {
-			try {
 				CustomJavaFileFolder folder = folderMap.get(packageName);
 				if (folder == null) {
 					folder = new CustomJavaFileFolder(bundleContext,
@@ -163,9 +152,6 @@ public class CustomClassloaderJavaFileManager extends
 					folderMap.put(packageName, folder);
 				}
 				return folder.getEntries();
-			} catch (URISyntaxException e) {
-				logger.error("Illegal URI while listing entries for package: "+packageName,e);
-			}
 			// }
 		}
 		return Collections.emptyList();

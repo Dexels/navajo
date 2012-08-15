@@ -61,10 +61,18 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	
+	/**
+	 * The script compiler to clear
+	 * @param scriptCompiler  
+	 */
 	public void clearScriptCompiler(ScriptCompiler scriptCompiler) {
 		this.scriptCompiler = null;
 	}
 
+	/**
+	 * The java compiler to clear
+	 * @param javaCompiler
+	 */
 	public void clearJavaCompiler(JavaCompiler javaCompiler) {
 		this.javaCompiler = null;
 	}
@@ -73,6 +81,10 @@ public class BundleCreatorComponent implements BundleCreator {
 		this.eventAdmin = eventAdmin;
 	}
 
+	/**
+	 * 
+	 * @param eventAdmin the eventadmin to clear
+	 */
 	public void clearEventAdmin(EventAdmin eventAdmin) {
 		this.eventAdmin = null;
 	}
@@ -113,7 +125,7 @@ public class BundleCreatorComponent implements BundleCreator {
 				scriptCompiler.compileTsl(script,formatCompilationDate);
 				javaCompiler.compileJava(script);
 				javaCompiler.compileJava(script+"Factory");
-				createBundleJar(script,formatCompilationDate,keepIntermediate);
+				createBundleJar(script,keepIntermediate);
 				success.add(script);
 			}
 
@@ -127,7 +139,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 		Iterator<File> it = FileUtils.iterateFiles(baseDir, new String[]{extension}, true);
 		while (it.hasNext()) {
-			File file = (File) it.next();
+			File file = it.next();
 			String relative = getRelative(file, scriptPath);
 			if(!relative.endsWith(extension)) {
 				logger.warn("Odd: "+relative);
@@ -170,7 +182,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		File compiledScriptPath = new File(navajoIOConfig.getCompiledScriptPath());
 		Iterator<File> it = FileUtils.iterateFiles(baseDir, new String[]{extension}, true);
 		while (it.hasNext()) {
-			File file = (File) it.next();
+			File file = it.next();
 			String relative = getRelative(file, compiledScriptPath);
 			if(!relative.endsWith(extension)) {
 				logger.warn("Odd: "+relative);
@@ -227,7 +239,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 	
 
-	private File createBundleJar(String scriptPath, String compileDate, boolean keepIntermediateFiles) throws IOException {
+	private File createBundleJar(String scriptPath,boolean keepIntermediateFiles) throws IOException {
 		String packagePath = null;
 		String script = null;
 		if(scriptPath.indexOf('/')>=0) {
@@ -321,6 +333,10 @@ public class BundleCreatorComponent implements BundleCreator {
 		this.navajoIOConfig = config;
 	}
 	
+	/**
+	 * 
+	 * @param config the navajoioconfig to clear
+	 */
 	public void clearIOConfig(NavajoIOConfig config) {
 		this.navajoIOConfig = null;
 	}
@@ -546,7 +562,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		File compiledScriptPath = new File(navajoIOConfig.getScriptPath());
 		Iterator<File> it = FileUtils.iterateFiles(baseDir, new String[]{extension}, true);
 		while (it.hasNext()) {
-			File file = (File) it.next();
+			File file = it.next();
 			String relative = getRelative(file, compiledScriptPath);
 			if(!relative.endsWith(extension)) {
 				logger.warn("Odd: "+relative);

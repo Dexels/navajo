@@ -23,6 +23,9 @@ public class JavaCompilerComponent implements JavaCompiler {
 		this.navajoIOConfig = config;
 	}
 	
+	/**
+	 * @param config the navajo config to clear
+	 */
 	public void clearIOConfig(NavajoIOConfig config) {
 		this.navajoIOConfig = null;
 	}

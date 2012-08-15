@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -202,6 +201,9 @@ public class TslCompilerComponent implements ScriptCompiler {
 		this.classLoader = cls;
 	}
 
+	/**
+	 * @param cls the classloader to clear
+	 */
 	public void clearClassLoader(ClassLoader cls) {
 		this.classLoader = null;
 	}
@@ -210,11 +212,14 @@ public class TslCompilerComponent implements ScriptCompiler {
 		this.navajoIOConfig = config;
 	}
 	
+	/**
+	 * @param config the navajoconfig to clear
+	 */
 	public void clearIOConfig(NavajoIOConfig config) {
 		this.navajoIOConfig = null;
 	}
 	
-	public void activate(Map<String,Object> properties) {
+	public void activate() {
 		logger.debug("Activating TSL compiler");
 		compiler = new TslCompiler(classLoader, navajoIOConfig);
 	}

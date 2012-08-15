@@ -39,7 +39,7 @@ public class CustomJavaFileObject implements JavaFileObject {
 	}
 
 	public CustomJavaFileObject(String javaObjectName, URI uri, URL contents,
-			Kind kind) throws IOException {
+			Kind kind)  {
 		this(javaObjectName,uri,kind);
 		this.lazyURL = contents;
 	}	
