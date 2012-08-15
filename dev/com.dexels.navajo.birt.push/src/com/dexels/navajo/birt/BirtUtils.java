@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -30,6 +32,8 @@ public class BirtUtils {
 	private int idCounter = 10;
 
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BirtUtils.class);
 
 	public Binary createEmptyReport(Navajo n, Binary template) throws IOException,
 			NavajoException {
@@ -61,8 +65,7 @@ public class BirtUtils {
 	public void createEmptyReport(Navajo n, File reportFile, InputStream reportTemplateStream) throws IOException,
 			NavajoException {
 		File source = createDataSource(n);
-		System.err.println("Datasource created.");
-		System.err.println("Creating report: "+reportFile.getAbsolutePath());
+		logger.debug("Creating report: "+reportFile.getAbsolutePath());
 		createReportFile(source, n, reportFile,"navajoDataSource",reportTemplateStream);
 	}
 
@@ -125,27 +128,8 @@ public class BirtUtils {
 		}
 	}
 
+
 	/**
-	 * TODO Implement params
-	 * 
-	 * @param n
-	 * @param reportName
-	 * @param params
-	 * @throws IOException
-	 * @throws NavajoException
-	 */
-	// public void invokeReport(String serviceName, Navajo n, String reportName,
-	// Map params, File reportPath) throws NavajoException, IOException {
-	// FileInputStream fis = new FileInputStream(new
-	// File(reportPath,reportName));
-	// File datasource = createDataSource(n,serviceName);
-	// File fixedreport = createFixedReportDataSource(fis, datasource);
-	//		
-	// }
-	/**
-	 * TODO: Support for multi-service reports TODO: More defensive against
-	 * resource leaks
-	 * 
 	 * @param n
 	 * @return
 	 * @throws IOException
@@ -158,16 +142,14 @@ public class BirtUtils {
 		try {
 			n.write(origW);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} finally {
-			if (origW != null) {
-				origW.flush();
-				origW.close();
-			}
+			origW.flush();
+			origW.close();
 		}
 		Document t = NavajoLaszloConverter.createLaszloFromNavajo(n, false);
 		FileWriter fw = new FileWriter(sourceFile);
-		System.err.println("Data source created: " + sourceFile.getAbsolutePath());
+		logger.debug("Data source created: " + sourceFile.getAbsolutePath());
 		XMLDocumentUtils.write(t, fw, false);
 		fw.flush();
 		fw.close();
@@ -182,7 +164,7 @@ public class BirtUtils {
 		try {
 			d = XMLDocumentUtils.createDocument(reportTemplateStream, false);
 		} catch (NavajoException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 		reportTemplateStream.close();
 
@@ -291,7 +273,6 @@ public class BirtUtils {
 
 
 			if (Property.BINARY_PROPERTY.equals(current.getType())) {
-				System.err.println("Binary found.");
 				Element n = (Element) XMLutils.findNode(odaDataSetTag, "computedColumns");
 				if (n == null) {
 					n = addProperty(d, odaDataSetTag, "list-property", "computedColumns", null);
@@ -415,8 +396,7 @@ public class BirtUtils {
 			boolean landscape) throws IOException, NavajoException {
 		// public void setupMasterPage(Document d, int left, int top, int right,
 		// int bottom, boolean landscape) {
-		System.err.println("Margin: " + left + " top: " + top + " right: " + right + " bottom: " + bottom);
-		String serviceName = n.getHeader().getHeaderAttribute("sourceScript");
+//		String serviceName = n.getHeader().getHeaderAttribute("sourceScript");
 		List<String> pNames = new ArrayList<String>();
 		List<Integer> pSizes = new ArrayList<Integer>();
 		List<String> pTitles = new ArrayList<String>();
@@ -424,8 +404,6 @@ public class BirtUtils {
 		Property propSizes = n.getProperty("__ReportDefinition/PropertySizes");
 		Property propTitles = n.getProperty("__ReportDefinition/PropertyTitles");
 		Property messagePathProp = n.getProperty("__ReportDefinition/MessagePath");
-		// Message m = n.getMessage("__ReportDefinition");
-		// m.write(System.err);
 		String messagePath = null;
 		if (messagePathProp != null) {
 			messagePath = messagePathProp.getValue();
@@ -452,12 +430,11 @@ public class BirtUtils {
 			}
 
 		}
-		System.err.println("SERVICE NAME: " + serviceName);
-		createTableReport(n, reportTemplateStream, reportFile, serviceName, messagePath, pNames.toArray(), pSizes.toArray(), pTitles
+		createTableReport(n, reportTemplateStream, reportFile,messagePath, pNames.toArray(), pSizes.toArray(), pTitles
 				.toArray(), left, top, right, bottom, landscape);
 	}
 
-	private void createTableReport(Navajo n, InputStream reportTemplateStream, File reportFile, String serviceName, String messagePath,
+	private void createTableReport(Navajo n, InputStream reportTemplateStream, File reportFile, String messagePath,
 			Object[] propertyNames, Object[] propertyWidths, Object[] propertyTitles, int left, int top, int right, int bottom,
 			boolean landscape) throws IOException, NavajoException {
 		createEmptyReport(n, reportFile, reportTemplateStream);
@@ -471,7 +448,8 @@ public class BirtUtils {
 		try {
 			d = XMLDocumentUtils.createDocument(fis, false);
 		} catch (NavajoException e1) {
-			e1.printStackTrace();
+			logger.error("Error creating xml document? Fatal, can't continue. ", e1);
+			return;
 		}
 		fis.close();
 

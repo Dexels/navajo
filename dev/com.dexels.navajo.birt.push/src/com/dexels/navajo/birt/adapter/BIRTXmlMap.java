@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -38,7 +40,9 @@ public class BIRTXmlMap implements Mappable {
 	private String reportDir = "reports/";
 	private String viewerReportDir = "reports/";
 	private String viewerUrl = "http://distel:8080/birt/run";
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BIRTXmlMap.class);
 	// private String engineDir = "birt-engine/";
 
 //	private String directFile = null; // "c:/projects/sportlink-serv/navajo-tester/auxilary/reports/tempReport51567.rptdesign";
@@ -59,14 +63,9 @@ public class BIRTXmlMap implements Mappable {
 	public Binary getReport() throws NavajoException {
 
 		try {
-			return executeReport(reportName, parameters, inNavajo);
+			return executeReport(reportName, inNavajo);
 		}
-		// catch (EngineException e) {
-		// e.printStackTrace();
-		// throw NavajoFactory.getInstance().createNavajoException(e);
-		// }
 		catch (IOException e) {
-			e.printStackTrace();
 			throw NavajoFactory.getInstance().createNavajoException(e);
 		}
 	}
@@ -77,7 +76,6 @@ public class BIRTXmlMap implements Mappable {
 			return executeReport(inNavajo);
 		}
 		catch (IOException e) {
-			e.printStackTrace();
 			throw NavajoFactory.getInstance().createNavajoException(e);
 		}
 	}	
@@ -108,7 +106,6 @@ public class BIRTXmlMap implements Mappable {
 
 		BirtUtils b = new BirtUtils();
 		
-		input.write(System.err);
 		File rep = File.createTempFile("generic", ".rptdesign",new File(getViewerReportDir()));
 		Property marginProperty = inNavajo.getProperty("/__ReportDefinition/Margin");
 		String margin = null;
@@ -118,7 +115,7 @@ public class BIRTXmlMap implements Mappable {
 		}
 		
 		if(margin!=null) {
-			System.err.println("Margin: "+margin);
+			logger.debug("Margin: "+margin);
 			StringTokenizer st = new StringTokenizer(margin,",");
 			top = Integer.parseInt(st.nextToken());
 			right = Integer.parseInt(st.nextToken());
@@ -150,7 +147,7 @@ public class BIRTXmlMap implements Mappable {
 	 * For 'defined' reports, so the master page is left alone
 	 */
 	@SuppressWarnings("resource")
-	private Binary executeReport(String reportName, Map<String,Object> reportParams, Navajo input) throws NavajoException,
+	private Binary executeReport(String reportName,Navajo input) throws NavajoException,
 			IOException {
 		Binary result = new Binary();
 		Binary reportDef = null;
@@ -173,13 +170,13 @@ public class BIRTXmlMap implements Mappable {
 		InputStream reportIs = null;
 		if(reportDef==null) {
 			File reportFile = new File(reportDir + reportName + ".rptdesign");
-			System.err.println("No definition defined. Using reportname: "+reportFile.getAbsolutePath());
+			logger.debug("No definition defined. Using reportname: "+reportFile.getAbsolutePath());
 			if (!reportFile.exists()) {
 				throw NavajoFactory.getInstance().createNavajoException("Report: " + reportFile + " not found.");
 			}
 			reportIs = new FileInputStream(reportFile);
 		} else {
-			System.err.println("Using supplied definition. Size: "+reportDef.getLength());
+			logger.debug("Using supplied definition. Size: "+reportDef.getLength());
 			reportIs = reportDef.getDataAsStream();		
 		}
 		
@@ -215,7 +212,7 @@ public class BIRTXmlMap implements Mappable {
 		}
 		urlBuffer.append("&__format=" + outputFormat);
 
-		System.err.println("Result = " + urlBuffer.toString());
+		logger.debug("Result = " + urlBuffer.toString());
 
 		URL u = new URL(urlBuffer.toString());
 		InputStream is = u.openStream();
@@ -249,21 +246,7 @@ public class BIRTXmlMap implements Mappable {
 	public void load(Access access) throws MappableException, UserException {
 		// paths
 		inNavajo = access.getInDoc();
-		// reportDir =
 
-		// inMessage.getMessage("__globals__").getProperty("BIRTReportDir").getValue();
-		// engineDir =
-		// inMessage.getMessage("__globals__").getProperty("BIRTEngineDir").getValue();
-		// birtReportDir = "C:\\Program Files\\Apache Software
-		// Foundation\\Tomcat 5.5\\webapps\\NavajoStandardEdition\\reports\\";
-		// viewerReportDir = "C:\\Program Files\\Apache Software
-		// Foundation\\Tomcat 5.5\\webapps\\birt\\";
-		// engineDir = "C:\\Program Files\\Apache Software Foundation\\Tomcat
-		// 5.5\\webapps\\ReportEngine";
-		// engineDir = "C:\\Program Files\\Apache Software Foundation\\Tomcat
-		// 5.5\\webapps\\birt\\WEB-INF\\platform";
-		// System.err.println("Root path:
-		// "+Dispatcher.getInstance().getNavajoConfig().getRootPath());
 		InputStream in = null;
 		try {
 			in = DispatcherFactory.getInstance().getNavajoConfig().getConfig("birt.xml");
@@ -306,24 +289,18 @@ public class BIRTXmlMap implements Mappable {
 			} else {
 				throw new MappableException("No tag: reportDir found in birt.xml");
 			}
-			System.err.println("Birt configured succesfully!");
+			logger.debug("Birt configured succesfully!");
 
 			
 		} catch (NavajoException e1) {
 			throw new MappableException("Error reading birt.xml configuration file!");
 		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			try {
+				in.close();
+			} catch (IOException e) {
+				logger.error("Error: ", e);
 			}
 		}
-
-		 System.err.println("viewerReportDir: " + viewerReportDir);
-		 System.err.println("viewerUrl: " + viewerUrl);
-		 System.err.println("reportDir: " + reportDir);
 
 	}
 
