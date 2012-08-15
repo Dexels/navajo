@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -26,9 +28,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.LocalClient;
-import com.jcraft.jzlib.JZlib;
-import com.jcraft.jzlib.ZInputStream;
-import com.jcraft.jzlib.ZOutputStream;
+
 
 public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 		AsyncRequest {
@@ -46,6 +46,10 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseRequestImpl.class);
+	
+	private final static Logger statLogger = LoggerFactory
+			.getLogger("stats");
+
 	
 	public BaseRequestImpl(LocalClient lc, HttpServletRequest request,
 			HttpServletResponse response, String sendEncoding,
@@ -109,7 +113,7 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 		if (sendEncoding != null
 				&& sendEncoding.equals(AsyncRequest.COMPRESS_JZLIB)) {
 			r = new BufferedReader(new java.io.InputStreamReader(
-					new ZInputStream(is)));
+					new InflaterInputStream(is)));
 		} else if (sendEncoding != null
 				&& sendEncoding.equals(AsyncRequest.COMPRESS_GZIP)) {
 			r = new BufferedReader(new java.io.InputStreamReader(
@@ -166,8 +170,7 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 
 		if (recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {
 			response.setHeader("Content-Encoding", COMPRESS_JZLIB);
-			out = new ZOutputStream(response.getOutputStream(),
-					JZlib.Z_BEST_SPEED);
+			out = new DeflaterOutputStream(response.getOutputStream());
 		} else if (recvEncoding != null && recvEncoding.equals(COMPRESS_GZIP)) {
 			response.setHeader("Content-Encoding", COMPRESS_GZIP);
 			out = new java.util.zip.GZIPOutputStream(response.getOutputStream());
@@ -218,7 +221,7 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 				&& outDoc.getHeader() != null
 				&& !myLocalClient.isSpecialWebservice(inDoc.getHeader()
 						.getRPCName())) {
-			System.err.println("("
+			statLogger.info ("("
 					+ myLocalClient.getApplicationId()
 					+ "): "
 					+ new java.util.Date(connectedAt)
