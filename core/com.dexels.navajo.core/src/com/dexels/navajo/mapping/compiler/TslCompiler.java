@@ -1881,7 +1881,7 @@ public String mapNode(int ident, Element n) throws Exception {
     } 
     try {
     	contextClass = Class.forName(className, false, loader);
-    } catch (Exception e) { throw new Exception("Could not find adapter: " + className,e); }
+    } catch (Exception e) { throw new Exception("Could not find adapter: " + className+" from classloader: "+loader,e); }
 
     addDependency("dependentObjects.add( new JavaDependency( -1, \"" + className + "\"));\n", "JAVA"+className);
  
