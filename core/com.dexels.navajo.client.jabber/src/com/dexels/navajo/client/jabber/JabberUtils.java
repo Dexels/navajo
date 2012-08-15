@@ -33,7 +33,7 @@ public class JabberUtils {
 	private final static Logger logger = LoggerFactory
 			.getLogger(JabberUtils.class);
 	
-	private static MultiUserChat createRoom(String roomName, String nickName,
+	private static MultiUserChat createRoom(String roomName, 
 			String conferenceName, XMPPConnection connection)
 			throws XMPPException {
 		String roomJid = roomName + "@" + conferenceName;
@@ -142,7 +142,7 @@ public class JabberUtils {
 	}
 
 	public static Navajo postRoomMembers(XMPPConnection connection,
-			String conferenceName, String roomName) {
+			String conferenceName) {
 		try {
 
 			Navajo n = NavajoFactory.getInstance().createNavajo();
@@ -241,7 +241,7 @@ public class JabberUtils {
 		}
 
 		if (!found) {
-			MultiUserChat muc = JabberUtils.createRoom(roomName, nickName,
+			MultiUserChat muc = JabberUtils.createRoom(roomName,
 					conferenceName, connection);
 			occupants.clear();
 
