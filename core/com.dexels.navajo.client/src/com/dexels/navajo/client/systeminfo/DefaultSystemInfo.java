@@ -42,6 +42,9 @@ public class DefaultSystemInfo implements SystemInfoProvider {
 		
 	}
 	
+	/**
+	 * @param failed - Flah to indicate this is the 'failed state' constructor 
+	 */
 	DefaultSystemInfo (int failed, String msg) {
 		javaVersion = msg;
 		os = "[Failed to get runtime]";

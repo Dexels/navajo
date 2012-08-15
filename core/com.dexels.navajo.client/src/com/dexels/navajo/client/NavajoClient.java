@@ -109,12 +109,6 @@ public static final int DIRECT_PROTOCOL = 0;
   // Disable for one minute. Bit short, should be maybe an hour, but better for debugging.
   private static final long serverDisableTimeout = 60000;
   
-  /**
-   * Initialize a NavajoClient object with an empty XML message buffer.
-   */
-  protected NavajoClient(String dtdFile) {
-	  this();
-  }
 
 
   /**

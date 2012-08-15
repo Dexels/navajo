@@ -7,14 +7,9 @@ import java.util.Stack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.ClientException;
-import com.dexels.navajo.client.ClientInterface;
-import com.dexels.navajo.client.NavajoClientFactory;
-import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 
 

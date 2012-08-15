@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.context.ClientContext;
-import com.dexels.navajo.client.context.NavajoContext;
 import com.dexels.navajo.client.context.NavajoRemoteContext;
 import com.dexels.navajo.client.nql.NQLCommand;
 import com.dexels.navajo.client.nql.NqlContextApi;
@@ -56,6 +55,10 @@ public class NQLContext implements NqlContextApi {
 		context = c;
 	}
 
+	/**
+	 * The context to clear
+	 * @param c  
+	 */
 	public void clearNavajoContext(ClientContext c) {
 		context = null;
 	}
@@ -112,12 +115,12 @@ public class NQLContext implements NqlContextApi {
 		}
 		if("csv".equals(type)) {
 			setMimeType("text/comma-separated-values",callback);
-			writeCSV(callback.getOutputStream(),",","\n","\"");
+			writeCSV(callback.getOutputStream(),",","\"");
 			return;
 		}
 		if("tsv".equals(type)) {
 			setMimeType("text/tab-separated-values",callback);
-			writeCSV(callback.getOutputStream(),"\t","\n","");
+			writeCSV(callback.getOutputStream(),"\t","");
 			return;
 		}
 		if("btml".equals(type)) {
@@ -167,7 +170,7 @@ public class NQLContext implements NqlContextApi {
 	private void writeBinary(OutputStream outputStream, OutputCallback callback) throws IOException {
 		Binary b = (Binary)content;
 		setMimeType( b.getMimeType(),callback);
-		if ( b != null && b.getLength() > 0 ) {
+		if ( b.getLength() > 0 ) {
 			setContentLength(b.getLength(),callback);
 		}
 		b.write(callback.getOutputStream());
@@ -197,7 +200,7 @@ public class NQLContext implements NqlContextApi {
 		w.flush();
 	}
 
-	private void writeCSV(OutputStream outputStream, String separator,String lineseparator, String embed) throws IOException {
+	private void writeCSV(OutputStream outputStream, String separator,String embed) throws IOException {
 		if(!(content instanceof Message)) {
 			throw new UnsupportedOperationException("Can not return entire Navajo message as CSV/TSV. Use output.");
 		}
