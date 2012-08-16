@@ -273,13 +273,21 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 	@Override
 	public boolean isFirstId(Object itemId) {
 		Integer ii = sortedIndexes.get(0);
-		return itemId==ii;
+		if(ii==null || itemId==null) {
+			return false;
+		}
+		Integer itemInt = (Integer) itemId;
+		return itemInt.intValue()==ii.intValue();
 	}
 
 	@Override
 	public boolean isLastId(Object itemId) {
 		Integer ii = sortedIndexes.get(sortedIndexes.size()-1);
-		return itemId==ii;
+		if(ii==null || itemId==null) {
+			return false;
+		}
+		Integer itemInt = (Integer) itemId;
+		return itemInt.intValue()==ii.intValue();
 	}
 
 	@Override

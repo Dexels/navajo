@@ -394,7 +394,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 			}
 		
 		}
-		p.setImmediate(true);
+//		p.setImmediate(true);
 		value = p;
 		p.addListener(new TextChangeListener() {
 
@@ -403,9 +403,10 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 			@Override
 			public void textChange(TextChangeEvent event) {
 				
-//				System.err.println("Old type: "+property.getType()+" event val: "+event.getText());
 				logger.info("New: "+event.getText()+" old value: "+property.getTypedValue()+" eventval: "+event.getText());
+				currentDataSource.setRespondToServerSideChanges(false);
 				TipiProperty.this.property.setValue(event.getText());
+				currentDataSource.setRespondToServerSideChanges(true);
 //				System.err.println("New type: "+property.getType());
 //				System.err.println("Property value changed: " + event.getText());
 				propertyEventFired(property, "onValueChanged");

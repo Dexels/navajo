@@ -30,6 +30,9 @@ public class SelectionListBridge implements Container {
 	
 	private final Map<Object,SelectionBridge> selectionMap = new HashMap<Object,SelectionBridge>();
 	private final List<Object> selectionList = new ArrayList<Object>();
+
+
+	private boolean respondToServerSideChanges = true;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(SelectionListBridge.class);
@@ -54,6 +57,14 @@ public class SelectionListBridge implements Container {
 		} catch (NavajoException e) {
 			logger.error("Error creating SelectionListBridge: ",e);
 		}
+	}
+	
+	public boolean isRespondToServerSideChanges() {
+		return respondToServerSideChanges ;
+	}
+
+	public void setRespondToServerSideChanges(boolean respondToServerSideChanges) {
+		this.respondToServerSideChanges = respondToServerSideChanges;
 	}
 	
 	public void select(String newValue) {
