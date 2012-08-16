@@ -93,8 +93,8 @@ public class NavajoClientFactory {
    */
   public synchronized static ClientInterface createDefaultClient() {
     /** @todo Beware when refactoring */
-//    return createClient("com.dexels.navajo.client.NavajoClient",null);
-    return createClient("com.dexels.navajo.client.queueimpl.ClientQueueImpl",null,null);
+    return createClient("com.dexels.navajo.client.NavajoClient",null,null);
+//    return createClient("com.dexels.navajo.client.queueimpl.ClientQueueImpl",null,null);
   }
 
 
@@ -147,7 +147,7 @@ public class NavajoClientFactory {
   }
   
 
-  public static ClientLogger getClientLogger() {
+  public static synchronized ClientLogger getClientLogger() {
 	  if(clientLoggerInstance==null) {
 		  clientLoggerInstance = new BaseNavajoClientLogger();
 	  }

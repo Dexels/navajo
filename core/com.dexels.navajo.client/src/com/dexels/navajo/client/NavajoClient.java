@@ -83,7 +83,7 @@ public static final int DIRECT_PROTOCOL = 0;
   THIS IS A SAFE VALUE CAUSE INTEGRITY WORKER DOES NOT YET WORKER OVER MULTIPLE SERVER INSTANCES!!! */
   
   private int currentServerIndex;
-  private Thread keepAliveThread = null;
+  private transient Thread keepAliveThread = null;
   //private static int instances = 0;
   
   // Warning: Not thread safe!
