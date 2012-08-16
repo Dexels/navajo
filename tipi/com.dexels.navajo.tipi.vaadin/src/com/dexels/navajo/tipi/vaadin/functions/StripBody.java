@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.tidy.Tidy;
 
 import com.dexels.navajo.parser.FunctionInterface;
@@ -14,6 +16,10 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class StripBody extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(StripBody.class);
+	
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() != 1) {
@@ -57,7 +63,7 @@ public class StripBody extends FunctionInterface {
 			s = new String(baos.toByteArray(),"UTF8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return s;
 	}

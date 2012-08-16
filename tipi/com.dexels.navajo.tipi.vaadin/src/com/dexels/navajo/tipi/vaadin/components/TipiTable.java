@@ -77,9 +77,9 @@ public class TipiTable extends TipiVaadinComponentImpl {
 				try {
 					performTipiEvent("onSelectionChanged", tempMap, false);
 				} catch (TipiBreakException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 
@@ -100,9 +100,9 @@ public class TipiTable extends TipiVaadinComponentImpl {
 					try {
 						performTipiEvent("onActionPerformed", tempMap, false);
 					} catch (TipiBreakException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					} catch (TipiException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 
 				}
@@ -211,7 +211,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 				try {
 					TipiTable.super.load(elm, instance, context);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 //				Table mm = table;
 
@@ -258,7 +258,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 				try {
 					getTableReport("pdf", "horizontal", new int[] { 10, 10, 10, 10 });
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		}
@@ -270,7 +270,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			param.put("report", b);
 			performTipiEvent("onReport", param, true);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

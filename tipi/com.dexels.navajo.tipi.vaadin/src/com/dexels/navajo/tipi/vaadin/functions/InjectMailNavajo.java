@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.vaadin.functions;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -14,6 +17,10 @@ import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 
 public class InjectMailNavajo extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(InjectMailNavajo.class);
+	
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() != 3) {
@@ -40,7 +47,7 @@ public class InjectMailNavajo extends FunctionInterface {
 			ee.injectNavajo(navajoName, inputCopy);
 			return result;
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 	}
@@ -131,7 +138,7 @@ public class InjectMailNavajo extends FunctionInterface {
 			int index = Integer.parseInt(sp[sp.length-1]);
 			return index;
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		// guess 1
 		return 1;

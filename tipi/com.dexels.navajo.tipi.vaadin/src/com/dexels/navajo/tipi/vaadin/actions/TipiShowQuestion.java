@@ -46,9 +46,9 @@ public class TipiShowQuestion extends TipiVaadinActionImpl {
 					try {
 						continueAction(getEvent());
 					} catch (TipiBreakException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					} catch (TipiException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					} catch (TipiSuspendException e) {
 					}
 				} else {

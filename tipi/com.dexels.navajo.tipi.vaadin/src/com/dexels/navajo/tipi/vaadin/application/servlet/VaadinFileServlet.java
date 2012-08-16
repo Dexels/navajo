@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.vaadin.application.VaadinInstallationPathResolver;
 
@@ -36,6 +39,9 @@ public class VaadinFileServlet extends HttpServlet {
 
 	private String filePath;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(VaadinFileServlet.class);
 	// Actions
 	// ------------------------------------------------------------------------------------
 
@@ -135,7 +141,7 @@ public class VaadinFileServlet extends HttpServlet {
 			} catch (IOException e) {
 				// Do your thing with the exception. Print it, log it or mail
 				// it.
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 	}

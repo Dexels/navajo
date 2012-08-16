@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Selection;
@@ -21,6 +24,9 @@ public class SelectedItemValuePropertyBridge implements Property, Property.Value
 
 	private final List<SelectionBridge> selections = new ArrayList<SelectionBridge>();
 	private SelectionListBridge selectionListBridge;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SelectedItemValuePropertyBridge.class);
 	
 	public SelectedItemValuePropertyBridge(com.dexels.navajo.document.Property src) {
 		this(src,src.isDirIn());
@@ -63,7 +69,7 @@ public class SelectedItemValuePropertyBridge implements Property, Property.Value
 			}
 			return itemProperty.getValue();
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 	}
@@ -78,7 +84,7 @@ public class SelectedItemValuePropertyBridge implements Property, Property.Value
 			Selection ss = src.getSelection((String)newValue);
 			src.setSelected(ss);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new ConversionException("Problem resolving selected property.");
 		}
 

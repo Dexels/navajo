@@ -2,6 +2,9 @@ package com.dexels.navajo.tipi.vaadin.components;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.core.TipiComponentImpl;
@@ -12,8 +15,10 @@ public class TipiCalendarEvent extends TipiComponentImpl {
 	private static final long serialVersionUID = 1561760767992331660L;
 	
 	private BasicEvent event;
-//	private TipiCalendar myCalendar = null;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiCalendarEvent.class);
+	
 	private Integer index;
 	
 	@Override
@@ -90,9 +95,9 @@ public class TipiCalendarEvent extends TipiComponentImpl {
 		try {
 			performTipiEvent("onActionPerformed", null, true);
 		} catch (TipiBreakException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}		
 	}
 

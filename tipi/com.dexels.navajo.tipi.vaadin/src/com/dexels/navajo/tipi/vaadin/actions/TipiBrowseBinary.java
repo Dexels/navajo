@@ -95,7 +95,7 @@ public class TipiBrowseBinary extends TipiVaadinActionImpl {
 				} catch (TipiBreakException e) {
 				} catch (TipiSuspendException e) {
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		});

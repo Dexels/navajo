@@ -83,7 +83,7 @@ public class TipiVaadinServlet extends ApplicationServlet {
 			try {
 				o = instance.getCurrentContext().evaluate(eval, instance.getCurrentContext().getDefaultTopLevel(), null);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 			if(o==null) {
 				response.getWriter().write("Evaluated to null");

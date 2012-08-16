@@ -12,6 +12,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
@@ -23,7 +26,10 @@ import com.vaadin.terminal.StreamResource.StreamSource;
 public class TipiOpenBinary extends TipiVaadinActionImpl {
 
 	private static final long serialVersionUID = -6166751362772736306L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiOpenBinary.class);
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -52,7 +58,7 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 			try {
 				bb = new Binary(u.openStream(), false);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 				bb = null;
 			}
 		}
@@ -63,11 +69,11 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 				try {
 					bb = new Binary(u.openStream(), false);
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 					bb = null;
 				}
 			} catch (MalformedURLException e1) {
-				e1.printStackTrace();
+				logger.error("Error: ",e1);
 			}
 		}
 		

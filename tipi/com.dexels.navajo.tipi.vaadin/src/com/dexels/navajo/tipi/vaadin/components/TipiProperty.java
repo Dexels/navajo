@@ -135,7 +135,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
             performTipiEvent(eventType, m, false);
             // }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("Error: ", ex);
         }
     }
 
@@ -163,7 +163,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 				value.addStyleName("tipi-property-cardinality-"+this.property.getCardinality());
 
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		if(com.dexels.navajo.document.Property.DATE_PROPERTY.equals(property.getType())) {
@@ -335,11 +335,11 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 						property.setSelected(ss);
 						performTipiEvent("onValueChanged", null, true);
 					} catch (TipiBreakException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					} catch (TipiException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					} catch (NavajoException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
 			});

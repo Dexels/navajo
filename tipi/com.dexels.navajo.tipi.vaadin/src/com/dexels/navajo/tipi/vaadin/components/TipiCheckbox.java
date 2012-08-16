@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.vaadin.components;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.ui.Button.ClickEvent;
@@ -12,7 +15,10 @@ import com.vaadin.ui.CheckBox;
 
 public class TipiCheckbox extends TipiVaadinComponentImpl {
 	private static final long serialVersionUID = 6085520508083912004L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiCheckbox.class);
+	
 	private CheckBox myButton;
 
 	  private boolean iAmEnabled = true;
@@ -34,7 +40,7 @@ public class TipiCheckbox extends TipiVaadinComponentImpl {
 					performTipiEvent("onSelectionChanged", m, false);
 					getAttributeProperty("selected").setAnyValue( myButton.getValue());
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		});

@@ -2,6 +2,9 @@ package com.dexels.navajo.tipi.vaadin.components;
 
 import java.util.Iterator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
@@ -16,7 +19,10 @@ public class TipiAccordion extends TipiVaadinComponentImpl {
 
 	private static final long serialVersionUID = 7459432694853380651L;
 	private Accordion accordion;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiAccordion.class);
+	
 	@Override
 	public Object createContainer() {
 		Panel myPanel = new Panel();
@@ -43,9 +49,9 @@ public class TipiAccordion extends TipiVaadinComponentImpl {
 				try {
 					performTipiEvent("onTabChanged", null, true);
 				} catch (TipiBreakException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 				
 			}

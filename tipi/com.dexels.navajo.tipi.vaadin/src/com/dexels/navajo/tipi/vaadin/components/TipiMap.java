@@ -128,9 +128,9 @@ public class TipiMap extends TipiMessagePanel  {
 //				cep.addEvent(tc.getCalendarEvent());
 //				componentMap.put(tc.getCalendarEvent(),tc);
 //			} catch (TipiException e) {
-//				e.printStackTrace();
+//				logger.error("Error: ",e);
 //			} catch (TipiBreakException e) {
-//				e.printStackTrace();
+//				logger.error("Error: ",e);
 //			}
 //			i++;
 //		}

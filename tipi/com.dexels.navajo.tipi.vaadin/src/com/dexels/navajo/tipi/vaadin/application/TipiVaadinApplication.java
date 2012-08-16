@@ -92,12 +92,12 @@ private String referer;
 				setCurrentContext(createContext());
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 			windowCloseManager = new WindowCloseManager(this, getCurrentContext());
 
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Error: ",t);
 		}
 	}
 
@@ -136,7 +136,7 @@ private String referer;
 		try {
 			va = new VaadinTipiContext(this,installationFolder, extensionRegistry.getExtensionList());
 		} catch (Throwable e2) {
-			e2.printStackTrace();
+			logger.error("Error: ",e2);
 			return null;
 		}
 //		va.setInstallationFolder(installationFolder);
@@ -177,7 +177,7 @@ private String referer;
 		try {
 			loadTipi(va, "start.xml", instance);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return va;
 	}

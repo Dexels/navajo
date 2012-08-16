@@ -49,9 +49,9 @@ public class TipiMenuItem extends TipiVaadinComponentImpl {
 			        try {
 						performTipiEvent("onActionPerformed", null, true);
 					} catch (TipiBreakException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					} catch (TipiException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
 			});

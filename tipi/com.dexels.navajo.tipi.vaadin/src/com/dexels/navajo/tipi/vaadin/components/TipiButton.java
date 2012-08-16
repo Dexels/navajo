@@ -33,7 +33,7 @@ public class TipiButton extends TipiVaadinComponentImpl {
 					performTipiEvent("onActionPerformed", null, true);
 				} catch (TipiBreakException e) {
 					logger.debug("Break in button event.",e);
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				} catch (TipiException e) {
 					logger.error("Error in button event.",e);
 				}
@@ -77,7 +77,7 @@ public class TipiButton extends TipiVaadinComponentImpl {
 			try {
 				performTipiEvent("onActionPerformed", null, true);
 			} catch (TipiException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 
 		}

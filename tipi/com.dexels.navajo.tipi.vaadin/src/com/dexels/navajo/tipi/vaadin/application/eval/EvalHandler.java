@@ -72,7 +72,7 @@ public class EvalHandler implements URIHandler, ParameterHandler {
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			return null;
 		}
 
