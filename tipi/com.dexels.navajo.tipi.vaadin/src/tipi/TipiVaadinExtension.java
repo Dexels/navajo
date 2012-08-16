@@ -36,7 +36,6 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	
 	private File installationFolder = null;
 	
-	@SuppressWarnings("rawtypes")
 	private final Set<ServiceRegistration> adapterRegs = new HashSet<ServiceRegistration>();
 
 		
@@ -54,8 +53,12 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 
 	public TipiVaadinExtension() 
 			 {
-		instance = this;
+		setVaadinExtension(this);
 		loadDescriptor();
+	}
+
+	private static void setVaadinExtension(TipiVaadinExtension instance) {
+		TipiVaadinExtension.instance = instance;
 	}
 
 	@SuppressWarnings("rawtypes")

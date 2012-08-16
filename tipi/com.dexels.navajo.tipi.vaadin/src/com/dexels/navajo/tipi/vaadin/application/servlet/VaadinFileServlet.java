@@ -73,7 +73,6 @@ public class VaadinFileServlet extends HttpServlet {
 		File vaadinPath = new File(filePath,"VAADIN");
 		File file = new File(vaadinPath,
 				URLDecoder.decode(requestedFile, "UTF-8"));
-		System.err.println("Resolved: "+file.getAbsolutePath());
 		// Check if file actually exists in filesystem.
 		if (!file.exists()) {
 			// Do your thing if the file appears to be non-existing.

@@ -35,7 +35,7 @@ public class SelectedItemValuePropertyBridge implements Property, Property.Value
 //		Selection s= src.getSelected();
 
 		for (Selection sel : src.getAllSelections()) {
-			SelectionBridge sb = new SelectionBridge(src, sel);
+			SelectionBridge sb = new SelectionBridge( sel);
 			selections.add(sb);
 		}
 	}

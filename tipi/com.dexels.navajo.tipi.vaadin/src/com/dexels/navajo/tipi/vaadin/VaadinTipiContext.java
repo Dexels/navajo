@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.vaadin;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -112,7 +111,6 @@ public class VaadinTipiContext extends TipiContext {
 
 	@Override
 	public void setSplashVisible(boolean b) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -151,19 +149,13 @@ public class VaadinTipiContext extends TipiContext {
 		try {
 			String encoded = URLEncoder.encode(expression,"UTF-8");
 			TipiVaadinApplication tva = (TipiVaadinApplication) getVaadinApplication();
-			System.err.println("Referer: "+tva.getReferer());
 			String referer = tva.getReferer();
 			if(referer!=null) {
 				URL contextUrl = getVaadinApplication().getContextUrl();
 				URL prot = new URL(contextUrl.getProtocol(),referer,contextUrl.getPath()+"?evaluate="+encoded);
-				System.err.println("USING PROXIED BASE EVAL URL: "+prot);
-//				String s = referer+"?rdm="+randomizer.nextLong()+"&evaluate="+encoded;
 				return  prot;
 			} else {
 				URL contextUrl = getVaadinApplication().getContextUrl();
-				
-				System.err.println("USING BASE EVAL URL: "+contextUrl);
-//				URL eval = new URL(contextUrl ,"eval");
 				String s = contextUrl+"?rdm="+randomizer.nextLong()+"&evaluate="+encoded;
 				return new URL(s);
 			}
@@ -176,14 +168,8 @@ public class VaadinTipiContext extends TipiContext {
 		return null;
 	}
 
-	public void setEvalUrl(URL context, String relativeUri) {
-//		try {
-//			evalUrl = new URL(context,relativeUri);
-//		} catch (MalformedURLException e) {
-//			e.printStackTrace();
-//		}
-		
-	}	
+//	public void setEvalUrl(URL context, String relativeUri) {
+//	}	
 	
 	public String createExpressionUrl(String expression) {
 		return getEvalUrl(expression).toString();
@@ -209,13 +195,7 @@ public class VaadinTipiContext extends TipiContext {
 		StreamSource is = null;
 		if (u instanceof URL) {
 			if (ApplicationUtils.isRunningInGae()) {
-				try {
 					is = resolve((URL) u);
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-					return null;
-				}
 			} else {
 					is = new URLInputStreamSource((URL) u);
 			}
@@ -231,7 +211,7 @@ public class VaadinTipiContext extends TipiContext {
 		return sr;
 	}
 	
-	private StreamSource resolve(URL u) throws IOException {
+	private StreamSource resolve(URL u)  {
 		return new URLInputStreamSource(u);
 	}
 	

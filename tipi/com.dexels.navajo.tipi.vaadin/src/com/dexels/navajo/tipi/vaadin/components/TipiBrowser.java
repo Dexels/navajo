@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.terminal.ExternalResource;
@@ -34,8 +37,11 @@ import com.vaadin.ui.Embedded;
 
 public class TipiBrowser extends TipiVaadinComponentImpl {
 	private static final long serialVersionUID = 6384086271954436821L;
-	Embedded browser = null;
-
+	private Embedded browser = null;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiBrowser.class);
+	
 	public TipiBrowser() {
 	}
 
@@ -65,7 +71,7 @@ public class TipiBrowser extends TipiVaadinComponentImpl {
 
 
 	private void setBinary(final Binary binary) {
-		System.err.println("Setting binary content. Length:  "+binary.getLength());
+		logger.debug("Setting binary content. Length:  "+binary.getLength());
 		StreamResource sr = new StreamResource(new StreamSource() {
 			
 			private static final long serialVersionUID = -352043364387051337L;
@@ -82,17 +88,17 @@ public class TipiBrowser extends TipiVaadinComponentImpl {
 		try {
 			URL u = new URL(url);
 			ExternalResource er = new ExternalResource(u);
-			System.err.println("Navigating to: "+u);
-			System.err.println("Size: "+browser.getHeight()+"  "+browser.getHeight());
+			logger.debug("Navigating to: "+u);
+			logger.debug("Size: "+browser.getHeight()+"  "+browser.getHeight());
 			browser.setSource(er);
 //			browser.requestRepaint();
 		} catch (MalformedURLException e) {
-			System.err.println("Not a regular url. Trying file: "+url);
+			logger.debug("Not a regular url. Trying file: "+url);
 			File base = getVaadinContext().getInstallationFolder();
 			File fil = new File(base,""+url);
-			System.err.println("Trying file: "+fil);
+			logger.debug("Trying file: "+fil);
 			if(fil.exists()) {
-				System.err.println("Found!");
+				logger.debug("Found!");
 				final FileResource fr = new FileResource(fil,getVaadinApplication());
 				browser.setSource(fr);
 			}

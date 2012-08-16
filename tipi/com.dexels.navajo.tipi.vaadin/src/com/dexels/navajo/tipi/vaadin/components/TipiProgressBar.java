@@ -59,7 +59,6 @@ public class TipiProgressBar extends TipiVaadinComponentImpl {
 			return;
 		}
 		if (name.equals("orientation")) {
-			System.err.println("Progressbar: ignoring orientation");
 			return;
 		}
 		if (name.equals("indeterminate")) {

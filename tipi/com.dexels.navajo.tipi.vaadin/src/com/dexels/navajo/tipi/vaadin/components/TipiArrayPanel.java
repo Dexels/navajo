@@ -60,7 +60,6 @@ public class TipiArrayPanel extends TipiVaadinComponentImpl {
 	}
 
 	protected void cascadeLoad(Navajo n, String method) throws TipiException {
-		// System.err.println("ArrayPanell: Not cascading: "+method);
 	}
 
 }

@@ -49,7 +49,6 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 		}
 		if (evaluatedParameterValue instanceof URL) {
 			URL u = (URL) evaluatedParameterValue;
-			System.err.println("URL detected: " + u);
 			try {
 				bb = new Binary(u.openStream(), false);
 			} catch (IOException e) {
@@ -61,7 +60,6 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 			URL u;
 			try {
 				u = new URL((String) evaluatedParameterValue);
-				System.err.println("URL detected: " + u);
 				try {
 					bb = new Binary(u.openStream(), false);
 				} catch (IOException e) {
@@ -76,7 +74,6 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 		final Binary b = bb;
 
 		if (b == null) {
-			System.err.println("No binary found");
 			return;
 		}
 

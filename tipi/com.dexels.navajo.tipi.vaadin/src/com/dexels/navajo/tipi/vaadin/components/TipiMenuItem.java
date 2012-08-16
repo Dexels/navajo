@@ -57,7 +57,7 @@ public class TipiMenuItem extends TipiVaadinComponentImpl {
 			});
 			
 		} else {
-			System.err.println("BAD parent! "+parentMenu);
+			logger.warn("BAD parent, it is not a MenuItem: {}",parentMenu);
 		}
 
     	return menuItem;
@@ -79,7 +79,7 @@ public class TipiMenuItem extends TipiVaadinComponentImpl {
             if (object instanceof URL) {
                 menuItem.setIcon(getResource(object));
             } else {
-                System.err.println("Can not set button icon: I guess it failed to parse (TipiButton)");
+                logger.debug("Can not set button icon: I guess it failed to parse (TipiButton)");
             }
         }
     	if ("visible".equals(name)) {

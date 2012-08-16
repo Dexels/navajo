@@ -29,7 +29,7 @@ public class TableCell extends CssLayout {
 
 	private Label headerLabel;
 
-	private Integer index;
+//	private Integer index;
 
 	private String stylePrefix;
 //
@@ -82,7 +82,7 @@ public class TableCell extends CssLayout {
 
 			@Override
 			public void layoutClick(LayoutClickEvent event) {
-				tipiParent.layoutClick(event);
+				tipiParent.layoutClick();
 			}
 		});
 	}
@@ -135,9 +135,9 @@ public class TableCell extends CssLayout {
 //		setSubHeaderValue((String) item.getItemProperty(subHeaderPropertyName+"@value").getValue());
 //	}
 
-	public Integer getIndex() {
-		return index;
-	}
+//	public Integer getIndex() {
+//		return null;
+//	}
 
 //	public String getHeaderPropertyName() {
 //		return headerPropertyName;

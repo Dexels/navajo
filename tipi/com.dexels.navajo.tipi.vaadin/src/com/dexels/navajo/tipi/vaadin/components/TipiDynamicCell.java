@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.vaadin.components;
 
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.dexels.navajo.tipi.vaadin.components.impl.TableCell;
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 
 public class TipiDynamicCell extends TipiVaadinComponentImpl {
 
@@ -17,7 +16,7 @@ public class TipiDynamicCell extends TipiVaadinComponentImpl {
 		return dynamicCellComponent;
 	}
 
-	public void layoutClick(LayoutClickEvent event) {
+	public void layoutClick() {
 		int index = Integer.parseInt(getId());
 		tablePartner.layoutClick(index);
 	}

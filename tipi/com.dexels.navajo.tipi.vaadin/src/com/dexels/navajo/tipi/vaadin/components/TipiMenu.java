@@ -2,6 +2,9 @@ package com.dexels.navajo.tipi.vaadin.components;
 
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.ui.MenuBar;
@@ -30,6 +33,9 @@ public class TipiMenu extends TipiVaadinComponentImpl {
 	
 	private static final long serialVersionUID = 1811897469708468275L;
 	private MenuItem menuItem;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMenu.class);
 	
     public TipiMenu() {
     }
@@ -64,7 +70,7 @@ public class TipiMenu extends TipiVaadinComponentImpl {
             if (object instanceof URL) {
                 menuItem.setIcon(getResource(object));
             } else {
-                System.err.println("Can not set button icon: I guess it failed to parse (TipiButton)");
+                logger.warn("Can not set menu icon: I guess it failed to parse (TipiMenu)");
             }
         }
     	if ("visible".equals(name)) {

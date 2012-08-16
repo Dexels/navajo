@@ -83,7 +83,7 @@ public class TipiMap extends TipiMessagePanel  {
 		map.setSizeFull();
         map.setHeight("200px");
 //		map.set
-		System.err.println("Zoom: "+map.getZoom()+" api: "+map.getApiProjection());
+		logger.info("Zoom: "+map.getZoom()+" api: "+map.getApiProjection());
 		return map;
 		
 //		 &lt;script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"&gt;&lt;/script&gt;
@@ -185,11 +185,6 @@ public class TipiMap extends TipiMessagePanel  {
 
 	@Override
 	protected void setComponentValue(String name, Object object) {
-//		System.err.println("Set "+name+" object: "+object);
-//		if (name.equals("definitionName")) {
-//			definitionName = (String) object;
-//			return;
-//		}
 		if (name.toLowerCase().equals("messagepath")) {
 			messagepath = (String) object;
 			return;

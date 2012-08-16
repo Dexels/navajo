@@ -22,6 +22,7 @@ import com.vaadin.terminal.gwt.server.ApplicationServlet;
 public class TipiVaadinServlet extends ApplicationServlet {
 
 	
+	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiVaadinServlet.class);
 	/**
@@ -49,11 +50,10 @@ public class TipiVaadinServlet extends ApplicationServlet {
 //		String appInstance = getInitParameter("application");
 //		Class<? extends Application> appInstanceClass = Class.forName(appInstance);
 		TipiVaadinApplication tipiApplication = (TipiVaadinApplication) super.getNewApplication(request);
-		
 		tipiApplication.setLocale(new Locale("nl","NL"));
 		tipiApplication.setServletContext(getServletContext());
 		String referer = request.getHeader("x-forwarded-host");
-		System.err.println("Creating application. Referer: "+referer);
+		logger.info("Creating application. Referer: "+referer);
 		tipiApplication.setReferer(referer);
 		if(referer!=null) {
 			tipiApplication.setLogoutURL("http://"+referer+request.getContextPath());
@@ -64,21 +64,10 @@ public class TipiVaadinServlet extends ApplicationServlet {
 		return tipiApplication;
 	}
 
-//    protected void service(HttpServletRequest request,
-//            HttpServletResponse response) throws ServletException, IOException {
-//    			String eval = request.getParameter("evaluate");
-//    		System.err.println("wEVAAAAAAL: "+eval);
-//    }
-//	
 	@Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 		String eval = request.getParameter("evaluate");
-//    	Enumeration<String> s = request.getHeaderNames();
-//    	while (s.hasMoreElements()) {
-//			String name = (String) s.nextElement();
-//			System.err.println("Header: "+name+" value: "+request.getHeader(name));
-//		}
     	
 		if(eval==null) {
 			super.service(request, response);
@@ -87,7 +76,6 @@ public class TipiVaadinServlet extends ApplicationServlet {
 		
 		TipiVaadinApplication instance = (TipiVaadinApplication) request.getSession().getAttribute("tipiInstance");
 		if(instance==null) {
-			System.err.println("Whoops, no instance");
 			response.getWriter().write("No instance");
 		} else {
 			

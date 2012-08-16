@@ -103,37 +103,14 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 
 		}
 		this.property = p;
-//
-//		myChangeListener = new SerializablePropertyChangeListener() {
-//			
-//			private static final long serialVersionUID = -2164154865756231662L;
-//
-//			@Override
-//			public void propertyChange(PropertyChangeEvent pce) {
-//				if(!"selection".equals(pce.getPropertyName())) {
-//					System.err.println("DIF: "+pce.getOldValue()+" new: "+pce.getNewValue());
-////					refreshPropertyValue();
-//				}
-//			}
-//		};
-//
-//		this.property.addPropertyChangeListener(myChangeListener);
-//		
 		this.refreshPropertyValue();
 		if(this.width!=null) {
 			value.setWidth(this.width, Sizeable.UNITS_PIXELS);
 		}
 		value.addStyleName("tipi-property-direction-"+p.getDirection());
 		value.addStyleName("tipi-property-type-"+p.getType());
-			//		value.setCaption("Caption: "+p.getDescription());
 	}
 	
-//	public final void firePropertyEvents(Property p, String eventType) {
-//		for (int i = 0; i < myPropertyEventListeners.size(); i++) {
-//			PropertyEventListener current = myPropertyEventListeners.get(i);
-//			current.propertyEventFired(p, eventType);
-//		}
-//	}
     public void propertyEventFired(com.dexels.navajo.document.Property p, String eventType) {
         try {
             Map<String,Object> m = new HashMap<String,Object>();
@@ -144,7 +121,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
             m.put("propertyLength", new Integer(property.getLength()));
             
             for (int i = 0; i < myListeners.size(); i++) {
-                TipiEventListener tel = (TipiEventListener) myListeners.get(i);
+                TipiEventListener tel = myListeners.get(i);
                 tel.performTipiEvent(eventType, m, false);
             }
 //            logger.info("propertyEvent params: "+m, new Exception());
@@ -152,10 +129,9 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
                 return;
             }
             if (p != property) {
-                System.err.println("Mysterious anomaly: Property of event is not the loaded property");
+                logger.warn("Mysterious anomaly: Property of event is not the loaded property");
                 return;
             }
-//            System.err.println("PRoperty event firing: "+eventType+" prop: "+p.getFullPropertyName());
             performTipiEvent(eventType, m, false);
             // }
         } catch (Exception ex) {
@@ -277,7 +253,6 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		final AbstractSelect t = (AbstractSelect)value;
 //		SelectedItemValuePropertyBridge selectionValueBridge =  new SelectedItemValuePropertyBridge(property);
 		Collection<Object> selectedCollection = selectionListBridge.getSelectedCollection();
-		System.err.println("Count: "+selectedCollection.size());
 		t.setValue(selectedCollection);
 		t.setImmediate(true);
 		t.addListener(new Property.ValueChangeListener() {
@@ -286,7 +261,6 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				System.err.println("Value change!");
 				updateProperty(t,property);
 			}
 		});
@@ -301,7 +275,6 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 
 			@Override
 			public void containerPropertySetChange(PropertySetChangeEvent event) {
-				System.err.println("CHAAAANGE");
 				propertyEventFired(property, "onValueChanged");
 
 			}
@@ -337,7 +310,6 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 				@Override
 				public void propertyChange(PropertyChangeEvent pce) {
 					if(pce.getPropertyName().equals("selection")) {
-						System.err.println("Selection changed!");
 						propertyEventFired(property, "onValueChanged");
 					}
 				}
@@ -379,7 +351,6 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 	}
 	private void createTextualProperty() {
 		AbstractTextField p = null;
-//		System.err.println("Forcereadonly: "+forceReadOnly);
 		currentDataSource = new StaticTypeValuePropertyBridge(property,!forceReadOnly);
 		if(com.dexels.navajo.document.Property.PASSWORD_PROPERTY.equals(property.getType())) {
 			p = new PasswordField(currentDataSource);
@@ -407,8 +378,6 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 				currentDataSource.setRespondToServerSideChanges(false);
 				TipiProperty.this.property.setValue(event.getText());
 				currentDataSource.setRespondToServerSideChanges(true);
-//				System.err.println("New type: "+property.getType());
-//				System.err.println("Property value changed: " + event.getText());
 				propertyEventFired(property, "onValueChanged");
 			}
 		});

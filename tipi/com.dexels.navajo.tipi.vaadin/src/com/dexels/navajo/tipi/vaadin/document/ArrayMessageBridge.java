@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -20,6 +23,10 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 	private Message src;
 	protected List<String> visibleColumns;
 	protected List<String> editableColumns;
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ArrayMessageBridge.class);
 	
 	private final Map<Object,Item> messageMap = new HashMap<Object,Item>();
 	
@@ -200,27 +207,6 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 
 
 
-//	@Override
-//	public Collection<?> getContainerPropertyIds() {
-//		System.err.println("QQQQQ: "+containerProperties);
-//		if(visibleColumns!=null) {
-//			return visibleColumns;
-//		}
-//		// If no column names have been defined, try do generate a list based on the example message
-//		Message m = getExampleMessage();
-//		
-//		HashSet<Object> propertyIds = new HashSet<Object>();
-//		if(m==null) {
-//			return propertyIds;
-//		}
-//		List<com.dexels.navajo.document.Property> props = m.getAllProperties();
-//		for (com.dexels.navajo.document.Property property : props) {
-//			propertyIds.add(property.getName());
-//		}
-//		System.err.println("PPPPP: "+propertyIds);
-//		return propertyIds;
-//	}
-	
 	
 	@Override
 	public boolean removeAllItems() throws UnsupportedOperationException {
@@ -306,9 +292,6 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 
 	@Override
 	public void sort(Object[] propertyId, boolean[] ascending) {
-		for (Object b : propertyId) {
-			System.err.println("Sort: "+b);
-		}
 		String first = (String) propertyId[0];
 		final boolean firstIsAscending = ascending[0];
 		String[] parts = first.split("@");
@@ -337,7 +320,7 @@ public class ArrayMessageBridge implements Container, Container.Sortable {
 					}
 					return compared;
 				} else {
-					System.err.println("Not comparable");
+					logger.warn("Not comparable: {}",v1);
 				}
 				return 0;
 			}

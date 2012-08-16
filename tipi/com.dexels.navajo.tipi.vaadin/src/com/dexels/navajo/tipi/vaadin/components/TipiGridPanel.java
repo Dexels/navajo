@@ -9,6 +9,9 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.dexels.navajo.tipi.vaadin.components.grid.GridLayoutData;
@@ -31,6 +34,9 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
     private int currenty = 0;
     private final Set<Coordinate> availabilityMatrix = new HashSet<Coordinate>();
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiGridPanel.class);
 	
 	@Override
 	public Object createContainer() {
@@ -64,7 +70,7 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 		gridLayout.addComponent(component, currentx, currenty,endcolumn,endrow);
 		gridLayout.setComponentAlignment(component, myData.getAlignment());
 		int currentWidth = myWidths.get(currentx);
-		System.err.println("Adding component: "+currentx+" :: "+currenty+" >> "+myWidths.get(currentx));
+		logger.debug("Adding component: "+currentx+" :: "+currenty+" >> "+myWidths.get(currentx));
 		component.setWidth(currentWidth,Sizeable.UNITS_PIXELS);
         advance();
 	}
@@ -81,7 +87,7 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
         if (ss!=null) {
               parseColumns(ss.substring(1,ss.length()-1));
         } else {
-            System.err.println("oh dear, no columnwidth");
+            logger.debug("oh dear, no columnwidth");
         }
          gridLayout.setColumns(gridwidth);
 	  }	 
@@ -220,7 +226,7 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 	            for (int x = xstart; x < xend; x++) {
 	                boolean c = isOccupied(x, y);
 	                if (c) {
-	                    System.err.println("Oh dear, already occupied!");
+	                    logger.debug("Oh dear, already occupied!");
 	                }
 	                availabilityMatrix.add(new Coordinate(x, y));
 
@@ -276,6 +282,13 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 	        public String toString() {
 	            return "{" + x + "," + y + "}";
 	        }
+
+			@Override
+			public int hashCode() {
+				return y<<16 + x;
+			}
+	        
+	        
 	    }
 
 }

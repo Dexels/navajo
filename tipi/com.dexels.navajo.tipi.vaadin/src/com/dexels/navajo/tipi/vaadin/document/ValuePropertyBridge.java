@@ -24,7 +24,6 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 			.getLogger(ValuePropertyBridge.class);
 	
 	public ValuePropertyBridge(com.dexels.navajo.document.Property src, boolean editable) {
-//		System.err.println("Creating bridge with property: "+src.getFullPropertyName()+" path: "+editable);
 		this.src = src;
 		this.value = src.getTypedValue();
 		this.valueEditable = editable;
@@ -53,7 +52,7 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 		src.setAnyValue(newValue);
 		String newType = src.getType();
 		if(!oldType.equals(newType)) {
-			System.err.println("TYPE CHANGED. BAD NEWS. OLD: "+oldType+" new: "+newType);
+			logger.warn("TYPE CHANGED. BAD NEWS. OLD: "+oldType+" new: "+newType);
 		}
 		// refresh
 		this.value = src.getTypedValue();
@@ -79,7 +78,7 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 	
 	@Override
 	public void setReadOnly(boolean newStatus) {
-		System.err.println("Beware: changing readonly status?!");
+		logger.warn("Beware: changing readonly status?!");
 		src.setDirection(newStatus?com.dexels.navajo.document.Property.DIR_OUT:com.dexels.navajo.document.Property.DIR_IN);
 	}
 	

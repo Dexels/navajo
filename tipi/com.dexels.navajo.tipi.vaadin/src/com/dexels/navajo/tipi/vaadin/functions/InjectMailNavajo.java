@@ -1,7 +1,5 @@
 package com.dexels.navajo.tipi.vaadin.functions;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +10,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 
 public class InjectMailNavajo extends FunctionInterface {
@@ -42,11 +39,7 @@ public class InjectMailNavajo extends FunctionInterface {
 			String result = createNavajoUrl(ee,navajoName, inputCopy);
 			ee.injectNavajo(navajoName, inputCopy);
 			return result;
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (NavajoException e) {
-			e.printStackTrace();
-		} catch (TipiException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -54,7 +47,6 @@ public class InjectMailNavajo extends FunctionInterface {
 
 	@Override
 	public String remarks() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -65,15 +57,15 @@ public class InjectMailNavajo extends FunctionInterface {
 	
 
 	
-	private String createNavajoUrl(VaadinTipiContext ee, String navajoName, Navajo emailNavajo) throws IOException, TipiException {
+	private String createNavajoUrl(VaadinTipiContext ee, String navajoName, Navajo emailNavajo)  {
 		String u;
 		Message parts = emailNavajo.getMessage("Mail/Parts");
 		if (parts == null) {
-			u = parkSingle(ee,navajoName,emailNavajo);
+			u = parkSingle(navajoName);
 		} else {
 			String contentType = (String) emailNavajo.getProperty("Mail/ContentType").getTypedValue();
 			if(contentType.startsWith("multipart/alternative")) {
-				u = parkAlternative(ee,navajoName,emailNavajo);
+				u = parkAlternative(navajoName,emailNavajo);
 				
 			} else {
 				u = parkMultipart(ee,navajoName,emailNavajo);
@@ -82,22 +74,22 @@ public class InjectMailNavajo extends FunctionInterface {
 		return u;
 	}
 	
-	private String parkAlternative(VaadinTipiContext ee,String navajoName, Navajo emailNavajo) throws IOException {
+	private String parkAlternative(String navajoName, Navajo emailNavajo) {
 		Message parts = emailNavajo.getMessage("Mail/Parts");
 		int lastPartIndex = parts.getAllMessages().size()-1;
 		return "{property:/"+navajoName+":/Mail/Parts@"+lastPartIndex+"/Content}";
 	}
 
 	
-	private String parkSingle(VaadinTipiContext ee,String navajoName, Navajo emailNavajo) throws IOException {
-		return parkPart(ee,navajoName);
+	private String parkSingle(String navajoName) {
+		return parkPart(navajoName);
 	}
 
-	private String parkPart(VaadinTipiContext ee,String navajoName) throws IOException, MalformedURLException {
+	private String parkPart(String navajoName) {
 		return "{property:/"+navajoName+":/Mail/Content}";
 	}
 
-	private String parkMultipart(VaadinTipiContext ee,String navajoName, com.dexels.navajo.document.Navajo pp) throws IOException, TipiException {
+	private String parkMultipart(VaadinTipiContext ee,String navajoName, com.dexels.navajo.document.Navajo pp)  {
 		Message parts = pp.getMessage("Mail/Parts");
 		Property contentProperty = pp.getProperty("Mail/Parts@0/Content");
 		Binary body = (Binary) parts.getAllMessages().get(0).getProperty("Content").getTypedValue();
@@ -109,7 +101,7 @@ public class InjectMailNavajo extends FunctionInterface {
 		return "{property:/"+navajoName+":/Mail/Parts@0/Content}";
 	}
 
-	public String replaceAttributes(VaadinTipiContext ee,String attributeName, String navajoName, String htmlString) throws TipiException {
+	public String replaceAttributes(VaadinTipiContext ee,String attributeName, String navajoName, String htmlString) {
 		String expressionTemplate =  "{property:/"+navajoName+":/Mail/Parts@__REPLACE__/Content}";
 		
 		
@@ -145,17 +137,10 @@ public class InjectMailNavajo extends FunctionInterface {
 		return 1;
 	}
 	
-	public static void main(String[] args) throws IOException, NavajoException {
-
+	public static void main(String[] args) throws NavajoException {
 		String attachExample = "cid:attach-nr-3";
 		String[] sp = attachExample.split("-");
 		int index = Integer.parseInt(sp[sp.length-1]);
 		System.err.println("Index: "+index);
-		//		FileInputStream fis = new FileInputStream("tmlexample.xml");
-//		Navajo n = NavajoFactory.getInstance().createNavajo(fis);
-//		CreateEchoMailUrl cemu = new CreateEchoMailUrl();
-//		String result = cemu.createNavajoUrl("Aap", n, "http://www.aap.net/?aap=");
-//		System.err.println("Result: "+result);
-//		n.write(System.err);
 	}
 }

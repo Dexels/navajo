@@ -132,7 +132,7 @@ private String referer;
 		}
 
 		VaadinTipiContext va;
-		System.err.println("Extensionlist: "+extensionRegistry);
+		logger.info("Extensionlist: "+extensionRegistry);
 		try {
 			va = new VaadinTipiContext(this,installationFolder, extensionRegistry.getExtensionList());
 		} catch (Throwable e2) {
@@ -149,8 +149,7 @@ private String referer;
 		try {
 			BaseTipiApplicationInstance.processSettings(applicationDeploy, applicationProfile, installationFolder, va);
 		} catch (IOException e1) {
-			e1.printStackTrace();
-			System.err.println("Coulnd not process settings. No worries");
+			logger.warn("Couldn't not process settings. No worries",e1);
 		}
 
 		String theme = va.getSystemProperty("tipi.vaadin.theme");
@@ -208,7 +207,7 @@ private String referer;
 	public void setEvalUrl(URL context, String relativeUri) {
 		VaadinTipiContext vaadinTipiContext = (VaadinTipiContext)getCurrentContext();
 		if(vaadinTipiContext!=null) {
-			vaadinTipiContext.setEvalUrl(context, relativeUri);
+//			vaadinTipiContext.setEvalUrl(context, relativeUri);
 		}
 	}
 

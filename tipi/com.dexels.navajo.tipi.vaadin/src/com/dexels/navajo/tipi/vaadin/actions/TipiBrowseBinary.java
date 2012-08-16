@@ -8,6 +8,9 @@ package com.dexels.navajo.tipi.vaadin.actions;
 
 import java.io.OutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
@@ -30,6 +33,9 @@ import com.vaadin.ui.Window;
  */
 public class TipiBrowseBinary extends TipiVaadinActionImpl {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiBrowseBinary.class);
 	private static final long serialVersionUID = -2225176680492876032L;
 	/*
 	 * (non-Javadoc)
@@ -99,7 +105,7 @@ public class TipiBrowseBinary extends TipiVaadinActionImpl {
 
 			@Override
 			public void uploadFailed(FailedEvent event) {
-				System.err.println("Upload failed?");
+				logger.error("Upload failed?");
 				throw new TipiBreakException();
 			}
 		});

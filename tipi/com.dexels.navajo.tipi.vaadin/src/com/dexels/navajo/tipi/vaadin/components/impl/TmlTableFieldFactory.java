@@ -84,14 +84,7 @@ public class TmlTableFieldFactory extends DefaultFieldFactory {
 		createdField.setCaption("");
 		logger.info("Readonly: "+containerProperty.isReadOnly());
 		if (size != null) {
-			// System.err.println("Setting size: "+size);
-//			createdField.setWidth(mt.getColumnWidth(propertyId),
-//					Sizeable.UNITS_PIXELS);
-//			;
-
 		}
-//		Label l = new Label(containerProperty);
-//		return l;
 		return createdField;
 	}
 
@@ -101,7 +94,6 @@ public class TmlTableFieldFactory extends DefaultFieldFactory {
 //		Object found = null;
 		for (Object ii : slb.getItemIds()) {
 			SelectionBridge iii = (SelectionBridge) slb.getItem(ii);
-			System.err.println("ii: " + iii.getClass());
 			if (iii.isSelectedBool()) {
 //				found = iii;
 			}
@@ -113,39 +105,16 @@ public class TmlTableFieldFactory extends DefaultFieldFactory {
 		select.setNewItemsAllowed(false);
 		SelectionBridge selected = slb.getSelected();
 		if (selected != null) {
-			Property selectedName = selected.getItemProperty("name");
-			System.err.println("SelectedNAme: " + selectedName.getValue());
+//			Property selectedName = selected.getItemProperty("name");
 			select.setValue(selected);
 		}
-//		SelectionBridge sb = (SelectionBridge) slb.addItem("konijn");
 		select.setPropertyDataSource(cmb);
-//		System.err.println(">> " + sb.getItemPropertyIds());
-//		cmb.setValue("konijn");
-		// select.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
-		// select.setItemCaptionPropertyId("name");
-		// select.setPropertyDataSource(cmb);
-		// cmb.setValue(slb.getSource().getSelected());
-		// Item id = select.getItem("Ja");
-		//
-		// if(found!=null) {
-		// System.err.println("SELECTED: "+found);
-		// select.setValue(found);
-		// select.commit();
-		// }
-		//
 		select.addListener(new Property.ValueChangeListener() {
 
 			private static final long serialVersionUID = -4325015230483421707L;
 
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				// Selection property = (Selection) select.getValue();
-				// System.err.println("class: "+property.getClass()+" val: "+property);
-				// System.err.println("Selection changed: "+property);
-				// SelectedItemValuePropertyBridge svpb =
-				// (SelectedItemValuePropertyBridge) property;
-				// Selection ss = (Selection) svpb.getValue();
-				// System.err.println("Sel: "+ss);
 			}
 
 		});

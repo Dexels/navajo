@@ -195,11 +195,9 @@ public class TipiDynamicTable extends TipiMessagePanel  {
 			}
 			
 		};
-//		int rows = amb.getItemIds().size();
 		Message exa = amb.getExampleMessage();
 
 		if(exa==null) {
-			System.err.println("Example failed?");
 			return null;
 		}
 		return amb;
