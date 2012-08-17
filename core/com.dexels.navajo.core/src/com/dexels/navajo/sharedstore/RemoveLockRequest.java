@@ -37,13 +37,11 @@ public class RemoveLockRequest extends Request {
 	
 	public String parent;
 	public String name;
-	public String owner;
 	int lockType;
 	
 	public RemoveLockRequest(String parent, String name) {
 		this.parent = parent;
 		this.name = name;
-		this.owner = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 		this.blocking = false;
 	}
 	

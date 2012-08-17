@@ -115,7 +115,7 @@ public class MapMetaData {
 //		return getInstance("aap");
 //	}
 	
-	public static MapMetaData getInstance() throws Exception {
+	public static synchronized MapMetaData getInstance() throws Exception {
 		if ( instance != null ) {
 			return instance;
 		} else {
@@ -220,10 +220,9 @@ public class MapMetaData {
 		
 	}
 	
-	@SuppressWarnings("unused")
 	public static void main(String [] args) throws Exception {
 		
-		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
+		new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
 		MapMetaData mmd = MapMetaData.getInstance();
 		//System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
 		

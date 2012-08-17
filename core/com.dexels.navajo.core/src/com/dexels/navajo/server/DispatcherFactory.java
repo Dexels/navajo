@@ -74,11 +74,13 @@ public class DispatcherFactory {
 //		NavajoConfig.terminate();
 	}
 	
-	public static ScriptEngineManager getScriptEngineManager() {
-		if(scriptEngineFactory==null) {
-			scriptEngineFactory = new javax.script.ScriptEngineManager();
+	public static synchronized ScriptEngineManager getScriptEngineManager() {
+		synchronized (DispatcherFactory.class) {
+			if(scriptEngineFactory==null) {
+				scriptEngineFactory = new javax.script.ScriptEngineManager();
+			}
+			return scriptEngineFactory;
 		}
-		return scriptEngineFactory;
 	}
 	
 	/**

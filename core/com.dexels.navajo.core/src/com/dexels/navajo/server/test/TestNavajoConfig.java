@@ -1,18 +1,9 @@
 package com.dexels.navajo.server.test;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.Writer;
-import java.util.HashMap;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
@@ -37,7 +28,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	private PersistenceManager myPersistenceManager;
 //	private Repository myRepository;
 	private NavajoClassSupplier myClassloader;
-	private StatisticsRunnerInterface myStatisticsRunner;
 	
 	public TestNavajoConfig() {
 		setClassloader( new NavajoClassLoader(this.getClass().getClassLoader()));
@@ -100,7 +90,7 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 
 	@Override
 	public StatisticsRunnerInterface getStatisticsRunner() {
-		return myStatisticsRunner;
+		return null;
 	}
 
 	@Override

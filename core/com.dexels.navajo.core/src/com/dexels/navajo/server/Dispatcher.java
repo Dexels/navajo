@@ -570,7 +570,9 @@ private ServiceHandler createHandler(String handler, Access access)
 
     try {
       Navajo out = generateErrorMessage(access, message, SystemException.SYSTEM_ERROR, 1, e);
-      access.setOutputDoc(out);
+      if(access!=null) {
+          access.setOutputDoc(out);
+      }
       return out;
     }
     catch (Exception ne) {
@@ -965,7 +967,10 @@ private ServiceHandler createHandler(String handler, Access access)
     				.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null);
       }
       
-      if (clientInfo != null && access != null) {
+      if(access==null) {
+    	  throw new FatalException("Error acquiring Access object in dispatcher. Severe.");
+      }
+      if (clientInfo != null) {
     	  access.ipAddress = clientInfo.getIP();
     	  access.hostName = clientInfo.getHost();
     	  access.parseTime = clientInfo.getParseTime();

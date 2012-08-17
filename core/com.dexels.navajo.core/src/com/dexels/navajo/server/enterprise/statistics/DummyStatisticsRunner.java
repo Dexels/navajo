@@ -32,8 +32,6 @@ public class DummyStatisticsRunner implements StatisticsRunnerInterface, NavajoL
 
 	public void addAccess(Access a, AsyncMappable am) {
 		// Do nothing.
-		a = null;
-		am = null;
 	}
 
 	public void onNavajoEvent(NavajoEvent ne) {
