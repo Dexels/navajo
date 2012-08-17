@@ -308,8 +308,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			logger.debug("Adding name: " + name.trim());
 			i++;
 		}
-
-		Binary result = NavajoClientFactory.getClient().getArrayMessageReport(
+		Binary result = getContext().getClient().getArrayMessageReport(
 				m, namesarray, titles, widths, format, orientation, margins);
 		printTable(result);
 	}
