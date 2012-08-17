@@ -121,7 +121,6 @@ public class JettyServer {
 		}
 		
 		ServletHolder sh = new ServletHolder(vaadin);
-		System.err.println("Conf: "+vaadin.getServletConfig());
 		if (useTouch) {
 			sh.setInitParameter("application", "com.dexels.navajo.tipi.vaadin.touch.application.TipiVaadinTouchApplication");
 			sh.setInitParameter("widgetset", "com.example.vaadintest.widgetset.VaadintestWidgetset");
