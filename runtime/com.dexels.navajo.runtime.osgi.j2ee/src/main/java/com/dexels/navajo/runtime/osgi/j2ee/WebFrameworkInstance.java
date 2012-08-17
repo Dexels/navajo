@@ -25,11 +25,11 @@ public class WebFrameworkInstance extends FrameworkInstance {
 	
 	public WebFrameworkInstance(ServletContext context) {
 		super(context.getRealPath(BUNDLEDIR));
+		
 		this.context = context;
 	}
 
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void doStart(String directive) throws Exception {
 		super.doStart(directive);

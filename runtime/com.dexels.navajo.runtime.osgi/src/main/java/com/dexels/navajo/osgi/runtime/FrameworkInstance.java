@@ -35,10 +35,11 @@ import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import org.apache.felix.framework.Felix;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.BundleListener;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Version;
@@ -70,6 +71,7 @@ public class FrameworkInstance {
 	private RepositoryAdmin repositoryAdmin = null;
 
 	public FrameworkInstance(String path) {
+		logger.debug("Initializing OSGi runtime with bundle path: {}",path);
 		bundlePath = path;
 	}
 
@@ -85,8 +87,7 @@ public class FrameworkInstance {
 		return framework.getBundleContext();
 	}
 
-	public static void main(String[] args) throws BundleException,
-			MalformedURLException, InterruptedException {
+	public static void main(String[] args) {
 		FrameworkInstance fs = new FrameworkInstance("bundle");
 		if(args.length>0) {
 			//String tipiDirective = "/Users/frank/Documents/workspace42/SportlinkClub|test|knvb";
@@ -137,6 +138,7 @@ public class FrameworkInstance {
 		for (Bundle bundle : installed) {
 			if (bundle.getHeaders().get(Constants.FRAGMENT_HOST) == null) {
 				bundle.start();
+				logger.debug("Started bundle: "+bundle.getSymbolicName());
 			}
 		}
 	}
@@ -171,7 +173,7 @@ public class FrameworkInstance {
 
 	@SuppressWarnings("unchecked")
 	protected void doStart(final String directive) throws Exception {
-
+		logger.info("Starting with directive {}",directive);
 		Framework felixFramework = getFrameworkFactory().newFramework(createConfig());
 		felixFramework.init();
 		felixFramework.start();
@@ -200,18 +202,16 @@ public class FrameworkInstance {
 
 		};
 		obrTracker.open();
-
+		logger.debug("Trackers created and started");
 		installAndStartFromClasspath(new BundleInstall[] {
-				new BundleInstall("org.apache.felix.scr-1.6.0.jar","org.apache.felix.scr","1.6.0"),
+//				new BundleInstall("org.apache.felix.scr-1.6.0.jar","org.apache.felix.scr","1.6.0"),
 				new BundleInstall("org.apache.felix.configadmin-1.2.8.jar","org.apache.felix.configadmin","1.2.8"),
 				new BundleInstall("org.apache.felix.bundlerepository-1.6.6.jar","org.apache.felix.bundlerepository","1.6.6"),
-				new BundleInstall("com.dexels.navajo.runtime.provisioning-1.0.2.jar","com.dexels.navajo.runtime.provisioning","1.0.2"),
-				new BundleInstall("org.apache.felix.configadmin-1.2.8.jar","org.apache.felix.configadmin","1.2.8")
-//				new BundleInstall("slf4j-simple-1.6.4.jar","slf4j-simple","1.6.4")
-				});
+				//new BundleInstall("com.dexels.navajo.runtime.provisioning-1.0.2.jar","com.dexels.navajo.runtime.provisioning","1.0.2"),
+				new BundleInstall("org.apache.felix.configadmin-1.2.8.jar","org.apache.felix.configadmin","1.2.8"),
+			});
 
-//		"org.apache.felix.fileinstall-3.2.0.jar",
-//		"slf4j-api-1.6.4.jar",
+		installAndStartFromClasspath(new BundleInstall[]{new BundleInstall("org.apache.felix.fileinstall-3.2.0.jar","org.apache.felix.fileinstall","3.2.0")});
 
 		configurationInjectionService = null;
 		try {
@@ -222,9 +222,11 @@ public class FrameworkInstance {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		retrieveAndResolveDependencies(directive);
-		injectBootConfiguration();
-		startTipi(directive);
+		if(directive!=null && directive.length()>0) {
+			retrieveAndResolveDependencies(directive);
+			injectBootConfiguration();
+			startTipi(directive);
+		}
 //		configurationInjectionService.removeConfigutation("tipi.boot");
 }
 
@@ -327,6 +329,8 @@ public class FrameworkInstance {
 	protected void doStop() throws Exception {
 		if (this.framework != null) {
 			this.framework.stop();
+		} else {
+			return;
 		}
 		this.framework.waitForStop(10000);
 		log("OSGi framework stopped", null);
@@ -349,12 +353,12 @@ public class FrameworkInstance {
 		map.put("felix.fileinstall.dir", bundlePath);
 		map.put("felix.fileinstall.log.level", "2");
 		map.put("felix.fileinstall.noInitialDelay", "true");
-		map.put("felix.fileinstall.poll", "10000");
+		map.put("felix.fileinstall.poll", "15000");
 
 		return map;
 	}
 
-	private InputStream getResource(String path) throws IOException {
+	private InputStream getResource(String path) {
 		return FrameworkInstance.class.getClassLoader().getResourceAsStream(
 				path);
 	}
@@ -384,8 +388,7 @@ public class FrameworkInstance {
 					}
 				}
 			} finally {
-				if (br != null)
-					br.close();
+				br.close();
 			}
 		}
 

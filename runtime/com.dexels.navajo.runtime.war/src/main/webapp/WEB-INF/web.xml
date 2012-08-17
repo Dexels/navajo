@@ -6,10 +6,6 @@
         <listener-class>com.dexels.navajo.runtime.osgi.j2ee.StartupListener</listener-class>
     </listener>
 
-    <listener>
-        <listener-class>com.dexels.navajo.runtime.osgi.j2ee.ProxyListener</listener-class>
-    </listener>
-
     <servlet>
         <servlet-name>proxy</servlet-name>
         <servlet-class>com.dexels.navajo.runtime.osgi.j2ee.ProxyServlet</servlet-class>
