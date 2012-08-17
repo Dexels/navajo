@@ -345,11 +345,8 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 					pop.add(inv);
 					pop.show(this, e.getX(), e.getY());
 				} else if (p.isDirIn()) {
-					System.err.println("Showing property dependant editor");
-					System.err.println("Properties value: " + p.getValue());
 					final JPopupMenu pop = new JPopupMenu();
 					final int[] selectedRows = messageTable.getSelectedRows();
-					System.err.println("Selected rows: " + selectedRows);
 					final GenericPropertyComponent comp = new GenericPropertyComponent();
 					Property clone = p.copy(NavajoFactory.getInstance()
 							.createNavajo());
@@ -360,9 +357,6 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 					comp.setForcedTotalWidth(200);
 
 					pop.add(comp);
-					System.err.println("showing at: " + e.getX() + ", "
-							+ e.getY());
-
 					pop.show(this, e.getX(), e.getY());
 					// !!!comp.requestFocusInWindow(); SETTING FOCUS RESULTS IN
 					// UNDESIRED BEHAVIOUR!

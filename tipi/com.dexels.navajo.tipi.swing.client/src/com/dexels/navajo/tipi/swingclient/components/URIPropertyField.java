@@ -151,15 +151,5 @@ public class URIPropertyField extends TextPropertyField {
 		}
 	}
 
-	public static void main(String args[]) {
-		try {
-			URIPropertyField p = new URIPropertyField();
-			System.err.println("UNDERLINE: "
-					+ p.getFont().getAttributes()
-							.get(TextAttribute.UNDERLINE_ON));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 }

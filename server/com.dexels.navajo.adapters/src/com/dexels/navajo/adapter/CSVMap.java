@@ -78,7 +78,7 @@ public class CSVMap implements Mappable {
 	public int getEntryFieldCount() {
 	    int result = -1;
 	    if (entries != null && entries.length > 0) {
-	        CSVEntryMap e = (CSVEntryMap) entries[0];
+	        CSVEntryMap e = entries[0];
 	        result = e.getEntrySize();
 	    }
 	    return result;
@@ -93,27 +93,30 @@ public class CSVMap implements Mappable {
 				f = new FileReader(fileName);
 			}
 
-			if (f != null) {
-				BufferedReader buffer = new BufferedReader(f);
-				String line = "";
-				int lineCount = 0;
-				List<CSVEntryMap> entryList = new ArrayList<CSVEntryMap>();
-				while ((line = buffer.readLine()) != null) {
-				    if (maximumImportCount == 0 || (lineCount <= maximumImportCount)) {
-    					if (isSkipFirstRow() && lineCount == 0) {
-    					    // First line will be skipped. Probably contains headers
+			BufferedReader buffer = new BufferedReader(f);
+			String line = "";
+			int lineCount = 0;
+			List<CSVEntryMap> entryList = new ArrayList<CSVEntryMap>();
+			while ((line = buffer.readLine()) != null) {
+			    if (maximumImportCount == 0 || (lineCount <= maximumImportCount)) {
+					if (isSkipFirstRow() && lineCount == 0) {
+					    // First line will be skipped. Probably contains headers
+					} else {
+    				    if (includeEmpty) {
+    						parseLineWithEmpty(line, entryList);
     					} else {
-        				    if (includeEmpty) {
-        						parseLineWithEmpty(line, entryList);
-        					} else {
-        						parseLineDefault(line, entryList);
-        					}
+    						parseLineDefault(line, entryList);
     					}
-				    }
-					lineCount++;
-				}
-				entries = new CSVEntryMap[entryList.size()];
-				entries = (CSVEntryMap[]) entryList.toArray(entries);
+					}
+			    }
+				lineCount++;
+			}
+//				entries = new CSVEntryMap[entryList.size()];
+//				entries = entryList.toArray(entries);
+			entries = new CSVEntryMap[entryList.size()];
+			int i = 0;
+			for (CSVEntryMap ce : entryList) {
+				entries[i++] = ce;
 			}
 		} catch (java.io.IOException ioe) {
 			throw new UserException(-1, ioe.getMessage());
@@ -161,7 +164,7 @@ public class CSVMap implements Mappable {
 		CSVEntryMap csvEntry = new CSVEntryMap();
 		csvEntry.entries = new String[currentLine.size()];
 		for (int i = 0; i < currentLine.size(); i++) {
-			csvEntry.entries[i] = (String) currentLine.get(i);
+			csvEntry.entries[i] = currentLine.get(i);
 		}
 		entryList.add(csvEntry);
 	}
@@ -181,18 +184,22 @@ public class CSVMap implements Mappable {
 		this.separator = sep;
 	}
 
-	public void setFileName(String s) throws UserException {
+	public void setFileName(String s)  {
 		this.fileName = s;
 	}
 
-	public void setFileContent(Binary b) throws UserException {
+	public void setFileContent(Binary b) {
 		this.fileContent = b;
 	}
 
 	public void store() throws MappableException, UserException {
 		if (draftEntries != null) {
 			entries = new CSVEntryMap[draftEntries.size()];
-			entries = (CSVEntryMap[]) draftEntries.toArray();
+			int i = 0;
+			for (CSVEntryMap ce : draftEntries) {
+				entries[i++] = ce;
+			}
+//			entries = (CSVEntryMap[]) draftEntries.toArray();
 		}
 		if (update) {
 			try {
@@ -200,7 +207,7 @@ public class CSVMap implements Mappable {
 				if (entries != null) {
 					FileWriter writer = new FileWriter(fileName);
 					for (int i = 0; i < entries.length; i++) {
-						CSVEntryMap e = (CSVEntryMap) entries[i];
+						CSVEntryMap e = entries[i];
 						for (int j = 0; j < e.entries.length; j++) {
 							writer.write(e.getEntry(new Integer(j)));
 							if (j < (e.entries.length - 1))

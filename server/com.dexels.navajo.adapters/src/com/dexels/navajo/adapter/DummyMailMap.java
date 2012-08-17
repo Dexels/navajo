@@ -50,7 +50,7 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 	}
 
 	public void setMultipleAttachments(AttachmentMapInterface[] c) {
-		System.err.println("In DummyMailMap, setMultipleAttachments(" + c + ")");
+		System.err.println("In DummyMailMap, setMultipleAttachments size: " + c.length );
 		this.multipleAttachments = (DummyAttachmentMap []) c;
 	}
 

@@ -30,6 +30,7 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.UserException;
 
 public class DescriptionMap implements Mappable {
@@ -40,9 +41,10 @@ public class DescriptionMap implements Mappable {
 	public Binary content = null;
 	public String stringContent = null;
 	public boolean debug = false;
-	private NavajoConfig myConfig = null;
+	private NavajoConfigInterface myConfig = null;
 	
 	public void load(Access a) throws MappableException, UserException {
+		myConfig = DispatcherFactory.getInstance().getNavajoConfig();
 	}
 	
 	public void store() throws MappableException, UserException {
@@ -52,13 +54,16 @@ public class DescriptionMap implements Mappable {
 	}
 
 	public int getCacheSize() {
-		if (DispatcherFactory.getInstance().getNavajoConfig().getDescriptionProvider()!=null) {
+		if (myConfig.getDescriptionProvider()!=null) {
 			return myConfig.getDescriptionProvider().getCacheSize();
 		}
 		return 0;
 	}
 
 
+	/**
+	 * @param doFlushCache param required in TSL 
+	 */
 	public void setDoFlushCache(boolean doFlushCache) {
 		if (myConfig.getDescriptionProvider()!=null) {
 			myConfig.getDescriptionProvider().flushCache();

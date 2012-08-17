@@ -13,7 +13,7 @@ public class DexelsProxySteetMapTileFactoryInfo extends TileFactoryInfo {
 		setDefaultZoomLevel(1);
 	}
     public String getTileUrl(int x, int y, int zoom) {
-        zoom = max-zoom;
+//        zoom = max-zoom;
 //        String tileString = "http://tile.openstreetmap.org" +"/"+zoom+"/"+x+"/"+y+".png";
 //        String res = Base64.encode(tileString.getBytes());
 //        String resss = URLEncoder.encode(tileString);

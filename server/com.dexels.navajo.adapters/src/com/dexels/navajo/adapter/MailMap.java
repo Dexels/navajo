@@ -138,10 +138,10 @@ public class MailMap implements MailMapInterface, Mappable,
 		try {
 			sendMail();
 		} catch (Exception e) {
-			AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
-					myAccess.accessID);
 			// e.printStackTrace(System.err);
 			if (myAccess != null) {
+				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+						myAccess.accessID);
 				myAccess.setException(e);
 			}
 			return false;

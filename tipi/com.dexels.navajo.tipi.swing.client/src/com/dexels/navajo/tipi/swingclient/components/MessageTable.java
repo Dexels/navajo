@@ -1105,10 +1105,8 @@ public class MessageTable extends JTable implements CellEditorListener,
 				Navajo n = NavajoFactory.getInstance().createNavajo(fis);
 				Message cdef = n.getMessage("columndef");
 				if (cdef == null) {
-					if (columnFile != null && columnFile.exists()) {
-						columnFile.delete();
-						return;
-					}
+					columnFile.delete();
+					return;
 				}
 				// System.err.println("Found " + cdef.getArraySize() +
 				// " columns");

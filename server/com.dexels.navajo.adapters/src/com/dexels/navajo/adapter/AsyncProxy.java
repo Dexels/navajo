@@ -22,7 +22,6 @@ public class AsyncProxy implements Mappable {
 
   public boolean isFinished = false;
   public boolean killOnFinnish = false;
-  private Exception caught = null;
   public long startTime = System.currentTimeMillis();
   public long lastAccess = System.currentTimeMillis();
   public int totaltime;
@@ -105,7 +104,9 @@ public class AsyncProxy implements Mappable {
         if (am.getPointer().equals(this.pointer))
           found = true;
       }
-      am.stop();
+      if(am!=null) {
+          am.stop();
+      }
       com.dexels.navajo.mapping.AsyncStore.getInstance().removeInstance(pointer);
     }
   }
@@ -162,7 +163,7 @@ public class AsyncProxy implements Mappable {
   }
 
 public Exception getCaught() {
-	return caught;
+	return null;
 }
 
 public boolean isKillOnFinnish() {

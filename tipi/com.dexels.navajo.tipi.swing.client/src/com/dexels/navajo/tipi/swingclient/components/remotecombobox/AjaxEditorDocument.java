@@ -23,11 +23,9 @@ public class AjaxEditorDocument extends PlainDocument {
 		super.insertUpdate(chng, attr);
 		if (fireEvents) {
 			try {
-				if (fireEvents) {
-					myBox.scheduleAjaxRefresh(
-							AjaxEditorDocument.this.getText(0, getLength()),
-							AjaxEditorDocument.this);
-				}
+				myBox.scheduleAjaxRefresh(
+						AjaxEditorDocument.this.getText(0, getLength()),
+						AjaxEditorDocument.this);
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}
