@@ -14,8 +14,6 @@ import com.dexels.navajo.plugin.workflow.model.TaskElement;
 
 public class TaskFigure extends Figure {
 	protected Label label = new Label();
-	protected Color fgColor;
-	protected Color bgColor;
 	protected boolean singleBorder = true;
 	protected static Color initialFgColor;
 	protected static Color initialBgColor;

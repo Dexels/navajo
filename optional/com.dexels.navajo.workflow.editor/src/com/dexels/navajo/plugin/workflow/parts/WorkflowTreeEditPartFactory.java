@@ -37,7 +37,7 @@ public class WorkflowTreeEditPartFactory implements EditPartFactory {
 		if (model instanceof StateElement) {
 			return new StateTreeEditPart((StateElement) model);
 		}
-		if (model instanceof TransitionTreeEditPart) {
+		if (model instanceof TransitionElement) {
 			return new TransitionTreeEditPart((TransitionElement) model);
 		}
 

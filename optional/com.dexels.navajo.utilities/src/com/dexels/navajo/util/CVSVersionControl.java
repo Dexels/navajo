@@ -160,15 +160,6 @@ public class CVSVersionControl {
 		return repository;
 	}
 	
-	public static void main(String [] args) {
-		
-		CVSVersionControl c = new CVSVersionControl(new File("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/match/ProcessQueryMatch.xml"));
-		System.err.println("Version: " + c.getVersion());
-		System.err.println("Date   : " + c.getDate());
-		System.err.println("Author : " + c.getAuthor());
-		System.err.println("Root   : " + c.getCvsRoot());
-		System.err.println("Repos. : " + c.getRepository());
-	}
 
 	public String getCvsRoot() {
 		return cvsRoot;

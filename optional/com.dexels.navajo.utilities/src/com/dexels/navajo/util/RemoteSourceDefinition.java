@@ -20,7 +20,13 @@ public class RemoteSourceDefinition {
 		if(serviceName.endsWith("'")){
 			serviceName = serviceName.substring(0, serviceName.length() - 1);
 		}
-		if(!callList.contains(serviceName)){
+		boolean found = false;
+		for (ScriptDefinition sd : callList) {
+			if(sd.getScriptName().equals(serviceName)) {
+				found = true;
+			}
+		}
+		if(found){
 			callList.add(new ScriptDefinition(serviceName));
 		}
 	}
@@ -32,9 +38,17 @@ public class RemoteSourceDefinition {
 		if(serviceName.endsWith("'")){
 			serviceName = serviceName.substring(0, serviceName.length() - 1);
 		}
-		if(!readList.contains(serviceName)){
+		
+		boolean found = false;
+		for (ScriptDefinition sd : readList) {
+			if(sd.getScriptName().equals(serviceName)) {
+				found = true;
+			}
+		}
+		if(!found){
 			readList.add(new ScriptDefinition(serviceName));
 		}
+
 	}
 	
 	public String getPath() {

@@ -45,7 +45,7 @@ public class AsyncClient {
 	}
 
 
-	public static AsyncClient getInstance() {
+	public static synchronized AsyncClient getInstance() {
 		if (instance == null) {
 			instance = new AsyncClient();
 		}

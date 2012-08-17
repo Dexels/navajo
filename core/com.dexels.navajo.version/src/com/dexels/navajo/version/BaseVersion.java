@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * ====================================================================
  */
 
-public abstract class BaseVersion implements Comparable<AbstractVersion> {
+public abstract class BaseVersion {
 
 	public String RELEASEDATE;
 	
@@ -55,7 +55,7 @@ public abstract class BaseVersion implements Comparable<AbstractVersion> {
 	 * @param versionClass
 	 * @return
 	 */
-	public boolean checkInclude(String versionClass, Set<AbstractVersion> previouslyVisited) {
+	public boolean checkInclude(String versionClass) {
 		
 		
 		for (int i = 0; i < includedPackages.size(); i++) {
@@ -77,7 +77,7 @@ public abstract class BaseVersion implements Comparable<AbstractVersion> {
 			Class<?> c = Class.forName(versionClass);
 			AbstractVersion v = (AbstractVersion) c.newInstance();
 			// Check if v is not already included in chain.
-			if (!checkInclude(versionClass, null)) {
+			if (!checkInclude(versionClass)) {
 				//logger.info(this.getClass().getName() + ": Adding " + versionClass);
 				includedPackages.add(v);
 			}
@@ -117,13 +117,6 @@ public abstract class BaseVersion implements Comparable<AbstractVersion> {
 		v = allDeps.toArray(v);
 		return v;
 	}
-	
-	public boolean equals(Object o) {
-		return o.getClass().getName().equals(this.getClass().getName());
-	}
-	
-	public int compareTo(AbstractVersion o) {
-	    return o.getClass().getName().compareTo(this.getClass().getName());
-	}
+
 	
 }
