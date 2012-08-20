@@ -25,9 +25,8 @@ public class NavaDocDifferenceListener implements DifferenceListener {
   }
 
   public int differenceFound(
-    String controlVal, String resultVal,
-    Node controlNode, Node resultNode,
-    Difference diff ) {
+    
+    Node controlNode, Node resultNode) {
 
     if ( ( controlNode.getNodeName().compareToIgnoreCase( "meta" ) == 0 ) &&
       ( resultNode.getNodeName().compareToIgnoreCase( "meta" ) == 0 ) ) {

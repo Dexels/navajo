@@ -68,7 +68,7 @@ public class PathConfig {
      * @return path property as File
      */
     public File getPath( String name ) {
-        return ( (File) this.pathMap.get( name ) );
+        return ( this.pathMap.get( name ) );
     }
 
     public String toString() {
@@ -77,8 +77,8 @@ public class PathConfig {
         final Set<String> keys = this.pathMap.keySet();
         final Iterator<String> iter = keys.iterator();
         while ( iter.hasNext() ) {
-            final String name = (String) iter.next();
-            final File path = (File) this.pathMap.get( name );
+            final String name = iter.next();
+            final File path = this.pathMap.get( name );
             s.append( " " + name + "-path = '" + path.toString() + "'" );
         }
 

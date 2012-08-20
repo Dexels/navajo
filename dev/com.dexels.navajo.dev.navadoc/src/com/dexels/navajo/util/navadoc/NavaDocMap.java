@@ -10,7 +10,6 @@ public class NavaDocMap implements Mappable{
 	public String configUri = null;
 	
 	public void kill() {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -38,7 +37,6 @@ public class NavaDocMap implements Mappable{
 	}
 
 	public void load(Access access) throws MappableException, UserException {
-		// TODO Auto-generated method stub
 		
 	}
 

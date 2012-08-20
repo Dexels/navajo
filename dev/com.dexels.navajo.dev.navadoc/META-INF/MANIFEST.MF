@@ -4,11 +4,15 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.2.qualifier
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.version,
- com.dexels.navajo.core;bundle-version="2.9.6"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Service-Component: OSGI-INF/simpleRepository.xml, OSGI-INF/repositoryFactory.xml, OSGI-INF/statisticsRunner.xml
 Bundle-ClassPath: lib/xmlunit-1.3.jar
 Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.mapping,
+ com.dexels.navajo.server,
+ com.dexels.navajo.util,
+ com.dexels.navajo.version,
  javax.servlet;version="[2.5.0,4.0.0)",
- javax.servlet.http;version="[2.5.0,4.0.0)"
+ javax.servlet.http;version="[2.5.0,4.0.0)",
+ navajo,
+ org.slf4j;version="1.6.1"

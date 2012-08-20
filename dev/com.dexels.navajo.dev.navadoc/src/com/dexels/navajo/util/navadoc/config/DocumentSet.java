@@ -68,8 +68,8 @@ public class DocumentSet {
       final Set<String> keys = this.propMap.keySet();
       final Iterator<String> iter = keys.iterator();
       while (iter.hasNext()) {
-        final String name = (String) iter.next();
-        final String value = (String)this.propMap.get(name);
+        final String name = iter.next();
+        final String value = this.propMap.get(name);
         s.append(" " + name + " = '" + value + "'");
       }
 
@@ -107,7 +107,7 @@ public class DocumentSet {
    * @return String value
    */
   public String getProperty(String name) {
-    return ( (String)this.propMap.get(name));
+    return ( this.propMap.get(name));
   }
 
   /**

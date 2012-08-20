@@ -22,8 +22,6 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.xml.sax.SAXException;
-
 import com.dexels.navajo.util.navadoc.config.ConfigurationException;
 import com.dexels.navajo.util.navadoc.config.DocumentSet;
 import com.dexels.navajo.util.navadoc.config.NavaDocConfigurator;
@@ -52,7 +50,7 @@ public class NavaDoc {
    * objects are wrong or don't exist
    */
 
-  public NavaDoc() throws ConfigurationException, FileNotFoundException, IOException, SAXException {
+  public NavaDoc() throws ConfigurationException, FileNotFoundException, IOException {
 
     config.configure();
 
@@ -131,7 +129,7 @@ public class NavaDoc {
   // ----------------------------------------------------------- private methods
 
   private void setTransformer(final DocumentSet dset) throws
-      ConfigurationException, FileNotFoundException {
+      ConfigurationException {
 
 	  try {
     final File sPath = dset.getPathConfiguration().getPath(NavaDocConstants.SVC_PATH_ELEMENT);
@@ -219,7 +217,7 @@ public class NavaDoc {
     
     while (iter.hasNext()) {
     	NavaDocIndexDOM currentindex = index;
-      final String sname = (String) iter.next();
+      final String sname = iter.next();
                  
       /*
        * Check for subfolders, for subfolders we make new index files.
