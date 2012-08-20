@@ -185,7 +185,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 				String vakueVal = (String) valueOperand.value;
 				System.err
 						.println("Adding: " + nameVal + " value: " + vakueVal);
-				stc.getContext().setSystemPropertyLocal(nameVal, vakueVal);
+				stc.getContext().setSystemProperty(nameVal, vakueVal);
 				// ((Container) getContainer()).add((Component)
 				// stc.getContext().getTopLevel(), BorderLayout.CENTER);
 			} catch (Exception e) {

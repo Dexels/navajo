@@ -211,12 +211,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		this.myApplication = myApplication;
 		List<TipiExtension> extensionList = getExtensionFromServiceEnumeration();
 		
-		initializeContext(myApplication, extensionList, parent);
+		initializeContext(extensionList, parent);
 	}
 	
 	public TipiContext(TipiApplicationInstance myApplication, List<TipiExtension> extensionList) {
 		this.myApplication = myApplication;
-		initializeContext(myApplication, extensionList, null);
+		initializeContext(extensionList, null);
 	}
 
 	protected List<TipiExtension> getExtensionFromServiceEnumeration() {
@@ -247,11 +247,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		this.myApplication = myApplication;
 
 		// this();
-		initializeContext(myApplication, preload, parent);
+		initializeContext(preload, parent);
 	}
 
-	private void initializeContext(TipiApplicationInstance myApplication,
-			List<TipiExtension> preload, TipiContext parent) {
+	private void initializeContext(List<TipiExtension> preload, TipiContext parent) {
 
 		myParentContext = parent;
 		initializeExtensions(preload.iterator());
@@ -265,7 +264,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		tipiResourceLoader = new ClassPathResourceLoader();
 		setStorageManager(new TipiNullStorageManager());
 		try {
-			@SuppressWarnings("unchecked")
 			Class<? extends TipiContextListener> cc = (Class<? extends TipiContextListener>) Class
 					.forName("com.dexels.navajo.tipi.tools.TipiEventDumpDebugger");
 			TipiContextListener tcl = cc.newInstance();
@@ -310,7 +308,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		allExtensions.addAll(mainExtensionList);
 		allExtensions.addAll(coreExtensionList);
 		allExtensions.addAll(optionalExtensionList);
-		checkExtensions(allExtensions);
 		appendIncludes(allExtensions);
 	}
 
@@ -328,18 +325,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		optionalExtensionList.add(te);
 		processRequiredIncludes(te);
 
-	}
-
-	private void checkExtensions(List<TipiExtension> e) {
-		for (TipiExtension tipiExtension : e) {
-			checkExtension(tipiExtension, e);
-		}
-	}
-
-	private void checkExtension(TipiExtension tipiExtension,
-			List<TipiExtension> allExtension) {
-		// String main = tipiExtension.requiresMainImplementation();
-		// List<String> extensions = tipiExtension.getRequiredExtensions();
 	}
 
 	private void appendIncludes(List<TipiExtension> extensionList) {
@@ -509,19 +494,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public abstract void clearTopScreen();
 
-	protected final void setSystemProperty(String name, String value,
-			boolean overwrite) {
-		systemPropertyMap.put(name, value);
-
-	}
-
-	
-	public final void setSystemPropertyLocal(String name, String value) {
-		systemPropertyMap.put(name, value);
-	}
 
 	public void setSystemProperty(String name, String value) {
-		setSystemProperty(name, value, true);
+		systemPropertyMap.put(name, value);
 	}
 
 	public String getSystemProperty(String name) {
@@ -541,30 +516,30 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	}
 
-	private void createClient(XMLElement config) throws TipiException {
+	private void createClient(XMLElement config) {
 		String impl = (String) attemptGenericEvaluate(config
 				.getStringAttribute("impl", "'indirect'"));
-		setSystemProperty("tipi.client.impl", impl, false);
+		setSystemProperty("tipi.client.impl", impl);
 		String cfg = (String) attemptGenericEvaluate(config.getStringAttribute(
 				"config", "'server.xml'"));
-		setSystemProperty("tipi.client.config", cfg, false);
+		setSystemProperty("tipi.client.config", cfg);
 
 		String locale = (String) attemptGenericEvaluate(config
 				.getStringAttribute("locale", "'en'"));
-		setSystemProperty("tipi.client.locale", cfg, false);
+		setSystemProperty("tipi.client.locale", cfg);
 
 		String sublocale = (String) attemptGenericEvaluate(config
 				.getStringAttribute("sublocale", "''"));
-		setSystemProperty("tipi.client.sublocale", cfg, false);
+		setSystemProperty("tipi.client.sublocale", cfg);
 		navajoServer = (String) attemptGenericEvaluate(config
 				.getStringAttribute("server", ""));
-		setSystemProperty("tipi.client.server", navajoServer, false);
+		setSystemProperty("tipi.client.server", navajoServer);
 		navajoUsername = (String) attemptGenericEvaluate(config
 				.getStringAttribute("username", ""));
-		setSystemProperty("tipi.client.username", navajoUsername, false);
+		setSystemProperty("tipi.client.username", navajoUsername);
 		navajoPassword = (String) attemptGenericEvaluate(config
 				.getStringAttribute("password", ""));
-		setSystemProperty("tipi.client.password", navajoPassword, false);
+		setSystemProperty("tipi.client.password", navajoPassword);
 
 		logger.info("Connecting to server: " + navajoServer);
 		if (!impl.equals("direct")) {
@@ -577,24 +552,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			getClient().setPassword(navajoPassword);
 
 		} else {
-			// NavajoClientFactory.resetClient();
-			// deprecated
 			throw new UnsupportedOperationException(
 					"Sorry, I deprecated the direct client for tipi usage");
-			// NavajoClientFactory.createClient(
-			// "com.dexels.navajo.client.impl.DirectClientImpl",
-			// getClass().getClassLoader().getResource(cfg));
 		}
 
 		getClient().setLocaleCode(locale);
 		getClient().setSubLocaleCode(sublocale);
 	}
-
-//	private void parseStream(InputStream in, String sourceName,
-//			boolean studioMode, ExtensionDefinition ed) throws IOException,
-//			XMLParseException, TipiException {
-//		parseStream(in, sourceName, sourceName, studioMode, ed);
-//	}
 
 	public void parseStream(InputStream in, ExtensionDefinition ed)
 			throws IOException, XMLParseException, TipiException {
@@ -609,23 +573,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		isr.close();
 		parseXMLElement(doc, ed);
 	}
-
-//	public void parseStream(InputStream in,
-//			String definitionName, boolean studioMode, ExtensionDefinition ed)
-//			throws IOException, XMLParseException, TipiException {
-//		XMLElement doc = new CaseSensitiveXMLElement();
-//		InputStreamReader isr = new InputStreamReader(in, "UTF-8");
-//		long stamp = System.currentTimeMillis();
-//
-//		doc.parseFromReader(isr);
-//		doc.setTitle(definitionName);
-//		stamp = System.currentTimeMillis() - stamp;
-//		parseTime += stamp;
-//
-//		isr.close();
-//		parseXMLElement(doc, ed);
-//
-//	}
 
 	protected void parseXMLElement(XMLElement elm, ExtensionDefinition ed)
 			throws TipiException {
@@ -659,15 +606,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 		String childName = child.getName();
 		if (childName.equals("client-config")) {
-			// if (!"__ignore".equals(dir)) {
 			createClient(child);
-			// }
 			return;
 		}
-		// if (childName.equals("tipi-config")) {
-		// configureTipi(child);
-		// return;
-		// }
 		if (childName.equals("component") || childName.equals("tipi")
 				|| childName.equals("definition")) {
 			parseDefinition(child);
@@ -698,9 +639,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			return;
 		}
 		if (childName.equals("tipi-include")) {
-			// if (!"__ignore".equals(dir)) {
 			parseLibrary(child, ed);
-			// }
 			return;
 		}
 		if (childName.equals("tipi-parser")) {
@@ -727,15 +666,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			return;
 		}
 
-		// if (childName.equals("tipi-resource")) {
-		// parseResource(child);
-		// return;
-		// }
-		// if (childName.equals("tipi-package")) {
-		// parsePackage(child);
-		// return;
-		// }
-
 		if (childName.equals("tipi-storage")) {
 			parseStorage(child);
 			return;
@@ -750,26 +680,14 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			return;
 		}
 		if (childName.equals("function")) {
-			try {
-				parseFunction(child, ed);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+			parseFunction(child, ed);
 			return;
 		}
 
 		throw new TipiException("Wtf? What is this tag: " + childName);
 	}
 
-	private void parseFunction(XMLElement f, ExtensionDefinition ed)
-			throws ClassNotFoundException {
-		// <function name="Age" class="com.dexels.navajo.functions.Age">
-		// <description>calculates the age given a birth date. The calculation
-		// is as of the second date parameter, otherwise, if not provided, will
-		// be as of today.</description>
-		// <input>date,date|empty</input>
-		// <result>integer</result>
-		// </function>
+	private void parseFunction(XMLElement f, ExtensionDefinition ed)  {
 
 		XMLElement description = f.getChildByTagName("description");
 		String desc = description == null ? "" : description.getContent();
@@ -816,7 +734,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			return;
 		}
 		try {
-			@SuppressWarnings("unchecked")
 			Class<? extends TipiStorageManager> c = (Class<? extends TipiStorageManager>) Class
 					.forName(type);
 			TipiStorageManager tsm = c.newInstance();
@@ -1067,7 +984,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public TipiActionBlock instantiateTipiActionBlock(XMLElement definition,
 			TipiComponent parent, TipiExecutable parentExe)
-			throws TipiException {
+			 {
 		TipiActionBlock c = createTipiActionBlockCondition();
 		c.load(definition, parent, parentExe);
 		return c;
@@ -1252,6 +1169,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		comp.disposeComponent();
 	}
 
+	/**
+	 * 
+	 * @param  comp
+	 */
 	public void disposeTipiComponent(TipiComponent comp) {
 		if (comp.getTipiParent() == null) {
 			showInternalError("Can not dispose tipi: It has no parent!");
@@ -1604,7 +1525,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			String username, String password, String keystore, String keypass,
 			boolean breakOnError) throws TipiBreakException {
 		return doSimpleSend(n, service, ch, expirtationInterval, hosturl,
-				username, password, null, null, breakOnError, null);
+				username, password, breakOnError);
 	}
 
 	
@@ -1614,8 +1535,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	@Deprecated
 	private Navajo doSimpleSend(Navajo n, String service,
 			ConditionErrorHandler ch, long expirtationInterval, String hosturl,
-			String username, String password, String keystore, String keypass,
-			boolean breakOnError, String clientName) throws TipiBreakException {
+			String username, String password, boolean breakOnError) throws TipiBreakException {
 		Navajo reply = null;
 		try {
 			if (hosturl != null && !"".equals(hosturl)) {

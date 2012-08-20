@@ -53,7 +53,7 @@ public class TipiComposeMail extends TipiAction {
 			for (int i = 0; i < recipient.getArraySize(); i++) {
 				Message current = recipient.getMessage(i);
 				emailAddress = current.getProperty(propertyName).getValue();
-				if (emailAddress != null && emailAddress.trim() != "") {
+				if (emailAddress != null && !"".equals(emailAddress.trim())) {
 					recipientsFound = true;
 					emailString = emailString + emailAddress + ",";
 				}
