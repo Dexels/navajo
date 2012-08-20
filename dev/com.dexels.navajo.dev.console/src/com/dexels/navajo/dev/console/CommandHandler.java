@@ -29,6 +29,10 @@ public class CommandHandler {
 		this.nqlContext = n;
 	}
 
+	/**
+	 * 
+	 * @param n the nql context to clear
+	 */
 	public void clearNqlContext(NqlContextApi n) {
 		this.nqlContext = null;
 	}
@@ -38,6 +42,10 @@ public class CommandHandler {
 		this.bundleCreator = bundleCreator;
 	}
 
+	/**
+	 * 
+	 * @param bundleCreator the bundlecreator to clear
+	 */
 	public void clearBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = null;
 	}
@@ -46,6 +54,10 @@ public class CommandHandler {
 		localClient  = lc;
 	}
 
+	/**
+	 *
+	 * @param lc the local client to clear
+	 */
 	public void clearLocalClient(LocalClient lc) {
 		localClient  = null;
 	}
@@ -75,7 +87,7 @@ public class CommandHandler {
 		ScriptListCommand script = new ScriptListCommand(bundleContext);
 		registerCommand(script,"scripts");
 		
-		VerifyCommand verify = new VerifyCommand(bundleContext);
+		VerifyCommand verify = new VerifyCommand();
 		verify.setBundleCreator(bundleCreator);
 		registerCommand(verify,"verify");
 		
@@ -83,12 +95,12 @@ public class CommandHandler {
 		cc.setLocalClient(localClient);
 		registerCommand(cc, "call");
 		
-		NqlCommand nql = new NqlCommand(bundleContext);
+		NqlCommand nql = new NqlCommand();
 		nql.setNqlContext(nqlContext);
 		registerCommand(nql,"nql");
 
 		
-		LoginCommand login = new LoginCommand(bundleContext);
+		LoginCommand login = new LoginCommand();
 		login.setNqlContext(nqlContext);
 		registerCommand(login,"login");
 

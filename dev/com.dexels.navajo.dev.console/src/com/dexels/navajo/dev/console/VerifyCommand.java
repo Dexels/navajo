@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Descriptor;
-import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,13 +20,17 @@ public class VerifyCommand {
 	private BundleCreator bundleCreator = null;
 
 	
-	public VerifyCommand(BundleContext bc) {
+	public VerifyCommand() {
 	}
 	
 	public void setBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = bundleCreator;
 	}
 
+	/**
+	 * 
+	 * @param bundleCreator the bundle creator to remove
+	 */
 	public void clearBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = null;
 	}

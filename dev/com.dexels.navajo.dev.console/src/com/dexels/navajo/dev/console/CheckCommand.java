@@ -18,6 +18,10 @@ public class CheckCommand {
 		this.bundleCreator = bundleCreator;
 	}
 
+	/**
+	 * 
+	 * @param bundleCreator the bundlecreator to clear
+	 */
 	public void clearBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = null;
 	}

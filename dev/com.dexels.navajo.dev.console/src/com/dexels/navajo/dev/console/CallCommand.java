@@ -1,17 +1,13 @@
 package com.dexels.navajo.dev.console;
 
 
-import java.util.Date;
-
 import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Descriptor;
 
-import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
-import com.dexels.navajo.server.LocalClientDispatcherWrapper;
 
 public class CallCommand {
 	
@@ -21,6 +17,10 @@ public class CallCommand {
 		localClient  = lc;
 	}
 
+	/**
+	 * 
+	 * @param lc The localclient to clear
+	 */
 	public void clearLocalClient(LocalClient lc) {
 		localClient  = null;
 	}

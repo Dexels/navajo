@@ -23,6 +23,10 @@ public class CompileCommand {
 		this.bundleCreator = bundleCreator;
 	}
 
+	/**
+	 * 
+	 * @param bundleCreator the bundle creator to clear
+	 */
 	public void clearBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = null;
 	}

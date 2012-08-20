@@ -5,9 +5,6 @@ import java.io.OutputStream;
 
 import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Descriptor;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.nql.NqlContextApi;
@@ -16,11 +13,9 @@ import com.dexels.navajo.document.NavajoException;
 
 public class NqlCommand {
 
-	private final BundleContext bundleContext;
 	private NqlContextApi nqlContext;
 
-	public NqlCommand(BundleContext bc) {
-		this.bundleContext = bc;
+	public NqlCommand() {
 	}
 
 	 public void nql(final CommandSession session) {
