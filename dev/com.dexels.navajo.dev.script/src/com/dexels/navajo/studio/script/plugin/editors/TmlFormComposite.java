@@ -65,7 +65,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.studio.eclipse.ServerEntry;
-import com.dexels.navajo.studio.script.plugin.NavajoPluginException;
 import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 import com.dexels.navajo.studio.script.plugin.ServerInstance;
 import com.dexels.navajo.swtclient.GenericPropertyComponent;
@@ -173,15 +172,11 @@ public class TmlFormComposite extends Composite {
 		l.setBackground(FORM_BACKGROUND_COLOR);
 		l.setText(scriptName);
 		headComp.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.TOP));
-		try {
-			setHeader(n, scriptName, mainMessageContainer);
-			setMessages(n, mainMessageContainer);
-			setMethods(n, scriptName);
-			setBirtSection(n);
-			addRunReportHref(scriptName, headComp, n);
-		} catch (NavajoPluginException e1) {
-			e1.printStackTrace();
-		}
+		setHeader(n, mainMessageContainer);
+		setMessages(n, mainMessageContainer);
+		setMethods(n, scriptName);
+		setBirtSection(n);
+		addRunReportHref(scriptName, headComp);
 
 		mainMessageContainer.setVisible(true);
 		// mainMessageContainer.getParent().layout();
@@ -281,9 +276,7 @@ public class TmlFormComposite extends Composite {
 				final TableViewer tc = SwtFactory.getInstance().addTable(element, s);
 				TableWrapData tff = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
 				tff.grabHorizontal = true;
-				if (tc != null) {
-					tc.getTable().setLayoutData(tff);
-				}
+				tc.getTable().setLayoutData(tff);
 				
 				Hyperlink h = getKit().createHyperlink(headerRow, "Print as birt", SWT.NONE);
 				h.addHyperlinkListener(new HyperlinkAdapter(){
@@ -301,7 +294,7 @@ public class TmlFormComposite extends Composite {
 						for (int i = 0; i < aa.length; i++) {
 							System.err.println("Column#"+i+" is: "+aa[i].getClass());
 						}
-						printBirtMessage(element,e, names, names, sizes);
+						printBirtMessage(element,names, names, sizes);
 					}
 				});
 			}
@@ -337,7 +330,7 @@ public class TmlFormComposite extends Composite {
 		ss.setClient(s);
 	}
 
-	protected void printBirtMessage(final Message element, final HyperlinkEvent e, final String[] propertyNames, final String[] propertyTitles, final int[] columnWidths) {
+	protected void printBirtMessage(final Message element, final String[] propertyNames, final String[] propertyTitles, final int[] columnWidths) {
 		Job j = new Job("Running Navajo...") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -428,7 +421,7 @@ public class TmlFormComposite extends Composite {
 	 * @param myFile
 	 */
 
-	private void setMethods(final Navajo n, final String scriptName) throws NavajoPluginException {
+	private void setMethods(final Navajo n, final String scriptName) {
 		HyperlinkGroup hg = new HyperlinkGroup(mainMessageContainer.getDisplay());
 		if (methodSection != null) {
 			methodSection.dispose();
@@ -458,7 +451,7 @@ public class TmlFormComposite extends Composite {
 				@Override
 				public void linkActivated(HyperlinkEvent e) {
 					try {
-						runHref(myCurrentNavajo, element.getName(), e, false, scriptName);
+						runHref(myCurrentNavajo, element.getName(),false, scriptName);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -472,7 +465,7 @@ public class TmlFormComposite extends Composite {
 	 * @param myFile
 	 */
 
-	private void setHeader(final Navajo n, String scriptName, Composite parent) throws NavajoPluginException {
+	private void setHeader(final Navajo n, Composite parent)  {
 		final ExpandableComposite ss = getKit().createExpandableComposite(parent, ExpandableComposite.TWISTIE);
 		ss.setBackground(new Color(Display.getCurrent(), 240, 220, 220));
 		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
@@ -584,7 +577,7 @@ public class TmlFormComposite extends Composite {
 		hl.addHyperlinkListener(new HyperlinkAdapter() {
 			@Override
 			public void linkActivated(HyperlinkEvent e) {
-				runBirtReport(birtCombo, e);
+				runBirtReport(birtCombo);
 		
 			}
 		});
@@ -597,7 +590,7 @@ public class TmlFormComposite extends Composite {
 			public void linkActivated(HyperlinkEvent e) {
 				Navajo copiedNavajo = n.copy();
 				try {
-					runHref(copiedNavajo, "ProcessPrintGenericBirt", e, false, null);
+					runHref(copiedNavajo, "ProcessPrintGenericBirt", false, null);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -608,7 +601,7 @@ public class TmlFormComposite extends Composite {
 
 
 
-	private void addRunReportHref(final String name, Composite list, final Navajo n) throws NavajoPluginException {
+	private void addRunReportHref(final String name, Composite list)  {
 			final Hyperlink hl = getKit().createHyperlink(list, "[[Run report]]", SWT.NONE);
 		hl.setHref(name);
 		// TableWrapData tdd = new TableWrapData();
@@ -620,7 +613,7 @@ public class TmlFormComposite extends Composite {
 			public void linkActivated(HyperlinkEvent e) {
 				try {
 
-					runHref(myCurrentNavajo.copy(), "ProcessPrintGenericBirt", e, true, myCurrentName);
+					runHref(myCurrentNavajo.copy(), "ProcessPrintGenericBirt", true, myCurrentName);
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -639,7 +632,7 @@ public class TmlFormComposite extends Composite {
 		return kit;
 	}
 
-	private void runHref(final Navajo nav,final String name, HyperlinkEvent e, final boolean reload,
+	private void runHref(final Navajo nav,final String name, final boolean reload,
 			final String sourceTmlName) throws Exception {
 		fireScriptCalled(nav,name);
 		System.err.println("RUNHREF: file: [[null]] name: " + name + " reload: " + reload);
@@ -836,7 +829,7 @@ public class TmlFormComposite extends Composite {
 		return null;
 	}
 	
-	private void runBirtReport(final Combo birtCombo, HyperlinkEvent e) {
+	private void runBirtReport(final Combo birtCombo) {
 		try {
 			if (myCurrentNavajo == null) {
 				return;
@@ -881,11 +874,11 @@ public class TmlFormComposite extends Composite {
 				reportDef.addProperty(reportProperty);
 				reportProperty.setAnyValue(b);
 				copiedNavajo.write(System.err);
-				runHref(copiedNavajo, "ProcessPrintGenericBirt", e, false, getCurrentScript());
+				runHref(copiedNavajo, "ProcessPrintGenericBirt", false, getCurrentScript());
 
 			} else {
 			
-				runHref(copiedNavajo, "ProcessPrintGenericBirt", e, false, getCurrentScript());
+				runHref(copiedNavajo, "ProcessPrintGenericBirt",false, getCurrentScript());
 
 			}
 
@@ -894,6 +887,7 @@ public class TmlFormComposite extends Composite {
 		}
 	}
 
+	@Deprecated
 	public void setServerInstance(ServerInstance si) {
 		this.serverInstance = si;
 		

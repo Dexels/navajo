@@ -6,7 +6,7 @@
  */
 package com.dexels.navajo.studio.script.plugin.navajobrowser;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -51,11 +51,10 @@ class ProjectViewContentProvider implements IStructuredContentProvider {
     }
 
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        // TODO Auto-generated method stub
     }
 
     public Object[] getElements(Object inputElement) {
-        ArrayList l;
+        List<IProject> l;
         try {
             l = NavajoScriptPluginPlugin.getProjectsByNature(myNature);
             return l.toArray();

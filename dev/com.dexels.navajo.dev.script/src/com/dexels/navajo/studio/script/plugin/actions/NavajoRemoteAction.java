@@ -31,8 +31,10 @@ public class NavajoRemoteAction extends BaseNavajoAction {
      */
     public void run(IAction action) {
         try {
-//            NavajoScriptPluginPlugin.getDefault().runNavajo(NavajoScriptPluginPlugin.NAVAJO_RUNNER_CLASS, file);
-            NavajoScriptPluginPlugin.getDefault().runRemoteNavajo(file,scriptName);
+        	throw new UnsupportedOperationException("Not implemented");
+
+        	//            NavajoScriptPluginPlugin.getDefault().runNavajo(NavajoScriptPluginPlugin.NAVAJO_RUNNER_CLASS, file);
+//            NavajoScriptPluginPlugin.getDefault().runRemoteNavajo(file,scriptName);
         } catch (Exception e) {
             NavajoScriptPluginPlugin.getDefault().log("Running a remote navajo did not work.",e);
         }

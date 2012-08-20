@@ -46,10 +46,10 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
      */
     public void configure() throws CoreException {
     	System.err.println("NOT adding builder to project.");
-    	if(true) {
-    		return;
-    	}
-    	addBuilderToProject(myProject);
+//    	if(true) {
+//    		return;
+//    	}
+//    	addBuilderToProject(myProject);
 //        new Job("Building scripts...") {
 //            protected IStatus run(IProgressMonitor monitor) {
 //                try {
@@ -87,10 +87,10 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
      */
     public void deconfigure() throws CoreException {
         System.err.println("Deconfiguring NavajoNature. NOT decomissioning Builder");
-        if(true) {
-        	return;
-        }
-        removeBuilderFromProject(myProject);
+//        if(true) {
+//        	return;
+//        }
+//        removeBuilderFromProject(myProject);
     }
 
     /*
@@ -139,11 +139,11 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
         // Associate builder with project.
         ICommand newCmd = description.newCommand();
         newCmd.setBuilderName(BUILDER_ID);
-        List newCmds = new ArrayList();
+        List<ICommand> newCmds = new ArrayList<ICommand>();
 
         newCmds.addAll(Arrays.asList(cmds));
         newCmds.add(newCmd);
-        description.setBuildSpec((ICommand[]) newCmds.toArray(new ICommand[newCmds.size()]));
+        description.setBuildSpec(newCmds.toArray(new ICommand[newCmds.size()]));
         try {
             System.err.println("Committing to project...");
             project.setDescription(description, null);
@@ -181,10 +181,10 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
             return;
 
         // Remove builder from project.
-        List newCmds = new ArrayList();
+        List<ICommand> newCmds = new ArrayList<ICommand>();
         newCmds.addAll(Arrays.asList(cmds));
         newCmds.remove(index);
-        description.setBuildSpec((ICommand[]) newCmds.toArray(new ICommand[newCmds.size()]));
+        description.setBuildSpec(newCmds.toArray(new ICommand[newCmds.size()]));
         try {
             project.setDescription(description, null);
         } catch (CoreException e) {

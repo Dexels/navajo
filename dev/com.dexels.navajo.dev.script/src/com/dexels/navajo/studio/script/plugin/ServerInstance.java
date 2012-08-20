@@ -5,7 +5,6 @@ import com.dexels.navajo.client.context.NavajoContext;
 import com.dexels.navajo.document.Navajo;
 
 /**
- * @deprecated USE THE ONE FROM NAVAJOCLUENT
  * @author frank
  *
  */

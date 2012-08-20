@@ -1,6 +1,6 @@
 package com.dexels.navajo.studio.script.plugin.navajobrowser.preferences;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -261,7 +261,7 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
         testButton.addSelectionListener(new SelectionListener(){
             public void widgetSelected(SelectionEvent e) {
                 ServerEntry sel = (ServerEntry)((IStructuredSelection)selector.getSelection()).getFirstElement();
-                ArrayList al = NavajoScriptPluginPlugin.getDefault().getServerEntries();
+//                List<ServerEntry> al = NavajoScriptPluginPlugin.getDefault().getServerEntries();
                         try {
                             Navajo n = sel.runInit("InitNavajoStatus");
                             Message msg = n.getMessage("error");
@@ -280,7 +280,6 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
                             if (version!=null) {
                                 ver = version.getValue();
                             }
-                            // TODO Check the InitVersion service. Would give better info.
                             NavajoScriptPluginPlugin.getDefault().showInfo("Seems fine. Running version: "+ver);
                         } catch (Exception e1) {
                             e1.printStackTrace();
@@ -302,7 +301,7 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
     }
 
     private void setupSelectorBox() {
-      ArrayList arr = NavajoScriptPluginPlugin.getDefault().getServerEntries();
+      List<ServerEntry> arr = NavajoScriptPluginPlugin.getDefault().getServerEntries();
         for (int i = 0; i < arr.size(); i++) {
             selector.add(arr.get(i));
         }

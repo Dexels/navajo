@@ -17,7 +17,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -31,7 +30,6 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 public class NavajoSocketPreferencePage extends PreferencePage implements IWorkbenchPreferencePage{
-    private Composite myParent;
     private ScrolledForm myForm;
     private Composite panel;
     private FormToolkit formToolKit;
@@ -44,7 +42,6 @@ public class NavajoSocketPreferencePage extends PreferencePage implements IWorkb
 
     @Override
 	public Control createContents(Composite parent) {
-        myParent = parent;
         formToolKit = new FormToolkit(parent.getDisplay());
         formToolKit.setBackground(new Color(Display.getCurrent(),220,220,240));
         myForm = new ScrolledForm(parent, SWT.V_SCROLL | SWT.H_SCROLL);
@@ -62,16 +59,16 @@ public class NavajoSocketPreferencePage extends PreferencePage implements IWorkb
         layout.numColumns = 2;
         panel.setLayout(layout);
         
-        Label serverUrlLabel = formToolKit.createLabel(panel, "Server url: (without protocol)");
+        formToolKit.createLabel(panel, "Server url: (without protocol)");
         serverUrlText = formToolKit.createText(panel, NavajoScriptPluginPlugin.getDefault().getRemoteServer(),SWT.BORDER);
         serverUrlText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.TOP));
-        Label usernameLabel = formToolKit.createLabel(panel, "Username:");
+        formToolKit.createLabel(panel, "Username:");
         usernameText = formToolKit.createText(panel, NavajoScriptPluginPlugin.getDefault().getRemoteUsername(),SWT.BORDER);
         usernameText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.TOP));
-        Label passwordLabel = formToolKit.createLabel(panel, "Password:");
+        formToolKit.createLabel(panel, "Password:");
         passwordText = formToolKit.createText(panel, NavajoScriptPluginPlugin.getDefault().getRemotePassword(),SWT.BORDER);
         passwordText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.TOP));
-        Label portLabel = formToolKit.createLabel(panel, "Port: (requires socket restart)");
+        formToolKit.createLabel(panel, "Port: (requires socket restart)");
         portText = formToolKit.createText(panel, ""+NavajoScriptPluginPlugin.getDefault().getRemotePort(),SWT.BORDER);
         portText.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.TOP));
         remoteSocketSection.setExpanded(true);
@@ -100,7 +97,7 @@ public class NavajoSocketPreferencePage extends PreferencePage implements IWorkb
         }
         try {
             StringTokenizer st = new StringTokenizer(serverUrlText.getText(),":");
-            String serv = st.nextToken();
+//            String serv = st.nextToken();
             int port = Integer.parseInt(st.nextToken());
             int portport = Integer.parseInt(portText.getText());
             if (portport!=port) {
@@ -108,7 +105,6 @@ public class NavajoSocketPreferencePage extends PreferencePage implements IWorkb
                 return false;
            }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             NavajoScriptPluginPlugin.getDefault().showError("The server url should have the format:  hostname:port");
             return false;

@@ -97,6 +97,9 @@ public class ServerEntry {
         if ("local".equals(protocol)) {
             nc = NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null,null);
         }
+        if(nc==null) {
+        	throw new ClientException(-1, -1, "Unknown protocol: "+protocol);
+        }
         nc.setLocaleCode(NavajoScriptPluginPlugin.getDefault().getSelectedLocale());
         nc.setServerUrl(server);
         nc.setUsername(username);
@@ -121,6 +124,9 @@ public class ServerEntry {
 	        }
 	        if ("local".equals(protocol)) {
 	            nc = NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null,null);
+	        }
+	        if(nc==null) {
+	        	throw NavajoFactory.getInstance().createNavajoException("Unknown protocol: "+protocol);
 	        }
 	        nc.setLocaleCode(NavajoScriptPluginPlugin.getDefault().getSelectedLocale());
 	        nc.setServerUrl(server);

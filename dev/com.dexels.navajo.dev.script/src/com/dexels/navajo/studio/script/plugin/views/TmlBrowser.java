@@ -6,8 +6,8 @@
  */
 package com.dexels.navajo.studio.script.plugin.views;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -70,7 +70,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
     private Button forwardButton;
     private Button reloadButton;
     private Button sourceButton;
-//    private Button createReport;
+    private Button createReport;
    private String currentService = null;
     private String lastInit = null;
    private final Stack<String> historyList = new Stack<String>();
@@ -145,7 +145,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
              switch(e.keyCode)
             {
             case ' ':
-                if ((e.stateMask | SWT.CTRL) != 0) {
+            	
+                if ((e.stateMask & SWT.CTRL) != 0) {
                     assistant.showPossibleCompletions();
                 }
                 break;
@@ -224,10 +225,10 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
             }});
 
         
-//        createReport = new Button(headComp,SWT.PUSH);
-//        createReport.setText("Create BIRT");
-//        createReport.setEnabled(false);
-//        createReport.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
+        createReport = new Button(headComp,SWT.PUSH);
+        createReport.setText("Create BIRT");
+        createReport.setEnabled(false);
+        createReport.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
 //        createReport.addSelectionListener(new SelectionListener() {
 //            public void widgetSelected(SelectionEvent e) {
 //                createBirt();
@@ -274,7 +275,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
     }
 
     private void refreshFromPrefs() {
-        ArrayList<ServerEntry> arr = NavajoScriptPluginPlugin.getDefault().getServerEntries();
+        List<ServerEntry> arr = NavajoScriptPluginPlugin.getDefault().getServerEntries();
         while(selector.getElementAt(0)!=null) {
         	selector.remove(selector.getElementAt(0));
         }
@@ -421,7 +422,6 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
      */
     @Override
 	public void setFocus() {
-        // TODO Auto-generated method stub
     }
 
     public void setNavajo(final Navajo n, final String scriptName) {
@@ -450,10 +450,6 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
             }
         });
 
-    }
-
-    public void callingScript(String name) {
-        futureList.clear();
     }
 
     public void gotoScript(String name, Navajo n) {
@@ -493,7 +489,6 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
 
 
 	public void callScript(String name, Navajo n) {
-		// TODO Auto-generated method stub
 		
 	}
 

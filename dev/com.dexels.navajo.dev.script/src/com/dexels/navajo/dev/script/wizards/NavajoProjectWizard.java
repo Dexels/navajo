@@ -1,6 +1,5 @@
 package com.dexels.navajo.dev.script.wizards;
 
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -20,7 +19,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 public class NavajoProjectWizard extends BasicNewProjectResourceWizard implements INewWizard {
 //	private SampleNewWizardPage page;
-	private ISelection selection;
+//	private ISelection selection;
 
 	/**
 	 * Constructor for NavajoProjectWizard.

@@ -6,7 +6,7 @@
  */
 package com.dexels.navajo.studio.eclipse;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -31,15 +31,14 @@ public class ScriptContentAssist implements IContentAssistProcessor {
     }
 
     public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
-        // TODO Auto-generated method stub
         IDocument document = viewer.getDocument();
-        int currOffset = offset - 1;
+//        int currOffset = offset - 1;
         try {
             String contents = document.get(0, document.getLength());
-              ArrayList al = NavajoScriptPluginPlugin.getDefault().getScriptsStartingWith(contents);
+              List<String> al = NavajoScriptPluginPlugin.getDefault().getScriptsStartingWith(contents);
             ICompletionProposal[] proposals = new ICompletionProposal[al.size()];
             for (int i = 0; i < al.size(); i++) {
-                String current = (String) al.get(i);
+                String current = al.get(i);
                 proposals[i] = new CompletionProposal(current, 0, contents.length(), current.length());
             }
             return proposals;
@@ -50,7 +49,6 @@ public class ScriptContentAssist implements IContentAssistProcessor {
     }
 
     public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -59,7 +57,6 @@ public class ScriptContentAssist implements IContentAssistProcessor {
     }
 
     public char[] getContextInformationAutoActivationCharacters() {
-        // TODO Auto-generated method stub
         return null;
     }
 
