@@ -1272,6 +1272,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		throw new UnsupportedOperationException("getRef not possible on base type. Override it if you need it");
 	}
 
+	/**
+	 * @param newName the name of the new message 
+	 */
 	public Object clone(String newName) {
 		throw new UnsupportedOperationException("Can not clone properties (yet)");
 	}

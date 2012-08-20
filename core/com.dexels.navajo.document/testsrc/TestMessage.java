@@ -25,7 +25,7 @@ import com.dexels.navajo.document.Property;
 
 public class TestMessage {
 
-  NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture(this);
+  NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture();
   private Navajo testDoc = null;
   
   private final static Logger logger = LoggerFactory.getLogger(TestMessage.class);

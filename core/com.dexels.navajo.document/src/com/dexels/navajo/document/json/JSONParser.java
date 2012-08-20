@@ -38,10 +38,10 @@ public class JSONParser {
 		r.close();
 		String json = sw.getBuffer().toString();
 		JSONObject jso = new JSONObject(json);
-		parse(jso, null);
+		parse(jso);
 	}
 	
-	private void parse(JSONObject jso, String nodeName) throws Exception{
+	private void parse(JSONObject jso) throws Exception{
 		Iterator<String> keys = jso.keys();
 		while(keys.hasNext()){
 			String key =  keys.next();
@@ -128,7 +128,7 @@ public class JSONParser {
 					m.setName(v);
 				}
 				if("index".equals(key)){
-					if(v != null && !"".equals(v)){
+					if(!"".equals(v)){
 						m.setIndex(Integer.parseInt(v));
 					}
 				}
@@ -179,7 +179,7 @@ public class JSONParser {
 					p.setDescription(v);
 				}
 				if("length".equals(key)){
-					if(v != null && !"".equals(v)){
+					if(!"".equals(v)){
 						p.setLength(Integer.parseInt(v));
 					}
 				}

@@ -19,7 +19,11 @@ public class Base64DecodingFinishedException extends IOException {
 			.getLogger(Base64DecodingFinishedException.class);
 	
 	public Base64DecodingFinishedException(char[] data, int offset, int len) {
-        logger.info("Base64 finished at: "+offset+" len: "+len);
+		if (data==null) {
+	        logger.info("Base64 finished at: "+offset+" len: "+len+" data array null ");
+		} else {
+	        logger.info("Base64 finished at: "+offset+" len: "+len+" data array len: "+data.length);
+		}
     }
 
 

@@ -233,7 +233,7 @@ public final static String VERSION = "$Id$";
       return SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN).format(calValue.getTime());
     }
     else {
-      return null;
+      return "";
     }
   }
   public final String toShortString() {

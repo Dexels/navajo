@@ -14,7 +14,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 
 public class TestNavajo {
-  NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture(this);
+  NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture();
   private Navajo testDoc = null;
  
   @Before
@@ -53,7 +53,7 @@ public class TestNavajo {
   }
 
   @Test
-  public void testAppendDocBuffer() throws NavajoException, java.io.IOException {
+  public void testAppendDocBuffer() throws NavajoException {
     Navajo extra = NavajoFactory.getInstance().createNavajo();
     Message m = NavajoFactory.getInstance().createMessage(extra, "appendedmessage");
     Property p = NavajoFactory.getInstance().createProperty(extra, "propje", Property.STRING_PROPERTY, "", 0, "", "");

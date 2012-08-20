@@ -127,6 +127,9 @@ public final class SaxHandler implements DocHandler {
     }
     
     
+    /**
+	 * @param h parameter callback 
+	 */
     private final void parseAgent(Hashtable<String,String> h) {
         // TODO Auto-generated method stub
         
@@ -167,12 +170,18 @@ public final class SaxHandler implements DocHandler {
     }
 
 
+    /**
+	 * @param h parameter callback 
+	 */
     private final void parseMethods(Hashtable<String,String> h) {
         // TODO Auto-generated method stub
         
     }
 
 
+    /**
+	 * @param h parameter callback 
+	 */
     private final void parseCallback(Hashtable<String,String> h) {
         // TODO: Should use the navajo factory for these functions
         if (currentHeader==null) {
@@ -303,7 +312,6 @@ public final class SaxHandler implements DocHandler {
 //          logger.info("Adding property: "+currentProperty.getName()+" to message: "+current.getFullMessageName());
           current.addProperty(currentProperty);
 
-          definitionProperty = null;
 
           BaseMessageImpl arrayParent = (BaseMessageImpl) current.getArrayParentMessage();
           //logger.info("current = " + current.getName() + ", type = " + current.getType());
@@ -330,9 +338,6 @@ public final class SaxHandler implements DocHandler {
               if (subType == null) {
                 if (definitionProperty.getSubType() != null) {
                 	currentProperty.setSubType(definitionProperty.getSubType());
-                }
-                else {
-                  subType = null;
                 }
               }
               else {
@@ -489,9 +494,8 @@ public final class SaxHandler implements DocHandler {
             return;
 //            throw new IllegalArgumentException("Huh?");
         }
-        int length = currentProperty.getLength();
         if (Property.BINARY_PROPERTY.equals(currentProperty.getType())) {
-            Binary b = new Binary(r,length);
+            Binary b = new Binary(r);
             String sub = currentProperty.getSubType();
             currentProperty.setValue(b,false);
             // Preserve the subtype. This will cause the handle to refer to the server

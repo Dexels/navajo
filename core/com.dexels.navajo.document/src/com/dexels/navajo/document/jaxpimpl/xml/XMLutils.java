@@ -162,7 +162,7 @@ public class XMLutils {
     		return s;
     	}
     	
-        if ((s == null) || (s.length() == 0)) {
+        if (s.length() == 0) {
             return s;
         }
 

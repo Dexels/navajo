@@ -244,10 +244,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
          }
     }
 
-    public Binary(Reader reader, long length) throws IOException {
-        super(Property.BINARY_PROPERTY);
-        parseFromReader(reader);
-    }
     /**
      * Does NOT close the reader, it is shared with the qdXML parser
      * 
@@ -461,16 +457,11 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 
     }
 
-    private final void copyResource(String name, OutputStream out, InputStream in, long totalSize) throws IOException {
+    private final void copyResource(OutputStream out, InputStream in) throws IOException {
         byte[] buffer = new byte[1024];
         int read;
-        int iter = 0;
         while ((read = in.read(buffer)) > -1) {
             out.write(buffer, 0, read);
-            iter++;
-            if (iter % 100 == 0) {
-                
-            }
         }
         in.close();
     }
@@ -478,7 +469,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     public final void write(OutputStream to) throws IOException {
         InputStream in = getDataAsStream();
         if (in != null) {
-            copyResource("Writing data",to, in,getLength());
+            copyResource(to, in);
             try {
                 in.close();
             } catch (Exception e) {
@@ -561,10 +552,12 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	}
     	// TODO REALLY implement this 
     	logger.info("DUBIOUS EQUALITY IN BINARY!");
-     	Thread.dumpStack();
+    	
+    	Thread.dumpStack();
     	return true;
     	
     }
+
     
     // for sorting. Not really much to sort
     public final int compareTo(Binary o) {
@@ -583,7 +576,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	File f = File.createTempFile("navajo", "."+getExtension());
     	FileOutputStream fos = new FileOutputStream(f);
     	InputStream dataAsStream = getDataAsStream();
-		copyResource("aap", fos, dataAsStream, getLength());
+		copyResource(fos, dataAsStream);
     	fos.flush();
     	dataAsStream.close();
     	fos.close();
@@ -625,7 +618,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         	 return null;
          }
    		 try {
-			copyResource("base64", os, dataAsStream, getLength());
+			copyResource(os, dataAsStream);
 			 os.close();
 			 dataAsStream.close();
 		} catch (IOException e) {
@@ -652,7 +645,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         final OutputStream os = Base64.newEncoder(sw);
         InputStream dataInStream = getDataAsStream();
         if (dataInStream!=null) {
-        	copyResource("Writing data",os, dataInStream,getLength());
+        	copyResource(os, dataInStream);
 		}
 //        logger.info("Copied to stream");
         os.close();
@@ -791,9 +784,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	aStream.defaultWriteObject();
     	//manually serialize superclass
     	if ( dataFile != null ) {
-    		copyResource("", aStream, new FileInputStream(dataFile), 0);
+    		copyResource(aStream, new FileInputStream(dataFile));
     	} else if ( lazySourceFile != null ) {
-    		copyResource("", aStream, new FileInputStream(lazySourceFile), 0);
+    		copyResource(aStream, new FileInputStream(lazySourceFile));
     	}
     	aStream.flush();
     }
@@ -805,11 +798,11 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	doc.addMessage(m);
     	Property p = NavajoFactory.getInstance().createProperty(doc, "Bin", "binary", "", 0, "", "out");
     	m.addProperty(p);
-    	Binary b1 = new Binary( new File("/home/arjen/responsetimes_290307.xls" ), false );
+    	Binary b1 = new Binary( new File("responsetimes_290307.xls" ), false );
     	b1.setMimeType("application/excel");
     	p.setValue(b1);
     	
-    	FileOutputStream fos = new FileOutputStream(new File("/home/arjen/a"));
+    	FileOutputStream fos = new FileOutputStream(new File("a"));
     	doc.write(fos);
     	fos.close();
     	
@@ -825,7 +818,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	
 //    	logger.info(b2.getMimeType());
     	
-    	FileInputStream fis = new FileInputStream(new File("/home/arjen/a"));
+    	FileInputStream fis = new FileInputStream(new File("a"));
     	Navajo doc2 = NavajoFactory.getInstance().createNavajo(fis);
     	fis.close();
     	

@@ -32,6 +32,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A JSONArray is an ordered sequence of values. Its external text form is a
  * string wrapped in square brackets with commas separating the values. The
@@ -84,6 +87,9 @@ import java.util.Map;
  */
 public class JSONArray {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JSONArray.class);
 
     /**
      * The arrayList where the JSONArray's properties are kept.
@@ -797,8 +803,9 @@ public class JSONArray {
     public String toString() {
         try {
             return '[' + join(",") + ']';
-        } catch (Exception e) {
-            return null;
+        } catch (JSONException e) {
+        	logger.warn("JSON problem",e);
+            return "";
         }
     }
 

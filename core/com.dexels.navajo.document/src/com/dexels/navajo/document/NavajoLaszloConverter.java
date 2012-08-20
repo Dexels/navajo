@@ -40,7 +40,7 @@ public class NavajoLaszloConverter {
 				if(nn==null) {
 					System.err.println("WTF?!");
 				}
-				if(nn instanceof Text && nn!=null) {
+				if(nn instanceof Text) {
 //					Text t = (Text)nn;
 				}
 				
@@ -93,7 +93,7 @@ public class NavajoLaszloConverter {
 	 * @param w
 	 */
 	public static void writeBirtXml(Message m, Writer w) {
-		Document d = createLaszloFromNavajo(m, false, null);
+		Document d = createLaszloFromNavajo(m, false);
 		XMLDocumentUtils.write(d, w, false);
 
 	}
@@ -131,7 +131,7 @@ public class NavajoLaszloConverter {
 		return doc;
 	}
 
-	public static Document createLaszloFromNavajo(Message in, boolean includeSelections,  String serviceName) {
+	public static Document createLaszloFromNavajo(Message in, boolean includeSelections) {
 		Document doc = XMLDocumentUtils.createDocument();
 		Element root = doc.createElement("navajoDataSource");
 		doc.appendChild(root);

@@ -1408,13 +1408,14 @@ public class XMLElement implements java.io.Serializable {
 	 * </dd>
 	 * </dl>
 	 * <dl>
+	 * @param offSet reader offset, doesn't seem to be used at all
 	 * 
 	 * @throws java.io.IOException
 	 *             If an error occured while reading the input.
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the read data.
 	 */
-	public void parseFromReader(Reader reader, int startingLineNr, int offSet) throws IOException, XMLParseException {
+	private void parseFromReader(Reader reader, int startingLineNr, int offSet) throws IOException, XMLParseException {
 		this.charReadTooMuch = '\0';
 		this.reader = reader;
 		// this.offset = offSet;

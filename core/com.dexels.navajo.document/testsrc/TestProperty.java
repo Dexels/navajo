@@ -42,8 +42,7 @@ public class TestProperty {
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(TestProperty.class);
-	NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture(
-			this);
+	NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture();
 	private Navajo testDoc;
 
 	@Before

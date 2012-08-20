@@ -30,8 +30,7 @@ import com.dexels.navajo.document.Selection;
  */
 public class TestSelection {
 
-	private NavajoDocumentTestFicture fixture = new NavajoDocumentTestFicture(
-			this);
+	private NavajoDocumentTestFicture fixture = new NavajoDocumentTestFicture();
 	private Navajo testDoc;
 
 	@Before

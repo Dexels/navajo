@@ -33,6 +33,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A JSONObject is an unordered collection of name/value pairs. Its
  * external form is a string wrapped in curly braces with colons between the
@@ -88,6 +91,9 @@ import java.util.Map;
  */
 public class JSONObject {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JSONObject.class);
     /**
      * JSONObject.NULL is equivalent to the value that JavaScript calls null,
      * whilst Java's null is equivalent to the value that JavaScript calls
@@ -1149,7 +1155,8 @@ public class JSONObject {
             sb.append('}');
             return sb.toString();
         } catch (Exception e) {
-            return null;
+        	logger.warn("JSON problem",e);
+            return "";
         }
     }
 
@@ -1251,7 +1258,7 @@ public class JSONObject {
      */
     @SuppressWarnings("unchecked")
 	static String valueToString(Object value) throws JSONException {
-        if (value == null || value.equals(null)) {
+        if (value == null ) {
             return "null";
         }
         if (value instanceof JSONString) {
@@ -1300,10 +1307,10 @@ public class JSONObject {
      *  with <code>}</code>&nbsp;<small>(right brace)</small>.
      * @throws JSONException If the object contains an invalid number.
      */
-     @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	static String valueToString(Object value, int indentFactor, int indent)
             throws JSONException {
-        if (value == null || value.equals(null)) {
+        if (value == null ) {
             return "null";
         }
         try {

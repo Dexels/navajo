@@ -10,11 +10,11 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 
-public class NavajoDocumentTestFicture extends java.lang.Object {
+public class NavajoDocumentTestFicture  {
 
   public Navajo testDoc;
   private final static Logger logger = LoggerFactory.getLogger(NavajoDocumentTestFicture.class);
-  public NavajoDocumentTestFicture(Object obj) {
+  public NavajoDocumentTestFicture() {
   }
 
   @Before
@@ -93,7 +93,7 @@ public class NavajoDocumentTestFicture extends java.lang.Object {
   }
   
   public static void main(String [] args) throws Exception {
-	  NavajoDocumentTestFicture o = new NavajoDocumentTestFicture(null);
+	  NavajoDocumentTestFicture o = new NavajoDocumentTestFicture();
 	  o.setUp();
 	  o.testDoc.write(System.err);
   }

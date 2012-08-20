@@ -62,19 +62,11 @@ public static void main(String[] args) {
     String regexp = "f*b";
     String value = "fb";
     String message ="aaaaap";
-    if (regexp!=null) {
-//        String message = p.getSubType("regexp_error");
-//        if (message==null) {
-//            message="String format error!";
-//        }
-//        Pattern pat = Pattern.compile(regexp);
-//        Matcher mat = pat.matches(regexp, value);
-        if (!Pattern.matches(regexp, value)) {
-            logger.info("Regexp: "+regexp+" failed on: "+value+" with message: "+message+" with oldvalue: -");
+    if (!Pattern.matches(regexp, value)) {
+        logger.info("Regexp: "+regexp+" failed on: "+value+" with message: "+message+" with oldvalue: -");
 //            throw new PropertyTypeException(p,message);
-        } else {
-            logger.info("Regexp matches!");
-        }
+    } else {
+        logger.info("Regexp matches!");
     }
 
 }
