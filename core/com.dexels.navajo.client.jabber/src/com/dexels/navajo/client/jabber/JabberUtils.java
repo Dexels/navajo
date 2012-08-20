@@ -215,7 +215,7 @@ public class JabberUtils {
 				logger.info("Before Join: People in the room: "
 						+ myMultiuserChat.getOccupantsCount());
 
-				nickName = join(nickName, myMultiuserChat, 0);
+				join(nickName, myMultiuserChat, 0);
 				logger.info("People in the room: "
 						+ myMultiuserChat.getOccupantsCount());
 				// This odd construction is necessary. We need to release this
@@ -247,7 +247,7 @@ public class JabberUtils {
 
 			//registerRoomListeners(nickName, muc, occupants);
 			
-			nickName = join(nickName, muc, 0);
+			join(nickName, muc, 0);
 			return muc;
 		}
 		return null;

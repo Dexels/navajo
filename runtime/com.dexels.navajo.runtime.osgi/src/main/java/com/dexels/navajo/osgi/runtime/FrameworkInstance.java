@@ -177,6 +177,7 @@ public class FrameworkInstance {
 		Framework felixFramework = getFrameworkFactory().newFramework(createConfig());
 		felixFramework.init();
 		felixFramework.start();
+		
 		this.framework = felixFramework;
 
 		configurationInjectorTracker = new ServiceTracker(

@@ -12,7 +12,6 @@ import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.osgi.runtime.ContextIdentifier;
 import com.dexels.navajo.osgi.runtime.FrameworkInstance;
-import com.dexels.navajo.runtime.osgi.j2ee.impl.ServletContextIdentifier;
 
 public class WebFrameworkInstance extends FrameworkInstance {
 

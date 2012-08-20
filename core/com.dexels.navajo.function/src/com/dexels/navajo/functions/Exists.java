@@ -69,7 +69,7 @@ public class Exists extends FunctionInterface {
 //			System.err.println("Forall expression: "+expression);
 			
 			for (int i = 0; i < arrayMsg.size(); i++) {
-				Message current = (Message)arrayMsg.get(i);
+				Message current = arrayMsg.get(i);
 				try {
 					boolean evaluate = (filter != null ?
 							Condition.evaluate(filter, doc, null, current) : true);

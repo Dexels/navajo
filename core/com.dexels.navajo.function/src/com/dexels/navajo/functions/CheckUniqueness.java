@@ -65,8 +65,8 @@ public class CheckUniqueness extends FunctionInterface {
             "Empty or non existing array message: " + messageName);
       }
       for (int i = 0; i < arrayMsg.size(); i++) {
-        Message m = (Message) arrayMsg.get(i);
-        Property p = (Property) m.getProperty(propertyName);
+        Message m = arrayMsg.get(i);
+        Property p = m.getProperty(propertyName);
         boolean evaluate = (filter != null ? Condition.evaluate(filter, doc, null, m) : true);
         if (evaluate) {
           if (p != null) {

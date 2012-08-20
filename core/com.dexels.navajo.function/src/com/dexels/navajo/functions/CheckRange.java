@@ -18,7 +18,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class CheckRange extends FunctionInterface {
 
-    public void prototype(List<?> list, int a) {}
+//    public void prototype(List<?> list, int a) {}
 
     public CheckRange() {}
 
