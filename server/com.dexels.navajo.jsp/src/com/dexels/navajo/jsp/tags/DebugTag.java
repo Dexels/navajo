@@ -11,9 +11,6 @@ public class DebugTag extends BaseNavajoTag {
 		return 0;
 	}
 
-	public void setProperty(String property) {
-//		myProperty = property;
-	}
 
 	public int doStartTag() throws JspException {
 		getNavajoContext().debug();

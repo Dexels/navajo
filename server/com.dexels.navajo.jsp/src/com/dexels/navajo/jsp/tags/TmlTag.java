@@ -6,7 +6,6 @@ import javax.servlet.jsp.JspException;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.types.Binary;
 
 public class TmlTag extends BaseNavajoTag {
 
@@ -22,14 +21,9 @@ public class TmlTag extends BaseNavajoTag {
 
 	public int doStartTag() throws JspException {
 		Navajo m= null;
-		if(content instanceof Binary) {
-			Binary bin = (Binary)content;
-			m = NavajoFactory.getInstance().createNavajo(bin.getDataAsStream());
-		} else {
-			String ss = content.toString();
+ 			String ss = content.toString();
 			System.err.println("String::::: "+ss+"<<<<<<<<<");
 			m = NavajoFactory.getInstance().createNavajo(new StringReader(ss));
-		}
 			if(m==null) {
 				throw new IllegalStateException("Can not push navajo on navajo stack. Service doesnt seem to parse!");
 			}

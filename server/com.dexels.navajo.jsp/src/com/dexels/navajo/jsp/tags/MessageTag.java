@@ -66,7 +66,9 @@ public class MessageTag extends BaseNavajoTag {
 					message = parent.getMessage(messageName);
 				} else {
 //					n = getNavajoContext().getNavajo();
-					message = n.getMessage(messageName);
+					if(n!=null) {
+						message = n.getMessage(messageName);
+					}
 				}
 			if(message==null) {
 				System.err.println("Warning, no message found at: "+messageName);
@@ -74,7 +76,9 @@ public class MessageTag extends BaseNavajoTag {
 			}
 		}
 		if(messageIndex>-1) {
-			message = parent.getMessage(messageIndex);
+			if(parent!=null) {
+				message = parent.getMessage(messageIndex);
+			}
 		}
 		if(message!=null) {
 			try {
