@@ -45,7 +45,7 @@ public abstract class BaseFileRequest implements AsyncRequest {
 	// }
 	//
 	//
-	private OutputStream getRequestOutputStream() throws IOException {
+	private OutputStream getRequestOutputStream() {
 		return os;
 	}
 

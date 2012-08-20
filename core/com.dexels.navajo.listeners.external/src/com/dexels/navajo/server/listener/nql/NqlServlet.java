@@ -39,7 +39,7 @@ public class NqlServlet extends HttpServlet {
 		String ping = req.getParameter("ping");
 
 		if (ping != null) {
-			if (!checkPing(username, password, req, resp)) {
+			if (!checkPing(username, resp)) {
 				throw new ServletException("ping failed.");
 			}
 			return;
@@ -84,8 +84,7 @@ public class NqlServlet extends HttpServlet {
 		// String
 	}
 
-	private boolean checkPing(String username, String password,
-			HttpServletRequest req, HttpServletResponse resp)
+	private boolean checkPing(String username, HttpServletResponse resp)
 			throws IOException {
 		resp.setContentType("text/plain");
 		resp.getWriter().write(

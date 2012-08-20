@@ -31,7 +31,7 @@ public abstract class BaseInMemoryRequest implements AsyncRequest {
 	}
 
 
-	protected OutputStream getRequestOutputStream() throws IOException {
+	protected OutputStream getRequestOutputStream()  {
 		return os;
 	}
 

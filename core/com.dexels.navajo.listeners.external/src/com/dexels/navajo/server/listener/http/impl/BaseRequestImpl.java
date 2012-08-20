@@ -217,7 +217,6 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 
 		if (inDoc != null
 				&& inDoc.getHeader() != null
-				&& outDoc != null
 				&& outDoc.getHeader() != null
 				&& !myLocalClient.isSpecialWebservice(inDoc.getHeader()
 						.getRPCName())) {

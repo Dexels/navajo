@@ -12,7 +12,11 @@ import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.listener.http.impl.BaseRequestImpl;
-
+/**
+ * Warning, doesn't work any more, as the TmlScheduler will never be set, continuations and TmlListener classic do work
+ * @author frank
+ *
+ */
 public class TmlStandardServlet extends HttpServlet {
 
 	/**
