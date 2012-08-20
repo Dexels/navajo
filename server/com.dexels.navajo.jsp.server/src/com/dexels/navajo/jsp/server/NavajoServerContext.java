@@ -41,7 +41,7 @@ public class NavajoServerContext {
 		return installerContext;
 	}
 
-	public void setInstallerContext(InstallerContext installerContext) throws IOException {
+	public void setInstallerContext(InstallerContext installerContext)  {
 		this.installerContext = installerContext;
 
 	}
@@ -78,7 +78,7 @@ public class NavajoServerContext {
 		return cvsInfo;
 	}
 
-	public boolean isCVS() throws IOException {
+	public boolean isCVS() {
 		File cvsFolder = new File(getCurrentFolder(),"CVS");
 		return cvsFolder.exists();
 	}
@@ -162,7 +162,7 @@ public class NavajoServerContext {
 		return result;
 	}
 	
-	public File getCurrentFolder() throws IOException {
+	public File getCurrentFolder()  {
 		if(currentFolder==null) {
 			currentFolder = getScriptRoot();
 		}
@@ -244,7 +244,7 @@ public class NavajoServerContext {
 		return null;
 	}
 
-	public void setPath(String path) throws IOException {
+	public void setPath(String path)  {
 		File newCurrent = new File(getCurrentFolder(),path);
 		try {
 			// Check if we aren't navigating outside the script folder
@@ -258,7 +258,7 @@ public class NavajoServerContext {
 		}
 	}
 
-	public void setPageContext(PageContext pageContext) throws IOException {
+	public void setPageContext(PageContext pageContext) {
 		this.pageContext = pageContext;
 	}
 
@@ -266,13 +266,13 @@ public class NavajoServerContext {
 		return pageContext;
 	}
 	
-	public File getNavajoRoot() throws IOException {
+	public File getNavajoRoot()  {
 		if(getPageContext()==null) {
 			System.err.println("Returning custom root. Don't know what this implies...");
 			return customNavajoRoot;
 		}
 		
-		String installedContext = getInstallerContext().getNavajoRoot(getContextPath().substring(1));
+		String installedContext = getInstallerContext().getNavajoRoot();
 
 		if(installedContext==null) {
 			String real = pageContext.getServletContext().getRealPath("");
@@ -281,12 +281,12 @@ public class NavajoServerContext {
 		return new File(installedContext);
 	}
 
-	public File getScriptRoot() throws IOException {
+	public File getScriptRoot() {
 		return new File(getNavajoRoot(),"scripts/");
 	}
 
 
-	public File getConfigRoot() throws IOException {
+	public File getConfigRoot() {
 		return new File(getNavajoRoot(),"config/");
 	}
 	
@@ -302,10 +302,12 @@ public class NavajoServerContext {
 			PropertyResourceBundle b = new PropertyResourceBundle(fr);
 			return b;
 		} finally {
-			fr.close();
+			if(fr!=null) {
+				fr.close();
+			}
 		}
 	}
-	public List<String> getScripts() throws IOException {
+	public List<String> getScripts() {
 		List<String> all = new ArrayList<String>();
 		File[] filelist = getCurrentFolder().listFiles();
 		for (File file : filelist) {
@@ -327,7 +329,7 @@ public class NavajoServerContext {
 		return all;
 	}
 	
-	public List<String> getNavajoScripts() throws IOException {
+	public List<String> getNavajoScripts() {
 		List<String> all = new ArrayList<String>();
 		File scripts  = new File(getContextRoot(),"scripts");
 		File navajo  = new File(scripts,"navajo");
@@ -342,13 +344,13 @@ public class NavajoServerContext {
 		return all;
 	}
 
-	public List<ScriptStatus> getScriptList() throws IOException {
+	public List<ScriptStatus> getScriptList() {
 		List<ScriptStatus> all = new ArrayList<ScriptStatus>();
 		File[] filelist = getCurrentFolder().listFiles();
 		for (File file : filelist) {
 			int ii = file.getName().lastIndexOf('.');
 			if(ii>=0 && !file.isDirectory()) {
-				ScriptStatus s = new ScriptStatusImpl(this,getScriptRoot(), file, getCompiledRoot());
+				ScriptStatus s = new ScriptStatusImpl(getScriptRoot(), file, getCompiledRoot());
 				all.add(s);
 			}
 		}
@@ -361,7 +363,7 @@ public class NavajoServerContext {
 		return new File(getContextPath());
 	}
 	
-	private File getCompiledRoot() throws IOException {
+	private File getCompiledRoot() {
 		// TODO fix this monstrosity. Read it from the server.xml
 		File file = new File(getNavajoRoot(),"compiled");
 		if(file.exists()) {
@@ -371,7 +373,7 @@ public class NavajoServerContext {
 		return file;
 	}
 
-	public List<File> getFolders() throws IOException {
+	public List<File> getFolders() {
 		List<File> all = new ArrayList<File>();
 //		System.err.println("Current Folder: "+getCurrentFolder().getAbsolutePath());
 		File[] filelist = getCurrentFolder().listFiles();

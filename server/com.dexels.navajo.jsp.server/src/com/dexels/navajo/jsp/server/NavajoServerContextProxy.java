@@ -1,7 +1,5 @@
 package com.dexels.navajo.jsp.server;
 
-import java.io.IOException;
-
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.PageContext;
 
@@ -52,7 +50,7 @@ public class NavajoServerContextProxy implements NavajoServerContext {
 		return null;
 	}
 
-	public void setPageContext(PageContext pageContext) throws IOException {
+	public void setPageContext(PageContext pageContext) {
 //		this.pageContext = pageContext;
 		this.servletContext = pageContext.getServletContext();
 		setupOsgiLink();
