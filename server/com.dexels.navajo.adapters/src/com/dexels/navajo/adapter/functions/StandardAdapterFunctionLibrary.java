@@ -3,6 +3,9 @@ package com.dexels.navajo.adapter.functions;
 import java.io.InputStream;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import navajo.ExtensionDefinition;
 
 
@@ -16,8 +19,12 @@ import navajo.ExtensionDefinition;
 public class StandardAdapterFunctionLibrary implements ExtensionDefinition {
 	private static final long serialVersionUID = -2167328743333229662L;
 	private transient ClassLoader extensionClassLoader = null;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(StandardAdapterFunctionLibrary.class);
+	
 	public InputStream getDefinitionAsStream() {
+		logger.info("Processing extension: StandardAdapterFunctionLibrary");
 		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/adapter/functions/adapterfunctions.xml");
 	}
 

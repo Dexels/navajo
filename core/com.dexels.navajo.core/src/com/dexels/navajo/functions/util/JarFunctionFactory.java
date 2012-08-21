@@ -10,6 +10,7 @@ import java.util.Vector;
 import javax.imageio.spi.ServiceRegistry;
 
 import navajo.ExtensionDefinition;
+import navajocore.Version;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,7 +138,10 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 				readDefinitionFile(fuds, ed);
 			}
 		} catch (Throwable e) {
-			logger.warn("ServiceLookup failed. Normal in OSGi environment");
+			logger.debug("ServiceLookup failed. Normal in OSGi environment",e);
+			if(!Version.osgiActive()) {
+				logger.error("But OSGi isn't active, so something is definitely wrong.",e);
+			}
 		}
 	}
 	
