@@ -169,13 +169,11 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		adapterConfig.clear();
 	}
 
-	@SuppressWarnings("unchecked")
 	public FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws TMLExpressionException {
-		// This method is only used for non osgi resolution >>> No it's not.
 		try {
 			FunctionDefinition fd = getDef(functionName);
 			Class<FunctionInterface> myClass = (Class<FunctionInterface>) Class.forName(fd.getObject(), true, cl);
-			FunctionInterface fi =(FunctionInterface) myClass.newInstance();
+			FunctionInterface fi =myClass.newInstance();
 			if (!fi.isInitialized()) {
 				fi.setTypes(fd.getInputParams(), fd.getResultParam());
 			}
@@ -184,7 +182,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 			// Try legacy mode.
 			try {
 				Class<FunctionInterface> myClass = (Class<FunctionInterface>) Class.forName("com.dexels.navajo.functions."+functionName, true, cl);
-				FunctionInterface fi = (FunctionInterface) myClass.newInstance();
+				FunctionInterface fi = myClass.newInstance();
 				if (!fi.isInitialized()) {
 					fi.setTypes(null, null);
 				}
