@@ -1,5 +1,9 @@
 target/
+distribution/
+dist/
+work/
 classes/
 bin/
 .DS_Store
 *.war
+*.jar
