@@ -32,8 +32,7 @@ public class TipiButton extends TipiVaadinComponentImpl {
 				try {
 					performTipiEvent("onActionPerformed", null, true);
 				} catch (TipiBreakException e) {
-					logger.debug("Break in button event.",e);
-					logger.error("Error: ",e);
+					logger.debug("Break in button event.");
 				} catch (TipiException e) {
 					logger.error("Error in button event.",e);
 				}
