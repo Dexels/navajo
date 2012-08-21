@@ -18,7 +18,7 @@ import com.dexels.navajo.document.types.Binary;
 public class TestReplace {
 
 	
-	public static void main(String[] args) throws IOException, InterruptedException {
+	public static void main(String[] args) throws IOException {
 
 		com.dexels.navajo.document.Navajo pp =NavajoFactory.getInstance().createNavajo(new FileInputStream("tmlexample.xml"));
 		

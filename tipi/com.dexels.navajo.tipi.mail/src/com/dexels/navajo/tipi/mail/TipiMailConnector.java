@@ -24,6 +24,9 @@ import javax.mail.event.StoreEvent;
 import javax.mail.event.StoreListener;
 import javax.mail.internet.MimeMultipart;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -44,17 +47,21 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	private String host = "";
 	private String username = "";
 	private String password = "";
-	private Session session;
-	private ConnectionListener myConnectionListener = null;
+	private transient Session session;
+	private transient ConnectionListener myConnectionListener = null;
 	private Store store = null;
-	private FolderListener myFolderListener = null;
-	private StoreListener myStoreListener = null;
+	private transient FolderListener myFolderListener = null;
+	private transient StoreListener myStoreListener = null;
 	private String mailMode = "imap";
 	private int messageCount;
 	private int unreadMessageCount;
 	private Folder fff;
 //	private Date recentAfter;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMailConnector.class);
+		
 	private int pageSize = 0;
 	private int currentPage = 1;
 	
@@ -146,7 +153,11 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		}
 	}
 
+	/**
+	 * @param n Navajo containing message (not implemented 
+	 */
 	private void sendMessage(Navajo n) {
+		logger.info("Send message not implemented");
 	}
 
 	public String getDefaultEntryPoint() {
@@ -224,7 +235,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		// }
 		try {
 			javax.mail.Message m = fff.getMessage(messageNumber);
-			m.setFlag(flag, true);
+			m.setFlag(flag, value);
 			// m.getFlags().
 		} catch (MessagingException e) {
 			e.printStackTrace();
@@ -732,12 +743,12 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	}
 
 	private void addProperty(Message m, String name, Object value, String type) throws NavajoException {
-		addProperty(m, name, value, type, Property.DIR_OUT);
+		addProperty(m, name, value, type, Property.DIR_IN);
 	}
 
 	private void addProperty(Message m, String name, Object value, String type, String direction) throws NavajoException {
 		Navajo n = m.getRootDoc();
-		Property p = NavajoFactory.getInstance().createProperty(n, name, type, null, 0, null, Property.DIR_IN);
+		Property p = NavajoFactory.getInstance().createProperty(n, name, type, null, 0, null, direction);
 		p.setAnyValue(value);
 		m.addProperty(p);
 	}
