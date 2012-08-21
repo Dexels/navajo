@@ -6,5 +6,5 @@
 <%@ taglib prefix="nav" uri="../WEB-INF/tld/navajo.tld"%>
 <%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
-Navajo Tester 2.5.0 ${navajoContext.engineInstance}
+<jsp:useBean id="navajoContext" type="com.dexels.navajo.client.context.NavajoContext" scope="session" />
+Navajo Tester 2.9.1 ${navajoContext.engineInstance}

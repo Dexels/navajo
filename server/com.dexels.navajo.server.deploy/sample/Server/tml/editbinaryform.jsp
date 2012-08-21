@@ -6,7 +6,7 @@
 <%@ taglib prefix="nav" uri="/WEB-INF/tld/navajo.tld"%>
 <%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
+<jsp:useBean id="navajoContext" type="com.dexels.navajo.client.context.NavajoContext" scope="session" />
 <form name="input" action="TipiAdminServlet?cmd=upload&amp;app=unknown" method="post" enctype="multipart/form-data">Upload binary: 
 	Choose file:<br/>
 	<input type="file" name="binaryData" /> 

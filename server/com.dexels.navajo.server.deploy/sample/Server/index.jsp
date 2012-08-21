@@ -9,7 +9,7 @@
 <%@ taglib prefix="c" uri="/WEB-INF/tld/c.tld"%>
 <%@ taglib prefix="nav" uri="/WEB-INF/tld/navajo.tld"%>
 <%@ taglib prefix="navserver" uri="/WEB-INF/tld/navajoserver.tld"%>
-<jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
+<jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoRemoteContext" scope="session" />
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
 <jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
 <jsp:useBean id="installerContext" class="com.dexels.navajo.jsp.server.InstallerContext" scope="page" />
