@@ -43,15 +43,20 @@ public abstract class FunctionFactoryInterface implements Serializable {
 	public abstract void readDefinitionFile(Map<String, FunctionDefinition> fuds, ExtensionDefinition fd) ;
 
 	
-	public final FunctionDefinition getDef(String name) throws TMLExpressionException {
+	public final FunctionDefinition getDef(String name)  {
 		if(defaultConfig!=null) {
 			FunctionDefinition fd = defaultConfig.get(name);
+			logger.info("Keys in defaultconfig: "+defaultConfig.keySet());
 			if(fd!=null) {
 				return fd;
 			}
+		} else {
+			logger.debug("No default config");
 		}
+		
 		for (Map<String, FunctionDefinition> elt : functionConfig.values()) {
 			FunctionDefinition fd = elt.get(name);
+			logger.debug("Looking for function in fd: "+fd);
 			if(fd!=null) {
 				return fd;
 			}
@@ -188,7 +193,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 				}
 				return fi;
 			} catch (ClassNotFoundException e1) {
-				throw new TMLExpressionException("Could find class for function: " + getDef(functionName),e1);
+				throw new TMLExpressionException("Could find class for function: " + getDef(functionName)+" name: "+functionName,e1);
 			} catch (IllegalAccessException e2) {
 				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject(),e2);
 			} catch (InstantiationException e3) {

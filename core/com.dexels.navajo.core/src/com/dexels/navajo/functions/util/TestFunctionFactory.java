@@ -48,7 +48,7 @@ public class TestFunctionFactory extends FunctionFactoryInterface {
 					}
 				}
 				if ( name != null ) {
-					fuds.put(name, new FunctionDefinition(object, description, inputParams, resultParam,null));
+					fuds.put(name, new FunctionDefinition(object, description, inputParams, resultParam));
 				}
 			}
 			setDefaultConfig(fuds);

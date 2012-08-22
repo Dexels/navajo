@@ -17,7 +17,7 @@ public final class FunctionDefinition implements Serializable {
 	private final String [] resultParam;
 	private XMLElement xmlElement;
 	
-	public FunctionDefinition(final String object, final String description, final String inputParams, final String resultParam, ExtensionDefinition fd) {
+	public FunctionDefinition(final String object, final String description, final String inputParams, final String resultParam) {
 		this.object = object;
 		this.description = description;
 		if ( inputParams != null && !inputParams.equals("") ) {

@@ -18,7 +18,6 @@ public class FunctionFactoryFactory {
 	
 
 		
-	@SuppressWarnings("unchecked")
 	public static FunctionFactoryInterface getInstance() {
 //		FunctionFactoryInterface fii;
 		
@@ -52,7 +51,7 @@ public class FunctionFactoryFactory {
 			if ( func != null ) {
 				try {
 					Class<? extends FunctionFactoryInterface> c = (Class<? extends FunctionFactoryInterface>) Class.forName(func);
-					instance = (FunctionFactoryInterface) c.newInstance();
+					instance = c.newInstance();
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}

@@ -68,7 +68,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 		String name = element.getElementByTagName("tagname").getContent();
 		String className = element.getElementByTagName("object").getContent();
 		if(fd!=null) {
-			FunctionDefinition functionDefinition = new FunctionDefinition(className, null, null, null,fd);
+			FunctionDefinition functionDefinition = new FunctionDefinition(className, null, null, null);
 			getAdapterConfig(fd).put(name, functionDefinition);
 			try {
 				MapMetaData.getInstance().addMapDefinition(element);
@@ -108,7 +108,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 			}
 		}
 		if ( name != null ) {
-			FunctionDefinition functionDefinition = new FunctionDefinition(object, description, inputParams, resultParam,fd);
+			FunctionDefinition functionDefinition = new FunctionDefinition(object, description, inputParams, resultParam);
 			functionDefinition.setXmlElement(element);
 			fuds.put(name, functionDefinition);
 			
