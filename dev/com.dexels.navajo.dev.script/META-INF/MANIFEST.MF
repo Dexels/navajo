@@ -34,6 +34,4 @@ Export-Package: com.dexels.navajo.studio.eclipse,
  com.dexels.navajo.studio.script.plugin,
  com.dexels.navajo.studio.script.plugin.editors,
  com.dexels.navajo.studio.script.plugin.views
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
- JavaSE-1.7
 
