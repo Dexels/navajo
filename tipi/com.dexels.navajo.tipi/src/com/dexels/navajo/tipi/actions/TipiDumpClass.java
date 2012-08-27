@@ -56,14 +56,14 @@ public final class TipiDumpClass extends TipiAction {
 			for (Iterator<String> iter = m.keySet().iterator(); iter.hasNext();) {
 				String element = iter.next();
 				XMLElement def = m.get(element);
-				dumpDef(mm, element, def);
+				dumpDef(def);
 			}
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void dumpDef(Message msg, String element, XMLElement def) {
+	private void dumpDef( XMLElement def) {
 		if (def.getName().equals("tipiaction")) {
 			logger.info("Action: " + def.getStringAttribute("name"));
 

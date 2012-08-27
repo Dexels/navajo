@@ -698,7 +698,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		String name = f.getStringAttribute("name");
 
 		FunctionDefinition fd = new FunctionDefinition(
-				f.getStringAttribute("class"), desc, inp, res, ed);
+				f.getStringAttribute("class"), desc, inp, res);
 		// TODO Realign tipixml / nanoxml implementations
 		// fd.setXmlElement(f);
 		getClassManager().addFunctionDefinition(name, fd);

@@ -37,9 +37,7 @@ import java.util.ResourceBundle;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.BundleListener;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Version;
@@ -84,7 +82,11 @@ public class FrameworkInstance {
 			log("Can't retrieve bundleContext: Framework isn't running.", null);
 			return null;
 		}
-		return framework.getBundleContext();
+		final BundleContext bundleContext = framework.getBundleContext();
+		if(bundleContext==null) {
+			log("BAD: null bundleContext",null);
+		}
+		return bundleContext;
 	}
 
 	public static void main(String[] args) {
@@ -175,10 +177,14 @@ public class FrameworkInstance {
 	protected void doStart(final String directive) throws Exception {
 		logger.info("Starting with directive {}",directive);
 		Framework felixFramework = getFrameworkFactory().newFramework(createConfig());
-		felixFramework.init();
-		felixFramework.start();
-		
 		this.framework = felixFramework;
+		logger.info("felixFramework created: "+felixFramework);
+		felixFramework.init();
+		logger.info("init called");
+		logger.info("BundleContext: "+framework.getBundleContext());
+		felixFramework.start();
+		logger.info("start called called");
+		
 
 		configurationInjectorTracker = new ServiceTracker(
 				framework.getBundleContext(),
@@ -191,7 +197,7 @@ public class FrameworkInstance {
 
 		};
 		configurationInjectorTracker.open();
-
+		logger.info("configurationInjectortracker opened");
 		obrTracker = new ServiceTracker(framework.getBundleContext(), framework
 				.getBundleContext().createFilter(
 						"(objectClass=org.osgi.service.obr.RepositoryAdmin)"),
@@ -203,6 +209,7 @@ public class FrameworkInstance {
 
 		};
 		obrTracker.open();
+		logger.info("obrTracker opened");
 		logger.debug("Trackers created and started");
 		installAndStartFromClasspath(new BundleInstall[] {
 //				new BundleInstall("org.apache.felix.scr-1.6.0.jar","org.apache.felix.scr","1.6.0"),
@@ -213,13 +220,13 @@ public class FrameworkInstance {
 			});
 
 		installAndStartFromClasspath(new BundleInstall[]{new BundleInstall("org.apache.felix.fileinstall-3.2.0.jar","org.apache.felix.fileinstall","3.2.0")});
-
+		logger.info("classpathbundles started");
 		configurationInjectionService = null;
 		try {
 			configurationInjectionService = (ConfigurationInjectionInterface) configurationInjectorTracker
-					.waitForService(2000);
+					.waitForService(3000);
 //			configurationInjectionService.removeConfigutation("com.dexels.navajo.tipi.swing.application");
-			repositoryAdmin = (RepositoryAdmin) obrTracker.waitForService(2000);
+			repositoryAdmin = (RepositoryAdmin) obrTracker.waitForService(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

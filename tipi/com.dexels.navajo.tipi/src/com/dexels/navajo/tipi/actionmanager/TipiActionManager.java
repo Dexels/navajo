@@ -76,6 +76,7 @@ public class TipiActionManager implements Serializable, IActionManager {
 		TipiActionFactory taf = getActionFactory(name);
 		if(taf==null) {
 			logger.warn("Missing action factory for action: {}",name);
+			return null;
 		}
 		return taf.instantateAction(instance, tc, parentExe);
 	}

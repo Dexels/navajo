@@ -25,14 +25,16 @@ public final class StartupListener
     implements ServletContextListener
 {
     private FrameworkInstance service;
-    
 
     public void contextInitialized(ServletContextEvent event)
     {
         try {
-			this.service = new WebFrameworkInstance(event.getServletContext());
+        	event.getServletContext().log("context Initialized");
+        	this.service = new WebFrameworkInstance(event.getServletContext());
+        	event.getServletContext().log("Instance created");
 			this.service.start("");
-		} catch (Throwable e) {
+        	event.getServletContext().log("Service started");
+        } catch (Throwable e) {
 			event.getServletContext().log("Error starting context", e);
 		}
     }

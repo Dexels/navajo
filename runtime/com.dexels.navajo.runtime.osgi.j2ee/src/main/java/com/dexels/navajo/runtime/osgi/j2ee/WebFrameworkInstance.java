@@ -1,5 +1,6 @@
 package com.dexels.navajo.runtime.osgi.j2ee;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -17,14 +18,14 @@ public class WebFrameworkInstance extends FrameworkInstance {
 
 	private final ServletContext context;
 	private ServiceRegistration<ServletContext> servletContextRegistration;
-	private ServiceRegistration<ContextIdentifier> servletContextIdentifierRegistration;
+	private ServiceRegistration<ContextIdentifier> servletContextIdentifierRegistration = null;
 	private final static String BUNDLEDIR = "WEB-INF/bundles/";
 	
 
 	
 	public WebFrameworkInstance(ServletContext context) {
 		super(context.getRealPath(BUNDLEDIR));
-		
+		log("init WebFrameworkInstance called",null);
 		this.context = context;
 	}
 
@@ -32,6 +33,7 @@ public class WebFrameworkInstance extends FrameworkInstance {
 	@Override
 	protected void doStart(String directive) throws Exception {
 		super.doStart(directive);
+		log("super called",null);
 		if (context != null) {
 			log("Setting "+"org.osgi.framework.BundleContext"+" : "+getBundleContext(),null);
 			context.setAttribute("org.osgi.framework.BundleContext",getBundleContext());
@@ -92,7 +94,7 @@ public class WebFrameworkInstance extends FrameworkInstance {
 	}
 
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes"})
 	@Override
 	protected Map createConfig() throws Exception {
 		Map<String, Object> config = super.createConfig();
@@ -119,16 +121,16 @@ public class WebFrameworkInstance extends FrameworkInstance {
 			context.log("Error reading framework.properties at: "+path, e);
 		}
 
-
+		
+		File javaTemp = new File(System.getProperty("java.io.tmpdir"));
+		File withContext = new File(javaTemp,context.getContextPath());
+		File bundles = new File(withContext,"bundles");
+		
+		config.put("bundleTmpPath", bundles.getAbsolutePath());
+		config.put("org.osgi.framework.storage", bundles.getAbsolutePath());
+		
 		config.put("SYSTEMBUNDLE_ACTIVATORS_PROP",
 				Arrays.asList(new ProvisionActivator(this.context)));
-//		System.err.println("Final map: "+config);
-//		logger.warn("ACTUAL CONFIG: ");
-//		for (Entry<String,Object> e : config.entrySet()) {
-//			logger.warn("Key: "+e.getKey()+" Value: >"+e.getValue()+"<");
-//		}
-//		logger.warn("END OF CONFIG");
-
 		return config;
 	}
 

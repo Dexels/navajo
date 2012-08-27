@@ -42,11 +42,11 @@ public class TipiDisposePath extends TipiAction {
 			String pathVal = (String) getEvaluatedParameter("path", event).value;
 			TipiComponent tp = myContext.getTipiComponentByPath(pathVal);
 			if (tp != null) {
+				myContext.disposeTipiComponent(tp);
 			} else {
 				logger.warn("ATTEMPTING TO DISPOSE NULL component. ");
 			}
 			// path);
-			myContext.disposeTipiComponent(tp);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

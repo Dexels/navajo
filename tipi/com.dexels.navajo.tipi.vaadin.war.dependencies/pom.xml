@@ -253,7 +253,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
-
+<!-- 
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.gogo.command</artifactId>
@@ -274,7 +274,7 @@
 			<artifactId>org.apache.felix.gogo.shell</artifactId>
 			<version>0.10.0</version>
 		</dependency>
-
+-->
 	</dependencies>
 	<build>
 		<finalName>com.dexels.navajo.tipi.vaadin.war.dependencies</finalName>
