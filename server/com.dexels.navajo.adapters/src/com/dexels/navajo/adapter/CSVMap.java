@@ -231,15 +231,26 @@ public class CSVMap implements Mappable {
 	public static void main(String[] args) throws Exception {
 		Mappable csv = new CSVMap();
 		((CSVMap) csv).setSeparator(";");
-		((CSVMap) csv).setIncludeEmpty(false);
+		((CSVMap) csv).setIncludeEmpty(true);
 		((CSVMap) csv).setSkipFirstRow(false);
 
-		Binary b = new Binary(new File("C:/Temp/csv_personen.csv"));
+		Binary b = new Binary(new File("C:/Temp/LedenLIJST-vertrouwelijktest.csv"));
 		((CSVMap) csv).setFileContent(b);
 		Mappable[] all = ((CSVMap) csv).getEntries();
 		for (int i = 0; i < all.length; i++) {
 			CSVEntryMap entryMap = ((CSVEntryMap) all[i]);
-			System.err.println("a = >" + entryMap.getEntry(new Integer(0)) + "< - >" + entryMap.getEntry(new Integer(1)) + "< - >" + entryMap.getEntry(new Integer(2))+"<");
+			System.err.println("a = >" + entryMap.getEntry(new Integer(0)) + "< - >" + 
+			                             entryMap.getEntry(new Integer(1)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(2)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(3)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(4)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(5)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(6)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(7)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(8)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(9)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(10)) + "< - >" + 
+			                             entryMap.getEntry(new Integer(11))+"<");
 		}
 	}
 
