@@ -46,7 +46,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 	public final FunctionDefinition getDef(String name)  {
 		if(defaultConfig!=null) {
 			FunctionDefinition fd = defaultConfig.get(name);
-			logger.info("Keys in defaultconfig: "+defaultConfig.keySet());
+//			logger.info("Keys in defaultconfig: "+defaultConfig.keySet());
 			if(fd!=null) {
 				return fd;
 			}
@@ -56,7 +56,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		
 		for (Map<String, FunctionDefinition> elt : functionConfig.values()) {
 			FunctionDefinition fd = elt.get(name);
-			logger.debug("Looking for function in fd: "+fd);
+//			logger.debug("Looking for function in fd: "+fd);
 			if(fd!=null) {
 				return fd;
 			}
@@ -107,7 +107,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 
 	public  FunctionDefinition getAdapterDefinition(String name, ExtensionDefinition ed)  {
 		Map<String, FunctionDefinition> configMap = getAdapterConfig(ed);
-		System.err.println("Looking for: "+name+" configmap: "+configMap.keySet());
+//		System.err.println("Looking for: "+name+" configmap: "+configMap.keySet());
 		return configMap.get(name);
 	}
 
