@@ -1,0 +1,700 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<functiondef>
+	<function name="CallService" class="com.dexels.navajo.functions.CallService">
+        <description>Calls a service using request Navajo and evaluates an expression</description>
+        <input>string,string</input>
+        <result>any</result>
+    </function>
+    <function name="NavajoRequestToString" class="com.dexels.navajo.functions.NavajoRequestToString">
+        <description>Serializes a Navajo request to a string</description>
+        <input>empty</input>
+        <result>string</result>
+    </function>
+    <function name="RandomColor" class="com.dexels.navajo.functions.RandomColor">
+        <description>Generates a random hex color given an integer seed</description>
+        <input>integer|empty</input>
+        <result>string</result>
+    </function>
+    <function name="IsEmpty" class="com.dexels.navajo.functions.IsEmpty">
+        <description>Determines whether a given object is null or empty</description>
+        <input>string|binary|list|message|array|integer|boolean|date|clocktime|memo|money|percentage|stopwatchtime|float|selection</input>
+        <result>boolean</result>
+    </function>
+    <function name="SetMimeType" class="com.dexels.navajo.functions.SetMimeType">
+        <description>Sets mime-type for a binary object</description>
+        <input>binary,string</input>
+        <result>binary</result>
+    </function>
+    <function name="ZipArchive" class="com.dexels.navajo.functions.ZipArchive">
+        <description>Archives an entire directory (including subdirs) as a zip file.</description>
+        <input>string</input>
+        <result>binary</result>
+    </function>
+    <function name="Zip" class="com.dexels.navajo.functions.Zip">
+        <description>Zips a binary property. Both binary property as well as filename should be supplied.</description>
+        <input>binary,string</input>
+        <result>binary</result>
+    </function>
+    <function name="MD5Sum" class="com.dexels.navajo.functions.MD5Sum">
+        <description>Get the MD5Sum of supplied Binary object.</description>
+        <input>binary</input>
+        <result>string</result>
+    </function>
+    <function name="XmlUnescape" class="com.dexels.navajo.functions.XmlUnescape">
+        <description>Unescapes the following characters in the characters: &amp;&apos;&lt;&gt;&quot;, using xml escape codes</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="XmlEscape" class="com.dexels.navajo.functions.XmlEscape">
+        <description>Escapes the following characters in the characters: &amp;&apos;&lt;&gt;&quot;</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="WeekDay" class="com.dexels.navajo.functions.WeekDay">
+        <description>Return a three letter string with the weekday; If no argument is provided return the weekday for today; Only english locale is supported now; The result is return in upper case</description>
+        <input>date|empty</input>
+        <result>string</result>
+    </function>
+    <function name="Wait" class="com.dexels.navajo.functions.Wait">
+        <description>Wait for specified number of milliseconds</description>
+        <input>integer</input>
+        <result>empty</result>
+    </function>
+    <function name="Unicode" class="com.dexels.navajo.functions.Unicode">
+        <description>Parses a number string (can be hex, use 0x... in that case), returns a unicode character</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="URLEncode" class="com.dexels.navajo.functions.URLEncode">
+        <description>Returns URL encoded string</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="Trim" class="com.dexels.navajo.functions.Trim">
+        <description>Trims a string</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="ToUpper" class="com.dexels.navajo.functions.ToUpper">
+        <description>Get an uppercase representation of given string.</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="ToString" class="com.dexels.navajo.functions.ToString">
+        <description>Returns a string representation of the supplied object.</description>
+        <input>any</input>
+        <result>string</result>
+    </function>
+    <function name="ToStopwatchTime" class="com.dexels.navajo.functions.ToStopwatchTime">
+        <description>Get a stopwatchtime representation of the supplied integer(in milliseconds) or date.</description>
+        <input>integer|date</input>
+        <result>stopwatchtime|integer</result>
+    </function>
+    <function name="ToSecureImage" class="com.dexels.navajo.functions.ToSecureImage">
+        <description>Creates a Binary containing a PNG image representation of specified objects string representation&#xa; max. inputlength is 6 chars</description>
+        <input>string</input>
+        <result>binary</result>
+    </function>
+    <function name="ToPercentage" class="com.dexels.navajo.functions.ToPercentage">
+        <description>Cast a string/double/integer to a percentage object</description>
+        <input>string|float|integer</input>
+        <result>percentage</result>
+    </function>
+    <function name="ToMoney" class="com.dexels.navajo.functions.ToMoney">
+        <description>Cast a string/double/integer to a money object</description>
+        <input>string|float|integer|money</input>
+        <result>money</result>
+    </function>
+    <function name="ToMilliseconds" class="com.dexels.navajo.functions.ToMilliseconds">
+        <description>Get the supplied time in milliseconds (long).</description>
+        <input>stopwatchtime|clocktime</input>
+        <result>integer|long</result>
+    </function>
+    <function name="ToMemo" class="com.dexels.navajo.functions.ToMemo">
+        <description>Cast a string to a memo object</description>
+        <input>string</input>
+        <result>memo</result>
+    </function>
+    <function name="ToLower" class="com.dexels.navajo.functions.ToLower">
+        <description>Returns a lowercase version of the supplied string.</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="ToInteger" class="com.dexels.navajo.functions.ToInteger">
+        <description>Get an integer representation of given object.</description>
+        <input>any</input>
+        <result>integer</result>
+    </function>
+        <function name="ToLong" class="com.dexels.navajo.functions.ToLong">
+        <description>Get an long representation of given object.</description>
+        <input>any</input>
+        <result>long</result>
+    </function>
+    <function name="ToDouble" class="com.dexels.navajo.functions.ToDouble">
+        <description>Get a Double version of supplied object. Returns 0.0 if object is null.</description>
+        <input>any</input>
+        <result>float</result>
+    </function>
+    <function name="ToClockTime" class="com.dexels.navajo.functions.ToClockTime">
+        <description>Cast an object to a clocktime object</description>
+        <input>date|string|clocktime</input>
+        <result>clocktime</result>
+    </function>
+    <function name="ToBinaryFromUrl" class="com.dexels.navajo.functions.ToBinaryFromUrl">
+        <description>Load a binary from a URL</description>
+        <input>string</input>
+        <result>binary</result>
+    </function>
+    <function name="ToBinaryFromPath" class="com.dexels.navajo.functions.ToBinaryFromPath">
+        <description>Load a binary from a URL</description>
+        <input>string</input>
+        <result>binary</result>
+    </function>
+    <function name="ToBinary" class="com.dexels.navajo.functions.ToBinary">
+        <description>Cast a string to a binary object</description>
+        <input>string|binary</input>
+        <result>binary</result>
+    </function>
+    <function name="Trunc" class="com.dexels.navajo.functions.Trunc">
+        <description>Removes time from Date object</description>
+        <input>date</input>
+        <result>date</result>
+    </function>
+    <function name="SumProperties" class="com.dexels.navajo.functions.SumProperties">
+        <description>Sums all properties in an array message</description>
+        <input>string,string,string|empty</input>
+        <result>any</result>
+    </function>
+    <function name="SumMessage" class="com.dexels.navajo.functions.SumMessage">
+        <description/>
+        <input>message|string</input>
+        <result>any</result>
+    </function>
+    <function name="SumExpressions" class="com.dexels.navajo.functions.SumExpressions">
+        <description>Sum expressions in a given array message</description>
+        <input>string,string,string|empty</input>
+        <result>any</result>
+    </function>
+    <function name="Sum" class="com.dexels.navajo.functions.Sum">
+        <description>Get the sum of values in a given list.</description>
+        <input>list</input>
+        <result>float|integer|string</result>
+    </function>
+    <function name="StringPadding" class="com.dexels.navajo.functions.StringPadding">
+        <description>This function ads whitespace (spaces) to a string until it has the specified size</description>
+        <input>string,integer,string|empty,boolean|empty</input>
+        <result>string</result>
+    </function>
+    <function name="StringFunction" class="com.dexels.navajo.functions.StringFunction">
+        <description>Perform a Java stringfunction on a given string.</description>
+        <input>string,string,...</input>
+        <result>any</result>
+    </function>
+    <function name="StringField" class="com.dexels.navajo.functions.StringField">
+        <description>This function returns a specified string field given a seperator and an initial string. Eg. StringField(&apos;aap, noot, mies&apos;, &apos;,&apos;, 2) = &apos;noot&apos;.</description>
+        <input>string,string,integer</input>
+        <result>string</result>
+    </function>
+    <function name="StringDistance" class="com.dexels.navajo.functions.StringDistance">
+        <description>Returns an Integer representing how much the two strings differ, 0 is equal</description>
+        <input>string,string</input>
+        <result>integer</result>
+    </function>
+    <function name="Size" class="com.dexels.navajo.functions.Size">
+        <description>This function return the size of a list argument, the length of an array, or the size of an array message.</description>
+        <input>string|binary|list|message|array</input>
+        <result>integer</result>
+    </function>
+    <function name="SetAllProperties" class="com.dexels.navajo.functions.SetAllProperties">
+        <description>Loops through an array message, and sets for every message the property with the supplied name to the supplied value</description>
+        <input>message,string,any</input>
+        <result>empty</result>
+    </function>
+    <function name="ScaleImageMin" class="com.dexels.navajo.functions.ScaleImageMin">
+        <description>Scales an image to the specified dimensions. Keeps aspect ratio, and uses the smallest value of the dimensions</description>
+        <input>binary,integer,integer</input>
+        <result>binary</result>
+    </function>
+    <function name="ScaleImageMax" class="com.dexels.navajo.functions.ScaleImageMax">
+        <description>Scales an image to the specified dimensions. Keeps aspect ratio, and uses the largest value of the dimensions</description>
+        <input>binary,integer,integer</input>
+        <result>binary</result>
+    </function>
+    <function name="ScaleImageFree" class="com.dexels.navajo.functions.ScaleImageFree">
+        <description>Scales an image to the specified dimensions. Does not keep aspect ratio.</description>
+        <input>binary,integer,integer</input>
+        <result>binary</result>
+    </function>
+    <function name="ScaleImageCentered" class="com.dexels.navajo.functions.ScaleImageCentered">
+        <description>Scales an image to the specified dimensions (with transparency if needed). Keeps aspect ratio, and uses the largest value of the dimensions</description>
+        <input>binary,integer,integer</input>
+        <result>binary</result>
+    </function>
+    <function name="ScaleImageCropped" class="com.dexels.navajo.functions.ScaleImageCropped">
+        <description>Scales an image to the specified dimensions (with transparency if needed). Keeps aspect ratio, and crops the image to the new size if necessary</description>
+        <input>binary,integer,integer</input>
+        <result>binary</result>
+    </function>
+    <function name="Round" class="com.dexels.navajo.functions.Round">
+        <description>With this function a floating point value can be rounded to a given number of digits. Round(2.372, 2) = 2.37</description>
+        <input>float,integer</input>
+        <result>float</result>
+    </function>
+    <function name="RandomString" class="com.dexels.navajo.functions.RandomString">
+        <description>allows generation of random string values given a specified length using a specific character set, sometimes useful for testing fixtures ...if a character set is not provided, a default one is used</description>
+        <input>integer,string|empty</input>
+        <result>string</result>
+    </function>
+    <function name="RandomInt" class="com.dexels.navajo.functions.RandomInt">
+        <description>Returns a random integer, between the given bounds</description>
+        <input>integer,integer</input>
+        <result>integer</result>
+    </function>
+    <function name="Random" class="com.dexels.navajo.functions.Random">
+        <description>Returns random integer</description>
+        <input>empty</input>
+        <result>integer</result>
+    </function>
+    <function name="ParseStringList" class="com.dexels.navajo.functions.ParseStringList">
+        <description>Creates a list out of a string representation, e.g. {1,2,3,8,9}</description>
+        <input>string,string</input>
+        <result>list</result>
+    </function>
+    <function name="ParseSelection" class="com.dexels.navajo.functions.ParseSelection">
+        <description>This function creates a selection out of a semi-colon separated string of options</description>
+        <input>string</input>
+        <result>any</result>
+    </function>
+    <function name="ParseDate" class="com.dexels.navajo.functions.ParseDate">
+        <description>Given a string and a date pattern, a date object is returned.</description>
+        <input>string,string</input>
+        <result>date</result>
+    </function>
+    <function name="ParameterList" class="com.dexels.navajo.functions.ParameterList">
+        <description>Create a list of comma separate ? values for use in SQL queries</description>
+        <input>integer</input>
+        <result>string</result>
+    </function>
+    <function name="OffsetDate" class="com.dexels.navajo.functions.OffsetDate">
+        <description>Returns a date with a certain offset.</description>
+        <input>date,integer,integer,integer,integer,integer,integer</input>
+        <result>date</result>
+    </function>
+    <function name="Now" class="com.dexels.navajo.functions.Now">
+        <description>Now() returns the current timestamp as a string in the following format: yyyy/MM/dd HH:uu:mm</description>
+        <input>empty</input>
+        <result>string</result>
+    </function>
+    <function name="NextMonth" class="com.dexels.navajo.functions.NextMonth">
+        <description>Get the next month as a date object, where supplied integer is an offset for the current year.</description>
+        <input>integer</input>
+        <result>date</result>
+    </function>
+    <function name="Min" class="com.dexels.navajo.functions.Min">
+        <description>Return the minimum of to given numbers.</description>
+        <input>integer|float,integer|float</input>
+        <result>integer|float</result>
+    </function>
+    <function name="MergeNavajo" class="com.dexels.navajo.functions.MergeNavajo">
+        <description>Merges two navajo objects</description>
+        <input>navajo,navajo</input>
+        <result>navajo</result>
+    </function>
+    <function name="Max" class="com.dexels.navajo.functions.Max">
+        <description>Return the maximum of to given numbers.</description>
+        <input>integer|float,integer|float</input>
+        <result>integer|float</result>
+    </function>
+    <function name="IsServiceCached" class="com.dexels.navajo.functions.IsServiceCached">
+        <description>Function to check whether a service with optionally service key values is cached</description>
+        <input>string,string</input>
+        <result>boolean</result>
+    </function>
+    <function name="IsNull" class="com.dexels.navajo.functions.IsNull">
+        <description>Will return true if the supplied argument is null, false otherwise</description>
+        <input>any</input>
+        <result>boolean</result>
+    </function>
+    <function name="InMonthTurnInterval" class="com.dexels.navajo.functions.InMonthTurnInterval">
+        <description>Returns true when a given date is either in the first or last n days of the month</description>
+        <input>date,integer,boolean</input>
+        <result>boolean</result>
+    </function>
+    <function name="GetWeekDayDate" class="com.dexels.navajo.functions.GetWeekDayDate">
+        <description>This function return the a calendar date of the first given weekday in the past. Optionally a third parameter can be added containing a date. This is the reference date used</description>
+        <input>integer|string,boolean|string,date|empty</input>
+        <result>date</result>
+    </function>
+    <function name="GetVersionInfo" class="com.dexels.navajo.functions.GetVersionInfo">
+        <description>Gets the version info of a specific Version object</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="GetUrlTime" class="com.dexels.navajo.functions.GetUrlTime">
+        <description>Check the date of an url. This is not the modification date, this is the time the header was sent. Effectively the current time of the webserver.</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetUrlSize" class="com.dexels.navajo.functions.GetUrlSize">
+        <description>Get the length of URL content</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetUrlModificationTime" class="com.dexels.navajo.functions.GetUrlModificationTime">
+        <description>Check the modification date of an url.</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetUrlMimeType" class="com.dexels.navajo.functions.GetUrlMimeType">
+        <description>Check the mime type of an url.</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetSelectedValue" class="com.dexels.navajo.functions.GetSelectedValue">
+        <description>Gets the value of a selected property</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetSelectedName" class="com.dexels.navajo.functions.GetSelectedName">
+        <description>Gets the name of a selected property</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetPropertyValue" class="com.dexels.navajo.functions.GetPropertyValue">
+        <description>Gets a property from a string</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetValue" class="com.dexels.navajo.functions.GetValue">
+        <description>Gets a typed value from a property object</description>
+        <input/>
+        <result/>
+    </function>
+    
+    <function name="GetPropertyType" class="com.dexels.navajo.functions.GetPropertyType">
+        <description>Gets the type of property as a string</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetPropertyDirection" class="com.dexels.navajo.functions.GetPropertyDirection">
+        <description>Gets the direction of property as a string</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetPropertySubType" class="com.dexels.navajo.functions.GetPropertySubType">
+        <description>Gets the subtype of property as a string</description>
+        <input>property|string,string</input>
+        <result>string</result>
+    </function>
+    <function name="GetProperty" class="com.dexels.navajo.functions.GetProperty">
+        <description>Gets a property from a string</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetMimeType" class="com.dexels.navajo.functions.GetMimeType">
+        <description>Guesses mime/type of a binary object</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetBinaryPath" class="com.dexels.navajo.functions.GetBinaryPath">
+        <description>Returns the path to a binary</description>
+        <input>binary</input>
+        <result>string</result>
+    </function>
+    
+    
+    <function name="GetMessage" class="com.dexels.navajo.functions.GetMessage">
+        <description>Gets a message from an array message. Or: GetMessage('MessagePath') will retrieve the message from the current navajo (Used for scripts)</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetLogoImage" class="com.dexels.navajo.functions.GetLogoImage">
+        <description>Get the specified string a a nice mirroed logo image</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetInitials" class="com.dexels.navajo.functions.GetInitials">
+        <description>This function returns the initials of a specified string field . Eg. GetInitials(&apos;aap noot mies&apos;) results in &apos;a n m&apos;</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetFileExtension" class="com.dexels.navajo.functions.GetFileExtension">
+        <description>Guesses mime/type of a binary object and returns default file extension</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetDescription" class="com.dexels.navajo.functions.GetDescription">
+        <description>Gets the description of property as a string</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetCurrentMessage" class="com.dexels.navajo.functions.GetCurrentMessage">
+        <description>This function will return the current message</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetCents" class="com.dexels.navajo.functions.GetCents">
+        <description>GetCents takes an amount of money and returns the cents</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="FormatStringList" class="com.dexels.navajo.functions.FormatStringList">
+        <description>Turns a list of strings in a single string using supplied delimiter.</description>
+        <input>list|string,string</input>
+        <result>string</result>
+    </function>
+    <function name="FormatDecimal" class="com.dexels.navajo.functions.FormatDecimal">
+        <description>Formats a number</description>
+        <input>any,string</input>
+        <result>string</result>
+    </function>
+    <function name="FormatDate" class="com.dexels.navajo.functions.FormatDate">
+        <description>formats a date according to a format string plus an optional locale</description>
+        <input>date|clocktime,string,string|empty</input>
+        <result>string</result>
+    </function>
+    <function name="FormatZipCode" class="com.dexels.navajo.functions.FormatZipCode">
+        <description>formats a date according to a format string plus an optional locale</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="ForAll" class="com.dexels.navajo.functions.ForAll">
+        <description>Evaluates a condition (expression evaluating to a boolean) under all the messages of an array message. It will return a &apos;AND&apos; of all the results</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="FileString" class="com.dexels.navajo.functions.FileString">
+        <description>Reads a file into a string</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="FileSize" class="com.dexels.navajo.functions.FileSize">
+        <description>Get the filesize of supplied Binary object in bytes.</description>
+        <input>binary</input>
+        <result>integer</result>
+    </function>
+    <function name="FileExists" class="com.dexels.navajo.functions.FileExists">
+        <description>Returns true if the filename exists. (Either as a file or as a directory</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="File" class="com.dexels.navajo.functions.File">
+        <description>Reads a file</description>
+        <input>string</input>
+        <result/>
+    </function>
+
+    <function name="GetReportFile" class="com.dexels.navajo.functions.GetReportFile">
+        <description>Reads a report file from the script folder to a binary</description>
+        <input>string</input>
+        <result>binary</result>
+    </function>
+
+<!-- This function isn't here! -->    
+   <!-- <function name="ExistsWorkflow" class="com.dexels.navajo.functions.ExistsWorkflow">
+        <description>Check whether a workflow with specified name and given global state exists</description>
+        <input/>
+        <result/>
+    </function>
+    -->
+    <function name="ExistsProperty" class="com.dexels.navajo.functions.ExistsProperty">
+        <description>Checks whether a property exists in the Input Navajo</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="Exists" class="com.dexels.navajo.functions.Exists">
+        <description>Evaluates a condition (expression evaluating to a boolean) under any the messages of an array message. It will return a &apos;OR&apos; of all the results</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="ExecuteScript" class="com.dexels.navajo.functions.ExecuteScript">
+        <description>ExecuteScript is used execute a Navajo script, the result is a Binary (xml) object</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="EvaluateExpression" class="com.dexels.navajo.functions.EvaluateExpression">
+        <description>Evaluate a Navajo expression</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="EvaluateParameters" class="com.dexels.navajo.functions.EvaluateParameters">
+        <description>Fill in parameter properties, like EvaluateExpression, but lightweight and for properties of the currentMessage only</description>
+        <input>string</input>
+        <result>string</result>
+    </function>
+    <function name="Euro" class="com.dexels.navajo.functions.Euro">
+        <description>Will return a euro sign.</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="EqualsPattern" class="com.dexels.navajo.functions.EqualsPattern">
+        <description>Determines whether a string matches a pattern</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="EqualsIgnoreCase" class="com.dexels.navajo.functions.EqualsIgnoreCase">
+        <description/>
+        <input/>
+        <result/>
+    </function>
+    <function name="EmptyBinary" class="com.dexels.navajo.functions.EmptyBinary">
+        <description>Creates an empty binary object</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="ElfProef" class="com.dexels.navajo.functions.ElfProef">
+        <description>Check if the supplied account number is a valid account (Dutch banks only).</description>
+        <input>string</input>
+        <result>boolean</result>
+    </function>
+    <function name="DecimalChar" class="com.dexels.navajo.functions.DecimalChar">
+        <description>This function returns a string representation of the desired decimal character</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="DateSubstract" class="com.dexels.navajo.functions.DateSubstract">
+        <description>Substracts two date object</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="DateField" class="com.dexels.navajo.functions.DateField">
+        <description>Get a specific part of the given date, options are WEEK, YEAR and DAY.</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="DateAdd" class="com.dexels.navajo.functions.DateAdd">
+        <description>Get a new Date object where the given field is increased by a given amount. Possible fields are YEAR, MONTH, WEEK and DAY.</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="Date" class="com.dexels.navajo.functions.Date">
+        <description>Create a date object from a given string. String is expected to be of format: yyyy-MM-dd.</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="CurrentTimeMillis" class="com.dexels.navajo.functions.CurrentTimeMillis">
+        <description>CurrentTimeMillis(), returns the time in millis since 1/1/1970</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="CreateExpression" class="com.dexels.navajo.functions.CreateExpression">
+        <description>Create a Navajo expression from a string that only contains text and property references</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="Contains" class="com.dexels.navajo.functions.Contains">
+        <description/>
+        <input>list,any</input>
+        <result>boolean</result>
+    </function>
+    <function name="CheckUrl" class="com.dexels.navajo.functions.CheckUrl">
+        <description>This function will check whether it returns a valid stream. It will throw an exception when the the URL is malformed, it returns false when the string is null</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="CheckUniqueness" class="com.dexels.navajo.functions.CheckUniqueness">
+        <description>Checks whether properties in an array message have unique values</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="CheckRange" class="com.dexels.navajo.functions.CheckRange">
+        <description>Check if a list of values is zero or lesser than a given number.</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="GetContextResource" class="com.dexels.navajo.functions.GetContextResource">
+        <description>GetContextResource gets the contents of a file in the servletcontext/resources folder</description>
+        <input/>
+        <result/>
+    </function>
+    
+        
+    
+    
+    <function name="CheckInteger" class="com.dexels.navajo.functions.CheckInteger">
+        <description>CheckInteger checks whether argument is valid integer</description>
+        <input>any</input>
+        <result>boolean</result>
+    </function>
+    <function name="CheckFloat" class="com.dexels.navajo.functions.CheckFloat">
+        <description>CheckFloat checks whether argument is valid double</description>
+        <input>any</input>
+        <result>boolean</result>
+    </function>
+    <function name="CheckEmail" class="com.dexels.navajo.functions.CheckEmail">
+        <description>This functions checks the syntactic validity of email adressess</description>
+        <input>string</input>
+        <result>boolean</result>
+    </function>
+    <function name="CheckDate" class="com.dexels.navajo.functions.CheckDate">
+        <description>Checks whether the input param is a date, returns true if this is the case</description>
+        <input>any</input>
+        <result>boolean</result>
+    </function>
+    <function name="Base64Encode" class="com.dexels.navajo.functions.Base64Encode">
+        <description>Get a Base64 representation of a given string or binary(deprecated).</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="ArraySelection" class="com.dexels.navajo.functions.ArraySelection">
+        <description>Checks whether properties in an array message have unique values</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="AppendArray" class="com.dexels.navajo.functions.AppendArray">
+        <description>Appends the first array message to the second array message. Returns the second message. Note: Call by reference function</description>
+        <input/>
+        <result/>
+    </function>
+    <function name="Age" class="com.dexels.navajo.functions.Age">
+        <description>calculates the age given a birth date. The calculation is as of the second date parameter, otherwise, if not provided, will be as of today.</description>
+        <input>date,date|empty</input>
+        <result>integer</result>
+    </function>
+    <function name="Abs" class="com.dexels.navajo.functions.Abs">
+        <description>Returns absolute value of a number</description>
+        <input>float|integer</input>
+        <result>integer|float</result>
+    </function>
+    <function name="Switch" class="com.dexels.navajo.functions.Switch">
+        <description>Switch(target, when, then, when, then, when, then, ..., else)</description>
+        <input>any,any,any,any,...</input>
+        <result>any</result>
+    </function>
+    <function name="IfElse" class="com.dexels.navajo.functions.IfElse">
+        <description>IfElse(boolean,any,any)</description>
+        <input>boolean,any,any</input>
+        <result>any</result>
+    </function>
+    <function name="KeyValueMap" class="com.dexels.navajo.functions.KeyValueMap">
+        <description>KeyValueMap(string,string,string)</description>
+        <input>string,string,string</input>
+        <result>string</result>
+    </function>
+    <function name="StripTime" class="com.dexels.navajo.functions.StripTime">
+        <description>StripTime(date|string,[string])</description>
+        <input>date|string,[string]</input>
+        <result>date</result>
+    </function>
+    <function name="ValidateAccountNumber" class="com.dexels.navajo.functions.ValidateAccountNumber">
+        <description>ValidateAccountNumber(string|integer,string)</description>
+        <input>string|integer,string</input>
+        <result>boolean</result>
+    </function>
+    <function name="IsDate" class="com.dexels.navajo.functions.IsDate">
+        <description>IsDate(date|string)</description>
+        <input>date|string</input>
+        <result>boolean</result>
+    </function>
+    <function name="ToDate" class="com.dexels.navajo.functions.ToDate">
+        <description>ToDate(date|string)</description>
+        <input>date|string</input>
+        <result>date</result>
+    </function>
+    <function name="IsNumeric" class="com.dexels.navajo.functions.IsNumeric">
+        <description>IsNumeric(string|integer|double|float)</description>
+        <input>string|integer|double|float</input>
+        <result>boolean</result>
+    </function>
+</functiondef>
