@@ -9,7 +9,7 @@
     <servlet>
         <servlet-name>proxy</servlet-name>
         <servlet-class>com.dexels.navajo.runtime.osgi.j2ee.ProxyServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
+        <load-on-startup>-1</load-on-startup>
     </servlet>
 <!-- 
    <servlet>
