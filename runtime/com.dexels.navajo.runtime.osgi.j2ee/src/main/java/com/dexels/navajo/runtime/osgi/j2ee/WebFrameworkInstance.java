@@ -11,14 +11,13 @@ import javax.servlet.ServletContext;
 
 import org.osgi.framework.ServiceRegistration;
 
-import com.dexels.navajo.osgi.runtime.ContextIdentifier;
 import com.dexels.navajo.osgi.runtime.FrameworkInstance;
 
 public class WebFrameworkInstance extends FrameworkInstance {
 
 	private final ServletContext context;
 	private ServiceRegistration<ServletContext> servletContextRegistration;
-	private ServiceRegistration<ContextIdentifier> servletContextIdentifierRegistration = null;
+//	private ServiceRegistration<ContextIdentifier> servletContextIdentifierRegistration = null;
 	private final static String BUNDLEDIR = "WEB-INF/bundles/";
 	
 
@@ -81,11 +80,11 @@ public class WebFrameworkInstance extends FrameworkInstance {
 		} else {
 			servletContextRegistration.unregister();
 		}
-		if(servletContextIdentifierRegistration==null) {
-			log("Problem while deregistering servletContextIdentifier", null);
-		} else {
-			servletContextIdentifierRegistration.unregister();
-		}
+//		if(servletContextIdentifierRegistration==null) {
+//			log("Problem while deregistering servletContextIdentifier", null);
+//		} else {
+//			servletContextIdentifierRegistration.unregister();
+//		}
 		if (this.context != null) {
 			this.context.removeAttribute("org.osgi.framework.BundleContext");
 		}

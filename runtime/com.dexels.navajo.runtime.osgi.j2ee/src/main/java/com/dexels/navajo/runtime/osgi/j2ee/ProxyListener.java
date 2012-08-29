@@ -154,7 +154,7 @@ public class ProxyListener implements HttpSessionAttributeListener, HttpSessionL
             {
                 // not expected for our simple filter
             }
-
+            return null;
         }
         return this.eventDispatcherTracker.getService();
     }
