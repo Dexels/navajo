@@ -20,7 +20,7 @@ public class RhinoAdapterLibrary implements ExtensionDefinition {
 	private transient ClassLoader extensionClassLoader = null;
 	
 	public InputStream getDefinitionAsStream() {
-		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/adapter/rhinoadapters.xml");
+		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/adapter/rhino/rhinoadapters.xml");
 	}
 
 	public String getConnectorId() {
