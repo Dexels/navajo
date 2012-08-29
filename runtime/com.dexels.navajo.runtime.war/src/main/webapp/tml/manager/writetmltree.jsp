@@ -6,7 +6,7 @@
 <%@ taglib prefix="nav" uri="/WEB-INF/tld/navajo.tld"%>
 <%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <%@ page trimDirectiveWhitespaces="true" %>
-<jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
+<jsp:useBean id="navajoContext" type="com.dexels.navajo.client.context.NavajoContext" scope="session" />
 <h4> ${navajoContext.navajoName}</h4>
 <c:forEach var="msg" items="${navajoContext.navajo.allMessages}">
 	<nav:message message="${msg}">
