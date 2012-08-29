@@ -6,6 +6,11 @@
         <input>binary,integer</input>
         <result>binary</result>
     </function>
+    <function name="PartCount" class="com.dexels.navajo.tipi.mail.functions.PartCount">
+        <description>Counts the number of mime parts in a binary</description>
+        <input>binary</input>
+        <result>integer</result>
+    </function>
     <function name="GetMailNavajo" class="com.dexels.navajo.tipi.mail.functions.GetMailNavajo">
         <description>Returns a navajo, depicting the message along with its parts. It does not do any link replacements</description>
         <input>binary</input>

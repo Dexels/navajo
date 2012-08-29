@@ -1,10 +1,8 @@
 package com.dexels.navajo.tipi.mail.functions;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import javax.activation.DataSource;
-import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMultipart;
 
@@ -15,9 +13,9 @@ import com.dexels.navajo.functions.mail.impl.BinaryDataSource;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
-public class GetPart extends FunctionInterface {
+public class PartCount extends FunctionInterface {
 
-	public GetPart() {	
+	public PartCount() {	
 //		super(new Class[][]{ {Float.class,Integer.class, null} });
 //		setReturnType(new Class[]{String.class});
 	}
@@ -26,7 +24,7 @@ public class GetPart extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
 	public String remarks() {
-		return "Returns absolute value of a number";
+		return "Returns the number of mime parts ";
 	}
 
 	/* (non-Javadoc)
@@ -34,20 +32,11 @@ public class GetPart extends FunctionInterface {
 	 */
 	public Object evaluate() throws TMLExpressionException {
 		Binary b = (Binary) getOperand(0);
-		int index = (Integer) getOperand(1);
 		DataSource ds = new BinaryDataSource(b);
 		try {
 			MimeMultipart mmp = new MimeMultipart(ds);
-			System.err.println("# of bodyparts: "+mmp.getCount());
-			BodyPart bp = mmp.getBodyPart(index);
-			String type = bp.getContentType();
-			Binary result = new Binary( bp.getInputStream());
-			result.setMimeType(type);
-			return result;
+			return mmp.getCount();
 		} catch (MessagingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -55,30 +44,17 @@ public class GetPart extends FunctionInterface {
 	}
 	
 	public static void main(String [] args) throws Exception {
-		InputStream is = GetPart.class.getResourceAsStream("testdata.xml");
+		InputStream is = PartCount.class.getResourceAsStream("testdata.xml");
 		Navajo nn = NavajoFactory.getInstance().createNavajo(is);
 		is.close();
 		nn.write(System.err);
 		Binary b = (Binary) nn.getProperty("MailBox/Mail@0/Content").getTypedValue();
 		System.err.println("Length: "+b.getLength()+" type: "+b.guessContentType());
-		GetPart gp = new GetPart();
+		PartCount gp = new PartCount();
 		gp.reset();
 		gp.insertOperand(b);
-		gp.insertOperand(0);
-		Binary result = (Binary) gp.evaluate();
-		System.err.println("Length of part 0: "+result.getLength());
-
-		gp.reset();
-		gp.insertOperand(b);
-		gp.insertOperand(1);
-		result = (Binary) gp.evaluate();
-		System.err.println("Length of part 1: "+result.getLength());
-
-		gp.reset();
-		gp.insertOperand(b);
-		gp.insertOperand(2);
-		result = (Binary) gp.evaluate();
-		System.err.println("Length of part 2: "+result.getLength());
+		Integer result = (Integer) gp.evaluate();
+		System.err.println("Parts: "+result);
 
 	}
 	
