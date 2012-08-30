@@ -67,19 +67,7 @@ public class GetPart extends FunctionInterface {
 		gp.insertOperand(0);
 		Binary result = (Binary) gp.evaluate();
 		System.err.println("Length of part 0: "+result.getLength());
-
-		gp.reset();
-		gp.insertOperand(b);
-		gp.insertOperand(1);
-		result = (Binary) gp.evaluate();
-		System.err.println("Length of part 1: "+result.getLength());
-
-		gp.reset();
-		gp.insertOperand(b);
-		gp.insertOperand(2);
-		result = (Binary) gp.evaluate();
-		System.err.println("Length of part 2: "+result.getLength());
-
+		
 	}
 	
 

@@ -49,12 +49,14 @@ public class GetMailNavajo extends FunctionInterface {
 				BodyPart bp = mmp.getBodyPart(i);
 				String type = bp.getContentType();
 				Binary partBinary = new Binary( bp.getInputStream(),false);
+
 				if (i==0) {
 //					Property content = NavajoFactory.getInstance().createProperty(result, "Content", Property.BINARY_PROPERTY, null, 0,"",Property.DIR_OUT);
 					Property mimeType = NavajoFactory.getInstance().createProperty(result, "ContentType", Property.STRING_PROPERTY, type, 0,"",Property.DIR_OUT);
 //					mail.addProperty(content);
 					mail.addProperty(mimeType);
 //					content.setAnyValue(partBinary);
+					partBinary.setMimeType(type);
 				}
 				Message element = parts.addElement(NavajoFactory.getInstance().createMessage(result, "Parts",Message.MSG_TYPE_ARRAY_ELEMENT));
 				Property content = NavajoFactory.getInstance().createProperty(result, "Content", Property.BINARY_PROPERTY, null, 0,"",Property.DIR_OUT);
@@ -62,13 +64,14 @@ public class GetMailNavajo extends FunctionInterface {
 				Property mimeType = NavajoFactory.getInstance().createProperty(result, "ContentType", Property.STRING_PROPERTY, type, 0,"",Property.DIR_OUT);
 				element.addProperty(mimeType);
 				content.setAnyValue(partBinary);					
+				partBinary.setMimeType(type);
+				content.addSubType("browserMime="+type);
 			}
 			
 			return result;
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
