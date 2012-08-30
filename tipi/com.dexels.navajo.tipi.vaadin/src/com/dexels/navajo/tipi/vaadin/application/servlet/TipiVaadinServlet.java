@@ -91,7 +91,16 @@ public class TipiVaadinServlet extends ApplicationServlet {
 				logger.info("Serving: "+o.value);
 				if(o.value instanceof Binary) {
 					Binary b = (Binary)o.value;
-					String contentType = b.guessContentType();
+					
+					String contentType = b.getMimeType();
+					String explicitMime = request.getParameter("mime");
+					if (explicitMime!=null) {
+						contentType = explicitMime;
+					}
+					logger.info("Mime: "+contentType+" : "+b.getSubType("mailMime")+" exp: "+explicitMime);
+					if(contentType==null) {
+						b.guessContentType();
+					}
 					response.setContentType(contentType);
 					response.setContentLength((int) b.getLength());
 					ServletOutputStream outputStream = response.getOutputStream();

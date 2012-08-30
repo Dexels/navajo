@@ -8,6 +8,7 @@ import java.net.URL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.terminal.ExternalResource;
@@ -66,12 +67,15 @@ public class TipiBrowser extends TipiVaadinComponentImpl {
         if ("binary".equals(name)) {
         	setBinary((Binary)object);
         }
+        if ("property".equals(name)) {
+        	setProperty((Property)object);
+        }
         super.setComponentValue(name, object);
     }
 
 
 	private void setBinary(final Binary binary) {
-		logger.debug("Setting binary content. Length:  "+binary.getLength());
+		logger.debug("Setting binary content. Length:  "+binary.getLength()+" type: "+binary.getMimeType());
 		StreamResource sr = new StreamResource(new StreamSource() {
 			
 			private static final long serialVersionUID = -352043364387051337L;
@@ -80,10 +84,45 @@ public class TipiBrowser extends TipiVaadinComponentImpl {
 			public InputStream getStream() {
 				return binary.getDataAsStream();
 			}
-		},"mail.html",getVaadinApplication());
+		},"m.html",getVaadinApplication());
+		if(binary.getMimeType()!=null) {
+			sr.setMIMEType(binary.getMimeType());
+		} else {
+			sr.setMIMEType(binary.guessContentType());
+		}
 		browser.setSource(sr);
 	}
 
+	private void setProperty(Property p) {
+		
+		Object value = p.getTypedValue();
+		if(value==null) {
+			logger.warn("Null value property passed to TipiBrowser");
+			return;
+		}
+		if(!(value instanceof Binary)) {
+			logger.warn("Non-binary value property passed to TipiBrowser");
+			return;
+		}
+		final Binary binary = (Binary)value;
+		logger.debug("Setting binary content. Length:  "+binary.getLength()+" type: "+binary.getMimeType()+" property: "+p.getSubType("browserBinary"));
+		StreamResource sr = new StreamResource(new StreamSource() {
+			
+			private static final long serialVersionUID = -352043364387051337L;
+
+			@Override
+			public InputStream getStream() {
+				return binary.getDataAsStream();
+			}
+		},"m.html",getVaadinApplication());
+		if(binary.getMimeType()!=null) {
+			sr.setMIMEType(binary.getMimeType());
+		} else {
+			sr.setMIMEType(binary.guessContentType());
+		}
+		browser.setSource(sr);
+	}
+	
 	private void setUrl(String url) {
 		try {
 			URL u = new URL(url);

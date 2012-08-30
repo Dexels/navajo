@@ -73,6 +73,7 @@
         <values>
             <value direction="in" name="url" type="string"/>
             <value direction="in" name="binary" type="binary"/>
+            <value direction="in" name="property" type="property"/>
         </values>
         <methods/>
     </tipiclass>

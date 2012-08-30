@@ -29,7 +29,7 @@ public class CreateEchoMailUrl extends FunctionInterface {
 		}
 		Object oo = getOperand(0);
 		if(!(oo instanceof VaadinTipiContext)) {
-			throw new TMLExpressionException("CreateEchoUrl: param one should be an EchoTipiContext");
+			throw new TMLExpressionException("CreateEchoUrl: param one should be an VaadinTipiContext");
 		}
 		VaadinTipiContext ee = (VaadinTipiContext)getOperand(0);
 //		String expression = (String)getOperand(1);
@@ -46,6 +46,7 @@ public class CreateEchoMailUrl extends FunctionInterface {
 		try {
 			String result = createNavajoUrl(ee,navajoName, inputCopy);
 			ee.injectNavajo(navajoName, inputCopy);
+			logger.info("Injecting navajo from createechomailurl: "+navajoName);
 			return result;
 		} catch (NavajoException e) {
 			logger.error("Error: ",e);
@@ -124,7 +125,7 @@ public class CreateEchoMailUrl extends FunctionInterface {
 			int index = getPartIndexOfAttach(text)+1;
 			String attach = expressionTemplate.replaceAll("__REPLACE__", ""+index);
 			
-			m.appendReplacement(sb, Matcher.quoteReplacement(attributeName + "=\"" + ee.createExpressionUrl(attach) + "\""));
+			m.appendReplacement(sb, Matcher.quoteReplacement(attributeName + "=\"" + ee.createExpressionUrl(attach,null) + "\""));
 		}
 		m.appendTail(sb);
 		return sb.toString();

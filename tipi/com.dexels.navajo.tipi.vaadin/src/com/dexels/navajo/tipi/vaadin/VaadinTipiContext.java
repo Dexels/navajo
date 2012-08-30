@@ -145,18 +145,25 @@ public class VaadinTipiContext extends TipiContext {
 	}
 
 
-	public URL getEvalUrl(String expression) {
+	public URL getEvalUrl(String expression, String mime) {
 		try {
 			String encoded = URLEncoder.encode(expression,"UTF-8");
 			TipiVaadinApplication tva = (TipiVaadinApplication) getVaadinApplication();
 			String referer = tva.getReferer();
 			if(referer!=null) {
 				URL contextUrl = getVaadinApplication().getContextUrl();
-				URL prot = new URL(contextUrl.getProtocol(),referer,contextUrl.getPath()+"?evaluate="+encoded);
+				String path = contextUrl.getPath()+"?evaluate="+encoded;
+				if(mime!=null) {
+					path = path+"&mime="+mime;
+				}
+				URL prot = new URL(contextUrl.getProtocol(),referer,path);
 				return  prot;
 			} else {
 				URL contextUrl = getVaadinApplication().getContextUrl();
 				String s = contextUrl+"?rdm="+randomizer.nextLong()+"&evaluate="+encoded;
+				if(mime!=null) {
+					s = s+"&mime="+mime;
+				}
 				return new URL(s);
 			}
 
@@ -171,8 +178,8 @@ public class VaadinTipiContext extends TipiContext {
 //	public void setEvalUrl(URL context, String relativeUri) {
 //	}	
 	
-	public String createExpressionUrl(String expression) {
-		return getEvalUrl(expression).toString();
+	public String createExpressionUrl(String expression, String mime) {
+		return getEvalUrl(expression,mime).toString();
 	}
 
 

@@ -123,7 +123,7 @@ public class InjectMailNavajo extends FunctionInterface {
 			int index = getPartIndexOfAttach(text)+1;
 			String attach = expressionTemplate.replaceAll("__REPLACE__", ""+index);
 			
-			m.appendReplacement(sb, Matcher.quoteReplacement(attributeName + "=\"" + ee.createExpressionUrl(attach) + "\""));
+			m.appendReplacement(sb, Matcher.quoteReplacement(attributeName + "=\"" + ee.createExpressionUrl(attach,null) + "\""));
 		}
 		m.appendTail(sb);
 		return sb.toString();
