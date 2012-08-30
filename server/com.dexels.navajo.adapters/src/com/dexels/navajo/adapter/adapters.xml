@@ -483,6 +483,7 @@ I think there is no problem now, as NavajoAdapters uses a filthy DynamicImport f
         <object>com.dexels.navajo.adapter.TmlToXmlMap</object>
         <values>
             <value name="rootPath" type="string" required="true" direction="in"/>          
+            <value name="content" type="binary" required="false" direction="out"/>
         </values>
         <methods>
             <method name="addAttribute">                
