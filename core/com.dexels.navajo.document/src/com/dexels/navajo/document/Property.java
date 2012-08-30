@@ -235,12 +235,20 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    */
   public String getSubType(String key);
 
-	/**
+  /**
+   * Adds a single subtype pair. Syntax key=value
+   * @param extra
+   */
+  public void addSubType(String extra);
+
+  
+  /**
 	 * Gets all subtypes in a map
 	 * This map is a copy, so there is no point in modifying.
 	 * 
 	 * @return
 	 */
+  
   public Map<String,String> getSubTypes();
 	
   /**

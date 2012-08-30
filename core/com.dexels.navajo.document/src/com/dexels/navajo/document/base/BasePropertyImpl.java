@@ -188,7 +188,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 
-	private void addSubType(String extra) {
+	public void addSubType(String extra) {
 		if (subtypeMap == null) {
 			subtypeMap = NavajoFactory.getInstance().parseSubTypes(subType);
 		}
