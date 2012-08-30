@@ -12,8 +12,8 @@
         <input>string</input>
         <result>string</result>
     </function>
-    <function name="CreateEchoUrl" class="com.dexels.navajo.tipi.vaadin.functions.CreateEchoUrl">
-        <description>Create an adressable entry for an expression</description>
+    <function name="CreateExpressionUrl" class="com.dexels.navajo.tipi.vaadin.functions.CreateExpressionUrl">
+        <description>Create an url for an expression</description>
         <input>context,string</input>
         <result>string</result>
     </function>
