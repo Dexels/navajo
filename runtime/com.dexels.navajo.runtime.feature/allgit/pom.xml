@@ -10,7 +10,7 @@
 	<modules>
 		<module>../../com.dexels.navajo.runtime.osgi</module>
 		<module>../../com.dexels.navajo.runtime.osgi.j2ee</module>
-		<module>../../com.dexels.navajo.runtime.war</module>
+		<module>../../com.dexels.navajo.runtime.war.deploy</module>
 		<module>../../com.dexels.navajo.runtime.homecontext</module>
 		<module>../../com.dexels.navajo.runtime.provisioning</module>
 		<module>../../com.dexels.navajo.runtime.dependencies</module>

@@ -12,6 +12,8 @@
 		<module>../../com.dexels.navajo.tipi.vaadin</module>
 		<module>../../com.dexels.navajo.tipi.vaadin.embedded</module>
 		<module>../../com.dexels.navajo.tipi.vaadin.bridged</module>
+		<module>../../com.dexels.navajo.tipi.vaadin.war.dependencies</module>
+		<module>../../com.dexels.navajo.tipi.vaadin.war.deploy</module>
 		<module>../</module>
 	</modules>
 	
