@@ -24,6 +24,8 @@
 		<module>../../com.dexels.navajo.resource.mongodb</module>
 		<module>../../com.dexels.navajo.resource.test</module>
 		<module>../../com.dexels.navajo.server.bridged</module>
+		<module>../../com.dexels.navajo.server.logback</module>
+		<module>../../com.dexels.navajo.server.deploy</module>
 		<module>../../com.dexels.navajo.authentication.api</module>
 		<module>../../com.dexels.navajo.rhino.continuations</module>
 		<module>../../com.dexels.navajo.webconsole.branding</module>
