@@ -503,11 +503,6 @@ I think there is no problem now, as NavajoAdapters uses a filthy DynamicImport f
     	<tagname>com.dexels.navajo.adapter.AdminMap</tagname>
     	<object>com.dexels.navajo.adapter.AdminMap</object>
     </map>
-
-    <map>
-    	<tagname>com.dexels.navajo.adapter.SequencedInsertMap</tagname>
-    	<object>com.dexels.navajo.adapter.SequencedInsertMap</object>
-    </map>
     <map>
     	<tagname>com.dexels.navajo.adapter.MultipleSQLMap</tagname>
     	<object>com.dexels.navajo.adapter.MultipleSQLMap</object>
