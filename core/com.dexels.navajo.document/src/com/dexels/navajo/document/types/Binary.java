@@ -89,12 +89,10 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
             }
             this.mimetype = guessContentType();
         }
-        logger.warn("Instantiating binary with sandbox: "+NavajoFactory.getInstance().isSandboxMode());
      }    
     
     public Binary() {
         super(Property.BINARY_PROPERTY);
-        logger.warn("Instantiating binary with sandbox: "+NavajoFactory.getInstance().isSandboxMode());
         setMimeType(guessContentType());
      }    
     
