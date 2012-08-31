@@ -117,7 +117,6 @@ private final static Logger logger = LoggerFactory
 
   @SuppressWarnings("unused")
   private ThreadInfo myThread = null;
-  @SuppressWarnings("unused")
 
   public String getScriptName() {
 	  return getClass().getName();
@@ -216,7 +215,7 @@ private final static Logger logger = LoggerFactory
   public Dependency [] getDependencies() {
 	  
 	  Dependency [] all = new Dependency[getDependentObjects().size()];
-	  all = (Dependency []) getDependentObjects().toArray(all);
+	  all = getDependentObjects().toArray(all);
 //	  for ( int i = 0; i < all.length; i++ ) {
 //		  // Normalize id's
 //		  if ( all[i] instanceof AdapterFieldDependency ) {
@@ -285,7 +284,7 @@ private final static Logger logger = LoggerFactory
 				  outMessage.addMessage(msg);
 				  msg.setType(Message.MSG_TYPE_ARRAY);
 				  for (int i = 0; i < failed.length; i++) {
-					  msg.addMessage( (Message) failed[i]);
+					  msg.addMessage( failed[i]);
 				  }
 			  }
 		  }
@@ -422,7 +421,7 @@ private final static Logger logger = LoggerFactory
         }
       }
       ConditionData[] conditionArray = new ConditionData[conditions.size()];
-      conditionArray = (ConditionData[]) conditions.toArray(conditionArray);
+      conditionArray = conditions.toArray(conditionArray);
       return conditionArray;
     }
     else {

@@ -97,9 +97,7 @@ public class TslCompiler {
    */
   private HashMap<Class, DependentResource []> instantiatedAdapters = new HashMap<Class, DependentResource []>();
   
-  @SuppressWarnings("unchecked")
   private Stack<Class> contextClassStack = new Stack<Class>();
-  @SuppressWarnings("unchecked")
   private Class contextClass = null;
   private int included = 0;
 
@@ -229,7 +227,6 @@ private void initialize(ClassLoader loader) {
    * @param className
    * @return
    */
-  @SuppressWarnings("unchecked")
 public String optimizeExpresssion(int ident, String clause, String className, String objectName) throws UserException {
 
     boolean exact = false;
@@ -914,7 +911,7 @@ result.append(printIdent(ident + 4) +
         }
       }
 
-      contextClass = (Class) contextClassStack.pop();
+      contextClass = contextClassStack.pop();
       //System.err.println("802: popped: " + contextClass);
       
       result.append(printIdent(ident + 2) + "MappingUtils.callStoreMethod(currentMap.myObject);\n");
@@ -1017,7 +1014,7 @@ result.append(printIdent(ident + 4) +
         result.append(compile(ident + 4, children.item(i), subClassName, subObjectName));
       }
 
-      contextClass = (Class) contextClassStack.pop();
+      contextClass = contextClassStack.pop();
      
       result.append(printIdent(ident + 2) + "}\n");
       result.append(printIdent(ident + 2) +
@@ -1054,7 +1051,6 @@ result.append(printIdent(ident + 4) +
     return result.toString();
   }
 
-  @SuppressWarnings("unchecked")
 public String propertyNode(int ident, Element n, boolean canBeSubMapped, String className, String objectName) throws
       Exception {
     StringBuffer result = new StringBuffer();
@@ -1798,7 +1794,7 @@ public String fieldNode(int ident, Element n, String className,
     }
 //      System.err.println("Count element: "+count);
 //      System.err.println("STACK: "+contextClassStack);
-      Class m = (Class)contextClassStack.get(contextClassStack.size()-( count ) - offset);
+      Class m = contextClassStack.get(contextClassStack.size()-( count ) - offset);
       //System.err.println("Mappable: "+m);
       return m;
 }
@@ -1847,7 +1843,6 @@ public String fieldNode(int ident, Element n, String className,
     return result.toString();
   }
 
-  @SuppressWarnings("unchecked")
 public String mapNode(int ident, Element n) throws Exception {
 
 
@@ -2112,7 +2107,7 @@ public String mapNode(int ident, Element n) throws Exception {
       result.append(printIdent(ident) + "} // EOF map condition \n");
     }
     if (!contextClassStack.isEmpty()) {
-        contextClass = (Class)contextClassStack.pop();
+        contextClass = contextClassStack.pop();
        // System.err.println("1798: popped: " + contextClass);
     } else {
         contextClass = null;
@@ -2832,7 +2827,7 @@ public String mapNode(int ident, Element n) throws Exception {
     compiler.setMsgOutput(System.out);
     System.err.println("\n\nCLASSPATH: "+classPath.toString());
     for (int i = 0; i < javaFiles.size(); i++) {
-      compiler.compile((String)javaFiles.get(i));
+      compiler.compile(javaFiles.get(i));
       System.err.println("Compiled: "+javaFiles.get(i));
 //      javaBuffer.append((String)javaFiles.get(i));
 //      javaBuffer.append(" ");
@@ -2876,7 +2871,6 @@ public String mapNode(int ident, Element n) throws Exception {
     }
 }
 
-  @SuppressWarnings("unchecked")
   public static String getHostName() {
 
 	  if ( hostname != null ) {
@@ -2957,7 +2951,6 @@ public static void main(String[] args) throws Exception {
    }
  }
 
-@SuppressWarnings("unchecked")
 public void initJavaCompiler( String outputPath, ArrayList classpath, Class javaCompilerClass) {
     StringBuffer cpbuffer = new StringBuffer();
           if (classpath != null) {
@@ -2978,13 +2971,11 @@ public void initJavaCompiler( String outputPath, ArrayList classpath, Class java
 
 }
 
-@SuppressWarnings("unchecked")
 public void compileAllTslToJava(ArrayList elements)  throws Exception {
       removeDuplicates(elements);
     
     compiler.compile(elements);
 }
-@SuppressWarnings("unchecked")
 public void compileAllTslToJava(ArrayList elements, Class compilerClass)  throws Exception {
     removeDuplicates(elements);
   
@@ -2999,7 +2990,6 @@ public void setCompileClassLoader( ClassLoader cl  ) {
     }
 }
 
-@SuppressWarnings("unchecked")
 private void removeDuplicates(ArrayList elements) {
     for (int i = elements.size()-1; i >=0; i--) {
         String element = (String)elements.get(i);

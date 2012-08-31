@@ -16,7 +16,6 @@ public abstract class CompiledScriptFactory {
 	
 	private String serviceName;
 	
-	@SuppressWarnings("unchecked")
 	public abstract CompiledScript getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException;
 	
 	

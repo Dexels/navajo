@@ -34,7 +34,6 @@ public class GenericScriptEngine extends JavaPlugin {
 	}
 
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Navajo process(Navajo in) throws Exception {
 		if(scriptFile.getName().indexOf('.')==-1) {

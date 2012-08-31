@@ -17,7 +17,6 @@ public class AgentFactory {
 		return getInstance("com.dexels.navajo.server.monitoring.ZapcatZabbixAgent");
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static final AgentInterface getInstance(String className) {
 		
 		if ( instance != null ) {

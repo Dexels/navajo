@@ -7,12 +7,12 @@ public final class ASTDatePatternNode extends SimpleNode {
     }
 
     public final Object interpret() throws TMLExpressionException {
-        Object y = (Object) jjtGetChild(0).interpret();
-        Object m = (Object) jjtGetChild(1).interpret();
-        Object d = (Object) jjtGetChild(2).interpret();
-        Object h = (Object) jjtGetChild(3).interpret();
-        Object min = (Object) jjtGetChild(4).interpret();
-        Object s = (Object) jjtGetChild(5).interpret();
+        Object y = jjtGetChild(0).interpret();
+        Object m = jjtGetChild(1).interpret();
+        Object d = jjtGetChild(2).interpret();
+        Object h = jjtGetChild(3).interpret();
+        Object min = jjtGetChild(4).interpret();
+        Object s = jjtGetChild(5).interpret();
 
         if (!((y instanceof Integer) && (m instanceof Integer) && (d instanceof Integer) && (h instanceof Integer) && (min instanceof Integer) && (s instanceof Integer)))
              throw new TMLExpressionException("Integer arguments expected in date pattern: (" + y + "," + m + "," + d + "," + h + "," + min + "," + s +")");

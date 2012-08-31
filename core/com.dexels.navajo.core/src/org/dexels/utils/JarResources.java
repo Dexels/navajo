@@ -74,7 +74,7 @@ public final class JarResources {
      *            a resource name.
      */
     public final byte[] getResource(String name) throws Exception {
-        byte[] resource = (byte[]) htJarContents.get(name);
+        byte[] resource = htJarContents.get(name);
 
         if (resource == null)
             throw new Exception("Resource not found");
@@ -140,7 +140,7 @@ public final class JarResources {
             Enumeration<? extends ZipEntry> e = zf.entries();
 
             while (e.hasMoreElements()) {
-                ZipEntry ze = (ZipEntry) e.nextElement();
+                ZipEntry ze = e.nextElement();
 
                 // System.out.println(ze.getName());
                 htSizes.put(ze.getName(), new Integer((int) ze.getSize()));
@@ -174,15 +174,15 @@ public final class JarResources {
 
                 // -1 means unknown size.
                 if (size == -1) {
-                    size = ((Integer) htSizes.get(ze.getName())).intValue();
+                    size = htSizes.get(ze.getName()).intValue();
                 }
-                byte[] b = new byte[(int) size];
+                byte[] b = new byte[size];
                 
                 int rb = 0;
                 int chunk = 0;
 
-                while (((int) size - rb) > 0) {
-                    chunk = zis.read(b, rb, (int) size - rb);
+                while ((size - rb) > 0) {
+                    chunk = zis.read(b, rb, size - rb);
                     if (chunk == -1) {
                         break;
                     }

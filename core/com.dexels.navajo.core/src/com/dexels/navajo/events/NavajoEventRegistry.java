@@ -251,7 +251,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 				HashSet<NavajoListener> listeners = registry.get(s);
 				Iterator<NavajoListener> all = listeners.iterator();
 				while ( all.hasNext() ) {
-					NavajoListener nl = (NavajoListener) all.next();
+					NavajoListener nl = all.next();
 					if ( !ignoreEventProxy || !( nl instanceof NavajoEventProxyInterface ) ) {
 						return true;
 					}

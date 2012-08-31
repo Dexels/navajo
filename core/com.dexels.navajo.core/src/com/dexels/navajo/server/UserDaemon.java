@@ -43,7 +43,6 @@ public class UserDaemon extends GenericThread {
 		return userServices.get(id);
 	}
 
-	@SuppressWarnings("unchecked")
 	protected static void startup() {
 		// Read XML config with user services.
 		/*
@@ -84,7 +83,7 @@ public class UserDaemon extends GenericThread {
 				try {
 					Class<? extends UserDaemon> c = (Class<? extends UserDaemon>) Class
 							.forName(className.getValue(), true, cl);
-					UserDaemon ud = (UserDaemon) c.newInstance();
+					UserDaemon ud = c.newInstance();
 					ud.setSleepTime(Integer.parseInt(sleepTime.getValue()));
 					startService(ud);
 				} catch (Exception e) {

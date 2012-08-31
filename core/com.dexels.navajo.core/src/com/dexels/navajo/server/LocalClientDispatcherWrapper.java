@@ -91,12 +91,12 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 	
 	public void activate(Map<String,String> properties) {
 //		Dictionary properties =  cc.getProperties();
-		user = (String) properties.get("user");
-		pass = (String) properties.get("password");
+		user = properties.get("user");
+		pass = properties.get("password");
 	}
 	public void modified(Map<String,String> properties) {
-		user = (String) properties.get("user");
-		pass = (String) properties.get("password");
+		user = properties.get("user");
+		pass = properties.get("password");
 	}
 	public void deactivate() {
 		

@@ -240,11 +240,11 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  Iterator<Access> iter = all.iterator();
 	  ArrayList<Access> d = new ArrayList<Access>();
 	  while (iter.hasNext()) {
-		  Access a = (Access) iter.next();
+		  Access a = iter.next();
 		  d.add(a);
 	  }
 	  Access [] ams = new Access[d.size()];
-	  return (Access []) d.toArray(ams);
+	  return d.toArray(ams);
   }
   
   /**
@@ -289,8 +289,8 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
    */
   public  float getRequestRate() {
     if(rateWindow[0] > 0){
-      float time = (float)(rateWindow[rateWindowSize - 1] - rateWindow[0]) / (float)1000.0;
-      float avg = (float) rateWindowSize/time;
+      float time = (rateWindow[rateWindowSize - 1] - rateWindow[0]) / (float)1000.0;
+      float avg = rateWindowSize/time;
       return avg;
     }
     return 0.0f;
@@ -362,7 +362,7 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
       return null;
     }
     else {
-      return (NavajoClassSupplier) navajoConfig.getClassloader();
+      return navajoConfig.getClassloader();
     }
   }
 
@@ -1411,7 +1411,7 @@ public String getServerId() {
   public String getSnmpManangers() {
 	  StringBuffer s = new StringBuffer();
 	  for (int i = 0; i < snmpManagers.size(); i++ ) {
-		  SNMPManager snmp = (SNMPManager) snmpManagers.get(i);
+		  SNMPManager snmp = snmpManagers.get(i);
 		  s.append(snmp.getHost() + ":" + snmp.getPort() + ":" + snmp.getSnmpVersion());
 		  s.append(",");
 	  }

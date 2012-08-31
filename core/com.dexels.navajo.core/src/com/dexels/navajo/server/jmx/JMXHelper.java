@@ -162,7 +162,7 @@ public final class JMXHelper  {
 		ThreadInfo myThread = null;
 		try {
 			ThreadMXBean mxthread = 
-				(ThreadMXBean) ManagementFactory.newPlatformMXBeanProxy(server, "java.lang:type=Threading", java.lang.management.ThreadMXBean.class);
+				ManagementFactory.newPlatformMXBeanProxy(server, "java.lang:type=Threading", java.lang.management.ThreadMXBean.class);
 			long [] all = mxthread.getAllThreadIds();
 			long [] target = new long[1];
 			for (int i = 0; i < all.length; i++) {

@@ -276,7 +276,7 @@ public final class GenericHandler extends ServiceHandler {
     }
     
     private static final NavajoClassSupplier getScriptLoader(boolean isBetaUser, String className) {
-    	NavajoClassSupplier newLoader = (NavajoClassLoader) loadedClasses.get(className);
+    	NavajoClassSupplier newLoader = loadedClasses.get(className);
          if (newLoader == null ) {
          	newLoader = new NavajoClassLoader(null, DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath(), 
          			( isBetaUser ? DispatcherFactory.getInstance().getNavajoConfig().getBetaClassLoader() : 
@@ -402,7 +402,6 @@ public final class GenericHandler extends ServiceHandler {
      * @throws SystemException
      * @throws AuthorizationException
      */
-    @SuppressWarnings("unchecked")
 	public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
 
     	// Check whether break-was-set for access from 'the-outside'. If so, do NOT perform service and return

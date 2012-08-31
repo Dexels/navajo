@@ -347,10 +347,10 @@ public final class MappingUtils {
 	   return parent;
    }
    
-   public static final Message[] addMessage(Navajo doc, Message parent, String message,
+   private static final Message[] addMessage(Navajo doc, Message parent, String message,
                                       String template, int count,
-                                      String type, String mode) throws java.io.IOException, NavajoException,
-                                      org.xml.sax.SAXException, MappingException {
+                                      String type, String mode) throws NavajoException,
+                                      MappingException {
 
 	/**
 	 * Added 22/5/2007: support for relative message creation.
@@ -494,7 +494,7 @@ public final class MappingUtils {
   
 public static final ArrayList getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o, 
   		Message currentParamMsg) throws
-      NavajoException, SystemException, MappingException, TMLExpressionException {
+      NavajoException, SystemException, TMLExpressionException {
     //try {
       ArrayList result = new ArrayList();
 
@@ -570,7 +570,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
   
   
   public static final void callStoreMethod(Object o) throws MappableException,
-  MappingException, UserException {
+  UserException {
 	  if (o == null || !(o instanceof Mappable)) {
 		  return;
 	  }
@@ -579,8 +579,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 	  }
   }
   
-  public static final void callKillMethod(Object o) throws MappableException,
-  MappingException, UserException {
+  public static final void callKillMethod(Object o)  {
 
 	  if (o == null || !(o instanceof Mappable)) {
 		  return;

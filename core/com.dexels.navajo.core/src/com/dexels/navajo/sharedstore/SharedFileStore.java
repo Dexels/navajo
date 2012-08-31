@@ -310,7 +310,7 @@ public class SharedFileStore implements SharedStoreInterface {
 			}
 		}
 		String [] result = new String[names.size()];
-		result = (String []) names.toArray(result);
+		result = names.toArray(result);
 
 		return result;
 	}
@@ -333,7 +333,7 @@ public class SharedFileStore implements SharedStoreInterface {
 			}
 		}
 		String [] result = new String[names.size()];
-		result = (String []) names.toArray(result);
+		result = names.toArray(result);
 
 		return result;
 	}

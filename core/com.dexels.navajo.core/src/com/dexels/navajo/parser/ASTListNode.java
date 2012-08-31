@@ -19,7 +19,7 @@ public final class ASTListNode extends SimpleNode {
         ArrayList list = new ArrayList();
 
         for (int i = 0; i < args; i++) {
-            Object a = (Object) jjtGetChild(i).interpret();
+            Object a = jjtGetChild(i).interpret();
 
             list.add(a);
         }

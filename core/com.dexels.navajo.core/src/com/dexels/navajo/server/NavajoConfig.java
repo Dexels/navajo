@@ -127,7 +127,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 	}
 
 	
-    @SuppressWarnings("unchecked")
 	private void loadConfig(InputStream in, String externalRootPath, String servletContextPath)  throws SystemException{
     	
    	if(servletContextPath!=null) {
@@ -519,7 +518,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 
     // Added a cast, because I changed the type of classloader to generic class loader, so I can just use the system class loader as well...
     public final NavajoClassSupplier getClassloader() {
-    	return (NavajoClassSupplier) adapterClassloader;
+    	return adapterClassloader;
     }
 
     /*

@@ -78,7 +78,7 @@ public class Parameters extends java.util.Hashtable<String,Parameter> implements
 
     private Object isValueStored(String name) {
 
-        Parameter p = (Parameter) super.get(name);
+        Parameter p = super.get(name);
 
         if (p == null)
             return "";
@@ -90,7 +90,7 @@ public class Parameters extends java.util.Hashtable<String,Parameter> implements
 
     public Object getValue(String name) throws NavajoException {
 
-        Parameter p = (Parameter) super.get(name);
+        Parameter p = super.get(name);
 
         if (p == null)
             throw NavajoFactory.getInstance().createNavajoException("No such parameter: " + name);
@@ -101,7 +101,7 @@ public class Parameters extends java.util.Hashtable<String,Parameter> implements
     }
 
     public String getType(String name) {
-        Parameter p = (Parameter) super.get(name);
+        Parameter p = super.get(name);
 
         if (p == null)
             return "";

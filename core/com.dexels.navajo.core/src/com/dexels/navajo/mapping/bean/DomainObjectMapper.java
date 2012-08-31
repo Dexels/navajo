@@ -96,7 +96,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	public final Method setMethodReference(Class myClass, String name, Class [] parameters) throws MappingException {
 
 		String key = constructParameterSignature(name, parameters);
-		java.lang.reflect.Method m = (Method) methods.get(key);
+		java.lang.reflect.Method m = methods.get(key);
 
 		if (m == null) {
 			String methodName = "set" + (name.charAt(0) + "").toUpperCase() + name.substring(1, name.length());
@@ -189,7 +189,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 			}
 		}
     
-		java.lang.reflect.Method m = (Method) methods.get(key.toString());
+		java.lang.reflect.Method m = methods.get(key.toString());
 
 		if (m == null) {
 		

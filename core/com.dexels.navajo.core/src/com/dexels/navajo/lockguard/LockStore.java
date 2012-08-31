@@ -60,13 +60,13 @@ public abstract class LockStore {
 			List<Message> allMessages = myRequest.getAllMessages();
 			
 			for (int i = 0; i < allMessages.size(); i++) {
-				Message m = (Message) allMessages.get(i);
+				Message m = allMessages.get(i);
 				if ( !( m.getName().equals("__parms__") || 
 						m.getName().equals("__globals__")  )) {
 					String excludeProperties = null;
 					
 					if ( ld.excludeProperties.get( m.getName() ) != null ) {
-						excludeProperties =  (String) ld.excludeProperties.get( m.getName() );
+						excludeProperties =  ld.excludeProperties.get( m.getName() );
 					}
 					System.err.println("excludeProperties = " + excludeProperties);
 					

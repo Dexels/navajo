@@ -37,7 +37,6 @@ public class TribeManagerFactory {
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	public static TribeManagerInterface getTribeManagerService() {
 			try {
 				/**

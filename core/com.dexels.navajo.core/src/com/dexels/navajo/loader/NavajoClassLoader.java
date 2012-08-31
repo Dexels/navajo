@@ -181,12 +181,12 @@ public class NavajoClassLoader extends MultiClassLoader {
     		  File fi = new File(classFileName);
     		  fis = new FileInputStream(fi);
     		  int size = (int) fi.length();
-    		  byte[] b = new byte[ (int) size];
+    		  byte[] b = new byte[ size];
     		  int rb = 0;
     		  int chunk = 0;
     		  
-    		  while ( ( (int) size - rb) > 0) {
-    			  chunk = fis.read(b, rb, (int) size - rb);
+    		  while ( ( size - rb) > 0) {
+    			  chunk = fis.read(b, rb, size - rb);
     			  if (chunk == -1) {
     				  break;
     			  }

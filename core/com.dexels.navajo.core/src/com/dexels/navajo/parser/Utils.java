@@ -123,7 +123,7 @@ public final class Utils extends Exception {
 
     public final static double getDoubleValue(Object o) throws TMLExpressionException {
         if (o instanceof Integer)
-            return (double) ((Integer) o).intValue();
+            return ((Integer) o).intValue();
         else if (o instanceof Double)
             return ((Double) o).doubleValue();
         else if (o instanceof Money)

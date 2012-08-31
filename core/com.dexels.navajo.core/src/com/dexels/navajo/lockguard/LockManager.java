@@ -119,7 +119,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 								
 			List<Message> all = definition.getMessage("Locks").getAllMessages();
 			for ( int i = 0; i < all.size(); i++ ) {
-				Message lock = (Message) all.get(i);
+				Message lock = all.get(i);
 				String ws = lock.getProperty("WebservicePattern").getValue();
 				boolean matchUsername = ((Boolean) lock.getProperty("MatchUsername").getTypedValue()).booleanValue();
 				boolean matchRequest = ((Boolean) lock.getProperty("MatchRequest").getTypedValue()).booleanValue();
@@ -129,7 +129,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 				if ( matchRequest && lock.getMessage("ExcludedMessages") != null ) {
 					List<Message> excludedMessagesList = lock.getMessage("ExcludedMessages").getAllMessages();
 					for (int j = 0; j < excludedMessagesList.size(); j++) {
-						Message ex = (Message) excludedMessagesList.get(j);
+						Message ex = excludedMessagesList.get(j);
 						String mn = ex.getProperty("MessageName").getValue();
 						String exprops = ex.getProperty("ExcludedProperties").getValue();
 						excludeMessages.put(mn, exprops);
@@ -210,7 +210,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 		
 		// Fork for each lockdefinition....
 		while ( iter.hasNext() ) {
-			final LockDefinition ld = (LockDefinition) iter.next();
+			final LockDefinition ld = iter.next();
 			new Thread() {
 				public void run() {
 					Lock l;
@@ -244,7 +244,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 		if ( a.getException() != null && a.getException() instanceof LocksExceeded ) {
 			// Remove previously set locks and throw exception.
 			for (int i = 0; i < lockList.size(); i++) {
-				LockStore.getStore().removeLock(a, (Lock) lockList.get(i));
+				LockStore.getStore().removeLock(a, lockList.get(i));
 			}
 			throw (LocksExceeded) a.getException();
 		}
@@ -254,7 +254,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 		}
 		
 		Lock [] locks = new Lock[lockList.size()];
-		return (Lock []) lockList.toArray(locks);
+		return lockList.toArray(locks);
 	}
 	
 	public static void main(String [] args) throws Exception {
@@ -326,7 +326,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 	
 	public LockDefinition [] getDefinitions() {
 		definitions = new LockDefinition[instance.lockDefinitions.size()];
-		return (LockDefinition []) instance.lockDefinitions.values().toArray(definitions);
+		return instance.lockDefinitions.values().toArray(definitions);
 	}
 	
 	public String getVERSION() {

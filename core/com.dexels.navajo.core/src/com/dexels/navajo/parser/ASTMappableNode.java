@@ -41,13 +41,13 @@ public final class ASTMappableNode extends SimpleNode {
             objects = new ArrayList();
 
         for (int i = 0; i < args; i++) {
-            Object a = (Object) jjtGetChild(i).interpret();
+            Object a = jjtGetChild(i).interpret();
             objects.add(a);
         }
 
         if (objects != null) {
             parameterArray = new Object[objects.size()];
-            parameterArray = (Object[]) objects.toArray(parameterArray);
+            parameterArray = objects.toArray(parameterArray);
         }
 
         try {

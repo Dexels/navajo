@@ -9,9 +9,9 @@ public final class ASTEQNode extends SimpleNode {
 
     public final Object interpret() throws TMLExpressionException {
         // System.out.println("in ASTEQNode()");
-        Object a = (Object) jjtGetChild(0).interpret();
+        Object a = jjtGetChild(0).interpret();
         // System.out.println("Got first argument");
-        Object b = (Object) jjtGetChild(1).interpret();
+        Object b = jjtGetChild(1).interpret();
 
         // System.out.println("Got second argument");
         

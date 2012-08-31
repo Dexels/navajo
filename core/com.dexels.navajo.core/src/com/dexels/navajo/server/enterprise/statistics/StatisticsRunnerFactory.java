@@ -21,7 +21,6 @@ public class StatisticsRunnerFactory {
 	private static Object semaphore = new Object();
 	private final static Logger logger = LoggerFactory.getLogger(StatisticsRunnerFactory.class);
 	
-	@SuppressWarnings("unchecked")
 	public static final StatisticsRunnerInterface getInstance(String storePath, Map parameters, String storeClass) {
 		if ( instance != null ) {
 			return instance;
@@ -52,7 +51,6 @@ public class StatisticsRunnerFactory {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private static StatisticsRunnerInterface getStatisticsRunnerInstance(String storePath,
 			Map parameters, String storeClass) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException,

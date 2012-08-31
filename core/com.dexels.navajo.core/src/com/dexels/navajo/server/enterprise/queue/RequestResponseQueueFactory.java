@@ -11,7 +11,6 @@ public class RequestResponseQueueFactory {
 	private static volatile RequestResponseQueueInterface instance = null;
 	private static Object semaphore = new Object();
 	
-	@SuppressWarnings("unchecked")
 	public static RequestResponseQueueInterface getInstance() {
 		
 		if ( instance != null ) {
