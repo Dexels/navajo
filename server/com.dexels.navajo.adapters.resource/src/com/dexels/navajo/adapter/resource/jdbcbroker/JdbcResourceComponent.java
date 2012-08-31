@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter.jdbcbroker;
+package com.dexels.navajo.adapter.resource.jdbcbroker;
 
 import java.sql.Connection;
 import java.util.HashMap;

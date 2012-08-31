@@ -18,7 +18,7 @@ import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.adapter.JDBCMap;
+import com.dexels.navajo.adapter.resource.JDBCMap;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Navajo;

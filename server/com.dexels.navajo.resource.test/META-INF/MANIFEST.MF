@@ -5,7 +5,8 @@ Bundle-SymbolicName: com.dexels.navajo.resource.test
 Bundle-Version: 1.0.2.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: com.dexels.navajo.client,
+Import-Package: com.dexels.navajo.adapter.resource,
+ com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.script.api,
  com.dexels.navajo.version,

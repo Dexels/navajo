@@ -16,6 +16,7 @@
 		<module>../../com.dexels.navajo.queuemanager</module>
 		<module>../../com.dexels.navajo.rhino</module>
 		<module>../../com.dexels.navajo.adapters</module>
+		<module>../../com.dexels.navajo.adapters.resource</module>
 		<module>../../com.dexels.navajo.resource</module>
 		<module>../../com.dexels.navajo.resource.manager</module>
 		<module>../../com.dexels.navajo.resource.jdbc.h2</module>

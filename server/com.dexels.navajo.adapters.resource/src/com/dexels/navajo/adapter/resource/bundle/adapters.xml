@@ -277,7 +277,36 @@
         </methods>
     </map>
     
-   
+    
+        <!-- SQL adapter -->
+    <map>
+        <tagname>jdbcquery</tagname>
+        <object>com.dexels.navajo.adapter.JDBCMap</object>
+        <values>
+            <value name="query" type="string" required="false" direction="in"/>
+            <value name="update" type="string" required="false" direction="in"/>
+            <value name="binaryQuery" type="binary" required="false" direction="in"/>
+            <value name="binaryUpdate" type="binary" required="false" direction="in"/>
+            <value name="debug" type="boolean" required="false" direction="in"/>
+            <value name="transactionContext" type="integer" required="false" direction="in"/>
+            <value name="datasource" type="string" required="false" direction="in"/>
+            <value name="username" type="string" required="false" direction="in"/>
+            <value name="parameter" type="any" required="false" direction="in" cardinality="+"/>
+            <value name="resultSet" map="resultrow []" required="false" direction="out"/>
+        </values>
+        <methods>
+            <method name="addParameter">
+                <param name="value" field="parameter" type="any" required="false"/>
+            </method>
+            <method name="doUpdate">
+                <param name="value" field="doUpdate" type="boolean" required="automatic" value="true"/>
+            </method>
+            <method name="rollback">
+                <param name="value" field="kill" type="boolean" required="automatic" value="true"/>
+            </method>
+        </methods>
+    </map>
+    
     <!-- SP adapter -->
     <map>
         <tagname>storedproc</tagname>

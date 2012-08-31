@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter;
+package com.dexels.navajo.adapter.resource;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.adapter.jdbcbroker.JdbcResourceComponent;
+import com.dexels.navajo.adapter.resource.jdbcbroker.JdbcResourceComponent;
 import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.adapter.sqlmap.SQLBatchUpdateHelper;
