@@ -10,7 +10,12 @@ package com.dexels.navajo.parser;
  */
 
 public class ExpressionDependencyException extends Exception {
-  public ExpressionDependencyException() {
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7489854423521979136L;
+
+public ExpressionDependencyException() {
   }
 
 }

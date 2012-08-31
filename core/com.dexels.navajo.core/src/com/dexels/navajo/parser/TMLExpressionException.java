@@ -12,7 +12,11 @@ package com.dexels.navajo.parser;
 
 public class TMLExpressionException extends Exception {
 
-    private String message = "";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 447452587961773391L;
+	private String message = "";
 
     public TMLExpressionException(String s) {
         this.message = "Invalid expression. " + s;
