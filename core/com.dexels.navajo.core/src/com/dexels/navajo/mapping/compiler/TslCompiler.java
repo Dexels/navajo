@@ -23,7 +23,6 @@ package com.dexels.navajo.mapping.compiler;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -67,7 +66,6 @@ import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.navajo.server.SystemException;
@@ -1181,7 +1179,6 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     }
 
     if (isMapped) {
-    	localContextClass = null;
       try {
     	  localContextClass = Class.forName(className, false, loader);
       } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
@@ -1287,9 +1284,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     if (isSelection) { // Set selection property stuff.
       result.append(optionItems.toString());
     }
-    if ( cardinality != null) {
-      result.append("p.setCardinality(\"" + cardinality + "\");\n");
-    }
+    result.append("p.setCardinality(\"" + cardinality + "\");\n");
 
     if (conditionClause) {
       ident -= 2;
@@ -1776,7 +1771,6 @@ public String fieldNode(int ident, Element n, String className,
     return result.toString();
   }
 
-  @SuppressWarnings("unchecked")
   /**
    * Locate a contextclass in the class stack based upon a mappath.
    * Depending on the way this method is called an additional offset to stack index must be supplied...

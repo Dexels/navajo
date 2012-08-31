@@ -1,6 +1,5 @@
 package com.dexels.navajo.server;
 
-import java.util.Dictionary;
 import java.util.Map;
 
 import org.slf4j.Logger;

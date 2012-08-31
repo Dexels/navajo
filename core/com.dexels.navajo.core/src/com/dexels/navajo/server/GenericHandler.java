@@ -3,18 +3,16 @@ package com.dexels.navajo.server;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
+
+import navajocore.Version;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import navajocore.Version;
 
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Header;

@@ -1,7 +1,5 @@
 package com.dexels.navajo.mapping.compiler.meta;
 
-import java.io.StringWriter;
-
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 /**
