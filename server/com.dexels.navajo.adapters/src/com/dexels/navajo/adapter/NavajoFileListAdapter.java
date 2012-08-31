@@ -170,7 +170,7 @@ private Message createFileMessage(Message parent, File entry, String pathToDescr
           }
 
       for (int i = 0; i < columns.size(); i++) {
-        String current = (String)columns.get(i);
+        String current = columns.get(i);
         Property p = n.getProperty(current);
         if (p!=null) {
 //          Property q = (Property)p.clone();

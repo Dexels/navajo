@@ -28,7 +28,6 @@ public final class DbConnectionBroker extends Object
 	public  boolean supportsAutocommit = true;
 	protected boolean sanityCheck = true;
 	
-	private static int instances = 0;
 	
 	protected static final Map<Integer,DbConnectionBroker> transactionContextBrokerMap = Collections.synchronizedMap(new HashMap<Integer,DbConnectionBroker>());
 	
@@ -196,8 +195,6 @@ public final class DbConnectionBroker extends Object
 	public final synchronized void refreshConnections() {
 		
 		long maxAge = (long) (System.currentTimeMillis() - this.timeoutDays * 86400000L);
-		int idle = 0;
-		int currentCount = this.current;
 		//System.err.println(Thread.currentThread().getName() + ": MAXAGE IS: " + maxAge);
 		// Check IDLE time, created[i] contains timestamp of last use.
 		
@@ -287,7 +284,6 @@ public final class DbConnectionBroker extends Object
 				return conns[i];
 			}
 		}
-		// TODO PUT REQUEST IN WAITING LIST!
 //         "Assertion failure: no connections, retrying...");
 //		return getConnection();
 		log("@@@@@ RETURNING NULL!! THIS SHOULD NOT HAPPEN");

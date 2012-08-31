@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +19,13 @@ public class JdbcResourceComponent {
 	private final Map<Integer,Connection> transactionMap = new HashMap<Integer, Connection>();
 //	private BundleContext bundleContext;
 	
-	public void setup(ComponentContext context) {
-		instance =  this;
+	public void setup() {
+		setInstance(this);
 //		this.bundleContext = context.getBundleContext();
+	}
+	private static void setInstance(JdbcResourceComponent jdbcResourceComponent) {
+		instance = jdbcResourceComponent;
+		
 	}
 	public void setResourceManager(ResourceManager r) {
 		logger.info("Adding Resource Manager, instantiating JdbcResourceComponent");
@@ -30,6 +33,9 @@ public class JdbcResourceComponent {
 		instance = this;
 	}
 
+	/**
+	 * @param r the resource manager to remove 
+	 */
 	public void removeResourceManager(ResourceManager r) {
 		logger.info("Removing Resource Manager, uninstantiating JdbcResourceComponent");
 		manager = null;

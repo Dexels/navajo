@@ -117,7 +117,6 @@ public class SOAPMap implements Mappable {
 		this.requestBody = new Binary( sb.toString().getBytes() );		
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void setDoSend(boolean b) throws UserException {
 		
 		SOAPConnection connection = null;
@@ -298,7 +297,7 @@ SOAPAction: "https://sportlink.rfxweb.nl/GetClub"
 
 	public SoapAttachment [] getResponseAttachments() {
 		SoapAttachment [] atts = new SoapAttachment[responseAttachments.size()];
-		atts = (SoapAttachment []) responseAttachments.toArray(atts);
+		atts = responseAttachments.toArray(atts);
 		return atts;
 	}
 	

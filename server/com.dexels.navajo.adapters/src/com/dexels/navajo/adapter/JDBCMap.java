@@ -484,12 +484,6 @@ public final Object getColumnName(final Integer index) throws UserException {
 				logger.info("Username set to: " + this.username);
 			}
 
-			this.transactionContext = con.hashCode();
-			logger.info(":::Creating transactioncontext: " + transactionContext);
-			this.ownContext = true;
-			// con = pooledConnection.getConnection();
-			JdbcResourceComponent.getInstance().registerTransaction(con.hashCode(), con);
-
 			if (con == null) {
 				AuditLog.log("SQLMap", "Could (still) not connect to database: " + datasource + ", check your connection", Level.SEVERE);
 				throw new UserException(-1, "Could not connect to database: " + datasource + " ()" + ", check your connection");
@@ -499,11 +493,16 @@ public final Object getColumnName(final Integer index) throws UserException {
 				}
 			}
 
-			if (this.con != null) {
-				this.connectionId = con.hashCode();
-				if (this.debug) {
-					Access.writeToConsole(myAccess, this.getClass() + ": put connection no. " + this.connectionId + " into the connection map\n");
-				}
+			this.transactionContext = con.hashCode();
+			logger.info(":::Creating transactioncontext: " + transactionContext);
+			this.ownContext = true;
+			// con = pooledConnection.getConnection();
+			JdbcResourceComponent.getInstance().registerTransaction(con.hashCode(), con);
+
+
+			this.connectionId = con.hashCode();
+			if (this.debug) {
+				Access.writeToConsole(myAccess, this.getClass() + ": put connection no. " + this.connectionId + " into the connection map\n");
 			}
 		}
 
@@ -698,7 +697,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 					meta = rs.getMetaData();
 					columns = meta.getColumnCount();
 				} catch (Exception e) {
-
+					throw new UserException(-1, "Error retrieving metadata / columncount", e);
 				}
 				ArrayList dummy = new ArrayList();
 				int index = 1;
@@ -744,10 +743,8 @@ public final Object getColumnName(final Integer index) throws UserException {
 						e.printStackTrace();
 						logger.warn("Some sql problem: ", e);
 					}
-					if (rs != null) {
-						rs.close();
-						rs = null;
-					}
+					rs.close();
+					rs = null;
 					resetAll();
 
 				}
@@ -822,7 +819,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 					queryWithParameters.append(dbQuery.charAt(i));
 				} else {
 					Object o = parameters.get(index++);
-					if (o instanceof String && o != null) {
+					if (o instanceof String ) {
 						queryWithParameters.append("'" + o.toString() + "'");
 					} else {
 						if (o != null) {
@@ -925,13 +922,8 @@ public final Object getColumnName(final Integer index) throws UserException {
 			}
 			fw.flush();
 			fw.close();
-
 			b = new Binary(tempFile, false);
-
-			if (fos != null) {
-				fos.close();
-			}
-
+			fos.close();
 			return b;
 		} catch (Exception ioe) {
 			throw new UserException(-1, ioe.getMessage(), ioe);
@@ -942,7 +934,6 @@ public final Object getColumnName(final Integer index) throws UserException {
 					rs = null;
 					resetAll();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					logger.error("Error writing output binary", e);
 				}
 			}
@@ -1030,8 +1021,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 
 	@Override
 	public void setEndIndex(int i) {
-		// TODO Auto-generated method stub
-
+		logger.warn("setEndIndex not properly implemented in JDBCMap");
 	}
 
 	public Connection getConnection() {
@@ -1049,7 +1039,6 @@ public final Object getColumnName(final Integer index) throws UserException {
 
     @Override
     public String getDbIdentifier() {
-        // TODO Auto-generated method stub
-        return null;
+        return dbIdentifier;
     }
 }

@@ -78,7 +78,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 			fi.injectExtension(library);
 			for(String adapterName: fi.getAdapterNames(library)) {
 //			FunctionDefinition fd = fi.getAdapterDefinition(adapterName,extensionDef);
-				FunctionDefinition fd = fi.getAdapterConfig(library).get(adapterName);
+				fi.getAdapterConfig(library).get(adapterName);
 //			FunctionDefinition fd = fi.getDef(extensionDef, adapterName);
 				
 				String adapterClass = fi.getAdapterClass(adapterName,library);
@@ -86,17 +86,17 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 				
 				try {
 					c = Class.forName(adapterClass);
+					 Dictionary<String, Object> props = new Hashtable<String, Object>();
+					 props.put("adapterName", adapterName);
+					 props.put("adapterClass", c.getName());
+
+					if(adapterClass!=null) {
+						context.registerService(Class.class.getName(), c, props);
+					}
 				} catch (Exception e) {
 					logger.error("Error loading class for adapterClass: "+adapterClass,e);
 				}
 				
-				 Dictionary<String, Object> props = new Hashtable<String, Object>();
-				 props.put("adapterName", adapterName);
-				 props.put("adapterClass", c.getName());
-
-				if(adapterClass!=null) {
-					context.registerService(Class.class.getName(), c, props);
-				}
 			}
 		} catch (Throwable e) {
 			logger.error("Trouble starting NavajoAdapters bundle",e);

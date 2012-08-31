@@ -44,7 +44,7 @@ public class DerbyManagerMap {
 		}
 	}
 
-	public void setShutdownDataSource(String name) throws UserException {
+	public void setShutdownDataSource(String name)  {
 		try {
 			Class.forName(driver).newInstance();
 			Properties props = null;
@@ -57,6 +57,9 @@ public class DerbyManagerMap {
 		}
 	}
 
+	/**
+	 * @param name  
+	 */
 	public void setPurgeDataSource(String name) throws UserException {
 		try {
 			delete(derbySystemDir);

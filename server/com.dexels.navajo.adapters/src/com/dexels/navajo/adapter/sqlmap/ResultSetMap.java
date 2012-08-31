@@ -52,7 +52,7 @@ public class ResultSetMap implements Mappable {
         this.columnName = name;
     }
 
-    public final RecordMap [] getRecords() throws UserException {
+    public final RecordMap [] getRecords() {
         if (records == null) {
           ArrayList list = new ArrayList();
           for (int i = 0; i < order.size(); i++) {
@@ -68,7 +68,7 @@ public class ResultSetMap implements Mappable {
         return records;
     }
 
-    public final Object getColumnValue() throws UserException {
+    public final Object getColumnValue() {
         return values.get(columnName);
     }
 

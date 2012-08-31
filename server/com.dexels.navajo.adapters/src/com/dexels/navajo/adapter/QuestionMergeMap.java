@@ -131,7 +131,7 @@ public class QuestionMergeMap
   private void mergeData(Navajo questionNavajo, Message dataMessage) {
     Message questionMessage = questionNavajo.getMessage(questionPath);
     for (int i = 0; i < dataMessage.getArraySize(); i++) {
-      Message m = (Message) dataMessage.getMessage(i);
+      Message m = dataMessage.getMessage(i);
       Property id = m.getProperty("Id");
 //      Property value = m.getProperty("Value");
       System.err.println("Looking for question: "+id.getValue());
@@ -154,9 +154,9 @@ public class QuestionMergeMap
       return questionMessage;
     }
     for (int i = 0; i < questionMessage.getArraySize(); i++) {
-      Message m = (Message) questionMessage.getMessage(i);
+      Message m = questionMessage.getMessage(i);
       Property p = m.getProperty("Id");
-      if (groupName.equals( (String) p.getTypedValue())) {
+      if (groupName.equals( p.getTypedValue())) {
         if (questionMessage.getName().equals("QuestionList")) {
           getQuestionById(idTok, m.getMessage("Group"));
         }

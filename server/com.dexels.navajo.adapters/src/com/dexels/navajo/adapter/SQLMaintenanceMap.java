@@ -3,6 +3,7 @@ package com.dexels.navajo.adapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.dexels.navajo.adapter.sqlmap.SQLMapDatasourceMap;
 import com.dexels.navajo.document.Message;
@@ -15,7 +16,6 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 
 /**
@@ -40,22 +40,24 @@ public class SQLMaintenanceMap implements Mappable {
 
 private boolean dirty = false;
 
-  private Parameters parms;
-  private Navajo inMessage;
   private Access access;
   private NavajoConfigInterface config;
 
   private static boolean noAccess = false;
 
-  public void load(Access access) throws MappableException, UserException {
+
+  private static void setNoAccess(boolean noAccess) {
+		SQLMaintenanceMap.noAccess = noAccess;
+	}
+
+public void load(Access access) throws MappableException, UserException {
 
       //if (noAccess)
       //  throw new MappableException("Cannot enter maintenance object, already in use");
 
-      noAccess = true;
+      setNoAccess(true);
       System.out.println("In SQLMaintenanceMap");
 
-      this.inMessage = access.getInDoc();
       this.access = access;
       this.config = DispatcherFactory.getInstance().getNavajoConfig();
 
@@ -70,15 +72,15 @@ private boolean dirty = false;
   }
 
   public synchronized void store() throws MappableException, UserException {
-    noAccess = false;
+	  setNoAccess(false);
   }
 
-  public SQLMapDatasourceMap [] getDatasources() {
+  public synchronized SQLMapDatasourceMap [] getDatasources() {
 
-    ArrayList all = new ArrayList();
-    ArrayList list = sqlMapConfigFile.getMessage("datasources").getAllMessages();
+    List<SQLMapDatasourceMap> all = new ArrayList<SQLMapDatasourceMap>();
+    List<Message> list = sqlMapConfigFile.getMessage("datasources").getAllMessages();
     for (int i = 0; i < list.size(); i++) {
-        Message msg = (Message) list.get(i);
+        Message msg = list.get(i);
         SQLMapDatasourceMap dm = new SQLMapDatasourceMap();
         dm.datasourceName = msg.getName();
         dm.url = msg.getProperty("url").getValue();
@@ -93,12 +95,15 @@ private boolean dirty = false;
     }
 
     datasources = new SQLMapDatasourceMap[all.size()];
-    datasources = (SQLMapDatasourceMap []) all.toArray(datasources);
+    datasources = all.toArray(datasources);
 
     return datasources;
   }
 
-  private void saveConfigFile(boolean copy) throws MappableException {
+  /**
+ * @param copy  
+ */
+private void saveConfigFile(boolean copy) throws MappableException {
 	  
 	  if (noAccess)
 	        throw new MappableException("Cannot enter maintenance object in write mode, already in use");
@@ -110,7 +115,7 @@ private boolean dirty = false;
 //          f.write(sqlMapConfigFile.toString());
 //          f.close();
         } catch (IOException ioe) {
-          noAccess = false;
+        	setNoAccess(false);
           throw new MappableException(ioe.getMessage());
         }
   }
@@ -203,6 +208,6 @@ private boolean dirty = false;
   }
   
   public void kill() {
-    noAccess = false;
+	  setNoAccess(false);
   }
 }

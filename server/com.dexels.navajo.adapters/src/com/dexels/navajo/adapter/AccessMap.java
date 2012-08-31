@@ -38,7 +38,6 @@ public final class AccessMap implements Mappable {
   
   /* Private vars */
   private boolean showDetails = false;
-  private boolean isAsync = false;
   
   public AccessMap() {
   }
@@ -167,7 +166,6 @@ public final class AccessMap implements Mappable {
       myAccess = (Access) com.dexels.navajo.mapping.AsyncStore.getInstance().accessStore.get(id);
       if (myAccess != null) {
         showDetails = true;
-        isAsync = true;
       }
     }
   }

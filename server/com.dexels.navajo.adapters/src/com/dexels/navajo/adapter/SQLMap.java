@@ -1047,14 +1047,6 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					Access.writeToConsole(myAccess, "GOT RESULTSET!!!!!\n");
 				}
 			} catch (SQLException e) {
-				if (rs != null) {
-					rs.close();
-					rs = null;
-				}
-				if (rs != null) {
-					resetAll();
-				}
-
 				// For Sybase compatibility: sybase does not like to be called
 				// using executeQuery() if query does not return a resultset.
 				if (e.getMessage().indexOf("JZ0R2") == -1) {
@@ -1127,7 +1119,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					meta = rs.getMetaData();
 					columns = meta.getColumnCount();
 				} catch (Exception e) {
-
+					throw new UserException(-1, "Error getting metadata / columns", e);
 				}
 				ArrayList dummy = new ArrayList();
 				int index = 1;
@@ -1146,11 +1138,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 								int type = meta.getColumnType(i);
 
 								Object value = null;
-//								final String strVal = rs.getString(i);
-								
-//								if ((strVal != null && !rs.wasNull()) || type == Types.BLOB) {
-									value = SQLMapHelper.getColumnValue(rs, type, i);
-//								}
+								value = SQLMapHelper.getColumnValue(rs, type, i);
 								rm.addValue(param.toUpperCase(), value);
 							}
 							dummy.add(rm);
@@ -1175,10 +1163,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 						Access.writeToConsole(myAccess, "SQL exception is '" + e.toString() + "'\n");
 						logger.info("Sql problem that might or might not be a an actual problem: ",e);
 					}
-					if (rs != null) {
-						rs.close();
-						rs = null;
-					}
+					rs.close();
+					rs = null;
 					resetAll();
 
 				}
@@ -1480,7 +1466,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					queryWithParameters.append(dbQuery.charAt(i));
 				} else {
 					Object o = parameters.get(index++);
-					if (o instanceof String && o != null) {
+					if (o instanceof String) {
 						queryWithParameters.append("'" + o.toString() + "'");
 					} else {
 						if (o != null) {
@@ -1567,11 +1553,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			fw.close();
 
 			b = new Binary(tempFile, false);
-
-			if (fos != null) {
-				fos.close();
-			}
-
+			fos.close();
 			return b;
 		} catch (Exception ioe) {
 			throw new UserException(-1, ioe.getMessage(), ioe);

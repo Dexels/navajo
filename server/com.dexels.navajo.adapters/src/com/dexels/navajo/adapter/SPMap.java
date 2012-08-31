@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
 import com.dexels.navajo.adapter.sqlmap.SQLMapHelper;
@@ -40,6 +43,8 @@ import com.dexels.navajo.util.AuditLog;
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
 public class SPMap extends SQLMap {
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(SPMap.class);
   public String outputParameter;
   public String outputParameterType;
 
@@ -80,51 +85,7 @@ public class SPMap extends SQLMap {
 	  // System.out.println("lookupTable = " + lookupTable);
   }
 
-  /**
-   * Determine SP parameter type from metadata (HIGHLY EXPERIMENTAL BUT NECCESSARY TO SUPPORT NULL VALUES IN SP PARAMS!
-   *
-   * @param index
-   * @return
-   */
-  private final int getSpParameterType(String spName, int parameterIndex) {
-
-    // ONLY INCREMENT THIS FOR SP's WITH OUTPUT PARAMETER, TODO: PARAMETERIZE THIS!!!!!!!!!!!!!!!!!!!!
-    parameterIndex++;
-    return Types.VARCHAR;
-
-//    try {
-//
-//      if (spName.equals("")) {
-//        return Types.VARCHAR;
-//      }
-//
-//      int type = Types.VARCHAR;
-//
-//      DatabaseMetaData md = con.getMetaData();
-//      // Sybase expects a ;1 after the procudure name.....
-//      ResultSet rs = md.getProcedureColumns(null, null, spName + ";1", null);
-//      int index = 1;
-//      // String sType = "";
-//      boolean found = false;
-//
-//      while (rs.next() && !found) {
-//        type = rs.getInt("DATA_TYPE");
-//        if (index == parameterIndex) {
-//          found = true;
-//          break;
-//        }
-//        else {
-//          index++;
-//        }
-//      }
-//      rs.close();
-//
-//      return type;
-//    }
-//    catch (SQLException sqle) {
-//      return Types.VARCHAR;
-//    }
-  }
+ 
 
   protected ResultSetMap[] getResultSet(boolean updateOnly) throws com.dexels.navajo.server.UserException {
 
@@ -153,8 +114,13 @@ public class SPMap extends SQLMap {
 
         // Close previously open call statements:
         if (callStatement != null) {
-        	try { callStatement.close(); } catch (Exception e) {}
-        	callStatement = null;
+
+			try {
+				callStatement.close();
+			} catch (Exception e) {
+				logger.warn("Non fatal error closing statement", e);
+			}
+     	callStatement = null;
         	openCallStatements--;
         }
         
@@ -205,7 +171,7 @@ public class SPMap extends SQLMap {
 													this.debug, 
 													this.myAccess);
 	            } else {
-	              int sqlType = ( (Integer) lookupTable.get( (String) param)).intValue();
+	              int sqlType = ( (Integer) lookupTable.get( param)).intValue();
 	              callStatement.registerOutParameter(i + 1, sqlType);
 	            }
 			}
@@ -329,10 +295,8 @@ public class SPMap extends SQLMap {
   }
 
   public void setOutputParameterType(String type) {
-    //System.out.println("in setOutputParameter(), type = " + type);
-    super.setParameter( (String) type);
+    super.setParameter( type);
     parameterTypes.add(new Integer(OUTPUT_PARAM));
-    //System.out.println("Added output parameter f" + (String) type);
   }
 
   public Object getOutputParameter(Integer i) throws com.dexels.navajo.server.UserException {

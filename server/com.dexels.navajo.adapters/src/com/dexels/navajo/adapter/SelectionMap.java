@@ -92,7 +92,7 @@ public class SelectionMap implements Mappable {
           return options;
 
         OptionMap[] result = new OptionMap[optionsList.size()];
-        result = (OptionMap[]) optionsList.toArray(result);
+        result = optionsList.toArray(result);
         return result;
     }
 

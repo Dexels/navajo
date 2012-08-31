@@ -304,7 +304,7 @@ public class MessageMap implements Mappable {
 		}
 		
 		this.resultMessage = new ResultMessage[resultingMessage.size()];
-		this.resultMessage = (ResultMessage []) resultingMessage.toArray(resultMessage);
+		this.resultMessage = resultingMessage.toArray(resultMessage);
 		
 		
 		return this.resultMessage;

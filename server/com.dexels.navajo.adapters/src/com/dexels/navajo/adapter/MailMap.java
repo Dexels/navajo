@@ -114,7 +114,7 @@ public class MailMap implements MailMapInterface, Mappable,
 
 	public Binary[] getAttachments() {
 		Binary[] bins = new Binary[attachments.size()];
-		bins = (Binary[]) attachments.toArray(bins);
+		bins = attachments.toArray(bins);
 		return bins;
 	}
 
@@ -149,7 +149,7 @@ public class MailMap implements MailMapInterface, Mappable,
 		return true;
 	}
 
-	private final void sendMail() throws MappableException, UserException {
+	private final void sendMail() throws UserException {
 
 		retries++;
 
@@ -227,7 +227,7 @@ public class MailMap implements MailMapInterface, Mappable,
 
 				if (attachments != null) {
 					for (int i = 0; i < attachments.size(); i++) {
-						AttachmentMapInterface am = (AttachmentMapInterface) attachments
+						AttachmentMapInterface am = attachments
 								.get(i);
 						String file = am.getAttachFile();
 						String userFileName = am.getAttachFileName();
@@ -490,6 +490,10 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	public void setMaxRunningInstances(int maxRunningInstances) {
+		setStaticMaxRunningInstances(maxRunningInstances);
+	}
+
+	private static void setStaticMaxRunningInstances(int maxRunningInstances) {
 		MailMap.maxRunningInstances = maxRunningInstances;
 	}
 

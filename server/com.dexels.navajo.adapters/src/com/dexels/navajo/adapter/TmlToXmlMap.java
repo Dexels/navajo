@@ -182,6 +182,9 @@ public class TmlToXmlMap implements Mappable {
 	}
 
 	
+	/**
+	 * @param b  
+	 */
 	public void setProcessSoapData(boolean b) throws UserException {
 		// TODO I think this overwrites multipart messages (?). Find an example and verify
 		Message settings = this.document.getMessage("_SoapSettings");

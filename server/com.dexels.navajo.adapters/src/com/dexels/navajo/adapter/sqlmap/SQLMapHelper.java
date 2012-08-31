@@ -215,8 +215,6 @@ public class SQLMapHelper {
 			InputStream is = rs.getBinaryStream(columnIndex);
 			if (is != null) {
 				value = new Binary(is);
-			} else {
-				value = null;
 			}
 			break;
 
@@ -323,7 +321,6 @@ public class SQLMapHelper {
 			break;
 
 		case Types.NULL:
-			value = null;
 			break;
 			
 		// TODO: No idea what to do with these types

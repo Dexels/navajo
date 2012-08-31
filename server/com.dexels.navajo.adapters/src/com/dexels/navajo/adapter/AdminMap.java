@@ -95,7 +95,6 @@ public class AdminMap implements Mappable {
     supportsStatistics = nc.isStatisticsRunnerEnabled();
     supportsLocks = nc.isLockManagerEnabled();
     
-    storeLocation = nc.getDbPath();
     serverId = DispatcherFactory.getInstance().getApplicationId();
     
     myAccess = access;
@@ -226,7 +225,7 @@ public AsyncProxy [] getAsyncThreads() {
        l.add(o);
      }
      AsyncProxy [] objects = new AsyncProxy[l.size()];
-     return (AsyncProxy []) l.toArray(objects);
+     return l.toArray(objects);
    }
 
 
@@ -235,11 +234,11 @@ public AsyncProxy [] getAsyncThreads() {
 	   Iterator<Access> iter = all.iterator();
 	   List<AccessMap> d = new ArrayList<AccessMap>();
 	   while (iter.hasNext()) {
-		   Access a = (Access) iter.next();
+		   Access a = iter.next();
 		   d.add(new AccessMap(a));
 	   }
 	   AccessMap [] ams = new AccessMap[d.size()];
-	   return (AccessMap []) d.toArray(ams);
+	   return d.toArray(ams);
    }
 
    public void store() throws MappableException, UserException {
@@ -316,9 +315,6 @@ public AsyncProxy [] getAsyncThreads() {
   }
   public boolean getSupportsStore() {
     return supportsStore;
-  }
-  public String getStoreLocation() {
-    return storeLocation;
   }
   public int getClassLoaderInstances() {
     return NavajoClassLoader.getInstances();
@@ -420,7 +416,10 @@ public AsyncProxy [] getAsyncThreads() {
 	  return cc;
   }
   
-  public void setCollectGarbage(boolean b) {
+  /**
+ * @param b  
+ */
+public void setCollectGarbage(boolean b) {
 	  System.err.println("Calling garbage collect");
 	  System.gc();
 	  System.err.println("Finished collecting garbage");

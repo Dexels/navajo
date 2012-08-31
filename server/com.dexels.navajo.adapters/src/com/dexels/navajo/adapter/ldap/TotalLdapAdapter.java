@@ -10,7 +10,6 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -29,21 +28,14 @@ public class TotalLdapAdapter implements Mappable {
 	private InitialDirContext initialDir = null;
 
 	
-	private Navajo out = null;
 	public void kill() {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void load(Access access) throws MappableException, UserException {
-		// TODO Auto-generated method stub
-		if(access!=null) {
-			out = access.getOutputDoc();
-		}
 	}
 
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -88,7 +80,7 @@ public class TotalLdapAdapter implements Mappable {
 		
 		}
 
-	public static void main(String[] args) throws NamingException {
+	public static void main(String[] args) {
 
 		TotalLdapAdapter tl= new TotalLdapAdapter();
 		tl.list("ou=users,dc=dexels,dc=com");

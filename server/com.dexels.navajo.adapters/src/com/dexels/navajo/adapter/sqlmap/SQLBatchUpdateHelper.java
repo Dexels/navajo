@@ -182,10 +182,10 @@ public class SQLBatchUpdateHelper {
 						System.out.println("executed last SQL '" + s + "' as query");
 					}
 				} catch (SQLException e) {
-					if (rs != null)
+					if (rs != null) {
 						this.rs.close();
-					if (prepared != null)
-						prepared.close();
+					}
+					prepared.close();
 					this.rs = null;
 					// For Sybase compatibility: sybase does not like to be
 					// called using executeQuery() if query does not return a
@@ -202,10 +202,10 @@ public class SQLBatchUpdateHelper {
 				System.out.println("cummulative update count is " + this.updateCount);
 			}
 			if (!last) {
-				if (rs != null)
+				if (rs != null) {
 					rs.close();
-				if (prepared != null)
-					prepared.close();
+				}
+				prepared.close();
 				/**************************************************************
 				 * closing does't seem to be enough, so we kill it completely
 				 * otherwise there may be complaints about too many open cursors

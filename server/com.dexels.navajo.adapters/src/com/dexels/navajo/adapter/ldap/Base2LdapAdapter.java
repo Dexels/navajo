@@ -3,6 +3,7 @@ package com.dexels.navajo.adapter.ldap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -44,20 +45,15 @@ public class Base2LdapAdapter implements Mappable {
 	private InitialDirContext initialDir = null;
 
 	public void kill() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void load(Access access) throws MappableException, UserException {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
-
 	}
 	
+	@SuppressWarnings("unused")
 	private DirContext createBranch(String key, String value, DirContext context, String[] objectClasses) throws NamingException {
 		BasicAttributes mandatory = new BasicAttributes(key, value);
 		BasicAttribute objectclass;
@@ -151,35 +147,35 @@ public class Base2LdapAdapter implements Mappable {
 			Message m = (Message) ll.get(i);
 			String value = m.getProperty("ClubIdentifier").getValue();
 			System.err.println("Clubid: " + value);
-			insertClub(root,"", init, value);
+			insertClub(root, init, value);
 			System.err.println("Inserted: " + m.getProperty("ClubName").getValue());
 		}
 	}
 
-	public void insertClub(DirContext clubsContext,String rootDn, final Navajo init, String clubId) throws NamingException, ClientException {
+	public void insertClub(DirContext clubsContext,final Navajo init, String clubId) throws NamingException, ClientException {
 
 		init.getProperty("Club/ClubIdentifier").setValue(clubId);
 		init.getProperty("Club/LastName").setValue("");
 
 
-		Map constants = new HashMap();
+		Map<String,String> constants = new HashMap<String,String>();
 		final Navajo process2 = NavajoClientFactory.getClient().doSimpleSend(init, "club/ProcessQueryClub");
 		Message clubD = process2.getMessage("ClubData");
-		DirContext organization = insertOrganization(clubsContext, clubD, constants);
+		insertOrganization(clubsContext, clubD, constants);
 		final Navajo process = NavajoClientFactory.getClient().doSimpleSend(init, "member/ProcessQueryAllMembersPerClub");
 		Message memberdata = process.getMessage("MembersPerClub");
 
-		ArrayList al = memberdata.getAllMessages();
+		List<Message> al = memberdata.getAllMessages();
 		int count = al.size();
 		count = Math.min(count, MAX_INSERTS_PER_CLUB);
 		for (int i = 0; i < count; i++) {
-			Message current = (Message) al.get(i);
+			Message current = al.get(i);
 //			DirContext personContext = getContext("o=persons,dc=dexels,dc=com");
 			try {
 				String pId = current.getProperty("PersonId").getValue();
-				Map cn2 = new HashMap(constants);
+				Map<String,String> cn2 = new HashMap<String,String>(constants);
 				cn2.put("userid", pId);
-				Context person = insertPerson(clubsContext, current, cn2);
+				insertPerson(clubsContext, current, cn2);
 				DirContext clubMemberContext = getContext(clubsContext,"cn=members_"+clubId);
 				// getContext("cn=members,o="+clubId+",o=clubs,dc=dexels,dc=com");
 				String uid = current.getProperty("PersonId").getValue();
@@ -190,7 +186,6 @@ public class Base2LdapAdapter implements Mappable {
 				try {
 					current.write(System.err);
 				} catch (NavajoException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -215,8 +210,8 @@ public class Base2LdapAdapter implements Mappable {
 
 	}
 
-	public Context insertPerson(DirContext context, Message entity, Map constants) throws NamingException {
-		Map mapping = new HashMap<String, String>();
+	public Context insertPerson(DirContext context, Message entity, Map<String,String> constants) throws NamingException {
+		Map<String,String> mapping = new HashMap<String, String>();
 		mapping.put("cn", "LastName");
 		mapping.put("sn", "LastName");
 		mapping.put("gn", "FirstName");
@@ -234,11 +229,11 @@ public class Base2LdapAdapter implements Mappable {
 		mapping.put("telephoneNumber", "TelephoneData");
 
 		String[] objectClasses = new String[] { "top", "person", "organizationalPerson", "inetorgperson" };
-		return insertEntity("userid", (String)constants.get("userid"), context, entity, mapping, objectClasses, constants);
+		return insertEntity("userid", constants.get("userid"), context, entity, mapping, objectClasses, constants);
 	}
 
-	public DirContext insertOrganization(DirContext context, Message entity, Map constants) throws NamingException {
-		Map mapping = new HashMap<String, String>();
+	public DirContext insertOrganization(DirContext context, Message entity, Map<String,String> constants) throws NamingException {
+		Map<String,String> mapping = new HashMap<String, String>();
 
 		// mapping.put("cn", "ClubName");
 		mapping.put("o", "ClubIdentifier");
@@ -257,13 +252,12 @@ public class Base2LdapAdapter implements Mappable {
 		// constants.put("member", "uid=Dummy");
 		String[] objectClasses = new String[] { "top", "organization" };
 		DirContext insertEntity = insertEntity("o", null, context, entity, mapping, objectClasses, constants);
-		Map memberMap = new HashMap<String, String>();
+		Map<String,String> memberMap = new HashMap<String, String>();
 		memberMap.put("member", "cn=dummy");
 		
 		try {
 			entity.write(System.err);
 		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		String clubId = entity.getProperty("ClubIdentifier").getValue();
@@ -274,7 +268,7 @@ public class Base2LdapAdapter implements Mappable {
 		memberMap.put("o", clubId);
 		// memberMap.put("o", "MOC");
 		// memberMap.put("dn", "MOC");
-		Context members = insertEntity("cn", "members_"+clubId, context, null, null, new String[] { "top", "groupOfNames" }, memberMap);
+		insertEntity("cn", "members_"+clubId, context, null, null, new String[] { "top", "groupOfNames" }, memberMap);
 		// String[] objectClasses = new String[] {
 		// "top","organization","account"};
 		// String[] objectClasses = new String[] { "top","organization"};
@@ -286,7 +280,7 @@ public class Base2LdapAdapter implements Mappable {
 
 		NamingEnumeration e = dd.list("");
 		while (e.hasMore()) {
-			NameClassPair o = (NameClassPair) e.next();
+			e.next();
 
 			NamingEnumeration<NameClassPair> sss = dd.list("");
 			while (sss.hasMore()) {

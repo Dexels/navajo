@@ -67,7 +67,7 @@ public class VersionedNavajoMap extends NavajoMap {
          List<Message> allMessages = inMessage.getAllMessages();
          for (int i = 0; i < allMessages.size(); i++) {
 
-           Message m = (Message) allMessages.get(i);
+           Message m = allMessages.get(i);
             System.err.println("Adding message: " + m.getName());
            Message a = inMessage.copyMessage(m, currentOutDoc);
            currentOutDoc.addMessage(a);

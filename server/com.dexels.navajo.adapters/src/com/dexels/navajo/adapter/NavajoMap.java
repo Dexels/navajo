@@ -15,6 +15,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.navajomap.MessageMap;
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
 import com.dexels.navajo.client.ClientInterface;
@@ -141,6 +144,9 @@ public boolean exists;
   private boolean serviceFinished = false;
   private Exception myException = null;
   
+  
+  private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
+
   public boolean isBlock() {
 	  return block;
   }
@@ -265,9 +271,12 @@ private Object waitForResult = new Object();
 			  // Expand list if it contains an array message.
 			  list = list.get(0).getAllMessages();
 		  }
-
+		  if(list==null) {
+			  logger.warn("Can not append: appendTo target can not be found");
+			  return;
+		  }
 		  for (int i = 0; i < list.size(); i++) {
-			  Message inMsg = (Message) list.get(i);
+			  Message inMsg = list.get(i);
 			  // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
 			  //currentDoc.importMessage(inMsg);
 			  Message clone = inDoc.copyMessage(inMsg, currentDoc);
@@ -344,21 +353,21 @@ private Object waitForResult = new Object();
 				  access.getInDoc().getMessage("__parms__") :
 					  access.getCompiledScript().currentParamMsg);
 
-		  ArrayList list = null;
+		  List<Message> list = null;
 		  // If append message equals '/'.
 		  if ( messageOffset.equals(Navajo.MESSAGE_SEPARATOR) ) {
 			  list = inDoc.getAllMessages();
 		  } else if ( inDoc.getMessage(messageOffset) == null ) {
 			  return;
 		  } else if ( inDoc.getMessage(messageOffset).getType().equals(Message.MSG_TYPE_ARRAY) ) {
-			  list = new ArrayList();
+			  list = new ArrayList<Message>();
 			  list.add( inDoc.getMessage(messageOffset) );
 		  } else {
 			  list = inDoc.getMessages(messageOffset);
 		  }
 
 		  for (int i = 0; i < list.size(); i++) {
-			  Message inMsg = (Message) list.get(i);
+			  Message inMsg = list.get(i);
 			  // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
 			  //currentDoc.importMessage(inMsg);
 			  Message clone = inDoc.copyMessage(inMsg, parm.getRootDoc());
@@ -393,20 +402,20 @@ private Object waitForResult = new Object();
      //System.out.println("in setIntegerProperty() : i = " + i);
      currentProperty.setType(Property.INTEGER_PROPERTY);
      currentProperty.setValue(i+"");
-     addProperty(currentFullName, currentProperty);
+     addProperty(currentProperty);
   }
 
   public final void setFloatProperty(double i) throws UserException {
      //System.out.println("in setFloatProperty() : i = " + i);
      currentProperty.setType(Property.FLOAT_PROPERTY);
      currentProperty.setValue(i+"");
-     addProperty(currentFullName, currentProperty);
+     addProperty(currentProperty);
   }
 
   public final void setStringProperty(String s) throws UserException {
     currentProperty.setType(Property.STRING_PROPERTY);
     currentProperty.setValue(s);
-    addProperty(currentFullName, currentProperty);
+    addProperty(currentProperty);
   }
   
   public final void setProperty(Object o) throws UserException {
@@ -415,13 +424,13 @@ private Object waitForResult = new Object();
 	  } else {
 		  currentProperty.setAnyValue(o);
 	  }
-	  addProperty(currentFullName, currentProperty);
+	  addProperty(currentProperty);
   }
 
   public final void setBooleanProperty(boolean b) throws UserException {
     currentProperty.setType(Property.BOOLEAN_PROPERTY);
     currentProperty.setValue(b);
-    addProperty(currentFullName, currentProperty);
+    addProperty(currentProperty);
   }
 
   public final void setClockTimeProperty(ClockTime d) throws UserException {
@@ -431,7 +440,7 @@ private Object waitForResult = new Object();
       currentProperty.setValue(d);
     else
       currentProperty.setValue("");
-    addProperty(currentFullName, currentProperty);
+    addProperty(currentProperty);
   }
 
   public final void setBinaryProperty(Binary d) throws UserException {
@@ -443,7 +452,7 @@ private Object waitForResult = new Object();
     else {
       currentProperty.setValue((Binary) null);
     }
-    addProperty(currentFullName, currentProperty);
+    addProperty(currentProperty);
   }
 
   public final void setMoneyProperty(Money d) throws UserException {
@@ -453,7 +462,7 @@ private Object waitForResult = new Object();
      currentProperty.setValue(d);
    else
      currentProperty.setValue("");
-   addProperty(currentFullName, currentProperty);
+   addProperty(currentProperty);
  }
 
 
@@ -464,7 +473,7 @@ private Object waitForResult = new Object();
       currentProperty.setValue(d);
     else
       currentProperty.setValue("");
-    addProperty(currentFullName, currentProperty);
+    addProperty(currentProperty);
   }
 
   public void setUsername(String u) {
@@ -565,7 +574,6 @@ private Object waitForResult = new Object();
 			  try {
 				  outDoc.addMessage(globals);
 			  } catch (NavajoException e) {
-				  // TODO Auto-generated catch block
 				  e.printStackTrace(Access.getConsoleWriter(access));
 			  }
 		  }
@@ -676,7 +684,7 @@ private Object waitForResult = new Object();
 		  currentProperty.setCardinality("1");
 		  
 	  }
-	  addProperty(currentFullName, currentProperty);
+	  addProperty(currentProperty);
 
   }
   
@@ -806,11 +814,11 @@ private Object waitForResult = new Object();
   public final boolean getExists(String fullName) throws UserException {
 
     try {
-      Property p = getPropertyObject(fullName);
+      getPropertyObject(fullName);
       return true;
     } catch (Exception e) {
       try {
-        Message msg = getMessage(fullName);
+        getMessage(fullName);
         return true;
       } catch (Exception e2) {
         return false;
@@ -923,11 +931,10 @@ private Object waitForResult = new Object();
 
   }
 
-  private void addProperty(String fullName, Property p) throws UserException {
+  private void addProperty(Property p) throws UserException {
 
     try {
       Message msg = MappingUtils.getMessageObject(currentFullName, null, false, outDoc, false, "", -1);
-      String propName = p.getName();
       msg.addProperty(p);
     } catch (Exception e) {
       throw new UserException(-1, e.getMessage(),e);
@@ -1024,7 +1031,7 @@ private Object waitForResult = new Object();
 	  access.setOutputDoc(inDoc);
   }
 
-  public void continueAfterRun() throws UserException, SystemException, ConditionErrorException, AuthorizationException {
+  public void continueAfterRun() throws UserException, ConditionErrorException, AuthorizationException {
 	 try {
 		  // Get task if if trigger was specified.
 	      if ( trigger != null ) {
@@ -1162,7 +1169,10 @@ private Object waitForResult = new Object();
 	  return taskId;
   }
   
-  public void setTaskId(String t) {
+  /**
+ * @param t  
+ */
+public void setTaskId(String t) {
 //	  taskId = t;
 //	  // Get response from TaskRunnerMap.
 //	  TaskRunnerMap trm = new TaskRunnerMap();
@@ -1210,7 +1220,7 @@ private Object waitForResult = new Object();
   private final void processShowProperties(Message m) {
 	  Iterator<Property> allProps = new ArrayList<Property>(m.getAllProperties()).iterator();
 	  while ( allProps.hasNext() ) {
-		  Property p = (Property) allProps.next();
+		  Property p = allProps.next();
 		  if ( !isPropertyInList(p, this.showProperties, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) ) {
 			  m.removeProperty(p);
 		  }
@@ -1239,7 +1249,7 @@ private Object waitForResult = new Object();
   private final void processPropertyDirections(Message m) {
 	  Iterator<Property> allProps = m.getAllProperties().iterator();
 	  while ( allProps.hasNext() ) {
-		  Property p = (Property) allProps.next();
+		  Property p = allProps.next();
 		  if ( isPropertyInList(p, this.outputProperties, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) ) {
 			  p.setDirection(Property.DIR_OUT);
 		  } else
@@ -1256,7 +1266,7 @@ private Object waitForResult = new Object();
   private final void processSuppressedProperties(Message m) {
 	  Iterator<Property> allProps = new ArrayList<Property>(m.getAllProperties()).iterator();
 	  while ( allProps.hasNext() ) {
-		  Property p = (Property) allProps.next();
+		  Property p = allProps.next();
 		  if ( isPropertyInList(p, this.suppressProperties, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) ) {
 			  m.removeProperty(p);
 		  }
@@ -1357,8 +1367,10 @@ private Object waitForResult = new Object();
 	  this.breakOnException = breakOnException;
   }
 
-  public void onResponse(Navajo response) {
-	  // TODO Auto-generated method stub
+  /**
+ * @param response  
+ */
+public void onResponse(Navajo response) {
 
   }
 
@@ -1368,19 +1380,13 @@ private Object waitForResult = new Object();
   }
 
   public void endTransaction() throws IOException {
-	  // TODO Auto-generated method stub
 
   }
 
   public Navajo getInputNavajo() throws IOException {
-	  // TODO Auto-generated method stub
 	  return null;
   }
 
-  public Scheduler getTmlScheduler() {
-	  // TODO Auto-generated method stub
-	  return null;
-  }
 
   public boolean isAborted() {
 	  // TODO Auto-generated method stub
@@ -1406,11 +1412,6 @@ private Object waitForResult = new Object();
   }
   
   public void setScheduledAt(long currentTimeMillis) {
-	  // TODO Auto-generated method stub
-
-  }
-
-  public void setTmlScheduler(Scheduler schedule) {
 	  // TODO Auto-generated method stub
 
   }

@@ -108,7 +108,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 
 	public Binary[] getAttachments() {
 		Binary[] bins = new Binary[attachments.size()];
-		bins = (Binary[]) attachments.toArray(bins);
+		bins = attachments.toArray(bins);
 		return bins;
 	}
 
@@ -132,10 +132,9 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 		try {
 			sendMail();
 		} catch (Exception e) {
-			AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
-					myAccess.accessID);
-			// e.printStackTrace(System.err);
 			if (myAccess != null) {
+				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+						myAccess.accessID);
 				myAccess.setException(e);
 			}
 			return false;
@@ -143,7 +142,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 		return true;
 	}
 
-	private final void sendMail() throws MappableException, UserException {
+	private final void sendMail() throws UserException {
 
 		retries++;
 
@@ -224,7 +223,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 
 					// Put related bodyparts in related.
 					for (int i = 0; i < bodyparts.size(); i++) {
-						AttachmentMapInterface am = (AttachmentMapInterface) bodyparts
+						AttachmentMapInterface am = bodyparts
 								.get(i);
 						String file = am.getAttachFile();
 						String userFileName = am.getAttachFileName();
@@ -268,7 +267,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 				if (attachments != null) {
 					for (int i = 0; i < attachments.size(); i++) {
 
-						AttachmentMapInterface am = (AttachmentMapInterface) attachments
+						AttachmentMapInterface am = attachments
 								.get(i);
 						String file = am.getAttachFile();
 						String userFileName = am.getAttachFileName();
@@ -484,8 +483,13 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 	}
 
 	public void setMaxRunningInstances(int maxRunningInstances) {
-		MailMapAlternative.maxRunningInstances = maxRunningInstances;
+		setStaticMaxRunningInstances(maxRunningInstances);
 	}
+	
+	private static void setStaticMaxRunningInstances(int maxRunningInstances) {
+		MailMap.maxRunningInstances = maxRunningInstances;
+	}
+
 
 	public DependentResource[] getDependentResourceFields() {
 		return new DependentResource[] { new GenericDependentResource(

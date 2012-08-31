@@ -42,22 +42,17 @@ public class BaseLdapAdapter implements Mappable {
 	private InitialDirContext initialDir = null;
 
 	public void kill() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void load(Access access) throws MappableException, UserException {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
-
 	}
 
+	@SuppressWarnings("unused")
 	private void checkLdap(String ldapUrl, String principal, String username, String password) throws NamingException {
-		Hashtable env = new Hashtable();
+		Hashtable<String,String> env = new Hashtable<String,String>();
 
 		String usr = "uid=" + username + ",";
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
@@ -164,37 +159,14 @@ public class BaseLdapAdapter implements Mappable {
 		
 
 		final Navajo process2 = NavajoClientFactory.getClient().doSimpleSend(init, "club/ProcessQueryClub");
-		Message clubD = process2.getMessage("ClubData");
+		process2.getMessage("ClubData");
 		process2.write(System.err);
-//		Con ext organization = bla.insertOrganization(context, clubD,constants);
-
-		//		constants.put("o","MOC");
-//		constants.put("member","MOC");
-//		
 		for (int i = 0; i < al.size(); i++) {
 			Message current = (Message) al.get(i);
-			Context person = bla.insertPerson(context, current,constants);
+			bla.insertPerson(context, current,constants);
 			bla.addGroupMember("uid", "horr"+i, "member", context);
 
 		}
-
-		// DirContext users = (DirContext) a.lookup("ou=users");
-		// BasicAttributes mandatory = new BasicAttributes("cn", "BillyBob");
-		// BasicAttribute objectclass;
-		//                
-		// objectclass = new BasicAttribute("objectclass", "top");
-		// mandatory.put(objectclass);
-		//
-		// objectclass = new BasicAttribute("objectclass", "person");
-		// mandatory.put(objectclass);
-		//
-		// BasicAttribute surname = new BasicAttribute("surname", "Roberts");
-		//
-		// mandatory.put(surname);
-		//
-		// users.createSubcontext("cn=BillyBob", mandatory);
-		// a.createSubcontext("cn=Emelius,dc=dexels,dc=com,objectClass=account,objectClass=top");
-		// a.bind("uid=Emelius", "Bartholdy");
 	}
 
 	public DirContext getContext(String dn) throws NamingException {
@@ -207,7 +179,7 @@ public class BaseLdapAdapter implements Mappable {
 	}
 
 	public Context insertPerson(DirContext context, Message entity, Map constants) throws NamingException {
-		Map mapping = new HashMap<String, String>();
+		Map<String, String> mapping = new HashMap<String, String>();
 		mapping.put("cn", "LastName");
 		mapping.put("sn", "LastName");
 		mapping.put("gn", "FirstName");
@@ -228,8 +200,8 @@ public class BaseLdapAdapter implements Mappable {
 		return insertEntity("cn", context, entity, mapping, objectClasses, constants);
 	}
 
-	public Context insertOrganization(DirContext context, Message entity, Map constants) throws NamingException {
-		Map mapping = new HashMap<String, String>();
+	public Context insertOrganization(DirContext context, Message entity, Map<String, String> constants) throws NamingException {
+		Map<String, String> mapping = new HashMap<String, String>();
 		
 		
 	 	mapping.put("cn", "ClubName");

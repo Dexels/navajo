@@ -62,7 +62,10 @@ public class MessageMap implements Mappable {
     return new java.util.Date();
    }
 
-   public void setIntegerProperty(String fullName) throws UserException {
+   /**
+ * @param fullName  
+ */
+public void setIntegerProperty(String fullName) {
 
    }
 
@@ -185,7 +188,7 @@ public class MessageMap implements Mappable {
       messages = new MessageMap[all.size()];
       for (int i = 0; i < all.size(); i++) {
         MessageMap m = new MessageMap();
-        m.setMsg((Message) all.get(i));
+        m.setMsg(all.get(i));
         messages[i] = m;
       }
       return messages;

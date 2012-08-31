@@ -58,7 +58,10 @@ public class RuntimeAdapter implements Mappable {
 	  this.dir = s;
   }
   
-  public void setRun(boolean b) throws UserException {
+  /**
+ * @param b  
+ */
+public void setRun(boolean b) throws UserException {
 
 	  // Note, this must be synchronized since Process is not thread safe.
 	  synchronized (semaphore) {

@@ -3,6 +3,9 @@ package com.dexels.navajo.adapter;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -44,6 +47,9 @@ public class AsyncProxy implements Mappable {
   public String lockName;
   public String lockOwner;
   public String lockClass;
+  
+  
+  private final static Logger logger = LoggerFactory.getLogger(AsyncProxy.class);
 
   public void load(Access access) throws MappableException, UserException {
     //System.err.println("IN ASYNCPROXY LOAD()......................");
@@ -69,10 +75,15 @@ public class AsyncProxy implements Mappable {
     boolean found = false;
     while (iter.hasNext() && !found) {
       am = (AsyncMappable) iter.next();
-      if (am.getPointer().equals(this.pointer))
+      if (am.getPointer().equals(this.pointer)) {
         found = true;
+      }
     }
-    am.resume();
+    if(am!=null) {
+        am.resume();
+    } else {
+    	logger.warn("Can not resume: No AsyncMappable found");
+    }
   }
  }
 
@@ -89,7 +100,11 @@ public class AsyncProxy implements Mappable {
        if (am.getPointer().equals(this.pointer))
          found = true;
      }
-     am.interrupt();
+     if(am!=null) {
+         am.interrupt();
+     } else {
+    	 logger.warn("Can not interrupt: No AsyncMappable found");
+     }
    }
   }
 
@@ -105,8 +120,11 @@ public class AsyncProxy implements Mappable {
           found = true;
       }
       if(am!=null) {
-          am.stop();
+    	    am.stop();
+      } else {
+     	 logger.warn("Can not stop: No AsyncMappable found");
       }
+
       com.dexels.navajo.mapping.AsyncStore.getInstance().removeInstance(pointer);
     }
   }

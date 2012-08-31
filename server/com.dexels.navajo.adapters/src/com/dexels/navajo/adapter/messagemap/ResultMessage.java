@@ -122,7 +122,7 @@ public class ResultMessage implements Mappable {
 	private final void processSuppressedProperties(Message m) {
 		Iterator<Property> allProps = new ArrayList<Property>(m.getAllProperties()).iterator();
 		while ( allProps.hasNext() ) {
-			Property p = (Property) allProps.next();
+			Property p = allProps.next();
 			if ( isPropertyInList(p, this.suppressProperties, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) ) {
 				m.removeProperty(p);
 			}

@@ -87,7 +87,10 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 	}
 
 	public void setMaxRunningInstances(int maxRunningInstances) {
-		TestQueuedAdapter.maxRunningInstances = maxRunningInstances;
+		setStaticMaxRunningInstances(maxRunningInstances);
+	}
+	private static void setStaticMaxRunningInstances(int maxRunningInstances) {
+		MailMap.maxRunningInstances = maxRunningInstances;
 	}
 
 	public void setQueuedSend(boolean b) {

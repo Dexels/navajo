@@ -100,6 +100,9 @@ public class HTTPMap implements Mappable, Queuable {
 		this.readTimeOut = i;
 	}
 	
+	/**
+	 * @param b  
+	 */
 	public void setDoSend(boolean b) throws UserException {
 		if ( !queuedSend ) {
 			sendOverHTTP();
@@ -146,9 +149,7 @@ public class HTTPMap implements Mappable, Queuable {
 				try {
 					osw.write(textContent);
 				} finally {
-					if ( osw != null ) {
-						osw.close();
-					}
+					osw.close();
 				}
 			} else if ( content != null ) {
 				OutputStream os = null;
@@ -186,8 +187,6 @@ public class HTTPMap implements Mappable, Queuable {
 				hasConnectionTimeOut = true;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			throw new UserException(-1, e.getMessage(), e);
 		} finally {
 			instances--;
@@ -220,7 +219,6 @@ public class HTTPMap implements Mappable, Queuable {
 	}
 	
 	public Binary getResponse() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -295,6 +293,10 @@ public class HTTPMap implements Mappable, Queuable {
 	}
 
 	public void setMaxRunningInstances(int maxRunningInstances) {
+		setStaticMaxRunningInstances(maxRunningInstances);
+	}
+	
+	private static void setStaticMaxRunningInstances(int maxRunningInstances) {
 		HTTPMap.maxRunningInstances = maxRunningInstances;
 	}
 

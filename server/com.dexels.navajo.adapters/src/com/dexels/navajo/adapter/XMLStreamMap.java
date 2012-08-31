@@ -57,6 +57,9 @@ public class XMLStreamMap implements Mappable {
 		}
 	}
 	
+	/**
+	 * @param b  
+	 */
 	public void setEndElement(boolean b) throws UserException {
 		try {
 			current_indentation -= indent;
@@ -88,6 +91,9 @@ public class XMLStreamMap implements Mappable {
 		}
 	}
 	
+	/**
+	 * @param b  
+	 */
 	public void setNewline(boolean b) throws UserException{
 		try {
 			newLineFlag = true;

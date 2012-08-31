@@ -15,6 +15,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.navajomap.MessageMap;
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
 import com.dexels.navajo.client.ClientInterface;
@@ -134,7 +137,9 @@ private final Map<String,Object> attributes = new HashMap<String,Object>();
   private boolean forceInline;
 
   private RequestQueue myRequestQueue;
-
+  
+  private final static Logger logger = LoggerFactory
+		.getLogger(NavajoMapUpdated.class);
   
   
   public boolean isForceInline() {
@@ -210,15 +215,6 @@ public boolean isBlock() {
    *    if messageOffset is '/', the messages of the received inDoc will be appended to the output document.
    */
   public final void setAppend(String messageOffset) throws UserException {
-	  System.err.println("In append. Using messagepath: "+messageOffset);
-	  System.err.println("Appending:");
-	  try {
-		inDoc.write(System.err);
-		System.err.println("To message: ");
-		access.getOutputDoc().write(System.err);
-	  } catch (NavajoException e) {
-		e.printStackTrace();
-	}
 	  
 	  if(block) {
 		  waitForResult();
@@ -277,9 +273,12 @@ public boolean isBlock() {
 			  // Expand list if it contains an array message.
 			  list = list.get(0).getAllMessages();
 		  }
-
+		  if(list==null) {
+			  logger.warn("Can not append: appendTo target can not be found");
+			  return;
+		  }
 		  for (int i = 0; i < list.size(); i++) {
-			  Message inMsg = (Message) list.get(i);
+			  Message inMsg = list.get(i);
 			  // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
 			  //currentDoc.importMessage(inMsg);
 			  Message clone = inDoc.copyMessage(inMsg, currentDoc);
@@ -409,20 +408,20 @@ public boolean isBlock() {
      //System.out.println("in setIntegerProperty() : i = " + i);
      currentProperty.setType(Property.INTEGER_PROPERTY);
      currentProperty.setValue(i+"");
-     addProperty(currentFullName, currentProperty);
+     addProperty(currentProperty);
   }
 
   public final void setFloatProperty(double i) throws UserException {
      //System.out.println("in setFloatProperty() : i = " + i);
      currentProperty.setType(Property.FLOAT_PROPERTY);
      currentProperty.setValue(i+"");
-     addProperty(currentFullName, currentProperty);
+     addProperty(currentProperty);
   }
 
   public final void setStringProperty(String s) throws UserException {
     currentProperty.setType(Property.STRING_PROPERTY);
     currentProperty.setValue(s);
-    addProperty(currentFullName, currentProperty);
+    addProperty(currentProperty);
   }
   
   public final void setProperty(Object o) throws UserException {
@@ -431,13 +430,13 @@ public boolean isBlock() {
 	  } else {
 		  currentProperty.setAnyValue(o);
 	  }
-	  addProperty(currentFullName, currentProperty);
+	  addProperty(currentProperty);
   }
 
   public final void setBooleanProperty(boolean b) throws UserException {
     currentProperty.setType(Property.BOOLEAN_PROPERTY);
     currentProperty.setValue(b);
-    addProperty(currentFullName, currentProperty);
+    addProperty( currentProperty);
   }
 
   public final void setClockTimeProperty(ClockTime d) throws UserException {
@@ -447,7 +446,7 @@ public boolean isBlock() {
       currentProperty.setValue(d);
     else
       currentProperty.setValue("");
-    addProperty(currentFullName, currentProperty);
+    addProperty( currentProperty);
   }
 
   public final void setBinaryProperty(Binary d) throws UserException {
@@ -459,7 +458,7 @@ public boolean isBlock() {
     else {
       currentProperty.setValue((Binary) null);
     }
-    addProperty(currentFullName, currentProperty);
+    addProperty( currentProperty);
   }
 
   public final void setMoneyProperty(Money d) throws UserException {
@@ -469,7 +468,7 @@ public boolean isBlock() {
      currentProperty.setValue(d);
    else
      currentProperty.setValue("");
-   addProperty(currentFullName, currentProperty);
+   addProperty( currentProperty);
  }
 
 
@@ -480,7 +479,7 @@ public boolean isBlock() {
       currentProperty.setValue(d);
     else
       currentProperty.setValue("");
-    addProperty(currentFullName, currentProperty);
+    addProperty( currentProperty);
   }
 
   public void setUsername(String u) {
@@ -543,7 +542,7 @@ public boolean isBlock() {
    * @param method
    * @throws UserException
    */
-  public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException, AuthorizationException {
+  public void setDoSend(String method) throws UserException, SystemException {
 
 	  // Reset current msgPointer when performing new doSend.
 	  
@@ -830,7 +829,7 @@ protected void prepareSend(String method) {
 		  messages = new MessageMap[all.size()];
 		  for (int i = 0; i < all.size(); i++) {
 			  MessageMap msg = new MessageMap();
-			  msg.setMsg((Message) all.get(i));
+			  msg.setMsg(all.get(i));
 			  messages[i] = msg;
 		  }
 		  return messages;
@@ -859,7 +858,7 @@ protected void prepareSend(String method) {
 
   }
 
-  private void addProperty(String fullName, Property p) throws UserException {
+  private void addProperty(Property p) throws UserException {
 
     try {
       Message msg = MappingUtils.getMessageObject(currentFullName, null, false, outDoc, false, "", -1);
@@ -881,7 +880,7 @@ protected void prepareSend(String method) {
     try {
       List<Message> all = inMessage.getAllMessages();
       for (int i = 0; i < all.size(); i++) {
-        Message m = inMessage.copyMessage( (Message) all.get(i), outDoc);
+        Message m = inMessage.copyMessage( all.get(i), outDoc);
         outDoc.addMessage(m);
       }
     } catch (Exception e) {
@@ -1113,7 +1112,10 @@ protected void prepareSend(String method) {
 	  return taskId;
   }
   
-  public void setTaskId(String t) {
+  /**
+ * @param t  
+ */
+public void setTaskId(String t) {
 //	  taskId = t;
 //	  // Get response from TaskRunnerMap.
 //	  TaskRunnerMap trm = new TaskRunnerMap();
@@ -1161,7 +1163,7 @@ protected void prepareSend(String method) {
   private final void processShowProperties(Message m) {
 	  Iterator<Property> allProps = new ArrayList<Property>(m.getAllProperties()).iterator();
 	  while ( allProps.hasNext() ) {
-		  Property p = (Property) allProps.next();
+		  Property p = allProps.next();
 		  if ( !isPropertyInList(p, this.showProperties, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) ) {
 			  m.removeProperty(p);
 		  }
@@ -1190,7 +1192,7 @@ protected void prepareSend(String method) {
   private final void processPropertyDirections(Message m) {
 	  Iterator<Property> allProps = m.getAllProperties().iterator();
 	  while ( allProps.hasNext() ) {
-		  Property p = (Property) allProps.next();
+		  Property p = allProps.next();
 		  if ( isPropertyInList(p, this.outputProperties, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) ) {
 			  p.setDirection(Property.DIR_OUT);
 		  } else
@@ -1207,7 +1209,7 @@ protected void prepareSend(String method) {
   private final void processSuppressedProperties(Message m) {
 	  Iterator<Property> allProps = new ArrayList<Property>(m.getAllProperties()).iterator();
 	  while ( allProps.hasNext() ) {
-		  Property p = (Property) allProps.next();
+		  Property p = allProps.next();
 		  if ( isPropertyInList(p, this.suppressProperties, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) ) {
 			  m.removeProperty(p);
 		  }
@@ -1308,7 +1310,10 @@ protected void prepareSend(String method) {
 	  this.breakOnException = breakOnException;
   }
 
-  public void onResponse(Navajo response) {
+  /**
+ * @param response  
+ */
+public void onResponse(Navajo response) {
 
   }
 
@@ -1340,7 +1345,10 @@ protected void prepareSend(String method) {
 
   }
 
-  public void setException(Exception e) {
+  /**
+ * @param e  
+ */
+public void setException(Exception e) {
 
   }
 
@@ -1348,7 +1356,10 @@ protected void prepareSend(String method) {
 
   }
 
-  public void setTmlScheduler(Scheduler schedule) {
+  /**
+ * @param schedule  
+ */
+public void setTmlScheduler(Scheduler schedule) {
 
   }
 

@@ -49,7 +49,7 @@ public class FileMap implements Mappable {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 		for (int i = 0; i < lineArray.size(); i++) {
-			FileLineMap flm = (FileLineMap) lineArray.get(i);
+			FileLineMap flm = lineArray.get(i);
 
 			if (flm.getLine() != null) {
 				String nextLine = handleLineEnds( flm.getLine() );

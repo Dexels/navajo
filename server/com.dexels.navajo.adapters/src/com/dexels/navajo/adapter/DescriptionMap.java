@@ -29,7 +29,6 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.UserException;
 

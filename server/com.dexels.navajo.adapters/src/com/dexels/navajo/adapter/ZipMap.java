@@ -95,20 +95,20 @@ public class ZipMap implements Mappable {
 	}
 
 	public static void main(String [] args) throws Exception {
-		FileInputStream fi = new FileInputStream(new File("/home/arjen/dbvis.license"));
+		FileInputStream fi = new FileInputStream(new File("~/dbvis.license"));
 		Binary b = new Binary(fi);
 		ZipMap zm = new ZipMap();
 		zm.load(null);
 		zm.setName("dbvis.license");
 		zm.setContent(b);
-		fi = new FileInputStream(new File("/home/arjen/INDEX"));
+		fi = new FileInputStream(new File("~/INDEX"));
 		b = new Binary(fi);
 		zm.setName("INDEX");
 		zm.setContent(b);
 
 		Binary r = zm.getZipped();
 		System.err.println(r.getData().length);
-		FileOutputStream fo = new FileOutputStream(new File("/home/arjen/aap.zip"));
+		FileOutputStream fo = new FileOutputStream(new File("~/aap.zip"));
 		fo.write(r.getData());
 		fo.close();
 	}
