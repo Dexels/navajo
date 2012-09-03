@@ -25,6 +25,10 @@ public class SystemPropertyComponent {
 		this.configurationInterface = ci;
 	}
 
+	/**
+	 * The configurationinjectioninterface to remove
+	 * @param ci
+	 */
 	public void clearConfigurationInterface(ConfigurationInjectionInterface ci) {
 		this.configurationInterface = null;
 	}

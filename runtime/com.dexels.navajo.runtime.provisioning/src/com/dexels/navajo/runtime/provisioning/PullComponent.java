@@ -162,7 +162,7 @@ public class PullComponent {
 		logger.info("Obr Component deactivated");
 	}
 
-	private void debugRepositories() throws MalformedURLException, Exception {
+	private void debugRepositories() throws Exception {
 		Repository[] repositories = myRepositoryAdmin.listRepositories();
 //		if (repositories.length == 0) {
 //			logger.info("No repositories found, adding one.");
@@ -216,6 +216,10 @@ public class PullComponent {
 		this.myRepositoryAdmin = admin;
 	}
 
+	/**
+	 * the RepositoryAdmin to remove
+	 * @param admin
+	 */
 	public void clearRepositoryAdmin(RepositoryAdmin admin) {
 		this.myRepositoryAdmin = null;
 	}
@@ -224,6 +228,10 @@ public class PullComponent {
 		this.myConfigurationAdmin = admin;
 	}
 
+	/**
+	 * the ConfigurationAdmin to remove
+	 * @param admin
+	 */
 	public void clearConfigurationAdmin(ConfigurationAdmin admin) {
 		this.myConfigurationAdmin = null;
 	}

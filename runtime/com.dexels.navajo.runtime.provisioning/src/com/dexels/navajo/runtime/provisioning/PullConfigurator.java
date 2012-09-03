@@ -1,7 +1,6 @@
 package com.dexels.navajo.runtime.provisioning;
 
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.obr.RepositoryAdmin;
 
 public class PullConfigurator {
@@ -14,6 +13,9 @@ public class PullConfigurator {
 		this.myRepositoryAdmin = admin;
 	}
 
+	/**
+	 * @param admin the RepositoryAdmin to remove 
+	 */
 	public void clearRepositoryAdmin(RepositoryAdmin admin) {
 		this.myRepositoryAdmin = null;
 	}
@@ -22,10 +24,14 @@ public class PullConfigurator {
 		this.myConfigurationAdmin = admin;
 	}
 
+	/**
+	 * The configurationAdmin to remove
+	 * @param admin
+	 */
 	public void clearConfigurationAdmin(ConfigurationAdmin admin) {
 		this.myConfigurationAdmin = null;
 	}
 
-	public void activate(ComponentContext cc) {
+	public void activate() {
 	}
 }

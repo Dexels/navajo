@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.resource.JDBCMap;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
-import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.resource.manager.ResourceManager;
@@ -61,6 +60,9 @@ public class ResourceManagerTest {
 	}
 
 
+	/**
+	 * @param resourceManager the resourceManager to remove 
+	 */
 	public void clearResourceManager(ResourceManager resourceManager) {
 		this.resourceManager = null;
 	}
@@ -99,7 +101,7 @@ public void testH2() throws Exception, SQLException {
 		connection.close();
 	}
 
-public void testMongo() throws Exception, SQLException {
+public void testMongo() throws Exception {
 	Map<String, Object> settings = new HashMap<String, Object>(); 
 	settings.put("host", "localhost");
 	settings.put("database", "demo");
@@ -267,7 +269,7 @@ public void testOracle() throws Exception, SQLException {
 		connection.close();
 
 	}
-	public void testClient() throws InvalidSyntaxException, ClientException {
+	public void testClient()  {
 		ServiceReference<LocalClient> l = bundleContext.getServiceReference(LocalClient.class);
 		LocalClient cc = bundleContext.getService(l);
 		// do magic
@@ -278,11 +280,11 @@ public void testOracle() throws Exception, SQLException {
 		for (int i = 0; i < 10; i++) {
 			try {
 				response = cc.call(n);
+				response.write(System.err);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		response.write(System.err);
 		
 		//		xx.
 	}

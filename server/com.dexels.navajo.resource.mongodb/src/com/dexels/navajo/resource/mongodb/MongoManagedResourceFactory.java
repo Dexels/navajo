@@ -79,8 +79,8 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 			throws ConfigurationException {
 //		logger.info("Configuration received, pid: "+pid);
 		try {
-			Object source = instantiate(bundleContext, pid,settings);
-			ServiceRegistration reg =  bundleContext.registerService(DB.class.getName(),(DB)source, settings);
+			Object source = instantiate(settings);
+			ServiceRegistration reg =  bundleContext.registerService(DB.class.getName(),source, settings);
 			registryMap.put(pid, reg);
 			contextMap.put(pid, (DB) source);
 		} catch (Exception e) {
@@ -90,7 +90,7 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 
 	
 	@SuppressWarnings({ "rawtypes" })
-	public Object instantiate(BundleContext bc, String pid, Dictionary settings) throws Exception {
+	public Object instantiate( Dictionary settings) throws Exception {
 		Properties prop = new Properties(); 
 		Enumeration en = settings.keys();
 		while (en.hasMoreElements()) {

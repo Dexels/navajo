@@ -209,7 +209,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	}
 
 	public final boolean isArrayMapRef(String fieldName)
-			throws IllegalAccessException, InvocationTargetException,
+			throws 
 			NoSuchMethodException {
 		Object map = getCurrentTreeNode().getMyMap();
 		String key = map.getClass().getName()+"."+fieldName;
@@ -240,7 +240,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 
 	@SuppressWarnings("rawtypes")
 	public Object createMapRefObjects(String fieldName, int count) 
-			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, SecurityException, NoSuchFieldException, InstantiationException {
+			throws IllegalAccessException, NoSuchMethodException, SecurityException, NoSuchFieldException, InstantiationException {
 		Object map = getCurrentTreeNode().getMyMap();
 		Class fieldType = null; 
 		if (isArrayMapRef(fieldName)) {
@@ -516,7 +516,6 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 
 			getAccess().getOutputDoc().write(System.err);
 		}
-		result.write(System.err);
 		return result;
 	}
 

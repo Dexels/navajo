@@ -12,8 +12,6 @@ import com.dexels.navajo.rhino.ContinuationRunnable;
 import com.dexels.navajo.script.api.NavajoResponseCallback;
 import com.dexels.navajo.script.api.RunnableTools;
 import com.dexels.navajo.script.api.TmlRunnable;
-import com.dexels.navajo.server.AuthorizationException;
-import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
@@ -21,7 +19,7 @@ public class NavajoMapContinuations extends NavajoMapUpdated {
 
 	@Override
 	public void setDoSend(final String method) throws UserException,
-			ConditionErrorException, SystemException, AuthorizationException {
+			SystemException {
 		// magically acquire ScriptEnvironment (from Access?)
 		setBlock(false);
 		setForceInline(true);

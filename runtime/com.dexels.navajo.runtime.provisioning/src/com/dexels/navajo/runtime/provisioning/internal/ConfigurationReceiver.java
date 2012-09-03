@@ -53,6 +53,10 @@ public class ConfigurationReceiver implements ConfigurationInjectionInterface {
 		this.configurationAdmin = ca;
 	}
 
+	/**
+	 * the configurationadmin to remove
+	 * @param ca
+	 */
 	public void clearConfigurationAdmin(ConfigurationAdmin ca) {
 		this.configurationAdmin = null;
 	}

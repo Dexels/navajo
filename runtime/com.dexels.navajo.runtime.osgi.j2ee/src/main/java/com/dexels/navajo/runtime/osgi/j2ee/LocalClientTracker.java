@@ -43,14 +43,11 @@ public class LocalClientTracker extends ServiceTracker {
 	public Object addingService(ServiceReference ref)
     {
     	LocalClient service = (LocalClient)super.addingService(ref);
-        if (service instanceof LocalClient) {
-        	if(servletContext!=null) {
-                servletContext.setAttribute("localClient", service);
-        	} else {
-        		System.err.println("Local client detected but no servlet context");
-        	}
-        }
-
+    	if(servletContext!=null) {
+            servletContext.setAttribute("localClient", service);
+    	} else {
+    		System.err.println("Local client detected but no servlet context");
+    	}
         return service;
     }
 

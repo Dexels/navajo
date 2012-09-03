@@ -73,7 +73,7 @@ public class FrameworkInstance {
 		bundlePath = path;
 	}
 
-	public FrameworkInstance(URL obrUrl) {
+	public FrameworkInstance() {
 		bundlePath = null;
 	}
 
@@ -257,7 +257,7 @@ public class FrameworkInstance {
 	}
 
 	private void injectBootConfiguration() throws IOException {
-		Hashtable ht = new Hashtable();
+		Hashtable<String,String> ht = new Hashtable<String,String>();
 		ht.put("tipi.boot", "true");
 		configurationInjectionService.addConfiguration("tipi.boot", ht);
 	}
@@ -288,12 +288,11 @@ public class FrameworkInstance {
 
 	private void resolveAtomic(String deps) {
 		Resolver resolver = repositoryAdmin.resolver();
-		installDependency(resolver, deps.split(","), true);
+		installDependency(resolver, deps.split(","));
 		resolver.deploy(true);
 	}
 
-	private boolean installDependency(Resolver resolver, String[] dependencies,
-			boolean performDeploy) {
+	private boolean installDependency(Resolver resolver, String[] dependencies) {
 		boolean isok = true;
 		for (String dep : dependencies) {
 			boolean result = exec(resolver,dep);
@@ -340,9 +339,11 @@ public class FrameworkInstance {
 		} else {
 			return;
 		}
-		this.framework.waitForStop(10000);
-		log("OSGi framework stopped", null);
-		this.framework = null;
+		if(this.framework!=null) {
+			this.framework.waitForStop(10000);
+			log("OSGi framework stopped", null);
+			this.framework = null;
+		}
 	}
 
 	// TODO: add some config properties
@@ -356,7 +357,6 @@ public class FrameworkInstance {
 			String value = (String) props.get(key);
 			map.put(key.toString(), value);
 		}
-		logger.info(">> "+map);
 		log("Bundles at: " + bundlePath, null);
 		map.put("felix.fileinstall.dir", bundlePath);
 		map.put("felix.fileinstall.log.level", "2");

@@ -15,6 +15,9 @@ public class SleepMap implements Mappable {
 		this.access = access;
 	}
 
+	/**
+	 * @param method  
+	 */
 	public void setSleep(final String method) {
 		ContinuationRunnable cr = ContinuationMapUtils.getContinuation(access);
 		ContinuationMapUtils.scheduleAndContinue(cr);

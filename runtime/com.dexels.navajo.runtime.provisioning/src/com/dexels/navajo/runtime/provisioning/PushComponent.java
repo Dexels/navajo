@@ -36,16 +36,17 @@ public class PushComponent {
 		logger.info("Push configuration component created.");
 		String contextPath = (String) properties.get("contextPath");
 		String contextName = (String) properties.get("contextName");
-		String deployment = (String) properties.get("deployment");
-		String profile = (String) properties.get("profile");
+//		String deployment = (String) properties.get("deployment");
+//		String profile = (String) properties.get("profile");
 
 		boolean matches = hasContext(contextName);
 		if(!matches) {
 			logger.info("Skipping context: "+contextName+" it doesn't match any attached context");
 			return;
 		}
+		logger.info("Setting up navajo context: "+contextName+" at: "+contextPath);
 		try {
-			setupNavajo(contextName,contextPath,deployment,profile);
+			setupNavajo(contextName,contextPath);
 		} catch (IOException e) {
 			logger.error("Setting up navajo failed: ", e);
 		}
@@ -90,8 +91,7 @@ public class PushComponent {
 //		logger.info(">>>>>>>>>>>>>INJECT CONPLETE: "+installationPath);
 	}
 	
-	private void setupNavajo(String contextName, String contextPath, String deployment,
-			String profile) throws IOException {
+	private void setupNavajo(String contextName, String contextPath) throws IOException {
 		injectConfig(contextName, null, contextPath);
 		
 
@@ -115,6 +115,10 @@ public class PushComponent {
 		this.myConfigurationAdmin = admin;
 	}
 
+	/**
+	 * the configurationadmin to remove
+	 * @param admin
+	 */
 	public void clearConfigurationAdmin(ConfigurationAdmin admin) {
 		this.myConfigurationAdmin = null;
 	}
