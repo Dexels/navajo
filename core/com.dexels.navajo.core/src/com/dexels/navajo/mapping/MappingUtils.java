@@ -347,7 +347,7 @@ public final class MappingUtils {
 	   return parent;
    }
    
-   private static final Message[] addMessage(Navajo doc, Message parent, String message,
+   public static final Message[] addMessage(Navajo doc, Message parent, String message,
                                       String template, int count,
                                       String type, String mode) throws NavajoException,
                                       MappingException {
