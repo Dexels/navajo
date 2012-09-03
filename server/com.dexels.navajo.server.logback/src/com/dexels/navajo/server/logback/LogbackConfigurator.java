@@ -28,6 +28,10 @@ public class LogbackConfigurator {
 		this.navajoServerContext = navajoServerContext;
 	}
 	
+	/**
+	 * 
+	 * @param navajoServerContext the navajoServerContext to remove
+	 */
 	public void clearNavajoContext(NavajoServerContext navajoServerContext) {
 		this.navajoServerContext = null;
 	}

@@ -40,7 +40,7 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 		String pid = (String) settings.get("service.pid");
 //		logger.info("Configuration received, pid: "+pid);
 		try {
-//			logger.info("Instantiating with pid: "+pid);
+			logger.info("Instantiating with pid: "+pid);
 			Properties prop = new Properties(); 
 			Enumeration en = settings.keys();
 			while (en.hasMoreElements()) {
@@ -93,6 +93,10 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 		this.myConfigurationAdmin = admin;
 	}
 
+	/**
+	 * 
+	 * @param admin the ConfigurationAdmin to remove
+	 */
 	public void clearConfigurationAdmin(ConfigurationAdmin admin) {
 		this.myConfigurationAdmin = null;
 	}

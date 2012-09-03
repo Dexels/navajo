@@ -1,6 +1,5 @@
 package com.dexels.navajo.server.embedded.impl;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -115,12 +114,12 @@ public class ServerInstanceImpl implements ServerInstance {
 
 
 	
-	private void startServer(final String projectName, Listener lifecycleListener) throws Exception, InterruptedException {
+	private void startServer(final String projectName, Listener lifecycleListener) throws Exception {
 		System.err.println("Project name: "+projectName);
 //		File file = navajoProject.getLocation().toFile();
 
 		
-		initializeServer(projectName);
+		initializeServer();
 		jettyServer.addLifeCycleListener(lifecycleListener);
 		
 		// ordering, allow for listeners to be added befor instantiating the jetty server
@@ -198,10 +197,10 @@ public class ServerInstanceImpl implements ServerInstance {
 		t.start();
 	}
 	
-	private void initializeServer(String folder) throws IOException {
+	private void initializeServer() throws IOException {
 		port = findFreePort();
 //		String ss = folder.getLocation().toString();
-		initializeServer(port, folder);
+		initializeServer(port);
 	}
 	
 	private int findFreePort() throws IOException {
@@ -211,7 +210,7 @@ public class ServerInstanceImpl implements ServerInstance {
 		return port;
 	}
 
-	private void initializeServer(int port, String navajoPath) throws FileNotFoundException {
+	private void initializeServer(int port)  {
 //		   Logger logger = (Logger) LoggerFactory.getLogger("org.eclipse.jetty.util.log");
 		   LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		   lc.reset();
@@ -232,7 +231,6 @@ public class ServerInstanceImpl implements ServerInstance {
 		webappContextHandler.setContextPath(contextPath);
 		String installationPath = NavajoContextListener.getInstallationPath(contextPath);
 
-		// TODO: This used the force parameter
 		NavajoContextListener.initializeServletContext(contextPath,webappContextHandler.getServletContext().getRealPath(""),installationPath);
 		webappContextHandler.addServlet(new ServletHolder(new TmlHttpServlet()),"/Postman");
 		webappContextHandler.addServlet(new ServletHolder(new NqlServlet()),"/Nql");

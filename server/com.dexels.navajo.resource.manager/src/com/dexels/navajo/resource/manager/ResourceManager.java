@@ -151,6 +151,9 @@ public class ResourceManager {
 		this.configAdmin = configAdmin;
 	}
 
+	/**
+	 * @param configAdmin the configAdmin to remove 
+	 */
 	public void clearConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.configAdmin = null;
 	}
@@ -225,6 +228,10 @@ public class ResourceManager {
 	}
 
 
+	/**
+	 * The navajoServerContext to remove
+	 * @param navajoServerContext
+	 */
 	public void removeNavajoContext(NavajoServerContext navajoServerContext) {
 		this.navajoServerContext = null;
 	}

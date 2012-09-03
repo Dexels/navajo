@@ -17,6 +17,7 @@ Export-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.adapter.soapmap,
  com.dexels.navajo.adapter.sqlmap,
  com.dexels.navajo.adapter.xmlmap,
+ com.dexels.navajo.http,
  com.dexels.navajo.jdbc,
  navajoadapters,
  org.dexels.grus
