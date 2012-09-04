@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -47,7 +46,6 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
-import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -145,8 +143,6 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
   
 //  private static Object semaphore = new Object();
   private int peakAccessSetSize = 0;
-  
-  private static final Set<BroadcastMessage> broadcastMessage = Collections.synchronizedSet(new HashSet<BroadcastMessage>());
   
   /**
    * Registered SNMP managers.
@@ -1200,7 +1196,7 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 					new NavajoExceptionEvent(rpcName, access.getAccessID(), rpcUser, myException));
 		}
 
-		appendServerBroadCast(access, inMessage, h);
+//		appendServerBroadCast(access, inMessage, h);
 
 		if (!afterWebServiceActivated) { // Nullify Access object if it
 													// did not result in an After
@@ -1226,36 +1222,6 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 		}
 	}
 
-  private void appendServerBroadCast(Access a, Navajo in, Header h) {
-	  Set<BroadcastMessage> toBeRemoved = null;
-	  for (Iterator<BroadcastMessage> iter = broadcastMessage.iterator(); iter.hasNext();) {
-
-		  BroadcastMessage bm = iter.next();
-		  if (bm.isExpired()) {
-			  if (toBeRemoved==null) {
-				  toBeRemoved = new HashSet<BroadcastMessage>();
-			  }
-			  toBeRemoved.add(bm);
-		  }
-		  if (!bm.validRecipient(a)) {
-			  continue;
-		  }
-		  if (bm.hasBeenSent(a)) {
-			  continue;
-		  }
-		  h.addPiggyBackData(bm.createMap());
-		  bm.addSentToClientId(a);
-
-	  }
-
-	  if (toBeRemoved!=null) {
-		  broadcastMessage.removeAll(toBeRemoved);
-	  }
-	  HashMap<String,String> m = new HashMap<String,String>();
-	  m.put("requestRate", ""+getRequestRate());
-	  m.put("serverId", ""+getServerId() + "/" + getApplicationId());
-	  h.addPiggyBackData(m);
-  }
 
 /**
    * Determine if WS is reserved Navajo webservice.
@@ -1332,12 +1298,7 @@ public String getServerId() {
 	  //f.deleteOnExit();
 	  return f;
   }
-  
-  public void setBroadcast(String message, int timeToLive, String recipientExpression) {
-	  BroadcastMessage bm = new BroadcastMessage(message,timeToLive,recipientExpression);
-	  broadcastMessage.add(bm);
 
-  }
 
   public Access getAccessObject(String id) {
 

@@ -81,15 +81,7 @@ public interface DispatcherInterface extends ResourceManager {
 	public void doClearCache();
 	public void doClearScriptCache();
 	
-	/**
-	 * Broadcast a message to a recipient.
-	 * 
-	 * @param message
-	 * @param timeToLive
-	 * @param recipientExpression
-	 */
-	public void setBroadcast(String message, int timeToLive, String recipientExpression);
-	
+
 	public String getApplicationId();
 	public String getServerId();
 	public String getThreadName(Access a);
