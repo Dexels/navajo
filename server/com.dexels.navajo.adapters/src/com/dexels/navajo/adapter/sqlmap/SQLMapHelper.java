@@ -222,7 +222,12 @@ public class SQLMapHelper {
 		case Types.BIGINT:
 		case Types.SMALLINT:
 		case Types.TINYINT:
-			value = new Integer(rs.getInt(columnIndex));
+		    int tmpValue = rs.getInt(columnIndex);
+		    if (rs.wasNull()) {
+		        value = null;
+		    } else {
+		        value = new Integer(tmpValue);
+		    }
 			break;
 
 		case Types.LONGNVARCHAR:
@@ -242,16 +247,31 @@ public class SQLMapHelper {
 
 			// if (debug) System.err.println(columnIndex + ", prec = " + prec + ", scale =  " + scale);
 			if (scale <= 0) {
-				value = new Integer(rs.getInt(columnIndex));
+	            int tmpValueNumeric = rs.getInt(columnIndex);
+	            if (rs.wasNull()) {
+	                value = null;
+	            } else {
+	                value = new Integer(tmpValueNumeric);
+	            }
 			} else {
-				value = new Double(rs.getString(columnIndex));
+	            double tmpValueDouble = rs.getDouble(columnIndex);
+	            if (rs.wasNull()) {
+	                value = null;
+	            } else {
+	                value = new Double(tmpValueDouble);
+	            }
 			}
 			break;
 
 		case Types.DECIMAL:
 		case Types.FLOAT:
 		case Types.DOUBLE:
-			value = new Double(rs.getString(columnIndex));
+            double tmpValueDouble = rs.getDouble(columnIndex);
+            if (rs.wasNull()) {
+                value = null;
+            } else {
+                value = new Double(tmpValueDouble);
+            }
 			break;
 
 		case Types.DATE:
@@ -305,7 +325,12 @@ public class SQLMapHelper {
 
 		case Types.BOOLEAN:
 		case Types.BIT:
-			value = new Boolean(rs.getBoolean(columnIndex));
+            boolean tmpValueBoolean = rs.getBoolean(columnIndex);
+            if (rs.wasNull()) {
+                value = null;
+            } else {
+                value = new Boolean(tmpValueBoolean);
+            }
 			break;
 
 		case Types.ARRAY:
