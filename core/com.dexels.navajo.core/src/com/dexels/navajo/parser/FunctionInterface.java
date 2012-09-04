@@ -159,7 +159,8 @@ public abstract class FunctionInterface {
     	}
     }
        
-    private final void checkReturnType(Object o) throws TMLExpressionException  {
+    @SuppressWarnings("unchecked")
+	private final void checkReturnType(Object o) throws TMLExpressionException  {
     	
     	Class [] myreturntype = returnType.get(this.getClass());
     	
@@ -183,7 +184,8 @@ public abstract class FunctionInterface {
     	}
     }
     
-    private final void checkTypes() throws TMLExpressionException {
+    @SuppressWarnings("unchecked")
+	private final void checkTypes() throws TMLExpressionException {
     	
     	Class [][] mytypes = types.get(this.getClass());
     	
@@ -234,7 +236,7 @@ public abstract class FunctionInterface {
     }
    
     public final void reset() {
-        operandList = new ArrayList();
+        operandList = new ArrayList<Object>();
     }
     public final void insertOperand(Object o) {
         operandList.add(o);

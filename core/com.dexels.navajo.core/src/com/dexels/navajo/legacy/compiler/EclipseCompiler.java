@@ -34,7 +34,7 @@ public class EclipseCompiler implements JavaCompiler {
     boolean classDebugInfo=false;
 
     ClassLoader loader=null;
-	private Class compilerClass;
+	private Class<?> compilerClass;
 
     public void setCompilerClass(Class c) {
         compilerClass = c;
@@ -83,6 +83,7 @@ public class EclipseCompiler implements JavaCompiler {
     
     /**
      * Set where you want the compiler output (messages) to go
+     * @param out 
      */
     public void setOut(OutputStream out) {
        
@@ -157,6 +158,7 @@ public class EclipseCompiler implements JavaCompiler {
     
     }
     
+	@SuppressWarnings("unchecked")
 	public boolean compile(String source) {
 
         try {

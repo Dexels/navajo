@@ -23,7 +23,6 @@ public class ClauseStream {
     private char endChar = ')';
     private String operators = "&|";
     private String unaryOperator = "!";
-    private int startCharOp = 0;
     private char unary = ' ';
 
     public ClauseStream(String s) {
@@ -64,7 +63,7 @@ public class ClauseStream {
             return false;
     }
 
-    public char getNextOperator() throws ClauseException {
+    public char getNextOperator()  {
 
         char operator = '.';
         char c;
@@ -87,7 +86,6 @@ public class ClauseStream {
         int start = 0;
         int startUndelimited = 0;
         boolean end = false;
-        int prevStartChar = startChar;
 
         if (startChar >= input.length())
             return "EOC";

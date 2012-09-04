@@ -19,7 +19,7 @@ public class OSGiFunctionFactoryFactory  {
 		// no instances
 	}
 	
-	public static FunctionInterface getFunctionInterface(final String functionName) throws TMLExpressionException  {
+	public static FunctionInterface getFunctionInterface(final String functionName)  {
 		FunctionInterface osgiResolution = (FunctionInterface) getComponent(functionName, "functionName", FunctionInterface.class);
 		return osgiResolution;
 	}

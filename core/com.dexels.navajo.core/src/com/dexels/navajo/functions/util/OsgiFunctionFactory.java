@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import navajo.ExtensionDefinition;
 import navajocore.Version;
 
 import org.osgi.framework.BundleContext;
@@ -117,7 +116,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	
 	@Override
 	public void parseFunction(Map<String, FunctionDefinition> fuds,
-			ExtensionDefinition fd, XMLElement element) {
-		super.parseFunction(fuds, fd, element);
+			 XMLElement element) {
+		super.parseFunction(fuds, element);
 	}
 }

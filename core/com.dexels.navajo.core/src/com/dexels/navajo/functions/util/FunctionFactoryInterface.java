@@ -87,12 +87,14 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		Map<String, FunctionDefinition> map = functionConfig.get(ed);
 		if(map==null) {
 			logger.warn("Function definition not found: "+name+" for extensiondef: "+ed.getId()+" map: "+functionConfig);
-		}
-		FunctionDefinition fd = map.get(name);
-		if ( fd != null ) {
-			return fd;
-		} else {
 			throw new TMLExpressionException("Could not find function definition: " + name);
+		} else {
+			FunctionDefinition fd = map.get(name);
+			if ( fd != null ) {
+				return fd;
+			} else {
+				throw new TMLExpressionException("Could not find function definition: " + name);
+			}
 		}
 	}
 	
@@ -265,12 +267,20 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		return null;
 	}
 //	
+	/**
+	 * @param interfaceClass  
+	 * @param propertyKey 
+	 */
 	public List<XMLElement> getAllFunctionElements(String interfaceClass, String propertyKey)  {
 		throw new UnsupportedOperationException("getAllFunctionElements only implemented in OSGi");
 	}
 
 
-	public List<XMLElement> getAllAdapterElements(String name, String string) {
+	/**
+	 * @param interfaceClass  
+	 * @param propertyKey 
+	 */
+	public List<XMLElement> getAllAdapterElements(String interfaceClass, String propertyKey) {
 		throw new UnsupportedOperationException("getAllAdapterElements only implemented in OSGi");
 	}
 }

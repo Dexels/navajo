@@ -152,9 +152,10 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 * 
 	 * @param ne
 	 * @param ignoreProxyListeners, if set to true, listeners of class NavajoEventProxy are ignored to prevent event ping-pong.
+	 * 
 	 */
 	public void publishAsynchronousEvent(final NavajoEvent ne, boolean ignoreProxyListeners) {
-
+		// TODO ignoreProxyListeners is actually not used. Is that correct?
 		//System.err.println("Asynchronous Event Triggered: " + ne.getClass());
 		publishMonitoredEvent(ne);
 		

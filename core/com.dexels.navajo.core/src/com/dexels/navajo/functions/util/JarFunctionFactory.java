@@ -51,7 +51,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 				XMLElement element = children.get(i);
 				
 				if(element.getName().equals("function")) {
-					parseFunction(fuds, fd, element);
+					parseFunction(fuds, element);
 				}
 				if(element.getName().equals("map")) {
 					parseAdapters(fuds, fd, element);
@@ -88,7 +88,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 	}
 	
 	public void parseFunction(Map<String, FunctionDefinition> fuds,
-			ExtensionDefinition fd, XMLElement element) {
+			XMLElement element) {
 		Vector<XMLElement> def = element.getChildren();
 		String name = (String) element.getAttribute("name");
 		String object = (String) element.getAttribute("class");

@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -40,6 +43,10 @@ import com.dexels.navajo.server.UserException;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public final class MappingUtils {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MappingUtils.class);
+	
     public static final String getStrippedPropertyName(String name) {
         StringTokenizer tok = new StringTokenizer(name, Navajo.MESSAGE_SEPARATOR);
         String result = "";
@@ -50,7 +57,7 @@ public final class MappingUtils {
         return result;
     }
 
-    public static final String determineNavajoType(Object o) throws TMLExpressionException {
+    public static final String determineNavajoType(Object o) {
 
          if (o == null) {
            return "";
@@ -118,6 +125,10 @@ public final class MappingUtils {
       newMsg = msg;
     }
     
+    if(msg==null) {
+    	logger.error("Null message in getMessageObject: parent null? (findbug based fix)");
+    	throw NavajoFactory.getInstance().createNavajoException("Null message in getMessageObject: parent null? (findbug based fix)");
+    }
     for (int i = 0; i < count; i++) {
      
       newMsg = null;
@@ -182,6 +193,11 @@ public final class MappingUtils {
     }
 
     if (array) {
+        if(newMsg==null) {
+        	logger.error("Null message in getMessageObject: parent null? (findbug based fix)");
+        	return null;
+        }
+
       newMsg.setType(Message.MSG_TYPE_ARRAY);
 
     }
@@ -309,11 +325,8 @@ public final class MappingUtils {
     }
     return prop;
   }
-   
-   public static final Message[] addMessage(Navajo doc, Message parent, String message,
-       String template, int count,
-       String type, String mode, String orderby) throws java.io.IOException, NavajoException,
-       org.xml.sax.SAXException, MappingException {
+
+	public static final Message[] addMessage(Navajo doc, Message parent, String message, String template, int count, String type, String mode, String orderby) throws NavajoException,MappingException {
 	 
 	 Message[] msgs = addMessage(doc, parent, message, template, count, type, mode);
 	 
@@ -347,7 +360,10 @@ public final class MappingUtils {
 	   return parent;
    }
    
-   public static final Message[] addMessage(Navajo doc, Message parent, String message,
+   /**
+ * @param template  
+ */
+public static final Message[] addMessage(Navajo doc, Message parent, String message,
                                       String template, int count,
                                       String type, String mode) throws NavajoException,
                                       MappingException {

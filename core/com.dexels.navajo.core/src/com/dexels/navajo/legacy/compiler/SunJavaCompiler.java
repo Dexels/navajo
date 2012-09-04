@@ -144,6 +144,7 @@ public class SunJavaCompiler implements JavaCompiler {
     
     /**
      * Set where you want the compiler output (messages) to go
+     * @param out 
      */
     public void setOut(OutputStream out) {
        

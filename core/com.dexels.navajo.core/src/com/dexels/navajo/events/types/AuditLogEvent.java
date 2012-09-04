@@ -42,7 +42,7 @@ public class AuditLogEvent implements NavajoEvent, LevelEvent {
 	}
 	
 	public AuditLogEvent(ServerTooBusyEvent nhc) {
-		this("SERVERTOOBUSY", "Number of simulatenously running service is", Level.SEVERE);
+		this("SERVERTOOBUSY", "Number of simulatenously running service is "+nhc.toString(), Level.SEVERE);
 	}
 	
 	public AuditLogEvent(String subSystem, String msg, Level level) {
