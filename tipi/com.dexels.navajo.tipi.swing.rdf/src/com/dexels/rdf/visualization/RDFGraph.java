@@ -263,7 +263,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 		zoom_height = zoom / aspect_ratio;
 
 		/* create 5x5 pixel picking region near cursor location */
-		glu.gluPickMatrix((double) pickPoint.x, (double) (viewport[3] - pickPoint.y), 10.0, 10.0, viewport, 0);
+		glu.gluPickMatrix(pickPoint.x, viewport[3] - pickPoint.y, 10.0, 10.0, viewport, 0);
 
 		// Zooming
 		gl.glOrtho(zoom, width - zoom, zoom_height, height - zoom_height, 0f, 1f);
@@ -315,6 +315,12 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 		}
 	}
 
+	/**
+	 * 
+	 * @param drawable
+	 * @param modeChanged
+	 * @param deviceChanged
+	 */
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
 	}
 
@@ -506,8 +512,15 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 		return pair;
 	}
 
-	/*
-	 * Draw a string in OpenGL
+	/**
+	 * 
+	 * @param gl
+	 * @param text
+	 * @param xpos
+	 * @param ypos
+	 * @param color
+	 * @param alpha
+	 * @param scale
 	 */
 	public void drawString(GL gl, String text, int xpos, int ypos, Color color, float alpha, float scale) {
 		float r = color.getRed() / 255f;

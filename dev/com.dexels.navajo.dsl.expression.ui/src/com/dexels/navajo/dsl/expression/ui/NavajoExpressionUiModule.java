@@ -19,8 +19,12 @@ public class NavajoExpressionUiModule extends com.dexels.navajo.dsl.expression.u
 	public NavajoExpressionUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
 //		myPlugin = plugin;
-		NavajoExpressionUiModule.instance = this;
+		setInstance(this);
 		registerToOSGi(plugin);
+	}
+
+	public static void setInstance(NavajoExpressionUiModule instance) {
+		NavajoExpressionUiModule.instance = instance;
 	}
 	
 	public static NavajoExpressionUiModule getInstance() {

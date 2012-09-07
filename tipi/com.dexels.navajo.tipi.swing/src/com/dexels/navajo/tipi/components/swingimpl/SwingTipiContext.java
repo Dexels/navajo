@@ -538,10 +538,10 @@ public class SwingTipiContext extends TipiContext {
 
 					@Override
 					public void run() {
-						if(tipiLaf!=null) {
-							TipiSwingExtension.getInstance().setLookAndFeel(tipiLaf);
-//							SwingUtilities.updateComponentTreeUI(getTopLevel());
-						}
+						
+						TipiSwingExtension.getInstance().setLookAndFeel(tipiLaf);
+						// TODO: Find a better workaround. Bug: https://github.com/Insubstantial/insubstantial/issues/56
+						TipiSwingExtension.getInstance().setLookAndFeel(tipiLaf);
 					
 					}});
 			}

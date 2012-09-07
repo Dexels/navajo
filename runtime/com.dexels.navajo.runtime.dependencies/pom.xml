@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>com.dexels.navajo.runtime.dependencies</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.6</version>
+	<version>1.0.7</version>
 	<name>com.dexels.navajo.bundle.depz Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	<parent>
@@ -102,7 +102,7 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.adapters</artifactId>
-            <version>1.0.15</version>
+            <version>1.0.17</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>

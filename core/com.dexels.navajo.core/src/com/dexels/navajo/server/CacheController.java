@@ -96,7 +96,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 	private long getConfigTimeStamp() {
 		if (  DispatcherFactory.getInstance() != null && DispatcherFactory.getInstance().getNavajoConfig() != null ) {
 			java.io.File f = new java.io.File(DispatcherFactory.getInstance().getNavajoConfig().getConfigPath() + "/" + CACHE_CONFIG);
-			if ( f != null && f.exists() ) {
+			if (f.exists() ) {
 				return f.lastModified();
 			}
 		}

@@ -66,6 +66,9 @@ public class ExampleServlet extends HttpServlet {
 		this.myClient = lc;
 	}
 
+	/**
+	 * @param lc the client to clear 
+	 */
 	public void clearClient(LocalClient lc) {
 		this.myClient = null;
 	}
