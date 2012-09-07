@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="lib/substance-6.jar"/>
+	<classpathentry kind="src" path="src-trident"/>
+	<classpathentry exported="true" kind="lib" path="lib/flamingo-7.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/laf-plugin-7.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/laf-widget-7.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/substance-7.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/substance-flamingo-7.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/substance-swingx-7.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/trident.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="classes"/>

@@ -39,7 +39,6 @@ public class TipiSubstanceExtension extends TipiAbstractXMLExtension implements 
 		registerTipiExtension(context);
 		LookAndFeelWrapper lafw = new com.dexels.navajo.tipi.swing.laf.api.LookAndFeelWrapper() {
 			
-			private SubstanceBusinessBlackSteelLookAndFeel s;
 			@Override
 			public void loadLookAndFeel() {
 				SubstanceBusinessBlackSteelLookAndFeel s = new SubstanceBusinessBlackSteelLookAndFeel();
@@ -54,22 +53,14 @@ public class TipiSubstanceExtension extends TipiAbstractXMLExtension implements 
 			
 			@Override
 			public String getClassName() {
-				return s.getClass().getName();
+				return SubstanceBusinessBlackSteelLookAndFeel.class.getName();
 			}
 		};
 		Dictionary<String, String> d = new Hashtable<String, String>();
 		d.put("name", "BusinessBlackSteel");
 		d.put("className", SubstanceBusinessBlackSteelLookAndFeel.class.getName());
 		black = context.registerService(LookAndFeelWrapper.class, lafw, d);
-//		logger.info("Registered LAF class: "+SubstanceBusinessBlackSteelLookAndFeel.class.getName());
 
-//		Collection<PropertyInterpolator> c = TridentConfig.getInstance().getPropertyInterpolators();
-//		if(c.isEmpty()) {
-//			logger.warn("No interpolators present");
-//		}
-//		for (PropertyInterpolator propertyInterpolator : c) {
-//			logger.warn("Found: {}",propertyInterpolator.getClass());
-//		}
 	}
 
 	@Override
@@ -77,19 +68,6 @@ public class TipiSubstanceExtension extends TipiAbstractXMLExtension implements 
 		deregisterTipiExtension(context);
 		black.unregister();
 	}
-//
-//
-//	public List<String> getLibraryJars() {
-//		ArrayList<String> jars = new ArrayList<String>();
-//		jars.add("substance.jar");
-//		return jars;
-//	}
-//
-//	public List<String> getMainJars() {
-//		ArrayList<String> jars = new ArrayList<String>();
-//		jars.add("TipiSubstance.jar");
-//		return jars;
-//	}
 
 
 
