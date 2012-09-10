@@ -71,7 +71,7 @@
         <object>com.dexels.navajo.adapter.CopyMessage</object>
         <values>
             <value name="useOutputDoc" type="boolean" required="true" direction="in"/>
-            <value name="copyMessageFrom" type="string" required="true" direction="in"/>
+            <value name="copyMessageFrom" type="string" required="false" direction="in"/>
             <value name="copyMessageTo" type="string" required="true" direction="in"/>
         </values>
     </map>
