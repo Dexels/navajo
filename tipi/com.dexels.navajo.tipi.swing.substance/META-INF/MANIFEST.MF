@@ -2,7 +2,7 @@ Bundle-Name: Navajo Tipi Substance wrapper
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.substance
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.1.9.qualifier
+Bundle-Version: 1.1.13.qualifier
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
@@ -27,7 +27,13 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
 Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.1.17",
  com.dexels.navajo.tipi.swing;bundle-version="1.2.1"
 Bundle-ClassPath: .,
- lib/substance-6.jar
+ lib/flamingo-7.1.jar,
+ lib/laf-plugin-7.1.jar,
+ lib/laf-widget-7.1.jar,
+ lib/substance-7.1.jar,
+ lib/substance-flamingo-7.1.jar,
+ lib/substance-swingx-7.1.jar,
+ lib/trident.jar
 Bundle-Activator: tipi.TipiSubstanceExtension
 Export-Package: com.dexels.navajo.tipi.swing.laf.api,
  com.dexels.navajo.tipi.swing.substance,
@@ -77,6 +83,7 @@ Export-Package: com.dexels.navajo.tipi.swing.laf.api,
  org.pushingpixels.substance.internal.inputmaps,
  org.pushingpixels.substance.internal.painter,
  org.pushingpixels.substance.internal.plugin,
+ org.pushingpixels.substance.internal.resources,
  org.pushingpixels.substance.internal.ui,
  org.pushingpixels.substance.internal.utils,
  org.pushingpixels.substance.internal.utils.border,
@@ -85,6 +92,7 @@ Export-Package: com.dexels.navajo.tipi.swing.laf.api,
  org.pushingpixels.substance.internal.utils.icon,
  org.pushingpixels.substance.internal.utils.menu,
  org.pushingpixels.substance.internal.utils.scroll,
+ org.pushingpixels.substance.swingx,
  org.pushingpixels.trident,
  org.pushingpixels.trident.android,
  org.pushingpixels.trident.callback,
@@ -92,4 +100,5 @@ Export-Package: com.dexels.navajo.tipi.swing.laf.api,
  org.pushingpixels.trident.interpolator,
  org.pushingpixels.trident.swing,
  org.pushingpixels.trident.swt,
+ resource,
  tipi

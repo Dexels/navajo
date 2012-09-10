@@ -66,14 +66,10 @@ public class ScriptInheritance {
 					for (int j = 0; j < allChildrenOfParent.size(); j++) {
 						
 						if ( allChildrenOfParent.get(j).equals(child) ) {
-						
-							String nameOfInsertedMessage = null;
 							String operation = "";
-							if ( nameOfInsertedMessage == null ) {
-								nameOfInsertedMessage = (String) insertedMessage.getAttribute(REPLACE_MESSAGE);
-								insertedMessage.removeAttribute(REPLACE_MESSAGE);
-								operation = REPLACE_MESSAGE;
-							}
+							String nameOfInsertedMessage = (String) insertedMessage.getAttribute(REPLACE_MESSAGE);
+							insertedMessage.removeAttribute(REPLACE_MESSAGE);
+							operation = REPLACE_MESSAGE;
 							if ( nameOfInsertedMessage == null ) {
 								nameOfInsertedMessage = (String) insertedMessage.getAttribute(EXTEND_MESSAGE);
 								insertedMessage.removeAttribute(EXTEND_MESSAGE);

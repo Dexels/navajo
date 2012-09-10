@@ -15,10 +15,6 @@ public class SimpleScheduler implements Scheduler {
 		normalPool = ThreadPoolRequestQueue.create(this, "default", Thread.NORM_PRIORITY, 50);
 	}
 	
-	public void cancel(TmlRunnable myRunner) {
-		
-	}
-
 	public boolean checkNavajo(Navajo input) {
 		return true;
 	}
@@ -35,8 +31,8 @@ public class SimpleScheduler implements Scheduler {
 		myRunner.run();
 	}
 
-	public void runFinished(TmlRunnable tr) {
-	}
+//	public void runFinished(TmlRunnable tr) {
+//	}
 
 	public void shutdownScheduler() {
 	}

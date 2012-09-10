@@ -101,7 +101,7 @@ public class PerspectiveImagePanel extends JPanel {
 	public PerspectiveImagePanel(int angle) {
 		try {
 			this.angle = angle;
-			img1 = ImageIO.read(new File("/home/aphilip/jmlogo.png"));
+			img1 = ImageIO.read(new File("jmlogo.png"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

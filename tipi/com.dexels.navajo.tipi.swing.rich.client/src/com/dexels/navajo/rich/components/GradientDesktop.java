@@ -16,7 +16,7 @@ public class GradientDesktop extends JDesktopPane {
 	BufferedImage gradientImage = null;
 	TipiGradientPaint myPaint = new TipiGradientPaint("north", new Color(120, 160, 205), Color.black);
 
-	BufferedImage bg;
+//	BufferedImage bg;
 
 	public GradientDesktop() {
 		try {
@@ -41,9 +41,9 @@ public class GradientDesktop extends JDesktopPane {
 		}
 
 		g2.drawImage(gradientImage, 0, 0, getWidth(), getHeight(), null);
-		if (bg != null) {
-			g2.drawImage(bg, 0, 0, bg.getWidth(), bg.getHeight(), null);
-		}
+//		if (bg != null) {
+//			g2.drawImage(bg, 0, 0, bg.getWidth(), bg.getHeight(), null);
+//		}
 
 	}
 

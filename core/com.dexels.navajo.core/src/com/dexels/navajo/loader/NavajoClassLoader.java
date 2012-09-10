@@ -134,10 +134,6 @@ public class NavajoClassLoader extends MultiClassLoader {
     	return noCaching;
     }
     
-    public synchronized void clearCache(String className) {
-
-    }
-    
     
     /**
      * Get the class definition for a compiled NavaScript.

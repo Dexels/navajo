@@ -52,7 +52,6 @@ public abstract class AbstractKMLMap {
 	protected int bitmapWidth = 500;
 
 	protected int legendSteps = 6;
-	protected String messagePath = "Data";
 
 	protected Binary kmlData = null;
 	protected Binary kmzData = null;
@@ -312,7 +311,7 @@ public abstract class AbstractKMLMap {
 		StringBuffer descr = new StringBuffer();
 		ArrayList<Property> properties = message.getAllProperties();
 		for (Iterator<Property> iterator = properties.iterator(); iterator.hasNext();) {
-			Property property = (Property) iterator.next();
+			Property property = iterator.next();
 			if (!(property.getName().equals("Longitude") || property.getName().equals("Latitude") || property.getName().equals("Id") || property.getName().equals("Name"))) {
 				descr.append(property.getDescription() + ": " + property.getValue() + "<br/>");
 			}
@@ -347,14 +346,14 @@ public abstract class AbstractKMLMap {
 
 	}
 
-	public File createKmlFile(Navajo n, String filePrefix) throws IOException, XMLParseException {
-		messagePath = "Data";
+	public File createKmlFile(Navajo n) throws IOException, XMLParseException {
+		String messagePath = "Data";
 		// workingDir.mkdirs();
 		XMLElement xx = mapData(n.getMessage(messagePath));
 		XMLElement overlay = xx.getElementByTagName("ScreenOverlay");
 
 		Random rr = new Random(System.currentTimeMillis());
-		String legendHref = "files/legendImage" + Math.abs(rr.nextInt()) + ".png";
+		String legendHref = "files/legendImage" + Math.abs(rr.nextInt()+1) + ".png";
 
 		if (!useLegend) {
 			overlay.getParent().removeChild(overlay);

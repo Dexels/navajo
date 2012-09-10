@@ -94,7 +94,6 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 	 */
     private long totalhits = 0;
     private long cachehits = 0;
-    private long fileWrites = 0;
     
     private volatile SharedTribalMap<String,PersistentEntry> inMemoryCache = null;
     private volatile SharedTribalMap<String,Frequency> accessFrequency = null;
@@ -248,8 +247,6 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
             
         	os = sharedPersistenceStore.getOutputStream(CACHE_PATH + "/" + getServicePath(key), key, false);
         	((Navajo) document).write(os);
-        	
-            fileWrites++;
             return true;
         } catch (Exception e) {
         	logger.error("Error: ", e);
@@ -360,10 +357,10 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 		PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 
 		if ( doClear && pm.inMemoryCache != null && pm.sharedPersistenceStore != null ) {
-			Set keys = new HashSet( pm.inMemoryCache.keySet() );
-			Iterator iter = keys.iterator();
+			Set<String> keys = new HashSet<String>( pm.inMemoryCache.keySet() );
+			Iterator<String> iter = keys.iterator();
 			while ( iter.hasNext() ) {
-				String cacheKey = (String) iter.next();
+				String cacheKey = iter.next();
 	        	String path = CACHE_PATH + "/" + getServicePath(cacheKey);
 	        	
 				if ( cacheKey.startsWith(key ) && this.serviceKeyValues == null ) {

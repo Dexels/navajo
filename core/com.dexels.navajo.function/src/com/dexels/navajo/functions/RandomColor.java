@@ -86,9 +86,9 @@ public class RandomColor extends FunctionInterface {
 		if ( getOperands().size() > 0 ) {
 			Integer seed = (Integer) getOperand(0);
 			java.util.Random r2 = new java.util.Random(seed.longValue());
-			rnd = Math.abs(r2.nextInt()) % 20;
+			rnd = Math.abs(r2.nextInt()+1) % 20;
 		} else {
-			rnd = Math.abs(r.nextInt()) % 20;
+			rnd = Math.abs(r.nextInt()+1) % 20;
 		}
 		return toGoogleColor(colors2[rnd]);
 

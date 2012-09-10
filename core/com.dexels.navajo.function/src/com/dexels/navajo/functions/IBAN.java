@@ -139,7 +139,7 @@ public class IBAN {
 			if (Character.isLetter(c)) {
 				result.append(Character.getNumericValue(c));
 			} else {
-				result.append((char)c);
+				result.append(c);
 			}
 		}
 		return result.toString();
@@ -155,7 +155,7 @@ public class IBAN {
 		for (int i=0;i<iban.length();i++) {
 			char c = iban.charAt(i);
 			if (Character.isLetter(c) || Character.isDigit(c) ) {
-				result.append((char)c);
+				result.append(c);
 			}
 		}
 		return result.toString();

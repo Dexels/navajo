@@ -23,10 +23,10 @@ public class ServiceMapper implements Mappable {
 	protected String serviceClass;
 	protected String serviceMethod;
 	
-	private ArrayList methodParameters = new ArrayList();
+	private List<Object> methodParameters = new ArrayList<Object>();
 	private Object result;
 	
-	private Access myAccess;
+//	private Access myAccess;
 	
 	/**
 	 * Get a instance of the specified service class.
@@ -179,7 +179,6 @@ public class ServiceMapper implements Mappable {
 	}
 
 	public void load(Access access) throws MappableException, UserException {
-		this.myAccess = access;
 	}
 
 	public void store() throws MappableException, UserException {

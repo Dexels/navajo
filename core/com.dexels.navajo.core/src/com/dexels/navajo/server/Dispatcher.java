@@ -1282,12 +1282,10 @@ public String getServerId() {
   
   private void clearTempSpace() {
 	  File tempDir = new File(System.getProperty("java.io.tmpdir") + "/" + getApplicationId());
-	  if ( tempDir != null ) {
-		  File [] dirs = tempDir.listFiles();
-		  if ( dirs != null && dirs.length > 0 ) {
-			  for (int i = 0; i < dirs.length; i++) {
-				  deleteFiles(dirs[i]);
-			  }
+	  File [] dirs = tempDir.listFiles();
+	  if ( dirs != null && dirs.length > 0 ) {
+		  for (int i = 0; i < dirs.length; i++) {
+			  deleteFiles(dirs[i]);
 		  }
 	  }
   }

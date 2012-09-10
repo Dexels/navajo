@@ -24,7 +24,6 @@ public class URLMap extends HTTPMap implements HTTPMapInterface, Mappable {
 	private ServiceReference httpResourceReference = null;
 	private HttpResource httpResource;
 
-	private String dataSourceName;
 	
 	@Override
 	public void load(Access access) throws MappableException, UserException {
@@ -55,7 +54,6 @@ public class URLMap extends HTTPMap implements HTTPMapInterface, Mappable {
 	}
 	
 	public void setResourceName(String name) {
-		this.dataSourceName = name;
 		this.httpResource = getComponent("navajo.resource."+name, "name", HttpResource.class);
 	}
 
