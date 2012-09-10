@@ -47,6 +47,9 @@ public class SimpleRepository implements Repository, GlobalManager {
 		this.config = config;
 	}
 
+	/**
+	 * @param config the config to remove 
+	 */
 	public void clearNavajoConfig(NavajoConfigInterface config) {
 		this.config = null;
 	}
@@ -68,7 +71,7 @@ public class SimpleRepository implements Repository, GlobalManager {
 		} catch (NavajoException e) {
 			logger.error("Error: ", e);
 		}
-		return new Access(1, 1, 1, username, service, "", "", "", certificate);
+		return new Access( 1, 1, username, service, "", "", "", certificate);
 	}
 
 	/**

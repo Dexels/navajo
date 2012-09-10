@@ -62,6 +62,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
+			logger.warn("Cache controller configuration problem, not fatal", e);
 		}
 	}
 	
@@ -226,7 +227,11 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 
 	@Override
 	public void terminate() {
-		instance = null;
+		setInstance(null);
+	}
+
+	public static void setInstance(CacheController c) {
+		instance = c;
 	}
 
 	public int cachedEntries() {

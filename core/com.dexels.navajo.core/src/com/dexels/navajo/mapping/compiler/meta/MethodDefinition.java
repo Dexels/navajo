@@ -62,7 +62,7 @@ public class MethodDefinition {
 		}
 		boolean hasCondition = false;
 		String tempParamName = null;
-		if ( condition != null && !condition.equals("true")) {
+		if ( !condition.equals("true")) {
 			// Generate a temp. param to evaluate the condition expression.
 			XMLElement c = new TSLElement(in, "param");
 			tempParamName = generateParamName();

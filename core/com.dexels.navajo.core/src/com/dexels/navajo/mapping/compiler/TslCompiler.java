@@ -343,7 +343,6 @@ public String optimizeExpresssion(int ident, String clause, String className, St
               }
             }
 
-            expressionContextClass = null;
               try {
             	  expressionContextClass = Class.forName(className, false, loader);
               } catch (Exception e) {
@@ -649,8 +648,6 @@ public String messageNode(int ident, Element n, String className, String objectN
     condition = (condition == null) ? "" : condition;
     count = (count == null || count.equals("")) ? "1" : count;
     int startIndex = (start_index == null || start_index.equals("")) ? -1 : Integer.parseInt(start_index);
-
-    boolean isLazy = mode.equals(Message.MSG_MODE_LAZY);
 
     boolean conditionClause = false;
 

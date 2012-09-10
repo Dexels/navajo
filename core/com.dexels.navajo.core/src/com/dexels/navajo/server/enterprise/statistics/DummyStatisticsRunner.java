@@ -41,11 +41,6 @@ public class DummyStatisticsRunner implements StatisticsRunnerInterface, NavajoL
 		ne = null;
 	}
 
-	public void addAuditLog(String subsystem, String message, String level) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public int getAuditLevel() {
 		// TODO Auto-generated method stub
 		return 0;
