@@ -3,6 +3,7 @@ package tipi;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -38,8 +39,18 @@ public class TipiSubstanceExtension extends TipiAbstractXMLExtension implements
 	}
 
 	@Override
-	public void start(BundleContext context) throws Exception {
-		ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+	public void start(final BundleContext context) throws Exception {
+		final ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+		SwingUtilities.invokeAndWait(new Runnable(){
+
+			@Override
+			public void run() {
+				registerThreadContext(context, tccl);
+			}});
+	}
+
+	private void registerThreadContext(BundleContext context, ClassLoader tccl){
+		
 		try {
 			Thread.currentThread().setContextClassLoader(
 					getClass().getClassLoader());
@@ -73,10 +84,11 @@ public class TipiSubstanceExtension extends TipiAbstractXMLExtension implements
 			d.put("className",
 					SubstanceBusinessBlackSteelLookAndFeel.class.getName());
 			black = context.registerService(LookAndFeelWrapper.class, lafw, d);
+		} catch (Exception e1) {
+			logger.error("Initialiation problem: ",e1);
 		} finally {
 			Thread.currentThread().setContextClassLoader(tccl);
 		}
-
 	}
 
 	@Override
