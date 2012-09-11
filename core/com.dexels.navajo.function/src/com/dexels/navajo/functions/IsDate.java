@@ -32,7 +32,7 @@ public class IsDate extends FunctionInterface {
             // Check if a format is given
             java.util.Date date = null;
             // Going to guess some formats now by using the navajo function ToDate()
-            ToDate td = new ToDate();
+            ParseDate td = new ParseDate();
             td.reset();
             td.insertOperand((String)o);
             date = (java.util.Date)td.evaluate();

@@ -132,7 +132,7 @@ public final class ParseDate extends FunctionInterface {
         dates.add("06/14/1982");
         dates.add("06-05-87");
         dates.add("06-05-187");
-        ToDate td = new ToDate();
+        ParseDate td = new ParseDate();
         for (String date : dates) {
             td.reset();
             td.insertOperand(date);
