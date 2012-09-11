@@ -1,9 +1,15 @@
 package com.dexels.navajo.adapter;
 
+import java.util.Iterator;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.mapping.MappingException;
+import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 
@@ -29,6 +35,15 @@ public class CopyMessage implements Mappable {
       throw new UserException( -1,
           "copyMessageTo has to be specified");
 
+    Message to = null;
+    
+    try {
+		to = MappingUtils.addMessage(outputDoc, myAccess.getCurrentOutMessage(), copyMessageTo, null, 
+				1, Message.MSG_TYPE_SIMPLE, "")[0];
+	} catch (Exception e1) {
+		throw new UserException(-1, e1.getMessage(), e1);
+	}
+    
     Message from = null;
     if ( copyMessageFrom.equals("") ) {
     	from = (useOutputDoc) ? myAccess.getCompiledScript().getCurrentOutMsg() : myAccess.getCompiledScript().getCurrentInMsg();
@@ -40,16 +55,20 @@ public class CopyMessage implements Mappable {
       throw new UserException( -1,
                               "Could not find message " + this.copyMessageFrom +
                               " in output document");
-
-    Message to = (useOutputDoc) ? outputDoc.copyMessage(from, outputDoc) : inDoc.copyMessage(from, outputDoc);
-    to.setName(this.copyMessageTo);
-
-    try {
-      outputDoc.addMessage(to);
+    
+    // Copy properties.
+    Iterator<Property> allProperties = from.getAllProperties().iterator();
+    while ( allProperties.hasNext() ) {
+    	Property p = allProperties.next();
+    	to.addProperty(p.copy(outputDoc));
     }
-    catch (Exception e) {
-      throw new UserException( -1, e.getMessage(), e);
+    // Copy messages.
+    Iterator<Message> allMessages = from.getAllMessages().iterator();
+    while ( allMessages.hasNext() ) {
+    	Message m = allMessages.next();
+    	to.addMessage(m.copy(outputDoc));
     }
+  
   }
 
   public void kill() {
