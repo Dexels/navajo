@@ -21,7 +21,7 @@ public class IsDate extends FunctionInterface {
     }
 
     public String usage() {
-        return "Date(String s|Date d)";
+        return "IsDate(String s|Date d)";
     }
 
     public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
