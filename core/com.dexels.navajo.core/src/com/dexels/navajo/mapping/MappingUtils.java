@@ -343,6 +343,9 @@ public final class MappingUtils {
 	   if ( name.startsWith("../") ) {
 		   return getBaseMessageName(name.substring(3));
 	   }
+	   if ( name.startsWith("/") ) {
+		   return name.substring(1);
+	   }
 	   return name;
    }
    
@@ -386,12 +389,12 @@ public static final Message[] addMessage(Navajo doc, Message parent, String mess
     /**
      * Get the real parent message given the fact that message could contain a relative name.
      */
-    parent = getParentMessage(parent, message);
+    parent = ( message.startsWith("/") ? null : getParentMessage(parent, message) );
     
     if (parent != null) {
       existing = parent.getMessage(getBaseMessageName(message));
     } else {
-      existing = doc.getMessage(message);
+      existing = doc.getMessage(getBaseMessageName(message));
     }
 
     // If existing message is array message, respect this and make
