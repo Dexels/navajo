@@ -12,6 +12,10 @@ public class TestService {
 		return dom.getLastname();
 	}
 	
+	/**
+	 * @param tb the first bean to merge
+	 * @param tb2  the second bean to merge
+	 */
 	public TestBean mergeBeans(TestBean tb, TestBean tb2) {
 		System.err.println("In mergBeans");
 		return tb;

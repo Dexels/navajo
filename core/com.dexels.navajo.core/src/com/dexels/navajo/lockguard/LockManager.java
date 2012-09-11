@@ -81,7 +81,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 	private final long getConfigTimeStamp() {
 		if (DispatcherFactory.getInstance().getNavajoConfig() != null ) {
 			java.io.File f = new java.io.File(DispatcherFactory.getInstance().getNavajoConfig() + "/" + LOCKS_CONFIG);
-			if ( f != null && f.exists() ) {
+			if ( f.exists() ) {
 				return f.lastModified();
 			} else {
 				return 0;
@@ -275,7 +275,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 		
 		// Test.
 		LockManager lm = LockManager.getInstance();
-		Access a = new Access(1, 1, 2, "arjen", "ProcessWhatever", "", "", "", null);
+		Access a = new Access(1, 2, "arjen", "ProcessWhatever", "", "", "", null);
 		a.setInDoc(n1);
 		
 		Lock [] locks = lm.grantAccess( a );
@@ -288,7 +288,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 		
 		// Simulate another access.
 		System.err.println("ANOTHER REQUEST: \n");
-		Access a2 = new Access(2, 2, 2, "arjen", "ProcessWhatever", "", "", "", null);
+		Access a2 = new Access(2, 2, "arjen", "ProcessWhatever", "", "", "", null);
 		a2.setInDoc(n2);
 		Lock [] locks2 = lm.grantAccess( a2 );
 		
