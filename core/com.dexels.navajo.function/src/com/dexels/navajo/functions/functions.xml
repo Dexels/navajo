@@ -267,8 +267,8 @@
         <result>any</result>
     </function>
     <function name="ParseDate" class="com.dexels.navajo.functions.ParseDate">
-        <description>Given a string and a date pattern, a date object is returned.</description>
-        <input>string,string</input>
+        <description>Tries to transform the (string) object to a date by guessing its format or use the given format</description>
+        <input>date|string,string|empty</input>
         <result>date</result>
     </function>
     <function name="ParameterList" class="com.dexels.navajo.functions.ParameterList">
@@ -686,11 +686,6 @@
         <description>IsDate(date|string)</description>
         <input>date|string</input>
         <result>boolean</result>
-    </function>
-    <function name="ToDate" class="com.dexels.navajo.functions.ToDate">
-        <description>ToDate(date|string)</description>
-        <input>date|string</input>
-        <result>date</result>
     </function>
     <function name="IsNumeric" class="com.dexels.navajo.functions.IsNumeric">
         <description>IsNumeric(string|integer|double|float)</description>
