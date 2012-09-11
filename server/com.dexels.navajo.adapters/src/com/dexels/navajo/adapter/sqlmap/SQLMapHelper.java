@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.CallableStatement;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.logging.Level;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
@@ -21,6 +23,7 @@ import com.dexels.navajo.document.types.NavajoType;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.util.AuditLog;
 
 /**
  * Class that sets the right parametertype according to the given dbIdentifier (if necessary)
@@ -188,6 +191,102 @@ public class SQLMapHelper {
 		} else {
 			statement.setNull(i + 1, Types.BLOB);
 		}
+	}
+	
+	/**
+	 * Gets the columnvalue from the CallableStatement while checking the correct datatype
+	 * @param statement
+	 * @param type
+	 * @param columnIndex
+	 * @param myAccess
+	 * @return Object
+	 * @throws UserException
+	 */
+	public static Object getColumnValue(CallableStatement statement, int type, int columnIndex, Access myAccess) throws UserException {
+        Object value = null;
+        // TODO: this could be better. There should be no need to create this instance for every call. For now only instantiate where needed.
+        java.util.Calendar c = null;
+
+        try {
+            switch (type) {
+            case Types.LONGNVARCHAR:
+            case Types.LONGVARCHAR:
+            case Types.NCHAR:
+            case Types.NVARCHAR:
+            case Types.CHAR:
+            case Types.VARCHAR:
+                value = statement.getString(columnIndex);
+                break;
+
+            case Types.BOOLEAN:
+            case Types.BIT:
+                value = new Boolean(statement.getBoolean(columnIndex));
+                break;
+
+            case Types.DATE:
+                if (statement.getDate(columnIndex) != null) {
+                    c = java.util.Calendar.getInstance();
+                    Date d = statement.getDate(columnIndex, c);
+                    long l = d.getTime();
+
+                    value = new java.util.Date(l);
+                }
+                break;
+
+            case -101: // For Oracle; timestamp with timezone, treat this as clocktime.
+                if (statement.getTimestamp(columnIndex) != null) {
+                    c = java.util.Calendar.getInstance();
+                    Timestamp ts = statement.getTimestamp(columnIndex, c);
+                    long l = ts.getTime();
+                    value = new ClockTime(new java.util.Date(l));
+                }
+                break;
+
+            case Types.TIMESTAMP:
+                if (statement.getTimestamp(columnIndex) != null) {
+                    c = java.util.Calendar.getInstance();
+                    Timestamp ts = statement.getTimestamp(columnIndex, c);
+                    long l = ts.getTime();
+
+                    value = new java.util.Date(l);
+                }
+                break;
+
+            case Types.INTEGER:
+            case Types.BIGINT:
+            case Types.SMALLINT:
+            case Types.TINYINT:
+                value = new Integer(statement.getInt(columnIndex));
+                break;
+
+            case Types.NUMERIC:
+                ResultSetMetaData meta = statement.getMetaData();
+//                int prec = meta.getPrecision(columnIndex);
+                int scale = meta.getScale(columnIndex);
+
+                if (scale == 0) {
+                    value = new Integer(statement.getInt(columnIndex));
+                } else {
+                    value = new Double(statement.getString(columnIndex));
+                }
+                break;
+
+            case Types.DECIMAL:
+            case Types.FLOAT:
+            case Types.DOUBLE:
+                value = new Double(statement.getDouble(columnIndex));
+                break;
+
+            default:
+                value = statement.getString(columnIndex);
+                break;
+            }
+
+        } catch (SQLException sqle) {
+            AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE, myAccess.accessID);
+            throw new com.dexels.navajo.server.UserException( -1, sqle.getMessage());
+        }
+        return value;
 	}
 	
 	/**
