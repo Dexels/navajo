@@ -77,7 +77,6 @@ public class TipiSwingDialog extends JDialog {
 
 	@Override
 	public void dispose() {
-		System.err.println("DISPOSING TIPISWINGDIALOG");
 		removeComponentListener(componentListener);
 		if (myRootParent != null) {
 			myRootParent.removeComponentListener(componentListener);
@@ -90,12 +89,10 @@ public class TipiSwingDialog extends JDialog {
 
 	public void setIconUrl(URL u) {
 		setIconImage(new ImageIcon(u).getImage());
-		System.err.println("Dialog icon set!");
 	}
 
 	public void setIconUrl(Object u) {
 		setIconImage(getIcon(u).getImage());
-		System.err.println("Dialog icon set!");
 	}
 
 	protected ImageIcon getIcon(Object u) {

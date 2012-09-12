@@ -292,11 +292,13 @@ public class FrameworkInstance {
 	private void resolveAtomic(String deps) {
 		Resolver resolver = repositoryAdmin.resolver();
 		installDependency(resolver, deps.split(","));
+		
 		resolver.deploy(true);
 	}
 
 	private boolean installDependency(Resolver resolver, String[] dependencies) {
 		boolean isok = true;
+		logger.info("# of dependencies: "+dependencies.length);
 		for (String dep : dependencies) {
 			boolean result = exec(resolver,dep);
 			if (!result) {
@@ -309,7 +311,11 @@ public class FrameworkInstance {
 	public boolean exec(Resolver resolver, String args) {
 	
 		Resource[] resources = repositoryAdmin.discoverResources(args);
+		logger.info("Resources discovered: "+resources.length);
 		if ((resources != null) && (resources.length > 0)) {
+			for (Resource resource : resources) {
+				logger.info("   resource> "+resource.getSymbolicName()+" / "+resource.getVersion().toString());
+			}
 			resolver.add(resources[0]);
 			if (resolver.resolve()) {
 				for (Resource res : resolver.getRequiredResources()) {

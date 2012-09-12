@@ -3,7 +3,6 @@ package tipi;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -41,55 +40,47 @@ public class TipiSubstanceExtension extends TipiAbstractXMLExtension implements
 	@Override
 	public void start(final BundleContext context) throws Exception {
 		final ClassLoader tccl = Thread.currentThread().getContextClassLoader();
-		SwingUtilities.invokeAndWait(new Runnable(){
-
-			@Override
-			public void run() {
-				registerThreadContext(context, tccl);
-			}});
-	}
-
-	private void registerThreadContext(BundleContext context, ClassLoader tccl){
-		
 		try {
-			Thread.currentThread().setContextClassLoader(
-					getClass().getClassLoader());
-
+			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 			TridentConfig.getInstance();
-			registerTipiExtension(context);
-			LookAndFeelWrapper lafw = new com.dexels.navajo.tipi.swing.laf.api.LookAndFeelWrapper() {
 
-				@Override
-				public void loadLookAndFeel() {
-					SubstanceBusinessBlackSteelLookAndFeel s = new SubstanceBusinessBlackSteelLookAndFeel();
-					UIManager.getLookAndFeelDefaults().put("ClassLoader",
-							TipiSubstanceExtension.class.getClassLoader());
-					UIManager.getDefaults();
-					try {
-						UIManager.setLookAndFeel(s);
-					} catch (UnsupportedLookAndFeelException e) {
-						logger.error(
-								"Unexpected error while setting LookAndFeel", e);
-					}
-				}
-
-				@Override
-				public String getClassName() {
-					return SubstanceBusinessBlackSteelLookAndFeel.class
-							.getName();
-				}
-			};
-			Dictionary<String, String> d = new Hashtable<String, String>();
-			d.put("name", "BusinessBlackSteel");
-			d.put("className",
-					SubstanceBusinessBlackSteelLookAndFeel.class.getName());
-			black = context.registerService(LookAndFeelWrapper.class, lafw, d);
 		} catch (Exception e1) {
 			logger.error("Initialiation problem: ",e1);
 		} finally {
 			Thread.currentThread().setContextClassLoader(tccl);
 		}
+
+		registerTipiExtension(context);
+		LookAndFeelWrapper lafw = new com.dexels.navajo.tipi.swing.laf.api.LookAndFeelWrapper() {
+
+			@Override
+			public void loadLookAndFeel() {
+				SubstanceBusinessBlackSteelLookAndFeel s = new SubstanceBusinessBlackSteelLookAndFeel();
+				UIManager.getLookAndFeelDefaults().put("ClassLoader",
+						TipiSubstanceExtension.class.getClassLoader());
+				UIManager.getDefaults();
+				try {
+					UIManager.setLookAndFeel(s);
+				} catch (UnsupportedLookAndFeelException e) {
+					logger.error(
+							"Unexpected error while setting LookAndFeel", e);
+				}
+			}
+
+			@Override
+			public String getClassName() {
+				return SubstanceBusinessBlackSteelLookAndFeel.class
+						.getName();
+			}
+		};
+		Dictionary<String, String> d = new Hashtable<String, String>();
+		d.put("name", "BusinessBlackSteel");
+		d.put("className",
+				SubstanceBusinessBlackSteelLookAndFeel.class.getName());
+		black = context.registerService(LookAndFeelWrapper.class, lafw, d);
+
 	}
+
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
