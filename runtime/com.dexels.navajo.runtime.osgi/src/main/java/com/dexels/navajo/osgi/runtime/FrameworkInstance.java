@@ -147,7 +147,7 @@ public class FrameworkInstance {
 	
 	public void startSwingTipi(String path, String deployment, String profile) throws IOException, BundleException {
 		configurationInjectionService.removeConfigutation("com.dexels.navajo.tipi.swing.application");
-		Bundle b = installFromClasspath(new BundleInstall("com.dexels.navajo.tipi.swing.application-1.2.5.jar", "com.dexels.navajo.tipi.swing.application","1.2.5"));
+		Bundle b = installFromClasspath(new BundleInstall("com.dexels.navajo.tipi.swing.application-1.2.8.jar", "com.dexels.navajo.tipi.swing.application","1.2.8"));
 		b.start(Bundle.START_TRANSIENT);
 		Dictionary<String,String> properties = new Hashtable<String,String>();
 		properties.put("tipi.context", path);
@@ -223,12 +223,14 @@ public class FrameworkInstance {
 		logger.info("classpathbundles started");
 		configurationInjectionService = null;
 		try {
-			configurationInjectionService = (ConfigurationInjectionInterface) configurationInjectorTracker
-					.waitForService(3000);
+			repositoryAdmin = (RepositoryAdmin) obrTracker.waitForService(10000);
+			configurationInjectionService = (ConfigurationInjectionInterface) configurationInjectorTracker.waitForService(10000);
 //			configurationInjectionService.removeConfigutation("com.dexels.navajo.tipi.swing.application");
-			repositoryAdmin = (RepositoryAdmin) obrTracker.waitForService(3000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Interrupted while waiting for trackers: ",e);
+		}
+		if(configurationInjectionService==null) {
+			logger.warn("Config injection service not found");
 		}
 		if(directive!=null && directive.length()>0) {
 			retrieveAndResolveDependencies(directive);
