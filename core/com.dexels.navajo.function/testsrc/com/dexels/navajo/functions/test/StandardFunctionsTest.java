@@ -43,7 +43,7 @@ public class StandardFunctionsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		fff = (FunctionFactoryInterface) FunctionFactoryFactory.getInstance();
+		fff = FunctionFactoryFactory.getInstance();
 		cl = getClass().getClassLoader();
 	}
 
@@ -1944,56 +1944,56 @@ public class StandardFunctionsTest {
 		fi.insertOperand(new String(""));
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.TRUE, (Boolean) o);
+		assertEquals(Boolean.TRUE, o);
 
 		// Non Empty String.
 		fi.reset();
 		fi.insertOperand(new String("aap"));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.FALSE, (Boolean) o);
+		assertEquals(Boolean.FALSE, o);
 
 		// Null value.
 		fi.reset();
 		fi.insertOperand(null);
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.TRUE, (Boolean) o);
+		assertEquals(Boolean.TRUE, o);
 
 		// Empty list
 		fi.reset();
 		fi.insertOperand(new ArrayList<Object>());
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.TRUE, (Boolean) o);
+		assertEquals(Boolean.TRUE, o);
 
 		// Non Empty list.
 		fi.reset();
 		fi.insertOperand(new ArrayList<String>().add(new String("noot")));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.FALSE, (Boolean) o);
+		assertEquals(Boolean.FALSE, o);
 
 		// Empty Binary.
 		fi.reset();
 		fi.insertOperand(new Binary());
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.TRUE, (Boolean) o);
+		assertEquals(Boolean.TRUE, o);
 
 		// Non Empty Binary.
 		fi.reset();
 		fi.insertOperand(new Binary("aap".getBytes()));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.FALSE, (Boolean) o);
+		assertEquals(Boolean.FALSE, o);
 
 		// Non empty Clocktime.
 		fi.reset();
 		fi.insertOperand(new ClockTime(new java.util.Date()));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.FALSE, (Boolean) o);
+		assertEquals(Boolean.FALSE, o);
 	}
 
 }

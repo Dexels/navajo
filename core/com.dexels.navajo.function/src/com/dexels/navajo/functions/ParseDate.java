@@ -26,7 +26,7 @@ public final class ParseDate extends FunctionInterface {
 
         Object o = this.getOperand(0);
         if (o instanceof java.util.Date) {
-            return (java.util.Date)o;
+            return o;
         } else if (o instanceof String) {
             // Check if a format is given else try to guess
             String dateFormat = null;

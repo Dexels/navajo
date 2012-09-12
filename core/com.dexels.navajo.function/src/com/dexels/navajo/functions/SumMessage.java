@@ -71,7 +71,7 @@ public class SumMessage extends FunctionInterface {
 		      String sumType = "int";
 		      double sum = 0;
 		      for (int i = 0; i < arrayMsg.size(); i++) {
-		        Message m = (Message) arrayMsg.get(i);
+		        Message m = arrayMsg.get(i);
 //	        	Operand o = Expression.evaluate(expression, m.getRootDoc(), null, m);
 		        Property ppp = m.getProperty(expression);
 		        Object o = ppp.getTypedValue();

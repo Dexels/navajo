@@ -64,8 +64,8 @@ public final class Round extends FunctionInterface {
             double dd = d.doubleValue();
             int digits = i.intValue();
 
-            dd = (int) (dd * Math.pow(10.0, (double) digits))
-                    / Math.pow(10.0, (double) digits);
+            dd = (int) (dd * Math.pow(10.0, digits))
+                    / Math.pow(10.0, digits);
             return new Double(dd);
         } catch (Exception e) {
             throw new TMLExpressionException(this, "Illegal type specified in Round() function: " + e.getMessage());
