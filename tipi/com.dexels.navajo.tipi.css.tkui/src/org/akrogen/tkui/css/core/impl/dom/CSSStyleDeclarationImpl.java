@@ -38,6 +38,10 @@ import org.w3c.dom.css.CSSValue;
 public class CSSStyleDeclarationImpl extends AbstractCSSNode implements
 		CSSStyleDeclaration, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5517288842283510636L;
 	private CSSRule parentRule;
 	private Vector properties = new Vector();
 

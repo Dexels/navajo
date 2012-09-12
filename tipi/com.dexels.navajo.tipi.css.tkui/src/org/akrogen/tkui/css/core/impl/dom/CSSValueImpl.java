@@ -38,6 +38,10 @@ import org.w3c.dom.css.Rect;
 public class CSSValueImpl extends AbstractCSSNode implements CSSPrimitiveValue,
 		CSSValueList, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2217153895370944696L;
 	private Object value = null;
 
 	/**

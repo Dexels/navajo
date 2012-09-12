@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.akrogen.tkui.css.tipi.helpers;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import org.akrogen.tkui.css.core.dom.CSSStylableElement;

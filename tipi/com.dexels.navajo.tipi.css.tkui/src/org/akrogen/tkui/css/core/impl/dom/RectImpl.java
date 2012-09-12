@@ -25,6 +25,10 @@ import org.w3c.dom.css.Rect;
  */
 public class RectImpl implements Rect, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7676864031033210647L;
 	private CSSPrimitiveValue left;
 	private CSSPrimitiveValue top;
 	private CSSPrimitiveValue right;

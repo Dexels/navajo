@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.akrogen.tkui.css.tipi.properties.css2.lazy.classification;
 
-import java.awt.Component;
 import java.awt.Cursor;
 
 import org.akrogen.tkui.css.core.engine.CSSEngine;

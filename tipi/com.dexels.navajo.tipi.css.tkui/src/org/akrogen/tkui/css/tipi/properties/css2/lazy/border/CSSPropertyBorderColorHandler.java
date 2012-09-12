@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.akrogen.tkui.css.tipi.properties.css2.lazy.border;
 
-import java.awt.Component;
-
 import org.akrogen.tkui.css.core.engine.CSSEngine;
 
 import com.dexels.navajo.tipi.TipiComponent;

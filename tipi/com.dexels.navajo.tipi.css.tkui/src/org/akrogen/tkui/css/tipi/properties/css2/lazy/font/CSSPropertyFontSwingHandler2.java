@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.akrogen.tkui.css.tipi.properties.css2.lazy.font;
 
-import java.awt.Component;
 import java.awt.Font;
 
 import org.akrogen.tkui.css.core.dom.properties.ICSSPropertyHandler2;

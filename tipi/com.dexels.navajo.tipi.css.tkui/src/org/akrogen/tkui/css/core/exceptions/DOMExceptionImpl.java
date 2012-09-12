@@ -24,6 +24,10 @@ import org.w3c.dom.DOMException;
  */
 public class DOMExceptionImpl extends DOMException {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5569213313348310550L;
 	public static final int SYNTAX_ERROR = 0;
 	public static final int ARRAY_OUT_OF_BOUNDS = 1;
 	public static final int READ_ONLY_STYLE_SHEET = 2;

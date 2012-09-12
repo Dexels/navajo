@@ -11,7 +11,6 @@
 package org.akrogen.tkui.css.tipi.properties.css2.lazy.text;
 
 import java.awt.Color;
-import java.awt.Component;
 
 import org.akrogen.tkui.css.core.engine.CSSEngine;
 import org.akrogen.tkui.css.tipi.properties.AbstractConvertedCSSPropertySwingHandler;

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.akrogen.tkui.css.tipi.dom.html;
 
-import java.awt.Component;
-
 import org.akrogen.tkui.css.core.dom.IElementProvider;
 import org.akrogen.tkui.css.core.engine.CSSEngine;
 import org.akrogen.tkui.css.tipi.helpers.TipiElementHelpers;

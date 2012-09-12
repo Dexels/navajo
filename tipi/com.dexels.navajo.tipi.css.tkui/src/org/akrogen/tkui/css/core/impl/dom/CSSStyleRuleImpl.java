@@ -37,6 +37,10 @@ import org.w3c.dom.css.CSSStyleSheet;
 public class CSSStyleRuleImpl extends AbstractCSSNode implements CSSStyleRule,
 		ExtendedCSSRule, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5029571524712971239L;
 	private CSSStyleSheet parentStyleSheet = null;
 	private CSSRule parentRule = null;
 	private SelectorList selectors = null;

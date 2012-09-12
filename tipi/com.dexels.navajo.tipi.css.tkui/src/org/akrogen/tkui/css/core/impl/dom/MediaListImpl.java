@@ -27,6 +27,10 @@ import org.w3c.dom.stylesheets.MediaList;
  */
 public class MediaListImpl implements MediaList, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7588400648695694782L;
 	private Vector _media = new Vector();
 
 	public MediaListImpl(SACMediaList mediaList) {
