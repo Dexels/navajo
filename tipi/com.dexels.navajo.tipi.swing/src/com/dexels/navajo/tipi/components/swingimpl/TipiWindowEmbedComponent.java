@@ -14,7 +14,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
-import tipi.SwingTipiApplicationInstance;
+import tipiswing.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.tipi.TipiEmbedComponent;
 import com.dexels.navajo.tipi.components.core.ShutdownListener;

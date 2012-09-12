@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import navajo.ExtensionDefinition;
-
-import tipi.SwingTipiApplicationInstance;
+import tipiswing.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;

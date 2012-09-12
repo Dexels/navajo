@@ -36,9 +36,9 @@ import org.jdesktop.animation.transitions.TransitionTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tipi.SwingTipiApplicationInstance;
 import tipi.TipiExtension;
 import tipi.TipiSwingExtension;
+import tipiswing.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiActivityListener;

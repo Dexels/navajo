@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.osgi.framework.BundleContext;
 
 import tipi.MainApplication;
-import tipi.SwingTipiApplicationInstance;
+import tipiswing.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.tipi.TipiException;
 

@@ -8,7 +8,7 @@ Export-Package: com.dexels.navajo.tipi.components.swingimpl,
  com.dexels.navajo.tipi.components.swingimpl.parsers,
  com.dexels.navajo.tipi.components.swingimpl.swing,
  com.dexels.navajo.tipi.swing.laf.api,
- navajoswingtipi
+ tipiswing
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi,
  com.dexels.navajo.core,

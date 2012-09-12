@@ -6,6 +6,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.osgi.framework.BundleContext;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
@@ -59,7 +60,7 @@ public class ApplicationComponent {
 					logger.info("Found a system var, booting after all.");
 					if(contextPath!=null) {
 						boot.delete();
-						bootApplication(contextPath,deployment,profile);
+						bootApplication(componentContext.getBundleContext(),contextPath,deployment,profile);
 					}
 				}
 				return;
@@ -70,7 +71,7 @@ public class ApplicationComponent {
 		}
 		//		if(verifyOptionalDeps()) {
 		if(contextPath!=null) {
-			bootApplication(contextPath,deployment,profile);
+			bootApplication(componentContext.getBundleContext(),contextPath,deployment,profile);
 		}
 //		}
 		
@@ -90,7 +91,7 @@ public class ApplicationComponent {
 
 
 	
-	private void bootApplication(final String contextPath, final String deploy, final String profile) {
+	public void bootApplication(final BundleContext bundleContext, final String contextPath, final String deploy, final String profile) {
 		logger.info("====================\nStarting application\n====================\n context: "+contextPath);
 		if(instance!=null) {
 			logger.error("ALReady running! Ignoring start");
@@ -103,7 +104,7 @@ public class ApplicationComponent {
 			@Override
 			public void run() {
 				try {
-					instance = TipiSwingWrapper.runApp(componentContext.getBundleContext(),contextPath,deploy,profile);
+					instance = TipiSwingWrapper.runApp(bundleContext,contextPath,deploy,profile);
 					instance.getCurrentContext().switchToDefinition(instance.getDefinition());
 				} catch (TipiException e) {
 					e.printStackTrace();

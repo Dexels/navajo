@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import navajo.ExtensionDefinition;
-
-import tipi.SwingTipiApplicationInstance;
+import tipiswing.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;

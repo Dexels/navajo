@@ -21,6 +21,8 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import tipiswing.SwingTipiApplicationInstance;
+
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.application.InstallationPathResolver;
 import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
