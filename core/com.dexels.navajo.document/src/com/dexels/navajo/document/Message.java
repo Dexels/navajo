@@ -229,6 +229,15 @@ public interface Message
   public Message mergeMessage(Message m);
 
   /**
+   * Mask message instance with a message 'mask'
+   * (For array messages, the mask message should use definition messages)
+   * 
+   * @param template, the message 'mask'
+   * 
+   */
+  public void maskMessage(Message mask);
+  
+  /**
    * Adds a message to an array message at a specific location in the array
    */
   public void addMessage(Message m, int index) throws NavajoException;
