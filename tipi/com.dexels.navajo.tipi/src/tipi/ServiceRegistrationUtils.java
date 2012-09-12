@@ -151,7 +151,7 @@ public class ServiceRegistrationUtils {
 				} catch (IllegalAccessException ex1) {
 					logger.error("Error instantiating class for parser: "
 							+ parserClass,ex1);
-					ex1.printStackTrace();
+					logger.error("Error: ",ex1);
 					return null;
 				} catch (InstantiationException ex1) {
 					logger.error("Error instantiating class for parser: "
@@ -178,8 +178,7 @@ public class ServiceRegistrationUtils {
 		};
 		bundleContext.registerService(TipiTypeParser.class.getName(), ttp, props);
 		} catch (ClassNotFoundException ex) {
-			System.err
-					.println("Error loading class for parser: " + parserClass);
+			logger.warn("Error loading class for parser: " + parserClass,ex);
 			return;
 		}
 	}

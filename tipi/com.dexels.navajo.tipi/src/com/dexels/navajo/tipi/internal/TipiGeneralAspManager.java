@@ -58,11 +58,11 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 								+ err.toString());
 			}
 		} catch (ClientException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TipiException(
 					"Client exception while storing settings: ", e);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TipiException(
 					"Client side exception while preparing to store settings: ",
 					e);
@@ -85,7 +85,7 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 		try {
 			is.close();
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Error in getStorageDocument",e);
 		}
 		return response;
 	}
@@ -104,11 +104,11 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 								+ err.toString());
 			}
 		} catch (ClientException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TipiException(
 					"Client exception while storing settings: ", e);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TipiException(
 					"Client side exception while preparing to store settings: ",
 					e);
@@ -126,7 +126,7 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 			baos.flush();
 			baos.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		Message document = n.getMessage("Document");
 		Property contentProp = NavajoFactory.getInstance().createProperty(n,

@@ -36,7 +36,7 @@ public class ClassModel implements Serializable {
 	private final Stack<XMLElement> definitionStack = new Stack<XMLElement>();
 	private StringBuffer description = new StringBuffer();
 
-	public ClassModel(String name) {
+	public ClassModel() {
 		// this.name = name;
 	}
 

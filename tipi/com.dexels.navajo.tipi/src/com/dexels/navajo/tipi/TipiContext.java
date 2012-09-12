@@ -237,7 +237,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 //				tipiExtension.loadDescriptor();
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return extensionList;
 	}
@@ -660,7 +660,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				Navajo n = NavajoFactory.getInstance().createNavajo(sr);
 				addNavajo(service, n);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 
 			return;
@@ -739,11 +739,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			TipiStorageManager tsm = c.newInstance();
 			setStorageManager(tsm);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 	}
@@ -806,7 +806,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					return resourceURL;
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 
@@ -814,7 +814,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			try {
 				return tipiResourceLoader.getResourceURL(location);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		return null;
@@ -839,7 +839,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			try {
 				return tipiResourceLoader.getResourceURL(location);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		return null;
@@ -940,10 +940,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 							"XML parse exception while parsing file: "
 									+ location + " at line: " + ex.getLineNr(),
 							ex);
-					ex.printStackTrace();
+					logger.error("Error: ",ex);
 					return;
 				} catch (IOException ex) {
-					ex.printStackTrace();
+					logger.error("Error: ",ex);
 					return;
 				}
 				if (extension != null) {
@@ -952,7 +952,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				parseXMLElement(doc, tipiExtension);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -969,8 +969,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		InputStream iss = getClass().getClassLoader().getResourceAsStream(
 				location);
 		if (iss != null) {
-			System.err
-					.println("FALLBACK: Using TipiContext classloader to locate include.");
+			logger.info("FALLBACK: Using TipiContext classloader to locate include.");
 			return iss;
 		}
 		try {
@@ -990,8 +989,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		return c;
 	}
 
-	public TipiActionBlock instantiateDefaultTipiActionBlock(
-			TipiComponent parent) {
+	public TipiActionBlock instantiateDefaultTipiActionBlock() {
 		TipiActionBlock c = createTipiActionBlockCondition();
 		return c;
 	}
@@ -1189,7 +1187,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				try {
 					unlink(getStateNavajo(), stateMessage);
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 
 			}
@@ -1197,7 +1195,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		try {
 			execute(r);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		parent.removeChild(comp);
 		// Message m = stateMessage;
@@ -1240,7 +1238,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		try {
 			o = c.newInstance();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 			throw new TipiException(
 					"Error instantiating class:"
 							+ className
@@ -1476,9 +1474,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				tc.addComponent(dev, this, null);
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
-			System.err
-					.println("Error instantiating debug component. Continuing");
+			logger.error("Error instantiating debug component. Continuing",e);
 		}
 
 		getDefaultTopLevel().addComponent(tc, this, null);
@@ -1486,7 +1482,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		try {
 			getStateNavajo().addMessage(tc.getStateMessage());
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		setSplashVisible(false);
 		fireTipiStructureChanged(tc);
@@ -1634,7 +1630,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				logger.debug("Firing navajo: " + method);
 
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 
 		}
@@ -1692,7 +1688,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			try {
 				loadTipiMethod(reply, method);
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error("Error: ",ex);
 			}
 		} else {
 			logger.error("Trying to load null navajo.");
@@ -1853,8 +1849,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				// }
 			}
 		} else {
-			System.err
-					.println("Trying to evaluate an expression that is not a tipiexpression.\n I.e. It is not in placed in curly brackets: "
+			logger.warn("Trying to evaluate an expression that is not a tipiexpression.\n I.e. It is not in placed in curly brackets: "
 							+ expression);
 			Thread.dumpStack();
 			return expression;
@@ -1868,7 +1863,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				Object p = source.evaluateExpression(path);
 				return p != null;
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error("Error: ",ex);
 				return false;
 			}
 		} else {
@@ -1930,7 +1925,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			}
 			return root;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			return null;
 		}
 	}
@@ -1960,15 +1955,15 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			}
 			myThreadPool.performAction(te, listener);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			showInternalError("Error performing action: " + te.getEventName()
 					+ " on component: " + te.getComponent().getPath(), e);
 		} catch (TipiBreakException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			showInternalError("Error performing action: " + te.getEventName()
 					+ " on component: " + te.getComponent().getPath(), e);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			showInternalError(
 					"Severe error performing action: " + te.getEventName()
 							+ " on component: " + te.getComponent().getPath(),
@@ -1986,8 +1981,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public void loadServerSettingsFromProperties() {
 		String impl = System.getProperty("tipi.client.impl");
 		if ("direct".equals(impl)) {
-			System.err
-					.println("********* FOR NOW: Only supports indirect client *******");
+			logger.info("********* FOR NOW: Only supports indirect client *******");
 		}
 		String navajoServerProperty = System.getProperty("tipi.client.server");
 		String navajoUsernameProperty = System
@@ -2034,7 +2028,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			try {
 				return getStorageManager().getStorageDocument(id);
 			} catch (TipiException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		return null;
@@ -2045,7 +2039,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			try {
 				getStorageManager().setStorageDocument(id, n);
 			} catch (TipiException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 	}
@@ -2137,13 +2131,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		Property l = NavajoFactory.getInstance().createProperty(n, "Locale",
 				Property.STRING_PROPERTY, locale, 99, "", Property.DIR_IN);
 		m.addProperty(l);
-		// n.write(System.err);
-		// TODO This is not the official way to use the client. Can cause
-		// problems in Echo
 		Navajo res = getClient().doSimpleSend(n,
 				"navajo/description/ProcessGetContextResources");
 
-		// res.write(System.err);
 		Message descr = res.getMessage("Descriptions");
 		DescriptionProvider descriptionProvider = new RemoteDescriptionProvider(
 				this);
@@ -2255,7 +2245,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			u = new URL(url + "?GetBinary=true&handle=" + b.getHandle());
 			return u;
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			return null;
 		}
 	}
@@ -2489,11 +2479,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 		if (master == slave) {
 			try {
-				System.err
-						.println("F@#$ing hell! You are linking a property to itself! "
+				logger.info("F@#$ing hell! You are linking a property to itself! "
 								+ master.getFullPropertyName());
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		copyPropertyValue(master, slave);
@@ -2530,7 +2519,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			pref = propertyBindMap.get(service + ":"
 					+ master.getFullPropertyName());
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			return;
 		}
 		propertyBindMap.remove(master);
@@ -2577,7 +2566,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					String navajo = header.getRPCName();
 					return navajo + ":" + slave.getFullPropertyName();
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 					return e.getMessage();
 				}
 			}
@@ -2691,7 +2680,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			}
 
 		} catch (TipiException ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 	}
 
@@ -2707,7 +2696,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 //				i++;
 //			}
 //		} catch (TipiException ex) {
-//			ex.printStackTrace();
+//			logger.error("Error: ",ex);
 //		}
 //	}
 	/**
@@ -2767,7 +2756,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			try {
 				unloadNavajo(old, service);
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		if (n.getHeader() != null) {

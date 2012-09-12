@@ -90,7 +90,7 @@ public final class TipiSelectValue extends TipiAction {
 					p.setSelected(s);
 
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 			if (evaluatedValue.value instanceof List) {
@@ -102,7 +102,7 @@ public final class TipiSelectValue extends TipiAction {
 				try {
 					p.setSelected(keys);
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		} else {

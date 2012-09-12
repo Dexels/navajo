@@ -93,6 +93,9 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		}
 	}
 
+	/**
+	 * @param context  
+	 */
 	public void loadData(final Navajo n, final TipiContext context) {
 		visibleCondition = null;
 		validationCondition = null;
@@ -176,7 +179,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 					tc.setQuestionList(myQuestionList);
 					// mySubQuestions.add(tc);
 				} catch (TipiException ex) {
-					ex.printStackTrace();
+					logger.error("Error: ",ex);
 				}
 			}
 			updateSubQuestions();

@@ -10,11 +10,17 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class HttpResourceLoader extends ClassPathResourceLoader implements Serializable {
 
 	private static final long serialVersionUID = 2074289039171755441L;
 	private final URL baseURL;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(HttpResourceLoader.class);
+	
 	public HttpResourceLoader(String baseLocation) throws MalformedURLException {
 		this.baseURL = new URL(baseLocation);
 	}
@@ -32,7 +38,7 @@ public class HttpResourceLoader extends ClassPathResourceLoader implements Seria
 		try {
 			is = uc.getInputStream();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		if (is != null) {
 			if ("gzip".equals(uc.getContentEncoding())) {

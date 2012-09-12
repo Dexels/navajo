@@ -1427,6 +1427,7 @@ public class XMLElement implements java.io.Serializable {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
+	 * @param offSet 
 	 * 
 	 * @throws java.io.IOException
 	 *             If an error occured while reading the input.

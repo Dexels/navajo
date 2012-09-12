@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -14,9 +17,11 @@ public abstract class TipiMessageDataComponentImpl extends
 	private static final long serialVersionUID = 3422365943982271264L;
 	private String myMessageName = null;
 	private Message myMessage;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMessageDataComponentImpl.class);
+	
 	public Message getMessage() {
-		// TODO Auto-generated method stub
 		return myMessage;
 	}
 
@@ -58,7 +63,7 @@ public abstract class TipiMessageDataComponentImpl extends
 									+ " to tipi: "
 									+ ((TipiComponent) current).getId());
 				} catch (NavajoException ex) {
-					ex.printStackTrace();
+					logger.error("Error: ",ex);
 				}
 			} else {
 				getContext().debugLog(

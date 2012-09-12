@@ -25,6 +25,9 @@ import com.dexels.navajo.document.Property;
 public class PropertyRef implements TipiReference {
 	// private final Property myProperty;
 
+	/**
+	 * @param p  
+	 */
 	public PropertyRef(Property p) {
 		// myProperty = p;
 	}
@@ -34,7 +37,6 @@ public class PropertyRef implements TipiReference {
 	}
 
 	public Object getValue() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

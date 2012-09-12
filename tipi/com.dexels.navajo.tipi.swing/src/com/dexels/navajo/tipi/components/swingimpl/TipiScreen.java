@@ -7,6 +7,9 @@ import javax.swing.JApplet;
 import javax.swing.JInternalFrame;
 import javax.swing.RootPaneContainer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 
@@ -28,11 +31,12 @@ import com.dexels.navajo.tipi.TipiContext;
  * @version 1.0
  */
 public class TipiScreen extends TipiSwingDataComponentImpl {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4453008939836688032L;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiScreen.class);
+	
 	public TipiScreen() {
 		setId("init");
 	}
@@ -45,10 +49,7 @@ public class TipiScreen extends TipiSwingDataComponentImpl {
 		return getTopLevel();
 	}
 
-	public void addStudio(final Window current, final Object constraints) {
-		current.setVisible(true);
-	}
-
+	
 	public void addToContainer(final Object c, final Object constraints) {
 		final Component current = (Component) c;
 		runSyncInEventThread(new Runnable() {
@@ -61,8 +62,7 @@ public class TipiScreen extends TipiSwingDataComponentImpl {
 					if (c instanceof JApplet) {
 						// ok
 					} else {
-						System.err
-								.println("**************** SHOULD NOT REALLY BE HERE: "
+						logger.error("**************** SHOULD NOT REALLY BE HERE: "
 										+ current);
 						Thread.dumpStack();
 					}

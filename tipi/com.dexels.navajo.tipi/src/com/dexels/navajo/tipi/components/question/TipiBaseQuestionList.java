@@ -97,6 +97,9 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		return true;
 	}
 
+	/**
+	 * @param b  
+	 */
 	public void setValid(boolean b) {
 		// Map m = new HashMap();
 		// m.put("valid",new Boolean(b));
@@ -104,7 +107,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		// performTipiEvent("onValidationChanged", m, false);
 		// }
 		// catch (TipiException ex) {
-		// ex.printStackTrace();
+		// logger.error("Error: ",ex);
 		// }
 	}
 
@@ -333,9 +336,9 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 						}
 						tc.loadData(n, method);
 					} catch (TipiException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					} catch (TipiBreakException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
 				// SwingTipiContext.debugSwingTree((Component)getContainer(),
@@ -369,7 +372,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		try {
 			performTipiEvent("onValidationChanged", m, true);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

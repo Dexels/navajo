@@ -43,7 +43,7 @@ public class TipiRuntime extends TipiAction {
 		} catch (Exception ex) {
 			logger.error("Error evaluating[" + txt
 					+ "] inserting as plain text only");
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 		String command = "rundll32 url,FileProtocolHandler ";
 		if (o != null) {

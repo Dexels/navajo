@@ -140,7 +140,6 @@ abstract class BaseTipiParser extends TipiTypeParser {
 			if (msg == null) {
 				return null;
 			}
-			// msg.write(System.err);
 			if (st.hasMoreTokens()) {
 				String partThree = st.nextToken();
 				return msg.getMessage(partThree);

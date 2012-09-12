@@ -51,8 +51,7 @@ public abstract class BaseClassManager implements IClassManager {
 				cc = Class.forName(fullDef, true, cl);
 				return cc;
 			}
-			System.err
-					.println("FALLBACK: Loading class without Extension definition");
+			logger.info("FALLBACK: Loading class without Extension definition");
 
 			cc = Class.forName(fullDef, true, myContext.getClassLoader());
 		} catch (ClassNotFoundException ex) {
@@ -63,15 +62,14 @@ public abstract class BaseClassManager implements IClassManager {
 		return cc;
 	}
 
-	private XMLElement assembleClassDefs(List<XMLElement> interfaces,
-			String name) {
+	private XMLElement assembleClassDefs(List<XMLElement> interfaces) {
 		assert (interfaces != null);
 		assert (interfaces.size() > 0);
 		if (interfaces.size() == 1) {
 			// maybe copy?
 			return interfaces.get(0);
 		}
-		ClassModel cl = new ClassModel(name);
+		ClassModel cl = new ClassModel();
 		for (XMLElement element : interfaces) {
 			cl.addDefinition(element);
 		}
@@ -105,7 +103,7 @@ public abstract class BaseClassManager implements IClassManager {
 			result = classDef;
 		} else {
 			interfaces.add(classDef);
-			result = assembleClassDefs(interfaces, name);
+			result = assembleClassDefs(interfaces);
 			result.setObjectAttribute("classInstance", classInstance);
 		}
 
@@ -175,8 +173,7 @@ public abstract class BaseClassManager implements IClassManager {
 			pClass = (Class<TipiTypeParser>) Class.forName(parserClass, true,
 					myContext.getClassLoader());
 		} catch (ClassNotFoundException ex) {
-			System.err
-					.println("Error loading class for parser: " + parserClass);
+			logger.info("Error loading class for parser: " + parserClass);
 			return null;
 		}
 		TipiTypeParser ttp = null;

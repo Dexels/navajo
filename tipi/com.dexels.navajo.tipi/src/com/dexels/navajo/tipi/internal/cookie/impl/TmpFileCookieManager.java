@@ -37,7 +37,7 @@ public class TmpFileCookieManager implements CookieManager {
 		try {
 			saveCookies();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

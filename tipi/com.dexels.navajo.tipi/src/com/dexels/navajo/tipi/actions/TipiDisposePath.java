@@ -48,7 +48,7 @@ public class TipiDisposePath extends TipiAction {
 			}
 			// path);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 	}
 }

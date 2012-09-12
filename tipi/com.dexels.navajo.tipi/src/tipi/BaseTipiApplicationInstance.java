@@ -142,9 +142,7 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 				} catch (NoSuchElementException ex) {
 					logger.error("Error parsing system property",ex);
 				} catch (SecurityException se) {
-					System.err
-							.println("Security exception: " + se.getMessage());
-					se.printStackTrace();
+					logger.error("Error: ",se);
 				}
 			} else if (current.equals("-profile")) {
 				loadProfile(args.get(index + 1), result);

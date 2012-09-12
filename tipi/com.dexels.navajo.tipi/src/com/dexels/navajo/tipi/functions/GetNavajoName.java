@@ -47,17 +47,13 @@ public class GetNavajoName extends FunctionInterface {
 		Navajo tc = (Navajo) pp;
 		Header h = tc.getHeader();
 		if (h == null) {
-			return getFallBack(tc);
+			return null;
 		}
 		String name = h.getRPCName();
 		if (name == null) {
-			return getFallBack(tc);
+			return null;
 		}
 		return name;
-	}
-
-	private Object getFallBack(Navajo tc) {
-		return null;
 	}
 
 }

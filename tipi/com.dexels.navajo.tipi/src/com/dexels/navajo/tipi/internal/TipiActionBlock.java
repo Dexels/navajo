@@ -122,7 +122,7 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

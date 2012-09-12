@@ -67,7 +67,7 @@ public class TipiFileStorageManager implements TipiStorageManager, Serializable 
 			return n;
 
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TipiException("File setting not found: "
 					+ in.getAbsolutePath());
 		} finally {
@@ -75,7 +75,7 @@ public class TipiFileStorageManager implements TipiStorageManager, Serializable 
 				try {
 					fis.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		}
@@ -102,7 +102,7 @@ public class TipiFileStorageManager implements TipiStorageManager, Serializable 
 			try {
 				n.write(System.err);
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 
@@ -112,18 +112,18 @@ public class TipiFileStorageManager implements TipiStorageManager, Serializable 
 			n.write(fos);
 			fos.flush();
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TipiException(
 					"Error constructing file setting not found: " + id, e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TipiException("Error writing file setting: " + id, e);
 		} finally {
 			if (fos != null) {
 				try {
 					fos.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		}

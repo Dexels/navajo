@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -11,11 +14,10 @@ import com.dexels.navajo.tipi.TipiException;
 
 public class ResourceNavajoConnector extends TipiBaseConnector {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8280248652467748667L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ResourceNavajoConnector.class);
 	// assume a load:
 	public void doTransaction(Navajo input, String service)
 			throws TipiBreakException, TipiException {
@@ -45,7 +47,7 @@ public class ResourceNavajoConnector extends TipiBaseConnector {
 			myContext.loadNavajo(result, destination);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 	}

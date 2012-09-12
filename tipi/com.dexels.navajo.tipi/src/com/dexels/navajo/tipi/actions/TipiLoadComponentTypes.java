@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Operand;
@@ -29,7 +32,9 @@ public class TipiLoadComponentTypes extends TipiAction {
 	 * 
 	 */
 	private static final long serialVersionUID = -4773755048188303396L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiLoadComponentTypes.class);
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -59,7 +64,7 @@ public class TipiLoadComponentTypes extends TipiAction {
 			Navajo compNavajo = context.createComponentNavajo();
 			context.loadNavajo(compNavajo, service);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 }

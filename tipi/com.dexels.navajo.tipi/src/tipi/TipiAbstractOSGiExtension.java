@@ -133,7 +133,7 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 				b.start();
 				logger.info("Bundle: "+b.getSymbolicName()+" id: "+b.getBundleId()+" started succesfully.");
 			} catch (BundleException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 				logger.error("Bundle: "+b.getSymbolicName()+" id: "+b.getBundleId()+" could not start.",e);
 			}
 		}

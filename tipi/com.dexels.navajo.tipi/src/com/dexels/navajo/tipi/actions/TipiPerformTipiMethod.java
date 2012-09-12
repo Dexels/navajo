@@ -45,7 +45,7 @@ public class TipiPerformTipiMethod extends TipiAction {
 			t = (TipiComponent) myContext.evaluate(path, getComponent(), event).value;
 			name = (String) evaluate(getParameter("name").getValue(), event).value;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 		if (t != null) {
 			t.performMethod(name, this, event);

@@ -88,7 +88,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 					try {
 						conditions.write(System.err);
 					} catch (NavajoException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
 				return errorMessage;

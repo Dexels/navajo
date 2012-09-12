@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -33,11 +36,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 // <param name="message" type="message" required="true"/>
 // </tipiaction>
 public class TipiRemoveMessage extends TipiAction {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7956701750993369325L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiRemoveMessage.class);
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -80,7 +82,7 @@ public class TipiRemoveMessage extends TipiAction {
 					try {
 						root.removeMessage(message);
 					} catch (NavajoException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
 			} else {

@@ -37,7 +37,7 @@ public class TipiSleep extends TipiAction {
 		try {
 			Thread.sleep(sleep);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		logger.info("Slept for: " + sleep + " millis!");
 	}

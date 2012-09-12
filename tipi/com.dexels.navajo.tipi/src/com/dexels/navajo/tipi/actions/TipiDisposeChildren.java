@@ -62,7 +62,7 @@ public class TipiDisposeChildren extends TipiAction {
 
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 	}
 }

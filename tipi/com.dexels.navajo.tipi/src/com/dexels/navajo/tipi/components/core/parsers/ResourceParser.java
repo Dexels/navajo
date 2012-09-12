@@ -30,7 +30,4 @@ public class ResourceParser extends BaseTipiParser {
 		return source.getContext().getResourceURL(expression);
 	}
 
-	public String toString(Object o, TipiComponent source) {
-		return "Not possible";
-	}
 }

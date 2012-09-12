@@ -32,10 +32,10 @@ import com.dexels.navajo.tipi.internal.ZipResourceLoader;
 public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 
 	private static final long serialVersionUID = 2148011051191091478L;
-	private static final String TIPLET_PROPERTY_PATH = null;
-	private static final String NAVAJO_MESSAGE_PATH = null;
-	private static final String NAVAJO_PROPERTY_NAME = null;
-	private static final String NAVAJONAME_PROPERTY_NAME = null;
+//	private static final String TIPLET_PROPERTY_PATH = null;
+//	private static final String NAVAJO_MESSAGE_PATH = null;
+//	private static final String NAVAJO_PROPERTY_NAME = null;
+//	private static final String NAVAJONAME_PROPERTY_NAME = null;
 	protected TipiStandaloneToplevelContainer stc = null;
 	
 	private final static Logger logger = LoggerFactory
@@ -47,47 +47,41 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 	}
 
 	public void loadData(Navajo n, String method) throws TipiException {
-		if (isTipletService(n)) {
-			try {
-				Binary b = (Binary) n.getProperty(TIPLET_PROPERTY_PATH)
-						.getTypedValue();
-
-				ZipResourceLoader zr = new ZipResourceLoader(b);
-				stc.getContext().setTipiResourceLoader(
-						new TmlResourceLoader(zr, "tipi/"));
-				stc.getContext().setGenericResourceLoader(
-						new TmlResourceLoader(zr, "resource/"));
-				parseLocation("init.xml", getParentExtension());
-				switchToDefinition("init");
-				Message m = n.getMessage(NAVAJO_MESSAGE_PATH);
-				List<Message> al = m.getAllMessages();
-				for (int i = 0; i < al.size(); i++) {
-					Message element = al.get(i);
-					parseNavajoMessage(element);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		}
+//		try {
+//			Binary b = (Binary) n.getProperty(TIPLET_PROPERTY_PATH)
+//					.getTypedValue();
+//
+//			ZipResourceLoader zr = new ZipResourceLoader(b);
+//			stc.getContext().setTipiResourceLoader(
+//					new TmlResourceLoader(zr, "tipi/"));
+//			stc.getContext().setGenericResourceLoader(
+//					new TmlResourceLoader(zr, "resource/"));
+//			parseLocation("init.xml", getParentExtension());
+//			switchToDefinition("init");
+//			Message m = n.getMessage(NAVAJO_MESSAGE_PATH);
+//			List<Message> al = m.getAllMessages();
+//			for (int i = 0; i < al.size(); i++) {
+//				Message element = al.get(i);
+//				parseNavajoMessage(element);
+//			}
+//		} catch (IOException e) {
+//			logger.error("Error: ",e);
+//		}
 	}
 
-	private void parseNavajoMessage(Message element) {
-		Property navajoBinary = element.getProperty(NAVAJO_PROPERTY_NAME);
-		Property navajoName = element.getProperty(NAVAJONAME_PROPERTY_NAME);
-		Binary bb = (Binary) navajoBinary.getTypedValue();
-		Navajo embedded = NavajoFactory.getInstance().createNavajo(
-				bb.getDataAsStream());
-		try {
-			stc.getContext().loadNavajo(embedded, navajoName.getValue());
-		} catch (TipiBreakException e) {
-			e.printStackTrace();
-		}
-	}
+//	private void parseNavajoMessage(Message element) {
+//		Property navajoBinary = element.getProperty(NAVAJO_PROPERTY_NAME);
+//		Property navajoName = element.getProperty(NAVAJONAME_PROPERTY_NAME);
+//		Binary bb = (Binary) navajoBinary.getTypedValue();
+//		Navajo embedded = NavajoFactory.getInstance().createNavajo(
+//				bb.getDataAsStream());
+//		try {
+//			stc.getContext().loadNavajo(embedded, navajoName.getValue());
+//		} catch (TipiBreakException e) {
+//			logger.error("Error: ",e);
+//		}
+//	}
 
-	private boolean isTipletService(Navajo n) {
-		return false;
-	}
 
 	@Override
 	public void setComponentValue(String name, Object value) {
@@ -97,7 +91,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 				tipiCodeBase = (String) value;
 				stc.getContext().setTipiResourceLoader(tipiCodeBase);
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		if (name.equals("resourceCodeBase")) {
@@ -105,7 +99,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 				resourceCodeBase = (String) value;
 				stc.getContext().setGenericResourceLoader(resourceCodeBase);
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 
 		}
@@ -119,7 +113,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 				stc.getContext().setGenericResourceLoader(
 						new TmlResourceLoader(tr, "resource/"));
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 
 		}
@@ -153,7 +147,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 				String loc = (String) oo.value;
 				parseLocation(loc, getParentExtension());
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		if ("switch".equals(name)) {
@@ -172,7 +166,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 
 				switchToDefinition(nameVal);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		if ("addStartupProperty".equals(name)) {
@@ -183,13 +177,12 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 				Operand valueOperand = compMeth.getEvaluatedParameter("value",
 						event);
 				String vakueVal = (String) valueOperand.value;
-				System.err
-						.println("Adding: " + nameVal + " value: " + vakueVal);
+				logger.debug("Adding: " + nameVal + " value: " + vakueVal);
 				stc.getContext().setSystemProperty(nameVal, vakueVal);
 				// ((Container) getContainer()).add((Component)
 				// stc.getContext().getTopLevel(), BorderLayout.CENTER);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		if ("loadNavajo".equals(name)) {
@@ -204,7 +197,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 				// ((Container) getContainer()).add((Component)
 				// stc.getContext().getTopLevel(), BorderLayout.CENTER);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		if ("loadAllNavajo".equals(name)) {
@@ -222,7 +215,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 					loadNavajo(n, n.getHeader().getRPCName());
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 
@@ -235,7 +228,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 				try {
 					stc.getContext().switchToDefinition(nameVal);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		});
@@ -253,7 +246,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		try {
 			stc.getContext().loadNavajo(n.copy(), method);
 		} catch (TipiBreakException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

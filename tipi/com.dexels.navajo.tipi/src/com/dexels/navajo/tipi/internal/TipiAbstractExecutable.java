@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -32,6 +35,10 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 	private final List<TipiExecutable> myExecutables = new ArrayList<TipiExecutable>();
 	private int currentIndex = 0;
 	private TipiExecutable myParent;
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiAbstractExecutable.class);
 	
 	public TipiAbstractExecutable(TipiContext tc) {
 		myContext = tc;
@@ -209,9 +216,9 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 				}
 			}
 		} catch (TMLExpressionException ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 		return false;
 	}
