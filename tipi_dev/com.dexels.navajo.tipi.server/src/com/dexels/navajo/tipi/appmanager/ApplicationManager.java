@@ -105,7 +105,7 @@ private ServletContext context = null;
 //		return false;
 	}
 
-	public  List<ApplicationStatus> getApplications() throws IOException {
+	public  List<ApplicationStatus> getApplications()  {
 //		System.err.println("Getting applications: "+applications);
 		return applications;
 	}

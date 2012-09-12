@@ -66,7 +66,7 @@ public class JarDiffHandler {
     private HashMap _jarDiffEntries = null;
     
     /** Reference to ServletContext and logger object */    
-    private static Logger _log = null;
+    private Logger _log = null;
     private ServletContext _servletContext = null;
     private String _jarDiffMimeType = null;
     
@@ -267,21 +267,27 @@ public class JarDiffHandler {
 	} finally {
 	    
 	    try {
-		in.close();
-		in = null;
+	    	if(in!=null) {
+	    		in.close();
+	    	}
+	    	in = null;
 	    } catch (IOException ioe) {
 		_log.addDebug("Got exception while downloading resource: " + ioe);
 	    }
 
 	    try {
-		out.close();
+	    	if(out!=null) {
+	    		out.close();
+	    	}
 		out = null;
 	    } catch (IOException ioe) {
 		_log.addDebug("Got exception while downloading resource: " + ioe);
 	    }
 
 	    if (delete) {
-		file.delete();
+	    	if(file!=null) {
+	    		file.delete();
+	    	}
 	    }
 
 	}

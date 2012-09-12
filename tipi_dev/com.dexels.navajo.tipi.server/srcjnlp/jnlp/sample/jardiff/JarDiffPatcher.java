@@ -167,6 +167,7 @@ public class JarDiffPatcher implements JarDiffConstants, Patcher {
 		if (oldEntry == null) {
 		    String moveCmd = MOVE_COMMAND + oldName + " " + newName;
 		    handleException("jardiff.error.badmove", moveCmd);
+		    return;
 		} 
 
 		// Create dest JarEntry  

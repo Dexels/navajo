@@ -329,7 +329,7 @@ public class JarDiff implements JarDiffConstants {
             index++;
             writer.write('\\');
         }
-        if (last != 0) {
+        if (last != 0 &&  chars !=null) {
             writer.write(chars, last, chars.length - last);
         }
         else {

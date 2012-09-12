@@ -78,10 +78,14 @@ public class XMLParsing {
 		    thisNode.setNested(last);
 		} else {
 		    XMLNode nnode = convert(nn);
-		    last.setNext(nnode);
-		    last = nnode;
+		    if(last!=null) {
+			    last.setNext(nnode);
+			    last = nnode;
+		    }
 		}
-		last.setParent(thisNode);
+	    if(last!=null) {
+	    	last.setParent(thisNode);
+	    }
 		nn = nn.getNextSibling();
 	    }
 	    

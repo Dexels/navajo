@@ -66,7 +66,7 @@ public class Deployer {
 
 	}
 
-	private void runDeployScript(IProject project,String deployName,String username, String password,boolean includeJars,IProgressMonitor monitor) throws CoreException, IOException {
+	private void runDeployScript(IProject project,String deployName,String username, String password,boolean includeJars,IProgressMonitor monitor) throws  IOException {
 			runBuild(project.getFile("settings/build.xml"),deployName,username, password,includeJars, monitor);
 	}
 	public void runBuild(IFile f, final String deployName,String username, String password, boolean includeJars,IProgressMonitor monitor) throws IOException  {

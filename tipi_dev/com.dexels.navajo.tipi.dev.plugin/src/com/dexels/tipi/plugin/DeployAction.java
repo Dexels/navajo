@@ -44,7 +44,6 @@ public class DeployAction implements IObjectActionDelegate {
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
-	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		try {
 		if (selection instanceof IStructuredSelection) {
@@ -57,12 +56,8 @@ public class DeployAction implements IObjectActionDelegate {
 					project = (IProject) ((IAdaptable) element).getAdapter(IProject.class);
 				}
 				final IProject rProject = project;
-				if (project != null) {
-					System.err.println("Appt");
+				if (rProject != null) {
 					final String[] retrieveTemplates = deployments(rProject); // new
-					for (String string : retrieveTemplates) {
-						System.err.println("Templ "+string);
-					}// String[]
 
 					includeJarsSelected = true;
 					
@@ -94,7 +89,6 @@ public class DeployAction implements IObjectActionDelegate {
 								includeJars.addSelectionListener(new SelectionListener(){
 
 									public void widgetDefaultSelected(SelectionEvent arg0) {
-										// TODO Auto-generated method stub
 										
 									}
 

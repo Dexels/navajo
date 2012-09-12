@@ -168,10 +168,10 @@ public class TipiAdminServlet extends HttpServlet {
 			return build(application, appDir,getServletContext(),request.getParameter("deploy"),request.getParameter("profile"),request.getParameter("skipdeploy")!=null);
 		}
 		if (commando.equals("clean")) {
-			return clean(application, appDir);
+			return clean(appDir);
 		}
 		if (commando.equals("delete")) {
-			return delete(application, appDir);
+			return delete(appDir);
 		}
 		if (commando.equals("create")) {
 			return create(application, appDir);
@@ -184,7 +184,7 @@ public class TipiAdminServlet extends HttpServlet {
 		}
 		if (commando.equals("cvsupdate")) {
 			try {
-				return updateApp(appDir,application);
+				return updateApp(application);
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new ServletException("Error updating CVS: ",e);
@@ -192,7 +192,7 @@ public class TipiAdminServlet extends HttpServlet {
 		}
 		if (commando.equals("cvscheckout")) {
 			try {
-				return checkoutApp(getAppFolder(),application,request.getParameter("branch"),request.getParameter("module"));
+				return checkoutApp(application,request.getParameter("branch"),request.getParameter("module"));
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new ServletException("Error updating CVS: ",e);
@@ -200,7 +200,7 @@ public class TipiAdminServlet extends HttpServlet {
 		}
 		if (commando.equals("tag")) {
 			try {
-				return tagApp(appDir,application,request.getParameter("tag"));
+				return tagApp(application,request.getParameter("tag"));
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new ServletException("Error updating CVS: ",e);
@@ -245,7 +245,6 @@ public class TipiAdminServlet extends HttpServlet {
 			e.printStackTrace();
 			return "ERROR -  "+e.getMessage();
 		}}
-	@SuppressWarnings("unchecked")
 	private String uploadMultipart(String application, HttpServletRequest request) {
 //		System.err.println(">>" +request.getParameterMap());
 		try {
@@ -255,7 +254,7 @@ public class TipiAdminServlet extends HttpServlet {
 			Enumeration<String> e =  mr.getFileNames();
 	
 			while (e.hasMoreElements()) {
-				String object = (String) e.nextElement();
+				String object = e.nextElement();
 				File f = mr.getFile(object);
 //				System.err.println("Filename returned: "+f.getAbsolutePath());
 				createApp(f,application);
@@ -267,7 +266,6 @@ public class TipiAdminServlet extends HttpServlet {
 			copyResource(fos, is);
 			tmp.deleteOnExit();	
 			createApp(tmp,application);
-			// fnished!
 			
 			return "File dumped @"+ tmp.getAbsolutePath();
 		} catch (IOException e) {
@@ -276,7 +274,7 @@ public class TipiAdminServlet extends HttpServlet {
 		}
 	}
 	
-	private String updateApp(File fileDir, String appName) throws IOException {
+	private String updateApp( String appName) throws IOException {
 //		public static String callAnt(File buildFile, File baseDir, Map<String,String> userProperties) throws IOException {
 		File currentAppFolder = new File(getAppFolder(),appName);
 		String path = getServletContext().getRealPath("WEB-INF/ant/cvsupdateproject.xml");
@@ -286,7 +284,7 @@ public class TipiAdminServlet extends HttpServlet {
 	}
 	
 	
-	private String tagApp(File appDir, String application,String tag) throws IOException {
+	private String tagApp(String application,String tag) throws IOException {
 		File currentAppFolder = new File(getAppFolder(),application);
 
 		String path = getServletContext().getRealPath("WEB-INF/ant/cvstagproject.xml");
@@ -298,11 +296,7 @@ public class TipiAdminServlet extends HttpServlet {
 	}
 	
 
-	private String checkoutApp(File appDir, String application, String branch, String module) throws IOException {
-//		File currentAppFolder = new File(getAppFolder(),application);
-//		if(!currentAppFolder.exists()) {
-//			currentAppFolder.mkdir();
-//		}
+	private String checkoutApp(String application, String branch, String module) throws IOException {
 		String path = getServletContext().getRealPath("WEB-INF/ant/cvscheckoutproject.xml");
 		Map<String,String> userProperties = new HashMap<String, String>();
 		userProperties.put("appDir",getAppFolder().getAbsolutePath());
@@ -377,7 +371,7 @@ public class TipiAdminServlet extends HttpServlet {
 //		}
 //	}
 
-	private void downloadXsd(String application, File appDir, HttpServletResponse response) throws IOException {
+	private void downloadXsd(String application, File appDir, HttpServletResponse response) {
 		response.setContentType("text/xml");
 		response.setHeader("Content-Disposition", "attachment; filename=\"tipi.xsd\"");
 		XsdBuilder b = new XsdBuilder();
@@ -455,7 +449,7 @@ public class TipiAdminServlet extends HttpServlet {
 	}		
 	}
 
-	private String delete(String application, File appDir) {
+	private String delete( File appDir) {
 		
 		String appPath = appDir.getAbsolutePath();
 //		File ff = new File(ap)
@@ -463,10 +457,10 @@ public class TipiAdminServlet extends HttpServlet {
 		return "OK - "+appPath + " deleted!";
 	}
 
-	private String clean(String application, File appDir) {
+	private String clean( File appDir) {
 
 		File libDir = new File(appDir, "lib");
-		if (libDir != null && libDir.exists()) {
+		if (libDir.exists()) {
 			for (File f : libDir.listFiles()) {
 				f.delete();
 			}
