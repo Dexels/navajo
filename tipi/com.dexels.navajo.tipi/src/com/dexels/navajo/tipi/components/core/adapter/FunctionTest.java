@@ -5,12 +5,9 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class FunctionTest {
 
-	public static void main(String[] arr) throws ClassNotFoundException,
-			InstantiationException, IllegalAccessException,
-			TMLExpressionException {
+	public static void main(String[] arr)  {
 	}
 
-	@SuppressWarnings("unchecked")
 	private FunctionInterface instantiateFunction(String name)
 			throws TMLExpressionException {
 		Class<FunctionInterface> cc;

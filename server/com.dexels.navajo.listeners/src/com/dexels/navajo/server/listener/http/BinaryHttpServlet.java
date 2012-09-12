@@ -97,7 +97,7 @@ public final class BinaryHttpServlet extends HttpServlet {
 			// security check, otherwise you could navigate outside the tmp dir.
 			throw new ServletException("Handle error");
 		}
-		if (handleFile == null || !handleFile.exists()) {
+		if (!handleFile.exists()) {
 			throw new ServletException("File not found");
 		}
 

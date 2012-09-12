@@ -56,7 +56,11 @@ public class ResourceManagerTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		instance = this;
+		setInstance(this);
+	}
+
+	private static void setInstance(ResourceManagerTest managerTest) {
+		instance = managerTest;
 	}
 
 

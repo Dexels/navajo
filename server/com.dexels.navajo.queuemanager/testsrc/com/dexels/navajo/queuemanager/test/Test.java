@@ -24,15 +24,15 @@ public class Test {
 	public static void main(String[] args) throws NavajoSchedulingException, IOException, InterruptedException {
 		QueueManager qm = new QueueManager();
 		qm.setQueueContext(new TestQueueContext());
-		String result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js","javascript");
+		String result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js");
 		System.err.println("result: "+result);
-		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js","javascript");
+		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js");
 		Thread.sleep(1100);
-		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js","javascript");
+		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js");
 		Thread.sleep(1100);
-		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js","javascript");
+		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js");
 		Thread.sleep(1100);
-		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js","javascript");
+		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js");
 	}
 
 

@@ -47,7 +47,7 @@ public class TmpFileCookieManager implements CookieManager {
 		fis.close();
 	}
 
-	protected void saveCookieWithStream(OutputStream fos) throws IOException {
+	protected void saveCookieWithStream(OutputStream fos) {
 		PrintWriter fw = new PrintWriter(fos);
 		Set<String> ss = cookieMap.keySet();
 		for (String key : ss) {

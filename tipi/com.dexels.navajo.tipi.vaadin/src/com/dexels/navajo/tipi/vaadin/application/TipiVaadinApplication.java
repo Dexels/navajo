@@ -146,11 +146,7 @@ private String referer;
 		if (ApplicationUtils.isRunningInGae()) {
 			extensionRegistry.loadExtensions(va);
 		}
-		try {
-			BaseTipiApplicationInstance.processSettings(applicationDeploy, applicationProfile, installationFolder, va);
-		} catch (IOException e1) {
-			logger.warn("Couldn't not process settings. No worries",e1);
-		}
+		BaseTipiApplicationInstance.processSettings(applicationDeploy, applicationProfile, installationFolder, va);
 
 		String theme = va.getSystemProperty("tipi.vaadin.theme");
 		logger.info("Theme resolved to: "+theme);

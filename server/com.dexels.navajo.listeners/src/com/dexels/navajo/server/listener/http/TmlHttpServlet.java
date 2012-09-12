@@ -89,6 +89,9 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 	public TmlHttpServlet() {
 	}
 
+	/**
+	 * @param serviceName  
+	 */
 	protected void writeOutput(Navajo resultMessage,
 			java.io.OutputStreamWriter out, String serviceName)
 			throws NavajoException {
@@ -165,7 +168,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 	}
 
 	private final void callDirect(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response) throws IOException {
 
 		String service = request.getParameter("service");
 		String type = request.getParameter("type");
@@ -310,18 +313,22 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		// Check for streamingmode toggle.
 		if (request.getParameter("streaming") != null
 				&& request.getParameter("streaming").equals("no")) {
-			streamingMode = false;
+			setStreamingMode(false);
 			PrintWriter pw = new PrintWriter(response.getWriter());
 			pw.write("Switched off streaming mode");
 			pw.close();
 		} else if (request.getParameter("streaming") != null) {
-			streamingMode = true;
+			setStreamingMode(true);
 			PrintWriter pw = new PrintWriter(response.getWriter());
 			pw.write("Switched on streaming mode");
 			pw.close();
 		} else {
 			callDirect(request, response);
 		}
+	}
+
+	private static void setStreamingMode(boolean b) {
+		streamingMode = b;
 	}
 
 	/**
@@ -478,9 +485,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			out.flush();
 			out.close();
 
-			if (in != null
-					&& in.getHeader() != null
-					&& outDoc != null
+			if ( in.getHeader() != null
 					&& outDoc.getHeader() != null
 					&& !Dispatcher.isSpecialwebservice(in.getHeader()
 							.getRPCName())) {

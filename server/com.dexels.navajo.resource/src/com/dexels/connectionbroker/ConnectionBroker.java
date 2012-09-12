@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import javax.sql.ConnectionPoolDataSource;
 
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.jdbc.DataSourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ public class ConnectionBroker {
 	private final Map<String,DataSourceFactory> driverMap = new HashMap<String,DataSourceFactory>();
 	
 	
-	public void activate(ComponentContext context) {
+	public void activate() {
 //		Dictionary properties = context.getProperties();
 //			Enumeration en = properties.keys();
 //			while(en.hasMoreElements()) {

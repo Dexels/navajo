@@ -27,10 +27,8 @@ import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SchedulerRegistry;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.AuthorizationException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.SystemException;
-import com.dexels.navajo.server.UserException;
 
 public class RhinoRunner {
 	// private ScriptableObject globalScope;
@@ -41,9 +39,7 @@ public class RhinoRunner {
 
 	private static Logger logger = LoggerFactory.getLogger(RhinoRunner.class);
 
-	public static void main(String[] args) throws IOException,
-			InterruptedException, NavajoException, UserException,
-			SystemException, AuthorizationException, ClassNotFoundException,
+	public static void main(String[] args) throws NavajoException, ClassNotFoundException,
 			NavajoDoneException {
 		Class.forName("com.dexels.navajo.functions.ToBinary", true,
 				RhinoRunner.class.getClassLoader());
@@ -130,7 +126,7 @@ public class RhinoRunner {
 		if (se.isAsync()) {
 			synchronized (se) {
 				try {
-					System.err.println("Waiting for scriptFinish");
+					logger.debug("Waiting for scriptFinish");
 					se.wait();
 				} catch (InterruptedException e) {
 					logger.info("Interrupted:", e);

@@ -176,11 +176,11 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 		if (getExpression() == null || getExpression().equals("")) {
 			return true;
 		}
-		return evaluateBlock(getContext(), getComponent(), te);
+		return evaluateBlock(getComponent(), te);
 
 	}
 
-	protected boolean evaluateBlock(TipiContext context, Object source,
+	protected boolean evaluateBlock(Object source,
 			TipiEvent te) {
 		// boolean valid = false;
 		Operand o;

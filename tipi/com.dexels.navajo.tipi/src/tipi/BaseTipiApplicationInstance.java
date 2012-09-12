@@ -51,7 +51,7 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 
 	// Utilities:
 	
-	public static void processSettings(String deploy, String profile,  File installationFolder, ITipiExtensionContainer extensionContainer) throws IOException {
+	public static void processSettings(String deploy, String profile,  File installationFolder, ITipiExtensionContainer extensionContainer)  {
 		File settings = new File(installationFolder,"settings");
 
 		Map<String, String> bundleValues = getBundleMap("arguments.properties",installationFolder);

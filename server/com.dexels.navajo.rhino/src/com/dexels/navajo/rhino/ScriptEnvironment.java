@@ -355,7 +355,7 @@ public abstract class ScriptEnvironment implements Serializable {
 		}
 	}
 	
-	public void killMap(Object map) throws MappableException, UserException {
+	public void killMap(Object map)  {
 		if (map instanceof Mappable) {
 			logger.debug("Killing map");
 			((Mappable) map).kill();
@@ -380,18 +380,10 @@ public abstract class ScriptEnvironment implements Serializable {
 			Context context = Context.enter();
 			final ContinuationPending cp = context.captureContinuation();
 			final Object c = cp.getContinuation();
-			final Object continuation = c;// = reserialize(c);
+			final Object continuation = c;
 			ch.setContinuation(continuation);
 			ch.setFunctionResult(localFunctionResult);
 			ch.setEnv(this);
-			// ContinuationHandler nrh = new
-			// ContinuationHandler(c,localFunctionResult,this) {
-			// @Override
-			// public void run() {
-			// continueScript(continuation, getFunctionResult());
-			// }
-			// };
-			// cp.setApplicationState(nrh);
 			ch.run();
 			throw (cp);
 			// return;

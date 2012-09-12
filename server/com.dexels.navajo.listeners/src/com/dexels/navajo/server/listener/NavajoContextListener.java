@@ -106,6 +106,7 @@ public class NavajoContextListener implements ServletContextListener {
 
 	/**
 	 * Initialized a Navajo context.
+	 * @param contextPath the path of the virtual context
 	 * 
 	 * @param sc
 	 * @param force
@@ -181,7 +182,7 @@ public class NavajoContextListener implements ServletContextListener {
 		if (!config.exists()) {
 			return false;
 		}
-		return config != null;
+		return true;
 	}
 
 	public static String getInstallationPath(String contextPath) {

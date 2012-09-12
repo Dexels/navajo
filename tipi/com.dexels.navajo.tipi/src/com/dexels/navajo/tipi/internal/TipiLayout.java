@@ -78,6 +78,9 @@ public abstract class TipiLayout implements Serializable {
 		myDefinition = def;
 	}
 
+	/**
+	 * @param index  
+	 */
 	public Object createDefaultConstraint(int index) {
 		return null;
 	}
