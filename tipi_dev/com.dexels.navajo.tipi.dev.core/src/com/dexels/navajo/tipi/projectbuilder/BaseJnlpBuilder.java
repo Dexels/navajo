@@ -20,7 +20,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 	protected abstract void appendProxyResource(XMLElement resources, String repository, String mainExtension, boolean useVersioning) throws IOException;
 
 
-	public String appendResources(File baseDir, XMLElement resources, String repository, List<String> extensions,String resourceBase, boolean useVersioning) throws IOException {
+	public String appendResources(XMLElement resources, String repository, List<String> extensions,String resourceBase, boolean useVersioning) throws IOException {
 		String mainExtension = null;
 		for (String ext : extensions) {
 			Map<String, String> versionMap = myVersionResolver.resolveVersion(ext);
@@ -149,7 +149,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		XMLElement java = resources.addTagKeyValue("j2se", "");
 		java.setAttribute("version", "1.6+");
 		appendSecurity(output, params.get("permissions"));
-		String mainExtension = appendResources(baseDir, resources, repository, exts,resourceBase,useVersioning);
+		String mainExtension = appendResources(resources, repository, exts,resourceBase,useVersioning);
 		appendProxyResource(resources, repository, mainExtension,useVersioning);
 
 		XMLElement app = output.addTagKeyValue("application-desc", "");

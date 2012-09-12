@@ -34,7 +34,7 @@ public class TipiWebProjectBuilder extends TipiProjectBuilder {
 				e.printStackTrace();
 			}
 		}
-		downloadProjectInclude(projectName, remoteExtensionUrl, extensionElement, baseDir, clean);
+		downloadProjectInclude(remoteExtensionUrl, baseDir, clean);
 
 	}
 

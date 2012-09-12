@@ -48,7 +48,7 @@ public abstract class ExtensionClassdefProcessor {
 			Map<String, XMLElement> allEvents, Map<String, XMLElement> allValues, Map<String, XMLElement> allTypes,
 			Map<String, XMLElement> allFunctions) ;
 
-	public void execute(URL repository, String originalExtension, String version, Map<String,List<XMLElement>> classDefElements, String repositoryDeploy) {
+	public void execute(URL repository, String originalExtension, String version, Map<String,List<XMLElement>> classDefElements) {
 		Map<String, XMLElement> allComponents = new HashMap<String, XMLElement>();
 		Map<String, XMLElement> allActions = new HashMap<String, XMLElement>();
 		Map<String, XMLElement> allEvents = new HashMap<String, XMLElement>();

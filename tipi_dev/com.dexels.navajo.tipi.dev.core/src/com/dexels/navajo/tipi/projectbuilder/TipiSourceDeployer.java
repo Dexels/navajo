@@ -19,7 +19,7 @@ public class TipiSourceDeployer {
 		writeDirLink(tipiDir,overviewWriter,pathElements);
 		for (File current : tipiDir.listFiles()) {
 			if(current.isFile() && current.toString().endsWith("xml")) {
-				deployFile(tipiDir,documentationDir,current,pathElements,overviewWriter);
+				deployFile(documentationDir,current,pathElements,overviewWriter);
 			}
 			if(current.isDirectory() && !current.getName().equals("CVS")) {
 			
@@ -65,12 +65,12 @@ public class TipiSourceDeployer {
 		return sb.toString();
 	}
 
-	private void deployFile(File tipiDir, File documentationDir, File current, List<String> pathElements, FileWriter overviewWriter) throws IOException {
+	private void deployFile(File documentationDir, File current, List<String> pathElements, FileWriter overviewWriter) throws IOException {
 		System.err.println("Current: "+current);
 		String fileName = current.getName();
 		String newName = fileName.substring(0,fileName.length()-4)+".txt";
 		File f = new File(documentationDir,newName.toLowerCase());
-		createDocSource(current,f,pathElements);
+		createDocSource(current,f);
 		writeFileLink(current,pathElements,overviewWriter);
 	}
 
@@ -117,7 +117,7 @@ public class TipiSourceDeployer {
 		return sb.toString();
 	}
 
-	private void createDocSource(File current, File destination, List<String> pathElements) throws IOException {
+	private void createDocSource(File current, File destination) throws IOException {
 		FileWriter fw = new FileWriter(destination);
 		Date d = new Date(current.lastModified());
 		fw.write("Source last modified: "+d+"\n");
