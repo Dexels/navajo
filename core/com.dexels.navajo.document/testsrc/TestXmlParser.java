@@ -5,6 +5,7 @@ import java.io.StringReader;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 
@@ -32,6 +33,18 @@ public class TestXmlParser {
 		Assert.assertNotNull(n);
 		is.close();
 		n.write(System.err);
+	}
+	
+	@Test
+	public void testDataSourceWithDefinitionMessage() throws IOException {
+		InputStream is = TestXmlParser.class.getResourceAsStream("arraymessages.xml");
+		Navajo n = NavajoFactory.getInstance().createNavajo(is);
+		Assert.assertNotNull(n);
+		is.close();
+		n.write(System.err);
+		Message arr = n.getMessage("SimpleMessage").getMessage("ArrayMessage").getDefinitionMessage();
+		Assert.assertNotNull(arr);
+		arr.write(System.err);
 	}
 
 }

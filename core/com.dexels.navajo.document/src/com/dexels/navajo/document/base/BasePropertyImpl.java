@@ -1050,14 +1050,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	public final String getType() {
 		if (this.type == null || "".equals(this.type)) {
-			Property def = getDefinitionProperty();
-			if (def != null) {
-				return def.getType();
-			} else {
-				// logger.info("Warning: Property without type. Reverting
-				// to String type");
-				return STRING_PROPERTY;
-			}
+			// logger.info("Warning: Property without type. Reverting
+			// to String type");
+			return STRING_PROPERTY;
 		} else {
 			return (this.type);
 		}
