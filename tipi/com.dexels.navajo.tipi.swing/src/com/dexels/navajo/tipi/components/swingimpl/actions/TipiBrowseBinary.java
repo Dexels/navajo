@@ -85,7 +85,6 @@ public class TipiBrowseBinary extends TipiAction {
 			Binary b = new Binary(f);
 			pp.setAnyValue(b);
 			String currentSubtype = pp.getSubType();
-			System.err.println("Setting type to: " + f.getPath());
 			if (currentSubtype != null && !"".equals(currentSubtype)) {
 				// beware, maybe already present?
 				pp.setSubType(currentSubtype + "," + "description="
@@ -93,7 +92,6 @@ public class TipiBrowseBinary extends TipiAction {
 			} else {
 				pp.setSubType("description=" + f.getName());
 			}
-			System.err.println("Sub: " + pp.getSubType());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

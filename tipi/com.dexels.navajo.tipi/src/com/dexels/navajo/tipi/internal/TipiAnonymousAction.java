@@ -29,14 +29,6 @@ public class TipiAnonymousAction implements TipiExecutable {
 		return null;
 	}
 
-	public TipiExecutable getExecutableChild(int index) {
-		return null;
-	}
-
-	public int getExecutableChildCount() {
-		return 0;
-	}
-
 	public void performAction(TipiEvent te, TipiExecutable parent, int index)
 			throws TipiBreakException, TipiException {
 		myRunnable.run();

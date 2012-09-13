@@ -450,6 +450,9 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		}
 	}
 	
+	/**
+	 * @param gl  
+	 */
 	private final void compileStars(GL gl){
 		try{
 			int size = 2000;
@@ -692,7 +695,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		zoom_height = zoom / aspect_ratio;
 
 		/* create 5x5 pixel picking region near cursor location */
-		glu.gluPickMatrix((double) pickPoint.x, (double) (viewport[3] - pickPoint.y),// 
+		glu.gluPickMatrix(pickPoint.x, viewport[3] - pickPoint.y,// 
 				15.0, 15.0, viewport, 0);
 
 		// Zooming
@@ -799,6 +802,9 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 
 	/*
 	 * Draw a string in OpenGL
+	 */
+	/**
+	 * @param gl  
 	 */
 	private void drawString(GL gl, String text, int xpos, int ypos, Color color, float scale) {
 		float r = color.getRed() / 255f;

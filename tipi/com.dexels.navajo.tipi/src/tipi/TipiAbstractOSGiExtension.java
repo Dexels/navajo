@@ -32,7 +32,6 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 	
 	
 	
-	@SuppressWarnings("unchecked")
 	protected void registerTipiExtension(BundleContext context)
 			throws Exception {
 		this.context = context;
@@ -58,6 +57,9 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 
 	
 	
+	/**
+	 * @param context  
+	 */
 	protected void deregisterTipiExtension(BundleContext context)
 			throws Exception {
 		if(extensionReg!=null) {
@@ -75,7 +77,6 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 
 	}	
 	
-	@SuppressWarnings("unchecked")
 	public ITipiExtensionRegistry getTipiExtensionRegistry() {
 		if(context==null) {
 			return nonOSGiRegistry;
@@ -83,21 +84,11 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 		ServiceReference<? extends ITipiExtensionRegistry> refs = (ServiceReference<? extends ITipiExtensionRegistry>) context
 				.getServiceReference(ITipiExtensionRegistry.class.getName());
 		// TODO Sometimes this value is null, just af
-		ITipiExtensionRegistry reg = (ITipiExtensionRegistry) context
-				.getService(refs);
+		ITipiExtensionRegistry reg = context.getService(refs);
 		return reg;
 	}
 
-//	@Override
-//	public void start(BundleContext context) throws Exception {
-//		registerTipiExtension(context);
-//	}
-//
-//	@Override
-//	public void stop(BundleContext context) throws Exception {
-//
-//	}
-	
+
 	public BundleContext getBundleContext() {
 		return context;
 	}
@@ -142,7 +133,7 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 				b.start();
 				logger.info("Bundle: "+b.getSymbolicName()+" id: "+b.getBundleId()+" started succesfully.");
 			} catch (BundleException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 				logger.error("Bundle: "+b.getSymbolicName()+" id: "+b.getBundleId()+" could not start.",e);
 			}
 		}

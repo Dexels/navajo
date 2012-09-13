@@ -31,7 +31,7 @@ public class ComponentMerger {
 //	   return element;
 //	}
 //	 <tipiclass addtocontainer="true" childcount="*" class="TipiWindow" implements="basecomponent,datacomponent,swingcomponent" layoutmanager="true" module="container" name="window" package="com.dexels.navajo.tipi.components.swingimpl"
-	public static XMLElement getAssembledClassDef(Map<String,XMLElement> allComponents,XMLElement classDef,String name) throws IOException  {
+	public static XMLElement getAssembledClassDef(Map<String,XMLElement> allComponents,XMLElement classDef) throws IOException  {
 		
 		XMLElement result = null;
 		Stack<String> extensionStack = new Stack<String>();
@@ -41,7 +41,7 @@ public class ComponentMerger {
 			result = classDef;
 		} else {
 			interfaces.add(classDef);
-			result = assembleClassDefs(interfaces,name);
+			result = assembleClassDefs(interfaces);
 		}
 		return result;
 	}
@@ -65,16 +65,16 @@ public class ComponentMerger {
 				if(element==null) {
 					System.err.println("WARNING: missing component: "+currentName);
 				}
-				appendInterfacesToClassdef(isExtending, allComponents, element);
 				if(element==null) {
 					throw new IOException("Error: ClassDef: "+classDef.getStringAttribute("name")+" has an unknown super interface: "+currentName);
 				}
+				appendInterfacesToClassdef(isExtending, allComponents, element);
 				isExtending.push(element.getStringAttribute("name"));
 			}
 		}
 	}
 	
-	private static XMLElement assembleClassDefs(List<XMLElement> interfaces,String name) {
+	private static XMLElement assembleClassDefs(List<XMLElement> interfaces) {
 		assert (interfaces!=null);
 		assert (interfaces.size()>0);
 		if(interfaces.size()==1) {
@@ -83,7 +83,7 @@ public class ComponentMerger {
 		}
 	
 		
-		ClassModel cl = new ClassModel(name);
+		ClassModel cl = new ClassModel();
 		for (XMLElement element : interfaces) {
 			cl.addDefinition(element);
 		}

@@ -35,27 +35,20 @@ public class NavajoScopeManager {
 		}
 		Scriptable so = freeScopes.poll();
 		if (so != null) {
-			// System.err.println("Reusing scope. Free scopes: "+freeScopes.size());
 			return so;
 		}
-		// System.err.println("Creating scope. Free scopes: "+freeScopes.size());
 		ScriptableObject globalScope = cx.initStandardObjects();
 		return globalScope;
 	}
 
 	public synchronized void releaseScope(Scriptable scope) {
-		// System.err.println("Releasing scope. Free scopes: "+freeScopes.size());
 		if (freeScopes.size() >= MAX_UNUSED_SCOPES) {
-			// System.err.println("Too many unused scopes, discarding this one.");
-			cleanScope(scope);
+//			cleanScope(scope);
 			return;
 		}
 		freeScopes.add(scope);
-		// System.err.println("Released scope. Free scopes: "+freeScopes.size());
 	}
 
-	private void cleanScope(Scriptable scope) {
-		// remove everything related to this run.
-
-	}
+//	private void cleanScope(Scriptable scope) {
+//	}
 }

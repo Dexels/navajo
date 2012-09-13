@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -24,11 +27,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class AliasParser extends BaseTipiParser {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8640653767113050463L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(AliasParser.class);
+	
 	private String findAlias(TipiComponent current, String expression) {
 		if (current == null) {
 			return null;
@@ -52,7 +55,7 @@ public class AliasParser extends BaseTipiParser {
 			Operand evaluate = source.getContext().evaluate(alias, source, event);
 			return evaluate.value;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 
 		}
 		return null;

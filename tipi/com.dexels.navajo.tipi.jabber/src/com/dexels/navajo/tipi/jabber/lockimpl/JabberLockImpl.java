@@ -104,7 +104,7 @@ public class JabberLockImpl extends BaseLockImpl {
 				debug("It seemed that I am king, but I am not.");
 				return false;
 			}
-			fireLockingChanges(true, false, "locked");
+			fireLockingChanges(true, false);
 			return true;
 		} catch (XMPPException e) {
 			debug("Changing didn't work");
@@ -115,7 +115,7 @@ public class JabberLockImpl extends BaseLockImpl {
 	public void unlock() {
 		resource = null;
 		reset(muc);
-		fireLockingChanges(true, false, "locked");
+		fireLockingChanges(true, false);
 
 	}
 

@@ -43,13 +43,13 @@ public class ExtensionActions {
 		generateJnlp(extensionRepository,projectName,version, destDir, xe);
 		generateIndex(destDir, xe);
 		List<XMLElement> locatedIncludes = new ArrayList<XMLElement>();
-		extractIncludes(baseDir, inputPath, destDir, xe,locatedIncludes);
+		extractIncludes(baseDir, destDir, xe,locatedIncludes);
 		Map<String,List<XMLElement>> tipiParts = new HashMap<String, List<XMLElement>>();
 		for (XMLElement element : locatedIncludes) {
 			appendClassDefElement(projectName, element, tipiParts);
 		}
 		
-		mergeTypeMap(new URL(extensionRepository), destDir, projectName,tipiParts);
+		mergeTypeMap(new URL(extensionRepository), destDir, tipiParts);
 		
 	}
 	
@@ -57,7 +57,7 @@ public class ExtensionActions {
 		return repository+"Extensions/";
 	}
 	
-	private static void mergeTypeMap(URL repository, File destDir, String projectName, Map<String, List<XMLElement>> tipiParts) throws IOException {
+	private static void mergeTypeMap(URL repository, File destDir, Map<String, List<XMLElement>> tipiParts) throws IOException {
 		List<XMLElement> parsers = tipiParts.get("tipi-parser");
 	//	System.err.println("Parserl: "+parsers.size());
 		Map<String,String> parserMap = new TreeMap<String, String>();
@@ -124,7 +124,7 @@ public class ExtensionActions {
 	}
 
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 
 //		buildDocumentation(new File("../NavajoTipi/dist"),"Tipi",new File("tipidoc"));
 		//		System.err.println(">> "+ss);
@@ -158,7 +158,7 @@ public class ExtensionActions {
 		ecdp.setOutputDir(destDir);
 		ecdp.setDistributionDir(distributionPath);
 		ecdp.setDeployRepository(repositoryDeploy);
-		ecdp.execute(repository,project,version,ss,repositoryDeploy);
+		ecdp.execute(repository,project,version,ss);
 	}
 	public static void buildTipiBeans(File baseDir, String distributionPath,String sourcePath, String project, String version, File destDir,String repositoryDeploy) throws IOException {
 		File sourceDir = new File(baseDir,sourcePath);
@@ -176,12 +176,11 @@ public class ExtensionActions {
 		projects.add(project);
 		Map<String,List<XMLElement>> ss = getAllClassDefs(project, repositoryDeploy, repository, projects);
 		
-
 		TipiCreateTipiBeans tcci = new TipiCreateTipiBeans();
 		tcci.setOutputDir(destDir);
 		tcci.setDistributionDir(distributionPath);
 		tcci.setDeployRepository(repositoryDeploy);
-		tcci.execute(repository,project,version,ss,repositoryDeploy);
+		tcci.execute(repository,project,version,ss);
 		
 	}
 	
@@ -340,7 +339,7 @@ public class ExtensionActions {
 //		}
 //	}
 //	
-	private static void extractIncludes(File baseDir, File inputPath, File destDir, XMLElement definitions, List<XMLElement> locatedIncludes) throws IOException {
+	private static void extractIncludes(File baseDir,  File destDir, XMLElement definitions, List<XMLElement> locatedIncludes) throws IOException {
 		XMLElement includes = definitions.getElementByTagName("includes");
 		if(includes==null) {
 			return;

@@ -37,7 +37,6 @@ public class DeployAppStoreAction implements IObjectActionDelegate {
 //	  <property name="tipiServerPassword" value="pw"/>
 //	  <property name="tipiServerApplication" value="${ant.project.name}"/>
 
-	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		try {
 		if (selection instanceof IStructuredSelection) {
@@ -48,6 +47,9 @@ public class DeployAppStoreAction implements IObjectActionDelegate {
 					project = (IProject) element;
 				} else if (element instanceof IAdaptable) {
 					project = (IProject) ((IAdaptable) element).getAdapter(IProject.class);
+				}
+				if(project==null) {
+					return;
 				}
 				final IProject rProject = project;
 				

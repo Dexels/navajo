@@ -24,6 +24,9 @@ import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
@@ -68,8 +71,11 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	private Point myOffset;
 	private RootPaneContainer myRootPaneContainer;
 	private boolean forceInternal = false;
-//	private float opacity = 1.0f;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiDialog.class);
+	
 	TipiSwingPanel tp;
 
 	public TipiDialog() {
@@ -332,17 +338,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		return myRootPaneContainer;
 	}
 
-	//
-	// public boolean performTipiEvent(String type, Map<String, Object> event,
-	// boolean sync) throws TipiException, TipiBreakException {
-	// // TODO Auto-generated method stub
-	// if(type.equals("onInstantiate")) {
-	// System.err.println("Calling onInstantiate in dialog");
-	// return super.performTipiEvent(type, null, false);
-	// }
-	//
-	// return super.performTipiEvent(type, event, sync);
-	// }
+
 
 	@SuppressWarnings("unused")
 	private final void constructDialog() {
@@ -394,10 +390,13 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		}
 	}
 
+	/**
+	 * @param isModal modal, but disabled 
+	 */
 	private JInternalFrame createInternalFrame(boolean isModal,
 			JDesktopPane desktop, Dimension size) {
 		// System.err.println("Creating modal: "+isModal);
-		System.err.println("HACKED TO NONMODAL!");
+		logger.info("HACKED TO NONMODAL!");
 		isModal = false;
 		JRootPane myRootPane = null;
 		if (myContext.getTopLevel() instanceof TipiApplet) {

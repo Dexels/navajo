@@ -170,14 +170,7 @@ public class TipiNewCallService extends TipiAction {
 			}
 			myContext.loadNavajo(result, service);
 			if (myContext.hasErrors(result)) {
-				// myContext.showInternalError("Service: "+service+
-				// " returned errors.");
 				dumpStack("Server error detected: " + service);
-				// try {
-				// result.write(System.err);
-				// } catch (NavajoException e) {
-				// e.printStackTrace();
-				// }
 			}
 
 			if (breakOnError) {
@@ -187,7 +180,7 @@ public class TipiNewCallService extends TipiAction {
 			}
 
 		} catch (ClientException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 	}

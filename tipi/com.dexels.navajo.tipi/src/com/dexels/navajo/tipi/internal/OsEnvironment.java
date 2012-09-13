@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.internal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /*
  * @(#)OSEnvironment.java
 
@@ -30,6 +33,11 @@ public class OsEnvironment {
 	 * Private Constructor. OSEnvironment is not instantiable.
 	 * 
 	 */
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(OsEnvironment.class);
+	
 	private OsEnvironment() {
 	}
 
@@ -79,7 +87,7 @@ public class OsEnvironment {
 				return null;
 			}
 		} catch (java.io.IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			System.err
 					.println("Could not determine the OS. Perhaps a security issue?");
 			return null;
@@ -106,7 +114,7 @@ public class OsEnvironment {
 				envVars.setProperty(key, value);
 			}
 		} catch (java.io.IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return envVars;
 	}
@@ -236,7 +244,7 @@ public class OsEnvironment {
 			System.out.println("the current value of TEMP is : "
 					+ p.getProperty("TEMP"));
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 }

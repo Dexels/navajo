@@ -12,6 +12,9 @@ public class Base64DecodingFinishedException extends IOException {
 	
 	private static final long serialVersionUID = -2693614501104506907L;
 
+	/**
+	 * @param data  
+	 */
 	public Base64DecodingFinishedException(char[] data, int offset, int len) {
         System.err.println("Base64 finished at: "+offset+" len: "+len);
     }

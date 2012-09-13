@@ -68,7 +68,8 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	protected String myId;
 	protected TipiComponent myParent = null;
 	protected boolean isHomeComponent = false;
-
+	
+	
 	// Maps a propertyPath onto a set of attributes
 	private Map<String, Set<PropertyLinkRequest>> linkMap = new HashMap<String, Set<PropertyLinkRequest>>();
 	private Set<String> allLinks = new HashSet<String>();
@@ -125,11 +126,8 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	}
 
 	public void removeFromContainer(Object c) {
-		System.err
-				.println("REMOVE FROM CONTAINER IGNORED: NOT IMPLEMENTED. CLASS: "
+		logger.debug("REMOVE FROM CONTAINER IGNORED: NOT IMPLEMENTED. CLASS: "
 						+ getClass());
-		// throw new UnsupportedOperationException("Can not remove from
-		// container of class: " + getClass());
 	}
 
 	public boolean isServiceRoot() {
@@ -228,11 +226,11 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 
 	private final void setValue(String name, Object value,
 			TipiComponent source, boolean defaultValue, TipiEvent event) {
-		setValue(name, "" + value, value, source, defaultValue, event);
+		setValue(name, "" + value, value);
 	}
 
-	private final void setValue(String name, String expression, Object value,
-			TipiComponent source, boolean defaultValue, TipiEvent event) {
+	private final void setValue(String name, String expression, Object value
+			) {
 		if (value instanceof PropertyLinkRequest) {
 			PropertyLinkRequest linkRequest = (PropertyLinkRequest) value;
 			linkRequest.setAttributeName(name);
@@ -280,7 +278,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 				myContext.showInternalError("Error in setter: " + name
 						+ " for component: " + getPath() + " proposed value: "
 						+ value + "\nFaillure: " + e.getMessage());
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		} else {
 			setComponentValue(name, value);
@@ -496,16 +494,13 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 
 	private final void removeChildComponent(TipiComponent tc) {
 		if (!tipiComponentMap.containsValue(tc)) {
-			System.err
-					.println("!!!!!!   Can not removeChildComponent: Component not found.");
+			logger.warn("!!!!!!   Can not removeChildComponent: Component not found.");
 		}
 		if (!tipiComponentList.contains(tc)) {
-			System.err
-					.println("!!!!!!   Can not removeChildComponent : Component not found in list.");
+			logger.warn("!!!!!!   Can not removeChildComponent : Component not found in list.");
 		}
 		if (!tipiComponentMap.containsKey(tc.getId())) {
-			System.err
-					.println("!!!!!!   Can not removeChildComponent: Component not found in map.");
+			logger.warn("!!!!!!   Can not removeChildComponent: Component not found in map.");
 		}
 		tipiComponentList.remove(tc);
 		tipiComponentMap.remove(tc.getId());
@@ -614,7 +609,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 				}
 				Operand o = evaluate(value.toString(), this, event);
 				if (o != null && o.value != null) {
-					setValue(key, value, o.value, this, false, event);
+					setValue(key, value, o.value);
 				} else {
 					logger.error("Evaluation error: " + value);
 					setValue(key, value);
@@ -625,6 +620,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 
 	/**
 	 * Loads all the allowed event from the classdefinition
+	 * @param classdef 
 	 */
 	private final void loadEvents(XMLElement events, XMLElement classdef) {
 		List<XMLElement> children = events.getChildren();
@@ -691,7 +687,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 					try {
 						doCallSetter(c, containerPropertyName, value);
 					} catch (Throwable ee) {
-						ee.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
 			}
@@ -701,7 +697,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 					return "TipiComponentBoundProp: " + p.getFullPropertyName()
 							+ ":" + p.hashCode();
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 				return "TipiComponentBoundPropKaboem";
 			}
@@ -719,7 +715,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		try {
 			callSetter(component, propertyName, param);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			myContext.showInternalError("Error setting value: " + propertyName
 					+ " to: " + param, e);
 		}
@@ -856,6 +852,11 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return tcm;
 	}
 
+	/**
+	 * @param name  
+	 * @param compMeth 
+	 * @param event 
+	 */
 	protected void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event)
 			throws TipiBreakException {
@@ -953,7 +954,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 				} catch (NoSuchMethodException e1) {
 					e1.printStackTrace();
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		}
@@ -966,7 +967,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		// try {
 		// myContext.unlink(getStateMessage());
 		// } catch (NavajoException e) {
-		// e.printStackTrace();
+		// logger.error("Error: ",e);
 		// }
 		removeAllChildren();
 		clearAllComponents();
@@ -1098,7 +1099,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		try {
 			c.performTipiEvent("onInstantiate", null, true);
 		} catch (TipiException ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		} catch (TipiBreakException e) {
 		}
 	}
@@ -1174,14 +1175,14 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 					} catch (TipiSuspendException e) {
 						// ignore, so do fire all the other events
 					} catch (TipiBreakException e) {
-						// e.printStackTrace();
+						// logger.error("Error: ",e);
 						throw (e);
 					} catch (NavajoException e) {
 //						getContext().showInternalError(
 //								"Error performing event: " + te.getEventName()
 //										+ " for component: "
 //										+ te.getComponent().getPath(), e);
-//						e.printStackTrace();
+//						logger.error("Error: ",e);
 						te.dumpStack(e.getMessage());
 						throw e;
 					} catch(Exception e) {
@@ -1189,7 +1190,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 								"Error performing event: " + te.getEventName()
 										+ " for component: "
 										+ te.getComponent().getPath(), e);
-						e.printStackTrace();
+						logger.error("Error: ",e);
 						te.dumpStack(e.getMessage());
 					} finally {
 						if (afterEvent != null) {
@@ -1207,7 +1208,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 								"Error performing event: " + te.getEventName()
 										+ " for component: "
 										+ te.getComponent().getPath(), e);
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
 			}
@@ -1509,11 +1510,11 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 			b.setInvocation(action);
 			return b;
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 	}

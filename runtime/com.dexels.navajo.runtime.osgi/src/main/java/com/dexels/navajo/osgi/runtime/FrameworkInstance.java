@@ -92,7 +92,6 @@ public class FrameworkInstance {
 	public static void main(String[] args) {
 		FrameworkInstance fs = new FrameworkInstance("bundle");
 		if(args.length>0) {
-			//String tipiDirective = "/Users/frank/Documents/workspace42/SportlinkClub|test|knvb";
 			String directive = args[0];
 			fs.start(directive);
 		} else {
@@ -212,10 +211,10 @@ public class FrameworkInstance {
 		logger.info("obrTracker opened");
 		logger.debug("Trackers created and started");
 		installAndStartFromClasspath(new BundleInstall[] {
-//				new BundleInstall("org.apache.felix.scr-1.6.0.jar","org.apache.felix.scr","1.6.0"),
+				new BundleInstall("org.apache.felix.scr-1.6.0.jar","org.apache.felix.scr","1.6.0"),
 				new BundleInstall("org.apache.felix.configadmin-1.2.8.jar","org.apache.felix.configadmin","1.2.8"),
 				new BundleInstall("org.apache.felix.bundlerepository-1.6.6.jar","org.apache.felix.bundlerepository","1.6.6"),
-				//new BundleInstall("com.dexels.navajo.runtime.provisioning-1.0.2.jar","com.dexels.navajo.runtime.provisioning","1.0.2"),
+				new BundleInstall("com.dexels.navajo.runtime.provisioning-1.0.3.jar","com.dexels.navajo.runtime.provisioning","1.0.3"),
 				new BundleInstall("org.apache.felix.configadmin-1.2.8.jar","org.apache.felix.configadmin","1.2.8"),
 			});
 

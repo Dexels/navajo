@@ -6,6 +6,9 @@ package com.dexels.navajo.tipi.functions;
 
 import java.io.StringWriter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -16,6 +19,9 @@ import com.dexels.navajo.parser.TMLExpressionException;
  */
 public class GetSource extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GetSource.class);
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -56,7 +62,7 @@ public class GetSource extends FunctionInterface {
 			sw.close();
 			return sw.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TMLExpressionException("Error writing navajo: ", e);
 		}
 	}

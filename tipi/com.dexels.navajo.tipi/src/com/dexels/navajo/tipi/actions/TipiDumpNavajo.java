@@ -69,7 +69,7 @@ public class TipiDumpNavajo extends TipiAction {
 				try {
 					nn.write(w);
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 			w.println("********** END OF DEBUG ****** ");
@@ -77,7 +77,7 @@ public class TipiDumpNavajo extends TipiAction {
 			// }
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} finally {
 			if (file != null) {
 				if (w != null) {

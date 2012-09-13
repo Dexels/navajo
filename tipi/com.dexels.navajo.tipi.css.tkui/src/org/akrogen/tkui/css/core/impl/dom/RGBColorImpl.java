@@ -25,6 +25,10 @@ import org.w3c.dom.css.RGBColor;
  */
 public class RGBColorImpl implements RGBColor, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8060897403543294188L;
 	private CSSPrimitiveValue red = null;
 	private CSSPrimitiveValue green = null;
 	private CSSPrimitiveValue blue = null;

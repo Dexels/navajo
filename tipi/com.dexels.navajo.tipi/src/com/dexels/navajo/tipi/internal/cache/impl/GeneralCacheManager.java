@@ -6,6 +6,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.internal.cache.CacheManager;
 import com.dexels.navajo.tipi.internal.cache.LocalStorage;
 import com.dexels.navajo.tipi.internal.cache.RemoteStorage;
@@ -14,7 +17,9 @@ public class GeneralCacheManager implements CacheManager {
 
 	private final LocalStorage local;
 	private final RemoteStorage remote;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GeneralCacheManager.class);
 	public GeneralCacheManager(LocalStorage l, RemoteStorage r) {
 		this.local = l;
 		this.remote = r;
@@ -67,7 +72,7 @@ public class GeneralCacheManager implements CacheManager {
 		try {
 			local.flushAll();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

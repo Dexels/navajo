@@ -22,7 +22,6 @@ public class XMLExtension  {
 	private final List<String> requires = new ArrayList<String>();
 	private final List<String> jars = new ArrayList<String>();
 	private String id = null;
-	private String requiresMain = null;
 	private String description = null;
 	private String project = null;
 	
@@ -136,7 +135,7 @@ public class XMLExtension  {
 	}
 
 	public final  String requiresMainImplementation() {
-		return requiresMain;
+		return null;
 	}
 
 }

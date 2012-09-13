@@ -51,7 +51,7 @@ public class ZipResourceLoader extends ClassPathResourceLoader {
 			}
 			return u;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			logger.info("Not found, delegating to parent: ");
 			return super.getResourceURL(location);
 		}

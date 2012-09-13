@@ -345,8 +345,6 @@ public class TmlFormComposite extends Composite {
 					
 				} catch (NavajoException e) {
 					e.printStackTrace();
-				}  catch (IOException e) {
-					e.printStackTrace();
 				}
 				return Status.OK_STATUS;
 			}

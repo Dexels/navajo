@@ -59,7 +59,7 @@ public final class TipiDumpClass extends TipiAction {
 				dumpDef(def);
 			}
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

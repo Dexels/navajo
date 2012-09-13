@@ -283,8 +283,10 @@ public class GenericPropertyComponent {
                         return;
                     }
                     fis = new FileOutputStream(res);
-                    // fis.write(bin.getData());
-                    bin.write(fis);
+                    if(bin!=null) {
+                        bin.write(fis);
+                    	
+                    }
                     fis.flush();
                 } catch (Exception e1) {
                     e1.printStackTrace();
@@ -304,11 +306,7 @@ public class GenericPropertyComponent {
         openButton.setEnabled(bin != null);
         openButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                try {
-                    openBinary(bin);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+               openBinary(bin);
             }
         });
 
@@ -654,7 +652,7 @@ public class GenericPropertyComponent {
         }
     }
 
-    public static void openBinary(Binary b) throws IOException {
+    public static void openBinary(Binary b)  {
     	
     	BinaryOpener.openBinary(b);
     	

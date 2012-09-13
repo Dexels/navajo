@@ -130,7 +130,7 @@ public class ClientActions {
 		return missing;
 	}
 
-	public static XMLElement getExtensionXml(String extension, String version,String repository) throws IOException {
+	public static XMLElement getExtensionXml(String extension, String version,String repository) {
 		try {
 			URL rep = new URL(repository);
 			URL projectURL = new URL(rep, extension + "/");
@@ -145,7 +145,7 @@ public class ClientActions {
 	}
 	
 
-	public static void downloadExtensionJars(String project, URL projectURL, XMLElement result, File baseDir, boolean clean)
+	public static void downloadExtensionJars(URL projectURL, XMLElement result, File baseDir, boolean clean)
 			throws MalformedURLException {
 		URL unsigned = new URL(projectURL, "lib/");
 
@@ -202,7 +202,7 @@ public class ClientActions {
 //		}
 //	}
 	
-	public static void downloadProxyJars(String project, URL projectURL, XMLElement result, File baseDir,boolean clean) throws MalformedURLException {
+	public static void downloadProxyJars(URL projectURL, XMLElement result, File baseDir,boolean clean) throws MalformedURLException {
 		System.err.println("PRoject dir: " + projectURL);
 		URL unsigned = new URL(projectURL, "lib/");
 

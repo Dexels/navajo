@@ -35,6 +35,10 @@ public abstract class TipiLayoutImpl extends TipiLayout {
 			.getLogger(TipiLayoutImpl.class);
 	
 	
+	/**
+	 * @param text  
+	 * @param index 
+	 */
 	protected Object parseConstraint(String text, int index) {
 		return null;
 	}
@@ -59,6 +63,10 @@ public abstract class TipiLayoutImpl extends TipiLayout {
 		}
 	}
 
+	/**
+	 * @param tc  
+	 * @param index 
+	 */
 	public Object getDefaultConstraint(TipiComponent tc, int index) {
 		return null;
 	}

@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
@@ -23,11 +26,12 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class PropertyParser extends BaseTipiParser {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8160207631197417713L;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PropertyParser.class);
+	
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return getPropertyValue(source, expression);
 	}
@@ -38,7 +42,7 @@ public class PropertyParser extends BaseTipiParser {
 				return getAttributePropertyValueByPath(source,
 						expression.substring(1));
 			} catch (TipiException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 				return null;
 			}
 		} else {
@@ -50,8 +54,6 @@ public class PropertyParser extends BaseTipiParser {
 		return null;
 	}
 
-	public String toString(Object o, TipiComponent source) {
-		return "Not possible";
-	}
+
 
 }

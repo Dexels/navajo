@@ -30,8 +30,4 @@ public class ComponentParser extends BaseTipiParser {
 		return getTipiComponent(source, expression);
 	}
 
-	public String toString(Object o, TipiComponent source) {
-		return "Not possible";
-	}
-
 }

@@ -78,6 +78,9 @@ public abstract class TipiLayout implements Serializable {
 		myDefinition = def;
 	}
 
+	/**
+	 * @param index  
+	 */
 	public Object createDefaultConstraint(int index) {
 		return null;
 	}
@@ -100,15 +103,20 @@ public abstract class TipiLayout implements Serializable {
 		myLayout = l;
 	}
 
+	/**
+	 * @param c  
+	 */
 	public void childAdded(Object c) {
 	}
 
 	public void commitLayout() {
-		// Not implemented, called after creating layout, override if further
-		// action is needed
 
 	}
 
+	/**
+	 * @param component  
+	 * @param constraints 
+	 */
 	public void addToLayout(Object component, Object constraints) {
 		
 	}

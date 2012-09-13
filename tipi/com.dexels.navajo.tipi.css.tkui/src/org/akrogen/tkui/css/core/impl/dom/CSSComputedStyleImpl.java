@@ -36,6 +36,10 @@ import org.w3c.dom.css.CSSStyleDeclaration;
 public class CSSComputedStyleImpl extends CSSStyleDeclarationImpl implements
 		CSSStyleDeclaration {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5978817498863350926L;
 	private static final Integer OTHER_SAC_CONDITIONAL_SELECTOR = new Integer(
 			Selector.SAC_CONDITIONAL_SELECTOR);
 	private static final Integer SAC_DESCENDANT_SELECTOR = new Integer(

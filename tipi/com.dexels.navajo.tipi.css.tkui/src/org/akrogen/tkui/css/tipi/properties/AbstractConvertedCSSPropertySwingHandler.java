@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.akrogen.tkui.css.tipi.properties;
 
-import java.awt.Component;
-
 import org.akrogen.tkui.css.core.engine.CSSEngine;
 import org.w3c.dom.css.CSSValue;
 

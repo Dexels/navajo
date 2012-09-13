@@ -69,7 +69,8 @@ public class Base64Encode extends FunctionInterface {
 //		
 		Binary b;
 		try {
-			b = new Binary(new StringReader(data));
+			final StringReader reader = new StringReader(data);
+			b = new Binary(reader);
 			b.setMimeType("application/octet-stream");
 			return b;
 		} catch (IOException e) {

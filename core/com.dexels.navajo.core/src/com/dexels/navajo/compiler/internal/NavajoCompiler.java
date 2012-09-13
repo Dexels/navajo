@@ -44,7 +44,7 @@ public class NavajoCompiler
 	
 		public String errors;
 		
-        public void compile(Access access, NavajoConfigInterface config, String source) throws Throwable{
+        public void compile(NavajoConfigInterface config, String source) throws Throwable{
 
         	try {
 				Class.forName("com.sun.tools.javac.Main");

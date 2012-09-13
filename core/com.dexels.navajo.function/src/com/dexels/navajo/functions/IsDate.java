@@ -34,7 +34,7 @@ public class IsDate extends FunctionInterface {
             // Going to guess some formats now by using the navajo function ToDate()
             ParseDate td = new ParseDate();
             td.reset();
-            td.insertOperand((String)o);
+            td.insertOperand(o);
             date = (java.util.Date)td.evaluate();
             
             if (date != null) {

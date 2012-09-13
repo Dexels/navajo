@@ -61,7 +61,7 @@ public class NavajoQueueScopeManager {
         engine.getBindings(ScriptContext.ENGINE_SCOPE).clear();
 	}
 	
-	public static void clearInstance() {
+	public static synchronized void clearInstance() {
 		if(instance!=null) {
 			instance.factory = null;
 			for (ScriptEngine engine : instance.freeScopes) {

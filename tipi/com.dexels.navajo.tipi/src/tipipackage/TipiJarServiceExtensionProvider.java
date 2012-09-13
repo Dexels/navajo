@@ -6,15 +6,19 @@ import java.util.List;
 
 import javax.imageio.spi.ServiceRegistry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import tipi.TipiExtension;
 
 public class TipiJarServiceExtensionProvider extends TipiManualExtensionRegistry {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5065605262245351282L;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiJarServiceExtensionProvider.class);
+	
 	public TipiJarServiceExtensionProvider() {
 		List<TipiExtension> ll = listExtensions();
 		for (TipiExtension tipiExtension : ll) {
@@ -34,7 +38,7 @@ public class TipiJarServiceExtensionProvider extends TipiManualExtensionRegistry
 //				tipiExtension.loadDescriptor();
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return extensionList;
 	}

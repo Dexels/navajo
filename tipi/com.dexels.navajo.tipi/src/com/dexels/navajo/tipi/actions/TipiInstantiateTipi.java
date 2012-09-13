@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.actions;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
@@ -31,11 +34,10 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public class TipiInstantiateTipi extends TipiAction {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3700828606138276145L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiInstantiateTipi.class);
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -124,7 +126,7 @@ public class TipiInstantiateTipi extends TipiAction {
 
 					}
 				} catch (Exception ex1) {
-					ex1.printStackTrace();
+					logger.error("Error: ",ex1);
 				}
 			}
 		}
@@ -198,7 +200,7 @@ public class TipiInstantiateTipi extends TipiAction {
 			}
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 		if (byClass) {
 			instantiateTipi(myContext, getComponent(), byClass, parent, force,

@@ -24,7 +24,7 @@ public class Switch extends AbstractFunction {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		fff = (FunctionFactoryInterface) FunctionFactoryFactory.getInstance();
+		fff = FunctionFactoryFactory.getInstance();
 		cl = getClass().getClassLoader();
 	}
 
@@ -68,7 +68,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(-10), (Integer) result);
+		assertEquals(new Integer(-10), result);
 		
 	}
 	
@@ -83,7 +83,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(0), (Integer) result);
+		assertEquals(new Integer(0), result);
 		
 	}
 	
@@ -100,7 +100,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(-10), (Integer) result);
+		assertEquals(new Integer(-10), result);
 		
 	}
 	
@@ -120,7 +120,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(-10), (Integer) result);
+		assertEquals(new Integer(-10), result);
 		
 	}
 	
@@ -139,7 +139,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(0), (Integer) result);
+		assertEquals(new Integer(0), result);
 		
 	}
 	
@@ -158,7 +158,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(-10), (Integer) result);
+		assertEquals(new Integer(-10), result);
 		
 	}
 	
@@ -177,7 +177,7 @@ public class Switch extends AbstractFunction {
 		Object result = fi.evaluate();
 		assertNotNull(result);
 		assertEquals(result.getClass(), Integer.class);
-		assertEquals(new Integer(0), (Integer) result);
+		assertEquals(new Integer(0), result);
 		
 	}
 	

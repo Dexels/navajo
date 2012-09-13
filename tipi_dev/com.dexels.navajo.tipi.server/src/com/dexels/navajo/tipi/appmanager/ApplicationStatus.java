@@ -61,7 +61,6 @@ public class ApplicationStatus {
 	public String propertyEntry(String deployment, String profile, String name) {
 		Map<String,String> depl = deploymentData.get(deployment);
 		if(depl==null) {
-			// TODO maybe check tipi.properties?
 			return null;
 		}
 		String rawValue = depl.get(name);
@@ -235,7 +234,10 @@ public class ApplicationStatus {
 	   	 File tag = new File(cvsDir,"Tag");
 	   	 if (tag.exists()) {
 		   	 fr = new BufferedReader(new FileReader(tag));
-		   	 setCvsRevision(fr.readLine().substring(1));
+		   	 String line = fr.readLine();
+		   	 if(line!=null ) {
+			   	 setCvsRevision(line.substring(1));
+		   	 }
 		   	 fr.close();
 			} else {
 				 setCvsRevision("HEAD");

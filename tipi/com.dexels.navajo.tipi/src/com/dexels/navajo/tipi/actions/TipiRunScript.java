@@ -55,7 +55,7 @@ public class TipiRunScript extends TipiAction {
 			try {
 				script = new InputStreamReader(scriptPath.openStream());
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		scr.getBindings(ScriptContext.ENGINE_SCOPE).clear();
@@ -100,7 +100,7 @@ public class TipiRunScript extends TipiAction {
 
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 			logger.debug("Eval took: "
 					+ (System.currentTimeMillis() - start));

@@ -146,7 +146,7 @@ public class ImageGenerator implements ImageConsumer
             intBuffer = new int[pixels.length];
 
         for(int i = pixels.length; --i >= 0 ; )
-            intBuffer[i] = (int)pixels[i] & 0xFF;
+            intBuffer[i] = pixels[i] & 0xFF;
 
         raster.setPixels(x, y, w, h, intBuffer);
     }

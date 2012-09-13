@@ -1,13 +1,10 @@
 package com.dexels.navajo.rhino;
 
-import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-
-import org.xml.sax.SAXException;
 
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
@@ -642,7 +639,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		getProperty().setAnyValue(value);
 	}
 
-	public Message addMessage(String name,Map<String, String> attributes) throws NavajoException, IOException, SAXException, MappingException {
+	public Message addMessage(String name,Map<String, String> attributes) throws NavajoException, MappingException {
 		Object oo = getTopmostElement(new Class[] { Message.class, Navajo.class });
 		if (Message.class.isAssignableFrom(oo.getClass())) {
 			Message parent = (Message) oo;
@@ -666,7 +663,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		return null;
 	}
 
-	public Message addArrayMessage(String name,Map<String, String> attributes) throws NavajoException, MappingException, IOException, SAXException {
+	public Message addArrayMessage(String name,Map<String, String> attributes) throws NavajoException, MappingException {
 		
 		Map<String,String> cloneAttributes = new HashMap<String,String>(attributes);
 		cloneAttributes.put(Message.MSG_TYPE, Message.MSG_TYPE_ARRAY);

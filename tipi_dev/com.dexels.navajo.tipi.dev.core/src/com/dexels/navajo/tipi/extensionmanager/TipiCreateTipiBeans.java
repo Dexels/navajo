@@ -36,7 +36,7 @@ public class TipiCreateTipiBeans extends ExtensionClassdefProcessor {
 		System.err.println("Created: "+javaDir.getAbsolutePath());
 		for (Entry<String, XMLElement> entry : allComponents.entrySet()) {
 			try {
-				XMLElement eee = ComponentMerger.getAssembledClassDef(allComponents, entry.getValue(), entry.getValue().getStringAttribute("name"));
+				XMLElement eee = ComponentMerger.getAssembledClassDef(allComponents, entry.getValue());
 //				System.err.println("Assembled classdef: \n"+eee);
 				String className = eee.getStringAttribute("class");
 				

@@ -44,7 +44,7 @@ public class TipiArrayPanel extends TipiSwingDataComponentImpl {
 	@Override
 	public void loadData(Navajo n, String method) throws TipiException,
 			TipiBreakException {
-		loadArrayData(n, method, messagePath);
+		loadArrayData(n, messagePath);
 		super.loadData(n, method);
 		doLayout();
 	}

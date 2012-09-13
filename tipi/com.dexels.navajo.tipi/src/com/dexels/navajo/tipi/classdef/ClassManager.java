@@ -125,8 +125,7 @@ public final class ClassManager extends BaseClassManager implements Serializable
 				cc = Class.forName(fullDef, true, cl);
 				return cc;
 			}
-			System.err
-					.println("FALLBACK: Loading class without Extension definition");
+			logger.info("FALLBACK: Loading class without Extension definition");
 			
 			cc = Class.forName(fullDef, true, myContext.getClassLoader());
 		} catch (ClassNotFoundException ex) {

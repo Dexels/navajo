@@ -83,10 +83,10 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
 
     @Override
     public XADataSource createXADataSource(Properties props) throws SQLException {
-    	OracleConnectionPoolDataSource base = new OracleConnectionPoolDataSource();
+//    	OracleConnectionPoolDataSource base = new OracleConnectionPoolDataSource();
     	OracleXADataSource source;
 		try {
-			source = setupXSource(base, props);
+			source = setupXSource(props);
 	        return source;
 		} catch (Exception e) {
 			throw new SQLException("Error creating XADatasource: ",e);
@@ -152,7 +152,7 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
      * {@link ConnectionPoolDataSource}s
      * @throws Exception 
      */
-    private OracleXADataSource setupXSource(DataSource base, Properties props) throws Exception {
+    private OracleXADataSource setupXSource( Properties props) throws Exception {
         if (props == null) {
             return null;
         }

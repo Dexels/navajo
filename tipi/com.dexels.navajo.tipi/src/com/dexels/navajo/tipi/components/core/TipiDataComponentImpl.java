@@ -214,7 +214,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 									+ " to tipi: "
 									+ ((TipiComponent) current).getId());
 				} catch (NavajoException ex) {
-					ex.printStackTrace();
+					logger.error("Error: ",ex);
 				}
 			} else {
 				getContext().debugLog(
@@ -252,7 +252,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 									+ " to tipi: "
 									+ ((TipiComponent) current).getId());
 				} catch (NavajoException ex) {
-					ex.printStackTrace();
+					logger.error("Error: ",ex);
 				}
 			} else {
 				getContext().debugLog(
@@ -339,7 +339,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			}
 			return performTipiEvent("onGeneratedErrors", null, true);
 		} catch (Throwable ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 			return false;
 		}
 	}
@@ -370,7 +370,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		myNavajo = null;
 	}
 
-	public void loadArrayData(final Navajo n, String method, String messagePath)
+	public void loadArrayData(final Navajo n,String messagePath)
 			throws TipiBreakException {
 		if (messagePath == null) {
 			return;
@@ -411,7 +411,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 					}
 
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		});

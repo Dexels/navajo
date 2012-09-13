@@ -107,6 +107,9 @@ public class ContextPathManager {
 		configurationAdmin = ca;
 	}
 
+	/**
+	 * @param ca the configadmin to remove 
+	 */
 	public void removeConfigAdmin(ConfigurationAdmin ca) {
 		configurationAdmin = null;
 	}

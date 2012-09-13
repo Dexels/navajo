@@ -113,26 +113,44 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 //        lightingChanged = true;
     }
 
+    /**
+	 * @param increase  
+	 */
     public void increaseXspeed(boolean increase) {
 //        increaseX = increase;
     }
 
+    /**
+	 * @param decrease  
+	 */
     public void decreaseXspeed(boolean decrease) {
 //        decreaseX = decrease;
     }
 
+    /**
+	 * @param increase  
+	 */
     public void increaseYspeed(boolean increase) {
 //        increaseY = increase;
     }
 
+    /**
+	 * @param decrease  
+	 */
     public void decreaseYspeed(boolean decrease) {
 //        decreaseY = decrease;
     }
 
+    /**
+	 * @param zoom  
+	 */
     public void zoomIn(boolean zoom) {
 //        zoomIn = zoom;
     }
 
+    /**
+	 * @param zoom  
+	 */
     public void zoomOut(boolean zoom) {
 //        zoomOut = zoom;
     }
@@ -231,10 +249,13 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
     /*
 	 * Debug function for outputting the current Frames Per Second
 	 */
+	/**
+	 * @param drawable  
+	 */
 	private void displayFPSText(GLAutoDrawable drawable) {
 		if (++frameCount == 10) {
 			long endTime = System.currentTimeMillis();
-			float fps = 10.0f / (float) (endTime - startTime) * 1000;
+			float fps = 10.0f / (endTime - startTime) * 1000;
 			frameCount = 0;
 			startTime = System.currentTimeMillis();
 			fpsText = format.format(fps);
@@ -258,6 +279,11 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
         gl.glLoadIdentity();                                     // Reset The ModalView Matrix
     }
 
+    /**
+	 * @param glDrawable  
+     * @param b 
+     * @param b1 
+	 */
     public void displayChanged(GLAutoDrawable glDrawable, boolean b, boolean b1) {
     }
     

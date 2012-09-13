@@ -49,13 +49,7 @@ public class MessageParser extends BaseTipiParser {
 			}
 		}
 		Message m = getMessageByPath(source, expression);
-		// if (m != null) {
-		// m.write(System.err);
-		// }
 		return m;
 	}
 
-	public String toString(Object o, TipiComponent source) {
-		return "Not possible";
-	}
 }

@@ -237,7 +237,7 @@ public class JnlpFileHandler {
                     boolean modified = false;
                     Element root = document.getDocumentElement();
                   
-                    if (root.hasAttribute("href") && query != null) {
+                    if (root.hasAttribute("href") ) {
                         String href = root.getAttribute("href");
                         root.setAttribute("href", href + "?" + query);
                         modified = true;

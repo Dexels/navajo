@@ -51,10 +51,10 @@ public final class Size extends FunctionInterface {
         	return new Integer( (int) ((Binary) arg).getLength());
         } 
         else if (arg instanceof Message) {
-        	return new Integer( (int) ((Message) arg).getArraySize());
+        	return new Integer( ((Message) arg).getArraySize());
         } 
         else if (arg instanceof Object[]) {
-          	return new Integer( (int) ((Object[]) arg).length);
+          	return new Integer( ((Object[]) arg).length);
           } 
           
         else if (!(arg instanceof ArrayList)) {

@@ -527,24 +527,30 @@ public final class GenericHandler extends ServiceHandler {
 	}
 
 	private CompiledScript loadOnDemand(BundleContext bundleContext, String rpcName, String filter) throws Exception {
-		BundleCreator bc = getBundleCreator();
+		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
+		BundleCreator bc = bundleContext.getService(ref);
+//		BundleCreator bc = getBundleCreator(bundleContext);
 		if(bc==null) {
 			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
 			return null;
 		}
 		CompiledScript sc = bc.getOnDemandScriptService(rpcName);
 		// wait for it..
+		bundleContext.ungetService(ref);
 		return sc;
 	}
 
-	/**
-	 * Bit of a hack, should be really DInjected
-	 * @return
-	 */
-	private BundleCreator getBundleCreator() {
-		return DispatcherFactory.getInstance().getBundleCreator();
-	}
+//	/**
+//	 * Bit of a hack, should be really DInjected
+//	 * @return
+//	 */
+//	private BundleCreator getBundleCreator(BundleContext bundleContext) {
+//		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
+//		return DispatcherFactory.getInstance().getBundleCreator();
+//	}
 
+	@SuppressWarnings("unused")
+	@Deprecated
 	private static String recompileJava(
 			Access a,
 			String sourceFileName,
@@ -575,7 +581,7 @@ public final class GenericHandler extends ServiceHandler {
 
 					com.dexels.navajo.compiler.internal.NavajoCompiler compiler = new com.dexels.navajo.compiler.internal.NavajoCompiler();
 					try {
-						compiler.compile(a, DispatcherFactory.getInstance().getNavajoConfig(), sourceFileName);
+						compiler.compile(DispatcherFactory.getInstance().getNavajoConfig(), sourceFileName);
 						compilerErrors = compiler.errors;
 						NavajoEventRegistry.getInstance().publishEvent(new NavajoCompileScriptEvent(a.rpcName));
 					}

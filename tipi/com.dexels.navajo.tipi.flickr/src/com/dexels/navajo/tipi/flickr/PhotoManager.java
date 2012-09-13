@@ -116,7 +116,6 @@ public class PhotoManager {
 //        System.exit(0);
 //    }
 
-    @SuppressWarnings("unchecked")
 	public List<Photo> getPhotos(String[] tags, int max, int index) throws FlickrException, IOException, SAXException {
     	
         SearchParameters sp = new SearchParameters();
@@ -160,7 +159,6 @@ public class PhotoManager {
     	return f.toURI().toURL().toString();
     }
     
-    @SuppressWarnings("unchecked")
 	public List<Photo>  getUrls(PhotoList pl) {
     	List<Photo> al = new ArrayList<Photo>();
     	for (Iterator<Photo> iterator = pl.iterator(); iterator.hasNext();) {

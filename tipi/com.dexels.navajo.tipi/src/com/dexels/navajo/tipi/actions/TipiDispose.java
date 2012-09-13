@@ -45,7 +45,7 @@ public class TipiDispose extends TipiAction {
 				logger.warn("ATTEMPTING TO DISPOSE NULL component. ");
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 	}
 }

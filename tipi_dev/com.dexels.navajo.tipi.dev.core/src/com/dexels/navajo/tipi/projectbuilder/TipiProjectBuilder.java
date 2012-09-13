@@ -23,7 +23,7 @@ public abstract class TipiProjectBuilder {
 		return useVersioning;
 	}
 	
-	public void downloadProjectInclude(String extensionName, URL remoteExtensionUrl, XMLElement extensionElement, File baseDir, boolean clean) throws MalformedURLException, IOException {
+	public void downloadProjectInclude(URL remoteExtensionUrl,  File baseDir, boolean clean) throws MalformedURLException, IOException {
 		URL projectInclude = new URL(remoteExtensionUrl,"projectinclude.zip");
 	   try {
 			ClientActions.downloadFile(projectInclude, "projectinclude.zip", baseDir, clean, false);

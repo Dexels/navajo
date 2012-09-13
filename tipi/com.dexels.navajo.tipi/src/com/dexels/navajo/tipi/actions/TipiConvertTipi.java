@@ -118,16 +118,16 @@ public class TipiConvertTipi extends TipiAction {
 				Result result = new StreamResult(file);
 				xformer.transform(source, result);
 			} catch (TransformerConfigurationException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			} catch (TransformerException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		} catch (SAXException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

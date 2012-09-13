@@ -11,7 +11,6 @@
 package org.akrogen.tkui.css.tipi.properties.css2.lazy.background;
 
 import java.awt.Color;
-import java.awt.Component;
 
 import javax.swing.JComponent;
 

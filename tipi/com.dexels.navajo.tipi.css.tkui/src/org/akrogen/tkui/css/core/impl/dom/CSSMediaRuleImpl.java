@@ -34,6 +34,10 @@ import org.w3c.dom.stylesheets.MediaList;
  */
 public class CSSMediaRuleImpl implements CSSMediaRule, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8987507717475328038L;
 	private CSSStyleSheet parentStyleSheet = null;
 	private CSSRule parentRule = null;
 	private MediaList media = null;

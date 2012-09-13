@@ -71,7 +71,7 @@ public abstract class ManagedResourceFactory<T> implements ManagedServiceFactory
 //		logger.info("Configuration received, pid: "+pid);
 		try {
 			Object source = instantiate(bundleContext, pid,settings);
-			ServiceRegistration<T> reg =  (ServiceRegistration<T>) bundleContext.registerService(serviceClass.getName(),(T)source, settings);
+			ServiceRegistration<T> reg =  (ServiceRegistration<T>) bundleContext.registerService(serviceClass.getName(),source, settings);
 			registryMap.put(pid, reg);
 //			contextMap.put(pid, (DataSource) source);
 		} catch (Exception e) {

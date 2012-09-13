@@ -59,7 +59,7 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 			return service;
 
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 	}
@@ -98,7 +98,7 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 			}
 
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			return null;
 		}
 
@@ -134,7 +134,7 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 			return myBundleContext.getService(xe);
 			
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 		return null;
@@ -167,7 +167,7 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 			ttp = myBundleContext.getService(xe);
 			return ttp;
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 	}

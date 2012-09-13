@@ -48,6 +48,10 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 		return DispatcherFactory.getInstance().handle(n);
 	}
 
+	public Navajo callWithoutAuth(Navajo n) throws FatalException {
+		return DispatcherFactory.getInstance().handle(n,true);
+	}
+	
 	@Override
 	public Navajo generateAbortMessage(String reason) throws FatalException {
 		Navajo outDoc = DispatcherFactory.getInstance().generateErrorMessage(

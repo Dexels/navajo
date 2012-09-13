@@ -59,7 +59,7 @@ public class TipiScanner {
 		logger.info("Size: " + results.size() + " conflicts: "
 				+ conflictcount);
 		String outputFile = "lang/tipi_lang";
-		dumpCurrent(base,outputFile, "nl", "");
+		dumpCurrent(base,outputFile, "nl");
 	}
 
 	@SuppressWarnings("unused")
@@ -87,11 +87,10 @@ public class TipiScanner {
 			}
 
 		 
-		dumpCurrent(base,"lang/tipi_preload", "nl", ".properties");
+		dumpCurrent(base,"lang/tipi_preload", "nl");
 	}
 
-	private static void dumpCurrent(File base, String filename, String locale,
-			String extension) throws IOException {
+	private static void dumpCurrent(File base, String filename, String locale) throws IOException {
 		File output = new File(base,filename + "_" + locale + ".properties");
 		FileWriter fw = new FileWriter(output);
 		Set<String> s = results.keySet();
@@ -199,7 +198,7 @@ public class TipiScanner {
 		try {
 			d = XMLDocumentUtils.createDocument(fr, false);
 		} catch (RuntimeException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			return;
 		}
 		NodeList nl = d.getChildNodes();

@@ -30,7 +30,6 @@ public class CleanAction implements IObjectActionDelegate {
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
-	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		if (selection instanceof IStructuredSelection) {
 			ClientActions.flushCache();
@@ -63,7 +62,7 @@ public class CleanAction implements IObjectActionDelegate {
 		}
 	}
 
-	private void runCleanScript(IProject project) throws CoreException {
+	private void runCleanScript(IProject project)  {
 		IFile buildDeploy = project.getFile("settings/build.xml");
 		runClean(project,buildDeploy,null,"clean");
 	}

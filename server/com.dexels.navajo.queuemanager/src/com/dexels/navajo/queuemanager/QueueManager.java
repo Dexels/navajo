@@ -29,7 +29,7 @@ public class QueueManager {
 		return instance;
 	}
 	
-	public static void clearInstance() {
+	public synchronized static void clearInstance() {
 		if(instance!=null) {
 			instance.cache.clear();
 			instance = null;
@@ -56,11 +56,11 @@ public class QueueManager {
 		cache.remove(service);
 	}
 
-	public String resolve(InputContext in, String script, String engineName) throws NavajoSchedulingException  {
-		long begin = System.currentTimeMillis();
+	public String resolve(InputContext in, String script) throws NavajoSchedulingException  {
+//		long begin = System.currentTimeMillis();
 		BaseQueueResponse pr = cache.get(in.getServiceName());
 		if(pr==null || !pr.isValid()) {
-			pr = callResolutionScript(in, script, begin,engineName);
+			pr = callResolutionScript(in, script);
 			cache.put(in.getServiceName(), pr);
 		} else {
 			//System.err.println("Returning cached response");			
@@ -73,7 +73,7 @@ public class QueueManager {
 	}
 
 	private BaseQueueResponse callResolutionScript(InputContext in,
-			String script, long begin, String engineName) throws NavajoSchedulingException {
+			String script) throws NavajoSchedulingException {
 		BaseQueueResponse pc = new BaseQueueResponse();
         ScriptEngine engine = NavajoQueueScopeManager.getInstance().getScope();
 //		long init = System.currentTimeMillis();

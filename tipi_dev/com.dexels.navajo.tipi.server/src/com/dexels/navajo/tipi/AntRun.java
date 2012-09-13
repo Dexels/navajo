@@ -15,8 +15,6 @@ import org.apache.tools.ant.ProjectHelper;
 public class AntRun {
 	
  static String callAnt(File buildFile, File baseDir, Map<String,String> userProperties, String target) throws IOException {
-		// Append tipiAppstore to appease the condition
-//		<fail unless="tipiAppstore" message="This script will only run from the app store."/>
 		userProperties.put("tipiAppstore", "true");
 		
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -28,11 +26,9 @@ public class AntRun {
 		p.setBaseDir(baseDir);
 		p.setUserProperty("ant.file", buildFile.getAbsolutePath());		
 		p.setUserProperty("baseDir", baseDir.getAbsolutePath());		
-		if(userProperties!=null) {
-			for (Entry<String,String> w : userProperties.entrySet()) {
-				System.err.println("Setting: key: "+w.getKey()+" value: "+w.getValue());
-				p.setUserProperty(w.getKey(), w.getValue());		
-			}
+		for (Entry<String,String> w : userProperties.entrySet()) {
+			System.err.println("Setting: key: "+w.getKey()+" value: "+w.getValue());
+			p.setUserProperty(w.getKey(), w.getValue());		
 		}
 		DefaultLogger consoleLogger = new DefaultLogger();
 		consoleLogger.setErrorPrintStream(ps);

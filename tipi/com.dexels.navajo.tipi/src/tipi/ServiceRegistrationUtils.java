@@ -45,7 +45,7 @@ public class ServiceRegistrationUtils {
 	
 	@SuppressWarnings("rawtypes")
 	static ServiceRegistration registerCoreExtension(TipiCoreExtension extension,
-			BundleContext context) throws FileNotFoundException {
+			BundleContext context) {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
 		props.put("extensionId", extension.getId());
 		props.put("type", "tipiExtension");
@@ -56,7 +56,7 @@ public class ServiceRegistrationUtils {
 	
 	@SuppressWarnings("rawtypes")
 	public static ServiceRegistration registerMainExtension(TipiMainExtension extension,
-			BundleContext context) throws FileNotFoundException {
+			BundleContext context)  {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
 		props.put("extensionId", extension.getId());
 		props.put("type", "tipiExtension");
@@ -88,7 +88,7 @@ public class ServiceRegistrationUtils {
 		}
 	}
 
-	public static void registerTipiElement(XMLElement element, TipiExtension extension, BundleContext context) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public static void registerTipiElement(XMLElement element, TipiExtension extension, BundleContext context) throws ClassNotFoundException {
 		String type = element.getName();
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
 		props.put("extensionId", extension.getId());
@@ -129,7 +129,6 @@ public class ServiceRegistrationUtils {
 	
 
 
-	@SuppressWarnings("unchecked")
 	public static void parseParser(BundleContext bundleContext, Dictionary<String, Object> props, XMLElement xe, final TipiExtension extension) {
 //		String name = xe.getStringAttribute("name");
 		final String parserClass = xe.getStringAttribute("parser");
@@ -152,7 +151,7 @@ public class ServiceRegistrationUtils {
 				} catch (IllegalAccessException ex1) {
 					logger.error("Error instantiating class for parser: "
 							+ parserClass,ex1);
-					ex1.printStackTrace();
+					logger.error("Error: ",ex1);
 					return null;
 				} catch (InstantiationException ex1) {
 					logger.error("Error instantiating class for parser: "
@@ -179,14 +178,13 @@ public class ServiceRegistrationUtils {
 		};
 		bundleContext.registerService(TipiTypeParser.class.getName(), ttp, props);
 		} catch (ClassNotFoundException ex) {
-			System.err
-					.println("Error loading class for parser: " + parserClass);
+			logger.warn("Error loading class for parser: " + parserClass,ex);
 			return;
 		}
 	}
 	
 	//	@SuppressWarnings("unchecked")
-	private static void registerTipiAction(XMLElement element,	Dictionary<String, Object> props,TipiExtension extension, BundleContext context) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+	private static void registerTipiAction(XMLElement element,	Dictionary<String, Object> props,TipiExtension extension, BundleContext context) throws ClassNotFoundException {
 		props.put("extensionId", extension.getId());
 		props.put("type", "tipiAction");
 		String className = element.getStringAttribute("class");

@@ -71,8 +71,8 @@ public class SumProperties
       String sumType = "int";
       double sum = 0;
       for (int i = 0; i < arrayMsg.size(); i++) {
-        Message m = (Message) arrayMsg.get(i);
-        Property p = (Property) m.getProperty(propertyName);
+        Message m = arrayMsg.get(i);
+        Property p = m.getProperty(propertyName);
         boolean evaluate = (filter != null ?
                             Condition.evaluate(filter, doc, null, m) : true);
         if (evaluate) {
@@ -81,14 +81,13 @@ public class SumProperties
             if (o == null) {
               continue;
             }
-            if ( (o != null) &&
+            if ( 
                 ! (o instanceof Integer || o instanceof Double ||
                    o instanceof Float || o instanceof Money ||
                    o instanceof Percentage || o instanceof Boolean || o instanceof String)) {
               throw new TMLExpressionException(this,
                   "Only numbers are supported a sum. Not: " +
-                                               (o == null ? "null" :
-                                                o.getClass().toString())+" value: "+o);
+                                               (o.getClass().toString())+" value: "+o);
             }
             if (o instanceof String) {
             	if ("".equals(o)) {
@@ -97,8 +96,7 @@ public class SumProperties
 					System.err.println("Only numbers are supported a sum. Not strings. Value:  "+o);
 		              throw new TMLExpressionException(this,
 		                      "Only numbers are supported a sum. Not strings. Value:  "+o +
-		                                                   (o == null ? "null" :
-		                                                    o.getClass().toString()));
+		                                                   (o.getClass().toString()));
 
 				}
               }

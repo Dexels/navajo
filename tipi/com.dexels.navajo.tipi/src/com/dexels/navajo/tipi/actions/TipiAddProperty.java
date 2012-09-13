@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -30,7 +33,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiAddProperty extends TipiAction {
 
 	private static final long serialVersionUID = 6911703287938533990L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiAddProperty.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -83,7 +89,7 @@ public class TipiAddProperty extends TipiAction {
 			try {
 				n.addMessage(parentMessage);
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 
@@ -106,7 +112,7 @@ public class TipiAddProperty extends TipiAction {
 			q.setAnyValue(valueOperand.value);
 			parentMessage.addProperty(q);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TipiException("Error creating property: " + path);
 		}
 	}

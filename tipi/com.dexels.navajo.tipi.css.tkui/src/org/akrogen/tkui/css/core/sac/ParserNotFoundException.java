@@ -19,6 +19,11 @@ package org.akrogen.tkui.css.core.sac;
  */
 public class ParserNotFoundException extends RuntimeException {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 894810979589423788L;
+
 	public ParserNotFoundException(Throwable throwable) {
 		super(throwable);
 	}

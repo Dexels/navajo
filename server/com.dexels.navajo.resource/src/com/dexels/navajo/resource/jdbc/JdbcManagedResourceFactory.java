@@ -74,7 +74,7 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 			throws ConfigurationException {
 //		logger.info("Configuration received, pid: "+pid);
 		try {
-			Object source = instantiate(bundleContext, pid,settings);
+			Object source = instantiate(settings);
 			ServiceRegistration<DataSource> reg =  bundleContext.registerService(DataSource.class,(DataSource)source, settings);
 			registryMap.put(pid, reg);
 //			contextMap.put(pid, (DataSource) source);
@@ -84,7 +84,7 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 	}
 	
 	@SuppressWarnings({ "rawtypes" })
-	public Object instantiate(BundleContext bc, String pid, Dictionary settings) throws Exception {
+	private Object instantiate(Dictionary settings) throws Exception {
 		Properties prop = new Properties(); 
 		Enumeration en = settings.keys();
 		while (en.hasMoreElements()) {
