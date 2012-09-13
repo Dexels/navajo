@@ -545,6 +545,8 @@ public final class GenericHandler extends ServiceHandler {
 		return DispatcherFactory.getInstance().getBundleCreator();
 	}
 
+	@SuppressWarnings("unused")
+	@Deprecated
 	private static String recompileJava(
 			Access a,
 			String sourceFileName,
@@ -575,7 +577,7 @@ public final class GenericHandler extends ServiceHandler {
 
 					com.dexels.navajo.compiler.internal.NavajoCompiler compiler = new com.dexels.navajo.compiler.internal.NavajoCompiler();
 					try {
-						compiler.compile(a, DispatcherFactory.getInstance().getNavajoConfig(), sourceFileName);
+						compiler.compile(DispatcherFactory.getInstance().getNavajoConfig(), sourceFileName);
 						compilerErrors = compiler.errors;
 						NavajoEventRegistry.getInstance().publishEvent(new NavajoCompileScriptEvent(a.rpcName));
 					}

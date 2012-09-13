@@ -28,7 +28,6 @@ import java.util.TreeMap;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1683,17 +1682,19 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		    } catch (Exception e) {
 		      logger.error("Error: ", e);
 		    }
-		 testDoc.write(System.err);
-		  Message m = testDoc.getMessage("testmessage/testmessage_sub1");
-		  
-		    //Assert.assertNotNull(m);
-		    testDoc.removeMessage(m);
-		    testDoc.write(System.err);
-		    Message m2 = testDoc.getMessage("testmessage/testmessage_sub1");
-		    //Assert.assertNull(m2);
-		    System.err.println("m2 = " + m2);
-		    Message m3 = testDoc.getMessage("testmessage");
-		    //Assert.assertNotNull(m3);
+			if(testDoc!=null) {
+				 testDoc.write(System.err);
+				  Message m = testDoc.getMessage("testmessage/testmessage_sub1");
+				  
+				    //Assert.assertNotNull(m);
+				    testDoc.removeMessage(m);
+				    testDoc.write(System.err);
+				    Message m2 = testDoc.getMessage("testmessage/testmessage_sub1");
+				    //Assert.assertNull(m2);
+				    System.err.println("m2 = " + m2);
+				    testDoc.getMessage("testmessage");
+				    //Assert.assertNotNull(m3);
+			}
 		  
 	}
 }

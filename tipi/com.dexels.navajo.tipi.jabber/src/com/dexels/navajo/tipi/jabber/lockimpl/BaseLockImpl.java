@@ -25,7 +25,7 @@ public abstract  class BaseLockImpl implements Lock {
 		myPropertyListeners.remove(p);
 	}
 
-	protected void fireLockingChanges(boolean locked, boolean oldLocked, String resource) {
+	protected void fireLockingChanges(boolean locked, boolean oldLocked) {
 		for (PropertyChangeListener p : myPropertyListeners) {
 			p.propertyChange(new PropertyChangeEvent(this,"locked",oldLocked,locked));
 		}

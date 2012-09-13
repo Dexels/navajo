@@ -34,7 +34,7 @@ public class JcrURLHandlerFactory implements URLStreamHandlerFactory {
 	}
 	
 	public static URL createURL(String protocol,String host, int port, String file) throws MalformedURLException {
-		URL uu = new URL(protocol,host,0,file,new JcrStreamHandler(session));
+		URL uu = new URL(protocol,host,port,file,new JcrStreamHandler(session));
 		return uu;
 	}
 

@@ -8,6 +8,9 @@ import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import winterwell.jtwitter.OAuthSignpostClient;
 import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.Twitter.Message;
@@ -19,12 +22,16 @@ import com.dexels.navajo.server.UserException;
 
 public class TwitterAdapter {
 	private Twitter twit = null;
-	private String username = null;//, status;
+//	private String username = null;//, status;
 	private String currentUser;
 	private String token1;
 	private String token2;
 //	private Binary signPost;
 	
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TwitterAdapter.class);
 	private OAuthSignpostClient mySignPost = null; 
 		
 	private final static String API_KEY = "UVyOkSE0F1i2YcqaPc0jYg";
@@ -39,7 +46,7 @@ public class TwitterAdapter {
 	@SuppressWarnings("deprecation")
 	public TwitterStatus getStatus(){
 		if (twit == null) {
-			twit = new Twitter(username, (String)null);
+			twit = new Twitter(null, (String)null);
 		}
 		Status s;
 		if(currentUser == null){
@@ -50,8 +57,11 @@ public class TwitterAdapter {
 		return new TwitterStatus(s);
 	}
 	
-	public void setUsername(String s) {
-		this.username = s;
+	/**
+	 * @param username  
+	 */
+	public void setUsername(String username) {
+		logger.warn("Ignoring username");
 	}
 	
 	public void setToken1(String t) {
@@ -63,7 +73,7 @@ public class TwitterAdapter {
 		OAuthSignpostClient oauthClient = new OAuthSignpostClient(API_KEY,  API_SECRET, token1, token2);
 		System.err.println("Login in with token1: " + token1 + ", token2: " + token2);
 		
-		twit = new Twitter(username, oauthClient);
+		twit = new Twitter(null, oauthClient);
 	}
 
 	public void setStatus(String status) {
