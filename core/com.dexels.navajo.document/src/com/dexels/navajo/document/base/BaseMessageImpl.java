@@ -101,6 +101,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	public final void setType(String type) {
 		myType = type;
+		if ( Message.MSG_TYPE_DEFINITION.equals(type) && getArrayParentMessage() != null ) {
+			getArrayParentMessage().setDefinitionMessage(this);
+		}
 	}
 
 	public final String getOrderBy() {
@@ -213,12 +216,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		/**
 		 * If message is array type, insert new message as "element".
 		 */
-		messageMap.put(name, m);
+		
 		if (getType().equals(MSG_TYPE_ARRAY)) {
 			if (!m.getType().equals(MSG_TYPE_DEFINITION)) {
 				m.setIndex(messageList.size());
 			}
 			((BaseMessageImpl) m).setNameInitially(getName());
+		} else {
+			messageMap.put(name, m);
 		}
 		messageList.add(m);
 
@@ -238,7 +243,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 
 		messageList.add(index, m);
-		messageMap.put(m.getName(), m);
+		//messageMap.put(m.getName(), m);
 		m.setIndex(index);
 		((BaseMessageImpl) m).setNameInitially(getName());
 		m.setParent(this);
@@ -277,15 +282,21 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			propertyList.add(q);
 			propertyMap.put(p.getName(), p);
 		}
-		initPropertyFromDefinition(q);
+		// #TODO: MAYBE THIS IS NOT CORRRECT FOR FINANCIAL FORMS IN SLC...
+		// initPropertyFromDefinition(q);
 	}
 
+	/**
+	 * LEAVE THIS METHOD (SEE COMMENT ABOVE)
+	 * 
+	 * @param q
+	 */
 	private void initPropertyFromDefinition(Property q) {
 		// Set default values from definition message.
 		BaseMessageImpl parentArrayMessage = (BaseMessageImpl) getArrayParentMessage();
 		if (parentArrayMessage != null) {
 
-			Property definitionProperty = parentArrayMessage.getPropertyDefinition(myName);
+			Property definitionProperty = parentArrayMessage.getPropertyDefinition(q.getName());
 
 			if (definitionProperty != null) {
 				if (q.getDescription() == null || "".equals(q.getDescription())) {
@@ -959,8 +970,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			}
 
 			Property pp = propertyMap.get(path);
-			if (pp == null) {
-				// check for definition messages
+			if ( pp == null && !Message.MSG_TYPE_DEFINITION.equals(getType())) {
+				// check for definition messages (except if I'm a definition message myself)
 				Message arrayP = getArrayParentMessage();
 				if (arrayP != null) {
 					Message def = arrayP.getDefinitionMessage();
@@ -1217,8 +1228,12 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	}
 
 	public final void setDefinitionMessage(Message m) {
-		m.setType(MSG_TYPE_DEFINITION);
 		this.definitionMessage = (BaseMessageImpl) m;
+		// Remove from child list, to be sure.
+		if ( messageList != null ) {
+			messageList.remove(m);
+		}
+		m.setParent(null);
 //		if (m == null) {
 //			return;
 //		}

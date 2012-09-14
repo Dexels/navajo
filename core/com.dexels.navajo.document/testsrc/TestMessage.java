@@ -438,6 +438,31 @@ public class TestMessage {
 	  assertEquals(sw.toString().indexOf("MyIgnoredMessage"), -1);
   }
   
+  @Test 
+  public void testSetType() throws Exception {
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  testDoc.addMessage(m);
+	  Message a = NavajoFactory.getInstance().createMessage(testDoc, "MyArrayMessage", "array");
+	  m.addMessage(a);
+	  for (int i = 0; i < 2; i++) {
+		  Message a1 = NavajoFactory.getInstance().createMessage(testDoc, "MyArrayMessage");
+		  a.addMessage(a1);
+		  String type = ( i == 1 ? "" : "integer" );
+		  Property p = NavajoFactory.getInstance().createProperty(testDoc, "MyProp", type, ""+i, 0, "", "in");
+		  a1.addProperty(p);
+		  Property p2 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp2", type, ""+i, 0, "", "in");
+		  a1.addProperty(p2);
+		  // Set type of first child to definition.
+		  if ( i == 0 ) {
+			  a1.setType(Message.MSG_TYPE_DEFINITION);
+		  }
+	  }
+	  Assert.assertEquals(1, a.getArraySize());
+	  Assert.assertNotNull(a.getDefinitionMessage());
+	  Assert.assertEquals("integer", a.getAllMessages().get(0).getProperty("MyProp").getType());
+	  testDoc.write(System.err);
+  }
+  
   @Test
   public void testAddIgnoreArrayMessageElements() throws Exception {
 	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
