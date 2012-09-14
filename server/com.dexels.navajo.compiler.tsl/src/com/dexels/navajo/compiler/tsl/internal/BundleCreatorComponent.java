@@ -354,7 +354,8 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	@Override
 	public Date getBundleInstallationDate(String scriptPath) {
-		final String bundleURI = SCRIPTPROTOCOL+scriptPath;
+		String scrpt = scriptPath.replaceAll("/", ".");
+		final String bundleURI = SCRIPTPROTOCOL+scrpt;
 		Bundle b = this.bundleContext.getBundle(bundleURI);
 		if(b==null) {
 			logger.warn("Can not determine age of bundle: "+bundleURI+" as it can not be found.");
