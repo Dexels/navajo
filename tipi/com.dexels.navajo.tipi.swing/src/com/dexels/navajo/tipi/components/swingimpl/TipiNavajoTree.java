@@ -11,6 +11,9 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -22,10 +25,10 @@ import com.dexels.navajo.tipi.components.swingimpl.tree.TipiNavajoTreeModel;
 
 public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3882394810767197190L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiNavajoTree.class);
 	private final Map<String, Boolean> expansionMap = new HashMap<String, Boolean>();
 	private TipiNavajoTreeModel navajoTreeModel;
 	private int lastSelectedRow = -1;
@@ -43,7 +46,7 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 						if (last >= 0) {
 							lastSelectedRow = last;
 						}
-						System.err.println("LastROw: " + lastSelectedRow);
+						logger.debug("LastROw: " + lastSelectedRow);
 
 						if (newLeadSelectionPath == null) {
 							return;
@@ -54,17 +57,17 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 						if (m != null) {
 							String selectedPath = m.getFullMessageName();
 							Map<String, Object> map = new HashMap<String, Object>();
-							// System.err.println("Selected: "+selectedPath);
+							// logger.debug("Selected: "+selectedPath);
 							map.put("selectedPath", selectedPath);
 							map.put("selectedMessage", m);
 							setComponentValue("selectedPath", selectedPath);
-							System.err.println("Selected: " + selectedPath);
+							logger.debug("Selected: " + selectedPath);
 							try {
 								performTipiEvent("onComponentSelected", map,
 										false);
 
 							} catch (TipiException e) {
-								e.printStackTrace();
+								logger.error("Error detected",e);
 							}
 						}
 					}
@@ -78,9 +81,9 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 								.getLastPathComponent();
 						expansionMap.put(mm.getMessage().getFullMessageName(),
 								false);
-						System.err.println("AAP:"
+						logger.debug("AAP:"
 								+ mm.getMessage().getFullMessageName());
-						System.err.println("Exp: " + expansionMap);
+						logger.debug("Exp: " + expansionMap);
 					}
 
 					public void treeExpanded(TreeExpansionEvent te) {
@@ -88,9 +91,9 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 								.getLastPathComponent();
 						expansionMap.put(mm.getMessage().getFullMessageName(),
 								true);
-						System.err.println("NOOT:"
+						logger.debug("NOOT:"
 								+ mm.getMessage().getFullMessageName());
-						System.err.println("Exp: " + expansionMap);
+						logger.debug("Exp: " + expansionMap);
 					}
 				});
 		return tipiSwingNavajoTree;
@@ -121,16 +124,16 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 						updateExpansion((MessageTreeNode) tnn);
 					}
 					if (lastSelectedRow >= 0) {
-						System.err.println("Row: " + lastSelectedRow);
+						logger.debug("Row: " + lastSelectedRow);
 						TreePath ttt = ((TipiSwingNavajoTree) getContainer())
 								.getPathForRow(lastSelectedRow);
-						System.err.println("SelectedPath: " + ttt);
+						logger.debug("SelectedPath: " + ttt);
 						((TipiSwingNavajoTree) getContainer())
 								.setSelectionPath(ttt);
 					}
 				} catch (NavajoException e) {
 					// throw new TipiException("Error building tree. ", e);
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 
 			}
@@ -160,8 +163,8 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 
 	@SuppressWarnings("unchecked")
 	private void dump(TreeNode tn) {
-		// System.err.println("My node: "+tn.toString());
-		// System.err.println("#of children: "+tn.getChildCount());
+		// logger.debug("My node: "+tn.toString());
+		// logger.debug("#of children: "+tn.getChildCount());
 		Enumeration<TreeNode> children = tn.children();
 		while (children.hasMoreElements()) {
 			TreeNode element = children.nextElement();

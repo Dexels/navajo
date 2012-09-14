@@ -6,12 +6,15 @@ import java.awt.event.ComponentEvent;
 
 import javax.swing.JPanel;
 
-public class TipiSwingOffsetPanel extends JPanel {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-	/**
-	 * 
-	 */
+public class TipiSwingOffsetPanel extends JPanel {
 	private static final long serialVersionUID = 6578024799595962293L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingOffsetPanel.class);
+	
 	private int x;
 	private int y;
 	private JPanel myClient = new JPanel();
@@ -47,8 +50,8 @@ public class TipiSwingOffsetPanel extends JPanel {
 		add(myClient);
 		addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
-				System.err.println("Bounds: " + getBounds());
-				System.err.println("clBounds: " + myClient.getBounds());
+				logger.debug("Bounds: " + getBounds());
+				logger.debug("clBounds: " + myClient.getBounds());
 				layoutOffsetPanel();
 			}
 

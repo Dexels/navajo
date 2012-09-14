@@ -20,6 +20,9 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
@@ -29,10 +32,10 @@ import com.dexels.navajo.tipi.swingimpl.dnd.TipiDndManager;
 
 public class TipiSwingButton extends JButton implements TipiDndCapable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5611343353338141519L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingButton.class);
 
 	public static String STRINGMNEMONIC_CHANGED_PROPERTY = "string_mnemonic";
 
@@ -50,9 +53,9 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 				try {
 					component.performTipiEvent("onMouseEntered", null, false);
 				} catch (TipiBreakException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -61,9 +64,9 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 				try {
 					component.performTipiEvent("onMouseExited", null, false);
 				} catch (TipiBreakException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 		});
@@ -109,7 +112,7 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 	}
 
 	public void createVerticalImage(String caption, boolean clockwise) {
-		System.err.println("Creating vertical image");
+		logger.debug("Creating vertical image");
 		Font f = getFont();
 		FontMetrics fm = getFontMetrics(f);
 		int captionHeight = fm.getHeight();
@@ -149,7 +152,7 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 	//
 	@Override
 	public void setCursor(Cursor cursor) {
-		System.err.println("Setting cursor: " + cursor.getName());
+		logger.debug("Setting cursor: " + cursor.getName());
 		Thread.dumpStack();
 		super.setCursor(cursor);
 	}
@@ -176,7 +179,7 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 				ImageIcon ii = new ImageIcon(i);
 				return ii;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		return null;

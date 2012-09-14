@@ -6,12 +6,18 @@ import java.util.Vector;
 
 import javax.swing.tree.TreeNode;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 
 public class NavajoTreeNode implements TreeNode {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoTreeNode.class);
 	private final Navajo myNavajo;
 	private Vector<TreeNode> childList;
 
@@ -21,7 +27,7 @@ public class NavajoTreeNode implements TreeNode {
 		for (Iterator<Message> iter = myNavajo.getAllMessages().iterator(); iter
 				.hasNext();) {
 			Message element = iter.next();
-			System.err.println("ELEMENT: " + element.getName());
+			logger.debug("ELEMENT: " + element.getName());
 			childList.add(new MessageTreeNode(element, this));
 		}
 	}

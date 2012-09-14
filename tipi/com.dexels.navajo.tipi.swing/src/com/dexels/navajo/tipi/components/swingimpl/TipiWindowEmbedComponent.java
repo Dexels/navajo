@@ -14,6 +14,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import tipiswing.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.tipi.TipiEmbedComponent;
@@ -23,10 +26,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.EmbeddedTipiFrame;
 
 @Deprecated
 public class TipiWindowEmbedComponent extends TipiEmbedComponent {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -7354561201460963130L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiWindowEmbedComponent.class);
 	private JInternalFrame panel = null;
 
 	public Object createContainer() {
@@ -73,16 +77,16 @@ public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 				// stc.getContext().addNavajoListener(new TipiNavajoListener(){
 				//
 				// public void navajoReceived(Navajo n, String service) {
-				// System.err.println("Nabacho: "+service);
+				// logger.debug("Nabacho: "+service);
 				// try {
 				// myContext.injectNavajo(service, n);
 				// Navajo navajoList = myContext.createNavajoListNavajo();
 				// myContext.injectNavajo("NavajoListNavajo", navajoList);
 				//
 				// } catch (TipiBreakException e) {
-				// e.printStackTrace();
+				// logger.error("Error detected",e);
 				// } catch (NavajoException e) {
-				// e.printStackTrace();
+				// logger.error("Error detected",e);
 				// }
 				//
 				// }
@@ -112,9 +116,9 @@ public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 			try {
 				SwingUtilities.invokeAndWait(runnable);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 	}

@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
@@ -29,20 +32,13 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 		PropertyComponent, PropertyChangeListener, PropertyEventListener {
 	
 	private static final long serialVersionUID = 8034864905090272048L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiProperty.class);
+	
 	private Property myProperty = null;
 	private Object myPropertyValue = null;
 	private List<TipiEventListener> myListeners = new ArrayList<TipiEventListener>();
-	// private boolean myVisibleState = true;
-	// private Boolean myEnableState = null;
-	// private String selectionType = "default";
-	// private String myCapitalization = "off";
-	// private String vAlign = null;
-	// private String hAlign = null;
-	// private boolean isLoading = false;
-	// private String currentType = "";
-	// private boolean showDatePicker = false;
-	// private boolean verticalScrolls = true;
-	// private boolean horizontalScrolls = false;
 
 	TipiSwingPropertyComponent p = null;
 
@@ -74,13 +70,13 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 					try {
 						performTipiEvent("onEnter", m, false);
 					} catch (TipiException e1) {
-						e1.printStackTrace();
+						logger.error("Error detected",e1);
 					}
 				}
 				try {
 					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -90,7 +86,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 				try {
 					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -100,7 +96,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 				try {
 					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -251,22 +247,22 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 			Object oldValue, boolean internal) {
 		if ("onValueChanged".equals(eventType)) {
 			// try {
-			// System.err.println("Onvalue Changed: "+oldValue+" new: "+p.getTypedValue()+" path: "+p.getFullPropertyName()+" ");
+			// logger.debug("Onvalue Changed: "+oldValue+" new: "+p.getTypedValue()+" path: "+p.getFullPropertyName()+" ");
 			// if(oldValue!=null) {
-			// System.err.println("OLD CLASS: "+p.getTypedValue().getClass());
+			// logger.debug("OLD CLASS: "+p.getTypedValue().getClass());
 			// }
 			// if(p.getTypedValue()!=null) {
-			// System.err.println("NEW CLASS: "+p.getTypedValue().getClass());
+			// logger.debug("NEW CLASS: "+p.getTypedValue().getClass());
 			// }
 			// } catch (NavajoException e) {
-			// e.printStackTrace();
+			// logger.error("Error detected",e);
 			// }
 
 			// Thread.dumpStack();
 
 			Object typedValue = p.getTypedValue();
 			if (typedValue != null && typedValue.equals(oldValue)) {
-				System.err.println("No real change. Beware:");
+				logger.debug("No real change. Beware:");
 				Thread.dumpStack();
 			}
 			try {
@@ -285,7 +281,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 				}
 				// performTipiEvent(eventType, m, false);
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error("Error detected",ex);
 			}
 		} else {
 			try {
@@ -296,12 +292,12 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 				m.put("propertyLength", new Integer(p.getLength()));
 				performTipiEvent(eventType, m, false);
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error("Error detected",ex);
 			}
 
 		}
 		if (p == null) {
-			System.err.println("Trying to fire event from null property!");
+			logger.debug("Trying to fire event from null property!");
 			return;
 		}
 	}
@@ -330,7 +326,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 					myProperty.setSelected(s);
 					setProperty(myProperty);
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 		}
@@ -342,7 +338,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 					myProperty.setSelected(selectionValue);
 					setProperty(myProperty);
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 		}
@@ -360,10 +356,10 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 				if (e.getPropertyName().equals("value")
 						|| e.getPropertyName().equals("selection")) {
 					// if(e.getPropertyName().equals("selection")) {
-					// System.err.println("Change: "+e.getPropertyName());
+					// logger.debug("Change: "+e.getPropertyName());
 					// }
-					// System.err.println("OLD: "+e.getOldValue());
-					// System.err.println("NEW: "+e.getNewValue());
+					// logger.debug("OLD: "+e.getOldValue());
+					// logger.debug("NEW: "+e.getNewValue());
 					// Thread.dumpStack();
 					((GenericPropertyComponent) getContainer())
 							.updatePropertyValue(e);

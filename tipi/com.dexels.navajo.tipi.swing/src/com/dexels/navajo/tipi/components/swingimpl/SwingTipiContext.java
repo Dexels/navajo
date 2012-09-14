@@ -117,19 +117,19 @@ public class SwingTipiContext extends TipiContext {
 		try {
 
 			if (WebStartProxy.hasJnlpContext()) {
-				// System.err.println("JNLP DETECTED.");
+				// logger.debug("JNLP DETECTED.");
 				setCookieManager(new JnlpCookieManager());
 				try {
 					getCookieManager().loadCookies();
 				} catch (FileNotFoundException e) {
-					// System.err.println("No cookies (yet). No prob.");
+					// logger.debug("No cookies (yet). No prob.");
 				}
 			} else {
 				createTmpCookieManager();
 			}
 		} catch (Throwable e) {
-			// System.err.println("No jnlp found");
-			// e.printStackTrace();
+			// logger.debug("No jnlp found");
+			// logger.error("Error detected",e);
 			createTmpCookieManager();
 		}
 		// hasJnlpContext(
@@ -156,10 +156,9 @@ public class SwingTipiContext extends TipiContext {
 		try {
 			cm.loadCookies();
 		} catch (IOException e) {
-			System.err.println("No cookies found. Continuing");
+			logger.debug("No cookies found. Continuing");
 		} catch (SecurityException e) {
-			System.err
-					.println("No permission for temp cookies. Cookies disabled, use JNLP Cookies!");
+			logger.warn("No permission for temp cookies. Cookies disabled, use JNLP Cookies!");
 		}
 	}
 
@@ -197,7 +196,7 @@ public class SwingTipiContext extends TipiContext {
 		// if (dialogShowing) {
 		// b = false;
 		// }
-		// System.err.println("SETWAITING: "+b+" thread: "+Thread.currentThread().getName());
+		// logger.debug("SETWAITING: "+b+" thread: "+Thread.currentThread().getName());
 		// Thread.dumpStack();
 		if (getAppletRoot() != null) {
 
@@ -226,7 +225,7 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	public void setSplashInfo(final String info) {
-		// System.err.println("Splash: "+info);
+		// logger.debug("Splash: "+info);
 		logger.info("Splash: "+info);
 		if (getAppletRoot() != null) {
 			getAppletRoot().showStatus(info);
@@ -288,7 +287,7 @@ public class SwingTipiContext extends TipiContext {
 
 	public final void updateWaiting() {
 		if (threadSet == null || threadSet.size() == 0) {
-			// System.err.println("No waiting threads");
+			// logger.debug("No waiting threads");
 			setWaiting(false);
 			return;
 		}
@@ -318,10 +317,10 @@ public class SwingTipiContext extends TipiContext {
 	protected void clearLogFile() {
 		try {
 			File f = new File(System.getProperty("user.home") + "/.tipidebug");
-			// System.err.println("Deleting: "+f.getAbsolutePath());
+			// logger.debug("Deleting: "+f.getAbsolutePath());
 			f.delete();
 		} catch (SecurityException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	}
 
@@ -344,19 +343,19 @@ public class SwingTipiContext extends TipiContext {
 			fw.flush();
 			fw.close();
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			logger.error("Error detected",ex);
 		} catch (SecurityException ee) {
-			ee.printStackTrace();
+			logger.error("Error detected",ee);
 		}
 	}
 
 	public void setDebugMode(boolean b) {
 		if (System.getSecurityManager() != null) {
-			System.err.println("No debugging. Securitymanager found.");
+			logger.debug("No debugging. Securitymanager found.");
 			debugMode = false;
 			return;
 		}
-		// System.err.println("Debugmode = "+b);
+		// logger.debug("Debugmode = "+b);
 		debugMode = b;
 		clearLogFile();
 	}
@@ -420,17 +419,16 @@ public class SwingTipiContext extends TipiContext {
 		// TODO: Move this to swingtipi or something
 		if (getTopLevel() instanceof RootPaneContainer) {
 			RootPaneContainer rpc = (RootPaneContainer) getTopLevel();
-			System.err.println("Doing allright!");
+			logger.debug("Doing allright!");
 			if (rpc instanceof Window) {
 				Window w = (Window) rpc;
 				w.setVisible(false);
 				w.dispose();
-				System.err.println("Ciao!");
+				logger.debug("Ciao!");
 			}
 
 		} else {
-			System.err
-					.println("NEED REFACTOR in TIPICONTEXT, around line 2230.");
+			logger.info("NEED REFACTOR in TIPICONTEXT, around line 2230.");
 		}
 	}
 	public void setDefaultDesktop(TipiSwingDesktop jp) {
@@ -569,7 +567,7 @@ public class SwingTipiContext extends TipiContext {
 				return WebStartProxy.createDefaultWebstartLoader(loaderType,
 						useCache, getCookieManager());
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 
 		}
@@ -590,10 +588,10 @@ public class SwingTipiContext extends TipiContext {
 				p.getTypedValue(), target);
 		if (animatableClass != null) {
 			PropertyAnimator pa = new PropertyAnimator();
-			System.err.println("animating...: " + animatableClass);
+			logger.debug("animating...: " + animatableClass);
 			pa.animateProperty(p, duration, target, animatableClass);
 		} else {
-			System.err.println("No, not animatable");
+			logger.debug("No, not animatable");
 			super.animateProperty(p, duration, target);
 		}
 
@@ -650,7 +648,7 @@ public class SwingTipiContext extends TipiContext {
 							}
 						} catch (Throwable ex) {
 							te.dumpStack(ex.getMessage());
-							ex.printStackTrace();
+							logger.error("Error detected",ex);
 						}
 						// animator.resume();
 						animator.getCycleElapsedTime();
@@ -669,7 +667,7 @@ public class SwingTipiContext extends TipiContext {
 		try {
 			Thread.sleep(duration);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 
 	}
@@ -682,7 +680,7 @@ public class SwingTipiContext extends TipiContext {
 		inst.setName("c.windowembed");
 		inst.setAttribute("id", "app");
 		if (sandbox != null) {
-			System.err.println("SANDBOX FOUND!");
+			logger.debug("SANDBOX FOUND!");
 		}
 	}
 
@@ -720,7 +718,7 @@ public class SwingTipiContext extends TipiContext {
 				dialogStack.push(jd);
 				return jd;
 			}
-			System.err.println("Trouble creating dialog");
+			logger.debug("Trouble creating dialog");
 			JDialog jd = new TipiSwingDialog((JFrame) null, d);
 			jd.setTitle(title);
 			dialogStack.push(jd);
@@ -728,7 +726,7 @@ public class SwingTipiContext extends TipiContext {
 		}
 		JDialog parent = dialogStack.peek();
 
-		System.err.println("Create dialog: Stack not empty: "
+		logger.debug("Create dialog: Stack not empty: "
 				+ dialogStack.size() + ", attaching to dialog with title: "
 				+ parent.getTitle());
 
@@ -753,9 +751,9 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	public void destroyDialog(JDialog j) {
-		// System.err.println("Before: "+dialogStack);
+		// logger.debug("Before: "+dialogStack);
 		if (dialogStack.isEmpty()) {
-			System.err.println("Already empty");
+			logger.debug("Already empty");
 			return;
 		}
 		if (dialogStack.peek() == j) {
@@ -763,7 +761,7 @@ public class SwingTipiContext extends TipiContext {
 			j.setVisible(false);
 			// smoking gun: (this line was missing)
 			j.dispose();
-			// System.err.println("After: "+dialogStack);
+			// logger.debug("After: "+dialogStack);
 
 			return;
 		}
@@ -773,7 +771,7 @@ public class SwingTipiContext extends TipiContext {
 			sss.dispose();
 			destroyDialog(j);
 		}
-		// System.err.println("After: "+dialogStack);
+		// logger.debug("After: "+dialogStack);
 		j.dispose();
 	}
 

@@ -13,6 +13,8 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.transitions.ScreenTransition;
 import org.jdesktop.animation.transitions.TransitionTarget;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.components.swingimpl.TipiMenubar;
@@ -40,11 +42,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiSwingFrameImpl extends JFrame implements TopLevel,
 		TipiSwingFrame {
 	// TipiContext c;
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8378198812937375585L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingFrameImpl.class);
+	
 	BorderLayout borderLayout1 = new BorderLayout();
 
 	// private TipiSwingDataComponentImpl me;
@@ -77,7 +79,7 @@ public class TipiSwingFrameImpl extends JFrame implements TopLevel,
 		//
 		// public void run() {
 		// JComponent jj =
-		// System.err.println(">>>"+getClass());
+		// logger.debug(">>>"+getClass());
 		JComponent jjj = (JComponent) getContentPane().getComponent(0);
 		Animator animator = new Animator(2500);
 		ScreenTransition transition = new ScreenTransition(jjj,
@@ -93,7 +95,7 @@ public class TipiSwingFrameImpl extends JFrame implements TopLevel,
 							}
 						} catch (Throwable ex) {
 							te.dumpStack(ex.getMessage());
-							ex.printStackTrace();
+							logger.error("Error detected",ex);
 						}
 					}
 				}, animator);
@@ -112,7 +114,7 @@ public class TipiSwingFrameImpl extends JFrame implements TopLevel,
 			}
 
 			public void timingEvent(float arg0) {
-				System.err.println("Running: " + arg0);
+				logger.debug("Running: " + arg0);
 
 			}
 		});

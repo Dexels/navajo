@@ -22,26 +22,20 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponent;
 
 public class TipiPopupMenu extends TipiSwingDataComponentImpl {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3119612802393524077L;
-
-	// private JPopupMenu myMenu;
-	// public void removeFromContainer(Object c) {
-	// myMenu.remove( (Component) c);
-	// }
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiPopupMenu.class);
 	public Object createContainer() {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		JPopupMenu myMenu = new JPopupMenu();
-		// myMenu.set
-		// TipiHelper th = new TipiSwingHelper();
-		// th.initHelper(this);
-		// addHelper(th);
-		System.err.println("Created popup");
+		logger.debug("Created popup");
 		return myMenu;
 	}
 
@@ -49,13 +43,13 @@ public class TipiPopupMenu extends TipiSwingDataComponentImpl {
 	public void showPopup(MouseEvent e) {
 		JPopupMenu jp = (JPopupMenu) getContainer();
 		Point point = e.getPoint();
-		System.err.println("SOURCE: " + e.getSource());
+		logger.debug("SOURCE: " + e.getSource());
 		// Thread.dumpStack();
 		if (jp.isShowing()) {
-			System.err.println("one");
+			logger.debug("one");
 			jp.show((Component) e.getSource(), point.x, point.y);
 		} else {
-			System.err.println("two");
+			logger.debug("two");
 			SwingUtilities.convertPointToScreen(point,
 					(Component) e.getSource());
 			jp.show((Component) e.getSource(), point.x, point.y);
@@ -73,7 +67,7 @@ public class TipiPopupMenu extends TipiSwingDataComponentImpl {
 
 				public void mousePressed(MouseEvent e) {
 					if (e.isPopupTrigger()) {
-						System.err.println("Showing popup for component: "
+						logger.debug("Showing popup for component: "
 								+ this);
 						showPopup(e);
 					}
@@ -81,7 +75,7 @@ public class TipiPopupMenu extends TipiSwingDataComponentImpl {
 
 				public void mouseReleased(MouseEvent e) {
 					if (e.isPopupTrigger()) {
-						System.err.println("Showing popup for component: "
+						logger.debug("Showing popup for component: "
 								+ this);
 						showPopup(e);
 					}
@@ -96,7 +90,7 @@ public class TipiPopupMenu extends TipiSwingDataComponentImpl {
 	// }
 
 	// public void addToContainer(final Object c, final Object constraints) {
-	// System.err.println("\n\nAdding: "+c+" to: "+getContainer());
+	// logger.debug("\n\nAdding: "+c+" to: "+getContainer());
 	//
 	// getSwingContainer().add((Component)c);
 	// }

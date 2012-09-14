@@ -18,6 +18,9 @@ import javax.swing.JPanel;
 import javax.swing.RootPaneContainer;
 import javax.swing.UIManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.swingimpl.embed.SwingEmbeddedContext;
@@ -25,29 +28,12 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingFrame;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingFrameImpl;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class TipiFrame extends TipiSwingDataComponentImpl {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1945154266267368285L;
-	// private JFrame myFrame = null;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiFrame.class);
 	private boolean fullscreen = false;
 	private boolean visible = false;
 	private int x = 0, y = 0, w = 0, h = 0;
@@ -75,7 +61,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 				// mySuperPanel.addPropertyChangeListener(new
 				// PropertyChangeListener(){
 				// public void propertyChange(PropertyChangeEvent evt) {
-				// System.err.println("Changed: "+evt.getPropertyName()+" old: "+evt.getOldValue()+" new: "+evt.getNewValue());
+				// logger.debug("Changed: "+evt.getPropertyName()+" old: "+evt.getOldValue()+" new: "+evt.getNewValue());
 				// }});
 				ta.getContentPane().add(mySuperPanel, BorderLayout.CENTER);
 				mySuperPanel.setOpaque(false);
@@ -160,7 +146,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 		// final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
 		runSyncInEventThread(new Runnable() {
 			public void run() {
-				// System.err.println("Beware! not working well");
+				// logger.debug("Beware! not working well");
 				myToplevel.getContentPane().remove((Component) c);
 			}
 		});
@@ -218,8 +204,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 					if (object instanceof URL) {
 						setIcon(getIcon((URL) object));
 					} else {
-						System.err
-								.println("Warning setting icon of tipiframe:");
+						logger.warn("Warning setting icon of tipiframe:");
 					}
 				}
 				if ("title".equals(name)) {
@@ -387,7 +372,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 							jj.setExtendedState(jj.getExtendedState()
 									| Frame.ICONIFIED);
 						} catch (Exception ex) {
-							ex.printStackTrace();
+							logger.error("Error detected",ex);
 						}
 					}
 				}
@@ -398,7 +383,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 							jj.setExtendedState(jj.getExtendedState()
 									| Frame.MAXIMIZED_BOTH);
 						} catch (Exception ex) {
-							ex.printStackTrace();
+							logger.error("Error detected",ex);
 						}
 					}
 				}
@@ -410,7 +395,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 					// jj.setExtendedState(jj.getExtendedState()|JFrame.ICONIFIED
 					// );
 					// } catch (Exception ex) {
-					// ex.printStackTrace();
+					// logger.error("Error detected",ex);
 					// }
 					// }
 				}

@@ -13,28 +13,17 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JWindow;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class TipiSwingSplash extends JWindow implements Runnable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -6303305182241612381L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingSplash.class);
+	
 	JLabel imageLabel = new JLabel();
 	Thread t;
 	ImageIcon img;
@@ -54,7 +43,7 @@ public class TipiSwingSplash extends JWindow implements Runnable {
 			this.t.start();
 			setCentered();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	}
 

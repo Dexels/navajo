@@ -6,6 +6,9 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -19,10 +22,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 @Deprecated
 public class TipiEmailLauncher extends TipiSwingDataComponentImpl {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8942278089469288268L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiEmailLauncher.class);
 	private Message recipient = null;
 
 	protected void performComponentMethod(String name,
@@ -44,13 +47,12 @@ public class TipiEmailLauncher extends TipiSwingDataComponentImpl {
 						"messagepath", event).value;
 
 				if (recipient == null) {
-					System.err
-							.println("TipiPersonEmail does not recieve a message as input! Aborting...");
+					logger.warn("TipiPersonEmail does not recieve a message as input! Aborting...");
 					return;
 				}
 			} catch (Exception ex) {
-				System.err.println("Could not find data in 'messagepath'! \n");
-				ex.printStackTrace();
+				logger.debug("Could not find data in 'messagepath'! \n");
+				logger.error("Error detected",ex);
 				return;
 			}
 			createEmail(propertyName, emailSubject, emailBody);
@@ -78,21 +80,20 @@ public class TipiEmailLauncher extends TipiSwingDataComponentImpl {
 						(emailString.length() - 1));
 				emailString = emailString + "?subject=" + subject + "&body="
 						+ body;
-				System.err.println("Generated email string: " + emailString);
+				logger.debug("Generated email string: " + emailString);
 				String cmd = "rundll32 url.dll,FileProtocolHandler "
 						+ emailString;
 				try {
 					Runtime.getRuntime().exec(cmd);
 				} catch (IOException ex) {
-					System.err.println("Could not launch email (rundll32)");
+					logger.debug("Could not launch email (rundll32)");
 				}
 			} else {
-				System.err
-						.println("No recipients found that have an email address");
+				logger.warn("No recipients found that have an email address");
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	}
 

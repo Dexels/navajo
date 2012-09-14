@@ -16,6 +16,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
@@ -46,6 +49,11 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public class TipiTableLayer extends TipiTableBaseLayer {
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTableLayer.class);
+	
 	private final List<String> columns = new ArrayList<String>();
 	private final List<Integer> columnSize = new ArrayList<Integer>();
 	private final List<String> columnName = new ArrayList<String>();
@@ -143,11 +151,11 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 		myTypeMap.put(name, typeHint);
 		// try {
 		// Operand result = myTable.getContext().evaluate(label,myTable,null);
-		// System.err.println("Label evaluated: "+result);
+		// logger.debug("Label evaluated: "+result);
 		// columnName.add(result.value);
 		// }
 		// catch (Throwable ex) {
-		// System.err.println("Can not evaluate column header. Did you use quotes? Switching to backup");
+		// logger.debug("Can not evaluate column header. Did you use quotes? Switching to backup");
 		// }
 
 		columnTypes.add(typeHint);
@@ -190,7 +198,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 		for (Iterator<String> iter = columnTypes.iterator(); iter.hasNext();) {
 			String item = iter.next();
 			mtp.setTypeHint(columnName.get(i), item);
-			// System.err.println("Setting type hint: " + (String)
+			// logger.debug("Setting type hint: " + (String)
 			// columnName.get(i) + " - " + item);
 			i++;
 		}
@@ -211,13 +219,13 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 				try {
 					myTable.performTipiEvent("onActionPerformed", m, false);
 				} catch (TipiException ex) {
-					ex.printStackTrace();
+					logger.error("Error detected",ex);
 				}
 			}
 		});
 		Message tableData = current.getMessage(messagePath);
 		// If a table definition has been found:
-		// System.err.println("Found definition.....");
+		// logger.debug("Found definition.....");
 		if (tableData.getDefinitionMessage() != null) {
 			Message def = tableData.getDefinitionMessage();
 			for (int j = 0; j < columns.size(); j++) {
@@ -273,7 +281,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 		mtp.updateTableSize();
 
 		remarkPanel.updateConditionalRemarks();
-		// System.err.println("MegaTable layer :"+mtp.getPreferredSize());
+		// logger.debug("MegaTable layer :"+mtp.getPreferredSize());
 		// updateConditionalRemarks(remarkPanel, current);
 	}
 
@@ -382,22 +390,22 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 
 	public int getCurrentSelection() {
 		if (myTablePanel != null) {
-			System.err.println("Getting selection of a table. Got: "
+			logger.debug("Getting selection of a table. Got: "
 					+ myTablePanel.getSelectedRow());
 			return myTablePanel.getSelectedRow();
 		}
-		System.err.println("Nothing selected in table.");
+		logger.debug("Nothing selected in table.");
 		return -1;
 	}
 
 	public void setCurrentSelection(int s) {
 		if (myTablePanel != null) {
-			System.err.println("Table layer. Table found. setting to: " + s);
+			logger.debug("Table layer. Table found. setting to: " + s);
 			if (s != -1) {
 				myTablePanel.setSelectedRow(s);
 
 			} else {
-				System.err.println("Ignoring. No row selected");
+				logger.debug("Ignoring. No row selected");
 			}
 
 		}

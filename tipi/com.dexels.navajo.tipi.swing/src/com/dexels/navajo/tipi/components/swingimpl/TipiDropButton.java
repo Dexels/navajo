@@ -20,6 +20,9 @@ import javax.swing.JComponent;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.dnd.BinaryTransferHandler;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -32,11 +35,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiDropButton extends TipiSwingComponentImpl {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5794122848933548653L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiDropButton.class);
+	
 	private boolean iAmEnabled = true;
 
 	private AbstractAction buttonAction;
@@ -66,7 +69,7 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 
 	public void setBinaryValue(final Binary b) {
 		if (b == null) {
-			System.err.println("huh? Null binary");
+			logger.debug("huh? Null binary");
 			return;
 		}
 
@@ -78,9 +81,9 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 		try {
 			performTipiEvent("onBinaryDropped", event, false);
 		} catch (TipiBreakException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 
 	}
@@ -94,7 +97,7 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 				}
 				if (name.equals("icon")) {
 					if (object == null) {
-						System.err.println("Ignoring null icon");
+						logger.debug("Ignoring null icon");
 					} else {
 						((JButton) getContainer()).setIcon(getIcon(object));
 					}
@@ -139,7 +142,7 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 				ImageIcon ii = new ImageIcon(i);
 				return ii;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		return null;

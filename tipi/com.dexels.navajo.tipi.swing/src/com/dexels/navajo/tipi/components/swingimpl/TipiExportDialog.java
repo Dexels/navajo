@@ -18,34 +18,22 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingExportSeparatorPanel;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingExportSortingPanel;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class TipiExportDialog extends TipiDialog {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 3039921708891626474L;
-	// private JDialog d = null;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiExportDialog.class);
+	
 	TipiSwingExportSortingPanel sp;
 	TipiSwingExportSeparatorPanel sep;
 	private String msgPath;
@@ -200,7 +188,7 @@ public class TipiExportDialog extends TipiDialog {
 					exportTitles(first, properties, separator, fw);
 				}
 			} catch (IOException ex1) {
-				ex1.printStackTrace();
+				logger.error("Error detected",ex1);
 				return;
 			}
 			for (int i = 0; i < subMsgs.size(); i++) {
@@ -242,7 +230,7 @@ public class TipiExportDialog extends TipiDialog {
 						fw.write(line + System.getProperty("line.separator"));
 					}
 				} catch (IOException ex) {
-					ex.printStackTrace();
+					logger.error("Error detected",ex);
 				}
 			}
 			try {

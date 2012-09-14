@@ -7,6 +7,9 @@ import java.util.Map;
 
 import javax.swing.JScrollPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
@@ -16,28 +19,14 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingTextArea;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class TipiTextArea extends TipiSwingComponentImpl {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 2784561061508301662L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTextArea.class);
+	
 	private TipiSwingTextArea myTextArea;
 
 	public TipiTextArea() {
@@ -62,13 +51,13 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 					try {
 						performTipiEvent("onEnter", m, true);
 					} catch (TipiException e1) {
-						e1.printStackTrace();
+						logger.error("Error detected",e1);
 					}
 				}
 				try {
 					performTipiEvent("onKey", m, true);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -78,7 +67,7 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 				try {
 					performTipiEvent("onKey", m, true);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -88,7 +77,7 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 				try {
 					performTipiEvent("onKey", m, true);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -105,7 +94,7 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 	}
 
 	public void setComponentValue(final String name, final Object object) {
-		System.err.println("Settting: " + name + " to " + object);
+		logger.debug("Settting: " + name + " to " + object);
 		if (name.equals("text")) {
 			runSyncInEventThread(new Runnable() {
 				public void run() {

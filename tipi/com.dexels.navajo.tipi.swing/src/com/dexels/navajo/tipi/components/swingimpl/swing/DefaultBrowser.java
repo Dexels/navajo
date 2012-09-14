@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import com.dexels.navajo.document.metadata.FormatDescription;
 import com.dexels.navajo.document.types.Binary;
@@ -13,15 +16,13 @@ import com.dexels.navajo.document.types.Binary;
 
 public class DefaultBrowser {
 
-	// private static final String WIN_ID = "Windows";
 	private static final String WIN_PATH = "rundll32";
 	private static final String WIN_FLAG = "url.dll,FileProtocolHandler";
-
 	private static final String MAC_PATH = "open";
 
-	// private static final String UNIX_PATH = "netscape";
-	// private static final String UNIX_FLAG = "-remote openURL";
-
+	private final static Logger logger = LoggerFactory
+			.getLogger(DefaultBrowser.class);
+	
 	public DefaultBrowser() {
 		super();
 	}
@@ -38,14 +39,14 @@ public class DefaultBrowser {
 		try {
 			if (windows) {
 				cmd = WIN_PATH + " " + WIN_FLAG + " " + url;
-				System.err.println("Executing Windows command: " + cmd);
+				logger.debug("Executing Windows command: " + cmd);
 				Runtime.getRuntime().exec(cmd);
 			} else {
 				String lcOSName = System.getProperty("os.name").toLowerCase();
 				boolean MAC_OS_X = lcOSName.startsWith("mac os x");
 				if (MAC_OS_X) {
 					cmd = MAC_PATH + " " + url;
-					System.err.println("Executing MAC command: " + cmd);
+					logger.debug("Executing MAC command: " + cmd);
 					Runtime.getRuntime().exec(cmd);
 					return result;
 				} else {
@@ -53,7 +54,7 @@ public class DefaultBrowser {
 				}
 
 				if (url.indexOf(' ') != -1) {
-					System.err.println("Warning, spaces in URL, might fail");
+					logger.debug("Warning, spaces in URL, might fail");
 				}
 				if (url.toLowerCase().endsWith(".doc")
 						|| url.toLowerCase().endsWith(".xls")
@@ -76,15 +77,15 @@ public class DefaultBrowser {
 				else { // we don't have a clue..
 					cmd = "mozilla " + url;
 				}
-				System.err.println("EXECUTING COMMAND:   " + cmd);
+				logger.debug("EXECUTING COMMAND:   " + cmd);
 				Runtime.getRuntime().exec(cmd);
 
 			}
 		} catch (java.io.IOException ex) {
 			result = false;
-			System.err.println("Could not invoke browser, command=" + cmd);
-			System.err.println("Caught: " + ex);
-			ex.printStackTrace();
+			logger.debug("Could not invoke browser, command=" + cmd);
+			logger.debug("Caught: " + ex);
+			logger.error("Error detected",ex);
 		}
 		return result;
 	}
@@ -93,42 +94,38 @@ public class DefaultBrowser {
 		String extString = null;
 		String fileNameEval = null;
 
-		if (extString == null) {
-			String mime = b.guessContentType();
-			String ext = null;
-			FormatDescription fd = b.getFormatDescription();
-			if (fd != null) {
-				List<String> extensions = fd.getFileExtensions();
-				if (!extensions.isEmpty()) {
-					ext = extensions.get(0);
+		String mime = b.guessContentType();
+		String ext = null;
+		FormatDescription fd = b.getFormatDescription();
+		if (fd != null) {
+			List<String> extensions = fd.getFileExtensions();
+			if (!extensions.isEmpty()) {
+				ext = extensions.get(0);
 
-				}
 			}
-			if (mime != null) {
-				if (mime.indexOf("/") != -1) {
-					StringTokenizer st = new StringTokenizer(mime, "/");
-					String major = st.nextToken();
-					String minor = st.nextToken();
-					System.err.println("Binary type: " + major + " and minor: "
-							+ minor);
-					if (ext != null) {
-						extString = ext;
-					} else {
-						extString = minor;
-					}
+		}
+		if (mime != null) {
+			if (mime.indexOf("/") != -1) {
+				StringTokenizer st = new StringTokenizer(mime, "/");
+				String major = st.nextToken();
+				String minor = st.nextToken();
+				logger.debug("Binary type: " + major + " and minor: "
+						+ minor);
+				if (ext != null) {
+					extString = ext;
+				} else {
+					extString = minor;
 				}
 			}
 		}
 
 		try {
-			if (fileNameEval == null) {
-				fileNameEval = "data_";
-			}
+			fileNameEval = "data_";
 			File f = File.createTempFile(fileNameEval, "." + extString);
 			DefaultBrowser.displayURL(f.getAbsolutePath());
 			f.deleteOnExit();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 
 	}

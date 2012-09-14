@@ -102,7 +102,7 @@ public class NullLayout implements LayoutManager2 {
 	}
 
 	public void addLayoutComponent(String name, Component comp) {
-		// System.err.println("que?");
+		// logger.debug("que?");
 	}
 
 	public static void main(String[] args) {
@@ -115,7 +115,7 @@ public class NullLayout implements LayoutManager2 {
 		JButton wappie = new JButton("wappie");
 		j.getContentPane().add(wappie,
 				new Rectangle(10, 200, 50, 10));
-//		System.err.println("pref: "+nullLayout.preferredLayoutSize(parent));
+//		logger.debug("pref: "+nullLayout.preferredLayoutSize(parent));
 		j.setVisible(true);
 	}
 

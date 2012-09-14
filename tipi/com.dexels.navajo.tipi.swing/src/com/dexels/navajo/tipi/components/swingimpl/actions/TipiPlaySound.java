@@ -19,6 +19,9 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
@@ -35,11 +38,12 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiPlaySound extends TipiAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4545861721012818582L;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiPlaySound.class);
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -70,9 +74,9 @@ public class TipiPlaySound extends TipiAction {
 				AudioInputStream ais = AudioSystem.getAudioInputStream(urlVal);
 				playAudioStream(ais);
 			} catch (UnsupportedAudioFileException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 
 		}
@@ -140,7 +144,7 @@ public class TipiPlaySound extends TipiAction {
 					}
 				} // while
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 
 			System.out.println("Play.playAudioStream draining line.");
@@ -152,7 +156,7 @@ public class TipiPlaySound extends TipiAction {
 			// device.
 			dataLine.close();
 		} catch (LineUnavailableException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	} // playAudioStream
 

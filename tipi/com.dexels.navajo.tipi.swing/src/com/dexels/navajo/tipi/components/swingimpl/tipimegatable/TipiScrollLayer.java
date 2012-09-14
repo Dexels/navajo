@@ -12,6 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
@@ -36,6 +39,10 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public class TipiScrollLayer extends TipiTableBaseLayer {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiScrollLayer.class);
+	
 	private int direction = BoxLayout.Y_AXIS;
 	private boolean scroll = false;
 	private Font titleFont = null;
@@ -65,7 +72,7 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
 			try {
 				titleFont = (Font) myTable.evaluateExpression(titleFontString);
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error("Error detected",ex);
 			}
 		}
 		scroll = elt.getBooleanAttribute("scroll", "true", "false", false);
@@ -79,8 +86,8 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
 		} else {
 			nextMessage = current.getMessage(messagePath);
 		}
-		// System.err.println("scroll. Loading with nextMessage: "+nextMessage.getName()+" type: "+nextMessage.getType());
-		// System.err.println("My messagePatH: "+messagePath);
+		// logger.debug("scroll. Loading with nextMessage: "+nextMessage.getName()+" type: "+nextMessage.getType());
+		// logger.debug("My messagePatH: "+messagePath);
 		if (layerStack.isEmpty()) {
 			return;
 		}
@@ -102,9 +109,6 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
 				}
 				for (int i = 0; i < msg.getArraySize(); i++) {
 					Message cc = msg.getMessage(i);
-					// System.err.println("Got message: ");
-					// cc.write(System.err);
-					// System.err.println("Looking for property: "+titleProperty);
 					String title = null;
 					Operand titleOperand = myTable.getContext().evaluate(
 							titleProperty, myTable, null, cc.getRootDoc(), cc);
@@ -118,7 +122,7 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
 						title = "" + titleOperand.value;
 					}
 					// if (titleProp!=null) {
-					// System.err.println("*********\nDEPRECATED: You used only a propertyname as title in your scroll layer, in TipiMegaTabel\nYou should just use an expression..\n********");
+					// logger.debug("*********\nDEPRECATED: You used only a propertyname as title in your scroll layer, in TipiMegaTabel\nYou should just use an expression..\n********");
 					// title = titleProp.getValue();
 					// } else {
 					// if (titleOperand!=null) {
@@ -147,10 +151,10 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
 			try {
 				SwingUtilities.invokeAndWait(rr);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			} catch (InvocationTargetException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 	}

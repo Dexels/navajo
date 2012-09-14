@@ -2,15 +2,19 @@ package com.dexels.navajo.tipi.components.swingimpl.formatters;
 
 import java.awt.Color;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.components.core.TipiFormatter;
 import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
 
 @Deprecated
 public class PaintFormatter extends TipiFormatter {
 
-	// paint="{paint:/gradient-north-#FEED01-#FFFFFF}"
-
-	// private ColorFormatter cf = new ColorFormatter();
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PaintFormatter.class);
+	
 	@Override
 	public String format(Object o) {
 		TipiGradientPaint tc = (TipiGradientPaint) o;
@@ -49,7 +53,7 @@ public class PaintFormatter extends TipiFormatter {
 	public static void main(String[] args) {
 		Color c = Color.lightGray;
 		PaintFormatter cc = new PaintFormatter();
-		System.err.println("Format: " + cc.format(c));
+		logger.debug("Format: " + cc.format(c));
 	}
 
 }

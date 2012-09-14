@@ -6,18 +6,22 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.components.swingimpl.formatters.ColorFormatter;
 
 @Deprecated
 public class TipiSwingColorButton extends JTextField {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 8938738809662470207L;
+		
+		private final static Logger logger = LoggerFactory
+				.getLogger(TipiSwingColorButton.class);
+		
 	private ColorFormatter myFormatter = new ColorFormatter();
-	// private ColorParser cp = new ColorParser();
 	private Property myProperty;
 	private TipiComponent myComponent;
 
@@ -59,7 +63,7 @@ public class TipiSwingColorButton extends JTextField {
 			setBackground(c);
 			myProperty.setAnyValue(c);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 
 	}

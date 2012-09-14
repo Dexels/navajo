@@ -184,7 +184,7 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 		// if (name.equals("x")) {
 		// runSyncInEventThread(new Runnable() {
 		// public void run() {
-		// System.err.println("Setx: "+object);
+		// logger.debug("Setx: "+object);
 		// view.setViewPosition(new Point((Integer) object, 0));
 		// }
 		// });
@@ -193,7 +193,7 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 		// if (name.equals("y")) {
 		// runSyncInEventThread(new Runnable() {
 		// public void run() {
-		// System.err.println("Sety: "+object);
+		// logger.debug("Sety: "+object);
 		// view.setViewPosition(new Point(0, (Integer) object));
 		// }
 		// });
@@ -262,7 +262,7 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 		int resX = start.x + (int) ((end.x - start.x) * fraction);
 		int resY = start.y + (int) ((end.y - start.y) * fraction);
 		Point point = new Point(resX, resY);
-		// System.err.println("point: "+point);
+		// logger.debug("point: "+point);
 		return point;
 
 	}

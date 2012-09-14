@@ -8,6 +8,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operand;
@@ -34,10 +37,13 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class TipiTabLayer extends TipiTableBaseLayer {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTabLayer.class);
 	private int direction = JTabbedPane.TOP;
 	private int tabLayout = JTabbedPane.WRAP_TAB_LAYOUT;
 	private JTabbedPane myTabbedPane = null;
-
+	
 	public TipiTabLayer(TipiMegaTable tmt) {
 		super(tmt);
 
@@ -103,8 +109,7 @@ public class TipiTabLayer extends TipiTableBaseLayer {
 						Property titleProp = cc.getProperty(titleProperty);
 						String title = null;
 						if (titleProp != null) {
-							System.err
-									.println("*********\nDEPRECATED: You used only a propertyname as title in your scroll layer, in TipiMegaTabel\nYou should just use an expression..\n********");
+							logger.warn("*********\nDEPRECATED: You used only a propertyname as title in your scroll layer, in TipiMegaTabel\nYou should just use an expression..\n********");
 							title = titleProp.getValue();
 						} else {
 							Operand titleOperand = myTable.getContext()
@@ -156,11 +161,11 @@ public class TipiTabLayer extends TipiTableBaseLayer {
 
 	public int getCurrentSelection() {
 		if (myTabbedPane != null) {
-			System.err.println("Getting selected TAB: "
+			logger.debug("Getting selected TAB: "
 					+ myTabbedPane.getSelectedIndex());
 			return myTabbedPane.getSelectedIndex();
 		}
-		System.err.println("No tab selected in table.");
+		logger.debug("No tab selected in table.");
 
 		return -1;
 	}

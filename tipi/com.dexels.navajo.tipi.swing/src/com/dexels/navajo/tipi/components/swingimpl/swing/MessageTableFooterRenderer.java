@@ -10,6 +10,9 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
@@ -38,11 +41,10 @@ import com.dexels.navajo.tipi.swingclient.components.MessageTable;
 
 public class MessageTableFooterRenderer extends JLabel implements
 		TableCellRenderer {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3302229790598054162L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MessageTableFooterRenderer.class);
 	private final TipiDataComponent myComponent;
 
 	private GenericPropertyComponent myPropComponent = new GenericPropertyComponent();
@@ -66,7 +68,7 @@ public class MessageTableFooterRenderer extends JLabel implements
 			try {
 				initialized = true;
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		myPropComponent.setForeground(Color.black);
@@ -92,7 +94,7 @@ public class MessageTableFooterRenderer extends JLabel implements
 					return myPropComponent;
 				}
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error("Error detected",ex);
 				setForeground(Color.red);
 				setText("error");
 				return this;
@@ -110,11 +112,11 @@ public class MessageTableFooterRenderer extends JLabel implements
 						mm.getColumnName(column), Property.DIR_OUT);
 				p.setAnyValue(val.value);
 			} catch (NavajoException ex1) {
-				ex1.printStackTrace();
+				logger.error("Error detected",ex1);
 			}
 			myPropComponent.setProperty(p);
 			// myPropComponent
-			// System.err.println("TYPE: "+p.getType()+" name: "+p.getName()+" value: "+p.getValue());
+			// logger.debug("TYPE: "+p.getType()+" name: "+p.getName()+" value: "+p.getValue());
 		}
 	}
 

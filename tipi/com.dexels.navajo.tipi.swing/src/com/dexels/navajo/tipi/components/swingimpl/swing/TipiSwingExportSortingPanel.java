@@ -17,31 +17,20 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class TipiSwingExportSortingPanel extends JPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -2873539257253222242L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingExportSortingPanel.class);
+	
 	JLabel availableColumnsLabel = new JLabel();
 	JLabel exportedColumnsLabel = new JLabel();
 	JButton addButton = new JButton();
@@ -60,7 +49,7 @@ public class TipiSwingExportSortingPanel extends JPanel {
 		try {
 			jbInit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	}
 
@@ -73,7 +62,7 @@ public class TipiSwingExportSortingPanel extends JPanel {
 			Message m = msg.getMessage(0);
 			fillAvailableList(m);
 		} else {
-			System.err.println("Filling with message itself");
+			logger.debug("Filling with message itself");
 			fillAvailableList(msg);
 		}
 	}
@@ -93,7 +82,7 @@ public class TipiSwingExportSortingPanel extends JPanel {
 	}
 
 	private ImageIcon getIcon(String name) {
-		System.err.println("Getting icon: " + name);
+		logger.debug("Getting icon: " + name);
 		return new ImageIcon(getClass().getClassLoader().getResource(name));
 	}
 

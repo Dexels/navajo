@@ -55,7 +55,7 @@ public abstract class TipiQuestionList extends TipiBaseQuestionList {
 			} catch (InvocationTargetException ex) {
 				throw new RuntimeException(ex);
 			} catch (InterruptedException ex) {
-				// System.err.println("Interrupted");
+				// logger.debug("Interrupted");
 			}
 		}
 	}

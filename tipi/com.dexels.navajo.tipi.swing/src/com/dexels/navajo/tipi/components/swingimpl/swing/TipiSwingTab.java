@@ -10,31 +10,19 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class TipiSwingTab extends JPanel implements TipiTabbable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1869629608167928815L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingTab.class);
+	
 	private String tabTooltip;
 	private Icon tabIcon;
 	private int index;
@@ -60,7 +48,7 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 		Icon old = this.tabIcon;
 		this.tabIcon = tabIcon;
 		if (old == tabIcon) {
-			System.err.println("whoops, identical");
+			logger.debug("whoops, identical");
 		}
 		firePropertyChange("tabIcon", old, tabIcon);
 	}
@@ -115,7 +103,7 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 				ImageIcon ii = new ImageIcon(i);
 				return ii;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		return null;

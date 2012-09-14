@@ -12,34 +12,19 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JViewport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingViewport;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
-
 public class TipiViewport extends TipiSwingDataComponentImpl {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5736061458396880332L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiViewport.class);
+	
 	public TipiViewport() {
 	}
 
@@ -87,18 +72,18 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 				c = constraint;
 			}
 		}
-		System.err.println("Consttraints::: " + constraint);
+		logger.debug("Consttraints::: " + constraint);
 		super.initBeforeBuildingChildren(instance, classdef, definition);
 	}
 
 	protected void updateClientSize(JViewport view) {
 		Dimension d = view.getSize();
 		if (axis == BoxLayout.Y_AXIS) {
-			System.err.println("y, vertical");
+			logger.debug("y, vertical");
 			Dimension vw = new Dimension(d.width, d.height * 2);
 			clientPanel.setPreferredSize(vw);
 		} else {
-			System.err.println("x, horizontal");
+			logger.debug("x, horizontal");
 			Dimension vw = new Dimension(d.width * 2, d.height);
 			clientPanel.setPreferredSize(vw);
 		}
@@ -162,7 +147,7 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 		// if (name.equals("x")) {
 		// runSyncInEventThread(new Runnable() {
 		// public void run() {
-		// System.err.println("Setx: "+object);
+		// logger.debug("Setx: "+object);
 		// view.setViewPosition(new Point((Integer) object, 0));
 		// }
 		// });
@@ -171,7 +156,7 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 		// if (name.equals("y")) {
 		// runSyncInEventThread(new Runnable() {
 		// public void run() {
-		// System.err.println("Sety: "+object);
+		// logger.debug("Sety: "+object);
 		// view.setViewPosition(new Point(0, (Integer) object));
 		// }
 		// });

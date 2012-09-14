@@ -44,7 +44,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 	private static final Logger logger = LoggerFactory.getLogger(TipiSwingExtension.class); 
 
 	
-	public TipiSwingExtension() throws XMLParseException, IOException {
+	public TipiSwingExtension() throws XMLParseException {
 		instance = this;
 	}
 

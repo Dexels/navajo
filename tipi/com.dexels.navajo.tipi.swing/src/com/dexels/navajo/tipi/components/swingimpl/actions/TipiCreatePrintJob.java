@@ -2,35 +2,22 @@ package com.dexels.navajo.tipi.components.swingimpl.actions;
 
 import java.awt.print.PrinterJob;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
 
 public class TipiCreatePrintJob extends TipiAction {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2430232555995628924L;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiCreatePrintJob.class);
+	
 	public TipiCreatePrintJob() {
 	}
 
@@ -48,7 +35,7 @@ public class TipiCreatePrintJob extends TipiAction {
 		if (jb.printDialog()) {
 			myContext.setGlobalValue("" + globalvalue.value, jb);
 		} else {
-			System.err.println("Breaking on printjob!");
+			logger.debug("Breaking on printjob!");
 			throw new TipiBreakException(TipiBreakException.USER_BREAK);
 		}
 

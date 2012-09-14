@@ -8,16 +8,20 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.components.swingimpl.formatters.PaintFormatter;
 import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
 @Deprecated
 public class TipiSwingPaintEditor extends JTextField {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8663221689657218088L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingPaintEditor.class);
+	
 	private PaintFormatter myFormatter = new PaintFormatter();
 	private Property myProperty;
 	private TipiComponent myComponent;
@@ -63,7 +67,7 @@ public class TipiSwingPaintEditor extends JTextField {
 			setPaint(c);
 			myProperty.setAnyValue(c);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 
 	}

@@ -16,6 +16,9 @@ import java.util.StringTokenizer;
 
 import javax.swing.JFileChooser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.metadata.FormatDescription;
@@ -33,9 +36,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiSaveBinary extends TipiAction {
 
-	/**
-	 * 
-	 */
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSaveBinary.class);
+	
 	private static final long serialVersionUID = -6668690071553956247L;
 	/*
 	 * (non-Javadoc)
@@ -91,7 +95,7 @@ public class TipiSaveBinary extends TipiAction {
 					StringTokenizer st = new StringTokenizer(mime, "/");
 					String major = st.nextToken();
 					String minor = st.nextToken();
-					System.err.println("Binary type: " + major + " and minor: "
+					logger.debug("Binary type: " + major + " and minor: "
 							+ minor);
 					if (ext != null) {
 						extString = ext;
@@ -142,17 +146,17 @@ public class TipiSaveBinary extends TipiAction {
 			fos = new FileOutputStream(f);
 			value.write(fos);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 			throw new TipiException("File not found: " + e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 			throw new TipiException("IO Error: " + e);
 		} finally {
 			if (fos != null) {
 				try {
 					fos.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 		}

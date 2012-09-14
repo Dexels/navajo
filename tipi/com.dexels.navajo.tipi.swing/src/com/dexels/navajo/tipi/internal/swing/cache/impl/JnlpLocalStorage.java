@@ -24,6 +24,9 @@ import javax.jnlp.PersistenceService;
 import javax.jnlp.ServiceManager;
 import javax.jnlp.UnavailableServiceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.internal.cache.LocalStorage;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 
@@ -36,8 +39,11 @@ public class JnlpLocalStorage implements LocalStorage {
 
 	private final String cacheBase = "tipicache_";
 	private final String relativePath;
-//	private final CookieManager myCookieMananger;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JnlpLocalStorage.class);
+	
+	
 	private final Map<String, Long> localModificationMap = new HashMap<String, Long>();
 
 	public JnlpLocalStorage(String relativePath, CookieManager cm)
@@ -50,7 +56,7 @@ public class JnlpLocalStorage implements LocalStorage {
 		try {
 			parseModMap();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	}
 
@@ -83,7 +89,7 @@ public class JnlpLocalStorage implements LocalStorage {
 		is.close();
 	}
 
-	private URL getCacheBaseURL() throws MalformedURLException {
+	private URL getCacheBaseURL()  {
 		// return new URL(new URL(bs.getCodeBase(),cacheBase),relativePath);
 		return bs.getCodeBase();
 	}
@@ -94,7 +100,7 @@ public class JnlpLocalStorage implements LocalStorage {
 			URL url = new URL(getCacheBaseURL(), fixed);
 			return url;
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 			return null;
 		}
 	}
@@ -119,12 +125,12 @@ public class JnlpLocalStorage implements LocalStorage {
 			}
 			return fc.getInputStream();
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		} catch (FileNotFoundException e) {
 			// regular cache miss
 			return null;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 
 		}
 		return null;
@@ -155,17 +161,17 @@ public class JnlpLocalStorage implements LocalStorage {
 		try {
 			fc = ps.get(createMuffinUrl(location));
 			// if(fc!=null) {
-			// System.err.println("local entry found: "+fc.getLength()+" at location: "+location);
+			// logger.debug("local entry found: "+fc.getLength()+" at location: "+location);
 			// } else {
-			// System.err.println("No local entry found at: "+location);
+			// logger.debug("No local entry found at: "+location);
 			// }
 		} catch (MalformedURLException e) {
-			// System.err.println("Malformed panic blues!");
-			e.printStackTrace();
+			// logger.debug("Malformed panic blues!");
+			logger.error("Error detected",e);
 		} catch (FileNotFoundException e) {
-			// System.err.println("Local file: "+location+" not found!");
+			// logger.debug("Local file: "+location+" not found!");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 		if (fc == null) {
 			return false;
@@ -173,7 +179,7 @@ public class JnlpLocalStorage implements LocalStorage {
 			try {
 				return fc.getLength() != 0;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 			return false;
 		}
@@ -188,14 +194,14 @@ public class JnlpLocalStorage implements LocalStorage {
 		// if(l )
 		// long length = l==null?DEFAULT_SIZE:l;
 		long length = DEFAULT_SIZE;
-		// System.err.println("JNLP storage. Storing: "+length+" bytes.");
+		// logger.debug("JNLP storage. Storing: "+length+" bytes.");
 
 		try {
 			ff = ps.get(muffinUrl);
 			ff.setMaxLength(length);
 
 		} catch (FileNotFoundException e) {
-			// System.err.println("Not found. fine.");
+			// logger.debug("Not found. fine.");
 		}
 		if (ff == null) {
 			ps.create(muffinUrl, length);
@@ -206,14 +212,14 @@ public class JnlpLocalStorage implements LocalStorage {
 		copyResource(os, data);
 		if (!location.equals(MODMAP_KEY)) {
 			localModificationMap.put(location, System.currentTimeMillis());
-			// System.err.println("Data saved and modentry added, Local modmap size: "+localModificationMap.size());
+			// logger.debug("Data saved and modentry added, Local modmap size: "+localModificationMap.size());
 			saveModMap();
 		}
 		// throw new IOException("JNLP Storage not yet implemeented");
 	}
 
 	private void saveModMap() {
-		// System.err.println("Saving modmap: "+localModificationMap);
+		// logger.debug("Saving modmap: "+localModificationMap);
 		Set<Entry<String, Long>> eset = localModificationMap.entrySet();
 		StringBuffer sb = new StringBuffer();
 		for (Entry<String, Long> entry : eset) {
@@ -222,7 +228,7 @@ public class JnlpLocalStorage implements LocalStorage {
 			sb.append(entry.getValue());
 			sb.append("\n");
 		}
-		// System.err.println("Modmap: "+sb.toString());
+		// logger.debug("Modmap: "+sb.toString());
 		byte[] bytes = sb.toString().getBytes();
 		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 		Map<String, Object> meta = new HashMap<String, Object>();
@@ -231,7 +237,7 @@ public class JnlpLocalStorage implements LocalStorage {
 			storeData(MODMAP_KEY, bais, meta);
 			bais.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 		// myCookieMananger.setCookie(MODMAP_KEY, sb.toString());
 
@@ -244,7 +250,7 @@ public class JnlpLocalStorage implements LocalStorage {
 		byte[] buffer = new byte[1024];
 		int read;
 		while ((read = in.read(buffer)) > -1) {
-			// System.err.println("Read: "+read+" bytes from class: "+in);
+			// logger.debug("Read: "+read+" bytes from class: "+in);
 			bout.write(buffer, 0, read);
 		}
 		in.close();

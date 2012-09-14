@@ -120,7 +120,7 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 		logger.info("Using install: "+tipiInstallationFolder.getAbsolutePath());
 
 		
-		System.err.println("Systemprop: "+context.systemPropertyMap);
+		logger.debug("Systemprop: "+context.systemPropertyMap);
 		// TODO Fix support for HTTP based runs
 		logger.warn("********** ENTERING FILE BASED MODE **********");
 		File tipi = new File(tipiInstallationFolder,"tipi");
@@ -137,10 +137,9 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 		InputStream tipiResourceStream = context
 				.getTipiResourceStream(definitionPath);
 		if (tipiResourceStream == null) {
-			System.err
-					.println("Error starting up: Can not load tipi. Resource not found: "
+			logger.warn("Error starting up: Can not load tipi. Resource not found: "
 							+ definitionPath);
-			System.err.println("Codebase: " + context.getTipiResourceLoader());
+			logger.debug("Codebase: " + context.getTipiResourceLoader());
 			String fatalErrorMsg = "No connection allowed to server by security software, check your connection and security settings.";
 			try {
 				String msg = System.getProperty("fatalSystemErrorMessage");
@@ -148,24 +147,24 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 					fatalErrorMsg = msg;
 				}
 			} catch (SecurityException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 			tipiResourceStream = context.getTipiResourceStream("init.xml");
 			if (tipiResourceStream == null) {
-				System.err.println("Still failed");
+				logger.debug("Still failed");
 				context.showFatalStartupError(fatalErrorMsg);
 				context.shutdown();
 			} else {
-				System.err.println("recovered");
+				logger.debug("recovered");
 			}
 		} else {
 			try {
 				context.parseStream(tipiResourceStream, null);
 				// context.switchToDefinition(definition);
 			} catch (XMLParseException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			} catch (TipiException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		return context;
@@ -182,7 +181,7 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 
 	@Override
 	public void setSystemProperty(String key, String value) {
-//		System.err.println("Adding system property (FAKE!): "+key+" value: "+value);
+//		logger.debug("Adding system property (FAKE!): "+key+" value: "+value);
 		systemProperties.put(key, value);
 	}
 

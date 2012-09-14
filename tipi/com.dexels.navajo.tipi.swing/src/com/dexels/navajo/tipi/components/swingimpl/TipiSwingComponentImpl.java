@@ -11,6 +11,9 @@ import java.util.List;
 import javax.swing.JPopupMenu;
 import javax.swing.JRootPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
@@ -19,28 +22,13 @@ import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public abstract class TipiSwingComponentImpl extends TipiComponentImpl
 		implements TipiSwingComponent {
-	/**
-	 * 
-	 */
+
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingComponentImpl.class);
 	private static final long serialVersionUID = -8220100898776017676L;
 	protected TipiGradientPaint myPaint;
 	protected TipiPopupMenu myPopupMenu = null;
@@ -128,7 +116,7 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl
 				try {
 					TipiSwingComponentImpl.super.loadValues(values, event);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 		});

@@ -1,33 +1,20 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- * @deprecated
- */
+
 @Deprecated
 public class TipiSwingErrorHandler extends BaseTipiErrorHandler {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7477014764317028204L;
 
+	private static final long serialVersionUID = 7477014764317028204L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingErrorHandler.class);
+	
 	public TipiSwingErrorHandler() {
 		// setContainer(createContainer);
 	}
@@ -37,7 +24,7 @@ public class TipiSwingErrorHandler extends BaseTipiErrorHandler {
 		if (c != null) {
 			showErrorDialog(getErrorMessage());
 		} else {
-			System.err.println("DefaultTipiErrorHandler, context not set!! ");
+			logger.debug("DefaultTipiErrorHandler, context not set!! ");
 		}
 	}
 

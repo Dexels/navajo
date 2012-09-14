@@ -18,6 +18,9 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiComponentMethod;
@@ -26,30 +29,14 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiTabbable;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class TipiTabs extends TipiSwingDataComponentImpl {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6765450974743393182L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTabs.class);
+	
 	private Component lastSelectedTab = null;
 
 	private final Map<Component, Boolean> visibilityMap = new HashMap<Component, Boolean>();
@@ -118,12 +105,12 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 						});
 
 				if (lastSelectedTab == null) {
-					System.err.println("last selected was null");
+					logger.debug("last selected was null");
 
 				}
 				lastSelectedTab = jt.getSelectedComponent();
 				if (lastSelectedTab == null) {
-					System.err.println("last selected is null");
+					logger.debug("last selected is null");
 					getAttributeProperty("selectedindex").setAnyValue(-1);
 				} else {
 					getAttributeProperty("selectedindex").setAnyValue(
@@ -164,7 +151,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					}
 				});
 			} else {
-				System.err.println("Sorry could not find tab: " + tabName);
+				logger.debug("Sorry could not find tab: " + tabName);
 			}
 		}
 		if (name.equals("showTab")) {
@@ -186,7 +173,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					}
 				});
 			} else {
-				System.err.println("Sorry could not find tab");
+				logger.debug("Sorry could not find tab");
 			}
 		}
 	}
@@ -392,7 +379,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 						}
 					}
 					if (lastSelectedTab != null) {
-						System.err.println("last selected null!");
+						logger.debug("last selected null!");
 						boolean found = false;
 						for (int i = 0; i < jt.getComponentCount(); i++) {
 							if (jt.getComponent(i) == lastSelectedTab) {

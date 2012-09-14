@@ -18,35 +18,20 @@ import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
-
 public class TipiGridPanel extends TipiPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8957107830563302282L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiGridPanel.class);
+	
 	private JPanel gridComponent;
 
 	private int currentx = 0;
@@ -98,7 +83,7 @@ public class TipiGridPanel extends TipiPanel {
 		if (ss != null) {
 			parseColumns(ss.substring(1, ss.length() - 1));
 		} else {
-			System.err.println("oh dear, no columnwidth");
+			logger.debug("oh dear, no columnwidth");
 		}
 
 	}
@@ -182,7 +167,7 @@ public class TipiGridPanel extends TipiPanel {
 			for (int x = xstart; x < xend; x++) {
 				boolean c = isOccupied(x, y);
 				if (c) {
-					System.err.println("Oh dear, already occupied!");
+					logger.debug("Oh dear, already occupied!");
 				}
 				availabilityMatrix.add(new Coordinate(x, y));
 
@@ -350,7 +335,7 @@ public class TipiGridPanel extends TipiPanel {
 	}
 
 	protected void parseColumns(String sizes) {
-		// System.err.println("PARSING COLUMNS::::::::::: "+sizes);
+		// logger.debug("PARSING COLUMNS::::::::::: "+sizes);
 		StringTokenizer st = new StringTokenizer(sizes);
 		myWidths.clear();
 		int count = 0;
@@ -360,7 +345,7 @@ public class TipiGridPanel extends TipiPanel {
 				setFixed(count);
 			} else {
 				element = element.substring(0, element.length() - 1);
-				// System.err.println("Starr. reuslt: "+element);
+				// logger.debug("Starr. reuslt: "+element);
 			}
 			int val = new Integer(element).intValue();
 			myWidths.add(new Integer(val));
@@ -402,7 +387,7 @@ public class TipiGridPanel extends TipiPanel {
 				return false;
 			}
 			Coordinate c = (Coordinate) o;
-			// System.err.println("Comparing: "+this+" and "+c);
+			// logger.debug("Comparing: "+this+" and "+c);
 			return c.x == x && c.y == y;
 		}
 

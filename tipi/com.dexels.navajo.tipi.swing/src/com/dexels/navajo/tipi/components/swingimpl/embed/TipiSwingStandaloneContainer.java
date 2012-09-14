@@ -58,7 +58,7 @@ public class TipiSwingStandaloneContainer implements
 	public void loadDefinition(String tipiPath, String definitionName,
 			String resourceBaseDirectory, ExtensionDefinition ed)
 			throws IOException, TipiException {
-		// System.err.println("Loading def: "+definitionName+" tipipath: "+tipiPath+" resbase: "+resourceBaseDirectory);
+		// logger.debug("Loading def: "+definitionName+" tipipath: "+tipiPath+" resbase: "+resourceBaseDirectory);
 		embeddedContext = new SwingEmbeddedContext(
 				(SwingTipiApplicationInstance) getContext()
 						.getApplicationInstance(),

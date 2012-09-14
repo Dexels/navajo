@@ -8,34 +8,21 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.components.question.TipiBaseQuestionGroup;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- * @deprecated
- */
+@Deprecated
 
 public class TipiQuestionGroup extends TipiBaseQuestionGroup {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1296232412976886388L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiQuestionGroup.class);
+	
+	
 	public Object createContainer() {
 		JPanel j = new JPanel();
 		j.setLayout(new BorderLayout());
@@ -57,15 +44,15 @@ public class TipiQuestionGroup extends TipiBaseQuestionGroup {
 			try {
 				SwingUtilities.invokeAndWait(runnable);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 	}
 
 	public void addToContainer(final Object c, final Object constraints) {
-		System.err.println("Adding to TipiTabbedQuestionList container:   " + c
+		logger.debug("Adding to TipiTabbedQuestionList container:   " + c
 				+ " constraints: " + constraints);
 		runSyncInEventThread(new Runnable() {
 			public void run() {

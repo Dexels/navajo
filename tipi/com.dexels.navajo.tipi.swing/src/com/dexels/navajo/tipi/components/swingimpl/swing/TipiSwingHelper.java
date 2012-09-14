@@ -19,35 +19,22 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.event.InternalFrameListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.swingimpl.TipiSwingComponent;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
-public class TipiSwingHelper implements TipiHelper {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1677532389917655637L;
 
+public class TipiSwingHelper implements TipiHelper {
+	private static final long serialVersionUID = -1677532389917655637L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingHelper.class);
+	
 	private TipiSwingComponent myComponent = null;
 
 	private java.util.List<EventListener> myListeners = new ArrayList<EventListener>();
@@ -66,8 +53,7 @@ public class TipiSwingHelper implements TipiHelper {
 	public void deregisterEvent(TipiEvent e) {
 		Component c = (Component) myComponent.getContainer();
 		if (c == null) {
-			System.err
-					.println("Cannot deregister swing event: Container is null! Component class: "
+			logger.warn("Cannot deregister swing event: Container is null! Component class: "
 							+ myComponent.getClass());
 			return;
 		}
@@ -101,7 +87,7 @@ public class TipiSwingHelper implements TipiHelper {
 
 			}
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error("Error detected",e1);
 		}
 
 	}
@@ -114,8 +100,7 @@ public class TipiSwingHelper implements TipiHelper {
 	public void registerEvent(final TipiEvent te) {
 		Component c = (Component) myComponent.getContainer();
 		if (c == null) {
-			System.err
-					.println("Cannot register swing event: Container is null!");
+			logger.warn("Cannot register swing event: Container is null!");
 			return;
 		}
 		if (te.isTrigger("onActionPerformed")) {
@@ -129,13 +114,13 @@ public class TipiSwingHelper implements TipiHelper {
 							myComponent.performTipiEvent("onActionPerformed",
 									null, te.isSync());
 						} catch (TipiException ex) {
-							ex.printStackTrace();
+							logger.error("Error detected",ex);
 						}
 					}
 				};
 				m.invoke(c, new Object[] { bert });
 			} catch (Exception exe) {
-				exe.printStackTrace();
+				logger.error("Error detected",exe);
 			}
 		}
 		if (te.isTrigger("onWindowClosed")) {
@@ -148,7 +133,7 @@ public class TipiSwingHelper implements TipiHelper {
 				// te.isSync());
 				// }
 				// catch (TipiException ex) {
-				// ex.printStackTrace();
+				// logger.error("Error detected",ex);
 				// }
 				// }
 				// });
@@ -160,7 +145,7 @@ public class TipiSwingHelper implements TipiHelper {
 							myComponent.performTipiEvent("onWindowClosed",
 									null, te.isSync());
 						} catch (TipiException ex) {
-							ex.printStackTrace();
+							logger.error("Error detected",ex);
 						}
 					}
 				});
@@ -185,7 +170,7 @@ public class TipiSwingHelper implements TipiHelper {
 						myComponent.performTipiEvent("onMouseEntered", m,
 								te.isSync());
 					} catch (TipiException ex) {
-						ex.printStackTrace();
+						logger.error("Error detected",ex);
 					}
 				}
 			});
@@ -200,7 +185,7 @@ public class TipiSwingHelper implements TipiHelper {
 						myComponent.performTipiEvent("onMouseExited", m,
 								te.isSync());
 					} catch (TipiException ex) {
-						ex.printStackTrace();
+						logger.error("Error detected",ex);
 					}
 				}
 			});
@@ -217,7 +202,7 @@ public class TipiSwingHelper implements TipiHelper {
 						myComponent.performTipiEvent("onMouseClicked", m,
 								te.isSync());
 					} catch (TipiException ex) {
-						ex.printStackTrace();
+						logger.error("Error detected",ex);
 					}
 				}
 			});
@@ -233,7 +218,7 @@ public class TipiSwingHelper implements TipiHelper {
 						myComponent.performTipiEvent("onMousePressed", m,
 								te.isSync());
 					} catch (TipiException ex) {
-						ex.printStackTrace();
+						logger.error("Error detected",ex);
 					}
 				}
 			});
@@ -249,7 +234,7 @@ public class TipiSwingHelper implements TipiHelper {
 						myComponent.performTipiEvent("onMouseReleased", m,
 								te.isSync());
 					} catch (TipiException ex) {
-						ex.printStackTrace();
+						logger.error("Error detected",ex);
 					}
 				}
 			});

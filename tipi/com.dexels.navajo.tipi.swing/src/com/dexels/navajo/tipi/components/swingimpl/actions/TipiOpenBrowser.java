@@ -9,6 +9,9 @@ package com.dexels.navajo.tipi.components.swingimpl.actions;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
@@ -26,18 +29,12 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiOpenBrowser extends TipiAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2652162769648210598L;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.dexels.navajo.tipi.internal.TipiAction#execute(com.dexels.navajo.
-	 * tipi.internal.TipiEvent)
-	 */
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiOpenBrowser.class);
+	
 	protected void execute(TipiEvent event) throws TipiBreakException,
 			TipiException {
 		Operand url = getEvaluatedParameter("url", event);
@@ -47,7 +44,7 @@ public class TipiOpenBrowser extends TipiAction {
 			try {
 				rr.getAppletContext().showDocument(new URL(urlVal), "_blank");
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		} else {
 			DefaultBrowser.displayURL(urlVal);

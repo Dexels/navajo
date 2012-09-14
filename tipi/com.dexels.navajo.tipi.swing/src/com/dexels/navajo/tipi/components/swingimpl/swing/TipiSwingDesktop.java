@@ -12,31 +12,20 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.components.swingimpl.parsers.TipiGradientPaint;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class TipiSwingDesktop extends JDesktopPane {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1844621625721636742L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingDesktop.class);
+	
 	private static final String ALIGNMENT = "alignment";
 	private static final String PAINT = "paint";
 	private Image myImage = null;
@@ -87,7 +76,7 @@ public class TipiSwingDesktop extends JDesktopPane {
 				ImageIcon ii = new ImageIcon(i);
 				return ii;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		return null;

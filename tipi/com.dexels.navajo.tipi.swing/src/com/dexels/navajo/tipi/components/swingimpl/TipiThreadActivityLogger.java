@@ -4,12 +4,18 @@ import java.util.Map;
 
 import javax.swing.JTextArea;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.components.core.ThreadActivityListener;
 import com.dexels.navajo.tipi.components.core.TipiThread;
 
 public class TipiThreadActivityLogger extends TipiSwingComponentImpl {
 
 	private static final long serialVersionUID = -9133341806481655664L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiThreadActivityLogger.class);
 	private JTextArea tja;
 
 	@Override
@@ -21,7 +27,7 @@ public class TipiThreadActivityLogger extends TipiSwingComponentImpl {
 
 			public void threadActivity(Map<TipiThread, String> threadStateMap,
 					TipiThread tt, String state, int queueSize) {
-				System.err.println("Thread activity: " + threadStateMap);
+				logger.debug("Thread activity: " + threadStateMap);
 				tja.append(threadStateMap.toString());
 			}
 		});

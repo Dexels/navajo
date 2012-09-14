@@ -29,12 +29,16 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
-public class JExtendedInternalFrame extends JInternalFrame {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2619439915934117879L;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class JExtendedInternalFrame extends JInternalFrame {
+
+	private static final long serialVersionUID = 2619439915934117879L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JExtendedInternalFrame.class);
+	
 	public JExtendedInternalFrame(String title, boolean resizable,
 			boolean closable, boolean maximizable, boolean iconifiable) {
 		super(title, resizable, closable, maximizable, iconifiable);
@@ -45,12 +49,12 @@ public class JExtendedInternalFrame extends JInternalFrame {
 	}
 
 	public synchronized void stopModal() {
-		System.err.println("STOPMODAL!");
+		logger.debug("STOPMODAL!");
 		notifyAll();
 	}
 
 	public synchronized void startModal() {
-		System.err.println("Starting modal");
+		logger.debug("Starting modal");
 		if (isVisible() && !isShowing()) {
 			Component parent = this.getParent();
 			while (parent != null) {

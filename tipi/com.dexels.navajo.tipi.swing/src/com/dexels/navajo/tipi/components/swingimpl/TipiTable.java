@@ -39,6 +39,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -62,10 +65,12 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class TipiTable extends TipiSwingDataComponentImpl implements
 		ChangeListener {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1181069408393438266L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTable.class);
+	
 	private String messagePath = "";
 	private MessageTablePanel mm;
 	private Map<String, ColumnAttribute> columnAttributes = new HashMap<String, ColumnAttribute>();
@@ -98,7 +103,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 					getAttributeProperty("selectedMessage").setAnyValue(
 							selectedMessage);
 					Object typedValue = getAttributeProperty("selectedMessage").getTypedValue();
-					System.err.println("Atr: "+typedValue);
+					logger.debug("Atr: "+typedValue);
 				}
 			}
 		});
@@ -137,7 +142,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 				try {
 					performTipiEvent("onKey", m, true);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -146,19 +151,19 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 				m.put("mode", "pressed");
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					try {
-						System.err.println("Enterrrr!");
+						logger.debug("Enterrrr!");
 						// Consume is important, otherwise selection will be
 						// changed.
 						e.consume();
 						performTipiEvent("onEnter", m, true);
 					} catch (TipiException e1) {
-						e1.printStackTrace();
+						logger.error("Error detected",e1);
 					}
 				}
 				try {
 					performTipiEvent("onKey", m, true);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -169,7 +174,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 				try {
 					performTipiEvent("onKey", m, true);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -189,7 +194,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 	@Override
 	public void showPopup(MouseEvent e) {
 		Point p = e.getPoint();
-		System.err.println("TablePopup: " + p);
+		logger.debug("TablePopup: " + p);
 		// get the row index that contains that coordinate
 		int rowNumber = mm.getTable().rowAtPoint(p);
 		mm.setSelectedRow(rowNumber);
@@ -318,12 +323,12 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		addProperty(columnMessage, "Size", size, Property.INTEGER_PROPERTY);
 
 		boolean editable = "true".equals(editableString);
-		// System.err.println("Putting size for column # "+columnCount+"
+		// logger.debug("Putting size for column # "+columnCount+"
 		// to: "+size);
 		columnSize.put(new Integer(i), new Integer(size));
 		// String sizeString = (String) child.getAttribute("size");
 		String labelString = label;
-		// System.err.println("Label to evaluate: "+labelString);
+		// logger.debug("Label to evaluate: "+labelString);
 
 		try {
 			Operand evalLabel = this.getContext().evaluate(labelString, this,
@@ -331,15 +336,15 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 			if (evalLabel != null) {
 
 				labelString = "" + evalLabel.value;
-				// System.err.println("Label evaluated to:
+				// logger.debug("Label evaluated to:
 				// "+labelString);
 
 			} else {
-				// System.err.println("Null evaluated label.");
+				// logger.debug("Null evaluated label.");
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			// System.err.println("Exception while evaluating label:
+			logger.error("Error detected",ex);
+			// logger.debug("Exception while evaluating label:
 			// "+label);
 		}
 
@@ -353,7 +358,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 			mm.setTypeHint(name, typehint);
 		}
 		if (aggr != null) {
-			// System.err.println("Adding agr: "+aggr+" col: "+i);
+			// logger.debug("Adding agr: "+aggr+" col: "+i);
 			// Thread.dumpStack();
 			addAggregate(i, aggr);
 		}
@@ -397,7 +402,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 			tempMap.put("selectedMessage", mm.getSelectedMessage());
 			performTipiEvent("onSelectionChanged", tempMap, false);
 		} catch (TipiException ex) {
-			ex.printStackTrace();
+			logger.error("Error detected",ex);
 		}
 	}
 
@@ -427,7 +432,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 				try {
 					reloadColumns();
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 		});
@@ -435,7 +440,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		if (messagePath != null && n != null) {
 			final Message m = n.getMessage(messagePath);
 			myMessage = m;
-			// System.err.println("MEssage: "+myMessage);
+			// logger.debug("MEssage: "+myMessage);
 			if (m != null) {
 				runSyncInEventThread(new Runnable() {
 					public void run() {
@@ -462,10 +467,10 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 								try {
 									performTipiEvent("onRowLoad", m, true);
 								} catch (TipiBreakException e) {
-									System.err.println("Row break!");
+									logger.debug("Row break!");
 									break;
 								} catch (TipiException e) {
-									e.printStackTrace();
+									logger.error("Error detected",e);
 									break;
 								}
 								elementIndex++;
@@ -513,7 +518,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 					setColumnVisible(index, ((Boolean) o.value).booleanValue());
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		mm.createDefaultColumnsFromModel();
@@ -734,11 +739,11 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 					try {
 						n.addMessage(array);
 					} catch (NavajoException e) {
-						e.printStackTrace();
+						logger.error("Error detected",e);
 					}
 					return array;
 				} else {
-					System.err.println("AAp.. all is null of 0");
+					logger.debug("AAp.. all is null of 0");
 				}
 			}
 			if (name.equals("filteredMessage")) {
@@ -830,7 +835,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 									+ title.value;
 							mm.showEditDialog(titleString, mm.getSelectedRow());
 						} catch (Exception ex1) {
-							ex1.printStackTrace();
+							logger.error("Error detected",ex1);
 						}
 					}
 					if ("selectByValue".equals(name)) {
@@ -859,7 +864,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 							mm.getTable().getSelectionModel()
 									.setValueIsAdjusting(false);
 						} catch (Exception ex1) {
-							ex1.printStackTrace();
+							logger.error("Error detected",ex1);
 						}
 					}
 				}
@@ -874,19 +879,19 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 				}
 
 				if ("setAllSelected".equals(name)) {
-					System.err.println("In setAllSelected");
+					logger.debug("In setAllSelected");
 					Operand propertyName = compMeth.getEvaluatedParameter(
 							"propertyName", event);
 					Operand value = compMeth.getEvaluatedParameter("value",
 							event);
-					System.err.println("Value: " + value.value);
-					System.err.println("PropertyName: " + propertyName.value);
+					logger.debug("Value: " + value.value);
+					logger.debug("PropertyName: " + propertyName.value);
 					ArrayList<Message> al = mm.getSelectedMessages();
 					if (al == null) {
 						// Nothing is selected
 						return;
 					}
-					System.err.println("# of selected msgs: " + al.size());
+					logger.debug("# of selected msgs: " + al.size());
 					for (int i = 0; i < al.size(); i++) {
 						Message current = al.get(i);
 						Property cp = current.getProperty(""
@@ -900,7 +905,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 						performTipiEvent("onActionPerformed", null, false);
 
 					} catch (TipiException e) {
-						e.printStackTrace();
+						logger.error("Error detected",e);
 					}
 				}
 
@@ -934,8 +939,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 
 					Property value = (Property) property.value;
 					if (value == null) {
-						System.err
-								.println("Error: can not editCell, property null. Expression: "
+						logger.warn("Error: can not editCell, property null. Expression: "
 										+ compMeth.getParameter("property")
 												.toString());
 					} else {
@@ -978,7 +982,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 					try {
 						doRunReport((String) format.value, orientation, margin);
 					} catch (TipiException e) {
-						e.printStackTrace();
+						logger.error("Error detected",e);
 					}
 				}
 			}
@@ -1020,7 +1024,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 				}
 			}
 		} catch (TipiException ex) {
-			ex.printStackTrace();
+			logger.error("Error detected",ex);
 		}
 	}
 
@@ -1097,7 +1101,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 								GridBagConstraints.WEST,
 								GridBagConstraints.HORIZONTAL, new Insets(1, 1,
 										1, 1), 0, 0));
-				System.err.println("COMPLYING:  ");
+				logger.debug("COMPLYING:  ");
 				complied++;
 			}
 		}
@@ -1123,12 +1127,11 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		ConditionalRemark cr = new ConditionalRemark(this, remark, condition,
 				c, font);
 		conditionalRemarks.add(cr);
-		System.err
-				.println("************************\nCreating remark panel\n********************************\n");
+		logger.warn("************************\nCreating remark panel\n********************************\n");
 		if (remarkPanel == null) {
 			createRemarkPanel();
 		}
-		System.err.println("size:");
+		logger.debug("size:");
 	}
 
 	private final void createRemarkPanel() {

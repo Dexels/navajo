@@ -13,6 +13,9 @@ import javax.jnlp.PersistenceService;
 import javax.jnlp.ServiceManager;
 import javax.jnlp.UnavailableServiceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
@@ -21,8 +24,11 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiStorageManager;
 
 public class TipiCookieStorageManager implements TipiStorageManager {
-// not serializable, I don't think it makes sense to make it serializable
-//	private TipiContext myContext;
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiCookieStorageManager.class);
+	
 	PersistenceService ps;
 	BasicService bs;
 
@@ -79,9 +85,9 @@ public class TipiCookieStorageManager implements TipiStorageManager {
 				// found, as we did not jump
 				// ps.delete(cookieURL);
 			} catch (FileNotFoundException e) {
-				System.err.println("Cookie not found. Thats fine.");
+				logger.debug("Cookie not found. Thats fine.");
 				long allowed = ps.create(cookieURL, 100000);
-				System.err.println("New muffin, size granted: " + allowed);
+				logger.debug("New muffin, size granted: " + allowed);
 			}
 			// InputStream inputStream = fc.getInputStream();
 			FileContents ff = ps.get(cookieURL);
@@ -90,10 +96,10 @@ public class TipiCookieStorageManager implements TipiStorageManager {
 			os.flush();
 			os.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 			throw new TipiException("Error storing document: " + id, e);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 			throw new TipiException("Error storing document: " + id, e);
 		}
 	}

@@ -13,31 +13,18 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class TipiSwingWindow extends JInternalFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1660981988162626561L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingWindow.class);
 	private Point position = null;
 	private Dimension oldSize = null;
 
@@ -142,7 +129,7 @@ public class TipiSwingWindow extends JInternalFrame {
 				ImageIcon ii = new ImageIcon(i);
 				return ii;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		return null;

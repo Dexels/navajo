@@ -10,37 +10,22 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.components.swingimpl.swing.ConditionalRemark;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
 
 public class RemarkPanel extends JPanel {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6444984452068415750L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(RemarkPanel.class);
+	
 	private final TipiMegaTable myTable;
-	// private final MessageTablePanel myMessageTable;
 	private final Message myMessage;
-	// private final TipiTableLayer myLayer;
 	private final List<ConditionalRemark> conditionalRemarks;
 
 	public RemarkPanel(TipiMegaTable tmt, Message m,
@@ -65,7 +50,7 @@ public class RemarkPanel extends JPanel {
 				oo = myTable.getContext().evaluate(current.getCondition(),
 						myTable, null, myMessage);
 			} catch (Throwable ex) {
-				System.err.println("Error while updating remarks. Continuing.");
+				logger.debug("Error while updating remarks. Continuing.");
 			}
 			boolean complies = false;
 			if (oo != null && oo.value != null) {

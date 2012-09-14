@@ -5,17 +5,23 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TipiTransferable implements Transferable {
 
 	final DataFlavor myFlavor;
 	final TipiDraggable source;
 	final TipiTransferHandler myHandler;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTransferable.class);
+	
 	public TipiTransferable(TipiDraggable source, TipiTransferHandler handler) {
 		myHandler = handler;
 		myFlavor = getFlavor();
 
-		System.err.println("Created flava: " + myFlavor);
+		logger.debug("Created flava: " + myFlavor);
 		this.source = source;
 	}
 
@@ -34,7 +40,7 @@ public class TipiTransferable implements Transferable {
 	}
 
 	public boolean isDataFlavorSupported(DataFlavor flavor) {
-		System.err.println("Chickin!");
+		logger.debug("Chickin!");
 		if (flavor.equals(myFlavor)) {
 			return true;
 		}

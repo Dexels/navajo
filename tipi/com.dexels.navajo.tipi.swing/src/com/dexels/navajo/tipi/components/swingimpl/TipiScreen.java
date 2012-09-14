@@ -56,7 +56,7 @@ public class TipiScreen extends TipiSwingDataComponentImpl {
 			public void run() {
 
 				if (current != null && Window.class.isInstance(current)) {
-					// System.err.println("Not null, and window");
+					// logger.debug("Not null, and window");
 					current.setVisible(true);
 				} else {
 					if (c instanceof JApplet) {
@@ -81,7 +81,7 @@ public class TipiScreen extends TipiSwingDataComponentImpl {
 				|| JInternalFrame.class.isInstance(current)) {
 			current.setVisible(false);
 		} else {
-			System.err.println("NOT studio mode, but not of type window: "
+			logger.debug("NOT studio mode, but not of type window: "
 					+ current.getClass());
 		}
 
@@ -125,7 +125,7 @@ public class TipiScreen extends TipiSwingDataComponentImpl {
 				return (RootPaneContainer) current.getContainer();
 			}
 		}
-		System.err.println("RETURNING NULL. OH DEAR");
+		logger.debug("RETURNING NULL. OH DEAR");
 		return null;
 	}
 
@@ -149,8 +149,7 @@ public class TipiScreen extends TipiSwingDataComponentImpl {
 			Object constraints) {
 
 		if (tc == null) {
-			System.err
-					.println("And I thought that this would never happen. Nice.");
+			logger.error("And I thought that this would never happen. Nice.");
 			Thread.dumpStack();
 			return;
 		}

@@ -12,6 +12,9 @@ import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
@@ -38,10 +41,12 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public final class TipiWindow
 // extends DefaultTipi {
 		extends TipiSwingDataComponentImpl {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -4916285139918344888L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiWindow.class);
+	
 	private JInternalFrame myWindow;
 
 	private JInternalFrame constructWindow() {
@@ -80,9 +85,9 @@ public final class TipiWindow
 							((JInternalFrame) e.getSource()).dispose();
 						} catch (TipiException e1) {
 							((JInternalFrame) e.getSource()).dispose();
-							e1.printStackTrace();
+							logger.error("Error detected",e1);
 						} catch (TipiBreakException e2) {
-							System.err.println("Breakie breakie");
+							logger.debug("Breakie breakie");
 							if (e2.getType() == TipiBreakException.COMPONENT_DISPOSED) {
 								// a component disposed event should still close
 								// the window
@@ -125,7 +130,7 @@ public final class TipiWindow
 					((JInternalFrame) getContainer()).setSelected(true);
 					((JInternalFrame) getContainer()).requestFocus();
 				} catch (PropertyVetoException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 		});
@@ -174,7 +179,7 @@ public final class TipiWindow
 				jj.setIcon(true);
 				tt.getDesktopManager().iconifyFrame(jj);
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error("Error detected",ex);
 			}
 		}
 		if (name.equals("maximize")) {
@@ -189,16 +194,16 @@ public final class TipiWindow
 				jj.setMaximum(true);
 				tt.getDesktopManager().maximizeFrame(jj);
 			} catch (Error ex1) {
-				ex1.printStackTrace();
+				logger.error("Error detected",ex1);
 			} catch (Exception ex1) {
-				ex1.printStackTrace();
+				logger.error("Error detected",ex1);
 			}
 		}
 		if (name.equals("restore")) {
 			checkContainerInstance();
 			JInternalFrame jj = (JInternalFrame) getContainer();
 			if (!jj.isMaximum()) {
-				System.err.println("Ignoring: Nothing to restore");
+				logger.debug("Ignoring: Nothing to restore");
 				return;
 			}
 			TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
@@ -208,7 +213,7 @@ public final class TipiWindow
 				// // This might give an exception.. don't worry.. can't help
 				// it.
 			} catch (PropertyVetoException ex1) {
-				ex1.printStackTrace();
+				logger.error("Error detected",ex1);
 			}
 		}
 		if (name.equals("toFront")) {

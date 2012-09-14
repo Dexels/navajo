@@ -15,6 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -31,30 +34,15 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.swingclient.components.MessageTablePanel;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 
 public class TipiMegaTable extends TipiSwingDataComponentImpl {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5292089261320457970L;
 
+	private static final long serialVersionUID = -5292089261320457970L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMegaTable.class);
+	
 	public TipiMegaTable() {
 	}
 
@@ -101,7 +89,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 						try {
 							performTipiEvent("onValueChanged", m, false);
 						} catch (TipiException ex) {
-							ex.printStackTrace();
+							logger.error("Error detected",ex);
 						}
 
 					}
@@ -125,13 +113,13 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 					try {
 						updates = myNavajo.refreshExpression();
 					} catch (NavajoException ex) {
-						ex.printStackTrace();
+						logger.error("Error detected",ex);
 					}
 				} else {
-					System.err.println("NULL MESSAGE?**********************");
+					logger.debug("NULL MESSAGE?**********************");
 				}
 			} else {
-				System.err.println("NUL PATH??******************8");
+				logger.debug("NUL PATH??******************8");
 			}
 		}
 		for (int i = 0; i < tableInstances.size(); i++) {
@@ -225,7 +213,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 				flatten(serviceName, hostUrl, username, password, pincode,
 						keystore, keypass);
 			} catch (NavajoException ex) {
-				ex.printStackTrace();
+				logger.error("Error detected",ex);
 				if (compMeth.getAction() != null) {
 					compMeth.getAction().dumpStack("Error performing flatten");
 				}
@@ -241,7 +229,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 					titleString = title == null ? "Aap" : "" + title.value;
 					mtp.showEditDialog(titleString, mtp.getSelectedRow());
 				} catch (Exception ex1) {
-					ex1.printStackTrace();
+					logger.error("Error detected",ex1);
 
 				}
 			}
@@ -254,7 +242,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 			try {
 				flattenToCsv(filename, delimiter);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 
@@ -407,12 +395,12 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		s.push(new Integer(1));
 		s.push(new Integer(2));
 		s.push(new Integer(3));
-		System.err.println("Stack: " + s);
+		logger.debug("Stack: " + s);
 		int i = 0;
 		for (Iterator<Integer> iter = s.iterator(); iter.hasNext();) {
 			Integer element = iter.next();
-			System.err.println("Element# " + i++);
-			System.err.println("::: " + element);
+			logger.debug("Element# " + i++);
+			logger.debug("::: " + element);
 		}
 	}
 }

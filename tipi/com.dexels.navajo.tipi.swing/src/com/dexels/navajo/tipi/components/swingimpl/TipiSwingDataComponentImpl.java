@@ -14,6 +14,9 @@ import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
@@ -26,29 +29,14 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiLayout;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public abstract class TipiSwingDataComponentImpl extends TipiDataComponentImpl
 		implements TipiSwingComponent {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 501099327239149734L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingDataComponentImpl.class);
 	protected TipiPopupMenu myPopupMenu = null;
 	protected TipiGradientPaint myPaint;
 	private int currentPage = -1;
@@ -91,8 +79,8 @@ public abstract class TipiSwingDataComponentImpl extends TipiDataComponentImpl
 
 				public void run() {
 					getSwingContainer().add((Component) c, constraints);
-					// System.err.println("Added to container: "+Thread.currentThread().getName());
-					// System.err.println("Adding component: "+c+" to: "+getSwingContainer()+" with constraint: "+constraints);
+					// logger.debug("Added to container: "+Thread.currentThread().getName());
+					// logger.debug("Adding component: "+c+" to: "+getSwingContainer()+" with constraint: "+constraints);
 					// TODO ADDED 7/7/2009 I don't know about the performance
 					// hit.
 					((JComponent) getSwingContainer()).revalidate();
@@ -247,9 +235,9 @@ public abstract class TipiSwingDataComponentImpl extends TipiDataComponentImpl
 					try {
 						TipiSwingDataComponentImpl.super.loadData(n, method);
 					} catch (TipiBreakException e) {
-						e.printStackTrace();
+						logger.error("Error detected",e);
 					} catch (Throwable e) {
-						e.printStackTrace();
+						logger.error("Error detected",e);
 						myContext.showInternalError("Error loading component: "
 								+ getPath() + " message: " + e.getMessage(), e);
 					}
@@ -271,7 +259,7 @@ public abstract class TipiSwingDataComponentImpl extends TipiDataComponentImpl
 				try {
 					TipiSwingDataComponentImpl.super.loadValues(values, event);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 		});
@@ -310,13 +298,13 @@ public abstract class TipiSwingDataComponentImpl extends TipiDataComponentImpl
 	}
 
 	// protected void addedToParent() {
-	// // System.err.println("Boioioiooiinggggg!");
+	// // logger.debug("Boioioiooiinggggg!");
 	// if(getContainer() instanceof JComponent) {
 	// runAsyncInEventThread(new Runnable() {
 	// public void run() {
 	// Component p = getSwingContainer().getParent();
 	// if(p instanceof JComponent) {
-	// System.err.println("RAAAAAHHHH!!!");
+	// logger.debug("RAAAAAHHHH!!!");
 	// JComponent jc = (JComponent)p;
 	// jc.revalidate();
 	// }
