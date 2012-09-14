@@ -9,4 +9,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.osgi.framework;version="1.3.0",
  org.osgi.service.cm;version="1.3.0",
  org.slf4j;version="1.6.1"
-Require-Bundle: com.mongodb;bundle-version="2.6.3"
+Require-Bundle: org.mongodb.mongo-java-driver;bundle-version="2.9.1"

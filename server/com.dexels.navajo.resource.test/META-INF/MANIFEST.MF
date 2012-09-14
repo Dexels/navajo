@@ -17,7 +17,7 @@ Import-Package: com.dexels.navajo.adapter.resource,
  org.slf4j;version="1.6.1"
 Require-Bundle: com.dexels.navajo.resource;bundle-version="1.0.0",
  com.dexels.navajo.resource.manager;bundle-version="1.0.0",
- com.mongodb;bundle-version="2.6.3",
  com.dexels.navajo.adapters;bundle-version="1.0.5",
- com.dexels.navajo.core;bundle-version="2.9.5"
+ com.dexels.navajo.core;bundle-version="2.9.5",
+ org.mongodb.mongo-java-driver;bundle-version="2.9.1"
 Service-Component: OSGI-INF/resourceManagerTest.xml, OSGI-INF/dataSourceTest.xml

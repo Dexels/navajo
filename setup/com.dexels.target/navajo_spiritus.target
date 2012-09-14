@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
 
-<target name="Navajo Develop" sequenceNumber="626">
+<target name="Navajo Develop" sequenceNumber="631">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.chart.feature.group" version="2.6.2.r262_v20101008-7f9T7OFPWowQ1naKt1Wwu4"/>
@@ -315,638 +315,638 @@
 <repository location="https://source.dexels.com/eclipse/platform_4.2"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.3.8.RELEASE"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.3.9.RELEASE"/>
 <repository location="https://source.dexels.com/eclipse/3rdparty"/>
 </location>
 </locations>
 <includeBundles>
-<plugin id="org.hamcrest.core"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.pdf.config"/>
-<plugin id="org.eclipse.equinox.weaving.caching"/>
-<plugin id="org.eclipse.emf.databinding"/>
-<plugin id="org.eclipse.swt.gtk.hpux.ia64_32" version="3.100.0.v4233d"/>
-<plugin id="org.apache.felix.scr"/>
-<plugin id="org.eclipse.jetty.security" version="8.1.3.v20120522"/>
-<plugin id="org.eclipse.jdt.compiler.apt"/>
-<plugin id="org.eclipse.jetty.util" version="8.1.3.v20120522"/>
-<plugin id="org.apache.ant" version="1.8.2.v20110505-1300"/>
-<plugin id="org.slf4j.api"/>
-<plugin id="org.eclipse.datatools.connectivity.ui.nl1"/>
-<plugin id="org.eclipse.birt.report.viewers.nl1"/>
-<plugin id="org.apache.xml.resolver" version="1.2.0.v201005080400"/>
-<plugin id="org.eclipse.emf.examples.generator.validator"/>
-<plugin id="org.eclipse.equinox.security.ui" version="1.1.100.v20120522-2049"/>
-<plugin id="javax.servlet.jsp" version="2.2.0.v201103241009"/>
-<plugin id="org.apache.xml.security"/>
-<plugin id="org.eclipse.birt.report.designer.ui.samplesview.nl1"/>
-<plugin id="org.eclipse.swt.gtk.aix.ppc64" version="3.100.0.v4233d"/>
-<plugin id="org.eclipse.birt.chart.examples.core.nl1"/>
-<plugin id="org.eclipse.xtext.util"/>
-<plugin id="org.eclipse.birt.report.debug.ui"/>
-<plugin id="org.apache.felix.servicediagnostics.plugin"/>
-<plugin id="org.eclipse.emf.examples.library"/>
-<plugin id="org.eclipse.birt.data.aggregation.nl1"/>
-<plugin id="org.eclipse.ecf.provider.filetransfer.httpclient" version="4.0.200.v20120608-0148"/>
-<plugin id="org.eclipse.birt.report.designer.ui.cubebuilder.nl1"/>
-<plugin id="org.eclipse.birt.chart.examples.core"/>
-<plugin id="org.apache.lucene.core" version="2.9.1.v201101211721"/>
-<plugin id="org.apache.felix.metatype"/>
-<plugin id="org.eclipse.birt.chart.reportitem.ui"/>
-<plugin id="org.eclipse.core.filesystem.win32.x86" version="1.1.300.v20120522-1137"/>
-<plugin id="org.eclipse.equinox.security.win32.x86" version="1.0.300.v20120522-2049"/>
-<plugin id="javax.management"/>
-<plugin id="org.eclipse.birt.core"/>
-<plugin id="org.eclipse.core.runtime.compatibility.registry" version="3.5.100.v20120521-2346"/>
-<plugin id="javax.transaction"/>
-<plugin id="org.eclipse.datatools.connectivity.oda.consumer"/>
-<plugin id="org.eclipse.core.net.win32.x86_64" version="1.0.100.v20120522-1148"/>
-<plugin id="org.eclipse.core.jobs" version="3.5.100.v20110404"/>
-<plugin id="org.antlr.runtime" version="3.2.0.v201101311130"/>
-<plugin id="org.eclipse.ui.views.properties.tabbed" version="3.5.300.v20120523-1955"/>
-<plugin id="org.apache.felix.dependencymanager.shell"/>
-<plugin id="org.apache.felix.eventadmin"/>
-<plugin id="org.eclipse.birt.chart.engine.extension.nl1"/>
-<plugin id="org.eclipse.gef"/>
-<plugin id="org.eclipse.equinox.simpleconfigurator.manipulator" version="2.0.0.v20110502-1955"/>
-<plugin id="org.eclipse.swt.gtk.solaris.x86" version="3.100.0.v4233d"/>
-<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile.sampledb.ui"/>
-<plugin id="org.eclipse.jetty.nested"/>
-<plugin id="javax.servlet.jsp" version="2.0.0.v201101211617"/>
-<plugin id="org.eclipse.update.core.win32"/>
-<plugin id="org.eclipse.emf.mapping.ecore2ecore.editor"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.postscript"/>
-<plugin id="org.eclipse.emf.mwe2.lib"/>
-<plugin id="org.eclipse.jetty.osgi.boot.warurl"/>
-<plugin id="javax.security.auth.message"/>
-<plugin id="org.eclipse.birt.report.data.bidi.utils"/>
-<plugin id="org.eclipse.xtext.xtend2.lib"/>
-<plugin id="org.mortbay.jetty.util"/>
-<plugin id="org.eclipse.xtend.shared.ui"/>
-<plugin id="org.apache.httpcomponents.httpcore.nio"/>
-<plugin id="org.eclipse.birt.report.designer.ui.ide"/>
-<plugin id="org.apache.felix.http.whiteboard"/>
-<plugin id="org.eclipse.core.variables" version="3.2.600.v20120521-2012"/>
-<plugin id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
-<plugin id="org.eclipse.ui.workbench.texteditor" version="3.8.0.v20120523-1310"/>
-<plugin id="org.eclipse.birt.report.viewer"/>
-<plugin id="org.apache.batik.transcoder" version="1.6.0.v200805290154"/>
-<plugin id="org.apache.lucene.misc"/>
-<plugin id="org.eclipse.emf.examples.library.editor"/>
-<plugin id="org.eclipse.ui" version="3.103.0.v20120521-2329"/>
-<plugin id="org.apache.felix.shell.remote"/>
-<plugin id="org.apache.felix.shell.tui"/>
-<plugin id="org.eclipse.xtext.builder"/>
-<plugin id="org.eclipse.emf.mapping.ui"/>
-<plugin id="org.eclipse.core.resources.win32.x86" version="3.5.100.v20120522-1137"/>
-<plugin id="org.apache.lucene.snowball"/>
-<plugin id="org.eclipse.equinox.event" version="1.2.200.v20120522-2049"/>
-<plugin id="org.eclipse.xtext.ui.codetemplates.ui"/>
-<plugin id="org.eclipse.xtext.ui.shared"/>
-<plugin id="org.eclipse.equinox.frameworkadmin" version="2.0.100.v20120606-175127"/>
-<plugin id="org.eclipse.jetty.servlets"/>
-<plugin id="org.eclipse.equinox.app" version="1.3.100.v20120522-1841"/>
-<plugin id="org.eclipse.debug.core" version="3.7.100.v20120521-2012"/>
-<plugin id="org.eclipse.zest.layouts"/>
-<plugin id="org.apache.ws.commons.util"/>
-<plugin id="org.eclipse.birt.report.engine.dataextraction.csv"/>
-<plugin id="org.apache.hadoop.zookeeper"/>
-<plugin id="org.eclipse.xtext.common.types"/>
-<plugin id="org.eclipse.birt.report.item.crosstab.ui.nl1"/>
-<plugin id="org.eclipse.jetty.jaspi"/>
-<plugin id="org.eclipse.xtend.typesystem.uml2"/>
-<plugin id="org.eclipse.equinox.useradmin"/>
-<plugin id="org.eclipse.help" version="3.6.0.v20120521-2344"/>
-<plugin id="org.eclipse.jetty.xml"/>
-<plugin id="org.eclipse.equinox.jsp.jasper" version="1.0.400.v20120522-2049"/>
-<plugin id="org.eclipse.birt.chart.ui.nl1"/>
-<plugin id="org.apache.felix.gogo.runtime" version="0.10.0"/>
-<plugin id="org.eclipse.birt.report.designer.ui.editors.schematic"/>
-<plugin id="org.eclipse.datatools.connectivity.oda.profile"/>
-<plugin id="org.apache.felix.http.bundle"/>
-<plugin id="org.apache.httpcomponents.httpcore"/>
-<plugin id="org.eclipse.xtend.typesystem.emf.ui"/>
-<plugin id="org.eclipse.swt.gtk.linux.ppc64" version="3.100.0.v4233d"/>
-<plugin id="org.eclipse.birt.chart.device.svg"/>
-<plugin id="osgi.cmpn"/>
-<plugin id="org.eclipse.xtext.purexbase.ui"/>
-<plugin id="org.eclipse.jetty.continuation" version="8.1.3.v20120522"/>
-<plugin id="org.eclipse.equinox.concurrent"/>
-<plugin id="org.eclipse.core.filesystem" version="1.3.200.v20120522-2012"/>
-<plugin id="org.apache.felix.http.base"/>
-<plugin id="org.eclipse.zest.core"/>
-<plugin id="org.eclipse.birt.report.data.oda.xml.ui"/>
-<plugin id="org.w3c.css.sac" version="1.3.1.v200903091627"/>
-<plugin id="org.eclipse.equinox.io"/>
-<plugin id="org.eclipse.help.appserver"/>
-<plugin id="org.w3c.dom.smil" version="1.0.0.v200806040011"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.excel.config.nl1"/>
-<plugin id="org.eclipse.birt.chart.reportitem"/>
-<plugin id="org.apache.batik.util.gui" version="1.7.0.v200903091627"/>
-<plugin id="org.eclipse.birt.report.data.oda.jdbc"/>
-<plugin id="javax.xml" version="1.3.4.v201005080400"/>
-<plugin id="org.eclipse.equinox.util.source" version="1.0.400.v20120522-2049"/>
-<plugin id="org.eclipse.ui.net" version="1.2.100.v20120522-1148"/>
-<plugin id="org.apache.commons.codec" version="1.3.0.v20100518-1140"/>
-<plugin id="org.sat4j.pb" version="2.3.0.v20110329"/>
-<plugin id="org.eclipse.birt.report.item.crosstab.ui"/>
-<plugin id="org.eclipse.birt.chart.ui.extension.nl1"/>
-<plugin id="com.google.gwtjsonrpc"/>
-<plugin id="org.eclipse.datatools.connectivity.oda.design.nl1"/>
-<plugin id="org.apache.commons.jxpath"/>
-<plugin id="org.eclipse.ui.win32" version="3.2.300.v20120523-1955"/>
-<plugin id="org.eclipse.swt.win32.win32.x86" version="3.100.0.v4233d"/>
-<plugin id="org.eclipse.birt.chart.device.pdf"/>
-<plugin id="org.eclipse.jetty.annotations"/>
-<plugin id="org.eclipse.emf.importer.rose"/>
-<plugin id="org.apache.bsf"/>
-<plugin id="org.eclipse.birt.report.designer.ui.preview.web"/>
-<plugin id="org.ops4j.pax.configmanager"/>
-<plugin id="org.eclipse.jdt.compiler.tool"/>
-<plugin id="javax.xml.ws"/>
-<plugin id="org.eclipse.birt.report.designer.ui.views"/>
-<plugin id="org.eclipse.ui.ide.application" version="1.0.400.v20120523-1955"/>
-<plugin id="org.eclipse.emf.importer.java"/>
-<plugin id="org.apache.felix.prefs"/>
-<plugin id="org.apache.commons.dbcp"/>
-<plugin id="org.eclipse.birt.chart.device.svg.nl1"/>
-<plugin id="org.eclipse.equinox.launcher" version="1.3.0.v20120522-1813"/>
-<plugin id="org.eclipse.equinox.transforms.hook"/>
-<plugin id="javax.wsdl" version="1.6.2.v201012040545"/>
-<plugin id="org.eclipse.birt.report.item.crosstab.core.nl1"/>
-<plugin id="org.eclipse.birt.report.data.bidi.utils.ui"/>
-<plugin id="org.eclipse.core.runtime.compatibility" version="3.2.200.v20120521-2346"/>
-<plugin id="com.lowagie.text"/>
-<plugin id="ch.qos.logback.slf4j"/>
-<plugin id="org.eclipse.jetty.jmx"/>
-<plugin id="org.apache.solr.core"/>
-<plugin id="org.eclipse.emf.ecore.edit"/>
-<plugin id="org.apache.commons.pool" version="1.4.0.v20081016-1000"/>
-<plugin id="org.eclipse.gef.doc.isv"/>
-<plugin id="org.eclipse.equinox.http.jetty" version="3.0.0.v20120522-1841"/>
-<plugin id="org.eclipse.birt.report.designer.ui.data"/>
-<plugin id="org.eclipse.xtext.xbase.lib"/>
-<plugin id="org.eclipse.draw2d.doc.isv"/>
-<plugin id="org.apache.derby"/>
-<plugin id="org.eclipse.ecf.provider.filetransfer.httpclient.ssl" version="1.0.0.v20120608-0148"/>
-<plugin id="osgi.enterprise"/>
-<plugin id="org.eclipse.emf.mapping.ecore.editor"/>
-<plugin id="org.apache.felix.shell"/>
-<plugin id="org.apache.batik.dom.svg" version="1.7.0.v201011041433"/>
-<plugin id="org.eclipse.birt.report.data.oda.xml"/>
-<plugin id="javax.inject" version="1.0.0.v20091030"/>
-<plugin id="org.eclipse.equinox.weaving.hook"/>
-<plugin id="org.eclipse.ui.navigator" version="3.5.200.v20120523-1955"/>
-<plugin id="org.eclipse.equinox.cm"/>
-<plugin id="org.eclipse.jetty.rewrite"/>
-<plugin id="org.eclipse.jsch.core" version="1.1.400.v20120522-1148"/>
-<plugin id="org.apache.taglibs.standard.glassfish"/>
-<plugin id="org.eclipse.jdt.core"/>
-<plugin id="org.eclipse.datatools.connectivity.oda.design"/>
-<plugin id="org.apache.batik.util" version="1.7.0.v201011041433"/>
-<plugin id="org.apache.batik.parser" version="1.7.0.v201011041433"/>
-<plugin id="org.eclipse.jetty.jndi"/>
-<plugin id="org.eclipse.xpand"/>
-<plugin id="org.apache.felix.webconsole"/>
-<plugin id="org.eclipse.emf.mapping.ecore"/>
-<plugin id="org.eclipse.emf.java.editor"/>
-<plugin id="org.eclipse.birt.chart.device.swt.nl1"/>
-<plugin id="org.eclipse.jdt.apt.pluggable.core"/>
-<plugin id="org.eclipse.datatools.connectivity.oda.consumer.nl1"/>
-<plugin id="org.eclipse.datatools.connectivity.db.generic.ui.nl1"/>
-<plugin id="org.eclipse.jface.text" version="3.8.0.v20120531-0600"/>
-<plugin id="org.eclipse.ui.browser" version="3.4.0.v20120521-2329"/>
-<plugin id="org.eclipse.birt.report.designer.ui.editors.schematic.nl1"/>
-<plugin id="org.junit" version="4.8.2.v4_8_2_v20110321-1705"/>
-<plugin id="org.igniterealtime.smack"/>
-<plugin id="org.eclipse.birt.chart.device.extension"/>
-<plugin id="ch.qos.logback.core"/>
-<plugin id="org.eclipse.birt.report.designer.ui.editors.nl1"/>
-<plugin id="org.eclipse.xtend.typesystem.uml2.ui"/>
-<plugin id="org.eclipse.xtext.common.types.shared"/>
-<plugin id="org.eclipse.birt.report.model.nl1"/>
-<plugin id="org.apache.batik.ext.awt" version="1.7.0.v201011041433"/>
-<plugin id="com.jcraft.jsch" version="0.1.46.v201205102330"/>
-<plugin id="org.eclipse.birt.report.item.crosstab.core"/>
-<plugin id="org.eclipse.jdt.apt.ui"/>
-<plugin id="org.eclipse.birt.report.designer.ui.samples.ide.nl1"/>
-<plugin id="org.eclipse.emf.importer"/>
-<plugin id="org.eclipse.swt.cocoa.macosx" version="3.100.0.v4233d"/>
-<plugin id="org.apache.felix.dependencymanager"/>
-<plugin id="org.apache.httpcomponents.httpclient"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.excel.config"/>
-<plugin id="org.eclipse.birt.report.data.oda.jdbc.ui.nl1"/>
-<plugin id="org.eclipse.equinox.coordinator"/>
-<plugin id="org.eclipse.ui.intro" version="3.4.200.v20120521-2344"/>
-<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile.ui.nl1"/>
-<plugin id="org.apache.commons.cli" version="1.2.0.v201105210650"/>
-<plugin id="javax.el" version="2.2.0.v201108011116"/>
-<plugin id="org.eclipse.platform.doc.user" version="4.2.0.v20120606-135340"/>
-<plugin id="org.apache.felix.deployment.rp.autoconf"/>
-<plugin id="org.eclipse.equinox.ip"/>
-<plugin id="org.eclipse.osgi.util" version="3.2.300.v20120522-1822"/>
-<plugin id="org.eclipse.equinox.http.registry" version="1.1.200.v20120522-2049"/>
-<plugin id="org.eclipse.jetty.webapp"/>
-<plugin id="org.eclipse.help.ui" version="3.5.200.v20120521-2344"/>
-<plugin id="org.eclipse.compare.core" version="3.5.200.v20120522-1148"/>
-<plugin id="org.eclipse.core.net.linux.x86_64" version="1.1.0.v20120522-1148"/>
-<plugin id="org.eclipse.xpand.incremental"/>
-<plugin id="org.eclipse.help.base" version="3.6.100.v201206081400"/>
-<plugin id="org.eclipse.datatools.connectivity.dbdefinition.genericJDBC.nl1"/>
-<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile.nl1"/>
-<plugin id="org.h2.jdbc.service"/>
-<plugin id="org.apache.wsil4j"/>
-<plugin id="org.apache.batik.parser" version="1.6.0.v200805290154"/>
-<plugin id="org.eclipse.jdt"/>
-<plugin id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
-<plugin id="com.mongodb"/>
-<plugin id="org.eclipse.xtext.logging"/>
-<plugin id="org.eclipse.jdt.apt.core"/>
-<plugin id="org.eclipse.birt.report.engine.fonts"/>
-<plugin id="com.google.inject" version="2.0.0.v201105231817"/>
-<plugin id="javax.management.remote"/>
-<plugin id="org.eclipse.emf.edit"/>
-<plugin id="javax.annotation" version="1.1.0.v201105051105"/>
-<plugin id="org.eclipse.emf.codegen"/>
-<plugin id="org.eclipse.team.ui" version="3.6.200.v20120522-1148"/>
-<plugin id="org.eclipse.xtend.profiler"/>
-<plugin id="org.eclipse.xtext.xtend2.ui"/>
-<plugin id="org.apache.batik.util" version="1.6.0.v200805290154"/>
-<plugin id="org.eclipse.help.webapp" version="3.6.100.v20120521-2344"/>
-<plugin id="org.jgroups"/>
-<plugin id="org.eclipse.birt.report.designer.ui.lib.explorer"/>
-<plugin id="org.eclipse.gef.examples.ui.pde"/>
-<plugin id="org.slf4j.log4j"/>
-<plugin id="org.eclipse.xtext.ecore"/>
-<plugin id="org.apache.solr.client.solrj"/>
-<plugin id="com.jogamp.jogl-macosx-universal"/>
-<plugin id="org.eclipse.emf.ecore" version="2.8.0.v20120606-0717"/>
-<plugin id="org.apache.commons.net"/>
-<plugin id="org.eclipse.birt.report.designer.ui"/>
-<plugin id="org.eclipse.core.databinding.property" version="1.4.100.v20120523-1955"/>
-<plugin id="org.eclipse.gef.examples.shapes"/>
-<plugin id="org.apache.xalan"/>
-<plugin id="org.eclipse.gef.examples.flow"/>
-<plugin id="org.eclipse.equinox.metatype"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.config"/>
-<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile"/>
-<plugin id="org.eclipse.birt.data.aggregation"/>
-<plugin id="org.eclipse.birt.report.data.adapter"/>
-<plugin id="org.apache.felix.bundlerepository"/>
-<plugin id="org.eclipse.ui.cheatsheets" version="3.4.200.v20120521-2344"/>
-<plugin id="org.eclipse.birt.report.data.oda.sampledb.ui"/>
-<plugin id="org.eclipse.equinox.servletbridge.extensionbundle"/>
-<plugin id="org.eclipse.emf.exporter"/>
-<plugin id="org.eclipse.ui.ide" version="3.8.0.v20120521-2329"/>
-<plugin id="org.apache.xmlrpc"/>
-<plugin id="org.eclipse.ui.intro.universal" version="3.2.600.v20120521-2344"/>
-<plugin id="org.apache.lucene.queries"/>
-<plugin id="org.eclipse.xtext.xtext.ui.examples"/>
-<plugin id="org.eclipse.emf.doc"/>
-<plugin id="org.apache.thrift"/>
-<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile.ui"/>
-<plugin id="org.eclipse.birt.report.debug.ui.nl1"/>
-<plugin id="org.eclipse.emf.java"/>
-<plugin id="org.eclipse.xtext.purexbase"/>
-<plugin id="org.eclipse.birt.chart.engine"/>
-<plugin id="org.apache.commons.lang" version="2.4.0.v201005080502"/>
-<plugin id="org.apache.solr.common"/>
-<plugin id="javax.jcr"/>
-<plugin id="org.apache.lucene.analysis" version="2.9.1.v201101211721"/>
-<plugin id="org.eclipse.gef.examples.logic"/>
-<plugin id="javax.activation"/>
-<plugin id="org.eclipse.core.externaltools" version="1.0.100.v20120521-2012"/>
-<plugin id="org.eclipse.equinox.weaving.caching.j9"/>
-<plugin id="javax.ws.rs"/>
-<plugin id="org.eclipse.emf.activities"/>
-<plugin id="org.apache.bcel"/>
-<plugin id="org.eclipse.jetty.server" version="8.1.3.v20120522"/>
-<plugin id="org.apache.commons.collections"/>
-<plugin id="org.eclipse.swt.gtk.aix.ppc" version="3.100.0.v4233d"/>
-<plugin id="org.eclipse.jetty.policy"/>
-<plugin id="org.eclipse.birt.chart"/>
-<plugin id="org.eclipse.swt.cocoa.macosx.x86_64" version="3.100.0.v4233d"/>
-<plugin id="org.eclipse.core.contenttype" version="3.4.100.v20110423-0524"/>
-<plugin id="org.eclipse.ecf.identity" version="3.1.200.v20120608-0148"/>
-<plugin id="javax.persistence"/>
-<plugin id="org.codehaus.jackson.jaxrs"/>
-<plugin id="org.eclipse.datatools.connectivity.ui"/>
-<plugin id="org.eclipse.emf.ecore.xmi" version="2.8.0.v20120606-0717"/>
-<plugin id="org.eclipse.emf.cheatsheets"/>
-<plugin id="org.eclipse.birt.report.designer.ui.lib.explorer.nl1"/>
-<plugin id="org.eclipse.emf.databinding.edit"/>
-<plugin id="org.eclipse.birt.report.designer.ui.ide.nl1"/>
-<plugin id="org.apache.lucene.memory"/>
-<plugin id="org.eclipse.jetty.osgi.httpservice"/>
-<plugin id="org.eclipse.core.databinding.observable" version="1.4.1.v20120521-2329"/>
-<plugin id="org.apache.commons.io"/>
-<plugin id="org.eclipse.swt.gtk.linux.s390" version="3.100.0.v4233d"/>
-<plugin id="org.mozilla.javascript"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.html.config.nl1"/>
-<plugin id="org.eclipse.xtext.ui"/>
-<plugin id="org.apache.batik.transcoder" version="1.7.0.v201011041433"/>
-<plugin id="org.eclipse.search" version="3.8.0.v20120523-1540"/>
-<plugin id="org.eclipse.birt.core.nl1"/>
-<plugin id="org.eclipse.jetty.http" version="8.1.3.v20120522"/>
-<plugin id="org.eclipse.equinox.jsp.jasper.registry" version="1.0.300.v20120522-2049"/>
-<plugin id="org.eclipse.jdt.launching"/>
-<plugin id="org.apache.felix.webconsole.plugins.event"/>
-<plugin id="org.apache.felix.configadmin"/>
-<plugin id="org.apache.commons.logging" version="1.0.4.v201101211617"/>
-<plugin id="org.apache.felix.webconsole.plugins.memoryusage"/>
-<plugin id="org.eclipse.ltk.ui.refactoring" version="3.7.0.v20120523-1543"/>
-<plugin id="org.eclipse.birt.chart.ui"/>
-<plugin id="org.eclipse.birt.report.engine"/>
-<plugin id="org.eclipse.emf.mapping"/>
-<plugin id="org.eclipse.draw2d"/>
-<plugin id="org.eclipse.birt.report.engine.dataextraction.nl1"/>
-<plugin id="org.eclipse.birt.report.designer.ui.nl1"/>
-<plugin id="org.eclipse.birt.data.nl1"/>
-<plugin id="org.slf4j.jul"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.wpml.config"/>
-<plugin id="org.eclipse.birt.report.data.oda.xml.nl1"/>
-<plugin id="org.apache.solr.client.solrj.embedded"/>
-<plugin id="org.eclipse.birt.report.designer.ui.cubebuilder"/>
-<plugin id="org.apache.ws.commons.schema"/>
-<plugin id="javax.servlet" version="2.5.0.v201103041518"/>
-<plugin id="org.apache.felix.framework.security"/>
-<plugin id="org.apache.batik.swing"/>
-<plugin id="org.eclipse.equinox.servletbridge"/>
-<plugin id="org.eclipse.birt"/>
-<plugin id="org.eclipse.core.variables" version="3.2.500.v20110511"/>
-<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile.sampledb"/>
-<plugin id="org.eclipse.birt.report.data.bidi.utils.nl1"/>
-<plugin id="org.eclipse.osgi.services" version="3.3.100.v20120522-1822"/>
-<plugin id="org.eclipse.equinox.security" version="1.1.100.v20120522-1841"/>
-<plugin id="org.codehaus.jackson.core"/>
-<plugin id="org.eclipse.datatools.connectivity.oda.design.ui"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.html"/>
-<plugin id="org.apache.xerces" version="2.9.0.v201005080400"/>
-<plugin id="org.eclipse.birt.core.script.function"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.html.config"/>
-<plugin id="org.apache.oro"/>
-<plugin id="javax.xml.stream"/>
-<plugin id="org.apache.commons.discovery" version="0.2.0.v201004190315"/>
-<plugin id="org.eclipse.emf"/>
-<plugin id="org.apache.commons.el" version="1.0.0.v201101211617"/>
-<plugin id="javax.servlet" version="3.0.0.v201103241727"/>
-<plugin id="org.eclipse.ant.launching"/>
-<plugin id="org.eclipse.equinox.log"/>
-<plugin id="org.eclipse.emf.examples"/>
-<plugin id="org.eclipse.ecf.ssl" version="1.0.100.v20120608-0148"/>
-<plugin id="org.eclipse.emf.importer.ecore"/>
-<plugin id="org.eclipse.birt.chart.ui.extension"/>
-<plugin id="org.eclipse.core.filesystem.win32.x86_64" version="1.1.300.v20120522-1137"/>
-<plugin id="org.eclipse.xtext.xbase"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.wpml"/>
-<plugin id="org.apache.felix.http.bridge"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.ppt"/>
-<plugin id="org.eclipse.birt.report.designer.ui.views.nl1"/>
-<plugin id="org.apache.felix.log"/>
-<plugin id="org.eclipse.emf.mapping.ecore2xml.ui"/>
-<plugin id="org.eclipse.core.net.win32.x86" version="1.0.100.v20120522-1148"/>
-<plugin id="org.eclipse.equinox.registry" version="3.5.200.v20120522-1841"/>
-<plugin id="org.eclipse.birt.report.data.oda.sampledb"/>
-<plugin id="org.eclipse.birt.report.engine.dataextraction.csv.nl1"/>
-<plugin id="org.slf4j.jcl"/>
-<plugin id="org.eclipse.birt.report.data.oda.sampledb.nl1"/>
-<plugin id="org.apache.felix.dependencymanager.runtime"/>
-<plugin id="org.eclipse.ui.presentations.r21"/>
-<plugin id="org.eclipse.equinox.weaving.aspectj"/>
-<plugin id="com.oracle.jdbc.driver"/>
-<plugin id="org.eclipse.birt.report.debug.core"/>
-<plugin id="org.eclipse.xtext.ui.codetemplates"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.postscript.config"/>
-<plugin id="org.eclipse.emf.ecore.change" version="2.8.0.v20120606-0717"/>
-<plugin id="org.apache.batik.css" version="1.7.0.v201011041433"/>
-<plugin id="org.eclipse.birt.report.designer.core.nl1"/>
-<plugin id="org.eclipse.update.ui"/>
-<plugin id="org.eclipse.birt.chart.engine.extension"/>
-<plugin id="org.eclipse.equinox.console.jaas.fragment"/>
-<plugin id="org.eclipse.ltk.core.refactoring" version="3.6.0.v20120523-1543"/>
-<plugin id="org.apache.log4j" version="1.2.15.v201012070815"/>
-<plugin id="org.eclipse.birt.report.designer.ui.editor.script.nl1"/>
-<plugin id="org.eclipse.core.filesystem.macosx" version="1.3.0.v20120522-1137"/>
-<plugin id="org.eclipse.core.expressions" version="3.4.300.v20110228"/>
-<plugin id="org.h2"/>
-<plugin id="org.apache.xerces" version="2.9.0.v201101211617"/>
-<plugin id="org.eclipse.swt.carbon.macosx"/>
-<plugin id="org.apache.commons.httpclient" version="3.1.0.v201012070820"/>
-<plugin id="org.apache.axis" version="1.4.0.v201005080400"/>
-<plugin id="org.eclipse.jdt.doc.user"/>
-<plugin id="org.eclipse.core.resources" version="3.8.0.v20120522-2034"/>
-<plugin id="javax.xml.soap" version="1.3.0.v201105210645"/>
-<plugin id="org.apache.batik.svggen" version="1.6.0.v200805290154"/>
-<plugin id="org.eclipse.emf.java.edit"/>
-<plugin id="org.apache.felix.fileinstall"/>
-<plugin id="org.eclipse.ui.forms" version="3.5.200.v20120521-2329"/>
-<plugin id="org.eclipse.equinox.preferences" version="3.5.0.v20120522-1841"/>
-<plugin id="org.eclipse.emf.exporter.html"/>
 <plugin id="org.eclipse.emf.common" version="2.8.0.v20120606-0717"/>
-<plugin id="com.vaadin"/>
-<plugin id="org.eclipse.compare.win32" version="1.0.200.v20120522-1148"/>
-<plugin id="org.eclipse.gef.examples.text"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.postscript.config.nl1"/>
-<plugin id="org.eclipse.core.runtime" version="3.8.0.v20120521-2346"/>
-<plugin id="org.eclipse.datatools.connectivity.oda.design.ui.nl1"/>
-<plugin id="org.eclipse.core.net" version="1.2.200.v20120522-1148"/>
-<plugin id="org.slf4j.ext"/>
-<plugin id="org.eclipse.swt.gtk.linux.s390x" version="3.100.0.v4233d"/>
-<plugin id="org.eclipse.xtend"/>
-<plugin id="org.apache.neethi"/>
-<plugin id="javax.xml.rpc" version="1.1.0.v201005080400"/>
-<plugin id="org.apache.batik.util.gui" version="1.6.0.v200805290154"/>
-<plugin id="org.eclipse.birt.report.data.oda.sampledb.ui.nl1"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.prototype.excel"/>
-<plugin id="org.eclipse.ant.core" version="3.2.400.v20120523-1752"/>
-<plugin id="org.eclipse.osgi" version="3.8.0.v20120529-1548"/>
-<plugin id="org.eclipse.equinox.common" version="3.6.100.v20120522-1841"/>
-<plugin id="ch.qos.logback.classic"/>
-<plugin id="org.apache.velocity"/>
-<plugin id="org.eclipse.emf.ecore.editor"/>
-<plugin id="org.eclipse.birt.report.designer.ui.editor.xml.wtp"/>
-<plugin id="org.apache.felix.gogo.shell" version="0.10.0"/>
-<plugin id="org.eclipse.update.core"/>
-<plugin id="org.eclipse.birt.report.designer.ui.lib.nl1"/>
-<plugin id="org.eclipse.birt.chart.device.swt"/>
-<plugin id="org.apache.batik.bridge" version="1.7.0.v201011041433"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.pdf"/>
-<plugin id="org.eclipse.datatools.connectivity.oda.profile.nl1"/>
-<plugin id="org.eclipse.rcp" version="4.2.0.v201206081400"/>
-<plugin id="org.apache.felix.gogo.command" version="0.12.0"/>
-<plugin id="org.eclipse.datatools.connectivity.oda"/>
-<plugin id="org.eclipse.birt.report.engine.script.javascript"/>
-<plugin id="org.eclipse.emf.mapping.ecore2ecore"/>
-<plugin id="javax.servlet.jsp.jstl"/>
-<plugin id="org.eclipse.xpand.activities"/>
-<plugin id="org.eclipse.equinox.security.macosx" version="1.100.200.v20120522-2049"/>
-<plugin id="org.eclipse.equinox.simpleconfigurator" version="1.0.300.v20110815-1744"/>
-<plugin id="org.eclipse.ecf.provider.filetransfer.ssl" version="1.0.0.v20120608-0148"/>
-<plugin id="org.eclipse.platform" version="4.2.0.v201206081400"/>
-<plugin id="org.apache.commons.codec" version="1.3.0.v201101211617"/>
-<plugin id="org.eclipse.emf.codegen.ui"/>
-<plugin id="org.kjkoster.zapcat"/>
-<plugin id="org.eclipse.birt.report.designer.core"/>
-<plugin id="org.eclipse.birt.report.data.oda.jdbc.nl1"/>
+<plugin id="org.eclipse.help.appserver"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.excel.config"/>
 <plugin id="org.eclipse.jetty.io" version="8.1.3.v20120522"/>
-<plugin id="javax.mail"/>
-<plugin id="org.eclipse.birt.report.designer.ui.editor.script"/>
-<plugin id="org.eclipse.emf.codegen.ecore"/>
-<plugin id="org.eclipse.birt.report.designer.ui.editor.xml.wtp.nl1"/>
-<plugin id="org.aopalliance" version="1.0.0.v201105210816"/>
-<plugin id="org.eclipse.equinox.console.ssh"/>
-<plugin id="org.apache.solr.servlet"/>
-<plugin id="org.eclipse.xtext.xbase.ui"/>
-<plugin id="org.eclipse.jdt.debug"/>
-<plugin id="org.eclipse.birt.report.model.adapter.oda"/>
-<plugin id="org.eclipse.xtend.typesystem.emf"/>
-<plugin id="org.eclipse.datatools.connectivity.nl1"/>
-<plugin id="org.apache.commons.beanutils"/>
-<plugin id="org.w3c.dom.svg" version="1.1.0.v201011041433"/>
-<plugin id="org.apache.jasper" version="5.5.17.v201101211617"/>
-<plugin id="org.mortbay.jetty.server"/>
-<plugin id="org.eclipse.update.scheduler"/>
-<plugin id="org.apache.batik.dom" version="1.7.0.v201011041433"/>
-<plugin id="org.eclipse.xtext"/>
-<plugin id="org.eclipse.swt.win32.win32.x86_64" version="3.100.0.v4233d"/>
-<plugin id="com.ibm.icu" version="4.4.2.v20110823"/>
-<plugin id="org.eclipse.jetty.deploy"/>
-<plugin id="org.eclipse.birt.core.script.function.nl1"/>
-<plugin id="org.w3c.sac"/>
-<plugin id="org.eclipse.emf.converter"/>
-<plugin id="org.osgi.service.obr"/>
-<plugin id="org.eclipse.jetty.ajp"/>
-<plugin id="org.eclipse.birt.report.designer.ui.editors"/>
-<plugin id="javax.xml.bind"/>
-<plugin id="org.apache.felix.http.jetty"/>
-<plugin id="org.eclipse.emf.codegen.ecore.ui"/>
-<plugin id="org.eclipse.emf.examples.library.edit"/>
-<plugin id="org.eclipse.core.boot"/>
-<plugin id="org.eclipse.update.configurator" version="3.3.200.v20120523-1752"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.ppt.config.nl1"/>
-<plugin id="org.eclipse.birt.chart.reportitem.ui.nl1"/>
-<plugin id="org.apache.batik.pdf" version="1.6.0.v200806031500"/>
-<plugin id="org.eclipse.jdt.core.manipulation"/>
-<plugin id="org.eclipse.equinox.transforms.xslt"/>
-<plugin id="org.eclipse.birt.report.designer.ui.preview.web.nl1"/>
-<plugin id="org.eclipse.core.net.linux.x86" version="1.1.200.v20120522-1148"/>
-<plugin id="org.eclipse.equinox.wireadmin"/>
-<plugin id="org.eclipse.xtend.typesystem.xsd.ui"/>
-<plugin id="org.eclipse.team.core" version="3.6.100.v20120524-0627"/>
-<plugin id="org.apache.felix.http.proxy"/>
-<plugin id="org.eclipse.ecf" version="3.1.300.v20120608-0148"/>
-<plugin id="org.eclipse.core.databinding.beans" version="1.2.200.v20120523-1955"/>
-<plugin id="org.eclipse.jetty.plus"/>
-<plugin id="org.eclipse.birt.report.model"/>
-<plugin id="org.eclipse.birt.report.data.adapter.nl1"/>
-<plugin id="org.eclipse.core.filebuffers" version="3.5.200.v20120523-1310"/>
-<plugin id="org.eclipse.emf.mwe.core"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.wpml.config.nl1"/>
-<plugin id="org.eclipse.equinox.util" version="1.0.400.v20120522-2049"/>
-<plugin id="org.eclipse.emf.ecore.change.edit"/>
-<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile.sampledb.nl1"/>
-<plugin id="org.eclipse.birt.chart.reportitem.nl1"/>
-<plugin id="org.eclipse.emf.mwe2.runtime"/>
-<plugin id="org.eclipse.jdt.ui"/>
-<plugin id="org.eclipse.core.databinding" version="1.4.1.v20120521-2329"/>
-<plugin id="org.eclipse.emf.mapping.ecore2xml"/>
-<plugin id="org.apache.ws.jaxme"/>
-<plugin id="org.eclipse.datatools.connectivity"/>
-<plugin id="org.eclipse.ui.workbench.compatibility"/>
-<plugin id="org.eclipse.birt.report.data.oda.jdbc.ui"/>
-<plugin id="org.eclipse.text" version="3.5.200.v20120523-1310"/>
-<plugin id="org.apache.felix.dependencymanager.compat"/>
-<plugin id="org.eclipse.equinox.security.win32.x86_64" version="1.0.100.v20120522-2049"/>
-<plugin id="org.eclipse.jetty.osgi.boot"/>
-<plugin id="org.eclipse.jsch.ui" version="1.1.400.v20120522-1148"/>
-<plugin id="org.eclipse.birt.data"/>
-<plugin id="org.codehaus.jackson.smile"/>
-<plugin id="org.eclipse.ui.workbench" version="3.103.0.v20120530-1824"/>
-<plugin id="org.json"/>
-<plugin id="org.eclipse.jdt.debug.ui"/>
-<plugin id="org.eclipse.emf.common.ui"/>
-<plugin id="javax.xml.soap" version="1.2.0.v201005080501"/>
-<plugin id="org.apache.felix.framework"/>
-<plugin id="org.eclipse.compare" version="3.5.300.v20120522-1148"/>
-<plugin id="org.apache.lucene" version="2.9.1.v201101211721"/>
-<plugin id="org.eclipse.birt.chart.engine.nl1"/>
-<plugin id="org.eclipse.ui.views" version="3.6.100.v20120521-2329"/>
-<plugin id="org.eclipse.ui.externaltools" version="3.2.100.v20120530-1753"/>
-<plugin id="org.eclipse.equinox.ds" version="1.4.0.v20120522-1841"/>
-<plugin id="org.apache.commons.fileupload"/>
-<plugin id="org.eclipse.core.filesystem.linux.x86_64" version="1.2.0.v20120522-1137"/>
-<plugin id="org.eclipse.ui.console" version="3.5.100.v20120521-2012"/>
-<plugin id="org.codehaus.jackson.xc"/>
-<plugin id="org.eclipse.birt.chart.device.extension.nl1"/>
-<plugin id="org.eclipse.xtext.activities"/>
-<plugin id="org.eclipse.emf.ant"/>
-<plugin id="org.eclipse.birt.report.engine.nl1"/>
-<plugin id="org.eclipse.xtend.typesystem.xsd"/>
-<plugin id="org.eclipse.birt.core.ui"/>
-<plugin id="org.igniterealtime.smackx"/>
-<plugin id="org.eclipse.emf.edit.ui"/>
-<plugin id="org.eclipse.jetty.websocket"/>
-<plugin id="org.eclipse.xtext.xtext.ui"/>
-<plugin id="org.eclipse.birt.core.ui.nl1"/>
-<plugin id="org.w3c.dom.svg" version="1.1.0.v200806040011"/>
-<plugin id="org.eclipse.ant.ui"/>
-<plugin id="javax.jws"/>
-<plugin id="org.eclipse.datatools.connectivity.db.generic.nl1"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.ppt.config"/>
+<plugin id="org.eclipse.equinox.jsp.jasper" version="1.0.400.v20120522-2049"/>
+<plugin id="org.eclipse.update.core.win32"/>
+<plugin id="org.eclipse.swt.gtk.linux.ppc64" version="3.100.0.v4233d"/>
+<plugin id="org.apache.batik.ext.awt" version="1.7.0.v201011041433"/>
+<plugin id="org.apache.xmlrpc"/>
+<plugin id="org.apache.felix.gogo.command" version="0.12.0"/>
+<plugin id="org.eclipse.ui.browser" version="3.4.0.v20120521-2329"/>
+<plugin id="org.eclipse.equinox.cm"/>
+<plugin id="org.eclipse.emf.java"/>
 <plugin id="org.eclipse.xtext.doc"/>
-<plugin id="org.eclipse.swt.gtk.linux.x86" version="3.100.0.v4233d"/>
-<plugin id="com.mysql.jdbc"/>
-<plugin id="org.eclipse.equinox.device"/>
-<plugin id="org.eclipse.core.commands" version="3.6.1.v20120521-2329"/>
-<plugin id="org.apache.batik.xml" version="1.7.0.v201011041433"/>
-<plugin id="org.eclipse.jface.databinding" version="1.6.0.v20120521-2329"/>
-<plugin id="org.codehaus.jackson.mapper"/>
-<plugin id="org.eclipse.core.filesystem.linux.x86" version="1.4.0.v20120522-1137"/>
-<plugin id="com.google.collect" version="1.0.0.v201105210816"/>
-<plugin id="org.sat4j.core" version="2.3.0.v20110329"/>
-<plugin id="org.eclipse.swt" version="3.100.0.v4233d"/>
-<plugin id="org.eclipse.xtext.xtend2"/>
-<plugin id="org.apache.commons.math"/>
-<plugin id="org.eclipse.birt.report.designer.ui.lib"/>
+<plugin id="javax.servlet.jsp" version="2.0.0.v201101211617"/>
+<plugin id="org.apache.ws.jaxme"/>
+<plugin id="org.eclipse.equinox.console.ssh"/>
+<plugin id="org.eclipse.birt.report.designer.ui.preview.web"/>
+<plugin id="org.hamcrest.core"/>
+<plugin id="org.eclipse.jetty.websocket"/>
+<plugin id="org.eclipse.datatools.connectivity.oda.profile"/>
+<plugin id="org.eclipse.core.resources.win32.x86" version="3.5.100.v20120522-1137"/>
 <plugin id="org.eclipse.equinox.supplement"/>
-<plugin id="org.eclipse.jetty.client"/>
-<plugin id="org.eclipse.xtext.xtext.ui.graph"/>
-<plugin id="org.apache.lucene.highlighter"/>
-<plugin id="org.apache.batik.xml" version="1.6.0.v200805290154"/>
-<plugin id="org.apache.cassandra"/>
-<plugin id="org.apache.batik.extension"/>
-<plugin id="org.apache.lucene.spellchecker"/>
+<plugin id="org.eclipse.birt.report.data.oda.jdbc"/>
+<plugin id="org.apache.felix.log"/>
+<plugin id="org.eclipse.emf.codegen"/>
+<plugin id="org.igniterealtime.smack"/>
+<plugin id="org.eclipse.ui" version="3.103.0.v20120521-2329"/>
+<plugin id="org.apache.commons.cli" version="1.2.0.v201105210650"/>
+<plugin id="org.kjkoster.zapcat"/>
+<plugin id="org.eclipse.xtext.builder"/>
+<plugin id="org.eclipse.birt.report.debug.ui.nl1"/>
+<plugin id="org.eclipse.zest.core"/>
+<plugin id="org.eclipse.core.jobs" version="3.5.100.v20110404"/>
+<plugin id="org.eclipse.xtext.util"/>
+<plugin id="org.eclipse.birt.report.data.oda.xml"/>
+<plugin id="org.eclipse.ecf.ssl" version="1.0.100.v20120608-0148"/>
+<plugin id="org.apache.velocity"/>
+<plugin id="org.eclipse.gef.examples.text"/>
+<plugin id="org.apache.felix.webconsole"/>
+<plugin id="org.eclipse.ui.externaltools" version="3.2.100.v20120530-1753"/>
 <plugin id="org.eclipse.ecf.filetransfer" version="5.0.0.v20120608-0148"/>
-<plugin id="org.eclipse.equinox.frameworkadmin.equinox" version="1.0.400.v20120428-0117"/>
-<plugin id="org.eclipse.xtext.common.types.ui"/>
-<plugin id="org.eclipse.jetty.servlet" version="8.1.3.v20120522"/>
-<plugin id="org.eclipse.emf.mwe.utils"/>
-<plugin id="org.eclipse.birt.chart.examples.nl1"/>
-<plugin id="org.eclipse.emf.example.installer"/>
-<plugin id="org.eclipse.xpand.ui"/>
-<plugin id="org.eclipse.debug.ui" version="3.8.0.v20120530-1753"/>
-<plugin id="org.eclipse.xtext.ui.ecore"/>
-<plugin id="org.apache.batik.svggen" version="1.7.0.v201011041433"/>
-<plugin id="org.eclipse.datatools.connectivity.oda.nl1"/>
-<plugin id="org.eclipse.birt.report.engine.dataextraction"/>
-<plugin id="org.eclipse.swt.gtk.linux.x86_64" version="3.100.0.v4233d"/>
-<plugin id="org.eclipse.birt.report.engine.emitter.pdf.config.nl1"/>
-<plugin id="com.jcraft.jzlib"/>
-<plugin id="org.eclipse.core.runtime.compatibility.auth"/>
-<plugin id="org.eclipse.jface" version="3.8.0.v20120521-2329"/>
-<plugin id="org.eclipse.jetty.osgi.boot.jsp"/>
-<plugin id="org.w3c.dom.smil" version="1.0.1.v200903091627"/>
-<plugin id="org.apache.felix.http.api"/>
+<plugin id="javax.transaction"/>
+<plugin id="org.apache.taglibs.standard.glassfish"/>
+<plugin id="org.apache.commons.jxpath"/>
+<plugin id="org.eclipse.birt.report.model"/>
+<plugin id="org.eclipse.jdt.debug.ui"/>
+<plugin id="org.eclipse.datatools.connectivity.db.generic.nl1"/>
+<plugin id="org.eclipse.birt.report.engine.nl1"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.wpml.config.nl1"/>
+<plugin id="org.eclipse.core.resources" version="3.8.0.v20120522-2034"/>
+<plugin id="org.apache.commons.fileupload"/>
+<plugin id="org.eclipse.core.filesystem.macosx" version="1.3.0.v20120522-1137"/>
+<plugin id="org.eclipse.ui.workbench.texteditor" version="3.8.0.v20120523-1310"/>
+<plugin id="org.eclipse.birt.core"/>
+<plugin id="org.eclipse.equinox.coordinator"/>
+<plugin id="org.eclipse.birt.report.data.oda.jdbc.nl1"/>
 <plugin id="org.apache.jasper.glassfish" version="2.2.2.v201205150955"/>
-<plugin id="org.eclipse.equinox.http.servletbridge"/>
-<plugin id="org.eclipse.ecf.provider.filetransfer" version="3.2.0.v20120608-0148"/>
-<plugin id="org.w3c.dom.events"/>
-<plugin id="com.jogamp.jogl"/>
-<plugin id="org.eclipse.xpand.doc"/>
+<plugin id="org.apache.felix.scr"/>
+<plugin id="org.eclipse.equinox.concurrent"/>
+<plugin id="org.eclipse.equinox.security.macosx" version="1.100.200.v20120522-2049"/>
+<plugin id="org.eclipse.birt.chart.device.swt"/>
+<plugin id="org.eclipse.datatools.connectivity.oda.design.ui.nl1"/>
+<plugin id="org.apache.oro"/>
+<plugin id="org.eclipse.core.expressions" version="3.4.300.v20110228"/>
+<plugin id="org.eclipse.swt.gtk.aix.ppc64" version="3.100.0.v4233d"/>
+<plugin id="org.eclipse.birt.report.viewers.nl1"/>
+<plugin id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
+<plugin id="org.eclipse.core.net.win32.x86_64" version="1.0.100.v20120522-1148"/>
+<plugin id="org.eclipse.xpand.incremental"/>
+<plugin id="org.eclipse.equinox.device"/>
+<plugin id="org.eclipse.datatools.connectivity.oda.consumer"/>
+<plugin id="org.eclipse.birt.report.data.bidi.utils.nl1"/>
+<plugin id="org.eclipse.birt.report.model.nl1"/>
+<plugin id="org.eclipse.birt.report.data.adapter"/>
+<plugin id="org.eclipse.swt.cocoa.macosx.x86_64" version="3.100.0.v4233d"/>
+<plugin id="org.codehaus.jackson.xc"/>
+<plugin id="org.eclipse.birt.report.item.crosstab.ui.nl1"/>
+<plugin id="org.eclipse.birt.core.script.function.nl1"/>
+<plugin id="org.eclipse.birt.report.designer.core"/>
+<plugin id="org.eclipse.jetty.rewrite"/>
+<plugin id="org.eclipse.birt.report.data.bidi.utils.ui"/>
+<plugin id="org.eclipse.xtext.common.types.ui"/>
+<plugin id="org.eclipse.datatools.connectivity.oda.design.ui"/>
+<plugin id="org.eclipse.birt.report.designer.ui.preview.web.nl1"/>
+<plugin id="org.eclipse.xtend.shared.ui"/>
+<plugin id="javax.security.auth.message"/>
+<plugin id="org.eclipse.datatools.connectivity"/>
+<plugin id="org.eclipse.jetty.jndi"/>
+<plugin id="org.apache.batik.util.gui" version="1.7.0.v200903091627"/>
+<plugin id="org.eclipse.jdt.compiler.tool"/>
+<plugin id="javax.management.remote"/>
+<plugin id="org.eclipse.emf.examples.library.edit"/>
+<plugin id="org.eclipse.help.webapp" version="3.6.100.v20120521-2344"/>
+<plugin id="org.eclipse.core.net.win32.x86" version="1.0.100.v20120522-1148"/>
+<plugin id="org.eclipse.emf.mwe2.lib"/>
+<plugin id="org.eclipse.jdt.ui"/>
+<plugin id="org.eclipse.ant.ui"/>
+<plugin id="org.eclipse.search" version="3.8.0.v20120523-1540"/>
+<plugin id="org.eclipse.equinox.console.jaas.fragment"/>
+<plugin id="org.json"/>
+<plugin id="org.eclipse.xpand.ui"/>
+<plugin id="org.eclipse.birt.chart.reportitem.ui"/>
+<plugin id="org.w3c.sac"/>
+<plugin id="org.eclipse.birt.report.designer.ui.editors.schematic"/>
+<plugin id="org.apache.felix.http.bridge"/>
+<plugin id="javax.servlet" version="2.5.0.v201103041518"/>
+<plugin id="org.eclipse.equinox.weaving.hook"/>
+<plugin id="org.apache.batik.util" version="1.7.0.v201011041433"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.prototype.excel"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.excel.config.nl1"/>
+<plugin id="org.eclipse.jface" version="3.8.0.v20120521-2329"/>
+<plugin id="javax.annotation" version="1.1.0.v201105051105"/>
+<plugin id="org.eclipse.emf.example.installer"/>
+<plugin id="org.antlr.runtime" version="3.2.0.v201101311130"/>
+<plugin id="ch.qos.logback.classic"/>
+<plugin id="org.eclipse.draw2d"/>
+<plugin id="org.eclipse.core.runtime.compatibility" version="3.2.200.v20120521-2346"/>
+<plugin id="org.eclipse.xtext.xbase.lib"/>
+<plugin id="org.eclipse.birt.report.data.bidi.utils"/>
+<plugin id="org.eclipse.gef.examples.shapes"/>
+<plugin id="org.apache.lucene.analysis" version="2.9.1.v201101211721"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.postscript"/>
+<plugin id="org.eclipse.birt.chart.ui"/>
+<plugin id="org.eclipse.birt.report.designer.ui.samplesview.nl1"/>
+<plugin id="org.mortbay.jetty.server"/>
+<plugin id="org.eclipse.equinox.common" version="3.6.100.v20120522-1841"/>
+<plugin id="org.eclipse.birt.report.designer.ui"/>
+<plugin id="org.eclipse.birt.core.nl1"/>
+<plugin id="org.eclipse.team.ui" version="3.6.200.v20120522-1148"/>
+<plugin id="org.jgroups"/>
+<plugin id="org.apache.thrift"/>
+<plugin id="org.codehaus.jackson.jaxrs"/>
+<plugin id="org.eclipse.equinox.weaving.caching"/>
+<plugin id="org.eclipse.birt.report.debug.core"/>
+<plugin id="org.apache.felix.dependencymanager.runtime"/>
+<plugin id="org.codehaus.jackson.mapper"/>
+<plugin id="org.eclipse.birt.chart.engine.extension"/>
+<plugin id="org.eclipse.ui.intro.universal" version="3.2.600.v20120521-2344"/>
+<plugin id="org.eclipse.birt.report.data.oda.sampledb.nl1"/>
+<plugin id="org.h2.jdbc.service"/>
+<plugin id="org.apache.commons.collections"/>
+<plugin id="org.apache.ws.commons.schema"/>
+<plugin id="org.apache.commons.httpclient" version="3.1.0.v201012070820"/>
+<plugin id="javax.ws.rs"/>
+<plugin id="org.eclipse.ui.cheatsheets" version="3.4.200.v20120521-2344"/>
 <plugin id="org.apache.derby.core"/>
-<plugin id="org.apache.batik.pdf" version="1.6.0.v201105071520"/>
-<plugin id="org.eclipse.update.core.linux"/>
+<plugin id="org.eclipse.gef.examples.logic"/>
+<plugin id="org.eclipse.birt.report.engine.dataextraction.csv"/>
+<plugin id="org.eclipse.gef.examples.ui.pde"/>
+<plugin id="org.eclipse.jetty.osgi.boot"/>
+<plugin id="org.eclipse.equinox.useradmin"/>
+<plugin id="org.eclipse.ecf.provider.filetransfer" version="3.2.0.v20120608-0148"/>
+<plugin id="org.eclipse.draw2d.doc.isv"/>
+<plugin id="org.eclipse.core.filesystem.win32.x86" version="1.1.300.v20120522-1137"/>
+<plugin id="org.apache.solr.core"/>
+<plugin id="org.apache.hadoop.zookeeper"/>
+<plugin id="org.eclipse.birt.report.engine.dataextraction"/>
+<plugin id="org.eclipse.jdt.doc.user"/>
+<plugin id="org.eclipse.emf.edit"/>
+<plugin id="org.apache.lucene.misc"/>
+<plugin id="org.eclipse.equinox.http.registry" version="1.1.200.v20120522-2049"/>
+<plugin id="org.apache.commons.lang" version="2.4.0.v201005080502"/>
+<plugin id="org.eclipse.birt.report.designer.ui.ide.nl1"/>
 <plugin id="javax.wsdl" version="1.5.1.v201005080630"/>
-<plugin id="org.eclipse.equinox.http.servlet" version="1.1.300.v20120522-1841"/>
+<plugin id="org.eclipse.core.contenttype" version="3.4.100.v20110423-0524"/>
+<plugin id="org.eclipse.update.core"/>
+<plugin id="org.eclipse.xtext.purexbase"/>
+<plugin id="org.eclipse.emf.importer.rose"/>
+<plugin id="org.slf4j.jcl"/>
+<plugin id="org.eclipse.emf.mapping.ecore2xml.ui"/>
+<plugin id="org.eclipse.xpand.activities"/>
+<plugin id="org.eclipse.zest.layouts"/>
+<plugin id="org.eclipse.datatools.connectivity.oda.design.nl1"/>
+<plugin id="org.eclipse.datatools.connectivity.oda.profile.nl1"/>
+<plugin id="osgi.cmpn"/>
+<plugin id="org.eclipse.core.boot"/>
+<plugin id="javax.xml.soap" version="1.2.0.v201005080501"/>
+<plugin id="org.apache.felix.webconsole.plugins.memoryusage"/>
+<plugin id="org.eclipse.ecf.provider.filetransfer.httpclient" version="4.0.200.v20120608-0148"/>
+<plugin id="org.eclipse.xtend.typesystem.uml2.ui"/>
+<plugin id="org.apache.lucene.core" version="2.9.1.v201101211721"/>
+<plugin id="org.apache.batik.transcoder" version="1.6.0.v200805290154"/>
+<plugin id="org.eclipse.xtext.ui.codetemplates.ui"/>
+<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile.nl1"/>
+<plugin id="org.eclipse.datatools.connectivity.oda"/>
+<plugin id="org.eclipse.team.core" version="3.6.100.v20120524-0627"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.postscript.config.nl1"/>
+<plugin id="org.eclipse.birt.chart.device.svg"/>
+<plugin id="org.eclipse.birt.report.data.oda.sampledb.ui"/>
+<plugin id="org.apache.solr.servlet"/>
+<plugin id="org.apache.httpcomponents.httpclient"/>
+<plugin id="org.apache.batik.util" version="1.6.0.v200805290154"/>
+<plugin id="org.apache.felix.http.proxy"/>
+<plugin id="org.eclipse.core.runtime" version="3.8.0.v20120521-2346"/>
+<plugin id="org.eclipse.osgi.util" version="3.2.300.v20120522-1822"/>
+<plugin id="org.eclipse.emf.importer.ecore"/>
+<plugin id="org.eclipse.equinox.io"/>
+<plugin id="javax.jcr"/>
+<plugin id="org.eclipse.xtext.xtend2.ui"/>
+<plugin id="org.osgi.service.obr"/>
+<plugin id="org.eclipse.birt.report.designer.ui.editors"/>
+<plugin id="org.ops4j.pax.configmanager"/>
+<plugin id="org.eclipse.core.runtime.compatibility.auth"/>
+<plugin id="org.eclipse.xtext.ui.shared"/>
+<plugin id="org.apache.felix.metatype"/>
+<plugin id="org.eclipse.emf.mapping.ui"/>
+<plugin id="org.eclipse.xtend.typesystem.uml2"/>
+<plugin id="org.eclipse.ui.intro" version="3.4.200.v20120521-2344"/>
+<plugin id="org.slf4j.jul"/>
+<plugin id="org.eclipse.datatools.connectivity.oda.nl1"/>
+<plugin id="org.eclipse.core.filesystem.linux.x86_64" version="1.2.0.v20120522-1137"/>
+<plugin id="org.eclipse.jetty.ajp"/>
+<plugin id="org.eclipse.gef"/>
+<plugin id="org.apache.xml.security"/>
+<plugin id="com.jcraft.jsch" version="0.1.46.v201205102330"/>
+<plugin id="org.eclipse.ui.forms" version="3.5.200.v20120521-2329"/>
+<plugin id="org.eclipse.ant.launching"/>
+<plugin id="javax.el" version="2.2.0.v201108011116"/>
+<plugin id="org.eclipse.birt.report.data.oda.sampledb.ui.nl1"/>
+<plugin id="com.mysql.jdbc"/>
+<plugin id="com.vaadin"/>
+<plugin id="org.igniterealtime.smackx"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.html.config"/>
+<plugin id="org.eclipse.emf.converter"/>
+<plugin id="org.eclipse.emf"/>
+<plugin id="org.apache.log4j" version="1.2.15.v201012070815"/>
+<plugin id="org.eclipse.birt.chart.examples.core.nl1"/>
+<plugin id="org.apache.felix.http.api"/>
+<plugin id="org.eclipse.jetty.osgi.httpservice"/>
+<plugin id="org.eclipse.ltk.core.refactoring" version="3.6.0.v20120523-1543"/>
+<plugin id="org.eclipse.jetty.security" version="8.1.3.v20120522"/>
+<plugin id="org.apache.batik.transcoder" version="1.7.0.v201011041433"/>
+<plugin id="org.eclipse.gef.examples.flow"/>
+<plugin id="org.apache.batik.pdf" version="1.6.0.v201105071520"/>
+<plugin id="org.eclipse.emf.cheatsheets"/>
+<plugin id="org.apache.felix.framework.security"/>
+<plugin id="org.eclipse.birt.report.designer.ui.ide"/>
+<plugin id="org.eclipse.jetty.servlet" version="8.1.3.v20120522"/>
+<plugin id="org.eclipse.xtext.xbase"/>
+<plugin id="org.eclipse.ecf.identity" version="3.1.200.v20120608-0148"/>
+<plugin id="org.eclipse.ui.workbench.compatibility"/>
+<plugin id="javax.mail"/>
+<plugin id="org.eclipse.swt.carbon.macosx"/>
+<plugin id="org.eclipse.birt.report.designer.ui.editors.nl1"/>
+<plugin id="org.eclipse.jetty.nested"/>
+<plugin id="org.eclipse.emf.databinding.edit"/>
+<plugin id="org.slf4j.api"/>
+<plugin id="org.eclipse.xtend.profiler"/>
+<plugin id="org.eclipse.equinox.transforms.hook"/>
+<plugin id="org.eclipse.birt.chart.reportitem.ui.nl1"/>
+<plugin id="org.eclipse.ltk.ui.refactoring" version="3.7.0.v20120523-1543"/>
+<plugin id="org.apache.batik.xml" version="1.6.0.v200805290154"/>
+<plugin id="org.eclipse.emf.mwe.core"/>
+<plugin id="org.eclipse.ecf" version="3.1.300.v20120608-0148"/>
+<plugin id="org.apache.felix.deployment.rp.autoconf"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.ppt.config.nl1"/>
+<plugin id="org.eclipse.equinox.frameworkadmin" version="2.0.100.v20120606-175127"/>
+<plugin id="org.apache.batik.extension"/>
+<plugin id="org.aopalliance" version="1.0.0.v201105210816"/>
+<plugin id="org.eclipse.ui.ide.application" version="1.0.400.v20120523-1955"/>
+<plugin id="org.apache.solr.client.solrj"/>
+<plugin id="org.eclipse.birt.chart.reportitem"/>
+<plugin id="org.eclipse.equinox.wireadmin"/>
+<plugin id="org.apache.felix.webconsole.plugins.event"/>
+<plugin id="org.eclipse.emf.examples.library.editor"/>
+<plugin id="org.eclipse.birt.chart.device.extension"/>
+<plugin id="org.eclipse.emf.ecore.change.edit"/>
+<plugin id="javax.management"/>
+<plugin id="org.apache.commons.net"/>
+<plugin id="javax.inject" version="1.0.0.v20091030"/>
+<plugin id="org.eclipse.birt.report.viewer"/>
+<plugin id="org.eclipse.emf.mapping"/>
+<plugin id="org.eclipse.emf.examples.generator.validator"/>
+<plugin id="org.eclipse.birt.report.engine.fonts"/>
+<plugin id="org.apache.felix.framework"/>
+<plugin id="org.apache.felix.eventadmin"/>
+<plugin id="org.w3c.dom.smil" version="1.0.0.v200806040011"/>
+<plugin id="org.eclipse.birt.report.designer.ui.views"/>
+<plugin id="org.eclipse.jetty.util" version="8.1.3.v20120522"/>
+<plugin id="org.eclipse.xpand.doc"/>
+<plugin id="org.eclipse.osgi" version="3.8.0.v20120529-1548"/>
+<plugin id="org.apache.batik.bridge" version="1.7.0.v201011041433"/>
+<plugin id="com.lowagie.text"/>
+<plugin id="org.apache.felix.bundlerepository"/>
+<plugin id="org.eclipse.xtext.xtext.ui.examples"/>
+<plugin id="org.eclipse.birt.data.aggregation"/>
+<plugin id="org.eclipse.emf.exporter"/>
+<plugin id="org.eclipse.equinox.event" version="1.2.200.v20120522-2049"/>
+<plugin id="org.apache.solr.client.solrj.embedded"/>
+<plugin id="org.eclipse.xtext"/>
+<plugin id="org.apache.felix.http.jetty"/>
+<plugin id="org.eclipse.xtext.logging"/>
+<plugin id="org.eclipse.xtext.ui.ecore"/>
+<plugin id="com.google.collect" version="1.0.0.v201105210816"/>
+<plugin id="org.apache.lucene.snowball"/>
+<plugin id="org.apache.lucene" version="2.9.1.v201101211721"/>
+<plugin id="org.eclipse.birt.report.debug.ui"/>
+<plugin id="org.eclipse.swt.gtk.aix.ppc" version="3.100.0.v4233d"/>
+<plugin id="org.eclipse.datatools.connectivity.ui.nl1"/>
+<plugin id="org.codehaus.jackson.smile"/>
+<plugin id="org.eclipse.jetty.deploy"/>
+<plugin id="org.eclipse.birt.report.data.oda.xml.nl1"/>
+<plugin id="org.eclipse.equinox.frameworkadmin.equinox" version="1.0.400.v20120428-0117"/>
+<plugin id="org.mongodb.mongo-java-driver"/>
+<plugin id="org.eclipse.debug.core" version="3.7.100.v20120521-2012"/>
+<plugin id="org.mozilla.javascript"/>
+<plugin id="javax.servlet.jsp" version="2.2.0.v201103241009"/>
+<plugin id="com.google.inject" version="2.0.0.v201105231817"/>
+<plugin id="org.eclipse.birt.report.designer.ui.cubebuilder.nl1"/>
+<plugin id="com.google.gwtjsonrpc"/>
+<plugin id="javax.persistence"/>
+<plugin id="org.eclipse.birt.report.designer.core.nl1"/>
+<plugin id="org.eclipse.birt.core.script.function"/>
+<plugin id="org.eclipse.equinox.ip"/>
+<plugin id="org.eclipse.update.ui"/>
+<plugin id="javax.xml.ws"/>
+<plugin id="org.eclipse.emf.mapping.ecore2ecore.editor"/>
+<plugin id="org.eclipse.xtend.typesystem.emf"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.ppt"/>
+<plugin id="org.eclipse.core.variables" version="3.2.500.v20110511"/>
+<plugin id="org.apache.batik.pdf" version="1.6.0.v200806031500"/>
+<plugin id="org.eclipse.core.databinding.property" version="1.4.100.v20120523-1955"/>
+<plugin id="org.eclipse.core.databinding" version="1.4.1.v20120521-2329"/>
+<plugin id="org.apache.batik.util.gui" version="1.6.0.v200805290154"/>
+<plugin id="org.eclipse.xtend"/>
+<plugin id="org.apache.batik.parser" version="1.6.0.v200805290154"/>
+<plugin id="org.codehaus.jackson.core"/>
+<plugin id="org.apache.xerces" version="2.9.0.v201005080400"/>
+<plugin id="org.apache.jasper" version="5.5.17.v201101211617"/>
+<plugin id="org.eclipse.equinox.app" version="1.3.100.v20120522-1841"/>
+<plugin id="org.eclipse.equinox.registry" version="3.5.200.v20120522-1841"/>
+<plugin id="org.eclipse.ui.views" version="3.6.100.v20120521-2329"/>
+<plugin id="org.eclipse.swt.win32.win32.x86_64" version="3.100.0.v4233d"/>
+<plugin id="org.eclipse.birt.chart.examples.nl1"/>
+<plugin id="org.eclipse.rcp" version="4.2.0.v201206081400"/>
+<plugin id="org.eclipse.jdt.apt.ui"/>
+<plugin id="org.eclipse.ui.ide" version="3.8.0.v20120521-2329"/>
+<plugin id="ch.qos.logback.core"/>
+<plugin id="org.eclipse.compare.win32" version="1.0.200.v20120522-1148"/>
+<plugin id="org.eclipse.equinox.servletbridge.extensionbundle"/>
+<plugin id="org.eclipse.jsch.ui" version="1.1.400.v20120522-1148"/>
+<plugin id="org.eclipse.emf.java.edit"/>
+<plugin id="org.apache.batik.swing"/>
+<plugin id="org.apache.felix.dependencymanager.shell"/>
+<plugin id="org.eclipse.emf.ecore.editor"/>
+<plugin id="org.eclipse.birt.report.engine.dataextraction.csv.nl1"/>
+<plugin id="org.eclipse.jdt.debug"/>
+<plugin id="org.eclipse.jetty.webapp"/>
+<plugin id="org.eclipse.birt.report.designer.ui.samples.ide.nl1"/>
+<plugin id="org.eclipse.swt.gtk.linux.x86_64" version="3.100.0.v4233d"/>
+<plugin id="org.eclipse.xtend.typesystem.xsd"/>
+<plugin id="org.apache.bsf"/>
+<plugin id="org.apache.felix.http.base"/>
+<plugin id="org.apache.commons.logging" version="1.0.4.v201101211617"/>
+<plugin id="osgi.enterprise"/>
+<plugin id="org.apache.commons.math"/>
+<plugin id="org.eclipse.update.scheduler"/>
+<plugin id="org.eclipse.equinox.weaving.aspectj"/>
+<plugin id="org.eclipse.text" version="3.5.200.v20120523-1310"/>
+<plugin id="org.eclipse.birt.chart.ui.nl1"/>
+<plugin id="org.eclipse.birt.report.engine"/>
+<plugin id="org.w3c.dom.svg" version="1.1.0.v200806040011"/>
+<plugin id="org.apache.lucene.highlighter"/>
+<plugin id="org.eclipse.birt.report.item.crosstab.ui"/>
+<plugin id="org.eclipse.emf.mapping.ecore"/>
+<plugin id="org.eclipse.birt.chart.device.swt.nl1"/>
+<plugin id="org.eclipse.birt.report.item.crosstab.core"/>
+<plugin id="org.eclipse.emf.examples"/>
+<plugin id="org.eclipse.birt.chart.engine.extension.nl1"/>
+<plugin id="org.eclipse.swt.gtk.linux.s390x" version="3.100.0.v4233d"/>
+<plugin id="org.eclipse.jdt.compiler.apt"/>
+<plugin id="org.eclipse.equinox.simpleconfigurator.manipulator" version="2.0.0.v20110502-1955"/>
+<plugin id="org.apache.axis" version="1.4.0.v201005080400"/>
+<plugin id="javax.xml" version="1.3.4.v201005080400"/>
+<plugin id="org.apache.felix.http.whiteboard"/>
+<plugin id="org.eclipse.core.runtime.compatibility.registry" version="3.5.100.v20120521-2346"/>
+<plugin id="org.eclipse.jdt"/>
+<plugin id="org.apache.felix.gogo.shell" version="0.10.0"/>
+<plugin id="org.eclipse.datatools.connectivity.oda.design"/>
+<plugin id="org.eclipse.emf.codegen.ecore"/>
+<plugin id="org.eclipse.xtext.purexbase.ui"/>
+<plugin id="org.eclipse.equinox.metatype"/>
+<plugin id="org.eclipse.jetty.continuation" version="8.1.3.v20120522"/>
+<plugin id="org.w3c.dom.events"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.html"/>
+<plugin id="org.apache.ant" version="1.8.2.v20110505-1300"/>
+<plugin id="org.eclipse.birt.report.item.crosstab.core.nl1"/>
+<plugin id="org.eclipse.datatools.connectivity.oda.consumer.nl1"/>
+<plugin id="org.eclipse.update.configurator" version="3.3.200.v20120523-1752"/>
+<plugin id="org.eclipse.ui.navigator" version="3.5.200.v20120523-1955"/>
+<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile.sampledb.ui"/>
+<plugin id="org.apache.felix.http.bundle"/>
+<plugin id="org.apache.felix.shell"/>
+<plugin id="org.eclipse.jdt.launching"/>
+<plugin id="org.eclipse.emf.activities"/>
+<plugin id="org.eclipse.emf.common.ui"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.config"/>
+<plugin id="org.eclipse.jdt.core.manipulation"/>
+<plugin id="org.apache.solr.common"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.postscript.config"/>
+<plugin id="org.eclipse.jface.databinding" version="1.6.0.v20120521-2329"/>
+<plugin id="org.eclipse.emf.edit.ui"/>
+<plugin id="org.w3c.dom.smil" version="1.0.1.v200903091627"/>
+<plugin id="org.eclipse.jetty.xml"/>
+<plugin id="org.eclipse.ui.workbench" version="3.103.0.v20120530-1824"/>
+<plugin id="org.eclipse.jetty.plus"/>
+<plugin id="org.eclipse.equinox.util" version="1.0.400.v20120522-2049"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.html.config.nl1"/>
+<plugin id="org.apache.felix.gogo.runtime" version="0.10.0"/>
+<plugin id="org.eclipse.xtext.ui"/>
+<plugin id="org.eclipse.birt.report.designer.ui.editor.script.nl1"/>
+<plugin id="javax.wsdl" version="1.6.2.v201012040545"/>
+<plugin id="org.eclipse.birt.report.designer.ui.lib.nl1"/>
+<plugin id="org.eclipse.jetty.osgi.boot.warurl"/>
+<plugin id="org.eclipse.xtend.typesystem.xsd.ui"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.pdf.config.nl1"/>
+<plugin id="org.apache.batik.dom" version="1.7.0.v201011041433"/>
+<plugin id="org.eclipse.core.variables" version="3.2.600.v20120521-2012"/>
+<plugin id="org.eclipse.birt.report.designer.ui.cubebuilder"/>
+<plugin id="org.apache.felix.configadmin"/>
+<plugin id="org.eclipse.birt.data"/>
+<plugin id="org.eclipse.jdt.apt.core"/>
+<plugin id="org.eclipse.birt.chart.engine"/>
+<plugin id="org.eclipse.datatools.connectivity.dbdefinition.genericJDBC.nl1"/>
+<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile"/>
+<plugin id="org.eclipse.xtext.ui.codetemplates"/>
+<plugin id="org.eclipse.emf.codegen.ui"/>
+<plugin id="org.eclipse.emf.codegen.ecore.ui"/>
+<plugin id="javax.jws"/>
+<plugin id="org.eclipse.birt"/>
+<plugin id="org.apache.commons.beanutils"/>
+<plugin id="org.eclipse.core.filesystem.win32.x86_64" version="1.1.300.v20120522-1137"/>
+<plugin id="org.eclipse.core.net.linux.x86" version="1.1.200.v20120522-1148"/>
+<plugin id="org.eclipse.swt.gtk.linux.s390" version="3.100.0.v4233d"/>
+<plugin id="org.eclipse.equinox.servletbridge"/>
+<plugin id="org.eclipse.birt.report.model.adapter.oda"/>
+<plugin id="org.eclipse.ui.console" version="3.5.100.v20120521-2012"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.wpml.config"/>
+<plugin id="org.eclipse.datatools.connectivity.nl1"/>
+<plugin id="org.apache.felix.shell.remote"/>
+<plugin id="org.eclipse.core.filesystem.linux.x86" version="1.4.0.v20120522-1137"/>
+<plugin id="org.eclipse.ant.core" version="3.2.400.v20120523-1752"/>
+<plugin id="javax.servlet.jsp.jstl"/>
+<plugin id="org.eclipse.xtext.xtext.ui"/>
+<plugin id="org.eclipse.compare.core" version="3.5.200.v20120522-1148"/>
+<plugin id="org.apache.cassandra"/>
+<plugin id="org.w3c.dom.svg" version="1.1.0.v201011041433"/>
+<plugin id="org.eclipse.equinox.http.jetty" version="3.0.0.v20120522-1841"/>
+<plugin id="org.eclipse.birt.data.aggregation.nl1"/>
+<plugin id="org.eclipse.ecf.provider.filetransfer.httpclient.ssl" version="1.0.0.v20120608-0148"/>
+<plugin id="org.eclipse.swt.gtk.linux.x86" version="3.100.0.v4233d"/>
+<plugin id="org.eclipse.jsch.core" version="1.1.400.v20120522-1148"/>
 <plugin id="org.eclipse.ui.editors" version="3.8.0.v20120523-1540"/>
+<plugin id="org.eclipse.ui.views.properties.tabbed" version="3.5.300.v20120523-1955"/>
+<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile.sampledb.nl1"/>
+<plugin id="org.eclipse.core.net.linux.x86_64" version="1.1.0.v20120522-1148"/>
+<plugin id="org.eclipse.xtext.activities"/>
+<plugin id="org.apache.derby"/>
+<plugin id="org.apache.felix.servicediagnostics.plugin"/>
+<plugin id="org.eclipse.birt.report.designer.ui.editor.xml.wtp.nl1"/>
+<plugin id="org.apache.batik.svggen" version="1.7.0.v201011041433"/>
+<plugin id="org.eclipse.emf.importer.java"/>
+<plugin id="org.eclipse.equinox.security.win32.x86_64" version="1.0.100.v20120522-2049"/>
+<plugin id="ch.qos.logback.slf4j"/>
+<plugin id="org.w3c.css.sac" version="1.3.1.v200903091627"/>
+<plugin id="org.slf4j.ext"/>
+<plugin id="org.apache.xml.resolver" version="1.2.0.v201005080400"/>
+<plugin id="org.apache.commons.codec" version="1.3.0.v20100518-1140"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.pdf.config"/>
+<plugin id="org.eclipse.core.databinding.observable" version="1.4.1.v20120521-2329"/>
+<plugin id="org.eclipse.xtext.common.types.shared"/>
+<plugin id="org.eclipse.emf.doc"/>
+<plugin id="org.apache.felix.prefs"/>
+<plugin id="org.eclipse.swt" version="3.100.0.v4233d"/>
+<plugin id="org.eclipse.jetty.annotations"/>
+<plugin id="org.apache.felix.fileinstall"/>
+<plugin id="org.apache.batik.css" version="1.7.0.v201011041433"/>
+<plugin id="org.apache.batik.parser" version="1.7.0.v201011041433"/>
+<plugin id="org.eclipse.xtend.typesystem.emf.ui"/>
+<plugin id="org.eclipse.emf.mapping.ecore2xml"/>
+<plugin id="org.eclipse.jetty.jmx"/>
+<plugin id="org.eclipse.ecf.provider.filetransfer.ssl" version="1.0.0.v20120608-0148"/>
+<plugin id="org.eclipse.jetty.client"/>
+<plugin id="javax.xml.bind"/>
+<plugin id="org.eclipse.birt.report.engine.script.javascript"/>
+<plugin id="javax.activation"/>
+<plugin id="org.eclipse.ui.win32" version="3.2.300.v20120523-1955"/>
+<plugin id="org.eclipse.equinox.security" version="1.1.100.v20120522-1841"/>
+<plugin id="org.eclipse.platform.doc.user" version="4.2.0.v20120606-135340"/>
+<plugin id="org.apache.batik.dom.svg" version="1.7.0.v201011041433"/>
+<plugin id="org.apache.xalan"/>
+<plugin id="org.eclipse.birt.report.designer.ui.editor.xml.wtp"/>
+<plugin id="org.eclipse.jetty.osgi.boot.jsp"/>
+<plugin id="org.eclipse.update.core.linux"/>
+<plugin id="org.apache.lucene.spellchecker"/>
+<plugin id="org.eclipse.birt.chart.device.svg.nl1"/>
+<plugin id="org.eclipse.emf.ecore.xmi" version="2.8.0.v20120606-0717"/>
+<plugin id="org.eclipse.birt.report.designer.ui.lib"/>
+<plugin id="org.apache.neethi"/>
+<plugin id="org.eclipse.ui.presentations.r21"/>
+<plugin id="org.eclipse.birt.chart.device.extension.nl1"/>
+<plugin id="org.eclipse.emf.importer"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.wpml"/>
+<plugin id="org.eclipse.swt.gtk.solaris.x86" version="3.100.0.v4233d"/>
+<plugin id="org.eclipse.birt.report.data.oda.jdbc.ui"/>
+<plugin id="org.eclipse.birt.report.data.oda.jdbc.ui.nl1"/>
+<plugin id="org.eclipse.equinox.preferences" version="3.5.0.v20120522-1841"/>
+<plugin id="org.eclipse.emf.ecore.change" version="2.8.0.v20120606-0717"/>
+<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile.sampledb"/>
+<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile.ui.nl1"/>
+<plugin id="javax.servlet" version="3.0.0.v201103241727"/>
+<plugin id="org.eclipse.emf.databinding"/>
+<plugin id="org.eclipse.birt.report.designer.ui.views.nl1"/>
+<plugin id="org.eclipse.equinox.security.win32.x86" version="1.0.300.v20120522-2049"/>
+<plugin id="org.eclipse.equinox.launcher" version="1.3.0.v20120522-1813"/>
+<plugin id="org.apache.xerces" version="2.9.0.v201101211617"/>
+<plugin id="org.mortbay.jetty.util"/>
+<plugin id="org.junit" version="4.8.2.v4_8_2_v20110321-1705"/>
+<plugin id="org.eclipse.equinox.jsp.jasper.registry" version="1.0.300.v20120522-2049"/>
+<plugin id="org.eclipse.help" version="3.6.0.v20120521-2344"/>
+<plugin id="org.eclipse.jdt.apt.pluggable.core"/>
+<plugin id="org.eclipse.xtext.xtend2"/>
+<plugin id="org.eclipse.help.ui" version="3.5.200.v20120521-2344"/>
+<plugin id="org.eclipse.birt.chart.ui.extension"/>
+<plugin id="org.eclipse.emf.mapping.ecore2ecore"/>
+<plugin id="org.eclipse.xtext.xtend2.lib"/>
+<plugin id="org.apache.commons.codec" version="1.3.0.v201101211617"/>
+<plugin id="org.eclipse.core.net" version="1.2.200.v20120522-1148"/>
+<plugin id="org.eclipse.jetty.servlets"/>
+<plugin id="org.eclipse.jdt.core"/>
+<plugin id="org.eclipse.birt.report.data.oda.sampledb"/>
+<plugin id="org.eclipse.swt.gtk.hpux.ia64_32" version="3.100.0.v4233d"/>
+<plugin id="org.eclipse.birt.chart.engine.nl1"/>
+<plugin id="org.eclipse.emf.ecore.edit"/>
+<plugin id="org.eclipse.jface.text" version="3.8.0.v20120531-0600"/>
+<plugin id="org.apache.batik.svggen" version="1.6.0.v200805290154"/>
+<plugin id="org.eclipse.equinox.security.ui" version="1.1.100.v20120522-2049"/>
+<plugin id="org.eclipse.equinox.weaving.caching.j9"/>
+<plugin id="org.eclipse.equinox.transforms.xslt"/>
+<plugin id="org.eclipse.birt.chart.examples.core"/>
+<plugin id="javax.xml.stream"/>
+<plugin id="org.apache.felix.dependencymanager"/>
+<plugin id="org.eclipse.jetty.jaspi"/>
+<plugin id="org.eclipse.equinox.http.servlet" version="1.1.300.v20120522-1841"/>
+<plugin id="org.apache.felix.shell.tui"/>
+<plugin id="org.eclipse.datatools.connectivity.db.generic.ui.nl1"/>
+<plugin id="org.eclipse.compare" version="3.5.300.v20120522-1148"/>
+<plugin id="org.eclipse.birt.core.ui"/>
+<plugin id="org.apache.httpcomponents.httpcore"/>
+<plugin id="org.eclipse.emf.java.editor"/>
+<plugin id="org.eclipse.swt.cocoa.macosx" version="3.100.0.v4233d"/>
+<plugin id="org.apache.bcel"/>
+<plugin id="org.apache.lucene.memory"/>
+<plugin id="com.jcraft.jzlib"/>
+<plugin id="org.apache.commons.pool" version="1.4.0.v20081016-1000"/>
+<plugin id="org.apache.commons.dbcp"/>
+<plugin id="org.eclipse.birt.report.data.oda.xml.ui"/>
+<plugin id="org.apache.ws.commons.util"/>
+<plugin id="org.eclipse.emf.ant"/>
+<plugin id="org.eclipse.equinox.ds" version="1.4.0.v20120522-1841"/>
+<plugin id="javax.xml.rpc" version="1.1.0.v201005080400"/>
+<plugin id="com.jogamp.jogl"/>
+<plugin id="org.eclipse.birt.report.data.adapter.nl1"/>
+<plugin id="org.eclipse.birt.chart.reportitem.nl1"/>
+<plugin id="org.eclipse.emf.examples.library"/>
+<plugin id="org.slf4j.log4j"/>
+<plugin id="org.eclipse.ui.net" version="1.2.100.v20120522-1148"/>
+<plugin id="org.eclipse.platform" version="4.2.0.v201206081400"/>
+<plugin id="org.eclipse.emf.mwe.utils"/>
+<plugin id="org.sat4j.core" version="2.3.0.v20110329"/>
+<plugin id="org.eclipse.core.databinding.beans" version="1.2.200.v20120523-1955"/>
+<plugin id="com.oracle.jdbc.driver"/>
+<plugin id="org.eclipse.xtext.xbase.ui"/>
+<plugin id="org.eclipse.emf.ecore" version="2.8.0.v20120606-0717"/>
+<plugin id="org.apache.felix.dependencymanager.compat"/>
+<plugin id="org.eclipse.emf.exporter.html"/>
+<plugin id="org.eclipse.emf.mapping.ecore.editor"/>
+<plugin id="org.eclipse.emf.mwe2.runtime"/>
+<plugin id="org.eclipse.debug.ui" version="3.8.0.v20120530-1753"/>
+<plugin id="org.eclipse.equinox.log"/>
+<plugin id="org.eclipse.datatools.connectivity.ui"/>
+<plugin id="org.apache.commons.el" version="1.0.0.v201101211617"/>
+<plugin id="org.eclipse.core.externaltools" version="1.0.100.v20120521-2012"/>
+<plugin id="org.eclipse.equinox.simpleconfigurator" version="1.0.300.v20110815-1744"/>
+<plugin id="org.eclipse.birt.report.designer.ui.lib.explorer.nl1"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.pdf"/>
+<plugin id="org.eclipse.gef.doc.isv"/>
+<plugin id="com.jogamp.jogl-macosx-universal"/>
+<plugin id="org.eclipse.equinox.http.servletbridge"/>
+<plugin id="org.eclipse.birt.report.engine.emitter.ppt.config"/>
+<plugin id="org.eclipse.core.commands" version="3.6.1.v20120521-2329"/>
+<plugin id="org.eclipse.jetty.http" version="8.1.3.v20120522"/>
+<plugin id="org.apache.commons.io"/>
+<plugin id="org.apache.commons.discovery" version="0.2.0.v201004190315"/>
+<plugin id="org.eclipse.birt.report.engine.dataextraction.nl1"/>
+<plugin id="org.eclipse.birt.report.designer.ui.data"/>
+<plugin id="org.eclipse.birt.chart"/>
+<plugin id="org.sat4j.pb" version="2.3.0.v20110329"/>
+<plugin id="org.apache.httpcomponents.httpcore.nio"/>
+<plugin id="org.eclipse.help.base" version="3.6.100.v201206081400"/>
+<plugin id="org.apache.lucene.queries"/>
+<plugin id="org.eclipse.birt.report.designer.ui.editor.script"/>
+<plugin id="org.eclipse.xtext.xtext.ui.graph"/>
+<plugin id="org.eclipse.birt.report.designer.ui.editors.schematic.nl1"/>
+<plugin id="javax.xml.soap" version="1.3.0.v201105210645"/>
+<plugin id="com.ibm.icu" version="4.4.2.v20110823"/>
+<plugin id="org.eclipse.birt.core.ui.nl1"/>
+<plugin id="org.eclipse.birt.chart.device.pdf"/>
+<plugin id="org.eclipse.xtext.ecore"/>
+<plugin id="org.eclipse.xpand"/>
+<plugin id="org.eclipse.birt.report.data.oda.jdbc.dbprofile.ui"/>
+<plugin id="org.eclipse.xtext.common.types"/>
+<plugin id="org.apache.batik.xml" version="1.7.0.v201011041433"/>
+<plugin id="org.eclipse.jetty.server" version="8.1.3.v20120522"/>
+<plugin id="org.eclipse.birt.report.designer.ui.nl1"/>
+<plugin id="org.h2"/>
+<plugin id="org.eclipse.equinox.util.source" version="1.0.400.v20120522-2049"/>
+<plugin id="org.eclipse.birt.data.nl1"/>
+<plugin id="org.eclipse.swt.win32.win32.x86" version="3.100.0.v4233d"/>
+<plugin id="org.apache.wsil4j"/>
+<plugin id="org.eclipse.jetty.policy"/>
+<plugin id="org.eclipse.core.filebuffers" version="3.5.200.v20120523-1310"/>
+<plugin id="org.eclipse.birt.chart.ui.extension.nl1"/>
+<plugin id="org.eclipse.core.filesystem" version="1.3.200.v20120522-2012"/>
+<plugin id="org.eclipse.osgi.services" version="3.3.100.v20120522-1822"/>
+<plugin id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
+<plugin id="org.eclipse.birt.report.designer.ui.lib.explorer"/>
 </includeBundles>
 </target>
