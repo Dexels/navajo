@@ -3,6 +3,8 @@ package com.dexels.navajo.tipi.ant.extensionbuilder;
 import java.io.File;
 
 import org.apache.tools.ant.BuildException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.extensionmanager.ExtensionActions;
 
@@ -13,7 +15,10 @@ public class BuildExtensionTask extends org.apache.tools.ant.Task {
 	private String destination;
 	private String version;
 	private String svnUrl;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BuildExtensionTask.class);
+	
 	public String getSvnUrl() {
 		return svnUrl;
 	}
@@ -68,7 +73,7 @@ public class BuildExtensionTask extends org.apache.tools.ant.Task {
 		try {
 			 ExtensionActions.build(repository,getProject().getProperty("ant.project.name"),version,getProject().getBaseDir(), sourceFile, destDir);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

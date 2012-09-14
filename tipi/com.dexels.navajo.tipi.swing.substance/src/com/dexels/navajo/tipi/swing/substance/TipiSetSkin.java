@@ -34,7 +34,7 @@ public class TipiSetSkin extends TipiAction {
 				if (valueOp != null) {
 					value = (String) valueOp.value;
 				}
-				System.err.println("Setting skin: "+value);
+				logger.info("Setting skin: "+value);
 				UIManager.getLookAndFeelDefaults().put("ClassLoader", SubstanceBusinessBlackSteelLookAndFeel.class.getClassLoader());
 
 				if (value == null) {

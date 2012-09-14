@@ -11,6 +11,8 @@ import javax.swing.SwingUtilities;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.effect.BufferedImageOpEffect;
 import org.jdesktop.jxlayer.plaf.ext.LockableUI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
 import com.dexels.navajo.tipi.jxlayer.impl.BusyPainterUI;
@@ -22,6 +24,10 @@ public class TipiLockedPanel extends TipiSwingDataComponentImpl {
 	private JPanel myPanel;
 	private LockableUI blurUI;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiLockedPanel.class);
+	
 	@Override
 	public Object createContainer() {
 		myPanel = new JPanel();
@@ -73,7 +79,7 @@ public class TipiLockedPanel extends TipiSwingDataComponentImpl {
 				@Override
 				public void run() {
 					blurUI.setLocked(lck);
-					System.err.println("Setting lock: "+lck);
+					logger.info("Setting lock: "+lck);
 				
 				}
 			});
@@ -91,7 +97,7 @@ public class TipiLockedPanel extends TipiSwingDataComponentImpl {
 			return new LockableUI(new BufferedImageOpEffect(new BlurFilter()));
 		}
 		if(effect.equals("busy")) {
-			System.err.println("Busy detected!");
+			logger.info("Busy detected!");
 			return new BusyPainterUI();
 		}
 		return getLockableUI("blur");

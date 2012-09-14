@@ -34,6 +34,9 @@ import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
@@ -59,6 +62,10 @@ import com.dexels.navajo.document.types.TypeFormatter;
 
 public class GenericPropertyComponent extends JPanel {
 	private static final long serialVersionUID = -2357812021805333562L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GenericPropertyComponent.class);
+	
 	private JComponent currentComponent = null;
 	private int labelWidth = 0;
 	private int valign = SwingConstants.CENTER;
@@ -143,7 +150,7 @@ public class GenericPropertyComponent extends JPanel {
 		try {
 			jbInit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -328,7 +335,7 @@ public class GenericPropertyComponent extends JPanel {
 		// }
 		if (currentComponent != null) {
 			remove(currentComponent);
-			// System.err.println("Removing component: " +
+			// logger.info("Removing component: " +
 			// currentComponent.getClass());
 		}
 		currentComponent = c;
@@ -374,7 +381,7 @@ public class GenericPropertyComponent extends JPanel {
 					GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
 					new Insets(0, 0, 0, 0), 0, 0));
 		} else {
-			System.err.println("Already present!");
+			logger.info("Already present!");
 		}
 		// if (myLabel == null) {
 		// myLabel = new JLabel();
@@ -598,7 +605,7 @@ public class GenericPropertyComponent extends JPanel {
 			return;
 		}
 		if (type.equals(Property.LONG_PROPERTY)) {
-			System.err.println("Creating long field! ");
+			logger.info("Creating long field! ");
 			createLongField(p);
 			return;
 		}
@@ -679,7 +686,7 @@ public class GenericPropertyComponent extends JPanel {
 	// if (type.equals(Property.EXPRESSION_PROPERTY)) {
 	// try {
 	// type = p.getEvaluatedType();
-	// System.err.println("Found evaluated type: "+type);
+	// logger.info("Found evaluated type: "+type);
 	// evaluatedValue = p.getTypedValue();
 	// }
 	// catch (NavajoException ex) {
@@ -777,7 +784,7 @@ public class GenericPropertyComponent extends JPanel {
 		// if (p.getLength() > 0) {
 		// max_img_size = p.getLength();
 		// }
-		// System.err.println("Length: "+p.getLength());
+		// logger.info("Length: "+p.getLength());
 		if (myBinaryLabel == null) {
 			myBinaryLabel = new BinaryEditor();
 			myBinaryLabel.setMaxImgWidth(max_img_width);
@@ -823,10 +830,10 @@ public class GenericPropertyComponent extends JPanel {
 				}
 			});
 			addedCustomListeners = true;
-			// System.err.println("Component class: "+c.getClass());
+			// logger.info("Component class: "+c.getClass());
 			if (c instanceof JTextField) {
 				JTextField jj = (JTextField) c;
-				// System.err.println("Text component found. forceAlignment:
+				// logger.info("Text component found. forceAlignment:
 				// "+forceFieldAlignment+" limit: "+limitFieldWidth);
 				if ("left".equals(forceFieldAlignment)) {
 					jj.setHorizontalAlignment(SwingConstants.LEFT);
@@ -838,7 +845,7 @@ public class GenericPropertyComponent extends JPanel {
 					jj.setHorizontalAlignment(SwingConstants.CENTER);
 				}
 				if (limitFieldWidth > 0) {
-					System.err.println("Limiting field size to: "
+					logger.info("Limiting field size to: "
 							+ limitFieldWidth);
 					// jj.setSize(new Dimension(limitFieldWidth,
 					// jj.getPreferredSize().height));
@@ -954,7 +961,7 @@ public class GenericPropertyComponent extends JPanel {
 		}
 		// myPickList.setVerticalScrolls(verticalScrolls);
 		// myPickList.setHorizontalScrolls(horizontalScrolls);
-		// System.err.println("PICKLIST: "+visibleRowCount);
+		// logger.info("PICKLIST: "+visibleRowCount);
 		addPropertyComponent(myPickList, true);
 		myPickList.setProperty(p);
 		if (visibleRowCount > 0) {
@@ -993,7 +1000,7 @@ public class GenericPropertyComponent extends JPanel {
 	}
 
 	private final void createIntegerField(Property p) {
-		// System.err.println("Create int field: "+p.getValue()+" type:
+		// logger.info("Create int field: "+p.getValue()+" type:
 		// "+p.getType()+"aaa: "+p.getTypedValue().getClass());
 		// Thread.dumpStack();
 		if (myIntField == null) {
@@ -1502,12 +1509,12 @@ public class GenericPropertyComponent extends JPanel {
 	}
 
 	final void myDateField_focusGained(FocusEvent e) {
-		// System.err.println(" IN myDateField_focusGained ");
+		// logger.info(" IN myDateField_focusGained ");
 		fireTipiEvent("onFocusGained");
 	}
 
 	final void myDateField_focusLost(FocusEvent e) {
-		// System.err.println(" IN myDateField_focusLOST ");
+		// logger.info(" IN myDateField_focusLOST ");
 		fireTipiEvent("onFocusLost");
 	}
 
@@ -1836,7 +1843,7 @@ public class GenericPropertyComponent extends JPanel {
 		return limitTo(super.getPreferredSize(), getMaximumSize());
 		// }
 		// // if (myProperty == null || currentComponent == null) {
-		// // // System.err.println("no prop or no component");
+		// // // logger.info("no prop or no component");
 		// // }
 		// Dimension labelDimension = null;
 		// if (showLabel && getLabel() != null) {
@@ -1852,7 +1859,7 @@ public class GenericPropertyComponent extends JPanel {
 		// labelWidth = -1;
 		// Dimension componentDimension = currentComponent.getPreferredSize();
 		// if (componentDimension == null) {
-		// // System.err.println("Component without dimension");
+		// // logger.info("Component without dimension");
 		// if (myPreferredSize != null) {
 		// return limitTo(new Dimension(myPreferredSize.width,
 		// super.getPreferredSize().height), getMaximumSize());
@@ -1992,7 +1999,7 @@ public class GenericPropertyComponent extends JPanel {
 	}
 
 	public void setPropertyWidth(int propertyWidth) {
-		System.err.println("SETTING setPropertyWidth: " + propertyWidth);
+		logger.info("SETTING setPropertyWidth: " + propertyWidth);
 		this.propertyWidth = propertyWidth;
 
 		// if(currentComponent!=null) {
@@ -2014,7 +2021,7 @@ public class GenericPropertyComponent extends JPanel {
 	}
 
 	private void setComponentWidth() {
-		System.err.println("MONKEEEY: " + propertyWidth);
+		logger.info("MONKEEEY: " + propertyWidth);
 		valueStrut = Box.createHorizontalStrut(propertyWidth);
 		add(valueStrut, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
@@ -2030,7 +2037,7 @@ public class GenericPropertyComponent extends JPanel {
 	}
 
 	public void setToolTipText(String toolTipText) {
-		System.err.println("Setting tooltiptext: " + toolTipText);
+		logger.info("Setting tooltiptext: " + toolTipText);
 		this.toolTipText = toolTipText;
 		super.setToolTipText(toolTipText);
 		if (currentComponent != null) {

@@ -10,6 +10,9 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TestMail {
 
 	private static final String SMTP_HOST_NAME = "smtp.gmail.com";
@@ -19,13 +22,16 @@ public class TestMail {
 	private static final String emailFromAddress = "flyaruu@gmail.com";
 	private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
 	private static final String[] sendTo = { "frank@dexels.com" };
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TestMail.class);
+	
 	public static void main(String args[]) throws Exception {
 
 //		Security.addProvider( new com.sun.net.ssl.internal.ssl.Provider());
 
 		new TestMail().sendSSLMessage(sendTo, emailSubjectTxt, emailMsgTxt, emailFromAddress);
-		System.out.println("Sucessfully Sent mail to All Users");
+		logger.info("Sucessfully Sent mail to All Users");
 	}
 
 	public void sendSSLMessage(String recipients[], String subject, String message, String from) throws MessagingException {

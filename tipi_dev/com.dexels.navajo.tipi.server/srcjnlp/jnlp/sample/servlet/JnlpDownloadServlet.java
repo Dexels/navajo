@@ -149,7 +149,7 @@ public class JnlpDownloadServlet extends HttpServlet {
             HttpServletResponse response, boolean isHead) throws IOException {
 	String requestStr = request.getRequestURI();
 	_log.addDebug("Reqeuest: "+request.getRequestURI()+" query: "+request.getQueryString());
-	//System.err.println("Request: "+request.getRequestURI()+" query: "+request.getQueryString());
+	//logger.info("Request: "+request.getRequestURI()+" query: "+request.getQueryString());
 
 	//TipiAdminServlet.buildIfNecessary(request,getAppFolder(),getServletContext());
 	Map en = request.getParameterMap();
@@ -158,7 +158,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 		if(value instanceof Object[]) {
 			Object[] vals = (Object[])value;
 //			for (Object object : vals) {
-//				System.err.println("Value element: "+object);
+//				logger.info("Value element: "+object);
 //			}
 		} else {
 		_log.addDebug("Param: "+key+" value: "+en.get(key));
@@ -222,7 +222,7 @@ public class JnlpDownloadServlet extends HttpServlet {
                 // Return selected resource
                 dres = constructResponse(jnlpres, dreq);
             }
-//            System.err.println("Resetting encoding!!!");
+//            logger.info("Resetting encoding!!!");
 //            response.setHeader("Content-Encoding", "");
 	    dres.sendRespond(response);
 	    

@@ -50,14 +50,14 @@ public class VaadinComponent {
 //		httpService.registerServlet(SERVLET_ALIAS+"eval", servlet, ht, commonContext);
 		httpService.registerServlet(VAADIN_DIR_PREFIX, vfs, null, commonContext);
 	} catch (ServletException e) {
-		e.printStackTrace();
+		logger.error("Error: ",e);
 	} catch (NamespaceException e) {
-		e.printStackTrace();
+		logger.error("Error: ",e);
 	}
 	}
 
 	protected void shutdown() {
-		System.err.println("SHUTTIN DOWN!");
+		logger.info("SHUTTIN DOWN!");
 
 	}
 }

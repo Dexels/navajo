@@ -83,10 +83,10 @@ public final class ClassManager {
 //		try {
 //			cc = Class.forName(fullDef, true, myContext.getClassLoader());
 //		} catch (ClassNotFoundException ex) {
-//			System.err.println("Error loading class: " + fullDef);
+//			logger.info("Error loading class: " + fullDef);
 //			ex.printStackTrace();
 //		} catch (SecurityException ex) {
-//			System.err.println("Security Error loading class: " + fullDef);
+//			logger.info("Security Error loading class: " + fullDef);
 //			ex.printStackTrace();
 //
 //		}

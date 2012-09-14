@@ -18,11 +18,19 @@ import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 import com.dexels.navajo.tipi.util.XMLParseException;
 
 public class XsdBuilder {
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(XsdBuilder.class);
+	
 	private final Map<String, XMLElement> allComponents = new TreeMap<String, XMLElement>();
 	private final Map<String, XMLElement> allActions = new TreeMap<String, XMLElement>();
 	private final Map<String, XMLElement> allEvents = new TreeMap<String, XMLElement>();
@@ -47,7 +55,7 @@ public class XsdBuilder {
 		vr.load(extensionRepository);
 		while(st.hasMoreTokens()) {
 			String token = st.nextToken();
-			System.err.println("Processing token: "+token);
+			logger.info("Processing token: "+token);
 			Map<String,String> versionMap = null;
 			
 			try {
@@ -60,7 +68,7 @@ public class XsdBuilder {
 			try {
 				appendExtension(ext,version,extensionRepository);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		processMap();
@@ -69,7 +77,7 @@ public class XsdBuilder {
 			createMetadata(repository,baseDir, allComponents, allActions, allTypes);
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -89,13 +97,13 @@ public class XsdBuilder {
 
 			return result;
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 
 	}
 	private void createXSD(File baseDir, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions) throws IOException {
-		// System.err.println("# of components: "+allComponents.size());
+		// logger.info("# of components: "+allComponents.size());
 		XMLElement root = new CaseSensitiveXMLElement();
 		root.setName("xs:schema");
 		root.setAttribute("xmlns:xs", "http://www.w3.org/2001/XMLSchema");
@@ -120,7 +128,7 @@ public class XsdBuilder {
 		appendClientConfigTag(choice);
 		appendInlineTml(choice, root);
 
-		System.err.println("All components: "+allComponents.keySet());
+		logger.info("All components: "+allComponents.keySet());
 		for (Iterator<String> iter = allComponents.keySet().iterator(); iter.hasNext();) {
 			String current = iter.next();
 			XMLElement e = createTipiClassElement(current, false, allComponents.get(current), allComponents);
@@ -290,7 +298,7 @@ public class XsdBuilder {
 			String path = element.getStringAttribute("path");
 			XMLElement xx = ClientActions.getXMLElement(new URL(versionURL,"includes/"+path));
 			// beware of missing function.xml
-			//System.err.println("ELEMENT: "+xx);
+			//logger.info("ELEMENT: "+xx);
 			if(xx!=null) {
 				appendClassDefElement(extension,xx);
 			}
@@ -564,7 +572,7 @@ public class XsdBuilder {
 					// if (!children.isEmpty()) {
 					// for (int i = 0; i < children.size(); i++) {
 					// XMLElement currentParam = children.get(i);
-					// System.err.println("CCC: "+currentParam);
+					// logger.info("CCC: "+currentParam);
 					// }
 					// }
 				}
@@ -583,10 +591,10 @@ public class XsdBuilder {
 			Map<String, XMLElement> allComponents) throws IOException {
 		XMLElement result = new CaseSensitiveXMLElement();
 		result.setName("xs:element");
-//		System.err.println("Element before: "+element);
+//		logger.info("Element before: "+element);
 		
 		element = ComponentMerger.getAssembledClassDef (allComponents, element);
-//		System.err.println("Element after: "+element);
+//		logger.info("Element after: "+element);
 		String type = element.getStringAttribute("type");
 		if (type.equals("tipi") || type.equals("component")|| type.equals("connector")) {
 			result.setAttribute("name", (isDefinition ? "d." : "c.") + current);
@@ -720,7 +728,7 @@ public class XsdBuilder {
 	private static XMLElement createTipiClassElement(String current, boolean isDefinition, XMLElement element,
 			Map<String, XMLElement> allComponents) throws IOException {
 		// component / c.window etc /definition
-		// System.err.println("element: " + element.getName() + " current: " +
+		// logger.info("element: " + element.getName() + " current: " +
 		// current);
 		if ("tipi".equals(element.getStringAttribute("type")) || "component".equals(element.getStringAttribute("type"))|| "connector".equals(element.getStringAttribute("type"))) {
 			return createTipiComponent(current, isDefinition, element, allComponents);
@@ -785,9 +793,9 @@ public class XsdBuilder {
 			choice.addChild(tml);
 
 		} catch (XMLParseException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 	}

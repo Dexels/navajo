@@ -30,6 +30,9 @@ import javax.swing.JComponent;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 
 //import com.dexels.sportlink.client.swing.dialogs.*;
@@ -38,6 +41,9 @@ import com.dexels.navajo.document.Navajo;
  */
 public class StandardWindow extends BaseWindow implements DialogConstants {
 	private static final long serialVersionUID = 6135214311748697090L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(StandardWindow.class);
 	protected JToolBar dialogToolbar = new JToolBar();
 	protected JButton closeButton = new JButton();
 	protected JButton insertButton = new JButton();
@@ -61,7 +67,7 @@ public class StandardWindow extends BaseWindow implements DialogConstants {
 		try {
 			jbInit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -103,7 +109,7 @@ public class StandardWindow extends BaseWindow implements DialogConstants {
 			isCollapsed = value;
 		} else {
 			isCollapsed = false;
-			System.err.println("Cant set collapsed for a non-sticky window");
+			logger.info("Cant set collapsed for a non-sticky window");
 		}
 	}
 

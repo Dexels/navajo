@@ -5,6 +5,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
@@ -18,6 +21,10 @@ public class TipiSvgForm extends TipiSvgComponent implements
 		SvgMouseListener, SvgAnimationListener {
 
 	private static final long serialVersionUID = 5653906058740273745L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSvgForm.class);
+	
 	private int width=50;
 	private int height=20;
 
@@ -100,16 +107,16 @@ public class TipiSvgForm extends TipiSvgComponent implements
 
 	private void updateSize() {
 		Dimension dimension = new Dimension(width,height);
-		System.err.println("SIZE: "+dimension);
+		logger.info("SIZE: "+dimension);
 		myComponent.setPreferredSize(dimension);
 		
 	}
 
 	@Override
 	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
-		System.err.println("Loading stuff");
+		logger.info("Loading stuff");
 		super.loadData(n, method);
-		System.err.println("Loading stuff");
+		logger.info("Loading stuff");
 		currentMessage = n.getMessage(basePath);
 		updateForm();
 	}
@@ -118,7 +125,7 @@ public class TipiSvgForm extends TipiSvgComponent implements
 
 	private void updateForm() {
 		if(currentMessage==null) {
-			System.err.println("huh?");
+			logger.info("huh?");
 			return;
 		}
 		ArrayList<Property> al = currentMessage.getAllProperties();
@@ -127,18 +134,18 @@ public class TipiSvgForm extends TipiSvgComponent implements
 			if(myComponent.isExisting(p.getName())) {
 				String name = myComponent.getTagName(p.getName());
 				if(name.equals("text")) {
-					System.err.println("Setting text:");
+					logger.info("Setting text:");
 					Object typedValue = p.getTypedValue();
 					if(typedValue!=null) {
 						myComponent.setTextContent(p.getName(), typedValue.toString());
 					}
 				}
 				if(name.equals("image")) {
-					System.err.println("Image found!");
+					logger.info("Image found!");
 					Object typedValue = p.getTypedValue();
 					
 					if(typedValue!=null && typedValue instanceof Binary) {
-						System.err.println("Binary found!");
+						logger.info("Binary found!");
 						
 						Binary b = (Binary)typedValue;
 						URL url;
@@ -147,12 +154,12 @@ public class TipiSvgForm extends TipiSvgComponent implements
 							if(url!=null) {
 
 								myComponent.setAttribute("http://www.w3.org/1999/xlink",p.getName(),"xlink:href",url.toString());
-								System.err.println("url: "+url.toString());
+								logger.info("url: "+url.toString());
 							} else {
-								System.err.println("Null url!");
+								logger.info("Null url!");
 							}
 						} catch (MalformedURLException e) {
-							e.printStackTrace();
+							logger.error("Error: ",e);
 						}
 						
 					} else {
@@ -170,7 +177,7 @@ public class TipiSvgForm extends TipiSvgComponent implements
 		try {
 			performTipiEvent("onActionPerformed", null, false);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		super.onActivate(targetId);
 	}

@@ -33,7 +33,7 @@ public class TipiSwingMapImpl extends JXMapKit {
 				}
 				if(p.getPropertyName().equals("centerPosition")) {
 //					myCenter = (GeoPosition) p.getNewValue();
-//					System.err.println("My center: "+myCenter);
+//					logger.info("My center: "+myCenter);
 					if(allowEvents) {
 						myCenter = (GeoPosition) p.getNewValue();
 						double newLat = ((GeoPosition) p.getNewValue()).getLatitude();

@@ -10,20 +10,25 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.Binary;
 
 
 public class TestReplace {
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TestReplace.class);
 	
 	public static void main(String[] args) throws IOException {
 
 		com.dexels.navajo.document.Navajo pp =NavajoFactory.getInstance().createNavajo(new FileInputStream("tmlexample.xml"));
 		
 		URL u = parkMultipart(pp,true);
-		System.err.println("UR:: "+u);
+		logger.info("UR:: "+u);
 //		Thread.sleep(20000);
 	}
 
@@ -50,7 +55,7 @@ public class TestReplace {
 		String bodyText = new String(body.getData());
 		String replaced = replaceAttributes("src",bodyText,replacementMap);
 		
-		System.err.println("RESULT:\n"+replaced);
+		logger.info("RESULT:\n"+replaced);
 		
 		
 		PrintWriter fos = new PrintWriter( new FileWriter(mailFile));
@@ -71,7 +76,7 @@ public class TestReplace {
 		  while (m.find()) {
 		    String text = m.group(1);
 		    // ... possibly process 'text' ...
-		    System.err.println("String: "+text);
+		    logger.info("String: "+text);
 		    m.appendReplacement(sb, Matcher.quoteReplacement(attributeName+"=\""+replacementMap.get(text)+"\""));
 		  }
 		  m.appendTail(sb);

@@ -7,6 +7,8 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import tipi.TipiApplicationInstance;
 import tipi.TipiExtension;
@@ -18,7 +20,10 @@ public class TipiRcpContext extends TipiContext {
 
 	private final Composite compositeParent;
 	private static final long serialVersionUID = -8780826070195136886L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiRcpContext.class);
+	
 	public TipiRcpContext(TipiApplicationInstance myApplication, Composite compositeParent, List<TipiExtension> preload, TipiContext parent) {
 		super(myApplication, preload, parent);
 		this.compositeParent = compositeParent;
@@ -34,7 +39,7 @@ public class TipiRcpContext extends TipiContext {
         rowLayout.spacing = 0;
         compositeParent.setLayout(rowLayout);
         Label hoempapa = new Label(this.compositeParent,SWT.NORMAL);
-        System.err.println("Creating rcp context");
+        logger.info("Creating rcp context");
 		hoempapa.setText("Shazam");
 	}
 
@@ -62,26 +67,22 @@ public class TipiRcpContext extends TipiContext {
 
 	@Override
 	public void setSplashVisible(boolean b) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void setSplashInfo(String s) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void showInfo(String text, String title) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void showQuestion(String text, String title, String[] options)
 			throws TipiBreakException {
-		// TODO Auto-generated method stub
 
 	}
 

@@ -44,6 +44,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -51,6 +53,9 @@ import org.apache.tools.ant.types.FileSet;
  */
 public class P200AntTask extends Task {
     
+	private final static Logger logger = LoggerFactory
+			.getLogger(P200AntTask.class);
+	
     private final Engine e;
     private final ArrayList<FileSet> filesets;
     private boolean repack;
@@ -133,10 +138,10 @@ public class P200AntTask extends Task {
         for(File f : files) {
             try {
                 if(repack) {
-                    System.out.println("Repacking JAR: " + f);
+                    logger.info("Repacking JAR: " + f);
                     e.repack(f);
                 } else {
-                    System.out.println("Packing JAR: " + f);
+                    logger.info("Packing JAR: " + f);
                     e.pack(f);
                 }
             } catch (IOException ex) {

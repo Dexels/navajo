@@ -44,7 +44,7 @@ public final class MessageTableColumnModel extends DefaultTableColumnModel {
 	public final void removeColumns() {
 		// super.remo
 		for (int i = getColumnCount() - 1; i >= 0; i--) {
-			// System.err.println("Removing column: "+i);
+			// logger.info("Removing column: "+i);
 			removeColumn(getColumn(i));
 		}
 	}
@@ -118,7 +118,7 @@ public final class MessageTableColumnModel extends DefaultTableColumnModel {
 				tc = new TableColumn(index);
 			} else {
 				width = p.getLength() * maxadvance;
-				// System.err.println("Creating column [" + index + "]: " +
+				// logger.info("Creating column [" + index + "]: " +
 				// width);
 				tc = new TableColumn(index, width);
 				tc.setHeaderValue(p.getDescription());
@@ -132,7 +132,7 @@ public final class MessageTableColumnModel extends DefaultTableColumnModel {
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		// System.err.println("Column selection changed!");
+		// logger.info("Column selection changed!");
 		super.valueChanged(e);
 	}
 

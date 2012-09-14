@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.cobra;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,13 +12,14 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.lobobrowser.html.parser.DocumentBuilderImpl;
 import org.lobobrowser.html.parser.InputSourceImpl;
 import org.lobobrowser.html.test.SimpleUserAgentContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -34,12 +34,15 @@ import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
 public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 
 	private static final long serialVersionUID = 2950228008172758098L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiCobraBrowser.class);
 	private TipiHtmlPanel myItem;
 	private SimpleUserAgentContext localContext;
 	private NavajoHtmlRendererContext renderingContext;
 
 	public Object createContainer() {
-		Logger.getLogger("org.lobobrowser").setLevel(Level.WARNING);
+		java.util.logging.Logger.getLogger("org.lobobrowser").setLevel(Level.WARNING);
 
 		myItem = new TipiHtmlPanel();
 		localContext = new SimpleUserAgentContext();
@@ -54,19 +57,18 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 	@Override
 	protected void setComponentValue(String name, Object object) {
 		// if(name.equals("binary")) {
-		// System.err.println("Setting to binary: "+object.toString());
+		// logger.info("Setting to binary: "+object.toString());
 		// try {
 		// myItem.setBinary((Binary) object);
 		// } catch (IOException e) {
-		// e.printStackTrace();
+		// logger.error("Error: ",e);
 		// }
 		// }
 		if (name.equals("url")) {
 			try {
 				renderingContext.navigate((String) object);
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		if (name.equals("binary")) {
@@ -81,14 +83,14 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 				// render.
 				myItem.setDocument(document, renderingContext);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			} catch (SAXException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 
 		}
 		if (name.equals("emailNavajo")) {
-			System.err.println("setting emailNavjao");
+			logger.info("setting emailNavjao");
 			Navajo emailNavajo = (Navajo) object;
 			try {
 				URL u = null;
@@ -97,7 +99,7 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 				renderingContext.navigate(u.toString());
 
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		super.setComponentValue(name, object);
@@ -154,7 +156,7 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 		Map<String, String> replacementMap = new HashMap<String, String>();
 		File mailFile = File.createTempFile("index", ".html");
 		File mailFileOutput = File.createTempFile("indexProcessed", ".html");
-//		System.err.println("Mailfile: "+mailFile);
+//		logger.info("Mailfile: "+mailFile);
 		Message parts = pp.getMessage("Mail/Parts");
 		Binary body = (Binary) parts.getAllMessages().get(0).getProperty("Content").getTypedValue();
 		FileOutputStream foss = new FileOutputStream(mailFile);
@@ -213,7 +215,7 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 		Navajo emailNavajo = NavajoFactory.getInstance().createNavajo(stream);
 		stream.close();
 		URL u = tc.createNavajoUrl(emailNavajo);
-		System.err.println("u: "+u);
+		logger.info("u: "+u);
 		Thread.sleep(100000);
 	}
 }

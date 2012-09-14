@@ -22,6 +22,9 @@ import javax.swing.WindowConstants;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
@@ -36,7 +39,9 @@ public class AjaxComboBox extends JComboBox {
 	private String valuePropertyName;
 	private int minCharCount = 1;
 	private final Vector<String> propertyList = new Vector<String>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(AjaxComboBox.class);
 	private Message selectedMessage;
 
 	private final Map<String, Navajo> cacheMap = new HashMap<String, Navajo>();
@@ -81,7 +86,7 @@ public class AjaxComboBox extends JComboBox {
 		//
 		// public void propertyChange(PropertyChangeEvent evt) {
 		// if(evt.getPropertyName().equals("document")) {
-		// System.err.println("Property CHANGED! "+evt.getNewValue());
+		// logger.info("Property CHANGED! "+evt.getNewValue());
 		// Thread.dumpStack();
 		// }
 		// }});
@@ -123,7 +128,7 @@ public class AjaxComboBox extends JComboBox {
 			ActionListener al = enterEventListeners.get(i);
 			al.actionPerformed(new ActionEvent(this, 1, "ENTER"));
 		}
-		System.err.println("Enter fired!");
+		logger.info("Enter fired!");
 	}
 
 	public String getValue() {
@@ -273,13 +278,13 @@ public class AjaxComboBox extends JComboBox {
 					// DocumentListener(){
 					//
 					// public void changedUpdate(DocumentEvent e) {
-					// System.err.println("up");
+					// logger.info("up");
 					// }
 					// public void insertUpdate(DocumentEvent e) {
-					// System.err.println("in");
+					// logger.info("in");
 					// }
 					// public void removeUpdate(DocumentEvent e) {
-					// System.err.println("re");
+					// logger.info("re");
 					// }});
 
 					aed.setFireEvents(true);
@@ -292,9 +297,9 @@ public class AjaxComboBox extends JComboBox {
 				SwingUtilities.invokeAndWait(r);
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -339,7 +344,7 @@ public class AjaxComboBox extends JComboBox {
 			Message message = loadMessage.getMessage(sel);
 			return message;
 		}
-		System.err.println("huh");
+		logger.info("huh");
 		return selectedMessage;
 	}
 
@@ -352,7 +357,7 @@ public class AjaxComboBox extends JComboBox {
 		}
 		Property pp = getSelectedMessage().getProperty(valuePropertyName);
 		if (pp == null) {
-			System.err.println("Warning: property does not exist");
+			logger.info("Warning: property does not exist");
 			return null;
 		}
 		return pp.getTypedValue();
@@ -454,7 +459,7 @@ public class AjaxComboBox extends JComboBox {
 							"club/ProcessSearchClubs");
 					return nn;
 				} catch (ClientException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 				return null;
 			}

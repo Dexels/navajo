@@ -61,7 +61,7 @@ public class AbstractTipiTest  {
 			String xx = myContext.getInfoBuffer();
 			assertEquals(xx, expectInfoBuffer);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 }

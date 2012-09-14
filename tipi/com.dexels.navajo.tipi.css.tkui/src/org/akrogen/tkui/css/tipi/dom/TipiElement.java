@@ -21,6 +21,8 @@ import org.akrogen.tkui.css.core.engine.CSSEngine;
 import org.akrogen.tkui.css.core.utils.ClassUtils;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -47,6 +49,10 @@ public class TipiElement extends ElementAdapter implements NodeList {
 
 	protected String namespaceURI;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiElement.class);
+	
 	public TipiElement(TipiComponent component, CSSEngine engine) {
 		super(component, engine);
 		this.localName = computeLocalName();
@@ -97,7 +103,7 @@ public class TipiElement extends ElementAdapter implements NodeList {
 //			if (o != null)
 //				return o.toString();
 //		} catch (Exception e) {
-//			// e.printStackTrace();
+//			// logger.error("Error: ",e);
 //		}
 //		return "";
 	}
@@ -142,7 +148,7 @@ public class TipiElement extends ElementAdapter implements NodeList {
 						defaultHTMLContent)));
 				return document.getDocumentElement().getChildNodes();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		NodeList n = new NodeList(){
@@ -236,7 +242,7 @@ public class TipiElement extends ElementAdapter implements NodeList {
 			serializer.serialize(element);
 			return writer.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 	}

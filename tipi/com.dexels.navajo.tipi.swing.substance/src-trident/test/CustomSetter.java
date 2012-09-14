@@ -5,8 +5,13 @@ import java.util.Date;
 
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.TimelinePropertyBuilder.PropertySetter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CustomSetter {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CustomSetter.class);
 	private float value;
 
 	public static void main(String[] args) {
@@ -17,7 +22,7 @@ public class CustomSetter {
 			public void set(Object obj, String fieldName, Float value) {
 				SimpleDateFormat sdf = new SimpleDateFormat("ss.SSS");
 				float oldValue = helloWorld.value;
-				System.out.println(sdf.format(new Date()) + " : " + oldValue
+				logger.info(sdf.format(new Date()) + " : " + oldValue
 						+ " -> " + value);
 				helloWorld.value = value;
 			}

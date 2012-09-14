@@ -4,11 +4,17 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.projectbuilder.TipiSourceDeployer;
 
 
 public class TipiBuildWikiSource  extends org.apache.tools.ant.Task {
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiBuildWikiSource.class);
 	
 	private String docDir;
 	private String sourceDir;
@@ -74,14 +80,14 @@ public class TipiBuildWikiSource  extends org.apache.tools.ant.Task {
 			File sourceDir = new File(currentBaseDir,getSourceDir());
 			File currentResourceDir = new File(currentBaseDir,getResourceDir());
 			File docDir = new File(currentBaseDir,getDocDir());
-			System.err.println("Source dir: "+sourceDir.getAbsolutePath());
-			System.err.println("Docdir: "+docDir.getAbsolutePath());
+			logger.info("Source dir: "+sourceDir.getAbsolutePath());
+			logger.info("Docdir: "+docDir.getAbsolutePath());
 			if(!docDir.exists()) {
 				docDir.mkdirs();
 			}
 			jd.deploy(name.toLowerCase(),sourceDir,docDir,currentResourceDir,appCodebase);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

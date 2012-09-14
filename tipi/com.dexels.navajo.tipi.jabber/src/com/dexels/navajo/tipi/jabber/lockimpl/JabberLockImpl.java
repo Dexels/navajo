@@ -4,6 +4,8 @@ import java.util.*;
 
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smackx.muc.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JabberLockImpl extends BaseLockImpl {
 	private Random generator = new Random();
@@ -12,6 +14,10 @@ public class JabberLockImpl extends BaseLockImpl {
 	private MultiUserChat muc = null;
 	private String resource = null;
 	private XMPPConnection connection;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JabberLockImpl.class);
+	
 //	public JabberLockImpl(String domain, String id) {
 //		super( id);
 //	}
@@ -46,7 +52,7 @@ public class JabberLockImpl extends BaseLockImpl {
 				if (nick.equals(participant)) {
 					// me
 				} else {
-//					System.err.println("Nick changed: "+participant+" name: "+name);
+//					logger.info("Nick changed: "+participant+" name: "+name);
 					if(participant.equals(resource)) {
 						// my resource!
 						setLockRequest(resource);
@@ -97,7 +103,7 @@ public class JabberLockImpl extends BaseLockImpl {
 
 	public boolean setLockRequest(String resource) {
 		try {
-//			System.err.println("Changing nick from: "+muc.getNickname()+" to "+resource);
+//			logger.info("Changing nick from: "+muc.getNickname()+" to "+resource);
 			muc.changeNickname(resource);
 			String newName = muc.getNickname();
 			if(!resource.equals(newName)) {
@@ -131,7 +137,7 @@ public void debug(String text) {
 				muc.sendMessage(text);
 			} catch (XMPPException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 	}

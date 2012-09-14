@@ -152,7 +152,7 @@ public class LockableDemo extends JFrame {
         button.setMnemonic('H');
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("LockableLayerDemo.actionPerformed");
+                logger.info("LockableLayerDemo.actionPerformed");
             }
         });
         panel.add(button);

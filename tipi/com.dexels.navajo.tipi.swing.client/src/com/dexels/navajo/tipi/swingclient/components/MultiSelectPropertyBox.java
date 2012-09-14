@@ -2,6 +2,9 @@ package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.event.ItemEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 
@@ -29,6 +32,10 @@ public class MultiSelectPropertyBox extends BaseComboBox implements
 	// ResourceBundle myResource;
 
 	private static final long serialVersionUID = 1387588426549269939L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MultiSelectPropertyBox.class);
+	
 	private Property myProperty = null;
 	private Property myValueProperty = null;
 
@@ -85,13 +92,13 @@ public class MultiSelectPropertyBox extends BaseComboBox implements
 
 	public final void setProperty(Property p) {
 		if (p == null) {
-			System.err.println("Resetting property to null.");
+			logger.info("Resetting property to null.");
 			myValueProperty = null;
 			return;
 		}
 
 		if (p.getType().equals(Property.SELECTION_PROPERTY)) {
-			// System.err.println("Reseting property box to a selection property: ");
+			// logger.info("Reseting property box to a selection property: ");
 			loadProperty(p);
 			return;
 			// myProperty = p;
@@ -131,7 +138,7 @@ public class MultiSelectPropertyBox extends BaseComboBox implements
 
 	private final void setValueProperty() {
 		myValueProperty.setValue(getSelectedId());
-		// System.out.println("SetTO: " + getSelectedId());
+		// logger.info("SetTO: " + getSelectedId());
 	}
 
 	public final Selection getSelectedSelection() {
@@ -147,7 +154,7 @@ public class MultiSelectPropertyBox extends BaseComboBox implements
 
 	final void this_itemStateChanged(ItemEvent e) {
 		if (myProperty == null) {
-			System.err.println("Property box changed before it was set!");
+			logger.info("Property box changed before it was set!");
 			// return;
 		}
 		if (myValueProperty == null) {
@@ -166,7 +173,7 @@ public class MultiSelectPropertyBox extends BaseComboBox implements
 	 */
 	@Override
 	public void hidePopup() {
-		// System.err.println("..errr..I'll hide u");
+		// logger.info("..errr..I'll hide u");
 	}
 
 }

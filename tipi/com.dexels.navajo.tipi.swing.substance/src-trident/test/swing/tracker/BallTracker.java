@@ -14,11 +14,15 @@ import org.pushingpixels.trident.Timeline.TimelineState;
 import org.pushingpixels.trident.callback.TimelineCallbackAdapter;
 import org.pushingpixels.trident.ease.*;
 import org.pushingpixels.trident.swing.SwingRepaintTimeline;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @SuppressWarnings("all")
 
 public class BallTracker extends JFrame {
 	Timeline timelineBallFalling;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BallTracker.class);
 	public BallTracker() throws Exception {
 		super("Ball tracker");
 
@@ -116,7 +120,7 @@ public class BallTracker extends JFrame {
 					public void onTimelineStateChanged(TimelineState oldState,
 							TimelineState newState, float durationFraction,
 							float timelinePosition) {
-						System.out.println("State change: " + oldState.name()
+						logger.info("State change: " + oldState.name()
 								+ " -> " + newState.name());
 					}
 				});

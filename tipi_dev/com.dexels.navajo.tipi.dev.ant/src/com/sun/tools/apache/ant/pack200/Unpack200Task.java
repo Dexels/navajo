@@ -71,9 +71,9 @@ public class Unpack200Task extends Unpack {
     }
 	
     protected void extract() {
-	System.out.println("Unpacking with Unpack200");
-	System.out.println("Source File :" + source);
-	System.out.println("Dest.  File :" + dest);
+	logger.info("Unpacking with Unpack200");
+	logger.info("Source File :" + source);
+	logger.info("Dest.  File :" + dest);
 	 FileInputStream fis = null;
 	try { 
 	    fis = new FileInputStream(source);

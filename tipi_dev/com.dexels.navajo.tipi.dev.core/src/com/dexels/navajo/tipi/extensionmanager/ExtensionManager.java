@@ -15,12 +15,20 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 import com.dexels.navajo.tipi.util.XMLParseException;
 
 public class ExtensionManager {
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ExtensionManager.class);
+	
 	/**
 	 * Add the current version of the extension to the repository It parses the
 	 * current extension file. It appends the new extension It writes back the
@@ -32,12 +40,12 @@ public class ExtensionManager {
 	 * @param version
 	 */
 	public static void registerExtension(String extension, String repository, File path, String version) {
-		System.err.println("Registering extension: " + extension + " to repository: " + repository);
+		logger.info("Registering extension: " + extension + " to repository: " + repository);
 		Map<String, List<String>> extensions = null;
 		try {
 			extensions = getExtensions(repository);
 		} catch (IOException e) {
-			System.err.println("No extensions found... Assuming this is the first");
+			logger.info("No extensions found... Assuming this is the first");
 			extensions = new HashMap<String, List<String>>();
 		}
 		List<String> versions = extensions.get(extension);
@@ -49,13 +57,13 @@ public class ExtensionManager {
 			versions.add(version);			
 		}
 		File extensionFile = new File(path, "extensions.xml");
-		System.err.println("Writing extensions to path: " + extensionFile);
-		System.err.println("Extensions: " + extensions);
+		logger.info("Writing extensions to path: " + extensionFile);
+		logger.info("Extensions: " + extensions);
 		XMLElement xe = createXML(extensions);
 		try {
 			xe.writeToFile(extensionFile);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -92,12 +100,12 @@ public class ExtensionManager {
 //	}
 
 	public static Map<String, List<String>> getExtensions(String extensionRepository) throws IOException {
-		System.err.println("Getting extensions from repository: "+extensionRepository);
+		logger.info("Getting extensions from repository: "+extensionRepository);
 		XMLElement xe;
 		try {
 			xe = downloadExtensions(extensionRepository);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new IOException("Error downloading from repository: "+extensionRepository);
 		}
 		List<XMLElement> children = xe.getChildren();
@@ -129,7 +137,7 @@ public class ExtensionManager {
 				result.put("href", main.getStringAttribute("proxyjar"));
 			}
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 		return result;
@@ -144,7 +152,7 @@ public class ExtensionManager {
 				return true;
 			}
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 		return false;
@@ -184,14 +192,14 @@ public class ExtensionManager {
 				}
 			}
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return result;
 	}
 
 	public static XMLElement getXMLElement(URL extensionURL) throws IOException {
 		try {
-			System.err.println("Downloading (EM): "+extensionURL);
+			logger.info("Downloading (EM): "+extensionURL);
 			InputStream is = ClientActions.getUrlStream(extensionURL);
 			XMLElement result = new CaseSensitiveXMLElement();
 //			InputStream is = extensionURL.openStream();
@@ -201,7 +209,7 @@ public class ExtensionManager {
 			r.close();
 			return result;
 		} catch (XMLParseException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} 
 		return null;
 	}

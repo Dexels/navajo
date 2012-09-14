@@ -69,7 +69,7 @@ public class ParseTest extends HandlerBase {
             parser.parseStyleSheet(is);
 
         } catch (Exception e) {
-            System.err.println("Exception: " + e.getMessage());
+            logger.info("Exception: " + e.getMessage());
         }
     }
 
@@ -79,18 +79,18 @@ public class ParseTest extends HandlerBase {
 
     public void startDocument(InputSource source)
         throws CSSException {
-        System.out.println("startDocument");
+        logger.info("startDocument");
     }
     
     public void endDocument(InputSource source) throws CSSException {
-        System.out.println("endDocument");
+        logger.info("endDocument");
     }
 
     public void comment(String text) throws CSSException {
     }
 
     public void ignorableAtRule(String atRule) throws CSSException {
-        System.out.println(atRule);
+        logger.info(atRule);
     }
 
     public void namespaceDeclaration(String prefix, String uri)
@@ -102,20 +102,20 @@ public class ParseTest extends HandlerBase {
 	    throws CSSException {
         System.out.print("@import url(" + uri + ")");
         if (media.getLength() > 0) {
-          System.out.println(" " + media.toString() + ";");
+          logger.info(" " + media.toString() + ";");
         } else {
-          System.out.println(";");
+          logger.info(";");
         }
     }
 
     public void startMedia(SACMediaList media) throws CSSException {
-        System.out.println(indent() + "@media " + media.toString() + " {");
+        logger.info(indent() + "@media " + media.toString() + " {");
         incIndent();
     }
 
     public void endMedia(SACMediaList media) throws CSSException {
         decIndent();
-        System.out.println(indent() + "}");
+        logger.info(indent() + "}");
     }
 
     public void startPage(String name, String pseudo_page) throws CSSException {
@@ -124,47 +124,47 @@ public class ParseTest extends HandlerBase {
             System.out.print(" " + name);
         }
         if (pseudo_page != null) {
-            System.out.println(" " + pseudo_page);
+            logger.info(" " + pseudo_page);
         }
-        System.out.println(" {");
+        logger.info(" {");
         _propertyCounter = 0;
         incIndent();
     }
 
     public void endPage(String name, String pseudo_page) throws CSSException {
-        System.out.println();
+        logger.info();
         decIndent();
-        System.out.println(indent() + "}");
+        logger.info(indent() + "}");
     }
 
     public void startFontFace() throws CSSException {
-        System.out.println(indent() + "@font-face {");
+        logger.info(indent() + "@font-face {");
         _propertyCounter = 0;
         incIndent();
     }
 
     public void endFontFace() throws CSSException {
-        System.out.println();
+        logger.info();
         decIndent();
-        System.out.println(indent() + "}");
+        logger.info(indent() + "}");
     }
 
     public void startSelector(SelectorList selectors) throws CSSException {
-        System.out.println(indent() + selectors.toString() + " {");
+        logger.info(indent() + selectors.toString() + " {");
         _propertyCounter = 0;
         incIndent();
     }
 
     public void endSelector(SelectorList selectors) throws CSSException {
-        System.out.println();
+        logger.info();
         decIndent();
-        System.out.println(indent() + "}");
+        logger.info(indent() + "}");
     }
 
     public void property(String name, LexicalUnit value, boolean important)
             throws CSSException {
         if (_propertyCounter++ > 0) {
-            System.out.println(";");
+            logger.info(";");
         }
         System.out.print(indent() + name + ":");
 

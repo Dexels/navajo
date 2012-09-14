@@ -19,34 +19,20 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 
-//import com.dexels.sportlink.client.swing.dialogs.*;
-/**
- * <p>
- * Title: SportLink Client:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Dexels.com
- * </p>
- * 
- * @author unascribed
- * @version 1.0
- * @deprecated
- */
 
 public class StandardDialog extends JDialog implements DialogConstants {
 
 	private static final long serialVersionUID = 4560643968422875526L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(StandardDialog.class);
 	private boolean doWindowClose = true;
 
 	private boolean isCommitted = false;
@@ -108,7 +94,7 @@ public class StandardDialog extends JDialog implements DialogConstants {
 		try {
 			jbInit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -117,20 +103,20 @@ public class StandardDialog extends JDialog implements DialogConstants {
 		getContentPane().add(dialogToolbar, BorderLayout.SOUTH);
 		getContentPane().addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				System.err.println("Pressed dialog");
+				logger.info("Pressed dialog");
 			}
 
 			public void keyReleased(KeyEvent e) {
-				System.err.println("Released dialog");
+				logger.info("Released dialog");
 			}
 
 			public void keyTyped(KeyEvent e) {
-				System.err.println("Typed dialog");
+				logger.info("Typed dialog");
 			}
 		});
 		mainPanel.setLayout(borderLayout1);
 		this.setResizable(true);
-		System.err.println("IN BaseDialog jbInit()..............");
+		logger.info("IN BaseDialog jbInit()..............");
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
@@ -298,7 +284,7 @@ public class StandardDialog extends JDialog implements DialogConstants {
 
 	void iconButtonPanel_actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals(IconButtonPanel.OK_BUTTON)) {
-			// System.err.println("OK");
+			// logger.info("OK");
 			if (!isCommitted()) {
 				isCommitted = true;
 				commit();
@@ -330,7 +316,7 @@ public class StandardDialog extends JDialog implements DialogConstants {
 			return;
 		}
 		if (e.getActionCommand().equals(IconButtonPanel.SAVE_BUTTON)) {
-			// System.err.println("SAVE");
+			// logger.info("SAVE");
 			isCommitted = false;
 			commit();
 			return;
@@ -372,9 +358,9 @@ public class StandardDialog extends JDialog implements DialogConstants {
 					}
 				});
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 	}

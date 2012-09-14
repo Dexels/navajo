@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.Grid;
@@ -12,6 +15,9 @@ import echopointng.ContainerEx;
 
 public class EchoGridLayoutImpl extends EchoLayoutImpl {
 
+		
+		private final static Logger logger = LoggerFactory
+				.getLogger(EchoGridLayoutImpl.class);
 	public EchoGridLayoutImpl() {
 		
 	}
@@ -32,7 +38,7 @@ public class EchoGridLayoutImpl extends EchoLayoutImpl {
 
 		
 		Grid sp = new Grid(maxwidth);
-		System.err.println("Creating");
+		logger.info("Creating");
 		for (int i = 0; i < childComponents.size(); i++) {
 			Component current = (Component)childComponents.get(i);
 			if(current instanceof PaneContainer) {
@@ -43,18 +49,18 @@ public class EchoGridLayoutImpl extends EchoLayoutImpl {
 				cc.add(current);
 				sp.add(cc);
 				LayoutData layoutData = (LayoutData)constraints.get(current);
-				System.err.println("LAYOUT: "+layoutData);
+				logger.info("LAYOUT: "+layoutData);
 				cc.setLayoutData(layoutData);
 				
 			} else {
 				sp.add(current);
 				LayoutData layoutData = (LayoutData)constraints.get(current);
-				System.err.println("LAYOUT: "+layoutData);
+				logger.info("LAYOUT: "+layoutData);
 				current.setLayoutData(layoutData);
 			}
 		}
 	
-		System.err.println("Parent class: "+myParent.getClass());
+		logger.info("Parent class: "+myParent.getClass());
 		((TipiEchoDataComponentImpl)myParent).getInnerComponent().add(sp);
 	}
 

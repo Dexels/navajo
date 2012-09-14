@@ -16,6 +16,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.osgi.framework.Bundle;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -31,7 +32,9 @@ import com.dexels.navajo.tipi.vaadin.application.servlet.TipiVaadinServlet;
 
 public class JettyServer {
 	
-//	private static final Logger logger = LoggerFactory.getLogger(JettyServer.class);
+	private final static Logger logger = LoggerFactory
+			.getLogger(JettyServer.class);
+	
 	public void init(int port,final String contextPath, final Bundle bundle) {
 		Server jettyServer = new Server();
 		SelectChannelConnector connector = new SelectChannelConnector();
@@ -54,7 +57,7 @@ public class JettyServer {
 			StatusPrinter.print(lc);
 
 	    } catch (JoranException je) {
-	       je.printStackTrace();
+	       logger.error("Error: ",je);
 	    }
 		StringTokenizer tokenizeContext = new StringTokenizer(contextPath,",");
 		List<String> contexts = new LinkedList<String>();
@@ -64,7 +67,7 @@ public class JettyServer {
 			try {
 				addVaadinContext(context, bundle, jettyServer, handlers,useTouch);
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 			
 		}
@@ -88,13 +91,13 @@ public class JettyServer {
 		try {
 			jettyServer.start();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
-		System.err.println("Started: "+contexts.size()+" contexts.");
+		logger.info("Started: "+contexts.size()+" contexts.");
 		int i = 1;
 		for (String context : contexts) {
 			
-			System.err.println("Context #"+i+". Open with:\nhttp://localhost:"+port+context+"/app\n");
+			logger.info("Context #"+i+". Open with:\nhttp://localhost:"+port+context+"/app\n");
 			i++;
 		}
 
@@ -136,9 +139,9 @@ public class JettyServer {
 
 			@Override
 			public Resource getResource(String s) throws MalformedURLException {
-//				System.err.println("Getting resource: "+s);
+//				logger.info("Getting resource: "+s);
 				if(s.startsWith(contextPath)) {
-//					System.err.println("Cropping");
+//					logger.info("Cropping");
 					s = s.substring(contextPath.length());
 				}
 				if(s==null || s.isEmpty()) {
@@ -150,12 +153,12 @@ public class JettyServer {
 					try {
 						ur = Resource.newResource(bundle.getResource(s));
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 						if(ur!=null) {
-//							System.err.println("Name: "+ur.getName()+" found: "+ur.exists());
-//							System.err.println(":: "+ur.length()+" mod: "+ur.lastModified());
-//							System.err.println("Resolved!!! returning...");
+//							logger.info("Name: "+ur.getName()+" found: "+ur.exists());
+//							logger.info(":: "+ur.length()+" mod: "+ur.lastModified());
+//							logger.info("Resolved!!! returning...");
 							return ur;
 						}
 				}
@@ -174,7 +177,7 @@ public class JettyServer {
 		String installationFolder;
 		try {
 			installationFolder = InstallationPathResolver.getInstallationFromPath(contextPath).get(0);
-			System.err.println("Resolved install: "+installationFolder);
+			logger.info("Resolved install: "+installationFolder);
 			resource_handler.setResourceBase(installationFolder);
 		} catch (IOException e1) {
 			e1.printStackTrace();

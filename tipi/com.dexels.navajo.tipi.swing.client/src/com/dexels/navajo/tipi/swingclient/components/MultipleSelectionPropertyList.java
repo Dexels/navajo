@@ -14,36 +14,19 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- * 
- * 
- *          se JList.setFixedCellHeight() and setFixedCellWidth() in combination
- *          with setPreferredSize() and setMaximumSize() to set size of
- *          container.
- */
-
 public final class MultipleSelectionPropertyList extends JPanel implements
 		PropertyControlled {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MultipleSelectionPropertyList.class);
 	private static final long serialVersionUID = 2207572420028970359L;
 	private Property myProperty;
 	private final DefaultListModel myModel = new DefaultListModel();
@@ -60,7 +43,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements
 			jbInit();
 			myList.setCellRenderer(new PropertyCellRenderer());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -87,7 +70,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements
 			((PropertyCellRenderer) myList.getCellRenderer())
 					.setSelectedColor(c);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -144,9 +127,9 @@ public final class MultipleSelectionPropertyList extends JPanel implements
 			} else {
 				for (int i = 0; i < selections.size(); i++) {
 					Selection current = selections.get(i);
-					// System.err.println("Adding: "+current);
+					// logger.info("Adding: "+current);
 					if (orderBySelected && current.isSelected()) {
-						// System.err.println("Selected: " + current.getName());
+						// logger.info("Selected: " + current.getName());
 						myModel.add(0, current);
 					} else {
 						myModel.addElement(current);

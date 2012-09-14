@@ -4,6 +4,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -15,7 +17,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiSetTheme extends TipiAction {
 
 	private static final long serialVersionUID = 7162024086267040701L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSetTheme.class);
+	
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		final Operand valueOp = getEvaluatedParameter("value", event);
 
@@ -35,7 +40,7 @@ public class TipiSetTheme extends TipiAction {
 			//			setSubstanceTheme(value);
 					}
 				} catch (Throwable e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		});
@@ -46,7 +51,7 @@ public class TipiSetTheme extends TipiAction {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

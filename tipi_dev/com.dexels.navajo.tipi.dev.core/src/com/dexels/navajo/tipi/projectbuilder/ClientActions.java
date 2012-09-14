@@ -25,6 +25,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.extensionmanager.ExtensionManager;
 import com.dexels.navajo.tipi.projectbuilder.impl.InMemoryUrlCache;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
@@ -35,6 +38,9 @@ public class ClientActions {
 	
 	private static final URLCache clientCache = new InMemoryUrlCache();
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ClientActions.class);
+	
 	public static void downloadZippedDemoFiles(String developmentRepository, String repository, File projectDir, String templateName) throws IOException {
 		URL baseUrl = new URL(developmentRepository);
 		URL zipFile = new URL(baseUrl,templateName+".zip");
@@ -42,10 +48,10 @@ public class ClientActions {
 			projectDir.mkdirs();
 		}
 		downloadFile(zipFile, "template.zip", projectDir, false,false);
-		System.err.println("Downloaded zip file: "+zipFile);
+		logger.info("Downloaded zip file: "+zipFile);
 		File archive = new File(projectDir,"template.zip");
 		unzip(archive, projectDir);
-		System.err.println("should delete zipfile now!");
+		logger.info("should delete zipfile now!");
 		archive.delete();
 		File f = new File(projectDir,"settings/tipi.properties");
 		FileWriter fw = new FileWriter(f,true);
@@ -115,7 +121,7 @@ public class ClientActions {
 		List<String> missing = new ArrayList<String>();
 		try {
 			Map<String, List<String>> available = ExtensionManager.getExtensions(repository);
-			System.err.println("Available extensions: " + available);
+			logger.info("Available extensions: " + available);
 			StringTokenizer st = new StringTokenizer(extensions, ",");
 			while (st.hasMoreTokens()) {
 				String ext = st.nextToken();
@@ -124,7 +130,7 @@ public class ClientActions {
 				}
 			}
 		} catch (IOException e1) {
-			System.err.println("Can not get extensionlist");
+			logger.info("Can not get extensionlist");
 			e1.printStackTrace();
 		}
 		return missing;
@@ -139,7 +145,7 @@ public class ClientActions {
 			XMLElement result = getXMLElement(extensionURL);
 			return result;
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 	}
@@ -161,7 +167,7 @@ public class ClientActions {
 			try {
 				downloadFile(jar, path, f,clean,false);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		XMLElement main = result.getElementByTagName("main");
@@ -171,7 +177,7 @@ public class ClientActions {
 			try {
 				downloadFile(jar, path, f,clean,false);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 	}
@@ -197,13 +203,13 @@ public class ClientActions {
 //			try {
 //				downloadFile(jar, path, webInfLib, clean, false);
 //			} catch (IOException e) {
-//				e.printStackTrace();
+//				logger.error("Error: ",e);
 //			}
 //		}
 //	}
 	
 	public static void downloadProxyJars(URL projectURL, XMLElement result, File baseDir,boolean clean) throws MalformedURLException {
-		System.err.println("PRoject dir: " + projectURL);
+		logger.info("PRoject dir: " + projectURL);
 		URL unsigned = new URL(projectURL, "lib/");
 
 		File f = new File(baseDir, "lib");
@@ -219,7 +225,7 @@ public class ClientActions {
 			try {
 				downloadFile(jar, path, f,clean,false);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 	}
@@ -235,11 +241,11 @@ public class ClientActions {
 	 * @throws IOException
 	 */
 	public static void downloadFile(URL remote, String localPath, File directory, boolean clean, boolean dontOverwrite) throws IOException, WriteAbortedException {
-		System.err.println("Downloading: "+localPath+" from url: "+remote+" directory: "+localPath);
+		logger.info("Downloading: "+localPath+" from url: "+remote+" directory: "+localPath);
 		directory.mkdirs();
 		File file = new File(directory, localPath);
 		if(dontOverwrite && file.exists()) {
-			System.err.println("Not overwriting existing file: "+file.getAbsolutePath());
+			logger.info("Not overwriting existing file: "+file.getAbsolutePath());
 			return;
 		}
 		InputStream cacheStream = clientCache.getStream(remote);
@@ -264,13 +270,13 @@ public class ClientActions {
 //		if(remote > local || clean) {
 //			return uc.getInputStream();
 //		}
-////		System.err.println("Skipping: "+jar);
+////		logger.info("Skipping: "+jar);
 //		
 //		return null;
 //	}
 
 	public static XMLElement getXMLElement(URL extensionURL) {
-//		System.err.println("Getting url: "+extensionURL);
+//		logger.info("Getting url: "+extensionURL);
 		try {
 			XMLElement result = new CaseSensitiveXMLElement();
 			InputStream is = extensionURL.openStream();
@@ -280,9 +286,9 @@ public class ClientActions {
 			is.close();
 			return result;
 		} catch (XMLParseException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 	}
@@ -344,7 +350,7 @@ public class ClientActions {
 				// "http://download.java.net/media/jogl/builds/archive/jsr-231-webstart-current/jogl.jnlp"
 				// />
 				// <extension name="jogl" href="http://www.jogl.com"/>
-//				System.err.println("Copying: " + extension);
+//				logger.info("Copying: " + extension);
 				resources.addChild(extension.copy());
 			}
 		}
@@ -418,12 +424,12 @@ public class ClientActions {
 	        File destinationFile = new File(destination, entry.getName());
 			if(entry.isDirectory()) {
 	          // Assume directories are stored parents first then children.
-	          System.err.println("Extracting directory: " + entry.getName());
+	          logger.info("Extracting directory: " + entry.getName());
 	          // This is not robust, just for demonstration purposes.
 	          destinationFile.mkdir();
 	          continue;
 	        }
-	        System.err.println("Extracting file: " + entry.getName());
+	        logger.info("Extracting file: " + entry.getName());
 	        if(destinationFile.exists()) {
 	      	  continue;
 	        }

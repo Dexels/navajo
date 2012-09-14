@@ -3,9 +3,15 @@ package test;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SimpleProp {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SimpleProp.class);
 	public void setValue(float value) {
-		System.out.println("Cool " + value);
+		logger.info("Cool " + value);
 	}
 	
 	public static void main(String[] args) throws Exception {
@@ -14,6 +20,6 @@ public class SimpleProp {
 				null, "setValue");
 		Method writer = desc.getWriteMethod();
 		writer.invoke(prop, new Float(2.0));
-		System.out.println(Float.class.isAssignableFrom(float.class));
+		logger.info(""+Float.class.isAssignableFrom(float.class));
 	}
 }

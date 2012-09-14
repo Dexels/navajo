@@ -11,8 +11,15 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.JDesktopPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class GradientDesktop extends JDesktopPane {
 	private static final long serialVersionUID = -5417581376879157911L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GradientDesktop.class);
+	
 	BufferedImage gradientImage = null;
 	TipiGradientPaint myPaint = new TipiGradientPaint("north", new Color(120, 160, 205), Color.black);
 
@@ -52,7 +59,7 @@ public class GradientDesktop extends JDesktopPane {
 		int res = 100000;
 		// double cap = 0.0033e-6;
 		// int res = 22000;
-		System.err.println("Starting..");
+		logger.info("Starting..");
 		double freq0 = 1 / (2 * Math.PI * cap * res);
 		double fmax = 1 / (2 * Math.PI * cap * 500);
 
@@ -77,7 +84,7 @@ public class GradientDesktop extends JDesktopPane {
 				g.drawLine(current.x, apenoot.getHeight(), current.x, current.y);
 			}
 			previous = current;
-			System.err.println("At r=" + pot + ", cutoff[f]=" + freq);
+			logger.info("At r=" + pot + ", cutoff[f]=" + freq);
 		}
 		try {
 			ImageIO.write(apenoot, "jpg", new File("c:/apenoot.jpg"));

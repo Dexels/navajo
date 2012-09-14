@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.ContentPane;
@@ -42,7 +45,9 @@ import echopointng.LightBox;
  */
 public class TipiDialog extends TipiEchoDataComponentImpl {
 	private static final long serialVersionUID = 686157003404928933L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiDialog.class);
 
     private WindowPane myWindow = null;
 
@@ -241,7 +246,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         ContentPane content = win.getContent();
 
         content.remove(myWindow);
-        System.err.println("DISPOSED DIALOG!");
+        logger.info("DISPOSED DIALOG!");
         myWindow = null;
    }
 
@@ -368,11 +373,11 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         if (name.equals("hide")) {
             if (myWindow != null) {
             	myWindow.setVisible(false);
-            	System.err.println("HIDING DIALOG!!!!!!!!!!!!!!!!!");
+            	logger.info("HIDING DIALOG!!!!!!!!!!!!!!!!!");
             }
         }
         if (name.equals("dispose")) {
-        	System.err.println("DISPOSING DIALOG!!!!!!!!!!!!!!!!!");
+        	logger.info("DISPOSING DIALOG!!!!!!!!!!!!!!!!!");
               if (myWindow != null) {
             	myWindow.setVisible(false);
             	myWindow = null;

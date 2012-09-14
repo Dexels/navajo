@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl.helpers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Border;
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
@@ -11,52 +14,36 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 import echopointng.able.Borderable;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
-
 public class EchoTipiHelper implements TipiHelper {
 
 	private static final long serialVersionUID = 8450401263733080156L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(EchoTipiHelper.class);
 	public EchoTipiHelper() {
     }
 
     private TipiComponent myComponent = null;
 
     public void initHelper(TipiComponent tc) {
-        // System.err.println("initHelper: " + tc);
+        // logger.info("initHelper: " + tc);
         myComponent = tc;
     }
 
     public void setComponentValue(String name, Object object) {
-        // System.err.println("setComponentValue: " + name);
+        // logger.info("setComponentValue: " + name);
         if (!Component.class.isInstance(myComponent.getActualComponent())) {
             if (name.equals("visible")) {
-                System.err.println("Sorry, should not assign a EchoHelper to a non-Echo component");
+                logger.info("Sorry, should not assign a EchoHelper to a non-Echo component");
                 ((Component) myComponent.getActualComponent()).setVisible(((Boolean) object).booleanValue());
             }
-            System.err.println("returning...from helper.. cause myComponents container is: " + myComponent.getActualComponent());
+            logger.info("returning...from helper.. cause myComponents container is: " + myComponent.getActualComponent());
             return;
         }
         Component c = (Component) myComponent.getActualComponent();
         if (name.equals("background")) {
         	if(object instanceof String) {
-        		System.err.println("Setting color: "+object);
+        		logger.info("Setting color: "+object);
         	}
             c.setBackground((Color) object);
         }
@@ -89,7 +76,7 @@ public class EchoTipiHelper implements TipiHelper {
 
     public Object getComponentValue(String name) {
         if (!Component.class.isInstance(myComponent.getContainer())) {
-            System.err.println("Sorry, should not assign a EchoHelper to a non-Echo component");
+            logger.info("Sorry, should not assign a EchoHelper to a non-Echo component");
             return null;
         }
         Component c = (Component) myComponent.getActualComponent();
@@ -127,7 +114,7 @@ public class EchoTipiHelper implements TipiHelper {
     	}
         Component c = (Component) myComponent.getActualComponent();
         if (c == null) {
-            System.err.println("Cannot register echo event: Container is null!");
+            logger.info("Cannot register echo event: Container is null!");
             return;
         }
         if (te.isTrigger("onActionPerformed")) {

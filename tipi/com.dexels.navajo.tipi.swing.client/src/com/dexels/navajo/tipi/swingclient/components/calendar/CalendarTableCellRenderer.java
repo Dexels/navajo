@@ -97,7 +97,7 @@ public class CalendarTableCellRenderer implements TableCellRenderer {
 
 		else if (MultipleDayContainer.class.isInstance(value)) {
 			// Implement this!!!
-			// System.err.println("Rendering mulitple day container");
+			// logger.info("Rendering mulitple day container");
 			MultipleDayContainer d = (MultipleDayContainer) value;
 			if (column > 0) {
 				md.setDays(d.getDays());

@@ -27,7 +27,7 @@ public class PropertyHiddenField extends PropertyPasswordField {
 	@Override
 	public void setProperty(Property p) {
 		if (p == null) {
-			// System.err.println("Setting to null property. Ignoring");
+			// logger.info("Setting to null property. Ignoring");
 			return;
 		}
 

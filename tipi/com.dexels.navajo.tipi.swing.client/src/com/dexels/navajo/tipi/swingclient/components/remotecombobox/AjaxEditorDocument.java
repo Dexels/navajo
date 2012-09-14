@@ -4,12 +4,18 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class AjaxEditorDocument extends PlainDocument {
 
 	private static final long serialVersionUID = 7442690284070678853L;
 	private boolean fireEvents = true;
 	private final AjaxComboBox myBox;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(AjaxEditorDocument.class);
+	
 	public AjaxEditorDocument(AjaxComboBox m) {
 		myBox = m;
 	}
@@ -27,7 +33,7 @@ public class AjaxEditorDocument extends PlainDocument {
 						AjaxEditorDocument.this.getText(0, getLength()),
 						AjaxEditorDocument.this);
 			} catch (BadLocationException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		// } catch (BadLocationException e1) {
@@ -51,12 +57,12 @@ public class AjaxEditorDocument extends PlainDocument {
 		}
 		try {
 			if (fireEvents && !text.equals(getText(0, getLength()))) {
-				System.err.println("removeUpdate Firing refresh: "
+				logger.info("removeUpdate Firing refresh: "
 						+ getText(0, getLength()) + " == " + text);
 				myBox.scheduleAjaxRefresh(text, AjaxEditorDocument.this);
 			}
 		} catch (BadLocationException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		super.removeUpdate(chng);
 
@@ -71,16 +77,16 @@ public class AjaxEditorDocument extends PlainDocument {
 	}
 
 	public void setFireEvents(boolean fireEvents) {
-		System.err.println("Fire: " + fireEvents);
+		logger.info("Fire: " + fireEvents);
 		this.fireEvents = fireEvents;
 	}
 
 	public static void main(String[] args) {
 		String s = "anja,Jelle";
 		StringBuffer sp = new StringBuffer(s);
-		System.err.println("o: " + sp);
+		logger.info("o: " + sp);
 		sp.delete(9, 10);
-		System.err.println("p: " + sp);
+		logger.info("p: " + sp);
 	}
 
 }

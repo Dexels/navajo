@@ -14,6 +14,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.TooManyListenersException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Alignment;
 import nextapp.echo2.app.Button;
 import nextapp.echo2.app.CheckBox;
@@ -68,7 +71,9 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	 * 
 	 */
 	private static final long serialVersionUID = -3562797392073851991L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(EchoPropertyComponent.class);
 	private static final int SELECTIONMODE_COMBO = 0;
 
 	private static final int SELECTIONMODE_RADIO = 1;
@@ -179,13 +184,13 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private void addPropertyComponent(Component comp, LayoutData ld) {
 		add(comp);
-		// System.err.println("Adding component: " + comp);
+		// logger.info("Adding component: " + comp);
 		if (ld != null) {
 			comp.setLayoutData(ld);
-			// System.err.println("Layout: " + ld);
+			// logger.info("Layout: " + ld);
 		} else {
 			// ld = n
-			// System.err.println("Null layout");
+			// logger.info("Null layout");
 		}
 	}
 
@@ -201,7 +206,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		}
 		if (showLabel) {
 			l = new LabelEx();
-			// System.err.println("Adding label::: ");
+			// logger.info("Adding label::: ");
 			if (p.getDescription() != null) {
 
 				l.setText(p.getDescription());
@@ -214,8 +219,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			gd.setAlignment(new Alignment(Alignment.LEADING, Alignment.DEFAULT));
 			add(l);
 			l.setLayoutData(gd);
-			// System.err.println("SETTING COLUMN WIDTH::: " + label_indent);
-			// System.err.println("SETTING VALUE WIDTH::: " + value_size);
+			// logger.info("SETTING COLUMN WIDTH::: " + label_indent);
+			// logger.info("SETTING VALUE WIDTH::: " + value_size);
 
 			setColumnWidth(0, new Extent(label_indent, Extent.PX));
 			if (value_size == 0) {
@@ -225,7 +230,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			}
 
 		} else {
-			// System.err.println("Ignoring label!");
+			// logger.info("Ignoring label!");
 			// l = new Label("aap");
 			// add(l);
 		}
@@ -280,7 +285,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		setLabelIndent(label_indent);
 		if (currentComponent != null) {
 			GridLayoutData gld = new GridLayoutData();
-			// System.err.println("");
+			// logger.info("");
 			gld.setAlignment(new Alignment(Alignment.LEADING, Alignment.DEFAULT));
 			currentComponent.setLayoutData(gld);
 		} else {
@@ -332,18 +337,18 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				}
 			}
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
 	private void createGenericTextProperty(Property p) {
 		boolean isEdit = p.isDirIn();
-		// System.err.println("CREATING GENERIC TEXT. ISEDIT: "+isEdit+"affe!");
+		// logger.info("CREATING GENERIC TEXT. ISEDIT: "+isEdit+"affe!");
 		if (alwaysUseLabel) {
 			createLabel(p.getValue());
 		} else {
 			if ((isEdit || !useLabelForReadOnlyProperties)) {
-				// System.err.println("My property type: "+p.getType());
+				// logger.info("My property type: "+p.getType());
 				createTextField(p);
 
 			} else {
@@ -629,7 +634,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				}
 			});
 		} catch (TooManyListenersException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		addPropertyComponent(g);
 
@@ -649,7 +654,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				.getStyle(cb.getClass(), "Default");
 		cb.setStyle(ss);
 
-		// System.err.println("Creating memo property: "+column+" row: "+row+"
+		// logger.info("Creating memo property: "+column+" row: "+row+"
 		// val: "+value_size);
 		cb.setWidth(new Extent(memoColumnCount, Extent.EM));
 		cb.setText(p.getValue());
@@ -667,7 +672,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// System.err.println("Memo DIRECT action");
+				// logger.info("Memo DIRECT action");
 				if ("upper".equals(myCapitalization)) {
 					cb.setText(cb.getText().toUpperCase());
 				}
@@ -687,7 +692,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 			@Override
 			public void documentUpdate(DocumentEvent e) {
-				// System.err.println("Memo activity!");
+				// logger.info("Memo activity!");
 				myProperty.setValue(cb.getText());
 				fireTipiEvent("onValueChanged");
 			}
@@ -696,7 +701,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				// System.err.println("AAAAAAAAAAAP:"+evt);
+				// logger.info("AAAAAAAAAAAP:"+evt);
 			}
 		});
 		currentComponent = cb;
@@ -789,7 +794,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		if (!p.isDirIn()) {
 			tf.setForeground(new Color(90, 90, 90));
 		}
-		// System.err.println("Created textfield. Dirin: "+p.isDirIn());
+		// logger.info("Created textfield. Dirin: "+p.isDirIn());
 		addPropertyComponent(tf);
 
 		tf.setEnabled(p.isDirIn());
@@ -801,8 +806,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 			@Override
 			public void documentUpdate(DocumentEvent e) {
-				// System.err.println("Mies: "+e);
-				// System.err.println("Capitalization: " + myCapitalization);
+				// logger.info("Mies: "+e);
+				// logger.info("Capitalization: " + myCapitalization);
 				String text = tf.getText();
 				if ("upper".equals(myCapitalization)) {
 					if (!text.equals(text.toUpperCase())) {
@@ -828,7 +833,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// System.err.println("Aap: "+e);
+				// logger.info("Aap: "+e);
 				TipiEchoTextField tf = (TipiEchoTextField) e.getSource();
 				if ("upper".equals(myCapitalization)) {
 					tf.setText(tf.getText().toUpperCase());
@@ -845,7 +850,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		// tf.addF
 		// tf.addActionListener(new Foc() {
 		// public void actionPerformed(ActionEvent e) {
-		// // System.err.println("Aap: "+e);
+		// // logger.info("Aap: "+e);
 		// TipiEchoTextField tf = (TipiEchoTextField) e.getSource();
 		// String text = tf.getText();
 		// myProperty.setValue(text);
@@ -882,7 +887,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			if (!p.isDirIn()) {
 				df.getTextField().setForeground(new Color(90, 90, 90));
 			}
-			// System.err.println("Created textfield. Dirin: "+p.isDirIn());
+			// logger.info("Created textfield. Dirin: "+p.isDirIn());
 			addPropertyComponent(df);
 
 			df.setEnabled(p.isDirIn());
@@ -891,7 +896,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 				@Override
 				public void propertyChange(PropertyChangeEvent e) {
-					System.err.println("Boing:" + e.getPropertyName());
+					logger.info("Boing:" + e.getPropertyName());
 					myProperty.setAnyValue(df.getSelectedDate().getTime());
 				}
 			});
@@ -925,8 +930,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 				@Override
 				public void documentUpdate(DocumentEvent e) {
-					// System.err.println("Mies: "+e);
-					// System.err.println("Capitalization: " +
+					// logger.info("Mies: "+e);
+					// logger.info("Capitalization: " +
 					// myCapitalization);
 
 					String text = tf.getText();
@@ -1045,7 +1050,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 						current.setSelected(lb.isSelectedIndex(i));
 					}
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 
 				fireTipiEvent("onValueChanged");
@@ -1089,7 +1094,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						// System.err.println("radiobutton activity:
+						// logger.info("radiobutton activity:
 						// "+rb.getActionCommand());
 						if (doUpdateRadioButtons) {
 							doUpdateRadioButtons = false;
@@ -1098,7 +1103,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 							doUpdateRadioButtons = true;
 						}
 					} catch (NavajoException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
 			});
@@ -1168,9 +1173,9 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			rb.setActionCommand(cc.getValue());
 			rb.setSelected(cc.isSelected());
 			rb.setEnabled(p.isDirIn());
-			System.err.println("Item: " + cc.getName() + " value: "
+			logger.info("Item: " + cc.getName() + " value: "
 					+ cc.getValue() + " selected: " + cc.isSelected());
-			// System.err.println("Created checkbox, actionCommand:
+			// logger.info("Created checkbox, actionCommand:
 			// "+cc.getValue());
 			rb.addActionListener(new ActionListener() {
 				/**
@@ -1184,7 +1189,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 						updateCheckboxButtonList(rb, buttons, p);
 						fireTipiEvent("onStateChanged");
 					} catch (NavajoException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
 			});
@@ -1257,7 +1262,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			for (int i = 0; i < ss.size(); i++) {
 				Selection cc = ss.get(i);
 				if (cc.isSelected()) {
-					System.err.println("Sett");
+					logger.info("Sett");
 					lb.setSelectedIndex(i);
 					break;
 				}
@@ -1338,7 +1343,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				pagedSortedIndex);
 
 		if (isSelected) {
-			// System.err.println("Setting SELECTED zebra to: " + column + " / "
+			// logger.info("Setting SELECTED zebra to: " + column + " / "
 			// + row);
 		}
 		if (value instanceof Boolean) {
@@ -1420,13 +1425,13 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			}
 		});
 		// MessageTable mt = (MessageTable) table;
-		// System.err.println("Sel: "+mt.getSelectedIndex());
-		// System.err.println("row: "+row);
+		// logger.info("Sel: "+mt.getSelectedIndex());
+		// logger.info("row: "+row);
 		// final Extent w = table.getColumnModel().getColumn(column).getWidth();
 		// epc.addPropertyChangeListener(new PropertyChangeListener(){
 		//
 		// public void propertyChange(PropertyChangeEvent evt) {
-		// System.err.println("Table RENDERER EVENT: "+value+" ->
+		// logger.info("Table RENDERER EVENT: "+value+" ->
 		// "+column+"/"+row+" width: "+w);
 		// }});
 		int widthVal = tableColumnwidth.getValue();
@@ -1512,7 +1517,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	@Override
 	public void setBackground(Color arg0) {
-		// System.err.println("In SETBACKGROUND of EcHOPropertyCOmponent:
+		// logger.info("In SETBACKGROUND of EcHOPropertyCOmponent:
 		// "+arg0.toString());
 		super.setBackground(arg0);
 		if (currentComponent != null) {
@@ -1593,11 +1598,11 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		setBackground(c);
 		Component cn = currentComponent;
 		if (c != null) {
-			System.err.println("Setting to color: " + c + " ckass: "
+			logger.info("Setting to color: " + c + " ckass: "
 					+ cn.getClass());
 			cn.setBackground(c);
 		} else {
-			System.err.println("NULL FOUND!");
+			logger.info("NULL FOUND!");
 		}
 		GridLayoutData gg = (GridLayoutData) currentComponent.getLayoutData();
 		gg.setBackground(c);

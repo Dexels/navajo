@@ -7,33 +7,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Dexels.com
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
-
 public class MergeUtils {
 	private static String filename = "c:/merge.dat";
 	private static String delimiter = "\t";
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MergeUtils.class);
+	
 	public MergeUtils() {
 	}
 
@@ -76,7 +64,7 @@ public class MergeUtils {
 			}
 			fw.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -157,7 +145,7 @@ public class MergeUtils {
 			}
 			fw.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -189,14 +177,14 @@ public class MergeUtils {
 				separator = ";";
 			}
 
-			System.err.println("Sending mail: " + columnName);
+			logger.info("Sending mail: " + columnName);
 			List<String> recepients = new ArrayList<String>();
 			for (int i = 0; i < data.getArraySize(); i++) {
 				String address = data.getMessage(i).getProperty(columnName)
 						.getValue();
-				System.err.println("Got: " + address);
+				logger.info("Got: " + address);
 				if (address != null && address.indexOf("@") > 0) {
-					System.err.println("Adding: " + address);
+					logger.info("Adding: " + address);
 					recepients.add(address);
 				}
 			}
@@ -207,10 +195,10 @@ public class MergeUtils {
 				mailString = mailString + recepients.get(j) + separator;
 			}
 			mailString = mailString.substring(0, mailString.length() - 1);
-			System.err.println("Calling openDoc: " + mailString);
+			logger.info("Calling openDoc: " + mailString);
 			openDocument(mailString);
 		} catch (Exception e) {
-			System.err.println("Could not send email: " + e.getMessage());
+			logger.info("Could not send email: " + e.getMessage());
 		}
 
 	}
@@ -223,17 +211,17 @@ public class MergeUtils {
 			extension = b.getExtension();
 		}
 
-		System.err.println("Ext: " + extension);
+		logger.info("Ext: " + extension);
 		try {
 			File f = File.createTempFile("datadump", "." + extension);
-			System.err.println("File: " + f.getAbsolutePath());
+			logger.info("File: " + f.getAbsolutePath());
 			FileOutputStream fos = new FileOutputStream(f);
 			b.write(fos);
 			fos.flush();
 			fos.close();
 			openDocument(f.getAbsolutePath());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -285,7 +273,7 @@ public class MergeUtils {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 	}

@@ -94,7 +94,7 @@ public abstract class ExtensionClassdefProcessor {
 				}
 				if (element.getName().equals("tipi-include")) {
 //					String location = element.getStringAttribute("location");
-					//System.err.println("Ignoring include: " + element);
+					//logger.info("Ignoring include: " + element);
 
 					continue;
 				}

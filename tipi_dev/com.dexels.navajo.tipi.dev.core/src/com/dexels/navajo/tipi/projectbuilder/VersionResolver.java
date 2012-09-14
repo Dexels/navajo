@@ -6,8 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class VersionResolver {
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(VersionResolver.class);
 	private Map<String,List<String>> repDefinition;
 	String currentToken = null;
 	public VersionResolver(String repository) throws IOException {
@@ -23,7 +28,7 @@ public class VersionResolver {
 	public Map<String,String> resolveVersion(String token) {
 		String ext = null;
 		String version = null;
-	//	System.err.println("repppp: "+repDefinition+" token: "+token);
+	//	logger.info("repppp: "+repDefinition+" token: "+token);
 		if(token.indexOf("/")!=-1) {
 			StringTokenizer st2 = new StringTokenizer(token,"/");
 			ext = st2.nextToken();
@@ -57,7 +62,7 @@ public class VersionResolver {
 			currentToken = resultVersionPath(token);
 		} catch (IllegalArgumentException e) {
 			currentToken = "Error resolving: "+token;
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

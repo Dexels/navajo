@@ -134,7 +134,7 @@ public class TipiOptionPane {
 
         // closeButton.addActionListener(new ActionListener() {
         // public void actionPerformed(ActionEvent ae) {
-        // System.err.println("ouwe: " + text);
+        // logger.info("ouwe: " + text);
         // w.getContent().remove(wp);
         // wp.dispose();
         // }

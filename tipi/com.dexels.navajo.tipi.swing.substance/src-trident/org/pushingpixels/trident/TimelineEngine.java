@@ -36,6 +36,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.pushingpixels.trident.Timeline.TimelineState;
 import org.pushingpixels.trident.TimelineScenario.TimelineScenarioState;
 import org.pushingpixels.trident.callback.RunOnUIThread;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Trident timeline engine. This is the main entry point to play
@@ -50,7 +52,10 @@ class TimelineEngine {
 	 * console.
 	 */
 	public static boolean DEBUG_MODE = false;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TimelineEngine.class);
+	
 	/**
 	 * Single instance of <code>this</code> class.
 	 */
@@ -170,6 +175,7 @@ class TimelineEngine {
 	private TimelineCallbackThread callbackThread;
 
 	class TridentAnimationThread extends Thread {
+		
 		public TridentAnimationThread() {
 			super();
 			this.setName("Trident pulse source thread");
@@ -195,7 +201,7 @@ class TimelineEngine {
 
 		@Override
 		public void interrupt() {
-			System.err.println("Interrupted");
+			logger.info("Interrupted");
 			super.interrupt();
 		}
 	}
@@ -263,11 +269,11 @@ class TimelineEngine {
 				passedSinceLastIteration = 0;
 			}
 			if (DEBUG_MODE) {
-				System.out.println("Elapsed since last iteration: "
+				logger.info("Elapsed since last iteration: "
 						+ passedSinceLastIteration + "ms");
 			}
 
-			// System.err.println("Periodic update on "
+			// logger.info("Periodic update on "
 			// + this.runningTimelines.size() + " timelines; "
 			// + passedSinceLastIteration + " ms passed since last");
 			// for (Timeline t : runningTimelines) {
@@ -276,7 +282,7 @@ class TimelineEngine {
 			// "ProgressBar") >= 0) {
 			// continue;
 			// }
-			// System.err.println("\tTimeline @"
+			// logger.info("\tTimeline @"
 			// + t.hashCode()
 			// + " ["
 			// + t.getName()
@@ -307,7 +313,7 @@ class TimelineEngine {
 
 				boolean hasEnded = false;
 				if (DEBUG_MODE) {
-					System.out.println("Processing " + timeline.id + "["
+					logger.info("Processing " + timeline.id + "["
 							+ timeline.mainObject.getClass().getSimpleName()
 							+ "] from " + timeline.durationFraction
 							+ ". Callback - "
@@ -442,7 +448,7 @@ class TimelineEngine {
 				}
 				if (hasEnded) {
 					if (DEBUG_MODE) {
-						System.out.println("Ending " + timeline.id + " on "
+						logger.info("Ending " + timeline.id + " on "
 								// + timeline.timelineKind.toString()
 								+ " in state " + timeline.getState().name()
 								+ " at position " + timeline.durationFraction);
@@ -459,7 +465,7 @@ class TimelineEngine {
 							TimelineState.DONE);
 				} else {
 					if (DEBUG_MODE) {
-						System.out.println("Calling " + timeline.id + " on "
+						logger.info("Calling " + timeline.id + " on "
 						// + timeline.timelineKind.toString() + " at "
 								+ timeline.durationFraction);
 					}
@@ -468,7 +474,7 @@ class TimelineEngine {
 			}
 
 			if (this.runningScenarios.size() > 0) {
-				// System.err.println(Thread.currentThread().getName()
+				// logger.info(Thread.currentThread().getName()
 				// + " : updating");
 				for (Iterator<TimelineScenario> it = this.runningScenarios
 						.iterator(); it.hasNext();) {
@@ -482,7 +488,7 @@ class TimelineEngine {
 							.getReadyActors();
 					if (readyActors != null) {
 						// if (readyActors.size() > 0)
-						// System.out.println("Scenario : " + scenario.state +
+						// logger.info("Scenario : " + scenario.state +
 						// ":"
 						// + readyActors.size());
 						for (TimelineScenario.TimelineScenarioActor readyActor : readyActors) {
@@ -491,7 +497,7 @@ class TimelineEngine {
 					}
 				}
 			}
-			// System.err.println("Periodic update done");
+			// logger.info("Periodic update done");
 
 			// this.nothingTracked = (this.runningTimelines.size() == 0);
 			this.lastIterationTimeStamp = System.currentTimeMillis();
@@ -548,14 +554,14 @@ class TimelineEngine {
 					timeline.uiToolkitHandler.runOnUIThread(
 							timeline.mainObject, new Runnable() {
 								public void run() {
-									// System.err.println("Timeline @"
+									// logger.info("Timeline @"
 									// + timeline.hashCode());
 									timeline.callback.onTimelinePulse(
 											durationFraction, timelinePosition);
 								}
 							});
 				} else {
-					// System.err.println("Timeline @" + timeline.hashCode());
+					// logger.info("Timeline @" + timeline.hashCode());
 					timeline.callback.onTimelinePulse(durationFraction,
 							timelinePosition);
 				}
@@ -611,7 +617,7 @@ class TimelineEngine {
 			this.runningTimelines.add(timeline);
 			// this.nothingTracked = false;
 			if (DEBUG_MODE) {
-				System.out.println("Added (" + timeline.id + ") on "
+				logger.info("Added (" + timeline.id + ") on "
 						+ timeline.fullObjectID + "]. Fade "
 						// + timeline.timelineKind.toString() + " with state "
 						+ timeline.getState().name() + ". Callback - "
@@ -675,7 +681,7 @@ class TimelineEngine {
 			Set<TimelineScenario.TimelineScenarioActor> readyActors = scenario
 					.getReadyActors();
 
-			// System.err.println(Thread.currentThread().getName() +
+			// logger.info(Thread.currentThread().getName() +
 			// " : adding");
 			this.runningScenarios.add(scenario);
 			for (TimelineScenario.TimelineScenarioActor readyActor : readyActors) {

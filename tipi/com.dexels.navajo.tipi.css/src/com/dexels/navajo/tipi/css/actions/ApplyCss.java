@@ -12,6 +12,8 @@ import org.akrogen.tkui.css.core.dom.properties.ICSSPropertyHandlerProvider;
 import org.akrogen.tkui.css.core.engine.CSSEngine;
 import org.akrogen.tkui.css.core.engine.CSSErrorHandler;
 import org.akrogen.tkui.css.tipi.engine.CSSTipiEngineImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.css.CSSStyleDeclaration;
 
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -24,9 +26,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class ApplyCss extends TipiAction {
 
 	private static final long serialVersionUID = 5481600392557969470L;
-//	public ConditionFactory cf;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ApplyCss.class);
 	public org.akrogen.tkui.css.tipi.engine.CSSTipiEngineImpl aap;
-//	public org.w3c.dom.css.DocumentCSS noot;
 	
 	
 	protected void execute(final TipiEvent event) throws TipiBreakException, TipiException {
@@ -48,7 +51,7 @@ public class ApplyCss extends TipiAction {
 		engine.setErrorHandler(new CSSErrorHandler() {
 			@Override
 			public void error(Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		});
 		//		String style = "JLabel {uppercase:true}";
@@ -83,7 +86,7 @@ public class ApplyCss extends TipiAction {
 			engine.dispose();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

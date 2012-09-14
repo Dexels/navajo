@@ -13,6 +13,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -23,6 +25,9 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class ResolveAttatchments extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ResolveAttatchments.class);
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() != 1) {
@@ -72,7 +77,7 @@ public class ResolveAttatchments extends FunctionInterface {
 		}
 
 		if (doc == null) {
-			System.err.println("Oh dear!");
+			logger.info("Oh dear!");
 			return result;
 		}
 		
@@ -82,7 +87,7 @@ public class ResolveAttatchments extends FunctionInterface {
 		try {
 			TransformerFactory.newInstance().newTransformer().transform(new DOMSource(doc), new StreamResult(sw));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		// String retidy2 = convertToXHTML(sw.toString());
 
@@ -92,16 +97,16 @@ public class ResolveAttatchments extends FunctionInterface {
 			fw.flush();
 			fw.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return sw.toString();
 	}
 
 	
 	public  void fixImageTags(Node n, List<Element> imageTagList, String expression) {
-		// System.err.println("Checking image tag: "+n.getNodeName());
-		// System.err.println("Checking image type: "+n.getNodeType());
-		// System.err.println("Checking image value: "+n.getNodeValue());
+		// logger.info("Checking image tag: "+n.getNodeName());
+		// logger.info("Checking image type: "+n.getNodeType());
+		// logger.info("Checking image value: "+n.getNodeValue());
 		if (n instanceof Document) {
 			NodeList v = n.getChildNodes();
 			for (int i = 0; i < v.getLength(); i++) {
@@ -112,7 +117,7 @@ public class ResolveAttatchments extends FunctionInterface {
 		if (n instanceof Element) {
 			Element x = (Element) n;
 			if (x.getTagName().equals("img")) {
-				// System.err.println("Found image tag! ");
+				// logger.info("Found image tag! ");
 				x.setAttribute("src", convertImgSrc(imageTagList.size(), expression));
 				imageTagList.add(x);
 			}

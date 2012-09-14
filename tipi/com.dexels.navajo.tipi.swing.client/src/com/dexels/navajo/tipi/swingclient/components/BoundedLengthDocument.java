@@ -45,7 +45,7 @@ class BoundedLengthDocument extends PlainDocument {
 	public void insertString(int offs, String str, AttributeSet a)
 			throws BadLocationException {
 		// getLength()
-		// System.err.println("Insert");
+		// logger.info("Insert");
 		// int maxlength = myProperty.getLength();
 		// Check the length, on output properties length is often not specified,
 		// this way the text will still be visible
@@ -63,7 +63,7 @@ class BoundedLengthDocument extends PlainDocument {
 				if (getLength() + i < getMaxLength()) {
 					result[j++] = source[i];
 				} else {
-					// System.err.println("Can not add to: "+myProperty.getValue());
+					// logger.info("Can not add to: "+myProperty.getValue());
 					// Toolkit.getDefaultToolkit().beep();
 				}
 			}

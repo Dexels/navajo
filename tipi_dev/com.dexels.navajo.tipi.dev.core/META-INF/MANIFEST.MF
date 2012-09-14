@@ -8,4 +8,5 @@ Export-Package: com.dexels.navajo.tipi.extensionmanager,
  com.dexels.navajo.tipi.projectbuilder.impl,
  com.dexels.navajo.tipi.util
 Bundle-Vendor: Dexels
-Import-Package: org.osgi.framework;version="1.5.0"
+Import-Package: org.osgi.framework;version="1.5.0",
+ org.slf4j;version="1.6.1"

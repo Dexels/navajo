@@ -14,6 +14,8 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Item;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoException;
@@ -28,8 +30,10 @@ import com.dexels.navajo.document.Selection;
  */
 public class PropertyModifier implements ICellModifier {
 
-    // private final TmlEditor myEditor;
-    private final StructuredViewer myViewer;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PropertyModifier.class);
+	private final StructuredViewer myViewer;
 
     /**
      * @param myEditor
@@ -109,14 +113,14 @@ public class PropertyModifier implements ICellModifier {
         Property p = mm.getProperty(property);
         if (Property.SELECTION_PROPERTY.equals(p.getType())) {
             if (!Property.CARDINALITY_SINGLE.equals(p.getCardinality())) {
-                System.err.println("I DONT SUPPORT CARDINALITY PLUS IN TABLES DAMMIT");
+                logger.info("I DONT SUPPORT CARDINALITY PLUS IN TABLES DAMMIT");
             }
             try {
                 ArrayList<Selection> al = p.getAllSelections();
 //                for (int i = 0; i < al.size(); i++) {
 //                    Selection current =  (Selection)al.get(i);
-//                    System.err.println("NAME: "+current.getName());
-//                    System.err.println("VALUE:"+current.getValue());
+//                    logger.info("NAME: "+current.getName());
+//                    logger.info("VALUE:"+current.getValue());
 //                }
                for (int i = 0; i < al.size(); i++) {
                     Selection current =  al.get(i);
@@ -125,7 +129,7 @@ public class PropertyModifier implements ICellModifier {
                     }
                 }
             } catch (NavajoException e) {
-                 e.printStackTrace();
+                 logger.error("Error: ",e);
             }
             return new Integer(0);
         }
@@ -150,7 +154,7 @@ public class PropertyModifier implements ICellModifier {
         //            try {
         //                return p.getAllSelections();
         //            } catch (NavajoException e) {
-        //                e.printStackTrace();
+        //                logger.error("Error: ",e);
         //                return null;
         //            }
         //            
@@ -177,7 +181,7 @@ public class PropertyModifier implements ICellModifier {
         if (Property.SELECTION_PROPERTY.equals(p.getType())) {
           
             if (!Property.CARDINALITY_SINGLE.equals(p.getCardinality())) {
-                System.err.println("I DONT SUPPORT CARDINALITY PLUS IN TABLES DAMMIT");
+                logger.info("I DONT SUPPORT CARDINALITY PLUS IN TABLES DAMMIT");
             }
                 try {
                     int index = ((Integer)value).intValue();
@@ -191,7 +195,7 @@ public class PropertyModifier implements ICellModifier {
                         p.setSelected(s);
                     }
                  } catch (NavajoException e) {
-                      e.printStackTrace();
+                      logger.error("Error: ",e);
                 }
         }
         if (Property.BOOLEAN_PROPERTY.equals(p.getType())) {

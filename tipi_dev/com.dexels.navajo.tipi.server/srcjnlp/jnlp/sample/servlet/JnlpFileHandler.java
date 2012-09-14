@@ -305,8 +305,8 @@ public class JnlpFileHandler {
 	jnlpTemplate = substitute(jnlpTemplate, "$$hostname",
 				  request.getServerName());
 	
-//		System.err.println("Codebase "+urlprefix + request.getContextPath() + codebase);
-//		System.err.println("context "+urlprefix + request.getContextPath());
+//		logger.info("Codebase "+urlprefix + request.getContextPath() + codebase);
+//		logger.info("context "+urlprefix + request.getContextPath());
         jnlpTemplate = substitute(jnlpTemplate, "$$codebase",  urlprefix + request.getContextPath() + codebase);
         jnlpTemplate = substitute(jnlpTemplate, "$$context", urlprefix + request.getContextPath());
         // fix for 6256326: add $$site macro to sample jnlp servlet

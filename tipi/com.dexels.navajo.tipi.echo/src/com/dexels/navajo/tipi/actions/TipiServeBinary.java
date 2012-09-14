@@ -8,6 +8,9 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.app.Command;
 import nextapp.echo2.webcontainer.command.BrowserOpenWindowCommand;
@@ -21,28 +24,14 @@ import com.dexels.navajo.tipi.components.echoimpl.EchoTipiContext;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
 
 public class TipiServeBinary extends TipiAction {
 
 	private static final long serialVersionUID = 1048386067132114825L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiServeBinary.class);
+	
 	public TipiServeBinary() {
 	}
 
@@ -81,7 +70,7 @@ public class TipiServeBinary extends TipiAction {
 			}
 			URL baseUrl = null;
 
-			System.err.println("Opening binary: " + binary.value);
+			logger.info("Opening binary: " + binary.value);
 
 			Operand baseUrlOperand = getEvaluatedParameter("baseUrl", e);
 			if (baseUrlOperand != null && baseUrlOperand.value != null && !"".equals(baseUrlOperand.value)) {
@@ -98,13 +87,13 @@ public class TipiServeBinary extends TipiAction {
 				if (binary.value instanceof Binary) {
 					b = (Binary) binary.value;
 				} else {
-					System.err.println("Binary class: " + binary.value.getClass());
-					System.err.println(">>>>>>>>>>>>>>>>\n" + binary.value);
+					logger.info("Binary class: " + binary.value.getClass());
+					logger.info(">>>>>>>>>>>>>>>>\n" + binary.value);
 					b = new Binary(new StringReader((String) binary.value));
 				}
 			}
 			if (b == null) {
-				System.err.println("No binary found!");
+				logger.info("No binary found!");
 				myContext.showInfo("can not open binary property!", "info");
 				return;
 			}
@@ -123,7 +112,7 @@ public class TipiServeBinary extends TipiAction {
 				result = ee.getDynamicResourceBaseUrl(xx.getName());
 			}
 
-			System.err.println("Resulting url: " + result);
+			logger.info("Resulting url: " + result);
 			// URL result = new
 			// URL(baseUrl.toString()+"/binary"+random+"."+extension);
 
@@ -137,7 +126,7 @@ public class TipiServeBinary extends TipiAction {
 	}
 
 	protected void openBinary(String expression, boolean newWin) throws TipiBreakException, TipiException {
-		System.err.println("My context: "+getContext()+" my context: "+myContext);
+		logger.info("My context: "+getContext()+" my context: "+myContext);
 		EchoTipiContext ee = (EchoTipiContext) getContext();
 		String result = ee.createExpressionUrl(expression);
 	

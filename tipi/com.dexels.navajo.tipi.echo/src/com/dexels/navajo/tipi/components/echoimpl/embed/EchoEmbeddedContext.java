@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.components.echoimpl.embed;
 import java.io.IOException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import tipi.TipiEchoExtension;
 
 import com.dexels.navajo.tipi.TipiException;
@@ -10,27 +13,13 @@ import com.dexels.navajo.tipi.components.echoimpl.EchoTipiContext;
 import com.dexels.navajo.tipi.components.echoimpl.TipiEchoInstance;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
 
 public class EchoEmbeddedContext extends EchoTipiContext {
 
 	private static final long serialVersionUID = -6564389487110659275L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(EchoEmbeddedContext.class);
 	TipiEchoStandaloneToplevel top = new TipiEchoStandaloneToplevel();
 	
 	public EchoEmbeddedContext(TipiEchoInstance instance, EchoTipiContext parentContext) {
@@ -62,7 +51,7 @@ public class EchoEmbeddedContext extends EchoTipiContext {
 	}
 
 	public void exit() {
-		System.err.println("Exit in embedded");
+		logger.info("Exit in embedded");
 		shutdown();
 	}
 

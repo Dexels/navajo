@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 import nextapp.echo2.extras.app.MenuBarPane;
@@ -9,26 +12,13 @@ import nextapp.echo2.extras.app.menu.ItemModel;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
 
 public class TipiMenuBar extends TipiEchoDataComponentImpl {
 	private static final long serialVersionUID = -3747839523676117308L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMenuBar.class);
+	
 	private DefaultMenuModel defaultMenuModel;
 
 	public TipiMenuBar() {
@@ -58,10 +48,10 @@ public class TipiMenuBar extends TipiEchoDataComponentImpl {
 		public void actionPerformed(ActionEvent e) {
 			String path = e.getActionCommand();
 //			String pp = path.substring("component:/".length(),path.length());
-			System.err.println("EVENT::::::: "+path);
+			logger.info("EVENT::::::: "+path);
 			TipiComponent tc = myContext.getTipiComponentByPath(path);
 			if(tc instanceof TipiMenuItem) {
-				System.err.println("Alllright!");
+				logger.info("Alllright!");
 				TipiMenuItem tmi = (TipiMenuItem)tc;
 				try {
 					tmi.performAction();

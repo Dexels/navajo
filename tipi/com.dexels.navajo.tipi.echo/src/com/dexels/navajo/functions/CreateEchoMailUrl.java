@@ -5,6 +5,9 @@ import java.net.MalformedURLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -16,6 +19,9 @@ import com.dexels.navajo.tipi.components.echoimpl.EchoTipiContext;
 
 public class CreateEchoMailUrl extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CreateEchoMailUrl.class);
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() != 3) {
@@ -40,14 +46,14 @@ public class CreateEchoMailUrl extends FunctionInterface {
 		try {
 			String result = createNavajoUrl(ee,navajoName, inputCopy);
 			ee.injectNavajo(navajoName, inputCopy);
-			System.err.println("Injected:::'n");
+			logger.info("Injected:::'n");
 			inputCopy.write(System.err);
 			return result;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (NavajoException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 	}
@@ -137,10 +143,10 @@ public class CreateEchoMailUrl extends FunctionInterface {
 		try {
 			String[] sp = attach.split("-");
 			int index = Integer.parseInt(sp[sp.length-1]);
-			System.err.println("Index: "+index);
+			logger.info("Index: "+index);
 			return index;
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		// guess 1
 		return 1;
@@ -151,12 +157,12 @@ public class CreateEchoMailUrl extends FunctionInterface {
 		String attachExample = "cid:attach-nr-3";
 		String[] sp = attachExample.split("-");
 		int index = Integer.parseInt(sp[sp.length-1]);
-		System.err.println("Index: "+index);
+		logger.info("Index: "+index);
 		//		FileInputStream fis = new FileInputStream("tmlexample.xml");
 //		Navajo n = NavajoFactory.getInstance().createNavajo(fis);
 //		CreateEchoMailUrl cemu = new CreateEchoMailUrl();
 //		String result = cemu.createNavajoUrl("Aap", n, "http://www.aap.net/?aap=");
-//		System.err.println("Result: "+result);
+//		logger.info("Result: "+result);
 //		n.write(System.err);
 	}
 }

@@ -169,11 +169,11 @@ public class Pack200Task extends Pack {
 	    ? "Repack with Pack200" 
 	    : "Packing with Pack200";
 
-	System.out.println(statusStr);
-	System.out.println("Source File :" + source);
-	System.out.println("Dest.  File :" + zipFile);
+	logger.info(statusStr);
+	logger.info("Source File :" + source);
+	logger.info("Dest.  File :" + zipFile);
 	if (p200ConfigFile != null)
-           System.out.println("Config file :" + p200ConfigFile);
+           logger.info("Config file :" + p200ConfigFile);
 
 	this.validate();
 
@@ -238,7 +238,7 @@ public class Pack200Task extends Pack {
 	    }
 
 	} catch (IOException ioe) {
-	    ioe.printStackTrace();
+	    logger.error("Error: ",ioe);
 	    throw new BuildException("Error in pack200: ",ioe);	
     } finally {
 	    if (doRepack) packFile.delete();

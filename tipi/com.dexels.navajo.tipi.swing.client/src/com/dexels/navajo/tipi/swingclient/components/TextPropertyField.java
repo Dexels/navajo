@@ -9,6 +9,9 @@ import java.awt.event.FocusEvent;
 import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 
@@ -32,6 +35,9 @@ import com.dexels.navajo.document.Property;
 
 public class TextPropertyField extends PropertyField {
 	private static final long serialVersionUID = -7981567590499362651L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TextPropertyField.class);
 	private final BoundedLengthDocument myDocument = new BoundedLengthDocument();
 	private String search = "off";
 	private ImageIcon searchIcon = new ImageIcon(
@@ -59,10 +65,10 @@ public class TextPropertyField extends PropertyField {
 	}
 
 	private final void lostFocus(FocusEvent e) {
-		// System.err.println("---------------->> Vuur!");
+		// logger.info("---------------->> Vuur!");
 		try {
 			if (getText() == null) {
-				System.err.println("GetText() null");
+				logger.info("GetText() null");
 				return;
 			}
 
@@ -83,7 +89,7 @@ public class TextPropertyField extends PropertyField {
 
 	@Override
 	public final void update() {
-		// System.err.println("Update in property");
+		// logger.info("Update in property");
 		lostFocus(null);
 	}
 
@@ -97,7 +103,7 @@ public class TextPropertyField extends PropertyField {
 					.getType().equals(Property.TIPI_PROPERTY))) {
 				// Toolkit.getDefaultToolkit().beep();
 				try {
-					System.err.println("PROPERTY: " + p.getFullPropertyName()
+					logger.info("PROPERTY: " + p.getFullPropertyName()
 							+ " is not of string type! Value: " + p.getValue()
 							+ "");
 				} catch (NavajoException ex) {
@@ -108,9 +114,9 @@ public class TextPropertyField extends PropertyField {
 				// gewoon weer op zn oude (getrimde) waarde zet?
 				Object o = p.getTypedValue();
 				if (o != null && !(o instanceof String)) {
-					System.err.println("Problems setting property");
+					logger.info("Problems setting property");
 					try {
-						System.err.println("Name: " + p.getFullPropertyName());
+						logger.info("Name: " + p.getFullPropertyName());
 					} catch (NavajoException ex1) {
 						ex1.printStackTrace();
 					}
@@ -141,7 +147,7 @@ public class TextPropertyField extends PropertyField {
 
 			}
 			String caps = p.getSubType("capitalization");
-			// System.err.println("TextPropField: " + p.getName() +
+			// logger.info("TextPropField: " + p.getName() +
 			// " capitalization: " + caps) ;
 			if (caps != null) {
 				setCapitalizationMode(caps);

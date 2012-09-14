@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import javax.servlet.http.Cookie;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.webcontainer.ContainerContext;
 import nextapp.echo2.webcontainer.command.BrowserSetCookieCommand;
@@ -11,6 +14,10 @@ import nextapp.echo2.webcontainer.command.BrowserSetCookieCommand;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 
 public class BrowserCookieManager implements CookieManager {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BrowserCookieManager.class);
+	
 	private Cookie createCookie(String s) {
 		Cookie cc = new Cookie(s, "");
 		cc.setPath("/");
@@ -63,7 +70,7 @@ public class BrowserCookieManager implements CookieManager {
 	public void deleteCookies() throws IOException {
 //		ContainerContext containerContext = (ContainerContext) ApplicationInstance.getActive().getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
 //		Cookie[] cc = containerContext.getCookies();
-		System.err.println("Warning: Echo cookie deletion not implemented");
+		logger.info("Warning: Echo cookie deletion not implemented");
 	}
 
 }

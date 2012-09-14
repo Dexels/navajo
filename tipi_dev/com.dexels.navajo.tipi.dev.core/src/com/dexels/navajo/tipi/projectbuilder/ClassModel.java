@@ -8,6 +8,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 
@@ -21,7 +24,10 @@ public class ClassModel {
 	private final Map<String, StringBuffer> methodDescription = new HashMap<String, StringBuffer>();
 	private final Map<String, StringBuffer> eventDescription = new HashMap<String, StringBuffer>();
 	private final Map<String, StringBuffer> valueDescription = new HashMap<String, StringBuffer>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ClassModel.class);
+	
 	// current name of the component, changes as more definitions are added.
 //	private final String name;
 	
@@ -89,7 +95,7 @@ public class ClassModel {
 		String name = method.getStringAttribute("name");
 		XMLElement old = methods.get(name);
 		if(old!=null) {
-			System.err.println("Need to join method: "+old+" with new: "+method);
+			logger.info("Need to join method: "+old+" with new: "+method);
 		}
 
 		XMLElement desc =  method.getChildByTagName("description");
@@ -111,7 +117,7 @@ public class ClassModel {
 		String name = value.getStringAttribute("name");
 		XMLElement old = values.get(name);
 		if(old!=null) {
-//			System.err.println("Need to join value: "+old+" with new: "+value);
+//			logger.info("Need to join value: "+old+" with new: "+value);
 		}
 		
 		XMLElement desc =  value.getChildByTagName("description");
@@ -128,7 +134,7 @@ public class ClassModel {
 	}
 
 	private void addEvent(XMLElement event) {
-//		System.err.println("ADDING EVENT: "+event);
+//		logger.info("ADDING EVENT: "+event);
 		String name = event.getStringAttribute("name");
 //		XMLElement old = events.get(name);
 		
@@ -190,13 +196,13 @@ public class ClassModel {
 
 		Set<Entry<String, XMLElement>> eventL =  events.entrySet();
 		for (Entry<String, XMLElement> entry : eventL) {
-//			System.err.println("BUiLDING: "+entry.getKey()+"\n"+entry.getValue().toString());
+//			logger.info("BUiLDING: "+entry.getKey()+"\n"+entry.getValue().toString());
 			
 			XMLElement copy = entry.getValue().copy();
 		
 			eventsElement.addChild(copy);
 			StringBuffer d = eventDescription.get(entry.getKey());
-//			System.err.println("Current description: "+eventDescription);
+//			logger.info("Current description: "+eventDescription);
 			if(d!=null) {
 				XMLElement desc = new CaseSensitiveXMLElement();
 				desc.setName("description");

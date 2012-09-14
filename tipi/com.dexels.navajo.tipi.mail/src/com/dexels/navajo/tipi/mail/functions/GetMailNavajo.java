@@ -8,6 +8,9 @@ import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMultipart;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -19,21 +22,17 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class GetMailNavajo extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GetMailNavajo.class);
+	
 	public GetMailNavajo() {	
-//		super(new Class[][]{ {Float.class,Integer.class, null} });
-//		setReturnType(new Class[]{String.class});
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
-	 */
 	public String remarks() {
 		return "Returns a navajo, depicting the message along with its parts. It does not do any link replacements";
 	}
 
-	/* (non-Javadoc)
-	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
-	 */
 	public Object evaluate() throws TMLExpressionException {
 		Binary b = (Binary) getOperand(0);
 		DataSource ds = new BinaryDataSource(b);
@@ -70,9 +69,9 @@ public class GetMailNavajo extends FunctionInterface {
 			
 			return result;
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 
@@ -85,14 +84,14 @@ public class GetMailNavajo extends FunctionInterface {
 		is.close();
 		nn.write(System.err);
 		Binary b = (Binary) nn.getProperty("MailBox/Mail@0/Content").getTypedValue();
-		System.err.println("Length: "+b.getLength()+" type: "+b.guessContentType());
+		logger.info("Length: "+b.getLength()+" type: "+b.guessContentType());
 		GetMailNavajo gp = new GetMailNavajo();
 		gp.reset();
 		gp.insertOperand(b);
 		gp.insertOperand(0);
 		Navajo result = (Navajo) gp.evaluate();
 		result.write(System.err);
-//		System.err.println("Length of part 0: "+result.getLength());
+//		logger.info("Length of part 0: "+result.getLength());
 		
 	}
 	

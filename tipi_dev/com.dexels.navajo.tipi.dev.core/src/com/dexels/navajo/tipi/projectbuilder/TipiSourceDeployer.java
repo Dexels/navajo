@@ -9,11 +9,14 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TipiSourceDeployer {
 	
-	// This command will copy the source code to the destination folder as wiki readable source.
-	// create a wiki readable list of files.
-	// create a wiki readable list of resources
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSourceDeployer.class);
 	
 	public void deploy(File tipiDir, File documentationDir, List<String> pathElements, FileWriter overviewWriter) throws IOException {
 		writeDirLink(tipiDir,overviewWriter,pathElements);
@@ -66,7 +69,7 @@ public class TipiSourceDeployer {
 	}
 
 	private void deployFile(File documentationDir, File current, List<String> pathElements, FileWriter overviewWriter) throws IOException {
-		System.err.println("Current: "+current);
+		logger.info("Current: "+current);
 		String fileName = current.getName();
 		String newName = fileName.substring(0,fileName.length()-4)+".txt";
 		File f = new File(documentationDir,newName.toLowerCase());

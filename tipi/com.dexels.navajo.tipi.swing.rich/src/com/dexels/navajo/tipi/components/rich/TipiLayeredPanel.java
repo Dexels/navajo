@@ -10,12 +10,17 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JLayeredPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.components.swingimpl.TipiPanel;
 
 public class TipiLayeredPanel extends TipiPanel {
 
 	private static final long serialVersionUID = -1989798226251005367L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiLayeredPanel.class);
 	// private int totalResize = 0;
 	public Object createContainer() {
 		final JLayeredPane myPanel = new JLayeredPane();
@@ -26,7 +31,7 @@ public class TipiLayeredPanel extends TipiPanel {
 				for (int i = 0; i < myPanel.getComponentCount(); i++) {
 					Component c = myPanel.getComponent(i);
 					Rectangle rectangle = new Rectangle(new Point(0, 0), myPanel.getSize());
-					// System.err.println("Rect: "+rectangle+totalResize++);
+					// logger.info("Rect: "+rectangle+totalResize++);
 					c.setBounds(rectangle);
 
 				}
@@ -42,11 +47,11 @@ public class TipiLayeredPanel extends TipiPanel {
 		myPanel.addMouseListener(new MouseListener() {
 
 			public void mouseClicked(MouseEvent e) {
-				System.err.println("bliep");
+				logger.info("bliep");
 			}
 
 			public void mouseEntered(MouseEvent e) {
-				System.err.println("oop");
+				logger.info("oop");
 
 			}
 
@@ -84,7 +89,7 @@ public class TipiLayeredPanel extends TipiPanel {
 				} catch (NumberFormatException e) {
 					myContext.showInternalError("Error adding element to layerpanel: " + getPath()
 							+ " you need to add an Integer constraint", e);
-					e.printStackTrace();
+					logger.error("Error: ",e);
 
 				}
 			}

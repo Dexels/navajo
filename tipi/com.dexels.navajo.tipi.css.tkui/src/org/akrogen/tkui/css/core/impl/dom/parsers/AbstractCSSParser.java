@@ -179,7 +179,7 @@ public class AbstractCSSParser implements CSSParser {
 					parser.setSelectorFactory(selectorFactory);
 			} catch (Exception e) {
 				// TODO : manage error.
-				// e.printStackTrace();
+				// logger.error("Error: ",e);
 				throw new ParserNotFoundException(e);
 			}
 		return parser;

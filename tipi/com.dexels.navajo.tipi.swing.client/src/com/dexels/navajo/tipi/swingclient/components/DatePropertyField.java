@@ -21,34 +21,24 @@ import java.util.Locale;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 import com.dexels.navajo.tipi.swingclient.components.calendar.CalendarPickerDialog;
 
-//import com.dexels.sportlink.client.swing.components.*;
-/**
- * <p>
- * Title: SportLink Client:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Dexels.com
- * </p>
- * 
- * @author unascribed
- * @version 1.0
- */
+
 
 @SuppressWarnings("deprecation")
 public final class DatePropertyField extends PropertyField implements
 		PropertyControlled {
 
 	private static final long serialVersionUID = -6817551990943620076L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DatePropertyField.class);
+	
 	private static SimpleDateFormat displayDateFormat = new SimpleDateFormat(
 			"dd-MMM-yyyy", Locale.getDefault());
 	private static SimpleDateFormat inputFormat1 = new SimpleDateFormat(
@@ -83,7 +73,7 @@ public final class DatePropertyField extends PropertyField implements
 			});
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -104,7 +94,7 @@ public final class DatePropertyField extends PropertyField implements
 		try {
 			setDate((Date) p.getTypedValue());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		super.setProperty(p);
 	}
@@ -294,10 +284,10 @@ public final class DatePropertyField extends PropertyField implements
 					}
 					cpd.getMainPanel()
 							.setPreferredSize(new Dimension(255, 198));
-					System.err.println("Entering: checkMouseClick: "
+					logger.info("Entering: checkMouseClick: "
 							+ isEditable() + " -- " + showCalendarPickerButton
 							+ " >>> " + getHeight());
-					System.err.println("ThreaD: "
+					logger.info("ThreaD: "
 							+ Thread.currentThread().getName());
 					Property pp = getProperty();
 					if (pp != null
@@ -401,7 +391,7 @@ public final class DatePropertyField extends PropertyField implements
 
 	@Override
 	public final void update() {
-		// System.err.println("YOU FILTHY BASTARD! YOU SHOULD NOT CALL THIS FUNCTION! LUCKILY, WE CAUGHT YOUR ERROR! "
+		// logger.info("YOU FILTHY BASTARD! YOU SHOULD NOT CALL THIS FUNCTION! LUCKILY, WE CAUGHT YOUR ERROR! "
 		// + getClass());
 		dateUpdate();
 	}
@@ -419,41 +409,41 @@ public final class DatePropertyField extends PropertyField implements
 
 			text = "7-5";
 			df.setText(text);
-			System.err.println("INPUT1: " + text + " gives:\t "
+			logger.info("INPUT1: " + text + " gives:\t "
 					+ df.getDate().toString());
 
 			text = "07-5";
 			df.setText(text);
-			System.err.println("INPUT2: " + text + " gives:\t "
+			logger.info("INPUT2: " + text + " gives:\t "
 					+ df.getDate().toString());
 
 			text = "7-05";
 			df.setText(text);
-			System.err.println("INPUT3: " + text + " gives:\t "
+			logger.info("INPUT3: " + text + " gives:\t "
 					+ df.getDate().toString());
 
 			text = "07-05";
 			df.setText(text);
-			System.err.println("INPUT4: " + text + " gives:\t "
+			logger.info("INPUT4: " + text + " gives:\t "
 					+ df.getDate().toString());
 
 			text = "06";
 			df.setText(text);
-			System.err.println("INPUT5: " + text + " gives:\t "
+			logger.info("INPUT5: " + text + " gives:\t "
 					+ df.getDate().toString());
 
 			text = "1-12";
 			df.setText(text);
-			System.err.println("INPUT6: " + text + " gives:\t "
+			logger.info("INPUT6: " + text + " gives:\t "
 					+ df.getDate().toString());
 
 			text = "01-01-12005";
 			df.setText(text);
-			System.err.println("INPUT6: " + text + " gives:\t "
+			logger.info("INPUT6: " + text + " gives:\t "
 					+ df.getDate().toString());
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 	}

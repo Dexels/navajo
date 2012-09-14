@@ -8,12 +8,17 @@ import javax.imageio.*;
 import javax.swing.*;
 
 import org.jdesktop.swingx.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.*;
 
 public class TipiJXHyperlinkImpl extends JXHyperlink {
 	private static final long serialVersionUID = -4871054910728952972L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiJXHyperlinkImpl.class);
+	
 	public void setIconUrl(Object u) {
 		setIcon(getIcon(u));
 	}
@@ -32,7 +37,7 @@ public class TipiJXHyperlinkImpl extends JXHyperlink {
 				ImageIcon ii = new ImageIcon(i);
 				return ii;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		return null;

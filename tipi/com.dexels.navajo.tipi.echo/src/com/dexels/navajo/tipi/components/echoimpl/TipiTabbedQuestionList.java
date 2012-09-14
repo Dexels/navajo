@@ -6,6 +6,9 @@
  */
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
@@ -34,13 +37,11 @@ import echopointng.tabbedpane.DefaultTabModel;
  */
 @Deprecated
 public class TipiTabbedQuestionList extends TipiBaseQuestionList {
-//    private Component lastSelectedTab = null;
-
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -9212569710207074092L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTabbedQuestionList.class);
+	
 	private DefaultTabModel defaultTabModel = null;
 
     private TabbedPane myTabbedPane;
@@ -91,11 +92,11 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         
     	Style sss = Styles.DEFAULT_STYLE_SHEET.getStyle(myTabbedPane.getClass(), "Default");
     	myTabbedPane.setStyle(sss);
-    	System.err.println("Looking for style for class: "+myTabbedPane.getClass());
+    	logger.info("Looking for style for class: "+myTabbedPane.getClass());
     	if (sss!=null) {
-        	System.err.println("Style found : "+sss);
+        	logger.info("Style found : "+sss);
 		} else {
-			System.err.println("Style not found");
+			logger.info("Style not found");
 		}
         defaultTabModel = new DefaultTabModel();
 //        defaultTabModel.setSelectedBackground(new Color(255, 255, 255));
@@ -118,8 +119,8 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 //        myTabbedPane.addPropertyChangeListener(new PropertyChangeListener() {
 //
 //            public void propertyChange(PropertyChangeEvent evt) {
-//            	System.err.println("Boioioiong");
-//            	System.err.println("EVT: old: "+evt.getOldValue()+" new: "+evt.getNewValue());
+//            	logger.info("Boioioiong");
+//            	logger.info("EVT: old: "+evt.getOldValue()+" new: "+evt.getNewValue());
 //            }
 //            });
         validImage = new URLImageReference(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/components/echoimpl/ok.gif"));
@@ -142,9 +143,9 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         //        if (lastSelectedTab == null) {
 //            lastSelectedTab = (Component) c;
 //        }
-        // System.err.println("WIDTH: " + myTabbedPane.getWidth());
-        // System.err.println("HEIGHT: " + myTabbedPane.getWidth());
-        // System.err.println("Tab count: "+getChildCount());
+        // logger.info("WIDTH: " + myTabbedPane.getWidth());
+        // logger.info("HEIGHT: " + myTabbedPane.getWidth());
+        // logger.info("Tab count: "+getChildCount());
         // ButtonEx notSelected
         // =(ButtonEx)defaultTabModel.getTabAt(getChildCount()-1,false);
         
@@ -153,8 +154,8 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 
         // selected.setText("Selected");
         // notSelected.setText("Not selected");
-        // System.err.println("Sel: "+selected.toString());
-        // System.err.println("NSel: "+notSelected.toString());
+        // logger.info("Sel: "+selected.toString());
+        // logger.info("NSel: "+notSelected.toString());
         // selected.setForeground(new Color(0,0,0));
         // selected.setBackground(myTabbedPane.getBackground());
         // notSelected.setForeground(new Color(0,0,0));
@@ -180,7 +181,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
             return;
         }
         if (i < 0) {
-            System.err.println("Sh!34#@$!");
+            logger.info("Sh!34#@$!");
             return;
         }
         ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(myTabbedPane,i, true);
@@ -188,7 +189,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         selected.setFont(new Font(Font.VERDANA,Font.PLAIN, new Extent(10,Extent.PX)));
         //        selected.setProperty("icon", /)
 //        selected.setStyle(valid? validStyle: invalidStyle);
-        System.err.println("SETTING VALIDITY "+valid+" style: "+validStyle+" inv: "+invalidStyle);
+        logger.info("SETTING VALIDITY "+valid+" style: "+validStyle+" inv: "+invalidStyle);
 	}
 
     public void setComponentValue(String name, Object object) {

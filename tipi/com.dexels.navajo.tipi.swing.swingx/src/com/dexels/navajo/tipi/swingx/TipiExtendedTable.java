@@ -7,6 +7,8 @@ import javax.swing.JScrollPane;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.search.Searchable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -20,10 +22,11 @@ import com.dexels.navajo.tipi.swingclient.components.PropertyCellRenderer;
 
 public class TipiExtendedTable extends TipiSwingDataComponentImpl {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1924180960988641513L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiExtendedTable.class);
+	
 	private JXTable myTable = null;
 
 	@Override
@@ -76,8 +79,8 @@ public class TipiExtendedTable extends TipiSwingDataComponentImpl {
 		Message m = n.getMessage("FileAssociations");
 		final MessageTableModel mtm = new MessageTableModel(m);
 		createColumns(mtm, m);
-		System.err.println("Created model: " + mtm.getRowCount());
-		System.err.println("Created model: " + mtm.getColumnCount());
+		logger.info("Created model: " + mtm.getRowCount());
+		logger.info("Created model: " + mtm.getColumnCount());
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {

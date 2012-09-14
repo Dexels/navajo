@@ -94,11 +94,11 @@ public class TipiRemoveMessage extends TipiAction {
 
 	public static void main(String[] args) {
 		String path = "1234/5678/90ab";
-		System.out.println(path);
+		logger.info(path);
 		String name = path.substring(path.lastIndexOf("/") + 1, path.length());
 		String pp = path.substring(0, path.lastIndexOf("/"));
-		System.out.println(name);
-		System.out.println(pp);
+		logger.info(name);
+		logger.info(pp);
 
 	}
 }

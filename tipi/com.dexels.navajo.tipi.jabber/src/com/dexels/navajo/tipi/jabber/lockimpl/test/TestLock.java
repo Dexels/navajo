@@ -3,16 +3,16 @@ package com.dexels.navajo.tipi.jabber.lockimpl.test;
 import java.beans.*;
 
 import org.jivesoftware.smack.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.jabber.lockimpl.*;
 
 public class TestLock {
-
-	/**
-	 * @param args
-	 * @throws XMPPException
-	 * @throws InterruptedException
-	 */
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TestLock.class);
+	
 	public static void main(String[] args) throws XMPPException, InterruptedException {
 		King k = new King();
 		runDruif("Albert", 1000, 3000, k);
@@ -44,7 +44,7 @@ public class TestLock {
 					Thread.sleep(before);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 
 				l.debug("I want to be king now!");
@@ -59,7 +59,7 @@ public class TestLock {
 				l.addLockingListener(new PropertyChangeListener() {
 
 					public void propertyChange(PropertyChangeEvent evt) {
-						System.err.println("L :" + name + " Prop: " + evt);
+						logger.info("L :" + name + " Prop: " + evt);
 
 						boolean oldValue = (Boolean) evt.getOldValue();
 						boolean newValue = (Boolean) evt.getNewValue();
@@ -78,7 +78,7 @@ public class TestLock {
 					Thread.sleep(timeout);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 				if (l.isLocked()) {
 					k.removeKing(l.getPreferredNick());

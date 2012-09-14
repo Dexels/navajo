@@ -3,19 +3,20 @@ package com.dexels.navajo.tipi.jabber.lockimpl;
 import java.beans.*;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.jabber.*;
 
 public abstract  class BaseLockImpl implements Lock {
 
-//	protected final String id;
 	private final List<PropertyChangeListener> myPropertyListeners = new ArrayList<PropertyChangeListener>();
 	
-//	public BaseLockImpl(String id) {
-//		this.id = id;
-//	}
-//	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseLockImpl.class);
+	
 	public void addLockingListener(PropertyChangeListener p) {
-		System.err.println("Added locklistener");
+		logger.info("Added locklistener");
 		myPropertyListeners.add(p);
 	}
 

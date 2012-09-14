@@ -79,16 +79,16 @@ public class TipiTabLayer extends TipiTableBaseLayer {
         } else {
             nextMessage = current.getMessage(messagePath);
         }
-        // System.err.println("Tab. Loading with nextMessage:
+        // logger.info("Tab. Loading with nextMessage:
         // "+nextMessage.getName()+" type: "+nextMessage.getType());
-        // System.err.println("My messagePatH: "+messagePath);
+        // logger.info("My messagePatH: "+messagePath);
         if (layerStack.isEmpty()) {
             return;
         }
         final Message msg = nextMessage;
         final Stack newStack = (Stack) layerStack.clone();
         final TipiTableBaseLayer nextLayer = (TipiTableBaseLayer) newStack.pop();
-        // System.err.println("Tab. My stack: "+layerStack);
+        // logger.info("Tab. My stack: "+layerStack);
         TabbedPane jt = new TabbedPane();
         defaultTabModel = new DefaultTabModel();
         jt.setTabSpacing(0);
@@ -101,9 +101,9 @@ public class TipiTabLayer extends TipiTableBaseLayer {
         if (msg != null) {
             for (int i = 0; i < msg.getArraySize(); i++) {
                 Message cc = msg.getMessage(i);
-                // System.err.println("Got message: ");
+                // logger.info("Got message: ");
                 // cc.write(System.err);
-                // System.err.println("Looking for property: "+titleProperty);
+                // logger.info("Looking for property: "+titleProperty);
                 Property titleProp = cc.getProperty(titleProperty);
                 // String title = titleProp.getValue();
 

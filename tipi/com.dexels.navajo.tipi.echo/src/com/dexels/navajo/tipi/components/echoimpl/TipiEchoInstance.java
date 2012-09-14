@@ -15,6 +15,9 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import navajo.ExtensionDefinition;
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.app.Style;
@@ -31,28 +34,12 @@ import com.dexels.navajo.echoclient.components.Styles;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
-
 public class TipiEchoInstance extends ApplicationInstance implements TipiApplicationInstance {
 
 	private static final long serialVersionUID = 4880562953035112989L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiEchoInstance.class);
 	private TipiContext context;
 
 	private String tipiDef = null;
@@ -106,7 +93,7 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 //	}
 
 	public void loadTipi(TipiContext newContext, String fileName, ExtensionDefinition ed) throws IOException, TipiException {
-		System.err.println("Context: "+newContext+" filename: "+fileName);
+		logger.info("Context: "+newContext+" filename: "+fileName);
 		InputStream in = newContext.getTipiResourceStream(fileName);
 
 		if(in!=null) {
@@ -123,7 +110,7 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 		try {
 			startup();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		TipiScreen echo = (TipiScreen) context.getDefaultTopLevel();
  
@@ -153,12 +140,12 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 					System.setProperty(name, value);
 					result.put(name, value);
 				} catch (NoSuchElementException ex) {
-					System.err.println("Error parsing system property");
+					logger.info("Error parsing system property");
 				}
 			}
 			if ("tipidef".equals(current)) {
 				tipiDef = myServletConfig.getInitParameter(current);
-				System.err.println("Startup def: "+tipiDef);
+				logger.info("Startup def: "+tipiDef);
 				continue;
 			}
 			context.setSystemProperty(current, myServletConfig.getInitParameter(current));
@@ -180,21 +167,21 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 	public TipiContext createContext() throws IOException {
 
 		String stylePath = myServletContext.getRealPath("Default.stylesheet");
-		System.err.println("StylePath: "+stylePath);
+		logger.info("StylePath: "+stylePath);
 		try {
 			FileInputStream fis = new FileInputStream(stylePath);
 			Styles.loadStyleSheet(fis);
 			fis.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 		if (Styles.DEFAULT_STYLE_SHEET != null) {
 			setStyleSheet(Styles.DEFAULT_STYLE_SHEET);
 			Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(WindowPane.class, "Default");
-			System.err.println(">>> " + ss);
+			logger.info(">>> " + ss);
 		}
-		System.err.println("REAL PATH: " + myServletContext.getRealPath("/"));
+		logger.info("REAL PATH: " + myServletContext.getRealPath("/"));
 		
 		// Title.Sub
 		EchoTipiContext newContext = new EchoTipiContext(this,null);
@@ -214,7 +201,7 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 		es.createContainer();
 		newContext.setDefaultTopLevel(es);
 		try {
-			System.err.println("Context created: "+newContext.hashCode());
+			logger.info("Context created: "+newContext.hashCode());
 			initServlet(newContext, myServletConfig.getInitParameterNames(),ed);
 		} catch (Throwable ex) {
 			ex.printStackTrace();
@@ -241,31 +228,26 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 
 	@Override
 	public String getDefinition() {
-		System.err.println("WARNING UNCLEAR FUNCTION");
+		logger.info("WARNING UNCLEAR FUNCTION");
 		return "startup";
 	}
 
 	@Override
 	public void setEvalUrl(URL context, String relativeUri) {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("setEvalUrl (vaadin version) not implemented in echo"); 
 	}
 
 	@Override
 	public void setContextUrl(URL contextUrl) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public URL getContextUrl() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
 		
 	}
 

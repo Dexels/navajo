@@ -5,8 +5,13 @@ import java.util.*;
 
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.TimelinePropertyBuilder.PropertyAccessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CustomAccessor {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CustomAccessor.class);
 	private Map<String, Float> values = new HashMap<String, Float>();
 
 	public static void main(String[] args) {
@@ -23,7 +28,7 @@ public class CustomAccessor {
 			public void set(Object obj, String fieldName, Float value) {
 				SimpleDateFormat sdf = new SimpleDateFormat("ss.SSS");
 				float oldValue = helloWorld.values.get("value");
-				System.out.println(sdf.format(new Date()) + " : " + oldValue
+				logger.info(sdf.format(new Date()) + " : " + oldValue
 						+ " -> " + value);
 				helloWorld.values.put("value", value);
 			}

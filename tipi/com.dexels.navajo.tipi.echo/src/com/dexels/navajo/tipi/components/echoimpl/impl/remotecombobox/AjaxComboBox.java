@@ -199,9 +199,9 @@
 //				SwingUtilities.invokeAndWait(r);
 //			}
 //		} catch (InterruptedException e) {
-//			e.printStackTrace();
+//			logger.error("Error: ",e);
 //		} catch (InvocationTargetException e) {
-//			e.printStackTrace();
+//			logger.error("Error: ",e);
 //		}
 //	}
 //
@@ -324,7 +324,7 @@
 //					return nn;
 //				} catch (ClientException e) {
 //					// TODO Auto-generated catch block
-//					e.printStackTrace();
+//					logger.error("Error: ",e);
 //				}
 //				return null;
 //			}

@@ -16,6 +16,8 @@ import org.akrogen.tkui.css.core.dom.properties.converters.AbstractCSSValueConve
 import org.akrogen.tkui.css.core.dom.properties.converters.ICSSValueConverter;
 import org.akrogen.tkui.css.core.dom.properties.converters.ICSSValueConverterConfig;
 import org.akrogen.tkui.css.core.engine.CSSEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSValue;
 import org.w3c.dom.css.CSSValueList;
@@ -23,7 +25,9 @@ import org.w3c.dom.css.CSSValueList;
 public class CSSValueSwingLayoutConverterImpl extends AbstractCSSValueConverter {
 
 	public static final ICSSValueConverter INSTANCE = new CSSValueSwingLayoutConverterImpl();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CSSValueSwingLayoutConverterImpl.class);
 	public CSSValueSwingLayoutConverterImpl() {
 		super(LayoutManager.class);
 	}
@@ -62,7 +66,7 @@ public class CSSValueSwingLayoutConverterImpl extends AbstractCSSValueConverter 
 			}
 		}
 		// TODO : build custom CircleLayoutManager
-		System.out.println("CSSValueSwingLayoutConverterImpl=> circle="
+		logger.info("CSSValueSwingLayoutConverterImpl=> circle="
 				+ circle + ", rayon=" + rayon +  ", startInterval="
 				+ startInterval + ", endInterval=" + endInterval);
 		return null;

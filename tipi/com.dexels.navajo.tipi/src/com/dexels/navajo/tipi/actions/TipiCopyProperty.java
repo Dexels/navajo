@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
@@ -25,11 +28,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiCopyProperty extends TipiAction {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5296764161841844878L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiCopyProperty.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -58,11 +61,11 @@ public class TipiCopyProperty extends TipiAction {
 
 	public static void main(String[] args) {
 		String path = "1234/5678/90ab";
-		System.out.println(path);
+		logger.info(path);
 		String name = path.substring(path.lastIndexOf("/") + 1, path.length());
 		String pp = path.substring(0, path.lastIndexOf("/"));
-		System.out.println(name);
-		System.out.println(pp);
+		logger.info(name);
+		logger.info(pp);
 
 	}
 }

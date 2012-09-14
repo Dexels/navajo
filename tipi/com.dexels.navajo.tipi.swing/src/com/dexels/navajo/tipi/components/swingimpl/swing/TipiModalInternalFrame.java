@@ -57,9 +57,9 @@ public class TipiModalInternalFrame extends JExtendedInternalFrame {
 
 				Object value = optionPane.getValue();
 				if (value.equals(ZERO)) {
-					System.out.println("Selected Yes");
+					logger.info("Selected Yes");
 				} else if (value.equals(ONE)) {
-					System.out.println("Selected No");
+					logger.info("Selected No");
 				} else {
 					logger.debug("Input Error");
 				}

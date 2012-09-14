@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.actions;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
@@ -35,11 +38,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 // <param name="message" type="message" required="true"/>
 // </tipiaction>
 public class TipiInsertMessage extends TipiAction {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2822233445200193988L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiInsertMessage.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -79,11 +82,11 @@ public class TipiInsertMessage extends TipiAction {
 
 	public static void main(String[] args) {
 		String path = "1234/5678/90ab";
-		System.out.println(path);
+		logger.info(path);
 		String name = path.substring(path.lastIndexOf("/") + 1, path.length());
 		String pp = path.substring(0, path.lastIndexOf("/"));
-		System.out.println(name);
-		System.out.println(pp);
+		logger.info(name);
+		logger.info(pp);
 
 	}
 }

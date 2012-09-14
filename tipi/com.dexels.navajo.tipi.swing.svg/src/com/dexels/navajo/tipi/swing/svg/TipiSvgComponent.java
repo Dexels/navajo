@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.svg.SVGDocument;
 
 import com.dexels.navajo.document.Operand;
@@ -19,6 +21,9 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		SvgMouseListener, SvgAnimationListener {
 
 	private static final long serialVersionUID = -4356555280537206804L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSvgComponent.class);
 	protected SvgBaseComponent myComponent = null;
 	protected String registeredIds;
 
@@ -77,7 +82,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 
 			@Override
 			public void onDocumentLoadingFinished() {
-				System.err.println("Loading finished detected@");
+				logger.info("Loading finished detected@");
 				myComponent.setRegisteredIds(registeredIds);
 			}
 		});
@@ -91,51 +96,51 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 	
 	@Override
 	public void onClick(String targetId) {
-		System.err.println("On click detected!");
+		logger.info("On click detected!");
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
 			performTipiEvent("onClick", m, true);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
 	@Override
 	public void onMouseDown(String targetId) {
-		System.err.println("mouse down!");
+		logger.info("mouse down!");
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
-			System.err.println("Mouse down: "+targetId);
+			logger.info("Mouse down: "+targetId);
 			performTipiEvent("onMouseDown", m, true);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 	
 	@Override
 	public void onActivate(String targetId) {
-		System.err.println("Activate!!!!!!");
+		logger.info("Activate!!!!!!");
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
-			System.err.println("onActivate "+targetId);
+			logger.info("onActivate "+targetId);
 			performTipiEvent("onActivate", m, true);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
 	@Override
 	public void onMouseMove(String targetId) {
-		System.err.println("Sauspan!");
+		logger.info("Sauspan!");
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
 			performTipiEvent("onMouseMove", m, true);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -146,7 +151,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		try {
 			performTipiEvent("onMouseOut", m, true);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -157,19 +162,19 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		try {
 			performTipiEvent("onMouseOver", m, true);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
 	@Override
 	public void onMouseUp(String targetId) {
-		System.err.println("mouse up!");
+		logger.info("mouse up!");
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
 			performTipiEvent("onMouseUp", m, true);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -183,7 +188,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		try {
 			performTipiEvent("onAnimationEnded", m, true);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 	
@@ -199,7 +204,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		try {
 			performTipiEvent("onAnimationStarted", m, true);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 	}

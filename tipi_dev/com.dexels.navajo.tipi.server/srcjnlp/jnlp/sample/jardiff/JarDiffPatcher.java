@@ -57,6 +57,9 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * JarDiff is able to create a jar file containing the delta between two
  * jar files (old and new). The delta jar file can then be applied to the
@@ -69,6 +72,9 @@ import java.util.zip.ZipEntry;
 @SuppressWarnings({ "unchecked", "unused","rawtypes" })
 
 public class JarDiffPatcher implements JarDiffConstants, Patcher {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JarDiffPatcher.class);
     private static final int DEFAULT_READ_SIZE = 2048;
     private static byte[] newBytes = new byte[DEFAULT_READ_SIZE];
     private static byte[] oldBytes = new byte[DEFAULT_READ_SIZE];
@@ -274,7 +280,7 @@ public class JarDiffPatcher implements JarDiffConstants, Patcher {
 	try {
 	    throw new IOException(getResources().getString(errorMsg) + " " + line);
 	} catch (MissingResourceException mre) {
-	     System.err.println("Fatal error: " + errorMsg);
+	     logger.info("Fatal error: " + errorMsg);
 	     new Throwable().printStackTrace(System.err);
 	     System.exit(-1);
 	}

@@ -5,31 +5,21 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
 
 public final class SelectionCheckBox extends JCheckBox {
 
 	private static final long serialVersionUID = 3939722308465164825L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SelectionCheckBox.class);
+	
 	Selection mySelection;
 	private Property myProperty;
 
@@ -37,16 +27,16 @@ public final class SelectionCheckBox extends JCheckBox {
 		this.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				System.err.println("Bim!");
-				// System.err.println("Check changed");
+				logger.info("Bim!");
+				// logger.info("Check changed");
 				if (mySelection.isSelected() != isSelected()) {
 					try {
 						myProperty.setSelected(mySelection, isSelected());
 					} catch (NavajoException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
-				System.err.println("Bom!");
+				logger.info("Bom!");
 				repaint();
 			}
 		});

@@ -18,6 +18,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -34,14 +36,10 @@ import com.dexels.navajo.document.Selection;
 public class MessageContentProvider extends LabelProvider implements IStructuredContentProvider, ITableLabelProvider, IColorProvider,
         ITreeContentProvider {
 
-    /**
-     *  
-     */
-    //    private final Message myMessage;
-    //    private Color selectedColor = new Color(220, 220, 255);
-    //    private Color highColor = new Color(255, 255, 255);
-    //    private Color lowColor = new Color(240, 240, 240);
-    public MessageContentProvider() {
+	private final static Logger logger = LoggerFactory
+			.getLogger(MessageContentProvider.class);
+	
+	public MessageContentProvider() {
         super();
         //        myMessage = m;
     }
@@ -62,11 +60,11 @@ public class MessageContentProvider extends LabelProvider implements IStructured
             try {
                 oo = m.getAllMessages().toArray();
             } catch (NavajoException e) {
-                e.printStackTrace();
+                logger.error("Error: ",e);
             }
         }
 
-//        System.err.println("MessageContentProvider returning: " + oo.length);
+//        logger.info("MessageContentProvider returning: " + oo.length);
         return oo;
     }
 
@@ -105,7 +103,7 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      */
     public String getColumnText(Object element, int columnIndex) {
         if (!(element instanceof Message)) {
-            System.err.println("Class cast ex: " + element.getClass());
+            logger.info("Class cast ex: " + element.getClass());
         }
         Message current = (Message) element;
         List <Property> props = getRecursiveProperties(current);
@@ -123,11 +121,11 @@ public class MessageContentProvider extends LabelProvider implements IStructured
                     }
                     return ss.getName();
                 } else {
-                    System.err.println("Thought this would not happen");
+                    logger.info("Thought this would not happen");
                     return "-";
                 }
             } catch (NavajoException e) {
-                e.printStackTrace();
+                logger.error("Error: ",e);
                 return "-";
             } 
         }
@@ -158,7 +156,7 @@ public class MessageContentProvider extends LabelProvider implements IStructured
     public Color getBackground(Object element) {
         Message m = (Message) element;
         int ii = m.getIndex();
-//        System.err.println("Checking index: " + ii);
+//        logger.info("Checking index: " + ii);
         if (ii % 2 == 0) {
             // Red background if balance negative.
             //            return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
@@ -181,7 +179,7 @@ public class MessageContentProvider extends LabelProvider implements IStructured
     public Object[] getChildren(Object parentElement) {
         Message m = (Message) parentElement;
         Object[] oo = m.getAllMessages().toArray();
-//        System.err.println("MessageContentProvider returning: " + oo.length);
+//        logger.info("MessageContentProvider returning: " + oo.length);
         return oo;
 
     }

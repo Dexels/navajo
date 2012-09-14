@@ -31,7 +31,7 @@ public class LoadSkins extends TipiAction {
 			Navajo n = SubstanceSkinManager.createSkinNavajo();
 			myContext.injectNavajo(serviceName, n);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TipiException("Error loading substance skins!",e);
 		}
 		
@@ -66,10 +66,10 @@ public class LoadSkins extends TipiAction {
 
 		Map<String,SkinInfo> ss =  SubstanceLookAndFeel.getAllSkins();
 		for (String name : ss.keySet()) {
-			System.err.println("Name: "+name);
+			logger.info("Name: "+name);
 			SkinInfo si = ss.get(name);
-			System.err.println("DisplName: "+si.getDisplayName());
-			System.err.println("Classname: "+si.getClassName());
+			logger.info("DisplName: "+si.getDisplayName());
+			logger.info("Classname: "+si.getClassName());
 		}
 		
 	}

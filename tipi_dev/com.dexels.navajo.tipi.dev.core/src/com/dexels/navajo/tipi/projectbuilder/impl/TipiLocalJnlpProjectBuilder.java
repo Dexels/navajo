@@ -6,24 +6,31 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 import com.dexels.navajo.tipi.projectbuilder.TipiProjectBuilder;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class TipiLocalJnlpProjectBuilder extends TipiProjectBuilder{
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiLocalJnlpProjectBuilder.class);
+	
 	public void downloadExtensionJars(String extensionName, String version, URL remoteExtensionUrl, XMLElement extensionElement,
 			File baseDir, boolean clean, boolean localSign) throws MalformedURLException, IOException {
 		
 		String oldVersion = getCurrentExtensionVersion(baseDir,extensionName);
-		System.err.println(">>>>>>\n>>>>>>>>\nVersion detected "+oldVersion+"\n>>>>>>>>>>\n>>>>>>>>>");
+		logger.info(">>>>>>\n>>>>>>>>\nVersion detected "+oldVersion+"\n>>>>>>>>>>\n>>>>>>>>>");
 		if(version.equals(oldVersion)) {
-			System.err.println("Equeal version of extension: "+extensionName+" so should skip");
+			logger.info("Equeal version of extension: "+extensionName+" so should skip");
 			return;
 		}
 		URL jarFolder = null;
 		if (localSign) {
-			System.err.println("Local signing, so downloading unsigned binaries");
+			logger.info("Local signing, so downloading unsigned binaries");
 			jarFolder = new URL(remoteExtensionUrl, "unsigned/");
 		} else {
 			jarFolder = new URL(remoteExtensionUrl, "lib/");
@@ -71,7 +78,7 @@ public class TipiLocalJnlpProjectBuilder extends TipiProjectBuilder{
 			try {
 				ClientActions.downloadFile(jar, path, f,clean,useJnlpVersioning());
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}	
 		

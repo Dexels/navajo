@@ -148,6 +148,6 @@ public class InjectMailNavajo extends FunctionInterface {
 		String attachExample = "cid:attach-nr-3";
 		String[] sp = attachExample.split("-");
 		int index = Integer.parseInt(sp[sp.length-1]);
-		System.err.println("Index: "+index);
+		logger.info("Index: "+index);
 	}
 }

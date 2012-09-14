@@ -32,13 +32,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 import com.dexels.tipi.plugin.TipiNature;
 
 public class TipiHelpView extends ViewPart {
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiHelpView.class);
 	private long lastUpdate = -1;
 	private ViewContentProvider treeProvider;
 	private TreeViewer tv;
@@ -56,7 +60,7 @@ public class TipiHelpView extends ViewPart {
 	}
 	
 	public void switchToProject(String projectName) {
-//		System.err.println("Switching to project: "+projectName);
+//		logger.info("Switching to project: "+projectName);
 		IProject p =  ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		if(p==null) {
 			//huh?
@@ -87,7 +91,7 @@ public class TipiHelpView extends ViewPart {
 				}
 				}
 			} catch (CoreException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 //		ProjectList pr = new ProjectList(myProjects);
@@ -95,7 +99,7 @@ public class TipiHelpView extends ViewPart {
 		//		combo.setContentProvider(pr);
 //		combo.setLabelProvider(pr);
 //		pr.inputChanged(combo, oldInput, newInput)
-	//	System.err.println(">>>"+combo.getElementAt(0));
+	//	logger.info(">>>"+combo.getElementAt(0));
 		tv.setInput(getViewSite());
 
 	}
@@ -153,7 +157,7 @@ public class TipiHelpView extends ViewPart {
 			}});
 			try {
 		} catch (SWTError e) {
-			System.out.println("Could not instantiate Browser: " + e.getMessage());
+			logger.info("Could not instantiate Browser: " + e.getMessage());
 			return;
 		}
 		data = new GridData();
@@ -165,7 +169,7 @@ public class TipiHelpView extends ViewPart {
 		browser.setLayoutData(data);
 //		browser.setUrl("http://spiritus.dexels.nl:41766346/Tipi/");
 		listProjects();
-		System.err.println("Proj: "+myProjects);
+		logger.info("Proj: "+myProjects);
 		parent.redraw();
 	}
 protected void checkupdate() {
@@ -181,14 +185,14 @@ protected void checkupdate() {
 	 * Passing the focus request to the viewer's control.
 	 */
 	public void setFocus() {
-		System.err.println("Focus reseived");
+		logger.info("Focus reseived");
 	}
 
 	class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 		private XMLElement invisibleRoot;
 
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-//				System.err.println("AAAAAP");
+//				logger.info("AAAAAP");
 		}
 
 		public void dispose() {
@@ -233,11 +237,11 @@ protected void checkupdate() {
 			IFile metadata = ip.getFile(".tipiproject/tipi.metadata");
 			long localTimeStamp = metadata.getLocalTimeStamp();
 			if(invisibleRoot != null && (lastUpdate > localTimeStamp)) {
-				System.err.println("Still up to date!");
+				logger.info("Still up to date!");
 				return;
 			}
-			System.err.println("Commencing rebuild: "+lastUpdate);
-			System.err.println("Commencing dv: "+(lastUpdate-localTimeStamp));
+			logger.info("Commencing rebuild: "+lastUpdate);
+			logger.info("Commencing dv: "+(lastUpdate-localTimeStamp));
 			lastUpdate = new Date().getTime();
 			
 			XMLElement xe = new CaseSensitiveXMLElement();
@@ -246,12 +250,12 @@ protected void checkupdate() {
 				xe.parseFromStream(is);
 				is.close();
 			} catch (CoreException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 				lastUpdate = -1;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
-		//	System.err.println("XE: "+xe);
+		//	logger.info("XE: "+xe);
 
 			invisibleRoot = xe;
 			tv.setContentProvider(treeProvider);

@@ -98,7 +98,7 @@ public class Day {
 	}
 
 	public void addAttribute(String key, Object value) {
-		// System.err.println("Adding attribute: " + key + " : " +
+		// logger.info("Adding attribute: " + key + " : " +
 		// value.toString());
 		myAttributes.put(key, value);
 	}

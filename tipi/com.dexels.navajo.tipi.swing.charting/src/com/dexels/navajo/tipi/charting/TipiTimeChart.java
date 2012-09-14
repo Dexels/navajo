@@ -13,6 +13,8 @@ import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.RegularTimePeriod;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -22,6 +24,10 @@ import com.dexels.navajo.tipi.TipiException;
 public class TipiTimeChart extends TipiChart {
 
 	private static final long serialVersionUID = -8579552742186344850L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTimeChart.class);
+	
 	private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");	
 
 	@Override
@@ -43,7 +49,7 @@ public class TipiTimeChart extends TipiChart {
 	        
 	          while(tok.hasMoreTokens()){	        	  
 	            String valuePropName = tok.nextToken().trim();	            
-	            System.err.println("Adding series: " + valuePropName);
+	            logger.info("Adding series: " + valuePropName);
 	            
 	            TimeSeries ts = new TimeSeries(valuePropName);
 	            for(int i=0;i<stats.getArraySize();i++) {
@@ -63,7 +69,7 @@ public class TipiTimeChart extends TipiChart {
 	      return f;
 	    }
 	    catch (Exception e) {
-	      e.printStackTrace();
+	      logger.error("Error: ",e);
 	      return null;
 	    }
 	  }

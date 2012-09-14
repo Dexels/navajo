@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.projectbuilder.VersionResolver;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
@@ -31,6 +34,10 @@ import com.dexels.navajo.tipi.util.XMLParseException;
 
 public class ExtensionActions {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ExtensionActions.class);
+	
 	public static void build(String baseRepository, String projectName,String version, File baseDir, File inputPath, File destDir) throws XMLParseException, IOException {
 		XMLElement xe = parseXmlFile(inputPath);
 		String extensionRepository = getExtensionRepository(baseRepository);
@@ -59,12 +66,12 @@ public class ExtensionActions {
 	
 	private static void mergeTypeMap(URL repository, File destDir, Map<String, List<XMLElement>> tipiParts) throws IOException {
 		List<XMLElement> parsers = tipiParts.get("tipi-parser");
-	//	System.err.println("Parserl: "+parsers.size());
+	//	logger.info("Parserl: "+parsers.size());
 		Map<String,String> parserMap = new TreeMap<String, String>();
 		try {
 			parseParserMap(new URL(repository,"typemap.xml"), parserMap);
 		} catch (Exception e) {
-			System.err.println("Parse failed. Never mind.");
+			logger.info("Parse failed. Never mind.");
 		}
 		if(parsers!=null) {
 			for (XMLElement element : parsers) {
@@ -114,7 +121,7 @@ public class ExtensionActions {
  */
 
 	public static Map<String,List<XMLElement>> getAllClassDefs(String currentProject, String remoteRepository, URL repository, List<String> projects) throws IOException {
-		System.err.println("Getting classdefs from rep: "+repository+" projects: "+projects);
+		logger.info("Getting classdefs from rep: "+repository+" projects: "+projects);
 		List<String> toBeresolved = new LinkedList<String>();
 		List<String> resolved = new LinkedList<String>();
 		toBeresolved.addAll(projects);
@@ -127,7 +134,7 @@ public class ExtensionActions {
 	public static void main(String[] args) {
 
 //		buildDocumentation(new File("../NavajoTipi/dist"),"Tipi",new File("tipidoc"));
-		//		System.err.println(">> "+ss);
+		//		logger.info(">> "+ss);
 
 	}
 
@@ -140,11 +147,11 @@ public class ExtensionActions {
 	public static void buildDocumentation(File baseDir, String distributionPath,String sourcePath, String project, String version, File destDir,String repositoryDeploy) throws IOException {
 		File sourceDir = new File(baseDir,sourcePath);
 		URL u = sourceDir.toURI().toURL();
-//		System.err.println("Building documentation. Url: "+u.toString()+"from source dir: "+sourceDir);
+//		logger.info("Building documentation. Url: "+u.toString()+"from source dir: "+sourceDir);
 		if(!u.toString().endsWith("/")) {
-			System.err.println("Strange. No slash. Replacing");
+			logger.info("Strange. No slash. Replacing");
 			u = new URL(u.toString()+"/");
-			System.err.println("New version: "+u.toString());
+			logger.info("New version: "+u.toString());
 		} 
 		buildDocumentation(u, new File(baseDir,distributionPath), project,version, destDir,repositoryDeploy);
 	}	
@@ -163,11 +170,11 @@ public class ExtensionActions {
 	public static void buildTipiBeans(File baseDir, String distributionPath,String sourcePath, String project, String version, File destDir,String repositoryDeploy) throws IOException {
 		File sourceDir = new File(baseDir,sourcePath);
 		URL u = sourceDir.toURI().toURL();
-		System.err.println("Building documentation. Url: "+u.toString()+"from source dir: "+sourceDir);
+		logger.info("Building documentation. Url: "+u.toString()+"from source dir: "+sourceDir);
 		if(!u.toString().endsWith("/")) {
-			System.err.println("Strange. No slash. Replacing");
+			logger.info("Strange. No slash. Replacing");
 			u = new URL(u.toString()+"/");
-			System.err.println("New version: "+u.toString());
+			logger.info("New version: "+u.toString());
 		} 
 		buildTipiBeans(u, new File(baseDir,distributionPath), project,version, destDir,repositoryDeploy);
 	}	
@@ -185,9 +192,9 @@ public class ExtensionActions {
 	}
 	
 	private static void extractRemoteClassDefs(String currentProject, String remoteRepository,URL repository, List<String> resolved, List<String> toBeResolved, Map<String,List<XMLElement>> result) throws IOException {
-		System.err.println("Resolved: "+resolved);
-		System.err.println("to be resolved: "+toBeResolved);
-		System.err.println("Current project: "+currentProject+" remoteRep:  "+remoteRepository);
+		logger.info("Resolved: "+resolved);
+		logger.info("to be resolved: "+toBeResolved);
+		logger.info("Current project: "+currentProject+" remoteRep:  "+remoteRepository);
 		if(toBeResolved.isEmpty()) {
 			return;
 		}
@@ -196,7 +203,7 @@ public class ExtensionActions {
 		toBeResolved.remove(0);
 		
 		XMLElement projectDefinition = downloadDefinition(currentProject,remoteRepository,  repository, project);
-		System.err.println("Downloading (EA): "+project);
+		logger.info("Downloading (EA): "+project);
 		XMLElement requires = projectDefinition.getElementByTagName("requires");
 		if(requires!=null) {
 			List<XMLElement> children = requires.getChildren();
@@ -215,7 +222,7 @@ public class ExtensionActions {
 			for (XMLElement element : children) {
 				String path = element.getStringAttribute("path");
 				XMLElement xe = downloadInclude(currentProject,remoteRepository, repository, project, path);
-				System.err.println("Downloadinginclude: "+path);
+				logger.info("Downloadinginclude: "+path);
 				List<XMLElement> res = result.get(project);
 				if(res==null) {
 					res = new ArrayList<XMLElement>();
@@ -237,11 +244,11 @@ public class ExtensionActions {
 				URL base = new URL(remoteRepository);
 			VersionResolver vr = new VersionResolver(remoteRepository);
 			String pathtt =  vr.resultVersionPath(project);
-			System.err.println("PathResult: "+pathtt);
+			logger.info("PathResult: "+pathtt);
 		   URL pathUrl = new URL(base,pathtt+"/includes"+"/"+path);
-		   System.err.println("Pathurl: "+pathUrl);
+		   logger.info("Pathurl: "+pathUrl);
 //			URL def = new URL(pathUrl,path);
-		  // System.err.println("def: "+def);
+		  // logger.info("def: "+def);
 		   
 			return parseXmlFile(pathUrl);
 
@@ -250,20 +257,20 @@ public class ExtensionActions {
 	
 	private static XMLElement downloadDefinition(String currentProject, String remoteRepository, URL localRepository, String project) throws IOException {
 		if (currentProject.equals(project)) {
-			System.err.println("Local rep: "+localRepository);
+			logger.info("Local rep: "+localRepository);
 			URL def = new URL(localRepository,"definition.xml");
-			System.err.println("Resuult: "+def);
+			logger.info("Resuult: "+def);
 			return parseXmlFile(def);
 
 		} else {
 				URL base = new URL(remoteRepository);
 			VersionResolver vr = new VersionResolver(remoteRepository);
 			String path =  vr.resultVersionPath(project);
-			System.err.println("PathResult: "+path);
+			logger.info("PathResult: "+path);
 		   URL pathUrl = new URL(base,path+"/");
-		   System.err.println("Pathurl: "+pathUrl);
+		   logger.info("Pathurl: "+pathUrl);
 			URL def = new URL(pathUrl,"definition.xml");
-		   System.err.println("def: "+def);
+		   logger.info("def: "+def);
 		   
 			return parseXmlFile(def);
 
@@ -327,9 +334,9 @@ public class ExtensionActions {
 //			foundFile.parseFromReader(fw);
 //			fw.close();
 //			locatedIncludes.add(foundFile);
-//			System.err.println("Include: "+p.exists()+" ("+p+")");
+//			logger.info("Include: "+p.exists()+" ("+p+")");
 //			if(!p.exists()) {
-//				System.err.println("Not found");
+//				logger.info("Not found");
 //				continue;
 //			}
 //			File includeDir = new File(destDir,"includes");
@@ -358,9 +365,9 @@ public class ExtensionActions {
 			foundFile.parseFromReader(fw);
 			fw.close();
 			locatedIncludes.add(foundFile);
-			System.err.println("Include: "+p.exists()+" ("+p+")");
+			logger.info("Include: "+p.exists()+" ("+p+")");
 			if(!p.exists()) {
-				System.err.println("Not found");
+				logger.info("Not found");
 				continue;
 			}
 			File includeDir = new File(destDir,"includes");
@@ -416,7 +423,7 @@ public class ExtensionActions {
 
 	private static void buildJnlp(String repository, String projectName, String version, XMLElement input, XMLElement output) throws IOException {
 		VersionResolver vr = new VersionResolver(repository);
-		System.err.println("Title: "+input.getStringAttribute("title"));
+		logger.info("Title: "+input.getStringAttribute("title"));
 		XMLElement information =  output.addTagKeyValue("information", "");
 		information.addTagKeyValue("vendor",input.getStringAttribute("vendor"));
 		information.addTagKeyValue("homepage",input.getStringAttribute("homepage"));
@@ -460,7 +467,7 @@ public class ExtensionActions {
 			for (XMLElement extension : extensions.getChildren()) {
 			   // <extension name="jogl" href="http://download.java.net/media/jogl/builds/archive/jsr-231-webstart-current/jogl.jnlp" />
 				//<extension name="jogl" href="http://www.jogl.com"/> 
-				System.err.println("Copying: "+extension);
+				logger.info("Copying: "+extension);
 				resources.addChild(extension.copy());
 			}
 		}

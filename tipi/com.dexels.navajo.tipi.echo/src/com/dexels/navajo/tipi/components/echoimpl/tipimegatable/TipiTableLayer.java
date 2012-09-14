@@ -124,11 +124,11 @@ public class TipiTableLayer extends TipiTableBaseLayer {
         myTypeMap.put(name, typeHint);
         // try {
         // Operand result = myTable.getContext().evaluate(label,myTable,null);
-        // System.err.println("Label evaluated: "+result);
+        // logger.info("Label evaluated: "+result);
         // columnName.add(result.value);
         // }
         // catch (Throwable ex) {
-        // System.err.println("Can not evaluate column header. Did you use
+        // logger.info("Can not evaluate column header. Did you use
         // quotes? Switching to backup");
         // }
 
@@ -161,7 +161,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 //        for (Iterator iter = columnTypes.iterator(); iter.hasNext();) {
 //            String item = (String) iter.next();
             // mtp.setTypeHint( (String) columnName.get(i), item);
-            // System.err.println("Setting type hint: " + (String)
+            // logger.info("Setting type hint: " + (String)
             // columnName.get(i) + " - " + item);
 //            i++;
 //        }
@@ -190,7 +190,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
         });
         Message tableData = current.getMessage(messagePath);
         // If a table definition has been found:
-        // System.err.println("Found definition.....");
+        // logger.info("Found definition.....");
         if (tableData.getDefinitionMessage() != null) {
             Message def = tableData.getDefinitionMessage();
             for (int j = 0; j < columns.size(); j++) {

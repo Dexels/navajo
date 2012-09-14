@@ -41,7 +41,7 @@ public class TipiElementHelpers {
 	 * @param component
 	 * @return
 	 */
-	public static Element getElement(TipiComponent component, CSSEngine engine,
+	private static Element getElement(TipiComponent component, CSSEngine engine,
 			Class classElement) throws NoSuchMethodException,
 			InvocationTargetException, InstantiationException,
 			IllegalAccessException {
@@ -66,7 +66,7 @@ public class TipiElementHelpers {
 		return getElementInstance(component, engine, classElement);
 	}
 
-	public static Element getElementInstance(TipiComponent component,
+	private static Element getElementInstance(TipiComponent component,
 			CSSEngine engine, Class classElement) throws NoSuchMethodException,
 			InvocationTargetException, InstantiationException,
 			IllegalAccessException {

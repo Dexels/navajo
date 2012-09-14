@@ -1,12 +1,16 @@
 package test;
 
 import org.pushingpixels.trident.Timeline;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HelloWorld {
 	private float value;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(HelloWorld.class);
 	public void setValue(float newValue) {
-		System.out.println(this.value + " -> " + newValue);
+		logger.info(this.value + " -> " + newValue);
 		this.value = newValue;
 	}
 

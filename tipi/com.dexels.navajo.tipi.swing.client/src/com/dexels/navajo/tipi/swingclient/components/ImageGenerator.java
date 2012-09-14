@@ -81,7 +81,7 @@ public class ImageGenerator implements ImageConsumer {
 		}
 		// }
 		// else
-		// System.err.println("Some other value passed to complete");
+		// logger.info("Some other value passed to complete");
 	}
 
 	/**

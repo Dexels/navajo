@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.eclipse.swt.widgets.Composite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import tipi.BaseTipiApplicationInstance;
 import tipi.TipiApplicationInstance;
@@ -16,13 +18,15 @@ import com.dexels.navajo.tipi.rcp.TipiRcpContext;
 
 public class RcpViewApplicationInstance extends BaseTipiApplicationInstance implements TipiApplicationInstance {
 
+	private final static Logger logger = LoggerFactory
+			.getLogger(RcpViewApplicationInstance.class);
 	private final Composite compositeParent;
 	public RcpViewApplicationInstance(Composite parent) {
 		compositeParent = parent;
 		try {
 			setCurrentContext(createContext());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

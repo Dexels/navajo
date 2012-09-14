@@ -57,6 +57,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * JarDiff is able to create a jar file containing the delta between two
@@ -75,6 +78,9 @@ public class JarDiff implements JarDiffConstants {
     private static byte[] oldBytes = new byte[DEFAULT_READ_SIZE];
     private static ResourceBundle _resources = null;
 
+    
+	private final static Logger logger = LoggerFactory.getLogger(JarDiff.class);
+	
     // The JARDiff.java is the stand-along jardiff.jar tool. Thus, we do not
     // depend on Globals.java and other stuff here. Instead, we use an explicit
     // _debug flag.
@@ -123,7 +129,7 @@ public class JarDiff implements JarDiffConstants {
                 if (oldname == null) {
                     // New or modified entry
                     if (_debug) {
-                        System.out.println("NEW: "+ newname); 
+                        logger.info("NEW: "+ newname); 
                     }
                     newEntries.add(newname);
                 } else {
@@ -133,7 +139,7 @@ public class JarDiff implements JarDiffConstants {
                     // no move command already exist from oldJar
                     if (oldname.equals(newname) && !moveSrc.contains(oldname)) {
                         if (_debug) { 
-                            System.out.println(newname + " added to implicit set!");
+                            logger.info(newname + " added to implicit set!");
                         }
                         implicit.add(newname);
 		            } else {
@@ -152,13 +158,13 @@ public class JarDiff implements JarDiffConstants {
 			   
                             if (_debug) {
 				    
-                                System.out.println("NEW: "+ newname); 
+                                logger.info("NEW: "+ newname); 
                             }
                             newEntries.add(newname);			
                         } else {
                             // Use newname as key, since they are unique
                             if (_debug) {
-                                System.err.println("moved.put " + newname + " " + oldname); 
+                                logger.info("moved.put " + newname + " " + oldname); 
                             }
                             moved.put(newname, oldname);
                             moveSrc.add(oldname);
@@ -167,9 +173,9 @@ public class JarDiff implements JarDiffConstants {
                         if (implicit.contains(oldname) && minimal) { 
 			  
                            if (_debug) {
-                              System.err.println("implicit.remove " + oldname);
+                              logger.info("implicit.remove " + oldname);
 				
-                              System.err.println("moved.put " + oldname + " " + oldname); 
+                              logger.info("moved.put " + oldname + " " + oldname); 
 				
                             }
                             implicit.remove(oldname);
@@ -194,7 +200,7 @@ public class JarDiff implements JarDiffConstants {
                   if (!implicit.contains(oldName) && !moveSrc.contains(oldName)
                     && !newEntries.contains(oldName)) {
                       if (_debug) {
-                          System.err.println("deleted.add " + oldName);
+                          logger.info("deleted.add " + oldName);
                       }
                       deleted.add(oldName);
                   }
@@ -206,21 +212,21 @@ public class JarDiff implements JarDiffConstants {
               //DEBUG:  print out moved map
               entries = moved.keySet().iterator();
               if (entries != null) {
-                  System.out.println("MOVED MAP!!!");
+                  logger.info("MOVED MAP!!!");
                   while (entries.hasNext()) {
                       String newName = (String)entries.next();
                       String oldName = (String)moved.get(newName);	
-                      System.out.println("key is " + newName + " value is " + oldName);
+                      logger.info("key is " + newName + " value is " + oldName);
                       }
               }
 	    
               //DEBUG:  print out IMOVE map
               entries = implicit.iterator();
               if (entries != null) {
-                  System.out.println("IMOVE MAP!!!");
+                  logger.info("IMOVE MAP!!!");
                   while (entries.hasNext()) {
                       String newName = (String)entries.next();		 
-                      System.out.println("key is " + newName);
+                      logger.info("key is " + newName);
                   }
               }
           }
@@ -237,7 +243,7 @@ public class JarDiff implements JarDiffConstants {
               while (entries.hasNext()) {
                   String newName = (String)entries.next();		      
                   if (_debug) {
-                      System.out.println("New File: " + newName);
+                      logger.info("New File: " + newName);
                   }
                   writeEntry(jos, newJar.getEntryByName(newName), newJar);
               }
@@ -413,7 +419,7 @@ public class JarDiff implements JarDiffConstants {
 		
                 if (newSize != oldSize) {
                     if (_debug) {
-                        System.out.println("\tread sizes differ: " + newSize +
+                        logger.info("\tread sizes differ: " + newSize +
                             " " + oldSize + " total " + total);
                     }
                     retVal = true;
@@ -424,7 +430,7 @@ public class JarDiff implements JarDiffConstants {
                         total++;
                         if (newBytes[newSize] != oldBytes[newSize]) {
                             if (_debug) {
-                                System.out.println("\tbytes differ at " +
+                                logger.info("\tbytes differ at " +
                                                     total);
                             }
                             retVal = true;
@@ -530,7 +536,7 @@ public class JarDiff implements JarDiffConstants {
          
             _entries = new ArrayList();
             if (_debug) {
-                System.out.println("indexing: " + _jar.getName());
+                logger.info("indexing: " + _jar.getName());
             }
             if (entries != null) {
                 while (entries.hasMoreElements()) {
@@ -541,7 +547,7 @@ public class JarDiff implements JarDiffConstants {
 		    Long crcL = new Long(crc);
 
                     if (_debug) {
-                        System.out.println("\t" + entry.getName() + " CRC " +
+                        logger.info("\t" + entry.getName() + " CRC " +
                                       crc);
                     }
 		 
@@ -581,7 +587,7 @@ public class JarDiff implements JarDiffConstants {
 
 
     private static void showHelp() {
-        System.out.println("JarDiff: [-nonminimal (for backward compatibility with 1.0.1/1.0] [-creatediff | -applydiff] [-output file] old.jar new.jar");
+        logger.info("JarDiff: [-nonminimal (for backward compatibility with 1.0.1/1.0] [-creatediff | -applydiff] [-output file] old.jar new.jar");
     }
 
     // -creatediff -applydiff -debug -output file
@@ -632,7 +638,7 @@ public class JarDiff implements JarDiffConstants {
                         os.close();
                     } catch (IOException ioe) {
 			try {
-			    System.out.println(getResources().getString("jardiff.error.create") + " " + ioe);
+			    logger.info(getResources().getString("jardiff.error.create") + " " + ioe);
 			} catch (MissingResourceException mre) {
 			}
 		    }
@@ -649,7 +655,7 @@ public class JarDiff implements JarDiffConstants {
                         os.close();
                     } catch (IOException ioe) {
 			try {
-			    System.out.println(getResources().getString("jardiff.error.apply") + " " + ioe);
+			    logger.info(getResources().getString("jardiff.error.apply") + " " + ioe);
 			} catch (MissingResourceException mre) {
 			}
                     }

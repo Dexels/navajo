@@ -11,6 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 import com.dexels.navajo.tipi.swingclient.UserInterface;
 
@@ -34,10 +37,11 @@ import com.dexels.navajo.tipi.swingclient.UserInterface;
 
 public class BaseWindow extends JInternalFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1671424109176553065L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseWindow.class);
+	
 	protected JPanel mainPanel = new JPanel();
 	BorderLayout borderLayout1 = new BorderLayout();
 	private Component myOldGlassPane = null;
@@ -49,7 +53,7 @@ public class BaseWindow extends JInternalFrame {
 		try {
 			jbInit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -73,7 +77,7 @@ public class BaseWindow extends JInternalFrame {
 	}
 
 	public void mouseGestureReckognized(String id) {
-		System.err.println("BaseWindow got: " + id);
+		logger.info("BaseWindow got: " + id);
 	}
 
 	public void windowHasClosed() {

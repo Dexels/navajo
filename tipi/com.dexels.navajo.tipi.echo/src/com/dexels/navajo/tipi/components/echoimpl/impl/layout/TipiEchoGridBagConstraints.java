@@ -2,29 +2,18 @@ package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Insets;
 import nextapp.echo2.app.layout.GridLayoutData;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
 public class TipiEchoGridBagConstraints extends GridLayoutData {
 	private static final long serialVersionUID = 3941578160591522383L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiEchoGridBagConstraints.class);
 	private String[] myConstraints = new String[14];
 	private int gridx;
 	private int gridy;
@@ -68,7 +57,7 @@ public class TipiEchoGridBagConstraints extends GridLayoutData {
 			setColumnSpan(gridwidth);
 			setRowSpan(gridheight);
 			if (gridheight > 1) {
-				System.err.println("ROW/COLUMNSPAN: " + gridwidth + " / "
+				logger.info("ROW/COLUMNSPAN: " + gridwidth + " / "
 						+ gridheight);
 			}
 			// if(weightx>0 && child instanceof Sizeable) {

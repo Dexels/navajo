@@ -67,9 +67,9 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
         } else {
             nextMessage = current.getMessage(messagePath);
         }
-        // System.err.println("scroll. Loading with nextMessage:
+        // logger.info("scroll. Loading with nextMessage:
         // "+nextMessage.getName()+" type: "+nextMessage.getType());
-        // System.err.println("My messagePatH: "+messagePath);
+        // logger.info("My messagePatH: "+messagePath);
         if (layerStack.isEmpty()) {
             return;
         }
@@ -92,7 +92,7 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
 //                title = "" + titleOperand.value;
 //            }
             // if (titleProp!=null) {
-            // System.err.println("*********\nDEPRECATED: You used only a
+            // logger.info("*********\nDEPRECATED: You used only a
             // propertyname as title in your scroll layer, in TipiMegaTabel\nYou
             // should just use an expression..\n********");
             // title = titleProp.getValue();

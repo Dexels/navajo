@@ -17,13 +17,19 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 
 public class BinaryTransferHandler extends TransferHandler {
 
 	private static final long serialVersionUID = -7126949648142176528L;
 	private JComponent myBeanComponent = null;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BinaryTransferHandler.class);
+	
 	public BinaryTransferHandler() {
 		super("binary");
 	}
@@ -35,7 +41,7 @@ public class BinaryTransferHandler extends TransferHandler {
 
 	@Override
 	public void exportAsDrag(JComponent comp, InputEvent e, int action) {
-		System.err.println("Here we go: " + comp);
+		logger.info("Here we go: " + comp);
 		if (myBeanComponent != null) {
 			comp = myBeanComponent;
 		}
@@ -44,7 +50,7 @@ public class BinaryTransferHandler extends TransferHandler {
 
 	@Override
 	protected void exportDone(JComponent source, Transferable data, int action) {
-		System.err.println("All clear: " + source);
+		logger.info("All clear: " + source);
 		if (myBeanComponent != null) {
 			source = myBeanComponent;
 		}
@@ -73,7 +79,7 @@ public class BinaryTransferHandler extends TransferHandler {
 			List<File> data = (List<File>) transferable
 					.getTransferData(DataFlavor.javaFileListFlavor);
 			if (data == null || data.size() == 0) {
-				System.err.println("Whoops!");
+				logger.info("Whoops!");
 			}
 			if (data.size() > 1) {
 				return false;
@@ -91,12 +97,12 @@ public class BinaryTransferHandler extends TransferHandler {
 			return true;
 
 		} catch (UnsupportedFlavorException e) {
-			System.err.println("Try other flavor now:");
+			logger.info("Try other flavor now:");
 			Object o;
 			try {
 				o = support.getTransferable().getTransferData(
 						DataFlavor.stringFlavor);
-				System.err.println("Result: " + o);
+				logger.info("Result: " + o);
 				try {
 					URL u = new URL((String) o);
 					InputStream is = u.openStream();
@@ -112,7 +118,7 @@ public class BinaryTransferHandler extends TransferHandler {
 					setBinaryToComponent(comp, b);
 					return true;
 				} catch (MalformedURLException e1) {
-					System.err.println("Not a URL, I guess");
+					logger.info("Not a URL, I guess");
 				}
 
 			} catch (UnsupportedFlavorException e1) {
@@ -122,7 +128,7 @@ public class BinaryTransferHandler extends TransferHandler {
 			}
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return super.importData(support);
 	}
@@ -133,7 +139,7 @@ public class BinaryTransferHandler extends TransferHandler {
 					Binary.class);
 			m.invoke(component, new Object[] { b });
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -141,11 +147,11 @@ public class BinaryTransferHandler extends TransferHandler {
 	public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
 		boolean found = false;
 		for (int i = 0; i < transferFlavors.length; i++) {
-			System.err.println("Primary: "
+			logger.info("Primary: "
 					+ transferFlavors[i].getRepresentationClass()
 							.getCanonicalName() + " mim3: "
 					+ transferFlavors[i].getMimeType());
-			System.err.println(""
+			logger.info(""
 					+ i
 					+ "/"
 					+ transferFlavors.length
@@ -154,12 +160,12 @@ public class BinaryTransferHandler extends TransferHandler {
 							.getDefaultRepresentationClassAsString());
 			// transferFlavors[i].isMimeTypeEqual(mimeType)
 			if (transferFlavors[i].isFlavorJavaFileListType()) {
-				System.err.println("yes. " + i + "/" + transferFlavors.length
+				logger.info("yes. " + i + "/" + transferFlavors.length
 						+ "\n\n");
 				found = true;
 			}
 			if (transferFlavors[i].isRepresentationClassInputStream()) {
-				System.err.println("Byting!");
+				logger.info("Byting!");
 				found = true;
 			}
 			// if(transferFlavors[i].getDefaultRepresentationClassAsString())

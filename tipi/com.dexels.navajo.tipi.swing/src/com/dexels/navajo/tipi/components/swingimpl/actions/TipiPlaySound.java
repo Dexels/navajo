@@ -86,7 +86,7 @@ public class TipiPlaySound extends TipiAction {
 	public static void playAudioStream(AudioInputStream audioInputStream) {
 		// Audio format provides information like sample rate, size, channels.
 		AudioFormat audioFormat = audioInputStream.getFormat();
-		System.out.println("Play input audio format=" + audioFormat);
+		logger.info("Play input audio format=" + audioFormat);
 
 		// Open a data line to play our type of sampled audio.
 		// Use SourceDataLine for play and TargetDataLine for record.
@@ -103,7 +103,7 @@ public class TipiPlaySound extends TipiAction {
 			// LineUnavailableException).
 			SourceDataLine dataLine = (SourceDataLine) AudioSystem
 					.getLine(info);
-			// System.out.println( "SourceDataLine class=" + dataLine.getClass()
+			// logger.info( "SourceDataLine class=" + dataLine.getClass()
 			// );
 
 			// The line acquires system resources (throws
@@ -132,7 +132,7 @@ public class TipiPlaySound extends TipiAction {
 				while (bytesRead >= 0) {
 					bytesRead = audioInputStream.read(buffer, 0, buffer.length);
 					if (bytesRead >= 0) {
-						// System.out.println(
+						// logger.info(
 						// "Play.playAudioStream bytes read=" + bytesRead +
 						// ", frame size=" + audioFormat.getFrameSize() +
 						// ", frames read=" + bytesRead /
@@ -147,11 +147,11 @@ public class TipiPlaySound extends TipiAction {
 				logger.error("Error detected",e);
 			}
 
-			System.out.println("Play.playAudioStream draining line.");
+			logger.info("Play.playAudioStream draining line.");
 			// Continues data line I/O until its buffer is drained.
 			dataLine.drain();
 
-			System.out.println("Play.playAudioStream closing line.");
+			logger.info("Play.playAudioStream closing line.");
 			// Closes the data line, freeing any resources such as the audio
 			// device.
 			dataLine.close();

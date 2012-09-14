@@ -8,6 +8,9 @@ import java.net.URL;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.jogamp.opengl.util.awt.TextRenderer;
@@ -19,6 +22,10 @@ public class JOGLServerStatus {
 	Navajo serverLoad;
 	String serverName = "";
 	URL postman;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JOGLServerStatus.class);
+	
 
 	public JOGLServerStatus() {
 		Font font = new Font("SansSerif", Font.PLAIN, 18);
@@ -228,7 +235,7 @@ public class JOGLServerStatus {
 			
 			drawString(gl, "max: "+max + " v/s, at " + maxTime, (int)(x_offset + 10), (int)(y_offset + max_height + 5), Color.white, .8f, .6f);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 	}

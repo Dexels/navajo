@@ -11,6 +11,9 @@ import java.util.Map;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.filter.PropertyFilter;
@@ -36,6 +39,9 @@ import com.dexels.navajo.document.filter.PropertyFilter;
 public class MessageTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = -7930139592084553531L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MessageTableModel.class);
 	private final List<String> myColumnIds = new ArrayList<String>();
 	private final List<String> myColumnTitles = new ArrayList<String>();
 	// private final ArrayList editableList = new ArrayList();
@@ -119,16 +125,16 @@ public class MessageTableModel extends AbstractTableModel {
 										if (row >= 0 && column >= 0) {
 											fireTableCellUpdated(row, column);
 										}
-										// System.err.println("Updating: "+row+" column: "+column+" property: "+p.getName()+" orig. row: "+p.getParentMessage().getName()+" ---- "+p.getParentMessage().getIndex());
-										// System.err.println("Old: "+e.getOldValue()+" new: "+e.getNewValue());
+										// logger.info("Updating: "+row+" column: "+column+" property: "+p.getName()+" orig. row: "+p.getParentMessage().getName()+" ---- "+p.getParentMessage().getIndex());
+										// logger.info("Old: "+e.getOldValue()+" new: "+e.getNewValue());
 									}
 								});
 							} else {
 								if (row >= 0 && column >= 0) {
 									fireTableCellUpdated(row, column);
 								}
-								// System.err.println("Updating: "+row+" column: "+column+" property: "+p.getName()+" orig. row: "+p.getParentMessage().getName()+" ---- "+p.getParentMessage().getIndex());
-								// System.err.println("Old: "+e.getOldValue()+" new: "+e.getNewValue());
+								// logger.info("Updating: "+row+" column: "+column+" property: "+p.getName()+" orig. row: "+p.getParentMessage().getName()+" ---- "+p.getParentMessage().getIndex());
+								// logger.info("Old: "+e.getOldValue()+" new: "+e.getNewValue());
 
 							}
 						} catch (InterruptedException e1) {
@@ -168,7 +174,7 @@ public class MessageTableModel extends AbstractTableModel {
 	}
 
 	public int addColumn(String id, String title, boolean editable) {
-		// System.err.println("Adding column: " + id + ", " + editable +
+		// logger.info("Adding column: " + id + ", " + editable +
 		// ", NEW VERSION BABY");
 		myColumnIds.add(id);
 		myColumnTitles.add(title);
@@ -351,12 +357,12 @@ public class MessageTableModel extends AbstractTableModel {
 			return false;
 		}
 		if (!editableMap.containsKey(id)) {
-			System.err.println("Not in editable list. index too big");
+			logger.info("Not in editable list. index too big");
 			return false;
 		}
 		Boolean b = editableMap.get(id);
 		if (b == null) {
-			System.err.println("Nothing in editablelist");
+			logger.info("Nothing in editablelist");
 			return false;
 		}
 		if (b.booleanValue() == false) {
@@ -364,16 +370,16 @@ public class MessageTableModel extends AbstractTableModel {
 		}
 		Message m = getMessageRow(rowIndex);
 		if (m == null) {
-			// System.err.println("False: no such message");
+			// logger.info("False: no such message");
 			return false;
 		}
 		Property p = m.getProperty(getColumnId(columnIndex));
 		if (p == null) {
-			// System.err.println("False: no such property: " +
+			// logger.info("False: no such property: " +
 			// getColumnId(columnIndex));
 			return false;
 		} else {
-			// System.err.println("Property found. (" + p.getName() +
+			// logger.info("Property found. (" + p.getName() +
 			// ") Returning: "+p.isDirIn()+" row: "+rowIndex+" column: "+columnIndex);
 			// Thread.dumpStack();
 			return p.isDirIn();
@@ -437,7 +443,7 @@ public class MessageTableModel extends AbstractTableModel {
 
 		final int row = getRowOfMessage(parent);
 		if (row == -1) {
-			System.err.println("Trouble locating message");
+			logger.info("Trouble locating message");
 			return;
 		}
 		final int column = getColumnOfProperty(row, p);
@@ -455,9 +461,9 @@ public class MessageTableModel extends AbstractTableModel {
 						}
 					});
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				} catch (InvocationTargetException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		}
@@ -503,7 +509,7 @@ public class MessageTableModel extends AbstractTableModel {
 			}
 			filteredRecordCount = count;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

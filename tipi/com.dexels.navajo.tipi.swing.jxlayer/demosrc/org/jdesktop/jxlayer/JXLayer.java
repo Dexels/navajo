@@ -79,7 +79,7 @@ import org.jdesktop.jxlayer.plaf.item.*;
  *
  *            // overridden method which catches MouseMotion events
  *            protected void processMouseMotionEvent(MouseEvent e) {
- *                System.out.println("MouseMotionEvent detected: "
+ *                logger.info("MouseMotionEvent detected: "
  *                        + e.getX() + " " + e.getY());
  *            }
  *        };

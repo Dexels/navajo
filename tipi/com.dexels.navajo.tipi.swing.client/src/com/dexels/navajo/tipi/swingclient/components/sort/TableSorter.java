@@ -29,6 +29,9 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.swingclient.components.MessageTable;
 
 //import com.dexels.navajo.document.*;
@@ -36,7 +39,9 @@ import com.dexels.navajo.tipi.swingclient.components.MessageTable;
 public class TableSorter extends TableMap {
 
 	private static final long serialVersionUID = -3022350836931378122L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TableSorter.class);
 	int indexes[];
 
 	Vector<Integer> sortingColumns = new Vector<Integer>();
@@ -100,11 +105,11 @@ public class TableSorter extends TableMap {
 
 		// ************** HackedByFrank
 		if (Comparable.class.isInstance(o1)) {
-			// System.err.println("comp: '" + o1 + "' and '" + o2 +
+			// logger.info("comp: '" + o1 + "' and '" + o2 +
 			// "' compare as: "+( (Comparable) o1).compareTo(o2));
 			return ((Comparable) o1).compareTo(o2);
 		} else {
-			System.err.println("Oh, dear, comparing NON-COMPARABLE STUFF!");
+			logger.info("Oh, dear, comparing NON-COMPARABLE STUFF!");
 			return 0;
 		}
 
@@ -147,7 +152,7 @@ public class TableSorter extends TableMap {
 
 	@Override
 	public void tableChanged(TableModelEvent e) {
-		// System.out.println("Sorter: tableChanged");
+		// logger.info("Sorter: tableChanged");
 		reallocateIndexes();
 		sort(this);
 		super.tableChanged(e);
@@ -156,7 +161,7 @@ public class TableSorter extends TableMap {
 
 	public void checkModel() {
 		if (indexes.length != model.getRowCount()) {
-			// System.err.println("Sorter not informed of a change in model.");
+			// logger.info("Sorter not informed of a change in model.");
 		}
 
 	}
@@ -167,7 +172,7 @@ public class TableSorter extends TableMap {
 		// n2sort();
 		// qsort(0, indexes.length-1);
 		shuttlesort(indexes.clone(), indexes, 0, indexes.length);
-		// System.out.println("Compares: "+compares);
+		// logger.info("Compares: "+compares);
 
 	}
 
@@ -327,7 +332,7 @@ public class TableSorter extends TableMap {
 	// };
 	// Thread t = new Thread(r);
 	// t.start();
-	// System.err.println("Sort returned");
+	// logger.info("Sort returned");
 	// }
 
 	// There is no-where else to put this.

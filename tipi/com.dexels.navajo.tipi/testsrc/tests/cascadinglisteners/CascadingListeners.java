@@ -30,7 +30,7 @@ public class CascadingListeners extends AbstractTipiTest {
 		// try {
 		// Thread.sleep(100);
 		// } catch (InterruptedException e) {
-		// e.printStackTrace();
+		// logger.error("Error: ",e);
 		// }
 		String xx = getContext().getInfoBuffer();
 		assertEquals("loaded\n", xx);

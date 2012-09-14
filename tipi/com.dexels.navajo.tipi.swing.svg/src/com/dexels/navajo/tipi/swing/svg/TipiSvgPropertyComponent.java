@@ -5,6 +5,8 @@ import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.svg.SVGElement;
 
 import com.dexels.navajo.document.NavajoException;
@@ -16,6 +18,9 @@ import com.dexels.navajo.tipi.swing.svg.impl.SvgBatikComponent;
 
 public class TipiSvgPropertyComponent extends TipiSvgComponent implements PropertyComponent, PropertyChangeListener {
 	private static final long serialVersionUID = 711068173062950509L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSvgPropertyComponent.class);
 	private String propertyName = null;
 	private Property myProperty = null;
 	
@@ -31,7 +36,7 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 					try {
 						updateProperty(myProperty);
 					} catch (NavajoException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 //					myComponent.setRegisteredIds(getSvgComponent());
 
@@ -49,7 +54,7 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 							myProperty.setSelected(ss, !ss.isSelected());
 						}
 					} catch (NavajoException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
 			}
@@ -73,7 +78,7 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 
 			@Override
 			public void onMouseOver(String targetId) {
-				System.err.println("Over: "+targetId);
+				logger.info("Over: "+targetId);
 				
 			}
 
@@ -115,7 +120,7 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 	@Override
 	public void setProperty(final Property p) {
 		if(myProperty == p) {
-			System.err.println("Set property.... ");
+			logger.info("Set property.... ");
 			Thread.dumpStack();
 			return;
 		}
@@ -129,11 +134,11 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 			selections = p.getAllSelections();
 			StringBuffer sb = new StringBuffer();
 			Iterator<Selection> ss = selections.iterator();
-			System.err.println("ENTERING LOOP");
+			logger.info("ENTERING LOOP");
 			while(ss.hasNext()) {
 				Selection selection = ss.next();
 				sb.append(selection.getValue());
-				System.err.println("Adding registration: "+selection.getValue());
+				logger.info("Adding registration: "+selection.getValue());
 				getSvgComponent().registerId(selection.getValue(),getSvgComponent().getDocument());
 				if(ss.hasNext()) {
 					sb.append(",");
@@ -146,7 +151,7 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 			p.addPropertyChangeListener(this);
 			
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -159,18 +164,17 @@ public class TipiSvgPropertyComponent extends TipiSvgComponent implements Proper
 				try {
 					updateProperty(myProperty);
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}});
 	}
 	
 	private void updateProperty(Property p) throws NavajoException {
-		System.err.println("Setting property: "+p.getFullPropertyName());
-		System.err.println("SVG NULL? "+(getSvgComponent()==null));
-		System.err.println("Document null? "+getSvgComponent().getDocument()==null);
+		logger.info("Setting property: "+p.getFullPropertyName());
+		logger.info("SVG NULL? "+(getSvgComponent()==null));
 		List<Selection> ll = p.getAllSelections();
 		for (Selection selection : ll) {
-			System.err.println("Setting selection: "+selection.getName()+" value: "+selection.getValue()+" selected: "+selection.isSelected());
+			logger.info("Setting selection: "+selection.getName()+" value: "+selection.getValue()+" selected: "+selection.isSelected());
 			SVGElement s = (SVGElement) getSvgComponent().getDocument().getElementById(selection.getValue());
 			if(s!=null) {
 				s.setAttribute("class", selection.isSelected()?"selectedStyle":"unSelectedStyle");

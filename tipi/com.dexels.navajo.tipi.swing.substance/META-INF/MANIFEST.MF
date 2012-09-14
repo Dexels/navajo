@@ -33,7 +33,6 @@ Bundle-ClassPath: .,
  lib/laf-widget-7.1.jar,
  lib/substance-7.1.jar,
  lib/substance-flamingo-7.1.jar,
- lib/substance-swingx-7.1.jar,
  lib/trident.jar
 Bundle-Activator: tipi.TipiSubstanceExtension
 Export-Package: com.dexels.navajo.tipi.swing.laf.api,

@@ -59,9 +59,9 @@ public class HttpResourceLoader extends ClassPathResourceLoader implements Seria
 	public static void main(String[] args) throws MalformedURLException {
 		URL u = new URL("http://www.aap.nl");
 		URL b = new URL(u, "noot/");
-		System.out.println("U: " + u);
-		System.out.println("B: " + b);
+		logger.info("U: " + u);
+		logger.info("B: " + b);
 		URL c = new URL(b, "init.xml");
-		System.out.println("C: " + c);
+		logger.info("C: " + c);
 	}
 }

@@ -10,27 +10,15 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Dexels.com
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
-
 public class CalendarTableModel implements TableModel {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CalendarTableModel.class);
 	private Calendar myCalendar;
 	private ArrayList<TableModelListener> myListeners = new ArrayList<TableModelListener>();
 	// private int myDay;
@@ -48,9 +36,9 @@ public class CalendarTableModel implements TableModel {
 				myCalendar.getActualMinimum(Calendar.DATE)); // Set to the first
 																// of the
 																// current month
-		// System.err.println("First day of month: " +
+		// logger.info("First day of month: " +
 		// myCalendar.get(myCalendar.DAY_OF_WEEK));
-		// System.err.println("First day of a week: " +
+		// logger.info("First day of a week: " +
 		// myCalendar.getFirstDayOfWeek());
 		myCalendar.setFirstDayOfWeek(firstDayOfWeek);
 		myMonth = myCalendar.get(Calendar.MONTH);
@@ -105,7 +93,7 @@ public class CalendarTableModel implements TableModel {
 				day.addMessage(current);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -131,7 +119,7 @@ public class CalendarTableModel implements TableModel {
 	}
 
 	public Day getDay(String dayOfYear) {
-		// System.err.println("Getting: " + dayOfYear);
+		// logger.info("Getting: " + dayOfYear);
 		return dayMap.get(dayOfYear);
 	}
 
@@ -165,7 +153,7 @@ public class CalendarTableModel implements TableModel {
 				String year = String.valueOf(myCalendar.get(Calendar.YEAR));
 				Day dayM = dayMap.get(day_in_year + year);
 				if (dayM != null) {
-					// System.err.println("For " + doy + ", day object = " +
+					// logger.info("For " + doy + ", day object = " +
 					// dayM.hashCode());
 				}
 				if (dayM != null && doy >= yd_of_first && doy < yd_of_last) {

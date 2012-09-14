@@ -8,9 +8,16 @@ import java.net.URL;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public abstract class TipiProjectBuilder {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiProjectBuilder.class);
+	
 	private boolean useVersioning;
 	public abstract void downloadExtensionJars(String extensionName, String version, URL remoteExtensionUrl, XMLElement extensionElement, File baseDir, boolean clean, boolean localSign) throws MalformedURLException, IOException;
 
@@ -30,7 +37,7 @@ public abstract class TipiProjectBuilder {
 			File projectZip = new File(baseDir,"projectinclude.zip");
 			ClientActions.unzip(projectZip, baseDir);
 	   } catch (Exception e) {
-			System.err.println("No project include found!");
+			logger.info("No project include found!");
 		}
 
 	}
@@ -48,7 +55,7 @@ public abstract class TipiProjectBuilder {
 		while(st.hasMoreTokens()) {
 			String current = st.nextToken();
 			if(current.indexOf("/")==-1 ) {
-				System.err.println("No version in version result: "+extensions+" currently checking: "+current);
+				logger.info("No version in version result: "+extensions+" currently checking: "+current);
 				return null;
 			}
 			StringTokenizer st2 = new StringTokenizer(current,"/");

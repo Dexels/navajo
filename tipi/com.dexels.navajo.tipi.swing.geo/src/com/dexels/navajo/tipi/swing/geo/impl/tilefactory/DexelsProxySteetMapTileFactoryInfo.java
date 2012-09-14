@@ -17,8 +17,8 @@ public class DexelsProxySteetMapTileFactoryInfo extends TileFactoryInfo {
 //        String tileString = "http://tile.openstreetmap.org" +"/"+zoom+"/"+x+"/"+y+".png";
 //        String res = Base64.encode(tileString.getBytes());
 //        String resss = URLEncoder.encode(tileString);
-//        System.err.println("AAP: "+resss);
-//        System.err.println("RES: "+res.replaceAll("=", "|"));
+//        logger.info("AAP: "+resss);
+//        logger.info("RES: "+res.replaceAll("=", "|"));
 //        return "http://distel:8080/MapTileProxy/Tile?tile="+resss;
         return null;
     }

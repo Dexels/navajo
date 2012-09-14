@@ -20,5 +20,6 @@
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/com.dexels.navajo.tipi.dev.ant"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/NavajoJsp.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j.api_1.6.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

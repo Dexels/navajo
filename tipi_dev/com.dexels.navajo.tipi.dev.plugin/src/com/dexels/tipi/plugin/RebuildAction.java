@@ -15,9 +15,14 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RebuildAction implements IObjectActionDelegate {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(RebuildAction.class);
 	private ISelection selection;
 
 	/*
@@ -44,7 +49,7 @@ public class RebuildAction implements IObjectActionDelegate {
 					   	  try {
 									settings.touch(monitor);
 								} catch (CoreException e) {
-									e.printStackTrace();
+									logger.error("Error: ",e);
 								}
 								return Status.OK_STATUS;
 					        }

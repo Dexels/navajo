@@ -2379,7 +2379,7 @@ public class SACParser implements Parser, SACParserConstants {
   void error_skipblock() throws ParseException {
   if (!_quiet) {
     ParseException e = generateParseException();
-    System.err.println( "** error_skipblock **\n" + e.toString() );
+    logger.info( "** error_skipblock **\n" + e.toString() );
   }
 
   Token t;
@@ -2399,7 +2399,7 @@ public class SACParser implements Parser, SACParserConstants {
   void error_skipdecl() throws ParseException {
   if (!_quiet) {
     ParseException e = generateParseException();
-    System.err.println("** error_skipdecl **\n" + e.toString());
+    logger.info("** error_skipdecl **\n" + e.toString());
   }
 
   Token t = getToken(1);

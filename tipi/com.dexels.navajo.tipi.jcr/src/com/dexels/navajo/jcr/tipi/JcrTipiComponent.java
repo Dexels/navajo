@@ -37,9 +37,9 @@ public class JcrTipiComponent implements TipiResourceLoader{
 		try {
 			testJcrURL();
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		
 //		Dictionary<String, Object> dict = new Hashtable<String, Object>();
@@ -53,7 +53,7 @@ public class JcrTipiComponent implements TipiResourceLoader{
 		InputStream is = u.openStream();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		copyResource(baos, is);
-		System.err.println("SIZE: "+baos.toByteArray().length);
+		logger.info("SIZE: "+baos.toByteArray().length);
 		logger.info("Content: {}",new String(baos.toByteArray()));
 		is.close();
 	}
@@ -99,7 +99,7 @@ public class JcrTipiComponent implements TipiResourceLoader{
 	}
 	
 	public void setSession(Session r) {
-		System.err.println("Setting repo: "+r);
+		logger.info("Setting repo: "+r);
 		this.session = r;
 	}
 

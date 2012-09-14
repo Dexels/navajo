@@ -3,12 +3,19 @@ package com.dexels.navajo.tipi.swing.svg;
 import java.awt.Dimension;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiException;
 
 public class TipiSvgButton extends TipiSvgComponent implements
 		SvgMouseListener, SvgAnimationListener {
 
 	private static final long serialVersionUID = 9092120010940830449L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSvgButton.class);
+	
 	private int width=50;
 	private int height=20;
 
@@ -65,7 +72,6 @@ public class TipiSvgButton extends TipiSvgComponent implements
 
 	private void updateSize() {
 		Dimension dimension = new Dimension(width,height);
-		System.err.println("SIZE: "+dimension);
 		myComponent.setPreferredSize(dimension);
 		
 	}
@@ -77,8 +83,7 @@ public class TipiSvgButton extends TipiSvgComponent implements
 		try {
 			performTipiEvent("onActionPerformed", null, false);
 		} catch (TipiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		super.onActivate(targetId);
 	}

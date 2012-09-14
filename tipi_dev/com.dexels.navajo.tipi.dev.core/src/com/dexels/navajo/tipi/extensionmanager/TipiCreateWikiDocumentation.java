@@ -21,6 +21,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.projectbuilder.ComponentMerger;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
@@ -29,7 +32,10 @@ import com.dexels.navajo.tipi.util.XMLElement;
 public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 
 	private final Map<String,String> typeExtension = new HashMap<String,String>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiCreateWikiDocumentation.class);
+	
 	
 	protected void parseParserMap(URL parserLink) throws IOException {
 		InputStream openStream = parserLink.openStream();
@@ -77,7 +83,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			Map<String, XMLElement> allFunctions) {
 		
 		String currentExtension = originalExtension.toLowerCase();
-//		System.err.println("All: "+allComponents.keySet());
+//		logger.info("All: "+allComponents.keySet());
 		try {
 			parseParserMap(new URL(repository,"typemap.xml"));
 		} catch (MalformedURLException e1) {
@@ -116,7 +122,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			
 			mergeIndex(originalExtension, version, repository,allComponents,allActions,allFunctions,allTypes);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		
 	}
@@ -150,7 +156,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 				return s1.compareTo(s2);
 			}
 		});
-	    System.err.println("Writing function definitions: ("+extension+")"+list.size());
+	    logger.info("Writing function definitions: ("+extension+")"+list.size());
 		for (XMLElement element : list) {
 			String resourceName = extension + "/functions/"+element.getStringAttribute("name")+".txt";
 			OutputStream os = writeResource(resourceName.toLowerCase());
@@ -194,7 +200,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	 */
 
 	public void mergeIndex(String extension, String version, URL repository, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions, Map<String, XMLElement> allFunctions, Map<String, XMLElement> allTypes) throws IOException {
-//		System.err.println("Merging from repository: "+repository+" extension: "+extension);
+//		logger.info("Merging from repository: "+repository+" extension: "+extension);
 		File extensionFile = new File(getDistributionDir(),"extensions.xml");
 		OutputStream os = writeResource("tipi.txt");
 		OutputStreamWriter osw = new OutputStreamWriter(os);
@@ -202,7 +208,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		osw.write("^ Extension ^ Version ^ Components ^ Actions ^ Functions ^ Types ^ JavaDoc ^\n");
 	//	osw.write("Extension:"+extension+" version: "+version+"\n");
 
-		System.err.println("Output: "+getOutputDir().getAbsolutePath());
+		logger.info("Output: "+getOutputDir().getAbsolutePath());
 		XMLElement exten = new CaseSensitiveXMLElement();
 		FileReader fr = new FileReader(extensionFile);
 		exten.parseFromReader(fr);
@@ -235,7 +241,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			osw.write("| [[tipidoc:" + id + ":details|" + id + "]] |  version: " + currentVersion + " | " + components + " | " + actions + " | " + functions + " | " + types +" | " + javadoc +  "  |\n");
 			
 		}
-//		System.err.println("Extensiojn lost"+extension);
+//		logger.info("Extensiojn lost"+extension);
 //		for (String ext : extension) {
 			createExtensionDetails( new File(getOutputDir().getParentFile(),"definition.xml"),extension,version);
 			
@@ -406,7 +412,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			}
 		});
 		
-//		System.err.println("# of Components from this extension: "+componentsOfThisExtension.size()+" total: "+allComponents.size());
+//		logger.info("# of Components from this extension: "+componentsOfThisExtension.size()+" total: "+allComponents.size());
 //		Map<String,XMLElement> allComponentMap = new HashMap<String, XMLElement>();
 //		for (XMLElement element : componentsOfThisExtension) {
 //			allComponentMap.put(element.getStringAttribute("name"), element);
@@ -420,7 +426,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		for (XMLElement e : componentsOfThisExtension) {
 			String type = e.getStringAttribute("type");
 			if(type==null) {
-				System.err.println("DOumentation found abstract class. IGnoring for now!");
+				logger.info("DOumentation found abstract class. IGnoring for now!");
 				continue;
 			}
 			if (type.equals("component") || type.equals("tipi") ) {
@@ -433,7 +439,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 				otherComponents.add(e);
 			}
 		}
-//		System.err.println("Real: "+realComponents.size()+" connector: "+connectorComponents.size());
+//		logger.info("Real: "+realComponents.size()+" connector: "+connectorComponents.size());
 		if (realComponents.size() > 0) {
 			osw.write("==== Components ====\n[[..tipi|(Back to extensions)]]\n");
 			for (XMLElement e : realComponents) {
@@ -534,7 +540,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		for (XMLElement x : allElements.values()) {
 			String ext = x.getStringAttribute("extension");
 			if(ext==null) {
-				System.err.println("::::: "+x);
+				logger.info("::::: "+x);
 			}
 			List<XMLElement> v = result.get(ext);
 			if (v == null) {
@@ -703,7 +709,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			// <value direction="in" name="y" type="integer" value="0" />
 			w.write("== Event: " + element.getStringAttribute("name") + " ==\n");
 			XMLElement descrTag = element.getChildByTagName("description");
-			//System.err.println("Descr Tag: "+descr);
+			//logger.info("Descr Tag: "+descr);
 			appendDescriptorTag(w,"    *", descrTag);
 			List<XMLElement> methodParams = element.getElementsByTagName("param");
 			for (XMLElement param : methodParams) {
@@ -723,7 +729,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	}
 
 	private String getExtensionOfDataType(String datatype) {
-		//System.err.println("Type: "+datatype+" map: "+typeExtension);
+		//logger.info("Type: "+datatype+" map: "+typeExtension);
 		return typeExtension.get(datatype);
 	}
 	

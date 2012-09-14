@@ -23,33 +23,19 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 
-//import com.dexels.navajo.document.nanoimpl.*;
-//import com.dexels.sportlink.client.swing.components.treetable.*;
-
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Dexels.com
- * </p>
- * 
- * @author unascribed
- * @version 1.0
- */
 
 public class PropertyCellRenderer implements TableCellRenderer,
 		ListCellRenderer {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PropertyCellRenderer.class);
 	private String myPropertyType = null;
 	private PropertyBox myPropertyBox = null;
 	private MultiSelectPropertyBox myMultiSelectPropertyBox = null;
@@ -148,7 +134,7 @@ public class PropertyCellRenderer implements TableCellRenderer,
 		}
 
 		if (value == null) {
-			// System.err.println("Row: "+row+" column: "+column);
+			// logger.info("Row: "+row+" column: "+column);
 			setComponentColor(l, isSelected, row, column, false,
 					tm.getRowCount(), disabled);
 			// myPanel.add(l,new
@@ -167,7 +153,7 @@ public class PropertyCellRenderer implements TableCellRenderer,
 		}
 
 		if (Property.class.isInstance(value)) {
-			// System.err.println("Yes, a property");
+			// logger.info("Yes, a property");
 			myProperty = (Property) value;
 			myPropertyType = myProperty.getType();
 
@@ -336,7 +322,7 @@ public class PropertyCellRenderer implements TableCellRenderer,
 			}
 		}
 
-		// System.err.println("Mystery type: "+type);
+		// logger.info("Mystery type: "+type);
 		if (myPropertyLabel == null) {
 			myPropertyLabel = new JLabel();
 		}
@@ -431,7 +417,7 @@ public class PropertyCellRenderer implements TableCellRenderer,
 		double myNumber = -1234.56;
 		NumberFormat form;
 		for (int j = 0; j < 4; ++j) {
-			System.out.println("FORMAT");
+			logger.info("FORMAT");
 			for (int i = 0; i < locales.length; ++i) {
 				if (locales[i].getCountry().length() == 0) {
 					continue; // Skip language-only locales
@@ -456,7 +442,7 @@ public class PropertyCellRenderer implements TableCellRenderer,
 				}
 				System.out.print(" -> " + form.format(myNumber));
 				try {
-					System.out.println(" -> "
+					logger.info(" -> "
 							+ form.parse(form.format(myNumber)));
 				} catch (ParseException e) {
 				}

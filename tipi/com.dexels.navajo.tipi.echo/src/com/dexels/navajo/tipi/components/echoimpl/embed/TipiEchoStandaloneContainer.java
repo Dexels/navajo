@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import navajo.ExtensionDefinition;
 
 
@@ -26,18 +29,21 @@ import com.dexels.navajo.tipi.components.echoimpl.TipiEchoInstance;
 
 public class TipiEchoStandaloneContainer implements TipiStandaloneToplevelContainer  {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiEchoStandaloneContainer.class);
   private EchoEmbeddedContext embeddedContext = null;
   private final List<String> libraries = new ArrayList<String>();
   private TipiEchoInstance myInstance;
   public TipiEchoStandaloneContainer(TipiEchoInstance instance, EchoTipiContext parentContext) {
-	  System.err.println("Created embedded context");
+	  logger.info("Created embedded context");
 	  embeddedContext = new EchoEmbeddedContext(instance,parentContext);
 	  myInstance = instance;
  }
 
  
   public void loadDefinition(String tipiPath, String definitionName,String resourceBaseDirectory, ExtensionDefinition ed) throws IOException, TipiException {
-	  System.err.println("Loading def: "+definitionName+" tipipath: "+tipiPath+" resbase: "+resourceBaseDirectory);
+	  logger.info("Loading def: "+definitionName+" tipipath: "+tipiPath+" resbase: "+resourceBaseDirectory);
 	  embeddedContext = new EchoEmbeddedContext(myInstance, (EchoTipiContext) getContext(), new String[]{tipiPath},false,new String[]{definitionName},libraries,resourceBaseDirectory);
    
   }

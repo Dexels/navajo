@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.list.ListSelectionModel;
 import nextapp.echo2.app.table.DefaultTableModel;
 import nextapp.echo2.app.table.TableColumnModel;
@@ -11,56 +14,18 @@ import nextapp.echo2.app.table.TableColumnModel;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Dexels.com
- * </p>
- * 
- * @author unascribed
- * @version 1.0
- */
+
 
 public class MessageTableModel extends DefaultTableModel {
 
-	// private ArrayList myColumnIds = new ArrayList();
-	//
-	// private ArrayList myColumnTitles = new ArrayList();
-
-	// private ArrayList editableList = new ArrayList();
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2456719890318915748L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MessageTableModel.class);
 	private Message myMessage;
-
-	// private ArrayList filterList = new ArrayList();
-
-	// private boolean isFiltered = false;
-	// private int[] filterMap = null;
-	// private int filteredRecordCount = -1;
 	private final MessageTable myTable;
-
 	private final TableColumnModel myColumnModel;
-
-	// private final ArrayList myMessageRows = new ArrayList();
-
 	private ListSelectionModel mySelectionModel;
-
-	// private int lastSortedColumn = -1;
-	// private boolean lastSortedDirection = true;
-
-	// private List myData;
 	/**
 	 * Creates a List of Lists based on the data backing this model in the
 	 * superclass.
@@ -167,7 +132,7 @@ public class MessageTableModel extends DefaultTableModel {
 
 		for (int i = 0; i < m.getArraySize(); i++) {
 			List<Property> c = createListFromRow(myMessage.getMessage(i));
-			// System.err.println();
+			// logger.info();
 			addRow(c.toArray());
 		}
 	}
@@ -203,7 +168,7 @@ public class MessageTableModel extends DefaultTableModel {
 		if (last instanceof Message) {
 			return (Message) last;
 		}
-		System.err.println("Can not retrieve message. Sorry");
+		logger.info("Can not retrieve message. Sorry");
 		if (row < 0) {
 			return null;
 		}

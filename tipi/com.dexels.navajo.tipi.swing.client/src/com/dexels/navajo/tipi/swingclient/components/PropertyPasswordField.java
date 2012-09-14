@@ -68,7 +68,7 @@ public class PropertyPasswordField extends JPasswordField implements
 
 	public void setProperty(Property p) {
 		if (p == null) {
-			// System.err.println("Setting to null property. Ignoring");
+			// logger.info("Setting to null property. Ignoring");
 			return;
 		}
 

@@ -5,12 +5,18 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.extensionmanager.ExtensionManager;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class RemoteJnlpBuilder extends BaseJnlpBuilder {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(RemoteJnlpBuilder.class);
 	@Override
 	public String getJnlpName() {
 		return "RemoteJnlp.jnlp";
@@ -23,7 +29,7 @@ public class RemoteJnlpBuilder extends BaseJnlpBuilder {
 			VersionResolver vr = new VersionResolver(repository);
 			
 			URL rep = new URL(repository + vr.resultVersionPath(ext) + "/" + ext + ".jnlp");
-			// System.err.println("Repos: "+rep);
+			// logger.info("Repos: "+rep);
 			// resources.addTagKeyValue("extension","").setAttribute("href",
 			// rep);
 			XMLElement xe = new CaseSensitiveXMLElement("extension");
@@ -32,7 +38,7 @@ public class RemoteJnlpBuilder extends BaseJnlpBuilder {
 			return ExtensionManager.isMainExtension(repository, ext,version);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return false;
 	}
@@ -50,7 +56,7 @@ public class RemoteJnlpBuilder extends BaseJnlpBuilder {
 //
 //	public static void downloadProxy(String project, URL projectURL,
 //			XMLElement result, File baseDir) throws MalformedURLException {
-//		System.err.println("PRoject dir: " + projectURL);
+//		logger.info("PRoject dir: " + projectURL);
 //		URL unsigned = new URL(projectURL, "lib/");
 //
 //		List<XMLElement> jars = result.getElementsByTagName("jar");
@@ -62,11 +68,11 @@ public class RemoteJnlpBuilder extends BaseJnlpBuilder {
 //		for (XMLElement element : jars) {
 //			String path = element.getStringAttribute("path");
 //			URL jar = new URL(unsigned, path);
-//			System.err.println("URL: " + jar);
+//			logger.info("URL: " + jar);
 //			try {
 //				downloadJar(jar, path, f);
 //			} catch (IOException e) {
-//				e.printStackTrace();
+//				logger.error("Error: ",e);
 //			}
 //		}
 //		XMLElement main = result.getElementByTagName("main");
@@ -76,7 +82,7 @@ public class RemoteJnlpBuilder extends BaseJnlpBuilder {
 //			try {
 //				downloadJar(jar, path, f);
 //			} catch (IOException e) {
-//				e.printStackTrace();
+//				logger.error("Error: ",e);
 //			}
 //		}
 //	}

@@ -18,11 +18,16 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 
 public class ToggleNatureAction implements IObjectActionDelegate {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ToggleNatureAction.class);
 	private ISelection selection;
 //	private Combo templateCombo = null;
 
@@ -99,7 +104,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 			if (repositoryDialog.open() == Window.OK) {
 				repository = repositoryDialog.getValue();
 			} else {
-				System.err.println("No rep??! ");
+				logger.info("No rep??! ");
 				return;
 			}
 				
@@ -130,7 +135,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 //			
 //			if (dlg.open() == Window.OK) {
 //			} else {
-//				System.err.println("No templ??! ");
+//				logger.info("No templ??! ");
 //				return;
 //			}
 				
@@ -139,7 +144,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 			ClientActions.downloadZippedDemoFiles(repository+"Development/",repository, project.getLocation().toFile(),selectedTemplate);
 
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);	
-				System.err.println("Download completed");
+				logger.info("Download completed");
 	        String[] newNatures = new String[natures.length + 1];
 			System.arraycopy(natures, 0, newNatures, 0, natures.length);
 			newNatures[natures.length] = TipiNature.NATURE_ID;
@@ -147,8 +152,8 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 			description.setNatureIds(newNatures);
 			project.setDescription(description, null);
 		} catch (Exception e) {
-			System.err.println("Core ex");
-			e.printStackTrace();
+			logger.info("Core ex");
+			logger.error("Error: ",e);
 	       Status status = new Status(IStatus.ERROR, "TipiPlugin", 0,e.getMessage(), null);
 	       ErrorDialog.openError(Display.getCurrent().getActiveShell(),"Tipi Repository problem","Error downloading from repository!", status);
 		}

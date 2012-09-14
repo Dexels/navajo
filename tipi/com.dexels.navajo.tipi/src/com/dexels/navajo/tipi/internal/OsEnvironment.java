@@ -83,7 +83,7 @@ public class OsEnvironment {
 			else if (OS.indexOf("sunos") > -1) {
 				p = r.exec("/bin/env");
 			} else {
-				System.out.println("OS not known: " + OS);
+				logger.info("OS not known: " + OS);
 				return null;
 			}
 		} catch (java.io.IOException e) {
@@ -241,7 +241,7 @@ public class OsEnvironment {
 		try {
 			java.util.Properties p = OsEnvironment.get();
 			p.list(System.out);
-			System.out.println("the current value of TEMP is : "
+			logger.info("the current value of TEMP is : "
 					+ p.getProperty("TEMP"));
 		} catch (Throwable e) {
 			logger.error("Error: ",e);

@@ -93,7 +93,7 @@ public class HandlerBase implements DocumentHandler, ErrorHandler {
             .append(exception.getColumnNumber())
             .append("] ")
             .append(exception.getMessage());
-        System.err.println(sb.toString());
+        logger.info(sb.toString());
     }
 
     public void error(CSSParseException exception) throws CSSException {
@@ -105,7 +105,7 @@ public class HandlerBase implements DocumentHandler, ErrorHandler {
             .append(exception.getColumnNumber())
             .append("] ")
             .append(exception.getMessage());
-        System.err.println(sb.toString());
+        logger.info(sb.toString());
     }
 
     public void fatalError(CSSParseException exception) throws CSSException {
@@ -117,6 +117,6 @@ public class HandlerBase implements DocumentHandler, ErrorHandler {
             .append(exception.getColumnNumber())
             .append("] ")
             .append(exception.getMessage());
-        System.err.println(sb.toString());
+        logger.info(sb.toString());
     }
 }

@@ -11,6 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 
@@ -45,7 +48,10 @@ public class BasePanel extends JPanel {
 	protected BasePanel hostingPanel = null;
 	protected StandardWindow myWindow = null;
 	private String panelTitle = "no name";
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BasePanel.class);
+	
 	private int panelState = NO_STATE;
 
 	public static final int NO_STATE = -1;
@@ -80,7 +86,7 @@ public class BasePanel extends JPanel {
 		for (int i = 0; i < getComponentCount(); i++) {
 			Component c = getComponent(i);
 			if (BasePanel.class.isInstance(c)) {
-				// System.err.println("Loading BasePanel");
+				// logger.info("Loading BasePanel");
 				((BasePanel) c).load(msg);
 			}
 		}
@@ -100,7 +106,7 @@ public class BasePanel extends JPanel {
 		switch (focusState) {
 		case FOCUS_REQUEST:
 			setFocusState(FOCUS_GAINED);
-			System.err.println("request -> gained");
+			logger.info("request -> gained");
 			setBorder(new LineBorder(Color.white, 2));
 			break;
 		case FOCUS_LOST:
@@ -123,7 +129,7 @@ public class BasePanel extends JPanel {
 		if (loadMessage != null) {
 			load(loadMessage);
 		} else {
-			// System.err.println("Warning: Attempting to load without loadMessage");
+			// logger.info("Warning: Attempting to load without loadMessage");
 		}
 	}
 
@@ -137,7 +143,7 @@ public class BasePanel extends JPanel {
 				}
 			}
 		} else {
-			// System.err.println("Error: Attempting to store without loadMessage");
+			// logger.info("Error: Attempting to store without loadMessage");
 		}
 	}
 
@@ -155,14 +161,14 @@ public class BasePanel extends JPanel {
 						if (initMessage != null) {
 							init(initMessage);
 						} else {
-							// System.err.println("Warning: Attempting to init without initMessage");
+							// logger.info("Warning: Attempting to init without initMessage");
 						}
 					}
 				});
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 	}
@@ -175,7 +181,7 @@ public class BasePanel extends JPanel {
 				hasExceptions = true;
 			}
 		} else {
-			// System.err.println("Error: Attempting to insert without initMessage");
+			// logger.info("Error: Attempting to insert without initMessage");
 		}
 	}
 
@@ -187,7 +193,7 @@ public class BasePanel extends JPanel {
 				hasExceptions = true;
 			}
 		} else {
-			// System.err.println("Error: Attempting to delete without loadMessage");
+			// logger.info("Error: Attempting to delete without loadMessage");
 		}
 	}
 
@@ -215,7 +221,7 @@ public class BasePanel extends JPanel {
 
 	public void setRootMessage(Message msg) {
 		if (rootMessage != null) {
-			// System.err.println("WARNING: Resetting root message");
+			// logger.info("WARNING: Resetting root message");
 		}
 		rootMessage = msg;
 	}
@@ -227,16 +233,16 @@ public class BasePanel extends JPanel {
 	public void setLoadMessage(Message msg) {
 		// switch (getPanelState()) {
 		// case NO_STATE:
-		// System.err.println("WARNING: Loading panel without initializing first");
+		// logger.info("WARNING: Loading panel without initializing first");
 		// break;
 		// case INSERTED:
-		// System.err.println("WARNING: Loading newly inserted panel");
+		// logger.info("WARNING: Loading newly inserted panel");
 		// break;
 		// case LOADED:
-		// System.err.println("Reloading panel");
+		// logger.info("Reloading panel");
 		// break;
 		// case UPDATED:
-		// System.err.println("Reverting updated panel");
+		// logger.info("Reverting updated panel");
 		// break;
 		// }
 		setPanelState(LOADED);
@@ -247,11 +253,11 @@ public class BasePanel extends JPanel {
 	public void setInitMessage(Message msg) {
 		/*
 		 * switch (getPanelState()) { case INITIALIZED:
-		 * System.err.println("Reinitializing panel"); break; case INSERTED:
-		 * System.err.println("OK: Initializing newly inserted panel"); break;
-		 * case LOADED: System.err.println("Reinitializing loaded panel");
+		 * logger.info("Reinitializing panel"); break; case INSERTED:
+		 * logger.info("OK: Initializing newly inserted panel"); break;
+		 * case LOADED: logger.info("Reinitializing loaded panel");
 		 * break; case UPDATED:
-		 * System.err.println("Reinitializing updated panel, discarding changes"
+		 * logger.info("Reinitializing updated panel, discarding changes"
 		 * ); break; }
 		 */
 		setPanelState(INITIALIZED);
@@ -268,19 +274,19 @@ public class BasePanel extends JPanel {
 	}
 
 	protected Navajo insert(Message msg) {
-		System.err.println("Insert called in BasePanel. Not implemented. "
+		logger.info("Insert called in BasePanel. Not implemented. "
 				+ getClass().getName());
 		return null;
 	}
 
 	protected Navajo store(Message msg) {
-		System.err.println("this: " + this.getClass());
-		System.err.println("Store called in BasePanel. Not implemented.");
+		logger.info("this: " + this.getClass());
+		logger.info("Store called in BasePanel. Not implemented.");
 		return null;
 	}
 
 	protected Navajo delete(Message msg) {
-		System.err.println("Delete called in BasePanel. Not implemented.");
+		logger.info("Delete called in BasePanel. Not implemented.");
 		return null;
 	}
 
@@ -297,20 +303,20 @@ public class BasePanel extends JPanel {
 	public void setStateDeleted() {
 		switch (panelState) {
 		case LOADED:
-			System.err.println("Deleting loaded panel");
+			logger.info("Deleting loaded panel");
 			setPanelState(DELETED);
 			break;
 		case UPDATED:
-			System.err.println("Deleting updated panel");
+			logger.info("Deleting updated panel");
 			setPanelState(DELETED);
 			break;
 		case INSERTED:
-			System.err.println("Deleting inserted panel. No action.");
+			logger.info("Deleting inserted panel. No action.");
 			setPanelState(INITIALIZED);
 			break;
 		case INITIALIZED:
 		case NO_STATE:
-			System.err.println("Ignoring delete for current panel.");
+			logger.info("Ignoring delete for current panel.");
 			break;
 		}
 	}
@@ -319,7 +325,7 @@ public class BasePanel extends JPanel {
 
 		switch (panelState) {
 		case INSERTED:
-			System.err.println("Setting inserted panel to inserted. Ignoring.");
+			logger.info("Setting inserted panel to inserted. Ignoring.");
 			break;
 		case INITIALIZED:
 			setPanelState(INSERTED);
@@ -342,7 +348,7 @@ public class BasePanel extends JPanel {
 			setPanelState(UPDATED);
 			break;
 		case INSERTED:
-			System.err.println("Setting inserted panel to updated. Ignoring.");
+			logger.info("Setting inserted panel to updated. Ignoring.");
 			break;
 		case UPDATED:
 			break;
@@ -357,16 +363,16 @@ public class BasePanel extends JPanel {
 		hasExceptions = false;
 		switch (panelState) {
 		case INITIALIZED:
-			System.err.println("Store: Discarding initialized panel");
+			logger.info("Store: Discarding initialized panel");
 			break;
 		case INSERTED:
 			insert();
 			break;
 		case LOADED:
-			System.err.println("Ignoring unchanged panel");
+			logger.info("Ignoring unchanged panel");
 			break;
 		case NO_STATE:
-			System.err.println("Warning: Updating panel without state");
+			logger.info("Warning: Updating panel without state");
 			break;
 		case UPDATED:
 			store();
@@ -377,17 +383,17 @@ public class BasePanel extends JPanel {
 		}
 		ArrayList<Component> al = getAllPanels();
 		if (al.size() > 0) {
-			// System.err.println("End of commit panel. Now committing subpanels.");
+			// logger.info("End of commit panel. Now committing subpanels.");
 			for (int i = 0; i < al.size(); i++) {
 				BasePanel aw = (BasePanel) al.get(i);
 				aw.commit();
 			}
-			// System.err.println("Committed subpanels.");
+			// logger.info("Committed subpanels.");
 		}
 		if (!hasExceptions()) {
 			setPanelState(LOADED);
 		} else {
-			System.err.println("This panel had errors: " + this);
+			logger.info("This panel had errors: " + this);
 		}
 	}
 
@@ -453,10 +459,10 @@ public class BasePanel extends JPanel {
 			Component c = getComponent(i);
 			if (BasePanel.class.isInstance(c)) {
 				BasePanel handler = (BasePanel) c;
-				// System.err.println("Checking: " + c.getClass() + ", errors: "
+				// logger.info("Checking: " + c.getClass() + ", errors: "
 				// + handler.hasConditionErrors());
 				if (handler.hasExceptions()) {
-					// System.err.println("HasConditionErrors");
+					// logger.info("HasConditionErrors");
 					return true;
 				}
 			}
@@ -489,7 +495,7 @@ public class BasePanel extends JPanel {
 		try {
 			jbInit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -512,7 +518,7 @@ public class BasePanel extends JPanel {
 		setFocus();
 		if (hostingPanel != null) {
 			this.hostingPanel.focusUpdate();
-			System.err.println("BasePanel Focus gained");
+			logger.info("BasePanel Focus gained");
 		}
 	}
 

@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi.swing.svg;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.svg.*;
 
 import com.dexels.navajo.tipi.swing.svg.impl.*;
@@ -7,6 +9,9 @@ import com.dexels.navajo.tipi.swing.svg.impl.*;
 public class TipiSlideshowComponent extends TipiSvgComponent {
 
 	private static final long serialVersionUID = 2837382272551633918L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSlideshowComponent.class);
 	private SvgBatikComponent svgPanel;
 	private String myTag = null;
 	@Override
@@ -78,7 +83,7 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 					try {
 						Thread.sleep(350);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 					svgPanel.runInUpdateQueue(new Runnable(){
 
@@ -97,7 +102,7 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 	private void updateDom(SVGDocument document, String loadUrl) {
 		if(loadUrl!=null) {
 			svgPanel.setAttribute("http://www.w3.org/1999/xlink","picture", "xlink:href", loadUrl);
-			System.err.println("URL: "+loadUrl);
+			logger.info("URL: "+loadUrl);
 			svgPanel.moveToFirst("picture");
 			svgPanel.runInUpdateQueue(new Runnable() {
 

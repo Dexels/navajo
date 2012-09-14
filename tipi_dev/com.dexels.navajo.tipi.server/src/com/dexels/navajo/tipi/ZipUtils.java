@@ -12,8 +12,14 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-public class ZipUtils {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class ZipUtils {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ZipUtils.class);
+	
 	public static final void copyInputStream(InputStream in, OutputStream out) throws IOException {
 		byte[] buffer = new byte[1024];
 		int len;
@@ -32,7 +38,7 @@ public class ZipUtils {
 	}
 	
 	public static final void unzip(File f, File destination) {
-//		System.err.println("Unzipping file: " + f.getAbsolutePath() + " into dir: " + destination.getAbsolutePath());
+//		logger.info("Unzipping file: " + f.getAbsolutePath() + " into dir: " + destination.getAbsolutePath());
 		try {
 			FileInputStream fis = new FileInputStream(f);
 			// ZipFile zipFile = new ZipFile(f);
@@ -44,11 +50,11 @@ public class ZipUtils {
 		//	ZipEntry entry = zis.getNextEntry();
 				// .nextElement();
 
-//				System.err.println("Enztru: " + entry.getName());
+//				logger.info("Enztru: " + entry.getName());
 				File file = new File(destination, entry.getName());
 				if (entry.isDirectory()) {
 					// Assume directories are stored parents first then children.
-//					System.err.println("Extracting directory: " + entry.getName());
+//					logger.info("Extracting directory: " + entry.getName());
 					// This is not robust, just for demonstration purposes.
 					file.mkdir();
 					continue;
@@ -57,13 +63,13 @@ public class ZipUtils {
 				if(!parentDir.exists()) {
 					parentDir.mkdirs();
 				}
-//				System.err.println("Extracting file: " + entry.getName());
+//				logger.info("Extracting file: " + entry.getName());
 				copyInputStream(zis, new BufferedOutputStream(new FileOutputStream(file)));
 			}
 			zis.close();
 		} catch (IOException ioe) {
-//			System.err.println("Unhandled exception:");
-			ioe.printStackTrace();
+//			logger.info("Unhandled exception:");
+			logger.error("Error: ",ioe);
 			return;
 		}
 	}
@@ -118,7 +124,7 @@ public class ZipUtils {
 			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
 			ZipEntry entry;
 			while ((entry = zis.getNextEntry()) != null) {
-				System.out.println("Extracting: " + entry);
+				logger.info("Extracting: " + entry);
 				int count;
 				byte data[] = new byte[BUFFER];
 				// write the files to the disk
@@ -132,7 +138,7 @@ public class ZipUtils {
 			}
 			zis.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

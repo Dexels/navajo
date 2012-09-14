@@ -13,6 +13,9 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
@@ -20,6 +23,10 @@ import com.jogamp.opengl.util.texture.TextureIO;
 public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventListener {
 
 	private static final long serialVersionUID = -2008869951387194865L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JOGL3DTribeView.class);
+	
 	private boolean lightingEnabled;				// Lighting ON/OFF
 //    private boolean lightingChanged = false;		// Lighting changed
     private boolean blendingEnabled;				// Blending OFF/ON
@@ -261,7 +268,7 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 			fpsText = format.format(fps);
 //			int x = drawable.getWidth() - fpsWidth - 5;
 //			int y = drawable.getHeight() - 30;
-			System.err.println("FPS: " + fpsText);
+			logger.info("FPS: " + fpsText);
 		}
 	}
 
@@ -303,7 +310,7 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 	             t.setTexParameteri(GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
 	             t.setTexParameteri(GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
 	        } catch (IOException e) {
-	            System.err.println("Error loading " + filename);
+	            logger.info("Error loading " + filename);
 	        }
 	        return t;
 	    }

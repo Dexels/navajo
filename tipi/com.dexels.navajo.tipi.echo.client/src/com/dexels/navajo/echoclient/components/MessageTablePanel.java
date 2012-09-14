@@ -3,6 +3,9 @@ package com.dexels.navajo.echoclient.components;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.SplitPane;
 import nextapp.echo2.app.Style;
@@ -15,10 +18,10 @@ import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeEven
 import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeListener;
 
 public class MessageTablePanel extends SplitPane {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7415691768914843508L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MessageTablePanel.class);
 	private PageNavigator pageNavigator;
 	private MessageTable myTable;
 	private TransitionPane myTransitionPane;
@@ -77,7 +80,7 @@ public class MessageTablePanel extends SplitPane {
 
 			@Override
 			public void pageIndexChanged(PageIndexChangeEvent e) {
-				System.err.println("Swtitching");
+				logger.info("Swtitching");
 				myTransitionPane.remove(myTable);
 				myTransitionPane.add(myTable);
 

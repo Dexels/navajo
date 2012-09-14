@@ -49,7 +49,7 @@ public class CSSOMParseTest extends Object {
             InputSource is = new InputSource(r);
             CSSOMParser parser = new CSSOMParser();
             CSSStyleSheet ss = parser.parseStyleSheet(is);
-            System.out.println(ss.toString());
+            logger.info(ss.toString());
             
             CSSRuleList rl = ss.getCssRules();
             for (int i = 0; i < rl.getLength(); i++) {
@@ -61,16 +61,16 @@ public class CSSOMParseTest extends Object {
                         CSSValue value = style.getPropertyCSSValue(style.item(j));
                         if (value.getCssValueType() == CSSValue.CSS_PRIMITIVE_VALUE) {
                             CSSPrimitiveValue pv = (CSSPrimitiveValue) value;
-                            System.out.println(">> " + pv.toString());
+                            logger.info(">> " + pv.toString());
                             if (pv.getPrimitiveType() == CSSPrimitiveValue.CSS_COUNTER) {
-                                System.out.println("CSS_COUNTER(" + pv.toString() + ")");
+                                logger.info("CSS_COUNTER(" + pv.toString() + ")");
                             }
                         }
                     }
                 }
             }
         } catch (Exception e) {
-            System.err.println("Exception: " + e.getMessage());
+            logger.info("Exception: " + e.getMessage());
             e.printStackTrace(System.err);
         }
     }

@@ -4,13 +4,11 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -21,43 +19,7 @@ import org.apache.tools.ant.ProjectHelper;
 
 public class AntRun {
 
-	/**
-	 * @param args
-	 * @throws IOException 
-	 */
-	public static void main(String[] args) throws IOException {
-//		File buildFile = new File("build.xml");
-//		Project p = new Project();
-//		p.setUserProperty("ant.file", buildFile.getAbsolutePath());		
-//		DefaultLogger consoleLogger = new DefaultLogger();
-//		consoleLogger.setErrorPrintStream(System.err);
-//		consoleLogger.setOutputPrintStream(System.out);
-//		consoleLogger.setMessageOutputLevel(Project.MSG_INFO);
-//		p.addBuildListener(consoleLogger);
-//
-//		try {
-//			p.fireBuildStarted();
-//			p.init();
-//			ProjectHelper helper = ProjectHelper.getProjectHelper();
-//			p.addReference("ant.projectHelper", helper);
-//			helper.parse(p, buildFile);
-//			p.executeTarget(p.getDefaultTarget());
-//			p.fireBuildFinished(null);
-//		} catch (BuildException e) {
-//			p.fireBuildFinished(e);
-//		}
 
-		Map<String, String> props = new HashMap<String, String>();
-		props.put("application", "aap");
-		props.put("zipDir", "/Users/frank/Documents/runtime-New_configuration(1)/Baaaapaa/");
-	//	props.put("zipDir", "aap.zip");
-		
-		File buildFile = new File("/Users/frank/Documents/Spiritus/TipiServer/WebContent/WEB-INF/ant/zipoutput.xml");
-		FileInputStream fix = new FileInputStream(buildFile);
-		String result = callAnt(fix, new File("/Users/frank/Documents/Spiritus/TipiServer/"), props);
-		fix.close();
-		System.err.println("result:\n"+result);
-	}
 	
 	private static final void copyResource(OutputStream out, InputStream in) throws IOException {
 		BufferedInputStream bin = new BufferedInputStream(in);
@@ -118,7 +80,7 @@ public class AntRun {
 			p.fireBuildFinished(e);
 		}
 //		Map<String,Object> m =  p.getProperties();
-	//	System.err.println("Map: "+m);
+	//	logger.info("Map: "+m);
 		output.flush();
 		output.close();
 		return new String(output.toByteArray());

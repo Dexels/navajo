@@ -6,6 +6,9 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -19,6 +22,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiEmailLauncher extends TipiEchoDataComponentImpl {
 
 	private static final long serialVersionUID = -3833165821431412062L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiEmailLauncher.class);
 	private Message recipient = null;
     private String propertyName;
     private String clubName;
@@ -30,11 +36,11 @@ public class TipiEmailLauncher extends TipiEchoDataComponentImpl {
                 propertyName = (String) compMeth.getEvaluatedParameter("propertyname", event).value;
                 clubName = (String) compMeth.getEvaluatedParameter("clubname", event).value;
                 if (recipient == null) {
-                    System.err.println("TipiPersonEmail does not recieve a message as input! Aborting...");
+                    logger.info("TipiPersonEmail does not recieve a message as input! Aborting...");
                     return;
                 }
             } catch (Exception ex) {
-                System.err.println("Could not find data in 'messagepath'! \n");
+                logger.info("Could not find data in 'messagepath'! \n");
                 ex.printStackTrace();
                 return;
             }
@@ -54,7 +60,7 @@ public class TipiEmailLauncher extends TipiEchoDataComponentImpl {
             for (int i = 0; i < recipient.getArraySize(); i++) {
                 Message current = recipient.getMessage(i);
                 EmailAddress = current.getProperty(propertyName).getValue();
-                if (EmailAddress != null && EmailAddress.trim() != "") {
+                if (EmailAddress != null && !EmailAddress.trim().equals( "")) {
                     recipientsFound = true;
                     EmailString = EmailString + EmailAddress + ",";
                 }
@@ -63,19 +69,19 @@ public class TipiEmailLauncher extends TipiEchoDataComponentImpl {
             if (recipientsFound) {
                 EmailString = EmailString.substring(0, (EmailString.length() - 1));
                 EmailString = EmailString + "?subject=" + Subject;
-                System.err.println("Generated email string: " + EmailString);
+                logger.info("Generated email string: " + EmailString);
                 String cmd = "rundll32 url.dll,FileProtocolHandler " + EmailString;
                 try {
                     Runtime.getRuntime().exec(cmd);
                 } catch (IOException ex) {
-                    System.err.println("Could not launch rundll32");
+                    logger.info("Could not launch rundll32");
                 }
             } else {
-                System.err.println("No recipients found that have an email address");
+                logger.info("No recipients found that have an email address");
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error: ",e);
         }
     }
 

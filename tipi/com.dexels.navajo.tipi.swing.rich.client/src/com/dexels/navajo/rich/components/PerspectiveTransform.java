@@ -11,7 +11,13 @@ import java.io.FileInputStream;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PerspectiveTransform {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PerspectiveTransform.class);
 	private static int q_factor = 2;
 	public static final int FLIP_LEFT = 0;
 	public static final int FLIP_RIGHT = 1;
@@ -244,13 +250,13 @@ public class PerspectiveTransform {
 				// lowres.getHeight(), null);
 				long st = System.currentTimeMillis();
 				BufferedImage result = transformYaxis(img, angle, true, true);
-				System.err.println("Done.slow: " + (System.currentTimeMillis() - st) + " ms");
+				logger.info("Done.slow: " + (System.currentTimeMillis() - st) + " ms");
 
 				ImageIO.write(result, "png", new File("/home/aphilip/Desktop/test-slow" + angle + ".png"));
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

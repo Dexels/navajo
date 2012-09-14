@@ -6,6 +6,9 @@ import javax.swing.SwingConstants;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.PropertyTypeException;
 
@@ -34,7 +37,9 @@ public final class IntegerPropertyField extends PropertyField implements
 
 	// private Property myProperty;
 	private WholeNumberDocument myDocument = null;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(IntegerPropertyField.class);
 	private boolean longMode = false;
 
 	private boolean readOnly = false;
@@ -55,7 +60,7 @@ public final class IntegerPropertyField extends PropertyField implements
 			}
 			// getDocument().addDocumentListener(new MyDocumentListener());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -169,7 +174,7 @@ final class WholeNumberDocument extends BoundedLengthDocument {
 				result[j++] = source[i];
 			}
 		}
-		// System.err.println("Aap: "+new String(result));
+		// logger.info("Aap: "+new String(result));
 		super.insertString(offs, new String(result, 0, j), a);
 	}
 }

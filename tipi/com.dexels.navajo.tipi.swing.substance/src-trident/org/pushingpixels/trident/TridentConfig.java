@@ -36,11 +36,15 @@ import java.util.*;
 import org.pushingpixels.trident.TimelineEngine.TridentAnimationThread;
 import org.pushingpixels.trident.interpolator.PropertyInterpolator;
 import org.pushingpixels.trident.interpolator.PropertyInterpolatorSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("all")
 public class TridentConfig {
 	private static TridentConfig config;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TridentConfig.class);
 	private Set<UIToolkitHandler> uiToolkitHandlers;
 
 	private Set<PropertyInterpolator> propertyInterpolators;
@@ -64,7 +68,7 @@ public class TridentConfig {
 			try {
 				Thread.sleep(this.msDelay);
 			} catch (InterruptedException ie) {
-				ie.printStackTrace();
+				logger.error("Error: ",ie);
 			}
 		}
 	}
@@ -160,7 +164,7 @@ public class TridentConfig {
 						try {
 							reader.close();
 						} catch (IOException ioe) {
-							ioe.printStackTrace();
+							logger.error("Error: ",ioe);
 						}
 					}
 				}

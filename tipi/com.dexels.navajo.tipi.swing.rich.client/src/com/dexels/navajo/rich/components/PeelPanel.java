@@ -19,9 +19,15 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PeelPanel extends JPanel implements PeelListener{
 	
 	private static final long serialVersionUID = -6727304647628662379L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PeelPanel.class);
 	private int direction = 1;
 	private PeelImagePanel animationPanel = new PeelImagePanel();
 	private ArrayList<JComponent> components = new ArrayList<JComponent>();
@@ -149,7 +155,7 @@ public class PeelPanel extends JPanel implements PeelListener{
 		try{
 			backSideImage = ImageIO.read(img);
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 	}
@@ -183,7 +189,7 @@ public class PeelPanel extends JPanel implements PeelListener{
 //			BufferedImage img = ImageIO.read(new File("c:/workspace/Ticketing/resource/desktop.png"));
 //			peel.setBackSideImage();
 //		}catch(Exception e){
-//			e.printStackTrace();
+//			logger.error("Error: ",e);
 //		}
 		
 		

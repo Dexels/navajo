@@ -72,7 +72,7 @@ import org.slf4j.LoggerFactory;
  * while (enum.hasMoreElements()) {<BR>
  * &nbsp;&nbsp;&nbsp;&nbsp;String key = (String) enum.nextElement();<BR>
  * &nbsp;&nbsp;&nbsp;&nbsp;String value = element.getStringAttribute(key);<BR>
- * &nbsp;&nbsp;&nbsp;&nbsp;System.out.println(key + " = " + value);<BR> }
+ * &nbsp;&nbsp;&nbsp;&nbsp;logger.info(key + " = " + value);<BR> }
  * </CODE>
  * </UL>
  * </DD>

@@ -4,11 +4,17 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.projectbuilder.JnlpDeployer;
 
 
 public class TipiBuildDeployJnlp  extends org.apache.tools.ant.Task {
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiBuildDeployJnlp.class);
 	
 	private String codebase;
 	private String baseDir;
@@ -56,13 +62,13 @@ public class TipiBuildDeployJnlp  extends org.apache.tools.ant.Task {
 			for (File file : rootFiles) {
 				if(file.isFile() && file.getName().endsWith(".jnlp")) {
 					File destination = new File(deployDir,file.getName());
-					System.err.println("Deploying to destination: "+destination);
+					logger.info("Deploying to destination: "+destination);
 					jd.deploy(file, destination, codebase);
 				}
 			}
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

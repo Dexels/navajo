@@ -2,6 +2,9 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Button;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
@@ -35,6 +38,9 @@ import echopointng.image.URLImageReference;
 public class TipiButton extends TipiEchoComponentImpl {
   
 	private static final long serialVersionUID = -4423443422594659998L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiButton.class);
 	private Button myButton;
 
     public TipiButton() {
@@ -52,14 +58,14 @@ public class TipiButton extends TipiEchoComponentImpl {
 				try {
 					performTipiEvent("onActionPerformed",null, false);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}});
         return myButton;
     }
 
 //    public void processStyles() {
-////        System.err.println("Processing styles.... "+styleHintMap);
+////        logger.info("Processing styles.... "+styleHintMap);
 //        super.processStyles();
 //        Color c = ColorParser.parseColor(getStyle("foreground"));
 //        if (c!=null) {
@@ -106,13 +112,13 @@ public class TipiButton extends TipiEchoComponentImpl {
             TipiEvent current = getEventList().get(i);
             if (current.isTrigger("onActionPerformed")) {
               try {
-//            	  System.err.println("Button performing action (explicit fire): "+current.getEventName());
+//            	  logger.info("Button performing action (explicit fire): "+current.getEventName());
                 current.performAction(current,current,0);
               }
               catch (TipiException ex) {
                 ex.printStackTrace();
               } catch (TipiBreakException e) {
-            	  System.err.println("Break in event");
+            	  logger.info("Break in event");
               }
             }
           }
@@ -129,7 +135,7 @@ public class TipiButton extends TipiEchoComponentImpl {
             myButton.setText("" + object);
         }
        if ("visible".equals(name)) {
-    	   System.err.println("Setting visible to: "+object);
+    	   logger.info("Setting visible to: "+object);
            myButton.setVisible((Boolean)object);
        }
 
@@ -142,10 +148,10 @@ public class TipiButton extends TipiEchoComponentImpl {
         if ("icon".equals(name)) {
             if (object instanceof URL) {
                 URL u = (URL) object;
-//                System.err.println("Setting URL icon for button: "+u);
+//                logger.info("Setting URL icon for button: "+u);
                 myButton.setIcon(new URLImageReference(u));
             } else {
-                System.err.println("Can not set button icon: I guess it failed to parse (TipiButton)");
+                logger.info("Can not set button icon: I guess it failed to parse (TipiButton)");
             }
         }
         

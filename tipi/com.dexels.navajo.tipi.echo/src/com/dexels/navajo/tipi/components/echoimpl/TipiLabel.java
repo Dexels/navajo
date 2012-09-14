@@ -2,34 +2,21 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Label;
 import echopointng.LabelEx;
 import echopointng.image.URLImageReference;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
 
 public class TipiLabel extends TipiEchoComponentImpl {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 2855077377301927835L;
 
+	private static final long serialVersionUID = 2855077377301927835L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiLabel.class);
+	
 	public TipiLabel() {
     }
 
@@ -39,7 +26,7 @@ public class TipiLabel extends TipiEchoComponentImpl {
         return b;
     }
 //    public void processStyles() {
-////      System.err.println("Processing styles.... "+styleHintMap);
+////      logger.info("Processing styles.... "+styleHintMap);
 //      super.processStyles();
 //      boolean bl = "true".equals(getStyle("linewrap")) || "yes".equals(getStyle("linewrap"));
 //     	  ((LabelEx)getContainer()).setLineWrap(bl);
@@ -57,10 +44,10 @@ public class TipiLabel extends TipiEchoComponentImpl {
         if ("icon".equals(name)) {
             if (object instanceof URL) {
                 URL u = (URL) object;
-                System.err.println("Using url for button: " + u);
+                logger.info("Using url for button: " + u);
                 b.setIcon(new URLImageReference(u));
             } else {
-                System.err.println("Can not set button icon: I guess it failed to parse (TipiButton)");
+                logger.info("Can not set button icon: I guess it failed to parse (TipiButton)");
             }
         }
         super.setComponentValue(name, object);

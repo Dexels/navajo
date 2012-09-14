@@ -23,6 +23,8 @@ import org.jfree.chart.plot.dial.StandardDialFrame;
 import org.jfree.chart.plot.dial.StandardDialRange;
 import org.jfree.chart.plot.dial.StandardDialScale;
 import org.jfree.data.general.DefaultValueDataset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -43,6 +45,9 @@ public class TipiDialChart extends TipiChart {
 	private String dataProperty;
 	double minimum = 0d, maximum = 100d;
 	private Animator anim;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiDialChart.class);
 
 	public Object createContainer() {
 		super.createContainer();
@@ -129,7 +134,7 @@ public class TipiDialChart extends TipiChart {
 
 			return chart;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			return null;
 		}
 	}

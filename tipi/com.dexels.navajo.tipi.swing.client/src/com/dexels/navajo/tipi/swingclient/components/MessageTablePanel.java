@@ -31,6 +31,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -40,32 +43,17 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 
-//import com.dexels.navajo.tipi.tipixml.*;
 
-/**
- * <p>
- * Title: SportLink Client:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Dexels.com
- * </p>
- * 
- * @author unascribed
- * @version 1.0
- */
 
 @SuppressWarnings("deprecation")
 public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		Printable {
 
 	private static final long serialVersionUID = 2048693736371650314L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MessageTablePanel.class);
+	
 	final JScrollPane jScrollPane1 = new JScrollPane(
 			ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 			ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -100,7 +88,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		try {
 			jbInit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		filterPanel.setFiltersVisible(false);
 		filterPanel.setColumnsVisible(false);
@@ -209,7 +197,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 	}
 
 	public void firePopupEvent(MouseEvent e) {
-		System.err.println("Popupevent fired!!!!");
+		logger.info("Popupevent fired!!!!");
 
 		final int col = messageTable.getColumnModel().getColumnIndexAtX(
 				e.getX());
@@ -287,7 +275,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 				// try {
 				// Binary b = getTableReport("html");
 				// MergeUtils.openDocument(b,"html");
-				// System.err.println("BINARIIIII: "+b.getLength()+" extension: "+b.getExtension());
+				// logger.info("BINARIIIII: "+b.getLength()+" extension: "+b.getExtension());
 				// }
 				// catch (Exception ex) {
 				// ex.printStackTrace();
@@ -304,7 +292,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 				// try {
 				// Binary b = getTableReport("doc");
 				// MergeUtils.openDocument(b,"doc");
-				// System.err.println("BINARIIIII: "+b.getLength()+" extension: "+b.getExtension());
+				// logger.info("BINARIIIII: "+b.getLength()+" extension: "+b.getExtension());
 				// }
 				// catch (Exception ex) {
 				// ex.printStackTrace();
@@ -377,7 +365,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 				}
 			}
 		} else {
-			System.err.println("Column is not editable..");
+			logger.info("Column is not editable..");
 		}
 	}
 
@@ -419,7 +407,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 					messageTable.fireChangeEvents(p, !value, value);
 					p.getParentMessage().refreshExpression();
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				} catch (ExpressionChangedException e) {
 				}
 			}
@@ -434,7 +422,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 					messageTable.fireChangeEvents(p, !value, value);
 					p.getParentMessage().refreshExpression();
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				} catch (ExpressionChangedException e) {
 				}
 			}
@@ -459,7 +447,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 						messageTable.fireChangeEvents(p, oldValue, value);
 						m.refreshExpression();
 					} catch (NavajoException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					} catch (ExpressionChangedException e) {
 					}
 				}
@@ -479,7 +467,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 						messageTable.fireChangeEvents(p, oldValue, value);
 						p.getParentMessage().refreshExpression();
 					} catch (NavajoException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					} catch (ExpressionChangedException e) {
 					}
 				}
@@ -648,13 +636,13 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 	public final String getSelectedColumn() {
 		int col = messageTable.getSelectedColumn();
 		if (col > -1) {
-			// System.err.println("Columnname: " +
+			// logger.info("Columnname: " +
 			// messageTable.getMessageModel().getColumnName(col));
-			// System.err.println("ColumnId  : " +
+			// logger.info("ColumnId  : " +
 			// messageTable.getMessageModel().getColumnId(col));
 			return messageTable.getMessageModel().getColumnId(col);
 		} else {
-			// System.err.println("No column selected");
+			// logger.info("No column selected");
 			return null;
 		}
 	}
@@ -668,7 +656,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 				n.addMessage(m);
 				setMessage(m);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 
 		}
@@ -731,7 +719,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 	}
 
 	private final boolean excludeColumn(String col, String[] excludes) {
-		// System.err.println("Seeing if I should exclude column: " + col);
+		// logger.info("Seeing if I should exclude column: " + col);
 		for (int i = 0; i < excludes.length; i++) {
 			if (col.equals(excludes[i])) {
 				return true;
@@ -966,7 +954,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		// try {
 		// messageTable.getColumnModel().getColumn(index).setPreferredWidth(width);
 		// } catch(Throwable th) {
-		// System.err.println("SOMETHING WRONG IN setColumnWidth in messageTablePanel! Fix me!");
+		// logger.info("SOMETHING WRONG IN setColumnWidth in messageTablePanel! Fix me!");
 		// }
 	}
 
@@ -992,7 +980,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		if (tableFooter != null) {
 			tableFooter.repaint();
 		} else {
-			System.err.println("Trying to repaint invisible footer!");
+			logger.info("Trying to repaint invisible footer!");
 		}
 	}
 
@@ -1043,7 +1031,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		// }
 		if (tc == null) {
 			if (tableFooter != null) {
-				System.err.println("Removind footer renderer!");
+				logger.info("Removind footer renderer!");
 				tableFooter.setDefaultRenderer(tc);
 				tableFooter.setVisible(false);
 				remove(tableFooter);

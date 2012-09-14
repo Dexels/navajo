@@ -14,6 +14,9 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableCellRenderer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.swingclient.components.MessageTable;
 
 /**
@@ -37,6 +40,10 @@ import com.dexels.navajo.tipi.swingclient.components.MessageTable;
 public class CustomTableHeaderRenderer extends JLabel implements
 		TableCellRenderer {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CustomTableHeaderRenderer.class);
+	
 	private static final long serialVersionUID = -3227757814599248801L;
 
 	private static final int DEFAULT_INSET = 3;
@@ -65,7 +72,7 @@ public class CustomTableHeaderRenderer extends JLabel implements
 		try {
 			jbInit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		setHorizontalTextPosition(SwingConstants.LEADING);
 		setIconTextGap(10);

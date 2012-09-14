@@ -5,11 +5,17 @@ import javax.swing.*;
 
 import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.mapviewer.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.swing.geo.impl.tilefactory.*;
 
  
 public class TestGmap {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TestGmap.class);
+	
 	public static void main(String[] args)  {
 //	 UIManager.setLookAndFeel(new SubstanceLookAndFeel());
 		JXMapKit j = new JXMapKit();
@@ -17,12 +23,12 @@ public class TestGmap {
 		j.addPropertyChangeListener(new PropertyChangeListener(){
 
 			public void propertyChange(PropertyChangeEvent pce) {
-				System.err.println("Property: "+pce.getPropertyName());
+				logger.info("Property: "+pce.getPropertyName());
 			}});
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		
 		String s = Locale.getDefault().getCountry();
-		System.err.println(":: "+s);
+		logger.info(":: "+s);
 		
 		j.setTileFactory(new DefaultTileFactory(new GoogleTileFactoryInfo(0, 15, 17, 256,  true,true,false)));
 //		j.setTileFactory(new DefaultTileFactory(new OpenStreetMapTileFactoryInfo(17)));

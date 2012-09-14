@@ -7,30 +7,17 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class ComponentMerger {
 	
-	//	public static XMLElement mergeComponents(XMLElement base, XMLElement descendant) {
-//		XMLElement result = base.copy();
-//		
-//		return result;
-//	}
-//	
-//	
-//	public static XMLElement mergeWithBaseElements(Map<String,XMLElement> allComponents, XMLElement element) {
-//		String baseComponents = element.getStringAttribute("implements");
-//		if(baseComponents==null) {
-//			return element;
-//		}
-//		String[] baseC = baseComponents.split(",");
-//		for (int i = 0; i < baseC.length; i++) {
-//			XMLElement base = allComponents.get(baseC[i]);
-//			element = mergeComponents(base, element);
-//		}
-//	   return element;
-//	}
-//	 <tipiclass addtocontainer="true" childcount="*" class="TipiWindow" implements="basecomponent,datacomponent,swingcomponent" layoutmanager="true" module="container" name="window" package="com.dexels.navajo.tipi.components.swingimpl"
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ComponentMerger.class);
+	
 	public static XMLElement getAssembledClassDef(Map<String,XMLElement> allComponents,XMLElement classDef) throws IOException  {
 		
 		XMLElement result = null;
@@ -63,7 +50,7 @@ public class ComponentMerger {
 				String currentName = st.nextToken();
 				XMLElement element = allComponents.get(currentName);
 				if(element==null) {
-					System.err.println("WARNING: missing component: "+currentName);
+					logger.info("WARNING: missing component: "+currentName);
 				}
 				if(element==null) {
 					throw new IOException("Error: ClassDef: "+classDef.getStringAttribute("name")+" has an unknown super interface: "+currentName);

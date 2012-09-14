@@ -81,7 +81,7 @@ public class DefaultDayRenderer extends JPanel implements DayRendererInterface {
 			}
 		}
 
-		// System.err.println("Setting day in redererederer: " +
+		// logger.info("Setting day in redererederer: " +
 		// d.getAttributes().size());
 		nrOfAttributes = d.getAttributes().size();
 		String img_url = (String) d.getAttribute("image");

@@ -11,6 +11,8 @@ import org.apache.batik.swing.*;
 import org.apache.batik.swing.gvt.*;
 import org.apache.batik.swing.svg.*;
 import org.apache.log4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.svg.*;
 
 public class ViewBoxTest extends WindowAdapter implements
@@ -18,7 +20,10 @@ public class ViewBoxTest extends WindowAdapter implements
   SVGLoadEventDispatcherListener, GVTTreeRendererListener,
   UpdateManagerListener {
 
-    private final Logger log = Logger.getLogger(getClass());
+    private final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(getClass());
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(ViewBoxTest.class);
     private final String url;
     private final JFrame frame;
     private final JSVGCanvas canvas;
@@ -45,7 +50,7 @@ public class ViewBoxTest extends WindowAdapter implements
     }
 
     public void cancel() {
-        System.err.println("Something went wrong");
+        logger.info("Something went wrong");
     }
 
     protected void updateSVG(final Runnable rable) {
@@ -76,7 +81,7 @@ public class ViewBoxTest extends WindowAdapter implements
                 SVGElement svg = (SVGElement)dom.getDocumentElement();
                 String oldViewBox = svg.getAttribute("viewBox");
                 String newViewBox = oldViewBox + " ";
-                System.out.println("CHANGING VIEWBOX from \""
+                logger.info("CHANGING VIEWBOX from \""
                     + oldViewBox + "\" to \"" + newViewBox + "\"");
                 svg.setAttribute("viewBox", newViewBox);
             }
@@ -269,7 +274,7 @@ public class ViewBoxTest extends WindowAdapter implements
               + "/samples/tests/spec/coordinates/percentagesAndUnits.svg"
             };
         } else if (args.length != 1) {
-            System.err.println("Usage: java ViewBoxTest [file | URL]");
+            logger.info("Usage: java ViewBoxTest [file | URL]");
             System.exit(1);
         }
         File file = new File(args[0]);

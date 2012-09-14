@@ -11,8 +11,12 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AntRun {
+	
+	private final static Logger logger = LoggerFactory.getLogger(AntRun.class);
 	
  static String callAnt(File buildFile, File baseDir, Map<String,String> userProperties, String target) throws IOException {
 		userProperties.put("tipiAppstore", "true");
@@ -27,7 +31,7 @@ public class AntRun {
 		p.setUserProperty("ant.file", buildFile.getAbsolutePath());		
 		p.setUserProperty("baseDir", baseDir.getAbsolutePath());		
 		for (Entry<String,String> w : userProperties.entrySet()) {
-			System.err.println("Setting: key: "+w.getKey()+" value: "+w.getValue());
+			logger.info("Setting: key: "+w.getKey()+" value: "+w.getValue());
 			p.setUserProperty(w.getKey(), w.getValue());		
 		}
 		DefaultLogger consoleLogger = new DefaultLogger();
@@ -49,7 +53,7 @@ public class AntRun {
 			}
 			p.fireBuildFinished(null);
 		} catch (BuildException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			
 			p.fireBuildFinished(e);
 		}

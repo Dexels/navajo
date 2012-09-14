@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.StreamImageReference;
 
@@ -17,10 +20,10 @@ public class BinaryPropertyImage extends StreamImageReference {
 
 	// private byte[] datas;
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2372917153390080371L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BinaryPropertyImage.class);
 	private final Property myProperty;
 	private final Binary myBinary;
 	private static final int BUFFER_SIZE = 1000;
@@ -52,8 +55,8 @@ public class BinaryPropertyImage extends StreamImageReference {
 			return "image/gif";
 		}
 		String contentType = myBinary.guessContentType();
-		System.err.println("Binary image: Content Type: " + contentType);
-		System.err.println("Length: " + myBinary.getLength());
+		logger.info("Binary image: Content Type: " + contentType);
+		logger.info("Length: " + myBinary.getLength());
 		if (contentType != null) {
 			return contentType;
 		}
@@ -64,7 +67,7 @@ public class BinaryPropertyImage extends StreamImageReference {
 	public void render(OutputStream out) throws IOException {
 		InputStream in = null;
 		if (myBinary == null) {
-			System.err.println("Oh dear, bad binary");
+			logger.info("Oh dear, bad binary");
 			in = getClass()
 					.getClassLoader()
 					.getResource(
@@ -75,7 +78,7 @@ public class BinaryPropertyImage extends StreamImageReference {
 
 			Binary b = ImageScaler.scaleToMax(myBinary, width, height);
 			if (b != null) {
-				System.err.println("Good binary: rendering. Size: "
+				logger.info("Good binary: rendering. Size: "
 						+ myBinary.getLength() + " width: " + width
 						+ " height: " + height);
 				in = b.getDataAsStream();
@@ -84,7 +87,7 @@ public class BinaryPropertyImage extends StreamImageReference {
 				}
 
 			} else {
-				System.err.println("Trouble, not rendering");
+				logger.info("Trouble, not rendering");
 				return;
 			}
 		}

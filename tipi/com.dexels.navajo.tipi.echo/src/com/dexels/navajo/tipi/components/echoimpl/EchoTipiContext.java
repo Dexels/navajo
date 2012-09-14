@@ -10,6 +10,9 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.app.TaskQueueHandle;
 import nextapp.echo2.app.Window;
@@ -28,28 +31,12 @@ import com.dexels.navajo.tipi.internal.HttpResourceLoader;
 
 import echopointng.command.JavaScriptEval;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
 
 public class EchoTipiContext extends TipiContext {
 	private static final long serialVersionUID = -958549676651346217L;
-
-	//    private ApplicationInstance myServerContext;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(EchoTipiContext.class);
     
     private int zIndexCounter = 0;
 
@@ -62,13 +49,13 @@ public class EchoTipiContext extends TipiContext {
     	myInstance = t;
 		ContainerContext context =(ContainerContext) t.getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
     	Map parameterMap =  context.getInitialRequestParameterMap();
-		System.err.println("request: "+parameterMap);
+		logger.info("request: "+parameterMap);
 		Set s = parameterMap.keySet();
 		Iterator it = s.iterator();
 		while (it.hasNext()) {
 			Object type = it.next();
 			String[] object = (String[]) parameterMap.get(type);
-			System.err.println("Key: "+type+" value: "+object+" type: "+object.getClass());
+			logger.info("Key: "+type+" value: "+object);
 			if(object.length==1) {
 				setGlobalValue((String) type, object[0]);
 			}
@@ -136,11 +123,11 @@ public class EchoTipiContext extends TipiContext {
 				try {
 					te.performAction(null, null, 0);
 				} catch (TipiException e) {
-					System.err.println("tipi exception caught");
-					e.printStackTrace();
+					logger.info("tipi exception caught");
+					logger.error("Error: ",e);
 					showInternalError(e.getMessage(),e);
 				} catch (TipiBreakException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 				
 			}
@@ -196,7 +183,7 @@ public class EchoTipiContext extends TipiContext {
              try {
 				((TipiEchoInstance)ai).exitToUrl();
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
  		} 
          }
@@ -217,7 +204,7 @@ public class EchoTipiContext extends TipiContext {
 //        if(base==null) {
 //        	base=contextname;
 //        }
-//      System.err.println("Base ATTR: "+base);
+//      logger.info("Base ATTR: "+base);
 
         URL rootURL =  new URL(u.getProtocol(),getHostname(),u.getPort(),contextname+"/dynamic/"+path);
          return rootURL;
@@ -231,7 +218,7 @@ public class EchoTipiContext extends TipiContext {
 		URL u = new URL(url);
 		String contextname = con.getRequest().getContextPath();
 		// deprecated the init. The context path should work
-		System.err.println("CONTEXTNAME: "+contextname);
+		logger.info("CONTEXTNAME: "+contextname);
 		String host = con.getServlet().getInitParameter("host");
 //		if (base == null) {
 //			base = contextname;
@@ -290,11 +277,11 @@ public class EchoTipiContext extends TipiContext {
 
 
 	public void showInfo(String text, String title) {
-		System.err.println("ALERTING: "+text);
+		logger.info("ALERTING: "+text);
 		text = text.replaceAll("\n", "\\\\n");
-		System.err.println("ALERTING2: "+text);
+		logger.info("ALERTING2: "+text);
 		ApplicationInstance.getActive().enqueueCommand(new JavaScriptEval("alert('" + text +"')"));
-	//System.err.println("Show info found: ");
+	//logger.info("Show info found: ");
 //	Thread.dumpStack();
 	}
 
@@ -316,7 +303,7 @@ public class EchoTipiContext extends TipiContext {
 		try {
 			execute(r);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

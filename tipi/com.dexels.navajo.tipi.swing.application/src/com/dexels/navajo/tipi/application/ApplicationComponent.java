@@ -107,7 +107,7 @@ public class ApplicationComponent {
 					instance = TipiSwingWrapper.runApp(bundleContext,contextPath,deploy,profile);
 					instance.getCurrentContext().switchToDefinition(instance.getDefinition());
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		};

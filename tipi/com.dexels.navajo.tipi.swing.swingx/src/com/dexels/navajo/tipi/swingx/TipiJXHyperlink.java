@@ -10,6 +10,8 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import org.jdesktop.swingx.JXHyperlink;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiException;
@@ -18,6 +20,9 @@ import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
 public class TipiJXHyperlink extends TipiSwingDataComponentImpl {
 
 	private static final long serialVersionUID = 7386071333508347015L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiJXHyperlink.class);
 
 	@Override
 	public Object createContainer() {
@@ -42,7 +47,7 @@ public class TipiJXHyperlink extends TipiSwingDataComponentImpl {
 
 				if (name.equals("icon")) {
 					if (object == null) {
-						System.err.println("Ignoring null icon");
+						logger.info("Ignoring null icon");
 					} else {
 						if (object instanceof URL) {
 							((JXHyperlink) getContainer()).setIcon(getIcon(object));
@@ -68,7 +73,7 @@ public class TipiJXHyperlink extends TipiSwingDataComponentImpl {
 				return ii;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		return null;

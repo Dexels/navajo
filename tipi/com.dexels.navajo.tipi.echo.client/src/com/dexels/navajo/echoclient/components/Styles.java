@@ -31,6 +31,9 @@ package com.dexels.navajo.echoclient.components;
 
 import java.io.InputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.ImageReference;
 import nextapp.echo2.app.ResourceImageReference;
 import nextapp.echo2.app.StyleSheet;
@@ -43,10 +46,9 @@ import nextapp.echo2.app.componentxml.StyleSheetLoader;
 public class Styles {
 
 	public static final String IMAGE_PATH = "/com/dexels/navajo/echoclient/resource/image/";
-	// public static final String STYLE_PATH =
-	// "/com/dexels/navajo/tipi/components/echoimpl/resource/style/";
 	public static final String STYLE_PATH = "/";
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(Styles.class);
 	/**
 	 * Default application style sheet.
 	 */
@@ -65,7 +67,7 @@ public class Styles {
 					+ "Default.stylesheet", Thread.currentThread()
 					.getContextClassLoader());
 			if (DEFAULT_STYLE_SHEET != null) {
-				System.err.println("LOADED STYLESHEET: "
+				logger.info("LOADED STYLESHEET: "
 						+ DEFAULT_STYLE_SHEET.toString());
 			} else {
 				throw new RuntimeException("Stylesheet missing!");

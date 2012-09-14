@@ -1,31 +1,20 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.functions.StripBody;
 
 import echopointng.TemplatePanel;
 import echopointng.template.StringTemplateDataSource;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
 
 public class TipiHtmlLabel extends TipiEchoComponentImpl {
 	private static final long serialVersionUID = -8653909694723257928L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiHtmlLabel.class);
 	private TemplatePanel templatePanel = null;
 
 	public TipiHtmlLabel() {
@@ -53,15 +42,15 @@ public class TipiHtmlLabel extends TipiEchoComponentImpl {
 				
 				text = sb.bodyStrip(text);
 //				text = sb.tidyString(text);
-				System.err.println("WARNING Tidy disabled!");
+				logger.info("WARNING Tidy disabled!");
 				text = sb.bodyStrip(text);
 				
 				
 				setText(text);
 				
-//	        	System.err.println("HTMLLABEL TEXT:\n\n"+text+"\n\n");
+//	        	logger.info("HTMLLABEL TEXT:\n\n"+text+"\n\n");
 //			} catch (UnsupportedEncodingException e) {
-//				e.printStackTrace();
+//				logger.error("Error: ",e);
 //			}
         }
         super.setComponentValue(name, object);
@@ -70,10 +59,10 @@ public class TipiHtmlLabel extends TipiEchoComponentImpl {
 
 	private void setText(String bare) {
 		String emb = "<div xmlns='http://www.w3.org/1999/xhtml'>" + bare + "</div>";
-		System.err.println("Result: " + emb);
+		logger.info("Result: " + emb);
 		StringTemplateDataSource stds = new StringTemplateDataSource(emb);
 		templatePanel.setTemplateDataSource(stds);
-		System.err.println("Total result: "+emb);
+		logger.info("Total result: "+emb);
 	}
 
 }

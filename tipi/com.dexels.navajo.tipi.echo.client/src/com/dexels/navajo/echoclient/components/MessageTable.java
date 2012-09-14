@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.RadioButton;
@@ -46,7 +49,9 @@ public class MessageTable extends PageableSortableTable implements
 	 * 
 	 */
 	private static final long serialVersionUID = 3398089160255041783L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MessageTable.class);
 	private static final int DEFAULT_ROWS_PER_PAGE = 20;
 
 	private int rowsPerPage = DEFAULT_ROWS_PER_PAGE;
@@ -119,10 +124,10 @@ public class MessageTable extends PageableSortableTable implements
 		// lastSelectedRow = -1;
 		// }
 		// for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
-		// // System.err.println("Last row: "+lastSelectedRow);
-		// // System.err.println("Current row: "+currentSelectedRow);
+		// // logger.info("Last row: "+lastSelectedRow);
+		// // logger.info("Current row: "+currentSelectedRow);
 		// Component lastc = getCellComponent(i, lastSelectedRow);
-		// // System.err.println("Last: "+lastc+" current: "+currentc);
+		// // logger.info("Last: "+lastc+" current: "+currentc);
 		// if (lastSelectedRow > -1 && lastc instanceof EchoPropertyComponent) {
 		// ((EchoPropertyComponent) lastc).setZebra(i, lastSelectedRow, false);
 		//
@@ -167,9 +172,9 @@ public class MessageTable extends PageableSortableTable implements
 		sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		sortablePageableModel.setRowsPerPage(rowsPerPage);
 		setBackground(new Color(255, 255, 255));
-		// System.err.println("Total pages: " +
+		// logger.info("Total pages: " +
 		// sortablePageableModel.getTotalPages());
-		// System.err.println("Current page: " +
+		// logger.info("Current page: " +
 		// sortablePageableModel.getCurrentPage());
 
 		TableColumnModel tcm = getColumnModel();
@@ -183,7 +188,7 @@ public class MessageTable extends PageableSortableTable implements
 		// }
 		// });
 		// } else {
-		// System.err.println("No selection model!");
+		// logger.info("No selection model!");
 		// }
 		// addActionListener(new ActionListener() {
 		//
@@ -194,7 +199,7 @@ public class MessageTable extends PageableSortableTable implements
 		// addPropertyChangeListener(new PropertyChangeListener() {
 		//
 		// public void propertyChange(PropertyChangeEvent evt) {
-		// // System.err.println("AAAP!");
+		// // logger.info("AAAP!");
 		// }
 		// });
 		getSelectionModel().clearSelection();
@@ -216,7 +221,7 @@ public class MessageTable extends PageableSortableTable implements
 				if (row < 0) {
 					return;
 				}
-				System.err.println("Row: " + row);
+				logger.info("Row: " + row);
 				setSelectedRow(row);
 				// RadioButton rb = (RadioButton) rowSelectMap.get(new
 				// Integer(row));
@@ -255,7 +260,7 @@ public class MessageTable extends PageableSortableTable implements
 	}
 
 	public void fireTableEdited(Property p, int column, int row) {
-		// System.err.println("Edited: "+column+" / "+row+" value:
+		// logger.info("Edited: "+column+" / "+row+" value:
 		// "+p.getValue()+" listeners: "+editorListeners.size());
 
 		for (int i = 0; i < editorListeners.size(); i++) {
@@ -266,7 +271,7 @@ public class MessageTable extends PageableSortableTable implements
 
 	@Override
 	public TableCellRenderer getDefaultHeaderRenderer() {
-		// System.err.println("DefaultHEaderREnderer CREATED");
+		// logger.info("DefaultHEaderREnderer CREATED");
 		return sortableTableHeaderRenderer;
 	}
 
@@ -276,17 +281,17 @@ public class MessageTable extends PageableSortableTable implements
 	}
 
 	public void debugTableModel() {
-		System.err.println("RowCount: " + myModel.getRowCount());
-		System.err.println("ColumnCount: " + myModel.getColumnCount());
+		logger.info("RowCount: " + myModel.getRowCount());
+		logger.info("ColumnCount: " + myModel.getColumnCount());
 		for (int i = 0; i < myModel.getRowCount(); i++) {
 			for (int j = 0; j < myModel.getColumnCount(); j++) {
-				System.err.println("ROW: " + i + " COLUMN: " + j);
+				logger.info("ROW: " + i + " COLUMN: " + j);
 				Object value = myModel.getValueAt(i, j);
 				if (value != null) {
 					System.err.print("Value class: " + value.getClass());
-					System.err.println("Value: " + value.toString());
+					logger.info("Value: " + value.toString());
 				} else {
-					System.err.println("Null value");
+					logger.info("Null value");
 				}
 			}
 		}
@@ -294,28 +299,28 @@ public class MessageTable extends PageableSortableTable implements
 
 	public Message getSelectedMessage() {
 		int index = getSelectionModel().getMinSelectedIndex();
-		System.err.println("GETTING SELECTED INDEX: " + index);
+		logger.info("GETTING SELECTED INDEX: " + index);
 		if (index < 0) {
 			return null;
 		}
-		System.err.println("INDEX: " + index);
+		logger.info("INDEX: " + index);
 		// int sortedPagedIndex= -1;
 		// int pagedSortedIndex= -1;
 		try {
 			// int sortedIndex =
 			// sortablePageableModel.toUnsortedModelRowIndex(index);
-			// System.err.println("sorted: " + sortedIndex);
+			// logger.info("sorted: " + sortedIndex);
 			// int pagedIndex =
 			// sortablePageableModel.toUnpagedModelRowIndex(index);
-			// System.err.println("pagedIndex: " + pagedIndex);
+			// logger.info("pagedIndex: " + pagedIndex);
 			// sortedPagedIndex =
 			// sortablePageableModel.toUnpagedModelRowIndex(sortedIndex);
-			// System.err.println("sortedPagedIndex: " + sortedPagedIndex);
+			// logger.info("sortedPagedIndex: " + sortedPagedIndex);
 			// pagedSortedIndex =
 			// sortablePageableModel.toUnsortedModelRowIndex(pagedIndex);
-			// System.err.println("pagedSortedIndex: " + pagedSortedIndex);
+			// logger.info("pagedSortedIndex: " + pagedSortedIndex);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		// Actually removed all the above stuff...
 		Message selectedMessage = myModel.getMessageRow(index);
@@ -326,18 +331,18 @@ public class MessageTable extends PageableSortableTable implements
 	public int getSelectedIndex() {
 
 		int selIndex = getSelectionModel().getMinSelectedIndex();
-		System.err.println("GETING IDEX: " + selIndex);
+		logger.info("GETING IDEX: " + selIndex);
 		return selIndex;
 	}
 
 	public void setSelectedIndex(int s) {
-		// System.err.println("GETTING SELECTED MESSAGE: "
+		// logger.info("GETTING SELECTED MESSAGE: "
 		// + getSelectionModel().getMinSelectedIndex());
 		int old = getSelectedIndex();
 		// getSelectionModel().clearSelection();
 		getSelectionModel().setSelectedIndex(s, true);
-		// System.err.println("Setting selected index to: "+s);
-		// System.err.println("Set selected index to: "+getSelectionModel().getMinSelectedIndex());
+		// logger.info("Setting selected index to: "+s);
+		// logger.info("Set selected index to: "+getSelectionModel().getMinSelectedIndex());
 		firePropertyChange(Table.SELECTION_CHANGED_PROPERTY, old, s);
 		if (old >= 0) {
 			((AbstractTableModel) getModel()).fireTableRowsUpdated(old, old);
@@ -413,7 +418,7 @@ public class MessageTable extends PageableSortableTable implements
 		}
 		Integer i = sizes.get(columnIndex - 1);
 		if (i != null) {
-			// System.err.println("MESSAGETABLE: RETURNING SIZE:
+			// logger.info("MESSAGETABLE: RETURNING SIZE:
 			// "+i.intValue());
 			return new Extent(i.intValue(), Extent.PX);
 		}
@@ -570,7 +575,7 @@ public class MessageTable extends PageableSortableTable implements
 		String[] titles = new String[count];
 		// ECHO SPECIFIC: SKIP THE FIRST COLUMN!!!
 		//
-		System.err.println("Column count: " + count + " names size: "
+		logger.info("Column count: " + count + " names size: "
 				+ names.size() + " idsize: " + ids.size());
 		for (int i = 0; i < count; i++) {
 			int j = i;
@@ -581,8 +586,8 @@ public class MessageTable extends PageableSortableTable implements
 			widths[i] = width;
 			namesarray[i] = name;
 			titles[i] = title;
-			System.err.println("Adding width: " + width);
-			System.err.println("Adding name: " + name);
+			logger.info("Adding width: " + width);
+			logger.info("Adding name: " + name);
 		}
 
 		Binary result = NavajoClientFactory.getClient().getArrayMessageReport(
@@ -632,7 +637,7 @@ public class MessageTable extends PageableSortableTable implements
 								q.setValue(value);
 
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error("Error: ",e);
 							}
 						} else {
 							q = p.copy(newNavajo);
@@ -640,7 +645,7 @@ public class MessageTable extends PageableSortableTable implements
 							try {
 								q.setType(p.getEvaluatedType());
 							} catch (NavajoException e) {
-								e.printStackTrace();
+								logger.error("Error: ",e);
 								q.setType(Property.STRING_PROPERTY);
 							}
 						}
@@ -670,7 +675,7 @@ public class MessageTable extends PageableSortableTable implements
 								q.setValue(value);
 
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error("Error: ",e);
 							}
 						} else {
 							q = p.copy(newNavajo);
@@ -678,7 +683,7 @@ public class MessageTable extends PageableSortableTable implements
 							try {
 								q.setType(p.getEvaluatedType());
 							} catch (NavajoException e) {
-								e.printStackTrace();
+								logger.error("Error: ",e);
 								q.setType(Property.STRING_PROPERTY);
 							}
 						}

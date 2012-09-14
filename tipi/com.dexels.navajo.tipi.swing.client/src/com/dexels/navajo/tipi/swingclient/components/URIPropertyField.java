@@ -6,7 +6,9 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.font.TextAttribute;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Property;
 
@@ -30,6 +32,10 @@ import com.dexels.navajo.document.Property;
 
 public class URIPropertyField extends TextPropertyField {
 	private static final long serialVersionUID = -4554241617340878668L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(URIPropertyField.class);
+	
 	private boolean clickable = true;
 	// private static final String WIN_ID = "Windows";
 	private static final String WIN_PATH = "rundll32";
@@ -45,7 +51,7 @@ public class URIPropertyField extends TextPropertyField {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() > 1 && clickable) {
 					String uri = createURI();
-					System.err.println("Click!! -> URI: " + uri);
+					logger.info("Click!! -> URI: " + uri);
 					loadURI(uri);
 				}
 			}
@@ -136,17 +142,17 @@ public class URIPropertyField extends TextPropertyField {
 			try {
 				if (windows) {
 					cmd = WIN_PATH + " " + WIN_FLAG + " " + url;
-					System.err.println("Executing Windows command: " + cmd);
+					logger.info("Executing Windows command: " + cmd);
 					Runtime.getRuntime().exec(cmd);
 				} else {
 					cmd = UNIX_PATH + " " + UNIX_FLAG + "'" + url + "'";
-					System.err.println("Executing UNIX command: " + cmd);
+					logger.info("Executing UNIX command: " + cmd);
 					Runtime.getRuntime().exec(cmd);
 				}
 			} catch (java.io.IOException ex) {
 				// result = false;
-				System.err.println("Could not invoke browser, command=" + cmd);
-				System.err.println("Caught: " + ex);
+				logger.info("Could not invoke browser, command=" + cmd);
+				logger.info("Caught: " + ex);
 			}
 		}
 	}

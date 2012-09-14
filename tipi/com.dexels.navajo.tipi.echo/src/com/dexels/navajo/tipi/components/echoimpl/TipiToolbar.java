@@ -22,7 +22,7 @@ public class TipiToolbar extends TipiEchoDataComponentImpl {
         RowLayoutData rld = new RowLayoutData();
         rld.setInsets(new Insets(3));
         comp.setLayoutData(rld);
-        // System.err.println(">>>>>>>>>|||||||||||||||||| Added to
+        // logger.info(">>>>>>>>>|||||||||||||||||| Added to
         // container...");
     }
 

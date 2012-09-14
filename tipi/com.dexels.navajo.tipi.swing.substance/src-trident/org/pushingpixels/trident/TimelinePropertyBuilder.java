@@ -34,12 +34,16 @@ import java.lang.reflect.Modifier;
 
 import org.pushingpixels.trident.interpolator.KeyFrames;
 import org.pushingpixels.trident.interpolator.PropertyInterpolator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @SuppressWarnings("all")
 
 public class TimelinePropertyBuilder<T> {
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TimelinePropertyBuilder.class);
 	/**
 	 * Defines how to set a property.
 	 */
@@ -338,7 +342,7 @@ public class TimelinePropertyBuilder<T> {
 						timelinePosition);
 				this.setter.set(this.object, this.fieldName, value);
 			} catch (Throwable exc) {
-				System.err.println("Exception occurred in updating field '"
+				logger.info("Exception occurred in updating field '"
 						+ this.fieldName + "' of object "
 						+ this.object.getClass().getCanonicalName()
 						+ " at timeline position " + timelinePosition);
@@ -370,7 +374,7 @@ public class TimelinePropertyBuilder<T> {
 						timelinePosition);
 				this.setter.set(this.object, this.fieldName, value);
 			} catch (Throwable exc) {
-				System.err.println("Exception occurred in updating field '"
+				logger.info("Exception occurred in updating field '"
 						+ this.fieldName + "' of object "
 						+ this.object.getClass().getCanonicalName()
 						+ " at timeline position " + timelinePosition);

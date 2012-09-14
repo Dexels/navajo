@@ -65,6 +65,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -97,7 +100,9 @@ import com.dexels.navajo.tipi.swingclient.components.sort.TableSorter;
 public class MessageTable extends JTable implements CellEditorListener,
 		PropertyChangeListener, ListSelectionListener, CopyCompatible {
 	private static final long serialVersionUID = -1174076772355177410L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MessageTable.class);
 	private final PropertyCellEditor myEditor = new PropertyCellEditor(this);
 
 	private PropertyCellRenderer myRenderer = new PropertyCellRenderer();
@@ -216,13 +221,13 @@ public class MessageTable extends JTable implements CellEditorListener,
 									}
 								}
 							} catch (NavajoException ne) {
-								// System.err.println("Whoops something wrong...");
+								// logger.info("Whoops something wrong...");
 							}
 						}
 					}
 				}
 			}
-			// System.err.println("Setting: " + min);
+			// logger.info("Setting: " + min);
 			if (min > 0) {
 				this.setColumnWidth(column, min);
 				createDefaultFromModel(getMessage());
@@ -246,7 +251,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 				backup = m.copy();
 				initUI();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 
@@ -258,7 +263,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 				backup = m.copy();
 				initUI();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 
@@ -272,7 +277,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 					setMessage();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 
@@ -286,7 +291,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 					setMessage();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 
 		}
@@ -468,13 +473,13 @@ public class MessageTable extends JTable implements CellEditorListener,
 				// revalidate();
 				// repaint();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 	}
 
 	public void showEditDialog(String title, int row) throws NavajoException {
-		// System.err.println("Entering showEditDialog");
+		// logger.info("Entering showEditDialog");
 		setRowSelectionInterval(row, row);
 		// int labelindent = 170;
 		Container toplevel = getTopLevelAncestor();
@@ -498,7 +503,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 		// final Message backup = m.copy();
 
-		// System.err.println("Showing dialog");
+		// logger.info("Showing dialog");
 		bd.setTitle(title);
 		// bd.pack();
 		bd.setLocationRelativeTo(this.getTopLevelAncestor());
@@ -557,7 +562,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	private boolean isSortingAllowed = true;
 
 	public int getHeaderHeight() {
-		// System.err.println("Current headerHeight: " + headerHeight);
+		// logger.info("Current headerHeight: " + headerHeight);
 		return headerHeight;
 	}
 
@@ -614,7 +619,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 			}
 			fw.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -625,7 +630,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 			fw = new FileWriter(f);
 			exportTable(fw, delimiter);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} finally {
 			if (fw != null) {
 				try {
@@ -666,17 +671,17 @@ public class MessageTable extends JTable implements CellEditorListener,
 					} else {
 						// value = p.getValue();
 						Object val = p.getTypedValue();
-						// System.err.println("TYPE: "+p.getType()+" val: "+p.getValue()+" :::: "+val);
+						// logger.info("TYPE: "+p.getType()+" val: "+p.getValue()+" :::: "+val);
 						if (val instanceof Date) {
-							// /System.err.println("PArsing date: ");
+							// /logger.info("PArsing date: ");
 							value = navajoDateFormat.format((Date) val);
-							// System.err.println("Valllll: "+value);
+							// logger.info("Valllll: "+value);
 						} else {
 							value = "" + val;
 						}
 					}
 					if (value == null || value.equals("null")) {
-						// System.out.println("Null priperty at index: "+i+","+j+"");
+						// logger.info("Null priperty at index: "+i+","+j+"");
 						// data.getMessage(i).write(System.err);
 						value = "";
 					} else {
@@ -692,12 +697,12 @@ public class MessageTable extends JTable implements CellEditorListener,
 						fw.write(line + "\n");
 					}
 				} else {
-					System.err.println("Skipped an all-null line.");
+					logger.info("Skipped an all-null line.");
 				}
 			}
 			fw.write("\n");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -712,7 +717,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		int i = mapRowNumber(row);
 		Integer in = new Integer(i);
 		Color c = rowColorMap.get(in);
-		// System.err.println("Looking for color... "+in);
+		// logger.info("Looking for color... "+in);
 		if (c == null && !rowColorMap.containsKey(in)) {
 			createRowColor(i);
 			return rowColorMap.get(in);
@@ -736,16 +741,16 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 			String key = it.next();
 			Property p = m.getProperty(key);
-			// System.err.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>> Looking for color of row: "
+			// logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>> Looking for color of row: "
 			// + key);
 			if (p != null) {
 				ColumnAttribute ca = columnAttributes.get(key);
 				if (ca != null) {
-					// System.err.println("Got column atributes");
+					// logger.info("Got column atributes");
 					if (ca.getType().equals(ColumnAttribute.TYPE_ROWCOLOR)) {
 						String color = ca.getParam(p.getValue());
 						if (color != null) {
-							// System.err.println("Found color: " + color);
+							// logger.info("Found color: " + color);
 							Color clr = Color.decode(color);
 							setRowColor(i, clr);
 						} else {
@@ -835,10 +840,10 @@ public class MessageTable extends JTable implements CellEditorListener,
 						q.addSelection(r);
 					}
 					// try {
-					// System.err.println("----------------------------------->>>>,<<< Replaced: "
+					// logger.info("----------------------------------->>>>,<<< Replaced: "
 					// + replaced.getValue() + ", key is: '" + key + "'");
 					// if(replaced != null){
-					// System.err.println("Setting cache property selection to: "
+					// logger.info("Setting cache property selection to: "
 					// + replaced.getValue());
 					// p.clearSelections();
 					// p.setSelected(replaced.getValue());
@@ -854,7 +859,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 			fireDataChanged();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -878,7 +883,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 				savePathJustChanged = false;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			System.err
 					.println("WARNING: Could not save columns in MessageTable.setMessage(Message m)");
 		}
@@ -908,7 +913,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 			}
 		}
 
-		// System.err.println("ColumnM: "+getColumnModel().getTotalColumnWidth());
+		// logger.info("ColumnM: "+getColumnModel().getTotalColumnWidth());
 
 		createDefaultColumnsFromMessageModel();
 		// setPreferredScrollableViewportSize(new
@@ -1044,7 +1049,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 					"should be called from event thread");
 		}
 
-		// System.err.println("in createDefaultFromModel()");
+		// logger.info("in createDefaultFromModel()");
 		MessageTableColumnModel tcm = new MessageTableColumnModel();
 		tcm.addColumnModelListener(tableFooter);
 		if (tableFooter != null) {
@@ -1056,7 +1061,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		// tcm.loadSizes(columnSizeMap);
 		// for (int i = 0; i < tcm.getColumnCount(); i++) {
 		// TableColumn tc = tcm.getColumn(i);
-		// System.err.println("Column: "+i+" : "+tc.getPreferredWidth()+"  "+tc.getWidth());
+		// logger.info("Column: "+i+" : "+tc.getPreferredWidth()+"  "+tc.getWidth());
 		// }
 		setColumnModel(tcm);
 		setDefaultEditor(Object.class, myEditor);
@@ -1100,7 +1105,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		try {
 			File columnFile = new File(columnPathString);
 			if (columnFile.exists()) {
-				// System.err.println("Getting coldefs..");
+				// logger.info("Getting coldefs..");
 				fis = new FileInputStream(columnPathString);
 				Navajo n = NavajoFactory.getInstance().createNavajo(fis);
 				Message cdef = n.getMessage("columndef");
@@ -1108,11 +1113,11 @@ public class MessageTable extends JTable implements CellEditorListener,
 					columnFile.delete();
 					return;
 				}
-				// System.err.println("Found " + cdef.getArraySize() +
+				// logger.info("Found " + cdef.getArraySize() +
 				// " columns");
 				for (int i = 0; i < cdef.getArraySize(); i++) {
 					Message current = cdef.getMessage(i);
-					// System.err.println("Checking message for column " +
+					// logger.info("Checking message for column " +
 					// column);
 					// current.write(System.err);
 
@@ -1121,7 +1126,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 					if (id != null) {
 						if (column.equals(id.getValue())) {
 							name.setValue(title);
-							// System.err.println("Renamed column: " + column +
+							// logger.info("Renamed column: " + column +
 							// " to " + title);
 						}
 					}
@@ -1137,7 +1142,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		} catch (SecurityException e) {
 			// whatever
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} finally {
 			if (fis != null) {
 				try {
@@ -1168,7 +1173,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 			try {
 				fis.close();
 			} catch (IOException ex) {
-				System.err.println("Error closing columns file.");
+				logger.info("Error closing columns file.");
 			}
 		} catch (SecurityException e) {
 		}
@@ -1192,12 +1197,12 @@ public class MessageTable extends JTable implements CellEditorListener,
 				"sortedColumn").getValue());
 		final boolean sortedDirection = cdef.getProperty("sortedDirection")
 				.getValue().equals("true");
-		// System.err.println("sortedDirection: " +
+		// logger.info("sortedDirection: " +
 		// cdef.getProperty("sortedDirection").getValue());
 		SwingUtilities.invokeLater(new Runnable() {
 
 			public void run() {
-				System.err.println("BEWARE OF THE WOBBLE!");
+				logger.info("BEWARE OF THE WOBBLE!");
 				doSort(sortedColumn, sortedDirection);
 			}
 		});
@@ -1207,19 +1212,19 @@ public class MessageTable extends JTable implements CellEditorListener,
 		}
 		for (int i = 0; i < cdef.getArraySize() + substractCount; i++) {
 			if (i == 0 && myModel.isShowingRowHeaders()) {
-				// System.err.println("Setting editcolumn to width: 45");
+				// logger.info("Setting editcolumn to width: 45");
 				setColumnWidth(i, 45);
 			} else {
 				Message m = cdef.getMessage(i - substractCount);
 				int width = Integer.parseInt(m.getProperty("width").getValue());
-				// System.err.println("Setting " + i + " to width: " + width);
+				// logger.info("Setting " + i + " to width: " + width);
 				setColumnWidth(i, width);
 			}
 		}
 	}
 
 	public final void setColumnAttributes(Map<String, ColumnAttribute> m) {
-		// System.err.println("MessageTable columnAttributes set.");
+		// logger.info("MessageTable columnAttributes set.");
 		columnAttributes = m;
 	}
 
@@ -1253,7 +1258,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	public String getTypeHint(String id) {
 		MessageTableModel mtm = getMessageModel();
 		String type = mtm.getTypeHint(id);
-		// System.err.println("Getting type hint: " + type);
+		// logger.info("Getting type hint: " + type);
 		return type;
 	}
 
@@ -1308,7 +1313,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		} else {
 			y = topLeft.y;
 		}
-		// System.err.println("Setting to: " + x + "- " + y);
+		// logger.info("Setting to: " + x + "- " + y);
 		jd.setLocation(x, y);
 		jd.requestFocus();
 	}
@@ -1407,8 +1412,8 @@ public class MessageTable extends JTable implements CellEditorListener,
 			widths[i] = width;
 			names[i] = name;
 			titles[i] = title;
-			System.err.println("Adding width: " + width);
-			System.err.println("Adding name: " + name);
+			logger.info("Adding width: " + width);
+			logger.info("Adding name: " + name);
 		}
 		System.err
 				.println("USING NAVAJOCLIENTFACTORY. This will stop working pretty soon.");
@@ -1457,7 +1462,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 								q.setValue(value);
 
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error("Error: ",e);
 							}
 						} else {
 							q = p.copy(newNavajo);
@@ -1465,7 +1470,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 							try {
 								q.setType(p.getEvaluatedType());
 							} catch (NavajoException e) {
-								e.printStackTrace();
+								logger.error("Error: ",e);
 								q.setType(Property.STRING_PROPERTY);
 							}
 						}
@@ -1495,7 +1500,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 								q.setValue(value);
 
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error("Error: ",e);
 							}
 						} else {
 							q = p.copy(newNavajo);
@@ -1503,7 +1508,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 							try {
 								q.setType(p.getEvaluatedType());
 							} catch (NavajoException e) {
-								e.printStackTrace();
+								logger.error("Error: ",e);
 								q.setType(Property.STRING_PROPERTY);
 							}
 						}
@@ -1565,7 +1570,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		try {
 			// Object oldVal = init.getTypedValue();
 			Object newVal = current.getTypedValue();
-			System.err.println("Current name: " + current.getName()
+			logger.info("Current name: " + current.getName()
 					+ " oldVal: " + oldVal + " new: " + newVal);
 			if (oldVal == null) {
 				if (newVal == null) {
@@ -1585,13 +1590,13 @@ public class MessageTable extends JTable implements CellEditorListener,
 			e1.printStackTrace();
 		}
 
-		// System.err.println("Editing stopped, in MT");
+		// logger.info("Editing stopped, in MT");
 		changed = true;
 		// if (current != null &&
 		// Property.SELECTION_PROPERTY.equals(current.getType())) {
 		// // a selection property
 		// if (replacementMap.containsKey(current.getName())) {
-		// //System.err.println("You're edititing a cached property");
+		// //logger.info("You're edititing a cached property");
 		// try {
 		// getSelectedMessage().getProperty( (String)
 		// replacementMap.get(current.getName())).setValue(current.getSelected().getValue());
@@ -1605,7 +1610,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		// Selection currentSel = current.getSelected();
 		// if (! (initSel != null && currentSel != null &&
 		// initSel.getValue().equals(currentSel.getValue()))) {
-		// // System.err.println("Ready for select");
+		// // logger.info("Ready for select");
 		// try {
 		// fireChangeEvents(init, current);
 		// return;
@@ -1631,7 +1636,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		// }
 		// }
 		// else {
-		// // System.err.println("Ignoring equal..");
+		// // logger.info("Ignoring equal..");
 		// }
 		// }
 		// else {
@@ -1660,14 +1665,14 @@ public class MessageTable extends JTable implements CellEditorListener,
 				// List props = myMessage.getRootDoc().refreshExpression();
 				// myMessage.refreshExpression();
 				// NavajoFactory.getInstance().getExpressionEvaluator().
-				// System.err.println("# of properties changed: "+props.size());
+				// logger.info("# of properties changed: "+props.size());
 
 				// getMessageModel().updateProperties(props);
 
 				updateExpressions();
 				// fireDataChanged();
 			}
-			// System.err.println("refreshed. Items changed: "+props.size());
+			// logger.info("refreshed. Items changed: "+props.size());
 			// for (int i = 0; i < props.size(); i++) {
 			// Property currentProp = (Property)props.get(i);
 			// firePropertyChanged(currentProp);
@@ -1682,7 +1687,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		List<Property> props = myMessage.getRootDoc().refreshExpression();
 		// myMessage.refreshExpression();
 		// NavajoFactory.getInstance().getExpressionEvaluator().
-		// System.err.println("# of properties changed: " + props.size());
+		// logger.info("# of properties changed: " + props.size());
 
 		getMessageModel().updateProperties(props);
 	}
@@ -1831,7 +1836,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 	public int getColumnWidth(int index) {
 		// if (!SwingUtilities.isEventDispatchThread()) {
-		// System.err.println("Illegal Thread: " +
+		// logger.info("Illegal Thread: " +
 		// Thread.currentThread().getName());
 		// }
 		MessageTableColumnModel tc = (MessageTableColumnModel) getColumnModel();
@@ -1850,7 +1855,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 
 	public final void setColumnDefinitionSavePath(String path) {
 		if (columnPathString != null && !columnPathString.equals(path)) {
-			// System.err.println("Setting savePAthJustChanged to  true!");
+			// logger.info("Setting savePAthJustChanged to  true!");
 			savePathJustChanged = true;
 		}
 		columnPathString = path;
@@ -1894,7 +1899,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 				}
 				columnPathString = cps;
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		} catch (SecurityException e) {
 			// ignore security
@@ -1918,10 +1923,10 @@ public class MessageTable extends JTable implements CellEditorListener,
 				fw.close();
 			}
 			// else {
-			// System.err.println("WARNING: Did not save columns because I have none... or no rows");
+			// logger.info("WARNING: Did not save columns because I have none... or no rows");
 			// }
 		} catch (SecurityException e) {
-			// e.printStackTrace();
+			// logger.error("Error: ",e);
 		}
 	}
 
@@ -1938,7 +1943,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		m.addProperty(NavajoFactory.getInstance().createProperty(cdef,
 				"sortedDirection", Property.BOOLEAN_PROPERTY,
 				"" + sortedDirection, 0, "", Property.DIR_IN));
-		// System.err.println("Setting sort direction to: " + sortedDirection);
+		// logger.info("Setting sort direction to: " + sortedDirection);
 		int count = getColumnCount();
 		int start = 0;
 		if (myModel.isShowingRowHeaders()) {
@@ -2015,7 +2020,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 				cols = cols + getColumnId(k);
 			}
 		}
-		// System.err.println("COLUMS IN COPY: " + cols);
+		// logger.info("COLUMS IN COPY: " + cols);
 		try {
 			List<Message> selectedMsgs = getSelectedMessages();
 			if (selectedMsgs != null) {
@@ -2032,13 +2037,13 @@ public class MessageTable extends JTable implements CellEditorListener,
 				returnMsg = getMessage();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		StringWriter sw = new StringWriter();
 		try {
 			returnMsg.write(sw);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return cols + "<tml>" + sw.toString() + "</tml>";
 	}

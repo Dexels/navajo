@@ -18,6 +18,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -45,6 +48,10 @@ import com.dexels.navajo.document.Selection;
 
 public final class MultipleSelectionPropertyPickList extends JPanel implements
 		PropertyControlled {
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MultipleSelectionPropertyPickList.class);
 	private static final long serialVersionUID = -6853070214866368382L;
 	JScrollPane jScrollPane1 = new JScrollPane();
 	JScrollPane jScrollPane2 = new JScrollPane();
@@ -66,7 +73,7 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 			selectedList.setCellRenderer(new PropertyCellRenderer());
 			notSelectedList.setCellRenderer(new PropertyCellRenderer());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -133,21 +140,21 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 //			private static final long serialVersionUID = 5612713468556136254L;
 //
 //			public void propertyChange(PropertyChangeEvent evt) {
-//				System.err.println("CHANGE DETECTED: " + evt.getPropertyName()
+//				logger.info("CHANGE DETECTED: " + evt.getPropertyName()
 //						+ " old: " + evt.getOldValue() + " new: "
 //						+ evt.getNewValue());
 //				Thread.dumpStack();
-//				System.err.println("OLDVALCLASS: "
+//				logger.info("OLDVALCLASS: "
 //						+ evt.getOldValue().getClass());
-//				System.err.println("NEWVALCLASS: "
+//				logger.info("NEWVALCLASS: "
 //						+ evt.getNewValue().getClass());
 //				BasePropertyImpl pp = (BasePropertyImpl) p;
 //				try {
 //					StringWriter stringWriter = new StringWriter();
 //					pp.write(stringWriter);
-//					System.err.println("s: " + stringWriter.toString());
+//					logger.info("s: " + stringWriter.toString());
 //				} catch (NavajoException e) {
-//					e.printStackTrace();
+//					logger.error("Error: ",e);
 //				}
 //			}
 //		};
@@ -161,7 +168,7 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 			notSelectedList.setVisibleRowCount(visibleRows);
 			buildListModel(p);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -185,7 +192,7 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 						.println("WARNING: Setting a non-selection type property in MultipleSelectionPropertyPickList");
 			}
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -285,7 +292,7 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 			msppl.setProperty(p);
 			frame.setVisible(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

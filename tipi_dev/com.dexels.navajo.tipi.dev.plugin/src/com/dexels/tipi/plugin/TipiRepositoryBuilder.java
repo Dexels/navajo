@@ -119,8 +119,8 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 	}
 
 	boolean checkTipiProperties(IResource resource,IProgressMonitor monitor) {
-//		System.err.println("Entering rebuild.");
-//		System.err.println("resource name: "+resource.getName());
+//		logger.info("Entering rebuild.");
+//		logger.info("resource name: "+resource.getName());
 		monitor.setTaskName("Rebuilding tipi project");
 		if(!(resource instanceof IFile)) {
 			return false;
@@ -136,7 +136,7 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 					try {
 						file.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 					} catch (CoreException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
 				monitor.worked(5);
@@ -157,7 +157,7 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 		XsdBuilder b = new XsdBuilder();
 		try { 
 			b.build(repository,extensionRepository, extensions, baseDir);
-			System.err.println("XSD rebuilt!");
+			logger.info("XSD rebuilt!");
 			m.setTaskName("Building XSD");
 		} catch (IOException e) {
 			logger.error("XSD generator error:",e);
@@ -224,7 +224,7 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 
 				} else {
 					for (String profile : profiles) {
-						System.err.println("Building profile: "+profile);
+						logger.info("Building profile: "+profile);
 						buildWebXml(deployment,profiles,m, projectPath,extensions, extensionRepository, developmentRepository);
 						
 					}
@@ -236,7 +236,7 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 
 				} else {
 					for (String profile : profiles) {
-						System.err.println("Building profile: "+profile);
+						logger.info("Building profile: "+profile);
 						buildProfileJnlp(deployment,profiles,clean, m, projectPath, projectUrl, extensions, extensionRepository,developmentRepository, buildType,useVersioning);
 						
 					}
@@ -261,7 +261,7 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 				m.worked(10);
 							
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		
 		
@@ -334,7 +334,7 @@ private void buildClassPath(IProject project, String repository, String extensio
 		ClasspathBuilder cb = new ClasspathBuilder();
 		cb.build(repository, extensions,project.getLocation().toFile());
 	} catch (Exception e) {
-		e.printStackTrace();
+		logger.error("Error: ",e);
 	}
 }
 
@@ -364,7 +364,7 @@ private void buildClassPath(IProject project, String repository, String extensio
 				tpb.setUseVersioning(useVersioning);
 				tpb.downloadExtensionJars(ext, version, new URL(repository+vr.resultVersionPath(token)+"/"), extensionXml, projectPath, clean,false);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 	}
@@ -396,7 +396,7 @@ private void buildClassPath(IProject project, String repository, String extensio
 			try {
 				rebuildLocalTipi(ProjectBuilder.getCurrentDeploy(getProject().getLocation().toFile()), getProject(),false,monitor);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		monitor.done();

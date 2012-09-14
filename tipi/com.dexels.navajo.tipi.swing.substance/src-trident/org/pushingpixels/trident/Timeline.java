@@ -156,7 +156,7 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 				if ((uiToolkitHandler != null)
 						&& !uiToolkitHandler.isInReadyState(fInfo.object))
 					continue;
-				// System.err.println("Timeline @" + Timeline.this.hashCode()
+				// logger.info("Timeline @" + Timeline.this.hashCode()
 				// + " at position " + timelinePosition);
 				fInfo.updateFieldValue(timelinePosition);
 			}
@@ -243,14 +243,14 @@ public class Timeline implements TimelineScenario.TimelineScenarioActor {
 								public void run() {
 									if (Timeline.this.getState() == TimelineState.CANCELLED)
 										return;
-									// System.err.println("Timeline @"
+									// logger.info("Timeline @"
 									// + Timeline.this.hashCode());
 									callback.onTimelinePulse(durationFraction,
 											timelinePosition);
 								}
 							});
 				} else {
-					// System.err.println("Timeline @" +
+					// logger.info("Timeline @" +
 					// Timeline.this.hashCode());
 					callback
 							.onTimelinePulse(durationFraction, timelinePosition);

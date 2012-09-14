@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.ContentPane;
@@ -34,7 +37,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public final class TipiWindow extends TipiEchoDataComponentImpl {
 	private static final long serialVersionUID = 6587665353415100107L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiWindow.class);
 	private WindowPane myWindow;
 
     private String myTitle;
@@ -129,11 +134,9 @@ public final class TipiWindow extends TipiEchoDataComponentImpl {
 				myWindow.setVisible(false);
 			    
     		} catch (TipiException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error: ",e);
     		} catch (TipiBreakException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
     	// myContext.disposeTipi(this);
     }
@@ -144,10 +147,10 @@ public final class TipiWindow extends TipiEchoDataComponentImpl {
     
     
     public void addToContainer(final Object c, final Object constraints) {
-//        System.err.println("In window. Visible: "+ ((WindowPane) getContainer()).isVisible()+" w: "+ ((WindowPane) getContainer()).getWidth()+" h: "+ ((WindowPane) getContainer()).getHeight());
+//        logger.info("In window. Visible: "+ ((WindowPane) getContainer()).isVisible()+" w: "+ ((WindowPane) getContainer()).getWidth()+" h: "+ ((WindowPane) getContainer()).getHeight());
         if(layoutComponent!=null) {
          	// do layoutstuff
-//        	 System.err.println("LAYOUT DETECTED ON FRAME!!!!");
+//        	 logger.info("LAYOUT DETECTED ON FRAME!!!!");
          	layoutComponent.setParentComponent(this);
          	layoutComponent.addChildComponent((Component) c, constraints);
          } else {

@@ -33,6 +33,9 @@ import java.io.Serializable;
 import java.util.EventListener;
 import java.util.EventObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Button;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.Label;
@@ -47,11 +50,10 @@ import com.dexels.navajo.document.NavajoException;
  */
 public class PageNavigator extends Row {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2445605624264163792L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PageNavigator.class);
 	/**
 	 * An <code>EventListener</code> to provide notification of page index
 	 * changes.
@@ -218,7 +220,7 @@ public class PageNavigator extends Row {
 	private void firePageIndexChanged() {
 		EventListener[] listeners = getEventListenerList().getListeners(
 				PageIndexChangeListener.class);
-		System.err.println("Firing index changed... Listeners count: "
+		logger.info("Firing index changed... Listeners count: "
 				+ listeners.length);
 		PageIndexChangeEvent e = new PageIndexChangeEvent(getPageIndex());
 		for (int i = 0; i < listeners.length; ++i) {
@@ -261,7 +263,7 @@ public class PageNavigator extends Row {
 	 *            the new page index
 	 */
 	public void setPageIndex(int pageIndex) {
-		System.err.println("Setting to pageIndex: " + pageIndex
+		logger.info("Setting to pageIndex: " + pageIndex
 				+ " totalPages: " + totalPages);
 		if (pageIndex < 0) {
 			pageIndex = 0;

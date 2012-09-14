@@ -8,6 +8,9 @@ import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMultipart;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.Binary;
@@ -17,9 +20,9 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class GetPart extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(GetPart.class);
 	public GetPart() {	
-//		super(new Class[][]{ {Float.class,Integer.class, null} });
-//		setReturnType(new Class[]{String.class});
 	}
 	
 	/* (non-Javadoc)
@@ -38,17 +41,16 @@ public class GetPart extends FunctionInterface {
 		DataSource ds = new BinaryDataSource(b);
 		try {
 			MimeMultipart mmp = new MimeMultipart(ds);
-			System.err.println("# of bodyparts: "+mmp.getCount());
+			logger.info("# of bodyparts: "+mmp.getCount());
 			BodyPart bp = mmp.getBodyPart(index);
 			String type = bp.getContentType();
 			Binary result = new Binary( bp.getInputStream());
 			result.setMimeType(type);
 			return result;
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 
@@ -60,13 +62,13 @@ public class GetPart extends FunctionInterface {
 		is.close();
 		nn.write(System.err);
 		Binary b = (Binary) nn.getProperty("MailBox/Mail@0/Content").getTypedValue();
-		System.err.println("Length: "+b.getLength()+" type: "+b.guessContentType());
+		logger.info("Length: "+b.getLength()+" type: "+b.guessContentType());
 		GetPart gp = new GetPart();
 		gp.reset();
 		gp.insertOperand(b);
 		gp.insertOperand(0);
 		Binary result = (Binary) gp.evaluate();
-		System.err.println("Length of part 0: "+result.getLength());
+		logger.info("Length of part 0: "+result.getLength());
 		
 	}
 	

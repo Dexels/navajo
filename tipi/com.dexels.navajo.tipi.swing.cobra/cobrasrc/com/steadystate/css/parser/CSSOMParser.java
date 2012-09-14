@@ -61,7 +61,7 @@ public class CSSOMParser {
         	
         	_parser = new com.steadystate.css.parser.SACParser();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            logger.info(e.getMessage());
         }
     }
 
