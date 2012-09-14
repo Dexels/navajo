@@ -14,6 +14,8 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  org.slf4j;version="1.6.1"
 Require-Bundle: com.dexels.navajo.resource;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.5",
- com.dexels.navajo.listeners;bundle-version="3.1.6"
-Service-Component: OSGI-INF/resourceManager.xml
+ com.dexels.navajo.listeners;bundle-version="3.1.6",
+ org.apache.felix.gogo.runtime;bundle-version="0.10.0"
+Service-Component: OSGI-INF/resourceManager.xml,
+ OSGI-INF/reloadDatasources.xml
 Export-Package: com.dexels.navajo.resource.manager

@@ -166,7 +166,7 @@ public class ResourceManager {
 
 
 	
-	private void setupResources() {
+	public void setupResources() {
 		FileInputStream fis = null;
 		try {
 			logger.info("Looking for datasources in: "+navajoServerContext.getInstallationPath());
