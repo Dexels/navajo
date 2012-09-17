@@ -239,7 +239,7 @@ public final class JarResources {
      *       ...
      * </pre>
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
 //        JarResources jr = new JarResources(new File("/home/arjen/projecten/Navajo/tml.dtd"));
 //        Iterator iter = jr.getResources("/com/dexels/navajo/document/");

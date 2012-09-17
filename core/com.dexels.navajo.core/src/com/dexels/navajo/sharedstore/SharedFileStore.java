@@ -301,11 +301,9 @@ public class SharedFileStore implements SharedStoreInterface {
 		// Sort files on last modification date
 		if ( fs != null) {
 			Arrays.sort(fs, new FileComparator());
-			if ( fs != null ) {
-				for (int i = 0; i < fs.length; i++) {
-					if ( fs[i].isDirectory()) {
-						names.add(fs[i].getName());
-					}
+			for (int i = 0; i < fs.length; i++) {
+				if ( fs[i].isDirectory()) {
+					names.add(fs[i].getName());
 				}
 			}
 		}
@@ -324,11 +322,9 @@ public class SharedFileStore implements SharedStoreInterface {
 		// Sort files on last modification date
 		if ( fs != null) {
 			Arrays.sort(fs, new FileComparator());
-			if ( fs != null ) {
-				for (int i = 0; i < fs.length; i++) {
-					if ( fs[i].isFile()) {
-						names.add(fs[i].getName());
-					}
+			for (int i = 0; i < fs.length; i++) {
+				if ( fs[i].isFile()) {
+					names.add(fs[i].getName());
 				}
 			}
 		}
@@ -448,10 +444,7 @@ public class SharedFileStore implements SharedStoreInterface {
 				oos.reset();
 			} catch (Exception e) {
 				logger.error("Error: ", e);
-				// TODO: Log exception!!
-				if ( f != null ) {
-					f.delete();
-				}
+				f.delete();
 			} finally {
 			if ( oos != null ) {
 					try {
@@ -540,10 +533,7 @@ public class SharedFileStore implements SharedStoreInterface {
 				sw.write(str);
 			} catch (Exception e) {
 				logger.error("Error: ", e);
-				if ( f != null ) {
 					f.delete();
-				}
-				// TODO: Log exception.
 			} finally {
 				if ( sw != null ) {
 					try {

@@ -17,8 +17,6 @@ import com.dexels.navajo.server.AfterWebServiceEmitter;
 import com.dexels.navajo.server.ConditionData;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.SystemException;
-import com.dexels.navajo.server.UserException;
 
 public class TestDispatcher implements DispatcherInterface {
 
@@ -77,8 +75,7 @@ public class TestDispatcher implements DispatcherInterface {
 	}
 
 	public Message[] checkConditions(ConditionData[] conditions,
-			Navajo inMessage, Navajo outMessage) throws NavajoException,
-			SystemException, UserException {
+			Navajo inMessage, Navajo outMessage) throws NavajoException {
 		
 		return null;
 	}
@@ -188,7 +185,7 @@ public class TestDispatcher implements DispatcherInterface {
 		
 	}
 
-	public Navajo handle(Navajo inMessage, TmlRunnable initialRunnable, Object userCertificate) throws FatalException {
+	public Navajo handle(Navajo inMessage, TmlRunnable initialRunnable, Object userCertificate) {
 		return handle(inMessage,userCertificate);
 	}
 

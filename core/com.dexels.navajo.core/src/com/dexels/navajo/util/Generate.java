@@ -2,7 +2,6 @@ package com.dexels.navajo.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -265,7 +264,7 @@ public class Generate {
         //System.out.println(result.toString());
   }
 
-  public static Document createDocument(InputStream input) throws FileNotFoundException, NavajoException {
+  public static Document createDocument(InputStream input) throws NavajoException {
 
           Document d = null;
           d = XMLDocumentUtils.createDocument(input, false);

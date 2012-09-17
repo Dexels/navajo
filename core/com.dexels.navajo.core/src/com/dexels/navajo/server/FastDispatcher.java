@@ -22,6 +22,7 @@ public class FastDispatcher {
 	 * @param in
 	 * @param responseOutputStream
 	 */
+	@SuppressWarnings("unchecked")
 	public void handle(Navajo in, OutputStream responseOutputStream, Runnable onFinish) {
 		
 		// System.err.println(">>>> IN FASTDISPATCHER.HANDLE()..." + responseOutputStream);

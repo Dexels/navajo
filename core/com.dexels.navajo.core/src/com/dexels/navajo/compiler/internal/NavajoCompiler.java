@@ -34,7 +34,6 @@ import java.util.zip.ZipFile;
 
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.legacy.compiler.SunJavaCompiler;
-import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
 @Deprecated
