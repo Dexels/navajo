@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
 
-<target name="Navajo Develop" sequenceNumber="631">
+<target name="Navajo Develop" sequenceNumber="635">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.chart.feature.group" version="2.6.2.r262_v20101008-7f9T7OFPWowQ1naKt1Wwu4"/>
@@ -315,7 +315,7 @@
 <repository location="https://source.dexels.com/eclipse/platform_4.2"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.3.9.RELEASE"/>
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.3.10.RELEASE"/>
 <repository location="https://source.dexels.com/eclipse/3rdparty"/>
 </location>
 </locations>
