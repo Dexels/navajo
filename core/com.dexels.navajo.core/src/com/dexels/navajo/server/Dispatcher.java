@@ -41,6 +41,11 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import navajocore.Version;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -63,6 +68,7 @@ import com.dexels.navajo.lockguard.LockDefinition;
 import com.dexels.navajo.lockguard.LockManager;
 import com.dexels.navajo.lockguard.LocksExceeded;
 import com.dexels.navajo.mapping.AsyncStore;
+import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.RemoteAsyncAnswer;
@@ -1618,5 +1624,85 @@ public String getServerId() {
   public static ResourceManager getResourceManager(String id) {
 	  return DispatcherFactory.getInstance();
   }
+  
+	private CompiledScript getOSGiService(String scriptName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		final BundleContext bundleContext = Version.getDefaultBundleContext();
+		if(bundleContext==null) {
+			logger.debug("No OSGi context found");
+			return null;
+		}
+		String rpcName = scriptName.replaceAll("/", ".");
+		String filter = "(navajo.scriptName="+rpcName+")";
+		ServiceReference<?>[] sr;
+		try {
+			sr = bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filter);
+		} catch (InvalidSyntaxException e) {
+			logger.error("Filter syntax problem for: "+filter,e);
+			return null;
+		}
+		if(sr==null || sr.length==0) {
+			logger.error("No service reference found for "+filter);
+			try {
+				CompiledScript ss = loadOnDemand(bundleContext, rpcName, filter);
+				return ss;
+			} catch (Exception e) {
+				logger.error("Service  "+filter,e);
+			}
+		}
+		
+		if(sr!=null && sr.length>1) {
+			logger.warn("Multiple references ({}) found for {}",sr.length,filter);
+		}
+		
+		if(sr==null) {
+			logger.error("BundleContext is null. Why?!");
+		}
+		CompiledScriptFactory csf = null;
+		if(sr!=null) {
+			 csf = (CompiledScriptFactory) bundleContext.getService(sr[0]);
+			 if(csf!=null ) {
+				 return csf.getCompiledScript();
+			 }			
+		}
+		 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter);
+		 BundleCreator bc = DispatcherFactory.getInstance().getBundleCreator();
+		 if(bc!=null) {
+			 
+			 try {
+				CompiledScript ss = bc.getOnDemandScriptService(rpcName);
+				return ss;
+			} catch (Exception e) {
+				logger.error("on demand script resolution failed.",e);
+			}
+		 }
+		return null;
+
+//		 CompiledScript ss;
+//		try {
+//			ss = csf.getCompiledScript();
+//			final CompiledScript ccs = ss;
+//		} catch (Exception e) {
+//			 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter,e);
+//			 return null;
+//		}
+//		bundleContext.ungetService(sr[0]);
+//		 return ss;
+	}
+
+	private CompiledScript loadOnDemand(BundleContext bundleContext, String rpcName, String filter) throws Exception {
+		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
+		BundleCreator bc = bundleContext.getService(ref);
+		
+//		BundleCreator bc = getBundleCreator(bundleContext);
+		if(bc==null) {
+			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
+			return null;
+		}
+		CompiledScript sc = bc.getOnDemandScriptService(rpcName);
+		// wait for it..
+		bundleContext.ungetService(ref);
+		return sc;
+	}
+
   
 }
