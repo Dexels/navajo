@@ -50,14 +50,7 @@ public class ResourceManager {
 	
 	public void deactivate() {
 		logger.info("Deactivating context!");
-		for (String pid : resourcePids) {
-			try {
-				Configuration c = configAdmin.getConfiguration(pid);
-				c.delete();
-			} catch (IOException e) {
-				logger.error("Error deregistering configuration: "+pid);
-			}
-		}
+		unloadDataSources();
 		try {
 			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient",null);
 			if(config!=null) {
@@ -66,6 +59,17 @@ public class ResourceManager {
 			}
 		} catch (IOException e) {
 			logger.error("Error deactivating config: ", e);
+		}
+	}
+
+	public void unloadDataSources() {
+		for (String pid : resourcePids) {
+			try {
+				Configuration c = configAdmin.getConfiguration(pid);
+				c.delete();
+			} catch (IOException e) {
+				logger.error("Error deregistering configuration: "+pid);
+			}
 		}
 	}
 

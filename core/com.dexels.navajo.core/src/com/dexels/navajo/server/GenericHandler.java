@@ -420,7 +420,8 @@ public final class GenericHandler extends ServiceHandler {
     	
         try {
             // Should method getCompiledNavaScript be fully synced???
-        	CompiledScript cso = getOSGiService(access.rpcName);
+        	CompiledScript cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, null);
+        	//(access.rpcName);
         	if(cso==null) {
         		if(Version.osgiActive()) {
         			logger.warn("Script not found from OSGi registry while OSGi is active");
@@ -470,6 +471,7 @@ public final class GenericHandler extends ServiceHandler {
 			return null;
 		}
 		String rpcName = scriptName.replaceAll("/", ".");
+		
 		String filter = "(navajo.scriptName="+rpcName+")";
 		ServiceReference<?>[] sr;
 		try {

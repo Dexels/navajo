@@ -153,34 +153,33 @@ public class SQLMapHelper {
 	protected static void setBlob(PreparedStatement statement, int i, Binary b, Class classHoldingBinaryStreamList) throws SQLException {
 		if (b != null) {
 
-			InputStream os = b.getDataAsStream();
+			InputStream is = b.getDataAsStream();
 
-			if (os != null && b.getLength() > 0) {
-				statement.setBinaryStream(i + 1, os, (int) b.getLength());
+			if (is != null && b.getLength() > 0) {
+				statement.setBinaryStream(i + 1, is, (int) b.getLength());
 				// All streams in this list will be closed on kill() or store()
 				try {
 					Class params[] = new Class[1];
 					params[0] = InputStream.class;
 					String className = classHoldingBinaryStreamList.getName();
-//					System.out.println("****************************** classname = " + className);
 					Class cls = Class.forName(className);
 					Object obj = cls.newInstance();
 					Method method = cls.getDeclaredMethod("addToBinaryStreamList", params);
-					method.invoke(obj, os);
+					method.invoke(obj, is);
 				} catch (ClassNotFoundException e) {
-					throw new SQLException("ClassNotFoundException encountered in : " + classHoldingBinaryStreamList.getName());
+					throw new SQLException("ClassNotFoundException encountered in : " + classHoldingBinaryStreamList.getName(), e);
 				} catch (InstantiationException e) {
-					throw new SQLException("InstantiationException encountered in : " + classHoldingBinaryStreamList.getName());
+					throw new SQLException("InstantiationException encountered in : " + classHoldingBinaryStreamList.getName(), e);
 				} catch (IllegalAccessException e) {
-					throw new SQLException("IllegalAccessException encountered in : " + classHoldingBinaryStreamList.getName());
+					throw new SQLException("IllegalAccessException encountered in : " + classHoldingBinaryStreamList.getName(), e);
 				} catch (SecurityException e) {
-					throw new SQLException("SecurityException encountered in : " + classHoldingBinaryStreamList.getName());
+					throw new SQLException("SecurityException encountered in : " + classHoldingBinaryStreamList.getName(), e);
 				} catch (NoSuchMethodException e) {
-					throw new SQLException("NoSuchMethodException encountered in : " + classHoldingBinaryStreamList.getName());
+					throw new SQLException("NoSuchMethodException encountered in : " + classHoldingBinaryStreamList.getName(), e);
 				} catch (IllegalArgumentException e) {
-					throw new SQLException("IllegalArgumentException encountered in : " + classHoldingBinaryStreamList.getName());
+					throw new SQLException("IllegalArgumentException encountered in : " + classHoldingBinaryStreamList.getName(), e);
 				} catch (InvocationTargetException e) {
-					throw new SQLException("InvocationTargetException encountered in : " + classHoldingBinaryStreamList.getName());
+					throw new SQLException("InvocationTargetException encountered in : " + classHoldingBinaryStreamList.getName(), e);
 				}
 			} else {
 				statement.setNull(i + 1, Types.BLOB);

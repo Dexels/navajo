@@ -13,6 +13,7 @@ package com.dexels.navajo.adapter;
  *
  */
 
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.Date;
@@ -44,7 +45,7 @@ import com.dexels.navajo.util.AuditLog;
 public class SPMap extends SQLMap {
 
 	
-	private final static Logger logger = LoggerFactory.getLogger(SPMap.class);
+  private final static Logger logger = LoggerFactory.getLogger(SPMap.class);
   public String outputParameter;
   public String outputParameterType;
 
@@ -163,13 +164,13 @@ public class SPMap extends SQLMap {
 	            if (type == INPUT_PARAM) {
 	                spIndex++;
 					SQLMapHelper.setParameter(callStatement,
-													param, 
-													i, 
-													this.getClass(),
-													myConnectionBroker.getDbIdentifier(), 
-													this.isLegacyMode,
-													this.debug, 
-													this.myAccess);
+    										  param, 
+    										  i, 
+    										  this.getClass(),
+    										  myConnectionBroker.getDbIdentifier(), 
+    										  this.isLegacyMode,
+    										  this.debug, 
+    										  this.myAccess);
 	            } else {
 	              int sqlType = ( (Integer) lookupTable.get( param)).intValue();
 	              callStatement.registerOutParameter(i + 1, sqlType);
@@ -432,5 +433,12 @@ public class SPMap extends SQLMap {
       sqle.printStackTrace();
     }
     super.kill();
+  }
+  
+  /**
+   * This method can not be deleted because it's used in SQLMapHelper - setBlob
+   */
+  public void addToBinaryStreamList(InputStream binaryStream) {
+      super.addToBinaryStreamList(binaryStream);
   }
 }

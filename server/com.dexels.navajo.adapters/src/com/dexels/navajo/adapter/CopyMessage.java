@@ -4,11 +4,9 @@ import java.util.Iterator;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.mapping.MappingException;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
@@ -32,8 +30,7 @@ public class CopyMessage implements Mappable {
   public void store() throws MappableException, UserException {
 
     if (copyMessageTo.equals(""))
-      throw new UserException( -1,
-          "copyMessageTo has to be specified");
+      throw new UserException( -1, "copyMessageTo has to be specified");
 
     Message from = null;
     if ( copyMessageFrom.equals("") ) {
@@ -54,7 +51,7 @@ public class CopyMessage implements Mappable {
 	} catch (Exception e1) {
 		throw new UserException(-1, e1.getMessage(), e1);
 	}
-    
+
     // Copy properties.
     Iterator<Property> allProperties = from.getAllProperties().iterator();
     while ( allProperties.hasNext() ) {
@@ -67,7 +64,6 @@ public class CopyMessage implements Mappable {
     	Message m = allMessages.next();
     	to.addMessage(m.copy(outputDoc));
     }
-  
   }
 
   public void kill() {

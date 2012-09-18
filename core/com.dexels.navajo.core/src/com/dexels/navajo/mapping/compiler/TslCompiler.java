@@ -2880,7 +2880,7 @@ public String mapNode(int ident, Element n) throws Exception {
 			  //ArrayList list = new ArrayList();
 
 			  hostname = "unknown host";
-			  long start = System.currentTimeMillis();
+//			  long start = System.currentTimeMillis();
 
 			  Enumeration all = null;
 			 
@@ -2896,18 +2896,8 @@ public String mapNode(int ident, Element n) throws Exception {
 				  Enumeration ipaddresses = nic.getInetAddresses();
 				  while (ipaddresses.hasMoreElements()) {
 
-					  start = System.currentTimeMillis();
-
 					  InetAddress ip = (InetAddress) ipaddresses.nextElement();
 
-//					  System.err.println("\t\tCanonical hostname: " + ip.getCanonicalHostName());
-//					  System.err.println("\t\tHost address: " + ip.getHostAddress());
-//					  System.err.println("\t\tisMCGlobal: " + ip.isMCGlobal());
-//					  System.err.println("\t\tisLinkLocalAddress: " + ip.isLinkLocalAddress());
-//					  System.err.println("\t\t"+ip.toString());
-//					  System.err.println("Getting hostname took: " + ( System.currentTimeMillis() - start ) ) ;
-
-					 // hostname = "";//ip.getCanonicalHostName();
 
 				  }
 			  }

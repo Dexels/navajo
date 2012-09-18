@@ -45,6 +45,7 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 			n.getHeader().setRPCPassword(pass);
 		}
 		DispatcherFactory.getInstance().setBundleCreator(bundleCreator);
+		
 		return DispatcherFactory.getInstance().handle(n);
 	}
 

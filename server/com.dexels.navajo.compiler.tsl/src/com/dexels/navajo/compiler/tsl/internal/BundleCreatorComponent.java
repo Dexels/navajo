@@ -220,6 +220,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		if(previous!=null) {
 			if (force) {
 				previous.uninstall();
+				logger.debug("uninstalling bundle with URI: "+uri);
 			} else {
 				logger.info("Skipping bundle at: "+uri+" as it is already installed. Lastmod: "+new Date(previous.getLastModified())+" status: "+previous.getState());
 				return null;
@@ -370,7 +371,8 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 	
 	@Override
-	public Date getCompiledModificationDate(String scriptPath) {
+	public Date getCompiledModificationDate(String script) {
+		String scriptPath = script.replaceAll("\\.", "/");
 		File jarFile = getScriptBundleJar(scriptPath);
 		if(!jarFile.exists()) {
 			return null;
@@ -443,22 +445,27 @@ public class BundleCreatorComponent implements BundleCreator {
 	@Override
 	public CompiledScript getOnDemandScriptService(String rpcName) throws Exception {
 		CompiledScript sc = getCompiledScript(rpcName);
+		
 		if(sc!=null) {
-			return sc;
+			boolean needsRecompile = checkForRecompile(rpcName);
+			if(!needsRecompile) {
+				return sc;
+			}
 		}
 		List<String> failures = new ArrayList<String>();
 		List<String> success = new ArrayList<String>();
 		List<String> skipped = new ArrayList<String>();
-
+		boolean force = false;
 		// so no resolution
 		if(needsCompilation(rpcName)) {
 			createBundle(rpcName, new Date(), "xml", failures, success, skipped, false, false);
+			force = true;
 //			createBundleJar(rpcName, formatCompilationDate(new Date()), false);
 		}
 		
 		
 //		File bundleJar = getScriptBundleJar(rpcName);
-		installBundle(rpcName, failures, success, skipped, false);
+		installBundle(rpcName, failures, success, skipped, force);
 		
 		logger.info("On demand installation finished, waiting for service...");
 		CompiledScript cs = waitForService(rpcName);
@@ -470,6 +477,25 @@ public class BundleCreatorComponent implements BundleCreator {
 //		List<String> skipped = new ArrayList<String>();
 //		bundleContext.installBundles(rpcName, failures, success, skipped, false);
 //		
+	}
+
+	private boolean checkForRecompile(String rpcName) {
+		Date mod = getScriptModificationDate(rpcName);
+		if(mod==null) {
+			logger.error("No modification date for script: "+rpcName+" this is weird.");
+			return false;
+		}
+		Date install = getBundleInstallationDate(rpcName);
+		if(install!=null) {
+			if(install.before(mod)) {
+				logger.debug("Install: "+install);
+				logger.debug("mod: "+mod);
+				logger.debug("comp: ", getCompiledModificationDate(rpcName));
+				logger.debug("Obsolete script found. Needs recompile.");
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -503,13 +529,23 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private CompiledScript waitForService(String rpcName) throws Exception {
+	private CompiledScript waitForService(String rpcPath) throws Exception {
+		String rpcName = rpcPath.replaceAll("/", ".");
 		String filterString = "(navajo.scriptName="+rpcName+")";
-		logger.info("waiting for service...");
+		logger.info("waiting for service...: "+rpcName);
 		Filter filter = bundleContext.createFilter(filterString);
 		ServiceTracker tr = new ServiceTracker(bundleContext,filter,null);
+//		ServiceReference<CompiledScriptFactory>[] ss = (ServiceReference<CompiledScriptFactory>[]) bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filterString);
+//		if(ss!=null && ss.length>0) {
+//			logger.info("Service present: "+ss.length);
+//		} else {
+//			logger.info("Service missing");
+//		}
 		tr.open();
-		CompiledScriptFactory result = (CompiledScriptFactory) tr.waitForService(10000);
+		CompiledScriptFactory result = (CompiledScriptFactory) tr.waitForService(12000);
+		if(result==null) {
+			logger.error("Service resolution failed!");
+		}
 		CompiledScript cc = result.getCompiledScript();
 		tr.close();
 		return cc;
