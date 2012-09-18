@@ -4,11 +4,9 @@ import java.util.Iterator;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.mapping.MappingException;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
@@ -32,14 +30,12 @@ public class CopyMessage implements Mappable {
   public void store() throws MappableException, UserException {
 
     if (copyMessageTo.equals(""))
-      throw new UserException( -1,
-          "copyMessageTo has to be specified");
+      throw new UserException( -1, "copyMessageTo has to be specified");
 
     Message to = null;
     
     try {
-		to = MappingUtils.addMessage(outputDoc, myAccess.getCurrentOutMessage(), copyMessageTo, null, 
-				1, Message.MSG_TYPE_SIMPLE, "")[0];
+		to = MappingUtils.addMessage(outputDoc, myAccess.getCurrentOutMessage(), copyMessageTo, null, 1, Message.MSG_TYPE_SIMPLE, "")[0];
 	} catch (Exception e1) {
 		throw new UserException(-1, e1.getMessage(), e1);
 	}
@@ -52,9 +48,7 @@ public class CopyMessage implements Mappable {
     }
     
     if (from == null)
-      throw new UserException( -1,
-                              "Could not find message " + this.copyMessageFrom +
-                              " in output document");
+      throw new UserException( -1, "Could not find message " + this.copyMessageFrom + " in output document");
     
     // Copy properties.
     Iterator<Property> allProperties = from.getAllProperties().iterator();
@@ -68,7 +62,6 @@ public class CopyMessage implements Mappable {
     	Message m = allMessages.next();
     	to.addMessage(m.copy(outputDoc));
     }
-  
   }
 
   public void kill() {
