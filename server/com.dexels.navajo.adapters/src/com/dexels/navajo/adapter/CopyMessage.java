@@ -35,15 +35,6 @@ public class CopyMessage implements Mappable {
       throw new UserException( -1,
           "copyMessageTo has to be specified");
 
-    Message to = null;
-    
-    try {
-		to = MappingUtils.addMessage(outputDoc, myAccess.getCurrentOutMessage(), copyMessageTo, null, 
-				1, Message.MSG_TYPE_SIMPLE, "")[0];
-	} catch (Exception e1) {
-		throw new UserException(-1, e1.getMessage(), e1);
-	}
-    
     Message from = null;
     if ( copyMessageFrom.equals("") ) {
     	from = (useOutputDoc) ? myAccess.getCompiledScript().getCurrentOutMsg() : myAccess.getCompiledScript().getCurrentInMsg();
@@ -55,6 +46,14 @@ public class CopyMessage implements Mappable {
       throw new UserException( -1,
                               "Could not find message " + this.copyMessageFrom +
                               " in output document");
+    Message to = null;
+    
+    try {
+		to = MappingUtils.addMessage(outputDoc, myAccess.getCurrentOutMessage(), copyMessageTo, null, 
+				1, from.getType(), "")[0];
+	} catch (Exception e1) {
+		throw new UserException(-1, e1.getMessage(), e1);
+	}
     
     // Copy properties.
     Iterator<Property> allProperties = from.getAllProperties().iterator();
