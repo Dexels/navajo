@@ -42,7 +42,7 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.client</artifactId>
-            <version>3.4.7</version>
+            <version>3.4.9</version>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
@@ -147,7 +147,7 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.adapters</artifactId>
-            <version>1.0.18-SNAPSHOT</version>
+            <version>1.0.19</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -183,7 +183,7 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.listeners</artifactId>
-            <version>3.1.14</version>
+            <version>3.1.16</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
