@@ -220,6 +220,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		if(previous!=null) {
 			if (force) {
 				previous.uninstall();
+				logger.debug("uninstalling bundle with URI: "+uri);
 			} else {
 				logger.info("Skipping bundle at: "+uri+" as it is already installed. Lastmod: "+new Date(previous.getLastModified())+" status: "+previous.getState());
 				return null;
@@ -528,15 +529,22 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private CompiledScript waitForService(String rpcName) throws Exception {
+	private CompiledScript waitForService(String rpcPath) throws Exception {
+		String rpcName = rpcPath.replaceAll("/", ".");
 		String filterString = "(navajo.scriptName="+rpcName+")";
-		logger.info("waiting for service...");
+		logger.info("waiting for service...: "+rpcName);
 		Filter filter = bundleContext.createFilter(filterString);
 		ServiceTracker tr = new ServiceTracker(bundleContext,filter,null);
+//		ServiceReference<CompiledScriptFactory>[] ss = (ServiceReference<CompiledScriptFactory>[]) bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filterString);
+//		if(ss!=null && ss.length>0) {
+//			logger.info("Service present: "+ss.length);
+//		} else {
+//			logger.info("Service missing");
+//		}
 		tr.open();
 		CompiledScriptFactory result = (CompiledScriptFactory) tr.waitForService(12000);
 		if(result==null) {
-			logger.error("Server resolution failed!");
+			logger.error("Service resolution failed!");
 		}
 		CompiledScript cc = result.getCompiledScript();
 		tr.close();
