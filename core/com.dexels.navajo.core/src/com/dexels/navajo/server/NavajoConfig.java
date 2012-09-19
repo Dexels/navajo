@@ -44,7 +44,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 	public String scriptPath;
 	
 	private String repositoryClass = "com.dexels.navajo.server.SimpleRepository";
-	private String dbPath;
 	private String auditLevel;
 	private HashMap<String,Object> dbProperties = new HashMap<String,Object>();
 	public String store;
@@ -190,15 +189,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     				properDir(rootPath +
     						body.getProperty("paths/compiled-scripts").
     						getValue()) : "");
-    		// Reading deprecated navajostore definition.
-    		this.dbPath = (body.getProperty("paths/navajostore") != null ?
-    				rootPath +
-    				body.getProperty("paths/navajostore").
-    				getValue() : null);
-    		if (dbPath != null) {
-    			System.err.println("WARNING: Using DEPRECATED navajostore configuration, use message based configuration instead.");
-    		}
-    		
     		
     		persistenceManager = PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", configPath);
     		
@@ -267,7 +257,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     		// Read navajostore parameters.
     		Message navajostore = body.getMessage("navajostore");
     		if (navajostore != null) {
-    			dbPath = (navajostore.getProperty("dbpath") != null ? rootPath + navajostore.getProperty("dbpath").getValue() : null);
     			String p = (navajostore.getProperty("dbport") != null ? navajostore.getProperty("dbport").getValue() : null);
     			store = (navajostore.getProperty("store") != null ? navajostore.getProperty("store").getValue() : null);
     			if (p != null) {
@@ -602,7 +591,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
      */
     @Override
     public final StatisticsRunnerInterface getStatisticsRunner() {
-       return StatisticsRunnerFactory.getInstance(dbPath, dbProperties, store);
+       return StatisticsRunnerFactory.getInstance(null, dbProperties, store);
    }
 
     @Override
@@ -852,11 +841,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     @Override
 	public boolean isEnableStatisticsRunner() {
 		return enableStatisticsRunner;
-	}
-
-    @Override
-	public String getDbPath() {
-		return dbPath;
 	}
 
     @Override

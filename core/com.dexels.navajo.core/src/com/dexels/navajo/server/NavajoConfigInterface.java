@@ -56,8 +56,6 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	public String getBetaUser();
 	public int getMaxAccessSetSize();
 	public float getAsyncTimeout();
-	@Deprecated
-	public String getDbPath();
 	public void doClearCache();
 	public void doClearScriptCache();
 	public String getCompilationLanguage();

@@ -129,11 +129,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	}
 
 	@Override
-	public String getDbPath() {
-		return null;
-	}
-
-	@Override
 	public DescriptionProviderInterface getDescriptionProvider() {
 		return null;
 	}
