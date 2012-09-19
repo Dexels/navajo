@@ -529,6 +529,10 @@ public final class GenericHandler extends ServiceHandler {
 	}
 
 	private CompiledScript loadOnDemand(BundleContext bundleContext, String rpcName, String filter) throws Exception {
+		if(bundleContext==null) {
+			logger.debug("No OSGi context found");
+			return null;
+		}
 		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
 		BundleCreator bc = bundleContext.getService(ref);
 //		BundleCreator bc = getBundleCreator(bundleContext);
