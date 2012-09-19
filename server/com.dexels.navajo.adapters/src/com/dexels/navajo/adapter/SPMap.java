@@ -166,7 +166,7 @@ public class SPMap extends SQLMap {
 					SQLMapHelper.setParameter(callStatement,
     										  param, 
     										  i, 
-    										  this.getClass(),
+    										  this,
     										  myConnectionBroker.getDbIdentifier(), 
     										  this.isLegacyMode,
     										  this.debug, 
