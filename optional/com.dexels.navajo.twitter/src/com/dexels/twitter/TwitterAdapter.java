@@ -284,7 +284,7 @@ public class TwitterAdapter {
 			oos.writeObject(mySignPost);
 			oos.close();
 			} catch (Exception e) {
-				throw new UserException(-1, e.getMessage());
+				throw new UserException(-1, e.getMessage(),e);
 			}
 			return b;
 		} else {
@@ -298,7 +298,7 @@ public class TwitterAdapter {
 			ois = new ObjectInputStream(b.getDataAsStream());
 			mySignPost = (OAuthSignpostClient) ois.readObject();
 		} catch (Exception e) {
-			throw new UserException(-1, e.getMessage());
+			throw new UserException(-1, e.getMessage(),e);
 		}
 		
 	}

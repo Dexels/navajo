@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>com.dexels.navajo.adapters</artifactId>
-  <version>1.0.20-SNAPSHOT</version>
+  <version>1.0.21</version>
   <packaging>eclipse-plugin</packaging>
   	<parent>
 		<groupId>com.dexels.navajo</groupId>

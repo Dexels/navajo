@@ -44,6 +44,7 @@ public class MainApplication {
 		tce.loadDescriptor();
 		tce.getTipiExtensionRegistry().registerTipiExtension(tce);
 		TipiSwingExtension tse = new TipiSwingExtension();
+		//tse.start(null);
 		tse.loadDescriptor();
 		tse.getTipiExtensionRegistry().registerTipiExtension(tse);
 		

@@ -1798,7 +1798,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			}
 			// }
 		} catch (Exception ex) {
-			logger.error("Not happy while evaluating expression: " + expr, ex.getMessage());
+			logger.error("Not happy while evaluating expression: " + expr, ex);
 			return o;
 		} catch (Error ex) {
 			logger.error("Not happy while evaluating expression: " + expr,ex);
