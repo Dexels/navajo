@@ -46,7 +46,7 @@ public class SQLMapHelper {
 	public static PreparedStatement setParameter(PreparedStatement statement, 
 												 final Object param, 
 												 final int idx,
-												 Class classHoldingBinaryStreamList,
+												 StreamClosable callback,
 												 String dbIdentifier, 
 												 boolean isLegacyMode,
 												 boolean debug,
@@ -70,7 +70,6 @@ public class SQLMapHelper {
 			}
 			System.out.println("*************************** idx               = " + idx);
 			System.out.println("*************************** param             = " + param + " (" + ( (param != null) ? param.getClass().getName() : "") + ")");
-			System.out.println("*************************** binaryStreamList  = " + classHoldingBinaryStreamList.getName());
 		}
 		
 		if ((param == null) || (param instanceof NavajoType && !(param instanceof Binary) && ((NavajoType) param).isEmpty())) {
@@ -129,7 +128,7 @@ public class SQLMapHelper {
 		} else if (param instanceof Binary) {
 			Binary b = (Binary) param;
 //			System.out.println("*************************** Adding a BLOB     = " + b.getMimeType());
-			setBlob(statement, idx, b, classHoldingBinaryStreamList);
+			setBlob(statement, idx, b, callback);
 			if (debug) {
 				Access.writeToConsole(access, "ADDED BLOB\n");
 			}
@@ -139,6 +138,38 @@ public class SQLMapHelper {
 		return statement;
 	}
 
+	
+	/**
+	 * New version with callback
+	 * 
+	 * @param statement
+	 * @param i
+	 * @param b
+	 * @throws SQLException
+	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 */
+	protected static void setBlob(PreparedStatement statement, int i, Binary b,StreamClosable callback) throws SQLException {
+		if (b != null) {
+
+			InputStream is = b.getDataAsStream();
+
+			if (is != null && b.getLength() > 0) {
+				statement.setBinaryStream(i + 1, is, (int) b.getLength());
+				// All streams in this list will be closed on kill() or store()
+				if(callback!=null) {
+					callback.addToBinaryStreamList(is);
+				}
+			} else {
+				statement.setNull(i + 1, Types.BLOB);
+			}
+		} else {
+			statement.setNull(i + 1, Types.BLOB);
+		}
+	}
+	
+	
 	/**
 	 * BEWARE! Possible resource leak!!! Should the stream be closed?
 	 * 

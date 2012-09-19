@@ -68,7 +68,7 @@ public class SQLBatchUpdateHelper {
 								final ArrayList<Object> params,
 								Access myAccess,
 								String dbIdentifier,
-								Class classHoldingBinaryStreamList,
+								StreamClosable callback,
 								boolean isLegacyMode) throws SQLException {
 		this.sql = sql;
 		this.conn = conn;
@@ -77,7 +77,7 @@ public class SQLBatchUpdateHelper {
 		this.dbIdentifier = dbIdentifier;
 		this.isLegacyMode = isLegacyMode;
 		this.updateOnly = false;
-		this.parseStatements(classHoldingBinaryStreamList);
+		this.parseStatements(callback);
 		this.executeStatements();
 
 	}
@@ -87,7 +87,7 @@ public class SQLBatchUpdateHelper {
 								final ArrayList<Object> params, 
 								Access myAccess,
 								String dbIdentifier,
-								Class classHoldingBinaryStreamList,
+								StreamClosable callback,
 								boolean isLegacyMode,
 								boolean debug, 
 								boolean updateOnly) throws SQLException {
@@ -101,7 +101,7 @@ public class SQLBatchUpdateHelper {
 		this.debug = debug;
 		this.updateOnly = updateOnly;
 
-		this.parseStatements(classHoldingBinaryStreamList);
+		this.parseStatements(callback);
 		this.executeStatements();
 	}
 
@@ -128,7 +128,7 @@ public class SQLBatchUpdateHelper {
 	// ----------------------------------------------------------- private
 	// methods
 
-	private final void parseStatements(Class classHoldingBinaryStreamList) throws SQLException {
+	private final void parseStatements(StreamClosable callback) throws SQLException {
 		final StringTokenizer tok = new StringTokenizer(this.sql, DELIMITER);
 		if (tok.countTokens() == 0) {
 			throw new SQLException("tried to pass empty SQL statement batch");
@@ -141,7 +141,7 @@ public class SQLBatchUpdateHelper {
 					System.out.println("parsed statement: " + s);
 				}
 
-				prepareStatement(s, classHoldingBinaryStreamList);
+				prepareStatement(s, callback);
 			} else {
 				System.err.println("Did not qualify");
 			}
@@ -151,14 +151,14 @@ public class SQLBatchUpdateHelper {
 
 	}
 
-	protected void prepareStatement(final String s, Class classHoldingBinaryStreamList) throws SQLException {
+	protected void prepareStatement(final String s, StreamClosable callback) throws SQLException {
 		this.parsed.add(s);
 		final PreparedStatement prepared = this.conn.prepareStatement(s);
 		final int required = this.countRequiredParameters(s);
 		if (this.debug) {
 			System.out.println("required number of parameters = " + required);
 		}
-		this.setStatementParameters(prepared, required, classHoldingBinaryStreamList);
+		this.setStatementParameters(prepared, required, callback);
 		this.preparedList.add(prepared);
 	}
 
@@ -231,7 +231,7 @@ public class SQLBatchUpdateHelper {
 
 	private final void setStatementParameters(final PreparedStatement pre,
 											  final int n,
-											  Class classHoldingBinaryStreamList) throws SQLException {
+											  StreamClosable callback) throws SQLException {
 		if (this.params != null) {
 			for (int i = 0; i < n; i++, this.pptr++) {
 				if (this.pptr >= this.params.size()) {
@@ -239,7 +239,7 @@ public class SQLBatchUpdateHelper {
 				}
 
 				final Object param = this.params.get(this.pptr);
-				this.setParameter(i, param, pre, classHoldingBinaryStreamList);
+				this.setParameter(i, param, pre, callback);
 			}
 		}
 
@@ -248,7 +248,7 @@ public class SQLBatchUpdateHelper {
 	private final void setParameter(final int idx, 
 									final Object param,
 									final PreparedStatement pre,
-									Class classHoldingBinaryStreamList) throws SQLException {
+									StreamClosable callback) throws SQLException {
 		if (this.debug) {
 			System.out.println("parameter " + this.pptr + " = " + param);
 		}
@@ -256,7 +256,7 @@ public class SQLBatchUpdateHelper {
 		SQLMapHelper.setParameter(pre, 
 								  param, 
 								  idx, 
-								  classHoldingBinaryStreamList, 
+								  callback, 
 								  this.dbIdentifier, 
 								  this.isLegacyMode, 
 								  this.debug, 
