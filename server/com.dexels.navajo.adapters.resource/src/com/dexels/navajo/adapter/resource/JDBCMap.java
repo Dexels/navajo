@@ -28,6 +28,7 @@ import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.adapter.sqlmap.SQLBatchUpdateHelper;
 import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
 import com.dexels.navajo.adapter.sqlmap.SQLMapHelper;
+import com.dexels.navajo.adapter.sqlmap.StreamClosable;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.jdbc.JDBCMappable;
@@ -48,7 +49,7 @@ import com.dexels.navajo.util.AuditLog;
 
 
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
-public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBCMappable {
+public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBCMappable,StreamClosable {
 	private static final Logger logger = LoggerFactory.getLogger(JDBCMap.class);
 	protected final String DEFAULTSRCNAME = "default";
 	private String dbIdentifier = null;
@@ -540,7 +541,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 				SQLMapHelper.setParameter(statement, 
 										  param, 
 										  i,
-										  this.getClass(), 
+										  this, 
 										  this.dbIdentifier,
 										  this.isLegacyMode, 
 										  this.debug, 
@@ -581,7 +582,7 @@ public final Object getColumnName(final Integer index) throws UserException {
 												   this.parameters, 
 												   this.myAccess, 
 												   this.dbIdentifier,
-												   this.getClass(), 
+												   this, 
 												   this.isLegacyMode, 
 												   this.debug,
 												   updateOnly);
