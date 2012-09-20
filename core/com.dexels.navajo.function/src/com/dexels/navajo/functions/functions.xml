@@ -543,11 +543,6 @@
         <input/>
         <result/>
     </function>
-    <function name="ElfProef" class="com.dexels.navajo.functions.ElfProef">
-        <description>Check if the supplied account number is a valid account (Dutch banks only).</description>
-        <input>string</input>
-        <result>boolean</result>
-    </function>
     <function name="DecimalChar" class="com.dexels.navajo.functions.DecimalChar">
         <description>This function returns a string representation of the desired decimal character</description>
         <input/>
@@ -676,11 +671,6 @@
         <description>StripTime(date|string,[string])</description>
         <input>date|string,[string]</input>
         <result>date</result>
-    </function>
-    <function name="ValidateAccountNumber" class="com.dexels.navajo.functions.ValidateAccountNumber">
-        <description>ValidateAccountNumber(string|integer,string)</description>
-        <input>string|integer,string</input>
-        <result>boolean</result>
     </function>
     <function name="IsDate" class="com.dexels.navajo.functions.IsDate">
         <description>IsDate(date|string)</description>
