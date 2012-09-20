@@ -56,7 +56,11 @@ public class FrameworkInstance {
 	// private final static String APPSERVERBUNDLEDIR = "bundles/";
 	// private final static String EXPLICITBUNDLEDIR = "WEB-INF/explicit/";
 
-	private final String bundlePath;
+	private String bundlePath;
+
+	protected void setBundlePath(String bundlePath) {
+		this.bundlePath = bundlePath;
+	}
 
 	private ServiceTracker configurationInjectorTracker;
 	private ServiceTracker obrTracker;
@@ -65,6 +69,7 @@ public class FrameworkInstance {
 			.getLogger(FrameworkInstance.class);
 	
 	private ConfigurationInjectionInterface configurationInjectionService;
+
 
 	private RepositoryAdmin repositoryAdmin = null;
 
@@ -75,6 +80,10 @@ public class FrameworkInstance {
 
 	public FrameworkInstance() {
 		bundlePath = null;
+	}
+
+	protected ConfigurationInjectionInterface getConfigurationInjectionService() {
+		return configurationInjectionService;
 	}
 
 	protected BundleContext getBundleContext() {
@@ -89,7 +98,7 @@ public class FrameworkInstance {
 		return bundleContext;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		FrameworkInstance fs = new FrameworkInstance("bundle");
 		if(args.length>0) {
 			String directive = args[0];
