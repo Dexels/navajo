@@ -221,19 +221,17 @@ public class FrameworkInstance {
 		logger.debug("Trackers created and started");
 		installAndStartFromClasspath(new BundleInstall[] {
 				new BundleInstall("org.apache.felix.scr-1.6.0.jar","org.apache.felix.scr","1.6.0"),
-				new BundleInstall("org.apache.felix.configadmin-1.2.8.jar","org.apache.felix.configadmin","1.2.8"),
 				new BundleInstall("org.apache.felix.bundlerepository-1.6.6.jar","org.apache.felix.bundlerepository","1.6.6"),
 				new BundleInstall("com.dexels.navajo.runtime.provisioning-1.0.3.jar","com.dexels.navajo.runtime.provisioning","1.0.3"),
-				new BundleInstall("org.apache.felix.configadmin-1.2.8.jar","org.apache.felix.configadmin","1.2.8"),
+				new BundleInstall("org.apache.felix.configadmin-1.4.0.jar","org.apache.felix.configadmin","1.4.0"),
 			});
 
 		installAndStartFromClasspath(new BundleInstall[]{new BundleInstall("org.apache.felix.fileinstall-3.2.0.jar","org.apache.felix.fileinstall","3.2.0")});
 		logger.info("classpathbundles started");
 		configurationInjectionService = null;
 		try {
-			repositoryAdmin = (RepositoryAdmin) obrTracker.waitForService(10000);
-			configurationInjectionService = (ConfigurationInjectionInterface) configurationInjectorTracker.waitForService(10000);
-//			configurationInjectionService.removeConfigutation("com.dexels.navajo.tipi.swing.application");
+			repositoryAdmin = (RepositoryAdmin) obrTracker.waitForService(30000);
+			configurationInjectionService = (ConfigurationInjectionInterface) configurationInjectorTracker.waitForService(30000);
 		} catch (InterruptedException e) {
 			logger.error("Interrupted while waiting for trackers: ",e);
 		}
