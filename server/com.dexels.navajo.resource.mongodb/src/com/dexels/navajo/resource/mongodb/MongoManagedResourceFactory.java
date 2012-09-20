@@ -90,18 +90,24 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 
 	
 	@SuppressWarnings({ "rawtypes" })
-	public Object instantiate( Dictionary settings) throws Exception {
+	public Object instantiate( Dictionary<String,Object> settings) throws Exception {
 		Properties prop = new Properties(); 
 		Enumeration en = settings.keys();
 		while (en.hasMoreElements()) {
 			String key = (String) en.nextElement();
 			prop.put(key, settings.get(key));
+			logger.info("Dict: "+key+" : "+settings.get(key));
 		}
 //		MongoOptions o = new MongoOptions();
 		
 		Mongo m = new Mongo((String) settings.get(HOST));
-		DB db = m.getDB((String) settings.get(DATABASE));
-		return db;
+		final String database = (String) settings.get(DATABASE);
+		logger.info(">>> "+database);
+		if(database!=null) {
+			DB db = m.getDB(database);
+			return db;
+		}
+		return null;
 	}
 
 	public void close() {

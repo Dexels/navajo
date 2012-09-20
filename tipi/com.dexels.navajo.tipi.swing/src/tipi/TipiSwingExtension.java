@@ -1,6 +1,5 @@
 package tipi;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.HashSet;
@@ -18,10 +17,6 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import tipi.TipiAbstractXMLExtension;
-import tipi.TipiExtension;
-import tipi.TipiMainExtension;
 
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
@@ -48,6 +43,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		instance = this;
 	}
 
+	
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void start(BundleContext context) throws Exception {

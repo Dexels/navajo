@@ -775,7 +775,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 			final TipiComponentMethod compMeth, final TipiEvent event) {
 		runSyncInEventThread(new Runnable() {
 
-			@SuppressWarnings("unchecked")
 			public void run() {
 				int count = mm.getRowCount();
 				if (count != 0) {
@@ -1003,7 +1002,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		mm.setColumnDefinitionSavePath(path);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void stateChanged(ChangeEvent e) {
 		Map<String, Object> m = (Map<String, Object>) e.getSource();
 		Object old = m.get("old");
