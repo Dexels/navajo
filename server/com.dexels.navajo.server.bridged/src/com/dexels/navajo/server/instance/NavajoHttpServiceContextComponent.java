@@ -45,8 +45,11 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 			Enumeration en = settings.keys();
 			while (en.hasMoreElements()) {
 				String key = (String) en.nextElement();
-				prop.put(key, settings.get(key));
+				final Object object = settings.get(key);
+				prop.put(key, object);
+				logger.info("Keys: "+key+" - "+object);
 			}
+			
 			// TODO add context prefix, and link?
 			String contextPath = (String)settings.get("contextPath");
 			String servletContextPath = (String)settings.get("servletContextPath");
