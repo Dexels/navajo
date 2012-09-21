@@ -48,7 +48,7 @@ public class VaadinFileServlet extends HttpServlet {
 			String path = InstallationPathResolver.getInstallationFromPath(contextPath).get(0);
 			setPath(path);
 		} catch (TipiException e) {
-			throw new ServletException("Problem resolving context path: "+contextPath, e);
+			logger.error("Problem resolving context path: "+contextPath+" ignoring.", e);
 		} catch (IOException e) {
 			throw new ServletException("Problem resolving context path: "+contextPath, e);
 		}
