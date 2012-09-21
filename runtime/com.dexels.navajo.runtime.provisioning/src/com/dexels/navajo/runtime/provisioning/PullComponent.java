@@ -156,7 +156,7 @@ public class PullComponent {
 		if (!resolved) {
 			Requirement[] req = res.getUnsatisfiedRequirements();
 			for (Requirement requirement : req) {
-				logger.warn("Requirement missing: " + requirement.getName()
+				logger.warn("Requirement missing: " + requirement.getName() +" comment: "+ requirement.getComment()
 						+ " filter: " + requirement.getFilter());
 			}
 			return false;
