@@ -2,8 +2,14 @@ package com.dexels.navajo.runtime.provisioning;
 
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.obr.RepositoryAdmin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PullConfigurator {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PullConfigurator.class);
+	
 	@SuppressWarnings("unused")
 	private ConfigurationAdmin myConfigurationAdmin = null;
 	@SuppressWarnings("unused")
@@ -21,6 +27,7 @@ public class PullConfigurator {
 	}
 
 	public void addConfigurationAdmin(ConfigurationAdmin admin) {
+		logger.info("Adding config adming");
 		this.myConfigurationAdmin = admin;
 	}
 
