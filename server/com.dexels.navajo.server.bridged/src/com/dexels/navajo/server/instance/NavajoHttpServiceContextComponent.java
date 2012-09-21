@@ -55,7 +55,7 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 			String servletContextPath = (String)settings.get("servletContextPath");
 			String installPath = (String)settings.get("installationPath");
 			addAdapterListener(installPath);
-//			logger.info("Instantiate server: "+contextPath+" installpath: "+installPath);
+			logger.info("Instantiate server: "+contextPath+" installpath: "+installPath);
 			wrapped = NavajoContextListener.initializeServletContext(contextPath,servletContextPath,installPath);
 		} catch (Exception e) {
 			logger.error("Error starting navajo server: ", e);
