@@ -175,6 +175,10 @@ public class ResourceManager {
 		try {
 			logger.info("Looking for datasources in: "+navajoServerContext.getInstallationPath());
 			File install = new File(navajoServerContext.getInstallationPath(),"config/datasources.xml");
+			if(!install.exists()) {
+				logger.warn("Datasources file: "+install.getAbsolutePath()+" does not exist, not injecting explicit datasources");
+				return;
+			}
 			fis = new FileInputStream(install);
 			loadResourceTml(fis);
 			fis.close();
