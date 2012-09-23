@@ -14,6 +14,6 @@ Import-Package: javax.sql,
 Service-Component: OSGI-INF/driver.xml
 Export-Package: com.dexels.navajo.resource,
  com.dexels.navajo.resource.jdbc,
- org.osgi.service.jdbc
+ org.osgi.service.jdbc;version="1.0.0"
 Bundle-ClassPath: lib/osgi.cmpn_4.3.0.201111022214.jar,
  .
