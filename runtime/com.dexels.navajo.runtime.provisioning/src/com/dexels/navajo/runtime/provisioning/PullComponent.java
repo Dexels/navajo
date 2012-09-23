@@ -45,7 +45,7 @@ public class PullComponent {
 			String contextPath = (String) properties.get("contextPath");
 			String deployment = (String) properties.get("deployment");
 			String profile = (String) properties.get("profile");
-			String contextName = (String) properties.get("contextName");
+//			String contextName = (String) properties.get("contextName");
 
 //			boolean matches = hasContext(contextName);
 //			if (!matches) {
@@ -75,26 +75,26 @@ public class PullComponent {
 
 	}
 
-	private boolean hasContext(String contextName) {
-		for (ContextIdentifier c : contextIdentifiers) {
-			String con = c.getContextPath();
-			String ctxName = contextName;
-			if (ctxName.equals(con)) {
-				return true;
-			}
-			if (con != null && con.startsWith("/")) {
-				con = con.substring(1);
-			}
-			if (ctxName.startsWith("/")) {
-				ctxName = ctxName.substring(1);
-			}
-			if (ctxName.equals(con)) {
-				return true;
-			}
-
-		}
-		return false;
-	}
+//	private boolean hasContext(String contextName) {
+//		for (ContextIdentifier c : contextIdentifiers) {
+//			String con = c.getContextPath();
+//			String ctxName = contextName;
+//			if (ctxName.equals(con)) {
+//				return true;
+//			}
+//			if (con != null && con.startsWith("/")) {
+//				con = con.substring(1);
+//			}
+//			if (ctxName.startsWith("/")) {
+//				ctxName = ctxName.substring(1);
+//			}
+//			if (ctxName.equals(con)) {
+//				return true;
+//			}
+//
+//		}
+//		return false;
+//	}
 
 	private void setupTipi(String contextPath, String deployment, String profile)
 			throws Exception {
@@ -149,7 +149,9 @@ public class PullComponent {
 
 			for (Resource resource : result) {
 				res.add(resource);
+				logger.info("Added resource: "+resource.getSymbolicName());
 			}
+			logger.info("Enf of dep: "+dep);
 		}
 		boolean resolved = res.resolve();
 		logger.info("Dependencies resolve: " + resolved);
@@ -162,6 +164,8 @@ public class PullComponent {
 			return false;
 		} else {
 			if (performDeploy) {
+				logger.info("Added resources: "+res.getAddedResources().length+" req: "+res.getRequiredResources().length);
+				
 				res.deploy(true);
 			}
 			return true;
