@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
+import navajocore.Version;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,7 +124,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 		instance = this;
 		loadConfig(in, externalRootPath,servletContextRootPath);
 		myOs = ManagementFactory.getOperatingSystemMXBean();
-		
+		Version.registerNavajoConfig(this);
 	}
 
 	
