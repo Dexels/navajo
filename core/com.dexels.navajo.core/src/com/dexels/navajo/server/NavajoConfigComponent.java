@@ -45,11 +45,12 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 			.getLogger(NavajoConfigComponent.class);
 	
 	public NavajoConfigComponent() {
-		logger.info("<<<<<<<<<<<<< NavajoConfig");
+		System.err.println("========>  Navajo Config constructor.");
 	}
 	
 	public void setIOConfig(NavajoIOConfig config) {
 		this.navajoIOConfig = config;
+		System.err.println("========>  Setting NavajoIOConfig");
 	}
 	
 	/**
@@ -62,6 +63,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 
 	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.myConfigurationAdmin = configAdmin;
+		System.err.println("========>  Setting ConfigurationAdmin");
 	}
 
 	/**
@@ -72,6 +74,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	}
 	
 	public void activate(ComponentContext cc) {
+		System.err.println("========>  Activating");
 		try {
 			this.properties = cc.getProperties();
 			this.bundleContext = cc.getBundleContext();
