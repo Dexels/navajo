@@ -13,9 +13,7 @@ import navajo.ExtensionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import com.dexels.navajo.functions.util.FunctionDefinition;
-import com.dexels.navajo.functions.util.FunctionResolver;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
