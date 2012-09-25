@@ -37,8 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import tipi.TipiExtension;
-import tipi.TipiSwingExtension;
 import tipiswing.SwingTipiApplicationInstance;
+import tipiswing.TipiSwingExtension;
 
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiActivityListener;
@@ -67,7 +67,6 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * Title:
  * </p>
  * <p>
- * Description:
  * </p>
  * <p>
  * Copyright: Copyright (c) 2003
