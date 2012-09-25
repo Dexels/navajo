@@ -254,7 +254,6 @@ public class SQLMapHelper {
 		case Types.TINYINT:
 		    int tmpValue = rs.getInt(columnIndex);
 		    if (rs.wasNull()) {
-		        value = null;
 		    } else {
 		        value = new Integer(tmpValue);
 		    }
@@ -272,22 +271,17 @@ public class SQLMapHelper {
 			break;
 
 		case Types.NUMERIC:
-//			int prec = meta.getPrecision(columnIndex);
 			int scale = meta.getScale(columnIndex);
 
 			// if (debug) System.err.println(columnIndex + ", prec = " + prec + ", scale =  " + scale);
 			if (scale <= 0) {
 	            int tmpValueNumeric = rs.getInt(columnIndex);
-	            if (rs.wasNull()) {
-	                value = null;
-	            } else {
+	            if (!rs.wasNull()) {
 	                value = new Integer(tmpValueNumeric);
 	            }
 			} else {
 	            double tmpValueDouble = rs.getDouble(columnIndex);
-	            if (rs.wasNull()) {
-	                value = null;
-	            } else {
+	            if (!rs.wasNull()) {
 	                value = new Double(tmpValueDouble);
 	            }
 			}
@@ -297,9 +291,7 @@ public class SQLMapHelper {
 		case Types.FLOAT:
 		case Types.DOUBLE:
             double tmpValueDouble = rs.getDouble(columnIndex);
-            if (rs.wasNull()) {
-                value = null;
-            } else {
+            if (!rs.wasNull()) {
                 value = new Double(tmpValueDouble);
             }
 			break;
@@ -356,9 +348,7 @@ public class SQLMapHelper {
 		case Types.BOOLEAN:
 		case Types.BIT:
             boolean tmpValueBoolean = rs.getBoolean(columnIndex);
-            if (rs.wasNull()) {
-                value = null;
-            } else {
+            if (!rs.wasNull()) {
                 value = new Boolean(tmpValueBoolean);
             }
 			break;

@@ -41,7 +41,6 @@ import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.script.api.RequestQueue;
-import com.dexels.navajo.script.api.Scheduler;
 import com.dexels.navajo.script.api.SchedulerRegistry;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.Access;
