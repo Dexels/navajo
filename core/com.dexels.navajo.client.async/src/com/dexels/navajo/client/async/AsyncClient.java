@@ -235,7 +235,7 @@ public class AsyncClient {
 			}
 
 			@Override
-			protected void onResponseContent(Buffer content) throws IOException {
+			protected synchronized void onResponseContent(Buffer content) throws IOException {
 				// TODO: Implement for streaming
 //				HttpFields a = getRequestFields();
 				super.onResponseContent(content);

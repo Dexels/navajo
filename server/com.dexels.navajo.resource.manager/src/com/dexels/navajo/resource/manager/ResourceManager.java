@@ -229,6 +229,15 @@ public class ResourceManager {
 		} catch (IOException e) {
 			logger.error("Adding configuration for client.properties: ", e);
 		}
+		try {
+			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient.legacy",null);
+			Dictionary<String,String> dt = new Hashtable<String,String>();
+			dt.put("user", b.getString("username"));
+			dt.put("password", b.getString("password"));
+			config.update(dt);
+		} catch (IOException e) {
+			logger.error("Adding configuration for client.properties: ", e);
+		}
 		
 		
 	}

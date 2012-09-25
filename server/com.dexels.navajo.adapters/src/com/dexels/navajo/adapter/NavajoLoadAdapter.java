@@ -71,7 +71,7 @@ public class NavajoLoadAdapter
     FileInputStream fr = null;
     try {
       fr = new FileInputStream(f);
-      n =  NavajoFactory.getInstance().createNavajo(fr);;
+      n =  NavajoFactory.getInstance().createNavajo(fr);
       access.setOutputDoc(n);
     }
 
