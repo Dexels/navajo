@@ -231,6 +231,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		try {
 			return getDefaultBundleContext()!=null;
 		} catch (Throwable t) {
+			t.printStackTrace();
 			return false;
 		}
 	}
@@ -239,7 +240,11 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	public void start(BundleContext bc) throws Exception {
 			super.start(bc);
 			bundleContext = bc;
+			logger.debug("Bundle context set in Navajo Version: "+osgiActive()+" hash: "+Version.class.hashCode());
 			
+//			NavajoConfigComponent ncc = new NavajoConfigComponent();
+//			ncc.activate(null);
+//			
 			FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
 			fi.init();
 			

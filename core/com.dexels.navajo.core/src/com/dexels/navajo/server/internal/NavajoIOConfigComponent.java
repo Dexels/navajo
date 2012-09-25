@@ -28,6 +28,9 @@ public class NavajoIOConfigComponent extends FileNavajoConfig implements NavajoI
 		rootPath = new File(context.getInstallationPath());
 	}
 	
+	/**
+	 * @param nsc the NavajoServerContext to remove 
+	 */
 	public void clearServerContext(NavajoServerContext nsc) {
 		this.context = null;
 	}
@@ -73,6 +76,11 @@ public class NavajoIOConfigComponent extends FileNavajoConfig implements NavajoI
 	public File getContextRoot() {
 		logger.warn("getContextRoot not implemented in OSGi DS implementation");
 		return null;
+	}
+
+	@Override
+	public String getResourcePath() {
+		return new File(rootPath,"resource").getAbsolutePath();
 	}
 
 

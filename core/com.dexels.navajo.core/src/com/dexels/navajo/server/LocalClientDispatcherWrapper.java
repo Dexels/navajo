@@ -32,6 +32,9 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 		this.bundleCreator = bc;
 	}
 	
+	/**
+	 * @param bc The bundlecreator to remove 
+	 */
 	public void clearBundleCreator(BundleCreator bc) {
 		this.bundleCreator = null;
 	}
@@ -90,8 +93,13 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 		this.dispatcherInterface = nsc.getDispatcher();
 	}
 
+	
+	/**
+	 * @param nsc the context to remove 
+	 */
 	public void removeContext(NavajoServerContext nsc) {
 		this.serverContext = null;
+		this.dispatcherInterface = null;
 	}
 	
 	public void activate(Map<String,String> properties) {

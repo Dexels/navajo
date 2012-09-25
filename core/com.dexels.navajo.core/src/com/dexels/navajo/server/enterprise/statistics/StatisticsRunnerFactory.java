@@ -41,7 +41,7 @@ public class StatisticsRunnerFactory {
 					} catch (ClassNotFoundException e) {
 						logger.warn("Statistics runner not available from classpath.");
 					} catch (Exception e) {
-						AuditLog.log("INIT", "WARNING: StatisticsRunnner not available", e,Level.WARNING);
+						AuditLog.log("WARNING: StatisticsRunnner not available", e,Level.WARNING);
 						instance = new DummyStatisticsRunner();
 					}	
 				}
@@ -62,6 +62,7 @@ public class StatisticsRunnerFactory {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static StatisticsRunnerInterface getStatisticsRunnerInstanceOSGi(String storePath,
 			Map parameters, String storeClass) throws InvalidSyntaxException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		BundleContext bc = null;

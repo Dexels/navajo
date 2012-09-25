@@ -6,15 +6,12 @@ import java.util.Date;
 import java.util.Set;
 
 import com.dexels.navajo.compiler.BundleCreator;
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.AfterWebServiceEmitter;
-import com.dexels.navajo.server.ConditionData;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
@@ -26,44 +23,52 @@ public class TestDispatcher implements DispatcherInterface {
 		myConfig = injectedNavajoConfig;
 	}
 	
+	@Override
 	public File createTempFile(String prefix, String suffix) throws IOException {
 		return File.createTempFile(prefix, suffix);
 	}
 
-	public void init() {
-	}
+//	public void init() {
+//	}
 
+	@Override
 	public NavajoConfigInterface getNavajoConfig() {
 		return myConfig;
 	}
 
+	@Override
 	public Navajo handle(Navajo inMessage, boolean skipAuth)
 			throws FatalException {
 		
 		return null;
 	}
 
+	@Override
 	public Navajo handle(Navajo inMessage) throws FatalException {
 		
 		return null;
 	}
 
+	@Override
 	public Navajo handle(Navajo inMessage, Object userCertificate,
 			ClientInfo clientInfo) throws FatalException {
 		
 		return null;
 	}
 
+	@Override
 	public String getApplicationId() {
 		
 		return null;
 	}
 
+	@Override
 	public void setUseAuthorisation(boolean b) {
 		
 		
 	}
 
+	@Override
 	public Set<Access> getAccessSet() {
 		
 		return null;
@@ -74,127 +79,92 @@ public class TestDispatcher implements DispatcherInterface {
 		return null;
 	}
 
-	public Message[] checkConditions(ConditionData[] conditions,
-			Navajo inMessage, Navajo outMessage) throws NavajoException {
-		
-		return null;
-	}
 
+	@Override
 	public String getThreadName(Access a) {
 		
 		return null;
 	}
 
+	@Override
 	public long getRequestCount() {
 		
 		return 0;
 	}
 
+	@Override
 	public long getUptime() {
 		
 		return 0;
 	}
 
+	@Override
 	public boolean isBusy() {
 		
 		return false;
 	}
 
+	@Override
 	public void doClearCache() {
 		
 		
 	}
 
+	@Override
 	public void doClearScriptCache() {
 		
 		
 	}
 
-	public String getEdition() {
-		
-		return null;
-	}
-
-	public String getProduct() {
-		
-		return null;
-	}
-
+	@Override
 	public int getRateWindowSize() {
 		
 		return 0;
 	}
 
+	@Override
 	public float getRequestRate() {
 		
 		return 0;
 	}
 
+	@Override
 	public Date getStartTime() {
-		
 		return null;
 	}
 
+	@Override
 	public File getTempDir() {
-		
 		return null;
 	}
 
-	public String getVendor() {
-		
-		return null;
-	}
 
-	public String getVersion() {
-		
-		return null;
-	}
 
-	public Navajo handle(Navajo inMessage, Object userCertificate) {
-		
-		return null;
-	}
-
-	public void setBroadcast(String message, int timeToLive,
-			String recipientExpression) {
-		
-		
-	}
-
+	@Override
 	public Navajo removeInternalMessages(Navajo doc) {
 		return doc;
 	}
 
+	@Override
 	public int getHealth(String resourceId) {
-		
 		return 0;
 	}
 
+	@Override
 	public int getWaitingTime(String resourceId) {
-		
 		return 0;
 	}
 
+	@Override
 	public boolean isAvailable(String resourceId) {
-		
 		return false;
 	}
 
+	@Override
 	public void setHealth(String resourceId, int h) {
-		
-		
 	}
 
-	public Navajo handle(Navajo inMessage, TmlRunnable initialRunnable, Object userCertificate) {
-		return handle(inMessage,userCertificate);
-	}
-
-	public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, String rpcName, String rpcUser,
-			Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated) {
-		
-		
-	}
-
+	@Override
 	public Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException {
 		
 		return null;
@@ -203,7 +173,7 @@ public class TestDispatcher implements DispatcherInterface {
 	@Override
 	public Navajo handle(Navajo inMessage, boolean skipAuth,
 			AfterWebServiceEmitter emit) throws FatalException {
-		return handle(inMessage,null);
+		return null;
 	}
 
 	@Override
@@ -220,13 +190,11 @@ public class TestDispatcher implements DispatcherInterface {
 	public Navajo handle(Navajo inMessage, TmlRunnable initialRunnable,
 			Object userCertificate, ClientInfo clientInfo)
 			throws FatalException {
-		return handle(inMessage,userCertificate);
+		return null;
 	}
 
 	@Override
 	public void shutdown() {
-		
-		
 	}
 
 	@Override
@@ -239,13 +207,10 @@ public class TestDispatcher implements DispatcherInterface {
 
 	@Override
 	public void setBundleCreator(BundleCreator bc) {
-		
-		
 	}
 
 	@Override
 	public BundleCreator getBundleCreator() {
-		
 		return null;
 	}
 

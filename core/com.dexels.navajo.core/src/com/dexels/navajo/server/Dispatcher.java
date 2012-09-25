@@ -1676,24 +1676,11 @@ public String getServerId() {
 			}
 		 }
 		return null;
-
-//		 CompiledScript ss;
-//		try {
-//			ss = csf.getCompiledScript();
-//			final CompiledScript ccs = ss;
-//		} catch (Exception e) {
-//			 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter,e);
-//			 return null;
-//		}
-//		bundleContext.ungetService(sr[0]);
-//		 return ss;
 	}
 
 	private CompiledScript loadOnDemand(BundleContext bundleContext, String rpcName, String filter) throws Exception {
 		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
 		BundleCreator bc = bundleContext.getService(ref);
-		
-//		BundleCreator bc = getBundleCreator(bundleContext);
 		if(bc==null) {
 			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
 			return null;

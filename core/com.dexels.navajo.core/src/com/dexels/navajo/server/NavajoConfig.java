@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.HashMap;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import navajocore.Version;
@@ -31,6 +30,8 @@ import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
+import com.dexels.navajo.server.monitoring.MonitorComponent;
+import com.dexels.navajo.server.monitoring.ServiceMonitor;
 
 /*
  * The default NavajoConfig class.
@@ -38,7 +39,6 @@ import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
  */
 public final class NavajoConfig extends FileNavajoConfig implements NavajoConfigInterface {
 
-	private static final int MAX_ACCESS_SET_SIZE = 50;
 	
 	public String adapterPath;
 	public String compiledScriptPath;
@@ -64,6 +64,8 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     private Message body;
     private boolean statisticsRunnerStarted = false;
     
+    private ServiceMonitor serviceMonitor = new MonitorComponent();
+    
     /**
      * Several supporting threads.
      */
@@ -78,13 +80,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     private boolean enableLockManager = true;
     private boolean enableStatisticsRunner = true;
     private float asyncTimeout;
-    
-    public boolean monitorOn;
-    public String monitorUsers = null;
-    public String [] monitorUsersList = null;
-    public String monitorWebservices = null;
-    public String [] monitorWebservicesList = null;
-    public int monitorExceedTotaltime = -1;
 	private File rootFile;
 
     private static volatile NavajoConfig instance = null;
@@ -634,165 +629,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 
 
     
-    /**
-     *
-     * BELOW WILL FOLLOW LOGIC FOR MONITORING WEBSERVICES.
-     *
-     */
-
-    /*
-     * Determine if a value matches any of the regexps in a list.
-     *
-     * @param value
-     * @param regExplist
-     * @return
-     */
-    private final boolean matchesRegexp(String value, String [] regExplist) {
-      if (regExplist == null) {
-        return true;
-      }
-
-      for (int i = 0; i < regExplist.length; i++) {
-        if (value.matches(regExplist[i])) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    /*
-     * Determine if access object needs full access log.
-     *
-     * @param a the full access log candidate
-     * @return whether full access log is required for access object.
-     */
-    @Override
-    public final boolean needsFullAccessLog(Access a) {
-      // Check whether compiledscript has debugAll set or whether access object has debug all set.
-      if ( a.isDebugAll() || ( a.getCompiledScript() != null && a.getCompiledScript().isDebugAll() ) ) {
-    	  return true;
-      }
-      
-      if (!monitorOn) {
-        return false;
-      }
-      if (
-           (monitorUsersList == null || matchesRegexp(a.rpcUser, this.monitorUsersList ) )&&
-           (monitorWebservicesList == null || matchesRegexp(a.rpcName, monitorWebservicesList) ) &&
-           (monitorExceedTotaltime == -1 || a.getTotaltime() >= monitorExceedTotaltime)
-          )
-      {
-        return true;
-      }
-      return false;
-    }
-
-    /**
-     * Check if full access log monitor is enabled.
-     *
-     * @return
-     */
-    @Override
-    public final boolean isMonitorOn() {
-      return monitorOn;
-    }
-
-    /**
-     * Set enabled/disable full access log monitor.
-     *
-     * @param monitorOn
-     */
-    @Override
-    public final void setMonitorOn(boolean monitorOn) {
-      this.monitorOn = monitorOn;
-    }
-
-    /*
-     * Get r.e. for user monitor filter. If null is returned all users should be logged.
-     *
-     * @return the current filter
-     */
-    @Override
-    public final String getMonitorUsers() {
-      return monitorUsers;
-    }
-
-    /*
-     * Set r.e. for user monitor filter. Null or empty string means no filter.
-     *
-     * @param monitorUsers
-     */
-    @Override
-    public final void setMonitorUsers(String monitorUsers) {
-      System.err.println("in setMonitorUsers(" + monitorUsers + ")");
-      if (monitorUsers == null || monitorUsers.equals("")) {
-        this.monitorUsersList = null;
-        this.monitorUsers = null;
-        return;
-      }
-      this.monitorUsers = monitorUsers;
-      StringTokenizer list = new StringTokenizer(monitorUsers, ",");
-      System.err.println("Found " + list.countTokens() + " regexp elements");
-      monitorUsersList = new String[list.countTokens()];
-      int i = 0;
-      while (list.hasMoreTokens()) {
-        monitorUsersList[i++] = list.nextToken();
-      }
-    }
-
-    /*
-      * Set r.e. for webservice monitor filter. Null or empty string means no filter.
-      *
-      * @param monitorWebservices
-      */
-
-    @Override
-    public final void setMonitorWebservices(String monitorWebservices) {
-      System.err.println("in setMonitorWebservices(" + monitorWebservices + ")");
-      if (monitorWebservices == null || monitorWebservices.equals("")) {
-        this.monitorWebservicesList = null;
-        this.monitorWebservices = null;
-        return;
-      }
-      this.monitorWebservices = monitorWebservices;
-      StringTokenizer list = new StringTokenizer(monitorWebservices, ",");
-      monitorWebservicesList = new String[list.countTokens()];
-      System.err.println("Found " + list.countTokens() + " regexp elements");
-      int i = 0;
-      while (list.hasMoreTokens()) {
-        monitorWebservicesList[i++] = list.nextToken();
-      }
-    }
-
-    /*
-     * Get r.e. for webservice monitor filter. If null is returned all users should be logged.
-     *
-     * @return the current filter
-     */
-    @Override
-    public final String getMonitorWebservices() {
-      return monitorWebservices;
-    }
-    
-    /*
-     * Get the time in millis over which an access needs to be fully logged.
-     *
-     * @return
-     */
-    @Override
-    public final int getMonitorExceedTotaltime() {
-      return monitorExceedTotaltime;
-    }
-
-    /**
-     * Set the time in millis over which an access needs to be fully logged.
-     *
-     * @param monitorExceedTotaltime
-     */
-    @Override
-    public final void setMonitorExceedTotaltime(int monitorExceedTotaltime) {
-      this.monitorExceedTotaltime = monitorExceedTotaltime;
-    }
 
 	/**
 	 * @param classloader The classloader to set.
@@ -859,8 +695,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 		this.maxAccessSetSize = maxAccessSetSize;
 	}
 
-    @Override
-	public Message getMessage(String msg) {
+	private Message getMessage(String msg) {
 		if ( body != null ) {
 			return body.getMessage(msg);
 		} else {
@@ -871,6 +706,68 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     @Override
 	public String getCompilationLanguage() {
 		return compilationLanguage;
+	}
+
+
+	@Override
+	public boolean needsFullAccessLog(Access a) {
+		return serviceMonitor.needsFullAccessLog(a);
+	}
+
+
+	@Override
+	public boolean isMonitorOn() {
+		return serviceMonitor.isMonitorOn();
+	}
+
+
+	@Override
+	public void setMonitorOn(boolean monitorOn) {
+		serviceMonitor.setMonitorOn(monitorOn);
+	}
+
+
+	@Override
+	public String getMonitorUsers() {
+		return serviceMonitor.getMonitorUsers();
+	}
+
+
+	@Override
+	public void setMonitorUsers(String monitorUsers) {
+		serviceMonitor.setMonitorUsers(monitorUsers);
+	}
+
+
+	@Override
+	public void setMonitorWebservices(String monitorWebservices) {
+		serviceMonitor.setMonitorWebservices(monitorWebservices);
+	}
+
+
+	@Override
+	public String getMonitorWebservices() {
+		return serviceMonitor.getMonitorWebservices();
+	}
+
+
+	@Override
+	public int getMonitorExceedTotaltime() {
+		return serviceMonitor.getMonitorExceedTotaltime();
+	}
+
+
+	@Override
+	public void setMonitorExceedTotaltime(int monitorExceedTotaltime) {
+		serviceMonitor.setMonitorExceedTotaltime(monitorExceedTotaltime);
+		
+	}
+
+
+	@Override
+	public Object getParameter(String name) {
+		Property p = getMessage("parameters").getProperty("isLegacyMode");
+		return null;
 	}
 
 }

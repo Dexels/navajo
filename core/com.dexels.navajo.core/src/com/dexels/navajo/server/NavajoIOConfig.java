@@ -23,6 +23,7 @@ public interface NavajoIOConfig {
 	public String getScriptPath();
 	public String getCompiledScriptPath();
 	public String getAdapterPath();
+	public String getResourcePath();
 
 	public Navajo readConfig(String s) throws IOException;
 	public void writeConfig(String name, Navajo conf) throws IOException;
