@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
@@ -192,6 +193,7 @@ public abstract class BaseClassManager implements IClassManager {
 			Class<?> cc = Class.forName(classType, true,
 					myContext.getClassLoader());
 			ttp.setReturnType(cc);
+			NavajoFactory.getInstance().addNavajoType(name,cc);
 		} catch (ClassNotFoundException ex) {
 			logger.error("Error verifying return type class for parser: "
 					+ classType, ex);
