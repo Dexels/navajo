@@ -22,7 +22,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	private final static Logger logger = LoggerFactory
 			.getLogger(OsgiFunctionFactory.class);
 
-	public FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws TMLExpressionException  {
+	public FunctionInterface getInstance(final ClassLoader cl, final String functionName)  {
 		FunctionInterface osgiResolution = (FunctionInterface) getComponent(functionName, "functionName", FunctionInterface.class);
 
 		if (osgiResolution==null) {
