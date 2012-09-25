@@ -42,14 +42,12 @@ public class ResourceManager {
 	
 	public void activate(ComponentContext cc) {
 		this.bundleContext = cc.getBundleContext();
-		System.err.println("Bundlecontext: "+bundleContext);
 		setupResources();
 		setupTesterUser();
 
 	}
 	
 	public void deactivate() {
-		logger.info("Deactivating context!");
 		unloadDataSources();
 		try {
 			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient",null);
