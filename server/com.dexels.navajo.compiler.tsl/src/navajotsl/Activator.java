@@ -33,6 +33,7 @@ public class Activator implements BundleActivator {
 	}
 
 
+	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 		
@@ -74,6 +75,7 @@ public class Activator implements BundleActivator {
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
 		customJavaFileManager.close();
 		Activator.context = null;
