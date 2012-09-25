@@ -874,7 +874,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 
 	public void processRequiredIncludes(TipiExtension tipiExtension) {
-		logger.info("Adding extension: "+tipiExtension.getId());
+//		logger.info("Adding extension: "+tipiExtension.getId());
 		List<String> includes = new LinkedList<String>();
 		String[] ss = tipiExtension.getIncludes();
 		if (ss == null || ss.length == 0) {
@@ -885,7 +885,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 //		Thread.dumpStack();
 		for (int i = 0; i < ss.length; i++) {
-			logger.info("Adding include: " + ss[i]);
+//			logger.info("Adding include: " + ss[i]);
 			includes.add(ss[i]);
 		}
 
