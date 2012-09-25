@@ -96,7 +96,7 @@ import com.dexels.navajo.util.AuditLog;
  * finally dispatching to the proper dispatcher class.
  */
 
-public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterface {
+public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterface {
 
   protected static int instances = 0;
   
@@ -138,7 +138,7 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
   public static java.util.Date startTime = new java.util.Date();
 
   public  long requestCount = 0;
-  private final NavajoConfigInterface navajoConfig;
+  private NavajoConfigInterface navajoConfig;
  
   private  String keyStore;
   private  String keyPassword;
@@ -351,6 +351,16 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
    */
   public  final NavajoConfigInterface getNavajoConfig() {
     return navajoConfig;
+  }
+
+  public void setNavajoConfig(NavajoConfigInterface nci) {
+	  logger.info("Setting NavajoConfig");
+	  this.navajoConfig = nci;
+  }
+
+  public void clearNavajoConfig(NavajoConfigInterface nci) {
+	  logger.info("Clearing NavajoConfig");
+	  this.navajoConfig = null;
   }
 
   /*

@@ -1,4 +1,4 @@
-package com.dexels.navajo.server;
+package com.dexels.navajo.server.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +24,10 @@ import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.LockManager;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.NavajoConfigInterface;
+import com.dexels.navajo.server.NavajoIOConfig;
+import com.dexels.navajo.server.Repository;
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
