@@ -2,6 +2,7 @@ package com.dexels.navajo.functions.util;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,10 +30,9 @@ public abstract class FunctionFactoryInterface implements Serializable {
 
 	private static Object semaphore = new Object();
 	private boolean initializing = false;
-	
+	private final List<FunctionResolver> functionResolvers = new LinkedList<FunctionResolver>();
 	private static final Logger logger = LoggerFactory.getLogger(FunctionFactoryInterface.class);
 	public abstract void init();
-
 	
 	public void injectExtension(ExtensionDefinition fd) {
 		readDefinitionFile(getConfig(fd), fd);
@@ -42,6 +42,12 @@ public abstract class FunctionFactoryInterface implements Serializable {
 	
 	public abstract void readDefinitionFile(Map<String, FunctionDefinition> fuds, ExtensionDefinition fd) ;
 
+	public void addFunctionResolver(FunctionResolver fr) {
+		functionResolvers.add(fr);
+	}
+	public void removeFunctionResolver(FunctionResolver fr) {
+		functionResolvers.remove(fr);
+	}
 	
 	public final FunctionDefinition getDef(String name)  {
 		if(defaultConfig!=null) {
@@ -52,6 +58,12 @@ public abstract class FunctionFactoryInterface implements Serializable {
 			}
 		} else {
 			logger.debug("No default config");
+		}
+		for (FunctionResolver fr : functionResolvers) {
+			FunctionDefinition fd = fr.getFunction(name);
+			if(fd!=null) {
+				return fd;
+			}
 		}
 		
 		for (Map<String, FunctionDefinition> elt : functionConfig.values()) {
@@ -176,7 +188,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		adapterConfig.clear();
 	}
 
-	public FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws TMLExpressionException {
+	public FunctionInterface getInstance(final ClassLoader cl, final String functionName)  {
 		try {
 			FunctionDefinition fd = getDef(functionName);
 			Class<FunctionInterface> myClass = (Class<FunctionInterface>) Class.forName(fd.getObject(), true, cl);
@@ -186,21 +198,23 @@ public abstract class FunctionFactoryInterface implements Serializable {
 			}
 			return fi;
 		} catch (Exception e) {
+			logger.error("Function: "+functionName+" not found!",e);
+			return null;
 			// Try legacy mode.
-			try {
-				Class<FunctionInterface> myClass = (Class<FunctionInterface>) Class.forName("com.dexels.navajo.functions."+functionName, true, cl);
-				FunctionInterface fi = myClass.newInstance();
-				if (!fi.isInitialized()) {
-					fi.setTypes(null, null);
-				}
-				return fi;
-			} catch (ClassNotFoundException e1) {
-				throw new TMLExpressionException("Could find class for function: " + getDef(functionName)+" name: "+functionName,e1);
-			} catch (IllegalAccessException e2) {
-				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject(),e2);
-			} catch (InstantiationException e3) {
-				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject(),e3);
-			}
+//			try {
+//				Class<FunctionInterface> myClass = (Class<FunctionInterface>) Class.forName("com.dexels.navajo.functions."+functionName, true, cl);
+//				FunctionInterface fi = myClass.newInstance();
+//				if (!fi.isInitialized()) {
+//					fi.setTypes(null, null);
+//				}
+//				return fi;
+//			} catch (ClassNotFoundException e1) {
+//				throw new TMLExpressionException("Could find class for function: " + getDef(functionName)+" name: "+functionName,e1);
+//			} catch (IllegalAccessException e2) {
+//				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject(),e2);
+//			} catch (InstantiationException e3) {
+//				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject(),e3);
+//			}
 //		} catch (InstantiationException e) {
 //			throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject());
 //		} catch (IllegalAccessException e) {
