@@ -6,6 +6,7 @@
 	<includes>
 		<!--  needed for runtime, not for JNLP -->
 		<include path="com/dexels/navajo/tipi/components/swingimpl/swingclassdef.xml"/>
+		<include path="com/dexels/navajo/tipi/swing/functions/tipiswingfunctions.xml"/>
 	</includes>
 	<jars>
 		<jar path="TipiSwingClient.jar"/>

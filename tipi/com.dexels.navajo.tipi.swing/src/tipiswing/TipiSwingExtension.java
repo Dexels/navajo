@@ -1,4 +1,4 @@
-package tipi;
+package tipiswing;
 
 import java.util.Collection;
 import java.util.Dictionary;
@@ -18,6 +18,10 @@ import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import tipi.TipiAbstractXMLExtension;
+import tipi.TipiExtension;
+import tipi.TipiMainExtension;
+
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
@@ -31,7 +35,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		TipiExtension,TipiMainExtension {
 
 	@SuppressWarnings("rawtypes")
-	private final Set<ServiceRegistration> adapterRegs = new HashSet<ServiceRegistration>();
+	private final Set<ServiceRegistration> functionRegs = new HashSet<ServiceRegistration>();
 	private static final long serialVersionUID = 3083008630338044274L;
 
 	private static TipiSwingExtension instance = null;
@@ -51,17 +55,21 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		registerTipiExtension(context);
 		
 		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
-		fi.init();
-		fi.clearFunctionNames();
+//		fi.init();
+//		fi.clearFunctionNames();
 		ExtensionDefinition extensionDef = new TipiSwingFunctionDefinition();
 		fi.injectExtension(extensionDef);
-		for (String functionName : fi.getFunctionNames(extensionDef)) {
-			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
-			 Dictionary<String, Object> props = new Hashtable<String, Object>();
-			 props.put("functionName", functionName);
-			 props.put("functionDefinition", fd);
-			 ServiceRegistration sr = context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
-			 adapterRegs.add(sr);
+		if(context!=null) {
+			// OSGi only:
+			for (String functionName : fi.getFunctionNames(extensionDef)) {
+				FunctionDefinition fd = fi.getDef(extensionDef,functionName);
+				 Dictionary<String, Object> props = new Hashtable<String, Object>();
+				 props.put("functionName", functionName);
+				 props.put("functionDefinition", fd);
+				 ServiceRegistration sr = context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
+				 functionRegs.add(sr);
+			}
+			
 		}
 				
 	}
@@ -70,7 +78,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		deregisterTipiExtension(context);
-		for (ServiceRegistration sr : adapterRegs) {
+		for (ServiceRegistration sr : functionRegs) {
 			sr.unregister();
 		}
 	}
