@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import tipi.BaseTipiApplicationInstance;
 import tipi.TipiExtension;
-import tipi.TipiSwingExtension;
 import tipipackage.ITipiExtensionContainer;
 
 import com.dexels.navajo.tipi.TipiContext;

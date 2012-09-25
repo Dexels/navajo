@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 
 import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.functions.util.FunctionResolver;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
@@ -152,6 +153,11 @@ public final class ClassManager extends BaseClassManager implements Serializable
 	@Override
 	public void addFunctionDefinition(String name, FunctionDefinition fd) {
 		functionDefinitionMap.put(name, fd);
+	}
+
+	@Override
+	public FunctionDefinition getFunction(String name) {
+		return functionDefinitionMap.get(name);
 	}
 
 }

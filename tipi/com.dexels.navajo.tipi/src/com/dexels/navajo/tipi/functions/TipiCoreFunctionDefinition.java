@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.swing.functions;
+package com.dexels.navajo.tipi.functions;
 
 import java.io.InputStream;
 import java.util.List;
@@ -7,13 +7,13 @@ import navajo.ExtensionDefinition;
 
 
 
-public class TipiSwingFunctionDefinition implements ExtensionDefinition {
+public class TipiCoreFunctionDefinition implements ExtensionDefinition {
 
 	private static final long serialVersionUID = -3429274998043371128L;
 	private transient ClassLoader extensionClassLoader = null;
 
 	public InputStream getDefinitionAsStream() {
-		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/tipi/swing/functions/tipiswingfunctions.xml");
+		return getClass().getResourceAsStream("tipifunctions.xml");
 	}
 
 	public String getConnectorId() {
