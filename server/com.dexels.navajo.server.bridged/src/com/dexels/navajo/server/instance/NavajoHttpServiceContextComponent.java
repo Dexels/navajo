@@ -27,13 +27,21 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 	private ConfigurationAdmin myConfigurationAdmin = null;
 	private Configuration fileInstallConfiguration = null;
 	
+	public NavajoHttpServiceContextComponent() {
+		logger.info("*******Instantiated NavajoHttpServiceContextComponent!");
+	}
+	
 	public void activate(ComponentContext c) {
-		logger.info("Activating HTTP server component");
-		updated(c.getProperties());
+		try {
+			logger.info("Activating HTTP server component");
+			updated(c.getProperties());
+		} catch (Throwable e) {
+			logger.warn("Error activating NavajoHttpServiceContextComponent ",e);
+		}
 	}
 	
 	public void modified() {
-		logger.info("Navajo HTTP service modified. Why?");
+			logger.info("Navajo HTTP service modified. Why?");
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -120,6 +128,7 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 	}
 
 	public void addConfigurationAdmin(ConfigurationAdmin admin) {
+		logger.info("Adding configuration admin");
 		this.myConfigurationAdmin = admin;
 	}
 
@@ -128,6 +137,7 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 	 * @param admin the ConfigurationAdmin to remove
 	 */
 	public void clearConfigurationAdmin(ConfigurationAdmin admin) {
+		logger.info("Removing configuration admin");
 		this.myConfigurationAdmin = null;
 	}
 
