@@ -28,4 +28,5 @@ Import-Package: com.dexels.navajo.version,
  org.junit.runners;resolution:=optional,
  org.osgi.framework;version="1.5.0",
  org.slf4j,
+ org.w3c.dom,
  org.xml.sax
