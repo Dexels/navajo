@@ -56,6 +56,11 @@
         <input>date|empty</input>
         <result>string</result>
     </function>
+    <function name="DayOfWeek" class="com.dexels.navajo.functions.DayOfWeek">
+        <description>This function return a calendar date of the first given weekday in the past</description>
+        <input>integer,boolean</input>
+        <result>date</result>
+    </function>
     <function name="Wait" class="com.dexels.navajo.functions.Wait">
         <description>Wait for specified number of milliseconds</description>
         <input>integer</input>
