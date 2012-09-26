@@ -42,14 +42,12 @@ public class ResourceManager {
 	
 	public void activate(ComponentContext cc) {
 		this.bundleContext = cc.getBundleContext();
-		System.err.println("Bundlecontext: "+bundleContext);
 		setupResources();
 		setupTesterUser();
 
 	}
 	
 	public void deactivate() {
-		logger.info("Deactivating context!");
 		unloadDataSources();
 		try {
 			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient",null);
@@ -224,6 +222,15 @@ public class ResourceManager {
 	private void processClientBundle(ResourceBundle b) {
 		try {
 			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient",null);
+			Dictionary<String,String> dt = new Hashtable<String,String>();
+			dt.put("user", b.getString("username"));
+			dt.put("password", b.getString("password"));
+			config.update(dt);
+		} catch (IOException e) {
+			logger.error("Adding configuration for client.properties: ", e);
+		}
+		try {
+			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient.legacy",null);
 			Dictionary<String,String> dt = new Hashtable<String,String>();
 			dt.put("user", b.getString("username"));
 			dt.put("password", b.getString("password"));

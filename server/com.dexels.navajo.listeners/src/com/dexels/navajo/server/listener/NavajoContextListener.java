@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.server.LegacyLocalClientDispatcherWrapper;
 import com.dexels.navajo.server.LocalClientDispatcherWrapper;
 import com.dexels.navajo.server.api.impl.NavajoServerInstance;
 import com.dexels.navajo.server.listener.http.SchedulerTools;
@@ -68,7 +69,7 @@ public class NavajoContextListener implements ServletContextListener {
 		SchedulerTools.createScheduler(servletContext);
 		if(!Version.hasOSGiBundleContext()) {
 			logger.info("No OSGi detected. Manually inserting LocalClientWrapper into ServletContext");
-			LocalClientDispatcherWrapper lcdw = new LocalClientDispatcherWrapper();
+			LegacyLocalClientDispatcherWrapper lcdw = new LegacyLocalClientDispatcherWrapper();
 			lcdw.setContext(nsi);
 			try {
 				lcdw.activate(nsi.getClientSettingMap());

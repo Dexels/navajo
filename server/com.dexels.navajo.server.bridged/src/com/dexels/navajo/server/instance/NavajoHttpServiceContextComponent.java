@@ -7,6 +7,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
@@ -54,7 +55,7 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 			String contextPath = (String)settings.get("contextPath");
 			String servletContextPath = (String)settings.get("servletContextPath");
 			String installPath = (String)settings.get("installationPath");
-			addAdapterListener(installPath);
+			addAdapterListener(contextPath,installPath);
 			logger.info("Instantiate server: "+contextPath+" installpath: "+installPath+" servletContextPath: "+servletContextPath);
 			wrapped = NavajoContextListener.initializeServletContext(contextPath,servletContextPath,installPath);
 		} catch (Exception e) {
@@ -62,18 +63,44 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 		}
 	}
 	
-	private void addAdapterListener(String installPath) throws IOException {
-		fileInstallConfiguration = myConfigurationAdmin.createFactoryConfiguration("org.apache.felix.fileinstall",null);
+	private void addAdapterListener(String contextPath, String installPath) throws IOException, InvalidSyntaxException {
+		File cp = new File(installPath);
+		File adapters = new File(cp,"adapters");
+
+		//fileInstallConfiguration = myConfigurationAdmin.createFactoryConfiguration("org.apache.felix.fileinstall",null);
+		final String absolutePath = adapters.getAbsolutePath();
+		fileInstallConfiguration = getResourceConfig(contextPath, absolutePath);
 		Dictionary<String,Object> d = fileInstallConfiguration.getProperties();
 		if(d==null) {
 			d = new Hashtable<String,Object>();
 		}
-		File cp = new File(installPath);
-		File adapters = new File(cp,"adapters");
-		d.put("felix.fileinstall.dir",adapters.getAbsolutePath() );
+		d.put("felix.fileinstall.dir",absolutePath );
+		d.put("contextPath",contextPath );
+
 		fileInstallConfiguration.update(d);	
-		
 	}
+	
+	private Configuration getResourceConfig(String name, String path)
+			throws IOException, InvalidSyntaxException {
+		final String factoryPid = "org.apache.felix.fileinstall";
+		Configuration[] cc = myConfigurationAdmin
+				.listConfigurations("(&(service.factoryPid=" + factoryPid
+						+ ")(felix.fileinstall.dir=" + path + "))");
+		if (cc != null) {
+
+			if (cc.length != 1) {
+				logger.info("Odd length: " + cc.length);
+			}
+			return cc[0];
+		} else {
+			logger.info("Not found: " + name+" creating a new factory config for: "+factoryPid);
+			Configuration c = myConfigurationAdmin.createFactoryConfiguration(
+					factoryPid, null);
+			return c;
+		}
+	}
+
+	
 
 	public void deactivate() throws IOException {
 		logger.info("Deactivating service component");

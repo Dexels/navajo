@@ -286,12 +286,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	}
 
 	@Override
-	public Message getMessage(String msg) {
-		
-		return null;
-	}
-
-	@Override
 	public String getCompilationLanguage() {
 		
 		return "javascript";
@@ -300,6 +294,11 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	@Override
 	public File getContextRoot() {
 		
+		return null;
+	}
+
+	@Override
+	public Object getParameter(String string) {
 		return null;
 	}
 

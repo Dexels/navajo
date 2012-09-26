@@ -147,17 +147,15 @@ public class SharedFileStore implements SharedStoreInterface {
 		File [] files = sharedStore.listFiles(new LockFiles(ssl.parent, ssl.name));
 		if ( files != null && files.length > 0 ) {
 			// Check age of lock.
-			for (int i = 0; i < files.length; i++) {
-				if ( ( System.currentTimeMillis() - files[i].lastModified() ) > ssl.getLockTimeOut() ) {
-					// Lock has time-out, delete it.
-					files[i].delete();
-					//System.err.println("\nLOCK " + ssl + " HAS AGED OUT: " + files[i].getName());
+//			for (int i = 0; i < files.length; i++) {
+
+				if ( ( System.currentTimeMillis() - files[0].lastModified() ) > ssl.getLockTimeOut() ) {
+					files[0].delete();
 					return false;
 				} else {
-					//System.err.println("\nLOCK " + ssl + " EXISTS: " + files[i].getName() + "(" + files[i].lastModified() + ")");
 					return true;
 				}
-			}
+//			}
 		} 
 		//System.err.println("\nLOCK " + ssl + " DOES NOT EXIST");
 		return false;
@@ -407,6 +405,10 @@ public class SharedFileStore implements SharedStoreInterface {
 		}
 	}
 
+	/**
+	 * @param parent  
+	 * @param o 
+	 */
 	public String store(String parent, Object o) {
 		return null;
 	}

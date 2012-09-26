@@ -12,28 +12,32 @@ import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.api.NavajoServerContext;
 
-public class LocalClientDispatcherWrapper implements LocalClient {
+public class LegacyLocalClientDispatcherWrapper implements LocalClient {
 
 	private DispatcherInterface dispatcherInterface;
+	private NavajoServerContext serverContext;
+	private BundleCreator bundleCreator;
 	
 
 	private final static Logger logger = LoggerFactory
-			.getLogger(LocalClientDispatcherWrapper.class);
+			.getLogger(LegacyLocalClientDispatcherWrapper.class);
 	private String user;
 	private String pass;
 	
-	public LocalClientDispatcherWrapper() {
+	public LegacyLocalClientDispatcherWrapper() {
 	}
 
-	public void setDispatcher(DispatcherInterface di) {
-		this.dispatcherInterface = di;
+	public void setBundleCreator(BundleCreator bc) {
+		this.bundleCreator = bc;
 	}
-
-	public void clearDispatcher(DispatcherInterface di) {
-		this.dispatcherInterface = null;
+	
+	/**
+	 * @param bc The bundlecreator to remove 
+	 */
+	public void clearBundleCreator(BundleCreator bc) {
+		this.bundleCreator = null;
 	}
-
-
+	
 	@Override
 	public Navajo call(Navajo n) throws FatalException {
 		if(n.getHeader().getRPCUser()==null || n.getHeader().getRPCUser().equals("")) {
@@ -42,16 +46,18 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 		if(n.getHeader().getRPCPassword()==null || n.getHeader().getRPCPassword().equals("")) {
 			n.getHeader().setRPCPassword(pass);
 		}
-		return dispatcherInterface.handle(n);
+		DispatcherFactory.getInstance().setBundleCreator(bundleCreator);
+		
+		return DispatcherFactory.getInstance().handle(n);
 	}
 
 	public Navajo callWithoutAuth(Navajo n) throws FatalException {
-		return dispatcherInterface.handle(n,true);
+		return DispatcherFactory.getInstance().handle(n,true);
 	}
 	
 	@Override
 	public Navajo generateAbortMessage(String reason) throws FatalException {
-		Navajo outDoc = dispatcherInterface.generateErrorMessage(
+		Navajo outDoc = DispatcherFactory.getInstance().generateErrorMessage(
 				null, reason, -1, 0, null);
 		return outDoc;
 	}
@@ -63,8 +69,8 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 
 	@Override
 	public Navajo handleInternal(Navajo in, Object cert, ClientInfo clientInfo) throws FatalException {
-		Navajo outDoc = dispatcherInterface.removeInternalMessages(
-				dispatcherInterface.handle(in, cert,
+		Navajo outDoc = DispatcherFactory.getInstance().removeInternalMessages(
+				DispatcherFactory.getInstance().handle(in, cert,
 						clientInfo));
 		return outDoc;
 	}
@@ -79,7 +85,22 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 		return dispatcherInterface.getApplicationId();
 	}
 
+	
+	public void setContext(NavajoServerContext nsc) {
+		logger.info("LocalClient linked to context");
+		this.serverContext = nsc;
+		this.dispatcherInterface = nsc.getDispatcher();
+	}
 
+	
+	/**
+	 * @param nsc the context to remove 
+	 */
+	public void removeContext(NavajoServerContext nsc) {
+		this.serverContext = null;
+		this.dispatcherInterface = null;
+	}
+	
 	public void activate(Map<String,String> properties) {
 //		Dictionary properties =  cc.getProperties();
 		user = properties.get("user");

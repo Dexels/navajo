@@ -98,6 +98,7 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		}
 	}
 	
+	@Override
 	public byte[] compile(String className, InputStream source) throws IOException {
 		 JavaFileObject javaSource = getJavaSourceFileObject(className, source);
 		 Iterable<? extends JavaFileObject> fileObjects = Arrays.asList(javaSource);

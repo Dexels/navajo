@@ -8,6 +8,8 @@ import java.net.URL;
 
 import javax.script.ScriptEngineManager;
 
+import navajocore.Version;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,6 +145,9 @@ public class DispatcherFactory {
 			throws NavajoException {
 		logger.warn("CREATE INSTANCE2");
 		synchronized (semaphore) {
+			if(Version.osgiActive()) {
+				logger.info("Using osgi");
+			}
 			if (instance == null) {
 				
 				// Create NavajoConfig object.
@@ -153,6 +158,7 @@ public class DispatcherFactory {
 					  is = configurationUrl.openStream();
 					  nc = new NavajoConfig( null, is, rootPath,servletContextRootPath); 
 //					  navajocore.Version.registerNavajoConfig(nc);
+//					  createNavajoConfigConfiguration(configurationUrl);
 				  }
 				  catch (Exception se) {
 					  throw NavajoFactory.getInstance().createNavajoException(se);
@@ -175,5 +181,6 @@ public class DispatcherFactory {
 			}
 		}
 	}
-	
+
+
 }

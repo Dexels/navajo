@@ -6,7 +6,6 @@ import java.util.HashMap;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.MappingUtils;
-import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 
@@ -104,7 +103,7 @@ public class ResultSetMap implements Mappable {
         return values.get(upperC);
     }
 
-    public final String getType(final String columnName) throws UserException, TMLExpressionException {
+    public final String getType(final String columnName) throws UserException {
         return MappingUtils.determineNavajoType(getColumnValue(columnName));
     }
 

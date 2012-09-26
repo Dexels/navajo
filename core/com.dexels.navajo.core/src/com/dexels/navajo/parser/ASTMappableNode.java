@@ -37,12 +37,14 @@ public final class ASTMappableNode extends SimpleNode {
         // Parameter array may contain parameters that are used when calling the get method.
         Object[] parameterArray = null;
 
-        if (args > 0)
+        if (args > 0) {
             objects = new ArrayList();
-
+        }
         for (int i = 0; i < args; i++) {
             Object a = jjtGetChild(i).interpret();
-            objects.add(a);
+            if(objects!=null) {
+                objects.add(a);
+            }
         }
 
         if (objects != null) {

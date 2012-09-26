@@ -80,7 +80,7 @@ public class IntroductionRequest extends Request {
 			while ( iter.hasNext() ) {
 				Object key = iter.next();
 				Object value = stm.get(key);
-				newOriginal.putLocal(key, new SoftReference(value));
+				newOriginal.putLocal(key, new SoftReference<Object>(value));
 			}
 			SharedTribalMap.registerMapLocal(newOriginal);
 		}

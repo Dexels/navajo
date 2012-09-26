@@ -96,6 +96,9 @@ public class TestAdapter implements Mappable {
 		}
 	}
 	
+	/**
+	 * @param b clear 
+	 */
 	public void setClear(boolean b) {
 		SharedTribalMap stm = SharedTribalMap.getMap(id);
 		SharedTribalMap.deregisterMap(stm);

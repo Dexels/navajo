@@ -199,7 +199,6 @@ public class CustomClassloaderJavaFileManager extends
 		for (BundleCapability bundleCapability : l) {
 			String pkg = (String) bundleCapability.getAttributes().get(
 					"osgi.wiring.package");
-			logger.debug("Affected package: " + pkg);
 			result.add(pkg);
 		}
 		return result;

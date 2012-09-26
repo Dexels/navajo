@@ -21,6 +21,7 @@ public class JabberWorkerFactory {
 		instance = null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static JabberWorkerInterface getInstance() {
 
 		if ( instance != null ) {

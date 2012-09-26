@@ -68,7 +68,7 @@ public class SharedTribalElement implements Serializable {
 		if ( !hasSoftReference ) {
 			return value; 
 		} else {
-			return new SoftReference(value);
+			return new SoftReference<Object>(value);
 		}
 	}
 
