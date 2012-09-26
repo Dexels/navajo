@@ -22,7 +22,6 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.LegacyLocalClientDispatcherWrapper;
-import com.dexels.navajo.server.LocalClientDispatcherWrapper;
 import com.dexels.navajo.server.api.impl.NavajoServerInstance;
 import com.dexels.navajo.server.listener.http.SchedulerTools;
 import com.dexels.navajo.version.AbstractVersion;
