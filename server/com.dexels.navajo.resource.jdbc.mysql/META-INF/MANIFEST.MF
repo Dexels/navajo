@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: JDBC Driver for H2 database
+Bundle-Name: JDBC Driver for MySql database
 Bundle-SymbolicName: com.dexels.navajo.resource.jdbc.mysql
 Bundle-Version: 1.0.2.qualifier
 Bundle-Activator: com.dexels.navajo.resource.jdbc.mysql.Activator
