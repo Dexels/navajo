@@ -214,6 +214,9 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 		this.bundleCreator = bc;
 	}
 	
+	protected void clearBundleCreator(BundleCreator bc) {
+		this.bundleCreator = null;
+	}
   @Override
 	public BundleCreator getBundleCreator() {
 		return this.bundleCreator;

@@ -138,6 +138,10 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 	   	File opath = new File(getCompiledScriptPath());
 	   	final String path = opath.getAbsolutePath()+"/"+scriptName+suffix;
 		File fin = new File(path);
+		File parent = fin.getParentFile();
+		if(!parent.exists()) {
+			parent.mkdirs();
+		}
 	   	FileOutputStream fos = new FileOutputStream(fin);
 	   	IOUtils.copy(is, fos);
 	   	fos.close();

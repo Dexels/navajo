@@ -50,6 +50,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	
 	public NavajoConfigComponent() {
 		System.err.println("========>  Navajo Config constructor.");
+		Thread.dumpStack();
 	}
 	
 	public void setIOConfig(NavajoIOConfig config) {
@@ -61,6 +62,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	 * @param config the navajoioconfig to clear
 	 */
 	public void clearIOConfig(NavajoIOConfig config) {
+		System.err.println("========>  Clearing NavajoIOConfig");
 		this.navajoIOConfig = null;
 	}
 	
@@ -85,6 +87,10 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 		} catch (Throwable e) {
 			logger.error("activation error",cc);
 		}
+	}
+	
+	public void modified(ComponentContext cc) {
+		System.err.println("Modified. Just sayin'");
 	}
 	
 	@Override

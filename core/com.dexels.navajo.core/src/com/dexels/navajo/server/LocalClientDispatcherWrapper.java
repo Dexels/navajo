@@ -82,15 +82,28 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 
 	public void activate(Map<String,String> properties) {
 //		Dictionary properties =  cc.getProperties();
-		user = properties.get("user");
-		pass = properties.get("password");
+		try {
+			user = properties.get("user");
+			pass = properties.get("password");
+		} catch (Throwable e) {
+			logger.error("Activation failed");
+		}
 	}
 	public void modified(Map<String,String> properties) {
-		user = properties.get("user");
-		pass = properties.get("password");
+		try {
+			user = properties.get("user");
+			pass = properties.get("password");
+		} catch (Throwable e) {
+			logger.error("Activation failed");
+		}
 	}
 	public void deactivate() {
-		
+		try {
+			logger.info("Deactivate");
+		} catch (Throwable e) {
+			logger.error("Activation failed");
+		}
+
 	}
 
 

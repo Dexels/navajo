@@ -1429,6 +1429,7 @@ public String fieldNode(int ident, Element n, String className,
         String type = null;
        
         try {
+        	logger.info("Attr: "+attribute+" class: "+localContextClass);
         	type = MappingUtils.getFieldType(localContextClass, attribute);
         	checkDependentFieldResource(localContextClass, attribute, exprValues);	
         } catch (Exception e) { 
