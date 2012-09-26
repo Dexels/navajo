@@ -50,7 +50,6 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	
 	public NavajoConfigComponent() {
 		System.err.println("========>  Navajo Config constructor.");
-		Thread.dumpStack();
 	}
 	
 	public void setIOConfig(NavajoIOConfig config) {

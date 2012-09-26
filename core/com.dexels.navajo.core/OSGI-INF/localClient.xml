@@ -4,6 +4,5 @@
    <service>
       <provide interface="com.dexels.navajo.script.api.LocalClient"/>
    </service>
-   <reference bind="setContext" cardinality="1..1" interface="com.dexels.navajo.server.api.NavajoServerContext" name="NavajoServerContext" policy="dynamic" unbind="removeContext"/>
    <reference bind="setDispatcher" cardinality="1..1" interface="com.dexels.navajo.server.DispatcherInterface" name="DispatcherInterface" policy="dynamic" unbind="clearDispatcher"/>
 </scr:component>
