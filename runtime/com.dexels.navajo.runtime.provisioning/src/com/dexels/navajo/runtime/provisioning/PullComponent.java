@@ -69,7 +69,7 @@ public class PullComponent {
 			}
 			logger.info("Activating OBR took: "
 					+ (System.currentTimeMillis() - stamp) + " millis. ");
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.error("Activation of pull had a problem", e);
 		}
 
