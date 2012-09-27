@@ -3,8 +3,6 @@ package com.dexels.navajo.tipi.css.actions.impl;
 import org.akrogen.tkui.css.core.dom.properties.ICSSPropertyHandler;
 import org.akrogen.tkui.css.core.engine.CSSEngine;
 import org.akrogen.tkui.css.tipi.dom.TipiElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.css.CSSValue;
 
 import com.dexels.navajo.document.Operand;

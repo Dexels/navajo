@@ -21,7 +21,6 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -511,6 +510,7 @@ public abstract class ScriptEnvironment implements Serializable {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	private Class<?> getOSGiClass(String className) throws ClassNotFoundException {
 		if(!hasOSGi()) {
 			ClassLoader cl = DispatcherFactory.getInstance().getNavajoConfig()

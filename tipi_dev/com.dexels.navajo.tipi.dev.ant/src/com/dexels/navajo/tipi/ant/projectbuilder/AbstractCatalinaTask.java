@@ -272,7 +272,6 @@ public abstract class AbstractCatalinaTask {
                 try {
                     reader.close();
                 } catch (Throwable u) {
-                    ;
                 }
                 reader = null;
             }
@@ -280,7 +279,6 @@ public abstract class AbstractCatalinaTask {
                 try {
                     istream.close();
                 } catch (Throwable u) {
-                    ;
                 }
                 istream = null;
             }
