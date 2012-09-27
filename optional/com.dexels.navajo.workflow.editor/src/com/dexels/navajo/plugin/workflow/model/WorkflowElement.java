@@ -104,7 +104,7 @@ public class WorkflowElement extends WorkflowModelElement {
 	}
 
 	public StateElement getShape(String id) {
-		return (StateElement) shapeMap.get(id);
+		return shapeMap.get(id);
 	}
 
 	public Point getLocationForIndex(int in, int total) {
@@ -139,7 +139,7 @@ public class WorkflowElement extends WorkflowModelElement {
 		XMLElement xe = new CaseSensitiveXMLElement();
 		xe.setName("workflow");
 		for (int i = 0; i < shapes.size(); i++) {
-			StateElement st = (StateElement) shapes.get(i);
+			StateElement st = shapes.get(i);
 			if (!"null".equals(st.getId())) {
 				xe.addChild(st.toXml());
 			}

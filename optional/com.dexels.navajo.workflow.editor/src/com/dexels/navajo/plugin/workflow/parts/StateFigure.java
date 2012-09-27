@@ -66,15 +66,15 @@ public class StateFigure extends Figure {
 		}
 
 		if (initialState) {
-			fgColor = initialFgColor;
-			bgColor = initialBgColor;
+			setForegroundColor(initialFgColor);
+			setBackgroundColor(initialBgColor);
 		} else {
 			if (finalState) {
-				fgColor = finalFgColor;
-				bgColor = finalBgColor;
+				setForegroundColor(finalFgColor);
+				setBackgroundColor(finalFgColor);
 			} else {
-				fgColor = normalFgColor;
-				bgColor = normalBgColor;
+				setForegroundColor(normalFgColor);
+				setBackgroundColor(normalBgColor);
 
 			}
 		}
@@ -94,8 +94,8 @@ public class StateFigure extends Figure {
 
 		// Drawings
 
-		graphics.setForegroundColor(fgColor);
-		graphics.setBackgroundColor(bgColor);
+		graphics.setForegroundColor(getForegroundColor());
+		graphics.setBackgroundColor(getBackgroundColor());
 		graphics.fillRoundRectangle(bounds, round, round);
 		graphics.drawRoundRectangle(bounds, round, round);
 		if (!singleBorder) {

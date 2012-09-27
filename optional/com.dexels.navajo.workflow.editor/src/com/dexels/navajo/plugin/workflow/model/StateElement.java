@@ -318,7 +318,7 @@ public class StateElement extends WorkflowModelElement {
 		}
 		Vector<XMLElement> transitions = myElement.getChildren();
 		for (int i = 0; i < transitions.size(); i++) {
-			XMLElement currentChild = (XMLElement) transitions.get(i);
+			XMLElement currentChild = transitions.get(i);
 			if (currentChild.getName().equals("transition")) {
 
 				String id = currentChild.getStringAttribute("nextstate");
@@ -374,11 +374,11 @@ public class StateElement extends WorkflowModelElement {
 		XMLElement xe = new CaseSensitiveXMLElement();
 		xe.setName("state");
 		for (int i = 0; i < tasks.size(); i++) {
-			TaskElement st = (TaskElement) tasks.get(i);
+			TaskElement st = tasks.get(i);
 			xe.addChild(st.toXml());
 		}
 		for (int i = 0; i < sourceConnections.size(); i++) {
-			TransitionElement st = (TransitionElement) sourceConnections.get(i);
+			TransitionElement st = sourceConnections.get(i);
 			xe.addChild(st.toXml());
 		}
 		xe.setAttribute("id", id);
