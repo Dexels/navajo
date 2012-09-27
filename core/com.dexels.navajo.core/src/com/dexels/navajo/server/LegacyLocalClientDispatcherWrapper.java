@@ -15,7 +15,6 @@ import com.dexels.navajo.server.api.NavajoServerContext;
 public class LegacyLocalClientDispatcherWrapper implements LocalClient {
 
 	private DispatcherInterface dispatcherInterface;
-	private NavajoServerContext serverContext;
 	private BundleCreator bundleCreator;
 	
 
@@ -87,8 +86,7 @@ public class LegacyLocalClientDispatcherWrapper implements LocalClient {
 
 	
 	public void setContext(NavajoServerContext nsc) {
-		logger.info("LocalClient linked to context");
-		this.serverContext = nsc;
+		logger.warn("LocalClient linked to context / Bit odd, retrieving Dispatcher from context");
 		this.dispatcherInterface = nsc.getDispatcher();
 	}
 
@@ -97,7 +95,6 @@ public class LegacyLocalClientDispatcherWrapper implements LocalClient {
 	 * @param nsc the context to remove 
 	 */
 	public void removeContext(NavajoServerContext nsc) {
-		this.serverContext = null;
 		this.dispatcherInterface = null;
 	}
 	

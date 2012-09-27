@@ -5,12 +5,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
-import com.dexels.navajo.server.api.NavajoServerContext;
 
 public class LocalClientDispatcherWrapper implements LocalClient {
 

@@ -49,26 +49,26 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 			.getLogger(NavajoConfigComponent.class);
 	
 	public NavajoConfigComponent() {
-		System.err.println("========>  Navajo Config constructor.");
+		logger.info("========>  Navajo Config constructor.");
 	}
 	
 	public void setIOConfig(NavajoIOConfig config) {
 		this.navajoIOConfig = config;
-		System.err.println("========>  Setting NavajoIOConfig");
+		logger.info("========>  Setting NavajoIOConfig");
 	}
 	
 	/**
 	 * @param config the navajoioconfig to clear
 	 */
 	public void clearIOConfig(NavajoIOConfig config) {
-		System.err.println("========>  Clearing NavajoIOConfig");
+		logger.info("========>  Clearing NavajoIOConfig");
 		this.navajoIOConfig = null;
 	}
 	
 
 	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.myConfigurationAdmin = configAdmin;
-		System.err.println("========>  Setting ConfigurationAdmin");
+		logger.info("========>  Setting ConfigurationAdmin");
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	}
 	
 	public void activate(ComponentContext cc) {
-		System.err.println("========>  Activating");
+		logger.info("========>  Activating");
 		try {
 			this.properties = cc.getProperties();
 			this.bundleContext = cc.getBundleContext();
@@ -89,7 +89,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	}
 	
 	public void modified(ComponentContext cc) {
-		System.err.println("Modified. Just sayin'");
+		logger.info("Modified. Just sayin'");
 	}
 	
 	@Override

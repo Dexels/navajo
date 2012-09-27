@@ -25,7 +25,6 @@ public class LdapRepository extends SimpleRepository {
 	
 	@Override
 	public Access authorizeUser(String username, String password, String service, Navajo inMessage, Object certificate) throws SystemException, AuthorizationException {
-		// TODO Auto-generated method stub
 		try {
 			checkLdap(LDAP_SERVER,"o=dexels",username, password);
 
@@ -41,7 +40,7 @@ public class LdapRepository extends SimpleRepository {
 	
 
 	private void checkLdap(String ldapUrl, String principal, String username, String password) throws NamingException {
-		Hashtable env = new Hashtable();
+		Hashtable<String,String> env = new Hashtable<String,String>();
 
 		String usr = "uid="+username+",";
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");

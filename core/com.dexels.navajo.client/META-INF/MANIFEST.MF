@@ -6,14 +6,16 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 3.4.10.qualifier
 Bundle-Activator: navajoclient.Version
 Bundle-ClassPath: .
-Export-Package: com.dexels.navajo.client,
- com.dexels.navajo.client.context,
- com.dexels.navajo.client.logger,
- com.dexels.navajo.client.nql,
- com.dexels.navajo.client.nql.internal,
- com.dexels.navajo.client.server,
+Export-Package: com.dexels.navajo.client;uses:="com.dexels.navajo.document",
+ com.dexels.navajo.client.context;uses:="com.dexels.navajo.document",
+ com.dexels.navajo.client.logger;uses:="com.dexels.navajo.document",
+ com.dexels.navajo.client.nql;uses:="com.dexels.navajo.client.context,com.dexels.navajo.client.nql.internal",
+ com.dexels.navajo.client.nql.internal;x-internal:=true,
+ com.dexels.navajo.client.nql.internal.command;x-internal:=true,
+ com.dexels.navajo.client.server;uses:="com.dexels.navajo.client.context,com.dexels.navajo.document",
  com.dexels.navajo.client.sessiontoken,
- com.dexels.navajo.client.systeminfo
+ com.dexels.navajo.client.systeminfo,
+ navajoclient;uses:="com.dexels.navajo.version,org.osgi.framework,org.osgi.service.cm"
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",

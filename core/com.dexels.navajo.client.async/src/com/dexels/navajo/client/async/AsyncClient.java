@@ -10,7 +10,6 @@ import org.eclipse.jetty.io.Buffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.NavajoResponseHandler;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
@@ -102,8 +101,6 @@ public class AsyncClient {
 		final Access currentAccess = inputAccess.cloneWithoutNavajos();
 		
 		
-		
-		NavajoClientFactory.getClientLogger().logInput(service, input);
 		if(input==null) {
 			input = NavajoFactory.getInstance().createNavajo();
 		}
@@ -121,7 +118,6 @@ public class AsyncClient {
 			@Override
 			public void onResponse(Navajo n) {
 				setActualCalls(getActualCalls()-1);
-				NavajoClientFactory.getClientLogger().logOutput(service, n);
 				currentAccess.setOutputDoc(n);
 				try {
 					if (onSuccess != null) {
@@ -151,7 +147,6 @@ public class AsyncClient {
 				}
 			}
 		};
-		NavajoClientFactory.getClientLogger().logInput(service, input);
 		setActualCalls(getActualCalls()+1);
 
 		callService(currentAccess.getRequestUrl(), input, nrh);

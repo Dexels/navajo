@@ -1,5 +1,6 @@
 package com.dexels.navajo.parser;
 
+@SuppressWarnings("unchecked")
 
 class JJTTMLParserState {
     private java.util.Stack nodes;
@@ -71,7 +72,7 @@ class JJTTMLParserState {
         mk = ((Integer) marks.pop()).intValue();
     }
 
-    final void openNodeScope(Node n) {
+	final void openNodeScope(Node n) {
         marks.push(new Integer(mk));
         mk = sp;
         n.jjtOpen();

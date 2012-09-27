@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 
 public class OsgiFunctionFactory extends JarFunctionFactory {
 

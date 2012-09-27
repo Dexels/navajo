@@ -2227,8 +2227,6 @@ public String mapNode(int ident, Element n) throws Exception {
       //
     } else if (n.getNodeName().equals("antimessage")) {
     	  
-    	Message m;
-    	
     	  String messageName = ((Element) n).getAttribute("name");
     	  result.append(printIdent(ident) + "if ( currentOutMsg != null && currentOutMsg.getMessage(\"" + messageName + "\") != null ) {\n");
     	  result.append(printIdent(ident+2) + "   currentOutMsg.removeMessage(currentOutMsg.getMessage(\"" + messageName + "\"));\n");
@@ -2894,10 +2892,10 @@ public String mapNode(int ident, Element n) throws Exception {
 
 			  while (all.hasMoreElements()) {
 				  java.net.NetworkInterface nic = (java.net.NetworkInterface) all.nextElement();
-				  Enumeration ipaddresses = nic.getInetAddresses();
+				  Enumeration<InetAddress> ipaddresses = nic.getInetAddresses();
 				  while (ipaddresses.hasMoreElements()) {
-
-					  InetAddress ip = (InetAddress) ipaddresses.nextElement();
+					  logger.warn("Why are we harassing the network interfaces?");
+					  ipaddresses.nextElement();
 
 
 				  }

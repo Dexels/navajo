@@ -766,8 +766,15 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 
 	@Override
 	public Object getParameter(String name) {
-		Property p = getMessage("parameters").getProperty("isLegacyMode");
-		return null;
+		final Message message = getMessage("parameters");
+		if(message==null) {
+			return null;
+		}
+		Property p = message.getProperty(name);
+		if(p==null) {
+			return null;
+		}
+		return p.getTypedValue();
 	}
 
 }
