@@ -353,7 +353,15 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
             return c.x == x && c.y == y;
         }
 
-        public String toString() {
+        /**
+         * Theoretically could overflow, but I don't expect layouts to be THAT big
+         */
+        @Override
+		public int hashCode() {
+        	return x*y;
+		}
+
+		public String toString() {
             return "{" + x + "," + y + "}";
         }
     }

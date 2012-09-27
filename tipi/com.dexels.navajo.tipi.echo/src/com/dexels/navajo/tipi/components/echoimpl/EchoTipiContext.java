@@ -55,7 +55,7 @@ public class EchoTipiContext extends TipiContext {
 		while (it.hasNext()) {
 			Object type = it.next();
 			String[] object = (String[]) parameterMap.get(type);
-			logger.info("Key: "+type+" value: "+object);
+			logger.info("Key: "+type);
 			if(object.length==1) {
 				setGlobalValue((String) type, object[0]);
 			}

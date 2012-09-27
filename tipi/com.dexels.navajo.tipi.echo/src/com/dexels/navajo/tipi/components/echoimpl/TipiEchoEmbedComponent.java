@@ -11,6 +11,7 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.echoimpl.embed.TipiEchoStandaloneContainer;
 import com.dexels.navajo.tipi.components.echoimpl.embed.TipiEchoStandaloneToplevel;
 
+@Deprecated
 public class TipiEchoEmbedComponent extends TipiEmbedComponent {
 
 

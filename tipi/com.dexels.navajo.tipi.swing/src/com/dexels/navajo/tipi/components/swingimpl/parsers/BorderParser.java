@@ -148,7 +148,7 @@ public class BorderParser extends TipiTypeParser {
 						comp22.setCursor(Cursor
 								.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
-					};
+					}
 
 				};
 				t.start();

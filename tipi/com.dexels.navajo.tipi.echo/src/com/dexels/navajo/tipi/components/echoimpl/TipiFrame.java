@@ -154,6 +154,7 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 		final Window w = (Window) s.getTopLevel();
 		if(w==null) {
 			logger.info("oh dear, no toplevel found");
+			return;
 		}
 		w.getContent().add(child);
 	}

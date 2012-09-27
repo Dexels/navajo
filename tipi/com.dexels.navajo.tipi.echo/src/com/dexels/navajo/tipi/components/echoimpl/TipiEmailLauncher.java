@@ -60,7 +60,7 @@ public class TipiEmailLauncher extends TipiEchoDataComponentImpl {
             for (int i = 0; i < recipient.getArraySize(); i++) {
                 Message current = recipient.getMessage(i);
                 EmailAddress = current.getProperty(propertyName).getValue();
-                if (EmailAddress != null && !EmailAddress.trim().equals( "")) {
+                if ((EmailAddress != null) && !EmailAddress.trim().equals( "")) {
                     recipientsFound = true;
                     EmailString = EmailString + EmailAddress + ",";
                 }
