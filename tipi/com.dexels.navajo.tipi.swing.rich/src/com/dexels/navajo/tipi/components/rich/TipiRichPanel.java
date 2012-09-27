@@ -17,7 +17,7 @@ public class TipiRichPanel extends TipiPanel {
 	private LushContainer myPanel;
 	private JPanel actualPanel = new JPanel();
 	private GridBagLayout gridBagLayout;
-	private Insets insets = new Insets(10, 10, 10, 10);;
+	private Insets insets = new Insets(10, 10, 10, 10);
 
 	public Object createContainer() {
 		myPanel = new LushContainer();

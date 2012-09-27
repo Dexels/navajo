@@ -1,7 +1,5 @@
 package tipi;
 
-import java.io.IOException;
-
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.tipi.TipiContext;
@@ -11,8 +9,7 @@ public class TipiSwingDockingExtension extends TipiAbstractXMLExtension implemen
 
 	private static final long serialVersionUID = -5687079133065592997L;
 
-	public TipiSwingDockingExtension() throws XMLParseException,
-			IOException {
+	public TipiSwingDockingExtension() throws XMLParseException {
 //		loadXML();
 	}
 

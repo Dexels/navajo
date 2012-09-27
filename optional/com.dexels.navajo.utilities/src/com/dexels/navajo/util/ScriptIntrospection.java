@@ -234,7 +234,7 @@ public class ScriptIntrospection {
 				           ( !"".equals(packageName) ? "/" + packageName : "" ) );
 		getScriptsFromPath(packageName, parent, names);
 		ScriptDefinition [] result = new ScriptDefinition[names.size()];
-		result = (ScriptDefinition []) names.toArray(result);
+		result = names.toArray(result);
 		
 		return result;
 	}

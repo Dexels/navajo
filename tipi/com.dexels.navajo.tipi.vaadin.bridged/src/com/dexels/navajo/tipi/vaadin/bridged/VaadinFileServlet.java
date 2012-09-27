@@ -25,7 +25,6 @@ public class VaadinFileServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -8585205923703499272L;
 	private String path = null;
-	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(VaadinFileServlet.class); 
 	public VaadinFileServlet() {
 	}

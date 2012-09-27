@@ -202,7 +202,7 @@ public class GenerateXSD {
 		Iterator<String> all = maps.iterator();
 		while ( all.hasNext() ) {
 			
-			String mappie = (String) all.next();
+			String mappie = all.next();
 			if ( !mappie.equals("__empty__")) {
 				XMLElement x = createAdapterXSD(mappie, xml);
 				xml.addChild(x);
@@ -226,7 +226,7 @@ public class GenerateXSD {
 			all = maps.iterator();
 			while ( all.hasNext() ) {
 				
-				String mappie = (String) all.next();
+				String mappie = all.next();
 				if ( !mappie.equals("__empty__")) {
 					CaseSensitiveXMLElement replace = new CaseSensitiveXMLElement("xs:element");
 					replace.setAttribute("ref", "map." + mappie);

@@ -65,13 +65,13 @@ public class RemoteSourceDefinition {
 	
 	public ScriptDefinition[] getCallServices(){
 		ScriptDefinition[] result = new ScriptDefinition[callList.size()];
-		result = (ScriptDefinition[]) callList.toArray(result);
+		result = callList.toArray(result);
 		return result;
 	}
 	
 	public ScriptDefinition[] getReadServices(){
 		ScriptDefinition[] result = new ScriptDefinition[readList.size()];
-		result = (ScriptDefinition[]) readList.toArray(result);
+		result = readList.toArray(result);
 		return result;
 	}
 	

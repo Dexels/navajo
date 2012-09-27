@@ -172,8 +172,6 @@ public class JettyServer {
 		resource_handler.setAliases(false);
 		resource_handler.setWelcomeFiles(new String[] { "index.html" });
 
-		;
-		
 		String installationFolder;
 		try {
 			installationFolder = InstallationPathResolver.getInstallationFromPath(contextPath).get(0);
