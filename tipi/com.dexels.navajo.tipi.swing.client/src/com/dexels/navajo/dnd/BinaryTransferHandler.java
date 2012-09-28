@@ -67,7 +67,6 @@ public class BinaryTransferHandler extends TransferHandler {
 		super.exportToClipboard(comp, clip, action);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean importData(TransferSupport support) {
 		Transferable transferable = support.getTransferable();
@@ -80,6 +79,7 @@ public class BinaryTransferHandler extends TransferHandler {
 					.getTransferData(DataFlavor.javaFileListFlavor);
 			if (data == null || data.size() == 0) {
 				logger.info("Whoops!");
+				return false;
 			}
 			if (data.size() > 1) {
 				return false;

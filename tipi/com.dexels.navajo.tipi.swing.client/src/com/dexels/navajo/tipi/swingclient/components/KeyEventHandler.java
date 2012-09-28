@@ -11,7 +11,7 @@ import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+@Deprecated
 
 public class KeyEventHandler extends AbstractAction {
 	private static final long serialVersionUID = -7451651160947685387L;

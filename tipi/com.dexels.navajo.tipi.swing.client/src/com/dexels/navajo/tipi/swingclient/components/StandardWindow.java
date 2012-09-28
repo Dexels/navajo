@@ -72,12 +72,12 @@ public class StandardWindow extends BaseWindow implements DialogConstants {
 	}
 
 	@Override
-	public void addKeyListener(KeyListener k) {
+	public synchronized void addKeyListener(KeyListener k) {
 		keyListeners.add(k);
 	}
 
 	@Override
-	public void removeKeyListener(KeyListener k) {
+	public synchronized void removeKeyListener(KeyListener k) {
 		keyListeners.remove(k);
 	}
 
