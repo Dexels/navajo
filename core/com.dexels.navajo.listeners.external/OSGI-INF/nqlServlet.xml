@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="navajo.nqlservlet">
+   <implementation class="com.dexels.navajo.server.listener.nql.NqlServlet"/>
+   <reference bind="setClientContext" cardinality="1..1" interface="com.dexels.navajo.client.context.ClientContext" name="ClientContext" policy="static"/>
+   <reference bind="setNqlContext" cardinality="1..1" interface="com.dexels.navajo.client.nql.NqlContextApi" name="NqlContextApi" policy="static"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="alias" type="String" value="/Nql"/>
+</scr:component>

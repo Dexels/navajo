@@ -41,7 +41,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	
 	<servlet>
 		<servlet-name>Nql</servlet-name>
-		<servlet-class>com.dexels.navajo.server.listener.nql.NqlServlet</servlet-class>
+		<servlet-class>com.dexels.navajo.server.listener.nql.legacy.NqlServlet</servlet-class>
 	</servlet>
 	
 

@@ -7,7 +7,7 @@ Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dexels.navajo.server.listener.http.impl,
  com.dexels.navajo.server.listener.http.standard,
- com.dexels.navajo.server.listener.nql;uses:="javax.servlet.http"
+ com.dexels.navajo.server.listener.nql.legacy;uses:="javax.servlet.http"
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.context,
  com.dexels.navajo.client.nql,
@@ -20,3 +20,4 @@ Import-Package: com.dexels.navajo.client,
  javax.servlet.http;version="3.0.0",
  org.slf4j;version="1.6.1"
 Require-Bundle: com.dexels.navajo.api;bundle-version="1.0.0"
+Service-Component: OSGI-INF/nqlServlet.xml
