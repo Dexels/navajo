@@ -33,7 +33,7 @@ Import-Package: com.dexels.navajo.adapter,
  org.osgi.service.component;version="1.1.0",
  org.slf4j;version="1.6.1"
 Bundle-ClassPath: .
-Service-Component: OSGI-INF/
+Service-Component: OSGI-INF/jdbcBroker.xml
 Export-Package: com.dexels.navajo.adapter.resource,
  com.dexels.navajo.adapter.resource.jdbcbroker
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
