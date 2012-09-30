@@ -2,7 +2,7 @@ Bundle-Name: Navajo Jsp Server
 Bundle-SymbolicName: com.dexels.navajo.jsp.server
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.8
+Bundle-Version: 1.0.9.qualifier
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.jsp;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.7"
