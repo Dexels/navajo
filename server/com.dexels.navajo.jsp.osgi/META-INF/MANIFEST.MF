@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo JSP tester
 Bundle-SymbolicName: com.dexels.navajo.jsp.osgi
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.1
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.client.context,
