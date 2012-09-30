@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>com.dexels.navajo.runtime.osgi.j2ee</artifactId>
 	<groupId>com.dexels.navajo</groupId>
-	<version>1.0.8-SNAPSHOT</version>
+	<version>1.0.9</version>
 	<packaging>eclipse-plugin</packaging>
 
 	<parent>
