@@ -118,7 +118,7 @@ public class ResourceManager {
 	}
 	private ServiceReference<DataSource> getDataSourceReference(String shortName) throws InvalidSyntaxException {
 		logger.debug("Getting datasource reference: "+shortName);
-		Collection<ServiceReference<DataSource>> dlist = bundleContext.getServiceReferences(DataSource.class,"(name=navajo.resource."+shortName+")");
+		Collection<ServiceReference<DataSource>> dlist = bundleContext.getServiceReferences(DataSource.class,"(name="+shortName+")");
 		if(dlist.size()!=1) {
 			logger.info("Matched: {} datasources.",dlist.size());
 		}
@@ -127,7 +127,7 @@ public class ResourceManager {
 	}
 
 	private ServiceReference<Object> getResourceReference(String shortName) throws InvalidSyntaxException {
-		Collection<ServiceReference<Object>> dlist = bundleContext.getServiceReferences(Object.class,"(name=navajo.resource."+shortName+")");
+		Collection<ServiceReference<Object>> dlist = bundleContext.getServiceReferences(Object.class,"(name="+shortName+")");
 		if(dlist.size()!=1) {
 			logger.info("Matched: {} datasources.",dlist.size());
 		}
