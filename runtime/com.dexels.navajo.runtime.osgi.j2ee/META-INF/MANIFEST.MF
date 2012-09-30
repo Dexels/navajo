@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Wrapper to deploy an OSGi based Navajo instance into a servlet container
 Bundle-SymbolicName: com.dexels.navajo.runtime.osgi.j2ee
-Bundle-Version: 1.0.9
+Bundle-Version: 1.0.10.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.apache.felix.fileinstall;bundle-version="3.2.0",
