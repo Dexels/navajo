@@ -111,7 +111,13 @@ public class JSONObject {
         }
 
 
-        /**
+        @Override
+		public int hashCode() {
+        	return 0;
+        }
+
+
+		/**
          * A Null object is equal to the null value and to itself.
          * @param object    An object to test for nullness.
          * @return true if the object parameter is the JSONObject.NULL object

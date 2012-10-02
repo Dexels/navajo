@@ -283,9 +283,7 @@ public class QDParser {
                     mode = IN_TAG;
 
                     // mode = QUOTE;
-                } else if (Character.isWhitespace((char) c)) {
-                    ;
-                } else {
+                } else if (!Character.isWhitespace((char) c)) {
                     exc("Error in attribute processing", line, col);
                 }
 
@@ -305,9 +303,7 @@ public class QDParser {
             } else if (mode == ATTRIBUTE_EQUAL) {
                 if (c == '=') {
                     mode = ATTRIBUTE_RVALUE;
-                } else if (Character.isWhitespace((char) c)) {
-                    ;
-                } else {
+                } else if (!Character.isWhitespace((char) c)) {
                     exc("Error in attribute processing, got c='" + c + "'", line, col);
                 }
 
@@ -330,9 +326,7 @@ public class QDParser {
 
                 } else if (c == '/') {
                     mode = SINGLE_TAG;
-                } else if (Character.isWhitespace((char) c)) {
-                    ;
-                } else {
+                } else if (!Character.isWhitespace((char) c)) {
                     mode = ATTRIBUTE_LVALUE;
                     sb.append((char) c);
                 }
