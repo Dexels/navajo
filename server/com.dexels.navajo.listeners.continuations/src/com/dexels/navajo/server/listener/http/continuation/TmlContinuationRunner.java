@@ -59,6 +59,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				schedulingStatus = ts.getSchedulingStatus();
 			}
 			getRequest().writeOutput(getInputNavajo(), outDoc, scheduledAt, startedAt, schedulingStatus);
+			continuation.complete();
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		}
@@ -84,8 +85,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		  try {
 			  Navajo in = getInputNavajo();
 			  in.getHeader().setHeaderAttribute("useComet", "true");
-			  
-
 				  boolean continuationFound = false;
 				  try {
 					  
@@ -94,8 +93,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				      
 					  ClientInfo clientInfo = getRequest().createClientInfo(scheduledAt, startedAt, queueSize, queueId);
 					  outDoc = getLocalClient().handleInternal(in, getRequest().getCert(), clientInfo);
-//					  outDoc = DispatcherFactory.getInstance().removeInternalMessages(DispatcherFactory.getInstance().handle(in, this,getRequest().getCert(), clientInfo));
-					  // Do do: Support async services in a more elegant way.
 				  } catch (NavajoDoneException e) {
 					  // temp catch, to be able to pre
 					  continuationFound = true;
@@ -104,7 +101,9 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				  }
 				  finally {
 					  if(!continuationFound) {
-						  resumeContinuation();
+//						  resumeContinuation();
+//						  continuation.complete();
+						  endTransaction();
 					  }
 				  }
 //			  }
@@ -126,17 +125,14 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		  } 
 	  }
 
-
-
 	private void resumeContinuation() {
-		continuation.resume();
-		
-		
+		if(continuation.isSuspended()) {
+			continuation.resume();
+		}
 	}
 
-
-
 	public void suspendContinuation() {
+		logger.info("==============Suspending continuation");
 		continuation.suspend();
 	}
 	
@@ -147,8 +143,9 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		try {
 			execute();
 		} catch(NavajoDoneException e) {
-			System.err.println("NavajoDoneException caught. This thread fired a continuation. Another thread will finish it in the future.");
+			logger.debug("NavajoDoneException caught. This thread fired a continuation. Another thread will finish it in the future.");
 		} catch (Exception e) {
+			logger.error("Continuation problem: ",e);
 			getRequest().fail(e);
 		}
 	}

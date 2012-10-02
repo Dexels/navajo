@@ -64,6 +64,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 				DummyScheduler ds = new DummyScheduler();
 				 Dictionary<String, Object> wb = new Hashtable<String, Object>();
 				 wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.DummyScheduler");
+				 wb.put("ranking", 0);
 				reference = bc.registerService(TmlScheduler.class.getName(), ds, wb);
 
 				
