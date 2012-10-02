@@ -64,6 +64,10 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 		Navajo outDoc = dispatcherInterface.removeInternalMessages(
 				dispatcherInterface.handle(in, cert,
 						clientInfo));
+		if(outDoc==null) {
+			logger.error("handleInternal seems to have failed, as outDoc is null.");
+			
+		}
 		return outDoc;
 	}
 
