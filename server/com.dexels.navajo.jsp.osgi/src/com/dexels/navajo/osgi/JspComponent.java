@@ -7,6 +7,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.ops4j.pax.web.service.WebContainer;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
@@ -19,6 +21,9 @@ public class JspComponent {
 	private WebContainer webContainer;
 	private NavajoConfigInterface navajoConfig;
 	private ClientContext clientContext;
+	private BundleContext bundleContext;
+	private static JspComponent instance;
+	
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(JspComponent.class);
@@ -58,9 +63,18 @@ public class JspComponent {
 	public void clearClientContext(ClientContext clientContext) {
 		this.clientContext = null;
 	}
-
-	public void activate() {
-		System.err.println("ACTIVATE JSP");
+	
+	public static JspComponent getInstance() {
+		return instance;
+	}
+	
+	public String getVersion() {
+		return bundleContext.getBundle().getVersion().toString();
+	}
+	
+	public void activate(ComponentContext cc) {
+		this.bundleContext = cc.getBundleContext();
+		instance = this;
         try {
             final HttpContext httpContext = webContainer.createDefaultHttpContext();
             Dictionary<String,Object> contextProperties = new Hashtable<String,Object>();
@@ -105,7 +119,7 @@ public class JspComponent {
 	}
 
 	public void deactivate() {
-		System.err.println("DEACTIVATE JSP");
+		instance = null;
 	}
 
 }
