@@ -5,8 +5,6 @@ import java.util.Hashtable;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.jsp.JspFactory;
-import javax.servlet.jsp.PageContext;
 
 import org.ops4j.pax.web.service.WebContainer;
 import org.osgi.service.http.HttpContext;
@@ -78,8 +76,7 @@ public class JspComponent {
 				
 				@Override
 				public void contextDestroyed(ServletContextEvent sce) {
-					// TODO Auto-generated method stub
-					
+					logger.debug("Context destroyed.");
 				}
 			}, httpContext);
             
@@ -91,13 +88,14 @@ public class JspComponent {
             webContainer.registerJsps( new String[]{ "/tml/*" },httpContext);
             webContainer.registerJsps( new String[]{ "/tml/manager/*" },httpContext);
             webContainer.registerJsps( new String[]{ "/tml/installer/*" },httpContext);
+			webContainer.registerResources("/index.html", "/index.html", httpContext);
 			webContainer.registerResources("/images", "/images", httpContext);
 	        webContainer.registerResources("/css", "/css", httpContext);
 	        webContainer.registerResources("/js", "/js", httpContext);
 	        webContainer.registerResources("/resources", "/resources", httpContext);
 	        webContainer.registerResources("/yaml", "/yaml", httpContext);
 	        webContainer.registerResources("/WEB-INF", "/WEB-INF", httpContext);
-	        webContainer.registerWelcomeFiles(new String[]{"index.jsp"}, false, httpContext);
+	        webContainer.registerWelcomeFiles(new String[]{"index.html"}, false, httpContext);
         } catch (NamespaceException e) {
 			logger.error("Error: ", e);
 		} catch(Throwable e) {
