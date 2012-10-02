@@ -116,16 +116,18 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 		context.systemPropertyMap.putAll(systemProperties);
 		context.processProperties(properties);
 
-		logger.info("Using install: "+tipiInstallationFolder.getAbsolutePath());
+		if(tipiInstallationFolder!=null) {
+			logger.info("Using install: "+tipiInstallationFolder.getAbsolutePath());
 
-		
-		logger.debug("Systemprop: "+context.systemPropertyMap);
-		// TODO Fix support for HTTP based runs
-		logger.warn("********** ENTERING FILE BASED MODE **********");
-		File tipi = new File(tipiInstallationFolder,"tipi");
-		File resource = new File(tipiInstallationFolder,"resource");
-		context.setTipiResourceLoader(new FileResourceLoader(tipi));
-		context.setGenericResourceLoader(new FileResourceLoader(resource));
+			
+			logger.debug("Systemprop: "+context.systemPropertyMap);
+			// TODO Fix support for HTTP based runs
+			logger.warn("********** ENTERING FILE BASED MODE **********");
+			File tipi = new File(tipiInstallationFolder,"tipi");
+			File resource = new File(tipiInstallationFolder,"resource");
+			context.setTipiResourceLoader(new FileResourceLoader(tipi));
+			context.setGenericResourceLoader(new FileResourceLoader(resource));
+		}
 
 		
 		//		BaseTipiApplicationInstance.processSettings(deploy, profile, installationFolder, extensionContainer)

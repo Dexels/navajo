@@ -50,7 +50,7 @@ public class MainApplication {
 		tse.getTipiExtensionRegistry().registerTipiExtension(tse);
 		
 		SwingTipiApplicationInstance instance = runApp(args);
-		instance.setInstallationFolder(new File("C:/user_projects/SportlinkClub"));
+//		instance.setInstallationFolder(new File("C:/user_projects/SportlinkClub"));
 //        instance.setInstallationFolder(new File("/Users/frank/Documents/workspace-indigo/SportlinkClub"));
 		instance.getCurrentContext().switchToDefinition(
 				instance.getDefinition());
