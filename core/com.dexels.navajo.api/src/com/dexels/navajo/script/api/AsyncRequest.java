@@ -48,5 +48,4 @@ public interface AsyncRequest {
 
 	public String getUrl();
 
-	public TmlRunnable instantiateRunnable();
 }

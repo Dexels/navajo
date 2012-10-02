@@ -1,0 +1,10 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo Priority Threadpool" name="Navajo Priority Threadpool" id="navajo.server.threadpool.priority">
+    <AD name="Normal pool size"    id="normalPoolSize"   required="true"  type="Integer" default="15"/>   
+    <AD name="Priority pool size"  id="priorityPoolSize" required="true"  type="Integer" default="15"/>   
+    <AD name="System pool size"    id="systemPoolSize"   required="true"  type="Integer" default="15"/>   
+  </OCD>
+  <Designate pid="navajo.server.threadpool.priority">
+     <Object ocdref="navajo.server.threadpool.priority"/>
+  </Designate>
+</metatype:MetaData>

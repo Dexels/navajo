@@ -51,22 +51,23 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 			if(bc!=null) {
 				Dictionary<String, Object> wb = new Hashtable<String, Object>();
 				wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler");
-				registration = bc.registerService(TmlScheduler.class.getName(), new ServiceFactory<TmlScheduler>() {
-
-					@Override
-					public TmlScheduler getService(Bundle bundle,
-							ServiceRegistration<TmlScheduler> registration) {
-						PriorityThreadPoolScheduler ptps = new PriorityThreadPoolScheduler();
-						return ptps;
-					}
-
-					@Override
-					public void ungetService(Bundle bundle,
-							ServiceRegistration<TmlScheduler> registration,
-							TmlScheduler service) {
-						
-					}
-				},wb);
+				 wb.put("service.ranking", 10);
+//				 registration = bc.registerService(TmlScheduler.class.getName(), new ServiceFactory<TmlScheduler>() {
+//
+//					@Override
+//					public TmlScheduler getService(Bundle bundle,
+//							ServiceRegistration<TmlScheduler> registration) {
+//						PriorityThreadPoolScheduler ptps = new PriorityThreadPoolScheduler();
+//						return ptps;
+//					}
+//
+//					@Override
+//					public void ungetService(Bundle bundle,
+//							ServiceRegistration<TmlScheduler> registration,
+//							TmlScheduler service) {
+//						
+//					}
+//				},wb);
 			}
 		} catch (Throwable e) {
 			logger.error("Activation start failed: ",e);

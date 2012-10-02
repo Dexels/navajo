@@ -71,6 +71,10 @@ public class LegacyLocalClientDispatcherWrapper implements LocalClient {
 		Navajo outDoc = DispatcherFactory.getInstance().removeInternalMessages(
 				DispatcherFactory.getInstance().handle(in, cert,
 						clientInfo));
+		if(outDoc==null) {
+			logger.error("handleInternal/legacy seems to have failed, as outDoc is null.");
+			
+		}
 		return outDoc;
 	}
 

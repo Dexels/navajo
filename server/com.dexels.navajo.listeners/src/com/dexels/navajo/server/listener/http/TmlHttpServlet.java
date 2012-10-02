@@ -98,27 +98,21 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		resultMessage.write(out);
 	}
 
-	private static final Navajo constructFromRequest(HttpServletRequest request)
+	public static final Navajo constructFromRequest(HttpServletRequest request)
 			throws NavajoException {
 
 		Navajo result = NavajoFactory.getInstance().createNavajo();
-
 		Enumeration<String> all = request.getParameterNames();
 
 		// Construct TML document from request parameters.
 		while (all.hasMoreElements()) {
 			String parameter = all.nextElement().toString();
-
 			if (parameter.indexOf("/") != -1) {
-
 				StringTokenizer typedParameter = new StringTokenizer(parameter,
 						"|");
-
 				String propertyName = typedParameter.nextToken();
-
 				String type = (typedParameter.hasMoreTokens() ? typedParameter
 						.nextToken() : Property.STRING_PROPERTY);
-
 				String value = request.getParameter(parameter);
 
 				Message msg = com.dexels.navajo.mapping.MappingUtils
@@ -158,65 +152,19 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 
 			}
 		}
-		return result;
-	}
-
-	protected static Header constructHeader(Navajo tbMessage, String service,
-			String username, String password, long expirationInterval) {
-		return NavajoFactory.getInstance().createHeader(tbMessage, service,
-				username, password, expirationInterval);
-	}
-
-	private final void callDirect(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-
+		
 		String service = request.getParameter("service");
 		String type = request.getParameter("type");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 
-		logger.info("in callDirect(): service = " + service + ", username = "
-				+ username);
-
-		if (service == null) {
-
-			// logger.info("Empty service specified, request originating from "
-			// + request.getRemoteHost());
-			logger.info("thread = " + Thread.currentThread().hashCode());
-			logger.info("path = " + request.getPathInfo());
-			logger.info("query = " + request.getQueryString());
-			logger.info("protocol = " + request.getProtocol());
-			logger.info("agent = " + request.getRemoteUser());
-			logger.info("uri = " + request.getRequestURI());
-			logger.info("method = " + request.getMethod());
-			logger.info("contenttype = " + request.getContentType());
-			logger.info("scheme = " + request.getScheme());
-			logger.info("server = " + request.getServerName());
-			logger.info("port = " + request.getServerPort());
-			logger.info("contentlength = " + request.getContentLength());
-			Enumeration<String> enm = request.getHeaderNames();
-			while (enm.hasMoreElements()) {
-				String key = enm.nextElement();
-				String header = request.getHeader(key);
-				logger.info(">>" + key + "=" + header);
-			}
-			return;
-		}
-
 		if (username == null) {
 			username = "empty";
 			password = "";
-			// logger.log(Priority.FATAL,
-			// "Empty service specified, request originating from " +
-			// request.getRemoteHost());
-			// logger.info("Empty service specified, request originating from "
-			// + request.getRemoteHost());
-			// return;
 		}
 
 		if ((type == null) || (type.equals(""))) {
 			type = "xml";
-
 		}
 
 		if (password == null) {
@@ -237,8 +185,28 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 			}
 		}
 
-		ServletOutputStream outputStream = response.getOutputStream();
+		Header h = NavajoFactory.getInstance().createHeader(result, service,
+				username, password, expirationInterval);
+		result.addHeader(h);
+		return result;
+	}
 
+	protected static Header constructHeader(Navajo tbMessage, String service,
+			String username, String password, long expirationInterval) {
+		return NavajoFactory.getInstance().createHeader(tbMessage, service,
+				username, password, expirationInterval);
+	}
+
+	private final void callDirect(HttpServletRequest request,
+			HttpServletResponse response)  {
+
+		String service = request.getParameter("service");
+		if (service == null) {
+
+			logRequestParams(request);
+			return;
+		}
+		
 		// PrintWriter out = response.getWriter();
 
 		Navajo tbMessage = null;
@@ -247,16 +215,47 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		try {
 
 			tbMessage = constructFromRequest(request);
-			Header header = constructHeader(tbMessage, service, username,
-					password, expirationInterval);
-			tbMessage.addHeader(header);
-//			Navajo resultMessage = dis.removeInternalMessages(dis
-//					.handle(tbMessage));
-			
 			Navajo resultMessage = handleTransaction(dis, tbMessage, null, null);
-			// logger.info(resultMessage.toString());
-			// resultMessage.write(out);
+			sendResponse(request, response, resultMessage);
+
+		} catch (Exception ce) {
+			logger.error("Error: ", ce);
+		} finally {
+			dis = null;
+		}
+	}
+
+	private void logRequestParams(HttpServletRequest request) {
+		// logger.info("Empty service specified, request originating from "
+		// + request.getRemoteHost());
+		logger.info("thread = " + Thread.currentThread().hashCode());
+		logger.info("path = " + request.getPathInfo());
+		logger.info("query = " + request.getQueryString());
+		logger.info("protocol = " + request.getProtocol());
+		logger.info("agent = " + request.getRemoteUser());
+		logger.info("uri = " + request.getRequestURI());
+		logger.info("method = " + request.getMethod());
+		logger.info("contenttype = " + request.getContentType());
+		logger.info("scheme = " + request.getScheme());
+		logger.info("server = " + request.getServerName());
+		logger.info("port = " + request.getServerPort());
+		logger.info("contentlength = " + request.getContentLength());
+		Enumeration<String> enm = request.getHeaderNames();
+		while (enm.hasMoreElements()) {
+			String key = enm.nextElement();
+			String header = request.getHeader(key);
+			logger.info(">>" + key + "=" + header);
+		}
+		return;
+	}
+
+	private static void sendResponse(HttpServletRequest request,
+			HttpServletResponse response, Navajo resultMessage)  {
+		ServletOutputStream outputStream = null;
+
+		try {
 			String dataPath = request.getParameter("dataPath");
+			outputStream = response.getOutputStream();
 			if (dataPath != null) {
 				Property bin = resultMessage.getProperty(dataPath);
 				if (bin == null) {
@@ -290,12 +289,18 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 				out.flush();
 				out.close();
 			}
-
-		} catch (Exception ce) {
-			logger.error("Error: ", ce);
+		} catch (NavajoException e) {
+			logger.error("Error handling response: ",e);
+		} catch (IOException e) {
+			logger.error("Error handling response: ",e);
 		} finally {
-			outputStream.close();
-			dis = null;
+			if(outputStream!=null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					logger.warn("Stream closing problem", e);
+				}
+			}
 		}
 	}
 

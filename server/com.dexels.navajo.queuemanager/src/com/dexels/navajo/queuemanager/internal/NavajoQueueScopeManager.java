@@ -1,4 +1,4 @@
-package com.dexels.navajo.queuemanager;
+package com.dexels.navajo.queuemanager.internal;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -7,13 +7,19 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class NavajoQueueScopeManager {
 	
 	private static NavajoQueueScopeManager instance = null;
 	private final static String engineName = "javascript";
 	private ScriptEngineManager factory = new ScriptEngineManager();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoQueueScopeManager.class);
+	
 	private int MAX_UNUSED_SCOPES = 50;
 	
 	public synchronized static NavajoQueueScopeManager getInstance() {
@@ -44,7 +50,9 @@ public class NavajoQueueScopeManager {
 
         // basic example
 		System.err.println("Engine startup: "+(started-init)+" millis.");
-		
+		if(engine==null) {
+			logger.error("Fail: engine didn't start!");
+		}
 		return engine;
 	}
 	

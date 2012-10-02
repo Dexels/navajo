@@ -37,7 +37,6 @@ public class LegacyDispatcherFactory {
 	private final Set<Configuration> registeredConfigurations = new HashSet<Configuration>();
 	
 	public void setContext(NavajoServerContext nsc) {
-		logger.info("LocalClient linked to context");
 		this.navajoContext = nsc;
 	}
 
