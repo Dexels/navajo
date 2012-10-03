@@ -733,7 +733,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		if ( messageList.contains(child) ) {
 			messageList.remove(child);
 			messageMap.remove(child.getName());
-		} else if ( child.getParentMessage() != null ){
+		} else if ( child.getParentMessage() != null && child.getParentMessage() != this ) {
 			// Some other message's child, ask parent of child to remove it..
 			child.getParentMessage().removeMessage(child);
 		}
