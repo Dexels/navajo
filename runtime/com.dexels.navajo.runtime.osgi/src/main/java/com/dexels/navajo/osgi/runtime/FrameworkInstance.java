@@ -53,8 +53,6 @@ import org.slf4j.LoggerFactory;
 
 public class FrameworkInstance {
 	protected Framework framework;
-	// private final static String APPSERVERBUNDLEDIR = "bundles/";
-	// private final static String EXPLICITBUNDLEDIR = "WEB-INF/explicit/";
 
 	private String bundlePath;
 
