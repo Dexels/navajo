@@ -180,7 +180,7 @@ public abstract class FunctionInterface {
     	if ( !correct ) {
     		NavajoFactory nf = NavajoFactory.getInstance();
     		throw new TMLExpressionException("Expected returntype " + genPipedParamMsg(myreturntype) + ", got: " + 
-    				( o != null ? nf.getNavajoType(o.getClass()) : " empty" ) );
+    				( o != null ? nf.getNavajoType(o.getClass()) : " empty" )+" function: "+getClass().getName() );
     	}
     }
     
