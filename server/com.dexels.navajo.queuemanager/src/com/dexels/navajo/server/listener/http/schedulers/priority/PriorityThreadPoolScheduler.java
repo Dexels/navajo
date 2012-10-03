@@ -278,11 +278,11 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		};
 		String queueName;
 		try {
-//			queueName = queueManager.resolve(ic, "resolvequeue.js");
-			queueName = "normalThread";
-			if(false) {
-				throw new NavajoSchedulingException(1, "sure");
-			}
+			queueName = queueManager.resolve(ic, "resolvequeue.js");
+//			queueName = "normalThread";
+//			if(false) {
+//				throw new NavajoSchedulingException(1, "sure");
+//			}
 		} catch (NavajoSchedulingException e) {
 			if(e.getReason()==NavajoSchedulingException.SCRIPT_PROBLEM || e.getReason() == NavajoSchedulingException.UNKNOWN) {
 				logWarning(RESOLUTION_SCRIPT_DOES_NOT_EXIST, "Could not find queue resolution script, using default queue.");
