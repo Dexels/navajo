@@ -627,7 +627,7 @@ private Object waitForResult = new Object();
 
   }
 
-  private Message getMessage(String fullName) throws UserException {
+  public Message getMessage(String fullName) throws UserException {
 	waitForResult();
 	Message msg = null;
     if (msgPointer != null)
@@ -712,7 +712,7 @@ private Object waitForResult = new Object();
 		return om;
 	}
   
-  private Property getPropertyObject(String fullName) throws UserException {
+  public Property getPropertyObject(String fullName) throws UserException {
 	  waitForResult();
 
 	  Property p = null;
