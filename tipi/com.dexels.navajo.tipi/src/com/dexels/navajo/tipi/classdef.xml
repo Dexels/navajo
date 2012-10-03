@@ -274,7 +274,7 @@
 	<description>
 	</description>
    </tipi-parser>
-   <tipi-parser name="float" type="java.lang.Float" parser="com.dexels.navajo.tipi.components.core.parsers.FloatParser" >
+   <tipi-parser name="float" type="java.lang.Double" parser="com.dexels.navajo.tipi.components.core.parsers.FloatParser" >
 	<description>
 	</description>
    </tipi-parser>
