@@ -121,9 +121,18 @@ public class MessageMap implements Mappable {
 				}
 				} catch (NavajoException ne) {}
 			} else {
+				if ( m1.getParentMessage() != null ) {
+					m1.getParentMessage().removeMessage(m1);
+				} else {
+					myAccess.getOutputDoc().removeMessage(m1);
+				}
 				myAccess.getCurrentOutMessage().removeMessage(m1);
 				if ( m2 != null ) {
-					myAccess.getCurrentOutMessage().removeMessage(m2);
+					if ( m2.getParentMessage() != null ) {
+						m2.getParentMessage().removeMessage(m2);
+					} else {
+						myAccess.getOutputDoc().removeMessage(m2);
+					}
 				}
 			}
 		}
