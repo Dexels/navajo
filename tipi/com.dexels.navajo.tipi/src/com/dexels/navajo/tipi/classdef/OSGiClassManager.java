@@ -209,4 +209,9 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 			}
 			return true;
 	}
+	@Override
+	public FunctionDefinition getFunction(String name) {
+		logger.error("getFunction not yet implemented!");
+		return null;
+	}
 }

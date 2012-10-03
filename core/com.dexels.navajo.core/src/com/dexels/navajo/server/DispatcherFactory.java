@@ -8,6 +8,11 @@ import java.net.URL;
 
 import javax.script.ScriptEngineManager;
 
+import navajocore.Version;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -17,6 +22,9 @@ public class DispatcherFactory {
 	private static volatile DispatcherInterface instance;
 	private static Object semaphore = new Object();
 	private static ScriptEngineManager scriptEngineFactory = null;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DispatcherFactory.class);
 	
 	public DispatcherFactory() {	
 	}
@@ -93,7 +101,7 @@ public class DispatcherFactory {
 	 * @throws NavajoException
 	 */
 	public static DispatcherInterface getInstance(String rootPath, String serverXmlPath, String servletContextRootPath) throws NavajoException {
-
+		logger.warn("GETINSTANCE1");
 		if (instance != null) {
 			return instance;
 		}
@@ -135,7 +143,11 @@ public class DispatcherFactory {
 
 	private static void createInstance(String rootPath, URL configurationUrl,String servletContextRootPath)
 			throws NavajoException {
+		logger.warn("CREATE INSTANCE2");
 		synchronized (semaphore) {
+			if(Version.osgiActive()) {
+				logger.info("Using osgi");
+			}
 			if (instance == null) {
 				
 				// Create NavajoConfig object.
@@ -145,7 +157,8 @@ public class DispatcherFactory {
 					  // Read configuration file.
 					  is = configurationUrl.openStream();
 					  nc = new NavajoConfig( null, is, rootPath,servletContextRootPath); 
-					  navajocore.Version.registerNavajoConfig(nc);
+//					  navajocore.Version.registerNavajoConfig(nc);
+//					  createNavajoConfigConfiguration(configurationUrl);
 				  }
 				  catch (Exception se) {
 					  throw NavajoFactory.getInstance().createNavajoException(se);
@@ -168,5 +181,6 @@ public class DispatcherFactory {
 			}
 		}
 	}
-	
+
+
 }

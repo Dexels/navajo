@@ -62,7 +62,6 @@ public class AdminMap implements Mappable {
   public String monitorWS;
   public int monitorTotaltime;
 
-  public String storeLocation;
   public int classLoaderInstances;
   public int scriptClassInstances;
   public String serverId;

@@ -106,7 +106,7 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 
 
 
-	public static void main(String[] args) throws BadLocationException   {
+	public static void main(String[] args)   {
 		LeanLogger.setCurrentLogLevel(4);
 		KafenioPanelConfiguration gpc = new KafenioPanelConfiguration();
 		final KafenioPanel kp = new KafenioPanel(gpc);

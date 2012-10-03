@@ -46,7 +46,7 @@ public class SQLMapHelper {
 	public static PreparedStatement setParameter(PreparedStatement statement, 
 												 final Object param, 
 												 final int idx,
-												 Class classHoldingBinaryStreamList,
+												 StreamClosable callback,
 												 String dbIdentifier, 
 												 boolean isLegacyMode,
 												 boolean debug,
@@ -58,19 +58,6 @@ public class SQLMapHelper {
 			if (debug) {
 				Access.writeToConsole(access, "Created a new Access object to write to the console");
 			}
-		}
-		
-		if ( debug ) {
-			if (idx == 0) {
-				System.out.println("*************************** statement         = " + statement.toString());
-				System.out.println("*************************** dbIdentifier      = " + dbIdentifier);
-				System.out.println("*************************** myAccess          = " + access.accessID);
-				System.out.println("*************************** isLegacyMode      = " + isLegacyMode);
-				System.out.println("*************************** debug             = " + debug);
-			}
-			System.out.println("*************************** idx               = " + idx);
-			System.out.println("*************************** param             = " + param + " (" + ( (param != null) ? param.getClass().getName() : "") + ")");
-			System.out.println("*************************** binaryStreamList  = " + classHoldingBinaryStreamList.getName());
 		}
 		
 		if ((param == null) || (param instanceof NavajoType && !(param instanceof Binary) && ((NavajoType) param).isEmpty())) {
@@ -129,7 +116,7 @@ public class SQLMapHelper {
 		} else if (param instanceof Binary) {
 			Binary b = (Binary) param;
 //			System.out.println("*************************** Adding a BLOB     = " + b.getMimeType());
-			setBlob(statement, idx, b, classHoldingBinaryStreamList);
+			setBlob(statement, idx, b, callback);
 			if (debug) {
 				Access.writeToConsole(access, "ADDED BLOB\n");
 			}
@@ -139,6 +126,38 @@ public class SQLMapHelper {
 		return statement;
 	}
 
+	
+	/**
+	 * New version with callback
+	 * 
+	 * @param statement
+	 * @param i
+	 * @param b
+	 * @throws SQLException
+	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 */
+	protected static void setBlob(PreparedStatement statement, int i, Binary b,StreamClosable callback) throws SQLException {
+		if (b != null) {
+
+			InputStream is = b.getDataAsStream();
+
+			if (is != null && b.getLength() > 0) {
+				statement.setBinaryStream(i + 1, is, (int) b.getLength());
+				// All streams in this list will be closed on kill() or store()
+				if(callback!=null) {
+					callback.addToBinaryStreamList(is);
+				}
+			} else {
+				statement.setNull(i + 1, Types.BLOB);
+			}
+		} else {
+			statement.setNull(i + 1, Types.BLOB);
+		}
+	}
+	
+	
 	/**
 	 * BEWARE! Possible resource leak!!! Should the stream be closed?
 	 * 
@@ -223,7 +242,6 @@ public class SQLMapHelper {
 		case Types.TINYINT:
 		    int tmpValue = rs.getInt(columnIndex);
 		    if (rs.wasNull()) {
-		        value = null;
 		    } else {
 		        value = new Integer(tmpValue);
 		    }
@@ -241,22 +259,17 @@ public class SQLMapHelper {
 			break;
 
 		case Types.NUMERIC:
-//			int prec = meta.getPrecision(columnIndex);
 			int scale = meta.getScale(columnIndex);
 
 			// if (debug) System.err.println(columnIndex + ", prec = " + prec + ", scale =  " + scale);
 			if (scale <= 0) {
 	            int tmpValueNumeric = rs.getInt(columnIndex);
-	            if (rs.wasNull()) {
-	                value = null;
-	            } else {
+	            if (!rs.wasNull()) {
 	                value = new Integer(tmpValueNumeric);
 	            }
 			} else {
 	            double tmpValueDouble = rs.getDouble(columnIndex);
-	            if (rs.wasNull()) {
-	                value = null;
-	            } else {
+	            if (!rs.wasNull()) {
 	                value = new Double(tmpValueDouble);
 	            }
 			}
@@ -266,9 +279,7 @@ public class SQLMapHelper {
 		case Types.FLOAT:
 		case Types.DOUBLE:
             double tmpValueDouble = rs.getDouble(columnIndex);
-            if (rs.wasNull()) {
-                value = null;
-            } else {
+            if (!rs.wasNull()) {
                 value = new Double(tmpValueDouble);
             }
 			break;
@@ -325,9 +336,7 @@ public class SQLMapHelper {
 		case Types.BOOLEAN:
 		case Types.BIT:
             boolean tmpValueBoolean = rs.getBoolean(columnIndex);
-            if (rs.wasNull()) {
-                value = null;
-            } else {
+            if (!rs.wasNull()) {
                 value = new Boolean(tmpValueBoolean);
             }
 			break;

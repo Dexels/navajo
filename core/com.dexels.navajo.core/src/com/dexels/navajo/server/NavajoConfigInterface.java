@@ -1,6 +1,5 @@
 package com.dexels.navajo.server;
 
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.LockManager;
@@ -9,12 +8,15 @@ import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
+import com.dexels.navajo.server.monitoring.ServiceMonitor;
 
-public interface NavajoConfigInterface extends NavajoIOConfig {
+public interface NavajoConfigInterface extends NavajoIOConfig, ServiceMonitor {
+
+	public static final int MAX_ACCESS_SET_SIZE = 50;
 
 	// Read/write configuration.
 
-	// Indentity methods.
+	// Identity methods.
 	public String getInstanceName();
 	public String getInstanceGroup();
 	
@@ -34,30 +36,27 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	// Statistics.
 	public double getCurrentCPUload();
 	
-	public boolean needsFullAccessLog(Access a);
 	 
 	// Webservice, user monitoring options
-	public void setMonitorOn(boolean b);
-	public boolean isMonitorOn();
-	public int getMonitorExceedTotaltime();
-	public String getMonitorUsers();
-	public String getMonitorWebservices();
-	public void setMonitorWebservices(String monitorWebservices);
-	public void setMonitorUsers(String monitorUsers);
-	public void setMonitorExceedTotaltime(int monitorExceedTotaltime);
-	
+//	public boolean needsFullAccessLog(Access a);
+//	public void setMonitorOn(boolean b);
+//	public boolean isMonitorOn();
+//	public int getMonitorExceedTotaltime();
+//	public String getMonitorUsers();
+//	public String getMonitorWebservices();
+//	public void setMonitorWebservices(String monitorWebservices);
+//	public void setMonitorUsers(String monitorUsers);
+//	public void setMonitorExceedTotaltime(int monitorExceedTotaltime);
+//	
 	
    
 	// Setters/getters.
 	public void setStatisticsRunnerEnabled(boolean b);
 
-	public String getResourcePath();
 //	public HashMap<String,String> getProperties();
 	public String getBetaUser();
 	public int getMaxAccessSetSize();
 	public float getAsyncTimeout();
-	@Deprecated
-	public String getDbPath();
 	public void doClearCache();
 	public void doClearScriptCache();
 	public String getCompilationLanguage();
@@ -65,13 +64,23 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	public boolean isAsyncEnabled();
 	public boolean isIntegrityWorkerEnabled();
 	public boolean isLockManagerEnabled();
+
+	/**
+	 * This one consults the configuration
+	 * @return
+	 */
 	public boolean isEnableStatisticsRunner();
+	/**
+	 * This one asks the statisticsrunner
+	 * @return
+	 */
 	public boolean isStatisticsRunnerEnabled();
 	public boolean isCompileScripts();
 	
 	// Start modules.
-	public Message getMessage(String msg);
+//	public Message getMessage(String msg);
 	public void startTaskRunner();
 	public void startStatisticsRunner();
+	public Object getParameter(String string);
 	
 }

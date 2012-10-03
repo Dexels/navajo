@@ -50,6 +50,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.tipi.actionmanager.IActionManager;
@@ -212,11 +213,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		List<TipiExtension> extensionList = getExtensionFromServiceEnumeration();
 		
 		initializeContext(extensionList, parent);
+		FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
 	}
 	
 	public TipiContext(TipiApplicationInstance myApplication, List<TipiExtension> extensionList) {
 		this.myApplication = myApplication;
 		initializeContext(extensionList, null);
+		FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
 	}
 
 	protected List<TipiExtension> getExtensionFromServiceEnumeration() {
@@ -248,6 +251,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 		// this();
 		initializeContext(preload, parent);
+		FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
 	}
 
 	private void initializeContext(List<TipiExtension> preload, TipiContext parent) {
@@ -870,7 +874,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 
 	public void processRequiredIncludes(TipiExtension tipiExtension) {
-		logger.debug("Adding extension: "+tipiExtension.getId());
+//		logger.info("Adding extension: "+tipiExtension.getId());
 		List<String> includes = new LinkedList<String>();
 		String[] ss = tipiExtension.getIncludes();
 		if (ss == null || ss.length == 0) {
@@ -881,7 +885,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 //		Thread.dumpStack();
 		for (int i = 0; i < ss.length; i++) {
-			logger.debug("Adding include: " + ss[i]);
+//			logger.info("Adding include: " + ss[i]);
 			includes.add(ss[i]);
 		}
 
@@ -923,6 +927,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			if (location != null) {
 				InputStream in = resolveInclude(location, tipiExtension);
 				if (in == null) {
+					logger.warn("Missing include at location: "+location+" and extension: "+tipiExtension);
 					return;
 				}
 				XMLElement doc = new CaseSensitiveXMLElement();
@@ -951,7 +956,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				}
 				parseXMLElement(doc, tipiExtension);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.error("Error: ",e);
 		}
 	}
@@ -976,6 +981,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			InputStream in = getTipiResourceStream(location);
 			return in;
 		} catch (IOException e) {
+			logger.warn("Error resolving tipi include", e);
 			// classload failed. Continuing.
 		}
 		return null;
@@ -1798,7 +1804,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			}
 			// }
 		} catch (Exception ex) {
-			logger.error("Not happy while evaluating expression: " + expr, ex.getMessage());
+			logger.error("Not happy while evaluating expression: " + expr, ex);
 			return o;
 		} catch (Error ex) {
 			logger.error("Not happy while evaluating expression: " + expr,ex);

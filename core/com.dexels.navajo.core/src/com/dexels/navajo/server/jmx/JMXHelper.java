@@ -89,7 +89,7 @@ public final class JMXHelper  {
 				monitor.stop();
 				deregisterListenersForMonitor(monitor);
 			} catch (Exception e) {
-				AuditLog.log("JMX", "Error deregistering monitor",e, Level.SEVERE);
+				AuditLog.log("Error deregistering monitor",e, Level.SEVERE);
 			}
 			AuditLog.log("JMX", "Stopped JMX Monitor: " + monitor.getClass().getName(), Level.WARNING);
 		}
@@ -123,7 +123,7 @@ public final class JMXHelper  {
 			conn = null;
 			//System.err.println("Disconnected JMX.");
 		} catch (IOException e) {
-			AuditLog.log("JMX", "Error disconnecting jmx",e, Level.SEVERE);
+			AuditLog.log("Error disconnecting jmx",e, Level.SEVERE);
 		}
 	}
 	 
@@ -148,7 +148,7 @@ public final class JMXHelper  {
 			
 			return conn;
 		} catch (Exception e) {
-			AuditLog.log("JMX", "Error getting server connection",e, Level.SEVERE);
+			AuditLog.log("Error getting server connection",e, Level.SEVERE);
 			return null;
 		}
 	}
@@ -177,7 +177,7 @@ public final class JMXHelper  {
 			}
 		
 		} catch (IOException e) {
-			AuditLog.log("JMX", "Error getting server connection",e, Level.SEVERE);
+			AuditLog.log( "Error getting server connection",e, Level.SEVERE);
 		} 
 	
 		return myThread;

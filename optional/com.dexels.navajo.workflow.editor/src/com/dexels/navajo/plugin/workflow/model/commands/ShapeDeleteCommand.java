@@ -65,7 +65,7 @@ public class ShapeDeleteCommand extends Command {
 	 */
 	private void addConnections(List<TransitionElement> connections) {
 		for (Iterator<TransitionElement> iter = connections.iterator(); iter.hasNext();) {
-			TransitionElement conn = (TransitionElement) iter.next();
+			TransitionElement conn = iter.next();
 			conn.reconnect();
 		}
 	}
@@ -116,7 +116,7 @@ public class ShapeDeleteCommand extends Command {
 	 */
 	private void removeConnections(List<TransitionElement> connections) {
 		for (Iterator<TransitionElement> iter = connections.iterator(); iter.hasNext();) {
-			TransitionElement conn = (TransitionElement) iter.next();
+			TransitionElement conn = iter.next();
 			conn.disconnect();
 		}
 	}

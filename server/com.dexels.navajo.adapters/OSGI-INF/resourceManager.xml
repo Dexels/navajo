@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="setup" name="Connection Broker Component">
-   <implementation class="com.dexels.navajo.adapter.jdbcbroker.JdbcResourceComponent"/>
-   <reference bind="setResourceManager" cardinality="1..n" interface="com.dexels.navajo.resource.manager.ResourceManager" name="ResourceManager" policy="dynamic" unbind="removeResourceManager"/>
-</scr:component>

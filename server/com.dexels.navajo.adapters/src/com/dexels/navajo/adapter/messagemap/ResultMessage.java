@@ -106,7 +106,7 @@ public class ResultMessage implements Mappable {
 		this.suppressProperties = suppressProperties;
 	}
 	
-	private final boolean isPropertyInList(Property prop, String propertyStringList, boolean isArrayMessageElement) {
+	private final boolean isPropertyInList(Property prop, String propertyStringList) {
 		if ( propertyStringList == null ) {
 			return false;
 		}
@@ -123,7 +123,7 @@ public class ResultMessage implements Mappable {
 		Iterator<Property> allProps = new ArrayList<Property>(m.getAllProperties()).iterator();
 		while ( allProps.hasNext() ) {
 			Property p = allProps.next();
-			if ( isPropertyInList(p, this.suppressProperties, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) ) {
+			if ( isPropertyInList(p, this.suppressProperties) ) {
 				m.removeProperty(p);
 			}
 		}

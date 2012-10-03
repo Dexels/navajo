@@ -39,7 +39,7 @@ public class TipiSwingFunctionDefinition implements ExtensionDefinition {
 	}
 
 	public String[] getIncludes() {
-		return new String[]{"com/dexels/navajo/functions/tipiswingfunctions.xml"};
+		return new String[]{"com/dexels/navajo/tipi/swing/functions/tipiswingfunctions.xml"};
 	}
 
 	public List<String> getLibraryJars() {

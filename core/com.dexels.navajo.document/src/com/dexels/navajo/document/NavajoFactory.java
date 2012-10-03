@@ -60,6 +60,11 @@ public abstract class NavajoFactory {
 	 }
   }
   
+  public void addNavajoType(String typeId, Class<?> clz) {
+	  toJavaType.put(typeId, clz);
+	  toNavajoType.put(clz, typeId);
+  }
+  
   public String getNavajoType(Class<?> c) {
 	  if ( c == null ) {
 		  return "empty";

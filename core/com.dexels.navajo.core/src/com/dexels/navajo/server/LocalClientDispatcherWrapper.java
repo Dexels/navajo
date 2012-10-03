@@ -5,18 +5,14 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
-import com.dexels.navajo.server.api.NavajoServerContext;
 
 public class LocalClientDispatcherWrapper implements LocalClient {
 
 	private DispatcherInterface dispatcherInterface;
-	private NavajoServerContext serverContext;
-	private BundleCreator bundleCreator;
 	
 
 	private final static Logger logger = LoggerFactory
@@ -25,17 +21,17 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 	private String pass;
 	
 	public LocalClientDispatcherWrapper() {
-//		this.dispatcherInterface = di;
 	}
 
-	public void setBundleCreator(BundleCreator bc) {
-		this.bundleCreator = bc;
+	public void setDispatcher(DispatcherInterface di) {
+		this.dispatcherInterface = di;
 	}
-	
-	public void clearBundleCreator(BundleCreator bc) {
-		this.bundleCreator = null;
+
+	public void clearDispatcher(DispatcherInterface di) {
+		this.dispatcherInterface = null;
 	}
-	
+
+
 	@Override
 	public Navajo call(Navajo n) throws FatalException {
 		if(n.getHeader().getRPCUser()==null || n.getHeader().getRPCUser().equals("")) {
@@ -44,18 +40,16 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 		if(n.getHeader().getRPCPassword()==null || n.getHeader().getRPCPassword().equals("")) {
 			n.getHeader().setRPCPassword(pass);
 		}
-		DispatcherFactory.getInstance().setBundleCreator(bundleCreator);
-		
-		return DispatcherFactory.getInstance().handle(n);
+		return dispatcherInterface.handle(n);
 	}
 
 	public Navajo callWithoutAuth(Navajo n) throws FatalException {
-		return DispatcherFactory.getInstance().handle(n,true);
+		return dispatcherInterface.handle(n,true);
 	}
 	
 	@Override
 	public Navajo generateAbortMessage(String reason) throws FatalException {
-		Navajo outDoc = DispatcherFactory.getInstance().generateErrorMessage(
+		Navajo outDoc = dispatcherInterface.generateErrorMessage(
 				null, reason, -1, 0, null);
 		return outDoc;
 	}
@@ -67,9 +61,13 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 
 	@Override
 	public Navajo handleInternal(Navajo in, Object cert, ClientInfo clientInfo) throws FatalException {
-		Navajo outDoc = DispatcherFactory.getInstance().removeInternalMessages(
-				DispatcherFactory.getInstance().handle(in, cert,
+		Navajo outDoc = dispatcherInterface.removeInternalMessages(
+				dispatcherInterface.handle(in, cert,
 						clientInfo));
+		if(outDoc==null) {
+			logger.error("handleInternal seems to have failed, as outDoc is null.");
+			
+		}
 		return outDoc;
 	}
 
@@ -83,28 +81,31 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 		return dispatcherInterface.getApplicationId();
 	}
 
-	
-	public void setContext(NavajoServerContext nsc) {
-		logger.info("LocalClient linked to context");
-		this.serverContext = nsc;
-		this.dispatcherInterface = nsc.getDispatcher();
-	}
 
-	public void removeContext(NavajoServerContext nsc) {
-		this.serverContext = null;
-	}
-	
 	public void activate(Map<String,String> properties) {
 //		Dictionary properties =  cc.getProperties();
-		user = properties.get("user");
-		pass = properties.get("password");
+		try {
+			user = properties.get("user");
+			pass = properties.get("password");
+		} catch (Throwable e) {
+			logger.error("Activation failed");
+		}
 	}
 	public void modified(Map<String,String> properties) {
-		user = properties.get("user");
-		pass = properties.get("password");
+		try {
+			user = properties.get("user");
+			pass = properties.get("password");
+		} catch (Throwable e) {
+			logger.error("Activation failed");
+		}
 	}
 	public void deactivate() {
-		
+		try {
+			logger.info("Deactivate");
+		} catch (Throwable e) {
+			logger.error("Activation failed");
+		}
+
 	}
 
 

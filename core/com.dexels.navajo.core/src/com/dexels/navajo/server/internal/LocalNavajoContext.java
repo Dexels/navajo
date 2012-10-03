@@ -16,6 +16,9 @@ public class LocalNavajoContext extends NavajoContext implements ClientContext {
 		localClient = c;
 	}
 
+	/**
+	 * @param c  the LocalClient to remove
+	 */
 	public void clearLocalClient(LocalClient c) {
 		localClient = null;
 	}

@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import tipiswing.SwingTipiApplicationInstance;
+import tipiswing.TipiSwingExtension;
 
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.application.InstallationPathResolver;
@@ -44,11 +45,13 @@ public class MainApplication {
 		tce.loadDescriptor();
 		tce.getTipiExtensionRegistry().registerTipiExtension(tce);
 		TipiSwingExtension tse = new TipiSwingExtension();
+		tse.start(null);
 		tse.loadDescriptor();
 		tse.getTipiExtensionRegistry().registerTipiExtension(tse);
 		
 		SwingTipiApplicationInstance instance = runApp(args);
-		instance.setInstallationFolder(new File("/Users/frank/Documents/workspace-indigo/SportlinkClub"));
+//		instance.setInstallationFolder(new File("C:/user_projects/SportlinkClub"));
+//        instance.setInstallationFolder(new File("/Users/frank/Documents/workspace-indigo/SportlinkClub"));
 		instance.getCurrentContext().switchToDefinition(
 				instance.getDefinition());
 	}

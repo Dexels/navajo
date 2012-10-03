@@ -37,7 +37,7 @@ public class MultiSelectBoxRenderer implements ListCellRenderer {
 		final Selection sel = (Selection) value;
 		cb.setOpaque(false);
 		cb.setText(sel == null ? "" : sel.toString());
-		cb.setSelected(sel.isSelected());
+		cb.setSelected(sel == null ? false : sel.isSelected());
 		return cb;
 	}
 

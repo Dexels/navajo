@@ -342,6 +342,7 @@ public class NavajoContextProvider implements INavajoProjectContextProvider {
 		AdapterProposal ap = adapterMap.get(mapName);
 		if(ap==null) {
 			System.err.println("Warning: map: "+mapName+" not found!");
+			return;
 		}
 		List<String> apGetters = ap.getGetters();
 		for (String getter : apGetters) {

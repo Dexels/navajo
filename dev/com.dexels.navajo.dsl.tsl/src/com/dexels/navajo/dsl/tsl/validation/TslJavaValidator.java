@@ -1,6 +1,5 @@
 package com.dexels.navajo.dsl.tsl.validation;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -78,7 +77,7 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 	
 	
 	
-	protected INavajoContextProvider getNavajoContext() throws  IOException {
+	protected INavajoContextProvider getNavajoContext()  {
 		return navajoContext;
 	}
 	
@@ -92,74 +91,7 @@ public class TslJavaValidator extends AbstractTslJavaValidator {
 	public void checkTml(Tml p) {
 	}
 	
-//	@Check
-//	public void checkMessage(Message p) {
-//		java.util.Map<String,String> attr = createAttributeMap(p.getAttributes());
-//		validateNeeds("message",p.getAttributes(),attr, new String[]{"name"}, new String[]{}, new String[]{"name","type","filter","condition","index","mode"},new String[]{"filter","condition"},new String[]{"filter","condition"});
-//		validateAttribute("message",p.getAttributes(),"type",getDefaultValueForAttribute("message", "type"),true);
-//		validateAttribute("message",p.getAttributes(),"mode",getDefaultValueForAttribute("message", "mode"),true);
-//		if(attr.get("mode")!=null) {
-//			if(!"ignore".equals(attr.get("mode")) && !"default".equals(attr.get("mode")) ) {
-////				warning("Only 'ignore' and 'default' are valid modes!",TslPackage.MESSAGE,ISSUE_ILLEGAL_ATTRIBUTE,"mode");
-//// TODO FIX, don't know why it fires on every message
-//			}
-//		}
-//
-//	}
 
-//	@Check
-//	public void checkOption(Option p) {
-//		// TODO Check if parent property is of type 'selection'
-//		java.util.Map<String,String> attr = createAttributeMap(p.getAttributes());
-//		validateNeeds("option",p.getAttributes(),attr, new String[]{"name","value","selected"}, new String[]{}, new String[]{"name","value","selected","condition"},new String[]{"value","selected","condition"},new String[]{"condition"});
-//	}
-//
-//	
-	
-//	@Check
-//	public void checkProperty(Property p) {
-//		if(p instanceof Param) {
-//			return;
-//		}
-//
-//		java.util.Map<String,String> attr = createAttributeMap(p.getAttributes());
-//
-//		// TODO Check if it has expression children, if so, it shouldn't have a value
-//		// TODO If only one conditionless expression, propose conversion to value attribute
-//		
-//		EList<Element> ll = p.getChildren();
-//		for (Element element : ll) {
-//			if(element instanceof ExpressionTag) {
-//				String value = attr.get("value");
-//				if(value!=null) {
-//					warning("Either supply a value attribute, or an expression node, not both.", p, TslPackage.EXPRESSION_TAG);
-//				}
-//			}
-//		}
-//		
-//		validateNeeds("property",p.getAttributes(),attr, new String[]{"name"}, new String[]{"direction", "type"}, new String[]{"name","value","description","direction","subtypes","type","length","cardinality"},new String[]{"value","condition"},new String[]{"condition"});
-//		String type = stripQuotes(attr.get("type"));
-//		if("selection".equals(type)) {
-//			if(attr.get("cardinality")==null) {
-//				// cardinality required!
-//				warning("All selection properties should have a cardinality",p,TslPackage.PROPERTY,ISSUE_MISSING_ATTRIBUTE,"property","cardinality");
-//			}
-//		}
-//		validateAttribute("property",p.getAttributes(),"cardinality",TslJavaValidator.getDefaultValueForAttribute("property", "cardinality"),true);
-//		validateAttribute("property",p.getAttributes(),"type",TslJavaValidator.getDefaultValueForAttribute("property", "type"),true);
-//	}
-
-
-//	@Check
-//	public void checkExpression(ExpressionTag p) {
-//		java.util.Map<String,String> attr = createAttributeMap(p.getAttributes());
-//		// TODO refactor a bit, only required value is different
-//		if(p.getExpression()==null) {
-//			validateNeeds("expression",p.getAttributes(),attr, new String[]{"value"}, new String[]{}, new String[]{"value","condition","space"},new String[]{"value","condition"},new String[]{"value","condition"});
-//		} else {
-//			validateNeeds("expression",p.getAttributes(),attr, new String[]{}, new String[]{}, new String[]{"value","condition","space"},new String[]{"value","condition"},new String[]{"value","condition"});
-//		}
-//	}
 
 	 public  IProject getCurrentProject(EObject p){
 		 Resource eResource = p.eResource();

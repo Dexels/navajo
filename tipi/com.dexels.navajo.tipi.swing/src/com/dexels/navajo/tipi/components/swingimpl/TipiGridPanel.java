@@ -391,6 +391,15 @@ public class TipiGridPanel extends TipiPanel {
 			return c.x == x && c.y == y;
 		}
 
+        /**
+         * Theoretically could overflow, but I don't expect layouts to be THAT big
+         */
+        @Override
+		public int hashCode() {
+        	return x*y;
+		}
+
+        
 		public String toString() {
 			return "{" + x + "," + y + "}";
 		}

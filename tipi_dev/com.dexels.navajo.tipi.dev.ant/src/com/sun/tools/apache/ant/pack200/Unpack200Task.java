@@ -36,7 +36,7 @@ public class Unpack200Task extends Unpack {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(Unpack200Task.class);
-    enum FileType { unknown, gzip, pack200, zip };
+    enum FileType { unknown, gzip, pack200, zip }
 
     private SortedMap <String, String> propMap;
     private Pack200.Unpacker unpkr;

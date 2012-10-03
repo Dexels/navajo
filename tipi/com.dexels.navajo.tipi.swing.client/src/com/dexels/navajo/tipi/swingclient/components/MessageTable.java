@@ -734,7 +734,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		int i = mapRowNumber(row);
 		Message m = getMessageRow(i);
 		Iterator<String> it = columnAttributes.keySet().iterator();
-		if (it == null || !it.hasNext()) {
+		if ( !it.hasNext()) {
 			setRowColor(i, null);
 		}
 		while (it.hasNext()) {
@@ -1164,7 +1164,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 			Navajo n = NavajoFactory.getInstance().createNavajo(fis);
 			Message cdef = n.getMessage("columndef");
 			if (cdef == null) {
-				if (columnFile != null && columnFile.exists()) {
+				if (columnFile.exists()) {
 					columnFile.delete();
 					return;
 				}
@@ -2038,6 +2038,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 			}
 		} catch (Exception e) {
 			logger.error("Error: ",e);
+			return null;
 		}
 		StringWriter sw = new StringWriter();
 		try {

@@ -9,6 +9,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.queuemanager.NavajoSchedulingException;
 import com.dexels.navajo.queuemanager.QueueManager;
+import com.dexels.navajo.queuemanager.QueueManagerFactory;
 import com.dexels.navajo.queuemanager.api.InputContext;
 import com.dexels.navajo.queuemanager.impl.NavajoInputContext;
 
@@ -22,7 +23,7 @@ public class Test {
 	 * @throws InterruptedException 
 	 */
 	public static void main(String[] args) throws NavajoSchedulingException, IOException, InterruptedException {
-		QueueManager qm = new QueueManager();
+		QueueManager qm = QueueManagerFactory.getInstance();
 		qm.setQueueContext(new TestQueueContext());
 		String result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js");
 		System.err.println("result: "+result);

@@ -56,6 +56,11 @@
         <input>date|empty</input>
         <result>string</result>
     </function>
+    <function name="DayOfWeek" class="com.dexels.navajo.functions.DayOfWeek">
+        <description>This function return a calendar date of the first given weekday in the past</description>
+        <input>integer,boolean</input>
+        <result>date</result>
+    </function>
     <function name="Wait" class="com.dexels.navajo.functions.Wait">
         <description>Wait for specified number of milliseconds</description>
         <input>integer</input>
@@ -543,11 +548,6 @@
         <input/>
         <result/>
     </function>
-    <function name="ElfProef" class="com.dexels.navajo.functions.ElfProef">
-        <description>Check if the supplied account number is a valid account (Dutch banks only).</description>
-        <input>string</input>
-        <result>boolean</result>
-    </function>
     <function name="DecimalChar" class="com.dexels.navajo.functions.DecimalChar">
         <description>This function returns a string representation of the desired decimal character</description>
         <input/>
@@ -676,11 +676,6 @@
         <description>StripTime(date|string,[string])</description>
         <input>date|string,[string]</input>
         <result>date</result>
-    </function>
-    <function name="ValidateAccountNumber" class="com.dexels.navajo.functions.ValidateAccountNumber">
-        <description>ValidateAccountNumber(string|integer,string)</description>
-        <input>string|integer,string</input>
-        <result>boolean</result>
     </function>
     <function name="IsDate" class="com.dexels.navajo.functions.IsDate">
         <description>IsDate(date|string)</description>

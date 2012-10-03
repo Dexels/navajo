@@ -32,7 +32,6 @@ public class SystemPropertyContextIdentifier implements ContextIdentifier {
 	@Override
 	public String getContextPath() {
 		String context = System.getProperty("navajo.context");
-		System.err.println("***** **** System context: "+context);
 		if(context==null) {
 			System.err.println("<> assuming /navajodeploy");
 			return "/navajodeploy";

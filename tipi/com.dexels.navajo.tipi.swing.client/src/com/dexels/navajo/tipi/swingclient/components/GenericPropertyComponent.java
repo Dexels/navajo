@@ -1595,7 +1595,6 @@ public class GenericPropertyComponent extends JPanel {
 					if (myRadioButtonField != null) {
 						myRadioButtonField.setFocusable(value);
 						myRadioButtonField.setEnabled(value);
-						;
 					}
 				} else {
 					if (myBox != null) {
@@ -1611,7 +1610,6 @@ public class GenericPropertyComponent extends JPanel {
 					if (myMultiple != null) {
 						myMultiple.setFocusable(value);
 						myMultiple.setEnabled(value);
-						;
 					}
 				} else {
 					if (myMultipleList != null) {

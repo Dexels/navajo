@@ -19,10 +19,14 @@ public class JdbcResourceComponent {
 	private final Map<Integer,Connection> transactionMap = new HashMap<Integer, Connection>();
 //	private BundleContext bundleContext;
 	
-	public void setup() {
+	public void activate() {
 		setInstance(this);
-//		this.bundleContext = context.getBundleContext();
 	}
+
+	public void deactivate() {
+		setInstance(null);
+	}
+
 	private static void setInstance(JdbcResourceComponent jdbcResourceComponent) {
 		instance = jdbcResourceComponent;
 		
@@ -50,7 +54,8 @@ public class JdbcResourceComponent {
 
 	public static DataSource getJdbc(String name) {
 		try {
-			DataSource dataSource = getInstance().manager.getDataSource(name);
+			final ResourceManager mngr = getInstance().manager;
+			DataSource dataSource = mngr.getDataSource(name);
 			return dataSource;
 		} catch (InvalidSyntaxException e) {
 			logger.error("Can not resolve datasource{}",name,e);

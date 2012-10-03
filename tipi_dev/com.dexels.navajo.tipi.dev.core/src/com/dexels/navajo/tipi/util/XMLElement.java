@@ -2001,7 +2001,6 @@ public class XMLElement implements java.io.Serializable {
 		writer.write('<');
 		writer.write(this.name);
 		if (!this.attributes.isEmpty()) {
-			;
 			// Enumeration enum = attributeList.elements();
 			for (Iterator<String> en = this.attributes.keySet().iterator(); en.hasNext();) {
 				writer.write(' ');

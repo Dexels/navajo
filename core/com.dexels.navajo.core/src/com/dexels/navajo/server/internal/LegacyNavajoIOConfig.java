@@ -50,5 +50,10 @@ public class LegacyNavajoIOConfig extends FileNavajoConfig implements NavajoIOCo
 		return DispatcherFactory.getInstance().getNavajoConfig().getContextRoot();
 	}
 
+	@Override
+	public String getResourcePath() {
+		return DispatcherFactory.getInstance().getNavajoConfig().getResourcePath();
+	}
+
 
 }

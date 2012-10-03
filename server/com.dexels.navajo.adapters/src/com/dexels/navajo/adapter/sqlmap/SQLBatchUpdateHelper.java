@@ -68,7 +68,7 @@ public class SQLBatchUpdateHelper {
 								final ArrayList<Object> params,
 								Access myAccess,
 								String dbIdentifier,
-								Class classHoldingBinaryStreamList,
+								StreamClosable callback,
 								boolean isLegacyMode) throws SQLException {
 		this.sql = sql;
 		this.conn = conn;
@@ -77,7 +77,7 @@ public class SQLBatchUpdateHelper {
 		this.dbIdentifier = dbIdentifier;
 		this.isLegacyMode = isLegacyMode;
 		this.updateOnly = false;
-		this.parseStatements(classHoldingBinaryStreamList);
+		this.parseStatements(callback);
 		this.executeStatements();
 
 	}
@@ -87,11 +87,11 @@ public class SQLBatchUpdateHelper {
 								final ArrayList<Object> params, 
 								Access myAccess,
 								String dbIdentifier,
-								Class classHoldingBinaryStreamList,
+								StreamClosable callback,
 								boolean isLegacyMode,
 								boolean debug, 
 								boolean updateOnly) throws SQLException {
-		System.err.println("UpdateOnly: " + updateOnly);
+//		System.err.println("UpdateOnly: " + updateOnly);
 		this.sql = sql;
 		this.conn = conn;
 		this.params = params;
@@ -101,7 +101,7 @@ public class SQLBatchUpdateHelper {
 		this.debug = debug;
 		this.updateOnly = updateOnly;
 
-		this.parseStatements(classHoldingBinaryStreamList);
+		this.parseStatements(callback);
 		this.executeStatements();
 	}
 
@@ -128,37 +128,43 @@ public class SQLBatchUpdateHelper {
 	// ----------------------------------------------------------- private
 	// methods
 
-	private final void parseStatements(Class classHoldingBinaryStreamList) throws SQLException {
+	private final void parseStatements(StreamClosable callback) throws SQLException {
 		final StringTokenizer tok = new StringTokenizer(this.sql, DELIMITER);
 		if (tok.countTokens() == 0) {
 			throw new SQLException("tried to pass empty SQL statement batch");
 		}
-		System.err.println("Amount of tokens: " + tok.countTokens());
+		if (this.debug) {
+		    Access.writeToConsole(this.myAccess, "Amount of tokens: " + tok.countTokens());
+		}
 		while (tok.hasMoreElements()) {
 			final String s = tok.nextToken();
 			if (s.length() > 0 && !s.matches("\\s*")) {
 				if (this.debug) {
-					System.out.println("parsed statement: " + s);
+				    Access.writeToConsole(this.myAccess, "parsed statement: " + s);
 				}
 
-				prepareStatement(s, classHoldingBinaryStreamList);
+				prepareStatement(s, callback);
 			} else {
-				System.err.println("Did not qualify");
+		        if (this.debug) {
+		            Access.writeToConsole(this.myAccess, "Did not qualify");
+		        }
 			}
 
 		}
-		System.err.println("No more tokents.");
+        if (this.debug) {
+            Access.writeToConsole(this.myAccess, "No more tokents.");
+        }
 
 	}
 
-	protected void prepareStatement(final String s, Class classHoldingBinaryStreamList) throws SQLException {
+	protected void prepareStatement(final String s, StreamClosable callback) throws SQLException {
 		this.parsed.add(s);
 		final PreparedStatement prepared = this.conn.prepareStatement(s);
 		final int required = this.countRequiredParameters(s);
 		if (this.debug) {
-			System.out.println("required number of parameters = " + required);
+		    Access.writeToConsole(this.myAccess, "required number of parameters = " + required);
 		}
-		this.setStatementParameters(prepared, required, classHoldingBinaryStreamList);
+		this.setStatementParameters(prepared, required, callback);
 		this.preparedList.add(prepared);
 	}
 
@@ -173,13 +179,13 @@ public class SQLBatchUpdateHelper {
 			if (!last || updateOnly) {
 				prepared.executeUpdate();
 				if (this.debug) {
-					System.out.println("successful execution of SQL '" + s + "'");
+				    Access.writeToConsole(this.myAccess, "successful execution of SQL '" + s + "'");
 				}
 			} else {
 				try {
 					this.rs = prepared.executeQuery();
 					if (this.debug) {
-						System.out.println("executed last SQL '" + s + "' as query");
+					    Access.writeToConsole(this.myAccess, "executed last SQL '" + s + "' as query");
 					}
 				} catch (SQLException e) {
 					if (rs != null) {
@@ -199,7 +205,7 @@ public class SQLBatchUpdateHelper {
 			this.logWarnings(prepared);
 			this.updateCount = this.updateCount + prepared.getUpdateCount();
 			if (this.debug) {
-				System.out.println("cummulative update count is " + this.updateCount);
+			    Access.writeToConsole(this.myAccess, "cummulative update count is " + this.updateCount);
 			}
 			if (!last) {
 				if (rs != null) {
@@ -231,7 +237,7 @@ public class SQLBatchUpdateHelper {
 
 	private final void setStatementParameters(final PreparedStatement pre,
 											  final int n,
-											  Class classHoldingBinaryStreamList) throws SQLException {
+											  StreamClosable callback) throws SQLException {
 		if (this.params != null) {
 			for (int i = 0; i < n; i++, this.pptr++) {
 				if (this.pptr >= this.params.size()) {
@@ -239,7 +245,7 @@ public class SQLBatchUpdateHelper {
 				}
 
 				final Object param = this.params.get(this.pptr);
-				this.setParameter(i, param, pre, classHoldingBinaryStreamList);
+				this.setParameter(i, param, pre, callback);
 			}
 		}
 
@@ -248,15 +254,15 @@ public class SQLBatchUpdateHelper {
 	private final void setParameter(final int idx, 
 									final Object param,
 									final PreparedStatement pre,
-									Class classHoldingBinaryStreamList) throws SQLException {
+									StreamClosable callback) throws SQLException {
 		if (this.debug) {
-			System.out.println("parameter " + this.pptr + " = " + param);
+		    Access.writeToConsole(this.myAccess, "parameter " + this.pptr + " = " + param);
 		}
 		
 		SQLMapHelper.setParameter(pre, 
 								  param, 
 								  idx, 
-								  classHoldingBinaryStreamList, 
+								  callback, 
 								  this.dbIdentifier, 
 								  this.isLegacyMode, 
 								  this.debug, 
@@ -267,11 +273,9 @@ public class SQLBatchUpdateHelper {
 		if (this.debug) {
 			SQLWarning warning = pre.getWarnings();
 			while (warning != null) {
-				System.out.println("SQL warning: " + warning.getMessage());
+			    Access.writeToConsole(this.myAccess, "SQL warning: " + warning.getMessage());
 				warning = warning.getNextWarning();
 			}
 		}
-
 	}
-
 }

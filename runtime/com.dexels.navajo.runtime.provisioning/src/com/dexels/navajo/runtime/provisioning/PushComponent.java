@@ -29,28 +29,30 @@ public class PushComponent {
 
 	@SuppressWarnings("rawtypes")
 	public void activate(ComponentContext cc) {
-		long stamp = System.currentTimeMillis();
-		
-		properties = cc.getProperties();
-		 
-		logger.info("Push configuration component created.");
-		String contextPath = (String) properties.get("contextPath");
-		String contextName = (String) properties.get("contextName");
-//		String deployment = (String) properties.get("deployment");
-//		String profile = (String) properties.get("profile");
 
-		boolean matches = hasContext(contextName);
-		if(!matches) {
-			logger.info("Skipping context: "+contextName+" it doesn't match any attached context");
-			return;
-		}
-		logger.info("Setting up navajo context: "+contextName+" at: "+contextPath);
 		try {
-			setupNavajo(contextName,contextPath);
-		} catch (IOException e) {
-			logger.error("Setting up navajo failed: ", e);
+			long stamp = System.currentTimeMillis();
+			
+			properties = cc.getProperties();
+			 
+			logger.info("Push configuration component created.");
+			String contextPath = (String) properties.get("contextPath");
+			String contextName = (String) properties.get("contextName");
+			boolean matches = hasContext(contextName);
+			if(!matches) {
+				logger.info("Skipping context: "+contextName+" it doesn't match any attached context");
+				return;
+			}
+			logger.info("Setting up navajo context: "+contextName+" at: "+contextPath);
+			try {
+				setupNavajo(contextName,contextPath);
+			} catch (IOException e) {
+				logger.error("Setting up navajo failed: ", e);
+			}
+			logger.info("Activating push provisioning took: "+(System.currentTimeMillis()-stamp) +" millis. ");
+		} catch (Throwable e) {
+			logger.error("Error activating component",e);
 		}
-		logger.info("Activating push provisioning took: "+(System.currentTimeMillis()-stamp) +" millis. ");
 	}
 
 	// Check regardless of leading slashes TODO Check for pull
@@ -100,13 +102,17 @@ public class PushComponent {
 	
 
 	public void deactivate() {
-		logger.info("Push provisioning deactivated");
-		if(factoryConfiguration!=null) {
-			try {
-				factoryConfiguration.delete();
-			} catch (IOException e) {
-				logger.error("Error deregistering service factory: ", e);
+		try {
+			logger.info("Push provisioning deactivated");
+			if(factoryConfiguration!=null) {
+				try {
+					factoryConfiguration.delete();
+				} catch (IOException e) {
+					logger.error("Error deregistering service factory: ", e);
+				}
 			}
+		} catch (Throwable e) {
+			logger.error("Error activating component",e);
 		}
 	}
 

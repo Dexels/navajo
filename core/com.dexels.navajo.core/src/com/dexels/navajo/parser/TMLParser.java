@@ -6,6 +6,9 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
 
+@SuppressWarnings({"unchecked","unused"})
+
+
 public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLParserConstants {/*@bgen(jjtree)*/
   protected JJTTMLParserState jjtree = new JJTTMLParserState();
   protected Navajo inputDoc;
@@ -1801,7 +1804,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
   public boolean lookingAhead = false;
-  private boolean jj_semLA;
+private boolean jj_semLA;
   private int jj_gen;
   final private int[] jj_la1 = new int[27];
   static private int[] jj_la1_0;
@@ -1969,7 +1972,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
   private int[] jj_lasttokens = new int[100];
   private int jj_endpos;
 
-  private void jj_add_error_token(int kind, int pos) {
+private void jj_add_error_token(int kind, int pos) {
     if (pos >= 100) return;
     if (pos == jj_endpos + 1) {
       jj_lasttokens[jj_endpos++] = kind;

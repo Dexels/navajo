@@ -334,7 +334,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 					pop.show(this, e.getX(), e.getY());
 				} else if (p.isDirIn()) {
 					final JPopupMenu pop = new JPopupMenu();
-					final int[] selectedRows = messageTable.getSelectedRows();
+//					final int[] selectedRows = messageTable.getSelectedRows();
 					final GenericPropertyComponent comp = new GenericPropertyComponent();
 					Property clone = p.copy(NavajoFactory.getInstance()
 							.createNavajo());

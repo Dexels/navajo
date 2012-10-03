@@ -3,9 +3,6 @@ package com.dexels.navajo.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.impl.BaseNavajoClientLogger;
-import com.dexels.navajo.client.logger.ClientLogger;
-
 /**
  * Use the NavajoClientFactory for instantiating NavajoClients. The factory keeps track of all instances
  */
@@ -13,7 +10,6 @@ import com.dexels.navajo.client.logger.ClientLogger;
 public class NavajoClientFactory {
   private static ClientInterface myClient = null;
 
-  private static ClientLogger clientLoggerInstance;
   
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoClientFactory.class);
@@ -79,8 +75,6 @@ public class NavajoClientFactory {
    */
   public static void resetClient() {
     myClient=null;
-    clientLoggerInstance = null;
-    
   }
 
   public static ClientInterface createClient() {
@@ -147,10 +141,4 @@ public class NavajoClientFactory {
   }
   
 
-  public static synchronized ClientLogger getClientLogger() {
-	  if(clientLoggerInstance==null) {
-		  clientLoggerInstance = new BaseNavajoClientLogger();
-	  }
-	  return clientLoggerInstance;
-  }
 }

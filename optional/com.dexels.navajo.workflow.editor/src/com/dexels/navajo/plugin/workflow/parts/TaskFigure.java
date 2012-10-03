@@ -40,8 +40,8 @@ public class TaskFigure extends Figure {
 		// Lazily instanciate the shared colors
 
 		Device device = Display.getCurrent();
-		fgColor = new Color(device, 170, 170, 170);
-		bgColor = new Color(device, 250, 250, 250);
+		setForegroundColor(new Color(device, 170, 170, 170));
+		setBackgroundColor(new Color(device, 250, 250, 250));
 
 		// Init
 		// setInitialState(initialState);
@@ -68,8 +68,8 @@ public class TaskFigure extends Figure {
 
 		// Drawings
 
-		graphics.setForegroundColor(fgColor);
-		graphics.setBackgroundColor(bgColor);
+		graphics.setForegroundColor(getForegroundColor());
+		graphics.setBackgroundColor(getBackgroundColor());
 		graphics.fillRoundRectangle(bounds, round, round);
 		graphics.drawRoundRectangle(bounds, round, round);
 		if (!singleBorder) {

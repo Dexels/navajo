@@ -69,7 +69,7 @@ public class GradientDesktop extends JDesktopPane {
 		g.fillRect(0, 0, apenoot.getWidth(), apenoot.getHeight());
 
 		Point previous = new Point(res / 10, apenoot.getHeight());
-		;
+		
 		g.setColor(Color.blue);
 
 		g.drawLine(0, apenoot.getHeight() - 48, apenoot.getWidth(), apenoot.getHeight() - 48);

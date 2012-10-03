@@ -214,7 +214,6 @@ public class RhinoRunner {
 					a.setOutputDoc(conditionError.getConditionErrors());
 				} else {
 					Object o = e.getValue();
-					;
 					logger.error("ScriptStack: \n{}",e.getScriptStackTrace());
 					//				o = Context.jsToJava(o, Object.class);
 					System.err.println("o: " + o);

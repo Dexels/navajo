@@ -185,7 +185,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
     	return result.toString();
     }
     
-    private final Persistable memoryOperation(String key, String service, Persistable document, long expirationInterval, boolean read ) throws Exception {
+    private final Persistable memoryOperation(String key, String service, Persistable document, boolean read ) throws Exception {
 
     	if (read) {
 //    		SoftReference<PersistentEntry> pc = null;
@@ -243,7 +243,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 
     	OutputStream os = null;
     	try {
-        	memoryOperation(key, service, document, -1, false);
+        	memoryOperation(key, service, document, false);
             
         	os = sharedPersistenceStore.getOutputStream(CACHE_PATH + "/" + getServicePath(key), key, false);
         	((Navajo) document).write(os);
@@ -281,7 +281,6 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
                 if (isExpired(sharedPersistenceStore.lastModified(path, key), expirationInterval)) {
                 	System.err.println("REMOVING EXPIRED FILE CACHE ENTRY: " + key);
                 	sharedPersistenceStore.remove(path, key);
-                	// TODO:  Construct ClearCacheEvent....
                 	NavajoEventRegistry.getInstance().publishEvent(new CacheExpiryEvent(service, key));
                     return null;
                 }
@@ -294,7 +293,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
                 }
                 System.err.println("CACHE READ TOOK: " + ( System.currentTimeMillis() - start ) + " millis.");
                 if (inMemoryCache.get(key) == null) {
-                	memoryOperation(key, service, pc, expirationInterval, false);
+                	memoryOperation(key, service, pc, false);
                 }
                 
             } else {
@@ -423,7 +422,6 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 				p.setKey(ncse.getWebservice());
 				p.setDoClear(true);
 			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
 				AuditLog.log("PERSISTENCEMANAGER", e.getMessage(), Level.SEVERE);
 			}
 			

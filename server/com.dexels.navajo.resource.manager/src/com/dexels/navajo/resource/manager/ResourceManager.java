@@ -42,14 +42,12 @@ public class ResourceManager {
 	
 	public void activate(ComponentContext cc) {
 		this.bundleContext = cc.getBundleContext();
-		System.err.println("Bundlecontext: "+bundleContext);
 		setupResources();
 		setupTesterUser();
 
 	}
 	
 	public void deactivate() {
-		logger.info("Deactivating context!");
 		unloadDataSources();
 		try {
 			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient",null);
@@ -120,7 +118,7 @@ public class ResourceManager {
 	}
 	private ServiceReference<DataSource> getDataSourceReference(String shortName) throws InvalidSyntaxException {
 		logger.debug("Getting datasource reference: "+shortName);
-		Collection<ServiceReference<DataSource>> dlist = bundleContext.getServiceReferences(DataSource.class,"(name=navajo.resource."+shortName+")");
+		Collection<ServiceReference<DataSource>> dlist = bundleContext.getServiceReferences(DataSource.class,"(name="+shortName+")");
 		if(dlist.size()!=1) {
 			logger.info("Matched: {} datasources.",dlist.size());
 		}
@@ -129,7 +127,7 @@ public class ResourceManager {
 	}
 
 	private ServiceReference<Object> getResourceReference(String shortName) throws InvalidSyntaxException {
-		Collection<ServiceReference<Object>> dlist = bundleContext.getServiceReferences(Object.class,"(name=navajo.resource."+shortName+")");
+		Collection<ServiceReference<Object>> dlist = bundleContext.getServiceReferences(Object.class,"(name="+shortName+")");
 		if(dlist.size()!=1) {
 			logger.info("Matched: {} datasources.",dlist.size());
 		}
@@ -175,6 +173,10 @@ public class ResourceManager {
 		try {
 			logger.info("Looking for datasources in: "+navajoServerContext.getInstallationPath());
 			File install = new File(navajoServerContext.getInstallationPath(),"config/datasources.xml");
+			if(!install.exists()) {
+				logger.warn("Datasources file: "+install.getAbsolutePath()+" does not exist, not injecting explicit datasources");
+				return;
+			}
 			fis = new FileInputStream(install);
 			loadResourceTml(fis);
 			fis.close();
@@ -220,6 +222,15 @@ public class ResourceManager {
 	private void processClientBundle(ResourceBundle b) {
 		try {
 			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient",null);
+			Dictionary<String,String> dt = new Hashtable<String,String>();
+			dt.put("user", b.getString("username"));
+			dt.put("password", b.getString("password"));
+			config.update(dt);
+		} catch (IOException e) {
+			logger.error("Adding configuration for client.properties: ", e);
+		}
+		try {
+			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient.legacy",null);
 			Dictionary<String,String> dt = new Hashtable<String,String>();
 			dt.put("user", b.getString("username"));
 			dt.put("password", b.getString("password"));

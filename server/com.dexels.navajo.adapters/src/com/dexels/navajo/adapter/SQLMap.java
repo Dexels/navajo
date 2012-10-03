@@ -4,16 +4,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringReader;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
-import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,15 +28,11 @@ import com.dexels.navajo.adapter.sqlmap.SQLBatchUpdateHelper;
 import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
 import com.dexels.navajo.adapter.sqlmap.SQLMapHelper;
 import com.dexels.navajo.adapter.sqlmap.SessionIdentification;
+import com.dexels.navajo.adapter.sqlmap.StreamClosable;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.document.types.Memo;
-import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.document.types.NavajoType;
-import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.AuditLogEvent;
 import com.dexels.navajo.jdbc.JDBCMappable;
@@ -56,7 +48,6 @@ import com.dexels.navajo.mapping.compiler.meta.SQLFieldDependency;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.Repository;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.AuditLog;
@@ -147,7 +138,7 @@ import com.dexels.navajo.util.AuditLog;
  */
 
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
-public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, Debugable {
+public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, Debugable, StreamClosable {
 
 	protected final static int INFINITE = -1;
 	protected final String USERPWDDELIMITER = "/";
@@ -943,7 +934,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				SQLMapHelper.setParameter(statement, 
 										  param, 
 										  i,
-										  this.getClass(),
+										  this,
 										  this.getDbIdentifier(),
 										  this.isLegacyMode, 
 										  this.debug, 
@@ -990,7 +981,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 												   this.parameters, 
 												   this.myAccess,
 												   this.getDbIdentifier(),
-												   this.getClass(), 
+												   this, 
 												   this.isLegacyMode, 
 												   this.debug,
 												   updateOnly);
@@ -1634,6 +1625,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		return this.debug;
 	}
 	
+	@Override
 	public void addToBinaryStreamList(InputStream binaryStream) {
 		binaryStreamList.add(binaryStream);
 	}

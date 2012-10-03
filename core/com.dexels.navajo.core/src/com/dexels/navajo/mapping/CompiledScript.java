@@ -201,7 +201,7 @@ private final static Logger logger = LoggerFactory
 	  // Example:
 	  // dependentObjects.add( new IncludeDependency(IncludeDependency.getScriptTimeStamp("MyScript1"), "MyScript1"));
 	  // dependentObjects.add( new IncludeDependency(IncludeDependency.getScriptTimeStamp("MyScript2"), "MyScript2"));
-  };
+  }
   
   public ArrayList<Dependency> getDependentObjects() {
 	  return new ArrayList<Dependency>();

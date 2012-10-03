@@ -5,5 +5,5 @@
    <service>
       <provide interface="javax.servlet.Servlet"/>
    </service>
-   <property name="alias" type="String" value="/example"/>
+   <property name="alias" type="String" value="example"/>
 </scr:component>

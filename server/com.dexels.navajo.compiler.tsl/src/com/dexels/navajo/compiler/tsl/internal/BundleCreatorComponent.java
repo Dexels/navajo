@@ -37,6 +37,7 @@ import com.dexels.navajo.compiler.ScriptCompiler;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.server.CompiledScriptFactory;
 import com.dexels.navajo.server.NavajoIOConfig;
+import com.dexels.navajo.server.UserException;
 
 public class BundleCreatorComponent implements BundleCreator {
 
@@ -545,7 +546,8 @@ public class BundleCreatorComponent implements BundleCreator {
 		CompiledScriptFactory result = (CompiledScriptFactory) tr.waitForService(12000);
 		if(result==null) {
 			logger.error("Service resolution failed!");
-		}
+			throw new UserException(-1,"Can not resolve bundle for service: "+rpcName);
+		} 
 		CompiledScript cc = result.getCompiledScript();
 		tr.close();
 		return cc;

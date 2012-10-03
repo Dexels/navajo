@@ -150,14 +150,14 @@ public class GenericThread implements Runnable, Mappable {
 	/**
 	 * Implements the "work".
 	 */
-	public void worker() {};
+	public void worker() {}
 	 
 	/**
 	 * Implements what to do in case of termination.
 	 * Override this method if you want to do something special.
 	 * 
 	 */
-	public void terminate() {};
+	public void terminate() {}
 	 
 	/**
 	 * Called if killed by some life cycle manager.

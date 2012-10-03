@@ -198,7 +198,7 @@ public class TransitionElement extends WorkflowModelElement {
 		xe.setAttribute("nextstate", target.getId());
 		xe.setAttribute("trigger", trigger);
 		for (int i = 0; i < params.size(); i++) {
-			ParamElement st = (ParamElement) params.get(i);
+			ParamElement st = params.get(i);
 			xe.addChild(st.toXml());
 		}
 

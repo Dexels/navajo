@@ -12,21 +12,44 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
+import com.dexels.navajo.client.context.ClientContext;
 import com.dexels.navajo.client.context.NavajoRemoteContext;
 import com.dexels.navajo.client.nql.NqlContextApi;
 import com.dexels.navajo.client.nql.OutputCallback;
-import com.dexels.navajo.client.nql.internal.NQLContext;
 import com.dexels.navajo.document.NavajoException;
 
 public class NqlServlet extends HttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1365612001727053259L;
+	private NqlContextApi nqlContext;
+	private ClientContext clientContext;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(NqlServlet.class);
+
+	public NqlContextApi getNqlContext() {
+		return nqlContext;
+	}
+
+	public void setNqlContext(NqlContextApi nqlContext) {
+		this.nqlContext = nqlContext;
+	}
+	public void clearNqlContext(NqlContextApi nqlContext) {
+		this.nqlContext = null;
+	}
+
+	public ClientContext getClientContext() {
+		return clientContext;
+	}
+
+	public void setClientContext(ClientContext clientContext) {
+		this.clientContext = clientContext;
+	}
+
+	public void clearClientContext(ClientContext clientContext) {
+		this.clientContext = null;
+	}
+
 	
 	@Override
 	protected void doGet(final HttpServletRequest req,
@@ -44,13 +67,13 @@ public class NqlServlet extends HttpServlet {
 			}
 			return;
 		}
-		NavajoRemoteContext nrc = new NavajoRemoteContext();
+		NavajoRemoteContext nrc =  new NavajoRemoteContext();
 		nrc.setupClient(server, username, password, req.getServerName(),
 				req.getServerPort(), req.getContextPath(),"/PostmanLegacy");
 
 		
-		NqlContextApi nc = new NQLContext();
-		nc.setNavajoContext(nrc);
+		NqlContextApi nc = getNqlContext();//new NQLContext();
+		nc.setNavajoContext(getClientContext());
 		
 		try {
 			nc.executeCommand(query,new OutputCallback() {
@@ -90,6 +113,14 @@ public class NqlServlet extends HttpServlet {
 		resp.getWriter().write(
 				"Hi " + username + " looks like we're in business!\nPING OK\n");
 		return true;
+	}
+
+	public void activate() {
+		logger.info("Activating NQL Servlet");
+	}
+
+	public void deactivate() {
+		logger.info("Deactivating NQL Servlet");
 	}
 
 }

@@ -23,7 +23,7 @@ import com.dexels.navajo.client.server.ServerInstance;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.listener.NavajoContextListener;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
-import com.dexels.navajo.server.listener.nql.NqlServlet;
+import com.dexels.navajo.server.listener.nql.legacy.NqlServlet;
 
 public class ServerInstanceImpl implements ServerInstance {
 //	private String projectName;
