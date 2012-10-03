@@ -374,7 +374,7 @@ public static final Message[] addMessage(Navajo doc, Message parent, String mess
 	/**
 	 * Added 22/5/2007: support for relative message creation.
 	 */
-    if ( message.indexOf(Navajo.MESSAGE_SEPARATOR) != -1 && parent == null ) {
+    if ( !message.startsWith("/") && message.indexOf(Navajo.MESSAGE_SEPARATOR) != -1 && parent == null ) {
       throw new MappingException(
           "No submessage constructs allowed in non-nested <message> tags: " + message);
     }
@@ -795,78 +795,36 @@ public static final boolean isObjectMappable(String className) throws UserExcept
    * public void setNoot(double d);
    */
   public final static Object getAttributeValue(MappableTreeNode o, String name, Object[] arguments) throws com.dexels.
-      navajo.server.UserException,
-      MappingException {
+  navajo.server.UserException,
+  MappingException {
 
-    Object result = null;
-    // The ../ token is used to denote the parent of the current MappableTreeNode.
-    // e.g., $../myField or $../../myField is used to identifiy respectively the parent
-    // and the grandparent of the current MappableTreeNode.
+	  Object result = null;
+	  // The ../ token is used to denote the parent of the current MappableTreeNode.
+	  // e.g., $../myField or $../../myField is used to identifiy respectively the parent
+	  // and the grandparent of the current MappableTreeNode.
 
-    
-    while ( (name.indexOf("../")) != -1) {
-      o = o.parent;
-      if (o == null) {
-        throw new MappingException("Null parent object encountered: " + name);
-      }
-      name = name.substring(3, name.length());
-    }
 
-    result = getAttributeObject(o, name, arguments);
+	  while ( (name.indexOf("../")) != -1) {
+		  o = o.parent;
+		  if (o == null) {
+			  throw new MappingException("Null parent object encountered: " + name);
+		  }
+		  name = name.substring(3, name.length());
+	  }
 
-    if (result != null) {
+	  result = getAttributeObject(o, name, arguments);
 
-      //String type = result.getClass().getName();
-
-      if (result instanceof java.lang.String) {
-        return result;
-      } else
-      if (result instanceof java.lang.Long) {
-        return new Integer(result.toString());
-      }
-      else if (result instanceof java.lang.Float) {
-        return new Double(result.toString());
-      }
-      else if (result instanceof java.lang.Boolean) {
-        return result;
-      }
-      else if (result instanceof com.dexels.navajo.document.types.Binary) {
-        return result;
-      }
-      else if (result instanceof com.dexels.navajo.document.types.ClockTime) {
-        return result;
-      }
-      else if (result instanceof com.dexels.navajo.document.types.Money) {
-        return result;
-      }
-      else if (result instanceof java.util.Date) {
-        return result;
-      }
-      else if (result instanceof java.lang.Integer) {
-        return result;
-      }
-      else if (result instanceof java.lang.Double) {
-        return result;
-      }
-      else if (result.getClass().getName().startsWith("[Ljava.util.Vector")) {
-        return result;
-      }
-      else if (result.getClass().getName().startsWith("[L")) {
-        // Encountered array cast to ArrayList.
-        Object[] array = (Object[]) result;
-        ArrayList list = new ArrayList();
-        for (int i = 0; i < array.length; i++) {
-          list.add(array[i]);
-        }
-        return list;
-      }
-      else {
-        return result.toString();
-      }
-    }
-    else {
-      return null;
-    }
+	  if ( result != null && result.getClass().isArray() ) {
+		  // Encountered array cast to ArrayList.
+		  Object[] array = (Object[]) result;
+		  ArrayList list = new ArrayList();
+		  for (int i = 0; i < array.length; i++) {
+			  list.add(array[i]);
+		  }
+		  return list;
+	  } else {
+		  return result;
+	  }
   }
   
   public static void main(String [] args) throws Exception {
