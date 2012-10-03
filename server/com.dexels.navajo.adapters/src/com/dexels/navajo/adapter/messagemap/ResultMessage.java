@@ -165,6 +165,14 @@ public class ResultMessage implements Mappable {
 		}
 	}
 	
+	public Property getPropertyObject(String s) throws UserException {
+		if ( msg.getProperty(s) != null ) {
+			return msg.getProperty(s);
+		} else {
+			throw new UserException(-1, "Exception in getting property: " + s);
+		}
+	}
+
 	public void store() throws MappableException, UserException {
 		processSuppressedProperties(this.msg); 
 	}
