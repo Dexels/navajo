@@ -6,14 +6,21 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.Set;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
+import org.osgi.framework.BundleListener;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.osgi.service.obr.Repository;
 import org.osgi.service.obr.RepositoryAdmin;
 import org.osgi.service.obr.Requirement;
@@ -29,13 +36,18 @@ public class PullComponent {
 	private RepositoryAdmin myRepositoryAdmin = null;
 	private ConfigurationAdmin myConfigurationAdmin = null;
 	private final Set<ContextIdentifier> contextIdentifiers = new HashSet<ContextIdentifier>();
-
+	private BundleContext bundleContext = null;
+	private EventAdmin eventAdmin = null;
+	
 	private final static Logger logger = LoggerFactory
 			.getLogger(PullComponent.class);
+	private long total;
+	private int current;
 
 	@SuppressWarnings("rawtypes")
 	public void activate(ComponentContext cc) {
 		long stamp;
+		this.bundleContext  = cc.getBundleContext();
 		try {
 			stamp = System.currentTimeMillis();
 
@@ -45,14 +57,6 @@ public class PullComponent {
 			String contextPath = (String) properties.get("contextPath");
 			String deployment = (String) properties.get("deployment");
 			String profile = (String) properties.get("profile");
-//			String contextName = (String) properties.get("contextName");
-
-//			boolean matches = hasContext(contextName);
-//			if (!matches) {
-//				logger.info("Skipping context: " + contextName
-//						+ " it doesn't match any attached context");
-//				return;
-//			}
 
 			try {
 				setupTipi(contextPath, deployment, profile);
@@ -141,7 +145,17 @@ public class PullComponent {
 
 	private boolean installDependency(String[] dependencies,
 			boolean performDeploy) {
+		
+		BundleListener bl = new BundleListener() {
+			
+			@Override
+			public void bundleChanged(BundleEvent be) {
+				logger.info("OBR delta: "+be.getBundle()+" phase:"+ be.getType());
+			}
+		};
+		bundleContext.addBundleListener(bl);
 		Resolver res = myRepositoryAdmin.resolver();
+		total = 0;
 		for (String dep : dependencies) {
 			Resource[] result = myRepositoryAdmin.discoverResources(dep);
 			logger.info("Adding dep: " + dep + " # of results: "
@@ -150,11 +164,17 @@ public class PullComponent {
 			for (Resource resource : result) {
 				res.add(resource);
 				logger.info("Added resource: "+resource.getSymbolicName());
+				final Map properties = resource.getProperties();
+				long size = (Long) properties.get("size");
+				total+= size;
+				logger.info("Properties: "+properties); 
 			}
-			logger.info("Enf of dep: "+dep);
+			logger.info("End of dep: "+dep);
 		}
 		boolean resolved = res.resolve();
 		logger.info("Dependencies resolve: " + resolved);
+		logger.info("Total bytes to install: "+total);
+		try {
 		if (!resolved) {
 			Requirement[] req = res.getUnsatisfiedRequirements();
 			for (Requirement requirement : req) {
@@ -165,15 +185,67 @@ public class PullComponent {
 		} else {
 			if (performDeploy) {
 				logger.info("Added resources: "+res.getAddedResources().length+" req: "+res.getRequiredResources().length);
-				
-				res.deploy(true);
+				final Map<String,Long> bundleSizes = new HashMap<String, Long>();
+				Resource[] add = res.getAddedResources();
+				for (Resource resource : add) {
+					bundleSizes.put(resource.getSymbolicName(), (Long) resource.getProperties().get("size"));
+				}
+				BundleListener monitor = null;
+				try {
+					monitor = new BundleListener() {
+						
+						@Override
+						public void bundleChanged(BundleEvent be) {
+							final String name = be.getBundle().getSymbolicName();
+							Long size = bundleSizes.get(name);
+							if(size!=null) {
+								addProgress(name,size);
+							} else {
+								logger.warn("No size for bundle: "+name);
+							}
+						}
+					};
+					bundleContext.addBundleListener(monitor);
+					res.deploy(true);
+				} catch (Exception e) {
+					logger.error("Deployment failed: ",e);
+					return false;
+				} finally {
+					if(monitor!=null) {
+						bundleContext.removeBundleListener(monitor);
+					}
+				}
 			}
 			return true;
+		} 
+			
+		}finally {
+			if(bundleContext!=null) {
+				bundleContext.removeBundleListener(bl);
+			}
+		}
+	}
+
+	protected void addProgress(String name, long size) {
+		logger.info("Progress: "+name+" size: "+size);
+		this.current+=size;
+		final double frac = current/total;
+		logger.info("Current progress = "+current+" / "+total+" = "+frac);
+		Map<String,Object> props = new HashMap<String, Object>();
+		props.put("current",current);
+		props.put("total",total);
+		props.put("progress",frac);
+		props.put("name",name);
+
+		if(eventAdmin!=null) {
+			Event e = new Event("obr",props);
+			eventAdmin.postEvent(e);
 		}
 	}
 
 	public void deactivate() {
 		logger.info("Obr Component deactivated");
+		this.bundleContext = null;
 	}
 
 	private void debugRepositories() throws Exception {
@@ -240,6 +312,19 @@ public class PullComponent {
 	 */
 	public void clearRepositoryAdmin(RepositoryAdmin admin) {
 		this.myRepositoryAdmin = null;
+	}
+	
+	public void setEventAdmin(EventAdmin admin) {
+		this.eventAdmin = admin;
+	}
+
+	/**
+	 * the EventAdmin to remove
+	 * 
+	 * @param admin
+	 */
+	public void clearEventAdmin(EventAdmin admin) {
+		this.eventAdmin = null;
 	}
 
 	public void addConfigurationAdmin(ConfigurationAdmin admin) {
