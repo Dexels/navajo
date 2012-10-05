@@ -468,7 +468,7 @@ public class BundleCreatorComponent implements BundleCreator {
 //		File bundleJar = getScriptBundleJar(rpcName);
 		installBundle(rpcName, failures, success, skipped, force);
 		
-		logger.info("On demand installation finished, waiting for service...");
+		logger.debug("On demand installation finished, waiting for service...");
 		CompiledScript cs = waitForService(rpcName);
 		
 		return cs;
@@ -533,7 +533,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	private CompiledScript waitForService(String rpcPath) throws Exception {
 		String rpcName = rpcPath.replaceAll("/", ".");
 		String filterString = "(navajo.scriptName="+rpcName+")";
-		logger.info("waiting for service...: "+rpcName);
+		logger.debug("waiting for service...: "+rpcName);
 		Filter filter = bundleContext.createFilter(filterString);
 		ServiceTracker tr = new ServiceTracker(bundleContext,filter,null);
 //		ServiceReference<CompiledScriptFactory>[] ss = (ServiceReference<CompiledScriptFactory>[]) bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filterString);
