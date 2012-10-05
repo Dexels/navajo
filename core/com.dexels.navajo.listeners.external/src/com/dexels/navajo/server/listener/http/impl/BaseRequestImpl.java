@@ -121,7 +121,7 @@ public class BaseRequestImpl extends BaseInMemoryRequest implements
 		BufferedReader r;
 		InputStream is = getRequestInputStream();
 		Navajo in = null;
-		logger.info("Send encoding: "+acceptEncoding);
+		logger.debug("Send encoding: "+acceptEncoding);
 		if (acceptEncoding != null
 				&& acceptEncoding.equals(AsyncRequest.COMPRESS_JZLIB)) {
 			r = new BufferedReader(new java.io.InputStreamReader(
