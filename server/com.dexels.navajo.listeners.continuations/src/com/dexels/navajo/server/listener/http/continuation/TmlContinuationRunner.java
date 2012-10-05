@@ -23,7 +23,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 
 	private final Continuation continuation;
 	private Navajo outDoc;
-	
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(TmlContinuationRunner.class);
@@ -31,7 +30,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	public TmlContinuationRunner(AsyncRequest request, LocalClient lc) {
 		super(request,lc);
 		continuation = ContinuationSupport.getContinuation(request.getHttpRequest());
-		continuation.setTimeout(Long.MAX_VALUE);
+		continuation.setTimeout(10000000);
 	}
 	
 	@Override
@@ -132,7 +131,6 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	}
 
 	public void suspendContinuation() {
-		logger.info("==============Suspending continuation");
 		continuation.suspend();
 	}
 	
