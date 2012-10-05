@@ -1,6 +1,10 @@
 package com.dexels.navajo.rhino;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 
 import org.mozilla.javascript.Context;
@@ -49,6 +53,16 @@ public class NavajoScopeManager {
 		freeScopes.add(scope);
 	}
 
+	public void runScript(String fileName, Reader r, Map<String, Object> parameters) throws IOException {
+		Context cx = Context.getCurrentContext();
+		ScriptableObject globalScope = (ScriptableObject) NavajoScopeManager.getInstance().getScope();
+		for (Entry<String,Object> e : parameters.entrySet()) {
+			ScriptableObject.putProperty(globalScope, e.getKey(),Context.javaToJS(e.getValue(), globalScope));
+		}
+		cx.evaluateReader(globalScope, r, fileName, 1, null);
+		Context.exit();
+		NavajoScopeManager.getInstance().releaseScope(globalScope);
+	}
 //	private void cleanScope(Scriptable scope) {
 //	}
 }

@@ -18,6 +18,9 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	private static BundleContext defaultContext = null;
 	
+	public static boolean isOSGi() {
+		return defaultContext!=null;
+	}
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
