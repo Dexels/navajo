@@ -77,9 +77,10 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 			Object source = instantiate(settings);
 			ServiceRegistration<DataSource> reg =  bundleContext.registerService(DataSource.class,(DataSource)source, settings);
 			registryMap.put(pid, reg);
+			logger.info("Resource registered for: "+pid);
 //			contextMap.put(pid, (DataSource) source);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error registering service for: "+pid);
 		}
 	}
 	

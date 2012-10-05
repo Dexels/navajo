@@ -68,7 +68,7 @@ public abstract class ManagedResourceFactory<T> implements ManagedServiceFactory
 	@Override
 	public void updated(String pid, Dictionary settings)
 			throws ConfigurationException {
-//		logger.info("Configuration received, pid: "+pid);
+		logger.info("Configuration received, pid: "+pid+" class: "+serviceClass);
 		try {
 			Object source = instantiate(bundleContext, pid,settings);
 			ServiceRegistration<T> reg =  (ServiceRegistration<T>) bundleContext.registerService(serviceClass.getName(),source, settings);
