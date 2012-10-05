@@ -33,9 +33,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.script.api.SchedulerRegistry;
-import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
-import com.dexels.navajo.server.listener.http.schedulers.DummyScheduler;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
@@ -61,11 +59,11 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 			super.start(bc);
 			bundleContext = bc;
 			if(bc!=null) {
-				DummyScheduler ds = new DummyScheduler();
-				 Dictionary<String, Object> wb = new Hashtable<String, Object>();
-				 wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.DummyScheduler");
-				 wb.put("ranking", 0);
-				reference = bc.registerService(TmlScheduler.class.getName(), ds, wb);
+//				DummyScheduler ds = new DummyScheduler();
+//				 Dictionary<String, Object> wb = new Hashtable<String, Object>();
+//				 wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.DummyScheduler");
+//				 wb.put("ranking", 0);
+//				reference = bc.registerService(TmlScheduler.class.getName(), ds, wb);
 
 				
 				 Dictionary<String, Object> listener = new Hashtable<String, Object>();
