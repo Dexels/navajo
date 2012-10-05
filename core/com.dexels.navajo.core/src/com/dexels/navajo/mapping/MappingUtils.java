@@ -57,7 +57,7 @@ public final class MappingUtils {
         return result;
     }
 
-    public static final String determineNavajoType(Object o) throws TMLExpressionException {
+    public static final String determineNavajoType(Object o)  {
 
          if (o == null) {
            return "";
