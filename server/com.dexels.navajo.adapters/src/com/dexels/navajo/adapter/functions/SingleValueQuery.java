@@ -2,6 +2,9 @@ package com.dexels.navajo.adapter.functions;
 
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.jdbc.JDBCFactory;
 import com.dexels.navajo.jdbc.JDBCMappable;
 import com.dexels.navajo.parser.FunctionInterface;
@@ -24,6 +27,9 @@ public class SingleValueQuery extends FunctionInterface {
   public static final String USERDELIMITER = "@";
   private String dbIdentifier = null;
   
+  private final static Logger logger = LoggerFactory
+		.getLogger(SingleValueQuery.class);
+
   public String getDbIdentifier() { return this.dbIdentifier; }
   public void setDbIdentifier(String dbIdentifier) {
       this.dbIdentifier = dbIdentifier;
@@ -85,7 +91,7 @@ public class SingleValueQuery extends FunctionInterface {
 
 		  }
 		  if (transactionContext != -1) {
-			  System.out.println("SINGLEVALUEQUERY: USING TRANSACTIONCONTEXT: " + transactionContext);
+			  logger.debug("SINGLEVALUEQUERY: USING TRANSACTIONCONTEXT: " + transactionContext);
 			  sql.setTransactionContext(transactionContext);
 		  }
 		  sql.setQuery(query);
