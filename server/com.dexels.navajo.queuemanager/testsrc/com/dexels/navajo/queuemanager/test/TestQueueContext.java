@@ -3,7 +3,7 @@ package com.dexels.navajo.queuemanager.test;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.dexels.navajo.queuemanager.api.QueueContext;
+import com.dexels.navajo.listener.http.queuemanager.api.QueueContext;
 
 
 public class TestQueueContext implements QueueContext {

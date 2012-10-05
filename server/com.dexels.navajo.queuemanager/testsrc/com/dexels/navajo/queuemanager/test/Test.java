@@ -7,11 +7,10 @@ import javax.script.ScriptException;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.queuemanager.NavajoSchedulingException;
-import com.dexels.navajo.queuemanager.QueueManager;
-import com.dexels.navajo.queuemanager.QueueManagerFactory;
-import com.dexels.navajo.queuemanager.api.InputContext;
-import com.dexels.navajo.queuemanager.impl.NavajoInputContext;
+import com.dexels.navajo.listener.http.queuemanager.api.InputContext;
+import com.dexels.navajo.listener.http.queuemanager.api.NavajoSchedulingException;
+import com.dexels.navajo.listener.http.queuemanager.api.QueueManager;
+import com.dexels.navajo.listener.http.queuemanager.api.QueueManagerFactory;
 
 public class Test {
 
@@ -37,11 +36,13 @@ public class Test {
 	}
 
 
+	@SuppressWarnings("unused")
 	private static InputContext getInputContext() throws IOException {
         FileReader fr = new FileReader("testsrc/testinput.tml");
 		Navajo n = NavajoFactory.getInstance().createNavajo(fr);
 		fr.close();
-		return new NavajoInputContext(n,null);
+		return null;
+//		return new NavajoInputContext(n,null);
 	}
 
 	

@@ -35,13 +35,17 @@ import org.osgi.framework.ServiceRegistration;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
-	
+	private static BundleContext defaultBundleContext = null;
 	@SuppressWarnings("rawtypes")
 	private ServiceRegistration registration;
 
+	public static boolean isOSGi() {
+		return defaultBundleContext!=null;
+	}
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
+		defaultBundleContext = bc;
 		try {
 			if(bc!=null) {
 				Dictionary<String, Object> wb = new Hashtable<String, Object>();
@@ -75,6 +79,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 		if(registration!=null) {
 			registration.unregister();
 		}
+		defaultBundleContext = null;
 		super.stop(arg0);
 	}
 	

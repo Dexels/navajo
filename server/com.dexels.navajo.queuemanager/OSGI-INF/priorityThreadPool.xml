@@ -4,6 +4,6 @@
    <service>
       <provide interface="com.dexels.navajo.script.api.TmlScheduler"/>
    </service>
-   <reference bind="setQueueManager" cardinality="1..1" interface="com.dexels.navajo.queuemanager.QueueManager" name="QueueManager" policy="dynamic" unbind="clearQueueManager"/>
+   <reference bind="setQueueManager" cardinality="1..1" interface="com.dexels.navajo.listener.http.queuemanager.api.QueueManager" name="QueueManager" policy="dynamic" unbind="clearQueueManager"/>
    <property name="service.ranking" type="Integer" value="10"/>
 </scr:component>
