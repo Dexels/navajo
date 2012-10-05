@@ -104,7 +104,7 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
      * Setups the basic properties for {@link DataSource}s
      * @throws Exception 
      */
-    private DataSource setup(OracleConnectionPoolDataSource base, Properties props) throws Exception {
+    public DataSource setup(OracleConnectionPoolDataSource base, Properties props) throws Exception {
 //    	 Oracle settings: {service.pid=navajo.resource.oracle-1332524829528-5, user=knvbkern, url=jdbc:oracle:thin:@10.0.0.1:1521:1521:aardnoot, service.factoryPid=navajo.resource.oracle, password=knvb, name=navajo.resource.default, maxPoolSize=10, initialPoolSize=10}
 //
     	if (props == null) {

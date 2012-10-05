@@ -33,11 +33,14 @@ public class Activator implements BundleActivator {
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
-		OracleJDBCDataSourceService factory = new OracleJDBCDataSourceService();
-		
-        factory.start();
-
-        managedFactory = new JdbcManagedResourceFactory(bundleContext, factory,  "navajo.resource.oracle",  "Navajo Oracle Resource Driver");
+		try {
+			OracleJDBCDataSourceService factory = new OracleJDBCDataSourceService();
+			factory.start();
+			managedFactory = new JdbcManagedResourceFactory(bundleContext, factory,  "navajo.resource.oracle",  "Navajo Oracle Resource Driver");
+		} catch (Exception e) {
+			logger.error("Error starting oracle");
+		}
+		logger.info("Bundle started");
 	}
 
 	/*
