@@ -14,11 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.queuemanager.QueueManager;
-import com.dexels.navajo.queuemanager.NavajoSchedulingException;
-import com.dexels.navajo.queuemanager.QueueManagerFactory;
-import com.dexels.navajo.queuemanager.api.InputContext;
-import com.dexels.navajo.queuemanager.api.QueueContext;
+import com.dexels.navajo.listener.http.queuemanager.api.InputContext;
+import com.dexels.navajo.listener.http.queuemanager.api.NavajoSchedulingException;
+import com.dexels.navajo.listener.http.queuemanager.api.QueueContext;
+import com.dexels.navajo.listener.http.queuemanager.api.QueueManager;
+import com.dexels.navajo.listener.http.queuemanager.api.QueueManagerFactory;
 import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.Scheduler;
 import com.dexels.navajo.script.api.ThreadPoolRequestQueue;
@@ -71,7 +71,6 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	private QueueManager queueManager;
 	private final Map<String,RequestQueue> queueMap = new HashMap<String,RequestQueue>();
 	
-	private Map<String,Long> warnings = new HashMap<String,Long>();
 	private static String RESOLUTION_SCRIPT_DOES_NOT_EXIST = "resolutionscript";
 	
 	// Keep track of last throttle timestamp.
@@ -206,20 +205,6 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		
 	}
 
-	private final void logWarning(String type, String message) {
-		
-		synchronized (warnings) {
-			Long warning = warnings.get(type);
-			if ( warning == null ) {
-				warning = Long.valueOf(0);
-				warnings.put(type, warning);
-			} 
-			if ( warning.longValue() < 100 ) {
-				System.err.println(message);
-				warning = warning.longValue() + 1;
-			}	
-		}
-	}
 	
 	private final RequestQueue determineThreadPool(final TmlRunnable myRunner, final boolean priority) {
 		
@@ -285,7 +270,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 //			}
 		} catch (NavajoSchedulingException e) {
 			if(e.getReason()==NavajoSchedulingException.SCRIPT_PROBLEM || e.getReason() == NavajoSchedulingException.UNKNOWN) {
-				logWarning(RESOLUTION_SCRIPT_DOES_NOT_EXIST, "Could not find queue resolution script, using default queue.");
+				logger.warn(RESOLUTION_SCRIPT_DOES_NOT_EXIST, "Could not find queue resolution script, using default queue.",e);
 				return getDefaultQueue();
 			}
 			e.printStackTrace(System.err);
