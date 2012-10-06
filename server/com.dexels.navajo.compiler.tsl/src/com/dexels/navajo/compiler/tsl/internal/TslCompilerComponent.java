@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import com.dexels.navajo.compiler.tsl.custom.PackageReportingClassLoader;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
+import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class TslCompilerComponent implements ScriptCompiler {
@@ -28,7 +30,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	 * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String)
 	 */
 	@Override
-	public void compileTsl(String scriptPath, String compileDate) throws Exception {
+	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies) throws Exception {
 		String packagePath = null;
 		String script = null;
 		if(scriptPath.indexOf('/')>=0) {
@@ -55,13 +57,13 @@ public class TslCompilerComponent implements ScriptCompiler {
 //    	   scriptPackage = "defaultPackage";
 //       }
 		String scriptString = scriptPath.replaceAll("/", "_");
-		compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc, navajoIOConfig);
+		compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc, navajoIOConfig,dependencies);
 		//		logger.info("Javafile: "+javaFile);
 //		System.err.println("Packages: "+packages);
 		generateFactoryClass(script, packagePath);
 
 		generateManifest(scriptString,"1.0.0",packagePath, script,packages,compileDate);
-		generateDs(packagePath, script);
+		generateDs(packagePath, script,dependencies);
 	}
 	
 	private void generateFactoryClass(String script, String packagePath) throws IOException {
@@ -155,7 +157,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 //	</scr:component>
 //
 	
-	private void generateDs(String packagePath, String script) throws IOException {
+	private void generateDs(String packagePath, String script,List<Dependency> dependencies) throws IOException {
 		
 		String fullName;
 		if (packagePath.equals("")) {
@@ -184,6 +186,14 @@ public class TslCompilerComponent implements ScriptCompiler {
 		xe.addChild(service);
 		XMLElement provide = new CaseSensitiveXMLElement("provide");
 		service.addChild(provide);
+		for (Dependency dependency : dependencies) {
+			XMLElement dep = new CaseSensitiveXMLElement("reference");
+			dep.setAttribute("bind", "setDependency");
+			dep.setAttribute("deptype", dependency.getType());
+			dep.setAttribute("depId", dependency.getId());
+			dep.setAttribute("depStamp", dependency.getCurrentTimeStamp());
+			xe.addChild(dep);
+		}
 		provide.setAttribute("interface", "com.dexels.navajo.server.CompiledScriptFactory");
 		XMLElement property = new CaseSensitiveXMLElement("property");
 		xe.addChild(property);

@@ -113,6 +113,7 @@ public class CommandHandler {
 		ServiceRegistration<?> sr = bundleContext.registerService(c.getClass().getName(), c,dd );
 		registeredCommands.add(sr);
 		logger.info("registered: "+command+" with class: "+c.getClass().getName());
+
 	}
 
 	public void deactivate() {

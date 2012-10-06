@@ -16,7 +16,7 @@
 	<c:forEach var="folder" items="${serverContext.folders}">
 		<c:if test="${folder.name != 'CVS'}">
 			<li>
-				<a href="index.jsp?view=editor&cmd=setFolder&path=${folder.name}/&service=${param.service}">${folder.name }</a>
+				<a href="index.jsp?view=editor&cmd=setFolder&path=${folder.name}/&service=${param.service}">${folder.name }</a> <a href="compile?script=${folder.name}">[recompile]</a>
 			</li>
 		</c:if>
 	</c:forEach>

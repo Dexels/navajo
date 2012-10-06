@@ -35,6 +35,7 @@ import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.compiler.ScriptCompiler;
 import com.dexels.navajo.mapping.CompiledScript;
+import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.server.CompiledScriptFactory;
 import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.navajo.server.UserException;
@@ -108,7 +109,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		File f = new File(scriptFolder,script);
 //		boolean isInDefaultPackage = script.indexOf('/')==-1;
 		final String formatCompilationDate = formatCompilationDate(compilationDate);
-
+		List<Dependency> dependencies = new ArrayList<Dependency>();
 		if(f.isDirectory()) {
 			compileAllIn(f,compilationDate, failures,  success,skipped,force,keepIntermediate);
 		} else {
@@ -123,7 +124,7 @@ public class BundleCreatorComponent implements BundleCreator {
 //				logger.debug("Skipping up-to-date script: "+scriptFile.getAbsolutePath());
 				skipped.add(script);
 			} else {
-				scriptCompiler.compileTsl(script,formatCompilationDate);
+				scriptCompiler.compileTsl(script,formatCompilationDate,dependencies);
 				javaCompiler.compileJava(script);
 				javaCompiler.compileJava(script+"Factory");
 				createBundleJar(script,keepIntermediate);
