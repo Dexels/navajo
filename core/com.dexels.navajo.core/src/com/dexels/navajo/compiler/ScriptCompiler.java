@@ -1,5 +1,9 @@
 package com.dexels.navajo.compiler;
 
+import java.util.List;
+
+import com.dexels.navajo.mapping.compiler.meta.Dependency;
+
 
 /**
  * Interface for TSL compiling service
@@ -8,6 +12,6 @@ package com.dexels.navajo.compiler;
  */
 public interface ScriptCompiler {
 
-	void compileTsl(String scriptPath, String compileDate) throws Exception;
+	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies) throws Exception;
 
 }

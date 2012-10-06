@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -63,6 +64,7 @@ import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
+import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -630,7 +632,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
   }
 
   @SuppressWarnings("unchecked")
-public String messageNode(int ident, Element n, String className, String objectName) throws Exception {
+public String messageNode(int ident, Element n, String className, String objectName, List<Dependency> deps) throws Exception {
     StringBuffer result = new StringBuffer();
 
 
@@ -904,7 +906,7 @@ result.append(printIdent(ident + 4) +
 
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
-          result.append(compile(ident + 4, children.item(i), subClassName, subObjectName));
+          result.append(compile(ident + 4, children.item(i), subClassName, subObjectName,deps));
         }
       }
 
@@ -1008,7 +1010,7 @@ result.append(printIdent(ident + 4) +
 
       NodeList children = nextElt.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
-        result.append(compile(ident + 4, children.item(i), subClassName, subObjectName));
+        result.append(compile(ident + 4, children.item(i), subClassName, subObjectName,deps));
       }
 
       contextClass = contextClassStack.pop();
@@ -1023,7 +1025,7 @@ result.append(printIdent(ident + 4) +
       NodeList children = n.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         result.append(compile(ident + 2, children.item(i), className,
-                              objectName));
+                              objectName,deps));
       }
     }
     
@@ -1288,7 +1290,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 
   }
 
-  private final void checkDependentFieldResource(Class localContextClass, String fieldName, ArrayList<String> expressionValues) {
+  private final void checkDependentFieldResource(Class localContextClass, String fieldName, ArrayList<String> expressionValues, List<Dependency> deps) {
 	  
 	  if ( !(HasDependentResources.class.isAssignableFrom(localContextClass) )) {
 		  return;
@@ -1320,6 +1322,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 					  try {
 						  Constructor c = depClass.getConstructor(new Class[]{long.class, String.class, String.class, String.class});
 						  AdapterFieldDependency afd = (AdapterFieldDependency) c.newInstance(new Object[]{-1, localContextClass.getName(), dependentFields[i].getType(), expressionValue});
+						  deps.add(afd);
 						  AdapterFieldDependency [] allDeps = (AdapterFieldDependency []) afd.getMultipleDependencies();
 						  for ( int a = 0; a < allDeps.length; a++ ) {
 							  addDependency("dependentObjects.add( new " + depClass.getName() + "(-1, \"" + allDeps[a].getJavaClass() + 
@@ -1327,7 +1330,9 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 									  allDeps[a].getType() + "\", \"" +  allDeps[a].getId() + "\"));\n", 
 									  "FIELD" + allDeps[a].getJavaClass() + ";" + allDeps[a].getType() + ";" + 
 									  fieldName + ";" + allDeps[a].getId());
+							  deps.add(allDeps[a]);
 						  }
+						  
 					  } catch (Exception e) {
 //						  e.printStackTrace();
 					  } 
@@ -1336,6 +1341,8 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 							  dependentFields[i].getType() + "\", \"" +  expressionValue + "\"));\n", 
 							  "FIELD" + localContextClass.getName() + ";" + dependentFields[i].getType() + ";" + 
 							  fieldName + ";" + expressionValue);
+					  Dependency d = new AdapterFieldDependency(-1, localContextClass.getName(), dependentFields[i].getType(), expressionValue);
+					  deps.add(d);
 				  }
 			  }
 		  }
@@ -1344,7 +1351,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
   
   @SuppressWarnings("unchecked")
 public String fieldNode(int ident, Element n, String className,
-                          String objectName) throws Exception {
+                          String objectName, List<Dependency> dependencies) throws Exception {
 
     StringBuffer result = new StringBuffer();
 
@@ -1424,14 +1431,14 @@ public String fieldNode(int ident, Element n, String className,
           } catch (Exception e) { throw new Exception("Could not find adapter: " + className,e); }
           
           addDependency("dependentObjects.add( new JavaDependency( -1, \"" + className + "\"));\n", "JAVA"+className);
-          
+          dependencies.add(new JavaDependency(-1, className));
          
         String type = null;
        
         try {
         	logger.info("Attr: "+attribute+" class: "+localContextClass);
         	type = MappingUtils.getFieldType(localContextClass, attribute);
-        	checkDependentFieldResource(localContextClass, attribute, exprValues);	
+        	checkDependentFieldResource(localContextClass, attribute, exprValues,dependencies);	
         } catch (Exception e) { 
         	isDomainObjectMapper = localContextClass.isAssignableFrom(DomainObjectMapper.class);
         	if ( isDomainObjectMapper ) {
@@ -1644,7 +1651,7 @@ public String fieldNode(int ident, Element n, String className,
 
         children = mapNode.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
-          result.append(compile(ident + 2, children.item(i), type, subObjectsName + "[" + loopCounterName + "]"));
+          result.append(compile(ident + 2, children.item(i), type, subObjectsName + "[" + loopCounterName + "]",dependencies));
         }
 
         ident = ident-2;
@@ -1728,7 +1735,7 @@ public String fieldNode(int ident, Element n, String className,
         // Recursively dive into children.
         children = mapNode.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
-          result.append(compile(ident + 2, children.item(i), type, subObjectsName ));
+          result.append(compile(ident + 2, children.item(i), type, subObjectsName,dependencies ));
         }  
         
         ident = ident-2;        
@@ -1841,7 +1848,7 @@ public String fieldNode(int ident, Element n, String className,
     return result.toString();
   }
 
-public String mapNode(int ident, Element n) throws Exception {
+public String mapNode(int ident, Element n, List<Dependency> deps) throws Exception {
 
 
     StringBuffer result = new StringBuffer();
@@ -2006,7 +2013,7 @@ public String mapNode(int ident, Element n) throws Exception {
       children = response.item(0).getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
-          result.append(compile(ident + 2, children.item(i), className, aoName));
+          result.append(compile(ident + 2, children.item(i), className, aoName,deps));
         }
       }
       result.append(printIdent(ident) + "} else if (" + asyncStatusName +
@@ -2014,7 +2021,7 @@ public String mapNode(int ident, Element n) throws Exception {
       children = request.item(0).getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
-          result.append(compile(ident + 2, children.item(i), className, aoName));
+          result.append(compile(ident + 2, children.item(i), className, aoName,deps));
         }
       }
       result.append(printIdent(ident) + "} else if (" + asyncStatusName +
@@ -2022,7 +2029,7 @@ public String mapNode(int ident, Element n) throws Exception {
       children = running.item(0).getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
-          result.append(compile(ident + 2, children.item(i), className, aoName));
+          result.append(compile(ident + 2, children.item(i), className, aoName,deps));
         }
       }
       result.append(printIdent(ident) + "}\n");
@@ -2086,7 +2093,7 @@ public String mapNode(int ident, Element n) throws Exception {
       NodeList children = n.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         result.append(compile(ident + 2, children.item(i), className,
-                              objectName));
+                              objectName,deps));
       }
 
       result.append(printIdent(ident) + "} catch (Exception e" + ident +
@@ -2186,7 +2193,7 @@ public String mapNode(int ident, Element n) throws Exception {
 
   }
 
-  public String compile(int ident, Node n, String className, String objectName) throws
+  public String compile(int ident, Node n, String className, String objectName, List<Dependency> deps) throws
       Exception {
     StringBuffer result = new StringBuffer();
     //System.err.println("in compile(), className = " + className + ", objectName = " + objectName);
@@ -2197,11 +2204,11 @@ public String mapNode(int ident, Element n) throws Exception {
     if (n.getNodeName().equals("map")) {
       result.append(printIdent(ident) +
                     "{ // Starting new mappable object context. \n");
-      result.append(mapNode(ident + 2, (Element) n));
+      result.append(mapNode(ident + 2, (Element) n,deps));
       result.append(printIdent(ident) + "} // EOF MapContext \n");
     }
     else if (n.getNodeName().equals("field")) {
-      result.append(fieldNode(ident, (Element) n, className, objectName));
+      result.append(fieldNode(ident, (Element) n, className, objectName,deps));
     }
     else if ((n.getNodeName().equals("param") && !((Element) n).getAttribute("type").equals("array")  ) ||
              n.getNodeName().equals("property")) {
@@ -2218,7 +2225,7 @@ public String mapNode(int ident, Element n) throws Exception {
       methodBuffer.append(printIdent(ident) + "private final void " + methodName + "(Access access) throws Exception {\n\n");
       ident+=2;
       methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
-      methodBuffer.append(messageNode(ident, (Element) n, className, objectName));
+      methodBuffer.append(messageNode(ident, (Element) n, className, objectName,deps));
       methodBuffer.append(printIdent(ident) + "}\n");
       ident-=2;
       methodBuffer.append("}\n");
@@ -2248,7 +2255,7 @@ public String mapNode(int ident, Element n) throws Exception {
     return result.toString();
   }
 
-  private final void generateFinalBlock( Document d, StringBuffer generatedCode ) throws Exception {
+  private final void generateFinalBlock( Document d, StringBuffer generatedCode, List<Dependency> deps) throws Exception {
       generatedCode.append("public final void finalBlock(Access access) throws Exception {\n");
 
       NodeList list = d.getElementsByTagName("finally");
@@ -2256,7 +2263,7 @@ public String mapNode(int ident, Element n) throws Exception {
       if (list != null && list.getLength() > 0) {
         NodeList children = list.item(0).getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
-          String str = compile(0, children.item(i), "", "");
+          String str = compile(0, children.item(i), "", "",deps);
           generatedCode.append(str);
         }
       }
@@ -2365,7 +2372,7 @@ public String mapNode(int ident, Element n) throws Exception {
  }
 
 
-  private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, Writer fo) throws SystemException{
+  private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, Writer fo, List<Dependency> deps) throws SystemException{
 	  
 	  boolean debugInput = false;
 	  boolean debugOutput = false;
@@ -2470,7 +2477,7 @@ public String mapNode(int ident, Element n) throws Exception {
 	      generateValidations(tslDoc, result);
 
 	      // Generate final block code.
-	      generateFinalBlock(tslDoc, result);
+	      generateFinalBlock(tslDoc, result,deps);
 
 	      String methodDef = "public final void execute(Access access) throws Exception { \n\n";
 	      result.append(methodDef);
@@ -2494,7 +2501,7 @@ public String mapNode(int ident, Element n) throws Exception {
 	      //System.err.println("FOUND " + children.getLength() + " CHILDREN");
 	      for (int i = 0; i < children.getLength(); i++) {
 	    	
-	        String str = compile(0, children.item(i), "", "");
+	        String str = compile(0, children.item(i), "", "",deps);
 	        result.append(str);
 	      }
 
@@ -2561,7 +2568,7 @@ public String mapNode(int ident, Element n) throws Exception {
 	    } 
   }
     
-  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, Writer outputWriter) throws SystemException {
+  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, Writer outputWriter, List<Dependency> deps) throws SystemException {
 
 	    String fullScriptPath = scriptPath + "/" + packagePath + "/" + script + ".xml";
 	    
@@ -2584,7 +2591,7 @@ public String mapNode(int ident, Element n) throws Exception {
 	    	}
 	    	
 	    	InputStream sis = navajoIOConfig.getScript(packagePath+"/"+script);
-	    	logger.info("Getting script: "+packagePath+"/"+script);
+	    	logger.debug("Getting script: "+packagePath+"/"+script);
 	    	if ( ScriptInheritance.containsInject(sis)) {
 	    		// Inheritance preprocessor before compiling.
 	    		InputStream ais = null;
@@ -2599,7 +2606,7 @@ public String mapNode(int ident, Element n) throws Exception {
 		                 IncludeDependency.getScriptTimeStamp(inheritedScripts.get(i)) + "\"), \"" + 
 		                 inheritedScripts.get(i) + "\"));\n", "INHERIT"+inheritedScripts.get(i));
 			}
-			compileScript(is, packagePath, script, scriptPath, outputWriter);
+			compileScript(is, packagePath, script, scriptPath, outputWriter,deps);
 			
 		} catch (Exception e) {
 			throw new SystemException(-1, "Error while generating Java code for script: " + script, e);
@@ -2620,9 +2627,9 @@ public String mapNode(int ident, Element n) throws Exception {
 //  }
 
 
-  public String compileToJava(String script,
-          String input, String output, String packagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig) throws Exception {
-	  return compileToJava(script, input, output, packagePath, packagePath, classLoader, navajoIOConfig);
+  private String compileToJava(String script,
+          String input, String output, String packagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig,List<Dependency> deps) throws Exception {
+	  return compileToJava(script, input, output, packagePath, packagePath, classLoader, navajoIOConfig,deps);
   }
   
   /**
@@ -2638,7 +2645,7 @@ public String mapNode(int ident, Element n) throws Exception {
    * @throws Exception
    */
   public String compileToJava(String script,
-                                        String input, String output, String packagePath, String scriptPackagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig) throws Exception {
+                                        String input, String output, String packagePath, String scriptPackagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig, List<Dependency> deps) throws Exception {
     String javaFile = output + "/" + script + ".java";
    TslCompiler tslCompiler = new TslCompiler(classLoader,navajoIOConfig);
      try {
@@ -2654,8 +2661,12 @@ public String mapNode(int ident, Element n) throws Exception {
 //    	   packagePath = packagePath + "/";
 //       }
 
-       tslCompiler.compileScript(bareScript, input, output,scriptPackagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"));
-        return javaFile;
+       tslCompiler.compileScript(bareScript, input, output,scriptPackagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"),deps);
+       for(String s: tslCompiler.dependentObjects) {
+    	   logger.warn("DEPENDENCY: "+s);
+       }
+       
+       return javaFile;
      }
      catch (Throwable ex) {
        logger.error("Error compiling script: "+script,ex);
@@ -2673,7 +2684,7 @@ public String mapNode(int ident, Element n) throws Exception {
   }
   
   private void compileStandAlone(boolean all, String script,
-                                        String input, String output, String packagePath, String[] extraclasspath, String configPath) {
+                                        String input, String output, String packagePath, String[] extraclasspath, String configPath, List<Dependency> deps) {
      try {
       TslCompiler tslCompiler = new TslCompiler(null);
         try {
@@ -2689,7 +2700,7 @@ public String mapNode(int ident, Element n) throws Exception {
           //System.err.println("Using package path: "+packagePath);
 		Writer w = navajoIOConfig.getOutputWriter(output, packagePath, script, ".java");
 
-		tslCompiler.compileScript(bareScript, input, output,packagePath,w);
+		tslCompiler.compileScript(bareScript, input, output,packagePath,w,deps);
           
           ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
         }
@@ -2738,7 +2749,6 @@ public String mapNode(int ident, Element n) throws Exception {
 //      System.err.println("\n\nCLASSPATH: " + classPath.toString());
       compiler.compile(output + "/" + script + ".java");
       
-      logger.info("Compilertext: "+myWriter.toString());
       
       
       //System.out.println("COMPILED JAVA FILE INTO CLASS FILE");
@@ -2749,7 +2759,7 @@ public String mapNode(int ident, Element n) throws Exception {
     }
   }
 
-  public ArrayList<String> compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig) {
+  private ArrayList<String> compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig) {
     System.err.println("Entering compiledirectory: " + currentDir + " output: " +
                        outputPath + " offset: " + offsetPath);
     ArrayList<String> files = new ArrayList<String>();
@@ -2786,7 +2796,7 @@ public String mapNode(int ident, Element n) throws Exception {
             String javaFile = null;
             try {
                 javaFile = compileToJava(compileName, currentDir.toString(),
-                              outputPath.toString(), offsetPath,classLoader,navajoConfig);
+                              outputPath.toString(), offsetPath,classLoader,navajoConfig,new ArrayList<Dependency>());
                 files.add(javaFile);
             } catch (Exception e) {
                logger.error("Error: ", e);
@@ -2833,8 +2843,10 @@ public String mapNode(int ident, Element n) throws Exception {
   }
 
   public static void compileDirectory(File currentDir, File outputPath, String offsetPath, String[] classpath,String configPath) {
+
 	  TslCompiler compiler = new TslCompiler(null, new LegacyNavajoIOConfig());
-	System.err.println("Entering compiledirectory: "+currentDir+" output: "+outputPath+" offset: "+offsetPath);
+	List<Dependency> deps = new ArrayList<Dependency>();
+	  System.err.println("Entering compiledirectory: "+currentDir+" output: "+outputPath+" offset: "+offsetPath);
 
     File[] scripts = null;
     File f = new File(currentDir,offsetPath);
@@ -2860,7 +2872,8 @@ public String mapNode(int ident, Element n) throws Exception {
             } else {
               compileName = offsetPath+"/"+name;
             }
-            compiler.compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath,classpath,configPath);
+            compiler.compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath,classpath,configPath,deps);
+            logger.info("Standalone compile finished. Detected dependencies: "+deps);
           }
         }
       }

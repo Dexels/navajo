@@ -3,6 +3,8 @@ package com.dexels.navajo.server;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -24,6 +26,7 @@ import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.MappingUtils;
+import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.server.scriptengine.GenericScriptEngine;
 import com.dexels.navajo.util.AuditLog;
 
@@ -322,7 +325,7 @@ public final class GenericHandler extends ServiceHandler {
     public static CompiledScript compileScript(Access a, StringBuffer compilerErrors) throws Exception {
     	
     	NavajoConfigInterface properties = DispatcherFactory.getInstance().getNavajoConfig();
-    	
+    	List<Dependency> deps = new ArrayList<Dependency>();
     	String scriptPath = properties.getScriptPath();
     	
     		Object [] all = getScriptPathServiceNameAndScriptFile(a.rpcName, a.betaUser);
@@ -356,7 +359,7 @@ public final class GenericHandler extends ServiceHandler {
     								tslCompiler.compileScript(serviceName, 
     										scriptPath,
     										properties.getCompiledScriptPath(),
-    										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"));
+    										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps);
     							} catch (SystemException ex) {
     								sourceFile.delete();
     								AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER , ex.getMessage(), Level.SEVERE, a.accessID);
