@@ -106,16 +106,16 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 
 	}
 
-	private URL createNavajoUrl(Navajo emailNavajo) throws IOException {
+	public URL createNavajoUrl(Navajo emailNavajo) throws IOException {
 		URL u;
 		Message parts = emailNavajo.getMessage("Mail/Parts");
 		if (parts == null) {
 			u = parkSingle(emailNavajo, true);
 		} else {
 			String contentType = (String) emailNavajo.getProperty("Mail/ContentType").getTypedValue();
+			System.err.println("ContentType: "+contentType);
 			if(contentType.startsWith("multipart/alternative")) {
 				u = parkAlternative(emailNavajo, true);
-				
 			} else {
 				u = parkMultipart(emailNavajo, true);
 			}
@@ -188,7 +188,7 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 		if (doDeleteOnExit) {
 			mailFile.deleteOnExit();
 		}
-		return mailFile.toURI().toURL();
+		return mailFileOutput.toURI().toURL();
 
 	}
 
