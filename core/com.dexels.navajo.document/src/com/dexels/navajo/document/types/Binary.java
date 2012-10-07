@@ -1,17 +1,41 @@
 package com.dexels.navajo.document.types;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.PushbackReader;
+import java.io.RandomAccessFile;
+import java.io.Reader;
+import java.io.Serializable;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.DigestOutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.List;
 
-
-import org.dexels.utils.*;
+import org.dexels.utils.Base64;
+import org.dexels.utils.Base64DecodingFinishedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.metadata.*;
-import com.dexels.navajo.document.saximpl.qdxml.*;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.metadata.FormatDescription;
+import com.dexels.navajo.document.saximpl.qdxml.QDParser;
 
 /**
  * <p>
@@ -60,6 +84,10 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     public final static String TEXT = "plain/text";
 
     private FormatDescription currentFormatDescription;
+
+	private MessageDigest messageDigest;
+
+	private byte[] digest;
     
     private final static HashMap<String,Binary> persistedBinaries = new HashMap<String,Binary>();
     
@@ -78,6 +106,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 
     public Binary(InputStream is, boolean lazy) {
         super(Property.BINARY_PROPERTY);
+        createDigest();
         if (lazy) {
         	throw new UnsupportedOperationException("Constructing lazy binary based on a stream. This is not working.");
 //            lazyInputStream = is;
@@ -89,10 +118,19 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
             }
             this.mimetype = guessContentType();
         }
-     }    
+     }
+
+	private void createDigest() {
+		try {
+			this.messageDigest = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e1) {
+			logger.warn("Failed creating messageDigest in binary. Expect problems", e1);
+		}
+	}    
     
     public Binary() {
         super(Property.BINARY_PROPERTY);
+        createDigest();
         setMimeType(guessContentType());
      }    
     
@@ -143,25 +181,29 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
     
     private void loadBinaryFromStream(InputStream is, boolean close) throws IOException, FileNotFoundException {
-        int b = -1;
         OutputStream fos = createTempFileOutputStream();
-		byte[] buffer = new byte[1024];
-		try {
-			while ((b = is.read(buffer, 0, buffer.length)) != -1) {
-				fos.write(buffer, 0, b);
-			}
-		} finally {
+        messageDigest.reset();
+        copyResource(fos, is,close);
+//		byte[] buffer = new byte[1024];
+//		try {
+//			while ((b = is.read(buffer, 0, buffer.length)) != -1) {
+//				fos.write(buffer, 0, b);
+//				logger.info("Updating digest: "+b);
+//				messageDigest.update(buffer, 0, b);
+//			}
+//		} finally {
+//
+//			try {
+//				fos.close();
+//			} catch (IOException e) {}
+//			if ( close ) {
+//				try {
+//					is.close();
+//				} catch (IOException e) {}
+//			}
+//		}
 
-			try {
-				fos.close();
-			} catch (IOException e) {}
-			if ( close ) {
-				try {
-					is.close();
-				} catch (IOException e) {}
-			}
-		}
-
+		setDigest(messageDigest.digest());
     	if(NavajoFactory.getInstance().isSandboxMode()) {
     		inMemory = ((ByteArrayOutputStream)fos).toByteArray();
     	}
@@ -171,8 +213,40 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         }
         
     }
+    
+    public int hashCode() {
+    	if(getDigest()!=null) {
+    		return getHexDigest().hashCode();
+    	}
+    	return super.hashCode();
+    }
+    
+    public String getHexDigest() {
+    	return bytesToHex(getDigest());
+    }
 
-    private OutputStream createTempFileOutputStream() throws IOException, FileNotFoundException {
+    public void setDigest(byte[] digest) {
+    	this.digest = digest;
+	}
+
+    public static String bytesToHex(byte[] bytes) {
+        final char[] hexArray = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+        char[] hexChars = new char[bytes.length * 2];
+        int v;
+        for ( int j = 0; j < bytes.length; j++ ) {
+            v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+    
+	private OutputStream createTempFileOutputStream() throws IOException, FileNotFoundException {
+		if(messageDigest==null) {
+			createDigest();
+		} else {
+			messageDigest.reset();
+		}
     	if(NavajoFactory.getInstance().isSandboxMode()) {
     		ByteArrayOutputStream baos = new ByteArrayOutputStream() {
     			public void close() {
@@ -184,15 +258,21 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 	    			inMemory = toByteArray();
     			}
     		};
+    		OutputStream dos = new DigestOutputStream(baos, messageDigest);
     		
-    		return baos;
+    		return dos;
     	} else {
             dataFile = File.createTempFile("binary_object", "navajo", NavajoFactory.getInstance().getTempDir());
             
             FileOutputStream fos = new FileOutputStream(dataFile);
-            return fos;
+            OutputStream dos = new DigestOutputStream(fos, messageDigest);
+            return dos;
     	}
     }
+	
+	public byte[] getDigest() {
+		return this.digest;
+	}
 
     public Binary(File f) throws IOException {
         this(f, true);
@@ -228,7 +308,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     public Binary(byte[] data) {
         super(Property.BINARY_PROPERTY);
         //Thread.dumpStack();
-
+        createDigest();
         // TODO: For sandbox, set inMemory directly to data
         if (data != null) {
             try {
@@ -250,6 +330,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
      */
     public Binary(Reader reader) throws IOException {
         super(Property.BINARY_PROPERTY);
+//        createDigest();
         parseFromReader(reader);
     }
 
@@ -271,7 +352,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         fos.close();
         this.mimetype = getSubType("mime");
         this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
-    }
+		setDigest(messageDigest.digest());
+   }
 
 
     /**
@@ -455,19 +537,24 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 
     }
 
-    private final void copyResource(OutputStream out, InputStream in) throws IOException {
+    private final void copyResource(OutputStream out, InputStream in, boolean closeInput) throws IOException {
         byte[] buffer = new byte[1024];
         int read;
-        while ((read = in.read(buffer)) > -1) {
-            out.write(buffer, 0, read);
-        }
-        in.close();
+        try {
+			while ((read = in.read(buffer)) > -1) {
+			    out.write(buffer, 0, read);
+			}
+		} finally {
+			if(closeInput) {
+				in.close();
+			}
+		}
     }
 
     public final void write(OutputStream to) throws IOException {
         InputStream in = getDataAsStream();
         if (in != null) {
-            copyResource(to, in);
+            copyResource(to, in,true);
             try {
                 in.close();
             } catch (Exception e) {
@@ -533,14 +620,21 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         this.mimetype = mime;
     }
 
-
     
     public final boolean equals(Object o) {
     	if(!(o instanceof Binary)) {
         	return false;
     	} 
     	Binary b = (Binary)o;
-    	logger.info("Comparing binary sizes: "+b.getLength()+" with "+getLength());
+    	
+    	if(b.getDigest()!=null && getDigest()!=null) {
+    		logger.debug("Digests found, comparing those");
+    		final String other = b.getHexDigest();
+			final String mine = getHexDigest();
+			return mine.equals(other);
+    	}
+    
+    	logger.warn("Digest based equality failed. Comparing binary sizes: "+b.getLength()+" with "+getLength());
     	if(b.getLength()!=getLength()) {
     		return false;
     	}
@@ -548,7 +642,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	if(!(getMimeType().equals(b.getMimeType()))) {
     		return false;
     	}
-    	// TODO REALLY implement this 
     	logger.info("DUBIOUS EQUALITY IN BINARY!");
     	
     	Thread.dumpStack();
@@ -556,6 +649,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	
     }
 
+    
     
     // for sorting. Not really much to sort
     public final int compareTo(Binary o) {
@@ -574,7 +668,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	File f = File.createTempFile("navajo", "."+getExtension());
     	FileOutputStream fos = new FileOutputStream(f);
     	InputStream dataAsStream = getDataAsStream();
-		copyResource(fos, dataAsStream);
+		copyResource(fos, dataAsStream,true);
     	fos.flush();
     	dataAsStream.close();
     	fos.close();
@@ -616,7 +710,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         	 return null;
          }
    		 try {
-			copyResource(os, dataAsStream);
+			copyResource(os, dataAsStream,true);
 			 os.close();
 			 dataAsStream.close();
 		} catch (IOException e) {
@@ -643,7 +737,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         final OutputStream os = Base64.newEncoder(sw);
         InputStream dataInStream = getDataAsStream();
         if (dataInStream!=null) {
-        	copyResource(os, dataInStream);
+        	copyResource(os, dataInStream,true);
 		}
 //        logger.info("Copied to stream");
         os.close();
@@ -782,9 +876,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	aStream.defaultWriteObject();
     	//manually serialize superclass
     	if ( dataFile != null ) {
-    		copyResource(aStream, new FileInputStream(dataFile));
+    		copyResource(aStream, new FileInputStream(dataFile),true);
     	} else if ( lazySourceFile != null ) {
-    		copyResource(aStream, new FileInputStream(lazySourceFile));
+    		copyResource(aStream, new FileInputStream(lazySourceFile),true);
     	}
     	aStream.flush();
     }
