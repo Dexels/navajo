@@ -850,7 +850,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		cp.setMode(getMode());
 		cp.setType(getType());
 
-
+		// If definition message is available, copy it as well.
+		if ( isArrayMessage() && getDefinitionMessage() != null ) {
+			cp.setDefinitionMessage(getDefinitionMessage());
+		}
+		
 		if (messageList != null) {
 
 			for (int i = 0; i < messageList.size(); i++) {
