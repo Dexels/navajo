@@ -166,7 +166,6 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 				con.setRequestProperty("Content-type", contentType);
 			}
 			if ( textContent != null ) {
-				//System.err.println("textContent: " + textContent);
 				OutputStreamWriter osw = null;
 				osw = new OutputStreamWriter(con.getOutputStream());
 				try {
@@ -176,7 +175,6 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 				}
 			} else if ( content != null ) {
 				OutputStream os = null;
-				//System.err.println("content: "  + content);
 				os = con.getOutputStream();
 				try {
 					content.write(os);

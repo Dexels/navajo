@@ -30,6 +30,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.xmlmap.TagMap;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -45,7 +48,9 @@ public class XMLMap extends TagMap implements Mappable {
 	public Binary content = null;
 	public String stringContent = null;
 	public boolean debug = false;
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(XMLMap.class);
+	
 	public void load(Access access) throws MappableException, UserException {
 	}
 
@@ -83,7 +88,7 @@ public class XMLMap extends TagMap implements Mappable {
 		String r = getString();
 		Binary b = new Binary(r.getBytes());
 		if ( debug ) {
-			System.err.println(new String(b.getData()));
+			logger.debug(new String(b.getData()));
 		}
 		return b;
 	}

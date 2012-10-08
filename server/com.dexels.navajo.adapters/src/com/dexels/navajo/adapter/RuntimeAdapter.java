@@ -71,9 +71,6 @@ public void setRun(boolean b) throws UserException {
 			  if (parameterList != null)
 				  command += " " + parameterList;
 
-			  //System.err.println("in RuntimeAdapter: about to execute: " + command);
-
-			  //Runtime rt = Runtime.getRuntime();
 			  StringTokenizer tk = new StringTokenizer(command, ";");
 
 			  while (tk.hasMoreTokens()) {
@@ -130,19 +127,13 @@ public void setRun(boolean b) throws UserException {
 
 				  while (!(errorFinished && outputFinished)) {
 					  Thread.sleep(1000);
-					  //System.err.println("WAITING FOR SCRIPT TO FINISH....");
 				  }
 
 				  output += outputWriter.toString();
 				  error += errorWriter.toString();
-				  //println("output = " + output);
-				  //System.err.println("error = " + error);
 			  }
-
-			  //System.err.println("in RuntimeAdapter: finished script.");
 		  } catch (Exception e) {
-			  e.printStackTrace(System.err);
-			  throw new UserException(-1, e.getMessage());
+			  throw new UserException(-1, e.getMessage(),e);
 		  }
 
 	  }

@@ -22,7 +22,6 @@ public final class MultipleValueQuery extends SingleValueQuery {
 					result.add(resultSet[i].getColumnValue(new Integer(0)));
 				}
 			} else {
-				//System.err.println("NO RECORDS FOUND");
 			}
 		} catch (Exception e) {
 			sql.kill();

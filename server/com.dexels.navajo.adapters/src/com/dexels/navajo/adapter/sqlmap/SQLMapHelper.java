@@ -261,7 +261,6 @@ public class SQLMapHelper {
 		case Types.NUMERIC:
 			int scale = meta.getScale(columnIndex);
 
-			// if (debug) System.err.println(columnIndex + ", prec = " + prec + ", scale =  " + scale);
 			if (scale <= 0) {
 	            int tmpValueNumeric = rs.getInt(columnIndex);
 	            if (!rs.wasNull()) {

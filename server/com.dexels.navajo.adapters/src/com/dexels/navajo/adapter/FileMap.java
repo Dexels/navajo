@@ -11,6 +11,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.filemap.FileLineMap;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -36,7 +39,9 @@ public class FileMap implements Mappable {
 	public boolean dosMode = false;
 
 	public Binary content;
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(FileMap.class);
+	
 	private ArrayList<FileLineMap> lineArray = null;
 
 	/* (non-Javadoc)
@@ -79,7 +84,7 @@ public class FileMap implements Mappable {
 		if (persist && fileName != null) {
 			File f = new File(fileName);
 			if (f.exists()) {
-				System.err.println("Deleting existing file");
+				logger.info("Deleting existing file");
 				f.delete();
 			}
 			BufferedOutputStream bos = null;

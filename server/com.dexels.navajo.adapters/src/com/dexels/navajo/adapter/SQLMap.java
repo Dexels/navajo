@@ -253,7 +253,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			Access.writeToConsole(myAccess, "Creating new datasource: " + dataSourceName + "\n");
 		}
 
-		System.err.println("Creating new datasource: " + dataSourceName);
+		logger.info("Creating new datasource: " + dataSourceName);
 
 		driver = body.getProperty("driver").getValue(); 
 		// NavajoUtils.getPropertyValue(body, "driver", true);
@@ -519,8 +519,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					}
 				}
 			} catch (SQLException sqle) {
-				System.err.println("COULD NOT RESET SCHEMA");
-				System.err.println(resetSession);
+				logger.warn("COULD NOT RESET SCHEMA. session: "+resetSession);
 				AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access"));
 				throw new UserException(-1, sqle.getMessage(), sqle);
 			} finally {
@@ -581,12 +580,10 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	}
 
 	public int getTotalElements(String s) throws UserException {
-		// System.err.println("in getTotalElements(" + s+ ")");
 		if (resultSet == null) {
 			getResultSet();
 		}
 		// If endIndex is set, determine row count first.
-		// System.err.println("CALCULATE ROWCOUNT...........................................................................");
 		if (lazyTotal == 0) { // lazyTotal has not been set from outside.
 			if (viewCount <= (getEndIndex(s) - getStartIndex(s))) {
 				lazyTotal = viewCount;
@@ -883,7 +880,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					stmt.executeUpdate();
 					stmt.close();
 				} catch (Exception e) {
-					System.err.println(e.getMessage());
+					logger.error("Looking for schema based on username: "+this.alternativeUsername,e);
 				}
 			}
 

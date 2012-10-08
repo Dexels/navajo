@@ -91,7 +91,6 @@ public class SQLBatchUpdateHelper {
 								boolean isLegacyMode,
 								boolean debug, 
 								boolean updateOnly) throws SQLException {
-//		System.err.println("UpdateOnly: " + updateOnly);
 		this.sql = sql;
 		this.conn = conn;
 		this.params = params;

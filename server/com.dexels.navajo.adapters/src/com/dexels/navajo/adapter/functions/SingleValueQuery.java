@@ -119,7 +119,6 @@ public class SingleValueQuery extends FunctionInterface {
 		  if (sql.getRowCount() > 0) {
 			  result = sql.getColumnValue(new Integer(0));
 		  } else {
-			  //System.err.println("NO RECORDS FOUND");
 		  }
 	  } catch (Exception e) {
 		  sql.kill();

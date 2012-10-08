@@ -17,6 +17,9 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
@@ -38,6 +41,9 @@ public class BaseLdapAdapter implements Mappable {
 	public String server = DEFAULT_LDAP_SERVER;
 	public String username = DEFAULT_LDAP_USERNAME;
 	public String password = DEFAULT_LDAP_PASSWORD;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseLdapAdapter.class);
 
 	private InitialDirContext initialDir = null;
 
@@ -102,7 +108,7 @@ public class BaseLdapAdapter implements Mappable {
 			NamingEnumeration e = dc.list("");
 			while (e.hasMore()) {
 				Object o = e.next();
-				System.err.println("o: " + o);
+				logger.info("o: " + o);
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -238,23 +244,23 @@ public class BaseLdapAdapter implements Mappable {
 		}
 		mandatory.put("objectclass",objectclass);
 
-		System.err.println("Insert Entity: "+keyAttribute+" mapping: "+mapping);
+		logger.info("Insert Entity: "+keyAttribute+" mapping: "+mapping);
 		for (int i = 0; i < objectClasses.length; i++) {
-			System.err.println("CLASS: "+objectClasses[i]);
+			logger.info("CLASS: "+objectClasses[i]);
 		}
 		
 //		String keyProperty = (String) mapping.get(keyAttribute);
 //		String keySource = entity.getProperty(keyProperty).getValue();
 //		BasicAttributes mandatory = new BasicAttributes(keyAttribute, "" + entity.getProperty(keyProperty).getValue() + "");
 //		BasicAttribute objectclass = null;
-//		System.err.println("Create new objectClass");
+//		logger.info("Create new objectClass");
 //		objectclass = new BasicAttribute("objectClass");
 //		for (int i = 0; i < objectClasses.length; i++) {
-//			System.err.println("Adding: "+objectClasses[i]+" to objectClass");
+//			logger.info("Adding: "+objectClasses[i]+" to objectClass");
 //			objectclass.add(objectClasses[i]);
 //		}
 //		mandatory.put("objectClass",objectclass);
-		System.err.println("Added to objectClass");
+		logger.info("Added to objectClass");
 		for (Iterator iter = mapping.keySet().iterator(); iter.hasNext();) {
 			String currentAttribute = (String) iter.next();
 			if (currentAttribute.equals(keyAttribute)) {
@@ -269,11 +275,11 @@ public class BaseLdapAdapter implements Mappable {
 						continue;
 					}
 					String propertyValue = "" + value.trim() + "";
-					System.err.println("AddingProp: >"+currentAttribute+"="+propertyValue+"<");
+					logger.info("AddingProp: >"+currentAttribute+"="+propertyValue+"<");
 					BasicAttribute attr = new BasicAttribute(currentAttribute, propertyValue);
 					mandatory.put(attr);
 				} else {
-					System.err.println("Missing property: " + propertyName);
+					logger.info("Missing property: " + propertyName);
 				}
 			}
 		}
@@ -282,16 +288,16 @@ public class BaseLdapAdapter implements Mappable {
 				String currentAttribute = (String) iter.next();
 				String value = (String) constants.get(currentAttribute);
 				BasicAttribute attr = new BasicAttribute(currentAttribute, value);
-				System.err.println("Adding:     >"+currentAttribute+"="+value+"<");
+				logger.info("Adding:     >"+currentAttribute+"="+value+"<");
 				mandatory.put(attr);
 			}
 		}
 		try {
-			System.err.println("Creating: >"+keyAttribute+"="+keySource+"<");
+			logger.info("Creating: >"+keyAttribute+"="+keySource+"<");
 			Context result = context.createSubcontext(keyAttribute + "=" + keySource, mandatory);
 			return result;
 		} catch (javax.naming.NameAlreadyBoundException n) {
-			System.err.println("Exists!");
+			logger.info("Exists!");
 			context.unbind(keyAttribute + "=" + keySource);
 			Context result = context.createSubcontext(keyAttribute + "=" + keySource, mandatory);
 			return result;

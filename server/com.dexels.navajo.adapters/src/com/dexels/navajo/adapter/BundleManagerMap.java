@@ -26,7 +26,6 @@ public class BundleManagerMap implements Mappable {
 	private XMLElement createFunctionBundleXml() {
 		XMLElement xe = new CaseSensitiveXMLElement("functiondef");
 		List<XMLElement> flist = FunctionFactoryFactory.getInstance().getAllFunctionElements(FunctionInterface.class.getName(),"functionDefinition");
-		System.err.println("LIST SIZE: "+flist.size());
 		for (XMLElement xmlElement : flist) {
 			xe.addChild(xmlElement);
 		}
@@ -36,7 +35,6 @@ public class BundleManagerMap implements Mappable {
 	private XMLElement createAdapterBundleXml() {
 		XMLElement xe = new CaseSensitiveXMLElement("adapterdef");
 		List<XMLElement> flist = FunctionFactoryFactory.getInstance().getAllAdapterElements(Object.class.getName(),"functionDefinition");
-		System.err.println("LIST SIZE: "+flist.size());
 		for (XMLElement xmlElement : flist) {
 			xe.addChild(xmlElement);
 		}

@@ -21,6 +21,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import com.dexels.navajo.adapter.mailmap.AttachementMap;
@@ -95,7 +97,9 @@ public class MailMap implements MailMapInterface, Mappable,
 
 	private Navajo myNavajo;
 	private Access myAccess;
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(MailMap.class);
+	
 	private boolean useEncryption = false;
 
 	public MailMap() {
@@ -127,8 +131,7 @@ public class MailMap implements MailMapInterface, Mappable,
 			} catch (Exception e) {
 				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
 						myAccess.accessID);
-				// e.printStackTrace(System.err);
-				// System.err.println(e.getMessage());
+				logger.error("Error: sending request (?)",e);
 			}
 		}
 	}
@@ -161,8 +164,6 @@ public class MailMap implements MailMapInterface, Mappable,
 			Session session = createSession();
 			javax.mail.Message msg = new MimeMessage(session);
 
-			// System.err.println("Created mime message: " + msg);
-
 			if (sender == null || "".equals(sender)) {
 				throw new UserException(-1,
 						"Error: Required sender address not set!");
@@ -173,8 +174,6 @@ public class MailMap implements MailMapInterface, Mappable,
 
 			for (int i = 0; i < this.recipientArray.length; i++) {
 				addresses[i] = new InternetAddress(this.recipientArray[i]);
-				// System.err.println("Set recipient " + i + ": " +
-				// this.recipientArray[i]);
 			}
 
 			msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
@@ -183,8 +182,6 @@ public class MailMap implements MailMapInterface, Mappable,
 				InternetAddress[] extra = new InternetAddress[this.ccArray.length];
 				for (int i = 0; i < this.ccArray.length; i++) {
 					extra[i] = new InternetAddress(this.ccArray[i]);
-					// System.err.println("Set cc " + i + ": " +
-					// this.ccArray[i]);
 				}
 				msg.setRecipients(javax.mail.Message.RecipientType.CC, extra);
 			}
@@ -193,8 +190,6 @@ public class MailMap implements MailMapInterface, Mappable,
 				InternetAddress[] extra = new InternetAddress[this.bccArray.length];
 				for (int i = 0; i < this.bccArray.length; i++) {
 					extra[i] = new InternetAddress(this.bccArray[i]);
-					// System.err.println("Set cc " + i + ": " +
-					// this.bccArray[i]);
 				}
 				msg.setRecipients(javax.mail.Message.RecipientType.BCC, extra);
 			}
@@ -275,13 +270,10 @@ public class MailMap implements MailMapInterface, Mappable,
 			if (ignoreFailures) {
 				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
 						myAccess.accessID);
-				// System.err.println("MailMap: Failure logged: " +
-				// e.getMessage());
 				failure = e.getMessage();
 			} else {
 				AuditLog.log("MailMap", e.getMessage(), Level.SEVERE,
 						myAccess.accessID);
-				// e.printStackTrace();
 				throw new UserException(-1, e.getMessage(), e);
 			}
 		}
@@ -296,7 +288,7 @@ public class MailMap implements MailMapInterface, Mappable,
 			props.put("mail.smtp.auth", "true");
 			props.put("mail.debug", "true");
 			if (useEncryption) {
-				System.err.println("Using encrypt + auth. ");
+				logger.info("Using encrypt + auth. ");
 				props.put("mail.smtp.port", "465");
 				props.put("mail.smtp.socketFactory.port", "465");
 				props.put("mail.smtp.socketFactory.class",
@@ -425,8 +417,6 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	public void setAttachment(AttachmentMapInterface m) {
-		// System.err.println(">>>>>>>>>>>>>>>>>>>>>> in setAttachment");
-		// this.attachment = (AttachementMap) m;
 		if (attachments == null) {
 			attachments = new ArrayList<AttachmentMapInterface>();
 		}

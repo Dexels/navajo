@@ -18,6 +18,9 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
@@ -42,6 +45,10 @@ public class Base2LdapAdapter implements Mappable {
 	public String username = DEFAULT_LDAP_USERNAME;
 	public String password = DEFAULT_LDAP_PASSWORD;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(Base2LdapAdapter.class);
+	
 	private InitialDirContext initialDir = null;
 
 	public void kill() {
@@ -88,7 +95,7 @@ public class Base2LdapAdapter implements Mappable {
 			NamingEnumeration e = dc.list("");
 			while (e.hasMore()) {
 				Object o = e.next();
-				System.err.println("o: " + o);
+				logger.debug("o: " + o);
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -146,9 +153,9 @@ public class Base2LdapAdapter implements Mappable {
 		for (int i = 0; i < count; i++) {
 			Message m = (Message) ll.get(i);
 			String value = m.getProperty("ClubIdentifier").getValue();
-			System.err.println("Clubid: " + value);
+			logger.debug("Clubid: " + value);
 			insertClub(root, init, value);
-			System.err.println("Inserted: " + m.getProperty("ClubName").getValue());
+			logger.debug("Inserted: " + m.getProperty("ClubName").getValue());
 		}
 	}
 
@@ -182,7 +189,7 @@ public class Base2LdapAdapter implements Mappable {
 				addGroupMember("uid", uid, "member", clubMemberContext);
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.err.println("Adding member failed, continuing");
+				logger.debug("Adding member failed, continuing");
 				try {
 					current.write(System.err);
 				} catch (NavajoException e1) {
@@ -196,7 +203,7 @@ public class Base2LdapAdapter implements Mappable {
 		if (initialDir == null) {
 			startup();
 		}
-//		System.err.println("Context lookup: "+dn);
+//		logger.debug("Context lookup: "+dn);
 		DirContext dc = (DirContext) initialDir.lookup(dn);
 		return dc;
 
@@ -204,7 +211,7 @@ public class Base2LdapAdapter implements Mappable {
 	
 	public DirContext getContext(DirContext c, String dn) throws NamingException {
 	
-		System.err.println("Context lookup: "+dn);
+		logger.debug("Context lookup: "+dn);
 		DirContext dc = (DirContext) c.lookup(dn);
 		return dc;
 
@@ -262,7 +269,7 @@ public class Base2LdapAdapter implements Mappable {
 		}
 		String clubId = entity.getProperty("ClubIdentifier").getValue();
 		String clubName = entity.getProperty("ClubName").getValue();
-		System.err.println("Owner: "+clubId);
+		logger.debug("Owner: "+clubId);
 		memberMap.put("owner", "o="+clubId);
 		memberMap.put("description", clubName);
 		memberMap.put("o", clubId);
@@ -285,7 +292,7 @@ public class Base2LdapAdapter implements Mappable {
 			NamingEnumeration<NameClassPair> sss = dd.list("");
 			while (sss.hasMore()) {
 				Object oo = sss.next();
-				System.err.println("oo: " + oo);
+				logger.debug("oo: " + oo);
 			}
 
 			// deleteContext(oo, oo.getNameInNamespace());
@@ -345,7 +352,7 @@ public class Base2LdapAdapter implements Mappable {
 						BasicAttribute attr = new BasicAttribute(currentAttribute, propertyValue);
 						mandatory.put(attr);
 					} else {
-						System.err.println("Missing property: " + propertyName);
+						logger.debug("Missing property: " + propertyName);
 					}
 				}
 			}
@@ -359,13 +366,13 @@ public class Base2LdapAdapter implements Mappable {
 			}
 		}
 		try {
-//			System.err.println("Key: "+keyAttribute+" value: "+keySource);
-//			System.err.println("Parent context: "+context.getNameInNamespace());
-//			System.err.println("Adding params: "+mandatory);
+//			logger.debug("Key: "+keyAttribute+" value: "+keySource);
+//			logger.debug("Parent context: "+context.getNameInNamespace());
+//			logger.debug("Adding params: "+mandatory);
 			DirContext result = context.createSubcontext(keyAttribute + "=" + keySource, mandatory);
 			return result;
 		} catch (javax.naming.NameAlreadyBoundException n) {
-			// System.err.println("Exists!");
+			// logger.debug("Exists!");
 			// todo: Recursive delete
 			// deleteContext(context,keyAttribute + "=" + keySource);
 			context.unbind(keyAttribute + "=" + keySource);
@@ -382,7 +389,7 @@ public class Base2LdapAdapter implements Mappable {
 			// does not work
 			String first = (String) aa.get(0);
 			if(first.equals("dummy")) {
-				System.err.println("Dummy found!");
+				logger.debug("Dummy found!");
 				aa.clear();
 			}
 			

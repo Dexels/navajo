@@ -7,13 +7,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.util.AuditLog;
 
 public final class DbConnectionBroker extends Object
 {
 	protected String location, username, password;
 
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DbConnectionBroker.class);
 	protected String dbIdentifier;
 	protected Connection[] conns;
 	protected boolean[] usedmap;
@@ -68,7 +73,6 @@ public final class DbConnectionBroker extends Object
 	{
 		Class.forName(dbDriver);
 		
-//		System.err.println("in DBCONNECTIONBROKER(), FOUND JDBC DRIVER CLASS: " + dbDriver + ", LOCATION = " + dbServer);
 		location  = dbServer;
 		username  = dbLogin;
 		password  = dbPassword;
@@ -120,19 +124,17 @@ public final class DbConnectionBroker extends Object
 				// Check if it is the proper connection...
 
 				String metaUsername = conn.getMetaData().getUserName();
-//				System.err.println("Meta username: "+metaUsername);
 				
 				// MySql fix: My sql will add @localhost after the username, which confuses this test.
 				// It won't reuse connections because this test always fails.
 				if(metaUsername.indexOf("@")!=-1) {
 					metaUsername = metaUsername.split("@")[0];
 				}
-//				System.err.println("Meta username now: "+metaUsername);
 				String metaLocation = conn.getMetaData().getURL();
 				if ( !metaUsername.toLowerCase().equals(this.username.toLowerCase()) ||
 						!metaLocation.toLowerCase().equals(this.location.toLowerCase())) {
 					try {
-						System.err.println("FOUND ILLEGAL CONNECTION: ");
+						logger.warn("FOUND ILLEGAL CONNECTION: ");
 						AuditLog.log("GRUS", "Found ILLEGAL connection " + metaLocation+"/"+metaUsername +
 								", EXPECTED: " + this.location + "/" + this.username);
 					} catch (Exception e) {
@@ -159,7 +161,7 @@ public final class DbConnectionBroker extends Object
 		// Fetch proper broker.
 		DbConnectionBroker broker = transactionContextBrokerMap.get(connectionId);
 		if ( broker == null ) {
-			System.err.println("COULD NOT FIND BROKER FOR CONNECTION ID: " + connectionId);
+			logger.warn("COULD NOT FIND BROKER FOR CONNECTION ID: " + connectionId);
 			return null;
 		}
 		for ( int i = 0; i < broker.conns.length; i++ ) {
@@ -167,12 +169,12 @@ public final class DbConnectionBroker extends Object
 				if ( broker.usedmap[i] )  {
 					return broker.conns[i];
 				} else {
-					System.err.println("Trying to get unused connection: " + connectionId);
+					logger.debug("Trying to get unused connection: " + connectionId);
 					return null;
 				}
 			}
 		}
-		System.err.println("Could not find connectionid: " + connectionId);
+		logger.warn("Could not find connectionid: " + connectionId);
 		return null;
 	}
 	
@@ -186,7 +188,7 @@ public final class DbConnectionBroker extends Object
 		
 		DbConnectionBroker broker = transactionContextBrokerMap.get(connectionId);
 		if ( broker == null ) {
-			System.err.println("COULD NOT FIND BROKER FOR CONNECTION ID: " + connectionId);
+			logger.warn("COULD NOT FIND BROKER FOR CONNECTION ID: " + connectionId);
 			return null;
 		}
 		return broker;
@@ -195,13 +197,11 @@ public final class DbConnectionBroker extends Object
 	public final synchronized void refreshConnections() {
 		
 		long maxAge = (long) (System.currentTimeMillis() - this.timeoutDays * 86400000L);
-		//System.err.println(Thread.currentThread().getName() + ": MAXAGE IS: " + maxAge);
 		// Check IDLE time, created[i] contains timestamp of last use.
 		
 		if ( this.conns != null ) {
 			for (int i = 0; i < this.conns.length; i++) {
 				if (this.conns[i] != null && this.created[i] < maxAge) {
-//					log("@@@@@ marking connection " + conns[i].hashCode() + " as aged.");
 					this.aged[i] = true;
 				}
 			}
@@ -210,8 +210,6 @@ public final class DbConnectionBroker extends Object
 	}
 	
 	public final synchronized Connection getConnection() {
-		//System.err.println("BrokerHash: +"+hashCode()+"+total connections: "+conns.length+" available: "+available+" current: "+current);
-
 		if(closed && timeoutDays > 0) {
 			return null;
 		}
@@ -265,15 +263,12 @@ public final class DbConnectionBroker extends Object
 		for(int i=0; i<conns.length; i++) {
 			if( conns[i] == null ) {
 				try {
-					//System.out.println("IN DBCONNECTION BROKER: CREATING NEW CONNECTION FOR " + username);
 					//long start = System.currentTimeMillis();
 					DriverManager.setLoginTimeout(5);
 					conns[i] = DriverManager.getConnection(location,username,password);
 					
-					//System.err.println("Opening connection to " + username + " took: " + (  System.currentTimeMillis() - start ));
 				} catch(SQLException e) {
-					e.printStackTrace(System.err);
-//					return getConnection();
+					logger.error("SQL login failed",e);
 					return null;
 				}
 				usedmap[i] = true;
@@ -328,7 +323,6 @@ public final class DbConnectionBroker extends Object
 					log("Closed connection due to destroy: " + conns[i].hashCode());
 					conns[i] = null;
 					usedmap[i] = false;
-					//System.err.println(">>>>>> Closed connection.");
 				}
 			} catch(SQLException e) {
 				ex = e;

@@ -1,5 +1,8 @@
 package com.dexels.navajo.adapter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -26,6 +29,10 @@ public class AsyncProxyMap extends AsyncMappable {
   private Navajo outDoc;
   private Navajo inDoc;
   private Access access;
+
+  private final static Logger logger = LoggerFactory
+		.getLogger(AsyncProxyMap.class);
+
 
   public void load(Access access) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
     username = access.rpcUser;
@@ -79,10 +86,9 @@ public class AsyncProxyMap extends AsyncMappable {
     try {
       inDoc = DispatcherFactory.getInstance().handle(outDoc);
     } catch (Exception e) {
-      e.printStackTrace();
-      throw new UserException(-1, e.getMessage());
+      throw new UserException(-1, e.getMessage(),e);
     } finally {
-    	System.err.println("Setting set is finished.");
+    	logger.info("Setting set is finished.");
     	setIsFinished();
     }
     

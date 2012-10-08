@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -36,7 +39,9 @@ public class QuestionMergeMap
   public String fileName;
   public boolean overwrite = false;
   public boolean backup = false;
-
+  
+private final static Logger logger = LoggerFactory
+		.getLogger(QuestionMergeMap.class);
 
   private Navajo inNavajo = null;
 
@@ -134,14 +139,14 @@ public class QuestionMergeMap
       Message m = dataMessage.getMessage(i);
       Property id = m.getProperty("Id");
 //      Property value = m.getProperty("Value");
-      System.err.println("Looking for question: "+id.getValue());
+      logger.info("Looking for question: "+id.getValue());
 
       StringTokenizer idTok = new StringTokenizer( (String) id.getTypedValue());
       Message question = getQuestionById(idTok, questionMessage);
       if (question==null) {
-        System.err.println("returned no message!");
+        logger.info("returned no message!");
       } else {
-        System.err.println("returned: "+question.getFullMessageName());
+        logger.info("returned: "+question.getFullMessageName());
       }
     }
 

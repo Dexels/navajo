@@ -129,7 +129,6 @@ public class SPMap extends SQLMap {
         
           callStatement = con.prepareCall(query);
           openCallStatements++;
-          //System.err.println(">>>>>>>>>>>>>>>>>>> OPEN CALL STATEMENTS: " + openCallStatements);
           if (query.indexOf("Call") != -1 && query.indexOf("(") != -1) {
             spName = query.substring(query.indexOf("Call") + 5,
                                      query.indexOf("("));
@@ -138,7 +137,6 @@ public class SPMap extends SQLMap {
         else {
           callStatement = con.prepareCall(update);
           openCallStatements++;
-          //System.err.println(">>>>>>>>>>>>>>>>>>> OPEN CALL STATEMENTS: " + openCallStatements);
           if (update.indexOf("Call") != -1
               && update.indexOf("(") != -1) {
             spName = update.substring(update.indexOf("Call") + 5,
@@ -313,16 +311,13 @@ public class SPMap extends SQLMap {
           throw new UserException(-1, "Outputparameter index out of range: " + i.intValue() );
         }
         String type = (String) parameters.get(index - 1);
-        //System.err.println("type = " + type);
         if (lookupTable.get(type) == null) {
           throw new UserException(-1, "Outputparameter index out of range, trying to read a normal parameter as an output parameter: " + i.intValue() );
         }
         int sqlType = ( (Integer) lookupTable.get(type)).intValue();
 
-        //System.out.println("sqlType = " + sqlType);
         java.util.Calendar c = java.util.Calendar.getInstance();
 
-        // System.out.println("VALUE OF OUTPUT PARAMETER: " + callStatement.getString(index));
         switch (sqlType) {
           case Types.VARCHAR:
           case Types.CHAR:
@@ -407,7 +402,6 @@ public class SPMap extends SQLMap {
       com.dexels.navajo.mapping.MappableException {
     try {
       if (callStatement != null) {
-    	//System.err.println("CLOSING callStatement IN SPMAP.store()");
         callStatement.close();
         callStatement = null;
         openCallStatements--;

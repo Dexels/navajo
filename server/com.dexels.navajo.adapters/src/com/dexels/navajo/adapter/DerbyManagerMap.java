@@ -8,6 +8,9 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.UserException;
@@ -16,6 +19,9 @@ public class DerbyManagerMap {
 	public String driver = "org.apache.derby.jdbc.EmbeddedDriver";
 	public String protocol = "jdbc:derby:";
 	private File derbySystemDir;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DerbyManagerMap.class);
 	
 	public DerbyManagerMap() {
 		NavajoConfigInterface myConfig = DispatcherFactory.getInstance().getNavajoConfig();
@@ -52,8 +58,7 @@ public class DerbyManagerMap {
 			conn.close();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("Shutdown failed. That's ok, continuing.");
+			logger.warn("Shutdown failed. That's ok, continuing.",e);
 		}
 	}
 

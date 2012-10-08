@@ -728,8 +728,6 @@ private Object waitForResult = new Object();
    public boolean getBooleanProperty(String fullName) throws UserException {
 
     Property p = getPropertyObject(fullName);
-    //System.err.println("in getBooleanProperty("+fullName+")");
-    //System.err.println("VALUE = " + p.getValue());
     if (p.getType().equals(Property.BOOLEAN_PROPERTY) && !p.getValue().equals("")) {
         return p.getValue().equals("true");
     }
@@ -764,7 +762,6 @@ private Object waitForResult = new Object();
     if (!p.getType().equals(Property.BINARY_PROPERTY)) {
       throw new UserException(-1, "Property " + fullName + " not of type binary");
     }
-    //System.err.println("Returning Binary property: ");
     return (Binary) p.getTypedValue();
   }
 
@@ -773,7 +770,6 @@ private Object waitForResult = new Object();
    if (!p.getType().equals(Property.CLOCKTIME_PROPERTY)) {
      throw new UserException(-1, "Property " + fullName + " not of type clocktime");
    }
-   //System.err.println("Returning clocktime property: ");
    return (ClockTime) p.getTypedValue();
  }
 
@@ -782,7 +778,6 @@ private Object waitForResult = new Object();
   if (!p.getType().equals(Property.MONEY_PROPERTY)) {
     throw new UserException(-1, "Property " + fullName + " not of type money");
   }
-  //System.err.println("Returning money property: ");
   return (Money) p.getTypedValue();
 }
 
@@ -978,7 +973,6 @@ private Object waitForResult = new Object();
 
   public void setSkipProperties(String list) {
     this.skipProperties = list;
-    //System.err.println("in setSkipProperties(): " + list);
   }
 
   public boolean getIsEqual() {
@@ -990,7 +984,6 @@ private Object waitForResult = new Object();
    * @param breakOnConditionError
    */
   public void setBreakOnConditionError(boolean b) {
-	//System.err.println("IN setBreakOnConditionError(" + b + ")");
     this.breakOnConditionError = b;
   }
 
@@ -1035,7 +1028,7 @@ private Object waitForResult = new Object();
 		  // Get task if if trigger was specified.
 	      if ( trigger != null ) {
 	    	  taskId = inDoc.getHeader().getSchedule();
-	    	  System.err.println("************************************************* TASKID: " + taskId);
+	    	  logger.info("************************************************* TASKID: " + taskId);
 	      }
 	      
 	      // Call sorted.
@@ -1077,7 +1070,6 @@ private Object waitForResult = new Object();
 	      }
 	      if (aaaError != null) {
 	    	AuditLog.log("NavajoMap", "THROWING AUTHORIZATIONEXCEPTION IN NAVAJOMAP" + aaaError.getProperty("User").getValue(), Level.WARNING, access.accessID);
-	        //System.err.println("THROWING AUTHORIZATIONEXCEPTION IN NAVAJOMAP....");
 	        throw new AuthorizationException(authenticationError, !authenticationError,
 	                                         aaaError.getProperty("User").getValue(),
 	                                         aaaError.getProperty("Message").getValue());
@@ -1085,11 +1077,9 @@ private Object waitForResult = new Object();
 
 	      if (breakOnConditionError && inDoc.getMessage("ConditionErrors") != null) {
 	    	  AuditLog.log("NavajoMap", ">>>> BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR", Level.INFO, access.accessID);
-	    	  //System.err.println("BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR");
 	          throw new ConditionErrorException(inDoc);
 	      } else if (inDoc.getMessage("ConditionErrors") != null) {
 	    	  AuditLog.log("NavajoMap", "BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....", Level.INFO, access.accessID);
-	    	  //System.err.println("");
 	    	  return;
 	      }
 	      
@@ -1107,20 +1097,13 @@ private Object waitForResult = new Object();
 	      this.showProperties = null;
 	      
 	      if (!compare.equals("")) {
-	        //isEqual = inMessage.isEqual(inDoc);
-
 	        Message other = inMessage.getMessage(compare);
 	        Message rec = inDoc.getMessage(compare);
-
-	        //System.err.println("other = " + other);
-	        //System.err.println("rec = " + rec);
-	        //System.err.println("skipProperties = " + skipProperties);
-	        if (other == null || rec == null)
-	          isEqual = false;
-	        else
-	          isEqual = other.isEqual(rec, this.skipProperties);
-
-	        //System.err.println("IN NAVAJOMAP(), ISEQUAL = " + isEqual);
+			if (other == null || rec == null) {
+				isEqual = false;
+			} else {
+				isEqual = other.isEqual(rec, this.skipProperties);
+			}
 	      } else {
 	        outDoc = inDoc;
 	      }
@@ -1180,7 +1163,7 @@ public void setTaskId(String t) {
 //	  while ( tm == null ) {
 //		  tm = trm.getFinishedTask();
 //		  if ( tm == null) {
-//			  //System.err.println("Waiting for task to finish....");
+//			  //logger.info("Waiting for task to finish....");
 //			  try {
 //				Thread.sleep(1000);
 //			} catch (InterruptedException e) {
@@ -1375,7 +1358,7 @@ public void onResponse(Navajo response) {
 
   @Override
   public void abort(String reason) {
-	  System.err.println("Aborting navajomap: "+reason);
+	  logger.warn("Aborting navajomap: "+reason);
   }
 
   public void endTransaction() throws IOException {
@@ -1416,7 +1399,7 @@ public void onResponse(Navajo response) {
   }
 
   public void setResponseNavajo(Navajo n)  {
-		System.err.println("Set input navajo in NavajoMap... Isn't this odd?");	
+		logger.warn("Set input navajo in NavajoMap... Isn't this odd?");	
 		inDoc = n;
 	}
 

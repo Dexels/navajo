@@ -205,7 +205,6 @@ public class MessageMap implements Mappable {
 					// Compare joinValues...
 					boolean equal = true;
 					for (int jv = 0; jv < joinConditions.size(); jv++) {
-						//System.err.println("Checking join values: " + joinValues1[jv] + " and " + joinValues2[jv]  );
 						if ( joinValues1[jv] != null && joinValues2[jv] != null && !joinValues1[jv].equals(joinValues2[jv])) {
 							equal = false;
 						} else if ( joinValues1[jv] == null && joinValues2[jv] != null ) {

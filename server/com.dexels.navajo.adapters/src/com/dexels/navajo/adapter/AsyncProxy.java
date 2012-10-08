@@ -52,7 +52,6 @@ public class AsyncProxy implements Mappable {
   private final static Logger logger = LoggerFactory.getLogger(AsyncProxy.class);
 
   public void load(Access access) throws MappableException, UserException {
-    //System.err.println("IN ASYNCPROXY LOAD()......................");
   }
 
   public void store() throws MappableException, UserException {
@@ -67,7 +66,6 @@ public class AsyncProxy implements Mappable {
   }
 
   public void setResume(boolean b) {
-   //System.err.println("..............................CALLING SETRESUME ON ASYNCPROXY WITH POINTER: " + this.pointer);
    if (b) {
     Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
     Iterator iter = all.values().iterator();
@@ -88,7 +86,6 @@ public class AsyncProxy implements Mappable {
  }
 
   public void setInterrupt(boolean b) {
-    //System.err.println("..............................CALLING SETINTERRUPT ON ASYNCPROXY WITH POINTER: " + this.pointer);
     if (b) {
      Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().
          objectStore;
@@ -130,7 +127,6 @@ public class AsyncProxy implements Mappable {
   }
 
   public void setPointer(String pointer) {
-    //System.err.println("SETTING POINTER TO: " + pointer);
     this.pointer = pointer;
   }
   public java.util.Date getStartDate() {

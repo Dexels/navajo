@@ -1,5 +1,8 @@
 package com.dexels.navajo.adapter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -11,10 +14,10 @@ import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 
 public class TestQueuedAdapter implements Mappable, Queuable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2697339185493595216L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TestQueuedAdapter.class);
 	
 	private Access myAccess;
 	public static int maxRunningInstances = -1;
@@ -72,13 +75,13 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 	}
 
 	public boolean send() {
-		System.err.println("DOING SOME WORK IN TESTADAPTER (" + this.hashCode() + ") .........." );
+		logger.debug("DOING SOME WORK IN TESTADAPTER (" + this.hashCode() + ") .........." );
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.err.println("....HE, HE, EINDELIJK KLAAR (" + this.hashCode() + ")");
+		logger.debug("....HE, HE, EINDELIJK KLAAR (" + this.hashCode() + ")");
 		return true;
 	}
 

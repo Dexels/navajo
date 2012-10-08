@@ -9,6 +9,9 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -24,7 +27,10 @@ public class TotalLdapAdapter implements Mappable {
 	public String server = DEFAULT_LDAP_SERVER;
 	public String username = DEFAULT_LDAP_USERNAME;
 	public String password = DEFAULT_LDAP_PASSWORD;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TotalLdapAdapter.class);
+	
 	private InitialDirContext initialDir = null;
 
 	
@@ -67,10 +73,10 @@ public class TotalLdapAdapter implements Mappable {
 			NamingEnumeration e = dc.list("");
 			while (e.hasMore()) {
 				NameClassPair o = (NameClassPair) e.next();
-				System.err.println("NAME: "+o.getName());
-				System.err.println("NAMESp: "+o.getNameInNamespace());
+				logger.info("NAME: "+o.getName());
+				logger.info("NAMESp: "+o.getNameInNamespace());
 //				o.getSchema("");
-				System.err.println("o: " + o);
+				logger.info("o: " + o);
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();

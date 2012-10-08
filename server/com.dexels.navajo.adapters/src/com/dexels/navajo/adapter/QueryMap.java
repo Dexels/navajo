@@ -50,7 +50,6 @@ public class QueryMap extends SQLMap {
             "RecordSet", Message.MSG_TYPE_ARRAY_ELEMENT);
         recordSet.addElement(record);
         RecordMap[] columns = resultSet[i].getRecords();
-        //System.err.println("Processing row " + i);
         for (int j = 0; j < columns.length; j++) {
           try {
             Object value = columns[j].getRecordValue();

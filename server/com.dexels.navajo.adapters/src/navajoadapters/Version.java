@@ -64,7 +64,6 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 			StandardAdapterFunctionLibrary extensionDef = new StandardAdapterFunctionLibrary();
 			fi.injectExtension(extensionDef);
-			//		System.err.println("Detected functions: "+fi.getFunctionNames());
 			for (String functionName : fi.getFunctionNames(extensionDef)) {
 				FunctionDefinition fd = fi.getDef(extensionDef, functionName);
 				 Dictionary<String, Object> props = new Hashtable<String, Object>();

@@ -7,6 +7,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -33,6 +36,9 @@ public class DatabaseInfo implements Mappable {
   public DbSchema schema = null;
   public String datasource;
 
+  private final static Logger logger = LoggerFactory
+		.getLogger(DatabaseInfo.class);
+
   public DatabaseInfo(DatabaseMetaData dbmd, String datasource) {
 
     try {
@@ -41,16 +47,17 @@ public class DatabaseInfo implements Mappable {
       //setCatalogs(dbmd);
     }
     catch (SQLException ex) {
-      ex.printStackTrace(System.err);
+    	logger.warn("Error querying database version",ex);
     }
 
     try {
       this.version = dbmd.getDatabaseProductVersion();
     }
     catch (SQLException ex1) {
+    	logger.warn("Error querying database version",ex1);
     }
-    System.err.println("vendor = " + vendor);
-    System.err.println("version = " + version);
+    logger.info("vendor = " + vendor);
+    logger.info("version = " + version);
   }
 
   public DbCatalog [] getCatalogs() {

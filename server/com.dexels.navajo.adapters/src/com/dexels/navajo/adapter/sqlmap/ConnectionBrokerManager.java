@@ -12,6 +12,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.dexels.grus.DbConnectionBroker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -28,6 +30,9 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 
   private static Object semaphore = new Object();
   
+  private final static Logger logger = LoggerFactory
+		.getLogger(ConnectionBrokerManager.class);
+
   public ConnectionBrokerManager() {
     super();
     JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "ConnectionBrokerManager");
@@ -75,7 +80,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  
 	  SQLMapBroker broker = null;
 	  
-	  System.err.println("in ConnectionBrokerManager.put(" + dsrc + "," + drv + ", ...)");
+	  logger.info("in ConnectionBrokerManager.put(" + dsrc + "," + drv + ", ...)");
 	  synchronized ( semaphore ) {
 		
 		  
@@ -216,7 +221,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 
   public final DbConnectionBroker get(final String dsrc, final String usr, final String pwd) {
     SQLMapBroker broker;
-    //System.err.println("In ConnectionBrokerManager.get(" + dsrc + "," + usr + "," + pwd + ")");
+    //logger.info("In ConnectionBrokerManager.get(" + dsrc + "," + usr + "," + pwd + ")");
     if (usr == null) {
       if (this.debug) {
         System.out.println(this.getClass() +
@@ -283,7 +288,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 
   private final SQLMapBroker haveExistingBroker(final String datasource, final String usr) {
 
-	  System.err.println("In ConnectionBrokerManager.haveExistingBroker(" + datasource + "," + usr + ")");
+	  logger.info("In ConnectionBrokerManager.haveExistingBroker(" + datasource + "," + usr + ")");
 
 	  SQLMapBroker broker = ( this.brokerMap.get(datasource));
 
@@ -293,7 +298,6 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 
 	  synchronized ( semaphore ) {
 
-		  //System.err.println("Detected dead broker, removing it and creating new one");
 		  // Remember health.
 		  int health = ServiceAvailability.STATUS_OK;
 		  if ( broker != null ) {
@@ -432,7 +436,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 			 }
 		 }
 	  } else {
-		  System.err.println("Could not find datasource associated with url: " + url);
+		  logger.warn("Could not find datasource associated with url: " + url);
 		  return 0;
 	  }
 	  return maxHealth;
@@ -448,7 +452,6 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 		  } 
 		  broker = ( this.brokerMap.get(datasource.replaceAll("'", "")));
 		  if ( broker == null ) {
-			  //System.err.println("Could not determine health of resource: " + datasource);
 			  return ServiceAvailability.STATUS_UNKNOWN;
 		  }
 	  }
@@ -458,7 +461,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
   public void setHealth(String datasource, int h) {
 	  SQLMapBroker broker = ( this.brokerMap.get(datasource.replaceAll("'", "")));
 	  if ( broker == null ) {
-		  System.err.println("Could not set health of resource: " + datasource);
+		  logger.warn("Could not set health of resource: " + datasource);
 	  } else {
 		  broker.health = h;
 	  }
@@ -473,7 +476,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 			 b.health = health;
 		 }
 	  } else {
-		  System.err.println("Could not find datasource associated with url: " + url);
+		  logger.warn("Could not find datasource associated with url: " + url);
 	  }
   }
   
@@ -486,7 +489,6 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  // Make sure to strip "'". 
 	  SQLMapBroker broker = ( this.brokerMap.get(datasource.replaceAll("'", "")));
 	  if ( broker == null ) {
-		  //System.err.println("Could not determine availability of resource: " + datasource);
 		  return true; // Try it to prevent deadlocking on changed web service that can never be reached due to former unavailability.
 	  }
 	  

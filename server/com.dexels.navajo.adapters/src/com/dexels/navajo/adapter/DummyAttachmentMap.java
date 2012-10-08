@@ -1,11 +1,17 @@
 package com.dexels.navajo.adapter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
 import com.dexels.navajo.document.types.Binary;
 
 public class DummyAttachmentMap implements AttachmentMapInterface {
 
 	private String attachFile;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DummyAttachmentMap.class);
 	
 	public String getAttachFile() {
 		return this.attachFile;
@@ -24,24 +30,24 @@ public class DummyAttachmentMap implements AttachmentMapInterface {
 	}
 
 	public void setAttachContentHeader(String s) {
-		System.err.println("in setAttachContentHeader(" + s + ")");
+		logger.debug("in setAttachContentHeader(" + s + ")");
 	}
 
 	public void setAttachFile(String attachFile) {
-		System.err.println("in setAttachFile(" + attachFile + ")");
+		logger.debug("in setAttachFile(" + attachFile + ")");
 		this.attachFile = attachFile;
 	}
 
 	public void setAttachFileContent(Binary attachFileContent) {
-		System.err.println("in setAttachFileContent(" + attachFileContent + ")");
+		logger.debug("in setAttachFileContent(" + attachFileContent + ")");
 	}
 
 	public void setAttachFileName(String attachFileName) {
-		System.err.println("in setAttachFileName(" + attachFileName + ")");
+		logger.debug("in setAttachFileName(" + attachFileName + ")");
 	}
 
 	public void setEncoding(String s) {
-		System.err.println("in setEncoding(" + s + ")");
+		logger.debug("in setEncoding(" + s + ")");
 	}
 
 }
