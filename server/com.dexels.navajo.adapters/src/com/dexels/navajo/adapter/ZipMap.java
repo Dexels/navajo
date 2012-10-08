@@ -32,6 +32,9 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -43,7 +46,9 @@ public class ZipMap implements Mappable {
 	public String name = "file.zip";
 	public Binary content;
 	public Binary zipped;
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(ZipMap.class);
+	
 	ByteArrayOutputStream baos = null;
 	ZipOutputStream zo = null;
 
@@ -80,7 +85,7 @@ public class ZipMap implements Mappable {
 			byte [] result = baos.toByteArray();
 			return new Binary(result);
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 
 		return null;

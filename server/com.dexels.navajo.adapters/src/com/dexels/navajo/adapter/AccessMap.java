@@ -4,6 +4,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -36,6 +39,8 @@ public final class AccessMap implements Mappable {
   public String waitingFor = null;
   public CompiledScript myScript = null;
   
+private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
+
   /* Private vars */
   private boolean showDetails = false;
   
@@ -136,7 +141,7 @@ public final class AccessMap implements Mappable {
         
         
       } catch (Exception ne) {
-        ne.printStackTrace(System.err);
+    	  logger.error("Error: ", ne);
       }
     }
   }

@@ -84,7 +84,7 @@ public class DatabaseInfo implements Mappable {
           sqlMap.store();
         }
         catch (Exception ex1) {
-          ex1.printStackTrace(System.err);
+        	logger.error("Error: ", ex1);
         }
       }
 
@@ -123,7 +123,7 @@ public class DatabaseInfo implements Mappable {
         catalogs = (DbCatalog[]) list.toArray(catalogs);
       }
       catch (SQLException sqle) {
-        sqle.printStackTrace(System.err);
+    	  logger.error("Error: ", sqle);
       }
     }
 
@@ -159,7 +159,7 @@ public class DatabaseInfo implements Mappable {
       }
 
     } catch (SQLException sqle) {
-      sqle.printStackTrace(System.err);
+    	logger.error("Error: ", sqle);
     }
 
     return l;

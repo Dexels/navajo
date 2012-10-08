@@ -312,7 +312,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 				  broker = ( this.brokerMap.get(datasource));
 				  broker.health = health;
 			  } catch (Exception e) {
-				  e.printStackTrace(System.err);
+				  logger.error("Error: ", e);
 				  return null;
 			  }
 		  }
@@ -347,7 +347,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 			  broker = ( this.brokerMap.get(datasource));
 			  broker.health = health;
 		  } catch (Exception e) {
-			  e.printStackTrace(System.err);
+			  logger.error("Error: ", e);
 			  return null;
 		  }
 		  return broker;    	
@@ -575,7 +575,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     				dbInfo = new DatabaseInfo(dbmd, this.datasource);
     			}
     			catch (SQLException ex) {
-    				ex.printStackTrace(System.err);
+    				logger.error("Error: ", ex);
     			}
     			finally {
     				this.broker.freeConnection(c);

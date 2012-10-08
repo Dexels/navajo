@@ -2,6 +2,9 @@ package com.dexels.navajo.adapter.sqlmap;
 
 import java.sql.Connection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.server.Access;
 
@@ -35,6 +38,9 @@ public final class SessionIdentification {
 
   private static final String oracleSid = "SELECT sid, serial# FROM v$session WHERE client_info = ?";
   private static final String killOracleSession = "ALTER SYSTEM KILL SESSION '?, ?'";
+  
+private final static Logger logger = LoggerFactory
+		.getLogger(SessionIdentification.class);
 
   public static final void killSession(String dbIdentifier, Connection con, Access access) {
 
@@ -57,8 +63,8 @@ public final class SessionIdentification {
         sql.store();
       }
       catch (Exception ex) {
-        ex.printStackTrace(System.err);
-        sql.kill();
+    	  logger.error("Error: ", ex);
+    	  sql.kill();
       }
     }
 

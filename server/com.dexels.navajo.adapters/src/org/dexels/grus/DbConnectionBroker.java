@@ -246,12 +246,12 @@ public final class DbConnectionBroker extends Object
 								--current;
 								conns[i].close();
 							} catch (Throwable t) {
-								t.printStackTrace(System.err);
+								logger.error("Error: ", t);
 							}
 							transactionContextBrokerMap.remove(conns[i].hashCode());
 						}
 					} catch (Throwable e) {
-						e.printStackTrace(System.err);
+						logger.error("Error: ", e);
 					}
 					conns[i] = null;
 					usedmap[i] = false;

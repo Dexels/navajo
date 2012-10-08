@@ -141,7 +141,7 @@ public class AdminMap implements Mappable {
 		  sql.store();
 
 		  return c;
-	  } catch (Throwable e) { e.printStackTrace(System.err);  }
+	  } catch (Throwable e) { logger.error("Error: ", e);  }
 	  return 0;
   }
 
@@ -225,7 +225,7 @@ public AsyncProxy [] getAsyncThreads() {
        o.waiting = am.isWaiting();
        try {
          o.percReady = am.getPercReady();
-       } catch (Exception e) { e.printStackTrace(System.err); }
+       } catch (Exception e) { logger.error("Error: ", e); }
        l.add(o);
      }
      AsyncProxy [] objects = new AsyncProxy[l.size()];
