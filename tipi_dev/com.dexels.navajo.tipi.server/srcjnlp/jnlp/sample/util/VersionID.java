@@ -261,5 +261,10 @@ public class VersionID implements Comparable {
 	if (_usePrefixMatch) sb.append('+');
 	return sb.toString();
     }
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 }
 

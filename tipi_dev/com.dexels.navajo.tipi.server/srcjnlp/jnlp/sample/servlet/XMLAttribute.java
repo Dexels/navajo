@@ -93,4 +93,10 @@ public class XMLAttribute {
 			return _name + "=\"" + _value + "\"";
 		}
 	}
+
+	// TODO Should have a real implementation, just suppressig warning
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
 }

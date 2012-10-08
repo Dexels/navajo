@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE project>
 <!-- $Id$ -->
 <project name="TipiServer" default="dobuild" basedir=".">
     <property name="tipiTomcatServer" value="http://spiritus.dexels.nl:8080/"/>

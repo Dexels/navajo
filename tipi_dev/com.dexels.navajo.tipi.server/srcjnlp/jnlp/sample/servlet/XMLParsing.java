@@ -69,7 +69,7 @@ public class XMLParsing {
 	    }
 	    
 	    // Convert childern
-	    XMLNode thisNode = new XMLNode(en.getNodeName(), xmlatts, null, null);;
+	    XMLNode thisNode = new XMLNode(en.getNodeName(), xmlatts, null, null);
 	    XMLNode last = null;
 	    Node nn = en.getFirstChild();
 	    while(nn != null) {

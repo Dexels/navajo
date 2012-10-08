@@ -181,7 +181,7 @@ abstract public class DownloadResponse {
 	    response.setContentType(JNLP_ERROR_MIMETYPE);
 	    PrintWriter pw = response.getWriter();
 	    pw.println(_message);
-	};	
+	}	
 	
 	public String toString() { return super.toString() + "[" + _message + "]"; }
     }
