@@ -125,10 +125,6 @@ public final class MappingUtils {
       newMsg = msg;
     }
     
-    if(msg==null) {
-    	logger.error("Null message in getMessageObject: parent null? (findbug based fix)");
-//    	throw NavajoFactory.getInstance().createNavajoException("Null message in getMessageObject: parent null? (findbug based fix)");
-    }
     for (int i = 0; i < count; i++) {
      
       newMsg = null;
