@@ -107,9 +107,15 @@ public class ResultMessage implements Mappable {
 	}
 	
 	private final boolean isPropertyInList(Property prop, String propertyStringList) {
+		
 		if ( propertyStringList == null ) {
 			return false;
 		}
+		
+		if (propertyStringList.equals("*") ) {
+			return true;
+		}
+		
 		String [] propertyList = propertyStringList.split(";");
 		for (int i = 0; i < propertyList.length; i++) {
 			if ( propertyList[i].equals(prop.getName())) {
