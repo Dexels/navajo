@@ -58,7 +58,7 @@ public class PropertyAggregate {
 		
 		public void addProperty(Property myProp) {
 			count++;
-			if ( myProp.getType().equals(Property.INTEGER_PROPERTY) || myProp.getType().equals(Property.FLOAT_PROPERTY) ) {
+			if ( myProp.getTypedValue() != null && ( myProp.getType().equals(Property.INTEGER_PROPERTY) || myProp.getType().equals(Property.FLOAT_PROPERTY) ) ) {
 				Double value = new Double(myProp.getTypedValue()+"");
 				if ( value < min ) {
 					min = value;
@@ -68,7 +68,7 @@ public class PropertyAggregate {
 				}
 				sum += value;
 			}
-			if ( myProp.getType().equals(Property.DATE_PROPERTY) ) {
+			if ( myProp.getTypedValue() != null && myProp.getType().equals(Property.DATE_PROPERTY) ) {
 				Date date = (Date) myProp.getTypedValue();
 				if ( minDate == null && maxDate == null) {
 					minDate = maxDate = date;
