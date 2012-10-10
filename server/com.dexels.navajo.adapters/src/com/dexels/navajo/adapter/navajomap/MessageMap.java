@@ -89,6 +89,11 @@ public void setIntegerProperty(String fullName) {
       return -1;
   }
 
+   public Property getPropertyObject(String fullName) throws NavajoException, UserException {
+	   Property p = msg.getProperty(fullName);
+	   return p;
+   }
+   
    public Object getProperty(String fullName) throws NavajoException, UserException {
 	   Property p = msg.getProperty(fullName);
 		  if ( p == null ) {
