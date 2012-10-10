@@ -17,6 +17,8 @@ public class CopyMessage implements Mappable {
   private Navajo inDoc;
   private Access myAccess;
   public boolean useOutputDoc = true;
+  public boolean useDefinitionMessage = false;
+  
   public String copyMessageFrom = null; // If copyMessageFrom is empty, either the currently processed incoming (useOutputDoc = false)
   									  // or currently processed outgoing (useOutputDoc = true) will be copied.
   public String copyMessageTo = null;
@@ -54,6 +56,12 @@ public class CopyMessage implements Mappable {
     	from = (useOutputDoc) ? myAccess.getCompiledScript().getCurrentOutMsg() : myAccess.getCompiledScript().getCurrentInMsg();
     } else {
     	from = (useOutputDoc) ? outputDoc.getMessage(this.copyMessageFrom) : inDoc.getMessage(this.copyMessageFrom);
+    	if ( useDefinitionMessage ) {
+    		if ( !from.isArrayMessage() || from.getDefinitionMessage() == null ) {
+    			throw new UserException(-1, "Could not copy definition message: not present.");
+    		}
+    		from = from.getDefinitionMessage();
+    	}
     }
     
     if (from == null)
@@ -66,7 +74,7 @@ public class CopyMessage implements Mappable {
     if ( copyMessageTo != null ) {
     	try {
     		to = MappingUtils.addMessage(outputDoc, myAccess.getCurrentOutMessage(), copyMessageTo, null, 
-    				1, from.getType(), "")[0];
+    				1, ( from.getType() != Message.MSG_TYPE_DEFINITION ? from.getType() : Message.MSG_TYPE_SIMPLE ), "")[0];
     	} catch (Exception e1) {
     		throw new UserException(-1, e1.getMessage(), e1);
     	}
@@ -88,6 +96,10 @@ public class CopyMessage implements Mappable {
   public void setUseOutputDoc(boolean b) {
     this.useOutputDoc = b;
   }
+  
+  public void setUseDefinitionMessage(boolean b) {
+	    this.useDefinitionMessage = b;
+	  }
 
   public void setCopyMessageFrom(String name) {
     this.copyMessageFrom = name;
