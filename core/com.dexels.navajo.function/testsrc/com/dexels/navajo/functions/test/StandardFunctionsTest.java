@@ -1591,38 +1591,6 @@ public class StandardFunctionsTest {
 		assertEquals("true", o.toString());
 	}
 
-	@Test
-	public void testEmptyBinary() throws Exception {
-
-		FunctionInterface fi = fff.getInstance(cl, "EmptyBinary");
-		fi.reset();
-
-		Object o = fi.evaluateWithTypeChecking();
-		assertNotNull(o);
-		assertEquals(Binary.class, o.getClass());
-
-	}
-
-	@Test
-	public void testElfProef() throws Exception {
-
-		FunctionInterface fi = fff.getInstance(cl, "ElfProef");
-		fi.reset();
-		fi.insertOperand("123456789");
-
-		Object o = fi.evaluateWithTypeChecking();
-		assertNotNull(o);
-		assertEquals(Boolean.class, o.getClass());
-		assertEquals("true", o.toString());
-
-		fi.reset();
-		fi.insertOperand("23232323");
-
-		o = fi.evaluateWithTypeChecking();
-		assertNotNull(o);
-		assertEquals(Boolean.class, o.getClass());
-		assertEquals("false", o.toString());
-	}
 
 	@Test
 	public void testDecimalChar() throws Exception {
