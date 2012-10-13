@@ -31,7 +31,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
  * ====================================================================
  */
 
-public class GetPropertyAttribute extends FunctionInterface {
+abstract class GetPropertyAttribute extends FunctionInterface {
 
 
 	public GetPropertyAttribute() {
