@@ -1187,39 +1187,39 @@ public class StandardFunctionsTest {
 
 	}
 
-	@Test
-	public void testGetPropertyAttribute1() throws Exception {
-
-		FunctionInterface fi = fff.getInstance(cl, "GetPropertyAttribute");
-		fi.reset();
-		fi.setInMessage(createTestNavajo());
-		Navajo doc = createTestNavajo();
-		fi.insertOperand("/Single/Vuur");
-		fi.insertOperand("direction");
-
-		Object o = fi.evaluateWithTypeChecking();
-
-		assertNotNull(o);
-		assertEquals("out", o.toString());
-
-	}
-
-	@Test
-	public void testGetPropertyAttribute2() throws Exception {
-
-		FunctionInterface fi = fff.getInstance(cl, "GetPropertyAttribute");
-		fi.reset();
-		fi.setInMessage(createTestNavajo());
-		Navajo doc = createTestNavajo();
-		fi.insertOperand("/Single/Vuur");
-		fi.insertOperand("type");
-
-		Object o = fi.evaluateWithTypeChecking();
-
-		assertNotNull(o);
-		assertEquals("integer", o.toString());
-
-	}
+//	@Test
+//	public void testGetPropertyAttribute1() throws Exception {
+//
+//		FunctionInterface fi = fff.getInstance(cl, "GetPropertyAttribute");
+//		fi.reset();
+//		fi.setInMessage(createTestNavajo());
+//		Navajo doc = createTestNavajo();
+//		fi.insertOperand("/Single/Vuur");
+//		fi.insertOperand("direction");
+//
+//		Object o = fi.evaluateWithTypeChecking();
+//
+//		assertNotNull(o);
+//		assertEquals("out", o.toString());
+//
+//	}
+//
+//	@Test
+//	public void testGetPropertyAttribute2() throws Exception {
+//
+//		FunctionInterface fi = fff.getInstance(cl, "GetPropertyAttribute");
+//		fi.reset();
+//		fi.setInMessage(createTestNavajo());
+//		Navajo doc = createTestNavajo();
+//		fi.insertOperand("/Single/Vuur");
+//		fi.insertOperand("type");
+//
+//		Object o = fi.evaluateWithTypeChecking();
+//
+//		assertNotNull(o);
+//		assertEquals("integer", o.toString());
+//
+//	}
 
 	@Test
 	public void testGetPropertySubType() throws Exception {
