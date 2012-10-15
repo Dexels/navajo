@@ -80,7 +80,7 @@ public class MySQLJDBCDataSourceService implements DataSourceFactory {
     /**
      * Setups the basic properties for {@link DataSource}s
      */
-    private void setup(MysqlDataSource source, Properties props) {
+    protected void setup(MysqlDataSource source, Properties props) {
         if (props == null) {
             return;
         }
