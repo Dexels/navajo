@@ -289,8 +289,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			gld.setAlignment(new Alignment(Alignment.LEADING, Alignment.DEFAULT));
 			currentComponent.setLayoutData(gld);
 		} else {
-			System.err
-					.println("Ayy, strange property: " + myProperty.getType());
+			logger.warn("Ayy, strange property: " + myProperty.getType());
 		}
 		if (label_indent > 0 && showLabel && getComponents().length > 1) {
 			LabelEx ll = new LabelEx("");

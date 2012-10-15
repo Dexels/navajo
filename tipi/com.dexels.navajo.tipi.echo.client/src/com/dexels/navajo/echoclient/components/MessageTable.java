@@ -361,8 +361,7 @@ public class MessageTable extends PageableSortableTable implements
 
 	@Override
 	public void addActionListener(ActionListener al) {
-		System.err
-				.println("Ignoring addActionListener. Use addselectionlistener");
+		logger.warn("Ignoring addActionListener. Use addselectionlistener");
 	}
 
 	//
