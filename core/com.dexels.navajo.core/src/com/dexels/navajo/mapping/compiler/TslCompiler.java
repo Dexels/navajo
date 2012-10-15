@@ -1179,7 +1179,9 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
       } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
       
       addDependency("dependentObjects.add( new JavaDependency( -1, \"" + className + "\"));\n", "JAVA"+className);
-      
+      if(mapNode==null) {
+    	  throw new IllegalStateException("Unexpected null mapNode");
+      }
       String ref = mapNode.getAttribute("ref");
       String filter = mapNode.getAttribute("filter");
       
@@ -1436,7 +1438,7 @@ public String fieldNode(int ident, Element n, String className,
         String type = null;
        
         try {
-        	logger.info("Attr: "+attribute+" class: "+localContextClass);
+//        	logger.info("Attr: "+attribute+" class: "+localContextClass);
         	type = MappingUtils.getFieldType(localContextClass, attribute);
         	checkDependentFieldResource(localContextClass, attribute, exprValues,dependencies);	
         } catch (Exception e) { 
@@ -1525,6 +1527,9 @@ public String fieldNode(int ident, Element n, String className,
       
     }
     else { // Field with ref: indicates that a message or set of messages is mapped to attribute (either Array Mappable or singular Mappable)
+        if(mapNode==null) {
+      	  throw new IllegalStateException("Unexpected null mapNode");
+        }
       String ref = mapNode.getAttribute("ref");
       boolean isParam = false;
       
@@ -2180,6 +2185,9 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
     }
 
     //System.err.println("nextNode = " + nextNode + ", n = " + n);
+    if(nextNode==null) {
+  	  throw new IllegalStateException("Unexpected null nextNode");
+    }
 
     Node parentNode = nextNode.getParentNode();
 

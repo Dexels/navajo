@@ -156,7 +156,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	public void publishAsynchronousEvent(final NavajoEvent ne, boolean ignoreProxyListeners) {
 		// TODO ignoreProxyListeners is actually not used. Is that correct?
-		//System.err.println("Asynchronous Event Triggered: " + ne.getClass());
+		//logger.info("Asynchronous Event Triggered: " + ne.getClass());
 		publishMonitoredEvent(ne);
 		
 		Set<NavajoListener> copy = getInterestedParties(ne);
@@ -194,7 +194,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	public void publishEvent(NavajoEvent ne, boolean ignoreProxyListeners) {
 
-		//System.err.println("Synchronous Event Triggered: " + ne.getClass());
+		//logger.info("Synchronous Event Triggered: " + ne.getClass());
 		publishMonitoredEvent(ne);
 		
 		Set<NavajoListener> copy = getInterestedParties(ne);
@@ -290,11 +290,11 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	public void handleNotification(Notification notification, Object handback) {
 
-		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getType() );
-		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getMessage() );
-		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSequenceNumber() );
-		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getTimeStamp() );
-		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSource() );		
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getType() );
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getMessage() );
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSequenceNumber() );
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getTimeStamp() );
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSource() );		
 
 	}
 
@@ -318,8 +318,8 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 //		NavajoEventRegistry n = NavajoEventRegistry.getInstance();
 //		n.addListener(NavajoEvent.class, new NavajoEventProxy());
 //		n.addListener(NavajoEvent.class, null);
-//		System.err.println(">>>> " + n.isMonitoredEvent(NavajoEvent.class, true));
-//		System.err.println(">>>> " + n.isMonitoredEvent(TribeMemberDownEvent.class, true));
+//		logger.info(">>>> " + n.isMonitoredEvent(NavajoEvent.class, true));
+//		logger.info(">>>> " + n.isMonitoredEvent(TribeMemberDownEvent.class, true));
 //	}
 
 }

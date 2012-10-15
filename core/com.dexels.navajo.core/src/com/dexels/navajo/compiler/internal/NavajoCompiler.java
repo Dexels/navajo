@@ -32,6 +32,9 @@ import java.io.StringWriter;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.legacy.compiler.SunJavaCompiler;
 import com.dexels.navajo.server.NavajoConfigInterface;
@@ -40,7 +43,9 @@ import com.dexels.navajo.server.NavajoConfigInterface;
 public class NavajoCompiler
 {
 		public static final String VERSION = "$Id$";
-	
+		
+		private final static Logger logger = LoggerFactory
+				.getLogger(NavajoCompiler.class);
 		public String errors;
 		
         public void compile(NavajoConfigInterface config, String source) throws Throwable{
@@ -48,7 +53,7 @@ public class NavajoCompiler
         	try {
 				Class.forName("com.sun.tools.javac.Main");
 			} catch (ClassNotFoundException e) {
-				System.err.println("No sun compiler.");
+				logger.info("No sun compiler.");
 				throw NavajoFactory.getInstance().createNavajoException("No java compiler found! Is tools.jar in your classpath? Are you using a full JDK?");
 //				return;
 			}
@@ -69,7 +74,7 @@ public class NavajoCompiler
 					}});
 				for (int i = 0; i < jars.length; i++) {
 					if (!jars[i].exists()) {
-						System.err.println("JAR: "+jars[i]+" does not exist!");
+						logger.info("JAR: "+jars[i]+" does not exist!");
 					
 					} else {
 						boolean valid = isValidZip(jars[i]);
@@ -101,7 +106,7 @@ public class NavajoCompiler
             
             classPath += additional.toString();
 
-            //System.err.println("in NavajoCompiler(): new classPath = " + classPath);
+            //logger.info("in NavajoCompiler(): new classPath = " + classPath);
             
             SunJavaCompiler compiler = new SunJavaCompiler();
 
