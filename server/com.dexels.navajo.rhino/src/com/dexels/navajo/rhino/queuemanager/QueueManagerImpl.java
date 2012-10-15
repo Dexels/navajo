@@ -146,7 +146,7 @@ public class QueueManagerImpl implements QueueManager {
 //		long init = System.currentTimeMillis();
 		Scriptable globalScope = null;
     	File scriptFile = null;
-    	Context cx = Context.enter();
+    	Context.enter();
     	if(getScriptDir()==null) {
     		scriptFile = new File(script);
     	} else {
