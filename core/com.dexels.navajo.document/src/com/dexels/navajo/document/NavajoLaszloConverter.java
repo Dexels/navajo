@@ -31,14 +31,12 @@ public class NavajoLaszloConverter {
 		try {
 			Document doc = XMLDocumentUtils.createDocument(is, false);
 
-			 System.err.println("Received: " + XMLDocumentUtils.toString(doc));
-
 			 Node root = doc.getFirstChild();
 			 NodeList nl = root.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node nn = nl.item(i);
 				if(nn==null) {
-					System.err.println("WTF?!");
+					logger.error("WTF?!");
 				}
 				if(nn instanceof Text) {
 //					Text t = (Text)nn;
@@ -62,7 +60,6 @@ public class NavajoLaszloConverter {
 
 	private static Navajo convertNodeToNavajo(Element tml) {
 		Navajo n;
-		System.err.println("ELEMENT NAME: "+tml.getNodeName());
 		n = NavajoFactory.getInstance().createNavajo();
 			String rpc_name = tml.getAttribute("rpc_name");
 			rpc_name = rpc_name.replaceAll("_", "/");
@@ -142,7 +139,6 @@ public class NavajoLaszloConverter {
 			ArrayList<Message> l = in.getAllMessages();
 			for (int i = 0; i < l.size(); i++) {
 				appendMessage(l.get(i), tml, doc, includeSelections);
-				System.err.println("Message added!");
 			}
 		} catch (Exception e) {
 			logger.error("Error: ", e);

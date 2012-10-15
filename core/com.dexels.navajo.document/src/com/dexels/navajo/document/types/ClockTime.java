@@ -29,7 +29,6 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
 	 */
 	private static final long serialVersionUID = -1867359996556685730L;
 	
-	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory
 			.getLogger(ClockTime.class);
 public final static String VERSION = "$Id$";
@@ -246,15 +245,6 @@ public final static String VERSION = "$Id$";
 	  }
   
   
-
-  public static void main(String [] args) throws Exception {
-
-    // Tests.
-
-  ClockTime ck = new ClockTime("12:00:33");
-  System.err.println("ck = " + ck.toString());
-  
-  }
 
   public final int compareTo(ClockTime o) {
 

@@ -154,7 +154,7 @@ public class AsyncClient {
 
 	private void callService(String url, Navajo n, final NavajoResponseHandler continuation) throws IOException, NavajoException {
 
-		System.err.println("Calling service: " + n.getHeader().getRPCName());
+		logger.debug("Calling service: " + n.getHeader().getRPCName());
 		final ContentExchange exchange = new ContentExchange() {
 
 			
@@ -174,13 +174,13 @@ public class AsyncClient {
 
 			@Override
 			protected void onRequestCommitted() throws IOException {
-				System.err.println("Connection committed");
+				logger.debug("Connection committed");
 				super.onRequestCommitted();
 			}
 
 			@Override
 			protected void onConnectionFailed(Throwable x) {
-				System.err.println("Connection failed");
+				logger.debug("Connection failed");
 				super.onConnectionFailed(x);
 				try {
 					continuation.onFail(x);
@@ -193,7 +193,7 @@ public class AsyncClient {
 
 			@Override
 			protected void onException(Throwable x) {
-				System.err.println("Exception occurred");
+				logger.debug("Exception occurred");
 				super.onException(x);
 				try {
 					continuation.onFail(x);
@@ -220,12 +220,12 @@ public class AsyncClient {
 						}
 					} catch (RuntimeException e) {
 						e.printStackTrace();
-						System.err.println("Illegal TML detected:\n"+new String(responseContentBytes));
+						logger.debug("Illegal TML detected:\n"+new String(responseContentBytes));
 					} finally {
 						setActualCalls(getActualCalls()-1);
 					}
 				} else {
-					System.err.println("No response bytes detected!");
+					logger.debug("No response bytes detected!");
 				}
 			}
 
@@ -264,9 +264,9 @@ public class AsyncClient {
 		final NavajoResponseHandler showOutput = new NavajoResponseHandler() {
 			@Override
 			public void onResponse(Navajo n) {
-				System.err.println("Navajo finished!");
+				logger.debug("Navajo finished!");
 				try {
-					System.err.println("Response2 ..");
+					logger.debug("Response2 ..");
 					n.write(System.err);
 				} catch (NavajoException e) {
 					e.printStackTrace();
@@ -285,9 +285,9 @@ public class AsyncClient {
 			new NavajoResponseHandler() {
 			@Override
 			public void onResponse(Navajo n) {
-				System.err.println("Navajo finished!");
+				logger.debug("Navajo finished!");
 				try {
-					System.err.println("Response: ..");
+					logger.debug("Response: ..");
 					n.write(System.err);
 					ac.callService(n, "person/ProcessSearchPersons", showOutput);
 				} catch (NavajoException e) {

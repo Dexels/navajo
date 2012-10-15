@@ -72,11 +72,11 @@ public class XMLDocumentUtils {
       createDocumentBuilderFactory();
        if (transformerFactory == null) {
            try {
-               System.out.println("Trying to use Xalan TransformerFactory instance");
+               logger.info("Trying to use Xalan TransformerFactory instance");
                //transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
                 transformerFactory = TransformerFactory.newInstance();
            } catch (java.lang.NoClassDefFoundError e) {
-               System.out.println("Could not find XSLT factory, using system default");
+               logger.warn("Could not find XSLT factory, using system default");
 
                throw NavajoFactory.getInstance().createNavajoException("Could not instantiate XSLT");
            }
