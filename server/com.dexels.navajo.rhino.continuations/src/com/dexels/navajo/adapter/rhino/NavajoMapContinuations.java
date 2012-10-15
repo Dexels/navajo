@@ -3,6 +3,9 @@ package com.dexels.navajo.adapter.rhino;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.NavajoMapUpdated;
 import com.dexels.navajo.client.async.AsyncClient;
 import com.dexels.navajo.document.Message;
@@ -17,6 +20,9 @@ import com.dexels.navajo.server.UserException;
 
 public class NavajoMapContinuations extends NavajoMapUpdated {
 
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoMapContinuations.class);
+	
 	@Override
 	public void setDoSend(final String method) throws UserException,
 			SystemException {
@@ -56,10 +62,9 @@ public class NavajoMapContinuations extends NavajoMapUpdated {
 
 	protected void scheduleExternalNavajoCall(String method, TmlRunnable on2) {
 		try {
-			System.err
-					.println("Calling navajoMapContinuations. Using currentOutdoc: "
+			logger.info("Calling navajoMapContinuations. Using currentOutdoc: "
 							+ useCurrentOutDoc + "\nresolved out doc;");
-			outDoc.write(System.err);
+//			outDoc.write(System.err);
 			if (useCurrentOutDoc) {
 				this.outDoc = access.getOutputDoc().copy();
 			} else {
