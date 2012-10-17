@@ -186,14 +186,14 @@ public class TslCompilerComponent implements ScriptCompiler {
 		xe.addChild(service);
 		XMLElement provide = new CaseSensitiveXMLElement("provide");
 		service.addChild(provide);
-		for (Dependency dependency : dependencies) {
-			XMLElement dep = new CaseSensitiveXMLElement("reference");
-			dep.setAttribute("bind", "setDependency");
-			dep.setAttribute("deptype", dependency.getType());
-			dep.setAttribute("depId", dependency.getId());
-			dep.setAttribute("depStamp", dependency.getCurrentTimeStamp());
-			xe.addChild(dep);
-		}
+//		for (Dependency dependency : dependencies) {
+//			XMLElement dep = new CaseSensitiveXMLElement("reference");
+//			dep.setAttribute("bind", "setDependency");
+//			dep.setAttribute("deptype", dependency.getType());
+//			dep.setAttribute("depId", dependency.getId());
+//			dep.setAttribute("depStamp", dependency.getCurrentTimeStamp());
+//			xe.addChild(dep);
+//		}
 		provide.setAttribute("interface", "com.dexels.navajo.server.CompiledScriptFactory");
 		XMLElement property = new CaseSensitiveXMLElement("property");
 		xe.addChild(property);
