@@ -238,9 +238,4 @@ public class TslCompilerComponent implements ScriptCompiler {
 		logger.debug("Deactivating TSL compiler");
 	}
 	
-	public static void main(String[] args) {
-		String script = "club/InitUpdateClub";
-		String pack = script.substring(0,script.lastIndexOf('/'));
-		System.err.println("pack: "+pack);
-	}
 }
