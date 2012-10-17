@@ -126,6 +126,11 @@ public class ResultMessage implements Mappable {
 	}
 	
 	private final void processSuppressedProperties(Message m) {
+		
+		if ( m.isArrayMessage() && m.getDefinitionMessage() != null ) {
+			processSuppressedProperties(m.getDefinitionMessage());
+		}
+		
 		Iterator<Property> allProps = new ArrayList<Property>(m.getAllProperties()).iterator();
 		while ( allProps.hasNext() ) {
 			Property p = allProps.next();
@@ -180,7 +185,6 @@ public class ResultMessage implements Mappable {
 	}
 
 	public void store() throws MappableException, UserException {
-		processSuppressedProperties(this.msg); 
 	}
 
 }
