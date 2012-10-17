@@ -24,7 +24,9 @@ public class ClasspathInputLocator implements ScriptInputLocator {
 		} catch (Exception e) {
 			throw new IOException("Error loading test input: "+scriptName);
 		}
-		is.close();
+		if(is!=null) {
+			is.close();
+		}
 		return result;
 	}	
 
