@@ -148,7 +148,6 @@ public class TmlContinuationServlet extends HttpServlet implements
 	protected void service(final HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
-			long stamp = System.currentTimeMillis();
 			TmlContinuationRunner tmlRunner = (TmlContinuationRunner) req
 					.getAttribute("tmlRunner");
 			if (tmlRunner != null) {
@@ -198,10 +197,6 @@ public class TmlContinuationServlet extends HttpServlet implements
 			req.setAttribute("tmlRunner", instantiateRunnable);
 			getTmlScheduler().submit(instantiateRunnable, false);
 			instantiateRunnable.suspendContinuation();
-//			logger.warn("WAIT FOR IT");
-			long stamp2 = System.currentTimeMillis();
-//			logger.info("Server schedule timestamp took: "+(stamp2-stamp));
-//			logger.info("Exiting initial servlet call");
 		} catch (Throwable e) {
 			logger.error("Servlet call failed dramatically", e);
 		}
