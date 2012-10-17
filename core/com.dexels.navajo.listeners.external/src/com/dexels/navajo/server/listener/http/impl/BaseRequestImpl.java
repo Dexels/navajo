@@ -200,9 +200,12 @@ public class BaseRequestImpl extends BaseInMemoryRequest implements
 		long serverTime = finishedScriptAt - startedAt;
 		if(outDoc==null) {
 			logger.warn("Null outDoc. This is going to hurt");
+			response.sendError(500, "No response received, possible scheduling problem.");
+			return;
 		} else if (outDoc.getHeader()==null) {
 			logger.warn("Null outDoc header. This is going to hurt");
-			
+			response.sendError(500, "No response header received, possible scheduling problem.");
+			return;
 		}
 
 		outDoc.getHeader().setHeaderAttribute("postTime", "" + postTime);
