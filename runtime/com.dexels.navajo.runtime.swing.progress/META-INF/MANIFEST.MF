@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Navajo Swing Progress Monitor
+Bundle-SymbolicName: com.dexels.navajo.runtime.swing.progress
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: DEXELS
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
