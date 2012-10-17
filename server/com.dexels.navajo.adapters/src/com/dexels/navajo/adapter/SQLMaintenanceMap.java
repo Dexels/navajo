@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.sqlmap.SQLMapDatasourceMap;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -36,6 +39,9 @@ public class SQLMaintenanceMap implements Mappable {
   public SQLMapDatasourceMap [] datasources;
   public SQLMapDatasourceMap [] deleteDatasources;
   public int transactionContextCount;
+  
+private final static Logger logger = LoggerFactory
+		.getLogger(SQLMaintenanceMap.class);
 
 
 private boolean dirty = false;
@@ -56,7 +62,7 @@ public void load(Access access) throws MappableException, UserException {
       //  throw new MappableException("Cannot enter maintenance object, already in use");
 
       setNoAccess(true);
-      System.out.println("In SQLMaintenanceMap");
+      logger.debug("In SQLMaintenanceMap");
 
       this.access = access;
       this.config = DispatcherFactory.getInstance().getNavajoConfig();
@@ -68,7 +74,7 @@ public void load(Access access) throws MappableException, UserException {
         e.printStackTrace();
         throw new MappableException(e.getMessage());
       }
-      //System.out.println(sqlMapConfigFile.toString());
+      //logger.debug(sqlMapConfigFile.toString());
   }
 
   public synchronized void store() throws MappableException, UserException {

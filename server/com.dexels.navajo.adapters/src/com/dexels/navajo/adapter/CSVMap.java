@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.csvmap.CSVEntryMap;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -54,7 +57,9 @@ public class CSVMap implements Mappable {
 
 	private boolean update = false;
 	private List<CSVEntryMap> draftEntries = null;
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(CSVMap.class);
+	
 	public void load(Access access) throws MappableException, UserException {
 
 	}
@@ -239,7 +244,7 @@ public class CSVMap implements Mappable {
 		Mappable[] all = ((CSVMap) csv).getEntries();
 		for (int i = 0; i < all.length; i++) {
 			CSVEntryMap entryMap = ((CSVEntryMap) all[i]);
-			System.err.println("a = >" + entryMap.getEntry(new Integer(0)) + "< - >" + 
+			logger.info("a = >" + entryMap.getEntry(new Integer(0)) + "< - >" + 
 			                             entryMap.getEntry(new Integer(1)) + "< - >" + 
                                          entryMap.getEntry(new Integer(2)) + "< - >" + 
                                          entryMap.getEntry(new Integer(3)) + "< - >" + 

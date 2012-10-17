@@ -70,15 +70,15 @@ public class BaseLdapAdapter implements Mappable {
 		initialDir = new InitialDirContext(env);
 		Integer i = new Integer(28420);
 
-		System.out.println("Adding " + i + " to directory...");
+		logger.debug("Adding " + i + " to directory...");
 
 		initialDir.bind(principal + ",cn=myRandomInt", i);
 		// ctx.bind(arg0, i)
 		i = new Integer(98765);
-		System.out.println("i is now: " + i);
+		logger.debug("i is now: " + i);
 
 		i = (Integer) initialDir.lookup("cn=myRandomInt");
-		System.out.println("Retrieved i from directory with value: " + i);
+		logger.debug("Retrieved i from directory with value: " + i);
 	}
 
 	// public static void main(String[] args) throws SystemException,

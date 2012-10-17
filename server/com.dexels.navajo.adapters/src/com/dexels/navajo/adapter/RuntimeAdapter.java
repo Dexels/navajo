@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -32,6 +35,9 @@ public class RuntimeAdapter implements Mappable {
   public String error = "";
   public String dir = "";
   
+  private final static Logger logger = LoggerFactory
+		.getLogger(RuntimeAdapter.class);
+
   private String parameterList = null;
 
   private boolean outputFinished = false;
@@ -102,7 +108,7 @@ public void setRun(boolean b) throws UserException {
 					  br_in.close();
 				  }
 				  catch (IOException ioe) {
-					  System.out.println("Exception caught printing javac result");
+					  logger.debug("Exception caught printing javac result");
 					  ioe.printStackTrace();
 				  }
 				  outputFinished = true;
@@ -120,7 +126,7 @@ public void setRun(boolean b) throws UserException {
 					  br_in.close();
 				  }
 				  catch (IOException ioe) {
-					  System.out.println("Exception caught printing javac result");
+					  logger.debug("Exception caught printing javac result");
 					  ioe.printStackTrace();
 				  }
 				  errorFinished = true;
@@ -164,8 +170,8 @@ public void setRun(boolean b) throws UserException {
 //    ra.setParameter("ONGELOOFELIJK");
     ra.setRun(true);
     
-    System.err.println("FINITO: " + ra.getOutput());
-    System.err.println("ERROR STRING:>" + ra.getError() + "<");
+    logger.info("FINITO: " + ra.getOutput());
+    logger.info("ERROR STRING:>" + ra.getError() + "<");
   }
 
 }

@@ -83,7 +83,7 @@ public class SPMap extends SQLMap {
 			  lookupTable.put("NUMBER", new Integer(java.sql.Types.NUMERIC));
 		  }
 	  }
-	  // System.out.println("lookupTable = " + lookupTable);
+	  // logger.info("lookupTable = " + lookupTable);
   }
 
  
@@ -145,10 +145,10 @@ public class SPMap extends SQLMap {
         }
 
         if (debug) {
-          System.out.println("callStatement = " + callStatement.toString());
+          logger.info("callStatement = " + callStatement.toString());
         }
         if (debug) {
-          System.out.println("parameters = " + parameters);
+          logger.info("parameters = " + parameters);
 
         }
         if (parameters != null) {
@@ -157,7 +157,7 @@ public class SPMap extends SQLMap {
 				Object param = parameters.get(i);
 	            int type = ( (Integer) parameterTypes.get(i)).intValue();
 	            if (debug) {
-	              System.out.println("Setting parameter: " + param + "(" + (param != null ? param.getClass().toString() : "") + "), type = " + type);
+	              logger.info("Setting parameter: " + param + "(" + (param != null ? param.getClass().toString() : "") + "), type = " + type);
 	            }
 	            if (type == INPUT_PARAM) {
 	                spIndex++;
@@ -177,14 +177,14 @@ public class SPMap extends SQLMap {
         }
 
         if (query != null) {
-          // System.out.println("\nCalling query - callStatement.query()");
+          // logger.info("\nCalling query - callStatement.query()");
           rs = callStatement.executeQuery();
-          // System.out.println("\nCalled query");
+          // logger.info("\nCalled query");
         }
         else {
-          // System.out.println("\nCalling update - callStatement.execute()");
+          // logger.info("\nCalling update - callStatement.execute()");
           callStatement.execute();
-          // System.out.println("\nCalled update");
+          // logger.info("\nCalled update");
         }
       }
 
@@ -202,7 +202,7 @@ public class SPMap extends SQLMap {
             for (int i = 1; i < (columns + 1); i++) {
               String param = meta.getColumnName(i);
               int type = meta.getColumnType(i);
-              // System.out.println(param + " has type " + getType(type));
+              // logger.info(param + " has type " + getType(type));
               Object value = null;
               java.util.Calendar c = java.util.Calendar.getInstance();
 
@@ -243,7 +243,7 @@ public class SPMap extends SQLMap {
     double total = (end - start) / 1000.0;
 
     totaltiming += total;
-    // System.out.println("finished " + total + " seconds. Average query time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
+    // logger.info("finished " + total + " seconds. Average query time: " + (totaltiming/requestCount) + " (" + requestCount + ")");
     return resultSet;
   }
 
@@ -269,7 +269,7 @@ public class SPMap extends SQLMap {
       throw new UserException( -1,
           "SPMap does not allow for multiple queries/updates, use a new SPMap");
     }
-    // System.out.println("in setUpdate(), newUpdate = " + newUpdate);
+    // logger.info("in setUpdate(), newUpdate = " + newUpdate);
     // Close previous callStatement if it exists.
     try {
       	if (callStatement != null) {
@@ -283,10 +283,10 @@ public class SPMap extends SQLMap {
   }
 
   public void setParameter(Object param) {
-    // System.out.println("in setParameter(),");
+    // logger.info("in setParameter(),");
     super.setParameter(param);
     parameterTypes.add(new Integer(INPUT_PARAM));
-    // System.out.println("Leaving setParameter() in SPMap");
+    // logger.info("Leaving setParameter() in SPMap");
   }
 
   public Object getOutputParameter() {
@@ -301,12 +301,12 @@ public class SPMap extends SQLMap {
   public Object getOutputParameter(Integer i) throws com.dexels.navajo.server.UserException {
 
     int index = i.intValue();
-    // System.out.println("in getOutputParameter("+index+")");
+    // logger.info("in getOutputParameter("+index+")");
     Object value = null;
 
     if (callStatement != null) {
       try {
-        // System.out.println("parameters = " + parameters);
+        // logger.info("parameters = " + parameters);
         if ( index  > parameters.size() ) {
           throw new UserException(-1, "Outputparameter index out of range: " + i.intValue() );
         }

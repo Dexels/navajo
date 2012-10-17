@@ -89,7 +89,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 			  if (broker != null) {
 				  // Found an existing broker, returning this one.
 				  if (this.debug) {
-					  System.out.println(this.getClass() +
+					  logger.info(this.getClass() +
 							  ": already have a broker for data source '"
 							  + dsrc + "', user name '" + usr + "'");
 				  }
@@ -104,7 +104,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 		  
 		  if (similar != null) {
 			  if (this.debug) {
-				  System.out.println(this.getClass() +
+				  logger.info(this.getClass() +
 						  ": have a similar broker for data source '"
 						  + dsrc + "'");
 			  }
@@ -126,7 +126,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 		  this.brokerMap.put(dsrc, broker);
 		  
 		  if (this.debug) {
-			  System.out.println(this.getClass() +
+			  logger.info(this.getClass() +
 					  ": putting new broker with identifier '" +
 					  dsrc + "'");
 		  }
@@ -193,7 +193,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     SQLMapBroker broker;
     if (usr == null) {
       if (this.debug) {
-        System.out.println(this.getClass() +
+        logger.info(this.getClass() +
             ": user name is null, returning a similar broker for datasource '"
             + dsrc + "'");
       }
@@ -202,7 +202,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     else {
       broker = this.haveExistingBroker(dsrc, usr);
       if (this.debug && (broker != null)) {
-        System.out.println(this.getClass() +
+        logger.info(this.getClass() +
                            ": returning a broker for datasource '"
                            + dsrc + "', user name '" + usr + "', password '" + pwd + "'");
       }
@@ -213,7 +213,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     }
     else {
       if (this.debug) {
-        System.out.println(this.getClass() + ": no appropriate brokers found");
+        logger.info(this.getClass() + ": no appropriate brokers found");
       }
       return (null);
     }
@@ -224,7 +224,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     //logger.info("In ConnectionBrokerManager.get(" + dsrc + "," + usr + "," + pwd + ")");
     if (usr == null) {
       if (this.debug) {
-        System.out.println(this.getClass() +
+        logger.info(this.getClass() +
             ": user name is null, returning a similar broker for datasource '"
             + dsrc + "'");
       }
@@ -234,7 +234,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     else {
       broker = this.haveExistingBroker(dsrc, usr);
       if (this.debug && (broker != null)) {
-        System.out.println(this.getClass() +
+        logger.info(this.getClass() +
                            ": returning a broker for datasource '"
                            + dsrc + "', user name '" + usr + "', password '" + pwd + "'");
 
@@ -246,7 +246,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     }
     else {
       if (this.debug) {
-        System.out.println(this.getClass() + ": no appropriate brokers found");
+        logger.info(this.getClass() + ": no appropriate brokers found");
       }
       return (null);
     }
@@ -278,7 +278,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
   public final void setDebug(final boolean b) {
     this.debug = b;
     if (this.debug) {
-      System.out.println(this.getClass() +
+      logger.info(this.getClass() +
                          "; debugging on");
     }
 
@@ -364,7 +364,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
         }
         this.brokerMap.remove(datasource);
         if (this.debug) {
-          System.out.println(this.getClass() + ": destroyed broker '" + datasource + "'");
+          logger.info(this.getClass() + ": destroyed broker '" + datasource + "'");
         }
       }
   }
