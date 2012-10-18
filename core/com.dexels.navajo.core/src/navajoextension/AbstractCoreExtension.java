@@ -44,7 +44,7 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 		logger.debug("Function names: "+functionNames);
 		for (String functionName : functionNames) {
 			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
-			 registerFunction(fi, functionName, fd);
+			 registerFunction(fi, functionName, fd,extensionDef);
 		}
 	}
 	
@@ -63,6 +63,7 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 				 Dictionary<String, Object> props = new Hashtable<String, Object>();
 				 props.put("adapterName", adapterName);
 				 props.put("adapterClass", c.getName());
+				 props.put("type", "adapter");
 
 				if(adapterClass!=null) {
 					context.registerService(Class.class.getName(), c, props);
@@ -87,16 +88,26 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 	}
 
 	private void registerFunction(FunctionFactoryInterface fi,
-			String functionName, FunctionDefinition fd) {
+			String functionName, FunctionDefinition fd, ExtensionDefinition extensionDef) {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
 		props.put("functionName", functionName);
 		props.put("functionDefinition", fd);
 		props.put("type", "function");
 		logger.debug("registering function: {}",functionName);
-		registration = context.registerService(
-				FunctionInterface.class.getName(),
-				fi.instantiateFunctionClass(fd, getClass().getClassLoader()),
-				props);
+		Class<? extends FunctionInterface> clz;
+		try {
+			clz = (Class<? extends FunctionInterface>) Class.forName(fd.getObject(),true,extensionDef.getClass().getClassLoader());
+			registration = context.registerService(
+					Class.class.getName(),
+					clz,
+					props);
+		} catch (ClassNotFoundException e) {
+			logger.error("Error registering service: {}",functionName,e);
+		}
+//		registration = context.registerService(
+//				FunctionInterface.class.getName(),
+//				fi.instantiateFunctionClass(fd, getClass().getClassLoader()),
+//				props);
 		registrations.add(registration);
 	}
 }
