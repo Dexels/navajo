@@ -255,6 +255,14 @@
 					required="true" />
 				<param name="value" field="property" type="any" required="true" />
 			</method>
+			<!--  Deletes a property -->
+			<method name="deleteproperty">
+				<param name="name" field="deleteProperty" type="string" required="true"/>
+			</method>
+			<!--  Deletes a message -->
+			<method name="deletemessage">
+				<param name="name" field="deleteMessage" type="string" required="true"/>
+			</method>
 			<!-- Suppresses a defined property -->
 			<method name="suppressproperty">
 				<param name="name" field="propertyId" type="string" required="true" />
