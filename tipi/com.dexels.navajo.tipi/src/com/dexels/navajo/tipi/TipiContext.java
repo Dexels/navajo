@@ -2282,8 +2282,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			String[] options) throws TipiBreakException;
 
 	public String generateComponentId(TipiComponent parent,
-			TipiComponent component) {
-		if (component == null || component == parent) {
+			TipiComponent component)  {
+		if (component == parent) {
 			return component.getClass().getName() + "@" + Math.random();
 		}
 		return component.getClass().getName() + "@" + component.hashCode();

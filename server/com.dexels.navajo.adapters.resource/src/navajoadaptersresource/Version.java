@@ -1,13 +1,10 @@
 package navajoadaptersresource;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
+import navajoextension.AbstractCoreExtension;
 
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.adapter.resource.bundle.ResourceAdapterLibrary;
-import com.dexels.navajo.functions.util.FunctionFactoryFactory;
-import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -35,7 +32,7 @@ import com.dexels.navajo.functions.util.FunctionFactoryInterface;
  */
 
 
-public class Version extends com.dexels.navajo.version.AbstractVersion {
+public class Version extends AbstractCoreExtension {
 
 
 	private static BundleContext bundleContext;
@@ -44,44 +41,43 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	}
 
 
-	// TODO Refactor into more reusable code
-
-	
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
 		bundleContext = bc;
 		try {
-			FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
-			fi.init();
-			
-			fi.clearFunctionNames();
-
-
 			ResourceAdapterLibrary library = new ResourceAdapterLibrary();
-			fi.injectExtension(library);
-			for(String adapterName: fi.getAdapterNames(library)) {
-//			FunctionDefinition fd = fi.getAdapterDefinition(adapterName,extensionDef);
-				fi.getAdapterConfig(library).get(adapterName);
-//			FunctionDefinition fd = fi.getDef(extensionDef, adapterName);
-				
-				String adapterClass = fi.getAdapterClass(adapterName,library);
-				Class<?> c = null;
-				
-				try {
-					c = Class.forName(adapterClass);
-					 Dictionary<String, Object> props = new Hashtable<String, Object>();
-					 props.put("adapterName", adapterName);
-					 props.put("adapterClass", c.getName());
-
-					if(adapterClass!=null) {
-						context.registerService(Class.class.getName(), c, props);
-					}
-				} catch (Exception e) {
-					logger.error("Error loading class for adapterClass: "+adapterClass,e);
-				}
-				
-			}
+			registerAll(library);
+//			FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
+//			fi.init();
+//			
+//			fi.clearFunctionNames();
+//
+//
+//			fi.injectExtension(library);
+//			
+//			for(String adapterName: fi.getAdapterNames(library)) {
+////			FunctionDefinition fd = fi.getAdapterDefinition(adapterName,extensionDef);
+//				fi.getAdapterConfig(library).get(adapterName);
+////			FunctionDefinition fd = fi.getDef(extensionDef, adapterName);
+//				
+//				String adapterClass = fi.getAdapterClass(adapterName,library);
+//				Class<?> c = null;
+//				
+//				try {
+//					c = Class.forName(adapterClass);
+//					 Dictionary<String, Object> props = new Hashtable<String, Object>();
+//					 props.put("adapterName", adapterName);
+//					 props.put("adapterClass", c.getName());
+//
+//					if(adapterClass!=null) {
+//						context.registerService(Class.class.getName(), c, props);
+//					}
+//				} catch (Exception e) {
+//					logger.error("Error loading class for adapterClass: "+adapterClass,e);
+//				}
+//				
+//			}
 		} catch (Throwable e) {
 			logger.error("Trouble starting NavajoAdapters bundle",e);
 			e.printStackTrace();

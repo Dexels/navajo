@@ -75,12 +75,12 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 			} catch (Exception e) {
 				logger.error("Error: ", e);
 			}
-			if ( name != null ) {
-
-				functionDefinition.setXmlElement(element);
-				fuds.put(name, functionDefinition);
-				
-			}
+//			if ( name != null ) {
+//
+//				functionDefinition.setXmlElement(element);
+//				fuds.put(name, functionDefinition);
+//				
+//			}
 
 		} else {
 			throw new UnsupportedOperationException("Can not register adapter (pre-OSGi) without a ExtensionDefinition.");

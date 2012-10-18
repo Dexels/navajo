@@ -1,6 +1,7 @@
 package com.dexels.navajo.functions.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,18 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 		}
 	}
 	
-	@SuppressWarnings("rawtypes")
+	
+	@Override
+	public void init() {
+		Map<String, FunctionDefinition> fuds = getDefaultConfig();
+		if(fuds==null) {
+			fuds = new HashMap<String, FunctionDefinition>();
+			setDefaultConfig(fuds);
+		}
+//		super.init();
+	}
+
+
 	@Override
 	public List<XMLElement> getAllFunctionElements(String interfaceClass, String propertyKey)  {
 		List<XMLElement> result = new ArrayList<XMLElement>();

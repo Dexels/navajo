@@ -24,16 +24,13 @@
  */
 package navajobirt;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
+import navajoextension.AbstractCoreExtension;
 
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.birt.BirtAdapterLibrary;
-import com.dexels.navajo.functions.util.FunctionFactoryFactory;
-import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 
 /**
  * VERSION HISTORY
@@ -41,7 +38,7 @@ import com.dexels.navajo.functions.util.FunctionFactoryInterface;
  * 2.0.3. -Added more verbose timing information
  * 
  */
-public class Version extends com.dexels.navajo.version.AbstractVersion {
+public class Version extends AbstractCoreExtension {
 
 	public static final int MAJOR = 1;
 	public static final int MINOR = 0;
@@ -61,37 +58,38 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 		super.start(bc);
 		try {
-			FunctionFactoryInterface fi = FunctionFactoryFactory.getInstance();
-			fi.init();
-
-			fi.clearFunctionNames();
-
 			BirtAdapterLibrary library = new BirtAdapterLibrary();
-			fi.injectExtension(library);
-			for (String adapterName : fi.getAdapterNames(library)) {
-				// FunctionDefinition fd =
-				// fi.getAdapterDefinition(adapterName,extensionDef);
-//				FunctionDefinition fd = fi.getAdapterConfig(library).get(
-//						adapterName);
-				// FunctionDefinition fd = fi.getDef(extensionDef, adapterName);
-
-				String adapterClass = fi.getAdapterClass(adapterName, library);
-				Class<?> c = null;
-
-				try {
-					if (adapterClass != null) {
-						c = Class.forName(adapterClass);
-						Dictionary<String, Object> props = new Hashtable<String, Object>();
-						props.put("adapterName", adapterName);
-						props.put("adapterClass", c.getName());
-						context.registerService(Class.class.getName(), c, props);
-					}
-				} catch (Exception e) {
-					logger.error("Error loading class for adapterClass: "
-							+ adapterClass, e);
-				}
-
-			}
+			registerAll(library);
+//			FunctionFactoryInterface fi = FunctionFactoryFactory.getInstance();
+//			fi.init();
+//
+//			fi.clearFunctionNames();
+//
+//			fi.injectExtension(library);
+//			for (String adapterName : fi.getAdapterNames(library)) {
+//				// FunctionDefinition fd =
+//				// fi.getAdapterDefinition(adapterName,extensionDef);
+////				FunctionDefinition fd = fi.getAdapterConfig(library).get(
+////						adapterName);
+//				// FunctionDefinition fd = fi.getDef(extensionDef, adapterName);
+//
+//				String adapterClass = fi.getAdapterClass(adapterName, library);
+//				Class<?> c = null;
+//
+//				try {
+//					if (adapterClass != null) {
+//						c = Class.forName(adapterClass);
+//						Dictionary<String, Object> props = new Hashtable<String, Object>();
+//						props.put("adapterName", adapterName);
+//						props.put("adapterClass", c.getName());
+//						context.registerService(Class.class.getName(), c, props);
+//					}
+//				} catch (Exception e) {
+//					logger.error("Error loading class for adapterClass: "
+//							+ adapterClass, e);
+//				}
+//
+//			}
 		} catch (Throwable e) {
 			logger.error("Trouble starting NavajoAdapters bundle", e);
 		}
@@ -99,8 +97,8 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	}
 
 	@Override
-	public void stop(BundleContext arg0) throws Exception {
-		super.stop(arg0);
+	public void stop(BundleContext bundleContext) throws Exception {
+		super.stop(bundleContext);
 	}
 
 }

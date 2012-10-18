@@ -70,7 +70,8 @@ Export-Package: com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.na
   uses:="com.dexels.navajo.server,
    com.dexels.navajo.mapping,
    org.w3c.dom,
-   com.dexels.navajo.document"
+   com.dexels.navajo.document",
+ navajoextension
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.authentication.api,
  com.dexels.navajo.client,

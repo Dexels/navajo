@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import navajoextension.AbstractCoreExtension;
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -18,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import tipipackage.ITipiExtensionRegistry;
 import tipipackage.TipiJarServiceExtensionProvider;
 
-public abstract class TipiAbstractOSGiExtension implements TipiExtension,
+public abstract class TipiAbstractOSGiExtension extends AbstractCoreExtension implements TipiExtension,
 		BundleActivator {
 
 	private static final long serialVersionUID = 7871411864902044319L;
