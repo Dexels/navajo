@@ -397,6 +397,20 @@ private Object waitForResult = new Object();
     }
   }
 
+  public final void setDeleteProperty(String fullName) throws UserException {
+	 Property p = outDoc.getProperty(fullName);
+	 if ( p != null ) {
+		 p.getParentMessage().removeProperty(p);
+	 }
+  }
+  
+  public final void setDeleteMessage(String fullName) throws UserException {
+	  Message m = outDoc.getMessage(fullName);
+	  if ( m != null ) {
+			 outDoc.removeMessage(m);
+	  }
+  }
+  
   public final void setIntegerProperty(int i) throws UserException {
      //System.out.println("in setIntegerProperty() : i = " + i);
      currentProperty.setType(Property.INTEGER_PROPERTY);
@@ -425,7 +439,7 @@ private Object waitForResult = new Object();
 	  }
 	  addProperty(currentProperty);
   }
-
+  
   public final void setBooleanProperty(boolean b) throws UserException {
     currentProperty.setType(Property.BOOLEAN_PROPERTY);
     currentProperty.setValue(b);
@@ -944,7 +958,7 @@ private Object waitForResult = new Object();
   public void setSendThrough(boolean b) throws UserException {
 
     try {
-      ArrayList all = inMessage.getAllMessages();
+      ArrayList<Message> all = inMessage.getAllMessages();
       for (int i = 0; i < all.size(); i++) {
         Message m = inMessage.copyMessage( (Message) all.get(i), outDoc);
         outDoc.addMessage(m);
