@@ -119,7 +119,6 @@ public class GenericThread implements Runnable, Mappable {
 	
 	public void run() {
 		try {
-			System.err.println("in run, killed " + killed);
 			while ( !killed ) {
 				try {
 					status = WORKING;
@@ -132,7 +131,7 @@ public class GenericThread implements Runnable, Mappable {
 				status = SLEEPING;
 				inactive();
 			}
-			System.err.println("Thread " + myId + " is dying");
+			logger.debug("Thread " + myId + " is dying");
 			status = DEAD;
 		} finally {
 			finishThread();

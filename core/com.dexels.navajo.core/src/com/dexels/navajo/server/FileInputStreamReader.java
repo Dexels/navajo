@@ -35,11 +35,10 @@ public InputStream getResource(String name) {
     	if (f.exists()) {
     		return new FileInputStream(f);
     	}
-    	System.err.println("userdir = " + filePath);
     	File dir = new File(filePath);
     	URL baseDir = dir.toURI().toURL();
     	URL res = new URL(baseDir,name);
-    	logger.info("Resolved to res url: "+res.toString()+" while resolving name: "+name);
+    	logger.debug("Resolved to res url: "+res.toString()+" while resolving name: "+name);
     	return res.openStream();
     } catch (Exception ioe) {
     	
