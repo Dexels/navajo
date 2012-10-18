@@ -43,7 +43,7 @@ public class CallServiceTag extends BaseNavajoTag {
 		if(myService==null || "".equals(myService)) {
 			throw new JspException("Error calling service: No service supplied!");
 		}
-		System.err.println("Calling service: "+myService);
+		logger.debug("Calling service: "+myService);
 		try {
 			if (myNavajo==null) {
 				getNavajoContext().callService(myService);
@@ -88,7 +88,7 @@ public class CallServiceTag extends BaseNavajoTag {
 		if(myService==null || "".equals(myService)) {
 			throw new JspException("Error calling service: No service supplied!");
 		}
-		System.err.println("Calling service: "+myService);
+		logger.debug("Calling service: "+myService);
 		LocalClient lc = (LocalClient) getPageContext().getServletContext().getAttribute("localClient");
 		if(lc==null) {
 			callOldStyle();
@@ -100,7 +100,7 @@ public class CallServiceTag extends BaseNavajoTag {
 		if(resultNavajo==null) {
 			throw new JspException("Unknown Navajo service error while calling service: "+myService);
 		}
-		System.err.println("Service called: "+myService);
+		logger.debug("Service called: "+myService);
 		Message error = resultNavajo.getMessage("error");
 		if(error!=null) {
 			StringWriter sw = new StringWriter();
