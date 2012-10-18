@@ -8,9 +8,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.document.Property;
 
 /**
@@ -29,8 +26,6 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
 	 */
 	private static final long serialVersionUID = -1867359996556685730L;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(ClockTime.class);
 public final static String VERSION = "$Id$";
 	
   //Set the fixed year constants.
