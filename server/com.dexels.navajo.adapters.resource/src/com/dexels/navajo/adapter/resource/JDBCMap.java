@@ -171,7 +171,9 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBC
 			// if (!ac) {
 			if (con != null) {
 				// kill = true;
-				con.rollback();
+				if(!autoCommit) {
+					con.rollback();
+				}
 			}
 			// }
 		} catch (SQLException sqle) {
@@ -198,8 +200,14 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBC
 			logger.info(":::Creating transactioncontext: " + transactionContext);
 			JdbcResourceComponent.getInstance().deregisterTransaction(transactionContext);
 			if (con != null) {
+				if(autoCommit==false) {
+					try {
+						con.commit();
+					} catch (SQLException e) {
+						logger.error("Problem committing connection", e);
+					}
+				}
 				try {
-					con.commit();
 					con.close();
 				} catch (SQLException e) {
 					logger.error("Problem closing pooled connection", e);
