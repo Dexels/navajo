@@ -21,6 +21,16 @@
         <input>component</input>
         <result>string</result>
     </function>
+    <function name="GetComponentName" class="com.dexels.navajo.tipi.functions.GetComponentName">
+        <description>Resolves a tipi path to a TipiComponent. Source component is required to resolve context data.</description>
+        <input>component</input>
+        <result>string</result>
+    </function>
+    <function name="GetComponentType" class="com.dexels.navajo.tipi.functions.GetComponentType">
+        <description>Resolves a tipi path to a TipiComponent. Source component is required to resolve context data.</description>
+        <input>component</input>
+        <result>string</result>
+    </function>
     <function name="GetConnectorInit" class="com.dexels.navajo.tipi.functions.GetConnectorInit">
         <description>Retrieves the init function of a connector</description>
         <input>component,string</input>
@@ -83,7 +93,7 @@
     </function>
     <function name="ToValue" class="com.dexels.navajo.tipi.functions.ToValue">
         <description>Dereferences a TipiReference, which is basically a pointer. cool</description>
-        <input>reference</input>
+        <input>any</input>
         <result>object</result>
     </function>
  </functiondef>

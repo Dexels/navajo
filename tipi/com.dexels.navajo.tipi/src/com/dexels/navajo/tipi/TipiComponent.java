@@ -50,6 +50,7 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 //	public void deregisterEvent(TipiEvent e);
 
 	public void setName(String name);
+	public void setComponentType(String type);
 
 	public void setContext(TipiContext tc);
 
@@ -168,6 +169,7 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 			boolean sync) throws TipiException, TipiBreakException;
 
 	public String getName();
+	public String getComponentType();
 
 	public Object getContainer();
 	public void setContainer(Object c);
