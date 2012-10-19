@@ -19,7 +19,7 @@ public class ToBold extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
 	public String remarks() {
-		return "Make text bold. Html-style";
+		return "Make text bold. Html-style (depending on 2nd parameter including html tag)";
 	}
 
 	/*
@@ -28,10 +28,9 @@ public class ToBold extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
 	public String usage() {
-		return "ToBold(string) duh.";
+		return "ToBold(string, boolean|empty) duh.";
 	}
 
-	// GetComponent({component://init/desktop},{event:/from})
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -39,12 +38,18 @@ public class ToBold extends FunctionInterface {
 	 */
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
+        String result = null;
 
 		if (!(pp instanceof String)) {
-			throw new TMLExpressionException(this, "Invalid operand: "
-					+ pp.getClass().getName());
-		}
-		return "<html><b>" + pp + "</b></html>";
+			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
+        } else {
+            result = "<html><b>" + pp + "</b></html>";
+            if (getOperands().size() > 1) {
+                if (getOperand(1) instanceof Boolean && (Boolean)getOperand(1)) {
+                    result = "<b>" + pp + "</b>";
+                }
+            }
+        }
+        return result;
 	}
-
 }

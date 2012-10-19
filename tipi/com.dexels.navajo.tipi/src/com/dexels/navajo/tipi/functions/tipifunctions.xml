@@ -31,11 +31,6 @@
         <input>context,string</input>
         <result>object</result>
     </function>
-    <function name="GlobalReference" class="com.dexels.navajo.tipi.functions.GlobalReference">
-        <description>GlobalReference to a certain global</description>
-        <input>context,string</input>
-        <result>reference</result>
-    </function>
     <function name="GetNavajo" class="com.dexels.navajo.tipi.functions.GetNavajo">
         <description>Resolves a navajo name. Source component is required</description>
         <input>component|context,string</input>
@@ -46,8 +41,6 @@
         <input>navajo</input>
         <result>string</result>
     </function>
-
-
     <function name="GetResource" class="com.dexels.navajo.tipi.functions.GetResource">
         <description>Retrieves the contents of a resource</description>
         <input>context,string</input>
@@ -58,9 +51,34 @@
         <input>navajo</input>
         <result>string</result>
     </function>
+    <function name="GlobalReference" class="com.dexels.navajo.tipi.functions.GlobalReference">
+        <description>GlobalReference to a certain global</description>
+        <input>context,string</input>
+        <result>reference</result>
+    </function>
     <function name="ToBold" class="com.dexels.navajo.tipi.functions.ToBold">
-        <description>Make text bold. Html-style</description>
-        <input>string</input>
+        <description>Make text bold. Html-style (depending on 2nd parameter including html tag)</description>
+        <input>string,boolean|empty</input>
+        <result>string</result>
+    </function>
+    <function name="ToItalic" class="com.dexels.navajo.tipi.functions.ToItalic">
+        <description>Make text italic. Html-style (depending on 2nd parameter including html tag)</description>
+        <input>string,boolean|empty</input>
+        <result>string</result>
+    </function>
+    <function name="ToSubscript" class="com.dexels.navajo.tipi.functions.ToSubscript">
+        <description>Make text subscript. Html-style (depending on 2nd parameter including html tag)</description>
+        <input>string,boolean|empty</input>
+        <result>string</result>
+    </function>
+    <function name="ToSuperscript" class="com.dexels.navajo.tipi.functions.ToSuperscript">
+        <description>Make text superscript. Html-style (depending on 2nd parameter including html tag)</description>
+        <input>string,boolean|empty</input>
+        <result>string</result>
+    </function>
+    <function name="ToUnderline" class="com.dexels.navajo.tipi.functions.ToUnderline">
+        <description>Make text underlined. Html-style (depending on 2nd parameter including html tag)</description>
+        <input>string,boolean|empty</input>
         <result>string</result>
     </function>
     <function name="ToValue" class="com.dexels.navajo.tipi.functions.ToValue">
@@ -68,5 +86,4 @@
         <input>reference</input>
         <result>object</result>
     </function>
- 
  </functiondef>
