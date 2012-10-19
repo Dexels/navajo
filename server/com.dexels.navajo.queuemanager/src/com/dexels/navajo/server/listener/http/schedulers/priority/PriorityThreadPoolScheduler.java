@@ -270,7 +270,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 //			}
 		} catch (NavajoSchedulingException e) {
 			if(e.getReason()==NavajoSchedulingException.SCRIPT_PROBLEM || e.getReason() == NavajoSchedulingException.UNKNOWN) {
-				logger.warn(RESOLUTION_SCRIPT_DOES_NOT_EXIST, "Could not find queue resolution script, using default queue.",e);
+				logger.info(RESOLUTION_SCRIPT_DOES_NOT_EXIST, "Could not find queue resolution script, using default queue.",e);
 				return getDefaultQueue();
 			}
 			e.printStackTrace(System.err);
