@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -97,7 +98,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   public String messagePointer;
   public String selectionPointer = null;
 
-public boolean exists;
+  public boolean exists;
   public String append;
   public String appendTo;
   // appendParms is used to append entire output doc of called webservice to param block.
@@ -143,6 +144,9 @@ public boolean exists;
   private boolean serviceFinished = false;
   private Exception myException = null;
   
+  // Keep track of delete messages and properties
+  HashSet<String> deleteProperties = new HashSet<String>();
+  HashSet<String> deleteMessages = new HashSet<String>();
   
   private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
 
@@ -398,17 +402,11 @@ private Object waitForResult = new Object();
   }
 
   public final void setDeleteProperty(String fullName) throws UserException {
-	 Property p = outDoc.getProperty(fullName);
-	 if ( p != null ) {
-		 p.getParentMessage().removeProperty(p);
-	 }
+	  deleteProperties.add(fullName);
   }
   
   public final void setDeleteMessage(String fullName) throws UserException {
-	  Message m = outDoc.getMessage(fullName);
-	  if ( m != null ) {
-			 outDoc.removeMessage(m);
-	  }
+	  deleteMessages.add(fullName);
   }
   
   public final void setIntegerProperty(int i) throws UserException {
@@ -579,6 +577,7 @@ private Object waitForResult = new Object();
 					e.printStackTrace(Access.getConsoleWriter(access));
 				}
 			  }
+			  
 		  }
 		  
 		  // Always copy globals.
@@ -591,6 +590,23 @@ private Object waitForResult = new Object();
 			  }
 		  }
 		  
+		  // Check for deleted properties/messages.
+		  Iterator<String> dp = deleteProperties.iterator();
+		  while ( dp.hasNext() ) {
+			  String pn = dp.next();
+			  Property p = outDoc.getProperty(pn);
+			  if ( p != null ) {
+				  p.getParentMessage().removeProperty(p);
+			  }
+		  }
+		  Iterator<String> dm = deleteMessages.iterator();
+		  while ( dm.hasNext() ) {
+			  String mn = dm.next();
+			  Message m = outDoc.getMessage(mn);
+			  if ( m != null ) {
+				  outDoc.removeMessage(m);
+			  }
+		  }
 		  if (server != null) { // External request.
 			  ClientInterface nc = NavajoClientFactory.createClient();
 //			  if (keyStore != null) {
