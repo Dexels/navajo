@@ -1,5 +1,9 @@
 <adapterdef>
 
+	<map>
+		<tagname>filemap</tagname>
+		<object>com.dexels.navajo.adapter.FileMap</object>
+	</map>
 	<!-- Loops files in a directory -->
 	<map>
 		<tagname>fileentry</tagname>
