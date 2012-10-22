@@ -31,6 +31,7 @@ import java.lang.reflect.Constructor;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,6 +41,11 @@ import java.util.StringTokenizer;
 
 import navajocore.Version;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -1295,6 +1301,18 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
   private final void checkDependentFieldResource(Class localContextClass, String fieldName, ArrayList<String> expressionValues, List<Dependency> deps) {
 	  
 	  if ( !(HasDependentResources.class.isAssignableFrom(localContextClass) )) {
+		  Bundle b = FrameworkUtil.getBundle(localContextClass);
+		  logger.debug("Adapter bundle: ", b.getBundleContext());
+		  Bundle hasdep = FrameworkUtil.getBundle(HasDependentResources.class);
+		  logger.debug("Hasdep bundle: ", hasdep.getBundleContext());
+		  
+		  logger.debug("HasDep hash: "+HasDependentResources.class.getName()+" hash: "+HasDependentResources.class.hashCode());
+		  Class[] interf = localContextClass.getInterfaces();
+		  for (Class class1 : interf) {
+			logger.debug("Class hash: "+class1.getName()+" hash: "+class1.hashCode());
+			  Bundle b2 = FrameworkUtil.getBundle(class1);
+			  logger.debug("Interface bundle: ", b2.getBundleContext());
+		}
 		  return;
 	  }
 	  
@@ -1308,7 +1326,9 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 			  try {
 				  HasDependentResources hr = (HasDependentResources) localContextClass.newInstance();
 				  dependentFields = hr.getDependentResourceFields();
-			  } catch (Throwable t) {}
+			  } catch (Throwable t) {
+				  logger.error("Dependency detection problem:",t);
+			  }
 			  instantiatedAdapters.put(localContextClass, dependentFields);
 		  }
 
@@ -1427,7 +1447,11 @@ public String fieldNode(int ident, Element n, String className,
             if (mapPath!=null) {
             	localContextClass = locateContextClass(mapPath, 0);
             } else {
-            	localContextClass = Class.forName(className, false, loader);
+            	if(Version.osgiActive()) {
+            		localContextClass = resolveClassUsingService(className);
+            	} else {
+                	localContextClass = Class.forName(className, false, loader);
+            	}
             }
             
           } catch (Exception e) { throw new Exception("Could not find adapter: " + className,e); }
@@ -1446,7 +1470,7 @@ public String fieldNode(int ident, Element n, String className,
         	if ( isDomainObjectMapper ) {
         		type = "java.lang.Object";
         	} else {
-        		throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName());
+        		throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName(),e);
         	}
         }
         
@@ -1777,7 +1801,20 @@ public String fieldNode(int ident, Element n, String className,
     return result.toString();
   }
 
-  /**
+  private Class resolveClassUsingService(String className) {
+	  BundleContext bc = Version.getDefaultBundleContext();
+	  Collection<ServiceReference<Class>> sr;
+	try {
+		sr = bc.getServiceReferences(Class.class, "(adapterClass="+className+")");
+		  Class result = bc.getService(sr.iterator().next());
+		  return result;
+	} catch (InvalidSyntaxException e) {
+		logger.error("Adapter resolution error: ",e);
+		return null;
+	}
+	  
+}
+/**
    * Locate a contextclass in the class stack based upon a mappath.
    * Depending on the way this method is called an additional offset to stack index must be supplied...
    * 
@@ -2671,7 +2708,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 
        tslCompiler.compileScript(bareScript, input, output,scriptPackagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"),deps);
        for(String s: tslCompiler.dependentObjects) {
-    	   logger.warn("DEPENDENCY: "+s);
+    	   logger.debug("DEPENDENCY: "+s);
        }
        
        return javaFile;

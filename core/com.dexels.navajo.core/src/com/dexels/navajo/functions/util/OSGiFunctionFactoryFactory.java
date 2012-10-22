@@ -18,9 +18,19 @@ public class OSGiFunctionFactoryFactory  {
 		// no instances
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static FunctionInterface getFunctionInterface(final String functionName)  {
-		FunctionInterface osgiResolution = (FunctionInterface) getComponent(functionName, "functionName", FunctionInterface.class);
-		return osgiResolution;
+		final Class<? extends FunctionInterface> componentClass = (Class<? extends FunctionInterface>) getComponent(functionName, "functionName", Class.class);
+		FunctionInterface osgiResolution;
+		try {
+			osgiResolution = componentClass.newInstance();
+			return osgiResolution;
+		} catch (InstantiationException e) {
+			logger.error("Instantiation problem for function: "+functionName,e);
+		} catch (IllegalAccessException e) {
+			logger.error("Instantiation problem for function: "+functionName,e);
+		}
+		return null;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -37,6 +47,7 @@ public class OSGiFunctionFactoryFactory  {
 		} catch (InvalidSyntaxException e) {
 			logger.error("Error: ", e);
 		}
+		logger.error("Service resolution failed: No references found for query: "+"("+serviceKey+"="+name+")"+" class: "+interfaceClass.getName());
 		return null;
 	}
 }

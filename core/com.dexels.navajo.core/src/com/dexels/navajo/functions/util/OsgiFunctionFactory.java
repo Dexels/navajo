@@ -23,13 +23,23 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 			.getLogger(OsgiFunctionFactory.class);
 
 	public FunctionInterface getInstance(final ClassLoader cl, final String functionName)  {
-		FunctionInterface osgiResolution = (FunctionInterface) getComponent(functionName, "functionName", FunctionInterface.class);
+		Class<? extends FunctionInterface> osgiResolutionClass = (Class<? extends FunctionInterface>) getComponent(functionName, "functionName", Class.class);
 
-		if (osgiResolution==null) {
-			System.err.println("OSGi failed. Going old skool");
+		if (osgiResolutionClass==null) {
+			logger.debug("OSGi failed. Going old skool");
 			return super.getInstance(cl, functionName);
 		} else {
-			return osgiResolution;
+			FunctionInterface osgiResolution;
+			try {
+				osgiResolution = osgiResolutionClass.newInstance();
+				return osgiResolution;
+			} catch (InstantiationException e) {
+				logger.debug("OSGi failed (InstantiationException). Going old skool",e);
+				return super.getInstance(cl, functionName);
+			} catch (IllegalAccessException e) {
+				logger.debug("OSGi failed (IllegalAccessException). Going old skool",e);
+				return super.getInstance(cl, functionName);
+			}
 
 		}
 	}
@@ -97,7 +107,6 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	}
 	
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
 		BundleContext context = navajocore.Version.getDefaultBundleContext();
 		try {

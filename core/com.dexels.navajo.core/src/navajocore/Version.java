@@ -10,8 +10,6 @@ import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.adapter.core.NavajoCoreAdapterLibrary;
 import com.dexels.navajo.events.NavajoEventRegistry;
-import com.dexels.navajo.functions.util.FunctionFactoryFactory;
-import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.GenericHandler;

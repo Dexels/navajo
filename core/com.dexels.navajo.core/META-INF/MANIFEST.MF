@@ -65,6 +65,7 @@ Export-Package: com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.na
  com.dexels.navajo.serviceplugin;uses:="com.dexels.navajo.server,com.dexels.navajo.mapping,com.dexels.navajo.document",
  com.dexels.navajo.sharedstore;uses:="junit.framework",
  com.dexels.navajo.sharedstore.map;uses:="com.dexels.navajo.server.enterprise.tribe,com.dexels.navajo.server,com.dexels.navajo.mapping",
+ com.dexels.navajo.test,
  com.dexels.navajo.tipilink,
  com.dexels.navajo.util;
   uses:="com.dexels.navajo.server,
