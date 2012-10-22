@@ -40,6 +40,7 @@ import com.dexels.navajo.mapping.HasDependentResources;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
+import com.dexels.navajo.mapping.compiler.meta.AdapterResourceDependency;
 import com.dexels.navajo.mapping.compiler.meta.SQLFieldDependency;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -985,8 +986,8 @@ public final Object getColumnName(final Integer index) throws UserException {
 	@Override
 	public DependentResource[] getDependentResourceFields() {
 		return new DependentResource[] {
-				new GenericDependentResource("database", "datasource",
-						AdapterFieldDependency.class),
+				new GenericDependentResource("resource", "datasource",
+						AdapterResourceDependency.class),
 				new GenericMultipleDependentResource("sql", "update",
 						SQLFieldDependency.class),
 				new GenericMultipleDependentResource("sql", "query",
