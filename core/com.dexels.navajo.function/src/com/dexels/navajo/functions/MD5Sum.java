@@ -20,23 +20,24 @@ public class MD5Sum extends FunctionInterface {
 		if (getOperand(0) == null) {
 			return new Integer(0);
 		}
-
-		Binary binaryFile = (Binary) getOperand(0);
-
 		MessageDigest md5 = null;
-
 		try {
 			md5 = MessageDigest.getInstance("MD5");
-			md5.update(binaryFile.getData());
-
-			byte[] array = md5.digest();
-
-			BigInteger bigInt = new BigInteger(1, array);
-			output = bigInt.toString(16);
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
-
+		
+		if ( getOperand(0) instanceof Binary ) {
+			Binary binaryFile = (Binary) getOperand(0);			
+			md5.update(binaryFile.getData());
+		} else {
+			md5.update((getOperand(0)+"").getBytes());	
+		}
+		
+		byte[] array = md5.digest();
+		BigInteger bigInt = new BigInteger(1, array);
+		output = bigInt.toString(16);
+		
 		return output;
 
 	}
@@ -47,12 +48,12 @@ public class MD5Sum extends FunctionInterface {
 
 	public static void main(String args[]) throws Exception {
 
-		Binary b = new Binary(new java.io.FileInputStream("C:/feyenoord-goud.png"));
+		String b = "Kibbeling";
 		MD5Sum fsc = new MD5Sum();
 		fsc.reset();
 		fsc.insertOperand(b);
 		Object o = fsc.evaluate();
-		System.err.println("o = " + o);
+		System.err.println("o  = " + o);
 
 	}
 }

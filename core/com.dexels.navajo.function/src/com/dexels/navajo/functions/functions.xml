@@ -383,8 +383,8 @@
         <result>integer|float</result>
     </function>
     <function name="MD5Sum" class="com.dexels.navajo.functions.MD5Sum">
-        <description>Get the MD5Sum of supplied Binary object.</description>
-        <input>binary</input>
+        <description>Get the MD5Sum of a supplied object.</description>
+        <input>any</input>
         <result>string</result>
     </function>
     <function name="MergeNavajo" class="com.dexels.navajo.functions.MergeNavajo">
