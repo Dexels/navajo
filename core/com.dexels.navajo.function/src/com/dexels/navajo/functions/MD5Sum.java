@@ -1,12 +1,9 @@
 package com.dexels.navajo.functions;
 
-import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.SecretKey;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
