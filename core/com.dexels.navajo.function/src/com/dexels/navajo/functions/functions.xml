@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- This file is in alphabetical order -->
 <functiondef>
+	<function name="EncryptString" class="com.dexels.navajo.functions.EncryptString">
+		<description>Encrypts a string</description>
+		<input>string,string</input>
+		<result>string</result>
+	</function>
+	<function name="DecryptString" class="com.dexels.navajo.functions.DecryptString">
+		<description>Decrypts a string</description>
+		<input>string,string</input>
+		<result>string</result>
+	</function>
 	<function name="GetRequest" class="com.dexels.navajo.functions.GetRequest">
 		<description>Returns the current request Navajo as a string
 			representation</description>
