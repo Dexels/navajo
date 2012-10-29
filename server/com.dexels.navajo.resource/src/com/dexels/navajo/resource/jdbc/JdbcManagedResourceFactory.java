@@ -89,14 +89,17 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 		Properties prop = new Properties(); 
 		Enumeration en = settings.keys();
 		while (en.hasMoreElements()) {
-			String key = (String) en.nextElement();
-			prop.put(key, settings.get(key));
+			final String key = (String) en.nextElement();
+			final Object value = settings.get(key);
+			logger.debug("Property element: {} value: {}",key,value);
+			prop.put(key, value);
 		}
 	    prop.put(DataSourceFactory.JDBC_URL,settings.get(DataSourceFactory.JDBC_URL)); 
 	    prop.put(DataSourceFactory.JDBC_USER, settings.get(DataSourceFactory.JDBC_USER)); 
 	    prop.put(DataSourceFactory.JDBC_PASSWORD, settings.get(DataSourceFactory.JDBC_PASSWORD)); 
 	    prop.put(DataSourceFactory.JDBC_MAX_POOL_SIZE, 10); 
 	    prop.put(DataSourceFactory.JDBC_INITIAL_POOL_SIZE, 10); 
+	    prop.put(DataSourceFactory.JDBC_DATABASE_NAME, settings.get("name")); 
 //	    prop.put(DataSourceFactory.JDBC_PROPERTY_CYCLE, arg1)
 	    DataSource source = factory.createDataSource(prop); 
 	    return source;
