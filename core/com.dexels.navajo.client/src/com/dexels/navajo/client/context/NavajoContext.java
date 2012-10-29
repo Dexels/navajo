@@ -324,6 +324,9 @@ public abstract class NavajoContext implements ClientContext {
 		String navajo = keyVal[0];
 		String path = keyVal[1];
 		Navajo n = getNavajo(navajo);
+		if(n==null) {
+			throw new IllegalArgumentException("Missing navajo: "+navajo+" in state. Was the session deleted?");
+		}
 		Property p = n.getProperty(path);
 		if(Property.BOOLEAN_PROPERTY.equals(p.getType()) ) {
 			if ("on".equals(value)) {
