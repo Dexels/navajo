@@ -142,12 +142,12 @@ private final static Logger logger = LoggerFactory
       System.out.println("o = " + o.value);
       System.out.println("type = " + o.type);
 
-      FileOutputStream fos = new FileOutputStream(new java.io.File("aepenoot.png"));
+      FileOutputStream fos = new FileOutputStream(new java.io.File("/Users/arjenschoneveld/aepenoot.png"));
       fos.write(b.getData());
       fos.flush();
       fos.close();
 
-      FileOutputStream fs = new FileOutputStream(new java.io.File("noteaep.png"));
+      FileOutputStream fs = new FileOutputStream(new java.io.File("/Users/arjenschoneveld/noteaep.png"));
       Binary c = (Binary)o.value;
       fs.write(c.getData());
       fs.flush();
