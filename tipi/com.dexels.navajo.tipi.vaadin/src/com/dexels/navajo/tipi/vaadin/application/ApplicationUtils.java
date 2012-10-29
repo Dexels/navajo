@@ -47,6 +47,11 @@ public class ApplicationUtils {
 			public String getSessionToken() {
 				return context.getHttpSession().getId();
 			}
+
+			@Override
+			public void reset() {
+				
+			}
 		});
 
 		final WebBrowser wb = context.getBrowser(); //.getBrowserApplication();
