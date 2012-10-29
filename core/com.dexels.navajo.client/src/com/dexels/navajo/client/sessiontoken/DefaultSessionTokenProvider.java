@@ -9,6 +9,7 @@ public class DefaultSessionTokenProvider implements SessionTokenProvider {
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(DefaultSessionTokenProvider.class);
+	private String token  = null;
 	
 	DefaultSessionTokenProvider() {
 		
@@ -29,6 +30,9 @@ public class DefaultSessionTokenProvider implements SessionTokenProvider {
 	  
 	@Override
 	public String getSessionToken() {
+		if(token!=null) {
+			return token;
+		}
 		String userName = null;
 		try {
 			userName = System.getProperty("user.name");
@@ -36,18 +40,24 @@ public class DefaultSessionTokenProvider implements SessionTokenProvider {
 			userName = "UnknownUser";
 		}
 
-		String fabricatedToken = null;
 		
 		try {
-			fabricatedToken = userName + "|" + (InetAddress.getLocalHost().getHostAddress())
+			token = userName + "|" + (InetAddress.getLocalHost().getHostAddress())
 					+ "|" + (InetAddress.getLocalHost().getHostName()) + "|"
 					+ (System.currentTimeMillis());
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
 			logger.info("Session failed!");
-			fabricatedToken="unknown session";
+			token="unknown session";
 		}
-		return fabricatedToken;	
+		return token;	
+	}
+
+
+
+	@Override
+	public void reset() {
+		token = null;
 	}
 
 }

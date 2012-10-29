@@ -30,7 +30,10 @@ public class SessionTokenFactory  {
 	
 	public static void main(String [] args) {
 		SessionTokenProvider info = SessionTokenFactory.getSessionTokenProvider();
-		logger.info(""+info);
+		System.err.println("info : "+SessionTokenFactory.getSessionTokenProvider().getSessionToken());
+		System.err.println("again: "+SessionTokenFactory.getSessionTokenProvider().getSessionToken());
+		SessionTokenFactory.getSessionTokenProvider().reset();
+		System.err.println("reset: "+SessionTokenFactory.getSessionTokenProvider().getSessionToken());
 	}
 	
 	public static void clearInstance() {
