@@ -14,9 +14,12 @@
 <ul>
 
 	<c:forEach var="folder" items="${serverContext.folders}">
-		<c:if test="${folder.name != 'CVS'}">
+		<c:if test="${folder.name != 'CVS' }">
 			<li>
-				<a href="index.jsp?view=editor&cmd=setFolder&path=${folder.name}/&service=${param.service}">${folder.name }</a> <a href="compile?redirect=true&script=${folder.name}">[recompile]</a>
+				<a href="index.jsp?view=editor&cmd=setFolder&path=${folder.name}/&service=${param.service}">${folder.name }</a>
+		<c:if test="${folder.name!= '..'}">
+				<a href="compile?folder=true&redirect=true&script=${serverContext.path}${folder.name}">[recompile]</a>
+		</c:if>
 			</li>
 		</c:if>
 	</c:forEach>
@@ -25,11 +28,13 @@
 		<c:choose>
 			<c:when test="${navajoContext.navajos[script]!=null}">
 				<a href="index.jsp?view=editor&service=${serverContext.path}${script}">${script} ${serverContext.cvsInfo[fileName].revision }</a>
+				<a href="compile?folder=true&redirect=true&script=${serverContext.path}${script}">[recompile]</a>
 				<a href="index.jsp?view=editor&cmd=cvsUpdate&path=scripts/${serverContext.path}${script}.xml">[[Update]]</a>
 				<a href="index.jsp?view=editor&service=${serverContext.path}${script}&${serverContext.path}${script}=true">[[Reload]]</a>
 			</c:when>
 			<c:otherwise>
 				<a href="index.jsp?view=tsl&service=${serverContext.path}${script}">${script} ${serverContext.cvsInfo[fileName].revision }</a>
+				<a href="compile?folder=true&redirect=true&script=${serverContext.path}${script}">[recompile]</a>
 				<c:if test="${serverContext.cvsInfo[fileName].revision !=null}">
 					<a href="index.jsp?view=tsl&cmd=cvsUpdate&path=scripts/${serverContext.path}${script}.xml">[[Update]]</a>
 				</c:if>
