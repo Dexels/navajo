@@ -1302,6 +1302,10 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 		  return;
 	  }
 	  
+	  if ( expressionValues == null ) {
+		  return;
+	  }
+	  
 	  for ( int all = 0; all < expressionValues.size(); all++ ) {
 		  
 		  String expressionValue = expressionValues.get(all);
