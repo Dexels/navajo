@@ -25,3 +25,4 @@ Export-Package: com.dexels.navajo.installer,
  com.dexels.navajo.jsp.server.tags
 Bundle-ClassPath: .,
  lib/jhighlight-1.0.jar
+Bundle-Activator: navajojspserver.Version

@@ -24,8 +24,19 @@
  */
 package navajojspserver;
 
+import org.osgi.framework.BundleContext;
+
 
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
+	private static BundleContext defaultContext;
 
+	public void start(BundleContext bc) throws Exception {
+		super.start(bc);
+		Version.defaultContext = bc;
+	}
+	
+	public static BundleContext getDefaultContext() {
+		return defaultContext;
+	}
 }
