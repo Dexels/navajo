@@ -401,11 +401,11 @@ private Object waitForResult = new Object();
     }
   }
 
-  public final void setDeleteProperty(String fullName) throws UserException {
+  public final void setDeleteProperty(String fullName) {
 	  deleteProperties.add(fullName);
   }
   
-  public final void setDeleteMessage(String fullName) throws UserException {
+  public final void setDeleteMessage(String fullName) {
 	  deleteMessages.add(fullName);
   }
   
@@ -976,7 +976,7 @@ private Object waitForResult = new Object();
     try {
       ArrayList<Message> all = inMessage.getAllMessages();
       for (int i = 0; i < all.size(); i++) {
-        Message m = inMessage.copyMessage( (Message) all.get(i), outDoc);
+        Message m = inMessage.copyMessage( all.get(i), outDoc);
         outDoc.addMessage(m);
       }
     } catch (Exception e) {
