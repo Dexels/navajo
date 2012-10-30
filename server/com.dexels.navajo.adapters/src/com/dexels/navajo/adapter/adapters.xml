@@ -594,4 +594,8 @@
 		<tagname>com.dexels.navajo.adapter.MultipleSQLMap</tagname>
 		<object>com.dexels.navajo.adapter.MultipleSQLMap</object>
 	</map>
+	<map>
+		<tagname>com.dexels.navajo.adapter.SelectionMap</tagname>
+		<object>com.dexels.navajo.adapter.SelectionMap</object>
+	</map>
 </adapterdef>
