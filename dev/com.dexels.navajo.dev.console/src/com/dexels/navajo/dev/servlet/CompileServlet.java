@@ -51,10 +51,15 @@ public class CompileServlet extends HttpServlet {
 			for (String failed : failures) {
 				logger.info("Failed: "+failed);
 			}
+			bundleCreator.installBundles(script, failures, success, skipped, true);
 		} catch (Throwable e) {
 			logger.error("Error compiling scripts form servlet:",e);
 		}
-		resp.sendRedirect("/index.jsp");
+		if(req.getParameter("redirect")!=null) {
+			resp.sendRedirect("/index.jsp");
+		} else {
+			resp.getWriter().write("OK");
+		}
 	}
 	
 	
