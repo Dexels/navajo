@@ -1,6 +1,7 @@
 package com.dexels.navajo.server;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ public abstract class CompiledScriptFactory {
 			.getLogger(CompiledScriptFactory.class);
 	
 	private String serviceName;
+	private final Map<String,Object> resources = new HashMap<String, Object>();
 	
 	public abstract CompiledScript getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException;
 	
@@ -38,17 +40,31 @@ public abstract class CompiledScriptFactory {
 				return Class.forName(className, true, CompiledScriptFactory.this.getClass().getClassLoader()); 
 			}
 		});
+		instance.setFactory(this);
 	}
 	
 	protected abstract String getScriptName();
 	
 	public void activate(Map<String,String> properties) {
-//		logger.info("Activating compiledscriptfactory");
 		serviceName = properties.get("navajo.scriptName");
-		
 	}
 
 	public void deactivate() {
 		logger.info("Deactivating script: "+serviceName);
 	}
+	
+
+	public Object getResource(String name) {
+		return resources.get(name);
+	}
+
+
+	protected void setResource(String name, Object o) {
+		resources.put(name, o);
+	}
+
+	protected void clearResource(String name, Object o) {
+		resources.remove(name);
+	}
+
 }

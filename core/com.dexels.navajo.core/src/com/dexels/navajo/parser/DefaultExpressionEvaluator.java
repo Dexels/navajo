@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
@@ -31,10 +34,12 @@ import com.dexels.navajo.server.DispatcherFactory;
 public final class DefaultExpressionEvaluator
     implements ExpressionEvaluator {
 
-//  private long lastTime = 0;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DefaultExpressionEvaluator.class);
 
   public DefaultExpressionEvaluator() {
-//    lastTime = System.currentTimeMillis();
+	  logger.debug("Creating defaultExpressionEvaluator service");
   }
 
 

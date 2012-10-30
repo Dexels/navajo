@@ -22,6 +22,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	private final static Logger logger = LoggerFactory
 			.getLogger(OsgiFunctionFactory.class);
 
+	@SuppressWarnings("unchecked")
 	public FunctionInterface getInstance(final ClassLoader cl, final String functionName)  {
 		Class<? extends FunctionInterface> osgiResolutionClass = (Class<? extends FunctionInterface>) getComponent(functionName, "functionName", Class.class);
 
@@ -107,6 +108,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
 		BundleContext context = navajocore.Version.getDefaultBundleContext();
 		try {

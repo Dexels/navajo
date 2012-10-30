@@ -48,6 +48,7 @@ import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.CompiledScriptFactory;
 import com.dexels.navajo.server.ConditionData;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.SystemException;
@@ -103,6 +104,8 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public String[] ruleArray = null;
   public String[] codeArray = null;
   public String[] descriptionArray = null;
+
+  private CompiledScriptFactory factory;
 
   
 private final static Logger logger = LoggerFactory
@@ -542,5 +545,16 @@ private final static Logger logger = LoggerFactory
   public Selection getCurrentSelection() {
 	  return currentSelection;
   }
+  
 
+	public void setFactory(CompiledScriptFactory factory) {
+		this.factory = factory;
+	}
+
+	protected Object getResource(String name) {
+		if(this.factory!=null) {
+			return factory.getResource(name);
+		}
+		return null;
+	}
 }
