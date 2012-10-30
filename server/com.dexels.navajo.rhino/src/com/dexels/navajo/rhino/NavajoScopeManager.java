@@ -55,6 +55,9 @@ public class NavajoScopeManager {
 
 	public void runScript(String fileName, Reader r, Map<String, Object> parameters) throws IOException {
 		Context cx = Context.getCurrentContext();
+		if(cx==null) {
+			cx = Context.enter();
+		}
 		ScriptableObject globalScope = (ScriptableObject) NavajoScopeManager.getInstance().getScope();
 		for (Entry<String,Object> e : parameters.entrySet()) {
 			ScriptableObject.putProperty(globalScope, e.getKey(),Context.javaToJS(e.getValue(), globalScope));
