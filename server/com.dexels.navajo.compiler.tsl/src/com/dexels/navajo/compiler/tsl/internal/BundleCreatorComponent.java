@@ -104,7 +104,6 @@ public class BundleCreatorComponent implements BundleCreator {
 		
 		String script = scriptName.replaceAll("\\.", "/");
 		
-		
 		File scriptFolder = new File(navajoIOConfig.getScriptPath());
 		File f = new File(scriptFolder,script);
 //		boolean isInDefaultPackage = script.indexOf('/')==-1;
@@ -533,24 +532,36 @@ public class BundleCreatorComponent implements BundleCreator {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private CompiledScript waitForService(String rpcPath) throws Exception {
 		String rpcName = rpcPath.replaceAll("/", ".");
+//		script://person/InitSearchPersons
+		final String bundleURI = SCRIPTPROTOCOL+rpcPath;
+		Bundle scriptBundle = bundleContext.getBundle(bundleURI);
+		if(scriptBundle==null) {
+			throw new UserException(-1,"Can not resolve bundle for service: "+rpcName+" failed to find bundle with URI: "+bundleURI);
+		}
+		if(scriptBundle.getState() != Bundle.ACTIVE) {
+			throw new UserException(-1,"Can not resolve bundle for service: "+rpcName+" bundle with URI: "+bundleURI+" is not active. State: "+scriptBundle.getState());
+		}
+		
 		String filterString = "(navajo.scriptName="+rpcName+")";
 		logger.debug("waiting for service...: "+rpcName);
 		Filter filter = bundleContext.createFilter(filterString);
-		ServiceTracker tr = new ServiceTracker(bundleContext,filter,null);
-//		ServiceReference<CompiledScriptFactory>[] ss = (ServiceReference<CompiledScriptFactory>[]) bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filterString);
-//		if(ss!=null && ss.length>0) {
-//			logger.info("Service present: "+ss.length);
-//		} else {
-//			logger.info("Service missing");
-//		}
-		tr.open();
-		CompiledScriptFactory result = (CompiledScriptFactory) tr.waitForService(12000);
+		ServiceReference<CompiledScriptFactory>[] ss = (ServiceReference<CompiledScriptFactory>[]) bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filterString);
+		if(ss!=null && ss.length>0) {
+			logger.info("Service present: "+ss.length);
+		} else {
+			throw new UserException(-1,"Bundle resolved but no service available for service: "+rpcName+" probably it is missing a dependency");
+		}
+//		ServiceTracker tr = new ServiceTracker(bundleContext,filter,null);
+//		tr.open();
+//		CompiledScriptFactory result = (CompiledScriptFactory) tr.waitForService(12000);
+		CompiledScriptFactory result = bundleContext.getService(ss[0]);
+		
 		if(result==null) {
 			logger.error("Service resolution failed!");
 			throw new UserException(-1,"Can not resolve bundle for service: "+rpcName);
 		} 
 		CompiledScript cc = result.getCompiledScript();
-		tr.close();
+//		tr.close();
 		return cc;
 	}
 

@@ -13,9 +13,12 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.compiler.ScriptCompiler;
 import com.dexels.navajo.compiler.tsl.custom.PackageListener;
 import com.dexels.navajo.compiler.tsl.custom.PackageReportingClassLoader;
+import com.dexels.navajo.document.ExpressionEvaluator;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
+import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
@@ -26,6 +29,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	private final static Logger logger = LoggerFactory.getLogger(TslCompilerComponent.class);
 	private TslCompiler compiler;
 	String[] standardPackages = new String[]{"com.dexels.navajo.document","com.dexels.navajo.script.api","com.dexels.navajo.server","com.dexels.navajo.mapping","com.dexels.navajo.server.enterprise.tribe","com.dexels.navajo.mapping.compiler.meta","com.dexels.navajo.parser","com.dexels.navajo.loader"};
+	private ExpressionEvaluator expressionEvaluator;
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String)
 	 */
@@ -60,13 +64,39 @@ public class TslCompilerComponent implements ScriptCompiler {
 		compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc, navajoIOConfig,dependencies);
 		//		logger.info("Javafile: "+javaFile);
 //		System.err.println("Packages: "+packages);
-		generateFactoryClass(script, packagePath);
+		Set<String> dependentResources = new HashSet<String>();
+		
+		for (Dependency d : dependencies) {
+			if("resource".equals(d.getType())) {
+				if(d instanceof AdapterFieldDependency) {
+					final AdapterFieldDependency adapterFieldDep = (AdapterFieldDependency)d;
+					logger.info("It's an aadapter field. with multiple: "+adapterFieldDep.hasMultipleDependencies()+" type: "+d.getClass());
+					logger.info("id: "+adapterFieldDep.getId());
+					Operand op = expressionEvaluator.evaluate(adapterFieldDep.getId(), null);
+					if(op!=null && op.value instanceof String) {
+						logger.debug("Succeeded evaluation of id: "+((String)op.value));
+						dependentResources.add((String) op.value);
+					} else {
+						logger.info("Eval failed");
+					}
+					logger.info("Resource dependency detected:"+d.getClass().getName()+" type: "+d.getType()+" dependency id: "+d.getId());
+
+					Dependency[] subs = adapterFieldDep.getMultipleDependencies();
+					if (subs!=null) {
+						for (Dependency dependency : subs) {
+							logger.info("Nested dependency detected:"+dependency.getClass().getName()+" type: "+dependency.getType());
+						}
+					}
+				}
+			}
+		}
+		generateFactoryClass(script, packagePath,dependentResources);
 
 		generateManifest(scriptString,"1.0.0",packagePath, script,packages,compileDate);
-		generateDs(packagePath, script,dependencies);
+		generateDs(packagePath, script,dependencies,dependentResources);
 	}
 	
-	private void generateFactoryClass(String script, String packagePath) throws IOException {
+	private void generateFactoryClass(String script, String packagePath, Set<String> resources) throws IOException {
 		
 		String javaPackagePath = packagePath.replaceAll("/", ".");
 //		public CompiledScript getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -97,6 +127,10 @@ public class TslCompilerComponent implements ScriptCompiler {
 			w.println("		return \""+javaPackagePath+"."+ script+"\";");
 		}
 		w.println("	}");
+		for (String res : resources) {
+			addResourceField(res, w);
+		}
+		
 		w.println("public CompiledScript getCompiledScript() throws InstantiationException, IllegalAccessException, ClassNotFoundException {");
 		w.println("	Class<? extends CompiledScript> c;");
 		w.println("	c = (Class<? extends CompiledScript>) Class.forName(getScriptName());");
@@ -105,6 +139,10 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.println("	return instance;");
 		w.println("}");
 		w.println("");
+		for (String res : resources) {
+			addResourceDependency(res, w,"set");
+			addResourceDependency(res, w,"clear");
+		}
 		w.println("");
 		
 		w.println("}");
@@ -112,6 +150,17 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.close();
 		
 	}
+	private void addResourceField(String res, PrintWriter w) {
+		w.println("private Object _"+res+";");
+	}
+
+	private void addResourceDependency(String res, PrintWriter w,String prefix) {
+		w.println("void "+prefix+res+"(Object resource) {");
+		w.println("  this._"+res+" = resource;");
+		w.println("  "+prefix+"Resource(\""+res+"\",resource); ");
+		w.println("}\n");
+	}
+
 	private void generateManifest(String description, String version, String packagePath, String script, Set<String> packages, String compileDate) throws IOException {
 		String symbolicName = "navajo.script."+description;
 		PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, script, ".MF"));
@@ -146,18 +195,8 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.flush();
 		w.close();
 	}
-
-//	<?xml version="1.0" encoding="UTF-8"?>
-//	<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="club.InitUpdateClub">
-//	   <implementation class="com.dexels.navajo.server.CompiledScriptFactory"/>
-//	   <service>
-//	      <provide interface="com.dexels.navajo.server.CompiledScriptFactory"/>
-//	   </service>
-//	   <property name="serviceName" type="String" value="club.InitUpdateClub"/>
-//	</scr:component>
-//
 	
-	private void generateDs(String packagePath, String script,List<Dependency> dependencies) throws IOException {
+	private void generateDs(String packagePath, String script,List<Dependency> dependencies, Set<String> dependentResources) throws IOException {
 		
 		String fullName;
 		if (packagePath.equals("")) {
@@ -186,21 +225,33 @@ public class TslCompilerComponent implements ScriptCompiler {
 		xe.addChild(service);
 		XMLElement provide = new CaseSensitiveXMLElement("provide");
 		service.addChild(provide);
-		for (Dependency dependency : dependencies) {
-			XMLElement dep = new CaseSensitiveXMLElement("reference");
-			dep.setAttribute("bind", "setDependency");
-			dep.setAttribute("deptype", dependency.getType());
-			dep.setAttribute("depId", dependency.getId());
-			dep.setAttribute("depStamp", dependency.getCurrentTimeStamp());
-//			xe.addChild(dep);
-			logger.debug("Dependency: "+dep.toString());
-		}
 		provide.setAttribute("interface", "com.dexels.navajo.server.CompiledScriptFactory");
 		XMLElement property = new CaseSensitiveXMLElement("property");
 		xe.addChild(property);
 		property.setAttribute("name", "navajo.scriptName");
 		property.setAttribute("type", "String");
 		property.setAttribute("value", symbolicName);
+		
+//		for (Dependency dependency : dependencies) {
+//			XMLElement dep = new CaseSensitiveXMLElement("reference");
+//			dep.setAttribute("bind", "setDependency");
+//			dep.setAttribute("deptype", dependency.getType());
+//			dep.setAttribute("depId", dependency.getId());
+//			dep.setAttribute("depStamp", dependency.getCurrentTimeStamp());
+//			xe.addChild(dep);
+//			logger.debug("Dependency: "+dep.toString());
+//		}
+//		  <reference bind="setIOConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoIOConfig" name="NavajoIOConfig" policy="dynamic" unbind="clearIOConfig"/>
+		for (String resource : dependentResources) {
+			XMLElement dep = new CaseSensitiveXMLElement("reference");
+			dep.setAttribute("bind", "set"+resource);
+			dep.setAttribute("unbind", "clear"+resource);
+			dep.setAttribute("policy", "static");
+			dep.setAttribute("cardinality", "1..1");
+			dep.setAttribute("interface", "javax.sql.DataSource");
+			dep.setAttribute("target", "(navajo.resource.name="+resource+")");
+			xe.addChild(dep);
+		}
 		PrintWriter w = new PrintWriter(navajoIOConfig.getOutputWriter(navajoIOConfig.getCompiledScriptPath(), packagePath, script, ".xml"));
 		w.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		xe.write(w);
@@ -239,4 +290,12 @@ public class TslCompilerComponent implements ScriptCompiler {
 		logger.debug("Deactivating TSL compiler");
 	}
 	
+	void setExpressionEvaluator(ExpressionEvaluator e) {
+		this.expressionEvaluator = e;
+	}
+
+	void clearExpressionEvaluator(ExpressionEvaluator e) {
+		this.expressionEvaluator = null;
+	}
+
 }
