@@ -41,9 +41,7 @@ import java.util.StringTokenizer;
 
 import navajocore.Version;
 
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
@@ -1301,18 +1299,6 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
   private final void checkDependentFieldResource(Class localContextClass, String fieldName, ArrayList<String> expressionValues, List<Dependency> deps) {
 	  
 	  if ( !(HasDependentResources.class.isAssignableFrom(localContextClass) )) {
-		  Bundle b = FrameworkUtil.getBundle(localContextClass);
-		  logger.debug("Adapter bundle: ", b.getBundleContext());
-		  Bundle hasdep = FrameworkUtil.getBundle(HasDependentResources.class);
-		  logger.debug("Hasdep bundle: ", hasdep.getBundleContext());
-		  
-		  logger.debug("HasDep hash: "+HasDependentResources.class.getName()+" hash: "+HasDependentResources.class.hashCode());
-		  Class[] interf = localContextClass.getInterfaces();
-		  for (Class class1 : interf) {
-			logger.debug("Class hash: "+class1.getName()+" hash: "+class1.hashCode());
-			  Bundle b2 = FrameworkUtil.getBundle(class1);
-			  logger.debug("Interface bundle: ", b2.getBundleContext());
-		}
 		  return;
 	  }
 	  
@@ -2707,9 +2693,6 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 //       }
 
        tslCompiler.compileScript(bareScript, input, output,scriptPackagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"),deps);
-       for(String s: tslCompiler.dependentObjects) {
-    	   logger.debug("DEPENDENCY: "+s);
-       }
        
        return javaFile;
      }
