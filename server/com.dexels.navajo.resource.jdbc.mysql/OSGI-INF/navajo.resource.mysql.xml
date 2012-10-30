@@ -3,5 +3,6 @@
    <implementation class="com.mysql.jdbc.service.MySqlDataSourceComponent"/>
    <service>
       <provide interface="javax.sql.DataSource"/>
+      <provide interface="java.lang.Object"/>
    </service>
 </scr:component>

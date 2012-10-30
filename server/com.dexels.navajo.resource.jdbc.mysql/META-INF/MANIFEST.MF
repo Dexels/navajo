@@ -12,4 +12,4 @@ Import-Package: javax.sql,
  org.slf4j;version="1.6.1"
 Require-Bundle: com.mysql.jdbc;bundle-version="5.1.18",
  com.dexels.navajo.resource;bundle-version="1.0.0"
-Service-Component: OSGI-INF/navajo.resource.mysql.xml
+Bundle-Activator: com.dexels.navajo.resource.jdbc.mysql.Activator

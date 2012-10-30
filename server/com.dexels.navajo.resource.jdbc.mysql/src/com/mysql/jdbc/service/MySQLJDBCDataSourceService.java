@@ -28,6 +28,8 @@ import javax.sql.DataSource;
 import javax.sql.XADataSource;
 
 import org.osgi.service.jdbc.DataSourceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
@@ -41,6 +43,10 @@ import com.mysql.jdbc.jdbc2.optional.MysqlXADataSource;
  */
 public class MySQLJDBCDataSourceService implements DataSourceFactory {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MySQLJDBCDataSourceService.class);
+
     public void start() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         //Load driver if not already done...
         Class<?> clazz = Class.forName("com.mysql.jdbc.Driver");
@@ -48,7 +54,7 @@ public class MySQLJDBCDataSourceService implements DataSourceFactory {
         // broken Java implementations, see MySQL Connector/J documentation
         clazz.newInstance();
     }
-
+    
     @Override
     public DataSource createDataSource(Properties props) throws SQLException {
         MysqlDataSource source = new MysqlDataSource();
@@ -84,6 +90,10 @@ public class MySQLJDBCDataSourceService implements DataSourceFactory {
         if (props == null) {
             return;
         }
+        for(Object o :props.keySet()) {
+        	logger.debug("Setting up mysql: key {} val: {}",o,props.get(o));
+        }
+        
         if (props.containsKey(JDBC_DATABASE_NAME)) {
             source.setDatabaseName(props.getProperty(JDBC_DATABASE_NAME));
         }

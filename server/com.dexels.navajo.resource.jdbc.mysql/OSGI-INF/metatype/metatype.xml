@@ -3,7 +3,9 @@
     <AD name="url"    id="url"   required="true"  type="String" default="jdbc:mysql"/>   
     <AD name="user"  id="user" required="false" type="String" default="demo"/>
     <AD name="password"  id="password" required="false" type="String" default="demo"/>
-    <AD name="name"  id="name" required="false" type="String" default="navajo.resource.myjdbc"/>
+    <AD name="name"  id="name" required="false" type="String" default="myjdbc"/>
+    <AD name="navajo.resource.name"  id="navajo.resource.name" required="false" type="String" default="navajo.resource.myjdbc"/>
+    <AD name="databaseName"  id="databaseName" required="false" type="String" default="navajo.resource.myjdbc"/>
   </OCD>
   <Designate pid="navajo.resource.mysql" factoryPid="navajo.resource.mysql">
      <Object ocdref="navajo.resource.mysql"/>
