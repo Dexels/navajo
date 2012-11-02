@@ -140,7 +140,7 @@ import com.dexels.navajo.util.AuditLog;
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
 public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, Debugable, StreamClosable {
 
-	protected final static int INFINITE = -1;
+	protected final static int INFINITE = 10000;
 	protected final String USERPWDDELIMITER = "/";
 	protected final String DEFAULTSRCNAME = "default";
 
@@ -1010,9 +1010,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			Access.writeToConsole(myAccess, "AFTER PREPARESTATEMENT(), SETTING MAXROWS...\n");
 		}
 
-		if (endIndex != INFINITE) {
+		if (endIndex < INFINITE) {
 			this.statement.setMaxRows(this.endIndex);
 			// this.statement.setFetchSize(endIndex);
+		} else {
+			this.statement.setMaxRows(INFINITE);
 		}
 
 		if (debug) {
@@ -1118,7 +1120,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 					while (rs.next()) {
 
-						if ((index >= startIndex) && ((endIndex == INFINITE) || (index <= endIndex))) {
+						if ((index >= startIndex) && ( index <= endIndex) ) {
 							ResultSetMap rm = new ResultSetMap();
 
 							for (int i = 1; i < (columns + 1); i++) {
@@ -1302,11 +1304,15 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * @param i
 	 */
 	public void setEndIndex(int i) {
-		endIndex = i;
+		if ( i < INFINITE ) {
+			endIndex = i;
+		}
 	}
 
 	public void setEndIndex(String s, int newEndIndex) {
-		endIndex = newEndIndex;
+		if ( newEndIndex < INFINITE ) {
+			endIndex = newEndIndex;
+		}
 	}
 
 	public int getEndIndex(String s) {
