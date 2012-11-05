@@ -1010,13 +1010,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			Access.writeToConsole(myAccess, "AFTER PREPARESTATEMENT(), SETTING MAXROWS...\n");
 		}
 
-		if (endIndex < INFINITE) {
-			this.statement.setMaxRows(this.endIndex);
-			// this.statement.setFetchSize(endIndex);
-		} else {
-			this.statement.setMaxRows(INFINITE);
+		this.statement.setMaxRows(this.endIndex);
+		if ( this.endIndex != INFINITE ) {
+			this.statement.setFetchSize(this.endIndex);
 		}
-
+		
 		if (debug) {
 			Access.writeToConsole(myAccess, "SET MAXROWS DONE..SETTING STATEMENT PARAMETERS\n");
 		}
@@ -1304,15 +1302,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * @param i
 	 */
 	public void setEndIndex(int i) {
-		if ( i < INFINITE ) {
-			endIndex = i;
-		}
+		endIndex = i;
 	}
 
 	public void setEndIndex(String s, int newEndIndex) {
-		if ( newEndIndex < INFINITE ) {
-			endIndex = newEndIndex;
-		}
+		endIndex = newEndIndex;
 	}
 
 	public int getEndIndex(String s) {
