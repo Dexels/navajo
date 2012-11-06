@@ -1170,7 +1170,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     }
     else { // parameter
       result.append(printIdent(ident) +
-                    "p = MappingUtils.setProperty(true, currentParamMsg, \"" +
+                    "MappingUtils.setProperty(true, currentParamMsg, \"" +
                     propertyName + "\", sValue, type, subtype, \"" + direction +
                     "\", \"" + description + "\", " +
                     length +
@@ -1262,6 +1262,8 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
           }
         } else if (children.item(i).getNodeName().equals("debug")) {
           result.append(debugNode(ident, (Element) children.item(i)));
+        } else if (children.item(i).getNodeName().equals("param")) {
+        	result.append(propertyNode(ident, (Element) children.item(i), false, className, objectName)); 
         }
         else if (children.item(i) instanceof Element) {
           throw new Exception(
@@ -1285,8 +1287,9 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     if (isSelection) { // Set selection property stuff.
       result.append(optionItems.toString());
     }
-    result.append("p.setCardinality(\"" + cardinality + "\");\n");
-
+    if ( n.getNodeName().equals("property") ) {
+    	result.append("p.setCardinality(\"" + cardinality + "\");\n");
+    }
     if (conditionClause) {
       ident -= 2;
       result.append(printIdent(ident) + "} // EOF property condition \n");

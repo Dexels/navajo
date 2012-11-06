@@ -1,9 +1,11 @@
 package com.dexels.navajo.events;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.management.AttributeChangeNotification;
 import javax.management.MBeanNotificationInfo;
@@ -29,14 +31,14 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 
 	private volatile static NavajoEventRegistry instance = null;
 	
-	private final HashMap<Class<? extends NavajoEvent>, HashSet<NavajoListener>> registry = 
-															new HashMap<Class<? extends NavajoEvent>, HashSet<NavajoListener>>();
+	private final Map<Class<? extends NavajoEvent>, Set<NavajoListener>> registry = 
+															new ConcurrentHashMap<Class<? extends NavajoEvent>, Set<NavajoListener>>();
 	
 	/**
 	 * Map contains JMX monitored eventtypes.
 	 */
-	private final HashSet<String> monitoredEvents = new HashSet<String>();
-	private final HashMap<String,HashSet<String>> monitorLeveledEvents = new HashMap<String,HashSet<String>>();
+	private final Set<String> monitoredEvents = Collections.newSetFromMap( new ConcurrentHashMap<String,Boolean>() );
+	private final Map<String,HashSet<String>> monitorLeveledEvents = new ConcurrentHashMap<String,HashSet<String>>();
 	
 	private final static Object semaphore = new Object();
 	public static long notificationSequence = 0;
@@ -91,9 +93,9 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		
 		synchronized (semaphore) {
 			
-			HashSet<NavajoListener> registered = registry.get(type);
+			Set<NavajoListener> registered = registry.get(type);
 			if ( registered == null ) {
-				registered = new HashSet<NavajoListener>();
+				registered = Collections.newSetFromMap( new ConcurrentHashMap<NavajoListener,Boolean>() );
 				registry.put(type, registered);
 			}
 			registered.add(l);
@@ -108,7 +110,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	public void removeListener(Class<? extends NavajoEvent> type, NavajoListener l) {
 		synchronized (semaphore) {
-			HashSet<NavajoListener> registered = registry.get(type);
+			Set<NavajoListener> registered = registry.get(type);
 			registered.remove(l);
 		}
 	}
@@ -224,18 +226,8 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		publishEvent(ne, false);
 	}
 	
-	private final Set<NavajoListener> getInterestedParties(NavajoEvent ne) {
-		synchronized (semaphore) {
-			HashSet<NavajoListener> copy = null; 
-			HashSet<NavajoListener> registered = registry.get(ne.getClass());
-			if ( registered != null ) {
-				copy = new HashSet<NavajoListener>();
-				copy.addAll(registered);
-				return copy;
-			} else {
-				return null;
-			}
-		}
+	private final Set<NavajoListener> getInterestedParties(NavajoEvent ne) {		
+		return registry.get(ne.getClass());
 	}
 
 	/**
@@ -249,7 +241,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		while ( iter.hasNext() ) {
 			Class<? extends NavajoEvent> s = iter.next();
 			if ( s.equals(type) ) {
-				HashSet<NavajoListener> listeners = registry.get(s);
+				Set<NavajoListener> listeners = registry.get(s);
 				Iterator<NavajoListener> all = listeners.iterator();
 				while ( all.hasNext() ) {
 					NavajoListener nl = all.next();

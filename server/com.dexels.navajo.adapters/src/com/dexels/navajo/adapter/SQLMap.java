@@ -140,7 +140,7 @@ import com.dexels.navajo.util.AuditLog;
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
 public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, Debugable, StreamClosable {
 
-	protected final static int INFINITE = -1;
+	protected final static int INFINITE = 10000;
 	protected final String USERPWDDELIMITER = "/";
 	protected final String DEFAULTSRCNAME = "default";
 
@@ -1010,11 +1010,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			Access.writeToConsole(myAccess, "AFTER PREPARESTATEMENT(), SETTING MAXROWS...\n");
 		}
 
-		if (endIndex != INFINITE) {
-			this.statement.setMaxRows(this.endIndex);
-			// this.statement.setFetchSize(endIndex);
+		this.statement.setMaxRows(this.endIndex);
+		if ( this.endIndex != INFINITE ) {
+			this.statement.setFetchSize(this.endIndex);
 		}
-
+		
 		if (debug) {
 			Access.writeToConsole(myAccess, "SET MAXROWS DONE..SETTING STATEMENT PARAMETERS\n");
 		}
@@ -1118,7 +1118,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 					while (rs.next()) {
 
-						if ((index >= startIndex) && ((endIndex == INFINITE) || (index <= endIndex))) {
+						if ((index >= startIndex) && ( index <= endIndex) ) {
 							ResultSetMap rm = new ResultSetMap();
 
 							for (int i = 1; i < (columns + 1); i++) {

@@ -196,7 +196,7 @@ public class SPMap extends SQLMap {
 
         remainCount = 0;
         while (rs.next()) {
-          if ( (index >= startIndex) && ( (endIndex == INFINITE) || (index <= endIndex))) {
+          if ( (index >= startIndex) && ( index <= endIndex) ) {
             ResultSetMap rm = new ResultSetMap();
 
             for (int i = 1; i < (columns + 1); i++) {
