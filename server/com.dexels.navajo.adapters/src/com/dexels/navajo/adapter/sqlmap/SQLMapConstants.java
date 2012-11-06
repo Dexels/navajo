@@ -8,6 +8,7 @@ import com.dexels.navajo.server.Repository;
  * @author Erik Versteeg
  */
 public class SQLMapConstants {
+    public final static String ENTERPRISEDB = "enterprisedb";
 	public final static String ORACLEDB = "oracle";
 	public final static String POSTGRESDB = "postgresql";
 	public final static String MYSQLDB = "mysql";

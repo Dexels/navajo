@@ -54,6 +54,8 @@ public class GetSequenceValue extends FunctionInterface {
         if (sequencename != null) {
             if (SQLMapConstants.POSTGRESDB.equals(dbIdenitifier)) {
                 sql = "SELECT nextval('" + sequencename + "') FROM dual";
+            } else if (SQLMapConstants.ENTERPRISEDB.equals(dbIdenitifier)) {
+                    sql = "SELECT nextval('" + sequencename + "')";
             } else {
             	sql = "SELECT " + sequencename + ".nextval FROM dual";
             }
