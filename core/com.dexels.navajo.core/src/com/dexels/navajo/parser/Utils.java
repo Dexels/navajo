@@ -158,8 +158,11 @@ public final class Utils extends Exception {
           return ((ClockTime) o).toString();
         else if (o instanceof Selection) 
           return ((Selection) o).getValue();
-        else
+        else if ( o != null ) {
+        	return o.toString();
+        } else {
           throw new TMLExpressionException("Unknown type: " + o.getClass().getName());
+        }
     }
 
     /**
