@@ -598,4 +598,8 @@
 		<tagname>com.dexels.navajo.adapter.SelectionMap</tagname>
 		<object>com.dexels.navajo.adapter.SelectionMap</object>
 	</map>
+	<map>
+		<tagname>com.dexels.navajo.adapter.SequencedInsertMap</tagname>
+		<object>com.dexels.navajo.adapter.SequencedInsertMap</object>
+	</map>
 </adapterdef>
