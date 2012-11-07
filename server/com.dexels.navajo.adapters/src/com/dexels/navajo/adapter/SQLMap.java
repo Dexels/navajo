@@ -494,7 +494,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 			String resetSession = null;
 			if (myConnectionBroker != null && this.alternativeUsername != null) {
-				if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier())) {
+				if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier()) || SQLMapConstants.ENTERPRISEDB.equals(this.getDbIdentifier())) {
 					resetSession = "SET SEARCH_PATH TO " + myConnectionBroker.getUsername();
 				} else {
 					resetSession = "ALTER SESSION SET CURRENT_SCHEMA = " + myConnectionBroker.getUsername();
@@ -872,7 +872,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				try {
 					// Now set current_schema...
 					PreparedStatement stmt = null;
-					if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier())) {
+					if (SQLMapConstants.POSTGRESDB.equals(this.getDbIdentifier()) || SQLMapConstants.ENTERPRISEDB.equals(this.getDbIdentifier())) {
 						stmt = con.prepareStatement("SET SEARCH_PATH TO " + this.alternativeUsername);
 					} else {
 						stmt = con.prepareStatement("ALTER SESSION SET CURRENT_SCHEMA = " + this.alternativeUsername);

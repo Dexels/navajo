@@ -61,7 +61,7 @@ public class SQLMapHelper {
 		}
 		
 		if ((param == null) || (param instanceof NavajoType && !(param instanceof Binary) && ((NavajoType) param).isEmpty())) {
-			if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier)) { 
+			if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier) || SQLMapConstants.ENTERPRISEDB.equals(dbIdentifier)) { 
 				if (debug) {
 					Access.writeToConsole(access, "Had to do something in order to not get the cast error from a null value, because it concerns " + dbIdentifier + "\n");
 				}
@@ -97,7 +97,7 @@ public class SQLMapHelper {
 			// That creates a "value too long" error when trying to
 			// update/insert, because the value is true or false and not 0 or 1
 			// So prevent the error by using setInt instead
-			if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier)) {
+			if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier) || SQLMapConstants.ENTERPRISEDB.equals(dbIdentifier)) {
 				if (debug) {
 					Access.writeToConsole(access, "Used setInt instead of setBoolean, because it concerns " + dbIdentifier + "\n");
 				}

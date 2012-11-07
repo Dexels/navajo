@@ -43,7 +43,7 @@
     </function>
     <function name="GetNavajo" class="com.dexels.navajo.tipi.functions.GetNavajo">
         <description>Resolves a navajo name. Source component is required</description>
-        <input>component|context,string</input>
+        <input>component|context,string|empty</input>
         <result>navajo</result>
     </function>
     <function name="GetNavajoName" class="com.dexels.navajo.tipi.functions.GetNavajoName">
