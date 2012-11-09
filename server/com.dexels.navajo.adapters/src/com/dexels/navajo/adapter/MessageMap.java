@@ -425,7 +425,7 @@ public class MessageMap implements Mappable {
 			String [] props = groupBy.split(",");
 			groupByProperties = new ArrayList<String>();
 			for ( int i = 0; i < props.length; i++ ) {
-				groupByProperties.add(props[i]);
+				groupByProperties.add(props[i].trim());
 			}
 		}
 	}
