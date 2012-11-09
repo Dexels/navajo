@@ -58,7 +58,7 @@ public class PropertyAggregate {
 		
 		public void addProperty(Property myProp) {
 			count++;
-			if ( myProp.getTypedValue() != null && ( myProp.getType().equals(Property.INTEGER_PROPERTY) || myProp.getType().equals(Property.FLOAT_PROPERTY) ) ) {
+			if ( myProp.getTypedValue() != null && ( myProp.getType().equals(Property.INTEGER_PROPERTY) || myProp.getType().equals(Property.FLOAT_PROPERTY) || myProp.getType().equals(Property.MONEY_PROPERTY) ) ) {
 				Double value = new Double(myProp.getTypedValue()+"");
 				if ( value < min ) {
 					min = value;
