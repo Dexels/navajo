@@ -76,6 +76,11 @@
         <input>string,boolean|empty</input>
         <result>string</result>
     </function>
+    <function name="ToPlainText" class="com.dexels.navajo.tipi.functions.ToPlainText">
+        <description>Make text plain and simple. Html-style (depending on 2nd parameter including html tag)</description>
+        <input>string,boolean|empty</input>
+        <result>string</result>
+    </function>
     <function name="ToSubscript" class="com.dexels.navajo.tipi.functions.ToSubscript">
         <description>Make text subscript. Html-style (depending on 2nd parameter including html tag)</description>
         <input>string,boolean|empty</input>
