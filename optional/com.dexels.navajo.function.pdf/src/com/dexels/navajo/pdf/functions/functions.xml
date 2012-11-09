@@ -6,4 +6,9 @@
         <input>binary,binary</input>
         <result>binary</result>
     </function>    
+    <function name="SecurePDF" class="com.dexels.navajo.pdf.functions.SecurePDF">
+        <description>Creates an image representation of a PDF document</description>
+        <input>binary</input>
+        <result>binary</result>
+    </function>    
 </functiondef>
