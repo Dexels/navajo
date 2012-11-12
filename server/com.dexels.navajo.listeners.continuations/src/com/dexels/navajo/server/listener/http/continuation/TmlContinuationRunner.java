@@ -8,6 +8,7 @@ import org.eclipse.jetty.continuation.Continuation;
 import org.eclipse.jetty.continuation.ContinuationSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -64,6 +65,8 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				totalMem = ((Long) getAttribute("maxmemory")) >> 20;
 				freeMem = ((Long) getAttribute("freememory")) >> 20;
 			}
+			MDC.put("maxMemory", ""+totalMem);
+			MDC.put("freeMemory", ""+freeMem);
 			schedulingStatus = schedulingStatus + ", totalmemory=" + totalMem + "Mb, freememory=" + freeMem + "Mb";
 			getRequest().writeOutput(getInputNavajo(), outDoc, scheduledAt, startedAt, schedulingStatus);
 			continuation.complete();
