@@ -18,7 +18,10 @@ package com.dexels.navajo.osgi.runtime;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,7 +40,9 @@ import java.util.ResourceBundle;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.BundleListener;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Version;
@@ -177,7 +182,7 @@ public class FrameworkInstance {
 	public final void start(final String directive) {
 		try {
 			doStart(directive);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log("Failed to start framework", e);
 			e.printStackTrace();
 		}
@@ -201,8 +206,18 @@ public class FrameworkInstance {
 		felixFramework.init();
 		logger.info("init called");
 		felixFramework.start();
+		felixFramework.getBundleContext().addBundleListener(new BundleListener() {
+			
+			@Override
+			public void bundleChanged(BundleEvent bc) {
+				logger.info("Bundle Event: "+bc.getBundle().getSymbolicName()+" : "+bc.getType());
+			}
+		});
 		logger.info("start called called");
-
+//		loadBundlesFromBundleDir(felixFramework.getBundleContext());
+		loadBundlesInFolder(bundlePath);
+		logger.info("Load bundles complete");
+		registerService(bundlePath);
 	}
 
 	protected void registerService(final String directive) throws Exception {
@@ -247,9 +262,9 @@ public class FrameworkInstance {
 		configurationInjectionService = null;
 		try {
 			repositoryAdmin = obrTracker
-					.waitForService(30000);
+					.waitForService(3000);
 			configurationInjectionService = configurationInjectorTracker
-					.waitForService(30000);
+					.waitForService(3000);
 		} catch (InterruptedException e) {
 			logger.error("Interrupted while waiting for trackers: ", e);
 		}
@@ -257,7 +272,7 @@ public class FrameworkInstance {
 			logger.warn("Config injection service not found");
 		}
 		if (directive != null && directive.length() > 0) {
-			retrieveAndResolveDependencies(directive);
+			retrieveAndResolveDependencies("/Users/frank/Documents/workspace42/SportlinkClub|test|knvb");
 			injectBootConfiguration();
 			startTipi(directive);
 		}
@@ -386,6 +401,7 @@ public class FrameworkInstance {
 			String value = (String) props.get(key);
 			map.put(key.toString(), value);
 		}
+		logger.info(">>>>>>>>> bundles: "+bundlePath);
 		if (bundlePath != null) {
 			log("Bundles at: " + bundlePath, null);
 			map.put("felix.fileinstall.dir", bundlePath);
@@ -398,10 +414,91 @@ public class FrameworkInstance {
 	}
 
 	private InputStream getResource(String path) {
-		return FrameworkInstance.class.getClassLoader().getResourceAsStream(
+		URL u = getClass().getClassLoader().getResource(path);
+		logger.info("Looking for resource: "+path+" resolved to: "+u);
+		return getClass().getClassLoader().getResourceAsStream(
 				path);
 	}
 
+	protected void loadBundlesInFolder(String bundlePath) {
+		File folder = new File(bundlePath);
+		File[] bundles = folder.listFiles(new FilenameFilter() {
+			
+			@Override
+			public boolean accept(File folder, String name) {
+				return name.endsWith("jar");
+			}
+		});
+		logger.info("Folder: "+folder.getAbsolutePath()+" # of jars: "+bundles.length);
+		final List<Bundle> installed = new ArrayList<Bundle>();
+		for (File file : bundles) {
+			FileInputStream fis = null;
+			try {
+				// TODO check for already installed bundles?
+				logger.info("Installing: "+file.getAbsolutePath());
+				fis = new FileInputStream(file);
+				Bundle b = getBundleContext().installBundle("file://"+file.getAbsolutePath(),fis);
+				logger.info("Installed: "+b.getSymbolicName());
+				installed.add(b);
+				fis.close();
+				
+			} catch (Exception e) {
+				logger.error("Error installing bundle from path: "+file.getAbsolutePath(),e);
+			} finally {
+				if(fis!=null) {
+					try {
+						fis.close();
+					} catch (IOException e) {
+						logger.error("Error closing stream");
+					}
+				}
+			}
+		}
+		for (Bundle bundle : installed) {
+			logger.info("Starting: "+bundle.getSymbolicName());
+			try {
+				if (bundle.getHeaders().get(Constants.FRAGMENT_HOST) == null) {
+					bundle.start();
+				}
+			} catch (BundleException e) {
+				logger.error("Error starting bundle: ",e);
+			}
+		}
+	}
+
+	
+//	public void loadBundlesFromBundleDir(BundleContext bundleContext) {
+//		if(bundlePath==null) {
+//			logger.warn("Can not load bundles from bundledir: bundlePath is undefined");
+//			return;
+//		}
+//		File bundleDir = new File(bundlePath);
+//		for (File entry : bundleDir.listFiles(new FileFilter() {
+//			
+//			@Override
+//			public boolean accept(File f) {
+//				if(!f.isFile()) {
+//					return false;
+//				}
+//				if(f.getName().endsWith(".jar")) {
+//					return true;
+//				}
+//				return false;
+//			}
+//		})) {
+//			logger.info("Installing bundle: "+entry.getAbsolutePath());
+//			try {
+//				URL u = entry.toURI().toURL();
+//				bundleContext.installBundle(u.toString());
+//			} catch (MalformedURLException e) {
+//				logger.error("URL problem when installing bundle at: "+entry.getAbsolutePath(),e);
+//			} catch (BundleException e) {
+//				logger.error("Bundle problem when installing bundle at: "+entry.getAbsolutePath(),e);
+//			}
+//			
+//		}
+//	}
+//	
 	protected void log(String message, Throwable cause) {
 		logger.info("Message: " + message);
 		if (cause != null) {

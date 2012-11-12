@@ -20,8 +20,15 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 	
 	private final Set<ServiceRegistration> registrations = new HashSet<ServiceRegistration>();
 	private ServiceRegistration registration;
+	private BundleContext bundleContext;
 
 	
+
+	@Override
+	public void start(BundleContext bc) throws Exception {
+		super.start(bc);
+		this.bundleContext = bc;
+	}
 
 	@Override
 	public void stop(BundleContext bc) throws Exception {
@@ -44,7 +51,7 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 		logger.debug("Function names: "+functionNames);
 		for (String functionName : functionNames) {
 			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
-			 registerFunction(fi, functionName, fd,extensionDef);
+			 registerFunction(context, fi, functionName, fd,extensionDef);
 		}
 	}
 	
@@ -87,17 +94,21 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 		}
 	}
 
-	private void registerFunction(FunctionFactoryInterface fi,
+	private void registerFunction(BundleContext bundleContext,FunctionFactoryInterface fi,
 			String functionName, FunctionDefinition fd, ExtensionDefinition extensionDef) {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
 		props.put("functionName", functionName);
 		props.put("functionDefinition", fd);
 		props.put("type", "function");
-		logger.debug("registering function: {}",functionName);
+//		logger.debug("registering function: {}",functionName);
+		if(fd==null) {
+			logger.debug("Function def = null!");
+		}
 		Class<? extends FunctionInterface> clz;
 		try {
 			clz = (Class<? extends FunctionInterface>) Class.forName(fd.getObject(),true,extensionDef.getClass().getClassLoader());
-			registration = context.registerService(
+//			logger.debug("Registering functionclass: {} context: {}"+ functionName, clz.getName(),extensionDef.getClass().getName());
+			registration = bundleContext.registerService(
 					Class.class.getName(),
 					clz,
 					props);
