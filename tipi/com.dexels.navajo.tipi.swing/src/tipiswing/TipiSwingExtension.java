@@ -39,6 +39,7 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 	
 	@Override
 	public void start(BundleContext context) throws Exception {
+		super.start(context);
 		registerTipiExtension(context);
 		ExtensionDefinition extensionDef = new TipiSwingFunctionDefinition();
 		registerAll(extensionDef);
