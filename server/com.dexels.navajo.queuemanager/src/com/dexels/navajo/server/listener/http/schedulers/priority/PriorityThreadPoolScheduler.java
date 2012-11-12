@@ -32,7 +32,7 @@ import com.dexels.navajo.server.resource.ServiceAvailability;
 public final class PriorityThreadPoolScheduler implements TmlScheduler, PriorityThreadPoolSchedulerMBean, QueueContext {
 	
 	private static final int DEFAULT_POOL_SIZE = 15;
-	private static final int DEFAULT_MAXBACKLOG = 500;
+	private static final int DEFAULT_MAXBACKLOG = 100;
 	private static final Logger logger = LoggerFactory.getLogger(PriorityThreadPoolScheduler.class);
 //	private RequestQueue normalPool;
 //	private RequestQueue priorityPool;
@@ -286,6 +286,18 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	
 	private final void submitToPool(TmlRunnable run, RequestQueue pool) {
 		
+		// Check current memory usage.
+		long total = Runtime.getRuntime().maxMemory();
+		long free = Runtime.getRuntime().freeMemory();
+		
+		run.setAttribute("maxmemory", total);
+		run.setAttribute("freememory", free);
+		
+		if ( (free / total) > 0.95 ) {
+			run.abort("Memory consumption too high, refusing service.");
+			return;
+		}
+		
 		// Again, check back log size.
 		if ( pool == null) {
 				run.abort("Scheduling refused");
@@ -293,8 +305,8 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 			return;
 		}
 		if( pool.getQueueSize() >= maxbacklog) {
-				run.abort("Enormous backlog!");
-				return;
+			run.abort("Server too busy.");
+			return;
 		}
 		// Calculate moving average inter-arrival time.
 		synchronized (interArrivalTime) {
@@ -355,6 +367,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 
 	@Override
 	public final String getSchedulingStatus() {
+		
 		RequestQueue normalPool = queueMap.get("normalPool");
 		RequestQueue slowPool = queueMap.get("slowPool");
 		RequestQueue fastPool = queueMap.get("fastPool");
@@ -595,5 +608,19 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 			return null;
 		}
 		return pool.getQueuedRequests();
+	}
+	
+	public static void main(String [] args) {
+		
+		long start = System.currentTimeMillis();
+		double total = Runtime.getRuntime().maxMemory()/1024.0/1024.0;
+		 double free = Runtime.getRuntime().freeMemory()/1024.0/1024.0;
+		 System.err.println("Duration: " + (System.currentTimeMillis() - start));
+		 
+		 System.err.println("total: " + total);
+		 System.err.println("free: " + free);
+		 
+		
+		
 	}
 }
