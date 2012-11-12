@@ -24,26 +24,10 @@ public class TipiCoreExtension extends TipiAbstractXMLExtension implements Seria
 
 	@Override
 	public void start(BundleContext context) throws Exception {
+		super.start(context);
 		registerTipiExtension(context);
 		ExtensionDefinition extensionDef = new TipiCoreFunctionDefinition();
 		registerAll(extensionDef);
-//		// register as 'special service, so components can 'require' a core, as this is always the case.
-//		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
-////		fi.init();
-////		fi.clearFunctionNames();
-//		fi.injectExtension(extensionDef);
-//		if(context!=null) {
-//			// OSGi only:
-//			for (String functionName : fi.getFunctionNames(extensionDef)) {
-//				FunctionDefinition fd = fi.getDef(extensionDef,functionName);
-//				 Dictionary<String, Object> props = new Hashtable<String, Object>();
-//				 props.put("functionName", functionName);
-//				 props.put("functionDefinition", fd);
-//				 ServiceRegistration sr = context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
-//				 functionRegs.add(sr);
-//			}
-//			
-//		}
 	}
 
 	@Override
