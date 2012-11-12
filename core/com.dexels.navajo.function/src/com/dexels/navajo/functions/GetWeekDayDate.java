@@ -140,7 +140,7 @@ public String usage() {
   
       f.reset();
     f.insertOperand("sat");
-    f.insertOperand(new Boolean(false));
+    f.insertOperand(false);
     f.insertOperand(o);
     Object o2 = f.evaluate();
     System.err.println("f = " + o2);

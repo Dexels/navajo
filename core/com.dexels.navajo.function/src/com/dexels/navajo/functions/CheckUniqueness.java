@@ -77,7 +77,7 @@ public class CheckUniqueness extends FunctionInterface {
               o = p.getTypedValue();
             }
             if (values.contains(o)) {
-              return new Boolean(false);
+              return Boolean.FALSE;
             } else {
               values.add(o);
             }
@@ -93,7 +93,7 @@ public class CheckUniqueness extends FunctionInterface {
       throw new TMLExpressionException(this, se.getMessage());
     }
 
-   return new Boolean(isUnique);
+   return (isUnique ? Boolean.TRUE : Boolean.FALSE);
   }
 
   public String usage() {

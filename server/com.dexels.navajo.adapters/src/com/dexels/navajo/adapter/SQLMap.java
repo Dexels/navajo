@@ -296,7 +296,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		try {
 			fixedBroker.put(dataSourceName, driver, url, username, password,
 					minConnections, maxConnections, logFile, refresh,
-					new Boolean(ac), false, type);
+					ac, false, type);
 		} catch (ClassNotFoundException e) {
 			throw new UserException(-1, e.toString(), e);
 		}

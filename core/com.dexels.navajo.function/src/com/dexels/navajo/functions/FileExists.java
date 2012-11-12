@@ -23,10 +23,10 @@ public class FileExists extends FunctionInterface {
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     String path = (String) getOperand(0);
     if (path==null) {
-      return new Boolean(false);
+      return Boolean.FALSE;
     }
     File f = new File(path);
-    return new Boolean(f.exists());
+    return (f.exists());
   }
   public String usage() {
     return "FileExists(filename)";

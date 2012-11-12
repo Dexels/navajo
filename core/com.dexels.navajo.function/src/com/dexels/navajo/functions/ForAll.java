@@ -98,7 +98,7 @@ public class ForAll extends FunctionInterface {
 						
 						boolean res = ((Boolean)result2.value).booleanValue();
 						if (!res) {
-							return new Boolean(false);
+							return Boolean.FALSE;
 						}
 					}
 				} catch (SystemException ex) {
@@ -109,7 +109,7 @@ public class ForAll extends FunctionInterface {
 			throw new TMLExpressionException(this,"Error evaluating message path");
 		}
 		
-		return new Boolean(true);
+		return Boolean.TRUE;
 	}
 	public String usage() {
 		return "ForAll('ArrayMessage','Expression'[, 'Filter']) *ArrayMessage can be both a path and a message";

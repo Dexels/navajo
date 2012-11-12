@@ -264,7 +264,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
       return (broker.autocommit);
     }
     else {
-      return (new Boolean(true));
+      return Boolean.TRUE;
     }
   }
 

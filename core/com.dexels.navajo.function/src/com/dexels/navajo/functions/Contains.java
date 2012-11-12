@@ -51,7 +51,7 @@ public final class Contains extends FunctionInterface {
             throw new TMLExpressionException("Contains(ArrayList, Object) expected");
         Object b = this.getOperands().get(1);
 
-        return new Boolean(contains((List<?>) a, b));
+        return (contains((List<?>) a, b));
     }
 
 }

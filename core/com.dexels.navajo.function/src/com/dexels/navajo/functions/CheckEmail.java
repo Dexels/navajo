@@ -40,7 +40,7 @@ public class CheckEmail extends FunctionInterface {
 
     Object o = getOperand(0);
     if (!(o instanceof String)) {
-    	return new Boolean(false);
+    	return Boolean.FALSE;
       //throw new TMLExpressionException(this, "Invalid email address, string expected");
     }
 
@@ -50,12 +50,12 @@ public class CheckEmail extends FunctionInterface {
      Pattern re = Pattern.compile("[A-z.\\-_&0-9]+[@]{1}[A-z\\-_0-9]+[A-z.\\-_0-9]+[A-z\\-_0-9]{1}");
      boolean isMatch = re.matcher(email).matches();
      if(!isMatch) {
-       return new Boolean(false);
+       return Boolean.FALSE;
      } else
-       return new Boolean(true);
+       return Boolean.TRUE;
    }
    catch (Exception ree) {
-     return new Boolean(false);
+     return Boolean.FALSE;
    }
 
   }
