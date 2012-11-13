@@ -174,11 +174,11 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  // Bootstrap async store.
 	  navajoConfig.getAsyncStore();
 	  
-	  // Startup statistics runnner.
-	  navajoConfig.startStatisticsRunner();
-	  
 	  // Startup user defined services.
 	  UserDaemon.startup();
+	  
+	  // Startup statistics runnner.
+	  navajoConfig.startStatisticsRunner();
 	  
 	  // Startup task runner.
 	  navajoConfig.startTaskRunner();
