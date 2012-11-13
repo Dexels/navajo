@@ -59,15 +59,15 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				schedulingStatus = ts.getSchedulingStatus();
 			}
 			// Show memory usage.
-			long totalMem = 0;
-			long freeMem = 0;
+			long maxMem = 0;
+			long usedMem = 0;
 			if ( getAttribute("maxmemory") != null && !getAttribute("maxmemory").equals("") ) {
-				totalMem = ((Long) getAttribute("maxmemory")) >> 20;
-				freeMem = ((Long) getAttribute("freememory")) >> 20;
+				maxMem = ((Long) getAttribute("maxmemory")) >> 20;
+				usedMem = ((Long) getAttribute("usedmemory")) >> 20;
 			}
-			MDC.put("maxMemory", ""+totalMem);
-			MDC.put("freeMemory", ""+freeMem);
-			schedulingStatus = schedulingStatus + ", totalmemory=" + totalMem + "Mb, freememory=" + freeMem + "Mb";
+			MDC.put("maxMemory", ""+maxMem);
+			MDC.put("usedMemory", ""+usedMem);
+			schedulingStatus = schedulingStatus + ", totalmemory=" + maxMem + "Mb, usedmemory=" + usedMem + "Mb";
 			getRequest().writeOutput(getInputNavajo(), outDoc, scheduledAt, startedAt, schedulingStatus);
 			continuation.complete();
 		} catch (NavajoException e) {

@@ -280,6 +280,8 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		RequestQueue r = queueMap.get(queueName);
 		if(r!=null) {
 			return r;
+		} else {
+			logger.warn("Could not find thread pool: {}", queueName);
 		}
 		return getDefaultQueue();
 	}
@@ -287,16 +289,12 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	private final void submitToPool(TmlRunnable run, RequestQueue pool) {
 		
 		// Check current memory usage.
-		long total = Runtime.getRuntime().maxMemory();
+		long max = Runtime.getRuntime().maxMemory();
+		long total = Runtime.getRuntime().totalMemory();
 		long free = Runtime.getRuntime().freeMemory();
 		
-		run.setAttribute("maxmemory", total);
-		run.setAttribute("freememory", free);
-		
-		if ( (free / total) > 0.95 ) {
-			run.abort("Memory consumption too high, refusing service.");
-			return;
-		}
+		run.setAttribute("maxmemory", max);
+		run.setAttribute("usedmemory", (total - free));
 		
 		// Again, check back log size.
 		if ( pool == null) {
