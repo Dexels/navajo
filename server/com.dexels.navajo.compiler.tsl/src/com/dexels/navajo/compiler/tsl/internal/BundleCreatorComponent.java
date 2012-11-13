@@ -21,13 +21,11 @@ import org.apache.commons.io.IOUtils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.Filter;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
-import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -529,7 +527,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		return null;
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "rawtypes" })
 	private CompiledScript waitForService(String rpcPath) throws Exception {
 		String rpcName = rpcPath.replaceAll("/", ".");
 //		script://person/InitSearchPersons
@@ -544,7 +542,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		
 		String filterString = "(navajo.scriptName="+rpcName+")";
 		logger.debug("waiting for service...: "+rpcName);
-		Filter filter = bundleContext.createFilter(filterString);
+//		Filter filter = bundleContext.createFilter(filterString);
 		ServiceReference<CompiledScriptFactory>[] ss = (ServiceReference<CompiledScriptFactory>[]) bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filterString);
 		if(ss!=null && ss.length>0) {
 			logger.info("Service present: "+ss.length);

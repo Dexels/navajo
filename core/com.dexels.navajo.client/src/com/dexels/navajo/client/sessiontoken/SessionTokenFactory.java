@@ -7,6 +7,7 @@ public class SessionTokenFactory  {
 
 	private volatile static SessionTokenProvider instance = null;
 	
+	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory
 			.getLogger(SessionTokenFactory.class);
 	
@@ -29,7 +30,7 @@ public class SessionTokenFactory  {
 	}
 	
 	public static void main(String [] args) {
-		SessionTokenProvider info = SessionTokenFactory.getSessionTokenProvider();
+//		SessionTokenProvider info = SessionTokenFactory.getSessionTokenProvider();
 		System.err.println("info : "+SessionTokenFactory.getSessionTokenProvider().getSessionToken());
 		System.err.println("again: "+SessionTokenFactory.getSessionTokenProvider().getSessionToken());
 		SessionTokenFactory.getSessionTokenProvider().reset();
