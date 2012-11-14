@@ -48,6 +48,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	@SuppressWarnings("rawtypes")
 	public void start(BundleContext bc) throws Exception {
 		this.context = bc;
+		super.start(bc);
 		registerTipiExtension(context);
 		ExtensionDefinition extensionDef = new VaadinFunctionDefinition();
 		registerAll(extensionDef);
