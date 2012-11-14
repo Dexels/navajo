@@ -129,6 +129,9 @@ BEGIN
    -- empty the auditlog table
    DELETE FROM auditlog WHERE lastupdate < SYSDATE - 7;
 
+   -- empty worklow event table
+   DELETE from navajoworkflow where eventtime < sysdate - 7;
+
    deletecount := l_count;
 
 END sp_processcleanupnavajolog;
