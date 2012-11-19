@@ -9,7 +9,6 @@
 <%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <jsp:useBean id="navajoContext" type="com.dexels.navajo.client.context.NavajoContext" scope="session" />	  
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
-<jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
 
 <c:if test="${param['service']!= null && param['service']!=''}">
 	<h3>Run script</h3>

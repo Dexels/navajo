@@ -8,8 +8,6 @@
 <jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
 <jsp:useBean id="installerContext" class="com.dexels.navajo.jsp.server.InstallerContext" scope="session" />
-<jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
-<jsp:setProperty property="pageContext" name="installerContext" value="${pageContext}"/>
 
 <nav:postHandler/>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
