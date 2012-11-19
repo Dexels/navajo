@@ -24,7 +24,6 @@ public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiE
 		
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
