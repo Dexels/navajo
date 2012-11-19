@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Blueprint: OSGI-INF/blueprint/*.xml
-Import-Package: org.apache.camel;version="2.10.2",
+Import-Package: com.dexels.navajo.script.api;version="1.0.0",
+ org.apache.camel;version="2.10.2",
  org.apache.camel.component;version="2.10.2",
  org.apache.camel.impl;version="2.10.2",
  org.apache.camel.spi;version="2.10.2",
