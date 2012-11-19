@@ -9,6 +9,5 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <jsp:useBean id="navajoContext" type="com.dexels.navajo.client.context.NavajoContext" scope="session" />
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
-<jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
 
 <navserver:formattedFile serverContext="${serverContext}" filePath="config/${param['configfile']}.xml"></navserver:formattedFile>

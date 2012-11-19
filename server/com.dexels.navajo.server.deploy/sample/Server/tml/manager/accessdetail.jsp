@@ -9,7 +9,6 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <jsp:useBean id="navajoContext" type="com.dexels.navajo.client.context.NavajoContext" scope="session" />
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
-<jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
 <nav:call service="navajo/InitGetAccessLog">
 	<nav:set value="${param['accessid']}" property="AccessDetails/AccessId"/>
 	<nav:call service="navajo/ProcessGetAccessLog" navajo="navajo/InitGetAccessLog">
