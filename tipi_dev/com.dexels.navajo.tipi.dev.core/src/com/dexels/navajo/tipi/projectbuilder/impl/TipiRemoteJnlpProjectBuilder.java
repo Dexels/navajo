@@ -5,15 +5,21 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 import com.dexels.navajo.tipi.projectbuilder.TipiProjectBuilder;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class TipiRemoteJnlpProjectBuilder extends TipiProjectBuilder {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiRemoteJnlpProjectBuilder.class);
 	public void downloadExtensionJars(String extensionName, String version, URL remoteExtensionUrl, XMLElement extensionElement,
 			File baseDir, boolean clean, boolean localSign) throws MalformedURLException, IOException {
-		System.err.println("Project dir: " + remoteExtensionUrl);
+		logger.info("Project dir: " + remoteExtensionUrl);
 		URL signed = new URL(remoteExtensionUrl, "lib/");
 
 		File f = new File(baseDir, "lib");

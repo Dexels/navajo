@@ -29,7 +29,7 @@ public class TslFixGenerator implements IMarkerResolutionGenerator {
      */
     public IMarkerResolution[] getResolutions(IMarker marker) {
         System.err.println("GETTING RESOLUTIONS FROM TSLFIXGENERATOR");
-            int code = marker.getAttribute("code", 0);
+//            int code = marker.getAttribute("code", 0);
             TslCompileException tce = null;
             try {
                 tce = (TslCompileException)marker.getAttribute("tslCompileException");
@@ -55,9 +55,8 @@ public class TslFixGenerator implements IMarkerResolutionGenerator {
             return new IMarkerResolution[]{new TslFixField("mies","wim")};
     }
 
-    public boolean hasResolutions(IMarker marker) {
-        // TODO Auto-generated method stub
-        return true;
-    }
+//    public boolean hasResolutions(IMarker marker) {
+//        return true;
+//    }
 
 }

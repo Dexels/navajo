@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.vaadin.components;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -17,7 +20,10 @@ public class TipiMessagePanel extends TipiVaadinComponentImpl implements
 	private static final long serialVersionUID = -2676124688318507565L;
 	private String myMessageName = null;
 	private Message myMessage;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMessagePanel.class);
+	
 	public Message getMessage() {
 		return myMessage;
 	}
@@ -64,9 +70,9 @@ public class TipiMessagePanel extends TipiVaadinComponentImpl implements
 		try {
 			performTipiEvent("onLoad", eventParams, true);
 		} catch (TipiBreakException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

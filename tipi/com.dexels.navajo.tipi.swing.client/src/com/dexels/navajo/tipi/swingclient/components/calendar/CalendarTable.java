@@ -84,18 +84,18 @@ public class CalendarTable extends JTable {
 
 		this.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				// System.err.println("You pressed: " +
+				// logger.info("You pressed: " +
 				// e.getKeyText(e.getKeyCode()));
 			}
 
 			public void keyReleased(KeyEvent e) {
-				// System.err.println("You released: " +
+				// logger.info("You released: " +
 				// e.getKeyText(e.getKeyCode()));
 				registerKeyEvent(e);
 			}
 
 			public void keyTyped(KeyEvent e) {
-				// System.err.println("You typed: " +
+				// logger.info("You typed: " +
 				// e.getKeyText(e.getKeyCode()));
 				// Gives weird unrecognized keycodes.
 			}
@@ -318,7 +318,7 @@ public class CalendarTable extends JTable {
 	}
 
 	public void load(Message m) {
-		// System.err.println("Loading Table!!");
+		// logger.info("Loading Table!!");
 		if (BasePanel.class.isInstance(myManager)) {
 			((BasePanel) myManager).setLoadMessage(m);
 			((BasePanel) myManager).load();

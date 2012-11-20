@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.actions;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
@@ -31,7 +34,10 @@ public class TipiDisposeChildren extends TipiAction {
 	 * 
 	 */
 	private static final long serialVersionUID = 8311106046281479945L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiDisposeChildren.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -50,13 +56,13 @@ public class TipiDisposeChildren extends TipiAction {
 				children.add(tp.getTipiComponent(i));
 			}
 			for (TipiComponent tipiComponent : children) {
-				System.err.println("Disposing child: "
+				logger.debug("Disposing child: "
 						+ tipiComponent.getPath());
 				myContext.disposeTipiComponent(tipiComponent);
 
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 	}
 }

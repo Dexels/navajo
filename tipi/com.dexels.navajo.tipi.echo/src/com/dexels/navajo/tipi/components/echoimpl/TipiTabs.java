@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.components.echoimpl;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Component;
 import nextapp.echo2.extras.app.TabPane;
 
@@ -10,25 +13,12 @@ import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class TipiTabs extends TipiEchoDataComponentImpl {
 	private static final long serialVersionUID = 8622355169266150274L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTabs.class);
     private Component lastSelectedTab = null;
 
     private TabPane myTabbedPane;
@@ -39,7 +29,7 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
         myTabbedPane.addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
-            	System.err.println("Hoei: "+evt.getPropertyName());
+            	logger.info("Hoei: "+evt.getPropertyName());
             	
             }
             });

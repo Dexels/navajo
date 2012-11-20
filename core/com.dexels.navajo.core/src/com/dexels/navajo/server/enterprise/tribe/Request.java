@@ -30,6 +30,10 @@ import com.dexels.navajo.server.DispatcherFactory;
  */
 public abstract class Request implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3357053502585490959L;
 	public String owner = null;
 	public Answer predefined = null;
 	private String guid = null;

@@ -37,7 +37,7 @@ public class FormatDecimal extends FunctionInterface {
        }
        Object o1 = getOperand(0);
        Object o2 = getOperand(1);
-       if (!(o2 instanceof String) || o2 == null ) {
+       if (!(o2 instanceof String) ) {
            throw new TMLExpressionException(this, "Invalid argument: " + o2);
        }
        DecimalFormat df = new DecimalFormat(o2.toString());

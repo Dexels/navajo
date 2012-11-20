@@ -8,6 +8,11 @@ import java.net.URL;
 
 import javax.script.ScriptEngineManager;
 
+import navajocore.Version;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -17,6 +22,9 @@ public class DispatcherFactory {
 	private static volatile DispatcherInterface instance;
 	private static Object semaphore = new Object();
 	private static ScriptEngineManager scriptEngineFactory = null;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DispatcherFactory.class);
 	
 	public DispatcherFactory() {	
 	}
@@ -41,7 +49,7 @@ public class DispatcherFactory {
 	 * @return
 	 * @throws NavajoException
 	 */
-	public static DispatcherInterface getInstance(File rootPath, String serverXmlPath, InputStreamReader fileInputStreamReader, String servletContextRootPath) throws NavajoException {
+	public static DispatcherInterface getInstance(File rootPath, String serverXmlPath, String servletContextRootPath) throws NavajoException {
 		if (instance != null) {
 			return instance;
 		}
@@ -64,21 +72,23 @@ public class DispatcherFactory {
 		}
 
 		
-		createInstance(absRootPath, fileInputStreamReader, configurationUrl,servletContextRootPath);
+		createInstance(absRootPath, configurationUrl,servletContextRootPath);
 		return instance;
 	}
 	
 	public static void shutdown() {
 		instance = null;
 		scriptEngineFactory = null;
-		NavajoConfig.terminate();
+//		NavajoConfig.terminate();
 	}
 	
-	public static ScriptEngineManager getScriptEngineManager() {
-		if(scriptEngineFactory==null) {
-			scriptEngineFactory = new javax.script.ScriptEngineManager();
+	public static synchronized ScriptEngineManager getScriptEngineManager() {
+		synchronized (DispatcherFactory.class) {
+			if(scriptEngineFactory==null) {
+				scriptEngineFactory = new javax.script.ScriptEngineManager();
+			}
+			return scriptEngineFactory;
 		}
-		return scriptEngineFactory;
 	}
 	
 	/**
@@ -90,8 +100,8 @@ public class DispatcherFactory {
 	 * @return
 	 * @throws NavajoException
 	 */
-	public static DispatcherInterface getInstance(String rootPath, String serverXmlPath, InputStreamReader fileInputStreamReader, String servletContextRootPath) throws NavajoException {
-
+	public static DispatcherInterface getInstance(String rootPath, String serverXmlPath, String servletContextRootPath) throws NavajoException {
+		logger.warn("GETINSTANCE1");
 		if (instance != null) {
 			return instance;
 		}
@@ -126,14 +136,18 @@ public class DispatcherFactory {
 			rootPath = rootPath+ "/";
 		}
 
-		createInstance(rootPath, fileInputStreamReader, configurationUrl,servletContextRootPath);
+		createInstance(rootPath, configurationUrl,servletContextRootPath);
 
 		return instance;
 	}
 
-	private static void createInstance(String rootPath, InputStreamReader fileInputStreamReader, URL configurationUrl,String servletContextRootPath)
+	private static void createInstance(String rootPath, URL configurationUrl,String servletContextRootPath)
 			throws NavajoException {
+		logger.warn("CREATE INSTANCE2");
 		synchronized (semaphore) {
+			if(Version.osgiActive()) {
+				logger.info("Using osgi");
+			}
 			if (instance == null) {
 				
 				// Create NavajoConfig object.
@@ -142,11 +156,11 @@ public class DispatcherFactory {
 				  try {
 					  // Read configuration file.
 					  is = configurationUrl.openStream();
-					  nc = new NavajoConfig(fileInputStreamReader, null, is, rootPath,servletContextRootPath); 
-					  navajo.Version.registerNavajoConfig(nc);
+					  nc = new NavajoConfig( null, is, rootPath,servletContextRootPath); 
+//					  navajocore.Version.registerNavajoConfig(nc);
+//					  createNavajoConfigConfiguration(configurationUrl);
 				  }
 				  catch (Exception se) {
-					  se.printStackTrace(System.err);
 					  throw NavajoFactory.getInstance().createNavajoException(se);
 				  } finally {
 					  if ( is != null ) {
@@ -159,7 +173,7 @@ public class DispatcherFactory {
 				  }
 				  
 				instance = new Dispatcher(nc);
-				navajo.Version.registerDispatcher(instance);
+				navajocore.Version.registerDispatcher(instance);
 				((Dispatcher) instance).init();
 				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
 				NavajoFactory.getInstance().setTempDir(instance.getTempDir());
@@ -167,5 +181,6 @@ public class DispatcherFactory {
 			}
 		}
 	}
-	
+
+
 }

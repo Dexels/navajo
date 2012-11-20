@@ -26,6 +26,10 @@ import org.w3c.dom.css.CSSRuleList;
  */
 public class CSSRuleListImpl implements CSSRuleList, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8940999668830223961L;
 	private List rules = null;
 
 	public CSSRuleListImpl() {

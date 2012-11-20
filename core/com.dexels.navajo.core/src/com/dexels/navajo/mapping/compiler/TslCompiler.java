@@ -23,20 +23,29 @@ package com.dexels.navajo.mapping.compiler;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import navajocore.Version;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -59,13 +68,15 @@ import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
+import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
+import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.internal.LegacyNavajoIOConfig;
 
 public class TslCompiler {
 
@@ -92,9 +103,7 @@ public class TslCompiler {
    */
   private HashMap<Class, DependentResource []> instantiatedAdapters = new HashMap<Class, DependentResource []>();
   
-  @SuppressWarnings("unchecked")
   private Stack<Class> contextClassStack = new Stack<Class>();
-  @SuppressWarnings("unchecked")
   private Class contextClass = null;
   private int included = 0;
 
@@ -106,14 +115,31 @@ public class TslCompiler {
   
   private static String VERSION = "$Id$";
 
-  public TslCompiler(ClassLoader loader) {
-    this.loader = loader;
-    messageListCounter = 0;
-    if (loader == null) {
-      this.loader = this.getClass().getClassLoader();
-    }
-  }
+  private final NavajoIOConfig navajoIOConfig;
+  
+  
+  private final static Logger logger = LoggerFactory.getLogger(TslCompiler.class);
 
+  public TslCompiler(ClassLoader loader) {
+	    this.navajoIOConfig = new LegacyNavajoIOConfig();
+	    initialize(loader);
+  }
+  public TslCompiler(ClassLoader loader, NavajoIOConfig config) {
+	    this.navajoIOConfig = config;
+	    initialize(loader);
+  }
+private void initialize(ClassLoader loader) {
+	this.loader = loader;
+	messageListCounter = 0;
+	if (loader == null) {
+	  this.loader = this.getClass().getClassLoader();
+	}
+}
+  
+  public NavajoIOConfig getNavajoIOConfig() {
+	  return this.navajoIOConfig;
+  }
+  
   private String replaceQuotes(String str) {
 
 	  if ( str.startsWith("#")) {
@@ -207,7 +233,6 @@ public class TslCompiler {
    * @param className
    * @return
    */
-  @SuppressWarnings("unchecked")
 public String optimizeExpresssion(int ident, String clause, String className, String objectName) throws UserException {
 
     boolean exact = false;
@@ -324,7 +349,6 @@ public String optimizeExpresssion(int ident, String clause, String className, St
               }
             }
 
-            expressionContextClass = null;
               try {
             	  expressionContextClass = Class.forName(className, false, loader);
               } catch (Exception e) {
@@ -612,7 +636,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
   }
 
   @SuppressWarnings("unchecked")
-public String messageNode(int ident, Element n, String className, String objectName) throws Exception {
+public String messageNode(int ident, Element n, String className, String objectName, List<Dependency> deps) throws Exception {
     StringBuffer result = new StringBuffer();
 
 
@@ -630,8 +654,6 @@ public String messageNode(int ident, Element n, String className, String objectN
     condition = (condition == null) ? "" : condition;
     count = (count == null || count.equals("")) ? "1" : count;
     int startIndex = (start_index == null || start_index.equals("")) ? -1 : Integer.parseInt(start_index);
-
-    boolean isLazy = mode.equals(Message.MSG_MODE_LAZY);
 
     boolean conditionClause = false;
 
@@ -888,11 +910,11 @@ result.append(printIdent(ident + 4) +
 
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
-          result.append(compile(ident + 4, children.item(i), subClassName, subObjectName));
+          result.append(compile(ident + 4, children.item(i), subClassName, subObjectName,deps));
         }
       }
 
-      contextClass = (Class) contextClassStack.pop();
+      contextClass = contextClassStack.pop();
       //System.err.println("802: popped: " + contextClass);
       
       result.append(printIdent(ident + 2) + "MappingUtils.callStoreMethod(currentMap.myObject);\n");
@@ -992,10 +1014,10 @@ result.append(printIdent(ident + 4) +
 
       NodeList children = nextElt.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
-        result.append(compile(ident + 4, children.item(i), subClassName, subObjectName));
+        result.append(compile(ident + 4, children.item(i), subClassName, subObjectName,deps));
       }
 
-      contextClass = (Class) contextClassStack.pop();
+      contextClass = contextClassStack.pop();
      
       result.append(printIdent(ident + 2) + "}\n");
       result.append(printIdent(ident + 2) +
@@ -1007,7 +1029,7 @@ result.append(printIdent(ident + 4) +
       NodeList children = n.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         result.append(compile(ident + 2, children.item(i), className,
-                              objectName));
+                              objectName,deps));
       }
     }
     
@@ -1032,7 +1054,6 @@ result.append(printIdent(ident + 4) +
     return result.toString();
   }
 
-  @SuppressWarnings("unchecked")
 public String propertyNode(int ident, Element n, boolean canBeSubMapped, String className, String objectName) throws
       Exception {
     StringBuffer result = new StringBuffer();
@@ -1149,7 +1170,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     }
     else { // parameter
       result.append(printIdent(ident) +
-                    "p = MappingUtils.setProperty(true, currentParamMsg, \"" +
+                    "MappingUtils.setProperty(true, currentParamMsg, \"" +
                     propertyName + "\", sValue, type, subtype, \"" + direction +
                     "\", \"" + description + "\", " +
                     length +
@@ -1157,13 +1178,14 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     }
 
     if (isMapped) {
-    	localContextClass = null;
       try {
     	  localContextClass = Class.forName(className, false, loader);
       } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
       
       addDependency("dependentObjects.add( new JavaDependency( -1, \"" + className + "\"));\n", "JAVA"+className);
-      
+      if(mapNode==null) {
+    	  throw new IllegalStateException("Unexpected null mapNode");
+      }
       String ref = mapNode.getAttribute("ref");
       String filter = mapNode.getAttribute("filter");
       
@@ -1240,6 +1262,8 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
           }
         } else if (children.item(i).getNodeName().equals("debug")) {
           result.append(debugNode(ident, (Element) children.item(i)));
+        } else if (children.item(i).getNodeName().equals("param")) {
+        	result.append(propertyNode(ident, (Element) children.item(i), false, className, objectName)); 
         }
         else if (children.item(i) instanceof Element) {
           throw new Exception(
@@ -1263,10 +1287,9 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     if (isSelection) { // Set selection property stuff.
       result.append(optionItems.toString());
     }
-    if ( cardinality != null) {
-      result.append("p.setCardinality(\"" + cardinality + "\");\n");
+    if ( n.getNodeName().equals("property") ) {
+    	result.append("p.setCardinality(\"" + cardinality + "\");\n");
     }
-
     if (conditionClause) {
       ident -= 2;
       result.append(printIdent(ident) + "} // EOF property condition \n");
@@ -1276,9 +1299,13 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 
   }
 
-  private final void checkDependentFieldResource(Class localContextClass, String fieldName, ArrayList<String> expressionValues) {
+  private final void checkDependentFieldResource(Class localContextClass, String fieldName, ArrayList<String> expressionValues, List<Dependency> deps) {
 	  
 	  if ( !(HasDependentResources.class.isAssignableFrom(localContextClass) )) {
+		  return;
+	  }
+	  
+	  if ( expressionValues == null ) {
 		  return;
 	  }
 	  
@@ -1292,7 +1319,9 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 			  try {
 				  HasDependentResources hr = (HasDependentResources) localContextClass.newInstance();
 				  dependentFields = hr.getDependentResourceFields();
-			  } catch (Throwable t) {}
+			  } catch (Throwable t) {
+				  logger.error("Dependency detection problem:",t);
+			  }
 			  instantiatedAdapters.put(localContextClass, dependentFields);
 		  }
 
@@ -1308,6 +1337,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 					  try {
 						  Constructor c = depClass.getConstructor(new Class[]{long.class, String.class, String.class, String.class});
 						  AdapterFieldDependency afd = (AdapterFieldDependency) c.newInstance(new Object[]{-1, localContextClass.getName(), dependentFields[i].getType(), expressionValue});
+						  deps.add(afd);
 						  AdapterFieldDependency [] allDeps = (AdapterFieldDependency []) afd.getMultipleDependencies();
 						  for ( int a = 0; a < allDeps.length; a++ ) {
 							  addDependency("dependentObjects.add( new " + depClass.getName() + "(-1, \"" + allDeps[a].getJavaClass() + 
@@ -1315,9 +1345,10 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 									  allDeps[a].getType() + "\", \"" +  allDeps[a].getId() + "\"));\n", 
 									  "FIELD" + allDeps[a].getJavaClass() + ";" + allDeps[a].getType() + ";" + 
 									  fieldName + ";" + allDeps[a].getId());
+							  deps.add(allDeps[a]);
 						  }
+						  
 					  } catch (Exception e) {
-//						  // TODO Auto-generated catch block
 //						  e.printStackTrace();
 					  } 
 				  } else {
@@ -1325,6 +1356,8 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 							  dependentFields[i].getType() + "\", \"" +  expressionValue + "\"));\n", 
 							  "FIELD" + localContextClass.getName() + ";" + dependentFields[i].getType() + ";" + 
 							  fieldName + ";" + expressionValue);
+					  Dependency d = new AdapterFieldDependency(-1, localContextClass.getName(), dependentFields[i].getType(), expressionValue);
+					  deps.add(d);
 				  }
 			  }
 		  }
@@ -1333,7 +1366,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
   
   @SuppressWarnings("unchecked")
 public String fieldNode(int ident, Element n, String className,
-                          String objectName) throws Exception {
+                          String objectName, List<Dependency> dependencies) throws Exception {
 
     StringBuffer result = new StringBuffer();
 
@@ -1407,25 +1440,30 @@ public String fieldNode(int ident, Element n, String className,
             if (mapPath!=null) {
             	localContextClass = locateContextClass(mapPath, 0);
             } else {
-            	localContextClass = Class.forName(className, false, loader);
+            	if(Version.osgiActive()) {
+            		localContextClass = resolveClassUsingService(className);
+            	} else {
+                	localContextClass = Class.forName(className, false, loader);
+            	}
             }
             
-          } catch (Exception e) { e.printStackTrace(System.err);throw new Exception("Could not find adapter: " + className); }
+          } catch (Exception e) { throw new Exception("Could not find adapter: " + className,e); }
           
           addDependency("dependentObjects.add( new JavaDependency( -1, \"" + className + "\"));\n", "JAVA"+className);
-          
+          dependencies.add(new JavaDependency(-1, className));
          
         String type = null;
        
         try {
+//        	logger.info("Attr: "+attribute+" class: "+localContextClass);
         	type = MappingUtils.getFieldType(localContextClass, attribute);
-        	checkDependentFieldResource(localContextClass, attribute, exprValues);	
+        	checkDependentFieldResource(localContextClass, attribute, exprValues,dependencies);	
         } catch (Exception e) { 
         	isDomainObjectMapper = localContextClass.isAssignableFrom(DomainObjectMapper.class);
         	if ( isDomainObjectMapper ) {
         		type = "java.lang.Object";
         	} else {
-        		throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName());
+        		throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName(),e);
         	}
         }
         
@@ -1479,8 +1517,7 @@ public String fieldNode(int ident, Element n, String className,
         }
       }
       catch (ClassNotFoundException e) {
-        e.printStackTrace();
-        throw new UserException(-1, "Error in script: could not find mappable object: " + className);
+        throw new UserException(-1, "Error in script: could not find mappable object: " + className,e);
       }
       
       if (mapPath!=null) {
@@ -1507,6 +1544,9 @@ public String fieldNode(int ident, Element n, String className,
       
     }
     else { // Field with ref: indicates that a message or set of messages is mapped to attribute (either Array Mappable or singular Mappable)
+        if(mapNode==null) {
+      	  throw new IllegalStateException("Unexpected null mapNode");
+        }
       String ref = mapNode.getAttribute("ref");
       boolean isParam = false;
       
@@ -1553,7 +1593,7 @@ public String fieldNode(int ident, Element n, String className,
     		  localContextClass = contextClass;
     	  }
 
-      } catch (Exception e) { e.printStackTrace(System.err);throw new Exception("Could not find adapter: " + className); }
+      } catch (Exception e) {throw new Exception("Could not find adapter: " + className,e); }
      
   
       String type = null;
@@ -1633,7 +1673,7 @@ public String fieldNode(int ident, Element n, String className,
 
         children = mapNode.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
-          result.append(compile(ident + 2, children.item(i), type, subObjectsName + "[" + loopCounterName + "]"));
+          result.append(compile(ident + 2, children.item(i), type, subObjectsName + "[" + loopCounterName + "]",dependencies));
         }
 
         ident = ident-2;
@@ -1717,7 +1757,7 @@ public String fieldNode(int ident, Element n, String className,
         // Recursively dive into children.
         children = mapNode.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
-          result.append(compile(ident + 2, children.item(i), type, subObjectsName ));
+          result.append(compile(ident + 2, children.item(i), type, subObjectsName,dependencies ));
         }  
         
         ident = ident-2;        
@@ -1754,8 +1794,20 @@ public String fieldNode(int ident, Element n, String className,
     return result.toString();
   }
 
-  @SuppressWarnings("unchecked")
-  /**
+  private Class resolveClassUsingService(String className) {
+	  BundleContext bc = Version.getDefaultBundleContext();
+	  Collection<ServiceReference<Class>> sr;
+	try {
+		sr = bc.getServiceReferences(Class.class, "(adapterClass="+className+")");
+		  Class result = bc.getService(sr.iterator().next());
+		  return result;
+	} catch (InvalidSyntaxException e) {
+		logger.error("Adapter resolution error: ",e);
+		return null;
+	}
+	  
+}
+/**
    * Locate a contextclass in the class stack based upon a mappath.
    * Depending on the way this method is called an additional offset to stack index must be supplied...
    * 
@@ -1782,7 +1834,7 @@ public String fieldNode(int ident, Element n, String className,
     }
 //      System.err.println("Count element: "+count);
 //      System.err.println("STACK: "+contextClassStack);
-      Class m = (Class)contextClassStack.get(contextClassStack.size()-( count ) - offset);
+      Class m = contextClassStack.get(contextClassStack.size()-( count ) - offset);
       //System.err.println("Mappable: "+m);
       return m;
 }
@@ -1831,8 +1883,7 @@ public String fieldNode(int ident, Element n, String className,
     return result.toString();
   }
 
-  @SuppressWarnings("unchecked")
-public String mapNode(int ident, Element n) throws Exception {
+public String mapNode(int ident, Element n, List<Dependency> deps) throws Exception {
 
 
     StringBuffer result = new StringBuffer();
@@ -1859,7 +1910,7 @@ public String mapNode(int ident, Element n) throws Exception {
     } 
     try {
     	contextClass = Class.forName(className, false, loader);
-    } catch (Exception e) { throw new Exception("Could not find adapter: " + className,e); }
+    } catch (Exception e) { throw new Exception("Could not find adapter: " + className+" from classloader: "+loader,e); }
 
     addDependency("dependentObjects.add( new JavaDependency( -1, \"" + className + "\"));\n", "JAVA"+className);
  
@@ -1997,7 +2048,7 @@ public String mapNode(int ident, Element n) throws Exception {
       children = response.item(0).getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
-          result.append(compile(ident + 2, children.item(i), className, aoName));
+          result.append(compile(ident + 2, children.item(i), className, aoName,deps));
         }
       }
       result.append(printIdent(ident) + "} else if (" + asyncStatusName +
@@ -2005,7 +2056,7 @@ public String mapNode(int ident, Element n) throws Exception {
       children = request.item(0).getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
-          result.append(compile(ident + 2, children.item(i), className, aoName));
+          result.append(compile(ident + 2, children.item(i), className, aoName,deps));
         }
       }
       result.append(printIdent(ident) + "} else if (" + asyncStatusName +
@@ -2013,7 +2064,7 @@ public String mapNode(int ident, Element n) throws Exception {
       children = running.item(0).getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
-          result.append(compile(ident + 2, children.item(i), className, aoName));
+          result.append(compile(ident + 2, children.item(i), className, aoName,deps));
         }
       }
       result.append(printIdent(ident) + "}\n");
@@ -2077,7 +2128,7 @@ public String mapNode(int ident, Element n) throws Exception {
       NodeList children = n.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         result.append(compile(ident + 2, children.item(i), className,
-                              objectName));
+                              objectName,deps));
       }
 
       result.append(printIdent(ident) + "} catch (Exception e" + ident +
@@ -2096,7 +2147,7 @@ public String mapNode(int ident, Element n) throws Exception {
       result.append(printIdent(ident) + "} // EOF map condition \n");
     }
     if (!contextClassStack.isEmpty()) {
-        contextClass = (Class)contextClassStack.pop();
+        contextClass = contextClassStack.pop();
        // System.err.println("1798: popped: " + contextClass);
     } else {
         contextClass = null;
@@ -2164,6 +2215,9 @@ public String mapNode(int ident, Element n) throws Exception {
     }
 
     //System.err.println("nextNode = " + nextNode + ", n = " + n);
+    if(nextNode==null) {
+  	  throw new IllegalStateException("Unexpected null nextNode");
+    }
 
     Node parentNode = nextNode.getParentNode();
 
@@ -2177,7 +2231,7 @@ public String mapNode(int ident, Element n) throws Exception {
 
   }
 
-  public String compile(int ident, Node n, String className, String objectName) throws
+  public String compile(int ident, Node n, String className, String objectName, List<Dependency> deps) throws
       Exception {
     StringBuffer result = new StringBuffer();
     //System.err.println("in compile(), className = " + className + ", objectName = " + objectName);
@@ -2188,11 +2242,11 @@ public String mapNode(int ident, Element n) throws Exception {
     if (n.getNodeName().equals("map")) {
       result.append(printIdent(ident) +
                     "{ // Starting new mappable object context. \n");
-      result.append(mapNode(ident + 2, (Element) n));
+      result.append(mapNode(ident + 2, (Element) n,deps));
       result.append(printIdent(ident) + "} // EOF MapContext \n");
     }
     else if (n.getNodeName().equals("field")) {
-      result.append(fieldNode(ident, (Element) n, className, objectName));
+      result.append(fieldNode(ident, (Element) n, className, objectName,deps));
     }
     else if ((n.getNodeName().equals("param") && !((Element) n).getAttribute("type").equals("array")  ) ||
              n.getNodeName().equals("property")) {
@@ -2209,7 +2263,7 @@ public String mapNode(int ident, Element n) throws Exception {
       methodBuffer.append(printIdent(ident) + "private final void " + methodName + "(Access access) throws Exception {\n\n");
       ident+=2;
       methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
-      methodBuffer.append(messageNode(ident, (Element) n, className, objectName));
+      methodBuffer.append(messageNode(ident, (Element) n, className, objectName,deps));
       methodBuffer.append(printIdent(ident) + "}\n");
       ident-=2;
       methodBuffer.append("}\n");
@@ -2218,8 +2272,6 @@ public String mapNode(int ident, Element n) throws Exception {
       //
     } else if (n.getNodeName().equals("antimessage")) {
     	  
-    	Message m;
-    	
     	  String messageName = ((Element) n).getAttribute("name");
     	  result.append(printIdent(ident) + "if ( currentOutMsg != null && currentOutMsg.getMessage(\"" + messageName + "\") != null ) {\n");
     	  result.append(printIdent(ident+2) + "   currentOutMsg.removeMessage(currentOutMsg.getMessage(\"" + messageName + "\"));\n");
@@ -2241,7 +2293,7 @@ public String mapNode(int ident, Element n) throws Exception {
     return result.toString();
   }
 
-  private final void generateFinalBlock( Document d, StringBuffer generatedCode ) throws Exception {
+  private final void generateFinalBlock( Document d, StringBuffer generatedCode, List<Dependency> deps) throws Exception {
       generatedCode.append("public final void finalBlock(Access access) throws Exception {\n");
 
       NodeList list = d.getElementsByTagName("finally");
@@ -2249,7 +2301,7 @@ public String mapNode(int ident, Element n) throws Exception {
       if (list != null && list.getLength() > 0) {
         NodeList children = list.item(0).getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
-          String str = compile(0, children.item(i), "", "");
+          String str = compile(0, children.item(i), "", "",deps);
           generatedCode.append(str);
         }
       }
@@ -2358,7 +2410,7 @@ public String mapNode(int ident, Element n) throws Exception {
  }
 
 
-  private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, String workingPath) throws SystemException{
+  private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, Writer fo, List<Dependency> deps) throws SystemException{
 	  
 	  boolean debugInput = false;
 	  boolean debugOutput = false;
@@ -2370,17 +2422,8 @@ public String mapNode(int ident, Element n) throws Exception {
 	  try {
 	      Document tslDoc = null;
 	      StringBuffer result = new StringBuffer();
-	      
-	      File dir = new File(workingPath);
-	      if (!dir.exists()) {
-	        dir.mkdirs();
-	      }
-	      
-	      File javaFile = new File(dir,packagePath+"/"+script+".java");
-	      javaFile.getParentFile().mkdirs();
-	      //System.err.println("Will create file: "+javaFile.toString());
 
-	      FileWriter fo = new FileWriter(javaFile);
+	      
 	      tslDoc = XMLDocumentUtils.createDocument(is, false);
 	     
 	      NodeList tsl = tslDoc.getElementsByTagName("tsl");
@@ -2396,9 +2439,16 @@ public String mapNode(int ident, Element n) throws Exception {
 	      String author = tslElt.getAttribute("author");
 	      
 	      broadcast = (tslElt.getAttribute("broadcast").indexOf("true") != -1);
+	      String actualPackagePath = packagePath;
+	      if (packagePath.equals("")) {
+	      	if(Version.osgiActive()) {
+	      		actualPackagePath = "defaultPackage";
+	      	}
+	      }
 
-	      String importDef = (packagePath.equals("") ? "" :
-	                          "package " + MappingUtils.createPackageName(packagePath) +
+	      
+	      String importDef = (actualPackagePath.equals("") ? "" :
+	                          "package " + MappingUtils.createPackageName(actualPackagePath) +
 	                          ";\n\n") +
 	          "import com.dexels.navajo.server.*;\n" +
 	          "import com.dexels.navajo.mapping.*;\n" +
@@ -2465,7 +2515,7 @@ public String mapNode(int ident, Element n) throws Exception {
 	      generateValidations(tslDoc, result);
 
 	      // Generate final block code.
-	      generateFinalBlock(tslDoc, result);
+	      generateFinalBlock(tslDoc, result,deps);
 
 	      String methodDef = "public final void execute(Access access) throws Exception { \n\n";
 	      result.append(methodDef);
@@ -2489,7 +2539,7 @@ public String mapNode(int ident, Element n) throws Exception {
 	      //System.err.println("FOUND " + children.getLength() + " CHILDREN");
 	      for (int i = 0; i < children.getLength(); i++) {
 	    	
-	        String str = compile(0, children.item(i), "", "");
+	        String str = compile(0, children.item(i), "", "",deps);
 	        result.append(str);
 	      }
 
@@ -2552,12 +2602,11 @@ public String mapNode(int ident, Element n) throws Exception {
 	      fo.write(result.toString());
 	      fo.close();
 	    } catch (Exception e) {
-	      e.printStackTrace();
-	      throw new SystemException(-1, "Error while generating Java code for script: " + script + ". Message: " + e.getMessage(), e);
+	      throw new SystemException(-1, "Error while generating Java code for script: " + script, e);
 	    } 
   }
     
-  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, String configPath) throws SystemException {
+  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, Writer outputWriter, List<Dependency> deps) throws SystemException {
 
 	    String fullScriptPath = scriptPath + "/" + packagePath + "/" + script + ".xml";
 	    
@@ -2570,17 +2619,17 @@ public String mapNode(int ident, Element n) throws Exception {
 	    	if ( MapMetaData.isMetaScript(script, scriptPath, packagePath) ) {
 	    		scriptType = "navascript";
 	    		MapMetaData mmd = MapMetaData.getInstance();
-	    		InputStream metais = DispatcherFactory.getInstance().getNavajoConfig().getScript(packagePath+"/"+script);
+	    		InputStream metais = navajoIOConfig.getScript(packagePath+"/"+script);
 
 	    		String intermed = mmd.parse(fullScriptPath,metais);
 	    		metais.close();
 				is = new ByteArrayInputStream(intermed.getBytes());
 	    	} else {
-//	    		is = new FileInputStream(fullScriptPath);
-	    		is = DispatcherFactory.getInstance().getNavajoConfig().getScript(packagePath+"/"+script);
+	    		is = navajoIOConfig.getScript(packagePath+"/"+script);
 	    	}
 	    	
-	    	InputStream sis = DispatcherFactory.getInstance().getNavajoConfig().getScript(packagePath+script);
+	    	InputStream sis = navajoIOConfig.getScript(packagePath+"/"+script);
+	    	logger.debug("Getting script: "+packagePath+"/"+script);
 	    	if ( ScriptInheritance.containsInject(sis)) {
 	    		// Inheritance preprocessor before compiling.
 	    		InputStream ais = null;
@@ -2595,11 +2644,10 @@ public String mapNode(int ident, Element n) throws Exception {
 		                 IncludeDependency.getScriptTimeStamp(inheritedScripts.get(i)) + "\"), \"" + 
 		                 inheritedScripts.get(i) + "\"));\n", "INHERIT"+inheritedScripts.get(i));
 			}
-			compileScript(is, packagePath, script, scriptPath, workingPath);
+			compileScript(is, packagePath, script, scriptPath, outputWriter,deps);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new SystemException(-1, "Error while generating Java code for script: " + script + ". Message: " + e.getMessage(), e);
+			throw new SystemException(-1, "Error while generating Java code for script: " + script, e);
 		} finally {
 			if ( is != null ) {
 				try {
@@ -2617,12 +2665,27 @@ public String mapNode(int ident, Element n) throws Exception {
 //  }
 
 
-  public static String compileToJava(String script,
-                                        String input, String output, String packagePath, NavajoClassLoader classLoader) throws Exception {
-     // File dir = new File(output);
+  private String compileToJava(String script,
+          String input, String output, String packagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig,List<Dependency> deps) throws Exception {
+	  return compileToJava(script, input, output, packagePath, packagePath, classLoader, navajoIOConfig,deps);
+  }
+  
+  /**
+   * Only used by OSGi now
+   * @param script
+   * @param input
+   * @param output
+   * @param packagePath The package in the Java file. OSGi doesn't handle default packages well, so default package will be translated to 'defaultPackage'
+   * @param scriptPackagePath the path of the scriptFile from the scriptRoot
+   * @param classLoader
+   * @param navajoIOConfig
+   * @return
+   * @throws Exception
+   */
+  public String compileToJava(String script,
+                                        String input, String output, String packagePath, String scriptPackagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig, List<Dependency> deps) throws Exception {
     String javaFile = output + "/" + script + ".java";
-     //ArrayList javaList = new ArrayList();
-   TslCompiler tslCompiler = new TslCompiler(classLoader);
+   TslCompiler tslCompiler = new TslCompiler(classLoader,navajoIOConfig);
      try {
        String bareScript;
 
@@ -2631,12 +2694,19 @@ public String mapNode(int ident, Element n) throws Exception {
        } else {
          bareScript = script;
        }
-       tslCompiler.compileScript(bareScript, input, output,packagePath, DispatcherFactory.getInstance().getNavajoConfig().getConfigPath());
-        return javaFile;
+       
+//       if(!packagePath.endsWith("/")) {
+//    	   packagePath = packagePath + "/";
+//       }
+
+       tslCompiler.compileScript(bareScript, input, output,scriptPackagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"),deps);
+       
+       return javaFile;
      }
      catch (Throwable ex) {
-       System.err.println("Error compiling script: "+script);
+       logger.error("Error compiling script: "+script,ex);
        //System.err.println("delete javaFile: "+javaFile.toString());
+       // Isn't this what 'finally' is for?
        File f = new File(javaFile);
        if (f.exists()) {
 		f.delete();
@@ -2648,8 +2718,8 @@ public String mapNode(int ident, Element n) throws Exception {
     }
   }
   
-  private static void compileStandAlone(boolean all, String script,
-                                        String input, String output, String packagePath, String[] extraclasspath) {
+  private void compileStandAlone(boolean all, String script,
+                                        String input, String output, String packagePath, String[] extraclasspath, String configPath, List<Dependency> deps) {
      try {
       TslCompiler tslCompiler = new TslCompiler(null);
         try {
@@ -2663,13 +2733,14 @@ public String mapNode(int ident, Element n) throws Exception {
 
           //System.err.println("About to compile script: "+bareScript);
           //System.err.println("Using package path: "+packagePath);
-          tslCompiler.compileScript(bareScript, input, output,packagePath,DispatcherFactory.getInstance().getNavajoConfig().getConfigPath());
+		Writer w = navajoIOConfig.getOutputWriter(output, packagePath, script, ".java");
+
+		tslCompiler.compileScript(bareScript, input, output,packagePath,w,deps);
           
           ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
         }
         catch (Exception ex) {
           System.err.println("Error compiling script: "+script);
-          ex.printStackTrace();
           return;
         }
 //      }
@@ -2713,20 +2784,17 @@ public String mapNode(int ident, Element n) throws Exception {
 //      System.err.println("\n\nCLASSPATH: " + classPath.toString());
       compiler.compile(output + "/" + script + ".java");
       
-      System.err.println("Compilertext: "+myWriter.toString());
       
       
       //System.out.println("COMPILED JAVA FILE INTO CLASS FILE");
     }
     catch (Exception e) {
-      e.printStackTrace();
-      //System.out.println("Could not compile script " + script + ", reason: " +
-      //                   e.getMessage());
-      System.exit(1);
+    	logger.error("Error: ", e);
+    	System.exit(1);
     }
   }
 
-  public static ArrayList<String> compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader) {
+  private ArrayList<String> compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig) {
     System.err.println("Entering compiledirectory: " + currentDir + " output: " +
                        outputPath + " offset: " + offsetPath);
     ArrayList<String> files = new ArrayList<String>();
@@ -2740,7 +2808,7 @@ public String mapNode(int ident, Element n) throws Exception {
           System.err.println("Entering directory: " + current.getName());
           ArrayList<String> subDir = compileDirectoryToJava(currentDir, outputPath,
               offsetPath.equals("") ? current.getName() :
-              (offsetPath + "/" + current.getName()),classLoader);
+              (offsetPath + "/" + current.getName()),classLoader,navajoConfig);
           files.addAll(subDir);
         }
         else {
@@ -2763,11 +2831,10 @@ public String mapNode(int ident, Element n) throws Exception {
             String javaFile = null;
             try {
                 javaFile = compileToJava(compileName, currentDir.toString(),
-                              outputPath.toString(), offsetPath,classLoader);
+                              outputPath.toString(), offsetPath,classLoader,navajoConfig,new ArrayList<Dependency>());
                 files.add(javaFile);
             } catch (Exception e) {
-               
-                e.printStackTrace();
+               logger.error("Error: ", e);
             }
           }
         }
@@ -2776,7 +2843,7 @@ public String mapNode(int ident, Element n) throws Exception {
     return files;
   }
 
-  public static void fastCompileDirectory(File currentDir, File outputPath, String offsetPath, String[] extraclasspath, NavajoClassLoader classLoader) {
+  public void fastCompileDirectory(File currentDir, File outputPath, String offsetPath, String[] extraclasspath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig) {
 
     StringBuffer classPath = new StringBuffer();
     classPath.append(System.getProperty("java.class.path"));
@@ -2788,7 +2855,7 @@ public String mapNode(int ident, Element n) throws Exception {
       }
     }
 
-    ArrayList<String> javaFiles =  compileDirectoryToJava(currentDir, outputPath, offsetPath,classLoader);
+    ArrayList<String> javaFiles =  compileDirectoryToJava(currentDir, outputPath, offsetPath,classLoader,navajoConfig);
     System.err.println("javaFiles: "+javaFiles);
     JavaCompiler compiler = new SunJavaCompiler();
 //    StringBuffer javaBuffer = new StringBuffer();
@@ -2801,7 +2868,7 @@ public String mapNode(int ident, Element n) throws Exception {
     compiler.setMsgOutput(System.out);
     System.err.println("\n\nCLASSPATH: "+classPath.toString());
     for (int i = 0; i < javaFiles.size(); i++) {
-      compiler.compile((String)javaFiles.get(i));
+      compiler.compile(javaFiles.get(i));
       System.err.println("Compiled: "+javaFiles.get(i));
 //      javaBuffer.append((String)javaFiles.get(i));
 //      javaBuffer.append(" ");
@@ -2810,8 +2877,11 @@ public String mapNode(int ident, Element n) throws Exception {
 
   }
 
-  public static void compileDirectory(File currentDir, File outputPath, String offsetPath, String[] classpath) {
-    System.err.println("Entering compiledirectory: "+currentDir+" output: "+outputPath+" offset: "+offsetPath);
+  public static void compileDirectory(File currentDir, File outputPath, String offsetPath, String[] classpath,String configPath) {
+
+	  TslCompiler compiler = new TslCompiler(null, new LegacyNavajoIOConfig());
+	List<Dependency> deps = new ArrayList<Dependency>();
+	  System.err.println("Entering compiledirectory: "+currentDir+" output: "+outputPath+" offset: "+offsetPath);
 
     File[] scripts = null;
     File f = new File(currentDir,offsetPath);
@@ -2821,7 +2891,7 @@ public String mapNode(int ident, Element n) throws Exception {
         File current = scripts[i];
         if (current.isDirectory()) {
           System.err.println("Entering directory: "+current.getName());
-          compileDirectory(currentDir, outputPath, offsetPath.equals("") ? current.getName() : (offsetPath + "/"+ current.getName()),classpath);
+          compileDirectory(currentDir, outputPath, offsetPath.equals("") ? current.getName() : (offsetPath + "/"+ current.getName()),classpath, configPath);
         } else {
           if (current.getName().endsWith(".xml")) {
             String name = current.getName().substring(0,current.getName().indexOf("."));
@@ -2837,14 +2907,14 @@ public String mapNode(int ident, Element n) throws Exception {
             } else {
               compileName = offsetPath+"/"+name;
             }
-            compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath,classpath);
+            compiler.compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath,classpath,configPath,deps);
+            logger.info("Standalone compile finished. Detected dependencies: "+deps);
           }
         }
       }
     }
 }
 
-  @SuppressWarnings("unchecked")
   public static String getHostName() {
 
 	  if ( hostname != null ) {
@@ -2857,7 +2927,7 @@ public String mapNode(int ident, Element n) throws Exception {
 			  //ArrayList list = new ArrayList();
 
 			  hostname = "unknown host";
-			  long start = System.currentTimeMillis();
+//			  long start = System.currentTimeMillis();
 
 			  Enumeration all = null;
 			 
@@ -2870,21 +2940,11 @@ public String mapNode(int ident, Element n) throws Exception {
 
 			  while (all.hasMoreElements()) {
 				  java.net.NetworkInterface nic = (java.net.NetworkInterface) all.nextElement();
-				  Enumeration ipaddresses = nic.getInetAddresses();
+				  Enumeration<InetAddress> ipaddresses = nic.getInetAddresses();
 				  while (ipaddresses.hasMoreElements()) {
+					  logger.warn("Why are we harassing the network interfaces?");
+					  ipaddresses.nextElement();
 
-					  start = System.currentTimeMillis();
-
-					  InetAddress ip = (InetAddress) ipaddresses.nextElement();
-
-//					  System.err.println("\t\tCanonical hostname: " + ip.getCanonicalHostName());
-//					  System.err.println("\t\tHost address: " + ip.getHostAddress());
-//					  System.err.println("\t\tisMCGlobal: " + ip.isMCGlobal());
-//					  System.err.println("\t\tisLinkLocalAddress: " + ip.isLinkLocalAddress());
-//					  System.err.println("\t\t"+ip.toString());
-//					  System.err.println("Getting hostname took: " + ( System.currentTimeMillis() - start ) ) ;
-
-					 // hostname = "";//ip.getCanonicalHostName();
 
 				  }
 			  }
@@ -2897,9 +2957,10 @@ public String mapNode(int ident, Element n) throws Exception {
   }
 
 public static void main(String[] args) throws Exception {
-
+	NavajoIOConfig config = new LegacyNavajoIOConfig();
     System.err.println("today = " + new java.util.Date());
-   
+    final String configPath = config.getConfigPath();
+
    if (args.length == 0) {
      System.out.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler <scriptDir> <compiledDir> [-all | scriptName]");
      System.err.println("NOTE: Startupswitch for extra class path (eg for adding an adaper jar) has not been implemented yet");
@@ -2920,11 +2981,10 @@ public static void main(String[] args) throws Exception {
    if (all) {
      File scriptDir = new File(input);
      File outDir = new File(output);
-     compileDirectory(scriptDir, outDir, "",null);
+     compileDirectory(scriptDir, outDir, "",null,configPath);
    }
  }
 
-@SuppressWarnings("unchecked")
 public void initJavaCompiler( String outputPath, ArrayList classpath, Class javaCompilerClass) {
     StringBuffer cpbuffer = new StringBuffer();
           if (classpath != null) {
@@ -2945,13 +3005,11 @@ public void initJavaCompiler( String outputPath, ArrayList classpath, Class java
 
 }
 
-@SuppressWarnings("unchecked")
 public void compileAllTslToJava(ArrayList elements)  throws Exception {
       removeDuplicates(elements);
     
     compiler.compile(elements);
 }
-@SuppressWarnings("unchecked")
 public void compileAllTslToJava(ArrayList elements, Class compilerClass)  throws Exception {
     removeDuplicates(elements);
   
@@ -2966,7 +3024,6 @@ public void setCompileClassLoader( ClassLoader cl  ) {
     }
 }
 
-@SuppressWarnings("unchecked")
 private void removeDuplicates(ArrayList elements) {
     for (int i = elements.size()-1; i >=0; i--) {
         String element = (String)elements.get(i);

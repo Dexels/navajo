@@ -13,6 +13,9 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
@@ -20,6 +23,10 @@ import com.jogamp.opengl.util.texture.TextureIO;
 public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventListener {
 
 	private static final long serialVersionUID = -2008869951387194865L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JOGL3DTribeView.class);
+	
 	private boolean lightingEnabled;				// Lighting ON/OFF
 //    private boolean lightingChanged = false;		// Lighting changed
     private boolean blendingEnabled;				// Blending OFF/ON
@@ -113,26 +120,44 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 //        lightingChanged = true;
     }
 
+    /**
+	 * @param increase  
+	 */
     public void increaseXspeed(boolean increase) {
 //        increaseX = increase;
     }
 
+    /**
+	 * @param decrease  
+	 */
     public void decreaseXspeed(boolean decrease) {
 //        decreaseX = decrease;
     }
 
+    /**
+	 * @param increase  
+	 */
     public void increaseYspeed(boolean increase) {
 //        increaseY = increase;
     }
 
+    /**
+	 * @param decrease  
+	 */
     public void decreaseYspeed(boolean decrease) {
 //        decreaseY = decrease;
     }
 
+    /**
+	 * @param zoom  
+	 */
     public void zoomIn(boolean zoom) {
 //        zoomIn = zoom;
     }
 
+    /**
+	 * @param zoom  
+	 */
     public void zoomOut(boolean zoom) {
 //        zoomOut = zoom;
     }
@@ -231,16 +256,19 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
     /*
 	 * Debug function for outputting the current Frames Per Second
 	 */
+	/**
+	 * @param drawable  
+	 */
 	private void displayFPSText(GLAutoDrawable drawable) {
 		if (++frameCount == 10) {
 			long endTime = System.currentTimeMillis();
-			float fps = 10.0f / (float) (endTime - startTime) * 1000;
+			float fps = 10.0f / (endTime - startTime) * 1000;
 			frameCount = 0;
 			startTime = System.currentTimeMillis();
 			fpsText = format.format(fps);
 //			int x = drawable.getWidth() - fpsWidth - 5;
 //			int y = drawable.getHeight() - 30;
-			System.err.println("FPS: " + fpsText);
+			logger.info("FPS: " + fpsText);
 		}
 	}
 
@@ -258,6 +286,11 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
         gl.glLoadIdentity();                                     // Reset The ModalView Matrix
     }
 
+    /**
+	 * @param glDrawable  
+     * @param b 
+     * @param b1 
+	 */
     public void displayChanged(GLAutoDrawable glDrawable, boolean b, boolean b1) {
     }
     
@@ -277,7 +310,7 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 	             t.setTexParameteri(GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
 	             t.setTexParameteri(GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
 	        } catch (IOException e) {
-	            System.err.println("Error loading " + filename);
+	            logger.info("Error loading " + filename);
 	        }
 	        return t;
 	    }

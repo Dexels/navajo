@@ -17,8 +17,15 @@ import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ApplicationStatus {
-	//private String name;
+
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ApplicationStatus.class);
+	
 	private Date builtAt;
 	private boolean exists = false;
 
@@ -61,7 +68,6 @@ public class ApplicationStatus {
 	public String propertyEntry(String deployment, String profile, String name) {
 		Map<String,String> depl = deploymentData.get(deployment);
 		if(depl==null) {
-			// TODO maybe check tipi.properties?
 			return null;
 		}
 		String rawValue = depl.get(name);
@@ -235,7 +241,10 @@ public class ApplicationStatus {
 	   	 File tag = new File(cvsDir,"Tag");
 	   	 if (tag.exists()) {
 		   	 fr = new BufferedReader(new FileReader(tag));
-		   	 setCvsRevision(fr.readLine().substring(1));
+		   	 String line = fr.readLine();
+		   	 if(line!=null ) {
+			   	 setCvsRevision(line.substring(1));
+		   	 }
 		   	 fr.close();
 			} else {
 				 setCvsRevision("HEAD");
@@ -277,7 +286,7 @@ public class ApplicationStatus {
 				//pro.add(file.getName());
 				if(file.canRead() && file.isFile() && file.getName().endsWith(".properties")) {
 					String profileName = file.getName().substring(0,file.getName().length()-".properties".length());
-//					System.err.println("Profilename: "+profileName);
+//					logger.info("Profilename: "+profileName);
 					boolean b = profileNeedsRebuild(file,profileName, appDir);
 					pro.add(profileName);
 					profileNeedsRebuild.put (profileName,b);
@@ -325,7 +334,7 @@ public class ApplicationStatus {
 			String key = keys.nextElement();
 			String value = settings.getString(key);
 			element.put(key, value);
-			System.err.println("Adding data: "+deployName+" : "+key+" : "+value);
+			logger.info("Adding data: "+deployName+" : "+key+" : "+value);
 		}
 		deploymentData.put(deployName, element);
 	}

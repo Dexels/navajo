@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
 
 
 public class OSGiFunctionFactoryFactory  {
@@ -19,14 +18,24 @@ public class OSGiFunctionFactoryFactory  {
 		// no instances
 	}
 	
-	public static FunctionInterface getFunctionInterface(final String functionName) throws TMLExpressionException  {
-		FunctionInterface osgiResolution = (FunctionInterface) getComponent(functionName, "functionName", FunctionInterface.class);
-		return osgiResolution;
+	@SuppressWarnings("unchecked")
+	public static FunctionInterface getFunctionInterface(final String functionName)  {
+		final Class<? extends FunctionInterface> componentClass = (Class<? extends FunctionInterface>) getComponent(functionName, "functionName", Class.class);
+		FunctionInterface osgiResolution;
+		try {
+			osgiResolution = componentClass.newInstance();
+			return osgiResolution;
+		} catch (InstantiationException e) {
+			logger.error("Instantiation problem for function: "+functionName,e);
+		} catch (IllegalAccessException e) {
+			logger.error("Instantiation problem for function: "+functionName,e);
+		}
+		return null;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
-		BundleContext context = navajo.Version.getDefaultBundleContext();
+		BundleContext context = navajocore.Version.getDefaultBundleContext();
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass.getName(), "("+serviceKey+"="+name+")");
 			if(refs==null) {
@@ -36,8 +45,9 @@ public class OSGiFunctionFactoryFactory  {
 			return context.getService(refs[0]);
 			
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
+		logger.error("Service resolution failed: No references found for query: "+"("+serviceKey+"="+name+")"+" class: "+interfaceClass.getName());
 		return null;
 	}
 }

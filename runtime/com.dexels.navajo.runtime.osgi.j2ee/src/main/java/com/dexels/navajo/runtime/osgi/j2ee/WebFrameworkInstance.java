@@ -1,5 +1,6 @@
 package com.dexels.navajo.runtime.osgi.j2ee;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -10,29 +11,28 @@ import javax.servlet.ServletContext;
 
 import org.osgi.framework.ServiceRegistration;
 
-import com.dexels.navajo.osgi.runtime.ContextIdentifier;
 import com.dexels.navajo.osgi.runtime.FrameworkInstance;
-import com.dexels.navajo.runtime.osgi.j2ee.impl.ServletContextIdentifier;
 
 public class WebFrameworkInstance extends FrameworkInstance {
 
 	private final ServletContext context;
 	private ServiceRegistration<ServletContext> servletContextRegistration;
-	private ServiceRegistration<ContextIdentifier> servletContextIdentifierRegistration;
+//	private ServiceRegistration<ContextIdentifier> servletContextIdentifierRegistration = null;
 	private final static String BUNDLEDIR = "WEB-INF/bundles/";
 	
 
 	
 	public WebFrameworkInstance(ServletContext context) {
 		super(context.getRealPath(BUNDLEDIR));
+		log("init WebFrameworkInstance called",null);
 		this.context = context;
 	}
 
 
-	@SuppressWarnings("unchecked")
 	@Override
-	protected void doStart() throws Exception {
-		super.doStart();
+	protected void doStart(String directive) throws Exception {
+		super.doStart(directive);
+		log("super called",null);
 		if (context != null) {
 			log("Setting "+"org.osgi.framework.BundleContext"+" : "+getBundleContext(),null);
 			context.setAttribute("org.osgi.framework.BundleContext",getBundleContext());
@@ -80,11 +80,11 @@ public class WebFrameworkInstance extends FrameworkInstance {
 		} else {
 			servletContextRegistration.unregister();
 		}
-		if(servletContextIdentifierRegistration==null) {
-			log("Problem while deregistering servletContextIdentifier", null);
-		} else {
-			servletContextIdentifierRegistration.unregister();
-		}
+//		if(servletContextIdentifierRegistration==null) {
+//			log("Problem while deregistering servletContextIdentifier", null);
+//		} else {
+//			servletContextIdentifierRegistration.unregister();
+//		}
 		if (this.context != null) {
 			this.context.removeAttribute("org.osgi.framework.BundleContext");
 		}
@@ -93,7 +93,7 @@ public class WebFrameworkInstance extends FrameworkInstance {
 	}
 
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes"})
 	@Override
 	protected Map createConfig() throws Exception {
 		Map<String, Object> config = super.createConfig();
@@ -120,16 +120,16 @@ public class WebFrameworkInstance extends FrameworkInstance {
 			context.log("Error reading framework.properties at: "+path, e);
 		}
 
-
+		
+		File javaTemp = new File(System.getProperty("java.io.tmpdir"));
+		File withContext = new File(javaTemp,context.getContextPath());
+		File bundles = new File(withContext,"bundles");
+		
+		config.put("bundleTmpPath", bundles.getAbsolutePath());
+		config.put("org.osgi.framework.storage", bundles.getAbsolutePath());
+		
 		config.put("SYSTEMBUNDLE_ACTIVATORS_PROP",
 				Arrays.asList(new ProvisionActivator(this.context)));
-//		System.err.println("Final map: "+config);
-//		logger.warn("ACTUAL CONFIG: ");
-//		for (Entry<String,Object> e : config.entrySet()) {
-//			logger.warn("Key: "+e.getKey()+" Value: >"+e.getValue()+"<");
-//		}
-//		logger.warn("END OF CONFIG");
-
 		return config;
 	}
 

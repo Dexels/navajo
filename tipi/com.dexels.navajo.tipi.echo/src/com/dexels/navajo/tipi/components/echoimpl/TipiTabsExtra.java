@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.components.echoimpl;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.ContentPane;
 import nextapp.echo2.extras.app.TabPane;
@@ -13,32 +16,12 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
 
-//import echopointng.ButtonEx;
-//import echopointng.ContainerEx;
-//import echopointng.TabbedPane;
-//import echopointng.able.Positionable;
-//import echopointng.tabbedpane.DefaultTabModel;
-
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
 public class TipiTabsExtra extends TipiEchoDataComponentImpl {
 	private static final long serialVersionUID = -4745609817544745245L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTabsExtra.class);
+	
     private Component lastSelectedTab = null;
 
     private TabPane myTabbedPane;
@@ -66,7 +49,7 @@ public class TipiTabsExtra extends TipiEchoDataComponentImpl {
 					try {
 						me.performTipiEvent("onTabChanged", null, false);
 					} catch (TipiException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 //                lastSelectedTab = jt.getSelectedComponent();
 //                lastSelectedTab.doLayout();

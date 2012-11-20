@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="com.dexels.navajo.dev.console.commandhandler">
+   <implementation class="com.dexels.navajo.dev.console.CommandHandler"/>
+   <reference bind="setBundleCreator" cardinality="1..1" interface="com.dexels.navajo.compiler.BundleCreator" name="BundleCreator" policy="static" unbind="clearBundleCreator"/>
+   <reference bind="setLocalClient" cardinality="1..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="static" unbind="clearLocalClient"/>
+   <reference bind="setNqlContext" cardinality="1..1" interface="com.dexels.navajo.client.nql.NqlContextApi" name="NqlContextApi" policy="dynamic" unbind="clearNqlContext"/>
+</scr:component>

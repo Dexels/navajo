@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -44,9 +43,10 @@ import java.util.logging.Level;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
-import com.dexels.navajo.broadcast.BroadcastMessage;
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -90,7 +90,7 @@ import com.dexels.navajo.util.AuditLog;
  * finally dispatching to the proper dispatcher class.
  */
 
-public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterface {
+public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterface {
 
   protected static int instances = 0;
   
@@ -132,7 +132,7 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
   public static java.util.Date startTime = new java.util.Date();
 
   public  long requestCount = 0;
-  private final NavajoConfigInterface navajoConfig;
+  private NavajoConfigInterface navajoConfig;
  
   private  String keyStore;
   private  String keyPassword;
@@ -144,12 +144,13 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 //  private static Object semaphore = new Object();
   private int peakAccessSetSize = 0;
   
-  private static final Set<BroadcastMessage> broadcastMessage = Collections.synchronizedSet(new HashSet<BroadcastMessage>());
-  
   /**
    * Registered SNMP managers.
    */
-  private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>(); 
+  private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>();
+
+  // optional, can be null
+  private BundleCreator bundleCreator; 
    
   public Dispatcher(NavajoConfigInterface nc) {
 	  navajoConfig = nc;
@@ -173,11 +174,11 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  // Bootstrap async store.
 	  navajoConfig.getAsyncStore();
 	  
-	  // Startup statistics runnner.
-	  navajoConfig.startStatisticsRunner();
-	  
 	  // Startup user defined services.
 	  UserDaemon.startup();
+	  
+	  // Startup statistics runnner.
+	  navajoConfig.startStatisticsRunner();
 	  
 	  // Startup task runner.
 	  navajoConfig.startTaskRunner();
@@ -201,6 +202,20 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  JabberWorkerFactory.getInstance();
 
   }
+  
+  @Override
+	public void setBundleCreator(BundleCreator bc) {
+		this.bundleCreator = bc;
+	}
+	
+	protected void clearBundleCreator(BundleCreator bc) {
+		this.bundleCreator = null;
+	}
+  @Override
+	public BundleCreator getBundleCreator() {
+		return this.bundleCreator;
+	}
+
     
   protected final void init() {
 	  
@@ -224,11 +239,11 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  Iterator<Access> iter = all.iterator();
 	  ArrayList<Access> d = new ArrayList<Access>();
 	  while (iter.hasNext()) {
-		  Access a = (Access) iter.next();
+		  Access a = iter.next();
 		  d.add(a);
 	  }
 	  Access [] ams = new Access[d.size()];
-	  return (Access []) d.toArray(ams);
+	  return d.toArray(ams);
   }
   
   /**
@@ -273,8 +288,8 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
    */
   public  float getRequestRate() {
     if(rateWindow[0] > 0){
-      float time = (float)(rateWindow[rateWindowSize - 1] - rateWindow[0]) / (float)1000.0;
-      float avg = (float) rateWindowSize/time;
+      float time = (rateWindow[rateWindowSize - 1] - rateWindow[0]) / (float)1000.0;
+      float avg = rateWindowSize/time;
       return avg;
     }
     return 0.0f;
@@ -335,6 +350,16 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
     return navajoConfig;
   }
 
+  public void setNavajoConfig(NavajoConfigInterface nci) {
+	  logger.info("Setting NavajoConfig");
+	  this.navajoConfig = nci;
+  }
+
+  public void clearNavajoConfig(NavajoConfigInterface nci) {
+	  logger.info("Clearing NavajoConfig");
+	  this.navajoConfig = null;
+  }
+
   /*
    * Get the default NavajoClassLoader. Note that when hot-compile is enabled each webservice context uses
    * its own NavajoClassLoader instance.
@@ -346,7 +371,7 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
       return null;
     }
     else {
-      return (NavajoClassSupplier) navajoConfig.getClassloader();
+      return navajoConfig.getClassloader();
     }
   }
 
@@ -403,6 +428,8 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 				}
 			}
 		}
+	} else {
+		throw NavajoFactory.getInstance().createNavajoException("Null input message in dispatch");
 	}
 	  
 	  
@@ -554,7 +581,9 @@ private ServiceHandler createHandler(String handler, Access access)
 
     try {
       Navajo out = generateErrorMessage(access, message, SystemException.SYSTEM_ERROR, 1, e);
-      access.setOutputDoc(out);
+      if(access!=null) {
+          access.setOutputDoc(out);
+      }
       return out;
     }
     catch (Exception ne) {
@@ -607,8 +636,8 @@ private ServiceHandler createHandler(String handler, Access access)
       return outMessage;
     }
     catch (Exception e) {
-      e.printStackTrace(System.err);
-      throw new FatalException(e.getMessage());
+    	logger.error("Error: ", e);
+    	throw new FatalException(e.getMessage());
     }
   }
 
@@ -621,7 +650,7 @@ private ServiceHandler createHandler(String handler, Access access)
       FatalException {
 
 	  if ( t != null ) {
-		  t.printStackTrace(System.err);
+		  logger.error("Error: ", t);
 	  }
 	  
     if (message == null) {
@@ -662,7 +691,7 @@ private ServiceHandler createHandler(String handler, Access access)
         access.setException(t);
       }
 
-      if ( t != null && t instanceof LocksExceeded ) {
+      if (access != null && t != null && t instanceof LocksExceeded ) {
     	  
     	  LocksExceeded ld = (LocksExceeded) t;
     	  
@@ -726,7 +755,7 @@ private ServiceHandler createHandler(String handler, Access access)
 
 		  return outMessage;
 	  } catch (Exception e) {
-		  e.printStackTrace(System.err);
+		  logger.error("Error: ", e);
 		  return null;
 	  }
   }
@@ -888,7 +917,7 @@ private ServiceHandler createHandler(String handler, Access access)
     				Navajo result = TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef());
     				return result;
     			} catch (Exception e) {
-    				e.printStackTrace();
+    				logger.error("Error: ", e);
     			}
 
     		} else {
@@ -949,7 +978,10 @@ private ServiceHandler createHandler(String handler, Access access)
     				.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null);
       }
       
-      if (clientInfo != null && access != null) {
+      if(access==null) {
+    	  throw new FatalException("Error acquiring Access object in dispatcher. Severe.");
+      }
+      if (clientInfo != null) {
     	  access.ipAddress = clientInfo.getIP();
     	  access.hostName = clientInfo.getHost();
     	  access.parseTime = clientInfo.getParseTime();
@@ -1010,6 +1042,17 @@ private ServiceHandler createHandler(String handler, Access access)
         access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
         accessSet.add(access);
       
+        /**
+         * Add some MDC parameters to context
+         */
+        
+        MDC.put("accessId", access.accessID);
+        MDC.put("rpcName", access.getRpcName());
+        MDC.put("rpcUser", access.getRpcUser());
+        MDC.put("rootPath", getNavajoConfig().getRootPath());
+        MDC.put("instanceName", getNavajoConfig().getInstanceName());
+        MDC.put("instanceGroup", getNavajoConfig().getInstanceGroup());
+        
         /**
          * Phase VIa: Check if scheduled webservice
          */
@@ -1084,28 +1127,28 @@ private ServiceHandler createHandler(String handler, Access access)
     		return outMessage;
     	}
     	catch (Exception ee) {
-    		ee.printStackTrace();
+    		logger.error("Error: ", ee);
     		myException = ee;
     		return errorHandler(access, ee, inMessage);
     	}
     } catch (SystemException se) {
-    	se.printStackTrace(System.err);
+    	logger.error("Error: ", se);
     	myException = se;
     	try {
     		outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1,
     				(se.t != null ? se.t : se));
     		return outMessage;
     	}catch (Exception ee) {
-    		ee.printStackTrace();
+    		logger.error("Error: ", ee);
     		return errorHandler(access, ee, inMessage);
     	}
     }
     catch (Exception e) {
-    	e.printStackTrace(System.err);
+    	logger.error("Error: ", e);
     	myException = e;
     	return errorHandler(access, e, inMessage);
     } catch (Throwable e) {
-    	e.printStackTrace(System.err);
+    	logger.error("Error: ", e);
     	myException = e;
     	return errorHandler(access, e, inMessage);
     }
@@ -1168,7 +1211,7 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 					new NavajoExceptionEvent(rpcName, access.getAccessID(), rpcUser, myException));
 		}
 
-		appendServerBroadCast(access, inMessage, h);
+//		appendServerBroadCast(access, inMessage, h);
 
 		if (!afterWebServiceActivated) { // Nullify Access object if it
 													// did not result in an After
@@ -1190,40 +1233,10 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 		try {
 			navajoConfig.getDescriptionProvider().updatePropertyDescriptions(inMessage, outMessage);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
-  private void appendServerBroadCast(Access a, Navajo in, Header h) {
-	  Set<BroadcastMessage> toBeRemoved = null;
-	  for (Iterator<BroadcastMessage> iter = broadcastMessage.iterator(); iter.hasNext();) {
-
-		  BroadcastMessage bm = iter.next();
-		  if (bm.isExpired()) {
-			  if (toBeRemoved==null) {
-				  toBeRemoved = new HashSet<BroadcastMessage>();
-			  }
-			  toBeRemoved.add(bm);
-		  }
-		  if (!bm.validRecipient(a)) {
-			  continue;
-		  }
-		  if (bm.hasBeenSent(a)) {
-			  continue;
-		  }
-		  h.addPiggyBackData(bm.createMap());
-		  bm.addSentToClientId(a);
-
-	  }
-
-	  if (toBeRemoved!=null) {
-		  broadcastMessage.removeAll(toBeRemoved);
-	  }
-	  HashMap<String,String> m = new HashMap<String,String>();
-	  m.put("requestRate", ""+getRequestRate());
-	  m.put("serverId", ""+getServerId() + "/" + getApplicationId());
-	  h.addPiggyBackData(m);
-  }
 
 /**
    * Determine if WS is reserved Navajo webservice.
@@ -1284,12 +1297,10 @@ public String getServerId() {
   
   private void clearTempSpace() {
 	  File tempDir = new File(System.getProperty("java.io.tmpdir") + "/" + getApplicationId());
-	  if ( tempDir != null ) {
-		  File [] dirs = tempDir.listFiles();
-		  if ( dirs != null && dirs.length > 0 ) {
-			  for (int i = 0; i < dirs.length; i++) {
-				  deleteFiles(dirs[i]);
-			  }
+	  File [] dirs = tempDir.listFiles();
+	  if ( dirs != null && dirs.length > 0 ) {
+		  for (int i = 0; i < dirs.length; i++) {
+			  deleteFiles(dirs[i]);
 		  }
 	  }
   }
@@ -1300,12 +1311,7 @@ public String getServerId() {
 	  //f.deleteOnExit();
 	  return f;
   }
-  
-  public void setBroadcast(String message, int timeToLive, String recipientExpression) {
-	  BroadcastMessage bm = new BroadcastMessage(message,timeToLive,recipientExpression);
-	  broadcastMessage.add(bm);
 
-  }
 
   public Access getAccessObject(String id) {
 
@@ -1379,7 +1385,7 @@ public String getServerId() {
   public String getSnmpManangers() {
 	  StringBuffer s = new StringBuffer();
 	  for (int i = 0; i < snmpManagers.size(); i++ ) {
-		  SNMPManager snmp = (SNMPManager) snmpManagers.get(i);
+		  SNMPManager snmp = snmpManagers.get(i);
 		  s.append(snmp.getHost() + ":" + snmp.getPort() + ":" + snmp.getSnmpVersion());
 		  s.append(",");
 	  }
@@ -1455,7 +1461,7 @@ public String getServerId() {
 				result = timeSpecified > now;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 
 		return result;
@@ -1627,5 +1633,72 @@ public String getServerId() {
   public static ResourceManager getResourceManager(String id) {
 	  return DispatcherFactory.getInstance();
   }
+  
+//	private CompiledScript getOSGiService(String scriptName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+//		final BundleContext bundleContext = Version.getDefaultBundleContext();
+//		if(bundleContext==null) {
+//			logger.debug("No OSGi context found");
+//			return null;
+//		}
+//		String rpcName = scriptName.replaceAll("/", ".");
+//		String filter = "(navajo.scriptName="+rpcName+")";
+//		ServiceReference<?>[] sr;
+//		try {
+//			sr = bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filter);
+//		} catch (InvalidSyntaxException e) {
+//			logger.error("Filter syntax problem for: "+filter,e);
+//			return null;
+//		}
+//		if(sr==null || sr.length==0) {
+//			logger.error("No service reference found for "+filter);
+//			try {
+//				CompiledScript ss = loadOnDemand(bundleContext, rpcName, filter);
+//				return ss;
+//			} catch (Exception e) {
+//				logger.error("Service  "+filter,e);
+//			}
+//		}
+//		
+//		if(sr!=null && sr.length>1) {
+//			logger.warn("Multiple references ({}) found for {}",sr.length,filter);
+//		}
+//		
+//		if(sr==null) {
+//			logger.error("BundleContext is null. Why?!");
+//		}
+//		CompiledScriptFactory csf = null;
+//		if(sr!=null) {
+//			 csf = (CompiledScriptFactory) bundleContext.getService(sr[0]);
+//			 if(csf!=null ) {
+//				 return csf.getCompiledScript();
+//			 }			
+//		}
+//		 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter);
+//		 BundleCreator bc = DispatcherFactory.getInstance().getBundleCreator();
+//		 if(bc!=null) {
+//			 
+//			 try {
+//				CompiledScript ss = bc.getOnDemandScriptService(rpcName);
+//				return ss;
+//			} catch (Exception e) {
+//				logger.error("on demand script resolution failed.",e);
+//			}
+//		 }
+//		return null;
+//	}
+//
+//	private CompiledScript loadOnDemand(BundleContext bundleContext, String rpcName, String filter) throws Exception {
+//		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
+//		BundleCreator bc = bundleContext.getService(ref);
+//		if(bc==null) {
+//			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
+//			return null;
+//		}
+//		CompiledScript sc = bc.getOnDemandScriptService(rpcName);
+//		// wait for it..
+//		bundleContext.ungetService(ref);
+//		return sc;
+//	}
+
   
 }

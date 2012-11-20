@@ -132,9 +132,9 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 	public void createBreadCrumb(String bc) {
 
 		// Remove last entry.
-		if (bc.indexOf(File.separator) > 0) {
+//		if (bc.indexOf(File.separator) > 0) {
 			// bc = bc.substring( bc.lastIndexOf(File.separator));
-		}
+//		}
 
 		StringTokenizer tok = new StringTokenizer(bc, File.separator);
 		int count = tok.countTokens();

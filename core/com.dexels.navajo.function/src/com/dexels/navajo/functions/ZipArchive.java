@@ -3,6 +3,7 @@ package com.dexels.navajo.functions;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -39,12 +40,13 @@ public class ZipArchive extends FunctionInterface {
 	public Object evaluate() throws TMLExpressionException {
 
 		String pathName = (String) getOperand(0);
+		ZipOutputStream zo = null;
 
 		try {
 			File tempFile = File.createTempFile("zip_archive", "navajo");
 			FileOutputStream fos = new FileOutputStream( tempFile );
 			//ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ZipOutputStream zo = new ZipOutputStream( fos );
+			zo = new ZipOutputStream( fos );
 
 			File p = new File(pathName);
 			File [] entries = p.listFiles();
@@ -65,6 +67,14 @@ public class ZipArchive extends FunctionInterface {
 		} catch (Exception e) {
 			logger.error("Error: ", e);
 			return null;
+		} finally {
+			if(zo!=null) {
+				try {
+					zo.close();
+				} catch (IOException e) {
+					logger.error("Error: ", e);
+				}
+			}
 		}
 	}
 
@@ -81,10 +91,10 @@ public class ZipArchive extends FunctionInterface {
 	public static void main(String [] args) throws Exception {
 		ZipArchive za = new ZipArchive();
 		za.reset();
-		za.insertOperand("/home/arjen/testzip");
+		za.insertOperand("testzip");
 		Binary o = (Binary) za.evaluate();
 		System.err.println("o =" + o);
-		File result = new File("/home/arjen/result.zip");
+		File result = new File("result.zip");
 		FileOutputStream fos = new FileOutputStream(result);
 		o.write(fos);
 		fos.close();

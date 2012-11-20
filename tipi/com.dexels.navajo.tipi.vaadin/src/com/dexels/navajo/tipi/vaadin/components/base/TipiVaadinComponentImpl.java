@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi.vaadin.components.base;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vaadin.peter.contextmenu.ContextMenu;
 
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
@@ -17,6 +19,10 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 
 	
 	private static final long serialVersionUID = -304628775000480212L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiVaadinComponentImpl.class);
+	
 	protected ComponentContainer layoutComponent;
 	
 	@Override
@@ -75,7 +81,7 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 	@Override
 	public void addToContainer(Object c, Object constraints) {
 		if(c instanceof ContextMenu) {
-			System.err.println("Register context. Not working yet.");
+			logger.debug("Register context. Not working yet.");
 		}
 		if(!(c instanceof Component)) {
 			throw new IllegalArgumentException("Can not add non-vaadin component to component: "+c);
@@ -106,6 +112,12 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 //		this.layoutComponent.add
 	}
 
+/**
+ * Default way of adding childcomponents to Vaadin based tipi components. Can be overridden.	
+ * @param currentContainer
+ * @param component
+ * @param constraints
+ */
 	protected void addToVaadinContainer(ComponentContainer currentContainer, Component component, Object constraints) {
 		currentContainer.addComponent(component);
 		

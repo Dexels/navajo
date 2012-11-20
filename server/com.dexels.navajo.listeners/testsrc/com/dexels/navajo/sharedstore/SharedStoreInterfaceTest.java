@@ -227,6 +227,7 @@ public class SharedStoreInterfaceTest {
 		BufferedReader r = new BufferedReader(new FileReader("/tmp/sharedstore/myparent/mytextobject"));
 		String l = r.readLine();
 		Assert.assertEquals("text", l);
+		r.close();
 	}
 
 	

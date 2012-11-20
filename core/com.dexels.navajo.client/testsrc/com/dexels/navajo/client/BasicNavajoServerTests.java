@@ -148,10 +148,7 @@ public class BasicNavajoServerTests extends BasicClientTest {
 		// "4444");
 	}
 
-	public void handleException(Exception e) {
-		// TODO Auto-generated method stub
 
-	}
 
 	public void serviceStarted(String id) {
 		System.err.println("Service started: " + id);

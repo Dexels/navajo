@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * Title:
@@ -24,6 +27,9 @@ import javax.swing.event.TableModelListener;
  */
 
 public class MultiCalendarModel extends CalendarTableModel {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MultiCalendarModel.class);
 	private ArrayList<CalendarTableModel> myModels = new ArrayList<CalendarTableModel>();
 	private JTable myTable;
 	// private boolean columnsSized = false;
@@ -31,7 +37,7 @@ public class MultiCalendarModel extends CalendarTableModel {
 	private CalendarConstants myConstants = new CalendarConstants();
 
 	public MultiCalendarModel() {
-		System.err.println("Multi created");
+		logger.info("Multi created");
 	}
 
 	@Override
@@ -45,7 +51,7 @@ public class MultiCalendarModel extends CalendarTableModel {
 
 	public MultiCalendarModel(JTable t) {
 
-		System.err.println("Multi created");
+		logger.info("Multi created");
 		setTable(t);
 	}
 
@@ -70,7 +76,7 @@ public class MultiCalendarModel extends CalendarTableModel {
 			CalendarTableModel base = myModels.get(0);
 			return base.getRowCount();
 		} else {
-			// System.err.println("ERROR: MultiCalendarModel contains no CalendarTableModel(s)");
+			// logger.info("ERROR: MultiCalendarModel contains no CalendarTableModel(s)");
 			return -1;
 		}
 	}
@@ -81,7 +87,7 @@ public class MultiCalendarModel extends CalendarTableModel {
 			CalendarTableModel base = myModels.get(0);
 			return base.getColumnCount();
 		} else {
-			// System.err.println("ERROR: MultiCalendarModel contains no CalendarTableModel(s)");
+			// logger.info("ERROR: MultiCalendarModel contains no CalendarTableModel(s)");
 			return -1;
 		}
 
@@ -93,7 +99,7 @@ public class MultiCalendarModel extends CalendarTableModel {
 			CalendarTableModel base = myModels.get(0);
 			return base.getColumnName(parm1);
 		} else {
-			// System.err.println("ERROR: MultiCalendarModel contains no CalendarTableModel(s)");
+			// logger.info("ERROR: MultiCalendarModel contains no CalendarTableModel(s)");
 			return "error";
 		}
 

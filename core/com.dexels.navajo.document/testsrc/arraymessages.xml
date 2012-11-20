@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tml>
+	<message name="SimpleMessage">
+		<property name="Start" type="string"/>
+		<message name="ArrayMessage" type="array">
+			<message name="ArrayMessage" type="definition">
+				<property name="Prop1" type="string"/>
+				<property name="Prop2" type="integer"/>
+				<property name="Prop3" type="boolean"/>
+			</message>
+		</message>
+	</message>
+</tml>

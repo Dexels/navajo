@@ -2,8 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Application
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.application
-Bundle-Version: 1.2.2.qualifier
-Bundle-Activator: com.dexels.navajo.tipi.swing.application.Activator
+Bundle-Version: 1.2.9.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.document;version="2.2.0",

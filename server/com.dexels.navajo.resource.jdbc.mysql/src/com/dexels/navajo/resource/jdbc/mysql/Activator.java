@@ -12,15 +12,15 @@ public class Activator implements BundleActivator {
 
 	private static final Logger logger = LoggerFactory.getLogger(Activator.class);
 	private JdbcManagedResourceFactory managedFactory;
-	
-	
+
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		MySQLJDBCDataSourceService factory = new MySQLJDBCDataSourceService();
-		
+
         factory.start();
 
         managedFactory = new JdbcManagedResourceFactory(bundleContext, factory,  "navajo.resource.mysql",  "Navajo MySQL Resource Driver");
@@ -35,5 +35,5 @@ public class Activator implements BundleActivator {
 		managedFactory.close();
 	}
 
-	
+
 }

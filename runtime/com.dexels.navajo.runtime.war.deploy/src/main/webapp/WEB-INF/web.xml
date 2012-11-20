@@ -1,0 +1,58 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+      version="3.0"> 
+    <listener>
+        <listener-class>com.dexels.navajo.runtime.osgi.j2ee.StartupListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>proxy</servlet-name>
+        <servlet-class>com.dexels.navajo.runtime.osgi.j2ee.ProxyServlet</servlet-class>
+        <load-on-startup>-1</load-on-startup>
+    </servlet>
+<!-- 
+   <servlet>
+      <servlet-name>jsp</servlet-name>
+      <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+      <init-param>
+         <param-name>xpoweredBy</param-name>
+         <param-value>false</param-value>
+      </init-param>
+      <load-on-startup>3</load-on-startup>
+   </servlet>
+   -->
+   <servlet-mapping>
+      <servlet-name>jsp</servlet-name>
+      <url-pattern>*.jsp</url-pattern>
+      <url-pattern>*.jspx</url-pattern>
+   </servlet-mapping>
+   
+    <servlet-mapping>
+        <servlet-name>proxy</servlet-name>
+        <url-pattern>/osgi/*</url-pattern>
+<!--         <url-pattern>/system/console/*</url-pattern> -->
+    </servlet-mapping> 
+ <!--   <servlet-mapping>
+        <url-pattern>/PostmanLegacy</url-pattern>
+        <url-pattern>/Nql</url-pattern>
+        <servlet-name>proxy</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>-->
+
+
+
+
+	<servlet>
+		<servlet-name>Comet</servlet-name>
+		<servlet-class>com.dexels.navajo.server.listener.http.continuation.TmlContinuationServlet</servlet-class>
+        <async-supported>true</async-supported>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Comet</servlet-name>
+		<url-pattern>/Comet</url-pattern>
+		<url-pattern>/Postman</url-pattern>
+	</servlet-mapping>
+
+
+</web-app>

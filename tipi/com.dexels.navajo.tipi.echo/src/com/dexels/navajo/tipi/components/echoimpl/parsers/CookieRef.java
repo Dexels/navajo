@@ -1,28 +1,18 @@
 package com.dexels.navajo.tipi.components.echoimpl.parsers;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.internal.TipiReference;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class CookieRef implements TipiReference {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CookieRef.class);
 	private final TipiContext myContext;
 	private final String myKey;
 	public CookieRef(String key, TipiContext myContext) {
@@ -32,7 +22,7 @@ public class CookieRef implements TipiReference {
 
 	public void setValue(Object val) {
 		myContext.setCookie(myKey, (String)val);
-		System.err.println("Current cookie: "+myKey+" will be set to value: "+val);
+		logger.info("Current cookie: "+myKey+" will be set to value: "+val);
 		}
 
 	public Object getValue() {

@@ -42,7 +42,7 @@ public class TipiEchoGridBagLayout extends TipiLayoutImpl {
     public void createLayout() throws com.dexels.navajo.tipi.TipiException {
         myLayout = new Grid(3);
         // EchoGridBagLayout p = (EchoGridBagLayout) myLayout;
-        // System.err.println("EchoGridBagLayout created!!");
+        // logger.info("EchoGridBagLayout created!!");
         // setLayout(p);
     }
 

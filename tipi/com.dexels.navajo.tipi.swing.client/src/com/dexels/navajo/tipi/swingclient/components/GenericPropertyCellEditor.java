@@ -13,31 +13,22 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellEditor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 
-/**
- * <p>
- * Title: Seperate project for Navajo Swing client
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company: Dexels
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 
 public class GenericPropertyCellEditor implements TableCellEditor,
 		ListSelectionListener {
 	private final GenericPropertyComponent myComponent = new GenericPropertyComponent();
 	private final MessageTable myTable;
 	private final List<CellEditorListener> myListeners = new ArrayList<CellEditorListener>();
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GenericPropertyCellEditor.class);
+	
 	private Property copy;
 
 	private int lastRow = -1, lastColumn = -1;
@@ -85,10 +76,10 @@ public class GenericPropertyCellEditor implements TableCellEditor,
 		if (myTable != null) {
 			boolean b = myTable.getMessageModel().isCellEditable(
 					myTable.getSelectedRow(), myTable.getSelectedColumn());
-			System.err.println("Returning: " + b);
+			logger.info("Returning: " + b);
 			return b;
 		}
-		System.err.println("Returning false");
+		logger.info("Returning false");
 		return false;
 
 	}
@@ -106,10 +97,10 @@ public class GenericPropertyCellEditor implements TableCellEditor,
 	}
 
 	public boolean stopCellEditing() {
-		System.err.println("Stopped editing initial: "
+		logger.info("Stopped editing initial: "
 				+ getInitialProperty().getValue());
 		myComponent.updateProperty();
-		System.err.println("Stopped editing now: " + getProperty().getValue());
+		logger.info("Stopped editing now: " + getProperty().getValue());
 
 		if (lastRow > -1) {
 			for (int i = 0; i < myListeners.size(); i++) {

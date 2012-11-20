@@ -347,6 +347,10 @@ public abstract class AbstractComponentDecorator {
 
 	/** Used to hook into the Swing painting architecture. */
 	private class Painter extends JComponent {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8047457263898922280L;
 		private int base;
 
 		public JComponent getComponent() {

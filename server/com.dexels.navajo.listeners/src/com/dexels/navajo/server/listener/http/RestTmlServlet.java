@@ -47,7 +47,7 @@ public class RestTmlServlet extends HttpServlet implements Servlet {
 	}
 
 	private final void callDirect(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response) throws  IOException {
 
 		String service = request.getParameter("service");
 //		String type = request.getParameter("type");
@@ -114,6 +114,9 @@ public class RestTmlServlet extends HttpServlet implements Servlet {
 
 	}
 
+	/**
+	 * @param serviceName  
+	 */
 	protected void writeOutput(Navajo resultMessage,
 			java.io.OutputStreamWriter out, String serviceName)
 			throws NavajoException {

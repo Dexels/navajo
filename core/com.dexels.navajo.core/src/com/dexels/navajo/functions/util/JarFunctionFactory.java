@@ -9,6 +9,9 @@ import java.util.Vector;
 
 import javax.imageio.spi.ServiceRegistry;
 
+import navajo.ExtensionDefinition;
+import navajocore.Version;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +19,6 @@ import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 public class JarFunctionFactory extends FunctionFactoryInterface implements Serializable {
 
@@ -49,7 +51,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 				XMLElement element = children.get(i);
 				
 				if(element.getName().equals("function")) {
-					parseFunction(fuds, fd, element);
+					parseFunction(fuds, element);
 				}
 				if(element.getName().equals("map")) {
 					parseAdapters(fuds, fd, element);
@@ -66,19 +68,19 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 		String name = element.getElementByTagName("tagname").getContent();
 		String className = element.getElementByTagName("object").getContent();
 		if(fd!=null) {
-			FunctionDefinition functionDefinition = new FunctionDefinition(className, null, null, null,fd);
+			FunctionDefinition functionDefinition = new FunctionDefinition(className, null, null, null);
 			getAdapterConfig(fd).put(name, functionDefinition);
 			try {
 				MapMetaData.getInstance().addMapDefinition(element);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
-			if ( name != null ) {
-
-				functionDefinition.setXmlElement(element);
-				fuds.put(name, functionDefinition);
-				
-			}
+//			if ( name != null ) {
+//
+//				functionDefinition.setXmlElement(element);
+//				fuds.put(name, functionDefinition);
+//				
+//			}
 
 		} else {
 			throw new UnsupportedOperationException("Can not register adapter (pre-OSGi) without a ExtensionDefinition.");
@@ -86,7 +88,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 	}
 	
 	public void parseFunction(Map<String, FunctionDefinition> fuds,
-			ExtensionDefinition fd, XMLElement element) {
+			XMLElement element) {
 		Vector<XMLElement> def = element.getChildren();
 		String name = (String) element.getAttribute("name");
 		String object = (String) element.getAttribute("class");
@@ -106,7 +108,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 			}
 		}
 		if ( name != null ) {
-			FunctionDefinition functionDefinition = new FunctionDefinition(object, description, inputParams, resultParam,fd);
+			FunctionDefinition functionDefinition = new FunctionDefinition(object, description, inputParams, resultParam);
 			functionDefinition.setXmlElement(element);
 			fuds.put(name, functionDefinition);
 			
@@ -130,13 +132,16 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 		
 		try {
 			// TODO Detect OSGi mode
-			Iterator<?> iter = ServiceRegistry.lookupProviders(Class.forName("com.dexels.navajo.version.ExtensionDefinition", true, myClassLoader),myClassLoader);
+			Iterator<?> iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader),myClassLoader);
 			while(iter.hasNext()) {
 				ExtensionDefinition ed = (ExtensionDefinition) iter.next();
 				readDefinitionFile(fuds, ed);
 			}
 		} catch (Throwable e) {
-			logger.warn("ServiceLookup failed. Normal in OSGi environment");
+			logger.debug("ServiceLookup failed. Normal in OSGi environment",e);
+			if(!Version.osgiActive()) {
+				logger.error("But OSGi isn't active, so something is definitely wrong.",e);
+			}
 		}
 	}
 	

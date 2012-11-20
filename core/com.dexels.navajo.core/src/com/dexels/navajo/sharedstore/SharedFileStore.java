@@ -39,6 +39,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoObjectInputStream;
@@ -102,6 +105,10 @@ class FileComparator implements Comparator<File>{
  */
 public class SharedFileStore implements SharedStoreInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SharedFileStore.class);
+	
 	/**
 	 * The path name of the shared file store.
 	 */
@@ -140,17 +147,15 @@ public class SharedFileStore implements SharedStoreInterface {
 		File [] files = sharedStore.listFiles(new LockFiles(ssl.parent, ssl.name));
 		if ( files != null && files.length > 0 ) {
 			// Check age of lock.
-			for (int i = 0; i < files.length; i++) {
-				if ( ( System.currentTimeMillis() - files[i].lastModified() ) > ssl.getLockTimeOut() ) {
-					// Lock has time-out, delete it.
-					files[i].delete();
-					//System.err.println("\nLOCK " + ssl + " HAS AGED OUT: " + files[i].getName());
+//			for (int i = 0; i < files.length; i++) {
+
+				if ( ( System.currentTimeMillis() - files[0].lastModified() ) > ssl.getLockTimeOut() ) {
+					files[0].delete();
 					return false;
 				} else {
-					//System.err.println("\nLOCK " + ssl + " EXISTS: " + files[i].getName() + "(" + files[i].lastModified() + ")");
 					return true;
 				}
-			}
+//			}
 		} 
 		//System.err.println("\nLOCK " + ssl + " DOES NOT EXIST");
 		return false;
@@ -294,16 +299,14 @@ public class SharedFileStore implements SharedStoreInterface {
 		// Sort files on last modification date
 		if ( fs != null) {
 			Arrays.sort(fs, new FileComparator());
-			if ( fs != null ) {
-				for (int i = 0; i < fs.length; i++) {
-					if ( fs[i].isDirectory()) {
-						names.add(fs[i].getName());
-					}
+			for (int i = 0; i < fs.length; i++) {
+				if ( fs[i].isDirectory()) {
+					names.add(fs[i].getName());
 				}
 			}
 		}
 		String [] result = new String[names.size()];
-		result = (String []) names.toArray(result);
+		result = names.toArray(result);
 
 		return result;
 	}
@@ -317,16 +320,14 @@ public class SharedFileStore implements SharedStoreInterface {
 		// Sort files on last modification date
 		if ( fs != null) {
 			Arrays.sort(fs, new FileComparator());
-			if ( fs != null ) {
-				for (int i = 0; i < fs.length; i++) {
-					if ( fs[i].isFile()) {
-						names.add(fs[i].getName());
-					}
+			for (int i = 0; i < fs.length; i++) {
+				if ( fs[i].isFile()) {
+					names.add(fs[i].getName());
 				}
 			}
 		}
 		String [] result = new String[names.size()];
-		result = (String []) names.toArray(result);
+		result = names.toArray(result);
 
 		return result;
 	}
@@ -366,7 +367,7 @@ public class SharedFileStore implements SharedStoreInterface {
 							//System.err.println("WROTE LOCK, RETURNING LOCK FOR " + ssl.parent + "/" + ssl.name + " TO " + ssl.owner );
 							return ssl;
 						} catch (Exception e) {
-							e.printStackTrace(System.err);
+							logger.error("Error: ", e);
 						}
 					} else if ( block ){
 						try {
@@ -404,6 +405,10 @@ public class SharedFileStore implements SharedStoreInterface {
 		}
 	}
 
+	/**
+	 * @param parent  
+	 * @param o 
+	 */
 	public String store(String parent, Object o) {
 		return null;
 	}
@@ -440,11 +445,8 @@ public class SharedFileStore implements SharedStoreInterface {
 				oos.writeObject(o);
 				oos.reset();
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
-				// TODO: Log exception!!
-				if ( f != null ) {
-					f.delete();
-				}
+				logger.error("Error: ", e);
+				f.delete();
 			} finally {
 			if ( oos != null ) {
 					try {
@@ -532,11 +534,8 @@ public class SharedFileStore implements SharedStoreInterface {
 				sw = new OutputStreamWriter(fos);
 				sw.write(str);
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
-				if ( f != null ) {
+				logger.error("Error: ", e);
 					f.delete();
-				}
-				// TODO: Log exception.
 			} finally {
 				if ( sw != null ) {
 					try {

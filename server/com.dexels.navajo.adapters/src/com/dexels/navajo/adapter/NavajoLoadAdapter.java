@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.mapping.Mappable;
@@ -23,6 +26,9 @@ import com.dexels.navajo.server.UserException;
 public class NavajoLoadAdapter
     implements Mappable {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoLoadAdapter.class);
   public String pathPrefix;
 
   public String fileName;
@@ -61,7 +67,7 @@ public class NavajoLoadAdapter
 
   public void store() throws MappableException, UserException {
     String totalPath = fileName;
-    System.err.println("Total: "+totalPath);
+    logger.info("Total: "+totalPath);
     File f = new File(totalPath);
     if (!f.exists()) {
       throw new MappableException("Could not open file!");
@@ -71,7 +77,7 @@ public class NavajoLoadAdapter
     FileInputStream fr = null;
     try {
       fr = new FileInputStream(f);
-      n =  NavajoFactory.getInstance().createNavajo(fr);;
+      n =  NavajoFactory.getInstance().createNavajo(fr);
       access.setOutputDoc(n);
     }
 

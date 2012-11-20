@@ -39,6 +39,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
@@ -59,22 +61,9 @@ import com.gface.date.HourSelectionCombo;
  */
 public class GenericPropertyComponent {
 
-    /**
-     * 
-     */
-//
-//    private static SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
-//
-//    private static SimpleDateFormat inputFormat1 = new SimpleDateFormat("dd-MM-yy");
-//
-//    private static SimpleDateFormat inputFormat2 = new SimpleDateFormat("dd/MM/yy");
-//
-//    private static SimpleDateFormat inputFormat3 = new SimpleDateFormat("ddMMyy");
-//
-//    private static SimpleDateFormat inputFormat4 = new SimpleDateFormat("ddMM");
-//
-//    private static SimpleDateFormat inputFormat5 = new SimpleDateFormat("dd");
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GenericPropertyComponent.class);
     private static SimpleDateFormat navajoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private Property myProperty = null;
@@ -283,8 +272,10 @@ public class GenericPropertyComponent {
                         return;
                     }
                     fis = new FileOutputStream(res);
-                    // fis.write(bin.getData());
-                    bin.write(fis);
+                    if(bin!=null) {
+                        bin.write(fis);
+                    	
+                    }
                     fis.flush();
                 } catch (Exception e1) {
                     e1.printStackTrace();
@@ -304,11 +295,7 @@ public class GenericPropertyComponent {
         openButton.setEnabled(bin != null);
         openButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                try {
-                    openBinary(bin);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+               openBinary(bin);
             }
         });
 
@@ -342,7 +329,7 @@ public class GenericPropertyComponent {
                 Image i = new Image(Display.getCurrent(), id);
                 l.setImage(i);
             } catch (RuntimeException e) {
-                System.err.println("Not an image. No prob.");
+                logger.info("Not an image. No prob.");
                 l.setText("?");
             }
         }
@@ -404,7 +391,7 @@ public class GenericPropertyComponent {
 
             public void focusLost(FocusEvent e) {
                 String oldVal = myProperty.getValue();
-                // System.err.println("OldVal: "+oldVal);
+                // logger.info("OldVal: "+oldVal);
                 myProperty.setValue(ttt.getText());
                 if (myProperty.getValue() == null) {
                     ttt.setText(oldVal);
@@ -514,13 +501,13 @@ public class GenericPropertyComponent {
             return;
         }
         hsc.setTime(dd);
-        System.err.println("Adding listener to component: "+hsc.hashCode());
+        logger.info("Adding listener to component: "+hsc.hashCode());
         hsc.addDateSelectionListener(new DateSelectionListener(){
 
 			public void dateSelected(DateSelectedEvent d) {
-				System.err.println("Source: "+d.getSource());
-				System.err.println("Date selected: "+d);
-				System.err.println("Component hash: "+hsc.hashCode());
+				logger.info("Source: "+d.getSource());
+				logger.info("Date selected: "+d);
+				logger.info("Component hash: "+hsc.hashCode());
 				myProperty.setValue(new ClockTime(d.date));
 			}});
         hsc.setToolTipText(myProperty.getDescription());
@@ -591,7 +578,7 @@ public class GenericPropertyComponent {
                         int index = ttt.getSelectionIndex();
                         element.setSelected(index  == i);
                         // ttt.add(element.getName());
-                        System.err.println("Index: "+i+" selected: "+index);
+                        logger.info("Index: "+i+" selected: "+index);
                     }
 
                 }
@@ -601,7 +588,7 @@ public class GenericPropertyComponent {
                 }
             });
         } catch (NavajoException e) {
-            e.printStackTrace();
+            logger.error("Error: ",e);
         }
 
     }
@@ -654,7 +641,7 @@ public class GenericPropertyComponent {
         }
     }
 
-    public static void openBinary(Binary b) throws IOException {
+    public static void openBinary(Binary b)  {
     	
     	BinaryOpener.openBinary(b);
     	

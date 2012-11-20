@@ -7,6 +7,9 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
@@ -15,28 +18,13 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSlider;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class TipiSlider extends TipiSwingComponentImpl {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -8845463487710029071L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSlider.class);
 	private TipiSwingSlider mySlide;
 
 	public TipiSlider() {
@@ -55,9 +43,9 @@ public class TipiSlider extends TipiSwingComponentImpl {
 				try {
 					performTipiEvent("onFocusGained", null, false);
 				} catch (TipiBreakException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -65,9 +53,9 @@ public class TipiSlider extends TipiSwingComponentImpl {
 				try {
 					performTipiEvent("onFocusLost", null, false);
 				} catch (TipiBreakException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 
 			}
@@ -79,9 +67,9 @@ public class TipiSlider extends TipiSwingComponentImpl {
 				try {
 					performTipiEvent("onValueChanged", null, false);
 				} catch (TipiBreakException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 

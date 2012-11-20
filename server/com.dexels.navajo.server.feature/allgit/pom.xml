@@ -16,17 +16,22 @@
 		<module>../../com.dexels.navajo.queuemanager</module>
 		<module>../../com.dexels.navajo.rhino</module>
 		<module>../../com.dexels.navajo.adapters</module>
+		<module>../../com.dexels.navajo.adapters.resource</module>
 		<module>../../com.dexels.navajo.resource</module>
 		<module>../../com.dexels.navajo.resource.manager</module>
 		<module>../../com.dexels.navajo.resource.jdbc.h2</module>
 		<module>../../com.dexels.navajo.resource.jdbc.oracle</module>
 		<module>../../com.dexels.navajo.resource.jdbc.mysql</module>
 		<module>../../com.dexels.navajo.resource.mongodb</module>
+		<module>../../com.dexels.navajo.resource.http</module>
 		<module>../../com.dexels.navajo.resource.test</module>
 		<module>../../com.dexels.navajo.server.bridged</module>
+		<module>../../com.dexels.navajo.server.logback</module>
+		<module>../../com.dexels.navajo.server.deploy</module>
 		<module>../../com.dexels.navajo.authentication.api</module>
 		<module>../../com.dexels.navajo.rhino.continuations</module>
 		<module>../../com.dexels.navajo.webconsole.branding</module>
+		<module>../../com.dexels.navajo.compiler.tsl</module>
 		<module>../</module>
 
 	</modules>

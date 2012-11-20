@@ -18,6 +18,8 @@ import org.apache.batik.dom.anim.*;
 import org.apache.batik.dom.svg.*;
 import org.apache.batik.swing.*;
 import org.apache.batik.swing.svg.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
 import org.w3c.dom.events.*;
 import org.w3c.dom.events.Event;
@@ -29,6 +31,9 @@ import com.dexels.navajo.tipi.swing.svg.*;
 public class SvgBatikComponent extends SvgBaseComponent {
 
 	private static final long serialVersionUID = 8507026263039278186L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SvgBatikComponent.class);
 	public final JSVGCanvas svgCanvas;
 	private final ArrayList<SvgAnimationListener> mySvgAnimationListeners = new ArrayList<SvgAnimationListener>();
 	private final ArrayList<SvgMouseListener> mySvgMouseListeners = new ArrayList<SvgMouseListener>();
@@ -158,7 +163,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 				at =  AffineTransform.getTranslateInstance(-amount, 0.0);
 				current_x_translate += -(amount/current_zoom_factor);
 			}
-//			System.err.println("Current zoom_factor: " + current_zoom_factor + ", amount: " + (int)(amount/current_zoom_factor) + ", current x: " + current_x_translate + ", current_y: " + current_y_translate);
+//			logger.info("Current zoom_factor: " + current_zoom_factor + ", amount: " + (int)(amount/current_zoom_factor) + ", current x: " + current_x_translate + ", current_y: " + current_y_translate);
 
 			AffineTransform rat = svgCanvas.getRenderingTransform();
 			if (at != null) {
@@ -206,7 +211,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	@Override
 	public void setSize(Dimension d) {
 		super.setSize(d);
-		System.err.println("SETTING SIZE: " + d);
+		logger.info("SETTING SIZE: " + d);
 	}
 
 	public SVGDocument getDocument() {
@@ -244,7 +249,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 					StringTokenizer st = new StringTokenizer(myRegisteredIdList, ",");
 					while (st.hasMoreElements()) {
 						String elem = (String) st.nextElement();
-						System.err.println("Registering: " + elem);
+						logger.info("Registering: " + elem);
 						registerId(elem, e.getSVGDocument());
 					}
 				}
@@ -285,7 +290,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			public void handleEvent(Event oy) {
 				String targetId = ((AnimationTarget) oy.getCurrentTarget()).getElement().getAttribute("id");
 				String animationId = ((AnimationTarget) oy.getTarget()).getElement().getAttribute("id");
-				System.err.println("endEvent");
+				logger.info("endEvent");
 				fireOnAnimationEnded(animationId, targetId);
 
 			}
@@ -321,7 +326,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			public void handleEvent(Event oy) {
 				String currentId = ((SVGElement) oy.getCurrentTarget()).getAttribute("id");
 				String targetId = ((AnimationTarget) oy.getTarget()).getElement().getAttribute("id");
-				System.err.println("Current: " + currentId + " target: " + targetId);
+				logger.info("Current: " + currentId + " target: " + targetId);
 				fireOnMouseDown(targetId);
 			}
 		}, true);
@@ -349,14 +354,14 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		((EventTarget) ee).addEventListener("DOMActivate", new EventListener() {
 			@Override
 			public void handleEvent(Event oy) {
-				System.err.println("DOMActivate!");
+				logger.info("DOMActivate!");
 				String targetId = ((SVGElement) oy.getCurrentTarget()).getAttribute("id");
 				fireActivate(targetId);
 			}
 		}, false);
 		((EventTarget) ee).addEventListener("onselect", new EventListener() {
 			public void handleEvent(Event oy) {
-				System.err.println("onselect!");
+				logger.info("onselect!");
 
 				String targetId = ((SVGElement) oy.getCurrentTarget()).getAttribute("id");
 				fireActivate(targetId);
@@ -366,12 +371,12 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	}
 
 	// public void onClick(String targetId) {
-	// System.err.println("Component clicked: "+targetId);
+	// logger.info("Component clicked: "+targetId);
 	// fireAnimation("animout");
 	// }
 
 	protected void fireActivate(String targetId) {
-		System.err.println("FireActivate: " + targetId);
+		logger.info("FireActivate: " + targetId);
 		for (Iterator<SvgMouseListener> iterator = mySvgMouseListeners.iterator(); iterator.hasNext();) {
 			iterator.next().onActivate(targetId);
 		}
@@ -428,13 +433,13 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	public void registerId(String id, SVGDocument doc) {
 
 		if (svgCanvas == null || doc == null) {
-			System.err.println("Can not register id: " + id);
+			logger.info("Can not register id: " + id);
 			Thread.dumpStack();
 			return;
 		}
 		SVGElement ee = (SVGElement) doc.getElementById(id);
 		if (ee == null) {
-			System.err.println("Unable to register events. Id not found: " + id);
+			logger.info("Unable to register events. Id not found: " + id);
 			return;
 		}
 		if (ee instanceof SVGAnimationElement) {
@@ -504,7 +509,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 
 	@Override
 	public void setRegisteredIds(String object) {
-		System.err.println("Registered IDS SET: " + object);
+		logger.info("Registered IDS SET: " + object);
 		myRegisteredIdList = object;
 
 	}
@@ -514,7 +519,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			public void run() {
 				final SVGElement se = (SVGElement) svgCanvas.getSVGDocument().getElementById(item);
 				if (xlinkNS == null) {
-					System.err.println("No namespace. Setting: " + attributeName + " to: " + value);
+					logger.info("No namespace. Setting: " + attributeName + " to: " + value);
 					se.setAttribute(attributeName, value);
 				} else {
 					se.setAttributeNS(xlinkNS, "xlink:href", value);
@@ -524,12 +529,12 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	}
 
 	public void setTextContent(final String id, final String value) {
-		System.err.println("Getting component: " + id + " for setting text");
+		logger.info("Getting component: " + id + " for setting text");
 		runInUpdateQueue(new Runnable() {
 			public void run() {
 				final SVGElement se = (SVGElement) svgCanvas.getSVGDocument().getElementById(id);
 				if (id == null || se == null) {
-					System.err.println("Component not found: " + id);
+					logger.info("Component not found: " + id);
 					return;
 				}
 				se.setTextContent(value);
@@ -564,11 +569,11 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	public void runInUpdateQueue(Runnable runnable) {
 		// String xlinkNS = "http://www.w3.org/1999/xlink";
 		if (svgCanvas == null) {
-			System.err.println("Whoops! no svg canvas. Ignoring.");
+			logger.info("Whoops! no svg canvas. Ignoring.");
 			Thread.dumpStack();
 		} else {
 			if (svgCanvas.getSVGDocument() == null) {
-				System.err.println("Whoops! no svg document. Ignoring.");
+				logger.info("Whoops! no svg document. Ignoring.");
 			} else {
 				UpdateManager updateManager = svgCanvas.getUpdateManager();
 				if (updateManager != null) {
@@ -600,10 +605,10 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	// Keep track of mouse infliced translations as well.
 	public void zoom(double factor) {
 		String vb = svgCanvas.getSVGDocument().getDocumentElement().getAttribute("viewBox");
-		System.err.println("Viewbox: " + vb);
+		logger.info("Viewbox: " + vb);
 		current_zoom_factor = factor;
 		AffineTransform at = AffineTransform.getScaleInstance(factor, factor);
-		System.err.println("Factor: " + factor);
+		logger.info("Factor: " + factor);
 		if (at != null) {
 			Dimension dim = getSize();
 			int x = (dim.width / 2);

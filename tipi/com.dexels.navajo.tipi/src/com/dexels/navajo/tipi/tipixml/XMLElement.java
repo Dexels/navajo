@@ -22,7 +22,7 @@
  *
  *  2. Altered source versions must be plainly marked as such, and must not be
  *     misrepresented as being the original software.
- *
+ * ALTERED!
  *  3. This notice may not be removed or altered from any source distribution.
  *****************************************************************************/
 package com.dexels.navajo.tipi.tipixml;
@@ -41,6 +41,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * XMLElement is a representation of an XML object. The object is able to parse
@@ -69,7 +72,7 @@ import java.util.Vector;
  * while (enum.hasMoreElements()) {<BR>
  * &nbsp;&nbsp;&nbsp;&nbsp;String key = (String) enum.nextElement();<BR>
  * &nbsp;&nbsp;&nbsp;&nbsp;String value = element.getStringAttribute(key);<BR>
- * &nbsp;&nbsp;&nbsp;&nbsp;System.out.println(key + " = " + value);<BR> }
+ * &nbsp;&nbsp;&nbsp;&nbsp;logger.info(key + " = " + value);<BR> }
  * </CODE>
  * </UL>
  * </DD>
@@ -110,6 +113,10 @@ public class XMLElement implements java.io.Serializable {
 	 */
 	static final long serialVersionUID = 6685035139346394777L;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(XMLElement.class);
+	
 	/**
 	 * Major version of NanoXML. Classes with the same major and minor version
 	 * are binary compatible. Classes with the same major version are source
@@ -972,21 +979,6 @@ public class XMLElement implements java.io.Serializable {
 	}
 
 	public int getOffset() {
-		// XMLElement next = getNextSibling();
-		// if (next!=null) {
-		// int ii = next.getStartOffset()-1;
-		// System.err.println("Element: "+getName()+"returning start of next
-		// element: "+next.getName()+":: "+ii);
-		// return ii;
-		// }
-		// if (parent!=null) {
-		// int ii = parent.getOffset()-1;
-		// System.err.println("Element: "+getName()+"returning end of parent
-		// element: "+parent.getName()+":: "+ii);
-		// return ii;
-		// }
-		// System.err.println("Element has no parent: "+getName()+"returning end
-		// of self: "+offset);
 		return this.offset;
 	}
 
@@ -1435,6 +1427,7 @@ public class XMLElement implements java.io.Serializable {
 	 *            </dd>
 	 *            </dl>
 	 *            <dl>
+	 * @param offSet 
 	 * 
 	 * @throws java.io.IOException
 	 *             If an error occured while reading the input.
@@ -2608,19 +2601,10 @@ public class XMLElement implements java.io.Serializable {
 					XMLElement child = this.createAnotherElement();
 					child.startOffset = offset - 2;
 					child.startLineNr = lineNr;
-					// System.err.println("Child offseT: "+offset);
-					// parseStack.push(child);
 					this.scanElement(child);
-					// System.err.println("Parsed. Child offseT: "+offset);
 					child.offset = offset;
-					// System.err.println("Child: "+child.startOffset+" -
-					// "+child.offset+" name: "+child.getName());
-					// elt.offset = child.getOffset();
 					child.lineNr = lineNr;
-					// System.err.println("child startline: "+
-					// child.startLineNr+" endline: "+child.lineNr);
 					elt.addChild(child);
-					// parseStack.pop();
 				}
 				ch = this.scanWhitespace();
 				if (ch != '<') {
@@ -2906,8 +2890,6 @@ public class XMLElement implements java.io.Serializable {
 	}
 
 	public XMLElement getNextSibling() {
-		// System.err.println("getNextSibling called, in XMLElement. This
-		// function is untested and should not be trusted.");
 		if (parent == null) {
 			return null;
 		}
@@ -2933,7 +2915,7 @@ public class XMLElement implements java.io.Serializable {
 				return;
 			}
 		}
-		System.err.println("WARNING: ELEMENT NOT FOUND!");
+		logger.warn("WARNING: ELEMENT NOT FOUND!");
 	}
 
 	public String getNonNullStringAttribute(String attributeName) {
@@ -2942,7 +2924,7 @@ public class XMLElement implements java.io.Serializable {
 		String res = res1.replace('\r', ' ');
 
 		if (res.indexOf("\n") != -1) {
-			System.err.println("WTF: NEWLINE DETECTED!@!!!!!!!!!");
+			logger.error("WTF: NEWLINE DETECTED!@!!!!!!!!!");
 		}
 		return res;
 	}

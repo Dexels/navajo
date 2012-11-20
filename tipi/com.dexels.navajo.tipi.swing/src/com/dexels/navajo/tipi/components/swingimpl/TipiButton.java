@@ -18,6 +18,9 @@ import javax.swing.JComponent;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiExecutable;
@@ -44,7 +47,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiButton extends TipiSwingComponentImpl {
 
 	private static final long serialVersionUID = -6376459170529922811L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiButton.class);
+	
 	private boolean iAmEnabled = true;
 
 	private AbstractAction buttonAction;
@@ -78,7 +84,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 				}
 				if (name.equals("icon")) {
 					if (object == null) {
-						System.err.println("Ignoring null icon");
+						logger.debug("Ignoring null icon");
 					} else {
 						((JButton) getContainer()).setIcon(getIcon(object));
 					}
@@ -123,7 +129,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 				ImageIcon ii = new ImageIcon(i);
 				return ii;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		return null;

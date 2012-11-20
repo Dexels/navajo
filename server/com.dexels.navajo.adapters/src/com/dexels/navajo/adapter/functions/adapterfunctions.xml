@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<functiondef>
+    <function name="GetSequenceValue" class="com.dexels.navajo.adapter.functions.GetSequenceValue">
+        <description>Gets the next value for the given sequence in the given database</description>
+        <input>integer|string|empty, string|empty</input>
+        <result>integer</result>
+    </function>
+    <function name="MultipleValueQuery" class="com.dexels.navajo.adapter.functions.MultipleValueQuery">
+        <description>A query can be supplied to this function that executes a SQL parameter with a given number of parameters</description>
+        <input>integer|string|empty,...</input>
+        <result>list</result>
+    </function>
+    <function name="SingleValueQuery" class="com.dexels.navajo.adapter.functions.SingleValueQuery">
+        <description>A query can be supplied to this function that executes a SQL parameter with a given number of parameters</description>
+        <input>integer|string|empty,...</input>
+        <result>any</result>
+    </function>
+</functiondef>

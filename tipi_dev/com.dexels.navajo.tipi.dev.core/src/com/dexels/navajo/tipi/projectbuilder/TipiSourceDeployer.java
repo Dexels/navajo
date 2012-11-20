@@ -9,17 +9,20 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TipiSourceDeployer {
 	
-	// This command will copy the source code to the destination folder as wiki readable source.
-	// create a wiki readable list of files.
-	// create a wiki readable list of resources
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSourceDeployer.class);
 	
 	public void deploy(File tipiDir, File documentationDir, List<String> pathElements, FileWriter overviewWriter) throws IOException {
 		writeDirLink(tipiDir,overviewWriter,pathElements);
 		for (File current : tipiDir.listFiles()) {
 			if(current.isFile() && current.toString().endsWith("xml")) {
-				deployFile(tipiDir,documentationDir,current,pathElements,overviewWriter);
+				deployFile(documentationDir,current,pathElements,overviewWriter);
 			}
 			if(current.isDirectory() && !current.getName().equals("CVS")) {
 			
@@ -65,12 +68,12 @@ public class TipiSourceDeployer {
 		return sb.toString();
 	}
 
-	private void deployFile(File tipiDir, File documentationDir, File current, List<String> pathElements, FileWriter overviewWriter) throws IOException {
-		System.err.println("Current: "+current);
+	private void deployFile(File documentationDir, File current, List<String> pathElements, FileWriter overviewWriter) throws IOException {
+		logger.info("Current: "+current);
 		String fileName = current.getName();
 		String newName = fileName.substring(0,fileName.length()-4)+".txt";
 		File f = new File(documentationDir,newName.toLowerCase());
-		createDocSource(current,f,pathElements);
+		createDocSource(current,f);
 		writeFileLink(current,pathElements,overviewWriter);
 	}
 
@@ -117,7 +120,7 @@ public class TipiSourceDeployer {
 		return sb.toString();
 	}
 
-	private void createDocSource(File current, File destination, List<String> pathElements) throws IOException {
+	private void createDocSource(File current, File destination) throws IOException {
 		FileWriter fw = new FileWriter(destination);
 		Date d = new Date(current.lastModified());
 		fw.write("Source last modified: "+d+"\n");

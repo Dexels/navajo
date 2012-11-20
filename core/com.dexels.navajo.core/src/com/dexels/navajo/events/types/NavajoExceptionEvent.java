@@ -1,5 +1,8 @@
 package com.dexels.navajo.events.types;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -9,11 +12,8 @@ import com.dexels.navajo.events.NavajoEvent;
 
 public class NavajoExceptionEvent implements NavajoEvent {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1224320416969244502L;
-	
+	private final static Logger logger = LoggerFactory.getLogger(NavajoExceptionEvent.class);
 	private String webservice;
 	private Throwable myException;
 	private String accessId;
@@ -61,7 +61,7 @@ public class NavajoExceptionEvent implements NavajoEvent {
 			event.addProperty(accessId);
 			event.addProperty(user);
 		} catch (NavajoException e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 		return input;
 	}

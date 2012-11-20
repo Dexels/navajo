@@ -135,8 +135,6 @@ public final class ASTTmlNode extends SimpleNode {
 	                throw new TMLExpressionException("TML property does not exist: " + val);
 				}
             else if (exists) { // Check for existence and datatype validity.
-                boolean b = false;
-
                 if (prop != null) {
                     // Check type. If integer, float or date type and if is empty
                     String type = prop.getType();
@@ -163,7 +161,7 @@ public final class ASTTmlNode extends SimpleNode {
                        }
                     } else if (type.equals(Property.DATE_PROPERTY)) {
                     	try {
-                    		if ( prop != null && prop.getTypedValue() instanceof Date ) {
+                    		if ( prop.getTypedValue() instanceof Date ) {
                     			return Boolean.valueOf(true);
                     		} else {
                     			return Boolean.valueOf(false);
@@ -174,7 +172,7 @@ public final class ASTTmlNode extends SimpleNode {
                     } else if ( type.equals(Property.CLOCKTIME_PROPERTY)) {
                     	try {
                             ClockTime ct = new ClockTime(prop.getValue());
-                            if ( ct != null && ct.calendarValue() == null ) {
+                            if ( ct.calendarValue() == null ) {
                             	return Boolean.valueOf(false);
                             }
                             return Boolean.valueOf(true);

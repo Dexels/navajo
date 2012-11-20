@@ -29,7 +29,7 @@ public class WindowCloseManager implements CloseListener {
 	
 	@Override
 	public void windowClose(CloseEvent e) {
-		System.err.println("WINDOW CLOSE EVENT DETECTED!");
+		logger.debug("WINDOW CLOSE EVENT DETECTED!");
 		handleWindowClose();
 		
 	}
@@ -41,7 +41,7 @@ public class WindowCloseManager implements CloseListener {
 
 				@Override
 				public void run() {
-					System.err.println("Shutdown firing!");
+					logger.debug("Shutdown firing!");
 					tipiContext.shutdown();
 					application.close();
 					logger.info("Shutting down instance. Goodbye");

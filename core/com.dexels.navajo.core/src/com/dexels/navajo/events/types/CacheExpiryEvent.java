@@ -1,5 +1,8 @@
 package com.dexels.navajo.events.types;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -12,9 +15,8 @@ public class CacheExpiryEvent implements NavajoEvent {
 	private String webservice;
 	private String key;
 	
-	/**
-	 * 
-	 */
+	private final static Logger logger = LoggerFactory
+			.getLogger(CacheExpiryEvent.class);
 	private static final long serialVersionUID = -7870880336884588772L;
 
 	public CacheExpiryEvent(String webservice, String key) {
@@ -36,7 +38,7 @@ public class CacheExpiryEvent implements NavajoEvent {
 			event.addProperty(key);
 			
 		} catch (NavajoException e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 		return input;
 	}

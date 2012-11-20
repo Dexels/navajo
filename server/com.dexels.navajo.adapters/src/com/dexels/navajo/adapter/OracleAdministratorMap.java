@@ -17,13 +17,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.server.UserException;
 
 public class OracleAdministratorMap extends SQLMap {
 
 	public static final String LISTDELIMITER = ":";
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(OracleAdministratorMap.class);
+	
 	protected static final String constraintSQL =
 		"SELECT "
 			+ "''ALTER TABLE '' ||  T.table_name || "
@@ -74,7 +80,7 @@ public class OracleAdministratorMap extends SQLMap {
 	public void setSchemaOwner(final String o) {
 		this.schemaOwner = o.trim().toUpperCase();
 		if (this.debug) {
-			System.out.println(
+			logger.info(
 				this.getClass()
 					+ ": schema owner set to '"
 					+ this.schemaOwner
@@ -96,7 +102,7 @@ public class OracleAdministratorMap extends SQLMap {
 			final String tname = tok.nextToken().trim().toUpperCase();
 			this.tableListArray.add(tname);
 			if (this.debug) {
-				System.out.println(
+				logger.info(
 					this.getClass() + ": added table '" + tname + "' to list");
 			}
 		}
@@ -181,7 +187,7 @@ public class OracleAdministratorMap extends SQLMap {
 					(String) this.rsMap[i].getColumnValue(new Integer(0)));
 			s.append(" " + modeClause);
 			if (this.debug) {
-				System.out.println(
+				logger.info(
 					this.getClass()
 						+ ": attempting to execute Oracle DDL statement '"
 						+ s.toString()
@@ -204,7 +210,7 @@ public class OracleAdministratorMap extends SQLMap {
 					(String) this.rsMap[0].getColumnValue(new Integer(0));
 				this.schemaOwner = s.trim().toUpperCase();
 				if (this.debug) {
-					System.out.println(
+					logger.debug(
 						this.getClass()
 							+ ": guessed schema owner is '"
 							+ this.schemaOwner

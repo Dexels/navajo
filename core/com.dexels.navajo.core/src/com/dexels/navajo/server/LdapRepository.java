@@ -11,23 +11,27 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 
 public class LdapRepository extends SimpleRepository {
 
 	private static final String LDAP_SERVER = "ldap://iris.dexels.nl:389/";
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(LdapRepository.class);
+	
 	@Override
 	public Access authorizeUser(String username, String password, String service, Navajo inMessage, Object certificate) throws SystemException, AuthorizationException {
-		// TODO Auto-generated method stub
 		try {
 			checkLdap(LDAP_SERVER,"o=dexels",username, password);
 
 //			ou=users,dc=dexels,dc=com
 
 		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			throw new AuthorizationException(true,true,username,"Sorry, LDAP complains.");
 		}
 		return super.authorizeUser(username, password, service, inMessage, certificate);
@@ -36,7 +40,7 @@ public class LdapRepository extends SimpleRepository {
 	
 
 	private void checkLdap(String ldapUrl, String principal, String username, String password) throws NamingException {
-		Hashtable env = new Hashtable();
+		Hashtable<String,String> env = new Hashtable<String,String>();
 
 		String usr = "uid="+username+",";
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");

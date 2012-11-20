@@ -1,5 +1,8 @@
 package com.dexels.navajo.adapter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -19,7 +22,10 @@ public class TestAdapter implements Mappable {
     public String empty = null;
     public TestAdapter [] testAdapters;
     public TestAdapter single;
-
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(TestAdapter.class);
+	
     public TestAdapter() {}
 
     public void load(Access access) throws MappableException, UserException {
@@ -33,11 +39,11 @@ public class TestAdapter implements Mappable {
     }
 
     public void store() throws MappableException, UserException {
-    	System.err.println("TestAdapter store() called!!");
+    	logger.debug("TestAdapter store() called!!");
     }
 
     public void kill() {
-    	System.err.println("TestAdapter kill() called!!");
+    	logger.debug("TestAdapter kill() called!!");
     }
 
     public TestAdapter getSingle() {

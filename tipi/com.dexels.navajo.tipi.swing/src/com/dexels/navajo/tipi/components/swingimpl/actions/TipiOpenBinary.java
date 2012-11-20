@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.metadata.FormatDescription;
@@ -29,9 +32,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiOpenBinary extends TipiAction {
 
-	/**
-	 * 
-	 */
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiOpenBinary.class);
+	
 	private static final long serialVersionUID = 90381883062864115L;
 
 	/*
@@ -82,7 +86,7 @@ public class TipiOpenBinary extends TipiAction {
 					StringTokenizer st = new StringTokenizer(mime, "/");
 					String major = st.nextToken();
 					String minor = st.nextToken();
-					System.err.println("Binary type: " + major + " and minor: "
+					logger.debug("Binary type: " + major + " and minor: "
 							+ minor);
 					if (ext != null) {
 						extString = ext;
@@ -101,7 +105,7 @@ public class TipiOpenBinary extends TipiAction {
 			TipiSaveValue.saveFile(b, f);
 			DefaultBrowser.displayURL(f.getAbsolutePath());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 		b.getHandle();
 	}

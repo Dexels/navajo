@@ -30,6 +30,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.xmlmap.TagMap;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -45,7 +48,9 @@ public class XMLMap extends TagMap implements Mappable {
 	public Binary content = null;
 	public String stringContent = null;
 	public boolean debug = false;
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(XMLMap.class);
+	
 	public void load(Access access) throws MappableException, UserException {
 	}
 
@@ -83,7 +88,7 @@ public class XMLMap extends TagMap implements Mappable {
 		String r = getString();
 		Binary b = new Binary(r.getBytes());
 		if ( debug ) {
-			System.err.println(new String(b.getData()));
+			logger.debug(new String(b.getData()));
 		}
 		return b;
 	}
@@ -152,7 +157,7 @@ public class XMLMap extends TagMap implements Mappable {
 		xml.setChild(district);
 		district.setName("DISTRIKTJE");
 		district.setName("WERKT DIT NOG STEEDS");
-		System.err.println("child = " + xml.getChildTag("district", 0));
+		logger.info("child = " + xml.getChildTag("district", 0));
 
 		TagMap n = new TagMap();
 		n.setName("apenoot");
@@ -163,7 +168,7 @@ public class XMLMap extends TagMap implements Mappable {
 
 		xml.setChildName("district");
 		TagMap kind = xml.getChild();
-		System.err.println("kind = " + kind.getName());
+		logger.info("kind = " + kind.getName());
 
 		b.write(System.err);
 

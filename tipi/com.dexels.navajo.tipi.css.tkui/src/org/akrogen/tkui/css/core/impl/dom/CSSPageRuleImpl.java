@@ -34,6 +34,10 @@ import org.w3c.dom.css.CSSStyleSheet;
 public class CSSPageRuleImpl extends AbstractCSSNode implements CSSPageRule,
 		Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1721626387917821911L;
 	private CSSStyleSheet parentStyleSheet = null;
 	private CSSRule parentRule = null;
 	private String ident = null;

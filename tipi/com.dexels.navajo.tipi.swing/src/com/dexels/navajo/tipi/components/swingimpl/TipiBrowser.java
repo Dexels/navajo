@@ -2,33 +2,19 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiEditorPane;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @deprecated Use the Cobra browser. It has much better js and css support
- * @version 1.0
- */
+
 @Deprecated
 public class TipiBrowser extends TipiSwingComponentImpl {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7908348920868634250L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiBrowser.class);
 	private TipiEditorPane myItem;
 
 	public Object createContainer() {
@@ -40,18 +26,18 @@ public class TipiBrowser extends TipiSwingComponentImpl {
 	@Override
 	protected void setComponentValue(String name, Object object) {
 		if (name.equals("binary")) {
-			System.err.println("Setting to binary: " + object.toString());
+			logger.debug("Setting to binary: " + object.toString());
 			try {
 				myItem.setBinary((Binary) object);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		if (name.equals("url")) {
 			try {
 				myItem.setPage((String) object);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		super.setComponentValue(name, object);

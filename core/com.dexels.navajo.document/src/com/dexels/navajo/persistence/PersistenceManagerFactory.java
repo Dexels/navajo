@@ -33,6 +33,9 @@ public class PersistenceManagerFactory {
 		}
 	}
 	
+	/**
+	 * @param configPath unused, it seems 
+	 */
 	public static PersistenceManager getInstance(String className, String configPath) {
 
 		if ( instance != null ) {

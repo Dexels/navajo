@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
@@ -44,6 +47,10 @@ public class TipiValue implements Serializable {
 	private String defaultValue = null;
 	private boolean required = false;
 	private HashMap<String, String> selectionMap;
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiValue.class);
 
 	private final TipiComponent myComponent;
 
@@ -132,7 +139,7 @@ public class TipiValue implements Serializable {
 			p.setSubType("tipitype=" + type);
 			return p;
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 	}
@@ -259,6 +266,9 @@ public class TipiValue implements Serializable {
 		return value;
 	}
 
+	/**
+	 * @param typeValue  
+	 */
 	public void typeCheck(Object typeValue) {
 		/** @todo Implement this */
 	}

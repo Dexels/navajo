@@ -7,9 +7,12 @@
 		<include path="com/dexels/navajo/tipi/swing/substance/substanceclassdef.xml"/>
 	</includes>
 	<jars>
-		<jar path="substance-6.jar"/>
+		<jar path="laf-plugin-7.1.jar"/>
+		<jar path="laf-widget-7.1.jar"/>
 		<jar path="TipiSubstance.jar"/>
 		<jar path="trident.jar"/>
+		<jar path="substance-7.1.jar"/>
+		<jar path="substance-swingx-7.1.jar"/>
 	</jars>
 	<other>
 		<link href="https://substance.dev.java.net/"/>

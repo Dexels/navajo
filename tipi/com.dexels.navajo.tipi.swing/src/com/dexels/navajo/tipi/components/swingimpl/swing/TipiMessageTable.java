@@ -14,6 +14,9 @@ import java.io.IOException;
 
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -24,10 +27,10 @@ import com.dexels.navajo.tipi.swingclient.components.MessageTable;
 
 public class TipiMessageTable extends MessageTable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8878916392303033449L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMessageTable.class);
 	final TipiContext myContext;
 
 	// private final TipiDndManager myDndManager;
@@ -38,7 +41,7 @@ public class TipiMessageTable extends MessageTable {
 		addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
-					System.err.println("Table detected right click!");
+					logger.debug("Table detected right click!");
 					Point p = e.getPoint();
 					int rowNumber = rowAtPoint(p);
 					if (getSelectionModel().isSelectedIndex(rowNumber)) {
@@ -48,7 +51,7 @@ public class TipiMessageTable extends MessageTable {
 
 					int keyMask = InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK;
 					int mask = e.getModifiers() & keyMask;
-					System.err.println("Modifiers: " + e.getModifiers()
+					logger.debug("Modifiers: " + e.getModifiers()
 							+ " mask:  " + mask + " keyMask: " + keyMask);
 					if (mask != 0) {
 						getSelectionModel().addSelectionInterval(rowNumber,
@@ -82,7 +85,7 @@ public class TipiMessageTable extends MessageTable {
 			n = myContext.getStorageManager().getStorageDocument(
 					columnPathString);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 			return;
 		}
 		if (n != null) {
@@ -100,7 +103,7 @@ public class TipiMessageTable extends MessageTable {
 				myContext.getStorageManager().setStorageDocument(
 						columnPathString, n);
 			} catch (TipiException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 				throw new IOException("Errrorrrr saving columns. columnPath: "
 						+ columnPathString);
 			}

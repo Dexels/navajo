@@ -5,6 +5,9 @@ import java.net.MalformedURLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
@@ -17,9 +20,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiInjectEmail extends TipiAction {
 
 	private static final long serialVersionUID = -4545529880859492751L;
-
-
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiInjectEmail.class);
 
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		Navajo input = (Navajo) getEvaluatedParameter("navajo", event);
@@ -30,7 +33,7 @@ public class TipiInjectEmail extends TipiAction {
 		try {
 			createNavajoUrl(navajoName, inputCopy, urlTemplate);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		getContext().injectNavajo(navajoName, inputCopy);
 	}

@@ -11,6 +11,8 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.util.TableOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -23,7 +25,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiGenericChart extends TipiSwingDataComponentImpl {
 
 	private static final long serialVersionUID = 1761254226090465659L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiGenericChart.class);
+	
 	protected ChartPanel myChart;
 	
 	private String series = "Sex";
@@ -88,7 +93,7 @@ public class TipiGenericChart extends TipiSwingDataComponentImpl {
 	      return f;
 	    }
 	    catch (Exception e) {
-	      e.printStackTrace();
+	      logger.error("Error: ",e);
 	      return null;
 	    }
 	  }

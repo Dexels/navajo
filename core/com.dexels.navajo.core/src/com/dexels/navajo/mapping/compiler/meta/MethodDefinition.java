@@ -48,7 +48,7 @@ public class MethodDefinition {
 	}
 	
 	private String generateParamName() {
-		return "Dummy" + Math.abs(MethodDefinition.rand.nextInt());
+		return "Dummy" + Math.abs(MethodDefinition.rand.nextInt()+1);
 	}
 	
 	public void generateCode(XMLElement in, XMLElement out, String filename) throws Exception {
@@ -62,7 +62,7 @@ public class MethodDefinition {
 		}
 		boolean hasCondition = false;
 		String tempParamName = null;
-		if ( condition != null && !condition.equals("true")) {
+		if ( !condition.equals("true")) {
 			// Generate a temp. param to evaluate the condition expression.
 			XMLElement c = new TSLElement(in, "param");
 			tempParamName = generateParamName();

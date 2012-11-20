@@ -12,6 +12,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
@@ -41,11 +44,11 @@ import com.dexels.navajo.tipi.swingclient.components.remotecombobox.RemoteRefres
  * @version 1.0
  */
 public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8756127082376871184L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiAjaxCombobox.class);
+	
 	private AjaxComboBox myCombo;
 
 	private String currentSelection = null;
@@ -59,7 +62,7 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 		addHelper(th);
 		myCombo.setCurrentRemoteRefresh(new RemoteRefreshFilter() {
 			public Navajo getNavajo(String filterString) {
-				System.err.println("Gettin: " + filterString);
+				logger.debug("Gettin: " + filterString);
 				currentSelection = filterString;
 				Map<String, Object> m = new HashMap<String, Object>();
 				selectedValue = myCombo.getSelectedValue();
@@ -70,7 +73,7 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 				try {
 					performTipiEvent("onChange", m, true);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 				return null;
 			}
@@ -90,7 +93,7 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 					m.put("value", sel);
 					performTipiEvent("onSelect", m, false);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 		});
@@ -102,7 +105,7 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 					fireTextChange(de.getDocument().getText(0,
 							de.getDocument().getLength()));
 				} catch (BadLocationException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 
@@ -111,7 +114,7 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 					fireTextChange(de.getDocument().getText(0,
 							de.getDocument().getLength()));
 				} catch (BadLocationException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 
@@ -120,7 +123,7 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 					fireTextChange(de.getDocument().getText(0,
 							de.getDocument().getLength()));
 				} catch (BadLocationException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 		});
@@ -139,7 +142,7 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 					m.put("value", sel);
 					performTipiEvent("onEnter", m, false);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 		});
@@ -155,7 +158,7 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 		try {
 			performTipiEvent("onTextChange", m, false);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	}
 

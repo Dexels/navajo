@@ -12,6 +12,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.components.swingimpl.TipiDialog;
 
@@ -35,10 +38,11 @@ import com.dexels.navajo.tipi.components.swingimpl.TipiDialog;
 
 public class TipiSwingDialog extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8923819403196803897L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingDialog.class);
+	
 	private ComponentAdapter componentListener;
 	private final JFrame myRootParent;
 
@@ -59,7 +63,7 @@ public class TipiSwingDialog extends JDialog {
 
 			public void componentResized(ComponentEvent e) {
 				Rectangle r = getBounds();
-				// System.err.println("Dialog resize: "+r);
+				// logger.debug("Dialog resize: "+r);
 				comp.getAttributeProperty("h").setAnyValue(r.height);
 				comp.getAttributeProperty("w").setAnyValue(r.width);
 				comp.getAttributeProperty("x").setAnyValue(r.x);
@@ -77,7 +81,6 @@ public class TipiSwingDialog extends JDialog {
 
 	@Override
 	public void dispose() {
-		System.err.println("DISPOSING TIPISWINGDIALOG");
 		removeComponentListener(componentListener);
 		if (myRootParent != null) {
 			myRootParent.removeComponentListener(componentListener);
@@ -90,12 +93,10 @@ public class TipiSwingDialog extends JDialog {
 
 	public void setIconUrl(URL u) {
 		setIconImage(new ImageIcon(u).getImage());
-		System.err.println("Dialog icon set!");
 	}
 
 	public void setIconUrl(Object u) {
 		setIconImage(getIcon(u).getImage());
-		System.err.println("Dialog icon set!");
 	}
 
 	protected ImageIcon getIcon(Object u) {
@@ -112,7 +113,7 @@ public class TipiSwingDialog extends JDialog {
 				ImageIcon ii = new ImageIcon(i);
 				return ii;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		return null;

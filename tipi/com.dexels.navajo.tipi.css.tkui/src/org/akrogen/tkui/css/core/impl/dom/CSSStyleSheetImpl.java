@@ -36,6 +36,10 @@ import org.w3c.dom.stylesheets.StyleSheet;
 public class CSSStyleSheetImpl extends AbstractCSSNode implements
 		CSSStyleSheet, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7801248828963658491L;
 	private boolean disabled = false;
 	private Node ownerNode = null;
 	private StyleSheet parentStyleSheet = null;

@@ -11,11 +11,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class WebDescriptorBuilder extends BaseDeploymentBuilder {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(WebDescriptorBuilder.class);
 	@Override
 	public String build(String repository, String developmentRepository, String extensions, Map<String,String> tipiProperties, String deployment, File baseDir, String codebase, List<String> profiles, boolean useVersioning)
 			throws IOException {
@@ -80,7 +86,7 @@ public class WebDescriptorBuilder extends BaseDeploymentBuilder {
 		}
 		XMLElement description = web.getElementByTagName("description");
 		description.setContent(tipiProperties.get("title"));
-		System.err.println("Web xml: "+web);
+		logger.info("Web xml: "+web);
 		FileWriter writer = new FileWriter(new File(baseDir,"WEB-INF/web.xml"));
 		web.write(writer);
 		writer.flush();

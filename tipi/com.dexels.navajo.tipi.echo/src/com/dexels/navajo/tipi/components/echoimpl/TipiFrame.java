@@ -1,6 +1,9 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 //import tucana.echo2.app.ModalDimmer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.ContentPane;
@@ -14,28 +17,14 @@ import nextapp.echo2.extras.app.MenuBarPane;
 
 import com.dexels.navajo.tipi.components.echoimpl.impl.GradientContentPane;
 
-/**
- * <p>
- * Title:
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
 
 
 public class TipiFrame extends TipiEchoDataComponentImpl {
 
 	private static final long serialVersionUID = 6160466201795861752L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiFrame.class);
 
 	private Window myWindow;
 
@@ -158,13 +147,14 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
     }
 
 	private void addWindowPane(WindowPane child) {
-		System.err.println("Windowpane detected.");
-		System.err.println("is viz: "+child.isVisible()+" w: "+child.getWidth()+" h: "+child.getHeight());
+		logger.info("Windowpane detected.");
+		logger.info("is viz: "+child.isVisible()+" w: "+child.getWidth()+" h: "+child.getHeight());
 		TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
 		// Watch this.
 		final Window w = (Window) s.getTopLevel();
 		if(w==null) {
-			System.err.println("oh dear, no toplevel found");
+			logger.info("oh dear, no toplevel found");
+			return;
 		}
 		w.getContent().add(child);
 	}

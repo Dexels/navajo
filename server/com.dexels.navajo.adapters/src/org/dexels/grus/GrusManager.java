@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class GrusManager implements Runnable {
 
 	private final static GrusManager instance; 
@@ -12,6 +15,8 @@ public class GrusManager implements Runnable {
 	private final HashSet<DbConnectionBroker> registeredBrokers = new HashSet<DbConnectionBroker>();
 	private boolean shutdown = false;
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GrusManager.class);
 	
 	static  {
 		GrusManager myGrus = new GrusManager();
@@ -62,9 +67,7 @@ public class GrusManager implements Runnable {
 					inspectedBroker.refreshConnections();
 				}
 			} catch (Throwable t) {
-				t.printStackTrace(System.err);
-			} finally { 
-
+				logger.error("Error: ", t);
 			}
 		} // while true.
 	}

@@ -3,7 +3,60 @@
     <AD name="user"  id="user" required="false" type="String" default="demo"/>
     <AD name="password"  id="password" required="false" type="String" default="demo"/>
   </OCD>
+  <OCD description="Navajo Server Configuration" name="Navajo Server Configuration" id="navajo.server.config">
+    <AD name="Adapter path"  id="adapterPath" required="true" type="String" default="adapters"/>
+    <AD name="Compiled script path"  id="compiledScriptPath" required="true" type="String" default="compiled"/>
+    <AD name="Compiled scripts?"  id="compileScripts" required="true" type="Boolean" default="true"/>
+    <AD name="Configuration path"  id="configPath" required="true" type="String" default="compiled" />
+    <AD name="Description provider service"  id="descriptionProviderClass" required="false" type="String" default="com.dexels.navajo.adapter.descriptionprovider.FastDescriptionProvider"/>
+    <AD name="Document Class"  id="documentClass" required="true" type="String" default="com.dexels.navajo.document.base.BaseNavajoFactoryImpl"/>
+    <AD name="Instance name"  id="instanceName" required="true" type="String" default="My instance"/>
+    <AD name="Instance group"  id="instanceGroup" required="true" type="String" default="My instance group"/>
+    <AD name="Max simultaneous services"  id="maxAccessSetSize" required="true" type="Integer" default="50" />
+    <AD name="Repository class"  id="repositoryClass" required="true" type="String" default="com.dexels.navajo.server.SimpleRepository"/>
+    <AD name="Script path"  id="scriptPath" required="true" type="String" default="scripts"/>
+    <AD name="Compilation language"  id="compilationLanguage" required="false" type="String" default="java"/>
+  </OCD>
+  <OCD description="Asynchronous Service Configuration" name="Asynchronous Service Configuration" id="navajo.server.async">
+    <AD name="Enable"  id="enable" required="true" type="Boolean" default="true"/>
+    <AD name="Timeout"  id="asyncTimeout" required="false" type="Float" default="3600000"/>
+  </OCD>
+  <OCD description="Lockmanager Service Configuration" name="Lockmanager Service Configuration" id="navajo.server.lockmanager">
+    <AD name="Enable"  id="enable" required="true" type="Boolean" default="true"/>
+  </OCD>
+  <OCD description="Integrity Service Configuration" name="Integrity Service Configuration" id="navajo.server.integrity">
+    <AD name="Enable"  id="enable" required="true" type="Boolean" default="true"/>
+  </OCD>
+  <OCD description="Statistics Service Configuration" name="Statistics Service Configuration" id="navajo.server.statistics">
+    <AD name="Enable"  id="enable" required="true" type="Boolean" default="true"/>
+  </OCD>
+  <OCD description="Navajo Store Configuration" name="Navajo Store Configuration" id="navajo.server.store">
+    <AD name="Level"  id="level" required="true" type="String" default="WARNING"/>
+    <AD name="Name"  id="name" required="true" type="String" default="navajostore"/>
+    <AD name="Type"  id="type" required="true" type="String" default="com.dexels.navajo.enterprise.adapter.navajostore.OracleStore"/>
+  </OCD>
+
+  <Designate pid="navajo.server.store" >
+     <Object ocdref="navajo.server.store"/>
+  </Designate>
+
+  <Designate pid="navajo.server.lockmanager" >
+     <Object ocdref="navajo.server.lockmanager"/>
+  </Designate>
+  <Designate pid="navajo.server.statistics" >
+     <Object ocdref="navajo.server.statistics"/>
+  </Designate>
+  <Designate pid="navajo.server.integrity" >
+     <Object ocdref="navajo.server.integrity"/>
+  </Designate>
+  <Designate pid="navajo.server.async" >
+     <Object ocdref="navajo.server.async"/>
+  </Designate>
   <Designate pid="com.dexels.navajo.localclient" >
      <Object ocdref="com.dexels.navajo.localclient"/>
   </Designate>
+  <Designate pid="navajo.server.config" >
+     <Object ocdref="navajo.server.config"/>
+  </Designate>
+
 </metatype:MetaData>

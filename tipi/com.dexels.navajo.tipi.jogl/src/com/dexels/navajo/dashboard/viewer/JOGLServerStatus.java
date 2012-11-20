@@ -8,6 +8,9 @@ import java.net.URL;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.jogamp.opengl.util.awt.TextRenderer;
@@ -19,6 +22,10 @@ public class JOGLServerStatus {
 	Navajo serverLoad;
 	String serverName = "";
 	URL postman;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JOGLServerStatus.class);
+	
 
 	public JOGLServerStatus() {
 		Font font = new Font("SansSerif", Font.PLAIN, 18);
@@ -46,14 +53,23 @@ public class JOGLServerStatus {
 		this.postman = url;
 	}
 
+	/**
+	 * @param username  
+	 */
 	public void setUsername(String username) {
 
 	}
 
+	/**
+	 * @param password  
+	 */
 	public void setPassword(String password) {
 
 	}
 
+	/**
+	 * @param mode  
+	 */
 	public void draw(GL gl1, float width, float height, int mode) {
 		GL2 gl = gl1.getGL2();
 		gl.glBegin(GL2.GL_QUADS);
@@ -131,7 +147,7 @@ public class JOGLServerStatus {
 		
 		// Draw the index lines, ten, which is the number of max threads
 		int max_threads = 10;
-		float y_skip = (float)(max_height) / (float)max_threads;		
+		float y_skip = (max_height) / max_threads;		
 		gl.glBegin(GL.GL_LINES);
 		gl.glColor4f(0f, 0f, 0f, .4f);
 		for(int i=0;i<max_threads;i++){
@@ -219,7 +235,7 @@ public class JOGLServerStatus {
 			
 			drawString(gl, "max: "+max + " v/s, at " + maxTime, (int)(x_offset + 10), (int)(y_offset + max_height + 5), Color.white, .8f, .6f);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 	}
@@ -242,6 +258,9 @@ public class JOGLServerStatus {
 
 	/*
 	 * Draw a string in OpenGL
+	 */
+	/**
+	 * @param gl  
 	 */
 	private void drawString(GL gl, String text, int xpos, int ypos, Color color, float alpha, float scale) {
 		float r = color.getRed() / 255f;

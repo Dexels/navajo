@@ -21,7 +21,7 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  org.apache.log4j,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtext.xtend2.lib
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dexels.navajo.dsl.expression,
  com.dexels.navajo.dsl.expression.formatting,
  com.dexels.navajo.dsl.expression.parseTreeConstruction,

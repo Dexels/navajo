@@ -1,8 +1,9 @@
 package com.dexels.navajo.adapter;
 
+import static org.junit.Assert.assertEquals;
+
 import java.text.SimpleDateFormat;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.dexels.navajo.adapter.messagemap.ResultMessage;
@@ -77,23 +78,23 @@ public class MessageMapTest {
 		a.setCurrentOutMessage(null);
 		mm.store();
 		
-		Assert.assertEquals(2, result.length);
-		Assert.assertEquals(5, result[0].getCount("Age"));
+		assertEquals(2, result.length);
+		assertEquals(5, result[0].getCount("Age"));
 		
-		Assert.assertEquals(200.0, result[0].getSum("Age"));
-		Assert.assertEquals(500.0, result[1].getSum("Age"));
+		assertEquals(200.0, result[0].getSum("Age"),1);
+		assertEquals(500.0, result[1].getSum("Age"),1);
 		
-		Assert.assertEquals(40.0, result[0].getAvg("Age"));
-		Assert.assertEquals(100.0, result[1].getAvg("Age"));
+		assertEquals(40.0, result[0].getAvg("Age"),1);
+		assertEquals(100.0, result[1].getAvg("Age"),1);
 		
-		Assert.assertEquals(80.0, result[0].getMax("Age"));
-		Assert.assertEquals(0.0, result[0].getMin("Age"));
-		Assert.assertEquals(180.0, result[1].getMax("Age"));
-		Assert.assertEquals(20.0, result[1].getMin("Age"));
-		Assert.assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-01"), result[0].getMin("Date"));
-		Assert.assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-02"), result[1].getMin("Date"));
-		Assert.assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-09"), result[0].getMax("Date"));
-		Assert.assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-10"), result[1].getMax("Date"));
+		assertEquals(80.0, result[0].getMax("Age"));
+		assertEquals(0.0, result[0].getMin("Age"));
+		assertEquals(180.0, result[1].getMax("Age"));
+		assertEquals(20.0, result[1].getMin("Age"));
+		assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-01"), result[0].getMin("Date"));
+		assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-02"), result[1].getMin("Date"));
+		assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-09"), result[0].getMax("Date"));
+		assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-10"), result[1].getMax("Date"));
 		
 		//n.write(System.err);
 		

@@ -4,6 +4,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Operand;
@@ -28,11 +31,12 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiDebugNavajo extends TipiAction {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4117223330671763941L;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiDebugNavajo.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -58,7 +62,7 @@ public class TipiDebugNavajo extends TipiAction {
 				try {
 					n.write(w);
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 				w.println("********** END OF DEBUG ****** ");
 			}
@@ -66,7 +70,7 @@ public class TipiDebugNavajo extends TipiAction {
 			// }
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} finally {
 			if (file != null) {
 				if (w != null) {

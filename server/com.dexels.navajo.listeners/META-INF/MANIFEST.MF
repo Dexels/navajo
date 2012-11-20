@@ -2,7 +2,7 @@ Bundle-Name: Navajo Listeners
 Bundle-SymbolicName: com.dexels.navajo.listeners
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.1.10.qualifier
+Bundle-Version: 3.1.19.qualifier
 Bundle-Activator: navajolisteners.Version
 Bundle-ClassPath: .
 Include-Resource: lib
@@ -27,7 +27,7 @@ Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.script.api,
  com.dexels.navajo.server.listener.http.standard,
  com.dexels.navajo.version,
- com.jcraft.jzlib,
+ com.jcraft.jzlib;version="1.1.1",
  javax.management,
  javax.servlet;version="[2.5.0,4.0.0)",
  javax.servlet.http;version="[2.5.0,4.0.0)",

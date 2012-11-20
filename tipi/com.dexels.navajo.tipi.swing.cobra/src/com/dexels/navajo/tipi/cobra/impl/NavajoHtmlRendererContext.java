@@ -7,6 +7,8 @@ import java.util.Map;
 import org.lobobrowser.html.UserAgentContext;
 import org.lobobrowser.html.gui.HtmlPanel;
 import org.lobobrowser.html.test.SimpleHtmlRendererContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.html2.HTMLElement;
 
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -18,6 +20,8 @@ public class NavajoHtmlRendererContext extends SimpleHtmlRendererContext {
 	
 	private final TipiCobraBrowser owner;
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoHtmlRendererContext.class);
 	public NavajoHtmlRendererContext(HtmlPanel contextComponent, UserAgentContext ucontext, TipiCobraBrowser owner) {
 		super(contextComponent, ucontext);
 		this.owner = owner;
@@ -25,7 +29,6 @@ public class NavajoHtmlRendererContext extends SimpleHtmlRendererContext {
 
 	@Override
 	public void alert(String message) {
-		// TODO Auto-generated method stub
 		super.alert(message);
 	}
 
@@ -34,13 +37,11 @@ public class NavajoHtmlRendererContext extends SimpleHtmlRendererContext {
 
 	@Override
 	public void error(String message, Throwable throwable) {
-		// TODO Auto-generated method stub
 		super.error(message, throwable);
 	}
 
 	@Override
 	public String prompt(String message, String inputDefault) {
-		// TODO Auto-generated method stub
 		return super.prompt(message, inputDefault);
 	}
 
@@ -50,21 +51,21 @@ public class NavajoHtmlRendererContext extends SimpleHtmlRendererContext {
 			super.linkClicked(linkNode, url, target);
 			return;
 		}
-		System.err.println("Linking to: "+url+" target: "+target);
+		logger.info("Linking to: "+url+" target: "+target);
 		Map<String,Object> params = new HashMap<String, Object>();
 		params.put("url", url.toString());
 		try {
 			owner.performTipiEvent("onLink", params, false);
 		} catch (TipiBreakException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
 	@Override
 	public void setStatus(String message) {
-		System.err.println("New status: "+message);
+		logger.info("New status: "+message);
 		super.setStatus(message);
 	}
 	@Override
@@ -73,7 +74,6 @@ public class NavajoHtmlRendererContext extends SimpleHtmlRendererContext {
 	}
 	@Override
 	public void warn(String message, Throwable throwable) {
-		// TODO Auto-generated method stub
 		super.warn(message, throwable);
 	}
 

@@ -12,6 +12,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.dexels.grus.DbConnectionBroker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -19,6 +21,7 @@ import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.server.resource.ServiceAvailability;
 
 
+@SuppressWarnings({"unused"})
 public class ConnectionBrokerManager extends Object implements ResourceManager, ConnectionBrokerManagerMBean {
 
   private Map<String,SQLMapBroker> brokerMap = Collections.synchronizedMap(new HashMap<String,SQLMapBroker>());
@@ -27,6 +30,9 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 
   private static Object semaphore = new Object();
   
+  private final static Logger logger = LoggerFactory
+		.getLogger(ConnectionBrokerManager.class);
+
   public ConnectionBrokerManager() {
     super();
     JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "ConnectionBrokerManager");
@@ -74,7 +80,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  
 	  SQLMapBroker broker = null;
 	  
-	  System.err.println("in ConnectionBrokerManager.put(" + dsrc + "," + drv + ", ...)");
+	  logger.info("in ConnectionBrokerManager.put(" + dsrc + "," + drv + ", ...)");
 	  synchronized ( semaphore ) {
 		
 		  
@@ -83,7 +89,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 			  if (broker != null) {
 				  // Found an existing broker, returning this one.
 				  if (this.debug) {
-					  System.out.println(this.getClass() +
+					  logger.info(this.getClass() +
 							  ": already have a broker for data source '"
 							  + dsrc + "', user name '" + usr + "'");
 				  }
@@ -98,7 +104,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 		  
 		  if (similar != null) {
 			  if (this.debug) {
-				  System.out.println(this.getClass() +
+				  logger.info(this.getClass() +
 						  ": have a similar broker for data source '"
 						  + dsrc + "'");
 			  }
@@ -120,16 +126,13 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 		  this.brokerMap.put(dsrc, broker);
 		  
 		  if (this.debug) {
-			  System.out.println(this.getClass() +
+			  logger.info(this.getClass() +
 					  ": putting new broker with identifier '" +
 					  dsrc + "'");
 		  }
 		  
 	  }
 	  // Check transaction support.
-	  if ( broker != null ) {
-		  
-	  }
   }
 
   /**
@@ -153,7 +156,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
   }
   
   public final String getDatasourceUrl(String datasource) {
-	  SQLMapBroker b = (SQLMapBroker) brokerMap.get(datasource);
+	  SQLMapBroker b = brokerMap.get(datasource);
 	  if ( b != null ) {
 		  return b.getUrl();
 	  } else {
@@ -161,8 +164,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  }
   }
   
-  public int getMaxConnectionsByDatasource(String datasource) {
-	  SQLMapBroker b = (SQLMapBroker) brokerMap.get(datasource);
+  public synchronized int getMaxConnectionsByDatasource(String datasource) {
+	  SQLMapBroker b = brokerMap.get(datasource);
 	  if ( b != null && b.broker != null ) {
 		  return b.broker.getMaxCount();
 	  } else {
@@ -178,7 +181,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
   }
   
   public final String getDatasourceUsername(String datasource) {
-	  SQLMapBroker b = (SQLMapBroker) brokerMap.get(datasource);
+	  SQLMapBroker b = brokerMap.get(datasource);
 	  if ( b != null ) {
 		  return b.username;
 	  } else {
@@ -190,7 +193,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     SQLMapBroker broker;
     if (usr == null) {
       if (this.debug) {
-        System.out.println(this.getClass() +
+        logger.info(this.getClass() +
             ": user name is null, returning a similar broker for datasource '"
             + dsrc + "'");
       }
@@ -199,7 +202,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     else {
       broker = this.haveExistingBroker(dsrc, usr);
       if (this.debug && (broker != null)) {
-        System.out.println(this.getClass() +
+        logger.info(this.getClass() +
                            ": returning a broker for datasource '"
                            + dsrc + "', user name '" + usr + "', password '" + pwd + "'");
       }
@@ -210,7 +213,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     }
     else {
       if (this.debug) {
-        System.out.println(this.getClass() + ": no appropriate brokers found");
+        logger.info(this.getClass() + ": no appropriate brokers found");
       }
       return (null);
     }
@@ -218,10 +221,10 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 
   public final DbConnectionBroker get(final String dsrc, final String usr, final String pwd) {
     SQLMapBroker broker;
-    //System.err.println("In ConnectionBrokerManager.get(" + dsrc + "," + usr + "," + pwd + ")");
+    //logger.info("In ConnectionBrokerManager.get(" + dsrc + "," + usr + "," + pwd + ")");
     if (usr == null) {
       if (this.debug) {
-        System.out.println(this.getClass() +
+        logger.info(this.getClass() +
             ": user name is null, returning a similar broker for datasource '"
             + dsrc + "'");
       }
@@ -231,7 +234,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     else {
       broker = this.haveExistingBroker(dsrc, usr);
       if (this.debug && (broker != null)) {
-        System.out.println(this.getClass() +
+        logger.info(this.getClass() +
                            ": returning a broker for datasource '"
                            + dsrc + "', user name '" + usr + "', password '" + pwd + "'");
 
@@ -243,7 +246,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     }
     else {
       if (this.debug) {
-        System.out.println(this.getClass() + ": no appropriate brokers found");
+        logger.info(this.getClass() + ": no appropriate brokers found");
       }
       return (null);
     }
@@ -261,7 +264,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
       return (broker.autocommit);
     }
     else {
-      return (new Boolean(true));
+      return Boolean.TRUE;
     }
   }
 
@@ -275,7 +278,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
   public final void setDebug(final boolean b) {
     this.debug = b;
     if (this.debug) {
-      System.out.println(this.getClass() +
+      logger.info(this.getClass() +
                          "; debugging on");
     }
 
@@ -285,9 +288,9 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 
   private final SQLMapBroker haveExistingBroker(final String datasource, final String usr) {
 
-	  System.err.println("In ConnectionBrokerManager.haveExistingBroker(" + datasource + "," + usr + ")");
+	  logger.info("In ConnectionBrokerManager.haveExistingBroker(" + datasource + "," + usr + ")");
 
-	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(datasource));
+	  SQLMapBroker broker = ( this.brokerMap.get(datasource));
 
 	  if (! ( ( broker != null && broker.refresh == 0 ) || ( broker != null && broker.broker.isDead() ) ) ) {
 		  return broker;
@@ -295,25 +298,25 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 
 	  synchronized ( semaphore ) {
 
-		  //System.err.println("Detected dead broker, removing it and creating new one");
 		  // Remember health.
 		  int health = ServiceAvailability.STATUS_OK;
 		  if ( broker != null ) {
 			  health = broker.health;
 		  }
 		  brokerMap.remove(datasource);
-		  
-		  // Create new broker.
-		  try { 
-			  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
-					  broker.minconnections, broker.maxconnections, broker.logFile,
-					  broker.refresh, broker.autocommit, true, broker.type);
-			  broker = ( (SQLMapBroker)this.brokerMap.get(datasource));
-			  broker.health = health;
-		  } catch (Exception e) {
-			  e.printStackTrace(System.err);
-			  return null;
+		  if(broker!=null) {
+			  try { 
+				  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
+						  broker.minconnections, broker.maxconnections, broker.logFile,
+						  broker.refresh, broker.autocommit, true, broker.type);
+				  broker = ( this.brokerMap.get(datasource));
+				  broker.health = health;
+			  } catch (Exception e) {
+				  logger.error("Error: ", e);
+				  return null;
+			  }
 		  }
+		  // Create new broker.
 		  return broker;
 	  }
   }
@@ -328,34 +331,32 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
   private final SQLMapBroker seekSimilarBroker(final String datasource, boolean donotremove) {
 
 
-	  SQLMapBroker broker = (SQLMapBroker) brokerMap.get( datasource );
+	  SQLMapBroker broker = brokerMap.get( datasource );
 	  if ( !( !donotremove && broker != null && ( broker.refresh == 0 || broker.broker.isDead() ) ) ) {
 		  return broker;
 	  } 
 	  
 	  synchronized ( semaphore ) {
-		  if ( broker != null ) {
-			  int health = broker.health;
-			  brokerMap.remove(datasource);
-			  // Create new broker.
-			  try { 
-				  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
-						   broker.minconnections, broker.maxconnections, broker.logFile,
-						   broker.refresh, broker.autocommit, true, broker.type);
-				  broker = ( (SQLMapBroker)this.brokerMap.get(datasource));
-				  broker.health = health;
-			  } catch (Exception e) {
-				  e.printStackTrace(System.err);
-				  return null;
-			  }
-		  } 
+		  int health = broker.health;
+		  brokerMap.remove(datasource);
+		  // Create new broker.
+		  try { 
+			  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
+					   broker.minconnections, broker.maxconnections, broker.logFile,
+					   broker.refresh, broker.autocommit, true, broker.type);
+			  broker = ( this.brokerMap.get(datasource));
+			  broker.health = health;
+		  } catch (Exception e) {
+			  logger.error("Error: ", e);
+			  return null;
+		  }
 		  return broker;    	
 	  }
   }
 
   private final void destroySimilarBroker(final String datasource) {
    
-      final SQLMapBroker broker = (SQLMapBroker)this.brokerMap.get(datasource);
+      final SQLMapBroker broker = this.brokerMap.get(datasource);
       if (broker != null ) {
         if (broker.broker != null) {
           broker.broker.destroy();
@@ -363,7 +364,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
         }
         this.brokerMap.remove(datasource);
         if (this.debug) {
-          System.out.println(this.getClass() + ": destroyed broker '" + datasource + "'");
+          logger.info(this.getClass() + ": destroyed broker '" + datasource + "'");
         }
       }
   }
@@ -402,7 +403,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
   }
 
   public int getActiveConnectionsByDatasource(String datasource) {
-	  SQLMapBroker broker = (SQLMapBroker) brokerMap.get(datasource);
+	  SQLMapBroker broker = brokerMap.get(datasource);
 	  if ( broker != null && broker.broker != null ) {
 		  return broker.broker.getUseCount();
 	  }
@@ -435,23 +436,22 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 			 }
 		 }
 	  } else {
-		  System.err.println("Could not find datasource associated with url: " + url);
+		  logger.warn("Could not find datasource associated with url: " + url);
 		  return 0;
 	  }
 	  return maxHealth;
   }
 	
   public int getHealth(String datasource) {
-	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(datasource.replaceAll("'", "")));
+	  SQLMapBroker broker = ( this.brokerMap.get(datasource.replaceAll("'", "")));
 	  if ( broker == null ) {
 		  try {
 			  new SQLMap().setReload(datasource);
 		  } catch (Throwable e) {
 			  return ServiceAvailability.STATUS_UNKNOWN; // Be careful.
 		  } 
-		  broker = ( (SQLMapBroker)this.brokerMap.get(datasource.replaceAll("'", "")));
+		  broker = ( this.brokerMap.get(datasource.replaceAll("'", "")));
 		  if ( broker == null ) {
-			  //System.err.println("Could not determine health of resource: " + datasource);
 			  return ServiceAvailability.STATUS_UNKNOWN;
 		  }
 	  }
@@ -459,9 +459,9 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	}
   
   public void setHealth(String datasource, int h) {
-	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(datasource.replaceAll("'", "")));
+	  SQLMapBroker broker = ( this.brokerMap.get(datasource.replaceAll("'", "")));
 	  if ( broker == null ) {
-		  System.err.println("Could not set health of resource: " + datasource);
+		  logger.warn("Could not set health of resource: " + datasource);
 	  } else {
 		  broker.health = h;
 	  }
@@ -476,7 +476,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 			 b.health = health;
 		 }
 	  } else {
-		  System.err.println("Could not find datasource associated with url: " + url);
+		  logger.warn("Could not find datasource associated with url: " + url);
 	  }
   }
   
@@ -487,9 +487,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
   public boolean isAvailable(String datasource) {
 
 	  // Make sure to strip "'". 
-	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(datasource.replaceAll("'", "")));
+	  SQLMapBroker broker = ( this.brokerMap.get(datasource.replaceAll("'", "")));
 	  if ( broker == null ) {
-		  //System.err.println("Could not determine availability of resource: " + datasource);
 		  return true; // Try it to prevent deadlocking on changed web service that can never be reached due to former unavailability.
 	  }
 	  
@@ -576,7 +575,7 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     				dbInfo = new DatabaseInfo(dbmd, this.datasource);
     			}
     			catch (SQLException ex) {
-    				ex.printStackTrace(System.err);
+    				logger.error("Error: ", ex);
     			}
     			finally {
     				this.broker.freeConnection(c);

@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl.embed;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.ContentPane;
 
@@ -30,7 +33,10 @@ public class TipiEchoStandaloneToplevel extends TipiPanel {
 	private static final long serialVersionUID = 3945778439490301909L;
 	private final ContentPane myPanel; // = new JPanel();
 	private final BorderLayout myLayout = new BorderLayout();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiEchoStandaloneToplevel.class);
+	
 	public TipiEchoStandaloneToplevel(ContentPane jj) {
 		// myPanel.setLayout(myLayout);
 		super.setName("init");
@@ -56,17 +62,17 @@ public class TipiEchoStandaloneToplevel extends TipiPanel {
 
 		// public void run() {
 		if (myPanel != null) {
-			// System.err.println("Adding to toplevel: "+c.getClass()+
+			// logger.info("Adding to toplevel: "+c.getClass()+
 			// " -- "+c.hashCode());
-			System.err.println("ADDING TO PANEL: "
+			logger.info("ADDING TO PANEL: "
 					+ myPanel.getComponentCount() + " - " + c);
 			try {
 				myPanel.add((Component) c);
 			} catch (RuntimeException e) {
-				System.err.println("Whatever");
-				e.printStackTrace();
+				logger.info("Whatever");
+				logger.error("Error: ",e);
 			}
-			System.err.println("BEWArE: Tiplet hack");
+			logger.info("BEWArE: Tiplet hack");
 
 		}
 		// }});

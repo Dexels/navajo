@@ -19,6 +19,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import com.dexels.navajo.adapter.mailmap.AttachementMap;
@@ -54,11 +56,11 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 		HasDependentResources,
 		com.dexels.navajo.server.enterprise.queue.Queuable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6829674936474299750L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MailMapAlternative.class);
+	
 	public String recipients = "";
 	public String mailServer = "";
 	public String sender = "";
@@ -108,7 +110,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 
 	public Binary[] getAttachments() {
 		Binary[] bins = new Binary[attachments.size()];
-		bins = (Binary[]) attachments.toArray(bins);
+		bins = attachments.toArray(bins);
 		return bins;
 	}
 
@@ -121,8 +123,6 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 			} catch (Exception e) {
 				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
 						myAccess.accessID);
-				// e.printStackTrace(System.err);
-				// System.err.println(e.getMessage());
 			}
 		}
 	}
@@ -132,10 +132,9 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 		try {
 			sendMail();
 		} catch (Exception e) {
-			AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
-					myAccess.accessID);
-			// e.printStackTrace(System.err);
 			if (myAccess != null) {
+				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
+						myAccess.accessID);
 				myAccess.setException(e);
 			}
 			return false;
@@ -143,32 +142,22 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 		return true;
 	}
 
-	private final void sendMail() throws MappableException, UserException {
+	private final void sendMail() throws UserException {
 
 		retries++;
 
 		try {
 			String result = "";
-
 			result = text;
-
 			Properties props = System.getProperties();
-
 			props.put("mail.smtp.host", mailServer);
 			Session session = Session.getInstance(props);
-
 			javax.mail.Message msg = new MimeMessage(session);
-
-			// System.err.println("Created mime message: " + msg);
-
 			msg.setFrom(new InternetAddress(sender));
-
 			InternetAddress[] addresses = new InternetAddress[this.recipientArray.length];
 
 			for (int i = 0; i < this.recipientArray.length; i++) {
 				addresses[i] = new InternetAddress(this.recipientArray[i]);
-				// System.err.println("Set recipient " + i + ": " +
-				// this.recipientArray[i]);
 			}
 
 			msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
@@ -177,8 +166,6 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 				InternetAddress[] extra = new InternetAddress[this.ccArray.length];
 				for (int i = 0; i < this.ccArray.length; i++) {
 					extra[i] = new InternetAddress(this.ccArray[i]);
-					// System.err.println("Set cc " + i + ": " +
-					// this.ccArray[i]);
 				}
 				msg.setRecipients(javax.mail.Message.RecipientType.CC, extra);
 			}
@@ -187,8 +174,6 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 				InternetAddress[] extra = new InternetAddress[this.bccArray.length];
 				for (int i = 0; i < this.bccArray.length; i++) {
 					extra[i] = new InternetAddress(this.bccArray[i]);
-					// System.err.println("Set cc " + i + ": " +
-					// this.bccArray[i]);
 				}
 				msg.setRecipients(javax.mail.Message.RecipientType.BCC, extra);
 			}
@@ -224,7 +209,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 
 					// Put related bodyparts in related.
 					for (int i = 0; i < bodyparts.size(); i++) {
-						AttachmentMapInterface am = (AttachmentMapInterface) bodyparts
+						AttachmentMapInterface am = bodyparts
 								.get(i);
 						String file = am.getAttachFile();
 						String userFileName = am.getAttachFileName();
@@ -232,7 +217,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 						String encoding = am.getEncoding();
 						MimeBodyPart bp = new MimeBodyPart();
 
-						System.err.println("Embedding: " + userFileName);
+						logger.debug("Embedding: " + userFileName);
 
 						if (file != null) {
 							if (userFileName == null) {
@@ -268,7 +253,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 				if (attachments != null) {
 					for (int i = 0; i < attachments.size(); i++) {
 
-						AttachmentMapInterface am = (AttachmentMapInterface) attachments
+						AttachmentMapInterface am = attachments
 								.get(i);
 						String file = am.getAttachFile();
 						String userFileName = am.getAttachFileName();
@@ -276,7 +261,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 						String encoding = am.getEncoding();
 						MimeBodyPart bp = new MimeBodyPart();
 
-						System.err.println("Attaching: " + userFileName);
+						logger.debug("Attaching: " + userFileName);
 
 						if (file != null) {
 							if (userFileName == null) {
@@ -314,13 +299,10 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 			if (ignoreFailures) {
 				AuditLog.log("MailMap", e.getMessage(), Level.WARNING,
 						myAccess.accessID);
-				// System.err.println("MailMap: Failure logged: " +
-				// e.getMessage());
 				failure = e.getMessage();
 			} else {
 				AuditLog.log("MailMap", e.getMessage(), Level.SEVERE,
 						myAccess.accessID);
-				// e.printStackTrace();
 				throw new UserException(-1, e.getMessage());
 			}
 		}
@@ -484,8 +466,13 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 	}
 
 	public void setMaxRunningInstances(int maxRunningInstances) {
-		MailMapAlternative.maxRunningInstances = maxRunningInstances;
+		setStaticMaxRunningInstances(maxRunningInstances);
 	}
+	
+	private static void setStaticMaxRunningInstances(int maxRunningInstances) {
+		MailMap.maxRunningInstances = maxRunningInstances;
+	}
+
 
 	public DependentResource[] getDependentResourceFields() {
 		return new DependentResource[] { new GenericDependentResource(

@@ -20,30 +20,18 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class TipiSwingExportFilterPanel extends JPanel {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8446578689643821621L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingExportFilterPanel.class);
+	
 	JPanel jPanel1 = new JPanel();
 	TitledBorder titledBorder1;
 	GridBagLayout gridBagLayout2 = new GridBagLayout();
@@ -76,7 +64,7 @@ public class TipiSwingExportFilterPanel extends JPanel {
 		try {
 			jbInit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	}
 
@@ -123,7 +111,6 @@ public class TipiSwingExportFilterPanel extends JPanel {
 	}
 
 	void cancelButton_actionPerformed(ActionEvent e) {
-		/** @todo Replace by dispose? */
 		this.setVisible(false);
 	}
 
@@ -158,7 +145,7 @@ public class TipiSwingExportFilterPanel extends JPanel {
 						Date d = inputFormat3.parse(filterValueField.getText());
 						filter[2] = navajoDateFormat.format(d);
 					} catch (Exception e3) {
-						System.err.println("Whoops wrong date format typed..");
+						logger.debug("Whoops wrong date format typed..");
 						filter[2] = filterValueField.getText();
 					}
 				}

@@ -24,7 +24,7 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 //		URL u = bundleContext.getBundle().getResource("VAADIN/themes/base/styles.css");
-//		System.err.println("u: "+u);
+//		logger.info("u: "+u);
 
 		String portString = System.getProperty("tipi.vaadin.embedded.port");
 		int port;
@@ -37,7 +37,6 @@ public class Activator implements BundleActivator {
 		if(context==null) {
 			context = DEFAULTCONTEXTPATH;
 		}
-		System.err.println("CONTEXT: "+context);
 		JettyServer js = new JettyServer();
 		js.init(port,context,bundleContext.getBundle());
 	}

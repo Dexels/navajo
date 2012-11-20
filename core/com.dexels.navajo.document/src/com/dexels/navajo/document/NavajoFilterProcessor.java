@@ -17,10 +17,10 @@ public class NavajoFilterProcessor {
     if (h==null) {
       return out;
     }
-    return filter(h,out);
+    return filter(out);
   }
 
-  private static Navajo filter(Header header, Navajo out) {
+  private static Navajo filter(Navajo out) {
 //    Navajo newNavajo = NavajoFactory.getInstance().createNavajo();
 //    ArrayList messages = out.getAllMessages();
     return out;

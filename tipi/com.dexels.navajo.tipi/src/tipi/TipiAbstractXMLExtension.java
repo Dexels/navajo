@@ -61,9 +61,9 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 			is.close();
 			loadXML(xx);
 		} catch (XMLParseException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 //	private void loadXML(String xmlName) {
@@ -81,9 +81,9 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 //			is.close();
 //			loadXML(xx);
 //		} catch (XMLParseException e) {
-//			e.printStackTrace();
+//			logger.error("Error: ",e);
 //		} catch (IOException e) {
-//			e.printStackTrace();
+//			logger.error("Error: ",e);
 //		}
 //	}
 

@@ -42,7 +42,9 @@ public class ServerSocketTest {
             serverSocket = new ServerSocket(4444);
         } catch (IOException e) {
             System.err.println("Could not listen on port: 4444.");
-            System.exit(1);
+            // whoa bit too hardcore here
+            //            System.exit(1);
+            return;
         }
 
         Socket clientSocket = null;
@@ -50,7 +52,9 @@ public class ServerSocketTest {
             clientSocket = serverSocket.accept();
         } catch (IOException e) {
             System.err.println("Accept failed.");
-            System.exit(1);
+            // whoa bit too hardcore here
+//            System.exit(1);
+            return;
         }
 
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);

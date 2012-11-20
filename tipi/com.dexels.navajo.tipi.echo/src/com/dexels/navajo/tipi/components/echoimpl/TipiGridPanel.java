@@ -7,6 +7,9 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Alignment;
 import nextapp.echo2.app.Border;
 import nextapp.echo2.app.Color;
@@ -24,28 +27,12 @@ import echopointng.ContainerEx;
 import echopointng.GroupBox;
 import echopointng.able.Sizeable;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
-
 public class TipiGridPanel extends TipiEchoDataComponentImpl {
 
 	private static final long serialVersionUID = -3352759730817458879L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiGridPanel.class);
 	private Grid gridComponent;
 
      private GroupBox myContainer;
@@ -90,10 +77,10 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
     public void addToContainer(Object o, Object constraints) {
         Component c = (Component) o;
         if (c == null) {
-            System.err.println("Warning: Adding null component to tipicomponent: " + getPath());
+            logger.info("Warning: Adding null component to tipicomponent: " + getPath());
             return;
         }
-            System.err.println("Warning: Adding non-component to tipicomponent: " + getPath()+ " class: "+c.getClass());
+            logger.info("Warning: Adding non-component to tipicomponent: " + getPath()+ " class: "+c.getClass());
             String constr = (String) constraints;
 
             if(o instanceof PaneContainer) {
@@ -123,7 +110,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
         try {
 			while (st.hasMoreTokens()) {
 			    String next = st.nextToken();
-			    // System.err.println("NEEXT: "+next);
+			    // logger.info("NEEXT: "+next);
 			    StringTokenizer current = new StringTokenizer(next, ":");
 			    String key = current.nextToken();
 			    String value = current.nextToken();
@@ -139,15 +126,15 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
     }
 
     public void setRowHeight(int rowIndex, Extent height) {
-//    	System.err.println("Setting row height, row: "+rowIndex+" to:"+height.toString());
+//    	logger.info("Setting row height, row: "+rowIndex+" to:"+height.toString());
     	gridComponent.setRowHeight(rowIndex, height);
     }
 
     
     private void setProperty(String key, String value, GridLayoutData myData, Component c) {
-//    	System.err.println("Setting layoutdata: "+key+" value: "+value);
+//    	logger.info("Setting layoutdata: "+key+" value: "+value);
     	if ("align".equals(key)) {
-//        	System.err.println("Alignment: "+value);
+//        	logger.info("Alignment: "+value);
             myData.setAlignment(parseAlignment(value));
         }
         if ("padding".equals(key)) {
@@ -178,7 +165,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
     }
 
     private Alignment parseAlignment(String value) {
-        // System.err.println("PARSING VALUE FOR ALIGNMENT: "+value);
+        // logger.info("PARSING VALUE FOR ALIGNMENT: "+value);
         StringTokenizer st = new StringTokenizer(value, " ");
         String horizontalStr = st.nextToken();
         String verticalStr = st.nextToken();
@@ -225,7 +212,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
         if (ss != null) {
             parseColumns(ss.substring(1, ss.length() - 1));
         } else {
-            System.err.println("oh dear, no columnwidth");
+            logger.info("oh dear, no columnwidth");
         }
 
     }
@@ -247,7 +234,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
         }
         
         if ("border".equals(name)) {
-          	System.err.println("SET_BORDER_GRIDPANEL: "+object);
+          	logger.info("SET_BORDER_GRIDPANEL: "+object);
             if(object instanceof String) {
                 myContainer.setTitleLabel(new Label(""+object));
                 myContainer.setBorder(myBorder);
@@ -255,7 +242,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
         	return;
          }         
         // if ("border".equals(name)) {
-        // System.err.println("Parsing border!!!!!!");
+        // logger.info("Parsing border!!!!!!");
         // if (object!=null && object instanceof String) {
         // myContainer.setTitle((String)object);
         // myContainer.setBorder(new Border(1,new
@@ -277,7 +264,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
     // }
 
     protected Object[] parseColumns(String sizes) {
-        // System.err.println("\n\n\nPARSING COLUMNS::::::::::: "+sizes);
+        // logger.info("\n\n\nPARSING COLUMNS::::::::::: "+sizes);
         StringTokenizer st = new StringTokenizer(sizes);
         ArrayList myWidths = new ArrayList();
         myWidths.clear();
@@ -288,7 +275,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
                 setFixed(count);
             } else {
                 element = element.substring(0, element.length() - 1);
-                // System.err.println("Starr. reuslt: "+element);
+                // logger.info("Starr. reuslt: "+element);
             }
             int val = new Integer(element).intValue();
             myWidths.add(new Integer(val));
@@ -313,7 +300,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
             for (int x = xstart; x < xend; x++) {
                 boolean c = isOccupied(x, y);
                 if (c) {
-                    System.err.println("Oh dear, already occupied!");
+                    logger.info("Oh dear, already occupied!");
                 }
                 availabilityMatrix.add(new Coordinate(x, y));
 
@@ -323,11 +310,11 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 
     private void advance() {
         while (isOccupied(currentx, currenty)) {
-//        	System.err.println("Currentx: "+currentx+" currenty: "+currenty+" gridwidth: "+gridwidth);
+//        	logger.info("Currentx: "+currentx+" currenty: "+currenty+" gridwidth: "+gridwidth);
             if (currentx >= gridwidth - 1) {
                 currentx = 0;
                 currenty++;
-//                System.err.println("Advancing row. Row now: "+currenty);
+//                logger.info("Advancing row. Row now: "+currenty);
             } else {
                 currentx++;
             }
@@ -362,11 +349,19 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
                 return false;
             }
             Coordinate c = (Coordinate) o;
-            // System.err.println("Comparing: "+this+" and "+c);
+            // logger.info("Comparing: "+this+" and "+c);
             return c.x == x && c.y == y;
         }
 
-        public String toString() {
+        /**
+         * Theoretically could overflow, but I don't expect layouts to be THAT big
+         */
+        @Override
+		public int hashCode() {
+        	return x*y;
+		}
+
+		public String toString() {
             return "{" + x + "," + y + "}";
         }
     }

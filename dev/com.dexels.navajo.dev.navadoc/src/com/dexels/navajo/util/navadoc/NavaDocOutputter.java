@@ -88,15 +88,13 @@ public class NavaDocOutputter {
     	    targetFile.getParentFile().mkdirs();
     	    this.output();    
     	    
-    	    if ( out != null ) {
-    	    	BufferedReader bf = new BufferedReader( new FileReader(this.targetFile) );
-    	    	String l = null;
-    	    	while ( ( l = bf.readLine() ) != null  ) {
-    	    		out.write(l);
-    	    	}
-    	    	bf.close();
-    	    	out.close();
-    	    }
+	    	BufferedReader bf = new BufferedReader( new FileReader(this.targetFile) );
+	    	String l = null;
+	    	while ( ( l = bf.readLine() ) != null  ) {
+	    		out.write(l);
+	    	}
+	    	bf.close();
+	    	out.close();
     	    
     } catch ( Exception ex ) {
       ex.printStackTrace(System.err);

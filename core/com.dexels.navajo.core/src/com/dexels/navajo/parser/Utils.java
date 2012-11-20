@@ -123,7 +123,7 @@ public final class Utils extends Exception {
 
     public final static double getDoubleValue(Object o) throws TMLExpressionException {
         if (o instanceof Integer)
-            return (double) ((Integer) o).intValue();
+            return ((Integer) o).intValue();
         else if (o instanceof Double)
             return ((Double) o).doubleValue();
         else if (o instanceof Money)
@@ -158,8 +158,11 @@ public final class Utils extends Exception {
           return ((ClockTime) o).toString();
         else if (o instanceof Selection) 
           return ((Selection) o).getValue();
-        else
+        else if ( o != null ) {
+        	return o.toString();
+        } else {
           throw new TMLExpressionException("Unknown type: " + o.getClass().getName());
+        }
     }
 
     /**

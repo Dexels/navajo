@@ -7,6 +7,9 @@ import javax.swing.JApplet;
 import javax.swing.JInternalFrame;
 import javax.swing.RootPaneContainer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 
@@ -28,11 +31,12 @@ import com.dexels.navajo.tipi.TipiContext;
  * @version 1.0
  */
 public class TipiScreen extends TipiSwingDataComponentImpl {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4453008939836688032L;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiScreen.class);
+	
 	public TipiScreen() {
 		setId("init");
 	}
@@ -45,24 +49,20 @@ public class TipiScreen extends TipiSwingDataComponentImpl {
 		return getTopLevel();
 	}
 
-	public void addStudio(final Window current, final Object constraints) {
-		current.setVisible(true);
-	}
-
+	
 	public void addToContainer(final Object c, final Object constraints) {
 		final Component current = (Component) c;
 		runSyncInEventThread(new Runnable() {
 			public void run() {
 
 				if (current != null && Window.class.isInstance(current)) {
-					// System.err.println("Not null, and window");
+					// logger.debug("Not null, and window");
 					current.setVisible(true);
 				} else {
 					if (c instanceof JApplet) {
 						// ok
 					} else {
-						System.err
-								.println("**************** SHOULD NOT REALLY BE HERE: "
+						logger.error("**************** SHOULD NOT REALLY BE HERE: "
 										+ current);
 						Thread.dumpStack();
 					}
@@ -81,7 +81,7 @@ public class TipiScreen extends TipiSwingDataComponentImpl {
 				|| JInternalFrame.class.isInstance(current)) {
 			current.setVisible(false);
 		} else {
-			System.err.println("NOT studio mode, but not of type window: "
+			logger.debug("NOT studio mode, but not of type window: "
 					+ current.getClass());
 		}
 
@@ -125,7 +125,7 @@ public class TipiScreen extends TipiSwingDataComponentImpl {
 				return (RootPaneContainer) current.getContainer();
 			}
 		}
-		System.err.println("RETURNING NULL. OH DEAR");
+		logger.debug("RETURNING NULL. OH DEAR");
 		return null;
 	}
 
@@ -149,8 +149,7 @@ public class TipiScreen extends TipiSwingDataComponentImpl {
 			Object constraints) {
 
 		if (tc == null) {
-			System.err
-					.println("And I thought that this would never happen. Nice.");
+			logger.error("And I thought that this would never happen. Nice.");
 			Thread.dumpStack();
 			return;
 		}

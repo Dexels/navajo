@@ -14,6 +14,9 @@ import java.io.IOException;
 
 import javax.swing.JFileChooser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -29,18 +32,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiSaveValue extends TipiAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7529816552777424125L;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.dexels.navajo.tipi.internal.TipiAction#execute(com.dexels.navajo.
-	 * tipi.internal.TipiEvent)
-	 */
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSaveValue.class);
 	protected void execute(TipiEvent event) throws TipiBreakException,
 			TipiException {
 		Operand globalvalue = getEvaluatedParameter("value", event);
@@ -90,17 +86,17 @@ public class TipiSaveValue extends TipiAction {
 				fos.write(value.toString().getBytes());
 			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 			throw new TipiException("File not found: " + e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 			throw new TipiException("IO Error: " + e);
 		} finally {
 			if (fos != null) {
 				try {
 					fos.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 		}

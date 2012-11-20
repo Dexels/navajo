@@ -11,7 +11,6 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiPropertyHandler implements ICSSPropertyHandler {
 
-	
 	private final TipiEvent tipiEvent;
 
 
@@ -31,7 +30,6 @@ public class TipiPropertyHandler implements ICSSPropertyHandler {
 		}
 		Object parsed = o.value;
 		//		Object parsed = tc.getContext().evaluateExpression(value.getCssText(), tc, tipiEvent);
-		System.err.println("Text: "+value.getCssText());
 		tc.setValue(property, parsed);
 
 		return true;

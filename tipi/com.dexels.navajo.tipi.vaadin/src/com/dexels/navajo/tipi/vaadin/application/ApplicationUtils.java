@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.vaadin.application;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +46,11 @@ public class ApplicationUtils {
 			@Override
 			public String getSessionToken() {
 				return context.getHttpSession().getId();
+			}
+
+			@Override
+			public void reset() {
+				
 			}
 		});
 
@@ -97,7 +101,7 @@ public class ApplicationUtils {
 	}
 
 	// I don't think this one is still necessary
-	public static void checkForExtensions(File installationFolder) throws IOException {
+	public static void checkForExtensions(File installationFolder) {
 		logger.info("Loading extensions in: ", installationFolder.getAbsolutePath());
 		TipiVaadinExtension.getInstance().initialializeExtension(installationFolder);
 	}

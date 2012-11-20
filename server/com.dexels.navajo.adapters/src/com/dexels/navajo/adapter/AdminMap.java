@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.mapping.AsyncMappable;
@@ -62,7 +65,6 @@ public class AdminMap implements Mappable {
   public String monitorWS;
   public int monitorTotaltime;
 
-  public String storeLocation;
   public int classLoaderInstances;
   public int scriptClassInstances;
   public String serverId;
@@ -77,6 +79,9 @@ public class AdminMap implements Mappable {
   
   // RequestRate windowSize
   public int requestRateWindowSize;
+  
+
+  private final static Logger logger = LoggerFactory.getLogger(AdminMap.class);
 
   private Access myAccess = null;
 
@@ -87,7 +92,6 @@ public class AdminMap implements Mappable {
     adapterPath = nc.getAdapterPath();
     compiledScriptPath = nc.getCompiledScriptPath();
     rootPath = nc.getRootPath();
-    
     //supportsHotCompile = nc.isHotCompileEnabled();
     supportsAsync = nc.isAsyncEnabled();
     supportsStore = ( nc.getAsyncStore() != null );
@@ -95,7 +99,6 @@ public class AdminMap implements Mappable {
     supportsStatistics = nc.isStatisticsRunnerEnabled();
     supportsLocks = nc.isLockManagerEnabled();
     
-    storeLocation = nc.getDbPath();
     serverId = DispatcherFactory.getInstance().getApplicationId();
     
     myAccess = access;
@@ -128,7 +131,7 @@ public class AdminMap implements Mappable {
 		  sql.setDatasource(datasource);
 
 		  if (SQLMap.fixedBroker == null || SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
-			  System.err.println("Could not create connection to datasource " +
+			  logger.error("Could not create connection to datasource " +
 					  sql.datasource + ", using username " +
 					  sql.username);
 			  return 0;
@@ -138,7 +141,7 @@ public class AdminMap implements Mappable {
 		  sql.store();
 
 		  return c;
-	  } catch (Throwable e) { e.printStackTrace(System.err);  }
+	  } catch (Throwable e) { logger.error("Error: ", e);  }
 	  return 0;
   }
 
@@ -179,7 +182,7 @@ public class AdminMap implements Mappable {
      sql.setDatasource(datasource);
 
      if (SQLMap.fixedBroker == null || SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
-       System.err.println("Could not create connection to datasource " +
+       logger.error("Could not create connection to datasource " +
                           sql.datasource + ", using username " +
                           sql.username);
        return 0;
@@ -194,7 +197,7 @@ public class AdminMap implements Mappable {
    @SuppressWarnings("rawtypes")
 public AsyncProxy [] getAsyncThreads() {
 
-     //System.err.println("IN GETASYNCTHREADS()......");
+     //logger.info("IN GETASYNCTHREADS()......");
      Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
      Iterator iter = all.values().iterator();
 	 List<AsyncProxy> l = new ArrayList<AsyncProxy>();
@@ -222,11 +225,11 @@ public AsyncProxy [] getAsyncThreads() {
        o.waiting = am.isWaiting();
        try {
          o.percReady = am.getPercReady();
-       } catch (Exception e) { e.printStackTrace(System.err); }
+       } catch (Exception e) { logger.error("Error: ", e); }
        l.add(o);
      }
      AsyncProxy [] objects = new AsyncProxy[l.size()];
-     return (AsyncProxy []) l.toArray(objects);
+     return l.toArray(objects);
    }
 
 
@@ -235,11 +238,11 @@ public AsyncProxy [] getAsyncThreads() {
 	   Iterator<Access> iter = all.iterator();
 	   List<AccessMap> d = new ArrayList<AccessMap>();
 	   while (iter.hasNext()) {
-		   Access a = (Access) iter.next();
+		   Access a = iter.next();
 		   d.add(new AccessMap(a));
 	   }
 	   AccessMap [] ams = new AccessMap[d.size()];
-	   return (AccessMap []) d.toArray(ams);
+	   return d.toArray(ams);
    }
 
    public void store() throws MappableException, UserException {
@@ -317,9 +320,6 @@ public AsyncProxy [] getAsyncThreads() {
   public boolean getSupportsStore() {
     return supportsStore;
   }
-  public String getStoreLocation() {
-    return storeLocation;
-  }
   public int getClassLoaderInstances() {
     return NavajoClassLoader.getInstances();
   }
@@ -344,7 +344,7 @@ public AsyncProxy [] getAsyncThreads() {
    * @param monitorOn
    */
   public void setMonitorOn(boolean monitorOn) {
-    System.err.println("Setting monitor to: " + monitorOn);
+    logger.debug("Setting monitor to: " + monitorOn);
     this.monitorOn = monitorOn;
     DispatcherFactory.getInstance().getNavajoConfig().setMonitorOn(monitorOn);
   }
@@ -394,7 +394,7 @@ public AsyncProxy [] getAsyncThreads() {
   public void setResetAdapters(boolean b) {
 	  this.resetAdapters = b;
 	  if ( resetAdapters ) {
-		  System.err.println("Resetting adapters...");
+		  logger.info("Resetting adapters...");
 		  DispatcherFactory.getInstance().getNavajoConfig().doClearCache();
 	  }
   }
@@ -409,7 +409,7 @@ public AsyncProxy [] getAsyncThreads() {
 	  NavajoFactory.resetImplementation();
 	  NavajoFactory.getInstance().setTempDir(DispatcherFactory.getInstance().getTempDir());
 		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
-	  System.err.println("Document class is now: " + getDocumentClass());
+	  logger.debug("Document class is now: " + getDocumentClass());
   }
   
   @Deprecated
@@ -420,10 +420,13 @@ public AsyncProxy [] getAsyncThreads() {
 	  return cc;
   }
   
-  public void setCollectGarbage(boolean b) {
-	  System.err.println("Calling garbage collect");
+  /**
+ * @param b  
+ */
+public void setCollectGarbage(boolean b) {
+	  logger.info("Calling garbage collect");
 	  System.gc();
-	  System.err.println("Finished collecting garbage");
+	  logger.info("Finished collecting garbage");
   }
 
 

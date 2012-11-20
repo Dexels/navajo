@@ -24,13 +24,21 @@
  */
 package navajobirt;
 
+import navajoextension.AbstractCoreExtension;
+
+import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.birt.BirtAdapterLibrary;
+
 /**
  * VERSION HISTORY
  * 
  * 2.0.3. -Added more verbose timing information
  * 
  */
-public class Version extends com.dexels.navajo.version.AbstractVersion {
+public class Version extends AbstractCoreExtension {
 
 	public static final int MAJOR = 1;
 	public static final int MINOR = 0;
@@ -38,12 +46,59 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo BIRT Adapter";
 	public static final String RELEASEDATE = "2006-04-09";
-	
-	//Included packages.
-	String [] includes = {"navajodocument.Version"};
-	
+
+	private final static Logger logger = LoggerFactory.getLogger(Version.class);
+
 	public Version() {
-		
+
+	}
+
+	@Override
+	public void start(BundleContext bc) throws Exception {
+
+		super.start(bc);
+		try {
+			BirtAdapterLibrary library = new BirtAdapterLibrary();
+			registerAll(library);
+//			FunctionFactoryInterface fi = FunctionFactoryFactory.getInstance();
+//			fi.init();
+//
+//			fi.clearFunctionNames();
+//
+//			fi.injectExtension(library);
+//			for (String adapterName : fi.getAdapterNames(library)) {
+//				// FunctionDefinition fd =
+//				// fi.getAdapterDefinition(adapterName,extensionDef);
+////				FunctionDefinition fd = fi.getAdapterConfig(library).get(
+////						adapterName);
+//				// FunctionDefinition fd = fi.getDef(extensionDef, adapterName);
+//
+//				String adapterClass = fi.getAdapterClass(adapterName, library);
+//				Class<?> c = null;
+//
+//				try {
+//					if (adapterClass != null) {
+//						c = Class.forName(adapterClass);
+//						Dictionary<String, Object> props = new Hashtable<String, Object>();
+//						props.put("adapterName", adapterName);
+//						props.put("adapterClass", c.getName());
+//						context.registerService(Class.class.getName(), c, props);
+//					}
+//				} catch (Exception e) {
+//					logger.error("Error loading class for adapterClass: "
+//							+ adapterClass, e);
+//				}
+//
+//			}
+		} catch (Throwable e) {
+			logger.error("Trouble starting NavajoAdapters bundle", e);
+		}
+
+	}
+
+	@Override
+	public void stop(BundleContext bundleContext) throws Exception {
+		super.stop(bundleContext);
 	}
 
 }

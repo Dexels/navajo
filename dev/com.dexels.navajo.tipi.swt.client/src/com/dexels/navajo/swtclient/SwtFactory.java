@@ -27,6 +27,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -42,6 +44,9 @@ import com.dexels.navajo.document.Selection;
  */
 public class SwtFactory {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SwtFactory.class);
     private static SwtFactory instance;
 
     /**
@@ -118,7 +123,7 @@ public class SwtFactory {
             }
 
         } catch (NavajoException e) {
-            e.printStackTrace();
+            logger.error("Error: ",e);
 
         }
         return new TextCellEditor(tv);
@@ -147,8 +152,8 @@ public class SwtFactory {
         tv.getTable().setLayout(layout);
         Message m = element.getMessage(0);
         List<Property> al = m.getAllProperties();
-        System.err.println("Got properties for table. Count: "+al.size());
-        System.err.println("AL: "+al);
+        logger.info("Got properties for table. Count: "+al.size());
+        logger.info("AL: "+al);
         CellEditor[] editors = new CellEditor[al.size()];
         String[] colNames = new String[al.size()];
         int count = 0;

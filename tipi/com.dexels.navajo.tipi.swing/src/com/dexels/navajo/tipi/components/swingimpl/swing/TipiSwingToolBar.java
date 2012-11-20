@@ -5,30 +5,18 @@ import java.awt.FlowLayout;
 
 import javax.swing.JToolBar;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class TipiSwingToolBar extends JToolBar {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1643352915642094872L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingToolBar.class);
+	
+	
 	public TipiSwingToolBar() {
 		setAlignmentX(0);
 		setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -62,7 +50,7 @@ public class TipiSwingToolBar extends JToolBar {
 
 	@Override
 	public void setOpaque(boolean isOpaque) {
-		System.err.println("Setting opaque. Thread: "
+		logger.debug("Setting opaque. Thread: "
 				+ Thread.currentThread().getName());
 		super.setOpaque(isOpaque);
 	}

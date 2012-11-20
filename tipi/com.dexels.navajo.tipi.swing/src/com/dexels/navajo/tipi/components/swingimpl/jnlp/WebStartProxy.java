@@ -13,6 +13,9 @@ import javax.jnlp.PersistenceService;
 import javax.jnlp.ServiceManager;
 import javax.jnlp.UnavailableServiceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.internal.HttpResourceLoader;
 import com.dexels.navajo.tipi.internal.TipiResourceLoader;
@@ -20,7 +23,9 @@ import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 import com.dexels.navajo.tipi.internal.swing.cache.impl.CachedHttpJnlpResourceLoader;
 
 public class WebStartProxy {
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(WebStartProxy.class);
 	public static void appendJnlpCodeBase(SwingTipiContext myContext,
 			String loaderType) {
 		try {
@@ -34,7 +39,7 @@ public class WebStartProxy {
 			myContext.setGenericResourceLoader(resourceCodeBase.toString());
 		} catch (javax.jnlp.UnavailableServiceException e) {
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 
 	}
@@ -48,8 +53,7 @@ public class WebStartProxy {
 					.lookup("javax.jnlp.BasicService");
 			URL codeURL = new URL(bs.getCodeBase(), relativePath);
 			if (codeURL.getProtocol().equals("file") && useCache) {
-				System.err
-						.println("Using cache on file-based webstart. Not all that efficient.");
+				logger.info("Using cache on file-based webstart. Not all that efficient.");
 			}
 			if (useCache) {
 				try {
@@ -57,8 +61,7 @@ public class WebStartProxy {
 					return new CachedHttpJnlpResourceLoader(relativePath,
 							codeURL, manager);
 				} catch (javax.jnlp.UnavailableServiceException e) {
-					System.err
-							.println("Cached HTTP/JNLP cacheloader failed. Returning uncached loader.");
+					logger.info("Cached HTTP/JNLP cacheloader failed. Returning uncached loader.");
 					return new HttpResourceLoader(codeURL.toString());
 				}
 			} else {
@@ -67,7 +70,7 @@ public class WebStartProxy {
 			}
 		} catch (javax.jnlp.UnavailableServiceException e) {
 
-			e.printStackTrace();
+			logger.error("Error detected",e);
 			throw new IOException("Error loading basic webstartservice: ", e);
 		}
 
@@ -83,23 +86,23 @@ public class WebStartProxy {
 				URL base = bs.getCodeBase();
 				String[] muffins = ps.getNames(base);
 				for (int i = 0; i < muffins.length; i++) {
-					System.err.println("Parsing muffin: " + muffins[i]);
+					logger.debug("Parsing muffin: " + muffins[i]);
 
 					FileContents fc = ps.get(new URL(base, muffins[i]));
-					System.err.println("Entry: " + muffins[i] + " readable: "
+					logger.debug("Entry: " + muffins[i] + " readable: "
 							+ fc.canRead() + " writable: " + fc.canWrite()
 							+ " size: " + fc.getLength() + " maxsize: "
 							+ fc.getMaxLength());
 				}
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		} catch (UnavailableServiceException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	}
 
@@ -109,7 +112,7 @@ public class WebStartProxy {
 					.lookup("javax.jnlp.BasicService");
 			return bs != null;
 		} catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error("Error detected",e);
 			return false;
 		}
 	}
@@ -128,12 +131,12 @@ public class WebStartProxy {
 					properties.put(key, pr.getString(key));
 				}
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			} catch (IOException e) {
-				// System.err.println("No arguments. Ok. ");
+				// logger.debug("No arguments. Ok. ");
 			}
 		} catch (UnavailableServiceException e) {
-			// System.err.println("No jnlp detected");
+			// logger.debug("No jnlp detected");
 		}
 	}
 }

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.MappingUtils;
-import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 
@@ -23,6 +22,7 @@ import com.dexels.navajo.server.UserException;
  *
  */
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class ResultSetMap implements Mappable {
 
     public String columnName;
@@ -31,7 +31,7 @@ public class ResultSetMap implements Mappable {
     public RecordMap [] records;
 
     private HashMap values = new HashMap();
-    private ArrayList order = new ArrayList();
+	private ArrayList order = new ArrayList();
 
     public final void load(Access access) throws MappableException, UserException {}
 
@@ -51,7 +51,7 @@ public class ResultSetMap implements Mappable {
         this.columnName = name;
     }
 
-    public final RecordMap [] getRecords() throws UserException {
+    public final RecordMap [] getRecords() {
         if (records == null) {
           ArrayList list = new ArrayList();
           for (int i = 0; i < order.size(); i++) {
@@ -67,7 +67,7 @@ public class ResultSetMap implements Mappable {
         return records;
     }
 
-    public final Object getColumnValue() throws UserException {
+    public final Object getColumnValue() {
         return values.get(columnName);
     }
 
@@ -103,7 +103,7 @@ public class ResultSetMap implements Mappable {
         return values.get(upperC);
     }
 
-    public final String getType(final String columnName) throws UserException, TMLExpressionException {
+    public final String getType(final String columnName) throws UserException {
         return MappingUtils.determineNavajoType(getColumnValue(columnName));
     }
 

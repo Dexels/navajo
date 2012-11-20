@@ -9,6 +9,9 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 import com.dexels.navajo.tipi.util.XMLParseException;
@@ -17,12 +20,15 @@ import com.dexels.navajo.tipi.util.XMLParseException;
 
 public class XMLExtension  {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(XMLExtension.class);
+	
 	private final List<String> thirdPartyList = new ArrayList<String>();
 	private final List<String> includes = new ArrayList<String>();
 	private final List<String> requires = new ArrayList<String>();
 	private final List<String> jars = new ArrayList<String>();
 	private String id = null;
-	private String requiresMain = null;
 	private String description = null;
 	private String project = null;
 	
@@ -39,9 +45,9 @@ public class XMLExtension  {
 			is.close();
 			loadXML(xx);
 		} catch (XMLParseException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		
 	}
@@ -131,12 +137,12 @@ public class XMLExtension  {
 
 
 	public final boolean isMainImplementation() {
-		System.err.println("Need to implement main detection");
+		logger.info("Need to implement main detection");
 		return false;
 	}
 
 	public final  String requiresMainImplementation() {
-		return requiresMain;
+		return null;
 	}
 
 }

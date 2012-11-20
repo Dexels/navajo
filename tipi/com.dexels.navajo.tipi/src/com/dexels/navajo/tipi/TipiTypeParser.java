@@ -36,11 +36,6 @@ public abstract class TipiTypeParser implements Serializable {
 	public abstract Object parse(TipiComponent source, String expression,
 			TipiEvent event);
 
-//	protected TipiContext myContext;
-//
-//	public void setContext(TipiContext tc) {
-//		myContext = tc;
-//	}
 
 	public Class<?> getReturnType() {
 		return myReturnType;
@@ -50,7 +45,4 @@ public abstract class TipiTypeParser implements Serializable {
 		myReturnType = c;
 	}
 
-	public String toString(Object o, TipiComponent source) {
-		return o == null ? "null" : o.toString();
-	}
 }

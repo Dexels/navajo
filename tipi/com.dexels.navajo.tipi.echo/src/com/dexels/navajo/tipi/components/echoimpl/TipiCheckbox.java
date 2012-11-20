@@ -4,6 +4,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Alignment;
 import nextapp.echo2.app.CheckBox;
 import nextapp.echo2.app.Style;
@@ -29,7 +32,9 @@ import echopointng.image.URLImageReference;
 public class TipiCheckbox extends TipiEchoComponentImpl {
 
 	private static final long serialVersionUID = 7429128639740380936L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiCheckbox.class);
 private CheckBox myButton;
 
 //  private boolean iAmEnabled = true;
@@ -52,10 +57,10 @@ private CheckBox myButton;
 				Map<String,Object> m = new HashMap<String, Object>();
 				m.put("value", myButton.isSelected());
 				performTipiEvent("onSelectionChanged", m, false);
-				System.err.println("Checkbox clicked!");
+				logger.info("Checkbox clicked!");
 				getAttributeProperty("selected").setAnyValue(myButton.isSelected());
 			} catch (TipiException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 			
 		}});
@@ -70,10 +75,10 @@ private CheckBox myButton;
         if ("icon".equals(name)) {
             if (object instanceof URL) {
                 URL u = (URL) object;
-//                System.err.println("Setting URL icon for button: "+u);
+//                logger.info("Setting URL icon for button: "+u);
                 myButton.setIcon(new URLImageReference(u));
             } else {
-                System.err.println("Can not set button icon: I guess it failed to parse (TipiButton)");
+                logger.info("Can not set button icon: I guess it failed to parse (TipiButton)");
             }
         }        if (name.equals("enabled")) {
           // Just for the record.

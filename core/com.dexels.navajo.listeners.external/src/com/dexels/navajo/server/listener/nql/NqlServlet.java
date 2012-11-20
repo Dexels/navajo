@@ -12,19 +12,44 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
-import com.dexels.navajo.client.nql.NQLContext;
+import com.dexels.navajo.client.context.ClientContext;
+import com.dexels.navajo.client.context.NavajoRemoteContext;
+import com.dexels.navajo.client.nql.NqlContextApi;
 import com.dexels.navajo.client.nql.OutputCallback;
 import com.dexels.navajo.document.NavajoException;
 
 public class NqlServlet extends HttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1365612001727053259L;
+	private NqlContextApi nqlContext;
+	private ClientContext clientContext;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(NqlServlet.class);
+
+	public NqlContextApi getNqlContext() {
+		return nqlContext;
+	}
+
+	public void setNqlContext(NqlContextApi nqlContext) {
+		this.nqlContext = nqlContext;
+	}
+	public void clearNqlContext(NqlContextApi nqlContext) {
+		this.nqlContext = null;
+	}
+
+	public ClientContext getClientContext() {
+		return clientContext;
+	}
+
+	public void setClientContext(ClientContext clientContext) {
+		this.clientContext = clientContext;
+	}
+
+	public void clearClientContext(ClientContext clientContext) {
+		this.clientContext = null;
+	}
+
 	
 	@Override
 	protected void doGet(final HttpServletRequest req,
@@ -37,38 +62,41 @@ public class NqlServlet extends HttpServlet {
 		String ping = req.getParameter("ping");
 
 		if (ping != null) {
-			if (!checkPing(username, password, req, resp)) {
+			if (!checkPing(username, resp)) {
 				throw new ServletException("ping failed.");
 			}
 			return;
 		}
-		NQLContext nc = new NQLContext();
-		nc.setupClient(server, username, password, req.getServerName(),
+		NavajoRemoteContext nrc =  new NavajoRemoteContext();
+		nrc.setupClient(server, username, password, req.getServerName(),
 				req.getServerPort(), req.getContextPath(),"/PostmanLegacy");
 
-		nc.setCallback(new OutputCallback() {
-
-			public void setOutputType(String mime) {
-				resp.setContentType(mime);
-			}
-
-			public void setContentLength(long l) {
-				resp.setContentLength((int) l);
-				resp.setHeader("Accept-Ranges", "none");
-				resp.setHeader("Connection", "close");
-			}
-
-			public OutputStream getOutputStream() {
-				try {
-					return resp.getOutputStream();
-				} catch (IOException e) {
-					logger.error("Error: ", e);
-					return null;
-				}
-			}
-		});
+		
+		NqlContextApi nc = getNqlContext();//new NQLContext();
+		nc.setNavajoContext(getClientContext());
+		
 		try {
-			nc.executeCommand(query);
+			nc.executeCommand(query,new OutputCallback() {
+
+				public void setOutputType(String mime) {
+					resp.setContentType(mime);
+				}
+
+				public void setContentLength(long l) {
+					resp.setContentLength((int) l);
+					resp.setHeader("Accept-Ranges", "none");
+					resp.setHeader("Connection", "close");
+				}
+
+				public OutputStream getOutputStream() {
+					try {
+						return resp.getOutputStream();
+					} catch (IOException e) {
+						logger.error("Error: ", e);
+						return null;
+					}
+				}
+			});
 		} catch (ClientException e) {
 			logger.error("Error: ", e);
 		} catch (NavajoException e) {
@@ -79,13 +107,20 @@ public class NqlServlet extends HttpServlet {
 		// String
 	}
 
-	private boolean checkPing(String username, String password,
-			HttpServletRequest req, HttpServletResponse resp)
+	private boolean checkPing(String username, HttpServletResponse resp)
 			throws IOException {
 		resp.setContentType("text/plain");
 		resp.getWriter().write(
 				"Hi " + username + " looks like we're in business!\nPING OK\n");
 		return true;
+	}
+
+	public void activate() {
+		logger.info("Activating NQL Servlet");
+	}
+
+	public void deactivate() {
+		logger.info("Deactivating NQL Servlet");
 	}
 
 }

@@ -58,7 +58,6 @@ public class NavajoClientJabber {
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void processPushNavajo(Navajo n,String agentId) {
 		try {
 			n.write(System.err);

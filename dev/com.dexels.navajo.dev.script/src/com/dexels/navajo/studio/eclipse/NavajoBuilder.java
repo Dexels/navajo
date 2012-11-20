@@ -9,6 +9,7 @@ package com.dexels.navajo.studio.eclipse;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -115,16 +116,9 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
             break;
 
         case FULL_BUILD:
-            ArrayList compileList = new ArrayList();
-              fullBuild(compileList, script, compiled, monitor, script, "");
+            List<NavajoScriptCompilation> compileList = new ArrayList<NavajoScriptCompilation>();
             System.err.println("Fullbuild would compile: " + compileList.size());
-            try {
-                compileScript(compileList, monitor);
-            } catch (CoreException e1) {
-                NavajoScriptPluginPlugin.getDefault().log(e1);
-            } catch (NavajoPluginException e1) {
-                NavajoScriptPluginPlugin.getDefault().log(e1);
-            }
+            compileScript(compileList);
             break;
 
         default:
@@ -132,17 +126,9 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
         }
     }
 
-    /**
-     * @param script
-     * @param compiled
-     * @param monitor
-     */
-    private void fullBuild(ArrayList compilationList, IFolder scriptDir, IFolder compiled, IProgressMonitor monitor, IFolder currentDir,
-            String currentPrefix) throws CoreException {
-    
-    }
 
-    public void clean(int kind, final IFolder compileDir, IProgressMonitor ipm) throws CoreException {
+
+    public void clean(final IFolder compileDir) throws CoreException {
         System.err.println("Cleaning folder....");
         NavajoScriptPluginPlugin.getDefault().getMetaDataHandler().flushAll();
         cleanFolder(compileDir);
@@ -160,9 +146,9 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
 
     public void buildScriptDelta(final IProgressMonitor monitor, IResourceDelta ird, final IFolder scriptDir, final IFolder compileDir)
             throws CoreException, NavajoPluginException {
-        final ArrayList changed = new ArrayList();
-        final ArrayList removed = new ArrayList();
-        final IFolder configFolder = NavajoScriptPluginPlugin.getDefault().getNavajoConfigFolder(getProject());
+        final List<IResource> changed = new ArrayList<IResource>();
+        final List<IResource> removed = new ArrayList<IResource>();
+//        final IFolder configFolder = NavajoScriptPluginPlugin.getDefault().getNavajoConfigFolder(getProject());
         final IFolder adapterFolder = NavajoScriptPluginPlugin.getDefault().getAdaptersFolder(getProject());
                 
         IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
@@ -199,9 +185,9 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                     if (fold.getFullPath().isPrefixOf(scriptDir.getFullPath())) {
                         return true;
                     }
-                    if (fold.getFullPath().equals(configFolder)) {
-                       return true;
-                    }
+//                    if (fold.getFullPath().equals(configFolder)) {
+//                       return true;
+//                    }
                     return false;
                 }
                 if (!(resource instanceof IFile)) {
@@ -268,9 +254,8 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
             ird.accept(visitor);
             try {
                 monitor.beginTask("Compiling TSL", changed.size());
-                String name = ird.getFullPath().toString();
-                ArrayList compilation = new ArrayList();
-                Set compilationSet = new HashSet();
+                List<NavajoScriptCompilation> compilation = new ArrayList<NavajoScriptCompilation>();
+                Set<IPath> compilationSet = new HashSet<IPath>();
                 for (Iterator iter = changed.iterator(); iter.hasNext();) {
                     if (monitor.isCanceled()) {
                         System.err.println("CANCELLED!");
@@ -301,7 +286,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                         // Experimental
                         continue;
                     }
-                    final String scriptString = script;
+//                    final String scriptString = script;
                     // if (scriptPackage.getName().equals("include")) {
                     // System.err.println("Skipping include dir...");
                     // continue;
@@ -313,8 +298,8 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
 
                     // TODO Create a better way to filter out non-xml files.
 
-                    String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptName(element, element.getProject());
-                    IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(element.getProject(), scriptName);
+//                    String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptName(element, element.getProject());
+//                    IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(element.getProject(), scriptName);
                     long modstamp = element.getModificationStamp();
                     IFile compiledFile = NavajoScriptPluginPlugin.getDefault().getCompiledScriptFile(getProject(), script);
                     if (compiledFile != null) {
@@ -332,21 +317,12 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                     return;
                 }
                 if (compilation.size() > 0) {
-                     compileScript(compilation, monitor);
+                     compileScript(compilation);
                 }
                 for (Iterator it = removed.iterator(); it.hasNext();) {
                     IFile element = (IFile) it.next();
                     if (element==null) {
                         continue;
-                    }
-                    String scriptName = NavajoScriptPluginPlugin.getDefault().getScriptName(element, element.getProject());
-                    IFile tmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(element.getProject(), scriptName);
-                    if (tmlFile.exists()) {
-                        NavajoScriptPluginPlugin.getDefault().deleteFile(tmlFile, monitor);
-                    }
-                    IFile compiledFile = NavajoScriptPluginPlugin.getDefault().getCompiledScriptFile(element.getProject(), scriptName);
-                    if (compiledFile.exists()) {
-                        NavajoScriptPluginPlugin.getDefault().deleteFile(compiledFile, monitor);
                     }
                 }
             } catch (Throwable e1) {
@@ -357,7 +333,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
              }
    }
 
-    private void compileScript(final ArrayList compilationList, IProgressMonitor monitor) throws CoreException, NavajoPluginException {
+    private void compileScript(final List<NavajoScriptCompilation> compilationList)  {
 //        System.err.println("Compilelist: " + compilationList.size());
         if (compilationList.size() > VERY_LARGE_COMPILE_THRESHOLD) {
             NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().syncExec(new Runnable() {
@@ -385,13 +361,8 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
         
     }
 
-    private String getConfigDir() throws NavajoPluginException {
-        IFolder ff = NavajoScriptPluginPlugin.getDefault().getNavajoConfigFolder(getProject());
-        return ff.getRawLocation().toOSString();
-	}
-
-	private void addCompilation(ArrayList compilationList, final IFolder scriptDir, final IFolder compileDir, final String scriptPackageName,
-            final String script) throws CoreException {
+	private void addCompilation(List<NavajoScriptCompilation> compilationList, final IFolder scriptDir, final IFolder compileDir, final String scriptPackageName,
+            final String script) {
         NavajoScriptCompilation nsc = new NavajoScriptCompilation(script, scriptPackageName, scriptDir.getLocation().toString(), compileDir
                 .getLocation().toString());
         compilationList.add(nsc);

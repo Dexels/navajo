@@ -2,13 +2,13 @@ package com.dexels.navajo.functions.util;
 
 
 import java.security.AccessControlException;
-import java.util.Map;
 
-import navajo.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import navajocore.Version;
 
 import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 
 public class FunctionFactoryFactory {
@@ -16,12 +16,14 @@ public class FunctionFactoryFactory {
 	private static volatile FunctionFactoryInterface instance = null;
 	private static Object semaphore = new Object();
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(FunctionFactoryFactory.class);
+	
 	private FunctionFactoryFactory() {	
 	}
 	
 
 		
-	@SuppressWarnings("unchecked")
 	public static FunctionFactoryInterface getInstance() {
 //		FunctionFactoryInterface fii;
 		
@@ -45,17 +47,20 @@ public class FunctionFactoryFactory {
 
 			try {
 				if(Version.getDefaultBundleContext()!=null) {
-					System.err.println("OSGi environment detected!");
+					logger.debug("OSGi environment detected!");
 					func = "com.dexels.navajo.functions.util.OsgiFunctionFactory";
+				} else {
+					logger.debug("no OSGi environment detected!");
+
 				}
 			} catch (Throwable t) {
-				System.err.println("NO OSGi environment detected!");
+				logger.debug("NO OSGi environment detection failed!");
 			}
 			
 			if ( func != null ) {
 				try {
 					Class<? extends FunctionFactoryInterface> c = (Class<? extends FunctionFactoryInterface>) Class.forName(func);
-					instance = (FunctionFactoryInterface) c.newInstance();
+					instance = c.newInstance();
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}

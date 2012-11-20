@@ -21,6 +21,9 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
@@ -33,6 +36,9 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 @SuppressWarnings("unchecked")
 public class TslMetaDataHandler implements MetaDataListener {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TslMetaDataHandler.class);
     private final TreeMap callsScriptMap = new TreeMap();
     private final Map calledByScriptMap = new TreeMap();
     private final Map includesScriptMap = new TreeMap();
@@ -136,13 +142,13 @@ public class TslMetaDataHandler implements MetaDataListener {
             e.parseFromReader(fr);
             parseMetaData(e);
         } catch (IOException e) {
-            e.printStackTrace();
+        	logger.error("Error: ", e);
         }  finally {
             if (fr!=null) {
                 try {
                     fr.close();
                 } catch (IOException e1) {
-                      e1.printStackTrace();
+                	logger.error("Error: ", e1);
                 }
             }
         }
@@ -225,7 +231,7 @@ public class TslMetaDataHandler implements MetaDataListener {
             fr = new FileReader(f);
             xe.parseFromReader(fr);
         } catch (IOException e) {
-            e.printStackTrace();
+        	logger.error("Error: ", e);
         } finally {
             if (fr!=null) {
                 try {

@@ -61,9 +61,9 @@ public class TipiScroller extends TipiPanel {
 
 	// public TipiComponent getTipiComponentByPath(String path) {
 	// TipiComponent tc = super.getTipiComponentByPath(path);
-	// System.err.println("TipiScroller.getTipiComponentByPath: Looking for: "+path+" children # "+getChildCount());
-	// System.err.println("I am: "+toString());
-	// System.err.println(">> CHILDDUMP: "+childDump());
+	// logger.debug("TipiScroller.getTipiComponentByPath: Looking for: "+path+" children # "+getChildCount());
+	// logger.debug("I am: "+toString());
+	// logger.debug(">> CHILDDUMP: "+childDump());
 	// return tc;
 	// }
 

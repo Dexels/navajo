@@ -11,6 +11,8 @@
 package org.akrogen.tkui.css.core.impl.engine;
 
 import org.akrogen.tkui.css.core.engine.CSSErrorHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Basic implementation for CSS Engine error handlers which print stack trace of
@@ -23,12 +25,15 @@ import org.akrogen.tkui.css.core.engine.CSSErrorHandler;
 public class CSSErrorHandlerImpl implements CSSErrorHandler {
 
 	public static final CSSErrorHandler INSTANCE = new CSSErrorHandlerImpl();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CSSErrorHandlerImpl.class);
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.akrogen.tkui.css.core.engine.CSSErrorHandler#error(java.lang.Exception)
 	 */
 	public void error(Exception e) {
-		e.printStackTrace();
+		logger.error("Error: ",e);
 	}
 }

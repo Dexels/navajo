@@ -30,6 +30,8 @@ import javax.media.opengl.glu.GLU;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -54,6 +56,9 @@ import com.jogamp.opengl.util.texture.TextureIO;
 public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventListener {
 
 	private static final long serialVersionUID = -7457560373249638162L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TestJOGLTribeView.class);
 	private GLCanvas canvas;
 	private Texture fireIcon;
 	private Texture tribeIcon;
@@ -132,7 +137,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 			}
 
 			public void mouseClicked(MouseEvent e) {
-				System.err.println("Clicked: " + mouseOverTribe);
+				logger.info("Clicked: " + mouseOverTribe);
 
 				int tribe_id = (mouseOverTribe - mouseOverTribe % tribeModFactor) / 100;
 //				int user_id = mouseOverTribe % tribeModFactor;
@@ -211,7 +216,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		int calculatedTribe = (int)(theta/ per_tribe);
 		boolean log_on = true;
 		
-		System.err.println("Selected: " + selectedTribe + ", calc: "+ calculatedTribe);
+		logger.info("Selected: " + selectedTribe + ", calc: "+ calculatedTribe);
 		if(selectedTribe != calculatedTribe && log_on){
 			focusOnTribe(calculatedTribe);
 		}
@@ -299,7 +304,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 				radiusAnim.start();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -315,7 +320,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 			parms.put("tribe", tribe.getProperty("Name").getValue());
 			performTipiEvent("onSelectionChanged", parms, false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 	
@@ -341,7 +346,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 //			fpsText = format.format(fps);
 //			int x = drawable.getWidth() - fpsWidth - 5;
 //			int y = drawable.getHeight() - 30;
-//			System.err.println("FPS: " + fpsText);
+//			logger.info("FPS: " + fpsText);
 //		}
 //	}
 
@@ -450,6 +455,9 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		}
 	}
 	
+	/**
+	 * @param gl  
+	 */
 	private final void compileStars(GL gl){
 		try{
 			int size = 2000;
@@ -459,7 +467,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 				stars.add(new Point2D.Float(size * r.nextFloat(), size*r.nextFloat()));
 			}
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -467,7 +475,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		GL2 gl = gl1.getGL2();
 		try {		
 			if (rooms != null) {
-				System.err.println("aap");
+				logger.info("aap");
 				rt.setPointCount(rooms.getArraySize());
 				rt.setScale(aspx, aspy);
 				ArrayList<Point2D.Double> locations = rt.getPoints(theta);
@@ -475,7 +483,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 				gl.glTranslatef(width / 2, height / 2, 0f);
 
 				for (int i = 0; i < rooms.getArraySize(); i++) {
-					System.err.println("Noot: " + i);
+					logger.info("Noot: " + i);
 					if (mode == GL2.GL_SELECT) {
 						gl.glLoadName(tribeModFactor * i);
 					}
@@ -532,7 +540,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 					PointRotationPanel prt = new PointRotationPanel(occupants);
 					ArrayList<Point2D.Double> occLoc = prt.getPoints(Math.PI / 4f);
 					for (int j = 0; j < occupants; j++) {					
-						System.err.println("miets: " + j);
+						logger.info("miets: " + j);
 						
 						if (mode == GL2.GL_SELECT) {
 							gl.glLoadName(tribeModFactor * i + j + 1);
@@ -631,7 +639,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 				gl.glPopMatrix();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 	
@@ -692,7 +700,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		zoom_height = zoom / aspect_ratio;
 
 		/* create 5x5 pixel picking region near cursor location */
-		glu.gluPickMatrix((double) pickPoint.x, (double) (viewport[3] - pickPoint.y),// 
+		glu.gluPickMatrix(pickPoint.x, viewport[3] - pickPoint.y,// 
 				15.0, 15.0, viewport, 0);
 
 		// Zooming
@@ -749,9 +757,9 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		tribeIcon = loadTexture("fire_small.png");
 		float values[] = new float[2];
 		gl.glGetFloatv(GL2.GL_LINE_WIDTH_GRANULARITY, values, 0);
-		System.out.println("GL2.GL_LINE_WIDTH_GRANULARITY value is " + values[0]);
+		logger.info("GL2.GL_LINE_WIDTH_GRANULARITY value is " + values[0]);
 		gl.glGetFloatv(GL2.GL_LINE_WIDTH_RANGE, values, 0);
-		System.out.println("GL.GL_LINE_WIDTH_RANGE values are " + values[0] + ", " + values[1]);
+		logger.info("GL.GL_LINE_WIDTH_RANGE values are " + values[0] + ", " + values[1]);
 		gl.glEnable(GL.GL_LINE_SMOOTH);
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
@@ -800,6 +808,9 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 	/*
 	 * Draw a string in OpenGL
 	 */
+	/**
+	 * @param gl  
+	 */
 	private void drawString(GL gl, String text, int xpos, int ypos, Color color, float scale) {
 		float r = color.getRed() / 255f;
 		float g = color.getGreen() / 255f;
@@ -822,7 +833,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
              t.setTexParameteri(GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
              t.setTexParameteri(GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
         } catch (IOException e) {
-            System.err.println("Error loading " + filename);
+            logger.info("Error loading " + filename);
         }
         return t;
     }

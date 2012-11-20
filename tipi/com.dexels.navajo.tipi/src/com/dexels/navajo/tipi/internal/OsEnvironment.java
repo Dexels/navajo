@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.internal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /*
  * @(#)OSEnvironment.java
 
@@ -30,6 +33,11 @@ public class OsEnvironment {
 	 * Private Constructor. OSEnvironment is not instantiable.
 	 * 
 	 */
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(OsEnvironment.class);
+	
 	private OsEnvironment() {
 	}
 
@@ -75,11 +83,11 @@ public class OsEnvironment {
 			else if (OS.indexOf("sunos") > -1) {
 				p = r.exec("/bin/env");
 			} else {
-				System.out.println("OS not known: " + OS);
+				logger.info("OS not known: " + OS);
 				return null;
 			}
 		} catch (java.io.IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			System.err
 					.println("Could not determine the OS. Perhaps a security issue?");
 			return null;
@@ -106,7 +114,7 @@ public class OsEnvironment {
 				envVars.setProperty(key, value);
 			}
 		} catch (java.io.IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return envVars;
 	}
@@ -233,10 +241,10 @@ public class OsEnvironment {
 		try {
 			java.util.Properties p = OsEnvironment.get();
 			p.list(System.out);
-			System.out.println("the current value of TEMP is : "
+			logger.info("the current value of TEMP is : "
 					+ p.getProperty("TEMP"));
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 }

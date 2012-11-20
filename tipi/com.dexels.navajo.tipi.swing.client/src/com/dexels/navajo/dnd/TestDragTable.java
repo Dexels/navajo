@@ -12,8 +12,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.table.DefaultTableModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TestDragTable extends JTable implements Runnable {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TestDragTable.class);
 	private static final long serialVersionUID = -8822849623440273745L;
 	JTable jt;
 
@@ -31,7 +37,7 @@ public class TestDragTable extends JTable implements Runnable {
 		jt = this;
 		jt.setModel(dtm);
 		jt.setDragEnabled(true);
-		System.out.println(jt.getDropMode());
+		logger.info(""+jt.getDropMode());
 		jt.setDropMode(DropMode.ON_OR_INSERT);
 		jt.setTransferHandler(new TransferHandler2());
 		JFrame jf = new JFrame();
@@ -60,7 +66,7 @@ public class TestDragTable extends JTable implements Runnable {
 
 		@Override
 		public boolean importData(TransferSupport support) {
-			System.err.println("Importing");
+			logger.info("Importing");
 			return super.importData(support);
 		}
 

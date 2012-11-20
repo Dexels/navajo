@@ -2,12 +2,16 @@ package com.dexels.navajo.tipi.internal;
 
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class TipiStackElement implements Serializable {
-	/**
-	 * 
-	 */
+
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiStackElement.class);
 	private static final long serialVersionUID = 5599683663955830486L;
 	private String title;
 	private int lineNr;
@@ -77,17 +81,17 @@ public class TipiStackElement implements Serializable {
 	}
 
 	public void dumpStack(String message) {
-		System.err.println("Exception: " + message);
+		logger.error("Exception: " + message);
 		dumpStack();
 	}
 
 	public void dumpStack() {
-		System.err.println(createLine());
+		logger.error(createLine());
 		if (getParent() != null) {
 			getParent().dumpStack();
 		} else {
 			if (rootCause != null && rootCause != this) {
-				System.err.println("Caused by:");
+				logger.error("Caused by:");
 				rootCause.dumpStack();
 			}
 		}

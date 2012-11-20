@@ -29,7 +29,7 @@ public class RandomInt extends FunctionInterface {
     Integer min = (Integer)operands.get(0);
     Integer max = (Integer)operands.get(1);
     int range = max.intValue() - min.intValue();
-    int result = Math.abs(r.nextInt()) % range;
+    int result = Math.abs(r.nextInt()+1) % range;
     return new Integer(result+min.intValue());
 //    return new Integer(range);
   }

@@ -5,6 +5,9 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import tipi.TipiApplicationInstance;
 
 import com.dexels.navajo.document.Operand;
@@ -18,7 +21,10 @@ public class EvalHandler implements URIHandler, ParameterHandler {
 	private static final long serialVersionUID = 2451838360127835405L;
 	private Map<String, String[]> parameters = null;
 	private final TipiApplicationInstance application;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(EvalHandler.class);
+	
 	public EvalHandler(TipiApplicationInstance tai) {
 		this.application = tai;
 	}
@@ -33,10 +39,6 @@ public class EvalHandler implements URIHandler, ParameterHandler {
 	public DownloadStream handleURI(URL context, String relativeUri) {
 		application.setEvalUrl(context,relativeUri);
 		application.setContextUrl(context);
-		if (!relativeUri.startsWith("eval")) {
-			System.err.println("Not matching: " + relativeUri);
-		}
-
 		if (parameters == null) {
 			return null;
 		}
@@ -64,13 +66,13 @@ public class EvalHandler implements URIHandler, ParameterHandler {
 					}
 					return downloadStream;
 				} else {
-					System.err.println("Not evaluating non binary.");
+					logger.debug("Not evaluating non binary.");
 					return null;
 				}
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			return null;
 		}
 

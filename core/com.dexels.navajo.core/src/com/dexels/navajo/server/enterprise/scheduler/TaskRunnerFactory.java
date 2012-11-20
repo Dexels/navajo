@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.util.AuditLog;
 
 public class TaskRunnerFactory {
@@ -32,19 +33,21 @@ public class TaskRunnerFactory {
 		synchronized (semaphore) {
 
 			if ( instance == null ) {
-			
+				logger.warn("OSGi compatibility problem: This part will fail.");
 				try {
-					Class c = Class.forName("com.dexels.navajo.scheduler.Clock");
-					ClockInterface dummy = (ClockInterface) c.newInstance();
+					Class<ClockInterface> c = (Class<ClockInterface>) Class.forName("com.dexels.navajo.scheduler.Clock");
+					ClockInterface dummy = c.newInstance();
 					Method m = c.getMethod("getInstance",(Class[])null);
-					ClockInterface myClock = (ClockInterface) m.invoke(dummy, (Object[])null);
+					// TODO Shouldn't we geep a link to the clock object?
+//					ClockInterface myClock = (ClockInterface) 
+					m.invoke(dummy, (Object[])null);
 				} catch (Exception e) {
 
 					AuditLog.log("INIT", "WARNING: Clock not available", Level.WARNING);
 				}	
 				try {
-					Class c = Class.forName("com.dexels.navajo.scheduler.TaskRunner");
-					TaskRunnerInterface dummy = (TaskRunnerInterface) c.newInstance();
+					Class<TaskRunnerInterface> c = (Class<TaskRunnerInterface>) Class.forName("com.dexels.navajo.scheduler.TaskRunner");
+					TaskRunnerInterface dummy = c.newInstance();
 					Method m = c.getMethod("getInstance",(Class[]) null);
 					instance = (TaskRunnerInterface) m.invoke(dummy, (Object[])null);
 				} catch (ClassNotFoundException e) {
@@ -56,25 +59,25 @@ public class TaskRunnerFactory {
 					instance = new DummyTaskRunner();
 				}	
 				try {
-					Class c = Class.forName("com.dexels.navajo.workflow.WorkFlowManager");
+					Class<?> c = Class.forName("com.dexels.navajo.workflow.WorkFlowManager");
 					Object dummy = c.newInstance();
 					Method m = c.getMethod("getInstance", (Class[])null);
 					m.invoke(dummy, (Object[])null);
 				} catch (ClassNotFoundException e) {
 					logger.warn("Workflow manager not available");
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+					logger.error("Error: ", e);
 					AuditLog.log("INIT", "WARNING: Workflow not available", Level.WARNING);
 				}	
 				try {
-					Class c = Class.forName("com.dexels.navajo.scheduler.ListenerRunner");
+					Class<GenericThread> c = (Class<GenericThread>) Class.forName("com.dexels.navajo.scheduler.ListenerRunner");
 					Object dummy = c.newInstance();
 					Method m = c.getMethod("getInstance", (Class[])null);
 					m.invoke(dummy, (Object[])null);
 				} catch (ClassNotFoundException e) {
 					logger.warn("Listener Runner not available from classpath");
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+					logger.error("Error: ", e);
 					AuditLog.log("INIT", "WARNING: Listener Runner not available", Level.WARNING);
 				}	
 				

@@ -1,25 +1,19 @@
 package com.dexels.navajo.server;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.HashMap;
-import java.util.List;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
+
+import navajocore.Version;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.loader.NavajoClassLoader;
@@ -36,14 +30,15 @@ import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
+import com.dexels.navajo.server.monitoring.MonitorComponent;
+import com.dexels.navajo.server.monitoring.ServiceMonitor;
 
 /*
  * The default NavajoConfig class.
  * 
  */
-public final class NavajoConfig implements NavajoConfigInterface {
+public final class NavajoConfig extends FileNavajoConfig implements NavajoConfigInterface {
 
-	private static final int MAX_ACCESS_SET_SIZE = 50;
 	
 	public String adapterPath;
 	public String compiledScriptPath;
@@ -51,7 +46,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	public String scriptPath;
 	
 	private String repositoryClass = "com.dexels.navajo.server.SimpleRepository";
-	private String dbPath;
 	private String auditLevel;
 	private HashMap<String,Object> dbProperties = new HashMap<String,Object>();
 	public String store;
@@ -70,6 +64,8 @@ public final class NavajoConfig implements NavajoConfigInterface {
     private Message body;
     private boolean statisticsRunnerStarted = false;
     
+    private ServiceMonitor serviceMonitor = new MonitorComponent();
+    
     /**
      * Several supporting threads.
      */
@@ -78,20 +74,12 @@ public final class NavajoConfig implements NavajoConfigInterface {
     public String rootPath;
     private PersistenceManager persistenceManager;
     private String betaUser;
-    private InputStreamReader inputStreamReader = null;
     private String classPath = "";
     private boolean enableAsync = true;
     private boolean enableIntegrityWorker = true;
     private boolean enableLockManager = true;
     private boolean enableStatisticsRunner = true;
     private float asyncTimeout;
-    
-    public boolean monitorOn;
-    public String monitorUsers = null;
-    public String [] monitorUsersList = null;
-    public String monitorWebservices = null;
-    public String [] monitorWebservicesList = null;
-    public int monitorExceedTotaltime = -1;
 	private File rootFile;
 
     private static volatile NavajoConfig instance = null;
@@ -122,9 +110,8 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	 * 
 	 * @throws SystemException
 	 */
-	public NavajoConfig(InputStreamReader inputStreamReader, NavajoClassSupplier ncs, InputStream in, String externalRootPath, String servletContextRootPath)  throws SystemException {
+	public NavajoConfig(NavajoClassSupplier ncs, InputStream in, String externalRootPath, String servletContextRootPath)  throws SystemException {
 
-		this.inputStreamReader = inputStreamReader;
 		classPath = System.getProperty("java.class.path");
 		adapterClassloader = ncs;
 		// BIG NOTE: instance SHOULD be set at this point since instance needs to be known by classes
@@ -132,22 +119,10 @@ public final class NavajoConfig implements NavajoConfigInterface {
 		instance = this;
 		loadConfig(in, externalRootPath,servletContextRootPath);
 		myOs = ManagementFactory.getOperatingSystemMXBean();
-		
+		Version.registerNavajoConfig(this);
 	}
 
 	
-	public static void terminate() {
-		if(instance!=null) {
-			instance.shutdown();
-			instance=null;
-		}
-	}
-      
-	public void shutdown() {
-		// do shutdown stuff?
-	}
-	
-    @SuppressWarnings("unchecked")
 	private void loadConfig(InputStream in, String externalRootPath, String servletContextPath)  throws SystemException{
     	
    	if(servletContextPath!=null) {
@@ -211,20 +186,11 @@ public final class NavajoConfig implements NavajoConfigInterface {
     				properDir(rootPath +
     						body.getProperty("paths/compiled-scripts").
     						getValue()) : "");
-    		// Reading deprecated navajostore definition.
-    		this.dbPath = (body.getProperty("paths/navajostore") != null ?
-    				rootPath +
-    				body.getProperty("paths/navajostore").
-    				getValue() : null);
-    		if (dbPath != null) {
-    			System.err.println("WARNING: Using DEPRECATED navajostore configuration, use message based configuration instead.");
-    		}
-    		
     		
     		persistenceManager = PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", configPath);
     		
     		if(adapterClassloader == null) {
-    			if(!navajo.Version.osgiActive()) {
+    			if(!navajocore.Version.osgiActive()) {
         			adapterClassloader = new NavajoLegacyClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
         			logger.warn("Setting non-OSGi legacy adapter classloader: " + adapterClassloader);
     			} else {
@@ -233,7 +199,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		}
 
     		if(betaClassloader==null) {
-    			if(!navajo.Version.osgiActive()) {
+    			if(!navajocore.Version.osgiActive()) {
         			betaClassloader = new NavajoLegacyClassLoader(adapterPath, compiledScriptPath, true, getClass().getClassLoader());
     			} else {
     				adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
@@ -276,7 +242,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 						}
 					}
 					} catch (Throwable e) {
-						System.err.println("WARNING: DescriptionProvider not available");
+						logger.warn("DescriptionProvider not available (normal in OSGi)");
 					}
 				}
 			} 
@@ -288,7 +254,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		// Read navajostore parameters.
     		Message navajostore = body.getMessage("navajostore");
     		if (navajostore != null) {
-    			dbPath = (navajostore.getProperty("dbpath") != null ? rootPath + navajostore.getProperty("dbpath").getValue() : null);
     			String p = (navajostore.getProperty("dbport") != null ? navajostore.getProperty("dbport").getValue() : null);
     			store = (navajostore.getProperty("store") != null ? navajostore.getProperty("store").getValue() : null);
     			if (p != null) {
@@ -307,15 +272,15 @@ public final class NavajoConfig implements NavajoConfigInterface {
     		
 	
     		//System.err.println("USing repository = " + repository);
-    		Message maintenance = body.getMessage("maintenance-services");
-    		
-    		if ( maintenance != null ) {
-    			List<Property> propertyList = maintenance.getAllProperties();
-    			for (int i = 0; i < propertyList.size(); i++) {
-    				Property prop = propertyList.get(i);
-    				properties.put(prop.getName(), scriptPath + prop.getValue());
-    			}
-    		}
+//    		Message maintenance = body.getMessage("maintenance-services");
+//    		
+//    		if ( maintenance != null ) {
+//    			List<Property> propertyList = maintenance.getAllProperties();
+//    			for (int i = 0; i < propertyList.size(); i++) {
+//    				Property prop = propertyList.get(i);
+//    				properties.put(prop.getName(), scriptPath + prop.getValue());
+//    			}
+//    		}
     		
 //    		Message security = body.getMessage("security");
 //    		if (security != null) {
@@ -356,9 +321,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 					}
 				}
 			} else {
-				System.err.println("No jar path found");
 				jarFolder = new File(contextRoot,"WEB-INF/lib/");				
-				System.err.println("New jarfolder: "+jarFolder.getAbsolutePath());
 			}	
 		    					
     		maxAccessSetSize = (body.getProperty("parameters/max_webservices") == null ? MAX_ACCESS_SET_SIZE :
@@ -403,7 +366,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
 
     		
     	} catch (Throwable t) {
-    		t.printStackTrace(System.err);
     		throw new SystemException(-1, "Error reading server.xml configuration", t);
     	}
     	//System.out.println("COMPILE SCRIPTS: " + compileScripts);
@@ -486,6 +448,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     /*
      * Check whether asynchronous services are enabled.
      */
+    @Override
     public final boolean isAsyncEnabled() {
       return enableAsync;
     }
@@ -493,15 +456,9 @@ public final class NavajoConfig implements NavajoConfigInterface {
     /*
      * Gets the class path to be used for the compiling scripts.
      */
+    @Deprecated
     public final String getClassPath() {
       return this.classPath;
-    }
-
-    /*
-     * Returns the server.xml Navajo configuration document.
-     */
-    public final Navajo getConfiguration() {
-        return configuration;
     }
 
     /*
@@ -509,13 +466,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
      */
     public final String getCompiledScriptPath() {
         return compiledScriptPath;
-    }
-
-    /*
-     * Not used yet.
-     */
-    public final String getHibernatePath() {
-      return ( this.hibernatePath );
     }
 
     /*
@@ -536,27 +486,11 @@ public final class NavajoConfig implements NavajoConfigInterface {
         return resourcePath;
     }
     
-    public final HashMap<String,String> getProperties() {
-        return properties;
-    }
+//    public final HashMap<String,String> getProperties() {
+//        return properties;
+//    }
 
-    /**
-     * Opens a stream to the named bundle. (this method will add the .properties extension)
-     * Don't forget to close the stream when done.
-     * @param name
-     * @return
-     * @throws IOException
-     */
-    public InputStream getResourceBundle(String name) throws IOException {
-   	File adPath = new File(getAdapterPath());
-		File bundleFile = new File(adPath,name+".properties");
-		if(!bundleFile.exists()) {
-			System.err.println("Bundle: "+name+" not found. Resolved to non-existing file: "+bundleFile.getAbsolutePath());
-			return null;
-		}
-		FileInputStream fix = new FileInputStream(bundleFile);
-		return fix;
-    }
+
     /*
      * Gets the configuration path to the Navajo Instance.
      */
@@ -570,7 +504,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 
     // Added a cast, because I changed the type of classloader to generic class loader, so I can just use the system class loader as well...
     public final NavajoClassSupplier getClassloader() {
-    	return (NavajoClassSupplier) adapterClassloader;
+    	return adapterClassloader;
     }
 
     /*
@@ -626,48 +560,6 @@ public final class NavajoConfig implements NavajoConfigInterface {
     }
     
     /*
-     * Gets the root path of the Navajo Installation if it exists.
-     */
-    private final File getRootDirectory() {
-    	File f = new File(getRootPath());
-    	if (f.exists()) {
-			return f;
-		}
-    	File workingDir = new File(System.getProperty("user.dir"));
-    	File rootDir = new File(workingDir,getRootPath());
-    	return rootDir;
-    }
-    
-    /*
-	 * Gets a resource from the 'navajo-tester' dir. For example authorization/authorization.xml
-	 * Its preferrable to the other filthy accessors, like:
-	 * new FileInputStream(new File(configPath + "/authorization/InputData.xml") )
-	 * 
-	 * @path
-	 */
-    public final InputStream getResource(String path) {
-    	try {
-    		File f = getResourceFile(path);
-    		if(!f.exists()) {
-    			return null;
-    		}
-			return new FileInputStream(f);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-    }
-    
-    /* 
-     * Same as the getResource(path), only it returns a file. It would be cleaner not to use this function,
-     * to make the navajo-config pure inputstream-based. 
-     * 
-     */
-    public final File getResourceFile(String path) {
-    	return new File(getRootDirectory(),path);
-    }
-    
-    /*
      * Gets the asynchronous service store instance.
      */
     public final com.dexels.navajo.mapping.AsyncStore getAsyncStore() {
@@ -694,106 +586,18 @@ public final class NavajoConfig implements NavajoConfigInterface {
     /*
      * Gets the statistics runnner instance.
      */
+    @Override
     public final StatisticsRunnerInterface getStatisticsRunner() {
-       return StatisticsRunnerFactory.getInstance(dbPath, dbProperties, store);
+       return StatisticsRunnerFactory.getInstance(null, dbProperties, store);
    }
 
-    /*
-     * Gets an input stream for a specified script.
-     * 
-     */
-    public final InputStream getScript(String name) throws IOException {
-      return getScript(name,false);
-    }
-
-    public final InputStream getScript(String name, boolean useBeta) throws IOException {
-    	InputStream input;
-    	if (useBeta) {
-    		input = inputStreamReader.getResource(getScriptPath() + name + "_beta.xml");
-    		return input;
-    	} else {
-    		System.err.println("Not beta");
-    		String path = getScriptPath() + name + ".xml";
-			input = inputStreamReader.getResource(path);
-    		if(input==null) {
-        		path = getScriptPath() + name + ".tsl";
-    			input = inputStreamReader.getResource(path);
-    		}
-    		if(input==null) {
-    			System.err.println("No resource found");
-    			File f = new File(contextRoot,"scripts/"+name+".xml");
-    			if(!f.exists()) {
-    				f = new File(contextRoot,"scripts/"+name+".tsl");
-    			}
-    			System.err.println("Looking into contextroot: "+f.getAbsolutePath());
-    			if(f.exists()) {
-    				System.err.println("Retrieving script from servlet context: "+path);
-    				return new FileInputStream(f);
-    			}
-    		}
-    		return input;
-    	}
-    }
-
-    public final InputStream getTmlScript(String name) throws IOException {
-      return getTmlScript(name,false);
-    }
-    
+    @Override
     public File getContextRoot() {
    	 return contextRoot;
     }
 
-    public final InputStream getTmlScript(String name, boolean useBeta) throws IOException {
-    	InputStream input;
-    	if (useBeta) {
-    		input = inputStreamReader.getResource(getScriptPath() +  name + "_beta.tml");
-    		if (input == null)
-    			return getTmlScript(name, false);
-    		return input;
-    	} else {
-    		input = inputStreamReader.getResource(getScriptPath() + name + ".tml");
-    		return input;
-    	}
-    }
 
-    public final InputStream getTemplate(String name) throws IOException {
-      InputStream input = inputStreamReader.getResource(getScriptPath() + "/" + name + ".tmpl");
-      return input;
-    }
 
-    public final InputStream getConfig(String name) throws IOException {
-      InputStream input = inputStreamReader.getResource(getConfigPath() + "/" + name);
-      return input;
-    }
-
-    public final void writeConfig(String name, Navajo conf) throws IOException {
-      Writer output = new FileWriter(new File(getConfigPath() + name));
-      try {
-        conf.write(output);
-      }
-      catch (NavajoException ex) {
-        throw new IOException(ex.getMessage());
-      }
-      output.close();
-    }
-
-    public final Navajo readConfig(String name) throws IOException {
-    	InputStream is = inputStreamReader.getResource(getConfigPath() + name);
-    	try {
-    		if (is == null) {
-    			return null;
-    		}
-    		return NavajoFactory.getInstance().createNavajo(is);
-    	} finally {
-    		if ( is != null ) {
-    			try {
-    				is.close();
-    			} catch (Exception e) {
-    				// NOT INTERESTED.
-    			}
-    		}
-    	}
-    }
 
     private final String properDir(String in) {
         String result = in + (in.endsWith("/") ? "" : "/");
@@ -804,9 +608,10 @@ public final class NavajoConfig implements NavajoConfigInterface {
      * Clears all NavajoClassLoaders instances. Both the general classloader as well as each instantiated script
      * classloader.
      */
+    @Override
     public final synchronized void doClearCache() {
 
-    	if(!navajo.Version.osgiActive()) {
+    	if(!navajocore.Version.osgiActive()) {
     		adapterClassloader = new NavajoLegacyClassLoader(adapterPath, null, getClass().getClassLoader());
     		betaClassloader = new NavajoLegacyClassLoader(adapterPath, null, true, getClass().getClassLoader());
     		GenericHandler.doClearCache();
@@ -817,192 +622,39 @@ public final class NavajoConfig implements NavajoConfigInterface {
     /*
      * Clears all script classloaders.
      */
+    @Override
     public final synchronized void doClearScriptCache() {
     	GenericHandler.doClearCache();
     }
 
-    /*
-     * Not used.
-     */
-    public final synchronized void setNoScriptCaching() {
-        if (adapterClassloader instanceof NavajoClassLoader) {
-            if (adapterClassloader != null)
-                ((NavajoClassLoader) adapterClassloader).setNoCaching();
-        }
-  
-    }
+
     
-    /**
-     *
-     * BELOW WILL FOLLOW LOGIC FOR MONITORING WEBSERVICES.
-     *
-     */
-
-    /*
-     * Determine if a value matches any of the regexps in a list.
-     *
-     * @param value
-     * @param regExplist
-     * @return
-     */
-    private final boolean matchesRegexp(String value, String [] regExplist) {
-      if (regExplist == null) {
-        return true;
-      }
-
-      for (int i = 0; i < regExplist.length; i++) {
-        if (value.matches(regExplist[i])) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    /*
-     * Determine if access object needs full access log.
-     *
-     * @param a the full access log candidate
-     * @return whether full access log is required for access object.
-     */
-    public final boolean needsFullAccessLog(Access a) {
-      // Check whether compiledscript has debugAll set or whether access object has debug all set.
-      if ( a.isDebugAll() || ( a.getCompiledScript() != null && a.getCompiledScript().isDebugAll() ) ) {
-    	  return true;
-      }
-      
-      if (!monitorOn) {
-        return false;
-      }
-      if (
-           (monitorUsersList == null || matchesRegexp(a.rpcUser, this.monitorUsersList ) )&&
-           (monitorWebservicesList == null || matchesRegexp(a.rpcName, monitorWebservicesList) ) &&
-           (monitorExceedTotaltime == -1 || a.getTotaltime() >= monitorExceedTotaltime)
-          )
-      {
-        return true;
-      }
-      return false;
-    }
-
-    /**
-     * Check if full access log monitor is enabled.
-     *
-     * @return
-     */
-    public final boolean isMonitorOn() {
-      return monitorOn;
-    }
-
-    /**
-     * Set enabled/disable full access log monitor.
-     *
-     * @param monitorOn
-     */
-    public final void setMonitorOn(boolean monitorOn) {
-      this.monitorOn = monitorOn;
-    }
-
-    /*
-     * Get r.e. for user monitor filter. If null is returned all users should be logged.
-     *
-     * @return the current filter
-     */
-    public final String getMonitorUsers() {
-      return monitorUsers;
-    }
-
-    /*
-     * Set r.e. for user monitor filter. Null or empty string means no filter.
-     *
-     * @param monitorUsers
-     */
-    public final void setMonitorUsers(String monitorUsers) {
-      System.err.println("in setMonitorUsers(" + monitorUsers + ")");
-      if (monitorUsers == null || monitorUsers.equals("")) {
-        this.monitorUsersList = null;
-        this.monitorUsers = null;
-        return;
-      }
-      this.monitorUsers = monitorUsers;
-      StringTokenizer list = new StringTokenizer(monitorUsers, ",");
-      System.err.println("Found " + list.countTokens() + " regexp elements");
-      monitorUsersList = new String[list.countTokens()];
-      int i = 0;
-      while (list.hasMoreTokens()) {
-        monitorUsersList[i++] = list.nextToken();
-      }
-    }
-
-    /*
-      * Set r.e. for webservice monitor filter. Null or empty string means no filter.
-      *
-      * @param monitorWebservices
-      */
-
-    public final void setMonitorWebservices(String monitorWebservices) {
-      System.err.println("in setMonitorWebservices(" + monitorWebservices + ")");
-      if (monitorWebservices == null || monitorWebservices.equals("")) {
-        this.monitorWebservicesList = null;
-        this.monitorWebservices = null;
-        return;
-      }
-      this.monitorWebservices = monitorWebservices;
-      StringTokenizer list = new StringTokenizer(monitorWebservices, ",");
-      monitorWebservicesList = new String[list.countTokens()];
-      System.err.println("Found " + list.countTokens() + " regexp elements");
-      int i = 0;
-      while (list.hasMoreTokens()) {
-        monitorWebservicesList[i++] = list.nextToken();
-      }
-    }
-
-    /*
-     * Get r.e. for webservice monitor filter. If null is returned all users should be logged.
-     *
-     * @return the current filter
-     */
-    public final String getMonitorWebservices() {
-      return monitorWebservices;
-    }
-    
-    /*
-     * Get the time in millis over which an access needs to be fully logged.
-     *
-     * @return
-     */
-    public final int getMonitorExceedTotaltime() {
-      return monitorExceedTotaltime;
-    }
-
-    /**
-     * Set the time in millis over which an access needs to be fully logged.
-     *
-     * @param monitorExceedTotaltime
-     */
-    public final void setMonitorExceedTotaltime(int monitorExceedTotaltime) {
-      this.monitorExceedTotaltime = monitorExceedTotaltime;
-    }
 
 	/**
 	 * @param classloader The classloader to set.
 	 */
+    @Override
 	public void setClassloader(NavajoClassSupplier classloader) {
 		this.adapterClassloader = classloader;
 	}
 	
+    @Override
 	public File getJarFolder() {
 		return jarFolder;
 	}
 
+    @Override
 	public String getInstanceName() {
 		return instanceName;
 	}
 
+    @Override
 	public DescriptionProviderInterface getDescriptionProvider() {
 //		System.err.println("Getting description provider. Config hash: "+hashCode());
 		return myDescriptionProvider;
 	}
 	
+    @Override
 	public double getCurrentCPUload() {
 		if ( myOs != null ) {
 			return ( myOs.getSystemLoadAverage() / myOs.getAvailableProcessors() );
@@ -1010,36 +662,31 @@ public final class NavajoConfig implements NavajoConfigInterface {
 		else return 1.0;
 	}
 
+    @Override
 	public String getInstanceGroup() {
 		return instanceGroup;
 	}
 	
-
-	public static void main(String[] args) throws SystemException {
-		NavajoConfig nc = new NavajoConfig(null,null,null,null,null);
-		System.err.println(":: "+nc.getCurrentCPUload());
-	}
-
+    @Override
 	public float getAsyncTimeout() {
 		return asyncTimeout;
 	}
 
-	public boolean isEnableAsync() {
+	private boolean isEnableAsync() {
 		return enableAsync;
 	}
 
+    @Override
 	public boolean isEnableStatisticsRunner() {
 		return enableStatisticsRunner;
 	}
 
-	public String getDbPath() {
-		return dbPath;
-	}
-
+    @Override
 	public boolean isCompileScripts() {
 		return compileScripts;
 	}
 
+    @Override
 	public int getMaxAccessSetSize() {
 		return maxAccessSetSize;
 	}
@@ -1048,7 +695,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 		this.maxAccessSetSize = maxAccessSetSize;
 	}
 
-	public Message getMessage(String msg) {
+	private Message getMessage(String msg) {
 		if ( body != null ) {
 			return body.getMessage(msg);
 		} else {
@@ -1056,8 +703,78 @@ public final class NavajoConfig implements NavajoConfigInterface {
 		}
 	}
 
+    @Override
 	public String getCompilationLanguage() {
 		return compilationLanguage;
 	}
-	
+
+
+	@Override
+	public boolean needsFullAccessLog(Access a) {
+		return serviceMonitor.needsFullAccessLog(a);
+	}
+
+
+	@Override
+	public boolean isMonitorOn() {
+		return serviceMonitor.isMonitorOn();
+	}
+
+
+	@Override
+	public void setMonitorOn(boolean monitorOn) {
+		serviceMonitor.setMonitorOn(monitorOn);
+	}
+
+
+	@Override
+	public String getMonitorUsers() {
+		return serviceMonitor.getMonitorUsers();
+	}
+
+
+	@Override
+	public void setMonitorUsers(String monitorUsers) {
+		serviceMonitor.setMonitorUsers(monitorUsers);
+	}
+
+
+	@Override
+	public void setMonitorWebservices(String monitorWebservices) {
+		serviceMonitor.setMonitorWebservices(monitorWebservices);
+	}
+
+
+	@Override
+	public String getMonitorWebservices() {
+		return serviceMonitor.getMonitorWebservices();
+	}
+
+
+	@Override
+	public int getMonitorExceedTotaltime() {
+		return serviceMonitor.getMonitorExceedTotaltime();
+	}
+
+
+	@Override
+	public void setMonitorExceedTotaltime(int monitorExceedTotaltime) {
+		serviceMonitor.setMonitorExceedTotaltime(monitorExceedTotaltime);
+		
+	}
+
+
+	@Override
+	public Object getParameter(String name) {
+		final Message message = getMessage("parameters");
+		if(message==null) {
+			return null;
+		}
+		Property p = message.getProperty(name);
+		if(p==null) {
+			return null;
+		}
+		return p.getTypedValue();
+	}
+
 }

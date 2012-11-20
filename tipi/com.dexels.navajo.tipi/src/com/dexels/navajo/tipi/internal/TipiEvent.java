@@ -8,6 +8,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
@@ -42,7 +45,10 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 	private String myEventName;
 
 	private Runnable afterEvent = null;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiEvent.class);
+	
 	private Map<String, TipiValue> eventParameterMap = new HashMap<String, TipiValue>();
 
 	public TipiEvent() {
@@ -147,7 +153,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 
 			if (current.getName().equals("block")) {
 				TipiActionBlock ta = context
-						.instantiateDefaultTipiActionBlock(getComponent());
+						.instantiateDefaultTipiActionBlock();
 				ta.load(current, getComponent(), this);
 				appendTipiExecutable(ta);
 				continue;
@@ -192,7 +198,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 		} catch (TipiSuspendException e) {
 			// ignore
 		} catch (Throwable ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 	}
 
@@ -261,7 +267,6 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 			// ignore
 			throw e;
 		} catch (TipiBreakException e) {
-			System.err.println("break detected");
 			throw e;
 		} catch (Throwable ex) {
 			dumpStack(ex.getMessage());
@@ -269,7 +274,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 					"Error performing event: " + getEventName()
 							+ " for component: " + getComponent().getPath()
 							+ " action: " + last + " : " + ex.getMessage(), ex);
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 		getContext().debugLog(
 				"event   ",

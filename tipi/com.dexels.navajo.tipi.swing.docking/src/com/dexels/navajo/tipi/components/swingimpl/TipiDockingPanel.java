@@ -5,6 +5,9 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiDockable;
@@ -22,6 +25,10 @@ import com.javadocking.model.FloatDockModel;
 public class TipiDockingPanel extends TipiPanel {
 
 	private static final long serialVersionUID = 2055356408721147231L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiDockingPanel.class);
+	
 	DockModel dockModel;
 	TipiSwingSplitDock myContainer;
 	@Override
@@ -72,7 +79,7 @@ public class TipiDockingPanel extends TipiPanel {
 				final int position = pos;
 				runSyncInEventThread(new Runnable(){
 					public void run(){
-						System.err.println("--> Adding doc to toplevel");
+						logger.info("--> Adding doc to toplevel");
 						myContainer.addChildDock((Dock)c, new Position(position));
 					}
 				});
@@ -84,7 +91,7 @@ public class TipiDockingPanel extends TipiPanel {
 
 	@Override
 	public void removeFromContainer(Object c) {
-//		System.err.println("Removing: );
+//		logger.info("Removing: );
 		if(c instanceof Dock){
 			dockModel.removeRootDock((Dock)c);
 		}
@@ -127,7 +134,7 @@ public class TipiDockingPanel extends TipiPanel {
 			});
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 	
@@ -141,7 +148,7 @@ public class TipiDockingPanel extends TipiPanel {
 			});
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 	

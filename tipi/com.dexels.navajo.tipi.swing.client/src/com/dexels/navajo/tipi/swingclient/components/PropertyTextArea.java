@@ -10,10 +10,16 @@ import javax.swing.JComponent;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 
 public class PropertyTextArea extends JTextArea implements PropertyControlled {
 	private static final long serialVersionUID = 6952361729861228490L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PropertyTextArea.class);
 	private String textValue;
 	private Property initProperty = null;
 
@@ -50,7 +56,7 @@ public class PropertyTextArea extends JTextArea implements PropertyControlled {
 			@Override
 			public void focusLost(FocusEvent e) {
 				textValue = getText();
-				System.err.println("MEMO FIELD: " + textValue);
+				logger.info("MEMO FIELD: " + textValue);
 				if (textValue != null) {
 					initProperty.setValue(textValue);
 				}
@@ -76,7 +82,7 @@ public class PropertyTextArea extends JTextArea implements PropertyControlled {
 		}
 		textValue = getText();
 		if (textValue != null) {
-			System.err.println("Setting ptopert: " + textValue);
+			logger.info("Setting ptopert: " + textValue);
 			initProperty.setValue(textValue);
 		}
 	}

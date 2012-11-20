@@ -5,19 +5,15 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
 
-import com.dexels.navajo.document.Message;
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.AfterWebServiceEmitter;
-import com.dexels.navajo.server.ConditionData;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.SystemException;
-import com.dexels.navajo.server.UserException;
 
 public class TestDispatcher implements DispatcherInterface {
 
@@ -27,186 +23,157 @@ public class TestDispatcher implements DispatcherInterface {
 		myConfig = injectedNavajoConfig;
 	}
 	
+	@Override
 	public File createTempFile(String prefix, String suffix) throws IOException {
 		return File.createTempFile(prefix, suffix);
 	}
 
-	public void init() {
-	}
+//	public void init() {
+//	}
 
+	@Override
 	public NavajoConfigInterface getNavajoConfig() {
 		return myConfig;
 	}
 
+	@Override
 	public Navajo handle(Navajo inMessage, boolean skipAuth)
 			throws FatalException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
+	@Override
 	public Navajo handle(Navajo inMessage) throws FatalException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
+	@Override
 	public Navajo handle(Navajo inMessage, Object userCertificate,
 			ClientInfo clientInfo) throws FatalException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
+	@Override
 	public String getApplicationId() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
+	@Override
 	public void setUseAuthorisation(boolean b) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
+	@Override
 	public Set<Access> getAccessSet() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public String getServerId() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
-	public Message[] checkConditions(ConditionData[] conditions,
-			Navajo inMessage, Navajo outMessage) throws NavajoException,
-			SystemException, UserException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
+	@Override
 	public String getThreadName(Access a) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
+	@Override
 	public long getRequestCount() {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
+	@Override
 	public long getUptime() {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
+	@Override
 	public boolean isBusy() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
+	@Override
 	public void doClearCache() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
+	@Override
 	public void doClearScriptCache() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
-	public String getEdition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getProduct() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	@Override
 	public int getRateWindowSize() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public float getRequestRate() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public Date getStartTime() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public File getTempDir() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getVendor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getVersion() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Navajo handle(Navajo inMessage, Object userCertificate)
-			throws FatalException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void setBroadcast(String message, int timeToLive,
-			String recipientExpression) {
-		// TODO Auto-generated method stub
 		
+		return 0;
 	}
 
+	@Override
+	public float getRequestRate() {
+		
+		return 0;
+	}
+
+	@Override
+	public Date getStartTime() {
+		return null;
+	}
+
+	@Override
+	public File getTempDir() {
+		return null;
+	}
+
+
+
+	@Override
 	public Navajo removeInternalMessages(Navajo doc) {
 		return doc;
 	}
 
+	@Override
 	public int getHealth(String resourceId) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
+	@Override
 	public int getWaitingTime(String resourceId) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
+	@Override
 	public boolean isAvailable(String resourceId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public void setHealth(String resourceId, int h) {
-		// TODO Auto-generated method stub
-		
 	}
 
-	public Navajo handle(Navajo inMessage, TmlRunnable initialRunnable, Object userCertificate) throws FatalException {
-		return handle(inMessage,userCertificate);
-	}
-
-	public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, String rpcName, String rpcUser,
-			Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	@Override
 	public Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public Navajo handle(Navajo inMessage, boolean skipAuth,
 			AfterWebServiceEmitter emit) throws FatalException {
-		return handle(inMessage,null);
+		return null;
 	}
 
 	@Override
@@ -215,7 +182,7 @@ public class TestDispatcher implements DispatcherInterface {
 			Throwable myException, String origThreadName,
 			boolean scheduledWebservice, boolean afterWebServiceActivated,
 			AfterWebServiceEmitter emit) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -223,20 +190,27 @@ public class TestDispatcher implements DispatcherInterface {
 	public Navajo handle(Navajo inMessage, TmlRunnable initialRunnable,
 			Object userCertificate, ClientInfo clientInfo)
 			throws FatalException {
-		return handle(inMessage,userCertificate);
+		return null;
 	}
 
 	@Override
 	public void shutdown() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public Navajo handle(Navajo inMessage, boolean skipAuth,
 			AfterWebServiceEmitter emit, ClientInfo clientInfo)
 			throws FatalException {
-		// TODO Auto-generated method stub
+		
+		return null;
+	}
+
+	@Override
+	public void setBundleCreator(BundleCreator bc) {
+	}
+
+	@Override
+	public BundleCreator getBundleCreator() {
 		return null;
 	}
 

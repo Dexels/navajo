@@ -54,8 +54,7 @@ public class IncludeMap implements Mappable {
       }
     }
     catch (Exception e) {
-      e.printStackTrace(System.err);
-      throw new UserException( -1, e.getMessage());
+      throw new UserException( -1, e.getMessage(),e);
     }
 
   }

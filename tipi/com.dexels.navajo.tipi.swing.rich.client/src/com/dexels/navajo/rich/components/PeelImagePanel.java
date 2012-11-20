@@ -22,10 +22,15 @@ import javax.swing.JPanel;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PeelImagePanel extends JPanel {
 
 	private static final long serialVersionUID = -3731847583252859896L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PeelImagePanel.class);
 	private Point peelLoc = new Point(1, 1);
 	private Point animationOrigin;
 	private Point flipOverTarget;
@@ -352,7 +357,7 @@ public class PeelImagePanel extends JPanel {
 						repaint();
 						firePeelComplete(true);
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}else{
 					firePeelComplete(false);

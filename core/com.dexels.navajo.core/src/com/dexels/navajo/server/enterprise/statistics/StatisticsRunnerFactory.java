@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.logging.Level;
 
-import navajo.Version;
+import navajocore.Version;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -21,7 +21,6 @@ public class StatisticsRunnerFactory {
 	private static Object semaphore = new Object();
 	private final static Logger logger = LoggerFactory.getLogger(StatisticsRunnerFactory.class);
 	
-	@SuppressWarnings("unchecked")
 	public static final StatisticsRunnerInterface getInstance(String storePath, Map parameters, String storeClass) {
 		if ( instance != null ) {
 			return instance;
@@ -42,7 +41,7 @@ public class StatisticsRunnerFactory {
 					} catch (ClassNotFoundException e) {
 						logger.warn("Statistics runner not available from classpath.");
 					} catch (Exception e) {
-						AuditLog.log("INIT", "WARNING: StatisticsRunnner not available", e,Level.WARNING);
+						AuditLog.log("WARNING: StatisticsRunnner not available", e,Level.WARNING);
 						instance = new DummyStatisticsRunner();
 					}	
 				}
@@ -52,7 +51,6 @@ public class StatisticsRunnerFactory {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private static StatisticsRunnerInterface getStatisticsRunnerInstance(String storePath,
 			Map parameters, String storeClass) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException,
@@ -64,6 +62,7 @@ public class StatisticsRunnerFactory {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static StatisticsRunnerInterface getStatisticsRunnerInstanceOSGi(String storePath,
 			Map parameters, String storeClass) throws InvalidSyntaxException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		BundleContext bc = null;

@@ -1,15 +1,20 @@
 package com.dexels.navajo.events;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.management.AttributeChangeNotification;
 import javax.management.MBeanNotificationInfo;
 import javax.management.Notification;
 import javax.management.NotificationBroadcasterSupport;
 import javax.management.NotificationListener;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.events.types.ChangeNotificationEvent;
 import com.dexels.navajo.events.types.LevelEvent;
@@ -26,19 +31,23 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 
 	private volatile static NavajoEventRegistry instance = null;
 	
-	private final HashMap<Class<? extends NavajoEvent>, HashSet<NavajoListener>> registry = 
-															new HashMap<Class<? extends NavajoEvent>, HashSet<NavajoListener>>();
+	private final Map<Class<? extends NavajoEvent>, Set<NavajoListener>> registry = 
+															new ConcurrentHashMap<Class<? extends NavajoEvent>, Set<NavajoListener>>();
 	
 	/**
 	 * Map contains JMX monitored eventtypes.
 	 */
-	private final HashSet<String> monitoredEvents = new HashSet<String>();
-	private final HashMap<String,HashSet<String>> monitorLeveledEvents = new HashMap<String,HashSet<String>>();
+	private final Set<String> monitoredEvents = Collections.newSetFromMap( new ConcurrentHashMap<String,Boolean>() );
+	private final Map<String,HashSet<String>> monitorLeveledEvents = new ConcurrentHashMap<String,HashSet<String>>();
 	
 	private final static Object semaphore = new Object();
 	public static long notificationSequence = 0;
 	
 	private final static String id = "Navajo Event Registry";
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoEventRegistry.class);
 	
 	public static void clearInstance() {
 		instance = null;
@@ -84,9 +93,9 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		
 		synchronized (semaphore) {
 			
-			HashSet<NavajoListener> registered = registry.get(type);
+			Set<NavajoListener> registered = registry.get(type);
 			if ( registered == null ) {
-				registered = new HashSet<NavajoListener>();
+				registered = Collections.newSetFromMap( new ConcurrentHashMap<NavajoListener,Boolean>() );
 				registry.put(type, registered);
 			}
 			registered.add(l);
@@ -101,7 +110,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	public void removeListener(Class<? extends NavajoEvent> type, NavajoListener l) {
 		synchronized (semaphore) {
-			HashSet<NavajoListener> registered = registry.get(type);
+			Set<NavajoListener> registered = registry.get(type);
 			registered.remove(l);
 		}
 	}
@@ -145,10 +154,11 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 * 
 	 * @param ne
 	 * @param ignoreProxyListeners, if set to true, listeners of class NavajoEventProxy are ignored to prevent event ping-pong.
+	 * 
 	 */
 	public void publishAsynchronousEvent(final NavajoEvent ne, boolean ignoreProxyListeners) {
-
-		//System.err.println("Asynchronous Event Triggered: " + ne.getClass());
+		// TODO ignoreProxyListeners is actually not used. Is that correct?
+		//logger.info("Asynchronous Event Triggered: " + ne.getClass());
 		publishMonitoredEvent(ne);
 		
 		Set<NavajoListener> copy = getInterestedParties(ne);
@@ -163,7 +173,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 						}
 					}.start();
 				} catch (Throwable t) {
-					t.printStackTrace(System.err);
+					logger.error("Error: ", t);
 				}
 			}
 		}
@@ -186,7 +196,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	public void publishEvent(NavajoEvent ne, boolean ignoreProxyListeners) {
 
-		//System.err.println("Synchronous Event Triggered: " + ne.getClass());
+		//logger.info("Synchronous Event Triggered: " + ne.getClass());
 		publishMonitoredEvent(ne);
 		
 		Set<NavajoListener> copy = getInterestedParties(ne);
@@ -201,7 +211,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 						nl.onNavajoEvent(ne);
 					}
 				} catch (Throwable t) {
-					t.printStackTrace(System.err);
+					logger.error("Error: ", t);
 				}
 			}
 		}
@@ -216,18 +226,8 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		publishEvent(ne, false);
 	}
 	
-	private final Set<NavajoListener> getInterestedParties(NavajoEvent ne) {
-		synchronized (semaphore) {
-			HashSet<NavajoListener> copy = null; 
-			HashSet<NavajoListener> registered = registry.get(ne.getClass());
-			if ( registered != null ) {
-				copy = new HashSet<NavajoListener>();
-				copy.addAll(registered);
-				return copy;
-			} else {
-				return null;
-			}
-		}
+	private final Set<NavajoListener> getInterestedParties(NavajoEvent ne) {		
+		return registry.get(ne.getClass());
 	}
 
 	/**
@@ -241,10 +241,10 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		while ( iter.hasNext() ) {
 			Class<? extends NavajoEvent> s = iter.next();
 			if ( s.equals(type) ) {
-				HashSet<NavajoListener> listeners = registry.get(s);
+				Set<NavajoListener> listeners = registry.get(s);
 				Iterator<NavajoListener> all = listeners.iterator();
 				while ( all.hasNext() ) {
-					NavajoListener nl = (NavajoListener) all.next();
+					NavajoListener nl = all.next();
 					if ( !ignoreEventProxy || !( nl instanceof NavajoEventProxyInterface ) ) {
 						return true;
 					}
@@ -282,11 +282,11 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	public void handleNotification(Notification notification, Object handback) {
 
-		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getType() );
-		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getMessage() );
-		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSequenceNumber() );
-		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getTimeStamp() );
-		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSource() );		
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getType() );
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getMessage() );
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSequenceNumber() );
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getTimeStamp() );
+		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSource() );		
 
 	}
 
@@ -310,8 +310,8 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 //		NavajoEventRegistry n = NavajoEventRegistry.getInstance();
 //		n.addListener(NavajoEvent.class, new NavajoEventProxy());
 //		n.addListener(NavajoEvent.class, null);
-//		System.err.println(">>>> " + n.isMonitoredEvent(NavajoEvent.class, true));
-//		System.err.println(">>>> " + n.isMonitoredEvent(TribeMemberDownEvent.class, true));
+//		logger.info(">>>> " + n.isMonitoredEvent(NavajoEvent.class, true));
+//		logger.info(">>>> " + n.isMonitoredEvent(TribeMemberDownEvent.class, true));
 //	}
 
 }

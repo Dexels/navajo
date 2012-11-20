@@ -406,14 +406,14 @@ private final static Logger logger = LoggerFactory
  
   }
 
-/**
- * @deprecated
- */
-  @Deprecated
-public void read(java.io.InputStream stream) throws NavajoException {
-    InputStreamReader isr = new InputStreamReader(stream);
-    read(isr);
-  }
+///**
+// * @deprecated
+// */
+//  @Deprecated
+//public void read(java.io.InputStream stream) throws NavajoException {
+//    InputStreamReader isr = new InputStreamReader(stream);
+//    read(isr);
+//  }
 
 
 
@@ -474,20 +474,10 @@ public void write(OutputStream stream, boolean condense, String method) throws N
     super.write(stream);
 }
 
-//public void printElement(Writer sw, int indent) throws IOException {
-////    sw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-//    super.printElement(sw, indent);
-//}
-/** @deprecated
- * Create a new navajo using a stream in the NavajoFactory
- * @see com.dexels.navajo.document.Navajo#read(java.io.Reader)
+
+/**
+ * @param r  
  */
-@Deprecated
-public void read(Reader stream) throws NavajoException {
-     
-}
-
-
 public void disposeReader(Reader r) {
     
 }

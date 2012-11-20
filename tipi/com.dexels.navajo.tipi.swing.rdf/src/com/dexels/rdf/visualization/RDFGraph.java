@@ -13,6 +13,8 @@ import javax.media.opengl.glu.GLU;
 
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
@@ -24,6 +26,10 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 
 public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 	private static final long serialVersionUID = -3851994275022643825L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(RDFGraph.class);
+	
 	public static HashMap<String, String> namespaces = new HashMap<String, String>();
 	private HashMap<String, RDFObject> rdfObjects = new HashMap<String, RDFObject>();
 
@@ -201,7 +207,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -263,7 +269,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 		zoom_height = zoom / aspect_ratio;
 
 		/* create 5x5 pixel picking region near cursor location */
-		glu.gluPickMatrix((double) pickPoint.x, (double) (viewport[3] - pickPoint.y), 10.0, 10.0, viewport, 0);
+		glu.gluPickMatrix(pickPoint.x, viewport[3] - pickPoint.y, 10.0, 10.0, viewport, 0);
 
 		// Zooming
 		gl.glOrtho(zoom, width - zoom, zoom_height, height - zoom_height, 0f, 1f);
@@ -307,7 +313,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 				}
 			}
 		}
-		// System.err.println("ii: " + ii + ", jj " + jj);
+		// logger.info("ii: " + ii + ", jj " + jj);
 		if (ii > -1) {
 			selectedRDFObject = jj;
 		} else {
@@ -315,6 +321,12 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 		}
 	}
 
+	/**
+	 * 
+	 * @param drawable
+	 * @param modeChanged
+	 * @param deviceChanged
+	 */
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
 	}
 
@@ -322,9 +334,9 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 		GL2 gl = drawable.getGL().getGL2();
 		float values[] = new float[2];
 		gl.glGetFloatv(GL2.GL_LINE_WIDTH_GRANULARITY, values, 0);
-		System.out.println("GL.GL_LINE_WIDTH_GRANULARITY value is " + values[0]);
+		logger.info("GL.GL_LINE_WIDTH_GRANULARITY value is " + values[0]);
 		gl.glGetFloatv(GL2.GL_LINE_WIDTH_RANGE, values, 0);
-		System.out.println("GL.GL_LINE_WIDTH_RANGE values are " + values[0] + ", " + values[1]);
+		logger.info("GL.GL_LINE_WIDTH_RANGE values are " + values[0] + ", " + values[1]);
 		gl.glEnable(GL.GL_LINE_SMOOTH);
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
@@ -357,7 +369,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 			String url = (String) compMeth.getEvaluatedParameterValue("url", event);
 			String type = (String) compMeth.getEvaluatedParameterValue("ns", event);
 			namespaces.put(type, url);
-			System.err.println("Namespace added: " + type + ": " + url);
+			logger.info("Namespace added: " + type + ": " + url);
 		}
 		if("setViewDepth".equals(name)){
 			int depth = (Integer) compMeth.getEvaluatedParameterValue("depth", event);
@@ -369,7 +381,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 	}
 	
 	private void clear(){
-		System.err.println("Clearing..");
+		logger.info("Clearing..");
 		rdfObjects.clear();
 		currentRDFObject = null;
 		previousPanPoint = new Point(0,0);
@@ -477,7 +489,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 			rdf = new RDFObject(url, nat[0], nat[1]);
 			rdf.setId(rdfObjects.size());
 		} else {
-			System.err.println("WARNING: Not created, no name/type determined for [" + url + "]");
+			logger.info("WARNING: Not created, no name/type determined for [" + url + "]");
 		}
 		return rdf;
 	}
@@ -506,8 +518,15 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 		return pair;
 	}
 
-	/*
-	 * Draw a string in OpenGL
+	/**
+	 * 
+	 * @param gl
+	 * @param text
+	 * @param xpos
+	 * @param ypos
+	 * @param color
+	 * @param alpha
+	 * @param scale
 	 */
 	public void drawString(GL gl, String text, int xpos, int ypos, Color color, float alpha, float scale) {
 		float r = color.getRed() / 255f;

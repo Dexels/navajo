@@ -6,6 +6,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiException;
@@ -14,7 +17,10 @@ import com.dexels.navajo.tipi.headless.HeadlessTipiContext;
 public class AbstractTipiTest  {
 
 	private HeadlessTipiContext myContext = null;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(AbstractTipiTest.class);
+	
 	public HeadlessTipiContext getContext() {
 		return myContext;
 	}
@@ -30,7 +36,7 @@ public class AbstractTipiTest  {
 		
 		myContext = (HeadlessTipiContext) HeadlessApplicationInstance
 				.initialize(definition, tipiDir, properties, ed);
-		System.err.println("Resource loader set: " + tipiDir.getAbsolutePath());
+		logger.info("Resource loader set: " + tipiDir.getAbsolutePath());
 	}
 
 	public void injectEvent(String componentPath, String eventName)
@@ -55,7 +61,7 @@ public class AbstractTipiTest  {
 			String xx = myContext.getInfoBuffer();
 			assertEquals(xx, expectInfoBuffer);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 }

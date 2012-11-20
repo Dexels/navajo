@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -27,6 +30,9 @@ public class TipiDebugOutput extends TipiAction {
 	 */
 	private static final long serialVersionUID = -1427497523393178499L;
 
+	private final static Logger logger = LoggerFactory
+		.getLogger(TipiDebugOutput.class);
+
 	public TipiDebugOutput() {
 	}
 
@@ -34,13 +40,13 @@ public class TipiDebugOutput extends TipiAction {
 			throws com.dexels.navajo.tipi.TipiBreakException,
 			com.dexels.navajo.tipi.TipiException {
 		Operand value = getEvaluatedParameter("value", event);
-		System.err.println("******** DEBUG *********");
+		logger.info("******** DEBUG *********");
 		if (value != null) {
-			System.err.println("VALUE: >" + value.value + "<");
-			System.err.println("TYPE: >" + value.type + "<");
+			logger.info("VALUE: >" + value.value + "<");
+			logger.info("TYPE: >" + value.type + "<");
 		} else {
-			System.err.println("NULL EVALUATION!");
+			logger.info("NULL EVALUATION!");
 		}
-		System.err.println("******** END *********");
+		logger.info("******** END *********");
 	}
 }

@@ -2,13 +2,17 @@ package tipi;
 
 import java.io.Serializable;
 
+import navajo.ExtensionDefinition;
+
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.functions.TipiCoreFunctionDefinition;
 
 public class TipiCoreExtension extends TipiAbstractXMLExtension implements Serializable {
 
 	private static final long serialVersionUID = -1916256809513988908L;
+//	private final Set<ServiceRegistration> functionRegs = new HashSet<ServiceRegistration>();
 
 	public TipiCoreExtension() {
 		super();
@@ -20,12 +24,15 @@ public class TipiCoreExtension extends TipiAbstractXMLExtension implements Seria
 
 	@Override
 	public void start(BundleContext context) throws Exception {
+		super.start(context);
 		registerTipiExtension(context);
-		// register as 'special service, so components can 'require' a core, as this is always the case.
+		ExtensionDefinition extensionDef = new TipiCoreFunctionDefinition();
+		registerAll(extensionDef);
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		super.stop(context);
 		deregisterTipiExtension(context);
 	}
 

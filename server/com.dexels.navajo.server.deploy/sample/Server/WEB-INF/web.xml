@@ -28,7 +28,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 
 	<servlet>
 		<servlet-name>Laszlo</servlet-name>
-		<servlet-class>com.dexels.navajo.server.listener.http.NavajoFilterServlet</servlet-class>
+		<servlet-class>com.dexels.navajo.server.listener.http.external.NavajoFilterServlet</servlet-class>
 		<init-param>
             <param-name>inputFilterClass</param-name>
             <param-value>com.dexels.navajo.server.listener.http.wrapper.laszlo.LaszloRequestWrapper</param-value>
@@ -41,7 +41,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	
 	<servlet>
 		<servlet-name>Nql</servlet-name>
-		<servlet-class>com.dexels.navajo.server.listener.nql.NqlServlet</servlet-class>
+		<servlet-class>com.dexels.navajo.server.listener.nql.legacy.NqlServlet</servlet-class>
 	</servlet>
 	
 
@@ -69,11 +69,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	    <param-value>2</param-value>
 	</context-param>
 	
-	<servlet>
-		<servlet-name>NavaDoc</servlet-name>
-		<servlet-class>com.dexels.navajo.util.navadoc.servlet.DocumentWebService</servlet-class>
-	</servlet>
-
 	<servlet-mapping>
 		<servlet-name>Comet</servlet-name>
 		<url-pattern>/Comet</url-pattern>
@@ -90,11 +85,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet-mapping>
 		<servlet-name>Rest</servlet-name>
 		<url-pattern>/Rest</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>NavaDoc</servlet-name>
-		<url-pattern>/NavaDoc</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>

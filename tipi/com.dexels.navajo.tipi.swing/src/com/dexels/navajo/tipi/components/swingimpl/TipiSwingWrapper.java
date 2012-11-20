@@ -3,13 +3,19 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.io.IOException;
 
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import tipi.MainApplication;
-import tipi.SwingTipiApplicationInstance;
+import tipiswing.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.tipi.TipiException;
 
 public class TipiSwingWrapper {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingWrapper.class);
+	
 	public static SwingTipiApplicationInstance runApp(BundleContext bundle, String appInstance) {
 		try {
 			SwingTipiApplicationInstance applicationInstance = MainApplication.runApp(bundle, appInstance);
@@ -17,9 +23,9 @@ public class TipiSwingWrapper {
 			applicationInstance.setCurrentContext(applicationInstance.createContext());
 			return applicationInstance;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 		return null;
 	}
@@ -31,7 +37,7 @@ public class TipiSwingWrapper {
 			applicationInstance.setCurrentContext(applicationInstance.createContext());
 			return applicationInstance;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 		return null;
 	}

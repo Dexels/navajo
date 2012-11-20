@@ -2,21 +2,21 @@ Bundle-Name: Navajo Jsp Server
 Bundle-SymbolicName: com.dexels.navajo.jsp.server
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.5.qualifier
+Bundle-Version: 1.1.7.qualifier
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.jsp;bundle-version="1.0.0",
- com.dexels.navajo.core;bundle-version="2.9.7"
+Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.7"
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.context,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.jsp.tags,
  com.dexels.navajo.version,
  javax.servlet;version="2.4.0",
  javax.servlet.http,
  javax.servlet.jsp;version="2.0.0",
  javax.servlet.jsp.el;version="2.0.0",
  javax.servlet.jsp.tagext;version="2.0.0",
- org.apache.tools.ant,
+ org.apache.tools.ant;resolution:=optional,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"
 Export-Package: com.dexels.navajo.installer,
@@ -25,3 +25,4 @@ Export-Package: com.dexels.navajo.installer,
  com.dexels.navajo.jsp.server.tags
 Bundle-ClassPath: .,
  lib/jhighlight-1.0.jar
+Bundle-Activator: navajojspserver.Version

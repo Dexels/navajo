@@ -31,6 +31,8 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -49,8 +51,10 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   private File servicesPath = null;
     
   // current service we last worked on
-  private String serviceName = null;
-
+  
+  private final static Logger logger = LoggerFactory
+		.getLogger(NavaDocTransformer.class);
+  
   // XML transformation
   private static DocumentBuilder dBuilder;
   private TransformerFactory tFactory = TransformerFactory.newInstance();
@@ -377,10 +381,9 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     } catch ( Exception e ) {
     	
     	this.errorText = "unable to transform source '" + sFileOrig + "': " + e;
-    	//System.err.println(errorText);
-    	e.printStackTrace( System.err );
+    	logger.error("Error: ", e);
     	
-    	this.setErrorText( body );
+    	this.setErrorText( );
     	
     	
     } finally {
@@ -398,7 +401,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   // ----------------------------------------------------  private methods
 
   // sets the error text into the document
-  private void setErrorText( Element body ) {
+  private void setErrorText( ) {
 
     Element p = this.dom.createElement( "p" );
 
@@ -415,7 +418,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     String titl =
       ( ( ( this.projectName != null ) &&
           ( this.projectName.length() > 0 ) ? this.projectName : "Web" )
-        + " Service: " ) + this.serviceName;
+        + " Service: " ) + "Unknown service";
 
     this.setHeaders( titl );
   } // private void setHeaders()

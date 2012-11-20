@@ -13,13 +13,17 @@ import javax.swing.JApplet;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import tipi.MainApplication;
 
 public class TipiApplet extends JApplet {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2086609397645022166L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiApplet.class);
+	
 	private SwingTipiContext myContext;
 
 	public TipiApplet() throws Exception {
@@ -30,7 +34,7 @@ public class TipiApplet extends JApplet {
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 		super.stop();
 	}
@@ -40,7 +44,7 @@ public class TipiApplet extends JApplet {
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 		super.destroy();
 	}
@@ -60,17 +64,17 @@ public class TipiApplet extends JApplet {
 //				arrrgs = MainApplication.parseBundleUrl(f);
 //				definition = arrrgs.get(arrrgs.size() - 1);
 //			} catch (IOException e) {
-//				e.printStackTrace();
+//				logger.error("Error detected",e);
 //			}
 //		}
 
 		String init = this.getParameter("init");
-		// System.err.println("LocationOnScreen: "+getLocationOnScreen());
+		// logger.debug("LocationOnScreen: "+getLocationOnScreen());
 		String laf = this.getParameter("tipilaf");
-		// System.err.println("Applet init laf: "+laf);
+		// logger.debug("Applet init laf: "+laf);
 		String tipiCodeBase = this.getParameter("tipiCodeBase");
 		String resourceCodeBase = this.getParameter("resourceCodeBase");
-		// System.err.println("my codebase: "+getCodeBase());
+		// logger.debug("my codebase: "+getCodeBase());
 		String switches = getParameter("args");
 		if (switches != null) {
 			StringTokenizer st = new StringTokenizer(switches, " ");
@@ -85,7 +89,7 @@ public class TipiApplet extends JApplet {
 						.toString();
 				arguments.add("tipiCodeBase=" + tipiCode);
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 
@@ -95,17 +99,17 @@ public class TipiApplet extends JApplet {
 						.toString();
 				arguments.add("resourceCodeBase=" + resourceCode);
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
-		System.err.println("Laf: " + laf);
+		logger.debug("Laf: " + laf);
 		if (laf != null) {
 			try {
 				arguments.add("tipilaf=" + laf);
 				UIManager.setLookAndFeel(laf);
 				SwingUtilities.updateComponentTreeUI(this);
 			} catch (Throwable e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		if (init != null) {
@@ -122,7 +126,7 @@ public class TipiApplet extends JApplet {
 					.initializeSwingApplication(null, arguments, init, this,
 							null);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 
 	}

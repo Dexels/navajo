@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
@@ -73,6 +76,10 @@ class Frequency implements Serializable {
 
 public final class PersistenceManagerImpl implements PersistenceManager, NavajoListener {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PersistenceManagerImpl.class);
+	
 	/**
 	 * Public bean properties
 	 */
@@ -87,7 +94,6 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 	 */
     private long totalhits = 0;
     private long cachehits = 0;
-    private long fileWrites = 0;
     
     private volatile SharedTribalMap<String,PersistentEntry> inMemoryCache = null;
     private volatile SharedTribalMap<String,Frequency> accessFrequency = null;
@@ -179,7 +185,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
     	return result.toString();
     }
     
-    private final Persistable memoryOperation(String key, String service, Persistable document, long expirationInterval, boolean read ) throws Exception {
+    private final Persistable memoryOperation(String key, String service, Persistable document, boolean read ) throws Exception {
 
     	if (read) {
 //    		SoftReference<PersistentEntry> pc = null;
@@ -237,16 +243,14 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 
     	OutputStream os = null;
     	try {
-        	memoryOperation(key, service, document, -1, false);
+        	memoryOperation(key, service, document, false);
             
         	os = sharedPersistenceStore.getOutputStream(CACHE_PATH + "/" + getServicePath(key), key, false);
         	((Navajo) document).write(os);
-        	
-            fileWrites++;
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        	logger.error("Error: ", e);
+        	return false;
         } finally {
         	if ( os != null ) {
 				try {
@@ -277,7 +281,6 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
                 if (isExpired(sharedPersistenceStore.lastModified(path, key), expirationInterval)) {
                 	System.err.println("REMOVING EXPIRED FILE CACHE ENTRY: " + key);
                 	sharedPersistenceStore.remove(path, key);
-                	// TODO:  Construct ClearCacheEvent....
                 	NavajoEventRegistry.getInstance().publishEvent(new CacheExpiryEvent(service, key));
                     return null;
                 }
@@ -290,7 +293,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
                 }
                 System.err.println("CACHE READ TOOK: " + ( System.currentTimeMillis() - start ) + " millis.");
                 if (inMemoryCache.get(key) == null) {
-                	memoryOperation(key, service, pc, expirationInterval, false);
+                	memoryOperation(key, service, pc, false);
                 }
                 
             } else {
@@ -299,7 +302,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("Error: ", e);
             return null;
         } 
         
@@ -353,10 +356,10 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 		PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 
 		if ( doClear && pm.inMemoryCache != null && pm.sharedPersistenceStore != null ) {
-			Set keys = new HashSet( pm.inMemoryCache.keySet() );
-			Iterator iter = keys.iterator();
+			Set<String> keys = new HashSet<String>( pm.inMemoryCache.keySet() );
+			Iterator<String> iter = keys.iterator();
 			while ( iter.hasNext() ) {
-				String cacheKey = (String) iter.next();
+				String cacheKey = iter.next();
 	        	String path = CACHE_PATH + "/" + getServicePath(cacheKey);
 	        	
 				if ( cacheKey.startsWith(key ) && this.serviceKeyValues == null ) {
@@ -419,7 +422,6 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 				p.setKey(ncse.getWebservice());
 				p.setDoClear(true);
 			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
 				AuditLog.log("PERSISTENCEMANAGER", e.getMessage(), Level.SEVERE);
 			}
 			

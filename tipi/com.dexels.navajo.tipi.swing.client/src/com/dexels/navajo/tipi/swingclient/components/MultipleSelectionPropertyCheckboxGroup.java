@@ -10,32 +10,20 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
 
 @SuppressWarnings("deprecation")
 public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel
 		implements PropertyControlled, PropertyChangeListener {
 	private static final long serialVersionUID = -5094941150514654170L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MultipleSelectionPropertyCheckboxGroup.class);
 	private Property myProperty;
 	// private ArrayList mySelectionList = new ArrayList();
 	private List<ItemListener> myListeners = new ArrayList<ItemListener>();
@@ -94,7 +82,7 @@ public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel
 			ArrayList<Selection> selections = myProperty.getAllSelections();
 
 			if (selections.size() <= 0) {
-				System.err.println("Watch it! No selection property!");
+				logger.info("Watch it! No selection property!");
 			} else {
 				removeAll();
 				int col = 0;

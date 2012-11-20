@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -47,7 +50,10 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	private final List<String> myServices = new ArrayList<String>();
 	protected String myMethod;
 	protected final Set<TipiComponent> propertyComponentSet = new HashSet<TipiComponent>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiDataComponentImpl.class);
+	
 	public TipiDataComponentImpl() {
 	}
 
@@ -195,7 +201,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			PropertyComponent current = properties.get(i);
 			Property p;
 			if (current.getPropertyName() == null) {
-				System.err.println("Property component found without name: "
+				logger.warn("Property component found without name: "
 						+ current.getClass());
 				continue;
 			}
@@ -208,7 +214,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 									+ " to tipi: "
 									+ ((TipiComponent) current).getId());
 				} catch (NavajoException ex) {
-					ex.printStackTrace();
+					logger.error("Error: ",ex);
 				}
 			} else {
 				getContext().debugLog(
@@ -233,7 +239,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			PropertyComponent current = plist.get(i);
 			Property p;
 			if (current.getPropertyName() == null) {
-				System.err.println("Property component found without name: "
+				logger.warn("Property component found without name: "
 						+ current.getClass());
 				continue;
 			}
@@ -246,7 +252,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 									+ " to tipi: "
 									+ ((TipiComponent) current).getId());
 				} catch (NavajoException ex) {
-					ex.printStackTrace();
+					logger.error("Error: ",ex);
 				}
 			} else {
 				getContext().debugLog(
@@ -269,9 +275,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		/** @TODO Maybe it is not a good idea that it is recursive. */
 		if ("true".equals(myContext.getSystemProperty("noCascadedLoading"))) {
 			// new style
-			// System.err.println("New school mode, ignoring children.");
 		} else {
-			// System.err.println("Legacy mode, also loading children.");
 			for (int i = 0; i < getChildCount(); i++) {
 				TipiComponent tcomp = getTipiComponent(i);
 				if (TipiDataComponent.class.isInstance(tcomp)) {
@@ -335,7 +339,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			}
 			return performTipiEvent("onGeneratedErrors", null, true);
 		} catch (Throwable ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 			return false;
 		}
 	}
@@ -366,7 +370,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		myNavajo = null;
 	}
 
-	public void loadArrayData(final Navajo n, String method, String messagePath)
+	public void loadArrayData(final Navajo n,String messagePath)
 			throws TipiBreakException {
 		if (messagePath == null) {
 			return;
@@ -407,7 +411,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 					}
 
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		});

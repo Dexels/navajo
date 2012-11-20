@@ -9,7 +9,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -68,7 +67,6 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 
-				System.err.println("Selected message!" + table.getValue());
 				selectedId = table.getValue();
 				Message selectedM = getSelectedMessage();
 				Map<String, Object> tempMap = new HashMap<String, Object>();
@@ -78,9 +76,9 @@ public class TipiTable extends TipiVaadinComponentImpl {
 				try {
 					performTipiEvent("onSelectionChanged", tempMap, false);
 				} catch (TipiBreakException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 
@@ -92,12 +90,8 @@ public class TipiTable extends TipiVaadinComponentImpl {
 
 			public void itemClick(ItemClickEvent event) {
 				if (event.isDoubleClick()) {
-					System.err.println("Dblclicked message!" + table.getValue());
 					selectedId = table.getValue();
 					Message selectedM = getSelectedMessage();
-					if(selectedM!=null) {
-						selectedM.write(System.err);
-					}
 					Map<String, Object> tempMap = new HashMap<String, Object>();
 					// TODO fix
 					tempMap.put("selectedIndex", selectedIndex);
@@ -105,9 +99,9 @@ public class TipiTable extends TipiVaadinComponentImpl {
 					try {
 						performTipiEvent("onActionPerformed", tempMap, false);
 					} catch (TipiBreakException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					} catch (TipiException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 
 				}
@@ -177,11 +171,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		if(m==null) {
 			return null;
 		}
-//		System.err.println("COL: "+visibleColumns+" EDIT: "+editableColumns+" columnsizes: "+columnSizes);
 		CompositeArrayContainer amb = new CompositeArrayContainer(m,visibleColumns,editableColumns,columnSizes);
-//		int rows = amb.getItemIds().size();
-//		System.err.println("ROWS: "+rows+" msgrows: "+m.getArraySize());
-
 		Message exa = amb.getExampleMessage();
 		if(exa==null) {
 			return null;
@@ -191,7 +181,6 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			if(label==null) {
 				label = amb.getPropertyAspect(col+"@description");
 				if(label==null) {
-//					System.err.println("No description checking name: "+col+"@name");
 					label = amb.getPropertyAspect(col+"@name");
 				}
 			}
@@ -221,7 +210,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 				try {
 					TipiTable.super.load(elm, instance, context);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 //				Table mm = table;
 
@@ -234,9 +223,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 						Operand o = evaluate(child.getStringAttribute("label"), TipiTable.this, null);
 						String label = null;
 						String name = (String) child.getAttribute("name");
-						if (o == null) {
-							label = null;
-						} else {
+						if (o != null) {
 							label = (String) o.value;
 						}
 						if(label!=null) {
@@ -270,7 +257,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 				try {
 					getTableReport("pdf", "horizontal", new int[] { 10, 10, 10, 10 });
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		}
@@ -282,7 +269,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			param.put("report", b);
 			performTipiEvent("onReport", param, true);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -305,10 +292,8 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		// ECHO SPECIFIC: SKIP THE FIRST COLUMN!!!
 		//
 		for (Object id : cids) {
-			System.err.println("ID: "+id);
+			logger.debug("ID: "+id);
 		}
-//		System.err.println("Column count: " + count + " names size: "
-//				+ names.size() + " idsize: " + ids.size());
 		int i = 0;
 		for (Object propertyId : cids) {
 			// TableColumn tt = getColumnModel().getColumn(j);
@@ -317,15 +302,13 @@ public class TipiTable extends TipiVaadinComponentImpl {
 			String title = table.getColumnHeader(propertyId); // ""+tt.getHeaderValue();
 			widths[i] = width;
 			namesarray[i] = name.trim();
-			titles[i] = title;
-			System.err.println("Adding width: " + width);
-			System.err.println("Adding name: " + name.trim());
+			titles[i] = title; 
+			logger.debug("Adding width: " + width);
+			logger.debug("Adding name: " + name.trim());
 			i++;
 		}
-
-		Binary result = NavajoClientFactory.getClient().getArrayMessageReport(
+		Binary result = getContext().getClient().getArrayMessageReport(
 				m, namesarray, titles, widths, format, orientation, margins);
-//		m.write(System.err);
 		printTable(result);
 	}
 }

@@ -22,4 +22,8 @@ public interface ClientContext {
 
 	public Navajo getNavajo(String name);
 
+	public void setUsername(String username);
+
+	public void setPassword(String password);
+	
 }

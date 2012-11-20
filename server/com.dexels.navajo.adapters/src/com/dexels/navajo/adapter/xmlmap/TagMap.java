@@ -162,6 +162,9 @@ public class TagMap implements Mappable {
 		return attributeText;
 	}
 
+	/**
+	 * @throws UserException  
+	 */
 	public void setChild(TagMap t) throws UserException {
 		if ( tags == null ) {
 			tags    = new HashMap<String,TagMap>();
@@ -224,7 +227,7 @@ public class TagMap implements Mappable {
 				Pattern pattern = Pattern.compile(s);
 				int count = 0;
 				if (  pattern.matcher(key.replaceFirst( this.PREFIX_PATTERN + this.PREFIX_SEPARATOR, "" )).matches()  && count == index ) {
-					return (TagMap) tags.get( key );
+					return tags.get( key );
 				} else if ( s.equals( key.replaceFirst( this.PREFIX_PATTERN + this.PREFIX_SEPARATOR, "" ) ) ) {
 					count++;
 				}
@@ -239,9 +242,9 @@ public class TagMap implements Mappable {
 		t.setText( XMLutils.XMLEscape( s ) );
 	}
 
-	public String getAttribute(String a) throws UserException {
+	public String getAttribute(String a) {
 		if ( attributes.get(a) != null ) {
-			return (String) attributes.get(a);
+			return attributes.get(a);
 		}
 		return null;
 	}
@@ -287,9 +290,7 @@ public class TagMap implements Mappable {
 				index = Integer.parseInt(indexSpecifier.nextToken());
 			}
 			TagMap parent = child;
-			if ( child != null ) {
-				child = (TagMap) child.getChildTag(subChildName, index);
-			}
+			child = child.getChildTag(subChildName, index);
 			if ( child == null && createIfNotFound ) {
 				child = new TagMap();
 				child.setName(subChildName);
@@ -318,13 +319,13 @@ public class TagMap implements Mappable {
 		children = new TagMap[tagList.size()];
 
 		for ( int i = 0; i < tagList.size(); i++) {
-			children[i] = (TagMap) tags.get( tagList.get(i) );
+			children[i] = tags.get( tagList.get(i) );
 		}
 
 		return children;
 	}
 
-	public void setChildren(TagMap [] all) throws UserException {
+	public void setChildren(TagMap [] all) throws UserException  {
 		for (int i = 0; i < all.length; i++) {
 			setChild(all[i]);
 		}
@@ -356,7 +357,7 @@ public class TagMap implements Mappable {
 
 		if ( tags != null ) {
 			for ( int i = 0; i < tagList.size(); i++ ) {
-				TagMap c = (TagMap) tags.get( tagList.get( i ) );
+				TagMap c = tags.get( tagList.get( i ) );
 				String s = c.getString(indent + tabsize, tabsize);
 				sw.write(s);
 			}

@@ -2,6 +2,9 @@ package com.dexels.navajo.tipi.components.echoimpl.parsers;
 
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Border;
 import nextapp.echo2.app.Color;
 
@@ -28,7 +31,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class BorderParser extends TipiTypeParser {
 	private static final long serialVersionUID = -1017113073986344337L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BorderParser.class);
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
         return parseBorder(expression);
     }
@@ -48,7 +53,7 @@ public class BorderParser extends TipiTypeParser {
         // return parsePercent(s.substring(0,s.length()-2));
         // }
         // return parsePixels(s);
-//        System.err.println("PARSING BORDER:::: "+s);
+//        logger.info("PARSING BORDER:::: "+s);
         int size = 1;
         StringTokenizer st = new StringTokenizer(s, "-");
         String borderName = st.nextToken();
@@ -78,7 +83,7 @@ public class BorderParser extends TipiTypeParser {
             return new Border(size, c, Border.STYLE_INSET);
         }
         if ("titled".equals(borderName)) {
-        	System.err.println("RETURNING TITLED BORDER: "+title);
+        	logger.info("RETURNING TITLED BORDER: "+title);
             return title;
             
         }

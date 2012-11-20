@@ -48,10 +48,13 @@ public abstract class BaseServiceRunner  implements
 	protected long startedAt = -1;
 	// private TmlScheduler tmlScheduler;
 	private RequestQueue myQueue;
-	private AsyncRequest myRequest;
+	private final AsyncRequest myRequest;
 	private final LocalClient localClient;
 	
 	public BaseServiceRunner(AsyncRequest asyncRequest, LocalClient lc) {
+		if(asyncRequest==null) {
+			throw new RuntimeException("Boom! Null asyncrequest?!");
+		}
 		this.myRequest = asyncRequest;
 		this.localClient = lc;
 		// this.event = event;
@@ -172,7 +175,7 @@ public abstract class BaseServiceRunner  implements
 	public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException,
 			FileNotFoundException, UnsupportedEncodingException,
 			NavajoException {
-
+		System.err.println("BSR: --");
 		TmlScheduler ts = getTmlScheduler();
 		String schedulingStatus = null;
 		if (ts != null) {

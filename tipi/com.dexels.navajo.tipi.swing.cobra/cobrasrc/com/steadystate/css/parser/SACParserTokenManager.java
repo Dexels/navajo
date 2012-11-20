@@ -3947,7 +3947,7 @@ void TokenLexicalActions(Token matchedToken)
             image = new StringBuffer();
             image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
         if (!_quiet) {
-            System.err.println("Illegal character : " + image.toString());
+            logger.info("Illegal character : " + image.toString());
         }
          break;
       default : 

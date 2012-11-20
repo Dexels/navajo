@@ -3,6 +3,9 @@ package com.dexels.navajo.tipi.actions;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -34,7 +37,11 @@ public final class TipiDumpClass extends TipiAction {
 	 * 
 	 */
 	private static final long serialVersionUID = -3476765938740552778L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiDumpClass.class);
+	
+	
 	public final void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -49,16 +56,16 @@ public final class TipiDumpClass extends TipiAction {
 			for (Iterator<String> iter = m.keySet().iterator(); iter.hasNext();) {
 				String element = iter.next();
 				XMLElement def = m.get(element);
-				dumpDef(mm, element, def);
+				dumpDef(def);
 			}
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
-	private void dumpDef(Message msg, String element, XMLElement def) {
+	private void dumpDef( XMLElement def) {
 		if (def.getName().equals("tipiaction")) {
-			System.err.println("Action: " + def.getStringAttribute("name"));
+			logger.info("Action: " + def.getStringAttribute("name"));
 
 		}
 	}

@@ -28,11 +28,17 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.tipi.plugin.impl.Deployer;
 
 public class DeployAction implements IObjectActionDelegate {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DeployAction.class);
+	
 	private ISelection selection;
 	private Combo templateCombo = null;
 
@@ -44,7 +50,6 @@ public class DeployAction implements IObjectActionDelegate {
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
-	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		try {
 		if (selection instanceof IStructuredSelection) {
@@ -57,12 +62,8 @@ public class DeployAction implements IObjectActionDelegate {
 					project = (IProject) ((IAdaptable) element).getAdapter(IProject.class);
 				}
 				final IProject rProject = project;
-				if (project != null) {
-					System.err.println("Appt");
+				if (rProject != null) {
 					final String[] retrieveTemplates = deployments(rProject); // new
-					for (String string : retrieveTemplates) {
-						System.err.println("Templ "+string);
-					}// String[]
 
 					includeJarsSelected = true;
 					
@@ -94,7 +95,6 @@ public class DeployAction implements IObjectActionDelegate {
 								includeJars.addSelectionListener(new SelectionListener(){
 
 									public void widgetDefaultSelected(SelectionEvent arg0) {
-										// TODO Auto-generated method stub
 										
 									}
 
@@ -132,7 +132,7 @@ public class DeployAction implements IObjectActionDelegate {
 			}
 		}
 		}catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -141,7 +141,7 @@ public class DeployAction implements IObjectActionDelegate {
 		IFolder settings = p.getFolder("settings");
 		IFolder deploys = settings.getFolder("deployments");
 		if (deploys == null || !deploys.exists()) {
-			System.err.println("whoops");
+			logger.info("whoops");
 			return new String[] {};
 		}
 		IResource[] res;
@@ -158,7 +158,7 @@ public class DeployAction implements IObjectActionDelegate {
 				}
 			}
 		} catch (CoreException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		
 	

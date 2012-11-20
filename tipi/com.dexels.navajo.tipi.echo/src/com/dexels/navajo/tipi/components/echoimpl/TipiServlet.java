@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.webcontainer.WebContainerServlet;
 import nextapp.echo2.webrender.WebRenderServlet;
@@ -15,39 +18,22 @@ import nextapp.echo2.webrender.WebRenderServlet;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
 
 public class TipiServlet extends WebContainerServlet {
 
 	private static final long serialVersionUID = -5781613924406447203L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiServlet.class);
 	private TipiEchoInstance tipiInstance = null;
 
 	static {
-        // echopoint.ui.Installer.register();
-        // CustomUIComponents.register();
-
         System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
         
     }
 
     public void destroy() {
-    	System.err.println("IN SERVLET DESTROY!");
+    	logger.info("IN SERVLET DESTROY!");
     	super.destroy();
     }
 
@@ -77,14 +63,14 @@ public class TipiServlet extends WebContainerServlet {
 		
 		TipiEchoInstance instance = (TipiEchoInstance) request.getSession().getAttribute("tipiInstance");
 		if(instance==null) {
-			System.err.println("Whoops, no instance");
+			logger.info("Whoops, no instance");
 			response.getWriter().write("No instance");
 		} else {
 			Operand o = null;
 			try {
 				o = instance.getTipiContext().evaluate(eval, instance.getTipiContext().getDefaultTopLevel(), null);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 			if(o==null) {
 				response.getWriter().write("Evaluated to null");

@@ -34,10 +34,7 @@ public class NavajoParser extends TipiTypeParser {
 	}
 
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		// System.err.println("Parsing navajo expression: "+expression);
 		if (".".equals(expression)) {
-			System.err.println("Home navajo found. Component path: "
-					+ source.getPath());
 			return source.getValue(expression);
 		}
 		if (expression.indexOf(':') != -1) {

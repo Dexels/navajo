@@ -1,6 +1,5 @@
 package com.dexels.navajo.server.embedded.impl;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -19,18 +18,19 @@ import ch.qos.logback.classic.PatternLayout;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.context.NavajoContext;
+import com.dexels.navajo.client.context.NavajoRemoteContext;
 import com.dexels.navajo.client.server.ServerInstance;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.listener.NavajoContextListener;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
-import com.dexels.navajo.server.listener.nql.NqlServlet;
+import com.dexels.navajo.server.listener.nql.legacy.NqlServlet;
 
 public class ServerInstanceImpl implements ServerInstance {
 //	private String projectName;
 	private int port;
 	
 	private Server jettyServer;
-	private NavajoContext localContext;
+	private NavajoRemoteContext localContext;
 
 	private ServletContextHandler webappContextHandler;
 
@@ -106,7 +106,7 @@ public class ServerInstanceImpl implements ServerInstance {
 	}
 	
 	protected void setupClient(String server, String user, String pass) {
-		localContext = new NavajoContext();
+		localContext = new NavajoRemoteContext();
 		localContext.setupClient(server,user, pass);
 		
 	}
@@ -114,12 +114,12 @@ public class ServerInstanceImpl implements ServerInstance {
 
 
 	
-	private void startServer(final String projectName, Listener lifecycleListener) throws Exception, InterruptedException {
+	private void startServer(final String projectName, Listener lifecycleListener) throws Exception {
 		System.err.println("Project name: "+projectName);
 //		File file = navajoProject.getLocation().toFile();
 
 		
-		initializeServer(projectName);
+		initializeServer();
 		jettyServer.addLifeCycleListener(lifecycleListener);
 		
 		// ordering, allow for listeners to be added befor instantiating the jetty server
@@ -197,10 +197,10 @@ public class ServerInstanceImpl implements ServerInstance {
 		t.start();
 	}
 	
-	private void initializeServer(String folder) throws IOException {
+	private void initializeServer() throws IOException {
 		port = findFreePort();
 //		String ss = folder.getLocation().toString();
-		initializeServer(port, folder);
+		initializeServer(port);
 	}
 	
 	private int findFreePort() throws IOException {
@@ -210,7 +210,7 @@ public class ServerInstanceImpl implements ServerInstance {
 		return port;
 	}
 
-	private void initializeServer(int port, String navajoPath) throws FileNotFoundException {
+	private void initializeServer(int port)  {
 //		   Logger logger = (Logger) LoggerFactory.getLogger("org.eclipse.jetty.util.log");
 		   LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		   lc.reset();
@@ -231,7 +231,6 @@ public class ServerInstanceImpl implements ServerInstance {
 		webappContextHandler.setContextPath(contextPath);
 		String installationPath = NavajoContextListener.getInstallationPath(contextPath);
 
-		// TODO: This used the force parameter
 		NavajoContextListener.initializeServletContext(contextPath,webappContextHandler.getServletContext().getRealPath(""),installationPath);
 		webappContextHandler.addServlet(new ServletHolder(new TmlHttpServlet()),"/Postman");
 		webappContextHandler.addServlet(new ServletHolder(new NqlServlet()),"/Nql");

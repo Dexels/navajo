@@ -9,15 +9,19 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 
 public abstract class AbstractPropertyField extends JTextField implements
 		FocusListener, PropertyChangeListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7775450101839857448L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(AbstractPropertyField.class);
+	
 	protected Property myProperty = null;
 
 	protected abstract String getEditingFormat(Object o);
@@ -110,9 +114,9 @@ public abstract class AbstractPropertyField extends JTextField implements
 					SwingUtilities.invokeAndWait(runAction);
 				}
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		} else {
 			setEditing(true);
@@ -145,7 +149,7 @@ public abstract class AbstractPropertyField extends JTextField implements
 	public void propertyChange(PropertyChangeEvent e) {
 		Property p = (Property) e.getSource();
 		if (p != myProperty) {
-			System.err.println("Mysterious anomaly!");
+			logger.info("Mysterious anomaly!");
 		}
 		presentObject(e.getNewValue());
 	}
@@ -164,9 +168,9 @@ public abstract class AbstractPropertyField extends JTextField implements
 				SwingUtilities.invokeAndWait(runAction);
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

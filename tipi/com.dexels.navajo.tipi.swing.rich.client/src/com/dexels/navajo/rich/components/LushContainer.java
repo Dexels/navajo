@@ -140,4 +140,4 @@ public class LushContainer extends JPanel {
 		paintChildren(g);
 		paintBorder(g);
 	}
-};
+}

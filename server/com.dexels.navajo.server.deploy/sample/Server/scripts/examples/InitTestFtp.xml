@@ -1,6 +1,6 @@
 <tsl>
 	<message name="Result">
-		<map object="com.dexels.navajo.adapter.FTPMap">
+		<map object="com.dexels.navajo.enterprise.adapter.FTPMap">
 			<field name="server">
 				<expression value="'spiritus.dexels.nl'" />
 			</field>

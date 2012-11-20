@@ -15,6 +15,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiComponent;
@@ -27,10 +30,12 @@ import com.dexels.navajo.tipi.components.question.TipiBaseQuestionList;
  *
  */
 public class TipiTabbedQuestionList extends TipiBaseQuestionList {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 7291498630845123122L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTabbedQuestionList.class);
+	
 	private Component lastSelectedTab = null;
 	private JTabbedPane tabbedPane;
 
@@ -63,9 +68,9 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 			try {
 				SwingUtilities.invokeAndWait(runnable);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 	}
@@ -83,9 +88,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 							me.performTipiEvent("onTabChanged", null, false);
 							lastSelectedTab = tabbedPane.getSelectedComponent();
 						} catch (TipiException ex) {
-							System.err
-									.println("Exception while switching tabs.");
-							ex.printStackTrace();
+							logger.error("Exception while switching tabs.",ex);
 						}
 					}
 				});
@@ -96,7 +99,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 	}
 
 	public void addToContainer(final Object c, final Object constraints) {
-		// System.err.println("Adding to TipiTabbedQuestionList container:   "+c+" constraints: "+constraints);
+		// logger.debug("Adding to TipiTabbedQuestionList container:   "+c+" constraints: "+constraints);
 		runSyncInEventThread(new Runnable() {
 			public void run() {
 				tabbedPane = (JTabbedPane) getContainer();
@@ -118,7 +121,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 		super.setGroupValid(valid, group);
 		int i = myGroups.indexOf(group);
 		if (i < 0) {
-			System.err.println("Sh!34#@$!");
+			logger.debug("Sh!34#@$!");
 		}
 		tabbedPane
 				.setIconAt(

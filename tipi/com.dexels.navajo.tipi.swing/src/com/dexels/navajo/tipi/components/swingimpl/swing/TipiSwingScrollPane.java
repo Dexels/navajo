@@ -52,7 +52,7 @@ public class TipiSwingScrollPane extends JScrollPane {
 	// getViewport().getMaximumSize(), getViewport().getMaximumSize());
 	// }
 	// public void setPreferredSize(Dimension d) {
-	// System.err.println("SETPREF. in scroller called.: "+d);
+	// logger.debug("SETPREF. in scroller called.: "+d);
 	// Thread.dumpStack();
 	// }
 

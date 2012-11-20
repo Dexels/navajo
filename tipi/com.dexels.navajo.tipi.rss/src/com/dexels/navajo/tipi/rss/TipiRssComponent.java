@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Method;
@@ -39,7 +42,9 @@ import com.sun.cnpi.rss.parser.RssParserFactory;
  */
 public class TipiRssComponent extends TipiBaseConnector implements TipiConnector {
 	//http://search-result.com/directhit/xml/NL_algemeen.xml
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiRssComponent.class);
 
 	private static final long serialVersionUID = -5204169989328717042L;
 
@@ -85,7 +90,7 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 		n.addMethod(mm);
 		return n;
 	}
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "rawtypes" })
 	private Navajo getRssNavajo(Channel c, String service) throws NavajoException {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 			Header h =NavajoFactory.getInstance().createHeader(n, service, "unknown","unknown", -1);
@@ -132,9 +137,9 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 			imageMessage.getProperty("ImageData").setAnyValue(new Binary(is));
 			is.close();
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		
 		
@@ -173,7 +178,6 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 		addProperty(m, name, e, type,null);
 	}
 
-	@SuppressWarnings({"unchecked" })
 	public static void main(String[] args) throws MalformedURLException, RssParserException, IOException {
 		TipiRssComponent trc = new TipiRssComponent();
 		Rss r = trc.createRssFeed("http://search-result.com/directhit/xml/NL_algemeen.xml");
@@ -185,9 +189,9 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 		for (Iterator<Item> iterator = s.iterator(); iterator.hasNext();) {
 			Item i = iterator.next();
 			Title t = i.getTitle();
-			System.err.println("TT: "+t.getText());
+			logger.info("TT: "+t.getText());
 		}
-		System.err.println("s: "+s);
+		logger.info("s: "+s);
 	}
 
 

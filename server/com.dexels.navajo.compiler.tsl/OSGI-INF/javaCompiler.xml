@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activateCompiler" deactivate="deactivate" immediate="true" name="JavaCompiler">
+   <implementation class="com.dexels.osgicompiler.internal.OSGiJavaCompilerImplementation"/>
+   <service>
+      <provide interface="com.dexels.osgicompiler.OSGiJavaCompiler"/>
+   </service>
+</scr:component>

@@ -3,12 +3,17 @@ package com.dexels.navajo.tipi.charting;
 import java.awt.GridBagConstraints;
 
 import org.jfree.chart.ChartPanel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 
 public abstract class TipiChart extends TipiDataComponentImpl {
 
 	private static final long serialVersionUID = -957662862872135436L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiChart.class);
 	protected ChartPanel myChart;
 	protected String xAxis;
 	protected String series;
@@ -53,8 +58,8 @@ public abstract class TipiChart extends TipiDataComponentImpl {
 	}
 
 	public static void main(String[] artgs){
-		System.err.println("CENTER: " + GridBagConstraints.CENTER);
-		System.err.println("NONE: " + GridBagConstraints.NONE);
+		logger.info("CENTER: " + GridBagConstraints.CENTER);
+		logger.info("NONE: " + GridBagConstraints.NONE);
 	}
 	
 }

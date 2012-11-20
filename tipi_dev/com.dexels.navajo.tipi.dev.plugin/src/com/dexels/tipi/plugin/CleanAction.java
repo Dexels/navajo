@@ -18,11 +18,16 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 
 public class CleanAction implements IObjectActionDelegate {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CleanAction.class);
 	private ISelection selection;
 
 	/*
@@ -30,7 +35,6 @@ public class CleanAction implements IObjectActionDelegate {
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
-	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		if (selection instanceof IStructuredSelection) {
 			ClientActions.flushCache();
@@ -59,11 +63,11 @@ public class CleanAction implements IObjectActionDelegate {
 					runCleanScript(project);
 			}
 		} catch (CoreException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
-	private void runCleanScript(IProject project) throws CoreException {
+	private void runCleanScript(IProject project)  {
 		IFile buildDeploy = project.getFile("settings/build.xml");
 		runClean(project,buildDeploy,null,"clean");
 	}
@@ -85,7 +89,7 @@ public class CleanAction implements IObjectActionDelegate {
 	
 	public void runClean(IProject project, IFile f, IProgressMonitor monitor, String target)  {
 		if(!f.exists()) {
-			System.err.println("File not found!");
+			logger.info("File not found!");
 			return;
 		}
    		try {
@@ -95,7 +99,7 @@ public class CleanAction implements IObjectActionDelegate {
    			runner.setExecutionTargets(new String[]{target});
    			runner.setArguments("-DprojectName="+f.getProject().getName()+"-DbaseDir="+f.getProject().getLocation().toString());
    			runner.run(monitor);
-   			System.err.println("Run completed.");
+   			logger.info("Run completed.");
    		    boolean b = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), "Confirm", "Do a rebuild now?");
    		    if(b) {
    		   		if (project != null) {
@@ -103,7 +107,7 @@ public class CleanAction implements IObjectActionDelegate {
    						try {
    							settings.touch(null);
    						} catch (CoreException e) {
-   							e.printStackTrace();
+   							logger.error("Error: ",e);
    						}
    					}
    		    }
@@ -111,16 +115,16 @@ public class CleanAction implements IObjectActionDelegate {
    		
    		
    		} catch (CoreException e) {
-   			System.err.println("Showing error");
+   			logger.info("Showing error");
    	      ErrorDialog.openError(Display.getCurrent().getActiveShell(),"Tipi Deployment problem","Error building deploy", Status.CANCEL_STATUS);
-   			e.printStackTrace();
+   			logger.error("Error: ",e);
    			
    		}
 
    		try {
 				f.getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
 			} catch (CoreException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
    		//   		Display.getCurrent().getActiveShell().
 		

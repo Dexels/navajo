@@ -3,21 +3,24 @@ package com.dexels.navajo.tipi.actionmanager;
 import java.util.Collection;
 
 
+import navajo.ExtensionDefinition;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.actions.TipiActionFactory;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 public class OSGiActionManager extends TipiActionManager implements IActionManager {
 
 	
-	/**
-	 * 
-	 */
+	private final static Logger logger = LoggerFactory
+			.getLogger(OSGiActionManager.class);
+
 	private static final long serialVersionUID = 1562243077965649520L;
 	private final BundleContext bundleContext;
 
@@ -41,7 +44,7 @@ public class OSGiActionManager extends TipiActionManager implements IActionManag
 			return bundleContext.getService(xe);
 			
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 		return null;

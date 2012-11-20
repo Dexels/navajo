@@ -9,8 +9,13 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProjectList implements IContentProvider, IStructuredContentProvider, ILabelProvider {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ProjectList.class);
 	private final List<IProject> projects;
 	public ProjectList(List<IProject> p ) {
 		projects = p;
@@ -23,7 +28,7 @@ public class ProjectList implements IContentProvider, IStructuredContentProvider
 	}
 
 	public Object[] getElements(Object inputElement) {
-		System.err.println("Getting elements");
+		logger.info("Getting elements");
 		return projects.toArray();
 	}
 

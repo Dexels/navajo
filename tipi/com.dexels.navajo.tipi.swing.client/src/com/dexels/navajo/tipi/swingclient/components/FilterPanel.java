@@ -29,6 +29,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -56,6 +59,10 @@ import com.dexels.navajo.document.Selection;
 
 public class FilterPanel extends JPanel {
 	private static final long serialVersionUID = 4445177819384959544L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(FilterPanel.class);
+	
 	static ResourceBundle res = ResourceBundle
 			.getBundle("com.dexels.navajo.tipi.swingclient.components.filterpanelstrings");
 	private JPanel flipPanel = new JPanel();
@@ -403,7 +410,7 @@ public class FilterPanel extends JPanel {
 	}
 
 	void columnsSaveButton_actionPerformed(ActionEvent e) {
-		System.err.println("Saving the lot...");
+		logger.info("Saving the lot...");
 		// myTable.saveColunmns();
 		try {
 			// myTable.setColumnDefinitionSavePath("c:/vladb/columns.tml");
@@ -492,7 +499,7 @@ public class FilterPanel extends JPanel {
 					}
 					valueField.setProperty(q);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			} else {
 				valueField.setProperty(p);

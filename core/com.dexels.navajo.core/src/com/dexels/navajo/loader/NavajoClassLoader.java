@@ -37,8 +37,12 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import navajocore.Version;
+
 import org.dexels.utils.JarResources;
 import org.dexels.utils.MultiClassLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -76,6 +80,10 @@ public class NavajoClassLoader extends MultiClassLoader {
     protected HashSet<JarResources> jarResources = null;
     protected HashSet<JarResources> betaJarResources = null;
     
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoClassLoader.class);
+	
     private boolean noCaching = false;
     
     private static int instances = 0;
@@ -111,7 +119,11 @@ public class NavajoClassLoader extends MultiClassLoader {
         this.beta = false;
         this.compiledScriptPath = compiledScriptPath;
         instances++;
-        initializeJarResources();
+        if(Version.getDefaultBundleContext()!=null) {
+        	logger.info("OSGi environment detected. Disabling traditional jar discovery.");
+        } else {
+            initializeJarResources();
+        }
     }
 
     public void setNoCaching() {
@@ -120,10 +132,6 @@ public class NavajoClassLoader extends MultiClassLoader {
     
     public boolean isNoCaching() {
     	return noCaching;
-    }
-    
-    public synchronized void clearCache(String className) {
-
     }
     
     
@@ -169,12 +177,12 @@ public class NavajoClassLoader extends MultiClassLoader {
     		  File fi = new File(classFileName);
     		  fis = new FileInputStream(fi);
     		  int size = (int) fi.length();
-    		  byte[] b = new byte[ (int) size];
+    		  byte[] b = new byte[ size];
     		  int rb = 0;
     		  int chunk = 0;
     		  
-    		  while ( ( (int) size - rb) > 0) {
-    			  chunk = fis.read(b, rb, (int) size - rb);
+    		  while ( ( size - rb) > 0) {
+    			  chunk = fis.read(b, rb, size - rb);
     			  if (chunk == -1) {
     				  break;
     			  }
@@ -263,8 +271,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 							JarResources d = new JarResources(files[i]);
 							jarResources.add(d);
 						} catch (Throwable e) {
-							System.err.println("Error opening zip file in adapters. Continuing with others");
-							e.printStackTrace();
+							logger.error("Error opening zip file in adapters. Continuing with others", e);
 						}
     				}
     			}
@@ -287,8 +294,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 							JarResources d = new JarResources(files[i]);
 	    					betaJarResources.add(d);
 						} catch (Throwable e) {
-							System.err.println("Error opening zip file in adapters. Continuing with others");
-							e.printStackTrace();
+							logger.error("Error opening zip file in adapters. Continuing with others", e);
 						}
     				}
     			}

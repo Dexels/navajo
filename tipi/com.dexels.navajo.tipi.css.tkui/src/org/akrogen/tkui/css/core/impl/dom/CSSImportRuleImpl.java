@@ -34,6 +34,10 @@ import org.w3c.dom.stylesheets.MediaList;
 public class CSSImportRuleImpl extends AbstractCSSNode implements
 		CSSImportRule, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2640616488997462006L;
 	private CSSStyleSheet parentStyleSheet = null;
 	private CSSRule parentRule = null;
 	private String href = null;

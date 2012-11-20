@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.vaadin.components.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.terminal.Resource;
 import com.vaadin.ui.VerticalLayout;
 
@@ -29,7 +32,9 @@ public class TipiSwingTab extends VerticalLayout implements TipiTabbable {
 	private Resource tabIcon;
 	private int index;
 
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingTab.class);
 
 	public Resource getTabIcon() {
 		return tabIcon;
@@ -39,7 +44,7 @@ public class TipiSwingTab extends VerticalLayout implements TipiTabbable {
 		Resource old = this.tabIcon;
 		this.tabIcon = tabIcon;
 		if (old == tabIcon) {
-			System.err.println("whoops, identical");
+			logger.debug("whoops, identical");
 		}
 	}
 

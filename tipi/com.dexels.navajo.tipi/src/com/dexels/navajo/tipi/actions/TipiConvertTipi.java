@@ -16,6 +16,8 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
@@ -52,7 +54,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiConvertTipi extends TipiAction {
 
 	private static final long serialVersionUID = 2763921234336481301L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiConvertTipi.class);
+	
 	public TipiConvertTipi() {
 	}
 
@@ -66,10 +71,10 @@ public class TipiConvertTipi extends TipiAction {
 	}
 
 	public void processDir(File base, String extension, String relativePath) {
-		System.err.println("Processing dir: " + base.getAbsolutePath());
+		logger.debug("Processing dir: " + base.getAbsolutePath());
 		File[] ff = base.listFiles();
 		for (int i = 0; i < ff.length; i++) {
-			System.err.println("Current: " + ff[i].getName());
+			logger.debug("Current: " + ff[i].getName());
 			if (ff[i].getName().endsWith(extension)) {
 				if (ff[i].isFile()) {
 					processFile(ff[i], relativePath);
@@ -97,7 +102,7 @@ public class TipiConvertTipi extends TipiAction {
 					processElement(d, d.getDocumentElement(), relativePath);
 					break;
 				} catch (TipiBreakException e) {
-					System.err.println("change #" + i++);
+					logger.info("Break. change #" + i++);
 				}
 
 			}
@@ -113,16 +118,16 @@ public class TipiConvertTipi extends TipiAction {
 				Result result = new StreamResult(file);
 				xformer.transform(source, result);
 			} catch (TransformerConfigurationException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			} catch (TransformerException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		} catch (SAXException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -131,7 +136,6 @@ public class TipiConvertTipi extends TipiAction {
 		checkElement(d, element, relativePath);
 		NodeList nl = element.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
-			// System.err.println("Element # "+i);
 			Node n = nl.item(i);
 			if (n instanceof Element) {
 				processElement(d, (Element) n, relativePath);
@@ -147,7 +151,6 @@ public class TipiConvertTipi extends TipiAction {
 		for (int i = 0; i < nnm.getLength(); i++) {
 			Node n = nnm.item(i);
 			Attr a = (Attr) n;
-			// System.err.println("TYPE: "+n.getClass());
 			newElement.setAttribute(a.getName(), a.getValue());
 		}
 		NodeList nl = element.getChildNodes();

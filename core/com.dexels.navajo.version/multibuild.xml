@@ -76,7 +76,7 @@
 	(for example WAR-files), and compilelibs will not. 
 	Examples of compilelibs: junit.jar, ant.jar, servlet-api.jar etc.
 	-->
-	<property name="projects" value="../../navajo/core/com.dexels.navajo.version,../../navajo/core/com.dexels.navajo.document,../../navajo/core/com.dexels.navajo.core,../../navajo/core/com.dexels.navajo.client,../../navajo/core/com.dexels.navajo.api,../../navajo/core/com.dexels.navajo.listeners.external"/>
+	<property name="projects" value="../../navajo/core/com.dexels.navajo.version,../../navajo/core/com.dexels.navajo.document,../../navajo/core/com.dexels.navajo.client,../../navajo/core/com.dexels.navajo.api,../../navajo/core/com.dexels.navajo.listeners.external,../../navajo/core/com.dexels.navajo.core"/>
 
 	<target name="multibuild">
 		<for list="${projects}" delimiter="," param="project">

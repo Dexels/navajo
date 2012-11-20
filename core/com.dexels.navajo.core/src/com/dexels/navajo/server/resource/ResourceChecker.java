@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.mapping.CompiledScript;
@@ -36,6 +39,10 @@ public class ResourceChecker {
 	private boolean initialized = false;
 	private CompiledScript myCompiledScript = null;
 	private String webservice;
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ResourceChecker.class);
 	
 	public ResourceChecker(CompiledScript s) {
 		// For unit tests.
@@ -96,7 +103,7 @@ public class ResourceChecker {
 			managedResources.put(new AdapterFieldDependency(-1, "com.dexels.navajo.server.Dispatcher", "dispatcher", "dispatcher"), 
 				com.dexels.navajo.server.Dispatcher.class.getMethod("getResourceManager", new Class[]{String.class}));
 		} catch (Throwable e) {  
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 		
 		initialized = true;

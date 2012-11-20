@@ -5,6 +5,8 @@ import java.util.*;
 
 import javax.xml.parsers.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.*;
 
 import com.aetrion.flickr.*;
@@ -26,6 +28,10 @@ public class PhotoManager {
     REST rest;
     RequestContext requestContext;
     Properties properties = null;
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(PhotoManager.class);
+	
 
     private static PhotoManager instance = null;
     
@@ -34,9 +40,9 @@ public class PhotoManager {
     		try {
 				instance = new PhotoManager();
 			} catch (ParserConfigurationException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
     	}
     	return instance;
@@ -70,15 +76,15 @@ public class PhotoManager {
 //        ItemList list = iface.userComments(10, 0);
 //        for (int j = 0; j < list.size(); j++) {
 //            Item item = (Item) list.get(j);
-//            System.out.println("Item " + (j + 1) + "/" + list.size() + " type: " + item.getType());
-//            System.out.println("Item-id:       " + item.getId() + "\n");
+//            logger.info("Item " + (j + 1) + "/" + list.size() + " type: " + item.getType());
+//            logger.info("Item-id:       " + item.getId() + "\n");
 //            ArrayList events = (ArrayList) item.getEvents();
 //            for (int i = 0; i < events.size(); i++) {
-//                System.out.println("Event " + (i + 1) + "/" + events.size() + " of Item " + (j + 1));
-//                System.out.println("Event-type: " + ((Event) events.get(i)).getType());
-//                System.out.println("User:       " + ((Event) events.get(i)).getUser());
-//                System.out.println("Username:   " + ((Event) events.get(i)).getUsername());
-//                System.out.println("Value:      " + ((Event) events.get(i)).getValue() + "\n");
+//                logger.info("Event " + (i + 1) + "/" + events.size() + " of Item " + (j + 1));
+//                logger.info("Event-type: " + ((Event) events.get(i)).getType());
+//                logger.info("User:       " + ((Event) events.get(i)).getUser());
+//                logger.info("Username:   " + ((Event) events.get(i)).getUsername());
+//                logger.info("Value:      " + ((Event) events.get(i)).getValue() + "\n");
 //            }
 //        }
         SearchParameters sp = new SearchParameters();
@@ -108,15 +114,14 @@ public class PhotoManager {
 //            ArrayList al =  t.getUrls(pl);
 //            for (Iterator iterator = al.iterator(); iterator.hasNext();) {
 //            	URL name = (URL) iterator.next();
-//				System.err.println(name);
+//				logger.info(name);
 //			}
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            logger.error("Error: ",e);
 //        }
 //        System.exit(0);
 //    }
 
-    @SuppressWarnings("unchecked")
 	public List<Photo> getPhotos(String[] tags, int max, int index) throws FlickrException, IOException, SAXException {
     	
         SearchParameters sp = new SearchParameters();
@@ -148,7 +153,7 @@ public class PhotoManager {
     	}
     	Photo p = al.get(0);
     	String s = p.getLargeUrl();
-    	System.err.println("My url:" +s);
+    	logger.info("My url:" +s);
 		InputStream is = p.getMediumAsStream();
 		
 		File f = File.createTempFile("flickR", ".jpg");
@@ -160,7 +165,6 @@ public class PhotoManager {
     	return f.toURI().toURL().toString();
     }
     
-    @SuppressWarnings("unchecked")
 	public List<Photo>  getUrls(PhotoList pl) {
     	List<Photo> al = new ArrayList<Photo>();
     	for (Iterator<Photo> iterator = pl.iterator(); iterator.hasNext();) {

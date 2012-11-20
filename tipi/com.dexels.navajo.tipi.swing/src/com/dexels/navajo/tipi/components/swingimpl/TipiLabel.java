@@ -7,34 +7,22 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingLabel;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
-public class TipiLabel extends TipiSwingComponentImpl {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7871861091449007485L;
 
+public class TipiLabel extends TipiSwingComponentImpl {
+
+	private static final long serialVersionUID = -7871861091449007485L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiLabel.class);
+	
 	public Object createContainer() {
 		TipiSwingLabel myLabel = new TipiSwingLabel(this);
 		TipiHelper th = new TipiSwingHelper();
@@ -55,10 +43,10 @@ public class TipiLabel extends TipiSwingComponentImpl {
 			try {
 				i = ImageIO.read(((Binary) u).getDataAsStream());
 				ImageIcon ii = new ImageIcon(i);
-				System.err.println("Binary icon found");
+				logger.debug("Binary icon found");
 				return ii;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		return null;

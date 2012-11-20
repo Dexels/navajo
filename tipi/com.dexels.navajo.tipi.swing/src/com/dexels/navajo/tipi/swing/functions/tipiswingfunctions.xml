@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<functiondef>
+    <function name="GetScreenHeight" class="com.dexels.navajo.tipi.swing.functions.GetScreenHeight">
+        <description>Gets the height of the default screen</description>
+        <input></input>
+        <result>integer</result>
+    </function>
+    <function name="GetScreenWidth" class="com.dexels.navajo.tipi.swing.functions.GetScreenWidth">
+        <description>Gets the width of the default screen</description>
+        <input></input>
+        <result>integer</result>
+    </function>
+    
+    <function name="CreateTitledBorder" class="com.dexels.navajo.tipi.swing.functions.CreateTitledBorder">
+        <description>Create a border</description>
+        <input>string</input>
+        <result>border</result>
+    </function>
+
+</functiondef>

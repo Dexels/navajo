@@ -101,9 +101,6 @@ public class TipiComponentMethod implements Serializable {
 			parameters = new HashMap<String, Object>();
 		}
 		parameters.putAll(params);
-		System.err.println("Myarhs: " + myArgs);
-		System.err.println("Parameters: " + parameters);
-		System.err.println("Params: " + params);
 		for (Map.Entry<String, Object> element : parameters.entrySet()) {
 			TipiValue parameter = getParameter(element.getKey());
 			if (parameter != null) {

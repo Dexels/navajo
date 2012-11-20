@@ -14,7 +14,7 @@ import com.dexels.navajo.parser.FunctionInterface;
 public final class StringDistance 
     extends FunctionInterface {
 
-  public void prototype(String s1, String s2) {}
+//  public void prototype(String s1, String s2) {}
 
   public StringDistance() {}
 

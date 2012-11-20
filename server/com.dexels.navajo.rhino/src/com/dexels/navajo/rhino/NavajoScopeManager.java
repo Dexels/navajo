@@ -1,6 +1,10 @@
 package com.dexels.navajo.rhino;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 
 import org.mozilla.javascript.Context;
@@ -35,27 +39,33 @@ public class NavajoScopeManager {
 		}
 		Scriptable so = freeScopes.poll();
 		if (so != null) {
-			// System.err.println("Reusing scope. Free scopes: "+freeScopes.size());
 			return so;
 		}
-		// System.err.println("Creating scope. Free scopes: "+freeScopes.size());
 		ScriptableObject globalScope = cx.initStandardObjects();
 		return globalScope;
 	}
 
 	public synchronized void releaseScope(Scriptable scope) {
-		// System.err.println("Releasing scope. Free scopes: "+freeScopes.size());
 		if (freeScopes.size() >= MAX_UNUSED_SCOPES) {
-			// System.err.println("Too many unused scopes, discarding this one.");
-			cleanScope(scope);
+//			cleanScope(scope);
 			return;
 		}
 		freeScopes.add(scope);
-		// System.err.println("Released scope. Free scopes: "+freeScopes.size());
 	}
 
-	private void cleanScope(Scriptable scope) {
-		// remove everything related to this run.
-
+	public void runScript(String fileName, Reader r, Map<String, Object> parameters) throws IOException {
+		Context cx = Context.getCurrentContext();
+		if(cx==null) {
+			cx = Context.enter();
+		}
+		ScriptableObject globalScope = (ScriptableObject) NavajoScopeManager.getInstance().getScope();
+		for (Entry<String,Object> e : parameters.entrySet()) {
+			ScriptableObject.putProperty(globalScope, e.getKey(),Context.javaToJS(e.getValue(), globalScope));
+		}
+		cx.evaluateReader(globalScope, r, fileName, 1, null);
+		Context.exit();
+		NavajoScopeManager.getInstance().releaseScope(globalScope);
 	}
+//	private void cleanScope(Scriptable scope) {
+//	}
 }

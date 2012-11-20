@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.projectbuilder;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,11 +18,19 @@ import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 import com.dexels.navajo.tipi.util.XMLParseException;
 
 public class XsdBuilder {
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(XsdBuilder.class);
+	
 	private final Map<String, XMLElement> allComponents = new TreeMap<String, XMLElement>();
 	private final Map<String, XMLElement> allActions = new TreeMap<String, XMLElement>();
 	private final Map<String, XMLElement> allEvents = new TreeMap<String, XMLElement>();
@@ -48,7 +55,7 @@ public class XsdBuilder {
 		vr.load(extensionRepository);
 		while(st.hasMoreTokens()) {
 			String token = st.nextToken();
-			System.err.println("Processing token: "+token);
+			logger.info("Processing token: "+token);
 			Map<String,String> versionMap = null;
 			
 			try {
@@ -61,24 +68,16 @@ public class XsdBuilder {
 			try {
 				appendExtension(ext,version,extensionRepository);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
-//		System.err.println("eleements: "+tipiParts.keySet());
+		processMap();
 		try {
-			processMap();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-//		System.err.println("All: "+allComponents);
-		try {
-			createXSD(baseDir, allComponents, allActions, allEvents, allValues);
-			createMetadata(repository,extensionRepository, baseDir, allComponents, allActions, allTypes);
+			createXSD(baseDir, allComponents, allActions);
+			createMetadata(repository,baseDir, allComponents, allActions, allTypes);
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -98,14 +97,13 @@ public class XsdBuilder {
 
 			return result;
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 
 	}
-	private void createXSD(File baseDir, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions, Map<String, XMLElement> allEvents,
-			Map<String, XMLElement> allValues) throws IOException {
-		// System.err.println("# of components: "+allComponents.size());
+	private void createXSD(File baseDir, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions) throws IOException {
+		// logger.info("# of components: "+allComponents.size());
 		XMLElement root = new CaseSensitiveXMLElement();
 		root.setName("xs:schema");
 		root.setAttribute("xmlns:xs", "http://www.w3.org/2001/XMLSchema");
@@ -116,9 +114,6 @@ public class XsdBuilder {
 
 		XMLElement cc = createActions(allActions, allComponents);
 		root.addChild(cc);
-// These two, are they necessary?
-//		cc = createAllComponents(allComponents);
-//		root.addChild(cc);
 		XMLElement rootTidElement = addTag("xs:element", root);
 		rootTidElement.setAttribute("name", "tid");
 
@@ -133,17 +128,17 @@ public class XsdBuilder {
 		appendClientConfigTag(choice);
 		appendInlineTml(choice, root);
 
-		System.err.println("All components: "+allComponents.keySet());
+		logger.info("All components: "+allComponents.keySet());
 		for (Iterator<String> iter = allComponents.keySet().iterator(); iter.hasNext();) {
 			String current = iter.next();
-			XMLElement e = createTipiClassElement(current, false, allComponents.get(current), allComponents, root);
+			XMLElement e = createTipiClassElement(current, false, allComponents.get(current), allComponents);
 			if (e != null) {
 				root.addChild(e);
 			}
 		}
 		for (Iterator<String> iter = allComponents.keySet().iterator(); iter.hasNext();) {
 			String current = iter.next();
-			XMLElement e = createTipiLayout(current, false, allComponents.get(current), allComponents, root);
+			XMLElement e = createTipiLayout(current, false, allComponents.get(current), allComponents);
 			if (e != null) {
 				root.addChild(e);
 			}
@@ -151,7 +146,7 @@ public class XsdBuilder {
 
 		for (Iterator<String> iter = allComponents.keySet().iterator(); iter.hasNext();) {
 			String current = iter.next();
-			XMLElement e = createTipiClassElement(current, true, allComponents.get(current), allComponents, root);
+			XMLElement e = createTipiClassElement(current, true, allComponents.get(current), allComponents);
 
 			if (e != null) {
 				choice.addChild(e);
@@ -174,7 +169,7 @@ public class XsdBuilder {
 	}
 
 	
-	private void createMetadata(String repository,String extensionRepository, File baseDir, Map<String, XMLElement> allComponents2, Map<String, XMLElement> allActions2,
+	private void createMetadata(String repository, File baseDir, Map<String, XMLElement> allComponents2, Map<String, XMLElement> allActions2,
 			Map<String, XMLElement> allTypes) throws IOException {
 		XMLElement metadata = new CaseSensitiveXMLElement("metadata");
 		XMLElement components = new CaseSensitiveXMLElement("components");
@@ -183,7 +178,7 @@ public class XsdBuilder {
 		metadata.addChild(components);
 		metadata.addChild(actions);
 		metadata.addChild(types);
-		VersionResolver vr = new VersionResolver(extensionRepository);
+//		VersionResolver vr = new VersionResolver(extensionRepository);
 		String docPrefix = repository+"wiki/doku.php?id=tipidoc:";
 
 		for (Entry<String,XMLElement> elt : allComponents2.entrySet()) {
@@ -193,7 +188,7 @@ public class XsdBuilder {
 			if(elt.getValue().getAttribute("class")!=null) {
 				XMLElement entry = elt.getValue();
 				c.setAttribute("name",elt.getKey());
-				c.setAttribute("href",createDocLink(docPrefix,vr,entry.getStringAttribute("extension"),elt.getKey(),"component"));
+				c.setAttribute("href",createDocLink(docPrefix,entry.getStringAttribute("extension"),elt.getKey(),"component"));
 				components.addChild(c);
 				
 			}
@@ -202,14 +197,14 @@ public class XsdBuilder {
 			XMLElement c = new CaseSensitiveXMLElement("element");
 			XMLElement entry = elt.getValue();
 			c.setAttribute("name",elt.getKey());
-			c.setAttribute("href",createDocLink(docPrefix,vr,entry.getStringAttribute("extension"),elt.getKey(),"action"));
+			c.setAttribute("href",createDocLink(docPrefix,entry.getStringAttribute("extension"),elt.getKey(),"action"));
 			actions.addChild(c);
 		}
 		for (Entry<String,XMLElement> elt : allTypes.entrySet()) {
 			XMLElement c = new CaseSensitiveXMLElement("element");
 			XMLElement entry = elt.getValue();
 			c.setAttribute("name",elt.getKey());
-			c.setAttribute("href",createDocLink(docPrefix,vr,entry.getStringAttribute("extension"),elt.getKey(),"type"));
+			c.setAttribute("href",createDocLink(docPrefix,entry.getStringAttribute("extension"),elt.getKey(),"type"));
 			types.addChild(c);
 		}
 		File settings = new File(baseDir,".tipiproject");
@@ -223,7 +218,7 @@ public class XsdBuilder {
 	
 	// DOcumentation is unversioned for now
 	
-	private String createDocLink(String docPrefix,VersionResolver vr, String extension, String name, String elementType) {
+	private String createDocLink(String docPrefix,String extension, String name, String elementType) {
 		String docPrefixWithExtension = docPrefix+extension.toLowerCase();
 
 		if(elementType.equals("type")) {
@@ -240,7 +235,7 @@ public class XsdBuilder {
 
 
 
-	private void processMap() throws FileNotFoundException, IOException {
+	private void processMap()  {
 
 		List<XMLElement> compo = tipiParts.get("tipiclass");
 		if(compo!=null) {
@@ -303,7 +298,7 @@ public class XsdBuilder {
 			String path = element.getStringAttribute("path");
 			XMLElement xx = ClientActions.getXMLElement(new URL(versionURL,"includes/"+path));
 			// beware of missing function.xml
-			//System.err.println("ELEMENT: "+xx);
+			//logger.info("ELEMENT: "+xx);
 			if(xx!=null) {
 				appendClassDefElement(extension,xx);
 			}
@@ -577,7 +572,7 @@ public class XsdBuilder {
 					// if (!children.isEmpty()) {
 					// for (int i = 0; i < children.size(); i++) {
 					// XMLElement currentParam = children.get(i);
-					// System.err.println("CCC: "+currentParam);
+					// logger.info("CCC: "+currentParam);
 					// }
 					// }
 				}
@@ -593,13 +588,13 @@ public class XsdBuilder {
 
 	
 	private static XMLElement createTipiComponent(String current, boolean isDefinition, XMLElement element,
-			Map<String, XMLElement> allComponents, XMLElement root) throws IOException {
+			Map<String, XMLElement> allComponents) throws IOException {
 		XMLElement result = new CaseSensitiveXMLElement();
 		result.setName("xs:element");
-//		System.err.println("Element before: "+element);
+//		logger.info("Element before: "+element);
 		
-		element = ComponentMerger.getAssembledClassDef (allComponents, element,element.getStringAttribute("name"));
-//		System.err.println("Element after: "+element);
+		element = ComponentMerger.getAssembledClassDef (allComponents, element);
+//		logger.info("Element after: "+element);
 		String type = element.getStringAttribute("type");
 		if (type.equals("tipi") || type.equals("component")|| type.equals("connector")) {
 			result.setAttribute("name", (isDefinition ? "d." : "c.") + current);
@@ -636,10 +631,8 @@ public class XsdBuilder {
 				XMLElement currentComponent = allComponents.get(e);
 				if ("tipi".equals(currentComponent.getStringAttribute("type"))
 						|| "component".equals(currentComponent.getStringAttribute("type")) || "connector".equals(currentComponent.getStringAttribute("type"))) {
-					if (seq != null) {
 						XMLElement reff = addTag("xs:element", seq);
 						reff.setAttribute("ref", ("c.") + e);
-					}
 				}
 			}
 			if ("true".equals(element.getStringAttribute("layoutmanager"))) {
@@ -647,10 +640,8 @@ public class XsdBuilder {
 					String e = itt.next();
 					XMLElement currentComponent = allComponents.get(e);
 					if ("layout".equals(currentComponent.getStringAttribute("type"))) {
-						if (seq != null) {
-							XMLElement reff = addTag("xs:element", seq);
-							reff.setAttribute("ref", "l." + e);
-						}
+						XMLElement reff = addTag("xs:element", seq);
+						reff.setAttribute("ref", "l." + e);
 					}
 				}
 			}
@@ -667,11 +658,7 @@ public class XsdBuilder {
 				for (Iterator<XMLElement> iter2 = ccc.iterator(); iter2.hasNext();) {
 					XMLElement eventElement = iter2.next();
 					if (eventElement.getName().equals("event")) {
-						if (seq == null) {
-							seq = addTag("xs:choice", compl);
-							seq.setAttribute("maxOccurs", "unbounded");
-							seq.setAttribute("minOccurs", "0");
-						}
+
 						XMLElement classAttr = addTag("xs:element", seq);
 						classAttr.setAttribute("name", eventElement.getAttribute("name"));
 						classAttr.setAttribute("type", "allActions");
@@ -739,23 +726,23 @@ public class XsdBuilder {
 
 
 	private static XMLElement createTipiClassElement(String current, boolean isDefinition, XMLElement element,
-			Map<String, XMLElement> allComponents, XMLElement root) throws IOException {
+			Map<String, XMLElement> allComponents) throws IOException {
 		// component / c.window etc /definition
-		// System.err.println("element: " + element.getName() + " current: " +
+		// logger.info("element: " + element.getName() + " current: " +
 		// current);
 		if ("tipi".equals(element.getStringAttribute("type")) || "component".equals(element.getStringAttribute("type"))|| "connector".equals(element.getStringAttribute("type"))) {
-			return createTipiComponent(current, isDefinition, element, allComponents, root);
+			return createTipiComponent(current, isDefinition, element, allComponents);
 		}
 
 		return null;
 	}
 
 	private static XMLElement createTipiLayout(String current, boolean isDefinition, XMLElement element,
-			Map<String, XMLElement> allComponents, XMLElement root) throws IOException {
+			Map<String, XMLElement> allComponents) throws IOException {
 		// component / c.window etc /definition
 
 		if ("layout".equals(element.getStringAttribute("type"))) {
-			return createTipiComponent(current, isDefinition, element, allComponents, root);
+			return createTipiComponent(current, isDefinition, element, allComponents);
 		}
 
 		return null;
@@ -806,9 +793,9 @@ public class XsdBuilder {
 			choice.addChild(tml);
 
 		} catch (XMLParseException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 	}

@@ -6,11 +6,9 @@
 <%@ taglib prefix="navserver" uri="/WEB-INF/tld/navajoserver.tld"%>
 <%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 
-<%@page import="com.dexels.navajo.installer.NavajoInstaller"%><jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
+<%@page import="com.dexels.navajo.installer.NavajoInstaller"%><jsp:useBean id="navajoContext" type="com.dexels.navajo.client.context.NavajoContext" scope="session" />
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
 <jsp:useBean id="installerContext" class="com.dexels.navajo.jsp.server.InstallerContext" scope="session" />
-<jsp:setProperty property="pageContext" name="serverContext" value="${pageContext}"/>
-<jsp:setProperty property="pageContext" name="installerContext" value="${pageContext}"/>
 
 <%
 

@@ -20,6 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -31,6 +33,9 @@ import com.dexels.navajo.tipi.swing.geo.impl.TipiSwingMapImpl;
 public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	private static final long serialVersionUID = 3180381518976209467L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMapComponent.class);
 	// double lon,lat;
 	String mapFactory;
 	int zoom;
@@ -121,7 +126,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 				try {
 					performTipiEvent("onClear", null, true);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 
 				for (Message message : al) {
@@ -131,7 +136,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 					try {
 						performTipiEvent("onDataComponent", eventParams, true);
 					} catch (TipiException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
 				myMapKit.repaint();
@@ -186,7 +191,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	@Override
 	public void addToContainer(final Object c, Object constraints) {
-		System.err.println("entering add");
+		logger.info("entering add");
 		myMapKit.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
 		overlayPanel.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
 
@@ -210,19 +215,19 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 			lonRightBottom = st.nextToken();
 
 			if (latRightBottom.startsWith("+")) {
-				System.err.println("REL LAT:" + latRightBottom);
+				logger.info("REL LAT:" + latRightBottom);
 				double rel = Double.parseDouble(latRightBottom.substring(1));
 				latRB = latF + rel;
-				System.err.println("REsults: " + latRB);
+				logger.info("REsults: " + latRB);
 			} else {
 				latRB = Double.parseDouble(latRightBottom);
 			}
 
 			if (lonRightBottom.startsWith("+")) {
-				System.err.println("REL LON:" + lonRightBottom);
+				logger.info("REL LON:" + lonRightBottom);
 				double rel = Double.parseDouble(lonRightBottom.substring(1));
 				lonRB = lonF + rel;
-				System.err.println("REsults: " + lonRB);
+				logger.info("REsults: " + lonRB);
 			} else {
 				lonRB = Double.parseDouble(lonRightBottom);
 			}
@@ -238,7 +243,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		} else {
 			if (c instanceof JComponent) {
 				JComponent jc = (JComponent) c;
-				System.err.println("Adding with default size: " + jc.getPreferredSize());
+				logger.info("Adding with default size: " + jc.getPreferredSize());
 				jc.setSize(jc.getPreferredSize());
 			} else {
 				((Component) c).setSize(100, 100);
@@ -249,7 +254,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 //		myMapKit.addPropertyChangeListener(new PropertyChangeListener() {
 //
 //			public void propertyChange(PropertyChangeEvent evt) {
-//				System.err.println("aaaaprop: "+evt.getPropertyName());
+//				logger.info("aaaaprop: "+evt.getPropertyName());
 //				if (evt.getPropertyName().equals("ancestor")) {
 //					positionComponent(c, gp, gg);
 //				}
@@ -264,7 +269,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 			}});
 		jp.repaint();
 		// layoutChildren();
-		System.err.println("leaving add");
+		logger.info("leaving add");
 
 	}
 
@@ -279,7 +284,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 			gp_pt_rb = myMapKit.getMainMap().getTileFactory().geoToPixel(rightB, myMapKit.getMainMap().getZoom());
 			Point converted_gp_pt_rb = new Point((int) gp_pt_rb.getX() - rect.x, (int) gp_pt_rb.getY() - rect.y);
 			d = new Dimension(Math.abs(converted_gp_pt_rb.x - converted_gp_pt.x), Math.abs(converted_gp_pt_rb.y - converted_gp_pt.y));
-			System.err.println("Pixeldim: " + d);
+			logger.info("Pixeldim: " + d);
 		} else {
 			d = comp.getPreferredSize();
 		}

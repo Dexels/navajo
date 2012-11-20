@@ -11,6 +11,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -31,7 +34,9 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 	// public final String authorId;
 	private String instanceId;
 	private TipiContext myContext;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiGeneralAspManager.class);
 	public static final String TYPE_SETTING = "TIPI_SETTING";
 
 	public TipiGeneralAspManager(String scriptPrefix) {
@@ -46,18 +51,18 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 					scriptPrefix + STORAGE_QUERY_SERVICE);
 			Message err = reply.getMessage("error");
 			if (err != null) {
-				System.err.println("SERVER ERROR: ");
+				logger.error("SERVER ERROR: ");
 				err.write(System.err);
 				throw new TipiException(
 						"Server-side error while storing settings: "
 								+ err.toString());
 			}
 		} catch (ClientException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TipiException(
 					"Client exception while storing settings: ", e);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TipiException(
 					"Client side exception while preparing to store settings: ",
 					e);
@@ -80,7 +85,7 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 		try {
 			is.close();
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Error in getStorageDocument",e);
 		}
 		return response;
 	}
@@ -92,18 +97,18 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 					scriptPrefix + STORAGE_UPDATE_SERVICE);
 			Message err = reply.getMessage("error");
 			if (err != null) {
-				System.err.println("SERVER ERROR: ");
+				logger.error("SERVER ERROR: ");
 				err.write(System.err);
 				throw new TipiException(
 						"Server-side error while storing settings: "
 								+ err.toString());
 			}
 		} catch (ClientException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TipiException(
 					"Client exception while storing settings: ", e);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 			throw new TipiException(
 					"Client side exception while preparing to store settings: ",
 					e);
@@ -121,7 +126,7 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 			baos.flush();
 			baos.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		Message document = n.getMessage("Document");
 		Property contentProp = NavajoFactory.getInstance().createProperty(n,
@@ -176,7 +181,7 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 	}
 
 	public void setInstanceId(String id) {
-		System.err.println("Setting sublocale to: " + id);
+		logger.info("Setting sublocale to: " + id);
 		instanceId = id;
 	}
 

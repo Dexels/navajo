@@ -34,8 +34,6 @@ public class CompositeMessageBridge extends CompositeItem implements Item {
 		for (com.dexels.navajo.document.Property property : properties) {
 			if(editableList!=null) {
 				boolean edit = editableList.contains(property.getName());
-				
-//				System.err.println("EDITABLE: "+property.getName()+" editable: "+edit);
 				PropertyItem pi = new PropertyItem(property,edit);
 				addItem(property.getName(),pi);
 			} else {

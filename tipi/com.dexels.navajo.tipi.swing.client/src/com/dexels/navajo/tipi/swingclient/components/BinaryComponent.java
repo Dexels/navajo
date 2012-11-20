@@ -26,16 +26,20 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 
 public class BinaryComponent extends JPanel implements PropertyControlled,
 		PropertyChangeListener, ActionListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6097068768465009552L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BinaryComponent.class);
+	
 	private Property myProperty = null;
 	private JComponent myBinaryLabel = null;
 
@@ -83,9 +87,9 @@ public class BinaryComponent extends JPanel implements PropertyControlled,
 
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -151,10 +155,10 @@ public class BinaryComponent extends JPanel implements PropertyControlled,
 			Binary old = (Binary) e.getOldValue();
 			Binary newValue = (Binary) e.getNewValue();
 			if (old != null && newValue != null) {
-				System.err.println("Old size: " + old.getLength()
+				logger.info("Old size: " + old.getLength()
 						+ " new size: " + newValue.getLength());
 			} else {
-				System.err.println("Null detected!");
+				logger.info("Null detected!");
 			}
 			setBinary(newValue);
 		}
@@ -202,7 +206,7 @@ public class BinaryComponent extends JPanel implements PropertyControlled,
 	private void setSyncBinary(final Binary b) {
 		removeAll();
 		if (b == null || b.getLength() <= 0) {
-			// System.err.println("Null-binary found!");
+			// logger.info("Null-binary found!");
 			myBinaryLabel = new JButton();
 			add(myBinaryLabel, BorderLayout.CENTER);
 			((JButton) myBinaryLabel).addActionListener(BinaryComponent.this);
@@ -215,7 +219,7 @@ public class BinaryComponent extends JPanel implements PropertyControlled,
 			// addPropertyComponent(myBinaryLabel, true);
 			return;
 		}
-		// System.err.println("Getting binary data!");
+		// logger.info("Getting binary data!");
 		// byte[] data = b.getData();
 		String mime = b.guessContentType();
 		if (mime.indexOf("image") != -1) {
@@ -224,7 +228,7 @@ public class BinaryComponent extends JPanel implements PropertyControlled,
 			try {
 				mm = ImageIO.read(inp);
 				// ImageIcon img = new ImageIcon(mm);
-				System.err.println("WIDTH: " + maxImgWidth + " height: "
+				logger.info("WIDTH: " + maxImgWidth + " height: "
 						+ maxImgHeight);
 				myBinaryLabel = new JButton();
 				// ((JButton)myBinaryLabel).setUI(new ButtonUI(){
@@ -245,7 +249,7 @@ public class BinaryComponent extends JPanel implements PropertyControlled,
 				// ( (BaseLabel) myBinaryLabel).setIcon(img);
 				add(myBinaryLabel, BorderLayout.CENTER);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 			return;
 		}

@@ -8,27 +8,17 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
-/**
- * <p>
- * Title: Seperate project for Navajo Swing client
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company: Dexels
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- * @deprecated
- */
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Deprecated
 
 public class KeyEventHandler extends AbstractAction {
 	private static final long serialVersionUID = -7451651160947685387L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(KeyEventHandler.class);
+	
 	private String myMod;
 	private Component myComp;
 
@@ -178,13 +168,13 @@ public class KeyEventHandler extends AbstractAction {
 		if (PropertyTextArea.class.isInstance(myComp)) {
 			PropertyTextArea ta = (PropertyTextArea) myComp;
 			if ("ShiftEnterReleased".equals(myMod)) {
-				System.err.println("Next: "
+				logger.info("Next: "
 						+ ta.getFocusCycleRootAncestor()
 								.getFocusTraversalPolicy()
 								.getComponentAfter(
 										ta.getFocusCycleRootAncestor(), ta)
 								.getClass().getSuperclass());
-				System.err.println("Previous: "
+				logger.info("Previous: "
 						+ ta.getFocusCycleRootAncestor()
 								.getFocusTraversalPolicy()
 								.getComponentBefore(

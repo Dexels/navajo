@@ -252,8 +252,8 @@ public class TmlClientView extends BaseNavajoView implements IServerEntryListene
             return;
          }
          System.err.println(">>> "+historyList);
-       String current = (String)historyList.pop();
-        String nn = (String)historyList.pop();
+       String current = historyList.pop();
+        String nn = historyList.pop();
         System.err.println("BACKING TO: "+nn+" current: "+currentService);
          System.err.println(">>> "+historyList);
          Navajo n = scriptMap.get(nn);
@@ -272,9 +272,9 @@ public class TmlClientView extends BaseNavajoView implements IServerEntryListene
             return;
         }
         System.err.println("FUTURELIST: "+futureList);
-        String nn = (String)futureList.pop();
+        String nn = futureList.pop();
         System.err.println("IN FORWARD: going to script: "+nn);
-        Navajo n = (Navajo)scriptMap.get(nn);
+        Navajo n = scriptMap.get(nn);
         if (n!=null) {
             historyList.push(currentService);
 //           scriptMap.put(currentService, myCurrentNavajo);

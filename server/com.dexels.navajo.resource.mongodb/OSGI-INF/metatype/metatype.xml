@@ -1,7 +1,7 @@
 <metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
   <OCD description="Navajo MongoDb driver" name="Navajo MongoDb driver" id="navajo.resource.mongodb">
-    <AD name="host"    id="server"   required="true"  type="String" default="localhost"/>   
-    <AD name="database"    id="server"   required="true"  type="String" default="test"/>   
+    <AD name="host"    id="host"   required="true"  type="String" default="localhost"/>   
+    <AD name="database"    id="database"   required="true"  type="String" default="test"/>   
     <AD name="user"  id="user" required="false" type="String" default="demo"/>
     <AD name="password"  id="password" required="false" type="String" default="demo"/>
     <AD name="name"  id="name" required="false" type="String" default="navajo.resource.mongodatasource"/>

@@ -9,17 +9,16 @@ package com.dexels.navajo.adapter;
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: Dexels B.V.</p>
  * @author Matthew Eichler meichler@dexels.com
- * @version $Id$
+ * @version $Id: SequencedInsertMap.java,v 1.6 2012/03/30 15:38:45 frank Exp $
  */
 
+import com.dexels.navajo.server.UserException;
+import java.text.MessageFormat;
+import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.MessageFormat;
 
-import com.dexels.navajo.server.UserException;
-
-public class SequencedInsertMap extends JDBCMap {
+public class SequencedInsertMap extends SQLMap {
 
   public final static String ORACLEPRODUCTNAME = "Oracle";
   public final static String HSQLPRODUCTNAME = "HSQL Database Engine";
@@ -146,4 +145,4 @@ public class SequencedInsertMap extends JDBCMap {
   }
 
 } // public class SequencedInsertMap extends SQLMap
-// EOF: $RCSfile$ //
+// EOF: $RCSfile: SequencedInsertMap.java,v $ //

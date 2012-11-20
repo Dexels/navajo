@@ -18,6 +18,8 @@ import java.util.logging.Level;
 
 import javax.imageio.spi.ServiceRegistry;
 
+import navajo.ExtensionDefinition;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +29,6 @@ import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 import com.dexels.navajo.util.AuditLog;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 /**
  * This class holds the metadata for adapters that can be used in new navasript 'style' scripts.
@@ -69,7 +70,7 @@ public class MapMetaData {
 			try {
 				Iterator<?> iter = null;
 				try {
-					iter = ServiceRegistry.lookupProviders(Class.forName("com.dexels.navajo.version.ExtensionDefinition", true, myClassLoader), 
+					iter = ServiceRegistry.lookupProviders(Class.forName("navajo.ExtensionDefinition", true, myClassLoader), 
 							                                        myClassLoader);
 				} catch (Exception e) {
 					logger.warn("Unable to lookup providers in lecagy service. Normal in OSGi.");
@@ -77,7 +78,9 @@ public class MapMetaData {
 					return;
 				}
 				while(iter.hasNext()) {
+					logger.info("Looping");
 					ExtensionDefinition ed = (ExtensionDefinition) iter.next();
+					logger.info("ExtendionDef: "+ed.toString());
 					//System.err.println("FOUND POSSIBLE ADAPTER EXTENSION: " + ed);
 					
 					BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream()));
@@ -98,8 +101,7 @@ public class MapMetaData {
 					
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 	
 		}
@@ -115,7 +117,7 @@ public class MapMetaData {
 //		return getInstance("aap");
 //	}
 	
-	public static MapMetaData getInstance() throws Exception {
+	public static synchronized MapMetaData getInstance() throws Exception {
 		if ( instance != null ) {
 			return instance;
 		} else {
@@ -220,10 +222,9 @@ public class MapMetaData {
 		
 	}
 	
-	@SuppressWarnings("unused")
 	public static void main(String [] args) throws Exception {
 		
-		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
+		new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
 		MapMetaData mmd = MapMetaData.getInstance();
 		//System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
 		

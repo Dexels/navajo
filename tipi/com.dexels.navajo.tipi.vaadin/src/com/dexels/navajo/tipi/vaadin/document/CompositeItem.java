@@ -25,7 +25,6 @@ public abstract class CompositeItem implements Item {
 	}
 	
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<?> getItemPropertyIds() {
 		Collection<Object> results = new ArrayList<Object>();

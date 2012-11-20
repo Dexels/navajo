@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.LayoutData;
 import nextapp.echo2.app.Style;
@@ -20,28 +23,14 @@ import com.dexels.navajo.tipi.internal.PropertyComponent;
 import echopointng.ContainerEx;
 import echopointng.GroupBox;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
 
 public class TipiProperty extends TipiEchoComponentImpl implements PropertyComponent, PropertyEventListener {
 
 	private static final long serialVersionUID = 4332642289511254900L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiProperty.class);
+	
 	private Property myProperty = null;
 
     private String myPropertyName = null;
@@ -78,10 +67,10 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
                 return;
             }
             if (p != myProperty) {
-                System.err.println("Mysterious anomaly: Property of event is not the loaded property");
+                logger.info("Mysterious anomaly: Property of event is not the loaded property");
                 return;
             }
-            System.err.println("PRoperty event firing: "+eventType+" prop: "+p.getFullPropertyName());
+            logger.info("PRoperty event firing: "+eventType+" prop: "+p.getFullPropertyName());
             performTipiEvent(eventType, m, false);
             // }
         } catch (Exception ex) {
@@ -137,7 +126,7 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
     
     public Object getComponentValue(String name) {
   	  if (myProperty!=null) {
-  		  System.err.println("myProperty:"+myProperty.getName()+" value: "+myProperty.getValue());
+  		  logger.info("myProperty:"+myProperty.getName()+" value: "+myProperty.getValue());
   	  }
       if ("propertyname".equals(name)) {
         if (myProperty != null && myProperty.getType().equals(Property.SELECTION_PROPERTY)) {
@@ -222,7 +211,7 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
      *       method
      */
     // public void addTipiEvent(TipiEvent te) {
-    // }	  System.err.println("Getting PROPERTY VALUE: "+name);
+    // }	  logger.info("Getting PROPERTY VALUE: "+name);
 
     protected void setComponentValue(String name, Object object) {
         if ("propertyname".equals(name)) {

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<functiondef>
+    <function name="FindComponent" class="com.dexels.navajo.tipi.functions.FindComponent">
+        <description>Looks for a component with the given ID, will look downwards from the current component. It will do a PRE order tree search.</description>
+        <input>component,path</input>
+        <result>component</result>
+    </function>
+    <function name="GetAttribute" class="com.dexels.navajo.tipi.functions.GetAttribute">
+        <description>Gets the attribute ref of a component</description>
+        <input>component,path</input>
+        <result>attributeref</result>
+    </function>
+    <function name="GetComponent" class="com.dexels.navajo.tipi.functions.GetComponent">
+        <description>Resolves a tipi path to a TipiComponent. Source component is required to resolve context data.</description>
+        <input>component,path</input>
+        <result>component</result>
+    </function>
+    <function name="GetComponentId" class="com.dexels.navajo.tipi.functions.GetComponentId">
+        <description>Resolves a tipi path to a TipiComponent. Source component is required to resolve context data.</description>
+        <input>component</input>
+        <result>string</result>
+    </function>
+    <function name="GetComponentName" class="com.dexels.navajo.tipi.functions.GetComponentName">
+        <description>Resolves a tipi path to a TipiComponent. Source component is required to resolve context data.</description>
+        <input>component</input>
+        <result>string</result>
+    </function>
+    <function name="GetComponentType" class="com.dexels.navajo.tipi.functions.GetComponentType">
+        <description>Resolves a tipi path to a TipiComponent. Source component is required to resolve context data.</description>
+        <input>component</input>
+        <result>string</result>
+    </function>
+    <function name="GetConnectorInit" class="com.dexels.navajo.tipi.functions.GetConnectorInit">
+        <description>Retrieves the init function of a connector</description>
+        <input>component,string</input>
+        <result>string</result>
+    </function>
+    <function name="GetGlobal" class="com.dexels.navajo.tipi.functions.GetGlobal">
+        <description>Gets a certain global value</description>
+        <input>context,string</input>
+        <result>object</result>
+    </function>
+    <function name="GetNavajo" class="com.dexels.navajo.tipi.functions.GetNavajo">
+        <description>Resolves a navajo name. Source component is required</description>
+        <input>component|context,string|empty</input>
+        <result>navajo</result>
+    </function>
+    <function name="GetNavajoName" class="com.dexels.navajo.tipi.functions.GetNavajoName">
+        <description>Returns the name of the navajo object.</description>
+        <input>navajo</input>
+        <result>string</result>
+    </function>
+    <function name="GetResource" class="com.dexels.navajo.tipi.functions.GetResource">
+        <description>Retrieves the contents of a resource</description>
+        <input>context,string</input>
+        <result>url</result>
+    </function>
+    <function name="GetSource" class="com.dexels.navajo.tipi.functions.GetSource">
+        <description>Converts a navajo object to an xml string</description>
+        <input>navajo</input>
+        <result>string</result>
+    </function>
+    <function name="GlobalReference" class="com.dexels.navajo.tipi.functions.GlobalReference">
+        <description>GlobalReference to a certain global</description>
+        <input>context,string</input>
+        <result>reference</result>
+    </function>
+    <function name="ToBold" class="com.dexels.navajo.tipi.functions.ToBold">
+        <description>Make text bold. Html-style (depending on 2nd parameter including html tag)</description>
+        <input>string,boolean|empty</input>
+        <result>string</result>
+    </function>
+    <function name="ToItalic" class="com.dexels.navajo.tipi.functions.ToItalic">
+        <description>Make text italic. Html-style (depending on 2nd parameter including html tag)</description>
+        <input>string,boolean|empty</input>
+        <result>string</result>
+    </function>
+    <function name="ToPlainText" class="com.dexels.navajo.tipi.functions.ToPlainText">
+        <description>Make text plain and simple. Html-style (depending on 2nd parameter including html tag)</description>
+        <input>string,boolean|empty</input>
+        <result>string</result>
+    </function>
+    <function name="ToSubscript" class="com.dexels.navajo.tipi.functions.ToSubscript">
+        <description>Make text subscript. Html-style (depending on 2nd parameter including html tag)</description>
+        <input>string,boolean|empty</input>
+        <result>string</result>
+    </function>
+    <function name="ToSuperscript" class="com.dexels.navajo.tipi.functions.ToSuperscript">
+        <description>Make text superscript. Html-style (depending on 2nd parameter including html tag)</description>
+        <input>string,boolean|empty</input>
+        <result>string</result>
+    </function>
+    <function name="ToUnderline" class="com.dexels.navajo.tipi.functions.ToUnderline">
+        <description>Make text underlined. Html-style (depending on 2nd parameter including html tag)</description>
+        <input>string,boolean|empty</input>
+        <result>string</result>
+    </function>
+    <function name="ToValue" class="com.dexels.navajo.tipi.functions.ToValue">
+        <description>Dereferences a TipiReference, which is basically a pointer. cool</description>
+        <input>any</input>
+        <result>object</result>
+    </function>
+ </functiondef>

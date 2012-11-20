@@ -3,9 +3,19 @@ package com.dexels.navajo.server;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
+import navajocore.Version;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -16,6 +26,7 @@ import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.MappingUtils;
+import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.server.scriptengine.GenericScriptEngine;
 import com.dexels.navajo.util.AuditLog;
 
@@ -53,6 +64,9 @@ public final class GenericHandler extends ServiceHandler {
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
    
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(GenericHandler.class);
     public static String applicationGroup = "";
     
     static {
@@ -116,13 +130,11 @@ public final class GenericHandler extends ServiceHandler {
         		cso.setClassLoader(loader);
         	}	
     	} catch (Exception e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();
+    		logger.error("Error: ", e);
     		return false;
     	}
     	if ( cso != null ) {
     		boolean result = cso.hasDirtyDependencies(a);
-    		//System.err.println(">>>>>>>>>>>>>>>>. hasDirtyDepedencies: " + result);
     		return result;
     	} else {
     		return false;
@@ -189,7 +201,7 @@ public final class GenericHandler extends ServiceHandler {
     	
     	String sourceFileName = null;
     	if(scriptFile.exists()) {
-    		sourceFileName = DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath()+ "/" + pathPrefix + serviceName + ".java";;
+    		sourceFileName = DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath()+ "/" + pathPrefix + serviceName + ".java";
     		// regular scriptfile, 
     	} else {
     		// pure java scriptfile
@@ -266,7 +278,7 @@ public final class GenericHandler extends ServiceHandler {
     }
     
     private static final NavajoClassSupplier getScriptLoader(boolean isBetaUser, String className) {
-    	NavajoClassSupplier newLoader = (NavajoClassLoader) loadedClasses.get(className);
+    	NavajoClassSupplier newLoader = loadedClasses.get(className);
          if (newLoader == null ) {
          	newLoader = new NavajoClassLoader(null, DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath(), 
          			( isBetaUser ? DispatcherFactory.getInstance().getNavajoConfig().getBetaClassLoader() : 
@@ -313,7 +325,7 @@ public final class GenericHandler extends ServiceHandler {
     public static CompiledScript compileScript(Access a, StringBuffer compilerErrors) throws Exception {
     	
     	NavajoConfigInterface properties = DispatcherFactory.getInstance().getNavajoConfig();
-    	
+    	List<Dependency> deps = new ArrayList<Dependency>();
     	String scriptPath = properties.getScriptPath();
     	
     		Object [] all = getScriptPathServiceNameAndScriptFile(a.rpcName, a.betaUser);
@@ -326,7 +338,7 @@ public final class GenericHandler extends ServiceHandler {
     		String sourceFileName = (String) all[3];
     		File sourceFile = (File) all[4];
     		String className = (String) all[5];
-    		String classFileName = (String) all[6];
+//    		String classFileName = (String) all[6];
     		File targetFile = (File) all[7];
 
     		if (properties.isCompileScripts()) {
@@ -347,8 +359,7 @@ public final class GenericHandler extends ServiceHandler {
     								tslCompiler.compileScript(serviceName, 
     										scriptPath,
     										properties.getCompiledScriptPath(),
-    										pathPrefix,
-    										properties.getConfigPath());
+    										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps);
     							} catch (SystemException ex) {
     								sourceFile.delete();
     								AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER , ex.getMessage(), Level.SEVERE, a.accessID);
@@ -393,7 +404,6 @@ public final class GenericHandler extends ServiceHandler {
      * @throws SystemException
      * @throws AuthorizationException
      */
-    @SuppressWarnings("unchecked")
 	public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
 
     	// Check whether break-was-set for access from 'the-outside'. If so, do NOT perform service and return
@@ -409,13 +419,33 @@ public final class GenericHandler extends ServiceHandler {
     	
         Navajo outDoc = null;
     	StringBuffer compilerErrors = new StringBuffer();
-    	
+        outDoc = NavajoFactory.getInstance().createNavajo();
+
         try {
             // Should method getCompiledNavaScript be fully synced???
-        	CompiledScript cso = compileScript(access, compilerErrors);
-            outDoc = NavajoFactory.getInstance().createNavajo();
+        	CompiledScript cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, null);
+        	//(access.rpcName);
+        	if(cso==null) {
+        		if(Version.osgiActive()) {
+        			logger.warn("Script not found from OSGi registry while OSGi is active");
+        		} else {
+                	cso = compileScript(access, compilerErrors);
+                	if(cso==null) {
+                		logger.error("Can not find OSGi script for rpc: {} ",access.rpcName);
+                		throw new RuntimeException("Can not resolve script (non OSGi): "+access.rpcName);
+                	}
+        		}
+        	}
+        	if(cso==null) {
+        		logger.error("No compiled script found, proceeding further is useless.");
+        		throw new RuntimeException("Can not resolve script: "+access.rpcName);
+        	}
             access.setOutputDoc(outDoc);
             access.setCompiledScript(cso);
+            if (cso.getClassLoader()==null) {
+				logger.error("No classloader present!");
+			} 
+            
             cso.run(access);
 
             return access.getOutputDoc();
@@ -431,17 +461,109 @@ public final class GenericHandler extends ServiceHandler {
               return ( (com.dexels.navajo.server.ConditionErrorException) e).getNavajo();
             }
             else if (e instanceof AuthorizationException) {
-              System.err.println("CAUGHT AUTHORIZATION ERROR IN GENERICHANDLER!!!!!!!!!!!!!!!!!!");
+              System.err.println("CAUGHT AUTHORIZATION ERROR IN GENERICHANDLER!");
               throw (AuthorizationException) e;
             }
             else {
             	AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, e.getMessage() + (!compilerErrors.toString().trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), Level.SEVERE, access.accessID);
-            	e.printStackTrace();
             	throw new SystemException( -1, e.getMessage() + (!compilerErrors.toString().trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), e);
             }
           }
         }
 
+//	private CompiledScript getOSGiService(String scriptName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+//		final BundleContext bundleContext = Version.getDefaultBundleContext();
+//		if(bundleContext==null) {
+//			logger.debug("No OSGi context found");
+//			return null;
+//		}
+//		String rpcName = scriptName.replaceAll("/", ".");
+//		
+//		String filter = "(navajo.scriptName="+rpcName+")";
+//		ServiceReference<?>[] sr;
+//		try {
+//			sr = bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filter);
+//		} catch (InvalidSyntaxException e) {
+//			logger.error("Filter syntax problem for: "+filter,e);
+//			return null;
+//		}
+//		if(sr==null || sr.length==0) {
+//			logger.error("No service reference found for "+filter);
+//			try {
+//				CompiledScript ss = loadOnDemand(bundleContext, rpcName, filter);
+//				return ss;
+//			} catch (Exception e) {
+//				logger.error("Service  "+filter,e);
+//			}
+//		}
+//		
+//		if(sr!=null && sr.length>1) {
+//			logger.warn("Multiple references ({}) found for {}",sr.length,filter);
+//		}
+//		
+//		if(sr==null) {
+//			logger.error("BundleContext is null. Why?!");
+//		}
+//		CompiledScriptFactory csf = null;
+//		if(sr!=null) {
+//			 csf = (CompiledScriptFactory) bundleContext.getService(sr[0]);
+//			 if(csf!=null ) {
+//				 return csf.getCompiledScript();
+//			 }			
+//		}
+//		 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter);
+//		 BundleCreator bc = DispatcherFactory.getInstance().getBundleCreator();
+//		 if(bc!=null) {
+//			 try {
+//				CompiledScript ss = bc.getOnDemandScriptService(rpcName);
+//				return ss;
+//			} catch (Exception e) {
+//				logger.error("on demand script resolution failed.",e);
+//			}
+//		 }
+//		return null;
+//
+////		 CompiledScript ss;
+////		try {
+////			ss = csf.getCompiledScript();
+////			final CompiledScript ccs = ss;
+////		} catch (Exception e) {
+////			 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter,e);
+////			 return null;
+////		}
+////		bundleContext.ungetService(sr[0]);
+////		 return ss;
+//	}
+
+	private CompiledScript loadOnDemand(BundleContext bundleContext, String rpcName, String filter) throws Exception {
+		if(bundleContext==null) {
+			logger.debug("No OSGi context found");
+			return null;
+		}
+		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
+		BundleCreator bc = bundleContext.getService(ref);
+//		BundleCreator bc = getBundleCreator(bundleContext);
+		if(bc==null) {
+			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
+			return null;
+		}
+		CompiledScript sc = bc.getOnDemandScriptService(rpcName);
+		// wait for it..
+		bundleContext.ungetService(ref);
+		return sc;
+	}
+
+//	/**
+//	 * Bit of a hack, should be really DInjected
+//	 * @return
+//	 */
+//	private BundleCreator getBundleCreator(BundleContext bundleContext) {
+//		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
+//		return DispatcherFactory.getInstance().getBundleCreator();
+//	}
+
+	@SuppressWarnings("unused")
+	@Deprecated
 	private static String recompileJava(
 			Access a,
 			String sourceFileName,
@@ -470,9 +592,9 @@ public final class GenericHandler extends ServiceHandler {
 						loader = null;
 					}
 
-					com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
+					com.dexels.navajo.compiler.internal.NavajoCompiler compiler = new com.dexels.navajo.compiler.internal.NavajoCompiler();
 					try {
-						compiler.compile(a, DispatcherFactory.getInstance().getNavajoConfig(), sourceFileName);
+						compiler.compile(DispatcherFactory.getInstance().getNavajoConfig(), sourceFileName);
 						compilerErrors = compiler.errors;
 						NavajoEventRegistry.getInstance().publishEvent(new NavajoCompileScriptEvent(a.rpcName));
 					}

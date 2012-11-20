@@ -5,6 +5,9 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
@@ -30,11 +33,12 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public final class TipiRequestFocus extends TipiAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7937488763201435563L;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiRequestFocus.class);
+	
 	public final void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -62,9 +66,9 @@ public final class TipiRequestFocus extends TipiAction {
 					}
 				});
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		} else {
 			throw new TipiException("Error: No swing component: "

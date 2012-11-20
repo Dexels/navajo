@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -26,18 +28,16 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.LocalClient;
-import com.jcraft.jzlib.JZlib;
-import com.jcraft.jzlib.ZInputStream;
-import com.jcraft.jzlib.ZOutputStream;
 
-public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
+
+public class BaseRequestImpl extends BaseInMemoryRequest implements
 		AsyncRequest {
 
 	protected final HttpServletRequest request;
 	protected HttpServletResponse response;
 
-	protected final String recvEncoding;
-	protected final String sendEncoding;
+	protected final String contentEncoding;
+	protected final String acceptEncoding;
 	protected final Object cert;
 	protected long connectedAt = -1;
 	private String url;
@@ -47,15 +47,19 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseRequestImpl.class);
 	
+	private final static Logger statLogger = LoggerFactory
+			.getLogger("stats");
+
+	
 	public BaseRequestImpl(LocalClient lc, HttpServletRequest request,
-			HttpServletResponse response, String sendEncoding,
-			String recvEncoding, Object cert) throws UnsupportedEncodingException, IOException {
+			HttpServletResponse response, String acceptEncoding,
+			String contentEncoding, Object cert) throws UnsupportedEncodingException, IOException {
 		// this.event = event;
 		this.myLocalClient = lc;
 		this.response = response;
 		this.request = request;
-		this.recvEncoding = recvEncoding;
-		this.sendEncoding = sendEncoding;
+		this.contentEncoding = contentEncoding;
+		this.acceptEncoding = acceptEncoding;
 		this.cert = cert;
 		this.connectedAt = System.currentTimeMillis();
 		setUrl(createUrl(this.request));
@@ -65,6 +69,18 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 		this.inDoc = parseInputNavajo();
 	}
 
+	public BaseRequestImpl(LocalClient lc, Navajo in, HttpServletRequest request, HttpServletResponse response)  {
+		// this.event = event;
+		this.myLocalClient = lc;
+		this.contentEncoding = null;
+		this.acceptEncoding = null;
+		this.request = request;
+		this.response = response;
+		this.cert= request.getAttribute("javax.servlet.request.X509Certificate");
+		this.connectedAt = System.currentTimeMillis();
+		setUrl(createUrl(this.request));
+		this.inDoc = in;
+	}
 	@Override
 	public long getConnectedAt() {
 		return connectedAt;
@@ -105,13 +121,13 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 		BufferedReader r;
 		InputStream is = getRequestInputStream();
 		Navajo in = null;
-		logger.info("Send encoding: "+sendEncoding);
-		if (sendEncoding != null
-				&& sendEncoding.equals(AsyncRequest.COMPRESS_JZLIB)) {
+		logger.debug("Send encoding: "+acceptEncoding);
+		if (acceptEncoding != null
+				&& acceptEncoding.equals(AsyncRequest.COMPRESS_JZLIB)) {
 			r = new BufferedReader(new java.io.InputStreamReader(
-					new ZInputStream(is)));
-		} else if (sendEncoding != null
-				&& sendEncoding.equals(AsyncRequest.COMPRESS_GZIP)) {
+					new InflaterInputStream(is)));
+		} else if (acceptEncoding != null
+				&& acceptEncoding.equals(AsyncRequest.COMPRESS_GZIP)) {
 			r = new BufferedReader(new java.io.InputStreamReader(
 					new java.util.zip.GZIPInputStream(is), "UTF-8"));
 		} else {
@@ -137,14 +153,14 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 		ClientInfo clientInfo = new ClientInfo(
 				request.getRemoteAddr(),
 				"unknown",
-				recvEncoding,
+				contentEncoding,
 				(int) (scheduledAt - connectedAt),
 				(int) (startedAt - scheduledAt),
 				queueLength,
 				queueId,
-				(recvEncoding != null && (recvEncoding.equals(COMPRESS_GZIP) || recvEncoding
+				(contentEncoding != null && (contentEncoding.equals(COMPRESS_GZIP) || contentEncoding
 						.equals(COMPRESS_JZLIB))),
-				(sendEncoding != null && (sendEncoding.equals(COMPRESS_GZIP) || sendEncoding
+				(acceptEncoding != null && (acceptEncoding.equals(COMPRESS_GZIP) || acceptEncoding
 						.equals(COMPRESS_JZLIB))), request.getContentLength(),
 				new java.util.Date(connectedAt));
 		return clientInfo;
@@ -160,20 +176,20 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 			NavajoException {
 		OutputStream out;
 		response.setContentType("text/xml; charset=UTF-8");
-		response.setHeader("Connection", "close"); // THIS IS NOT SUPPORTED,
+//		response.setHeader("Connection", "close"); 
+		// THIS IS NOT SUPPORTED,
 													// I.E. IT DOES NOT
 													// WORK...EH.. PROBABLY..
 
-		if (recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {
+		if (contentEncoding != null && contentEncoding.equals(COMPRESS_JZLIB)) {
 			response.setHeader("Content-Encoding", COMPRESS_JZLIB);
-			out = new ZOutputStream(response.getOutputStream(),
-					JZlib.Z_BEST_SPEED);
-		} else if (recvEncoding != null && recvEncoding.equals(COMPRESS_GZIP)) {
+			out = new DeflaterOutputStream(response.getOutputStream());
+		} else if (contentEncoding != null && contentEncoding.equals(COMPRESS_GZIP)) {
 			response.setHeader("Content-Encoding", COMPRESS_GZIP);
 			out = new java.util.zip.GZIPOutputStream(response.getOutputStream());
 		} else {
-			logger.warn("No content encoding specified: (" + sendEncoding + "/"
-					+ recvEncoding + ")");
+//			logger.warn("No content encoding specified: (" + sendEncoding + "/"
+//					+ recvEncoding + ")");
 			out = response.getOutputStream();
 		}
 
@@ -182,6 +198,15 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 		long postTime = scheduledAt - connectedAt;
 		long queueTime = startedAt - scheduledAt;
 		long serverTime = finishedScriptAt - startedAt;
+		if(outDoc==null) {
+			logger.warn("Null outDoc. This is going to hurt");
+			response.sendError(500, "No response received, possible scheduling problem.");
+			return;
+		} else if (outDoc.getHeader()==null) {
+			logger.warn("Null outDoc header. This is going to hurt");
+			response.sendError(500, "No response header received, possible scheduling problem.");
+			return;
+		}
 
 		outDoc.getHeader().setHeaderAttribute("postTime", "" + postTime);
 		outDoc.getHeader().setHeaderAttribute("queueTime", "" + queueTime);
@@ -202,7 +227,6 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 
 		FileInputStream fis = new FileInputStream(temp);
 		copyResource(out, fis);
-
 		fis.close();
 		out.close();
 		temp.delete();
@@ -214,11 +238,10 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 
 		if (inDoc != null
 				&& inDoc.getHeader() != null
-				&& outDoc != null
 				&& outDoc.getHeader() != null
 				&& !myLocalClient.isSpecialWebservice(inDoc.getHeader()
 						.getRPCName())) {
-			System.err.println("("
+			statLogger.info ("("
 					+ myLocalClient.getApplicationId()
 					+ "): "
 					+ new java.util.Date(connectedAt)
@@ -245,7 +268,7 @@ public abstract class BaseRequestImpl extends BaseInMemoryRequest implements
 					+ outDoc.getHeader().getHeaderAttribute("cpuload")
 					+ ",cpt=" + postTime + ",cqt=" + queueTime + ",qst="
 					+ serverTime + ",cta=" + threadStatus + ",cwt=" + writeTime
-					+ ")" + " (" + sendEncoding + "/" + recvEncoding +
+					+ ")" + " (" + acceptEncoding + "/" + contentEncoding +
 
 					")");
 		}

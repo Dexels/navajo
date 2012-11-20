@@ -188,7 +188,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 	
 
-	private void addSubType(String extra) {
+	public void addSubType(String extra) {
 		if (subtypeMap == null) {
 			subtypeMap = NavajoFactory.getInstance().parseSubTypes(subType);
 		}
@@ -673,10 +673,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 //		myValue = null;
 //	}
 
-	public final void setValue(InputStream is) {
-		throw new UnsupportedOperationException("Unsupported method. Please use setValue(Binary)");
-	}
-
 //	private final void copyResource(OutputStream out, InputStream in) throws IOException {
 //		BufferedInputStream bin = new BufferedInputStream(in);
 //		BufferedOutputStream bout = new BufferedOutputStream(out);
@@ -1054,14 +1050,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	public final String getType() {
 		if (this.type == null || "".equals(this.type)) {
-			Property def = getDefinitionProperty();
-			if (def != null) {
-				return def.getType();
-			} else {
-				// logger.info("Warning: Property without type. Reverting
-				// to String type");
-				return STRING_PROPERTY;
-			}
+			// logger.info("Warning: Property without type. Reverting
+			// to String type");
+			return STRING_PROPERTY;
 		} else {
 			return (this.type);
 		}
@@ -1078,12 +1069,12 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	    SimpleDateFormat dateFormat3 = new SimpleDateFormat( Property.DATE_FORMAT3 );
 	    
 		if (getType().equals(Property.DATE_PROPERTY)) {
-			return (this.getTypedValue() != null) ? dateFormat3.format((Date) this.getTypedValue()) : null;
+			return (this.getTypedValue() != null) ? dateFormat3.format((Date) this.getTypedValue()) : "";
 		} else if (getType().equals(Property.SELECTION_PROPERTY)) {
 			return this.getSelected().getName();
 		} else if (getType().equals(Property.BOOLEAN_PROPERTY)) {
 			if(getValue()==null) {
-				return null;
+				return "";
 			}
 			if (Locale.getDefault().getLanguage().equals("nl")) {
 				return (getValue().equals("true") ? "ja" : "nee");
@@ -1402,14 +1393,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				return 0;
 			}
 
-			if (ob1 == null && ob2 != null) {
+			if (ob1 == null) {
 				return -1;
 			}
-
-			if (ob2 == null && ob1 != null) {
+			if (ob2 == null) {
 				return 1;
 			}
 
+			
 			if (!Property.class.isInstance(p)) {
 				return 0;
 			}

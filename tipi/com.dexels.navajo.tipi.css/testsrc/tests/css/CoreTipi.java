@@ -4,12 +4,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import tipi.TipiCoreExtension;
 import tipi.TipiCssExtension;
 import tipi.TipiExtension;
 
 
 public class CoreTipi extends AbstractTipiTest {
+
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CoreTipi.class);
+	
 	public CoreTipi() {
 		super("testTipi");
 	}
@@ -28,7 +36,7 @@ public class CoreTipi extends AbstractTipiTest {
 		setContext("init", new File("testsrc/tests/css"),elist);
 //		getContext().addOptionalInclude(tipiCss);
 //		getContext().processRequiredIncludes(tipiCss);
-		System.err.println("Setup complete");
+		logger.info("Setup complete");
 	}
 
 	public void testTipi() {
@@ -39,7 +47,7 @@ public class CoreTipi extends AbstractTipiTest {
 		getContext().shutdown();
 		String xx = getContext().getInfoBuffer();
 		assertEquals("event1\nevent2\n0.99\n", xx);
-		System.err.println("Test ok: "+xx);
+		logger.info("Test ok: "+xx);
 	}
 
 }

@@ -39,6 +39,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.Binary;
 
 public class BaseMessageImpl extends BaseNode implements Message, Comparable<Message> {
 
@@ -100,6 +101,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	public final void setType(String type) {
 		myType = type;
+		if ( Message.MSG_TYPE_DEFINITION.equals(type) && getArrayParentMessage() != null ) {
+			getArrayParentMessage().setDefinitionMessage(this);
+		}
 	}
 
 	public final String getOrderBy() {
@@ -212,12 +216,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		/**
 		 * If message is array type, insert new message as "element".
 		 */
-		messageMap.put(name, m);
+		
 		if (getType().equals(MSG_TYPE_ARRAY)) {
 			if (!m.getType().equals(MSG_TYPE_DEFINITION)) {
 				m.setIndex(messageList.size());
 			}
 			((BaseMessageImpl) m).setNameInitially(getName());
+		} else {
+			messageMap.put(name, m);
 		}
 		messageList.add(m);
 
@@ -237,7 +243,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 
 		messageList.add(index, m);
-		messageMap.put(m.getName(), m);
+		//messageMap.put(m.getName(), m);
 		m.setIndex(index);
 		((BaseMessageImpl) m).setNameInitially(getName());
 		m.setParent(this);
@@ -276,15 +282,21 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			propertyList.add(q);
 			propertyMap.put(p.getName(), p);
 		}
-		initPropertyFromDefinition(q);
+		// #TODO: MAYBE THIS IS NOT CORRRECT FOR FINANCIAL FORMS IN SLC...
+		// initPropertyFromDefinition(q);
 	}
 
+	/**
+	 * LEAVE THIS METHOD (SEE COMMENT ABOVE)
+	 * 
+	 * @param q
+	 */
 	private void initPropertyFromDefinition(Property q) {
 		// Set default values from definition message.
 		BaseMessageImpl parentArrayMessage = (BaseMessageImpl) getArrayParentMessage();
 		if (parentArrayMessage != null) {
 
-			Property definitionProperty = parentArrayMessage.getPropertyDefinition(myName);
+			Property definitionProperty = parentArrayMessage.getPropertyDefinition(q.getName());
 
 			if (definitionProperty != null) {
 				if (q.getDescription() == null || "".equals(q.getDescription())) {
@@ -718,8 +730,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		if (messageList == null || messageMap == null) {
 			return;
 		}
-		messageList.remove(child);
-		messageMap.remove(child.getName());
+		if ( messageList.contains(child) ) {
+			messageList.remove(child);
+			messageMap.remove(child.getName());
+		} else if ( child.getParentMessage() != null && child.getParentMessage() != this ) {
+			// Some other message's child, ask parent of child to remove it..
+			child.getParentMessage().removeMessage(child);
+		}
 	}
 	
 	/**
@@ -833,7 +850,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		cp.setMode(getMode());
 		cp.setType(getType());
 
-
+		// If definition message is available, copy it as well.
+		if ( isArrayMessage() && getDefinitionMessage() != null ) {
+			cp.setDefinitionMessage(getDefinitionMessage());
+		}
+		
 		if (messageList != null) {
 
 			for (int i = 0; i < messageList.size(); i++) {
@@ -953,8 +974,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			}
 
 			Property pp = propertyMap.get(path);
-			if (pp == null) {
-				// check for definition messages
+			if ( pp == null && !Message.MSG_TYPE_DEFINITION.equals(getType())) {
+				// check for definition messages (except if I'm a definition message myself)
 				Message arrayP = getArrayParentMessage();
 				if (arrayP != null) {
 					Message def = arrayP.getDefinitionMessage();
@@ -1123,21 +1144,21 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		return b;
 	}
 
-	public static void main(String[] args) throws Exception {
-		System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
-
-		Navajo n = NavajoFactory.getInstance().createNavajo();
-		Message array = NavajoFactory.getInstance().createMessage(n, "Array", Message.MSG_TYPE_ARRAY);
-		for (int i = 0; i < 5; i++) {
-			Message sub = NavajoFactory.getInstance().createMessage(n, "Array");
-			array.addMessage(sub);
-			Property p = NavajoFactory.getInstance().createProperty(n, "Apenoot", "string", "i=" + i, 10, "", "in");
-			sub.addProperty(p);
-		}
-		n.addMessage(array);
-		ArrayList<Property> p = n.getProperties("/Arr[aA][yY]@0/Apenoot");
-		logger.info("p = " + p.get(0).getValue());
-	}
+//	public static void main(String[] args) throws Exception {
+//		System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+//
+//		Navajo n = NavajoFactory.getInstance().createNavajo();
+//		Message array = NavajoFactory.getInstance().createMessage(n, "Array", Message.MSG_TYPE_ARRAY);
+//		for (int i = 0; i < 5; i++) {
+//			Message sub = NavajoFactory.getInstance().createMessage(n, "Array");
+//			array.addMessage(sub);
+//			Property p = NavajoFactory.getInstance().createProperty(n, "Apenoot", "string", "i=" + i, 10, "", "in");
+//			sub.addProperty(p);
+//		}
+//		n.addMessage(array);
+//		ArrayList<Property> p = n.getProperties("/Arr[aA][yY]@0/Apenoot");
+//		logger.info("p = " + p.get(0).getValue());
+//	}
 
 	public final boolean isEqual(Message o) {
 		return isEqual(o, "");
@@ -1212,6 +1233,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	public final void setDefinitionMessage(Message m) {
 		this.definitionMessage = (BaseMessageImpl) m;
+		// Remove from child list, to be sure.
+		if ( messageList != null ) {
+			messageList.remove(m);
+		}
+		m.setParent(null);
 //		if (m == null) {
 //			return;
 //		}
@@ -1272,6 +1298,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		throw new UnsupportedOperationException("getRef not possible on base type. Override it if you need it");
 	}
 
+	/**
+	 * @param newName the name of the new message 
+	 */
 	public Object clone(String newName) {
 		throw new UnsupportedOperationException("Can not clone properties (yet)");
 	}
@@ -1559,6 +1588,42 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 
 	}
+	
+	public void maskMessage(Message mask) {
+
+		// Mask all properties.
+		Iterator<Property> allProperties = new ArrayList<Property>(this.getAllProperties()).iterator();
+		
+		while ( allProperties.hasNext() ) {
+			Property p = allProperties.next();
+			if ( this.getIndex() >= 0) { // It's an array message element. Check mask's definition message if it exists..
+				if ( !mask.isArrayMessage() || ((BaseMessageImpl) mask).getPropertyDefinition(p.getName()) == null ) {
+					removeProperty(p);
+				}
+			} else {
+				if ( mask.getProperty(p.getName()) == null ) {
+					removeProperty(p);
+				}
+			}
+		}
+		
+		// Mask all messages.
+		Iterator<Message> allMessages = new ArrayList<Message>(this.getAllMessages()).iterator();
+		while ( allMessages.hasNext() ) {
+			Message m = allMessages.next();
+			if ( mask.getMessage(m.getName()) == null ) {
+				removeMessage(m);
+			} else {
+				if ( m.isArrayMessage() ) {
+					for (int i = 0; i < m.getElements().size(); i++ ) {
+						m.getElements().get(i).maskMessage(mask.getMessage(m.getName()));
+					}
+				} else {
+					m.maskMessage(mask.getMessage(m.getName()));
+				}
+			}
+		}
+	}
 
 	@Override
 	public void writeJSON(Writer writer) throws IOException {
@@ -1566,4 +1631,89 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		
 	}
 
+	public static void main(String [] args) {
+		
+		Navajo testDoc = null;
+		try {
+		      testDoc = NavajoFactory.getInstance().createNavajo();
+
+		      Message msg = NavajoFactory.getInstance().createMessage(testDoc, "testmessage");
+		      
+		      Property prop = NavajoFactory.getInstance().createProperty(testDoc, "testprop1", "+", "", Property.DIR_IN);
+		      msg.addProperty(prop);
+		      
+		      Property prop2 = NavajoFactory.getInstance().createProperty(testDoc, "stringprop", Property.STRING_PROPERTY, "navajo", 10, "", Property.DIR_OUT);
+		      msg.addProperty(prop2);
+		      
+		      Property prop3 = NavajoFactory.getInstance().createProperty(testDoc, "integerprop", Property.INTEGER_PROPERTY, "2", 10, "", Property.DIR_OUT);
+		      msg.addProperty(prop3);
+		      
+		      Property prop4 = NavajoFactory.getInstance().createProperty(testDoc, "propfloat", Property.FLOAT_PROPERTY, "5.0", 10, "", Property.DIR_OUT);
+		      msg.addProperty(prop4);
+		      
+		      Property prop6 = NavajoFactory.getInstance().createProperty(testDoc, "selectietje", "1", "", "in");
+		      prop6.addSelection(NavajoFactory.getInstance().createSelection(testDoc, "-", "-1", false));
+		      //prop6.addSelection(NavajoFactory.getInstance().createSelection(testDoc, "aap", "aap", false));
+		      //prop6.addSelection(NavajoFactory.getInstance().createSelection(testDoc, "noot", "noot", false));
+		      msg.addProperty(prop6);
+		      
+		      String binaryString = new String("ASSUMETHISISABINARY");
+		      Binary b = new Binary(binaryString.getBytes());
+		      Property prop7 = NavajoFactory.getInstance().createProperty(testDoc, "propbinary", Property.BINARY_PROPERTY, "", 10, "", Property.DIR_OUT);
+		      prop7.setAnyValue(b);
+		      msg.addProperty(prop7);
+		      
+		      testDoc.addMessage(msg);
+		      Message submsg1 =  NavajoFactory.getInstance().createMessage(testDoc, "testmessage_sub1");
+		      msg.addMessage(submsg1);
+		      Message subsubmsg1 = NavajoFactory.getInstance().createMessage(testDoc, "testmessage_sub1_sub1");
+		      submsg1.addMessage(subsubmsg1);
+		      Property prop5 = NavajoFactory.getInstance().createProperty(testDoc, "proppie", Property.STRING_PROPERTY, "", 0, "", Property.DIR_INOUT);
+		      subsubmsg1.addProperty(prop5);
+
+		      Message subsubmsg2 = NavajoFactory.getInstance().createMessage(testDoc, "testmessage_sub1_sub2");
+		      submsg1.addMessage(subsubmsg2);
+		      Message subsubmsgje = NavajoFactory.getInstance().createMessage(testDoc, "testmessage_sub1_subje");
+		      submsg1.addMessage(subsubmsgje);
+		      Message subsubmsg3 = NavajoFactory.getInstance().createMessage(testDoc, "testmessage_sub1_sub3");
+		      submsg1.addMessage(subsubmsg3);
+
+		      Message submsg2 = NavajoFactory.getInstance().createMessage(testDoc, "testmessage_sub2");
+		      msg.addMessage(submsg2);
+		      Message sub2submsg1 = NavajoFactory.getInstance().createMessage(testDoc, "testmessage_sub2_sub1");
+		      submsg2.addMessage(sub2submsg1);
+		      Message sub2submsg2 = NavajoFactory.getInstance().createMessage(testDoc, "testmessage_sub2_sub2");
+		      submsg2.addMessage(sub2submsg2);
+		      Message sub2submsgje = NavajoFactory.getInstance().createMessage(testDoc, "testmessage_sub2_subje");
+		      submsg2.addMessage(sub2submsgje);
+		      Message sub2submsg3 = NavajoFactory.getInstance().createMessage(testDoc, "testmessage_sub2_sub3");
+		      submsg2.addMessage(sub2submsg3);
+
+		      Message submsg3 = NavajoFactory.getInstance().createMessage(testDoc, "testmessage_sub3");
+		      msg.addMessage(submsg3);
+
+		      Message msg2 = NavajoFactory.getInstance().createMessage(testDoc, "testmessage2");
+		      testDoc.addMessage(msg2);
+
+		      Message msg3 = NavajoFactory.getInstance().createMessage(testDoc, "testmessage3");
+		      testDoc.addMessage(msg3);
+
+		    } catch (Exception e) {
+		      logger.error("Error: ", e);
+		    }
+			if(testDoc!=null) {
+				 testDoc.write(System.err);
+				  Message m = testDoc.getMessage("testmessage/testmessage_sub1");
+				  
+				    //Assert.assertNotNull(m);
+				    testDoc.removeMessage(m);
+				    testDoc.write(System.err);
+				    Message m2 = testDoc.getMessage("testmessage/testmessage_sub1");
+				    //Assert.assertNull(m2);
+				    System.err.println("m2 = " + m2);
+				    testDoc.getMessage("testmessage");
+				    //Assert.assertNotNull(m3);
+			}
+		  
+	}
 }

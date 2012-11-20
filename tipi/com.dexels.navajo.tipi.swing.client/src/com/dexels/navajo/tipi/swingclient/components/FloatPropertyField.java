@@ -9,11 +9,18 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 
 public class FloatPropertyField extends PropertyField implements
 		PropertyControlled {
 	private static final long serialVersionUID = -315919846250291649L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(FloatPropertyField.class);
+	
 	protected Document myDocument = null;
 	protected boolean readOnly = false;
 
@@ -27,7 +34,7 @@ public class FloatPropertyField extends PropertyField implements
 				setHorizontalAlignment(SwingConstants.RIGHT);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -161,7 +168,7 @@ public class FloatPropertyField extends PropertyField implements
 		// commitEdit();
 		// }
 		// catch (ParseException ex) {
-		// System.err.println("Parse problem.");
+		// logger.info("Parse problem.");
 		// return;
 		// }
 
@@ -172,7 +179,7 @@ public class FloatPropertyField extends PropertyField implements
 		if (!"".equals(getText())) {
 			double d = Double.parseDouble(getText());
 
-			// System.err.println("Proceeding with update: "+getValue());
+			// logger.info("Proceeding with update: "+getValue());
 			if (initProperty.getType().equals(Property.EXPRESSION_PROPERTY)) {
 				return;
 			}
@@ -205,16 +212,16 @@ final class FloatNumberDocument extends PlainDocument {
 		// String start = oldVal.substring(0,offs);
 		// String end = oldVal.substring(offs,oldVal.length());
 		// String total = start+str+end;
-		// System.err.println("OldVal: "+oldVal);
-		// System.err.println("Start: "+start);
-		// System.err.println("End: "+end);
-		// System.err.println("Total: "+total);
+		// logger.info("OldVal: "+oldVal);
+		// logger.info("Start: "+start);
+		// logger.info("End: "+end);
+		// logger.info("Total: "+total);
 		for (int i = 0; i < result.length; i++) {
 			if (Character.isDigit(source[i])) {
 				result[j++] = source[i];
 			} else if (source[i] == ',' || source[i] == '.') {
 				// if (dot == true) {
-				// System.err.println("Second dot encountered:  " + str);
+				// logger.info("Second dot encountered:  " + str);
 				// }
 				// else {
 				// dot = true;
@@ -222,7 +229,7 @@ final class FloatNumberDocument extends PlainDocument {
 				// }
 			} else {
 				// Toolkit.getDefaultToolkit().beep();
-				// System.err.println("Invalid char (not numeric) in string:  "+str);
+				// logger.info("Invalid char (not numeric) in string:  "+str);
 			}
 		}
 		super.insertString(offs, new String(result, 0, j), a);
@@ -246,7 +253,7 @@ final class FloatNumberDocument extends PlainDocument {
 // }
 // else {
 // Toolkit.getDefaultToolkit().beep();
-// System.err.println("Invalid char (not numeric) in string:  "+str);
+// logger.info("Invalid char (not numeric) in string:  "+str);
 // }
 // }
 // super.insertString(offs, new String(result, 0, j), a);

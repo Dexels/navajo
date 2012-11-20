@@ -10,6 +10,9 @@ import java.util.Map;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
@@ -19,28 +22,13 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingTextField;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class TipiTextField extends TipiSwingComponentImpl {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 6379192303536111124L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTextField.class);
 	private TipiSwingTextField myField;
 
 	public TipiTextField() {
@@ -53,13 +41,13 @@ public class TipiTextField extends TipiSwingComponentImpl {
 		addHelper(th);
 		myField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {
-				// System.err.println("typed: "+e.getKeyChar());
+				// logger.debug("typed: "+e.getKeyChar());
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "typed");
 				try {
 					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -69,7 +57,7 @@ public class TipiTextField extends TipiSwingComponentImpl {
 				try {
 					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -79,13 +67,13 @@ public class TipiTextField extends TipiSwingComponentImpl {
 				try {
 					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					try {
 						performTipiEvent("onEnter", m, false);
 					} catch (TipiException e1) {
-						e1.printStackTrace();
+						logger.error("Error detected",e1);
 					}
 				}
 
@@ -124,9 +112,9 @@ public class TipiTextField extends TipiSwingComponentImpl {
 				try {
 					performTipiEvent("onFocusGained", null, false);
 				} catch (TipiBreakException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 			}
 
@@ -134,9 +122,9 @@ public class TipiTextField extends TipiSwingComponentImpl {
 				try {
 					performTipiEvent("onFocusLost", null, false);
 				} catch (TipiBreakException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error detected",e1);
 				}
 
 			}

@@ -17,6 +17,9 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -40,11 +43,10 @@ import com.dexels.navajo.tipi.swingclient.components.PropertyField;
  * @version 1.0
  */
 public class BorderParser extends TipiTypeParser {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3310054914723683160L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BorderParser.class);
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return parseBorder(expression);
 	}
@@ -94,7 +96,7 @@ public class BorderParser extends TipiTypeParser {
 				return BorderFactory
 						.createEmptyBorder(top, left, bottom, right);
 			} catch (Exception ex) {
-				System.err.println("Error while parsing border");
+				logger.debug("Error while parsing border");
 			}
 		}
 		return BorderFactory.createEmptyBorder();
@@ -141,12 +143,12 @@ public class BorderParser extends TipiTypeParser {
 						try {
 							Thread.sleep(2000);
 						} catch (InterruptedException e) {
-							e.printStackTrace();
+							logger.error("Error detected",e);
 						}
 						comp22.setCursor(Cursor
 								.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
-					};
+					}
 
 				};
 				t.start();

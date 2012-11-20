@@ -29,7 +29,7 @@ public final class FormatStringList extends FunctionInterface {
         Object b = this.getOperands().get(1);
 
         if (a instanceof String)
-            return (String) a;
+            return a;
         if (!(a instanceof ArrayList))
             throw new TMLExpressionException("FormatStringList: invalid operand: " + a.getClass().getName());
         if (!(b instanceof String))

@@ -42,22 +42,13 @@ public class ResourceManager {
 	
 	public void activate(ComponentContext cc) {
 		this.bundleContext = cc.getBundleContext();
-		System.err.println("Bundlecontext: "+bundleContext);
 		setupResources();
 		setupTesterUser();
 
 	}
 	
 	public void deactivate() {
-		logger.info("Deactivating context!");
-		for (String pid : resourcePids) {
-			try {
-				Configuration c = configAdmin.getConfiguration(pid);
-				c.delete();
-			} catch (IOException e) {
-				logger.error("Error deregistering configuration: "+pid);
-			}
-		}
+		unloadDataSources();
 		try {
 			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient",null);
 			if(config!=null) {
@@ -66,6 +57,17 @@ public class ResourceManager {
 			}
 		} catch (IOException e) {
 			logger.error("Error deactivating config: ", e);
+		}
+	}
+
+	public void unloadDataSources() {
+		for (String pid : resourcePids) {
+			try {
+				Configuration c = configAdmin.getConfiguration(pid);
+				c.delete();
+			} catch (IOException e) {
+				logger.error("Error deregistering configuration: "+pid);
+			}
 		}
 	}
 
@@ -111,21 +113,21 @@ public class ResourceManager {
 	}
 
 	public DataSource getDataSource(String shortName) throws InvalidSyntaxException {
-		ServiceReference ss = getDataSourceReference(shortName);
-		return (DataSource)bundleContext.getService(ss);
+		ServiceReference<DataSource> ss = getDataSourceReference(shortName);
+		return bundleContext.getService(ss);
 	}
-	public ServiceReference getDataSourceReference(String shortName) throws InvalidSyntaxException {
+	private ServiceReference<DataSource> getDataSourceReference(String shortName) throws InvalidSyntaxException {
 		logger.debug("Getting datasource reference: "+shortName);
-		ServiceReference<?>[] dlist = bundleContext.getServiceReferences(DataSource.class.getName(),"(name=navajo.resource."+shortName+")");
-		if(dlist.length!=1) {
-			logger.info("Matched: {} datasources.",dlist.length);
+		Collection<ServiceReference<DataSource>> dlist = bundleContext.getServiceReferences(DataSource.class,"(name="+shortName+")");
+		if(dlist.size()!=1) {
+			logger.info("Matched: {} datasources.",dlist.size());
 		}
-		ServiceReference dref = dlist[0];
+		ServiceReference<DataSource> dref = dlist.iterator().next();
 		return dref;
 	}
 
-	public ServiceReference<Object> getResourceReference(String shortName) throws InvalidSyntaxException {
-		Collection<ServiceReference<Object>> dlist = bundleContext.getServiceReferences(Object.class,"(name=navajo.resource."+shortName+")");
+	private ServiceReference<Object> getResourceReference(String shortName) throws InvalidSyntaxException {
+		Collection<ServiceReference<Object>> dlist = bundleContext.getServiceReferences(Object.class,"(name="+shortName+")");
 		if(dlist.size()!=1) {
 			logger.info("Matched: {} datasources.",dlist.size());
 		}
@@ -151,12 +153,14 @@ public class ResourceManager {
 		this.configAdmin = configAdmin;
 	}
 
+	/**
+	 * @param configAdmin the configAdmin to remove 
+	 */
 	public void clearConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.configAdmin = null;
 	}
 
 	public void activateManager() {
-		logger.info("Activating context>>>>>>>>>>>>>>>>>>>>>>!");
 		setupResources();
 		setupTesterUser();
 	}
@@ -164,11 +168,15 @@ public class ResourceManager {
 
 
 	
-	private void setupResources() {
+	public void setupResources() {
 		FileInputStream fis = null;
 		try {
 			logger.info("Looking for datasources in: "+navajoServerContext.getInstallationPath());
 			File install = new File(navajoServerContext.getInstallationPath(),"config/datasources.xml");
+			if(!install.exists()) {
+				logger.warn("Datasources file: "+install.getAbsolutePath()+" does not exist, not injecting explicit datasources");
+				return;
+			}
 			fis = new FileInputStream(install);
 			loadResourceTml(fis);
 			fis.close();
@@ -187,7 +195,6 @@ public class ResourceManager {
 
 	private void setupTesterUser() {
 		FileInputStream fis = null;
-		logger.debug("Looking for client.properties in: "+navajoServerContext.getInstallationPath());
 		File install = new File(navajoServerContext.getInstallationPath(),"config/client.properties");
 		try {
 			fis = new FileInputStream(install);
@@ -215,15 +222,19 @@ public class ResourceManager {
 	private void processClientBundle(ResourceBundle b) {
 		try {
 			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient",null);
-			Dictionary dt = new Hashtable<String,String>();
-			for(String key : b.keySet()) {
-				logger.info("Key: "+key+" value: "+b.getString(key));
-			}
-			
+			Dictionary<String,String> dt = new Hashtable<String,String>();
 			dt.put("user", b.getString("username"));
 			dt.put("password", b.getString("password"));
 			config.update(dt);
-			logger.info("client module registration complete.");
+		} catch (IOException e) {
+			logger.error("Adding configuration for client.properties: ", e);
+		}
+		try {
+			Configuration config = configAdmin.getConfiguration("com.dexels.navajo.localclient.legacy",null);
+			Dictionary<String,String> dt = new Hashtable<String,String>();
+			dt.put("user", b.getString("username"));
+			dt.put("password", b.getString("password"));
+			config.update(dt);
 		} catch (IOException e) {
 			logger.error("Adding configuration for client.properties: ", e);
 		}
@@ -232,6 +243,10 @@ public class ResourceManager {
 	}
 
 
+	/**
+	 * The navajoServerContext to remove
+	 * @param navajoServerContext
+	 */
 	public void removeNavajoContext(NavajoServerContext navajoServerContext) {
 		this.navajoServerContext = null;
 	}

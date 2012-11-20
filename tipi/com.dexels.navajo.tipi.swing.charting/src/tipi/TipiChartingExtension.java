@@ -1,7 +1,5 @@
 package tipi;
 
-import java.io.IOException;
-
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.tipi.TipiContext;
@@ -14,8 +12,7 @@ public class TipiChartingExtension extends TipiAbstractXMLExtension implements T
 	 */
 	private static final long serialVersionUID = -5107021813164792108L;
 
-	public TipiChartingExtension() throws XMLParseException,
-			IOException {
+	public TipiChartingExtension() throws XMLParseException {
 // NO		loadDescriptor();
 	}
 

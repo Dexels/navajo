@@ -5,6 +5,9 @@ import java.util.StringTokenizer;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.DescriptionProvider;
@@ -30,7 +33,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class LabelBorderParser extends TipiTypeParser {
 
 	private static final long serialVersionUID = -6929897138501606067L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(LabelBorderParser.class);
+	
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return parseBorder(expression,source);
 	}
@@ -49,7 +55,7 @@ public class LabelBorderParser extends TipiTypeParser {
 		}
 		if ("titled".equals(borderName)) {
 			String title = st.nextToken();
-			System.err.println("CREATING (LABEL) TITLED BORDER: " + title);
+			logger.debug("CREATING (LABEL) TITLED BORDER: " + title);
 			DescriptionProvider dp = source.getContext().getDescriptionProvider();
 
 			if (dp == null) {
@@ -68,7 +74,7 @@ public class LabelBorderParser extends TipiTypeParser {
 				return BorderFactory
 						.createEmptyBorder(top, left, bottom, right);
 			} catch (Exception ex) {
-				System.err.println("Error while parsing border");
+				logger.debug("Error while parsing border");
 			}
 		}
 		return BorderFactory.createEmptyBorder();

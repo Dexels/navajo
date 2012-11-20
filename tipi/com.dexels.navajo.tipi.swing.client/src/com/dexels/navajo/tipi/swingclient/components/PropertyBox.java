@@ -4,6 +4,9 @@ import java.awt.event.ItemEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
@@ -12,7 +15,9 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled,
 		PropertyChangeListener {
 
 	private static final long serialVersionUID = 473768705535369366L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PropertyBox.class);
 	private Property myProperty = null;
 
 	private Object lastSelection;
@@ -126,7 +131,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled,
 
 	final void this_itemStateChanged(ItemEvent e) {
 		if (myProperty == null) {
-			System.err.println("Property box changed before it was set!");
+			logger.info("Property box changed before it was set!");
 		}
 		try {
 			setSelectionProperty();
@@ -138,12 +143,12 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled,
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (evt.getSource().equals(myProperty)) {
-			System.err.println("change: " + evt.getOldValue() + " new: "
+			logger.info("change: " + evt.getOldValue() + " new: "
 					+ evt.getNewValue());
 			setProperty(myProperty);
 		} else {
 			// huh?!
-			System.err.println("snappetniet");
+			logger.info("snappetniet");
 		}
 	}
 

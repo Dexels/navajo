@@ -10,7 +10,7 @@ public class FormatDescriptionReader implements Serializable
 {
 	
 	private static final long serialVersionUID = -6016285390695170319L;
-	private BufferedReader in;
+	private transient BufferedReader in;
 
 	public FormatDescriptionReader() {
 		

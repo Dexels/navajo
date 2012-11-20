@@ -149,6 +149,12 @@ public class XMLNode {
         pw.close();
         return sw.toString();
     }
+
+	@Override
+	// TODO should have a 'real' implementation
+	public int hashCode() {
+		return super.hashCode();
+	}
 }
 
 

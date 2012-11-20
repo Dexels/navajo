@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.metadata.BinaryOpener;
 import com.dexels.navajo.tipi.internal.TipiAction;
@@ -25,7 +28,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiComposeMail extends TipiAction {
 
 	private static final long serialVersionUID = -1491806387584733104L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiComposeMail.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -47,7 +53,7 @@ public class TipiComposeMail extends TipiAction {
 			for (int i = 0; i < recipient.getArraySize(); i++) {
 				Message current = recipient.getMessage(i);
 				emailAddress = current.getProperty(propertyName).getValue();
-				if (emailAddress != null && emailAddress.trim() != "") {
+				if (emailAddress != null && !"".equals(emailAddress.trim())) {
 					recipientsFound = true;
 					emailString = emailString + emailAddress + ",";
 				}
@@ -57,14 +63,14 @@ public class TipiComposeMail extends TipiAction {
 						(emailString.length() - 1));
 				emailString = emailString + "?subject=" + subject + "&body="
 						+ body;
-				System.err.println("Generated email string: " + emailString);
+				logger.info("Generated email string: " + emailString);
 				BinaryOpener.displayURL(emailString);
 			} else {
-				System.err.println("No recipients found that have an email address");
+				logger.info("No recipients found that have an email address");
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 

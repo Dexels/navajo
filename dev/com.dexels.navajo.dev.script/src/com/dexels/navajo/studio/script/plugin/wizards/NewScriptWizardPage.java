@@ -1,7 +1,6 @@
 package com.dexels.navajo.studio.script.plugin.wizards;
 
 import org.eclipse.jface.dialogs.IDialogPage;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -21,22 +20,13 @@ import org.eclipse.swt.widgets.Text;
 public class NewScriptWizardPage extends WizardPage {
     private Text containerText;
 
-    private Text scriptText;
-
-    private ISelection selection;
 
     private String scriptName;
 
-    /**
-     * Constructor for SampleNewWizardPage.
-     * 
-     * @param pageName
-     */
-    public NewScriptWizardPage(ISelection selection) {
+    public NewScriptWizardPage() {
         super("wizardPage");
         setTitle("Empty script wizard");
         setDescription("This wizard creates a new, empty script file.");
-        this.selection = selection;
     }
 
     /**

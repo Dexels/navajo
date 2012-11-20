@@ -21,6 +21,8 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.dexels.utils.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.soapmap.SoapAttachment;
 import com.dexels.navajo.document.types.Binary;
@@ -50,11 +52,12 @@ public class SOAPMap implements Mappable {
 	public ArrayList<SoapAttachment> requestAttachments = new ArrayList<SoapAttachment>();
 	public ArrayList<SoapAttachment> responseAttachments = new ArrayList<SoapAttachment>();
 	
+	private final static Logger logger = LoggerFactory.getLogger(SOAPMap.class);
+	
 	public void kill() {
 	}
 	
 	public void setNamespace(String ns){
-		//System.err.println("Adding namespace to list: " + ns);
 		namespaces.add(ns);
 	}
 
@@ -91,11 +94,9 @@ public class SOAPMap implements Mappable {
 	}
 	
 	public void setRequestBody(Binary b, boolean containsSoapBody) {
-		//System.err.println("Constructing envelope, I have " + namespaces.size() + " extra namespaces" );
 		StringBuffer sb = new StringBuffer();
 		sb.append("<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" ");
 		for(int i=0;i<namespaces.size();i++){
-			//System.err.println("Appending extra namespace: " + namespaces.get(i));
 			sb.append(namespaces.get(i));
 		}
 		sb.append(">\n");
@@ -117,7 +118,6 @@ public class SOAPMap implements Mappable {
 		this.requestBody = new Binary( sb.toString().getBytes() );		
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void setDoSend(boolean b) throws UserException {
 		
 		SOAPConnection connection = null;
@@ -145,7 +145,7 @@ public class SOAPMap implements Mappable {
 				soapPart.setContent( ss );
 				msg.setContentDescription("text/xml");
 				
-				System.err.println(new String(requestBody.getData()));
+				logger.debug(new String(requestBody.getData()));
 				// attachments
 				if ( requestAttachments.size() > 0 ) {
 					for ( int i = 0; i < requestAttachments.size(); i++ ) {
@@ -272,33 +272,33 @@ SOAPAction: "https://sportlink.rfxweb.nl/GetClub"
 //		sm.setAddAttachment(new Binary(new FileInputStream(new File("/home/arjen/wedstrijden.csv"))));
 		sm.setDoSend(true);
 		
-		System.err.println("\n\nRESPONSE:\n");
+		logger.debug("\n\nRESPONSE:\n");
 		
 //		FileOutputStream fw = new FileOutputStream(new File("/home/arjen/result.xml"));
 //		sm.getResponseBody().write(fw);
 //		fw.close();
 		
 		SoapAttachment [] sa = sm.getResponseAttachments();
-		System.err.println("received " + sa.length + " attachments.");
+		logger.debug("received " + sa.length + " attachments.");
 		for ( int i = 0; i < sa.length; i++ ) {
-			System.err.println("type: " + sa[i].getMimeType() + ", content:\n" +  new String(sa[i].getContent().getData()));
+			logger.debug("type: " + sa[i].getMimeType() + ", content:\n" +  new String(sa[i].getContent().getData()));
 		}
 		
 		XMLMap response = sm.getXmlResponse();
 		
 		response.setChildName("/soap:Body/GetClubMembersResponse/GetClubMembersResult");
 		
-		System.err.println("Value: " + response.getChild().getChildren().length);
+		logger.debug("Value: " + response.getChild().getChildren().length);
 
 		
-		//System.err.println(response.getChildText("SOAP-ENV:Body/geocodeResponse/.*/item/lat"));
+		//logger.debug(response.getChildText("SOAP-ENV:Body/geocodeResponse/.*/item/lat"));
 		
 		
 	}
 
 	public SoapAttachment [] getResponseAttachments() {
 		SoapAttachment [] atts = new SoapAttachment[responseAttachments.size()];
-		atts = (SoapAttachment []) responseAttachments.toArray(atts);
+		atts = responseAttachments.toArray(atts);
 		return atts;
 	}
 	

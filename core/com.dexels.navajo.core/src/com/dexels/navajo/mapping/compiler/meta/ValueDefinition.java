@@ -1,7 +1,5 @@
 package com.dexels.navajo.mapping.compiler.meta;
 
-import java.io.StringWriter;
-
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 /**
@@ -168,17 +166,5 @@ public class ValueDefinition {
 		}
 		
 	}
-	
-	public static void main(String [] args) throws Exception {
-		
-		ValueDefinition vd = new ValueDefinition("datasource", "string", "false", "in");
-		
-		StringWriter sw = new StringWriter();
-		XMLElement start = new TSLElement(null, "tsl");
-		start.setName("tsl");
-		vd.generateCode(null, "sportlinkkernel", false, null, start, true, "aap.xml");
-		sw = new StringWriter();
-		start.write(sw);
-		System.err.println(sw.toString());
-	}
+
 }

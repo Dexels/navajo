@@ -29,6 +29,8 @@ import java.net.URLConnection;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.dexels.utils.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -43,6 +45,10 @@ import org.dexels.utils.Base64;
 
 public abstract class AbstractCatalinaTask {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(AbstractCatalinaTask.class);
+	
 
     // ----------------------------------------------------- Instance Variables
 
@@ -241,7 +247,7 @@ public abstract class AbstractCatalinaTask {
                         if (first) {
                             if (!line.startsWith("OK -")) {
                            	 
-                           	 System.err.println("Error: "+line);
+                           	 logger.info("Error: "+line);
                            	 error = line;
                                 msgPriority = Project.MSG_ERR;
                             }
@@ -266,7 +272,6 @@ public abstract class AbstractCatalinaTask {
                 try {
                     reader.close();
                 } catch (Throwable u) {
-                    ;
                 }
                 reader = null;
             }
@@ -274,7 +279,6 @@ public abstract class AbstractCatalinaTask {
                 try {
                     istream.close();
                 } catch (Throwable u) {
-                    ;
                 }
                 istream = null;
             }
@@ -283,7 +287,7 @@ public abstract class AbstractCatalinaTask {
     }
 
 	private void handleOutput(String line, int msgPriority) {
-		System.err.println("Output: "+line+" ("+msgPriority+")");
+		logger.info("Output: "+line+" ("+msgPriority+")");
 	}
 
 

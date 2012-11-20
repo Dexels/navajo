@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.aetrion.flickr.people.User;
 import com.aetrion.flickr.photos.GeoData;
 import com.aetrion.flickr.photos.Photo;
@@ -23,10 +26,12 @@ import com.dexels.navajo.tipi.connectors.TipiBaseConnector;
 public class TipiFlickrConnector extends TipiBaseConnector {
 
 	private static final long serialVersionUID = -8354461877702188904L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiFlickrConnector.class);
 
 	public TipiFlickrConnector() {
-		System.err.println("FLICKR INSTANTIATED!");
+		logger.info("FLICKR INSTANTIATED!");
 	}
 	public Set<String> getEntryPoints() {
 		Set<String> s = new HashSet<String>();
@@ -46,11 +51,11 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 //			String url =  PhotoManager.getInstance().getUrl(new String[]{tag}, index);
 //			return url;
 //		} catch (IOException e) {
-//			e.printStackTrace();
+//			logger.error("Error: ",e);
 //		} catch (FlickrException e) {
-//			e.printStackTrace();
+//			logger.error("Error: ",e);
 //		} catch (SAXException e) {
-//			e.printStackTrace();
+//			logger.error("Error: ",e);
 //		}
 //		return null;
 //		
@@ -175,7 +180,7 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 		int i=0;
 		while (tagger.hasMoreTokens()) {
 			tagg[i++]= tagger.nextToken();
-			System.err.println("adding tag: "+tagg[i-1]);
+			logger.info("adding tag: "+tagg[i-1]);
 		}
 		try {
 			tt = PhotoManager.getInstance().getPhotos(tagg,maxInt, indexInt);
@@ -228,17 +233,17 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 		try {
 			addProperty(element, "Small", new Binary(photo.getSmallAsInputStream(),false), Property.STRING_PROPERTY);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		try {
 			addProperty(element, "Medium", new Binary(photo.getMediumAsStream(),false), Property.STRING_PROPERTY);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		try {
 			addProperty(element, "Large", new Binary(photo.getLargeAsStream(),false), Property.STRING_PROPERTY);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		
 	}
@@ -247,14 +252,14 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 		try {
 			addProperty(element, "Small", new Binary(photo.getSmallAsInputStream(),false), Property.STRING_PROPERTY);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}	
 	}
 	private void appendMediumPictureBinary(Message element, Photo photo) throws NavajoException {
 		try {
 			addProperty(element, "Medium", new Binary(photo.getMediumAsStream(),false), Property.STRING_PROPERTY);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}	
 	}
 	

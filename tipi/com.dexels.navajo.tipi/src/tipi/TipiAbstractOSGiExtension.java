@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import navajoextension.AbstractCoreExtension;
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -18,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import tipipackage.ITipiExtensionRegistry;
 import tipipackage.TipiJarServiceExtensionProvider;
 
-public abstract class TipiAbstractOSGiExtension implements TipiExtension,
+public abstract class TipiAbstractOSGiExtension extends AbstractCoreExtension implements TipiExtension,
 		BundleActivator {
 
 	private static final long serialVersionUID = 7871411864902044319L;
@@ -32,7 +34,6 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 	
 	
 	
-	@SuppressWarnings("unchecked")
 	protected void registerTipiExtension(BundleContext context)
 			throws Exception {
 		this.context = context;
@@ -58,6 +59,9 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 
 	
 	
+	/**
+	 * @param context  
+	 */
 	protected void deregisterTipiExtension(BundleContext context)
 			throws Exception {
 		if(extensionReg!=null) {
@@ -75,7 +79,6 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 
 	}	
 	
-	@SuppressWarnings("unchecked")
 	public ITipiExtensionRegistry getTipiExtensionRegistry() {
 		if(context==null) {
 			return nonOSGiRegistry;
@@ -83,21 +86,11 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 		ServiceReference<? extends ITipiExtensionRegistry> refs = (ServiceReference<? extends ITipiExtensionRegistry>) context
 				.getServiceReference(ITipiExtensionRegistry.class.getName());
 		// TODO Sometimes this value is null, just af
-		ITipiExtensionRegistry reg = (ITipiExtensionRegistry) context
-				.getService(refs);
+		ITipiExtensionRegistry reg = context.getService(refs);
 		return reg;
 	}
 
-//	@Override
-//	public void start(BundleContext context) throws Exception {
-//		registerTipiExtension(context);
-//	}
-//
-//	@Override
-//	public void stop(BundleContext context) throws Exception {
-//
-//	}
-	
+
 	public BundleContext getBundleContext() {
 		return context;
 	}
@@ -142,7 +135,7 @@ public abstract class TipiAbstractOSGiExtension implements TipiExtension,
 				b.start();
 				logger.info("Bundle: "+b.getSymbolicName()+" id: "+b.getBundleId()+" started succesfully.");
 			} catch (BundleException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 				logger.error("Bundle: "+b.getSymbolicName()+" id: "+b.getBundleId()+" could not start.",e);
 			}
 		}

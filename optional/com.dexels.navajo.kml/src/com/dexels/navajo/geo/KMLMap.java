@@ -113,7 +113,7 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 	public Binary getKmlData() {
 		try {
 			if ( !isPointFile() ) {
-				File kmz = createKmlFile(inMessage,colorizer);
+				File kmz = createKmlFile(inMessage);
 				myKmzData = new Binary(kmz, false);
 				kmz.delete();
 				FormatDescription fd = new FormatDescription();
@@ -150,7 +150,7 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 		ZipEntry ze = null;
 		do {
 			ze = zis.getNextEntry();
-			if(ze.getName().equals("doc.kml")) {
+			if(ze!=null && ze.getName().equals("doc.kml")) {
 				SvgRenderer sr = new SvgRenderer();
 				mySvgData = sr.renderToBinary(zis);
 				FormatDescription fd = new FormatDescription();

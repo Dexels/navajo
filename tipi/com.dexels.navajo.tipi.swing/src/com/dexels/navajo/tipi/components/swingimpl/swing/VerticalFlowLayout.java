@@ -94,7 +94,7 @@ public class VerticalFlowLayout implements LayoutManager {
 				} else {
 					int x_pos = ((columns - 1) * current.getPreferredSize().width)
 							- ((column - 1) * current.getPreferredSize().width);
-					// System.err.println("adding: " + x_pos + ", " + y_pos +
+					// logger.debug("adding: " + x_pos + ", " + y_pos +
 					// " , cols: " + columns + ", col: " + column);
 					current.setBounds(x_pos, y_pos,
 							current.getPreferredSize().width + 2,

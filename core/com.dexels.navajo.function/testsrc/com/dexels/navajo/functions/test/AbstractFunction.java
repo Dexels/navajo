@@ -16,7 +16,7 @@ public abstract class AbstractFunction  {
 	
 	@Before
 	public void setUp() throws Exception {
-		fff = (FunctionFactoryInterface) FunctionFactoryFactory.getInstance();
+		fff = FunctionFactoryFactory.getInstance();
 		cl = getClass().getClassLoader();
 	}
 

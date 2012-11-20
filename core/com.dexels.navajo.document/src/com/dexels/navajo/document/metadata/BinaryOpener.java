@@ -92,38 +92,34 @@ public class BinaryOpener {
 		String extString = null;
 		String fileNameEval = null;
 	
-		if (extString == null) {
-			String mime = b.guessContentType();
-			String ext = b.getExtension();
-			FormatDescription fd = b.getFormatDescription();
-			if(fd!=null) {
-				if(ext==null) {
-					List<String> extensions = fd.getFileExtensions();
-					if(!extensions.isEmpty()) {
-						ext = extensions.get(0);
+		String mime = b.guessContentType();
+		String ext = b.getExtension();
+		FormatDescription fd = b.getFormatDescription();
+		if(fd!=null) {
+			if(ext==null) {
+				List<String> extensions = fd.getFileExtensions();
+				if(!extensions.isEmpty()) {
+					ext = extensions.get(0);
 
-					}
 				}
 			}
-			if (mime != null) {
-				if (mime.indexOf("/") != -1) {
-					StringTokenizer st = new StringTokenizer(mime, "/");
-					String major = st.nextToken();
-					String minor = st.nextToken();
-					logger.info("Binary type: " + major + " and minor: " + minor);
-					if(ext!=null) {
-						extString = ext;
-					} else {
-						extString = minor;
-					}
+		}
+		if (mime != null) {
+			if (mime.indexOf("/") != -1) {
+				StringTokenizer st = new StringTokenizer(mime, "/");
+				String major = st.nextToken();
+				String minor = st.nextToken();
+				logger.info("Binary type: " + major + " and minor: " + minor);
+				if(ext!=null) {
+					extString = ext;
+				} else {
+					extString = minor;
 				}
 			}
 		}
 
 		try {
-			if (fileNameEval == null) {
-				fileNameEval = "data_";
-			}
+			fileNameEval = "data_";
 			File f = File.createTempFile(fileNameEval, "." + extString);
 			BinaryOpener.displayURL(f.getAbsolutePath());
 			f.deleteOnExit();

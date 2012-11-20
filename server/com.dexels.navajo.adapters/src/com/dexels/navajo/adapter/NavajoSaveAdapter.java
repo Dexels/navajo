@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
@@ -27,6 +30,9 @@ public class NavajoSaveAdapter
     implements Mappable {
 
   private Navajo inMessage = null;
+  
+private final static Logger logger = LoggerFactory
+		.getLogger(NavajoSaveAdapter.class);
 
 
 
@@ -56,10 +62,6 @@ public class NavajoSaveAdapter
    */
 
   public void setData(Binary data) {
-    System.err.println("Setting data: "+data);
-//    if (data!=null) {
-//      System.err.println("Datasize: "+data.getData().length);
-//    }
     this.data = data;
   }
 
@@ -95,31 +97,22 @@ public class NavajoSaveAdapter
 
   public void load(Access access) throws MappableException, UserException {
     this.inMessage = access.getInDoc();
-//    System.err.println("\n\nMY NAVAJO: \n\n");
-//    try {
-//      inMessage.write(System.err);
-//    }
-//    catch (NavajoException ex) {
-//      ex.printStackTrace();
-//    }
-//    System.err.println("\n\nEND OF NAVAJO!");
-//    Property prefix = inMessage.getProperty(pathPrefix);
    }
 
   public void store() throws MappableException, UserException {
-    System.err.println("fileNamePropertyPath: "+fileNamePropertyPath);
-    System.err.println("Using prefix: "+pathPrefix);
+    logger.debug("fileNamePropertyPath: "+fileNamePropertyPath);
+    logger.debug("Using prefix: "+pathPrefix);
 
      String totalPath = null;
      if (fileName==null) {
-       System.err.println("No explicit filename found:");
+       logger.debug("No explicit filename found:");
        Property fileNameProp =  inMessage.getProperty(fileNamePropertyPath);
        totalPath = pathPrefix+fileNameProp.getValue();
      } else {
-       System.err.println("Explicit path found: "+fileName);
+       logger.debug("Explicit path found: "+fileName);
        totalPath = pathPrefix+fileName;
      }
-     System.err.println("Resolved path to: "+totalPath);
+     logger.debug("Resolved path to: "+totalPath);
      File path = new File(totalPath);
      if (path.exists() && !overwrite) {
        throw new UserException(-1, "File exists");
@@ -134,7 +127,7 @@ public class NavajoSaveAdapter
      }
 
      if (data!=null) {
-       System.err.println("Data found");
+       logger.debug("Data found");
        FileOutputStream fw = null;
       try {
         fw = new FileOutputStream(path);
@@ -161,7 +154,7 @@ public class NavajoSaveAdapter
      }
 
      } else {
-       System.err.println("No data found.");
+       logger.debug("No data found.");
        FileOutputStream fw = null;
        try {
          fw = new FileOutputStream(path);

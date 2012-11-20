@@ -14,12 +14,12 @@ public class IsEmpty extends FunctionInterface {
 		Object arg = this.getOperands().get(0);
 		
 		if (arg == null) {
-			return new Boolean(true);
+			return Boolean.TRUE;
 		}
 		
 		if (arg instanceof NavajoType) {
 			NavajoType n = (NavajoType)arg;
-			return new Boolean(n.isEmpty());
+			return (n.isEmpty());
 		}
 		
 		if ( arg instanceof String) {
@@ -30,7 +30,7 @@ public class IsEmpty extends FunctionInterface {
 			return (((List<?>) arg).size() == 0);
 		}
 		
-		return new Boolean(false);
+		return Boolean.FALSE;
 
 	}
 

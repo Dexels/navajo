@@ -48,9 +48,8 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
-import com.jcraft.jzlib.JZlib;
-import com.jcraft.jzlib.ZInputStream;
-import com.jcraft.jzlib.ZOutputStream;
+import com.jcraft.jzlib.DeflaterOutputStream;
+import com.jcraft.jzlib.InflaterInputStream;
 
 public class NavajoClient implements ClientInterface, Serializable {
 
@@ -84,7 +83,7 @@ public static final int DIRECT_PROTOCOL = 0;
   THIS IS A SAFE VALUE CAUSE INTEGRITY WORKER DOES NOT YET WORKER OVER MULTIPLE SERVER INSTANCES!!! */
   
   private int currentServerIndex;
-  private Thread keepAliveThread = null;
+  private transient Thread keepAliveThread = null;
   //private static int instances = 0;
   
   // Warning: Not thread safe!
@@ -110,12 +109,6 @@ public static final int DIRECT_PROTOCOL = 0;
   // Disable for one minute. Bit short, should be maybe an hour, but better for debugging.
   private static final long serverDisableTimeout = 60000;
   
-  /**
-   * Initialize a NavajoClient object with an empty XML message buffer.
-   */
-  protected NavajoClient(String dtdFile) {
-	  this();
-  }
 
 
   /**
@@ -358,7 +351,8 @@ public static final int DIRECT_PROTOCOL = 0;
    * @param useCompression boolean
    */
   
-  protected Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, NavajoException {
+  @SuppressWarnings("resource")
+protected Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, NavajoException {
     URL url;
     //useCompression = false;
     
@@ -417,7 +411,7 @@ public static final int DIRECT_PROTOCOL = 0;
     		if (forceGzip) {
         		out = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(con.getOutputStream()), "UTF-8"));
 			} else {
-	    		out = new BufferedWriter(new OutputStreamWriter(new ZOutputStream(con.getOutputStream(), JZlib.Z_BEST_SPEED), "UTF-8"));
+	    		out = new BufferedWriter(new OutputStreamWriter(new DeflaterOutputStream(con.getOutputStream()), "UTF-8"));
 			}
     		d.write(out, condensed, d.getHeader().getRPCName());
     	} finally  {
@@ -469,7 +463,7 @@ public static final int DIRECT_PROTOCOL = 0;
     			if (forceGzip) {
         			in = new GZIPInputStream(con.getInputStream());
 				} else {
-	    			in = new ZInputStream(con.getInputStream());
+	    			in = new InflaterInputStream(con.getInputStream());
 				}
     			
     		} else {

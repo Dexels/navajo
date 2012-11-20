@@ -121,9 +121,18 @@ public class MessageMap implements Mappable {
 				}
 				} catch (NavajoException ne) {}
 			} else {
+				if ( m1.getParentMessage() != null ) {
+					m1.getParentMessage().removeMessage(m1);
+				} else {
+					myAccess.getOutputDoc().removeMessage(m1);
+				}
 				myAccess.getCurrentOutMessage().removeMessage(m1);
 				if ( m2 != null ) {
-					myAccess.getCurrentOutMessage().removeMessage(m2);
+					if ( m2.getParentMessage() != null ) {
+						m2.getParentMessage().removeMessage(m2);
+					} else {
+						myAccess.getOutputDoc().removeMessage(m2);
+					}
 				}
 			}
 		}
@@ -196,7 +205,6 @@ public class MessageMap implements Mappable {
 					// Compare joinValues...
 					boolean equal = true;
 					for (int jv = 0; jv < joinConditions.size(); jv++) {
-						//System.err.println("Checking join values: " + joinValues1[jv] + " and " + joinValues2[jv]  );
 						if ( joinValues1[jv] != null && joinValues2[jv] != null && !joinValues1[jv].equals(joinValues2[jv])) {
 							equal = false;
 						} else if ( joinValues1[jv] == null && joinValues2[jv] != null ) {
@@ -304,7 +312,7 @@ public class MessageMap implements Mappable {
 		}
 		
 		this.resultMessage = new ResultMessage[resultingMessage.size()];
-		this.resultMessage = (ResultMessage []) resultingMessage.toArray(resultMessage);
+		this.resultMessage = resultingMessage.toArray(resultMessage);
 		
 		
 		return this.resultMessage;
@@ -417,7 +425,7 @@ public class MessageMap implements Mappable {
 			String [] props = groupBy.split(",");
 			groupByProperties = new ArrayList<String>();
 			for ( int i = 0; i < props.length; i++ ) {
-				groupByProperties.add(props[i]);
+				groupByProperties.add(props[i].trim());
 			}
 		}
 	}

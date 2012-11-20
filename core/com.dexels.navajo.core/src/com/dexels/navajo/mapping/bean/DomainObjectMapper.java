@@ -33,7 +33,6 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 
 	private String objectName;
 	private String attributeName;
-	private String excludedProperties;
 	private String inputProperties;
 	private boolean ignoreNonExistingAttributes = false;
 	private boolean automaticMapping = true;
@@ -96,7 +95,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	public final Method setMethodReference(Class myClass, String name, Class [] parameters) throws MappingException {
 
 		String key = constructParameterSignature(name, parameters);
-		java.lang.reflect.Method m = (Method) methods.get(key);
+		java.lang.reflect.Method m = methods.get(key);
 
 		if (m == null) {
 			String methodName = "set" + (name.charAt(0) + "").toUpperCase() + name.substring(1, name.length());
@@ -120,7 +119,8 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		return m;
 	}
 	
-	 private final boolean equalsParameterTypes(Class [] array1, Class [] array2) {
+	 @SuppressWarnings("unchecked")
+	private final boolean equalsParameterTypes(Class [] array1, Class [] array2) {
 		 if ( ( array1 == null || array1.length == 0 ) && ( array2 == null || array2.length == 0) ) {
 			 return true;
 		 }
@@ -137,18 +137,18 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		 }
 		 return true;
 	 }
-	 
-	 private String printClassArray(Class [] array) {
-		 if ( array == null ) {
-			 return "";
-		 }
-		 StringBuffer sb = new StringBuffer();
-		 for (int i = 0; i < array.length; i++) {
-			 sb.append(array[i].getSimpleName() + ",");
-		 }
-		 return sb.toString();
-	 }
-	 
+//	 
+//	 private String printClassArray(Class [] array) {
+//		 if ( array == null ) {
+//			 return "";
+//		 }
+//		 StringBuffer sb = new StringBuffer();
+//		 for (int i = 0; i < array.length; i++) {
+//			 sb.append(array[i].getSimpleName() + ",");
+//		 }
+//		 return sb.toString();
+//	 }
+//	 
 	 private final String constructParameterSignature(String name, Class [] classArray) {
 
 		 StringBuffer key = new StringBuffer();
@@ -189,7 +189,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 			}
 		}
     
-		java.lang.reflect.Method m = (Method) methods.get(key.toString());
+		java.lang.reflect.Method m = methods.get(key.toString());
 
 		if (m == null) {
 		

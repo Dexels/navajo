@@ -10,7 +10,6 @@ import org.eclipse.jetty.io.Buffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.NavajoResponseHandler;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
@@ -45,7 +44,7 @@ public class AsyncClient {
 	}
 
 
-	public static AsyncClient getInstance() {
+	public static synchronized AsyncClient getInstance() {
 		if (instance == null) {
 			instance = new AsyncClient();
 		}
@@ -74,11 +73,12 @@ public class AsyncClient {
 		client.setTimeout(30000); // 30 seconds timeout; if no server reply, the
 											// request expires
 		// client.setThreadPool(executor);
-		try {
-			client.start();
-		} catch (Exception e) {
-			logger.error("Error: ", e);
-		}
+//		try {
+//			client.start();
+//		} catch (Exception e) {
+//			logger.error("Error: ", e);
+//		}
+		logger.warn("Skipped the 'start' method call, it seems to have vanished. Don't know if it's a problem.");
 	}
 
 	public void callService(String service, final NavajoResponseHandler continuation) throws IOException, NavajoException {
@@ -101,8 +101,6 @@ public class AsyncClient {
 		final Access currentAccess = inputAccess.cloneWithoutNavajos();
 		
 		
-		
-		NavajoClientFactory.getClientLogger().logInput(service, input);
 		if(input==null) {
 			input = NavajoFactory.getInstance().createNavajo();
 		}
@@ -120,7 +118,6 @@ public class AsyncClient {
 			@Override
 			public void onResponse(Navajo n) {
 				setActualCalls(getActualCalls()-1);
-				NavajoClientFactory.getClientLogger().logOutput(service, n);
 				currentAccess.setOutputDoc(n);
 				try {
 					if (onSuccess != null) {
@@ -150,7 +147,6 @@ public class AsyncClient {
 				}
 			}
 		};
-		NavajoClientFactory.getClientLogger().logInput(service, input);
 		setActualCalls(getActualCalls()+1);
 
 		callService(currentAccess.getRequestUrl(), input, nrh);
@@ -158,7 +154,7 @@ public class AsyncClient {
 
 	private void callService(String url, Navajo n, final NavajoResponseHandler continuation) throws IOException, NavajoException {
 
-		System.err.println("Calling service: " + n.getHeader().getRPCName());
+		logger.debug("Calling service: " + n.getHeader().getRPCName());
 		final ContentExchange exchange = new ContentExchange() {
 
 			
@@ -178,13 +174,13 @@ public class AsyncClient {
 
 			@Override
 			protected void onRequestCommitted() throws IOException {
-				System.err.println("Connection committed");
+				logger.debug("Connection committed");
 				super.onRequestCommitted();
 			}
 
 			@Override
 			protected void onConnectionFailed(Throwable x) {
-				System.err.println("Connection failed");
+				logger.debug("Connection failed");
 				super.onConnectionFailed(x);
 				try {
 					continuation.onFail(x);
@@ -197,7 +193,7 @@ public class AsyncClient {
 
 			@Override
 			protected void onException(Throwable x) {
-				System.err.println("Exception occurred");
+				logger.debug("Exception occurred");
 				super.onException(x);
 				try {
 					continuation.onFail(x);
@@ -224,17 +220,17 @@ public class AsyncClient {
 						}
 					} catch (RuntimeException e) {
 						e.printStackTrace();
-						System.err.println("Illegal TML detected:\n"+new String(responseContentBytes));
+						logger.debug("Illegal TML detected:\n"+new String(responseContentBytes));
 					} finally {
 						setActualCalls(getActualCalls()-1);
 					}
 				} else {
-					System.err.println("No response bytes detected!");
+					logger.debug("No response bytes detected!");
 				}
 			}
 
 			@Override
-			protected void onResponseContent(Buffer content) throws IOException {
+			protected synchronized void onResponseContent(Buffer content) throws IOException {
 				// TODO: Implement for streaming
 //				HttpFields a = getRequestFields();
 				super.onResponseContent(content);
@@ -268,9 +264,9 @@ public class AsyncClient {
 		final NavajoResponseHandler showOutput = new NavajoResponseHandler() {
 			@Override
 			public void onResponse(Navajo n) {
-				System.err.println("Navajo finished!");
+				logger.debug("Navajo finished!");
 				try {
-					System.err.println("Response2 ..");
+					logger.debug("Response2 ..");
 					n.write(System.err);
 				} catch (NavajoException e) {
 					e.printStackTrace();
@@ -289,9 +285,9 @@ public class AsyncClient {
 			new NavajoResponseHandler() {
 			@Override
 			public void onResponse(Navajo n) {
-				System.err.println("Navajo finished!");
+				logger.debug("Navajo finished!");
 				try {
-					System.err.println("Response: ..");
+					logger.debug("Response: ..");
 					n.write(System.err);
 					ac.callService(n, "person/ProcessSearchPersons", showOutput);
 				} catch (NavajoException e) {

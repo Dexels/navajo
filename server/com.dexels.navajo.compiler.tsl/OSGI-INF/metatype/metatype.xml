@@ -1,0 +1,8 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo Tsl Compiler" name="com.dexels.navajo.compiler.tsl" id="com.dexels.navajo.compiler.tsl">
+    <AD name="packages"  id="packages" required="true" type="String" default="com.dexels.navajo.document,com.dexels.navajo.server,com.dexels.navajo.script.api"/>
+  </OCD>
+  <Designate pid="com.dexels.navajo.compiler.tsl" >
+     <Object ocdref="com.dexels.navajo.compiler.tsl"/>
+  </Designate>
+</metatype:MetaData>

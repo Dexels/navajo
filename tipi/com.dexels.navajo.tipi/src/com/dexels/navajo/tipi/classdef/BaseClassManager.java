@@ -6,20 +6,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import navajo.ExtensionDefinition;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 public abstract class BaseClassManager implements IClassManager {
 
 	protected TipiContext myContext;
 	private final Map<String, TipiTypeParser> parserInstanceMap = new HashMap<String, TipiTypeParser>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseClassManager.class);
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -44,30 +52,25 @@ public abstract class BaseClassManager implements IClassManager {
 				cc = Class.forName(fullDef, true, cl);
 				return cc;
 			}
-			System.err
-					.println("FALLBACK: Loading class without Extension definition");
+			logger.info("FALLBACK: Loading class without Extension definition");
 
 			cc = Class.forName(fullDef, true, myContext.getClassLoader());
 		} catch (ClassNotFoundException ex) {
-			System.err.println("Error loading class: " + fullDef);
-			ex.printStackTrace();
+			logger.error("Error loading class: " + fullDef,ex);
 		} catch (SecurityException ex) {
-			System.err.println("Security Error loading class: " + fullDef);
-			ex.printStackTrace();
-
+			logger.error("Security Error loading class: " + fullDef,ex);
 		}
 		return cc;
 	}
 
-	private XMLElement assembleClassDefs(List<XMLElement> interfaces,
-			String name) {
+	private XMLElement assembleClassDefs(List<XMLElement> interfaces) {
 		assert (interfaces != null);
 		assert (interfaces.size() > 0);
 		if (interfaces.size() == 1) {
 			// maybe copy?
 			return interfaces.get(0);
 		}
-		ClassModel cl = new ClassModel(name);
+		ClassModel cl = new ClassModel();
 		for (XMLElement element : interfaces) {
 			cl.addDefinition(element);
 		}
@@ -101,7 +104,7 @@ public abstract class BaseClassManager implements IClassManager {
 			result = classDef;
 		} else {
 			interfaces.add(classDef);
-			result = assembleClassDefs(interfaces, name);
+			result = assembleClassDefs(interfaces);
 			result.setObjectAttribute("classInstance", classInstance);
 		}
 
@@ -142,7 +145,7 @@ public abstract class BaseClassManager implements IClassManager {
 			TipiEvent te) {
 		TipiTypeParser ttp = getParser(name);
 		if (ttp == null) {
-			System.err.println("Unknown type: " + name);
+			logger.warn("Unknown type: " + name);
 			return null;
 		}
 		Object o = ttp.parse(source, expression, te);
@@ -161,7 +164,6 @@ public abstract class BaseClassManager implements IClassManager {
 		return ttp;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public TipiTypeParser parseParser(XMLElement xe, ExtensionDefinition te) {
 		String name = xe.getStringAttribute("name");
@@ -172,31 +174,29 @@ public abstract class BaseClassManager implements IClassManager {
 			pClass = (Class<TipiTypeParser>) Class.forName(parserClass, true,
 					myContext.getClassLoader());
 		} catch (ClassNotFoundException ex) {
-			System.err
-					.println("Error loading class for parser: " + parserClass);
+			logger.info("Error loading class for parser: " + parserClass);
 			return null;
 		}
 		TipiTypeParser ttp = null;
 		try {
 			ttp = pClass.newInstance();
 		} catch (IllegalAccessException ex1) {
-			System.err.println("Error instantiating class for parser: "
-					+ parserClass);
-			ex1.printStackTrace();
+			logger.error("Error instantiating class for parser: "
+					+ parserClass, ex1);
 			return null;
 		} catch (InstantiationException ex1) {
-			System.err.println("Error instantiating class for parser: "
-					+ parserClass);
-			ex1.printStackTrace();
+			logger.error("Error instantiating class for parser: "
+					+ parserClass, ex1);
 			return null;
 		}
 		try {
 			Class<?> cc = Class.forName(classType, true,
 					myContext.getClassLoader());
 			ttp.setReturnType(cc);
+			NavajoFactory.getInstance().addNavajoType(name,cc);
 		} catch (ClassNotFoundException ex) {
-			System.err.println("Error verifying return type class for parser: "
-					+ classType);
+			logger.error("Error verifying return type class for parser: "
+					+ classType, ex);
 			return null;
 		}
 		parserInstanceMap.put(name, ttp);

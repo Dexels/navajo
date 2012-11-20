@@ -42,7 +42,7 @@ public class TipiSwingVerticalFlowLayout extends FlowLayout {
 				Component component = container.getComponent(j);
 				if (component.isVisible()) {
 					Dimension compSize = component.getPreferredSize();
-					// System.out.println(j+" "+compSize+" "+firstInLine+" "+wrapWidth);
+					// logger.info(j+" "+compSize+" "+firstInLine+" "+wrapWidth);
 					Dimension oldLine = new Dimension(line);
 					boolean oldFirstInLine = firstInLine;
 					line.height = Math.max(line.height, compSize.height);

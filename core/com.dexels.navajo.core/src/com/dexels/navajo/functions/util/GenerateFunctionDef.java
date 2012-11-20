@@ -69,7 +69,7 @@ public class GenerateFunctionDef {
 		XMLElement description = new CaseSensitiveXMLElement("description");
 		def.addChild(description);
 		try {
-			FunctionInterface fi = (FunctionInterface) c.newInstance();
+			FunctionInterface fi = c.newInstance();
 			description.setContent(fi.remarks());
 		} catch (Exception e)  {
 
@@ -77,7 +77,7 @@ public class GenerateFunctionDef {
 		XMLElement input = new CaseSensitiveXMLElement("input");
 		def.addChild(input);
 		try {
-			FunctionInterface fi = (FunctionInterface) c.newInstance();
+			FunctionInterface fi = c.newInstance();
 			Class<?> [][] inputTypes = fi.getTypes();
 			if ( inputTypes != null ) {
 				NavajoFactory nf = NavajoFactory.getInstance();
@@ -103,7 +103,7 @@ public class GenerateFunctionDef {
 		XMLElement result = new CaseSensitiveXMLElement("result");
 		def.addChild(result);
 		try {
-			FunctionInterface fi = (FunctionInterface) c.newInstance();
+			FunctionInterface fi = c.newInstance();
 			Class<?> [] returnTypes = fi.getReturnType();
 			if ( returnTypes != null ) {
 				NavajoFactory nf = NavajoFactory.getInstance();

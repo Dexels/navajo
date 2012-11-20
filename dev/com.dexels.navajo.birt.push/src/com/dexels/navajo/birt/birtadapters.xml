@@ -1,0 +1,12 @@
+<adapterdef>
+
+    <!-- Loops files in a directory -->
+    <map>
+        <tagname>birtmap</tagname>
+        <object>com.dexels.navajo.birt.adapter.BIRTXmlMap</object>
+        <values>
+        </values>
+        <methods>
+		</methods>
+    </map>
+  </adapterdef>

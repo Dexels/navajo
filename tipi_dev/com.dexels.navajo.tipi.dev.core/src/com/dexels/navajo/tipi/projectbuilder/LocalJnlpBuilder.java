@@ -6,13 +6,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.extensionmanager.ExtensionManager;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class LocalJnlpBuilder extends BaseJnlpBuilder {
 
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(LocalJnlpBuilder.class);
+	
 
 	@Override
 	public String getJnlpName() {
@@ -34,7 +40,7 @@ public class LocalJnlpBuilder extends BaseJnlpBuilder {
 		Map<String,String> mainJar = new HashMap<String,String>();
 		Map<String,String> remoteJar = new HashMap<String,String>();
 		List<String> jars = ExtensionManager.getJars(repository, ext,version,mainJar,remoteJar);
-		System.err.println("Local jars:"+ jars+" resbase: "+resourceBase);
+		logger.info("Local jars:"+ jars+" resbase: "+resourceBase);
 		for (String path : jars) {
 			
 			XMLElement x = new CaseSensitiveXMLElement("jar");

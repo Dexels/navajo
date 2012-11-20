@@ -5,6 +5,9 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.swingclient.components.GenericPropertyComponent;
@@ -14,10 +17,11 @@ import com.dexels.navajo.tipi.swingimpl.dnd.TipiDndManager;
 public class TipiSwingPropertyComponent extends GenericPropertyComponent
 		implements TipiDndCapable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1703359870781330307L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingPropertyComponent.class);
+	
 	private static final String CAPITALIZATION = "capitalization";
 	private static final String CHECKBOXGROUPCOLUMNCOUNT = "checkboxGroupColumnCount";
 	private static final String HORIZONTALSCROLLS = "horizontalscrolls";
@@ -102,7 +106,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 				addPropertyComponent(new JLabel("Huh: " + subtype));
 
 			}
-			System.err.println("Strange type: " + subtype);
+			logger.debug("Strange type: " + subtype);
 		}
 		// strange type found:
 
@@ -270,7 +274,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 
 	public void setEnabled(boolean b) {
 		// super.setEnabled(b);
-		// System.err.println("IN SETENABLED. IGNORING");
+		// logger.debug("IN SETENABLED. IGNORING");
 		// Thread.dumpStack();
 	}
 

@@ -7,8 +7,14 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ApplicationManager {
 	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ApplicationManager.class);
 	private File appsFolder;
 	List<ApplicationStatus> applications;
 	private String currentApplication;
@@ -105,8 +111,8 @@ private ServletContext context = null;
 //		return false;
 	}
 
-	public  List<ApplicationStatus> getApplications() throws IOException {
-//		System.err.println("Getting applications: "+applications);
+	public  List<ApplicationStatus> getApplications()  {
+//		logger.info("Getting applications: "+applications);
 		return applications;
 	}
 	
@@ -114,6 +120,6 @@ private ServletContext context = null;
 		ApplicationManager m = new ApplicationManager();
 		m.setAppsFolder(new File("WebContent"));
 		List<ApplicationStatus> apps = m.getApplications();
-		System.err.println("Appcount: "+apps.size());
+		logger.info("Appcount: "+apps.size());
 	}
 }

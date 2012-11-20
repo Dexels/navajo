@@ -17,6 +17,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.swingimpl.dnd.TipiDndCapable;
@@ -40,10 +43,11 @@ import com.dexels.navajo.tipi.swingimpl.dnd.TipiDndManager;
  * @version 1.0
  */
 public class TipiSwingLabel extends JLabel implements TipiDndCapable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6493113702683929580L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingLabel.class);
+	
 	final TipiDndManager myDndManager;
 
 	public TipiSwingLabel(TipiComponent tc) {
@@ -72,7 +76,7 @@ public class TipiSwingLabel extends JLabel implements TipiDndCapable {
 				ImageIcon ii = new ImageIcon(i);
 				return ii;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 		return null;
@@ -104,7 +108,7 @@ public class TipiSwingLabel extends JLabel implements TipiDndCapable {
 	}
 
 	public void setTipiHorizontalAlignment(String horizontal) {
-		System.err.println("Setting horizontal: " + horizontal);
+		logger.debug("Setting horizontal: " + horizontal);
 		if (horizontal.equals("left")) {
 			setHorizontalAlignment(SwingConstants.LEFT);
 			return;
@@ -132,7 +136,7 @@ public class TipiSwingLabel extends JLabel implements TipiDndCapable {
 	}
 
 	public void createVerticalImage(String caption, boolean clockwise) {
-		System.err.println("Creating vertical image");
+		logger.debug("Creating vertical image");
 		Font f = getFont();
 		FontMetrics fm = getFontMetrics(f);
 		int captionHeight = fm.getHeight();
@@ -178,7 +182,7 @@ public class TipiSwingLabel extends JLabel implements TipiDndCapable {
 	}
 
 	public void setTipiVerticalAlignment(String vertical) {
-		System.err.println("Setting vertical: " + vertical);
+		logger.debug("Setting vertical: " + vertical);
 		if (vertical.equals("top")) {
 			setVerticalAlignment(SwingConstants.TOP);
 			return;

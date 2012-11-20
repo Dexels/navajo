@@ -10,6 +10,9 @@ import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.RootPaneContainer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.components.swingimpl.TipiPanel;
 import com.dexels.navajo.tipi.internal.TipiLayout;
 
@@ -34,10 +37,11 @@ import com.dexels.navajo.tipi.internal.TipiLayout;
 public class TipiSwingStandaloneToplevel extends TipiPanel implements
 		RootPaneContainer {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4454167651998605776L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingStandaloneToplevel.class);
+	
 	private JComponent myPanel; // = new JPanel();
 	private final BorderLayout myLayout = new BorderLayout();
 
@@ -64,10 +68,10 @@ public class TipiSwingStandaloneToplevel extends TipiPanel implements
 
 	public void addToContainer(final Object c, final Object constraints) {
 		if (myPanel != null) {
-			// System.err.println("Adding to toplevel: "+c.getClass()+
+			// logger.debug("Adding to toplevel: "+c.getClass()+
 			// " -- "+c.hashCode());
 
-			System.err.println("BEWArE: Tiplet hack");
+			logger.debug("BEWArE: Tiplet hack");
 			runSyncInEventThread(new Runnable() {
 
 				public void run() {
@@ -108,7 +112,7 @@ public class TipiSwingStandaloneToplevel extends TipiPanel implements
 	}
 
 	public JLayeredPane getLayeredPane() {
-		System.err.println("GETTING LAYERED PANE. BEWARE");
+		logger.debug("GETTING LAYERED PANE. BEWARE");
 		return null;
 	}
 
@@ -116,7 +120,7 @@ public class TipiSwingStandaloneToplevel extends TipiPanel implements
 	}
 
 	public JRootPane getRootPane() {
-		System.err.println("GETTING ROOT PANE. BEWARE");
+		logger.debug("GETTING ROOT PANE. BEWARE");
 		return null;
 	}
 

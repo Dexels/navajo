@@ -5,6 +5,9 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -16,10 +19,11 @@ import com.dexels.navajo.tipi.internal.MessageComponent;
 
 public class TipiMessagePanel extends TipiSwingDataComponentImpl implements
 		MessageComponent {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3361711528499588037L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMessagePanel.class);
+	
 	private String myMessageName = null;
 	private Message myMessage;
 
@@ -69,9 +73,9 @@ public class TipiMessagePanel extends TipiSwingDataComponentImpl implements
 		try {
 			performTipiEvent("onLoad", eventParams, true);
 		} catch (TipiBreakException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	}
 
@@ -108,7 +112,7 @@ public class TipiMessagePanel extends TipiSwingDataComponentImpl implements
 	// "delivering property: " + p.getFullPropertyName() + " to tipi: " +
 	// ((TipiComponent) current).getId());
 	// } catch (NavajoException ex) {
-	// ex.printStackTrace();
+	// logger.error("Error detected",ex);
 	// }
 	// } else {
 	// getContext().debugLog("data    ", "delivering null property to tipi: " +

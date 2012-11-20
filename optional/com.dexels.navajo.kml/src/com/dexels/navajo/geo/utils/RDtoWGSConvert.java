@@ -50,6 +50,7 @@ public class RDtoWGSConvert {
 				}
 				target.append(line.substring(offset));	
 			}				
+			br.close();
 			File newFile = new File("buurten.kml");
 			BufferedWriter out = new BufferedWriter(new FileWriter(newFile));
 			out.write(target.toString());

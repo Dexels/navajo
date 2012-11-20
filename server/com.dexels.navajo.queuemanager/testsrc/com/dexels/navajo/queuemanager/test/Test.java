@@ -7,10 +7,10 @@ import javax.script.ScriptException;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.queuemanager.NavajoSchedulingException;
-import com.dexels.navajo.queuemanager.QueueManager;
-import com.dexels.navajo.queuemanager.api.InputContext;
-import com.dexels.navajo.queuemanager.impl.NavajoInputContext;
+import com.dexels.navajo.listener.http.queuemanager.api.InputContext;
+import com.dexels.navajo.listener.http.queuemanager.api.NavajoSchedulingException;
+import com.dexels.navajo.listener.http.queuemanager.api.QueueManager;
+import com.dexels.navajo.listener.http.queuemanager.api.QueueManagerFactory;
 
 public class Test {
 
@@ -22,25 +22,27 @@ public class Test {
 	 * @throws InterruptedException 
 	 */
 	public static void main(String[] args) throws NavajoSchedulingException, IOException, InterruptedException {
-		QueueManager qm = new QueueManager();
+		QueueManager qm = QueueManagerFactory.getInstance();
 		qm.setQueueContext(new TestQueueContext());
-		String result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js","javascript");
+		String result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js");
 		System.err.println("result: "+result);
-		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js","javascript");
+		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js");
 		Thread.sleep(1100);
-		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js","javascript");
+		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js");
 		Thread.sleep(1100);
-		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js","javascript");
+		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js");
 		Thread.sleep(1100);
-		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js","javascript");
+		result = qm.resolve(getInputContext(), "testsrc/chooseQueue.js");
 	}
 
 
+	@SuppressWarnings("unused")
 	private static InputContext getInputContext() throws IOException {
         FileReader fr = new FileReader("testsrc/testinput.tml");
 		Navajo n = NavajoFactory.getInstance().createNavajo(fr);
 		fr.close();
-		return new NavajoInputContext(n,null);
+		return null;
+//		return new NavajoInputContext(n,null);
 	}
 
 	

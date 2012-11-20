@@ -6,7 +6,6 @@
  */
 package com.dexels.navajo.dsl.model.tsl.impl;
 
-import com.dexels.navajo.dsl.model.tsl.*;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;

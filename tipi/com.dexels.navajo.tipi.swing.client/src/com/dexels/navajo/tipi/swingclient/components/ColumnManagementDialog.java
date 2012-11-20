@@ -19,26 +19,11 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
-
-/**
- * <p>
- * Title: Seperate project for Navajo Swing client
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company: Dexels
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
 
 class NameIdMap {
 	HashMap<String, String> propertyNameIdMap = new HashMap<String, String>();
@@ -64,6 +49,11 @@ class NameIdMap {
 }
 
 public class ColumnManagementDialog extends JDialog {
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ColumnManagementDialog.class);
+	
 	private static final long serialVersionUID = -6795986412646589943L;
 	private JList availableColumnList = new JList();
 	private JList visibleColumnList = new JList();
@@ -93,7 +83,7 @@ public class ColumnManagementDialog extends JDialog {
 		try {
 			jbInit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -103,7 +93,7 @@ public class ColumnManagementDialog extends JDialog {
 		try {
 			jbInit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -129,7 +119,7 @@ public class ColumnManagementDialog extends JDialog {
 	public final void setMessageTable(MessageTable mt) {
 		myTable = mt;
 		if (myTable == null) {
-			System.err.println("Null message table! ignoring");
+			logger.info("Null message table! ignoring");
 			return;
 		}
 
@@ -329,7 +319,7 @@ public class ColumnManagementDialog extends JDialog {
 		myTable.removeAllColumns();
 		while (m.hasMoreElements()) {
 			String name = (String) m.nextElement();
-			System.err.println("Name: " + name);
+			logger.info("Name: " + name);
 			String id = nameIdMap.getByName(name);
 			if (id != null && !id.equals("") && !id.equals("ERROR!")) {
 				boolean editable = false;

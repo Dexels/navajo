@@ -25,7 +25,7 @@ public class InstantiateDisposeTipi extends AbstractTipiTest {
 		setContext("init", new File("testsrc/tests/instantiateDispose"),elist);
 	}
 
-	public void testTipi() throws InterruptedException {
+	public void testTipi()  {
 		String xx = getContext().getInfoBuffer();
 		assertEquals("instantiateOk\n", xx);
 

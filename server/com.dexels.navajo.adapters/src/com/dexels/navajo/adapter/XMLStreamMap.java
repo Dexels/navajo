@@ -7,6 +7,9 @@ import java.io.OutputStreamWriter;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -21,7 +24,10 @@ public class XMLStreamMap implements Mappable {
 	private XMLStreamWriter xtw;
 	public Binary content = null;
 	private boolean newLineFlag = false;  // flag if we're on a new line
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(XMLStreamMap.class);
+	
 	// @Override
 	public void kill() {
 	}
@@ -57,6 +63,9 @@ public class XMLStreamMap implements Mappable {
 		}
 	}
 	
+	/**
+	 * @param b  
+	 */
 	public void setEndElement(boolean b) throws UserException {
 		try {
 			current_indentation -= indent;
@@ -88,6 +97,9 @@ public class XMLStreamMap implements Mappable {
 		}
 	}
 	
+	/**
+	 * @param b  
+	 */
 	public void setNewline(boolean b) throws UserException{
 		try {
 			newLineFlag = true;
@@ -143,14 +155,14 @@ public class XMLStreamMap implements Mappable {
 			map.setEndElement(true);
 			map.setEndElement(true);
 			if(i%1000 == 0){
-				System.err.println("at: " + i);
+				logger.info("at: " + i);
 			}
 		}
 		map.setEndElement(true);
 		
 		Binary content = map.getContent();
 		content.write(new FileOutputStream("c:/serial-xml.xml"));
-		System.err.println("done..");
+		logger.info("done..");
 	}catch(Exception e){
 		e.printStackTrace();
 	}

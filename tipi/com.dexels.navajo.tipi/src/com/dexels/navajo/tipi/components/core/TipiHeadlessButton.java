@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
@@ -27,7 +30,10 @@ public class TipiHeadlessButton extends TipiComponentImpl {
 
 	private static final long serialVersionUID = 1303880032767792070L;
 	private boolean enabled = true;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiHeadlessButton.class);
+	
 	@Override
 	protected Object getComponentValue(String name) {
 		if (name.equals("enabled")) {
@@ -57,11 +63,11 @@ public class TipiHeadlessButton extends TipiComponentImpl {
 				TipiEvent current = getEventList().get(j);
 				if (current.isTrigger("onActionPerformed")) {
 					try {
-						doFireAction(event);
+						doFireAction();
 					} catch (TipiBreakException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					} catch (TipiException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 
 				}
@@ -69,7 +75,7 @@ public class TipiHeadlessButton extends TipiComponentImpl {
 		}
 	}
 
-	private void doFireAction(TipiEvent event) throws TipiBreakException,
+	private void doFireAction() throws TipiBreakException,
 			TipiException {
 		performTipiEvent("onActionPerformed", null, false);
 

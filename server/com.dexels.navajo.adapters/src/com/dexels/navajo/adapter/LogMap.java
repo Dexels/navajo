@@ -24,7 +24,10 @@ public class LogMap implements Mappable {
   public void load(Access access) throws MappableException, UserException {
   }
 
-  public void setMessage(String msg) {
+  /**
+ * @param msg  
+ */
+public void setMessage(String msg) {
 	  AuditLog.log("LogMap", message);
   }
 

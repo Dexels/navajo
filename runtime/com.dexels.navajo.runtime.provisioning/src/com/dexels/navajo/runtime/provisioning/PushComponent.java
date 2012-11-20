@@ -29,38 +29,40 @@ public class PushComponent {
 
 	@SuppressWarnings("rawtypes")
 	public void activate(ComponentContext cc) {
-		long stamp = System.currentTimeMillis();
-		
-		properties = cc.getProperties();
-		 
-		logger.info("Push configuration component created.");
-		String contextPath = (String) properties.get("contextPath");
-		String contextName = (String) properties.get("contextName");
-		String deployment = (String) properties.get("deployment");
-		String profile = (String) properties.get("profile");
 
-		boolean matches = hasContext(contextName);
-		if(!matches) {
-			logger.info("Skipping context: "+contextName+" it doesn't match any attached context");
-			return;
-		}
 		try {
-			setupNavajo(contextName,contextPath,deployment,profile);
-		} catch (IOException e) {
-			logger.error("Setting up navajo failed: ", e);
+			long stamp = System.currentTimeMillis();
+			
+			properties = cc.getProperties();
+			 
+			logger.info("Push configuration component created.");
+			String contextPath = (String) properties.get("contextPath");
+			String contextName = (String) properties.get("contextName");
+			boolean matches = hasContext(contextName);
+			if(!matches) {
+				logger.info("Skipping context: "+contextName+" it doesn't match any attached context");
+				return;
+			}
+			logger.info("Setting up navajo context: "+contextName+" at: "+contextPath);
+			try {
+				setupNavajo(contextName,contextPath);
+			} catch (IOException e) {
+				logger.error("Setting up navajo failed: ", e);
+			}
+			logger.info("Activating push provisioning took: "+(System.currentTimeMillis()-stamp) +" millis. ");
+		} catch (Throwable e) {
+			logger.error("Error activating component",e);
 		}
-		logger.info("Activating push provisioning took: "+(System.currentTimeMillis()-stamp) +" millis. ");
 	}
 
 	// Check regardless of leading slashes TODO Check for pull
 	private boolean hasContext(String contextName) {
-		logger.info("# of ci's: "+contextIdentifiers.size());
-		logger.info("ci's: "+contextIdentifiers);
+//		logger.info("# of ci's: "+contextIdentifiers.size());
+//		logger.info("ci's: "+contextIdentifiers);
 
 		for (ContextIdentifier c : contextIdentifiers) {
 			String con = c.getContextPath();
-			logger.info("Checking context identifier: "+c.getClass()+" checking for: "+contextName+" against: "+con);
-//			Thread.dumpStack();
+//			logger.info("Checking context identifier: "+c.getClass()+" checking for: "+contextName+" against: "+con);
 			String ctxName = contextName;
 			if(ctxName.equals(con)) {
 				return true;
@@ -88,11 +90,10 @@ public class PushComponent {
 		}
 		d.put("installationPath", installationPath);
 		factoryConfiguration.update(d);
-		logger.info(">>>>>>>>>>>>>INJECT CONPLETE: "+installationPath);
+//		logger.info(">>>>>>>>>>>>>INJECT CONPLETE: "+installationPath);
 	}
 	
-	private void setupNavajo(String contextName, String contextPath, String deployment,
-			String profile) throws IOException {
+	private void setupNavajo(String contextName, String contextPath) throws IOException {
 		injectConfig(contextName, null, contextPath);
 		
 
@@ -101,13 +102,17 @@ public class PushComponent {
 	
 
 	public void deactivate() {
-		logger.info("Push provisioning deactivated");
-		if(factoryConfiguration!=null) {
-			try {
-				factoryConfiguration.delete();
-			} catch (IOException e) {
-				logger.error("Error deregistering service factory: ", e);
+		try {
+			logger.info("Push provisioning deactivated");
+			if(factoryConfiguration!=null) {
+				try {
+					factoryConfiguration.delete();
+				} catch (IOException e) {
+					logger.error("Error deregistering service factory: ", e);
+				}
 			}
+		} catch (Throwable e) {
+			logger.error("Error activating component",e);
 		}
 	}
 
@@ -116,6 +121,10 @@ public class PushComponent {
 		this.myConfigurationAdmin = admin;
 	}
 
+	/**
+	 * the configurationadmin to remove
+	 * @param admin
+	 */
 	public void clearConfigurationAdmin(ConfigurationAdmin admin) {
 		this.myConfigurationAdmin = null;
 	}

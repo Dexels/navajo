@@ -47,8 +47,8 @@ public class RichTable extends JTable {
 			this.setRowSelectionInterval(row, row);
 			Rectangle vr = this.getVisibleRect();
 			Rectangle current = getCellRect(row, 0, true);
-			// System.err.println("Matthijs is gek");
-			// System.err.println("Point, " + p + ", " + vr);
+			// logger.info("Matthijs is gek");
+			// logger.info("Point, " + p + ", " + vr);
 			if (vr.height - p.y < 50) {
 				if (row < getRowCount() - 1) {
 					row += 4;
@@ -80,7 +80,7 @@ public class RichTable extends JTable {
 	public void setRect(int y) {
 		Rectangle r = new Rectangle(1, y, 1, 15);
 		this.scrollRectToVisible(r);
-		// System.err.println("woot: " + y);
+		// logger.info("woot: " + y);
 	}
 
 	public void setMessage(Message m) {

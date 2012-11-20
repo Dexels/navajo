@@ -24,7 +24,7 @@ public class TokenizerMap implements Mappable{
 			toks.add(t);
 		}
 		tokens = new Token[toks.size()];
-		tokens = (Token[])toks.toArray(tokens);
+		tokens = toks.toArray(tokens);
 		return tokens;		
 	}
 	

@@ -25,6 +25,8 @@ import java.util.zip.GZIPOutputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Pack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An optional ant Task which emulates the Command Line Interface pack200(1).
@@ -43,6 +45,9 @@ public class Pack200Task extends Pack {
     private boolean doGZIP = false;
     private File p200ConfigFile = null;
 
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(Pack200Task.class);
     // Storage for the properties used by the setters.
     private HashMap<String, String> propMap;
 
@@ -164,16 +169,16 @@ public class Pack200Task extends Pack {
 	    ? "Repack with Pack200" 
 	    : "Packing with Pack200";
 
-	System.out.println(statusStr);
-	System.out.println("Source File :" + source);
-	System.out.println("Dest.  File :" + zipFile);
+	logger.info(statusStr);
+	logger.info("Source File :" + source);
+	logger.info("Dest.  File :" + zipFile);
 	if (p200ConfigFile != null)
-           System.out.println("Config file :" + p200ConfigFile);
+           logger.info("Config file :" + p200ConfigFile);
 
 	this.validate();
 
 	File packFile = zipFile;
-
+	FileOutputStream fos = null;
 	try { 
 	    Pack200.Packer pkr = Pack200.newPacker();
 	    pkr.properties().putAll(propMap);
@@ -195,7 +200,7 @@ public class Pack200Task extends Pack {
 	    }
 
 	    JarFile jarFile = new JarFile(source);
-   	    FileOutputStream fos = new FileOutputStream(packFile);
+   	    fos = new FileOutputStream(packFile);
 
             OutputStream os = (doGZIP) 
 		? new BufferedOutputStream(new GZIPOutputStream(fos)) 
@@ -233,10 +238,17 @@ public class Pack200Task extends Pack {
 	    }
 
 	} catch (IOException ioe) {
-	    ioe.printStackTrace();
-	    throw new BuildException("Error in pack200");	
-        } finally {
+	    logger.error("Error: ",ioe);
+	    throw new BuildException("Error in pack200: ",ioe);	
+    } finally {
 	    if (doRepack) packFile.delete();
+		if(fos!=null) {
+			try {
+				fos.close();
+			} catch (IOException e) {
+				logger.warn("Error closing stream: ",e);
+			}
+		}
 	}
     }
 }

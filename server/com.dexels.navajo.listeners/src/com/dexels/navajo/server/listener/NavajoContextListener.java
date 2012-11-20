@@ -19,10 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
-import com.dexels.navajo.server.LocalClientDispatcherWrapper;
+import com.dexels.navajo.server.LegacyLocalClientDispatcherWrapper;
 import com.dexels.navajo.server.api.impl.NavajoServerInstance;
 import com.dexels.navajo.server.listener.http.SchedulerTools;
 import com.dexels.navajo.version.AbstractVersion;
@@ -35,8 +34,6 @@ public class NavajoContextListener implements ServletContextListener {
 	public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 	public static final String DEFAULT_SERVER_XML = "config/server.xml";
 	private static final Logger logger = LoggerFactory.getLogger(NavajoContextListener.class);
-	@SuppressWarnings("rawtypes")
-	private static ServiceRegistration navajoServerInstance;
 	@SuppressWarnings("rawtypes")
 	private static ServiceRegistration localClientInstance;
 
@@ -57,7 +54,7 @@ public class NavajoContextListener implements ServletContextListener {
 	}
 
 	public void init(String contextPath, String servletContextPath, String installPath, ServletContext servletContext) {
-		logger.info("=================	=========================================");
+		logger.info("==========================================================");
 		logger.info("INITIALIZING NAVAJO INSTANCE: "+contextPath);
 		logger.info("==========================================================");
 		if (!isValidInstallationForContext(installPath)) {
@@ -71,7 +68,7 @@ public class NavajoContextListener implements ServletContextListener {
 		SchedulerTools.createScheduler(servletContext);
 		if(!Version.hasOSGiBundleContext()) {
 			logger.info("No OSGi detected. Manually inserting LocalClientWrapper into ServletContext");
-			LocalClientDispatcherWrapper lcdw = new LocalClientDispatcherWrapper();
+			LegacyLocalClientDispatcherWrapper lcdw = new LegacyLocalClientDispatcherWrapper();
 			lcdw.setContext(nsi);
 			try {
 				lcdw.activate(nsi.getClientSettingMap());
@@ -109,6 +106,7 @@ public class NavajoContextListener implements ServletContextListener {
 
 	/**
 	 * Initialized a Navajo context.
+	 * @param contextPath the path of the virtual context
 	 * 
 	 * @param sc
 	 * @param force
@@ -148,7 +146,6 @@ public class NavajoContextListener implements ServletContextListener {
 	public static DispatcherInterface initializeContext(String rootPath,
 			String servletPath) throws NavajoException {
 		return DispatcherFactory.getInstance(rootPath, DEFAULT_SERVER_XML,
-				new com.dexels.navajo.server.FileInputStreamReader(),
 				servletPath);
 	}
 
@@ -161,7 +158,6 @@ public class NavajoContextListener implements ServletContextListener {
 			// DEFAULT_SERVER_XML
 			return DispatcherFactory.getInstance(new File(configurationPath),
 					DEFAULT_SERVER_XML,
-					new com.dexels.navajo.server.FileInputStreamReader(),
 					servletContextRootPath);
 		} else {
 			return initializeContext(rootPath, servletContextRootPath);
@@ -186,7 +182,7 @@ public class NavajoContextListener implements ServletContextListener {
 		if (!config.exists()) {
 			return false;
 		}
-		return config != null;
+		return true;
 	}
 
 	public static String getInstallationPath(String contextPath) {

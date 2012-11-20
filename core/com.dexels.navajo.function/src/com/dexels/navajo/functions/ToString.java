@@ -36,7 +36,6 @@ import com.dexels.navajo.parser.FunctionInterface;
 
 public final class ToString extends FunctionInterface {
 
-   @SuppressWarnings("unused")
 public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object s = this.getOperands().get(0);
 
@@ -57,10 +56,7 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
         	Money m = (Money)s;
         	return m.formattedString();
         }
-        if (s != null)
-          return s.toString();
-        else
-          return null;
+       return s.toString();
     }
 
     public String usage() {

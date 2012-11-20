@@ -1,10 +1,14 @@
 package com.dexels.navajo.tipi.application;
 
+import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,33 +31,18 @@ public class ApplicationComponent {
 	private TipiApplicationInstance instance;
 
 	private ComponentContext componentContext;
-	private final Map<String,TipiExtension> extensionList = new HashMap<String,TipiExtension>();
-	private TipiMainExtension mainExtension;
-	private TipiCoreExtension coreExtension;
 
-	private String[] requireOptional = new String[]{
-			"tipi.TipiSwingMigExtension",
-			"tipi.TipiJabberExtension",
-			"tipi.TipiMailExtension",
-			"tipi.TipiRichExtension",
-//			"tipi.TipiCssExtension",
-			"tipi.TipiSubstanceExtension"
-			};
-	
-	
+
 	private boolean isRunning = false;
 	private boolean isActive = false;
 	private Dictionary properties;
+	private ConfigurationAdmin configAdmin;
 	
 	public void activate(ComponentContext c) {
 		this.componentContext = c;
 		logger.info("Tipi Application Active");
 		properties = c.getProperties();
-		Enumeration en = properties.keys();
-		while (en.hasMoreElements()) {
-			Object key = (Object) en.nextElement();
-			logger.info("Element: "+key+" : "+properties.get(key));
-		}
+
 		if(instance!=null) {
 			instance.close();
 		}
@@ -61,32 +50,35 @@ public class ApplicationComponent {
 		String contextPath = (String) c.getProperties().get("tipi.context");
 		String deployment = (String) c.getProperties().get("deployment");
 		String profile = (String) c.getProperties().get("profile");
-//		if(verifyOptionalDeps()) {
+
+		try {
+			Configuration boot = configAdmin.getConfiguration("tipi.boot");
+			if(boot.getProperties()==null) {
+				logger.warn("No boot config, delaying actvation");
+				String tipiBoot = System.getProperty("tipi.boot");
+				if(tipiBoot!=null) {
+					logger.info("Found a system var, booting after all.");
+					if(contextPath!=null) {
+						boot.delete();
+						bootApplication(componentContext.getBundleContext(),contextPath,deployment,profile);
+					}
+				}
+				return;
+			}
+		} catch (IOException e) {
+			logger.error("Getting boot config failed? ",e);
+			return;
+		}
+		//		if(verifyOptionalDeps()) {
 		if(contextPath!=null) {
-			bootApplication(contextPath,deployment,profile);
+			bootApplication(componentContext.getBundleContext(),contextPath,deployment,profile);
 		}
 //		}
+		
 
 	}
 
-	private boolean verifyOptionalDeps() {
-		if(isRunning) {
-			// already running
-			logger.warn("Already running, not booting.");
-			return false;
-		}
-		for(String te: requireOptional) {
-			if(! isPresent(te)) {
-				logger.warn("Aborting boot: missing extension: "+te);
-				return false;
-			}
-		}
-		return true;
-	}
 
-	private boolean isPresent(String te) {
-		return extensionList.get(te)!=null;
-	}
 
 	public void deactivate() {
 		logger.info("Deactivating tipi Application");
@@ -97,38 +89,9 @@ public class ApplicationComponent {
 		isActive = false;
 	}
 
-	public void addTipiExtension(TipiExtension te) {
-		logger.info("Adding extension: "+te.getId()+" current size: "+extensionList.size());
-		extensionList.put(te.getClass().getCanonicalName(),te);
-//		if(verifyOptionalDeps()) {
-//			bootApplication((String) properties.get("tipi.context"));
-//		}
 
-	}
-
-	public void removeTipiExtension(TipiExtension te) {
-		logger.info("R extension: "+te.getId()+" class: "+te.getClass()+" current size: "+extensionList.size());
-		extensionList.remove(te);
-	}
-
-	public void setTipiMainExtension(TipiMainExtension te) {
-		logger.info("setting main extension: "+te.getId()+" current size: "+extensionList.size());
-		this.mainExtension = te;
-	}
-	public void clearTipiMainExtension(TipiMainExtension te) {
-		logger.info("clearing main extension: "+te.getId()+" current size: "+extensionList.size());
-		this.mainExtension = null;
-	}
-	public void setTipiCoreExtension(TipiCoreExtension te) {
-		logger.info("setting main extension: "+te.getId()+" current size: "+extensionList.size());
-		this.coreExtension = te;
-	}
-	public void clearTipiCoreExtension(TipiCoreExtension te) {
-		logger.info("clearing main extension: "+te.getId()+" current size: "+extensionList.size());
-		this.coreExtension = null;
-	}
 	
-	private void bootApplication(final String contextPath, final String deploy, final String profile) {
+	public void bootApplication(final BundleContext bundleContext, final String contextPath, final String deploy, final String profile) {
 		logger.info("====================\nStarting application\n====================\n context: "+contextPath);
 		if(instance!=null) {
 			logger.error("ALReady running! Ignoring start");
@@ -141,15 +104,21 @@ public class ApplicationComponent {
 			@Override
 			public void run() {
 				try {
-					System.err.println("Extensionlist at boot time: "+extensionList);
-					instance = TipiSwingWrapper.runApp(componentContext.getBundleContext(),contextPath,deploy,profile);
+					instance = TipiSwingWrapper.runApp(bundleContext,contextPath,deploy,profile);
 					instance.getCurrentContext().switchToDefinition(instance.getDefinition());
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		};
 		t.start();
 	}
 
+	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
+		this.configAdmin = configAdmin;
+	}
+
+	public void clearConfigAdmin(ConfigurationAdmin configAdmin) {
+		this.configAdmin = null;
+	}
 }

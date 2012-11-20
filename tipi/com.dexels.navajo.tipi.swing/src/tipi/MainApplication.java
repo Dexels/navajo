@@ -21,6 +21,9 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import tipiswing.SwingTipiApplicationInstance;
+import tipiswing.TipiSwingExtension;
+
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.application.InstallationPathResolver;
 import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
@@ -42,11 +45,13 @@ public class MainApplication {
 		tce.loadDescriptor();
 		tce.getTipiExtensionRegistry().registerTipiExtension(tce);
 		TipiSwingExtension tse = new TipiSwingExtension();
+		tse.start(null);
 		tse.loadDescriptor();
 		tse.getTipiExtensionRegistry().registerTipiExtension(tse);
 		
 		SwingTipiApplicationInstance instance = runApp(args);
-		instance.setInstallationFolder(new File("/Users/frank/Documents/workspace-indigo/SportlinkClub"));
+//		instance.setInstallationFolder(new File("C:/user_projects/SportlinkClub"));
+//        instance.setInstallationFolder(new File("/Users/frank/Documents/workspace-indigo/SportlinkClub"));
 		instance.getCurrentContext().switchToDefinition(
 				instance.getDefinition());
 	}
@@ -71,7 +76,7 @@ public class MainApplication {
 		return stai;
 	}
 	
-	public static SwingTipiApplicationInstance runApp(BundleContext bc, String installationPath,String deploy,String profile) throws IOException {
+	public static SwingTipiApplicationInstance runApp(BundleContext bc, String installationPath,String deploy,String profile) {
 		SwingTipiApplicationInstance stai = new SwingTipiApplicationInstance(bc);
 //		public static void processSettings(String deploy, String profile,  File installationFolder, TipiContext context) throws IOException {
 		File installationFolder = new File(installationPath);
@@ -82,11 +87,11 @@ public class MainApplication {
 	}
 	
 	public static SwingTipiApplicationInstance runApp( String[] args) {
-		System.err.println("Startup NONOSGi");
+		logger.debug("Startup NONOSGi");
 		try {
 			Locale.setDefault(new Locale("nl", "NL"));
 		} catch (SecurityException se) {
-			System.err.println("Sandbox. Using default locale");
+			logger.debug("Sandbox. Using default locale");
 		}
 
 		List<String> arrrgs = new ArrayList<String>();
@@ -121,7 +126,7 @@ public class MainApplication {
 				.setCurrentManager(new CheckThreadViolationRepaintManager());
 		try {
 			if(SwingUtilities.isEventDispatchThread()) {
-				System.err.println("Already in EDT. This is going to cause problems.");
+				logger.debug("Already in EDT. This is going to cause problems.");
 			}
 			SwingUtilities.invokeAndWait(new Runnable() {
 
@@ -162,15 +167,15 @@ public class MainApplication {
 						}
 
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error("Error detected",e);
 					}
 
 				}
 			});
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 
 		return myApplication;

@@ -106,10 +106,16 @@ public class ResultMessage implements Mappable {
 		this.suppressProperties = suppressProperties;
 	}
 	
-	private final boolean isPropertyInList(Property prop, String propertyStringList, boolean isArrayMessageElement) {
+	private final boolean isPropertyInList(Property prop, String propertyStringList) {
+		
 		if ( propertyStringList == null ) {
 			return false;
 		}
+		
+		if (propertyStringList.equals("*") ) {
+			return true;
+		}
+		
 		String [] propertyList = propertyStringList.split(";");
 		for (int i = 0; i < propertyList.length; i++) {
 			if ( propertyList[i].equals(prop.getName())) {
@@ -120,10 +126,15 @@ public class ResultMessage implements Mappable {
 	}
 	
 	private final void processSuppressedProperties(Message m) {
+		
+		if ( m.isArrayMessage() && m.getDefinitionMessage() != null ) {
+			processSuppressedProperties(m.getDefinitionMessage());
+		}
+		
 		Iterator<Property> allProps = new ArrayList<Property>(m.getAllProperties()).iterator();
 		while ( allProps.hasNext() ) {
-			Property p = (Property) allProps.next();
-			if ( isPropertyInList(p, this.suppressProperties, m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) ) {
+			Property p = allProps.next();
+			if ( isPropertyInList(p, this.suppressProperties) ) {
 				m.removeProperty(p);
 			}
 		}
@@ -165,8 +176,15 @@ public class ResultMessage implements Mappable {
 		}
 	}
 	
+	public Property getPropertyObject(String s) throws UserException {
+		if ( msg.getProperty(s) != null ) {
+			return msg.getProperty(s);
+		} else {
+			throw new UserException(-1, "Exception in getting property: " + s);
+		}
+	}
+
 	public void store() throws MappableException, UserException {
-		processSuppressedProperties(this.msg); 
 	}
 
 }

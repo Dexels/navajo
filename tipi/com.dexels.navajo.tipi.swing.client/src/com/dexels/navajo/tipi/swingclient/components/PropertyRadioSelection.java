@@ -16,6 +16,9 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
@@ -42,6 +45,9 @@ public final class PropertyRadioSelection extends JPanel implements
 		PropertyControlled, ActionListener {
 
 	private static final long serialVersionUID = 2786990335267017128L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PropertyRadioSelection.class);
 	private Property myProperty = null;
 	private final ButtonGroup myGroup = new ButtonGroup();
 
@@ -83,7 +89,7 @@ public final class PropertyRadioSelection extends JPanel implements
 		selectionMap.clear();
 		buttonList.clear();
 		if (p == null) {
-			// System.err.println("Null prop");
+			// logger.info("Null prop");
 			return;
 		}
 		myProperty = p;
@@ -153,7 +159,7 @@ public final class PropertyRadioSelection extends JPanel implements
 		// jr.addItemListener(new ItemListener() {
 		// public void itemStateChanged(ItemEvent ce) {
 		// if (ce.getStateChange()==ItemEvent.SELECTED) {
-		// System.err.println("ce: "+ce.getSource());
+		// logger.info("ce: "+ce.getSource());
 		// updateProperty((JRadioButton)ce.getSource());
 		// }w
 		// }
@@ -175,7 +181,7 @@ public final class PropertyRadioSelection extends JPanel implements
 	}
 
 	public final void actionPerformed(ActionEvent e) {
-		System.err.println("Radio action performed");
+		logger.info("Radio action performed");
 		updateProperty((JRadioButton) e.getSource());
 	}
 
@@ -184,7 +190,7 @@ public final class PropertyRadioSelection extends JPanel implements
 			return;
 		}
 		if (source == null) {
-			System.err.println("Tsja, updateprop with null source");
+			logger.info("Tsja, updateprop with null source");
 		}
 		try {
 			Selection s = selectionMap.get(source);

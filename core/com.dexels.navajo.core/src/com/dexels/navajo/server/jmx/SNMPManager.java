@@ -11,6 +11,9 @@ import javax.management.openmbean.OpenDataException;
 import javax.management.openmbean.OpenType;
 import javax.management.openmbean.SimpleType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SNMPManager implements CompositeData {
 
 	public static final String HOSTNAME = "hostname";
@@ -20,6 +23,8 @@ public class SNMPManager implements CompositeData {
 	public static final String V1 = "V1";
 	public static final String V2 = "V2";
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SNMPManager.class);
 	private HashMap items = new HashMap();
 	
 	@SuppressWarnings("unchecked")
@@ -99,7 +104,7 @@ public class SNMPManager implements CompositeData {
 					new OpenType[]{SimpleType.STRING, SimpleType.INTEGER, SimpleType.STRING}
 					);
 		} catch (OpenDataException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		
 		return ct;

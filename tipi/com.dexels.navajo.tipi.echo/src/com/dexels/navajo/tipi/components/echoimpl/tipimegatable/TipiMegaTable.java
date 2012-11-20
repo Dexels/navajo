@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Column;
 import nextapp.echo2.app.Component;
 
@@ -24,28 +27,12 @@ import com.dexels.navajo.tipi.components.echoimpl.TipiEchoDataComponentImpl;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
-
 public class TipiMegaTable extends TipiEchoDataComponentImpl {
 
 	private static final long serialVersionUID = 2852890344321360837L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMegaTable.class);
 	public TipiMegaTable() {
     }
 
@@ -100,10 +87,10 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
                         ex.printStackTrace();
                     }
                 } else {
-                    System.err.println("NULL MESSAGE?**********************");
+                    logger.info("NULL MESSAGE?**********************");
                 }
             } else {
-                System.err.println("NUL PATH??******************8");
+                logger.info("NUL PATH??******************8");
             }
         }
         for (int i = 0; i < tableInstances.size(); i++) {
@@ -148,9 +135,9 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
             flatten((Message) al.get(i), outResult);
         }
 
-//        System.err.println("FLATTENING FINISHED **********************************");
+//        logger.info("FLATTENING FINISHED **********************************");
         out.write(System.err);
-//        System.err.println("END OF NAVAJO ****************************************");
+//        logger.info("END OF NAVAJO ****************************************");
         myContext.performTipiMethod(this, out, "*", serviceName, true, null, -1, hostUrl, username, password, keystore, keypass);
 
     }
@@ -197,7 +184,7 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
          * String delimiter =
          * (String)compMeth.getEvaluatedParameter("delimiter",event).value; try {
          * flattenToCsv(filename,delimiter); } catch (IOException e) {
-         * e.printStackTrace(); } }
+         * logger.error("Error: ",e); } }
          * 
          * if ("refreshRemarks".equals(name)) { refreshAllTables(); }
          */
@@ -224,7 +211,7 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
                     Message m = NavajoFactory.getInstance().createMessage(out.getRootDoc(), "Answers");
                     out.addMessage(m);
                     Property codeCopy = p.copy(out.getRootDoc());
-                    // System.err.println("Remove the length restriction");
+                    // logger.info("Remove the length restriction");
                     // remove the length restriction
                     p.setLength(255);
                     codeCopy.setName("Id");

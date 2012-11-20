@@ -12,6 +12,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -30,6 +33,10 @@ import de.xeinfach.kafenio.util.LeanLogger;
 public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 
 	private static final long serialVersionUID = -8714674791523166811L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingEditor.class);
+	
 	private KafenioPanel myEditor = null;
 
 	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
@@ -48,7 +55,7 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 				myEditor.addPropertyChangeListener(new PropertyChangeListener(){
 
 					public void propertyChange(PropertyChangeEvent evt) {
-							System.err.println("Log: "+evt.getPropertyName()+" val: "+evt.getNewValue());
+							logger.info("Log: "+evt.getPropertyName()+" val: "+evt.getNewValue());
 					
 					}});
 				myEditor.getSourcePane().getDocument().addDocumentListener(new DocumentListener(){
@@ -66,7 +73,7 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 					}
 					
 					private void fireChange(String changeType, DocumentEvent e) {
-						System.err.println("Change: "+changeType+" evt: "+e);
+						logger.info("Change: "+changeType+" evt: "+e);
 					}
 				});
 
@@ -99,7 +106,7 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 
 
 
-	public static void main(String[] args) throws BadLocationException   {
+	public static void main(String[] args)   {
 		LeanLogger.setCurrentLogLevel(4);
 		KafenioPanelConfiguration gpc = new KafenioPanelConfiguration();
 		final KafenioPanel kp = new KafenioPanel(gpc);
@@ -121,7 +128,7 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 		kp.addPropertyChangeListener(new PropertyChangeListener(){
 
 			public void propertyChange(PropertyChangeEvent evt) {
-					System.err.println("Log: "+evt.getPropertyName()+" val: "+evt.getNewValue());
+					logger.info("Log: "+evt.getPropertyName()+" val: "+evt.getNewValue());
 			
 			}});
 		jf.getContentPane().add(jb,BorderLayout.SOUTH);

@@ -16,9 +16,14 @@ import javax.swing.JPanel;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PerspectiveImagePanel extends JPanel {
 	private static final long serialVersionUID = -7178013826296851126L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PerspectiveImagePanel.class);
 	BufferedImage img, img1, img2;
 	public int angle = 0;
 	private int previousAngle;
@@ -90,7 +95,7 @@ public class PerspectiveImagePanel extends JPanel {
 			});
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -101,9 +106,9 @@ public class PerspectiveImagePanel extends JPanel {
 	public PerspectiveImagePanel(int angle) {
 		try {
 			this.angle = angle;
-			img1 = ImageIO.read(new File("/home/aphilip/jmlogo.png"));
+			img1 = ImageIO.read(new File("jmlogo.png"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -130,7 +135,7 @@ public class PerspectiveImagePanel extends JPanel {
 					// ImageIO.write(img2, "png", new
 					// File("/home/aphilip/Desktop/img2.png"));
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			} else {
 				currentImg = img;
@@ -201,7 +206,7 @@ public class PerspectiveImagePanel extends JPanel {
 
 	public static void main(String[] args) {
 
-		System.err.println("CENtER " + GridBagConstraints.SOUTH);
+		logger.info("CENtER " + GridBagConstraints.SOUTH);
 
 		/*
 		 * JFrame frame = new JFrame("aap");

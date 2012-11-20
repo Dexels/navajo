@@ -26,7 +26,7 @@ public class RichTextFieldUI extends BasicTextFieldUI {
 		this.me = c;
 		me.addPropertyChangeListener("editable", new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				// System.err.println("prop: " + evt.getPropertyName());
+				// logger.info("prop: " + evt.getPropertyName());
 				if (((Boolean) evt.getNewValue()).booleanValue()) {
 					me.setFont(new Font("Dialog", Font.PLAIN, 10));
 				} else {
@@ -63,7 +63,7 @@ public class RichTextFieldUI extends BasicTextFieldUI {
 			}
 		}
 
-		// System.err.println("Stuck in loop?");
+		// logger.info("Stuck in loop?");
 
 		Rectangle bounds = me.getBounds();
 		int arc = (int) (bounds.height / 1.5);

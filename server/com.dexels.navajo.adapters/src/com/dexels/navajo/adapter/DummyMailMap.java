@@ -3,6 +3,9 @@ package com.dexels.navajo.adapter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -16,6 +19,10 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 	public DummyAttachmentMap attachment;
 	public DummyAttachmentMap [] multipleAttachments;
 	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DummyMailMap.class);
+	
 	public String sender;
 	public String subject;
 	public String recipients;
@@ -24,47 +31,47 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 	public String text;
 	
 	public void setAttachment(AttachmentMapInterface m) {
-		System.err.println("In DummyMailMap, setAttachment(" + m + ")");
+		logger.info("In DummyMailMap, setAttachment(" + m + ")");
 	}
 
 	public void setBcc(String bcc) {
-		System.err.println("In DummyMailMap, setBcc(" + bcc + ")");	
+		logger.info("In DummyMailMap, setBcc(" + bcc + ")");	
 		this.bcc = bcc;
 	}
 
 	public void setCc(String cc) {
-		System.err.println("In DummyMailMap, setCc(" + cc + ")");	
+		logger.info("In DummyMailMap, setCc(" + cc + ")");	
 		this.cc = cc;
 	}
 
 	public void setContentType(String s) {
-		System.err.println("In DummyMailMap, setContentType(" + s + ")");	
+		logger.info("In DummyMailMap, setContentType(" + s + ")");	
 	}
 
 	public void setIgnoreFailures(boolean b) {
-		System.err.println("In DummyMailMap, setIgnoreFailures(" + b + ")");
+		logger.info("In DummyMailMap, setIgnoreFailures(" + b + ")");
 	}
 
 	public void setMailServer(String s) {
-		System.err.println("In DummyMailMap, setMailServer(" + s + ")");
+		logger.info("In DummyMailMap, setMailServer(" + s + ")");
 	}
 
 	public void setMultipleAttachments(AttachmentMapInterface[] c) {
-		System.err.println("In DummyMailMap, setMultipleAttachments(" + c + ")");
+		logger.info("In DummyMailMap, setMultipleAttachments size: " + c.length );
 		this.multipleAttachments = (DummyAttachmentMap []) c;
 	}
 
 	public void setRecipients(String s) {
-		System.err.println("In DummyMailMap, setRecipients(" + s + ")");
+		logger.info("In DummyMailMap, setRecipients(" + s + ")");
 		this.recipients = s;
 	}
 
 	public void setRelatedMultipart(boolean b) {
-		System.err.println("In DummyMailMap, setRelatedMultipart(" + b + ")");
+		logger.info("In DummyMailMap, setRelatedMultipart(" + b + ")");
 	}
 
 	public void setSender(String s) {
-		System.err.println("In DummyMailMap, setSender(" + s + ")");
+		logger.info("In DummyMailMap, setSender(" + s + ")");
 		this.sender = s;
 	}
 	
@@ -73,17 +80,17 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 	}
 
 	public void setSubject(String s) {
-		System.err.println("In DummyMailMap, setSubject(" + s + ")");
+		logger.info("In DummyMailMap, setSubject(" + s + ")");
 		this.subject = s;
 	}
 
 	public void setText(String s) {
-		System.err.println("In DummyMailMap, setText(" + s + ")");
+		logger.info("In DummyMailMap, setText(" + s + ")");
 		this.text = s;
 	}
 
 	public void setXslFile(String s) {
-		System.err.println("In DummyMailMap, setXslFile(" + s + ")");
+		logger.info("In DummyMailMap, setXslFile(" + s + ")");
 	}
 
 	public void kill() {

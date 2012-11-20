@@ -3,7 +3,6 @@ package com.dexels.navajo.rhino;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,19 +21,14 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.rhino.flow.BreakError;
 import com.dexels.navajo.rhino.flow.ConditionError;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SchedulerRegistry;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.AuthorizationException;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.SystemException;
-import com.dexels.navajo.server.UserException;
-import com.dexels.navajo.server.test.TestNavajoConfig;
 
 public class RhinoRunner {
 	// private ScriptableObject globalScope;
@@ -45,74 +39,58 @@ public class RhinoRunner {
 
 	private static Logger logger = LoggerFactory.getLogger(RhinoRunner.class);
 
-	public static void main(String[] args) throws IOException,
-			InterruptedException, NavajoException, UserException,
-			SystemException, AuthorizationException, ClassNotFoundException,
+	public static void main(String[] args) throws NavajoException, ClassNotFoundException,
 			NavajoDoneException {
 		Class.forName("com.dexels.navajo.functions.ToBinary", true,
 				RhinoRunner.class.getClassLoader());
 
-		Navajo input = NavajoFactory.getInstance().createNavajo();
-		// Navajo x = runScript("initinsert",input,false);
-		// x.write(System.err);
-		//
-		// if(true) {
-		// return;
-		// }
+//		Navajo input = NavajoFactory.getInstance().createNavajo();
 
-		runScript("sleepmap", input, false);
-		// System.err.println("\n\nENTEREING CHECKFIELDS........\n\n");
-		// Navajo o = runScript("checkparam", n, false);
-		// Navajo o = runScript("checksimpleparam", n, false);
-		// Navajo o = runScript("TestFields", n, true);
 
-		// SchedulerRegistry.getScheduler()
-		// n.write(System.err);
-		// o.write(System.err);
-		// Thread.sleep(2000);
+//		runScript("sleepmap", input, false);
 
 		SchedulerRegistry.getScheduler().shutdownScheduler();
 
 	}
 
-	private static Navajo runScript(String scriptName, Navajo input,
-			boolean compile) throws FileNotFoundException, IOException,
-			NavajoException, NavajoDoneException {
-		RhinoRunner t = new RhinoRunner();
-		t.localMode = true;
-		Access a = new Access();
-		a.rpcName = scriptName;
-
-		// a.rpcName = "InitTestPropertyTypes";
-		a.setInDoc(input);
-		NavajoFactory.getInstance().setExpressionEvaluator(
-				new DefaultExpressionEvaluator());
-		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
-		// t.run(a);
-		if (compile) {
-			BasicScriptCompiler bsc = new BasicScriptCompiler();
-			FileOutputStream os = new FileOutputStream(a.getRpcName() + ".js");
-			bsc.compileTsl("ArrayMapTest", new FileInputStream("testscript/"
-					+ a.getRpcName() + ".xml"), os, new StringBuffer());
-			os.flush();
-			os.close();
-		}
-		Navajo output = NavajoFactory.getInstance().createNavajo();
-		a.setOutputDoc(output);
-		Navajo n;
-		try {
-			n = t.runBlockingScript(new FileInputStream(new File(a.getRpcName()
-					+ ".js")), a);
-			return n;
-		} catch (NavajoDoneException e) {
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e1) {
-				logger.warn("Interrupted");
-			}
-			return null;
-		}
-	}
+//	private static Navajo runScript(String scriptName, Navajo input,
+//			boolean compile) throws FileNotFoundException, IOException,
+//			NavajoException, NavajoDoneException {
+//		RhinoRunner t = new RhinoRunner();
+//		t.localMode = true;
+//		Access a = new Access();
+//		a.rpcName = scriptName;
+//
+//		// a.rpcName = "InitTestPropertyTypes";
+//		a.setInDoc(input);
+//		NavajoFactory.getInstance().setExpressionEvaluator(
+//				new DefaultExpressionEvaluator());
+//		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
+//		// t.run(a);
+//		if (compile) {
+//			BasicScriptCompiler bsc = new BasicScriptCompiler();
+//			FileOutputStream os = new FileOutputStream(a.getRpcName() + ".js");
+//			bsc.compileTsl("ArrayMapTest", new FileInputStream("testscript/"
+//					+ a.getRpcName() + ".xml"), os, new StringBuffer());
+//			os.flush();
+//			os.close();
+//		}
+//		Navajo output = NavajoFactory.getInstance().createNavajo();
+//		a.setOutputDoc(output);
+//		Navajo n;
+//		try {
+//			n = t.runBlockingScript(new FileInputStream(new File(a.getRpcName()
+//					+ ".js")), a);
+//			return n;
+//		} catch (NavajoDoneException e) {
+//			try {
+//				Thread.sleep(10000);
+//			} catch (InterruptedException e1) {
+//				logger.warn("Interrupted");
+//			}
+//			return null;
+//		}
+//	}
 
 	public Navajo runBlockingScript(InputStream script, final Access a)
 			throws IOException, NavajoException, NavajoDoneException {
@@ -148,7 +126,7 @@ public class RhinoRunner {
 		if (se.isAsync()) {
 			synchronized (se) {
 				try {
-					System.err.println("Waiting for scriptFinish");
+					logger.debug("Waiting for scriptFinish");
 					se.wait();
 				} catch (InterruptedException e) {
 					logger.info("Interrupted:", e);
@@ -236,7 +214,6 @@ public class RhinoRunner {
 					a.setOutputDoc(conditionError.getConditionErrors());
 				} else {
 					Object o = e.getValue();
-					;
 					logger.error("ScriptStack: \n{}",e.getScriptStackTrace());
 					//				o = Context.jsToJava(o, Object.class);
 					System.err.println("o: " + o);

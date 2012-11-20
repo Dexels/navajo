@@ -18,11 +18,15 @@ import com.dexels.navajo.tipi.TipiException;
 
 public class InstallationPathResolver {
 
-	private static final Logger logger = LoggerFactory.getLogger(InstallationPathResolver.class); 
-	
+	private final static Logger logger = LoggerFactory
+			.getLogger(InstallationPathResolver.class);
 
 
 	public static List<String> getInstallationFromPath(String fullContext) throws IOException, TipiException {
+		String forcedPath = System.getProperty("tipi.vaadin.context");
+		if(forcedPath!=null) {
+			return parseContext(forcedPath);
+		}
 		Map<String,String> systemContexts = loadSystemContexts();
 		logger.info("Resolving context paths. Input: "+fullContext+" paths: "+systemContexts);
 		String contextPath = fullContext.startsWith("/")?fullContext.substring(1):fullContext;
@@ -48,7 +52,11 @@ public class InstallationPathResolver {
 				break;
 			}
 			String[] r = line.split("=");
-			systemContexts.put(r[0], r[1]);
+			if(r.length<2) {
+				logger.error("Bad line in tipi.properties: "+line+"\nIgnoring and continuing");
+			} else {
+				systemContexts.put(r[0], r[1]);
+			}
 		}
 		
 		br.close();
@@ -68,7 +76,7 @@ public class InstallationPathResolver {
 		}
 		String result = systemContexts.get(key);
 		if(result!=null) {
-			System.err.println("Path "+contextPath+" resolved: "+result);
+			logger.info("Path "+contextPath+" resolved: "+result);
 			return parseContext(result);
 		}
 		result = systemContexts.get(contextPath);

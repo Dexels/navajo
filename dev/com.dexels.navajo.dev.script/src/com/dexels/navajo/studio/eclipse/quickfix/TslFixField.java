@@ -7,7 +7,6 @@
 package com.dexels.navajo.studio.eclipse.quickfix;
 
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IMarkerResolution2;
 
@@ -24,12 +23,12 @@ public class TslFixField implements IMarkerResolution2 {
      * @see org.eclipse.ui.IMarkerResolution#getLabel()
      */
     private final String name;
-    private final String value;
+//    private final String value;
     
     public TslFixField(String name, String value) {
         System.err.println("CREATED TSLFIXFIELD: "+name+" / "+value);
         this.name = name;
-        this.value = value;
+//        this.value = value;
     }
     
     public String getLabel() {
@@ -40,10 +39,10 @@ public class TslFixField implements IMarkerResolution2 {
      * @see org.eclipse.ui.IMarkerResolution#run(org.eclipse.core.resources.IMarker)
      */
     public void run(IMarker marker) {
-        IResource r = marker.getResource();
-        System.err.println("AAP: "+r.getFullPath()+(" code: "+name+" val: "+value));
-        int start = marker.getAttribute(IMarker.CHAR_START, 0);
-        int end = marker.getAttribute(IMarker.CHAR_END, 0);
+//        IResource r = marker.getResource();
+//        System.err.println("AAP: "+r.getFullPath()+(" code: "+name+" val: "+value));
+//        int start = marker.getAttribute(IMarker.CHAR_START, 0);
+//        int end = marker.getAttribute(IMarker.CHAR_END, 0);
     }
 
     public String getDescription() {
@@ -52,7 +51,6 @@ public class TslFixField implements IMarkerResolution2 {
     }
 
     public Image getImage() {
-        // TODO Auto-generated method stub
         return null;
     }
 

@@ -1,7 +1,6 @@
 package com.dexels.navajo.adapter.navajomap;
 
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -63,13 +62,14 @@ public class MessageMap implements Mappable {
     return new java.util.Date();
    }
 
-   public void setIntegerProperty(String fullName) throws UserException {
+   /**
+ * @param fullName  
+ */
+public void setIntegerProperty(String fullName) {
 
    }
 
    private void propertDoesNotExistException(String fullName) throws UserException {
-     StringWriter msgContent = new StringWriter();
-  
      throw new UserException( -1,
                              "Property " + fullName +
                              " does not exists in response document(" +
@@ -89,6 +89,11 @@ public class MessageMap implements Mappable {
       return -1;
   }
 
+   public Property getPropertyObject(String fullName) throws NavajoException {
+	   Property p = msg.getProperty(fullName);
+	   return p;
+   }
+   
    public Object getProperty(String fullName) throws NavajoException, UserException {
 	   Property p = msg.getProperty(fullName);
 		  if ( p == null ) {
@@ -182,13 +187,13 @@ public class MessageMap implements Mappable {
 
   public MessageMap [] getMessages() throws UserException {
     try {
-      ArrayList all = msg.getMessages(messagePointer);
+      ArrayList<Message> all = msg.getMessages(messagePointer);
       if ((all == null))
         throw new UserException(-1, "Could not find messages: " + messagePointer + " in response document (" + msg.getName() + ")");
       messages = new MessageMap[all.size()];
       for (int i = 0; i < all.size(); i++) {
         MessageMap m = new MessageMap();
-        m.setMsg((Message) all.get(i));
+        m.setMsg(all.get(i));
         messages[i] = m;
       }
       return messages;

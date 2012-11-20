@@ -130,7 +130,7 @@ public class ClockTimeField extends PropertyField {
 		}
 		super.setProperty(p);
 
-		// System.err.println("Setting text = "+p.getTypedValue().toString());
+		// logger.info("Setting text = "+p.getTypedValue().toString());
 
 		setFormatText();
 	}

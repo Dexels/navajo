@@ -9,11 +9,18 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Percentage;
 
 public class PercentageField extends AbstractPropertyField implements
 		PropertyControlled {
 	private static final long serialVersionUID = -4614624658588347172L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(PercentageField.class);
+	
 	private DecimalFormat myEditFormat = (DecimalFormat) NumberFormat
 			.getInstance();
 
@@ -31,7 +38,7 @@ public class PercentageField extends AbstractPropertyField implements
 	protected String getEditingFormat(Object o) {
 		Percentage p = (Percentage) o;
 		double d = p.doubleValue();
-		System.err.println("Double: " + d);
+		logger.info("Double: " + d);
 		return myEditFormat.format(d * 100);
 	}
 

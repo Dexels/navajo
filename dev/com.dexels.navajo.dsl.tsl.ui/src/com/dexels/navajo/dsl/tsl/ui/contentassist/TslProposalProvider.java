@@ -507,7 +507,7 @@ public class TslProposalProvider extends AbstractTslProposalProvider {
 		
 		if(m instanceof Map) {
 			Map currentMap = (Map) m;
-			if(currentMap==null || currentMap.getMapClosingName()==null) {
+			if(currentMap.getMapClosingName()==null) {
 				ICompletionProposal completionProposal = createCompletionProposal("</map."+currentMap.getMapName()+">" , "</map."+currentMap.getMapName()+">", null, context);
 				acceptor.accept(completionProposal);			
 			}

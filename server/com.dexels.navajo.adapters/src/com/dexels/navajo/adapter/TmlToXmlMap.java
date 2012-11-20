@@ -2,6 +2,9 @@ package com.dexels.navajo.adapter;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.xmlmap.TagMap;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -22,6 +25,9 @@ public class TmlToXmlMap implements Mappable {
 	public String attributeName = "";
 	public String attributeValue = "";
 	public boolean buildContent, dumpObject;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TmlToXmlMap.class);
 	
 	private boolean hasBeenBuild = false;
 	
@@ -86,9 +92,7 @@ public class TmlToXmlMap implements Mappable {
 				Message root = document.getMessage(rootPath);
 				
 				if(root == null){
-					System.err.println("ERROR! Could not find message: " + rootPath);
-					System.err.println("In document: ");
-					document.write(System.err);
+					logger.error("ERROR! Could not find message: " + rootPath);
 					throw new UserException(1200, "Root message not found for TML2XML map");
 				}
 				content.setStart(root.getName());
@@ -182,6 +186,9 @@ public class TmlToXmlMap implements Mappable {
 	}
 
 	
+	/**
+	 * @param b  
+	 */
 	public void setProcessSoapData(boolean b) throws UserException {
 		// TODO I think this overwrites multipart messages (?). Find an example and verify
 		Message settings = this.document.getMessage("_SoapSettings");
@@ -189,12 +196,12 @@ public class TmlToXmlMap implements Mappable {
 		settings.setMode(Message.MSG_MODE_IGNORE);
 		headers.setMode(Message.MSG_MODE_IGNORE);
 		setTargetNamespace(settings.getProperty("TargetNamespace").getValue());
-		System.err.println("Using namespace: "+settings.getProperty("TargetNamespace").getValue());
+		logger.debug("Using namespace: "+settings.getProperty("TargetNamespace").getValue());
 		Property parts = settings.getProperty("Parts");
 		String partList = parts.getValue();
 		String[] partArray = partList.split(",");
 		for (String pt : partArray) {
-			System.err.println("Part: "+pt);
+			logger.debug("Part: "+pt);
 			Message rootParent = this.document.getMessage(pt);
 			// should have only one child, if I'm not mistaken.
 			for (Message child : rootParent.getAllMessages()) {

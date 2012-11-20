@@ -26,14 +26,14 @@ public TipiMigLayout() {
 
   public void createLayout() {
     String grid = myDefinition.getStringAttribute("grid");
-//    System.err.println("Creating grid: >"+grid+"<");
+//    logger.info("Creating grid: >"+grid+"<");
     MigLayout layout = new MigLayout(grid);
     
     setLayout(layout);
   }
 
   public Object parseConstraint(String text, int index) {
-//	  System.err.println("parsing constraint: "+text);
+//	  logger.info("parsing constraint: "+text);
     return text;
   }
   

@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import tipi.SwingTipiApplicationInstance;
+import navajo.ExtensionDefinition;
+import tipiswing.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -13,7 +14,6 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiStandaloneToplevelContainer;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.swingclient.UserInterface;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 /**
  * <p>
@@ -58,7 +58,7 @@ public class TipiSwingStandaloneContainer implements
 	public void loadDefinition(String tipiPath, String definitionName,
 			String resourceBaseDirectory, ExtensionDefinition ed)
 			throws IOException, TipiException {
-		// System.err.println("Loading def: "+definitionName+" tipipath: "+tipiPath+" resbase: "+resourceBaseDirectory);
+		// logger.debug("Loading def: "+definitionName+" tipipath: "+tipiPath+" resbase: "+resourceBaseDirectory);
 		embeddedContext = new SwingEmbeddedContext(
 				(SwingTipiApplicationInstance) getContext()
 						.getApplicationInstance(),

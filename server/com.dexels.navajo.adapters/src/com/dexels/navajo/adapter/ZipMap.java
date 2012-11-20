@@ -32,6 +32,9 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -43,7 +46,9 @@ public class ZipMap implements Mappable {
 	public String name = "file.zip";
 	public Binary content;
 	public Binary zipped;
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(ZipMap.class);
+	
 	ByteArrayOutputStream baos = null;
 	ZipOutputStream zo = null;
 
@@ -80,7 +85,7 @@ public class ZipMap implements Mappable {
 			byte [] result = baos.toByteArray();
 			return new Binary(result);
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 
 		return null;
@@ -95,20 +100,20 @@ public class ZipMap implements Mappable {
 	}
 
 	public static void main(String [] args) throws Exception {
-		FileInputStream fi = new FileInputStream(new File("/home/arjen/dbvis.license"));
+		FileInputStream fi = new FileInputStream(new File("~/dbvis.license"));
 		Binary b = new Binary(fi);
 		ZipMap zm = new ZipMap();
 		zm.load(null);
 		zm.setName("dbvis.license");
 		zm.setContent(b);
-		fi = new FileInputStream(new File("/home/arjen/INDEX"));
+		fi = new FileInputStream(new File("~/INDEX"));
 		b = new Binary(fi);
 		zm.setName("INDEX");
 		zm.setContent(b);
 
 		Binary r = zm.getZipped();
 		System.err.println(r.getData().length);
-		FileOutputStream fo = new FileOutputStream(new File("/home/arjen/aap.zip"));
+		FileOutputStream fo = new FileOutputStream(new File("~/aap.zip"));
 		fo.write(r.getData());
 		fo.close();
 	}

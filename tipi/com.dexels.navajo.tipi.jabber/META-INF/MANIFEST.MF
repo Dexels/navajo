@@ -2,7 +2,7 @@ Bundle-Name: Navajo Tipi Jabber extension
 Bundle-SymbolicName: com.dexels.navajo.tipi.jabber
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.14.qualifier
+Bundle-Version: 1.0.18.qualifier
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi,
  com.dexels.navajo.core,
@@ -17,5 +17,6 @@ Import-Package: com.dexels.navajo.client.jabber,
  com.dexels.navajo.version,
  javax.net,
  javax.net.ssl,
- org.osgi.framework;version="1.5.0"
+ org.osgi.framework;version="1.5.0",
+ org.slf4j;version="1.6.1"
 Export-Package: com.dexels.navajo.tipi.jabber

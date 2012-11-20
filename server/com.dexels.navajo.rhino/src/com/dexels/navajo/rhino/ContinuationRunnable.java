@@ -149,12 +149,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 					environment.getGlobalScope());
 			Context.exit();
 		} catch (ContinuationPending e) {
-			try {
-				// Context.exit();
-				reschedule(environment, e);
-			} catch (IOException e1) {
-				logger.info("Continuation: ", e1);
-			}
+			reschedule(e);
 			throw new NavajoDoneException(e);
 		} catch (IOException e) {
 			logger.error("Error: ", e);
@@ -164,12 +159,8 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 	}
 
 	// if another continuation is captured.
-	private void reschedule(ScriptEnvironment env, ContinuationPending e)
-			throws IOException {
+	private void reschedule(ContinuationPending e) {
 		logger.info("Multiple continuations:  " + e.hashCode());
-		// Thread.dumpStack();
-		// SchedulerRegistry.getScheduler().submit(new ContinuationRunnable(env,
-		// e.getContinuation()), false);
 	}
 
 	@Override

@@ -8,17 +8,20 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingPropertyComponent;
 
 public class TipiSwingMessageView extends TipiSwingDataComponentImpl {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8647880449284812778L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingMessageView.class);
+	
 	@Override
 	protected void setComponentValue(String name, final Object object) {
 		super.setComponentValue(name, object);
@@ -31,9 +34,9 @@ public class TipiSwingMessageView extends TipiSwingDataComponentImpl {
 					}
 				});
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 	}

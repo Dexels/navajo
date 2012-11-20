@@ -115,7 +115,7 @@ package com.dexels.navajo.parser;
  *
  */
 
-import navajo.Version;
+import navajocore.Version;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -123,7 +123,6 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.functions.util.OSGiFunctionFactoryFactory;
-import com.dexels.navajo.functions.util.OsgiFunctionFactory;
 import com.dexels.navajo.server.DispatcherFactory;
 
 

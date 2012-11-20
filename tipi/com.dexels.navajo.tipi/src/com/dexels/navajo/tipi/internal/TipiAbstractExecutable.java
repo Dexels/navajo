@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -32,6 +35,10 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 	private final List<TipiExecutable> myExecutables = new ArrayList<TipiExecutable>();
 	private int currentIndex = 0;
 	private TipiExecutable myParent;
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiAbstractExecutable.class);
 	
 	public TipiAbstractExecutable(TipiContext tc) {
 		myContext = tc;
@@ -176,11 +183,11 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 		if (getExpression() == null || getExpression().equals("")) {
 			return true;
 		}
-		return evaluateBlock(getContext(), getComponent(), te);
+		return evaluateBlock(getComponent(), te);
 
 	}
 
-	protected boolean evaluateBlock(TipiContext context, Object source,
+	protected boolean evaluateBlock(Object source,
 			TipiEvent te) {
 		// boolean valid = false;
 		Operand o;
@@ -209,9 +216,9 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 				}
 			}
 		} catch (TMLExpressionException ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 		return false;
 	}
@@ -231,21 +238,15 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 	@Override
 	public void continueAction(TipiEvent original)
 			throws TipiBreakException, TipiException, TipiSuspendException {
-//		System.err.println(":::: "+stack);
-//		TipiExecutable me = stack.firstElement();
-		
 		
 		if(getParent()!=null) {
 			int ind = getParent().getExeIndex(this);
 			if(ind<0) {
-				System.err.println("Rolling on");
-//				throw new IllegalStateException("No such exe");
 				return;
 			}
 			List<TipiExecutable> ll = getParent().getExecutables();
 			for (int i = ind+1; i < ll.size(); i++) {
 				TipiExecutable current = ll.get(i);
-//				getParent().performAction(original, getParent().getParent(), i);
 				current.performAction(original, getParent(), i);
 			}
 			getParent().continueAction(original);

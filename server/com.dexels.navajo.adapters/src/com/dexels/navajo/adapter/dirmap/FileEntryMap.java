@@ -53,6 +53,9 @@ public class FileEntryMap {
 		return contents;
 	}
 	
+	/**
+	 * @param b  
+	 */
 	public void setDelete(boolean b) {
 		file.delete();
 	}

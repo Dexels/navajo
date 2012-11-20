@@ -10,7 +10,7 @@
 <%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <%@ page import="com.dexels.navajo.jsp.server.NavajoServerContext"%>
 
-<jsp:useBean id="navajoContext" class="com.dexels.navajo.client.context.NavajoContext" scope="session" />
+<jsp:useBean id="navajoContext" type="com.dexels.navajo.client.context.NavajoContext" scope="session" />
 <jsp:useBean id="serverContext" class="com.dexels.navajo.jsp.server.NavajoServerContext" scope="session" />
 <jsp:setProperty property="navajoContext" name="serverContext" value="${navajoContext}"/>
 <navserver:localclient/>

@@ -3,7 +3,6 @@ package com.dexels.navajo.functions.scale;
 import java.awt.AlphaComposite;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -394,8 +393,8 @@ public class ImageScaler {
 												        int width,
 												        int height) {
 		
-		GraphicsConfiguration gc = original.createGraphics().getDeviceConfiguration();
-		BufferedImage out = gc.createCompatibleImage(width, height, Transparency.BITMASK);
+//		GraphicsConfiguration gc = original.createGraphics().getDeviceConfiguration();
+		BufferedImage out =  new BufferedImage(width, height, Transparency.BITMASK); // gc.createCompatibleImage(width, height, Transparency.BITMASK);
 		Graphics2D g2d = out.createGraphics();
 //		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 //		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);

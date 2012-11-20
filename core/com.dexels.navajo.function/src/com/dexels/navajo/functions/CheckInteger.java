@@ -55,9 +55,9 @@ public class CheckInteger extends FunctionInterface {
 
     try {
       Integer.parseInt(o+"");
-      return new Boolean(true);
+      return Boolean.TRUE;
     } catch (Exception e) {
-      return new Boolean(false);
+      return Boolean.FALSE;
     }
   }
 

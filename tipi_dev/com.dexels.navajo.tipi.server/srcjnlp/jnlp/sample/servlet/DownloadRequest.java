@@ -96,7 +96,7 @@ public class DownloadRequest {
 	    // fix for 4474021 - getRealPath might returns NULL
 	    if (realPath != null) {
 		File f = new File(realPath);
-		if (f != null && f.exists() && f.isDirectory()) {
+		if (f.exists() && f.isDirectory()) {
 		    _path += "/";
 		}
 	    }

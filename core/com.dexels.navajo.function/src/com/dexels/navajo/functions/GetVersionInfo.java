@@ -39,7 +39,6 @@ public final class GetVersionInfo extends FunctionInterface {
 		return "GetVersionInfo([package name])";
 	}
 
-	@SuppressWarnings("unchecked")
 	public final Object evaluate() throws TMLExpressionException {
 		Object o = getOperand(0);
 		String packageName = o+"";
@@ -54,7 +53,7 @@ public final class GetVersionInfo extends FunctionInterface {
 				c = (Class<AbstractVersion>) DispatcherFactory.getInstance().getNavajoConfig().getClassloader().getClass(packageName+".Version");
 			}
 //			return "DUMMY FUNCTION, FIX ME!";
-			AbstractVersion v = (AbstractVersion) c.newInstance();
+			AbstractVersion v = c.newInstance();
 			return v.toString();
 		} catch (Exception e) {
 			throw new TMLExpressionException(this, "Could not find version object for package: " + packageName);

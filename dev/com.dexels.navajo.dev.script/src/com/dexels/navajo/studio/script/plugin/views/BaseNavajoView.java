@@ -31,7 +31,7 @@ public abstract class BaseNavajoView extends ViewPart {
 	public void init(final IViewSite site) throws PartInitException {
         super.init(site);
         final BaseNavajoView me = this;
-        NavajoScriptPluginPlugin plugin = NavajoScriptPluginPlugin.getDefault();
+//        NavajoScriptPluginPlugin plugin = NavajoScriptPluginPlugin.getDefault();
 //		IWorkbench workbench = ResourcesPlugin.getPlugin().getWorkbench();
 		//IWorkbench workbench =  Platform. //ResourcesPlugin.getWorkspace();
 		IWorkbench workbench = PlatformUI.getWorkbench();

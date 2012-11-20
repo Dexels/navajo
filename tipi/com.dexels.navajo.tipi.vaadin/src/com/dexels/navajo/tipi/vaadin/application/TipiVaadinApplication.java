@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+import navajo.ExtensionDefinition;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +30,6 @@ import com.dexels.navajo.tipi.classdef.OSGiClassManager;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.application.eval.EvalHandler;
 import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
-import com.dexels.navajo.version.ExtensionDefinition;
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
@@ -91,12 +92,12 @@ private String referer;
 				setCurrentContext(createContext());
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 			windowCloseManager = new WindowCloseManager(this, getCurrentContext());
 
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Error: ",t);
 		}
 	}
 
@@ -131,11 +132,11 @@ private String referer;
 		}
 
 		VaadinTipiContext va;
-		System.err.println("Extensionlist: "+extensionRegistry);
+		logger.info("Extensionlist: "+extensionRegistry);
 		try {
 			va = new VaadinTipiContext(this,installationFolder, extensionRegistry.getExtensionList());
 		} catch (Throwable e2) {
-			e2.printStackTrace();
+			logger.error("Error: ",e2);
 			return null;
 		}
 //		va.setInstallationFolder(installationFolder);
@@ -145,12 +146,7 @@ private String referer;
 		if (ApplicationUtils.isRunningInGae()) {
 			extensionRegistry.loadExtensions(va);
 		}
-		try {
-			BaseTipiApplicationInstance.processSettings(applicationDeploy, applicationProfile, installationFolder, va);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			System.err.println("Coulnd not process settings. No worries");
-		}
+		BaseTipiApplicationInstance.processSettings(applicationDeploy, applicationProfile, installationFolder, va);
 
 		String theme = va.getSystemProperty("tipi.vaadin.theme");
 		logger.info("Theme resolved to: "+theme);
@@ -177,7 +173,7 @@ private String referer;
 		try {
 			loadTipi(va, "start.xml", instance);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return va;
 	}
@@ -207,7 +203,7 @@ private String referer;
 	public void setEvalUrl(URL context, String relativeUri) {
 		VaadinTipiContext vaadinTipiContext = (VaadinTipiContext)getCurrentContext();
 		if(vaadinTipiContext!=null) {
-			vaadinTipiContext.setEvalUrl(context, relativeUri);
+//			vaadinTipiContext.setEvalUrl(context, relativeUri);
 		}
 	}
 

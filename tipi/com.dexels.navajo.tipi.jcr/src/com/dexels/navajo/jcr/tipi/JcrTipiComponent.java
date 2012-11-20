@@ -16,7 +16,6 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,16 +30,16 @@ public class JcrTipiComponent implements TipiResourceLoader{
 	private final static Logger logger = LoggerFactory
 			.getLogger(JcrTipiComponent.class);
 	
-	public void activate(ComponentContext cc) {
+	public void activate() {
 		logger.info("Activating tipi loader. ");
 		JcrURLHandlerFactory.instantiate(session);
 		logger.info("About to register command.");
 		try {
 			testJcrURL();
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		
 //		Dictionary<String, Object> dict = new Hashtable<String, Object>();
@@ -54,7 +53,7 @@ public class JcrTipiComponent implements TipiResourceLoader{
 		InputStream is = u.openStream();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		copyResource(baos, is);
-		System.err.println("SIZE: "+baos.toByteArray().length);
+		logger.info("SIZE: "+baos.toByteArray().length);
 		logger.info("Content: {}",new String(baos.toByteArray()));
 		is.close();
 	}
@@ -94,13 +93,13 @@ public class JcrTipiComponent implements TipiResourceLoader{
 		  }
 	  }
 	
-	public void deactivate(ComponentContext cc) {
+	public void deactivate() {
 		logger.info("Deactivating tipi loader. ");
 		
 	}
 	
 	public void setSession(Session r) {
-		System.err.println("Setting repo: "+r);
+		logger.info("Setting repo: "+r);
 		this.session = r;
 	}
 
@@ -137,13 +136,11 @@ public class JcrTipiComponent implements TipiResourceLoader{
 
 	@Override
 	public OutputStream writeResource(String resourceName) throws IOException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<File> getAllResources() throws IOException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -154,7 +151,6 @@ public class JcrTipiComponent implements TipiResourceLoader{
 
 	@Override
 	public void flushCache() throws IOException {
-		// TODO Auto-generated method stub
 		
 	}
 

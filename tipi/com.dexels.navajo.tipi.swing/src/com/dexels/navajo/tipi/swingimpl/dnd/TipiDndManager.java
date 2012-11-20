@@ -10,26 +10,30 @@ import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 import javax.swing.text.JTextComponent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
 
 public class TipiDndManager implements TipiDraggable, TipiDroppable {
 
-//	private final JComponent myComponent;
 	private final TipiComponent myTipiComponent;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiDndManager.class);
+	
 	public TipiDndManager(JComponent j, final TipiComponent ts) {
 //		myComponent = j;
 		myTipiComponent = ts;
 		if (!(j instanceof TipiDndCapable)) {
-			System.err.println("Not drag and drop capable");
+			logger.debug("Not drag and drop capable");
 			return;
 		}
 
 		j.setTransferHandler(new TipiTransferHandler(j.getTransferHandler()));
 		j.addMouseMotionListener(new MouseMotionAdapter() {
-			@SuppressWarnings("unchecked")
 			public void mouseDragged(MouseEvent e) {
 				JComponent c = (JComponent) e.getSource();
 				if (c instanceof JTextComponent) {
@@ -44,14 +48,14 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 						try {
 							ts.performTipiEvent("onDrag", null, true);
 						} catch (TipiException e1) {
-							e1.printStackTrace();
+							logger.error("Error detected",e1);
 						}
-						System.err.println("Drag val: "
+						logger.debug("Drag val: "
 								+ myTipiComponent.getValue("dragValue"));
 						TransferHandler th = c.getTransferHandler();
 						th.exportAsDrag(c, e, TransferHandler.COPY);
 					} catch (TipiBreakException e1) {
-						System.err.println("Component did a break on drag!");
+						logger.debug("Component did a break on drag!");
 					}
 				}
 			}
@@ -59,7 +63,6 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<String> getDragCategory() {
 		List<String> dragCategory = (List<String>) myTipiComponent
 				.getValue("dragCategory");
@@ -70,7 +73,6 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 		return myTipiComponent.getValue("dragValue");
 	}
 
-	@SuppressWarnings("unchecked")
 	public boolean acceptsDropCategory(List<String> category) {
 		List<String> dropCategory = (List<String>) myTipiComponent
 				.getValue("dropCategory");
@@ -94,12 +96,12 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("value", o);
 		try {
-			System.err.println("Value: " + o);
+			logger.debug("Value: " + o);
 			myTipiComponent.performTipiEvent("onDrop", params, true);
 		} catch (TipiBreakException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	}
 

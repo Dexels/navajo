@@ -2,22 +2,14 @@ package com.dexels.navajo.jsp.tags;
 
 import javax.servlet.jsp.JspException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 
 public class MessageTag extends BaseNavajoTag {
 
 	private String messageName;
 	private Message message;
 	private int messageIndex = -1;
-	
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(MessageTag.class);
 	
 	public int getMessageIndex() {
 		return messageIndex;
@@ -66,7 +58,9 @@ public class MessageTag extends BaseNavajoTag {
 					message = parent.getMessage(messageName);
 				} else {
 //					n = getNavajoContext().getNavajo();
-					message = n.getMessage(messageName);
+					if(n!=null) {
+						message = n.getMessage(messageName);
+					}
 				}
 			if(message==null) {
 				System.err.println("Warning, no message found at: "+messageName);
@@ -74,15 +68,11 @@ public class MessageTag extends BaseNavajoTag {
 			}
 		}
 		if(messageIndex>-1) {
-			message = parent.getMessage(messageIndex);
-		}
-		if(message!=null) {
-			try {
-				message.write(System.err);
-			} catch (NavajoException e) {
-				logger.error("Error: ", e);
+			if(parent!=null) {
+				message = parent.getMessage(messageIndex);
 			}
 		}
+
 		getNavajoContext().pushMessage(message);
 		return EVAL_BODY_INCLUDE;
 	}

@@ -21,6 +21,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.projectbuilder.ComponentMerger;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
@@ -29,7 +32,10 @@ import com.dexels.navajo.tipi.util.XMLElement;
 public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 
 	private final Map<String,String> typeExtension = new HashMap<String,String>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiCreateWikiDocumentation.class);
+	
 	
 	protected void parseParserMap(URL parserLink) throws IOException {
 		InputStream openStream = parserLink.openStream();
@@ -46,7 +52,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	
 	
 
-	protected void filterExtensions(String extension, List<String> extensions, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions,
+	protected void filterExtensions(String extension,  Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions,
 			Map<String, XMLElement> allEvents, Map<String, XMLElement> allValues, Map<String, XMLElement> allTypes,
 			Map<String, XMLElement> allFunctions) {
 		filterMapForExtension(extension,allComponents);
@@ -77,7 +83,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			Map<String, XMLElement> allFunctions) {
 		
 		String currentExtension = originalExtension.toLowerCase();
-//		System.err.println("All: "+allComponents.keySet());
+//		logger.info("All: "+allComponents.keySet());
 		try {
 			parseParserMap(new URL(repository,"typemap.xml"));
 		} catch (MalformedURLException e1) {
@@ -87,7 +93,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		}
 		 Map<String, XMLElement> allComponentsOfAllExtensions = new HashMap<String, XMLElement>(allComponents);
 		
-		filterExtensions(currentExtension, extensions, allComponents, allActions, allEvents, allValues, allTypes, allFunctions);
+		filterExtensions(currentExtension, allComponents, allActions, allEvents, allValues, allTypes, allFunctions);
 
 		Map<String, List<XMLElement>> extensionComponentMap = createExtensionMapFromList(allComponents);
 		Map<String, List<XMLElement>> extensionActionMap = createExtensionMapFromList(allActions);
@@ -104,25 +110,25 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			}
 
 			for (String extension : extensionComponentMap.keySet()) {
-				processComponents(currentExtension, version, extensionComponentMap.get(extension), extensionActionMap.get(extension),allComponentsOfAllExtensions);
+				processComponents(currentExtension, extensionComponentMap.get(extension), extensionActionMap.get(extension),allComponentsOfAllExtensions);
 			}
 			for (String extension : extensionActionMap.keySet()) {
-				processActions(currentExtension,version, extensionActionMap.get(extension));
+				processActions(currentExtension,extensionActionMap.get(extension));
 			}
 			for (String extension : extensionFunctionMap.keySet()) {
-				processFunctions(currentExtension,version, extensionFunctionMap.get(extension));
-				processFunctionHeaders(currentExtension,version,extensionFunctionMap.get(extension));
+				processFunctions(currentExtension,extensionFunctionMap.get(extension));
+				processFunctionHeaders(currentExtension,extensionFunctionMap.get(extension));
 			}
 			
 			mergeIndex(originalExtension, version, repository,allComponents,allActions,allFunctions,allTypes);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		
 	}
 
 	
-	private void processFunctionHeaders(String extension,String version, List<XMLElement> list) throws IOException {
+	private void processFunctionHeaders(String extension,List<XMLElement> list) throws IOException {
 		OutputStream os = writeResource( extension + "/functions/list.txt");
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		Collections.sort(list, new Comparator<XMLElement>() {
@@ -142,7 +148,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		os.close();
 	}
 
-	private void processFunctions(String extension, String version, List<XMLElement> list) throws IOException {
+	private void processFunctions(String extension, List<XMLElement> list) throws IOException {
 		Collections.sort(list, new Comparator<XMLElement>() {
 			public int compare(XMLElement o1, XMLElement o2) {
 				String s1 = o1.getStringAttribute("name");
@@ -150,7 +156,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 				return s1.compareTo(s2);
 			}
 		});
-	    System.err.println("Writing function definitions: ("+extension+")"+list.size());
+	    logger.info("Writing function definitions: ("+extension+")"+list.size());
 		for (XMLElement element : list) {
 			String resourceName = extension + "/functions/"+element.getStringAttribute("name")+".txt";
 			OutputStream os = writeResource(resourceName.toLowerCase());
@@ -194,7 +200,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	 */
 
 	public void mergeIndex(String extension, String version, URL repository, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions, Map<String, XMLElement> allFunctions, Map<String, XMLElement> allTypes) throws IOException {
-//		System.err.println("Merging from repository: "+repository+" extension: "+extension);
+//		logger.info("Merging from repository: "+repository+" extension: "+extension);
 		File extensionFile = new File(getDistributionDir(),"extensions.xml");
 		OutputStream os = writeResource("tipi.txt");
 		OutputStreamWriter osw = new OutputStreamWriter(os);
@@ -202,7 +208,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		osw.write("^ Extension ^ Version ^ Components ^ Actions ^ Functions ^ Types ^ JavaDoc ^\n");
 	//	osw.write("Extension:"+extension+" version: "+version+"\n");
 
-		System.err.println("Output: "+getOutputDir().getAbsolutePath());
+		logger.info("Output: "+getOutputDir().getAbsolutePath());
 		XMLElement exten = new CaseSensitiveXMLElement();
 		FileReader fr = new FileReader(extensionFile);
 		exten.parseFromReader(fr);
@@ -235,9 +241,9 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			osw.write("| [[tipidoc:" + id + ":details|" + id + "]] |  version: " + currentVersion + " | " + components + " | " + actions + " | " + functions + " | " + types +" | " + javadoc +  "  |\n");
 			
 		}
-//		System.err.println("Extensiojn lost"+extension);
+//		logger.info("Extensiojn lost"+extension);
 //		for (String ext : extension) {
-			createExtensionDetails(repository, new File(getOutputDir().getParentFile(),"definition.xml"),extension,version);
+			createExtensionDetails( new File(getOutputDir().getParentFile(),"definition.xml"),extension,version);
 			
 //		}
 //		for (TipiExtension e : extension) {
@@ -257,7 +263,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	
 	
 	@SuppressWarnings("deprecation")
-	private void createExtensionDetails(URL repository, File inputFile, String extension,String version) throws IOException {
+	private void createExtensionDetails( File inputFile, String extension,String version) throws IOException {
 
 		OutputStream os = writeResource(extension + "/details.txt");
 		OutputStreamWriter osw = new OutputStreamWriter(os);
@@ -383,7 +389,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			
 		}
 	}
-	private void processComponents(String extension, String version,  List<XMLElement> componentsOfThisExtension, List<XMLElement> allActions,  Map<String,XMLElement> allComponents) throws IOException {
+	private void processComponents(String extension,  List<XMLElement> componentsOfThisExtension, List<XMLElement> allActions,  Map<String,XMLElement> allComponents) throws IOException {
 		if(allActions==null) {
 			allActions = new ArrayList<XMLElement>();
 		}
@@ -406,7 +412,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			}
 		});
 		
-//		System.err.println("# of Components from this extension: "+componentsOfThisExtension.size()+" total: "+allComponents.size());
+//		logger.info("# of Components from this extension: "+componentsOfThisExtension.size()+" total: "+allComponents.size());
 //		Map<String,XMLElement> allComponentMap = new HashMap<String, XMLElement>();
 //		for (XMLElement element : componentsOfThisExtension) {
 //			allComponentMap.put(element.getStringAttribute("name"), element);
@@ -420,7 +426,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		for (XMLElement e : componentsOfThisExtension) {
 			String type = e.getStringAttribute("type");
 			if(type==null) {
-				System.err.println("DOumentation found abstract class. IGnoring for now!");
+				logger.info("DOumentation found abstract class. IGnoring for now!");
 				continue;
 			}
 			if (type.equals("component") || type.equals("tipi") ) {
@@ -433,11 +439,11 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 				otherComponents.add(e);
 			}
 		}
-//		System.err.println("Real: "+realComponents.size()+" connector: "+connectorComponents.size());
+//		logger.info("Real: "+realComponents.size()+" connector: "+connectorComponents.size());
 		if (realComponents.size() > 0) {
 			osw.write("==== Components ====\n[[..tipi|(Back to extensions)]]\n");
 			for (XMLElement e : realComponents) {
-				XMLElement eee = ComponentMerger.getAssembledClassDef(allComponents, e, e.getStringAttribute("name"));
+				XMLElement eee = ComponentMerger.getAssembledClassDef(allComponents, e);
 				writeComponentHeader(extension,eee, osw);
 				writeComponent(extension,allComponents, eee);
 			}
@@ -508,7 +514,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		
 	}
 
-	private void processActions(String extension, String version, List<XMLElement> allActions) throws IOException {
+	private void processActions(String extension, List<XMLElement> allActions) throws IOException {
 		
 		OutputStream os = writeResource(extension + "/actionlist.txt");
 		OutputStreamWriter osw = new OutputStreamWriter(os);
@@ -525,7 +531,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		os.close();
 
 		for (XMLElement e : allActions) {
-			writeAction(extension,version,e);
+			writeAction(extension,e);
 		}
 	}
 
@@ -534,7 +540,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		for (XMLElement x : allElements.values()) {
 			String ext = x.getStringAttribute("extension");
 			if(ext==null) {
-				System.err.println("::::: "+x);
+				logger.info("::::: "+x);
 			}
 			List<XMLElement> v = result.get(ext);
 			if (v == null) {
@@ -546,7 +552,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		return result;
 	}
 
-	private void writeAction(String extension, String version, XMLElement component) throws IOException {
+	private void writeAction(String extension, XMLElement component) throws IOException {
 		OutputStream os = writeResource(extension + "/actions/"+component.getStringAttribute("name").toLowerCase()+".txt");
 
 		OutputStreamWriter w = new OutputStreamWriter(os);
@@ -608,7 +614,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	private void writeComponent(XMLElement component,Map<String,XMLElement> allComponents, Writer w) throws IOException {
 		
 		
-		ComponentMerger.getAssembledClassDef(allComponents, component, component.getStringAttribute("name"));
+		ComponentMerger.getAssembledClassDef(allComponents, component);
 		w.write("==== Component: " + component.getStringAttribute("name") + " (type: " + component.getStringAttribute("type")
 				+ ") ====\n [[..componentlist|(Back to componentlist)]]\n");
 		List<XMLElement> ll = component.getElementsByTagName("description");
@@ -703,7 +709,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 			// <value direction="in" name="y" type="integer" value="0" />
 			w.write("== Event: " + element.getStringAttribute("name") + " ==\n");
 			XMLElement descrTag = element.getChildByTagName("description");
-			//System.err.println("Descr Tag: "+descr);
+			//logger.info("Descr Tag: "+descr);
 			appendDescriptorTag(w,"    *", descrTag);
 			List<XMLElement> methodParams = element.getElementsByTagName("param");
 			for (XMLElement param : methodParams) {
@@ -723,11 +729,11 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	}
 
 	private String getExtensionOfDataType(String datatype) {
-		//System.err.println("Type: "+datatype+" map: "+typeExtension);
+		//logger.info("Type: "+datatype+" map: "+typeExtension);
 		return typeExtension.get(datatype);
 	}
 	
-	private void appendDescriptorTags(Writer w, List<XMLElement> descriptionTags) throws IOException {
+	private void appendDescriptorTags(Writer w, List<XMLElement> descriptionTags) {
 		if (descriptionTags == null) {
 			return;
 		}
@@ -736,7 +742,12 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		}
 	}
 
-	private void appendDescriptorTag(Writer w, String prefix,XMLElement element) throws IOException {
+	/**
+	 * @param w  
+	 * @param prefix 
+	 * @param element 
+	 */
+	private void appendDescriptorTag(Writer w, String prefix,XMLElement element)  {
 
 	}
 

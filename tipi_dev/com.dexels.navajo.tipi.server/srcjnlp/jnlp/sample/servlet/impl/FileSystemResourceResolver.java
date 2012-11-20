@@ -45,7 +45,7 @@ public class FileSystemResourceResolver implements ResourceResolver {
 		String realPath = path.substring("Apps/".length(),path.length());
 		File result = new File(baseDir,realPath);
 		if(!result.exists()) {
-	//		System.err.println("File with path: "+path+" resolved to: "+result.getAbsolutePath()+" does not seem to exist!");
+	//		logger.info("File with path: "+path+" resolved to: "+result.getAbsolutePath()+" does not seem to exist!");
 		}
 		return result.lastModified();
 //		return 0;

@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
 	TestNavajo.class})  
 public class NavajoDocument  {
 
-  public NavajoDocument(String s) {
+  public NavajoDocument() {
   }
   
 //  public static junit.framework.Test suite() {

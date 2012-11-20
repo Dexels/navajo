@@ -32,6 +32,7 @@ import com.dexels.navajo.server.UserException;
  * ====================================================================
  */
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class DbSchema implements Mappable {
 
   public String name;

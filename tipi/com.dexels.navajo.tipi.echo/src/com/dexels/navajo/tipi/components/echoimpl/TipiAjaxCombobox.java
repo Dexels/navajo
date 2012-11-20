@@ -46,7 +46,7 @@ public class TipiAjaxCombobox extends TipiEchoDataComponentImpl {
 //				try {
 //					performTipiEvent("onChange", m, true);
 //				} catch (TipiException e) {
-//					e.printStackTrace();
+//					logger.error("Error: ",e);
 //				}
 //				return null;
 //			}
@@ -63,7 +63,7 @@ public class TipiAjaxCombobox extends TipiEchoDataComponentImpl {
 //					m.put("value", sel);
 //					performTipiEvent("onSelect", m, false);
 //				} catch (TipiException e) {
-//					e.printStackTrace();
+//					logger.error("Error: ",e);
 //				}
 //			}
 //		});
@@ -78,7 +78,7 @@ public class TipiAjaxCombobox extends TipiEchoDataComponentImpl {
 //					m.put("value", sel);
 //					performTipiEvent("onEnter", m, false);
 //				} catch (TipiException e) {
-//					e.printStackTrace();
+//					logger.error("Error: ",e);
 //				}
 //			}
 //		});
@@ -99,7 +99,7 @@ public class TipiAjaxCombobox extends TipiEchoDataComponentImpl {
 //
 //					public void run() {
 //						myCombo.hidePopup();
-//						System.err.println("njama");
+//						logger.info("njama");
 //					}});
 //			}});
 		return myCombo;

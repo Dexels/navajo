@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import com.mongodb.DB;
 import com.mongodb.Mongo;
-import com.mongodb.MongoOptions;
 
 public class MongoManagedResourceFactory implements ManagedServiceFactory {
 
@@ -41,7 +40,7 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(MongoManagedResourceFactory.class);
-	private ServiceRegistration factoryRegistration;
+	private ServiceRegistration<ManagedServiceFactory> factoryRegistration;
 	
 	public MongoManagedResourceFactory(BundleContext bc, String pid, String name) {
 		this.bundleContext = bc;
@@ -50,7 +49,7 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 		
         Dictionary<String, Object> managedProperties = new Hashtable<String, Object>();
         managedProperties.put(Constants.SERVICE_PID, this.pid);
-        factoryRegistration = bundleContext.registerService(ManagedServiceFactory.class.getName(), this, managedProperties);
+        factoryRegistration = bundleContext.registerService(ManagedServiceFactory.class, this, managedProperties);
 
 	}
 	
@@ -78,10 +77,10 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 	@Override
 	public void updated(String pid, Dictionary settings)
 			throws ConfigurationException {
-		logger.info("Configuration received, pid: "+pid);
+//		logger.info("Configuration received, pid: "+pid);
 		try {
-			Object source = instantiate(bundleContext, pid,settings);
-			ServiceRegistration reg =  bundleContext.registerService(DB.class.getName(),(DB)source, settings);
+			Object source = instantiate(settings);
+			ServiceRegistration reg =  bundleContext.registerService(DB.class.getName(),source, settings);
 			registryMap.put(pid, reg);
 			contextMap.put(pid, (DB) source);
 		} catch (Exception e) {
@@ -91,18 +90,24 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 
 	
 	@SuppressWarnings({ "rawtypes" })
-	public Object instantiate(BundleContext bc, String pid, Dictionary settings) throws Exception {
+	public Object instantiate( Dictionary<String,Object> settings) throws Exception {
 		Properties prop = new Properties(); 
 		Enumeration en = settings.keys();
 		while (en.hasMoreElements()) {
 			String key = (String) en.nextElement();
 			prop.put(key, settings.get(key));
+			logger.info("Dict: "+key+" : "+settings.get(key));
 		}
-		MongoOptions o = new MongoOptions();
+//		MongoOptions o = new MongoOptions();
 		
 		Mongo m = new Mongo((String) settings.get(HOST));
-		DB db = m.getDB((String) settings.get(DATABASE));
-		return db;
+		final String database = (String) settings.get(DATABASE);
+		logger.info(">>> "+database);
+		if(database!=null) {
+			DB db = m.getDB(database);
+			return db;
+		}
+		return null;
 	}
 
 	public void close() {

@@ -68,7 +68,7 @@ public class TipiSwitchPanel extends TipiPanel {
 					if (getChildCount() <= 1) {
 						selectedIndex = new Integer(0);
 						// cardLayout.show(myPanel,name);
-						// System.err.println("Showing component: "+name);
+						// logger.debug("Showing component: "+name);
 					}
 				} else {
 					getSwingContainer().add((Component) c, name);

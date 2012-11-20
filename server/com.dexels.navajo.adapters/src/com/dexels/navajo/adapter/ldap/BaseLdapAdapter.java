@@ -17,6 +17,9 @@ import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
@@ -38,26 +41,24 @@ public class BaseLdapAdapter implements Mappable {
 	public String server = DEFAULT_LDAP_SERVER;
 	public String username = DEFAULT_LDAP_USERNAME;
 	public String password = DEFAULT_LDAP_PASSWORD;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseLdapAdapter.class);
 
 	private InitialDirContext initialDir = null;
 
 	public void kill() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void load(Access access) throws MappableException, UserException {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
-
 	}
 
+	@SuppressWarnings("unused")
 	private void checkLdap(String ldapUrl, String principal, String username, String password) throws NamingException {
-		Hashtable env = new Hashtable();
+		Hashtable<String,String> env = new Hashtable<String,String>();
 
 		String usr = "uid=" + username + ",";
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
@@ -69,15 +70,15 @@ public class BaseLdapAdapter implements Mappable {
 		initialDir = new InitialDirContext(env);
 		Integer i = new Integer(28420);
 
-		System.out.println("Adding " + i + " to directory...");
+		logger.debug("Adding " + i + " to directory...");
 
 		initialDir.bind(principal + ",cn=myRandomInt", i);
 		// ctx.bind(arg0, i)
 		i = new Integer(98765);
-		System.out.println("i is now: " + i);
+		logger.debug("i is now: " + i);
 
 		i = (Integer) initialDir.lookup("cn=myRandomInt");
-		System.out.println("Retrieved i from directory with value: " + i);
+		logger.debug("Retrieved i from directory with value: " + i);
 	}
 
 	// public static void main(String[] args) throws SystemException,
@@ -107,7 +108,7 @@ public class BaseLdapAdapter implements Mappable {
 			NamingEnumeration e = dc.list("");
 			while (e.hasMore()) {
 				Object o = e.next();
-				System.err.println("o: " + o);
+				logger.info("o: " + o);
 			}
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -164,37 +165,14 @@ public class BaseLdapAdapter implements Mappable {
 		
 
 		final Navajo process2 = NavajoClientFactory.getClient().doSimpleSend(init, "club/ProcessQueryClub");
-		Message clubD = process2.getMessage("ClubData");
+		process2.getMessage("ClubData");
 		process2.write(System.err);
-//		Con ext organization = bla.insertOrganization(context, clubD,constants);
-
-		//		constants.put("o","MOC");
-//		constants.put("member","MOC");
-//		
 		for (int i = 0; i < al.size(); i++) {
 			Message current = (Message) al.get(i);
-			Context person = bla.insertPerson(context, current,constants);
+			bla.insertPerson(context, current,constants);
 			bla.addGroupMember("uid", "horr"+i, "member", context);
 
 		}
-
-		// DirContext users = (DirContext) a.lookup("ou=users");
-		// BasicAttributes mandatory = new BasicAttributes("cn", "BillyBob");
-		// BasicAttribute objectclass;
-		//                
-		// objectclass = new BasicAttribute("objectclass", "top");
-		// mandatory.put(objectclass);
-		//
-		// objectclass = new BasicAttribute("objectclass", "person");
-		// mandatory.put(objectclass);
-		//
-		// BasicAttribute surname = new BasicAttribute("surname", "Roberts");
-		//
-		// mandatory.put(surname);
-		//
-		// users.createSubcontext("cn=BillyBob", mandatory);
-		// a.createSubcontext("cn=Emelius,dc=dexels,dc=com,objectClass=account,objectClass=top");
-		// a.bind("uid=Emelius", "Bartholdy");
 	}
 
 	public DirContext getContext(String dn) throws NamingException {
@@ -207,7 +185,7 @@ public class BaseLdapAdapter implements Mappable {
 	}
 
 	public Context insertPerson(DirContext context, Message entity, Map constants) throws NamingException {
-		Map mapping = new HashMap<String, String>();
+		Map<String, String> mapping = new HashMap<String, String>();
 		mapping.put("cn", "LastName");
 		mapping.put("sn", "LastName");
 		mapping.put("gn", "FirstName");
@@ -228,8 +206,8 @@ public class BaseLdapAdapter implements Mappable {
 		return insertEntity("cn", context, entity, mapping, objectClasses, constants);
 	}
 
-	public Context insertOrganization(DirContext context, Message entity, Map constants) throws NamingException {
-		Map mapping = new HashMap<String, String>();
+	public Context insertOrganization(DirContext context, Message entity, Map<String, String> constants) throws NamingException {
+		Map<String, String> mapping = new HashMap<String, String>();
 		
 		
 	 	mapping.put("cn", "ClubName");
@@ -266,23 +244,23 @@ public class BaseLdapAdapter implements Mappable {
 		}
 		mandatory.put("objectclass",objectclass);
 
-		System.err.println("Insert Entity: "+keyAttribute+" mapping: "+mapping);
+		logger.info("Insert Entity: "+keyAttribute+" mapping: "+mapping);
 		for (int i = 0; i < objectClasses.length; i++) {
-			System.err.println("CLASS: "+objectClasses[i]);
+			logger.info("CLASS: "+objectClasses[i]);
 		}
 		
 //		String keyProperty = (String) mapping.get(keyAttribute);
 //		String keySource = entity.getProperty(keyProperty).getValue();
 //		BasicAttributes mandatory = new BasicAttributes(keyAttribute, "" + entity.getProperty(keyProperty).getValue() + "");
 //		BasicAttribute objectclass = null;
-//		System.err.println("Create new objectClass");
+//		logger.info("Create new objectClass");
 //		objectclass = new BasicAttribute("objectClass");
 //		for (int i = 0; i < objectClasses.length; i++) {
-//			System.err.println("Adding: "+objectClasses[i]+" to objectClass");
+//			logger.info("Adding: "+objectClasses[i]+" to objectClass");
 //			objectclass.add(objectClasses[i]);
 //		}
 //		mandatory.put("objectClass",objectclass);
-		System.err.println("Added to objectClass");
+		logger.info("Added to objectClass");
 		for (Iterator iter = mapping.keySet().iterator(); iter.hasNext();) {
 			String currentAttribute = (String) iter.next();
 			if (currentAttribute.equals(keyAttribute)) {
@@ -297,11 +275,11 @@ public class BaseLdapAdapter implements Mappable {
 						continue;
 					}
 					String propertyValue = "" + value.trim() + "";
-					System.err.println("AddingProp: >"+currentAttribute+"="+propertyValue+"<");
+					logger.info("AddingProp: >"+currentAttribute+"="+propertyValue+"<");
 					BasicAttribute attr = new BasicAttribute(currentAttribute, propertyValue);
 					mandatory.put(attr);
 				} else {
-					System.err.println("Missing property: " + propertyName);
+					logger.info("Missing property: " + propertyName);
 				}
 			}
 		}
@@ -310,16 +288,16 @@ public class BaseLdapAdapter implements Mappable {
 				String currentAttribute = (String) iter.next();
 				String value = (String) constants.get(currentAttribute);
 				BasicAttribute attr = new BasicAttribute(currentAttribute, value);
-				System.err.println("Adding:     >"+currentAttribute+"="+value+"<");
+				logger.info("Adding:     >"+currentAttribute+"="+value+"<");
 				mandatory.put(attr);
 			}
 		}
 		try {
-			System.err.println("Creating: >"+keyAttribute+"="+keySource+"<");
+			logger.info("Creating: >"+keyAttribute+"="+keySource+"<");
 			Context result = context.createSubcontext(keyAttribute + "=" + keySource, mandatory);
 			return result;
 		} catch (javax.naming.NameAlreadyBoundException n) {
-			System.err.println("Exists!");
+			logger.info("Exists!");
 			context.unbind(keyAttribute + "=" + keySource);
 			Context result = context.createSubcontext(keyAttribute + "=" + keySource, mandatory);
 			return result;

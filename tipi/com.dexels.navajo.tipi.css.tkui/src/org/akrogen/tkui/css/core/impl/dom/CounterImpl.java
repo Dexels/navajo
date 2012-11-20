@@ -24,6 +24,10 @@ import org.w3c.dom.css.Counter;
  */
 public class CounterImpl implements Counter, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7075258626705876426L;
 	private String identifier;
 	private String listStyle;
 	private String separator;

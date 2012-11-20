@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.akrogen.tkui.css.tipi.properties.css2;
 
-import java.awt.Component;
-
 import javax.swing.JComponent;
 import javax.swing.border.Border;
 

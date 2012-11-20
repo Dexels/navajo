@@ -8,7 +8,6 @@ import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
 
-@SuppressWarnings("unchecked")
 public final class ASTLTNode extends SimpleNode {
     public ASTLTNode(int id) {
         super(id);
@@ -37,9 +36,9 @@ public final class ASTLTNode extends SimpleNode {
 
     public final Object interpret() throws TMLExpressionException {
         // System.out.println("in ASTGENode()");
-        Object a = (Object) jjtGetChild(0).interpret();
+        Object a = jjtGetChild(0).interpret();
         // System.out.println("Got first argument");
-        Object b = (Object) jjtGetChild(1).interpret();
+        Object b = jjtGetChild(1).interpret();
 
         // System.out.println("Got second argument");
 

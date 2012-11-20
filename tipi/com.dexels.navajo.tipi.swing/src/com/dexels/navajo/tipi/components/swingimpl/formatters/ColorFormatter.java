@@ -32,9 +32,7 @@ public class ColorFormatter extends TipiFormatter {
 	}
 
 	public static void main(String[] args) {
-		Color c = Color.lightGray;
-		ColorFormatter cc = new ColorFormatter();
-		System.err.println("Format: " + cc.format(c));
+		new ColorFormatter();
 	}
 
 }

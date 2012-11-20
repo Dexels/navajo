@@ -60,8 +60,7 @@ public class ScriptIntrospection {
 				throw NavajoFactory.getInstance().createNavajoException(e);
 			}
 			
-			NavajoConfig nc = new NavajoConfig(new com.dexels.navajo.server.FileInputStreamReader(), 
-					(NavajoClassSupplier) null,
+			NavajoConfig nc = new NavajoConfig((NavajoClassSupplier) null,
 					configurationUrl.openStream(), rootPath,rootPath); 
 			TestDispatcher td = new TestDispatcher(nc);
 			new DispatcherFactory(td);
@@ -182,43 +181,6 @@ public class ScriptIntrospection {
 		
 	}
 	
-	public static void main(String [] args) throws Exception {
-		
-//		String rootPath = args[0] + "/";
-//		String script = args[1];
-//		
-//		ScriptIntrospection si = new ScriptIntrospection(rootPath, script);
-//		si.printAllDependencies(0);
-//		si.printVersionInfo();		
-//		HashSet<String> allScripts = new HashSet<String>();
-//		si.getAllScriptDependentScripts(allScripts);
-//		System.err.println("================== ALL DEPENDENT SCRIPTS ====================");
-//		Iterator all = allScripts.iterator();
-//		while ( all.hasNext() ) {
-//			System.err.println(all.next());
-//		}
-//		System.err.println("=============================================================");
-//		if ( si.getCompiledScript() != null ) {
-//			System.err.println("Original author    : " + si.getCompiledScript().getAuthor());
-//			System.err.println("Script description : " + si.getCompiledScript().getDescription());
-//			System.err.println("Script type        : " + si.getCompiledScript().getScriptType());
-//		}
-//		System.err.println("Has errors         : " + si.getHasErrors());
-//		if ( si.getHasErrors() ) {
-//			System.err.println("Error message: " + si.getError());
-//		}
-//		System.exit(1);
-		
-		
-		ScriptIntrospection s = new ScriptIntrospection();
-		File f = new File("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/navajo");
-		ArrayList<ScriptDefinition> all = new ArrayList<ScriptDefinition>();
-		s.getScriptsFromPath("navajo", f, all);
-		for (int i = 0; i < all.size(); i++) {
-			System.err.println(all.get(i).getScriptName());
-		}
-	}
-
 	public boolean getHasErrors() {
 		if ( myCompiledScript == null && !hasErrors ) {
 			initializeScript(script);
@@ -272,7 +234,7 @@ public class ScriptIntrospection {
 				           ( !"".equals(packageName) ? "/" + packageName : "" ) );
 		getScriptsFromPath(packageName, parent, names);
 		ScriptDefinition [] result = new ScriptDefinition[names.size()];
-		result = (ScriptDefinition []) names.toArray(result);
+		result = names.toArray(result);
 		
 		return result;
 	}

@@ -142,50 +142,6 @@ public class TipiCalendar extends TipiMessagePanel  {
 		});
         
 		return vl;
-		
-		
-		
-		
-//		calendar = new Calendar();
-//		calendar.setImmediate(true);
-//		calendar.setSizeFull();
-//		calendar.setReadOnly(true);
-//		java.util.Calendar cc = java.util.Calendar.getInstance();
-////		cc.add(java.util.Calendar.MONTH, -1);
-//		calendar.setStartDate(cc.getTime());
-//		cc.add(java.util.Calendar.DAY_OF_MONTH, 10);
-//		calendar.setEndDate(cc.getTime());
-//		calendar.set
-//			
-//		calendar.setHandler(new EventClickHandler() {
-//			private static final long serialVersionUID = -504480744687441461L;
-//
-//			public void eventClick(EventClick event) {
-//				BasicEvent e = (BasicEvent) event.getCalendarEvent();
-//				TipiCalendarEvent tce = componentMap.get(e);
-//				try {
-//					tce.performTipiEvent("onActionPerformed", null, true);
-//				} catch (TipiBreakException e1) {
-//					e1.printStackTrace();
-//				} catch (TipiException e1) {
-//					e1.printStackTrace();
-//				}
-//			} 
-//		});	
-//		
-//		calendar.setHandler(new BasicBackwardHandler() {
-//			protected void setDates(BackwardEvent event, Date start, Date end) {
-//				java.util.Calendar calendar = event.getComponent().getInternalCalendar();
-//				super.setDates(event, start, end);
-//			}
-//		});
-//		calendar.setHandler(new BasicForwardHandler() {
-//			protected void setDates(ForwardEvent event, Date start, Date end) {
-//				java.util.Calendar calendar = event.getComponent().getInternalCalendar();
-//				super.setDates(event, start, end);
-//			}
-//		});
-//		return calendar;
 	}
 
 	public void addToContainer(Object c, Object constraints) {
@@ -221,7 +177,7 @@ public class TipiCalendar extends TipiMessagePanel  {
 //				tc.setCalendar(this);
 				componentMap.put(tc.getCalendarEvent(),tc);
 			} catch (TipiException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 			i++;
 		}
@@ -243,34 +199,6 @@ public class TipiCalendar extends TipiMessagePanel  {
 	public Object getComponentValue(String name) {
 		return super.getComponentValue(name);
 	}
-
-	
-	
-//	private BasicEventProvider createEventProvider(Message m) {
-//		if(m==null) {
-//			return null;
-//		}
-//		BasicEventProvider result = new BasicEventProvider();
-//
-//		for (Message current : m.getAllMessages()) {
-//			
-//			BasicEvent event = createEvent(current);
-//			java.util.Calendar calendar =
-//					java.util.Calendar.getInstance(); calendar.setTime(new Date());
-//					event.setStart(calendar.getTime());
-//					calendar.add(java.util.Calendar.HOUR, 3); event.setEnd(calendar.getTime()); event.setCaption("FooBar");
-//			result.addEvent(event);
-//		}
-//
-//		return result;
-//	}
-//
-//
-//	private BasicEvent createEvent(Message current) {
-//		BasicEvent be = new BasicEvent();
-//		
-//		return be;
-//	}
 
 
 }

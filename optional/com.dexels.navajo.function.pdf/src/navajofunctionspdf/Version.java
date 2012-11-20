@@ -24,44 +24,17 @@
  */
 package navajofunctionspdf;
 
-import java.util.Dictionary;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
+import navajoextension.AbstractCoreExtension;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
 
-import com.dexels.navajo.functions.util.FunctionDefinition;
-import com.dexels.navajo.functions.util.FunctionFactoryFactory;
-import com.dexels.navajo.functions.util.FunctionFactoryInterface;
-import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.pdf.functions.PDFFunctionDefinitions;
 
-/**
- * VERSION HISTORY
- * 
- * 2.0.0. Now using function type signatures and XML definitions.
- * 
- * 1.0.1. Added GetVersionInfo function.
- * 
- * 1.1.0. Added various new functions (GetProperty, FromSeconds, ToSeconds, Base64Encode).
- * 
- * 1.1.1. Added IsNull function.
- * 
- * 1.1.2. Fix in ToClockTime
- */
-public class Version extends com.dexels.navajo.version.AbstractVersion {
 
-	@SuppressWarnings("rawtypes")
-	private final Set<ServiceRegistration> registrations = new HashSet<ServiceRegistration>();
-	//Included packages.
-	@SuppressWarnings("rawtypes")
-	private ServiceRegistration registration;
+public class Version extends AbstractCoreExtension {
+
 	
 	public Version() {
-		setReleaseDate(RELEASEDATE);
-		
 	}
 	
 	
@@ -69,38 +42,15 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
-		fi.init();
-		fi.clearFunctionNames();
 		PDFFunctionDefinitions extensionDef = new PDFFunctionDefinitions();
-		fi.injectExtension(extensionDef);
-//		System.err.println("Detected functions: "+fi.getFunctionNames());
-		for (String functionName : fi.getFunctionNames(extensionDef)) {
-			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
-			 Dictionary<String, Object> props = new Hashtable<String, Object>();
-			 props.put("functionName", functionName);
-			 props.put("functionDefinition", fd);
-			 props.put("type", "function");
-			 registration = context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
-			 registrations.add(registration);
-		}
-		
-//	        props.put("Language", "English");
-//	        context.registerService(
-//	            DictionaryService.class.getName(), new DictionaryImpl(), props);
+		registerAll(extensionDef);
 	}
-
-
-
+	
 	@Override
-	public void stop(BundleContext arg0) throws Exception {
-		super.stop(arg0);
-		if(registration!=null) {
-			registration.unregister();
-		}
+	public void stop(BundleContext context) throws Exception {
+		super.stop(context);
+		deregisterAll();
 	}
-
-
 
 	public static void main(String [] args) {
 		Version v = new Version();

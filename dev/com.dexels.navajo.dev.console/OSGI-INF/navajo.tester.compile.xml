@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.tester.compile">
+   <implementation class="com.dexels.navajo.dev.servlet.CompileServlet"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <reference bind="setBundleCreator" cardinality="1..1" interface="com.dexels.navajo.compiler.BundleCreator" name="BundleCreator" policy="static" unbind="clearBundleCreator"/>
+   <property name="alias" type="String" value="/compile"/>
+</scr:component>

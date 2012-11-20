@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -37,6 +40,7 @@ import com.dexels.navajo.server.UserException;
  * ====================================================================
  */
 
+@SuppressWarnings({"unused", "rawtypes", "unchecked"})
 public class DbTable implements Mappable {
 
   public String name;
@@ -45,6 +49,8 @@ public class DbTable implements Mappable {
   public String schemaName;
 
   public DbColumn[] columns;
+  
+private final static Logger logger = LoggerFactory.getLogger(DbTable.class);
 
   public void load(Access access) throws MappableException, UserException {
   }
@@ -69,7 +75,7 @@ public class DbTable implements Mappable {
         setColumns();
       }
       catch (Exception ex) {
-        ex.printStackTrace(System.err);
+    	  logger.error("Error: ", ex);
       }
     }
     return columns;
@@ -102,7 +108,7 @@ public class DbTable implements Mappable {
         rs.close();
       }
       catch (SQLException ex) {
-        ex.printStackTrace(System.err);
+    	  logger.error("Error: ", ex);
       }
       finally {
         sqlMap.store();

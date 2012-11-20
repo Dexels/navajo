@@ -3,6 +3,9 @@ package com.dexels.navajo.events.types;
 import java.util.Date;
 import java.util.logging.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -13,10 +16,10 @@ import com.dexels.navajo.server.DispatcherFactory;
 
 public class AuditLogEvent implements NavajoEvent, LevelEvent {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2957804056238962208L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(AuditLogEvent.class);
 	
 	private static String instanceName = null;
 	private String subSystem;
@@ -39,7 +42,7 @@ public class AuditLogEvent implements NavajoEvent, LevelEvent {
 	}
 	
 	public AuditLogEvent(ServerTooBusyEvent nhc) {
-		this("SERVERTOOBUSY", "Number of simulatenously running service is", Level.SEVERE);
+		this("SERVERTOOBUSY", "Number of simulatenously running service is "+nhc.toString(), Level.SEVERE);
 	}
 	
 	public AuditLogEvent(String subSystem, String msg, Level level) {
@@ -106,7 +109,7 @@ public class AuditLogEvent implements NavajoEvent, LevelEvent {
 			event.addProperty(subsystem);
 			
 		} catch (NavajoException e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 		return input;
 	}

@@ -10,15 +10,7 @@
  *******************************************************************************/
 package org.akrogen.tkui.css.tipi.selectors;
 
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-
-import javax.swing.JComponent;
-
 import org.akrogen.tkui.css.core.dom.selectors.IDynamicPseudoClassesHandler;
-import org.akrogen.tkui.css.core.engine.CSSElementContext;
 import org.akrogen.tkui.css.core.engine.CSSEngine;
 
 import com.dexels.navajo.tipi.TipiComponent;

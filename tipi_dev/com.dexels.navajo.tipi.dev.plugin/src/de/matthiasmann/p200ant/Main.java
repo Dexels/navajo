@@ -33,12 +33,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.jar.Pack200;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Matthias Mann
  */
 public class Main {
     
+	
+	private final static Logger logger = LoggerFactory.getLogger(Main.class);
+	
     /**
      * @param args the command line arguments
      */
@@ -69,7 +75,7 @@ public class Main {
                 } else {
                     File f = new File(arg);
                     if(!f.canRead() || !f.isFile()) {
-                        System.err.println("File does not exist or can't be read: " + arg);
+                        logger.info("File does not exist or can't be read: " + arg);
                         System.exit(1);
                     }
                     files.add(f);
@@ -94,20 +100,20 @@ public class Main {
     
     private static void needsArg(String[] args, int i) {
         if(i == args.length) {
-            System.err.println(args[i-1] + " needs a parameter");
+            logger.info(args[i-1] + " needs a parameter");
             System.exit(1);
         }
     }
     
     private static void help() {
-        System.out.println("Usage: java -jar P200Ant [<option> ...] <file> [<file> ... ]");
-        System.out.println("Possible options:");
-        System.out.println("  --repack                  do repacking");
-        System.out.println("  --config config.file      read properties from config.file");
-        System.out.println("  --keep-order              keep file order");
-        System.out.println("  --keep-modification-time  keep class modification time");
-        System.out.println("  --single-segment          create only one big segment");
-        System.out.println("  --segment-limit nnn       sets the segment limit to nnn bytes");
+        logger.info("Usage: java -jar P200Ant [<option> ...] <file> [<file> ... ]");
+        logger.info("Possible options:");
+        logger.info("  --repack                  do repacking");
+        logger.info("  --config config.file      read properties from config.file");
+        logger.info("  --keep-order              keep file order");
+        logger.info("  --keep-modification-time  keep class modification time");
+        logger.info("  --single-segment          create only one big segment");
+        logger.info("  --segment-limit nnn       sets the segment limit to nnn bytes");
         System.exit(1);
     }
 }

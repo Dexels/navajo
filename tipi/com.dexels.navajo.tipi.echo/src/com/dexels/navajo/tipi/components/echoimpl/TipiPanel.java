@@ -1,32 +1,22 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.ContentPane;
 import nextapp.echo2.app.LayoutData;
 import echopointng.GroupBox;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
 
 public class TipiPanel extends TipiEchoDataComponentImpl {
 
 	private static final long serialVersionUID = 5875923124427412379L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiPanel.class);
+	
 	private ContentPane myContainer;
 //    private ContainerEx myContentPane;
 
@@ -50,15 +40,15 @@ public class TipiPanel extends TipiEchoDataComponentImpl {
    }
 
 //public void addToContainer(Object o, Object contraints){
-//	 System.err.println("############ Adding to PANEL.");
+//	 logger.info("############ Adding to PANEL.");
 //	 if(layoutComponent!=null) {
-//		 System.err.println("############ Layout found: "+layoutComponent.getClass());		 
+//		 logger.info("############ Layout found: "+layoutComponent.getClass());		 
 //	 }
-//	 System.err.println("############ Comeponet found: "+getContainer());
-//	 System.err.println("############ Inner found: "+getInnerComponent());
-//	 System.err.println("############ My container: "+myContainer.getComponentCount());
+//	 logger.info("############ Comeponet found: "+getContainer());
+//	 logger.info("############ Inner found: "+getInnerComponent());
+//	 logger.info("############ My container: "+myContainer.getComponentCount());
 //	 for (int i = 0; i < myContainer.getComponentCount(); i++) {
-//		System.err.println("CHILD: "+myContainer.getComponent(i));
+//		logger.info("CHILD: "+myContainer.getComponent(i));
 //	}
 //	 super.addToContainer(o, contraints);
 // }
@@ -80,7 +70,7 @@ public class TipiPanel extends TipiEchoDataComponentImpl {
         }
 
         if ("border".equals(name)) {
-          	System.err.println("SET_BORDER_GRIDPANEL: "+object);
+          	logger.info("SET_BORDER_GRIDPANEL: "+object);
             Component parent = myContainer.getParent();
             if(parent!=null) {
             	LayoutData ld = parent.getLayoutData();
@@ -105,14 +95,14 @@ public class TipiPanel extends TipiEchoDataComponentImpl {
 //        if ("border".equals(name)) {
 //        	if(object instanceof Border) {
 //        		Border border = (Border)object;
-//        		System.err.println("Border set: "+border);
+//        		logger.info("Border set: "+border);
 //    			myContentPane.setBorder(border);
 //        		myContainer.setInsets(new Insets(0,20,0,0));
 //        		LabelEx l = new LabelEx("Bla");
 //        		myContentPane.add(l);
 //        		myContentPane.setTop(new Extent(20,Extent.PX));
 //        	} else {
-//        		System.err.println("HUH? Strange border: "+object);
+//        		logger.info("HUH? Strange border: "+object);
 //        	}
 //    		
 //    		return;

@@ -13,28 +13,17 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class TipiSwingExportSeparatorPanel extends JPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 4447847774972763717L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingExportSeparatorPanel.class);
+	
 	JPanel jPanel1 = new JPanel();
 	TitledBorder titledBorder1;
 	JRadioButton commaOption = new JRadioButton();
@@ -52,7 +41,7 @@ public class TipiSwingExportSeparatorPanel extends JPanel {
 		try {
 			jbInit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	}
 

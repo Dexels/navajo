@@ -36,7 +36,7 @@ public class ClassModel implements Serializable {
 	private final Stack<XMLElement> definitionStack = new Stack<XMLElement>();
 	private StringBuffer description = new StringBuffer();
 
-	public ClassModel(String name) {
+	public ClassModel() {
 		// this.name = name;
 	}
 
@@ -113,7 +113,6 @@ public class ClassModel implements Serializable {
 		String name = value.getStringAttribute("name");
 		XMLElement old = values.get(name);
 		if (old != null) {
-			// System.err.println("Need to join value: "+old+" with new: "+value);
 		}
 
 		XMLElement desc = value.getChildByTagName("description");
@@ -191,13 +190,10 @@ public class ClassModel implements Serializable {
 
 		Set<Entry<String, XMLElement>> eventL = events.entrySet();
 		for (Entry<String, XMLElement> entry : eventL) {
-			// System.err.println("BUiLDING: "+entry.getKey()+"\n"+entry.getValue().toString());
-
 			XMLElement copy = entry.getValue().copy();
 
 			eventsElement.addChild(copy);
 			StringBuffer d = eventDescription.get(entry.getKey());
-			// System.err.println("Current description: "+eventDescription);
 			if (d != null) {
 				XMLElement desc = new CaseSensitiveXMLElement();
 				desc.setName("description");
@@ -222,5 +218,4 @@ public class ClassModel implements Serializable {
 		return result;
 	}
 
-	// private String cleanUp() {}
 }

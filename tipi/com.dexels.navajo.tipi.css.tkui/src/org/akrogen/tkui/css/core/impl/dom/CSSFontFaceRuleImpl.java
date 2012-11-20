@@ -34,6 +34,10 @@ import org.w3c.dom.css.CSSStyleSheet;
 public class CSSFontFaceRuleImpl extends AbstractCSSNode implements
 		CSSFontFaceRule, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4863311195678177164L;
 	private CSSStyleSheet parentStyleSheet = null;
 	private CSSRule parentRule = null;
 	private CSSStyleDeclaration style = null;

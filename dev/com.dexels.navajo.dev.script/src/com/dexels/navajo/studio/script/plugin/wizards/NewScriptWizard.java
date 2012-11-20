@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IEditorPart;
@@ -43,7 +42,6 @@ import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 public class NewScriptWizard extends Wizard implements INewWizard {
     private NewScriptWizardPage page;
 
-    private ISelection selection;
 
     protected IResource selectedFile = null;
 
@@ -62,7 +60,7 @@ public class NewScriptWizard extends Wizard implements INewWizard {
 
     @Override
 	public void addPages() {
-        page = new NewScriptWizardPage(selection);
+        page = new NewScriptWizardPage();
         addPage(page);
     }
 
@@ -212,11 +210,7 @@ public class NewScriptWizard extends Wizard implements INewWizard {
      * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
      */
     public void init(IWorkbench workbench, IStructuredSelection selection) {
-        this.selection = selection;
         if (selection == null) {
-            return;
-        }
-        if (!(selection instanceof IStructuredSelection)) {
             return;
         }
         IStructuredSelection iss = selection;

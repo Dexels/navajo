@@ -64,15 +64,15 @@ public class PropertyAggregateTest {
 		Aggregate ag = pa.getAggregate(groupDef);
 
 		Assert.assertEquals(3, ag.getCount());
-		Assert.assertEquals((double) 200.0, ag.getAvg(), 0.0);
-		Assert.assertEquals((int) 600, (int) ag.getSum());
+		Assert.assertEquals(200.0, ag.getAvg(), 0.0);
+		Assert.assertEquals(600, (int) ag.getSum());
 
 		groupDef.clear();
 		groupDef.put("Product", "Book");
 		ag = pa.getAggregate(groupDef);
 		Assert.assertEquals(2, ag.getCount());
-		Assert.assertEquals((double)12.5, ag.getAvg(), 0.0);
-		Assert.assertEquals((int) 25, (int) ag.getSum());
+		Assert.assertEquals(12.5, ag.getAvg(), 0.0);
+		Assert.assertEquals(25, (int) ag.getSum());
 	}
 
 	@Test
@@ -131,15 +131,15 @@ public class PropertyAggregateTest {
 		Aggregate ag = pa.getAggregate(groupDef);
 
 		Assert.assertEquals(2, ag.getCount());
-		Assert.assertEquals((double) 200.0, ag.getAvg(), 0.0);
-		Assert.assertEquals((int) 400, (int) ag.getSum());
+		Assert.assertEquals(200.0, ag.getAvg(), 0.0);
+		Assert.assertEquals(400, (int) ag.getSum());
 		
 		groupDef.clear();
 		groupDef.put("Sub", "Novel");
 		groupDef.put("Product", "Book");
 		ag = pa.getAggregate(groupDef);
 		Assert.assertEquals(2, ag.getCount());
-		Assert.assertEquals((double) 12.5, ag.getAvg(), 0.0);
-		Assert.assertEquals((int) 25, (int) ag.getSum());
+		Assert.assertEquals(12.5, ag.getAvg(), 0.0);
+		Assert.assertEquals(25, (int) ag.getSum());
 	}
 }

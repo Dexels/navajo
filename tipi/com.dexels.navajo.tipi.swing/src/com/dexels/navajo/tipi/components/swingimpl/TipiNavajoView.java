@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
@@ -30,10 +33,12 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class TipiNavajoView extends TipiPanel {
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -6895145174946001728L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiNavajoView.class);
+	
 	public Navajo myNavajo = null;
 
 	public Object createContainer() {
@@ -65,9 +70,9 @@ public class TipiNavajoView extends TipiPanel {
 				createNavajoXML(n);
 				myNavajo = n;
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			} catch (TipiBreakException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 	}
@@ -87,7 +92,7 @@ public class TipiNavajoView extends TipiPanel {
 		final XMLElement root = createTipiXML(n, navajoName);
 		myContext.addTipiDefinition(root);
 
-		System.err.println(root.toString());
+		logger.debug(root.toString());
 
 		final XMLElement inst = createInstanceXML();
 
@@ -97,13 +102,13 @@ public class TipiNavajoView extends TipiPanel {
 		try {
 			addComponentInstance(myContext, inst, "Center");
 		} catch (TipiException e1) {
-			e1.printStackTrace();
+			logger.error("Error detected",e1);
 		}
 
 		try {
 			loadData(n, "NavajoView");
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 
 	}
@@ -166,7 +171,7 @@ public class TipiNavajoView extends TipiPanel {
 			throws TipiBreakException {
 		super.performComponentMethod(name, compMeth, event);
 		if (name.equals("fireMethod")) {
-			System.err.println("Fire methof!!!");
+			logger.debug("Fire methof!!!");
 			Map<String, Object> eventParam = new HashMap<String, Object>();
 			eventParam.put("service",
 					compMeth.getEvaluatedParameterValue("methodName", event));
@@ -176,7 +181,7 @@ public class TipiNavajoView extends TipiPanel {
 			try {
 				performTipiEvent("onMethodFired", eventParam, false);
 			} catch (TipiException e) {
-				e.printStackTrace();
+				logger.error("Error detected",e);
 			}
 		}
 	}

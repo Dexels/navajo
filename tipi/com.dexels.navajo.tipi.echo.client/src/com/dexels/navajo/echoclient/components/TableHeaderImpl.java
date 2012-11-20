@@ -41,7 +41,7 @@ public class TableHeaderImpl extends ButtonImpl {
 		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(),
 				"TableHeader");
 		setLineWrap(false);
-		// System.err.println("Background: "+PROPERTY_BACKGROUND+" value: "+
+		// logger.info("Background: "+PROPERTY_BACKGROUND+" value: "+
 		// ss.getProperty(this.PROPERTY_BACKGROUND));
 		setStyle(ss);
 

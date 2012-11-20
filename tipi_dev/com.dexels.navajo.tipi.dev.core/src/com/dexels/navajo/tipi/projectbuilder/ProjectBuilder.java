@@ -15,12 +15,19 @@ import java.util.PropertyResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.projectbuilder.impl.TipiLocalJnlpProjectBuilder;
 import com.dexels.navajo.tipi.projectbuilder.impl.TipiRemoteJnlpProjectBuilder;
 import com.dexels.navajo.tipi.projectbuilder.impl.TipiWebProjectBuilder;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class ProjectBuilder {
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ProjectBuilder.class);
 	
 	
 	private static void downloadExtensionJars(File projectPath, String extensions,String extensionRepository, boolean onlyProxy, boolean clean, String buildType, boolean useVersioning, boolean localSign) throws IOException {
@@ -81,7 +88,7 @@ public class ProjectBuilder {
 	}
 	
 	public static Map<String,String> assembleTipi(File projectPath) throws IOException {
-		System.err.println("Project patH: "+projectPath.getAbsoluteFile());
+		logger.info("Project patH: "+projectPath.getAbsoluteFile());
 //		FileInputStream is = new FileInputStream(new File(projectPath,"settings/tipi.properties"));
 //		PropertyResourceBundle tipiProperties = new PropertyResourceBundle(is);		
 //		is.close();	
@@ -95,19 +102,19 @@ public class ProjectBuilder {
 		File deploymentFolder = new File(projectPath,"settings/deploy/");
 		Set<String> deployments = new HashSet<String>();
 
-		System.err.println("Deployment folder detected: "+deploymentFolder.getAbsolutePath());
+		logger.info("Deployment folder detected: "+deploymentFolder.getAbsolutePath());
 		if(deploymentFolder.exists() && deploymentFolder.isDirectory()) {
 			File[] deployCandidates = deploymentFolder.listFiles();
 			String selectedDeploy = tipiPropertyMap.get("deploy");
 			if(selectedDeploy!=null) {
 				for (File candidate : deployCandidates) {
-					System.err.println("Current: "+candidate.getName());
+					logger.info("Current: "+candidate.getName());
 					if(candidate.getName().endsWith(".properties") && candidate.isFile()) {
 						String currentDeploymentName = candidate.getName().substring(0,candidate.getName().length()-".properties".length());
 						deployments.add(currentDeploymentName);
-						System.err.println("     : "+currentDeploymentName);
+						logger.info("     : "+currentDeploymentName);
 						if(currentDeploymentName.equals(selectedDeploy)) {
-							System.err.println("Deployment found!");
+							logger.info("Deployment found!");
 							Map<String,String> res = parsePropertyFile(candidate);
 							tipiPropertyMap.putAll(res);
 						}
@@ -142,7 +149,7 @@ public class ProjectBuilder {
 		if(codebase==null) {
 			codebase = "$$codebase";
 		}
-		System.err.println("PRofiles: "+profiles);
+		logger.info("PRofiles: "+profiles);
 		String keystore = null;
 		keystore = tipiPropertyMap.get("keystore");
 		boolean resign = keystore!=null;
@@ -161,7 +168,7 @@ public class ProjectBuilder {
 			postProcessAnt = buildProfileDescriptor(profiles,clean,tipiPropertyMap,deployment, projectPath, codebase, extensions , extensionRepository, developmentRepository,buildType,true);
 //			for (String profile : profiles) {
 //				// TODO: Beware, multiple profiles in Echo / Web will not work
-//				System.err.println("Building profile: "+profile);
+//				logger.info("Building profile: "+profile);
 //			}
 		}
 
@@ -178,17 +185,17 @@ public class ProjectBuilder {
 	public static List<String> getProfiles(File projectPath) {
 		List<String> profiles = new LinkedList<String>();
 		File profileFolder = new File(projectPath,"settings/profiles/");
-		System.err.println("Profile folder detected: "+profileFolder.getAbsolutePath());
+		logger.info("Profile folder detected: "+profileFolder.getAbsolutePath());
 		if(profileFolder.exists() && profileFolder.isDirectory()) {
 			File[] profileCandidates = profileFolder.listFiles();
 			for (File candidate : profileCandidates) {
-				System.err.println("Current: "+candidate.getName());
+				logger.info("Current: "+candidate.getName());
 				if(candidate.getName().endsWith(".properties") && candidate.isFile()) {
 					// ewwwww
 					String currentProfileName = candidate.getName().substring(0,candidate.getName().length()-".properties".length());
 					
 					profiles.add(currentProfileName);
-					System.err.println("     : "+currentProfileName);
+					logger.info("     : "+currentProfileName);
 				}
 			}
 		}
@@ -207,14 +214,14 @@ public class ProjectBuilder {
 			String string = eb.nextElement();
 			params.put(string, p.getString(string));
 		}
-		System.err.println("params: " + params);
+		logger.info("params: " + params);
 		return params;
 	}
 
 	private static String buildProfileDescriptor(List<String> profiles,  boolean clean,Map<String,String> tipiProperties, String deployment, File projectPath, String projectUrl, String extensions,
 			String repository,String developmentRepository, String buildType, boolean useVersioning) throws IOException {
 		
-		System.err.println("Writing in: "+projectPath.getAbsolutePath());
+		logger.info("Writing in: "+projectPath.getAbsolutePath());
 		// TODO: Don't think we need this one!
 		downloadExtensionJars(projectPath, extensions, repository,false,clean,buildType,useVersioning,false);
 

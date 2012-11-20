@@ -1,10 +1,11 @@
 package com.dexels.navajo.functions.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import navajo.Version;
+import navajocore.Version;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -14,8 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 public class OsgiFunctionFactory extends JarFunctionFactory {
 
@@ -23,19 +22,41 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	private final static Logger logger = LoggerFactory
 			.getLogger(OsgiFunctionFactory.class);
 
-	public FunctionInterface getInstance(final ClassLoader cl, final String functionName) throws TMLExpressionException  {
-		FunctionInterface osgiResolution = (FunctionInterface) getComponent(functionName, "functionName", FunctionInterface.class);
+	@SuppressWarnings("unchecked")
+	public FunctionInterface getInstance(final ClassLoader cl, final String functionName)  {
+		Class<? extends FunctionInterface> osgiResolutionClass = (Class<? extends FunctionInterface>) getComponent(functionName, "functionName", Class.class);
 
-		if (osgiResolution==null) {
-			System.err.println("OSGi failed. Going old skool");
+		if (osgiResolutionClass==null) {
+			logger.debug("OSGi failed. Going old skool");
 			return super.getInstance(cl, functionName);
 		} else {
-			return osgiResolution;
+			FunctionInterface osgiResolution;
+			try {
+				osgiResolution = osgiResolutionClass.newInstance();
+				return osgiResolution;
+			} catch (InstantiationException e) {
+				logger.debug("OSGi failed (InstantiationException). Going old skool",e);
+				return super.getInstance(cl, functionName);
+			} catch (IllegalAccessException e) {
+				logger.debug("OSGi failed (IllegalAccessException). Going old skool",e);
+				return super.getInstance(cl, functionName);
+			}
 
 		}
 	}
 	
-	@SuppressWarnings("rawtypes")
+	
+	@Override
+	public void init() {
+		Map<String, FunctionDefinition> fuds = getDefaultConfig();
+		if(fuds==null) {
+			fuds = new HashMap<String, FunctionDefinition>();
+			setDefaultConfig(fuds);
+		}
+//		super.init();
+	}
+
+
 	@Override
 	public List<XMLElement> getAllFunctionElements(String interfaceClass, String propertyKey)  {
 		List<XMLElement> result = new ArrayList<XMLElement>();
@@ -56,7 +77,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 			}
 			
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return result;
 	}
@@ -81,15 +102,15 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 				}
 			}
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return result;
 	}
 	
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("unchecked")
 	public Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
-		BundleContext context = navajo.Version.getDefaultBundleContext();
+		BundleContext context = navajocore.Version.getDefaultBundleContext();
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass.getName(), "("+serviceKey+"="+name+")");
 			if(refs==null) {
@@ -99,7 +120,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 			return context.getService(refs[0]);
 			
 		} catch (InvalidSyntaxException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return null;
 	}
@@ -117,7 +138,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	
 	@Override
 	public void parseFunction(Map<String, FunctionDefinition> fuds,
-			ExtensionDefinition fd, XMLElement element) {
-		super.parseFunction(fuds, fd, element);
+			 XMLElement element) {
+		super.parseFunction(fuds, element);
 	}
 }

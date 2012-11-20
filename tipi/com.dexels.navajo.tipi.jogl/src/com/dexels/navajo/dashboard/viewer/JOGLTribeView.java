@@ -33,6 +33,8 @@ import javax.media.opengl.glu.GLU;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.dashboard.viewer.images.ResourceLoader;
 import com.dexels.navajo.document.Message;
@@ -52,6 +54,9 @@ import com.jogamp.opengl.util.texture.TextureCoords;
 
 public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListener {
 	private static final long serialVersionUID = -8665532903536132430L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JOGLTribeView.class);
 	private final String tribeIdentifier = "navajotribe";
 //	private final static int CONFERENCE_ONTWIKKEL = 0;
 	private final static int CONFERENCE_TEST = 1;
@@ -139,7 +144,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mousePressed(MouseEvent e) {
-				System.err.println("Clicked tribe: " + mouseOverTribe + ", child: " + mouseOverChild);
+				logger.info("Clicked tribe: " + mouseOverTribe + ", child: " + mouseOverChild);
 
 				if (selectConference) {
 					selectedConference = mouseOverTribe;
@@ -213,7 +218,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 							parms.put("text", "postman");
 							parms.put("recipient", name);
 							performTipiEvent("onTalk", parms, false);
-							System.err.println("Just talked POSTMAN to recipient: " + name + ", this is user " + selectedUser);
+							logger.info("Just talked POSTMAN to recipient: " + name + ", this is user " + selectedUser);
 						}
 					} catch (Exception ex) {
 						ex.printStackTrace();
@@ -344,7 +349,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 			}
 
 			users = newUsers;
-			// System.err.println("Userlist: current number of users: " +
+			// logger.info("Userlist: current number of users: " +
 			// current + "new size: " + users.getArraySize());
 			repaintCanvas();
 		}
@@ -461,7 +466,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 			tn.addMessage(tribeRooms);
 			sn.addMessage(serverRooms);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -473,7 +478,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 				result = result.substring(result.indexOf("-") + 1);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return result;
 	}
@@ -507,11 +512,11 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 	}
 
 	private final void addException(String user, Message m) {
-		System.err.println(">>>>>>>>>>>>>>>>> Added exception for user " + user);
+		logger.info(">>>>>>>>>>>>>>>>> Added exception for user " + user);
 		try {
 			m.write(System.err);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		exceptions.put(user, m);
 
@@ -548,7 +553,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 				radiusAnim.start();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -578,7 +583,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 			parms.put("tribe", tribe.getProperty("Name").getValue());
 			performTipiEvent("onSelectionChanged", parms, false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -602,7 +607,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 //			frameCount = 0;
 //			startTime = System.currentTimeMillis();
 //			fpsText = format.format(fps);
-//			// System.err.println("FPS: " + fpsText);
+//			// logger.info("FPS: " + fpsText);
 //		}
 //	}
 
@@ -618,7 +623,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 			parms.put("serverURL", command);
 			performTipiEvent("onPostman", parms, false);
 		} catch (Exception e) {
-			System.err.println("Command is not an URL");
+			logger.info("Command is not an URL");
 		}
 	}
 
@@ -733,6 +738,9 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		}
 	}
 
+	/**
+	 * @param gl  
+	 */
 	private final void compileStars(GL gl) {
 		try {
 			int size = 2000;
@@ -742,7 +750,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 				stars.add(new Point2D.Float(size * r.nextFloat(), size * r.nextFloat()));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -940,7 +948,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 			gl.glTranslatef(-width / 2, -height / 2, 0f);
 			gl.glPopMatrix();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -1185,7 +1193,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 			gl.glPopMatrix();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -1219,7 +1227,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		zoom_height = zoom / aspect_ratio;
 
 		/* create 5x5 pixel picking region near cursor location */
-		glu.gluPickMatrix((double) pickPoint.x, (double) (viewport[3] - pickPoint.y),// 
+		glu.gluPickMatrix(pickPoint.x, viewport[3] - pickPoint.y,// 
 				15.0, 15.0, viewport, 0);
 
 		// Zooming
@@ -1267,7 +1275,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		}
 		mouseOverChild = jj;
 		mouseOverTribe = ii;
-		// System.err.println("Clicked tribe: " + mouseOverTribe + ", child: " +
+		// logger.info("Clicked tribe: " + mouseOverTribe + ", child: " +
 		// mouseOverChild);
 	}
 
@@ -1285,9 +1293,9 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		tribeIcon = loadTexture("fire_small.png");
 		float values[] = new float[2];
 		gl.glGetFloatv(GL2.GL_LINE_WIDTH_GRANULARITY, values, 0);
-		System.out.println("GL.GL_LINE_WIDTH_GRANULARITY value is " + values[0]);
+		logger.info("GL.GL_LINE_WIDTH_GRANULARITY value is " + values[0]);
 		gl.glGetFloatv(GL2.GL_LINE_WIDTH_RANGE, values, 0);
-		System.out.println("GL.GL_LINE_WIDTH_RANGE values are " + values[0] + ", " + values[1]);
+		logger.info("GL.GL_LINE_WIDTH_RANGE values are " + values[0] + ", " + values[1]);
 		gl.glEnable(GL.GL_LINE_SMOOTH);
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
@@ -1322,6 +1330,9 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 	/*
 	 * Draw a string in OpenGL
 	 */
+	/**
+	 * @param gl  
+	 */
 	private void drawString(GL gl, String text, int xpos, int ypos, Color color, float alpha, float scale) {
 		float r = color.getRed() / 255f;
 		float g = color.getGreen() / 255f;
@@ -1346,7 +1357,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 			c1Graphics.dispose();
 			return c1tx.getTexture();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		return null;
 	}

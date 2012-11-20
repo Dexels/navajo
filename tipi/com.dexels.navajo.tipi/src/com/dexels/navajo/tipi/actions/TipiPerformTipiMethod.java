@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.TipiAction;
@@ -27,7 +30,10 @@ public class TipiPerformTipiMethod extends TipiAction {
 	 * 
 	 */
 	private static final long serialVersionUID = -2948114436573845551L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiPerformTipiMethod.class);
+	
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -39,14 +45,14 @@ public class TipiPerformTipiMethod extends TipiAction {
 			t = (TipiComponent) myContext.evaluate(path, getComponent(), event).value;
 			name = (String) evaluate(getParameter("name").getValue(), event).value;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 		if (t != null) {
 			t.performMethod(name, this, event);
 		} else {
 			myContext.debugTipiComponentTree(getComponent().getTipiParent(), 4);
-			System.err.println("My parent: " + getComponent().getPath());
-			System.err.println("My parentparent: "
+			logger.error("My parent: " + getComponent().getPath());
+			logger.error("My parentparent: "
 					+ getComponent().getTipiParent().getPath());
 			throw new TipiException(
 					"performTipiMethod: Can not locate tipicomponent name: "

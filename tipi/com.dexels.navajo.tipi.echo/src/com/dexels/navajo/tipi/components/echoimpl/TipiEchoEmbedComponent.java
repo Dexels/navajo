@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 
@@ -8,10 +11,14 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.echoimpl.embed.TipiEchoStandaloneContainer;
 import com.dexels.navajo.tipi.components.echoimpl.embed.TipiEchoStandaloneToplevel;
 
+@Deprecated
 public class TipiEchoEmbedComponent extends TipiEmbedComponent {
 
 
 	private static final long serialVersionUID = -588381253551933691L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiEchoEmbedComponent.class);
 	private TipiEchoStandaloneToplevel tet;
 
 	public TipiEchoEmbedComponent() {
@@ -40,7 +47,7 @@ public class TipiEchoEmbedComponent extends TipiEmbedComponent {
 			stc.getContext().setGenericResourceLoader(getContext().getGenericResourceLoader());
 			return;
 			// } catch (MalformedURLException e) {
-			// e.printStackTrace();
+			// logger.error("Error: ",e);
 			// }
 
 		}
@@ -48,13 +55,13 @@ public class TipiEchoEmbedComponent extends TipiEmbedComponent {
 	}
 
 	protected void switchToDefinition(final String nameVal) {
-		System.err.println("Switching to def: " + nameVal);
+		logger.info("Switching to def: " + nameVal);
 		try {
 			stc.getContext().switchToDefinition(nameVal);
 //			Component topLevel = (Component) stc.getContext().getTopLevel();
 		} catch (TipiException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 }

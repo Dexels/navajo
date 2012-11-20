@@ -28,15 +28,18 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.tipi.plugin.TipiNature;
 
 public class Deployer {
 	
-
+	private final static Logger logger = LoggerFactory
+			.getLogger(Deployer.class);
 
 	public void deployProject(final IProject project,final String deployName, final String username, final String password, final boolean includeJars) {
-		System.err.println("Deploying: "+deployName);
+		logger.info("Deploying: "+deployName);
 		Job job = new Job("Deploy task") {
 		     protected IStatus run(IProgressMonitor monitor) {
 		  		try {
@@ -46,14 +49,14 @@ public class Deployer {
 				} catch (CoreException e) {
 					StringWriter sw = new StringWriter();
 					
-					e.printStackTrace();
+					logger.error("Error: ",e);
 					e.printStackTrace(new PrintWriter(sw));
 				
 			      ErrorDialog.openError(Display.getCurrent().getActiveShell(),"Tipi Deployment problem",sw.toString(), Status.CANCEL_STATUS);
 			      
 				} catch (IOException e) {
 					StringWriter sw = new StringWriter(); 
-					e.printStackTrace();
+					logger.error("Error: ",e);
 					e.printStackTrace(new PrintWriter(sw));
 					
 			      ErrorDialog.openError(Display.getCurrent().getActiveShell(),"Tipi Deployment problem",sw.toString(), Status.CANCEL_STATUS);
@@ -66,12 +69,12 @@ public class Deployer {
 
 	}
 
-	private void runDeployScript(IProject project,String deployName,String username, String password,boolean includeJars,IProgressMonitor monitor) throws CoreException, IOException {
+	private void runDeployScript(IProject project,String deployName,String username, String password,boolean includeJars,IProgressMonitor monitor) throws  IOException {
 			runBuild(project.getFile("settings/build.xml"),deployName,username, password,includeJars, monitor);
 	}
 	public void runBuild(IFile f, final String deployName,String username, String password, boolean includeJars,IProgressMonitor monitor) throws IOException  {
 		if(!f.exists()) {
-			System.err.println("File not found!");
+			logger.info("File not found!");
 			return;
 		}
 		IProject myProject = f.getProject();
@@ -87,7 +90,7 @@ public class Deployer {
 //   			String sshPw = dlg.getValue();
    			
 //   			runner.set
-   			System.err.println("Deploy name: "+deployName);
+   			logger.info("Deploy name: "+deployName);
    			Map<String,String> standardProperties =	retrieveProperties(myProject,"settings/deploy.properties");
    			properties.putAll(standardProperties);
    			IFolder deployments = myProject.getFolder("settings/deployments/");
@@ -113,7 +116,7 @@ public class Deployer {
 				properties.put("message", "building tipi application...");
 				properties.put("deployPath", "deploy/current");
 				properties.put("baseDir", f.getProject().getLocation().toString());
-   			System.err.println("Properties: "+properties);
+   			logger.info("Properties: "+properties);
    			
    			
 				AntRunner runner = new AntRunner();
@@ -124,17 +127,17 @@ public class Deployer {
    	//		runner.setArguments("-DprojectName="+f.getProject().getName()+" -Dmessage=Building -Dcodebase="+codebase+" -DdeployRootSsh="+deployRootSsh+" -DbaseDir="+f.getProject().getLocation().toString()+" -DdeployPath="+"deploy/current");
    			runner.setArguments(createArguments(properties));
    			//		runner.addUserProperties(properties);
-//   		   			System.err.println("Starting run");
+//   		   			logger.info("Starting run");
    			
    	//		runner.addBuildLogger("com.dexels.tipi.plugin.TipiBuildLogger");
 				for (Entry<String, String> ee : properties.entrySet()) {
-					System.err.println("Deployment properties: "+ee.getKey()+" :: "+ee.getValue());
+					logger.info("Deployment properties: "+ee.getKey()+" :: "+ee.getValue());
 					
 				}
 
 				monitor.subTask("Running build script");
    			runner.run(monitor);
-   			System.err.println("Run completed: "+target);
+   			logger.info("Run completed: "+target);
    			
 //      		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Thank you for deploying using the TipiPlugin!", properties.get("codebase")+"Application.jnlp");
       		Display.getDefault().asyncExec(new Runnable() {
@@ -149,14 +152,14 @@ public class Deployer {
 						url = new URL(properties.get("deployTarget") );
 						browser.openURL(url);
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
 			});
    		} catch (Exception e) {
    			final StringWriter sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
-   			System.err.println("Showing error");
+   			logger.info("Showing error");
        		Display.getDefault().asyncExec(new Runnable(){
    				public void run() {
    					
@@ -171,7 +174,7 @@ public class Deployer {
    			            "Deployment error", "Unable to deploy. Check password, deployment server, and the settings/deploy.properties file.\n"+sw.toString(), status);
    				}
        		});
-   	      e.printStackTrace();
+   	      logger.error("Error: ",e);
  		//	}
       }
    		try {

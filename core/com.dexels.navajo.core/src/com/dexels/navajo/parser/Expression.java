@@ -67,12 +67,8 @@ public final class Expression {
         if (aap == null)
             return new Operand(null, "", "");
 
-        try {
-          String type = MappingUtils.determineNavajoType(aap);
-          return new Operand(aap, type, "");
-        } catch (TMLExpressionException tmle) {
-          throw new TMLExpressionException("Invalid return type for expression, " + clause + ": " + tmle.getMessage());
-        }
+      String type = MappingUtils.determineNavajoType(aap);
+      return new Operand(aap, type, "");
 
     }
 

@@ -47,6 +47,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 
 /**
@@ -76,7 +79,7 @@ import java.util.Vector;
  * while (enum.hasMoreElements()) {<BR>
  * &nbsp;&nbsp;&nbsp;&nbsp;String key = (String) enum.nextElement();<BR>
  * &nbsp;&nbsp;&nbsp;&nbsp;String value = element.getStringAttribute(key);<BR>
- * &nbsp;&nbsp;&nbsp;&nbsp;System.out.println(key + " = " + value);<BR> }
+ * &nbsp;&nbsp;&nbsp;&nbsp;logger.info(key + " = " + value);<BR> }
  * </CODE>
  * </UL>
  * </DD>
@@ -114,6 +117,10 @@ import java.util.Vector;
 
 public class XMLElement implements java.io.Serializable {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(XMLElement.class);
+	
 	/**
 	 * Serialization serial version ID.
 	 */
@@ -951,17 +958,17 @@ public class XMLElement implements java.io.Serializable {
 		// XMLElement next = getNextSibling();
 		// if (next!=null) {
 		// int ii = next.getStartOffset()-1;
-		// System.err.println("Element: "+getName()+"returning start of next
+		// logger.info("Element: "+getName()+"returning start of next
 		// element: "+next.getName()+":: "+ii);
 		// return ii;
 		// }
 		// if (parent!=null) {
 		// int ii = parent.getOffset()-1;
-		// System.err.println("Element: "+getName()+"returning end of parent
+		// logger.info("Element: "+getName()+"returning end of parent
 		// element: "+parent.getName()+":: "+ii);
 		// return ii;
 		// }
-		// System.err.println("Element has no parent: "+getName()+"returning end
+		// logger.info("Element has no parent: "+getName()+"returning end
 		// of self: "+offset);
 		return this.offset;
 	}
@@ -1421,6 +1428,7 @@ public class XMLElement implements java.io.Serializable {
 	 * </dd>
 	 * </dl>
 	 * <dl>
+	 * @param offSet 
 	 * 
 	 * @throws java.io.IOException
 	 *             If an error occured while reading the input.
@@ -1993,7 +2001,6 @@ public class XMLElement implements java.io.Serializable {
 		writer.write('<');
 		writer.write(this.name);
 		if (!this.attributes.isEmpty()) {
-			;
 			// Enumeration enum = attributeList.elements();
 			for (Iterator<String> en = this.attributes.keySet().iterator(); en.hasNext();) {
 				writer.write(' ');
@@ -2570,16 +2577,16 @@ public class XMLElement implements java.io.Serializable {
 					XMLElement child = this.createAnotherElement();
 					child.startOffset = offset - 2;
 					child.startLineNr = lineNr;
-					// System.err.println("Child offseT: "+offset);
+					// logger.info("Child offseT: "+offset);
 					// parseStack.push(child);
 					this.scanElement(child);
-					// System.err.println("Parsed. Child offseT: "+offset);
+					// logger.info("Parsed. Child offseT: "+offset);
 					child.offset = offset;
-					// System.err.println("Child: "+child.startOffset+" -
+					// logger.info("Child: "+child.startOffset+" -
 					// "+child.offset+" name: "+child.getName());
 					// elt.offset = child.getOffset();
 					child.lineNr = lineNr;
-					// System.err.println("child startline: "+
+					// logger.info("child startline: "+
 					// child.startLineNr+" endline: "+child.lineNr);
 					elt.addChild(child);
 					// parseStack.pop();
@@ -2842,7 +2849,7 @@ public class XMLElement implements java.io.Serializable {
 	}
 
 	public XMLElement getNextSibling() {
-		// System.err.println("getNextSibling called, in XMLElement. This
+		// logger.info("getNextSibling called, in XMLElement. This
 		// function is untested and should not be trusted.");
 		if (parent == null) {
 			return null;
@@ -2869,7 +2876,7 @@ public class XMLElement implements java.io.Serializable {
 				return;
 			}
 		}
-		System.err.println("WARNING: ELEMENT NOT FOUND!");
+		logger.info("WARNING: ELEMENT NOT FOUND!");
 	}
 
 	public String getNonNullStringAttribute(String name) {
@@ -2878,7 +2885,7 @@ public class XMLElement implements java.io.Serializable {
 		String res = res1.replace('\r', ' ');
 
 		if (res.indexOf("\n") != -1) {
-			System.err.println("WTF: NEWLINE DETECTED!@!!!!!!!!!");
+			logger.info("WTF: NEWLINE DETECTED!@!!!!!!!!!");
 		}
 		return res;
 	}
@@ -2957,7 +2964,7 @@ public class XMLElement implements java.io.Serializable {
 			if(read!=3) {
 				throw new IOException("No comprendo!!!");
 			}
-//			System.err.println("Bytes read: "+read);
+//			logger.info("Bytes read: "+read);
 			if(b[0]==-17 && b[1]==-69 && b[2]==-65) {
 			} else {
 				pis.unread(b);

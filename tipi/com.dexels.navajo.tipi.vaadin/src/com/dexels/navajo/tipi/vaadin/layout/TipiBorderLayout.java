@@ -77,25 +77,25 @@ public class TipiBorderLayout
 	  if (text.equals("center") ) {
       return BorderLayout.Constraint.CENTER;
     }
-    if (text.equals("north") || text.equals(BorderLayout.Constraint.NORTH)) {
+    if (text.equals("north") ) {
     	if(sz>=0) {
     		sizeMap.put(BorderLayout.Constraint.NORTH,sz);
     	}
     	return BorderLayout.Constraint.NORTH;
     }
-    if (text.equals("south") || text.equals(BorderLayout.Constraint.SOUTH)) {
+    if (text.equals("south")) {
     	if(sz>=0) {
     		sizeMap.put(BorderLayout.Constraint.SOUTH,sz);
     	}
       return BorderLayout.Constraint.SOUTH;
     }
-    if (text.equals("east") || text.equals(BorderLayout.Constraint.EAST)) {
+    if (text.equals("east") ) {
     	if(sz>=0) {
     		sizeMap.put(BorderLayout.Constraint.EAST,sz);
     	}
       return BorderLayout.Constraint.EAST;
     }
-    if (text.equals("west") || text.equals(BorderLayout.Constraint.WEST)) {
+    if (text.equals("west") ) {
     	if(sz>=0) {
     		sizeMap.put(BorderLayout.Constraint.WEST,sz);
     	}

@@ -23,7 +23,6 @@ public class MessageBridge implements Item {
 		}
 		List<com.dexels.navajo.document.Property> properties = src.getAllProperties();
 		for (com.dexels.navajo.document.Property property : properties) {
-			System.err.println(">>>>>>>>>CHECKING EDITABLEEEEEEE: "+property.getName()+" list: "+editableColumns);
 			boolean editable = editableColumns.contains(property.getName());
 			ValuePropertyBridge pb = new ValuePropertyBridge(property,editable);
 			propertyMap.put(property.getName(), pb);

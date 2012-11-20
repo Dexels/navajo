@@ -32,8 +32,6 @@ public class DummyStatisticsRunner implements StatisticsRunnerInterface, NavajoL
 
 	public void addAccess(Access a, AsyncMappable am) {
 		// Do nothing.
-		a = null;
-		am = null;
 	}
 
 	public void onNavajoEvent(NavajoEvent ne) {
@@ -41,11 +39,6 @@ public class DummyStatisticsRunner implements StatisticsRunnerInterface, NavajoL
 			//System.err.println("DummyStatisticsRunner: " + ne);
 		}
 		ne = null;
-	}
-
-	public void addAuditLog(String subsystem, String message, String level) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public int getAuditLevel() {

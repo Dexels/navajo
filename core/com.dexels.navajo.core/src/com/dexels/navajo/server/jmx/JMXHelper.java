@@ -31,6 +31,9 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.rmi.RMIConnector;
 import javax.management.remote.rmi.RMIServer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
@@ -55,7 +58,9 @@ public final class JMXHelper  {
 	
 	private static HashSet<Monitor> monitors = new HashSet<Monitor>();
 	private static HashSet<ObjectName> mbeans = new HashSet<ObjectName>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JMXHelper.class);
 	
 	private static Map<Monitor,List<NotificationListener>> listenerMap = new HashMap<Monitor, List<NotificationListener>>();
 	private RMIServer getRMIServer(String hostName, int port) throws IOException {
@@ -65,7 +70,7 @@ public final class JMXHelper  {
 			RMIServer stub = (RMIServer) registry.lookup("jmxrmi");
 			return stub;
 		} catch (NotBoundException nbe) {
-			nbe.printStackTrace(System.err);
+			logger.error("Error: ", nbe);
 			return null;
 		}
 
@@ -84,7 +89,7 @@ public final class JMXHelper  {
 				monitor.stop();
 				deregisterListenersForMonitor(monitor);
 			} catch (Exception e) {
-				AuditLog.log("JMX", "Error deregistering monitor",e, Level.SEVERE);
+				AuditLog.log("Error deregistering monitor",e, Level.SEVERE);
 			}
 			AuditLog.log("JMX", "Stopped JMX Monitor: " + monitor.getClass().getName(), Level.WARNING);
 		}
@@ -96,9 +101,9 @@ public final class JMXHelper  {
 				mbs.unregisterMBean(mbean);
 				AuditLog.log("JMX", "Deregistered JMX Bean: " + mbean.getCanonicalName());
 			} catch (MBeanRegistrationException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			} catch (InstanceNotFoundException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 		
@@ -118,7 +123,7 @@ public final class JMXHelper  {
 			conn = null;
 			//System.err.println("Disconnected JMX.");
 		} catch (IOException e) {
-			AuditLog.log("JMX", "Error disconnecting jmx",e, Level.SEVERE);
+			AuditLog.log("Error disconnecting jmx",e, Level.SEVERE);
 		}
 	}
 	 
@@ -143,7 +148,7 @@ public final class JMXHelper  {
 			
 			return conn;
 		} catch (Exception e) {
-			AuditLog.log("JMX", "Error getting server connection",e, Level.SEVERE);
+			AuditLog.log("Error getting server connection",e, Level.SEVERE);
 			return null;
 		}
 	}
@@ -157,7 +162,7 @@ public final class JMXHelper  {
 		ThreadInfo myThread = null;
 		try {
 			ThreadMXBean mxthread = 
-				(ThreadMXBean) ManagementFactory.newPlatformMXBeanProxy(server, "java.lang:type=Threading", java.lang.management.ThreadMXBean.class);
+				ManagementFactory.newPlatformMXBeanProxy(server, "java.lang:type=Threading", java.lang.management.ThreadMXBean.class);
 			long [] all = mxthread.getAllThreadIds();
 			long [] target = new long[1];
 			for (int i = 0; i < all.length; i++) {
@@ -172,7 +177,7 @@ public final class JMXHelper  {
 			}
 		
 		} catch (IOException e) {
-			AuditLog.log("JMX", "Error getting server connection",e, Level.SEVERE);
+			AuditLog.log( "Error getting server connection",e, Level.SEVERE);
 		} 
 	
 		return myThread;
@@ -198,10 +203,10 @@ public final class JMXHelper  {
 		try {
 			return new ObjectName(constructObjectName(domain) + type + ",instance=" + applicationPrefix);
 		} catch (MalformedObjectNameException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			return  null;
 		} catch (NullPointerException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			return null;
 		} 
 	}
@@ -230,7 +235,7 @@ public final class JMXHelper  {
 			try {
 				m.removeNotificationListener(notificationListener);
 			} catch (ListenerNotFoundException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 	}
@@ -246,11 +251,11 @@ public final class JMXHelper  {
 					mbs.unregisterMBean(name);
 					mbs.registerMBean(o, name);
 				} catch (MBeanRegistrationException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				} catch (InstanceNotFoundException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				} catch (Exception e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 				//e.printStackTrace(System.err);
 			} catch (MBeanRegistrationException e) {
@@ -310,7 +315,7 @@ public final class JMXHelper  {
 			monitors.add(monitor);
 			mbeans.add(objectName);
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 		
 		return monitor;

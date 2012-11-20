@@ -24,6 +24,10 @@ import org.w3c.dom.css.CSSValue;
  */
 public class CSSPropertyImpl implements CSSProperty, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2014016277827864349L;
 	private String name;
 	private CSSValue value;
 	private boolean important;

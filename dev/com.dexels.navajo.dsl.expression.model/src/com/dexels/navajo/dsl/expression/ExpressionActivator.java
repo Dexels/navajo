@@ -10,7 +10,6 @@ public class ExpressionActivator implements BundleActivator {
 	@Override
 	public void start(BundleContext b) throws Exception {
 		ExpressionPackage.eINSTANCE.getClass();
-		System.err.println("Expression activator fired!");
 	}
 
 	@Override

@@ -4,11 +4,17 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.FatalException;
 
 public class FastDispatcher {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(FastDispatcher.class);
 	/**
 	 * Non blocking handle.
 	 * NOT USES? Seems on functional.
@@ -16,6 +22,7 @@ public class FastDispatcher {
 	 * @param in
 	 * @param responseOutputStream
 	 */
+	@SuppressWarnings("unchecked")
 	public void handle(Navajo in, OutputStream responseOutputStream, Runnable onFinish) {
 		
 		// System.err.println(">>>> IN FASTDISPATCHER.HANDLE()..." + responseOutputStream);
@@ -29,12 +36,11 @@ public class FastDispatcher {
 			Class c = Class.forName("com.dexels.navajo.workflow.TestServiceWorkflow");
 			Constructor con = c.getConstructor(new Class[]{Access.class, OutputStream.class, Runnable.class});
 			Object o = con.newInstance(new Object[]{a, responseOutputStream, onFinish});
-			Method m = c.getMethod("start", null);
-			m.invoke(o, null);
+			Method m = c.getMethod("start", (Class[])null);
+			m.invoke(o, (Object[])null);
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		
 	}

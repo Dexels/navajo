@@ -58,7 +58,6 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
 
     @Override
     public DataSource createDataSource(Properties props) throws SQLException {
-    	logger.warn("Creating NON-pooled datasource. Pooling anyway");
 //    	OracleConnectionPoolDataSource source = new OracleConnectionPoolDataSource();
     	OracleConnectionPoolDataSource source = new OracleConnectionPoolDataSource();
         try {
@@ -74,7 +73,6 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
 
     @Override
     public ConnectionPoolDataSource createConnectionPoolDataSource(Properties props) throws SQLException {
-    	logger.warn("Creating pooled datasource!");
     	OracleConnectionPoolDataSource source = new OracleConnectionPoolDataSource();
         try {
 			return (ConnectionPoolDataSource) setup(source, props);
@@ -85,10 +83,10 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
 
     @Override
     public XADataSource createXADataSource(Properties props) throws SQLException {
-    	OracleConnectionPoolDataSource base = new OracleConnectionPoolDataSource();
+//    	OracleConnectionPoolDataSource base = new OracleConnectionPoolDataSource();
     	OracleXADataSource source;
 		try {
-			source = setupXSource(base, props);
+			source = setupXSource(props);
 	        return source;
 		} catch (Exception e) {
 			throw new SQLException("Error creating XADatasource: ",e);
@@ -106,13 +104,13 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
      * Setups the basic properties for {@link DataSource}s
      * @throws Exception 
      */
-    private DataSource setup(OracleConnectionPoolDataSource base, Properties props) throws Exception {
+    public DataSource setup(OracleConnectionPoolDataSource base, Properties props) throws Exception {
 //    	 Oracle settings: {service.pid=navajo.resource.oracle-1332524829528-5, user=knvbkern, url=jdbc:oracle:thin:@10.0.0.1:1521:1521:aardnoot, service.factoryPid=navajo.resource.oracle, password=knvb, name=navajo.resource.default, maxPoolSize=10, initialPoolSize=10}
 //
     	if (props == null) {
             return null;
         }
-        logger.info("Oracle settings: "+props);
+//        logger.info("Oracle settings: "+props);
         if (props.containsKey(JDBC_DATABASE_NAME)) {
         	base.setDatabaseName(props.getProperty(JDBC_DATABASE_NAME));
         }
@@ -154,7 +152,7 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
      * {@link ConnectionPoolDataSource}s
      * @throws Exception 
      */
-    private OracleXADataSource setupXSource(DataSource base, Properties props) throws Exception {
+    private OracleXADataSource setupXSource( Properties props) throws Exception {
         if (props == null) {
             return null;
         }

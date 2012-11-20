@@ -9,18 +9,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseJnlpBuilder.class);
+	
 	protected abstract boolean appendResourceForExtension(XMLElement resources, String repository, String ext, String version,String resourceBase, boolean useVersioning)
 			throws IOException;
 
 	protected abstract void appendProxyResource(XMLElement resources, String repository, String mainExtension, boolean useVersioning) throws IOException;
 
 
-	public String appendResources(File baseDir, XMLElement resources, String repository, List<String> extensions,String resourceBase, boolean useVersioning) throws IOException {
+	public String appendResources(XMLElement resources, String repository, List<String> extensions,String resourceBase, boolean useVersioning) throws IOException {
 		String mainExtension = null;
 		for (String ext : extensions) {
 			Map<String, String> versionMap = myVersionResolver.resolveVersion(ext);
@@ -44,7 +51,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 //			List<String> jars = ExtensionManager.getJars(repository, versionMap.get("extension"),version,new HashMap<String,String>(),new HashMap<String,String>());
 //			appendExtensionToVersions(jnlpVersions, ext,version,jars);
 //		}
-//		System.err.println("Versions: "+jnlpVersions.toString());
+//		logger.info("Versions: "+jnlpVersions.toString());
 //		FileWriter fw = new FileWriter(new File(baseDir,"versions.xml"));
 //		fw.write("<?xml version=\"1.0\"?>\n");
 //		jnlpVersions.write(fw);
@@ -85,7 +92,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 	public String build(String repository, String developRepository, String extensions, Map<String,String> tipiProperties, String deployment,  File baseDir, String codebase, List<String> profiles, boolean useVersioning) {
 		for (String fileName : profiles) {
 			File jnlpFile = new File(baseDir, fileName+".jnlp");
-			System.err.println("Writing jnlp: "+jnlpFile.getAbsolutePath());
+			logger.info("Writing jnlp: "+jnlpFile.getAbsolutePath());
 			try {
 				FileWriter fw1 = new FileWriter(jnlpFile);
 				fw1.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -94,7 +101,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 				fw1.flush();
 				fw1.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		return null;
@@ -126,7 +133,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		information.addTagKeyValue("homepage", params.get("homepage"));
 		information.addTagKeyValue("icon", "").setAttribute("href", resourceBase+"/"+params.get("icon"));
 
-		System.err.println("Parsing: " + fileName);
+		logger.info("Parsing: " + fileName);
 
 		if (params.get("splash") != null) {
 			XMLElement splash = new CaseSensitiveXMLElement();
@@ -149,7 +156,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		XMLElement java = resources.addTagKeyValue("j2se", "");
 		java.setAttribute("version", "1.6+");
 		appendSecurity(output, params.get("permissions"));
-		String mainExtension = appendResources(baseDir, resources, repository, exts,resourceBase,useVersioning);
+		String mainExtension = appendResources(resources, repository, exts,resourceBase,useVersioning);
 		appendProxyResource(resources, repository, mainExtension,useVersioning);
 
 		XMLElement app = output.addTagKeyValue("application-desc", "");

@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
@@ -26,20 +29,16 @@ import echopointng.able.Positionable;
  * @todo Need to refactor menus in internalframes. Now still uses the old mode
  *       Frank
  */
-public final class TipiFixedPane
-// extends DefaultTipi {
-        extends TipiEchoDataComponentImpl {
+public final class TipiFixedPane extends TipiEchoDataComponentImpl {
 	private static final long serialVersionUID = -8874526687450129402L;
-
-	// private WindowPane myWindow;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiFixedPane.class);
 
     private ContainerEx innerContainer;
 
     public Object createContainer() {
-        // myWindow = new WindowPane();
         innerContainer = new ContainerEx();
-//        innerContainer.setStyleName("Default");
-        
         innerContainer.setPosition(Positionable.FIXED);
         innerContainer.setLeft(new Extent(0, Extent.PX));
         innerContainer.setTop(new Extent(0, Extent.PX));
@@ -92,7 +91,7 @@ public final class TipiFixedPane
     public final void setComponentValue(final String name, final Object object) {
         super.setComponentValue(name, object);
         if (object == null) {
-            System.err.println("Null object. Name = " + name);
+            logger.info("Null object. Name = " + name);
         }
         if (name.equals("background")) {
             innerContainer.setBackground((Color) object);

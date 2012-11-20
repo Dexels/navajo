@@ -22,6 +22,8 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Unpack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -31,7 +33,10 @@ import org.apache.tools.ant.taskdefs.Unpack;
  */
 public class Unpack200Task extends Unpack {
 
-    enum FileType { unknown, gzip, pack200, zip };
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(Unpack200Task.class);
+    enum FileType { unknown, gzip, pack200, zip }
 
     private SortedMap <String, String> propMap;
     private Pack200.Unpacker unpkr;
@@ -66,12 +71,12 @@ public class Unpack200Task extends Unpack {
     }
 	
     protected void extract() {
-	System.out.println("Unpacking with Unpack200");
-	System.out.println("Source File :" + source);
-	System.out.println("Dest.  File :" + dest);
-
+	logger.info("Unpacking with Unpack200");
+	logger.info("Source File :" + source);
+	logger.info("Dest.  File :" + dest);
+	 FileInputStream fis = null;
 	try { 
-	    FileInputStream fis = new FileInputStream(source);
+	    fis = new FileInputStream(source);
 
 	    InputStream is = (FileType.gzip == getMagic(source))
 		? new BufferedInputStream(new GZIPInputStream(fis))
@@ -87,8 +92,16 @@ public class Unpack200Task extends Unpack {
 
 	} catch (IOException ioe) {
 	    throw new BuildException("Error in unpack200");	
-        }
 
+    } finally {
+    	if(fis!=null) {
+    		try {
+				fis.close();
+			} catch (IOException e) {
+				logger.warn("Error closing stream",e);
+			}
+    	}
     }
 
+    }
 }

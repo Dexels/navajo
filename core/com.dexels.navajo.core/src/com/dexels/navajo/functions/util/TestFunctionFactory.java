@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import navajo.ExtensionDefinition;
+
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 public class TestFunctionFactory extends FunctionFactoryInterface {
 
@@ -47,7 +48,7 @@ public class TestFunctionFactory extends FunctionFactoryInterface {
 					}
 				}
 				if ( name != null ) {
-					fuds.put(name, new FunctionDefinition(object, description, inputParams, resultParam,null));
+					fuds.put(name, new FunctionDefinition(object, description, inputParams, resultParam));
 				}
 			}
 			setDefaultConfig(fuds);

@@ -9,7 +9,7 @@ public interface Scheduler {
 
 	
 	/**
-	 * Return the timeout you want to give to this specifice request.
+	 * Return the timeout you want to give to this specific request.
 	 * This only works when you are using the NIO connector (and not the APR connector)
 	 * Return 0 if you want to leave the timeout setting on its default value.
 	 * @param request

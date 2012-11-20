@@ -2,6 +2,7 @@ package com.dexels.navajo.functions;
 
 import java.util.List;
 
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -59,6 +60,16 @@ public class GetSelectedName extends FunctionInterface {
 			throw new TMLExpressionException(this,
 					"Invalid function call in GetSelectedName: Parameter null");
 		}
+		
+		if ( o instanceof Property ) {
+			Property p = (Property) o;
+			if ( p.getSelected() != null ) {
+				return ( p.getAllSelectedSelections().size() > 0 ? p.getSelected().getName() : null );
+			} else {
+				return null;
+			}
+		}
+		
 		if (!(o instanceof List)) {
 			throw new TMLExpressionException(this,
 					"Invalid function call in GetSelectedName: Not a selection property");

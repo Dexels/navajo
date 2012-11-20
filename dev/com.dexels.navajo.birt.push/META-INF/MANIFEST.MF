@@ -4,9 +4,8 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.2.qualifier
 Bundle-Activator: navajobirt.Version
-Export-Package: com.dexels.navajo.adapter,
- com.dexels.navajo.birt,
- navajobirt
+Export-Package: com.dexels.navajo.birt,
+ com.dexels.navajo.birt.adapter
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.0"
@@ -15,4 +14,6 @@ Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.version,
- org.osgi.framework;version="1.5.0"
+ navajo,
+ org.osgi.framework;version="1.5.0",
+ org.slf4j;version="1.6.1"

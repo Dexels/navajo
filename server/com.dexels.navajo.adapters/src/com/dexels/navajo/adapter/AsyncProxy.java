@@ -3,6 +3,9 @@ package com.dexels.navajo.adapter;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -22,7 +25,6 @@ public class AsyncProxy implements Mappable {
 
   public boolean isFinished = false;
   public boolean killOnFinnish = false;
-  private Exception caught = null;
   public long startTime = System.currentTimeMillis();
   public long lastAccess = System.currentTimeMillis();
   public int totaltime;
@@ -45,9 +47,11 @@ public class AsyncProxy implements Mappable {
   public String lockName;
   public String lockOwner;
   public String lockClass;
+  
+  
+  private final static Logger logger = LoggerFactory.getLogger(AsyncProxy.class);
 
   public void load(Access access) throws MappableException, UserException {
-    //System.err.println("IN ASYNCPROXY LOAD()......................");
   }
 
   public void store() throws MappableException, UserException {
@@ -62,7 +66,6 @@ public class AsyncProxy implements Mappable {
   }
 
   public void setResume(boolean b) {
-   //System.err.println("..............................CALLING SETRESUME ON ASYNCPROXY WITH POINTER: " + this.pointer);
    if (b) {
     Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
     Iterator iter = all.values().iterator();
@@ -70,15 +73,19 @@ public class AsyncProxy implements Mappable {
     boolean found = false;
     while (iter.hasNext() && !found) {
       am = (AsyncMappable) iter.next();
-      if (am.getPointer().equals(this.pointer))
+      if (am.getPointer().equals(this.pointer)) {
         found = true;
+      }
     }
-    am.resume();
+    if(am!=null) {
+        am.resume();
+    } else {
+    	logger.warn("Can not resume: No AsyncMappable found");
+    }
   }
  }
 
   public void setInterrupt(boolean b) {
-    //System.err.println("..............................CALLING SETINTERRUPT ON ASYNCPROXY WITH POINTER: " + this.pointer);
     if (b) {
      Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().
          objectStore;
@@ -90,7 +97,11 @@ public class AsyncProxy implements Mappable {
        if (am.getPointer().equals(this.pointer))
          found = true;
      }
-     am.interrupt();
+     if(am!=null) {
+         am.interrupt();
+     } else {
+    	 logger.warn("Can not interrupt: No AsyncMappable found");
+     }
    }
   }
 
@@ -105,13 +116,17 @@ public class AsyncProxy implements Mappable {
         if (am.getPointer().equals(this.pointer))
           found = true;
       }
-      am.stop();
+      if(am!=null) {
+    	    am.stop();
+      } else {
+     	 logger.warn("Can not stop: No AsyncMappable found");
+      }
+
       com.dexels.navajo.mapping.AsyncStore.getInstance().removeInstance(pointer);
     }
   }
 
   public void setPointer(String pointer) {
-    //System.err.println("SETTING POINTER TO: " + pointer);
     this.pointer = pointer;
   }
   public java.util.Date getStartDate() {
@@ -162,7 +177,7 @@ public class AsyncProxy implements Mappable {
   }
 
 public Exception getCaught() {
-	return caught;
+	return null;
 }
 
 public boolean isKillOnFinnish() {

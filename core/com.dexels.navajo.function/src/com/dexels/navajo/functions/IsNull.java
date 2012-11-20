@@ -23,13 +23,13 @@ public class IsNull extends FunctionInterface {
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object arg = this.getOperands().get(0);
     if (arg==null) {
-        return new Boolean(true);
+        return Boolean.TRUE;
     }
     if (arg instanceof NavajoType) {
         NavajoType n = (NavajoType)arg;
-        return new Boolean(n.isEmpty());
+        return (n.isEmpty());
     }
-    return new Boolean(false);
+    return Boolean.FALSE;
   }
   public String usage() {
     return "IsNull( <argument>)";

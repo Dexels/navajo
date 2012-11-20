@@ -6,6 +6,8 @@
  */
 package com.dexels.navajo.tipi.vaadin.actions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import com.dexels.navajo.tipi.TipiBreakException;
@@ -22,6 +24,10 @@ import com.dexels.navajo.tipi.vaadin.actions.base.TipiVaadinActionImpl;
  */
 public class TipiShowQuestion extends TipiVaadinActionImpl {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiShowQuestion.class);
+	
    private static final long serialVersionUID = -7235686945038762814L;
 
 	/*
@@ -36,13 +42,13 @@ public class TipiShowQuestion extends TipiVaadinActionImpl {
 			@Override
 			public void onClose(ConfirmDialog dialog) {
 				if(dialog.isConfirmed()) {
-					System.err.println("CONFIRM!");
+					logger.info("CONFIRMed question");
 					try {
 						continueAction(getEvent());
 					} catch (TipiBreakException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					} catch (TipiException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					} catch (TipiSuspendException e) {
 					}
 				} else {

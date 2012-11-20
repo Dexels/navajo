@@ -7,12 +7,15 @@ import java.io.IOException;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TipiTransferHandler extends TransferHandler {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7253771780427276069L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTransferHandler.class);
 	private final TransferHandler myParent;
 
 	public TipiTransferHandler(TransferHandler parent) {
@@ -31,7 +34,7 @@ public class TipiTransferHandler extends TransferHandler {
 	@Override
 	protected Transferable createTransferable(JComponent c) {
 
-		System.err.println("TRAAAAAAAAANS: " + c);
+		logger.debug("TRAAAAAAAAANS: " + c);
 		if (c instanceof TipiDndCapable) {
 			TipiDndCapable tdc = (TipiDndCapable) c;
 			TipiDndManager manager = tdc.getDndManager();
@@ -67,9 +70,9 @@ public class TipiTransferHandler extends TransferHandler {
 			}
 			return true;
 		} catch (UnsupportedFlavorException e1) {
-			// e1.printStackTrace();
+			// logger.error("Error detected",e1);
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			logger.error("Error detected",e1);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -80,7 +83,7 @@ public class TipiTransferHandler extends TransferHandler {
 	@Override
 	public boolean importData(TransferSupport support) {
 		Transferable transferable = support.getTransferable();
-		System.err.println("Transferable: " + transferable);
+		logger.debug("Transferable: " + transferable);
 
 		TipiDndManager managerForDropSide = ((TipiDndCapable) support
 				.getComponent()).getDndManager();
@@ -103,9 +106,9 @@ public class TipiTransferHandler extends TransferHandler {
 			td.fireDropEvent(o.getDragValue());
 			return true;
 		} catch (UnsupportedFlavorException e1) {
-			e1.printStackTrace();
+			logger.error("Error detected",e1);
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			logger.error("Error detected",e1);
 		}
 		if (myParent != null) {
 			return myParent.importData(support);

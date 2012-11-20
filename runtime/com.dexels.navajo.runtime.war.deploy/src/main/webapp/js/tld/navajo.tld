@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" 
+"http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+
+<taglib>
+   <tlibversion>1.0</tlibversion>
+   <jspversion>1.1</jspversion>
+   <shortname>Navajo</shortname>
+   <uri>http://www.navajo.nl</uri>
+   <info>Navajo Tags Library</info>
+
+   <tag>
+      <name>call</name>
+      <tagclass>com.dexels.navajo.jsp.tags.CallServiceTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      <info>Calls a webservice</info>
+      <attribute>
+         <name>service</name>
+         <required>true</required>
+	      <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>navajo</name>
+         <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+
+
+
+   <tag>
+      <name>write</name>
+      <tagclass>com.dexels.navajo.jsp.tags.WriteServiceTag</tagclass>
+      <info>Dumps a webservice</info>
+      <attribute>
+         <name>includeProperties</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+
+
+     <tag>
+      <name>postHandler</name>
+      <tagclass>com.dexels.navajo.jsp.tags.PostHandlerTag</tagclass>
+      <info>Looks for navajo modifications in the post variables</info>
+  
+   </tag>
+  
+   <tag>
+      <name>service</name>
+      <tagclass>com.dexels.navajo.jsp.tags.ServiceTag</tagclass>
+      <info>Pushes a service on the stack</info>
+      <attribute>
+         <name>service</name>
+         <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>serviceBinary</name>
+         <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>serviceString</name>
+         <required>false</required>
+	      <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      
+   </tag>
+   
+   <tag>
+      <name>tml</name>
+      <tagclass>com.dexels.navajo.jsp.tags.TmlTag</tagclass>
+      <info>Parses TML, and pushes it on the stack as navajo object. Accepts Strings and Binaries</info>
+      <attribute>
+         <name>content</name>
+         <required>true</required>
+	     <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+   
+
+   <tag>
+      <name>dump</name>
+      <tagclass>com.dexels.navajo.jsp.tags.DumpServiceTag</tagclass>
+      <info>Dumps a webservice</info>
+      <attribute>
+         <name>service</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>log</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>reset</name>
+      <tagclass>com.dexels.navajo.jsp.tags.ResetTag</tagclass>
+      <info>Reset message stack</info>      
+   </tag>
+
+   <tag>
+      <name>log</name>
+      <tagclass>com.dexels.navajo.jsp.tags.LogTag</tagclass>
+      <info>Dumps a webservice</info>
+      <attribute>
+         <name>text</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+
+
+
+   <tag>
+      <name>write</name>
+      <tagclass>com.dexels.navajo.jsp.tags.WriteServiceTag</tagclass>
+      <info>Dumps a webservice</info>
+      <attribute>
+         <name>includeProperties</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>client</name>
+      <tagclass>com.dexels.navajo.jsp.tags.ClientTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      <info>Creates a client</info>
+      <attribute>
+         <name>server</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>username</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>password</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>debugAll</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>propertyWrite</name>
+      <tagclass>com.dexels.navajo.jsp.tags.PropertyValueTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      <info>Writes a property</info>
+      <attribute>
+         <name>property</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+   <tag>
+      <name>value</name>
+      <tagclass>com.dexels.navajo.jsp.tags.ValueTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      <info>Writes a property</info>
+      <attribute>
+         <name>property</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>message</name>
+      <tagclass>com.dexels.navajo.jsp.tags.MessageTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      <info>Pushes the contents of a message on the stack</info>
+      <attribute>
+         <name>message</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>messageName</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>messageIndex</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+    </tag>
+   <tag>
+      <name>property</name>
+      <tagclass>com.dexels.navajo.jsp.tags.PropertyTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      <info>Pushes the contents of a property on the stack</info>
+      <attribute>
+         <name>property</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>propertyName</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+    </tag>
+   <tag>
+      <name>table</name>
+      <tagclass>com.dexels.navajo.jsp.tags.TableTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      <info>Writes all elements of an array message</info>
+      <attribute>
+         <name>message</name>
+         <required>true</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>description</name>
+      <tagclass>com.dexels.navajo.jsp.tags.DescriptionTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      <info>Writes a property</info>
+      <attribute>
+         <name>property</name>
+         <required>true</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>set</name>
+      <tagclass>com.dexels.navajo.jsp.tags.SetValueTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      <info>Sets a property</info>
+      <attribute>
+         <name>property</name>
+         <required>true</required>
+      </attribute>
+      <attribute>
+         <name>value</name>
+         <required>yes</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+</taglib>

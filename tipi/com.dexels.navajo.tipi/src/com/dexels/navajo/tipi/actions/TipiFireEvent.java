@@ -5,6 +5,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.TipiAction;
@@ -28,10 +31,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class TipiFireEvent extends TipiAction {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4413974956468244772L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiFireEvent.class);
 
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
@@ -40,7 +43,6 @@ public class TipiFireEvent extends TipiAction {
 			TipiComponent tp = (TipiComponent) evaluate(getParameter("path")
 					.getValue(), event).value;
 			if (tp != null) {
-				// System.err.println("ATTEMPTING TO DISPOSE: " + tp.getPath());
 			} else {
 				throw new TipiException("fireEvent: Component not found!");
 			}
@@ -48,7 +50,6 @@ public class TipiFireEvent extends TipiAction {
 			String type = (String) evaluate(getParameter("type").getValue(),
 					event).value;
 			if (type != null) {
-				// System.err.println("ATTEMPTING TO DISPOSE: " + tp.getPath());
 			} else {
 				throw new TipiException("fireEvent: type parameter not found!");
 			}
@@ -65,7 +66,7 @@ public class TipiFireEvent extends TipiAction {
 
 			tp.performTipiEvent(type, eventParams, true);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Error: ",ex);
 		}
 	}
 }

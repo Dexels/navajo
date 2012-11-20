@@ -25,7 +25,7 @@ import com.dexels.navajo.document.Property;
 
 public class TestMessage {
 
-  NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture(this);
+  NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture();
   private Navajo testDoc = null;
   
   private final static Logger logger = LoggerFactory.getLogger(TestMessage.class);
@@ -438,6 +438,31 @@ public class TestMessage {
 	  assertEquals(sw.toString().indexOf("MyIgnoredMessage"), -1);
   }
   
+  @Test 
+  public void testSetType() throws Exception {
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  testDoc.addMessage(m);
+	  Message a = NavajoFactory.getInstance().createMessage(testDoc, "MyArrayMessage", "array");
+	  m.addMessage(a);
+	  for (int i = 0; i < 2; i++) {
+		  Message a1 = NavajoFactory.getInstance().createMessage(testDoc, "MyArrayMessage");
+		  a.addMessage(a1);
+		  String type = ( i == 1 ? "" : "integer" );
+		  Property p = NavajoFactory.getInstance().createProperty(testDoc, "MyProp", type, ""+i, 0, "", "in");
+		  a1.addProperty(p);
+		  Property p2 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp2", type, ""+i, 0, "", "in");
+		  a1.addProperty(p2);
+		  // Set type of first child to definition.
+		  if ( i == 0 ) {
+			  a1.setType(Message.MSG_TYPE_DEFINITION);
+		  }
+	  }
+	  Assert.assertEquals(1, a.getArraySize());
+	  Assert.assertNotNull(a.getDefinitionMessage());
+	  Assert.assertEquals("integer", a.getAllMessages().get(0).getProperty("MyProp").getType());
+	  testDoc.write(System.err);
+  }
+  
   @Test
   public void testAddIgnoreArrayMessageElements() throws Exception {
 	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
@@ -466,6 +491,92 @@ public class TestMessage {
 	  logger.info(sw.toString());
 	  assertTrue(sw.toString().indexOf("AAPJES") == -1);
 	  assertTrue(sw.toString().indexOf("NOOTJES") == -1);
+  }
+  
+  @Test
+  public void testMaskMessage() throws Exception {
+	  Message myMessage = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  testDoc.addMessage(myMessage);
+	  
+	  Property p1 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp1", "string", "AAP", 0, "", "in", "");
+	  myMessage.addProperty(p1);
+	  Property p2 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp2", "string", "NOOT", 0, "", "in", "");
+	  myMessage.addProperty(p2);
+	 
+	  Message arrayMsg = NavajoFactory.getInstance().createMessage(testDoc, "MyArrayMessage");
+	  arrayMsg.setType(Message.MSG_TYPE_ARRAY);
+	  myMessage.addMessage(arrayMsg);
+	  
+	  for ( int i = 0; i < 5; i++ ) {
+		  Message child = NavajoFactory.getInstance().createMessage(testDoc, "MyArrayMessage");
+		  arrayMsg.addElement(child);
+		  Property p3 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp3", "string", "AAP"+i, 0, "", "in", "");
+		  child.addProperty(p3);
+		  Property p4 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp4", "string", "NOOT"+i, 0, "", "in", "");
+		  child.addProperty(p4);
+		  Property p5 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp5", "string", "MIES"+i, 0, "", "in", "");
+		  child.addProperty(p5);
+		  Property p6 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp6", "string", "VUUR"+i, 0, "", "in", "");
+		  child.addProperty(p6);
+	  }
+	  
+	  Message someChildMsg = NavajoFactory.getInstance().createMessage(testDoc, "SomeChildMessage");
+	  myMessage.addMessage(someChildMsg);
+	  
+	  Message someValidChildMsg = NavajoFactory.getInstance().createMessage(testDoc, "SomeValidChildMessage");
+	  myMessage.addMessage(someValidChildMsg);
+	  Property p7 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp7", "string", "VUUR", 0, "", "in", "");
+	  someValidChildMsg.addProperty(p7);
+	  Property p8 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp8", "string", "VUUR", 0, "", "in", "");
+	  someValidChildMsg.addProperty(p8);
+	  
+	  // Construct mask.
+	  Navajo maskDoc = NavajoFactory.getInstance().createNavajo();
+	  Message myMask = NavajoFactory.getInstance().createMessage(maskDoc, "MyTop");
+	  maskDoc.addMessage(myMask);
+	  Property mp2 = NavajoFactory.getInstance().createProperty(maskDoc, "MyProp2", "string", "NOOT", 0, "", "in", "");
+	  myMask.addProperty(mp2);
+	  Message maskArrayMsg = NavajoFactory.getInstance().createMessage(maskDoc, "MyArrayMessage");
+	  maskArrayMsg.setType(Message.MSG_TYPE_ARRAY);
+	  myMask.addMessage(maskArrayMsg);
+	  Message defMsg = NavajoFactory.getInstance().createMessage(maskDoc, "MyArrayMessage");
+	  Property mp4 = NavajoFactory.getInstance().createProperty(maskDoc, "MyProp4", "string", "", 0, "", "in", "");
+	  defMsg.addProperty(mp4);
+	  Property mp5 = NavajoFactory.getInstance().createProperty(maskDoc, "MyProp5", "string", "", 0, "", "in", "");
+	  defMsg.addProperty(mp5);
+	  maskArrayMsg.setDefinitionMessage(defMsg);
+	  
+	  Message validChild = NavajoFactory.getInstance().createMessage(maskDoc, "SomeValidChildMessage");
+	  myMask.addMessage(validChild);
+	  Property mp7 = NavajoFactory.getInstance().createProperty(maskDoc, "MyProp7", "string", "", 0, "", "in", "");
+	  validChild.addProperty(mp7);
+	  
+	  //myMask.write(System.err);
+	  
+	  Assert.assertNotNull(myMessage.getProperty("MyProp1"));
+	  Assert.assertNotNull(myMessage.getProperty("MyProp2"));
+	  Assert.assertNotNull(myMessage.getProperty("MyArrayMessage@0/MyProp3"));
+	  Assert.assertNotNull(myMessage.getProperty("MyArrayMessage@0/MyProp6"));
+	  Assert.assertNotNull(myMessage.getProperty("MyArrayMessage@0/MyProp4"));
+	  Assert.assertNotNull(myMessage.getProperty("MyArrayMessage@0/MyProp5"));
+	  Assert.assertNotNull(myMessage.getMessage("SomeChildMessage"));
+	  Assert.assertNotNull(myMessage.getProperty("SomeValidChildMessage/MyProp7"));
+	  Assert.assertNotNull(myMessage.getProperty("SomeValidChildMessage/MyProp8"));
+	  
+	  myMessage.maskMessage(myMask);
+	  
+	  //myMessage.write(System.err);
+	  
+	  Assert.assertNull(myMessage.getProperty("MyProp1"));
+	  Assert.assertNotNull(myMessage.getProperty("MyProp2"));
+	  Assert.assertNull(myMessage.getProperty("MyArrayMessage@0/MyProp3"));
+	  Assert.assertNull(myMessage.getProperty("MyArrayMessage@0/MyProp6"));
+	  Assert.assertNotNull(myMessage.getProperty("MyArrayMessage@0/MyProp4"));
+	  Assert.assertNotNull(myMessage.getProperty("MyArrayMessage@0/MyProp5"));
+	  Assert.assertNull(myMessage.getMessage("SomeChildMessage"));
+	  Assert.assertNotNull(myMessage.getProperty("SomeValidChildMessage/MyProp7"));
+	  Assert.assertNull(myMessage.getProperty("SomeValidChildMessage/MyProp8"));
+	  
   }
   
   @Test

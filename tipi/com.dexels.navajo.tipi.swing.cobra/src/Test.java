@@ -1,3 +1,4 @@
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -16,6 +17,9 @@ import org.lobobrowser.html.test.SimpleUserAgentContext;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.tipi.cobra.TipiCobraBrowser;
 import com.dexels.navajo.tipi.cobra.impl.NavajoHtmlRendererContext;
 
 public class Test {
@@ -31,12 +35,27 @@ public class Test {
 	  }
 	  
 	  
-	public static void main(String[] args) throws SAXException, IOException {
+	/**
+	 * @param args
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public static void main(String[] args) throws SAXException, IOException, InterruptedException {
 		Logger.getLogger("org.lobobrowser").setLevel(Level.WARNING);
 		
 		HtmlPanel panel = new HtmlPanel();
 		// This panel should be added to a JFrame or
 		// another Swing component.
+		FileInputStream fi = new FileInputStream("maildump.xml");
+		Navajo nn = NavajoFactory.getInstance().createNavajo(fi);
+		fi.close();
+		TipiCobraBrowser tc = new TipiCobraBrowser();
+		URL uu = tc.createNavajoUrl(nn);
+		System.err.println("u: "+uu);
+		Thread.sleep(1000000);
+
+		
 		
 		localContext = new SimpleUserAgentContext();
 		renderingContext = new NavajoHtmlRendererContext(panel, localContext,null);

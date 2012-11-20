@@ -14,69 +14,23 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TipiModalInternalFrame extends JExtendedInternalFrame {
 
-	// private JPanel glass;
-	// private final JRootPane myRootPane;
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5790556670928088082L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiModalInternalFrame.class);
+	
 	public TipiModalInternalFrame(String title, JRootPane rootPane,
 			Component desktop, Component contentComponent, Dimension size) {
 		super(title, false, true, false, false);
-		// myRootPane = rootPane;
-		// glass = new JPanel();
-		// glass.setOpaque(false);
-		//
-		// // Attach mouse listeners
-		// MouseInputAdapter adapter =
-		// new MouseInputAdapter(){};
-		// glass.addMouseListener(adapter);
-		// glass.addMouseMotionListener(adapter);
-		//
-		// // Add in option pane
-		// getContentPane().add(contentComponent, BorderLayout.CENTER);
-		// putClientProperty("JInternalFrame.frameType",
-		// "optionDialog");
 		Dimension rootSize = desktop.getSize();
-		//
 		setBounds((rootSize.width - size.width) / 2,
 				(rootSize.height - size.height) / 2, size.width, size.height);
-		// desktop.validate();
-		// try {
-		// setSelected(true);
-		// } catch (PropertyVetoException ignored) {
-		// }
-		// // Add modal internal frame to glass pane
-		// glass.add(this);
-		// // Change glass pane to our panel
-		// rootPane.setGlassPane(glass);
-		// // Show glass pane, then modal dialog
-		// glass.setVisible(true);
 	}
-
-	// public void setVisible(boolean value) {
-	// System.err.println("SETTING VISIBLE: "+value);
-	// Thread.dumpStack();
-	// super.setVisible(value);
-	// if (value) {
-	// startModal();
-	// } else {
-	// stopModal();
-	// if(glass!=null) {
-	// glass.setVisible(false);
-	// glass = new JPanel();
-	// }
-	// }
-	// }
-
-	//
-	// private synchronized void stopModal() {
-	// notifyAll();
-	// }
 
 	public static void main(String args[]) {
 		final JFrame frame = new JFrame("Modal Internal Frame");
@@ -103,11 +57,11 @@ public class TipiModalInternalFrame extends JExtendedInternalFrame {
 
 				Object value = optionPane.getValue();
 				if (value.equals(ZERO)) {
-					System.out.println("Selected Yes");
+					logger.info("Selected Yes");
 				} else if (value.equals(ONE)) {
-					System.out.println("Selected No");
+					logger.info("Selected No");
 				} else {
-					System.err.println("Input Error");
+					logger.debug("Input Error");
 				}
 			}
 		};
@@ -135,45 +89,4 @@ public class TipiModalInternalFrame extends JExtendedInternalFrame {
 		JOptionPane.showInternalMessageDialog(defaultDesktop, text, title,
 				messageType);
 	}
-
-	// public static void showInternalFrame(JRootPane root, JDesktopPane pane,
-	// JComponent contents, String title, String text, int type) {
-	// JOptionPane optionPane = new JOptionPane();
-	// //JInternalFrame modal = optionPane.createInternalFrame();
-	// }
-
-	// public static void showInternalMessage(JRootPane root, JDesktopPane pane,
-	// String title, String text, int type) {
-	// JOptionPane optionPane = new JOptionPane();
-	// optionPane.setMessage(text);
-	// optionPane.setMessageType(
-	// type);
-	// JInternalFrame modal = optionPane.
-	// createInternalFrame(pane, title);
-	//
-	// showInternalFrame(root, modal);
-	//
-	// System.out.println("Returns immediately");
-	// }
-
-	// private static void showInternalFrame(JRootPane root, JInternalFrame
-	// modal) {
-	// // create opaque glass pane
-	// JPanel glass = new JPanel();
-	// glass.setOpaque(false);
-	//
-	// // Attach modal behavior to frame
-	// modal.addInternalFrameListener(
-	// new ModalAdapter(glass));
-	//
-	// // Add modal internal frame to glass pane
-	// glass.add(modal);
-	//
-	// // Change glass pane to our panel
-	// root.setGlassPane(glass);
-	//
-	// // Show glass pane, then modal dialog
-	// glass.setVisible(true);
-	// modal.setVisible(true);
-	// }
 }

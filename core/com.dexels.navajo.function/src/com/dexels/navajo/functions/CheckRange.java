@@ -18,7 +18,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class CheckRange extends FunctionInterface {
 
-    public void prototype(List<?> list, int a) {}
+//    public void prototype(List<?> list, int a) {}
 
     public CheckRange() {}
 
@@ -41,16 +41,16 @@ public final class CheckRange extends FunctionInterface {
                 Integer x = (Integer) operand;
 
                 if (!((x.intValue() >= a.intValue()) || (x.intValue() == 0)))
-                    return new Boolean(false);
+                    return Boolean.FALSE;
             } else if (operand instanceof Double) {
                 Double x = (Double) operand;
 
                 if (!((x.doubleValue() >= a.intValue())
                         || (x.doubleValue() == 0)))
-                    return new Boolean(false);
+                    return Boolean.FALSE;
             } else
                 throw new TMLExpressionException("Invalid operand for CheckRange function: " + operand.getClass().getName());
         }
-        return new Boolean(true);
+        return Boolean.TRUE;
     }
 }

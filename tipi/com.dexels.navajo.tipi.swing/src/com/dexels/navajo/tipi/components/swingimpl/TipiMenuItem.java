@@ -8,32 +8,18 @@ import java.awt.event.ActionListener;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingMenuItem;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
-public class TipiMenuItem extends TipiSwingComponentImpl {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6655528844459688735L;
 
+public class TipiMenuItem extends TipiSwingComponentImpl {
+	private static final long serialVersionUID = -6655528844459688735L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMenuItem.class);
 	private TipiSwingMenuItem myItem;
 
 	private boolean iAmEnabled = true;
@@ -63,7 +49,7 @@ public class TipiMenuItem extends TipiSwingComponentImpl {
 	@Override
 	protected void addedToParent() {
 		JMenuItem swingContainer = (JMenuItem) getSwingContainer();
-		System.err.println("Toplevel:" + swingContainer.getTopLevelAncestor());
+		logger.debug("Toplevel:" + swingContainer.getTopLevelAncestor());
 		super.addedToParent();
 	}
 

@@ -27,6 +27,10 @@ import org.w3c.dom.css.CSSUnknownRule;
 public class CSSUnknownRuleImpl extends AbstractCSSNode implements
 		CSSUnknownRule, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2992456242269976324L;
 	private CSSStyleSheet parentStyleSheet = null;
 	private CSSRule parentRule = null;
 	private String text = null;

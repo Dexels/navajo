@@ -41,7 +41,7 @@ public class CookieParser extends TipiTypeParser {
 //        Command c = new Command(){};
 //        ContainerContext containerContext = (ContainerContext) ((EchoTipiContext)myContext).getInstance().getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
 //        if(containerContext==null) {
-//        	System.err.println("No containerContext!");
+//        	logger.info("No containerContext!");
 //        }
 //        Cookie[] cc = containerContext.getCookies();
 //     

@@ -1,5 +1,8 @@
 package com.dexels.navajo.adapter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -27,6 +30,10 @@ public class AsyncProxyMap extends AsyncMappable {
   private Navajo inDoc;
   private Access access;
 
+  private final static Logger logger = LoggerFactory
+		.getLogger(AsyncProxyMap.class);
+
+
   public void load(Access access) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
     username = access.rpcUser;
     password = access.rpcPwd;
@@ -36,7 +43,7 @@ public class AsyncProxyMap extends AsyncMappable {
   }
 
   public void setMethod(String name) {
-    System.out.println("AsyncProxyMap: in setMethod(), name = " + name);
+    logger.debug("AsyncProxyMap: in setMethod(), name = " + name);
     this.method = name;
   }
 
@@ -44,23 +51,23 @@ public class AsyncProxyMap extends AsyncMappable {
   }
 
   public void afterResponse() {
-    System.out.println("AsyncProxyMap: in afterResponse()");
+    logger.debug("AsyncProxyMap: in afterResponse()");
     access.setOutputDoc(inDoc);
   }
 
   public int getPercReady() {
-    System.out.println("AsyncProxyMap: in getPercReady()");
+    logger.debug("AsyncProxyMap: in getPercReady()");
     return 0;
   }
 
   public void beforeResponse(Access access) {
     access.setOutputDoc(inDoc);
-    System.out.println("AsyncProxyMap: in beforeResponse()");
-    System.out.println("INDOC = " + access.getOutputDoc());
+    logger.debug("AsyncProxyMap: in beforeResponse()");
+    logger.debug("INDOC = " + access.getOutputDoc());
   }
 
   public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
-    System.out.println("AsyncProxyMap: in store()");
+    logger.debug("AsyncProxyMap: in store()");
   }
 
   public void run() throws com.dexels.navajo.server.UserException {
@@ -79,17 +86,16 @@ public class AsyncProxyMap extends AsyncMappable {
     try {
       inDoc = DispatcherFactory.getInstance().handle(outDoc);
     } catch (Exception e) {
-      e.printStackTrace();
-      throw new UserException(-1, e.getMessage());
+      throw new UserException(-1, e.getMessage(),e);
     } finally {
-    	System.err.println("Setting set is finished.");
+    	logger.info("Setting set is finished.");
     	setIsFinished();
     }
     
   }
 
   public void afterRequest() throws UserException {
-    System.out.println("AsyncProxyMap: in afterRequest()");
+    logger.debug("AsyncProxyMap: in afterRequest()");
     if (method == null)
       throw new UserException(-1, "AsyncProxyMap: specify a method");
   }

@@ -65,8 +65,8 @@ public class CheckUniqueness extends FunctionInterface {
             "Empty or non existing array message: " + messageName);
       }
       for (int i = 0; i < arrayMsg.size(); i++) {
-        Message m = (Message) arrayMsg.get(i);
-        Property p = (Property) m.getProperty(propertyName);
+        Message m = arrayMsg.get(i);
+        Property p = m.getProperty(propertyName);
         boolean evaluate = (filter != null ? Condition.evaluate(filter, doc, null, m) : true);
         if (evaluate) {
           if (p != null) {
@@ -77,7 +77,7 @@ public class CheckUniqueness extends FunctionInterface {
               o = p.getTypedValue();
             }
             if (values.contains(o)) {
-              return new Boolean(false);
+              return Boolean.FALSE;
             } else {
               values.add(o);
             }
@@ -93,7 +93,7 @@ public class CheckUniqueness extends FunctionInterface {
       throw new TMLExpressionException(this, se.getMessage());
     }
 
-   return new Boolean(isUnique);
+   return (isUnique ? Boolean.TRUE : Boolean.FALSE);
   }
 
   public String usage() {

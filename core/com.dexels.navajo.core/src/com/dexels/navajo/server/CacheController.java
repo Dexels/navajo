@@ -3,6 +3,9 @@ package com.dexels.navajo.server;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
@@ -49,6 +52,8 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 	
 	private long configTimestamp = -1;
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CacheController.class);
 	
 	public CacheController() {
 		super(id);
@@ -57,6 +62,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
+			logger.warn("Cache controller configuration problem, not fatal", e);
 		}
 	}
 	
@@ -76,7 +82,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 			try {
 				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 			} catch (Throwable t) {
-				t.printStackTrace(System.err);
+				logger.error("Error: ", t);
 			} 
 			
 			instance.myId = id;
@@ -91,7 +97,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 	private long getConfigTimeStamp() {
 		if (  DispatcherFactory.getInstance() != null && DispatcherFactory.getInstance().getNavajoConfig() != null ) {
 			java.io.File f = new java.io.File(DispatcherFactory.getInstance().getNavajoConfig().getConfigPath() + "/" + CACHE_CONFIG);
-			if ( f != null && f.exists() ) {
+			if (f.exists() ) {
 				return f.lastModified();
 			}
 		}
@@ -213,7 +219,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 			try {
 				readConfig();
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
+				logger.error("Error: ", e);
 			}
 		}
 		
@@ -221,7 +227,11 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 
 	@Override
 	public void terminate() {
-		instance = null;
+		setInstance(null);
+	}
+
+	public static void setInstance(CacheController c) {
+		instance = c;
 	}
 
 	public int cachedEntries() {

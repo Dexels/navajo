@@ -25,7 +25,6 @@ public class VaadinFileServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -8585205923703499272L;
 	private String path = null;
-	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(VaadinFileServlet.class); 
 	public VaadinFileServlet() {
 	}
@@ -48,7 +47,7 @@ public class VaadinFileServlet extends HttpServlet {
 			String path = InstallationPathResolver.getInstallationFromPath(contextPath).get(0);
 			setPath(path);
 		} catch (TipiException e) {
-			throw new ServletException("Problem resolving context path: "+contextPath, e);
+			logger.error("Problem resolving context path: "+contextPath+" ignoring.", e);
 		} catch (IOException e) {
 			throw new ServletException("Problem resolving context path: "+contextPath, e);
 		}

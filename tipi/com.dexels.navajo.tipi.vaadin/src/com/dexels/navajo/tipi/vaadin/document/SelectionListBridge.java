@@ -30,6 +30,9 @@ public class SelectionListBridge implements Container {
 	
 	private final Map<Object,SelectionBridge> selectionMap = new HashMap<Object,SelectionBridge>();
 	private final List<Object> selectionList = new ArrayList<Object>();
+
+
+	private boolean respondToServerSideChanges = true;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(SelectionListBridge.class);
@@ -45,7 +48,7 @@ public class SelectionListBridge implements Container {
 			selections = src.getAllSelections();
 //			int i = 0;
 			for (Selection selection : selections) {
-				SelectionBridge pb = new SelectionBridge(src,selection);
+				SelectionBridge pb = new SelectionBridge(selection);
 				String name = selection.getName();
 				selectionMap.put(name, pb);
 				selectionList.add(name);
@@ -54,6 +57,14 @@ public class SelectionListBridge implements Container {
 		} catch (NavajoException e) {
 			logger.error("Error creating SelectionListBridge: ",e);
 		}
+	}
+	
+	public boolean isRespondToServerSideChanges() {
+		return respondToServerSideChanges ;
+	}
+
+	public void setRespondToServerSideChanges(boolean respondToServerSideChanges) {
+		this.respondToServerSideChanges = respondToServerSideChanges;
 	}
 	
 	public void select(String newValue) {
@@ -146,7 +157,7 @@ public class SelectionListBridge implements Container {
 		String name = (String)itemId;
 		Selection s = NavajoFactory.getInstance().createSelection(src.getRootDoc(), name, "unknown", false);
 		src.addSelection(s);
-		SelectionBridge sb = new SelectionBridge(src, s);
+		SelectionBridge sb = new SelectionBridge(s);
 		selectionMap.put(name, sb);
 //		throw new UnsupportedOperationException("Can not edit properties to container using VAADIN data model!");
 		return sb;

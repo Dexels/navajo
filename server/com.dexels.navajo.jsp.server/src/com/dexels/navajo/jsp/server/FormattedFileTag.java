@@ -101,6 +101,9 @@ public class FormattedFileTag  extends BaseNavajoTag {
 			} else if(content!=null) {
 				highlightContent(content,name);
 				return SKIP_BODY;
+			} else {
+				// nothing to do
+				return SKIP_BODY;
 			}
 			
 			File f = new File (realPath);
@@ -137,7 +140,7 @@ public class FormattedFileTag  extends BaseNavajoTag {
 		
 	}
 
-	public String resolveScriptPath(String path) throws IOException {
+	public String resolveScriptPath(String path) {
 		logger.info("Resolving: "+path);
 		if(serverContext==null) {
 			 return getPageContext().getServletContext().getRealPath(path);

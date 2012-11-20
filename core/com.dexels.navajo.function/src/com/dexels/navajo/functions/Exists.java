@@ -69,7 +69,7 @@ public class Exists extends FunctionInterface {
 //			System.err.println("Forall expression: "+expression);
 			
 			for (int i = 0; i < arrayMsg.size(); i++) {
-				Message current = (Message)arrayMsg.get(i);
+				Message current = arrayMsg.get(i);
 				try {
 					boolean evaluate = (filter != null ?
 							Condition.evaluate(filter, doc, null, current) : true);
@@ -98,7 +98,7 @@ public class Exists extends FunctionInterface {
 						
 						boolean res = ((Boolean)result2.value).booleanValue();
 						if (res) {
-							return new Boolean(true);
+							return Boolean.TRUE;
 						}
 					}
 				} catch (SystemException ex) {
@@ -109,7 +109,7 @@ public class Exists extends FunctionInterface {
 			throw new TMLExpressionException(this,"Error evaluating message path");
 		}
 		
-		return new Boolean(false);
+		return Boolean.FALSE;
 	}
 	public String usage() {
 		return "Exists('ArrayMessage','Expression'[, 'Filter']) *ArrayMessage can be both a path and a message";

@@ -277,10 +277,4 @@ public final class DatePattern {
              this.hour + ":" + this.minute + ":" + this.second +
              " (" + this.isOffset + ")";
     }
-
-    /**
-     * Multiply the date pattern to the specified date and return the result date.
-     * Mmmm... this won't occur that much probably.
-     */
-    public void multiply(DatePattern another) {}
 }

@@ -71,7 +71,7 @@ public class TipiDesktop extends TipiSwingDataComponentImpl {
 		}
 		runSyncInEventThread(new Runnable() {
 			public void run() {
-				// System.err.println("Removing from desktop: "+c);
+				// logger.debug("Removing from desktop: "+c);
 				if (c instanceof JInternalFrame) {
 					((JInternalFrame) c).dispose();
 				}

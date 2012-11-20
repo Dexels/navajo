@@ -13,7 +13,12 @@ package com.dexels.navajo.parser;
 
 public final class ConditionException extends Exception {
 
-    public ConditionException(String s) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1407156937643755907L;
+
+	public ConditionException(String s) {
         super(s);
     }
 }

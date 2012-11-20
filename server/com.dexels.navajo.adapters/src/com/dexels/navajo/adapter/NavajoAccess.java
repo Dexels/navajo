@@ -3,8 +3,6 @@ package com.dexels.navajo.adapter;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.UserException;
 
 
@@ -20,7 +18,6 @@ import com.dexels.navajo.server.UserException;
 public class NavajoAccess implements Mappable {
 
     private Access access;
-    private NavajoConfigInterface config;
 
     public String rpcName;
     public String rpcUser;
@@ -31,7 +28,6 @@ public class NavajoAccess implements Mappable {
 
     public void load(Access access) throws MappableException, UserException {
         this.access = access;
-        this.config = DispatcherFactory.getInstance().getNavajoConfig();
     }
 
     public String getRpcName() {

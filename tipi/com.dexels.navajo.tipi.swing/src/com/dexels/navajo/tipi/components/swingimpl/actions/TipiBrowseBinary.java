@@ -12,6 +12,9 @@ import java.io.IOException;
 
 import javax.swing.JFileChooser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
@@ -29,9 +32,9 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class TipiBrowseBinary extends TipiAction {
 
-	/**
-	 * 
-	 */
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiBrowseBinary.class);
 	private static final long serialVersionUID = 8248569662575036320L;
 	/*
 	 * (non-Javadoc)
@@ -85,7 +88,6 @@ public class TipiBrowseBinary extends TipiAction {
 			Binary b = new Binary(f);
 			pp.setAnyValue(b);
 			String currentSubtype = pp.getSubType();
-			System.err.println("Setting type to: " + f.getPath());
 			if (currentSubtype != null && !"".equals(currentSubtype)) {
 				// beware, maybe already present?
 				pp.setSubType(currentSubtype + "," + "description="
@@ -93,9 +95,8 @@ public class TipiBrowseBinary extends TipiAction {
 			} else {
 				pp.setSubType("description=" + f.getName());
 			}
-			System.err.println("Sub: " + pp.getSubType());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	}
 

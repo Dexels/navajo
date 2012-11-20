@@ -61,13 +61,16 @@ public class Base64Encode extends FunctionInterface {
 			data = new String(b.getData());
 		} else if ( o instanceof String ) {
 			data = (String) o;
+		} else {
+			throw new TMLExpressionException("Can not Base64Encode null data");
 		}
 //		sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();	
 //		String encoded = enc.encode(data.getBytes());
 //		
 		Binary b;
 		try {
-			b = new Binary(new StringReader(data));
+			final StringReader reader = new StringReader(data);
+			b = new Binary(reader);
 			b.setMimeType("application/octet-stream");
 			return b;
 		} catch (IOException e) {

@@ -48,6 +48,9 @@ package com.dexels.navajo.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.server.Access;
 
@@ -57,7 +60,10 @@ public class SelectionMap implements Mappable {
     private List<OptionMap> optionsList = null;
     public String option;
     public OptionMap[]  options;
-
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(SelectionMap.class);
+	
     public SelectionMap() {}
 
     public void load(Access parm4) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
@@ -92,7 +98,7 @@ public class SelectionMap implements Mappable {
           return options;
 
         OptionMap[] result = new OptionMap[optionsList.size()];
-        result = (OptionMap[]) optionsList.toArray(result);
+        result = optionsList.toArray(result);
         return result;
     }
 
@@ -102,9 +108,9 @@ public class SelectionMap implements Mappable {
         String value = option.substring(option.indexOf(";") + 1, option.lastIndexOf(";"));
         String selected = option.substring(option.lastIndexOf(";") + 1, option.length());
 
-        System.out.println("name = " + name);
-        System.out.println("value = " + value);
-        System.out.println("selected = " + selected);
+        logger.info("name = " + name);
+        logger.info("value = " + value);
+        logger.info("selected = " + selected);
     }
 
   public void setOptions(OptionMap[] options) {

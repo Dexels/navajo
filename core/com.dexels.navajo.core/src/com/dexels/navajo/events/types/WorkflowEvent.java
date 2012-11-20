@@ -8,8 +8,10 @@ public abstract class WorkflowEvent {
 	private final String workflowId;
 	private final String workflowName;
 	private final long timestamp;
+
 	private final Navajo workflowState;
 	private final int workflowEventCount;
+	private final boolean debug;
 	
 	public WorkflowEvent(WorkFlowInterface wf) {
 		workflowId = wf.getMyId();
@@ -17,6 +19,7 @@ public abstract class WorkflowEvent {
 		timestamp  = System.currentTimeMillis();
 		workflowState = wf.getLocalNavajo().copy();
 		workflowEventCount = wf.getNextWorkflowEventCounter();
+		debug = wf.isDebug();
 	}
 	
 	public Navajo getWorkflowState() {
@@ -37,6 +40,10 @@ public abstract class WorkflowEvent {
 	
 	public int getWorkflowEventCount() {
 		return workflowEventCount;
+	}
+	
+	public boolean isDebug() {
+		return debug;
 	}
 	
 }

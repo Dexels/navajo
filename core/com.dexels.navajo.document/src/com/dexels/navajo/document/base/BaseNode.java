@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -191,6 +192,9 @@ protected Navajo myDocRoot;
 		List<? extends BaseNode> list = getChildren();
 		boolean hasText = hasTextNode();
 		boolean hasChildren = (list != null) && list.size() > 0;
+		if(list==null) {
+			list = Collections.EMPTY_LIST;
+		}
 		if (hasChildren && hasText) {
 			throw new IllegalStateException("Can not have both children AND text");
 		}
@@ -248,7 +252,11 @@ protected Navajo myDocRoot;
 		writeElement(sw, "}");
 	}
 
-	public void printElementJSONTypeless(final Writer sw) throws IOException {
+	/**
+	 * @param sw The writer to write to 
+	 * @throws IOException 
+	 */
+	public void printElementJSONTypeless(final Writer sw) throws IOException  {
 		getAttributes();
 		getChildren();
 	}
@@ -276,7 +284,12 @@ protected Navajo myDocRoot;
   public boolean hasTextNode() {
       return false;
   }
-  public void writeText(Writer w) throws IOException {
+  
+  /**
+ * @param w the writer to write to 
+ * @throws IOException 
+ */
+public void writeText(Writer w) throws IOException {
       // default impl. Only used for properties. 
        
   }

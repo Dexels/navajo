@@ -24,92 +24,33 @@
  */
 package navajofunctions;
 
-import java.util.Dictionary;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
+import navajoextension.AbstractCoreExtension;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.functions.StandardFunctionDefinitions;
-import com.dexels.navajo.functions.util.FunctionDefinition;
-import com.dexels.navajo.functions.util.FunctionFactoryFactory;
-import com.dexels.navajo.functions.util.FunctionFactoryInterface;
-import com.dexels.navajo.parser.FunctionInterface;
-
-/**
- * VERSION HISTORY
- * 
- * 2.0.0. Now using function type signatures and XML definitions.
- * 
- * 1.0.1. Added GetVersionInfo function.
- * 
- * 1.1.0. Added various new functions (GetProperty, FromSeconds, ToSeconds, Base64Encode).
- * 
- * 1.1.1. Added IsNull function.
- * 
- * 1.1.2. Fix in ToClockTime
- */
-public class Version extends com.dexels.navajo.version.AbstractVersion {
-	@SuppressWarnings("rawtypes")
-	private final Set<ServiceRegistration> serviceRegistrations = new HashSet<ServiceRegistration>();
 
 
-	//Included packages.
+public class Version extends AbstractCoreExtension {
 	
 	public Version() {
-		setReleaseDate(RELEASEDATE);
-		
 	}
 	
 	
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
-		fi.init();
-		fi.clearFunctionNames();
 		StandardFunctionDefinitions extensionDef = new StandardFunctionDefinitions();
-		fi.injectExtension(extensionDef);
-//		System.err.println("Detected functions: "+fi.getFunctionNames());
-		for (String functionName : fi.getFunctionNames(extensionDef)) {
-			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
-			 Dictionary<String, Object> props = new Hashtable<String, Object>();
-			 props.put("functionName", functionName);
-			 props.put("functionDefinition", fd);
-			 props.put("type", "function");
-//			 System.err.println("Registering function...: "+functionName);
-			 ServiceRegistration sr = context.registerService(FunctionInterface.class.getName(), fi.instantiateFunctionClass(fd,getClass().getClassLoader()), props);
-			 serviceRegistrations.add(sr);
-		}
-		
-//	        props.put("Language", "English");
-//	        context.registerService(
-//	            DictionaryService.class.getName(), new DictionaryImpl(), props);
+		registerAll(extensionDef);
 	}
 
 
 
-	@SuppressWarnings("rawtypes")
 	@Override
-	public void stop(BundleContext arg0) throws Exception {
-		super.stop(arg0);
-		for (ServiceRegistration sr : serviceRegistrations) {
-			sr.unregister();
-		}
+	public void stop(BundleContext context) throws Exception {
+		super.stop(context);
+		deregisterAll();
 	}
 
-
-
-	public static void main(String [] args) {
-		Version v = new Version();
-		System.err.println(v.toString());
-		com.dexels.navajo.version.AbstractVersion [] d = v.getIncludePackages();
-		for (int i = 0; i < d.length; i++) {
-			System.err.println("\t"+d[i].toString());
-		}
-	}
 }

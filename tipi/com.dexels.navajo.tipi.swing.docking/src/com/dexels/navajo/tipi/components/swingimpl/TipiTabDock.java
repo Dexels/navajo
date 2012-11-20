@@ -4,6 +4,9 @@ import java.awt.Component;
 
 import javax.swing.ImageIcon;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiDockable;
 import com.javadocking.dock.Position;
@@ -18,6 +21,10 @@ import com.javadocking.dockable.action.DefaultDockableStateActionFactory;
 public class TipiTabDock extends TipiDataComponentImpl {
 	
 	private static final long serialVersionUID = 3923115370762305969L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTabDock.class);
+	
 	TabDock myTabDock;
 
 	public Object createContainer() {
@@ -43,12 +50,12 @@ public class TipiTabDock extends TipiDataComponentImpl {
 				((DefaultDockable)dockable).setDescription(td.getDescription());
 				int[] states = {DockableState.NORMAL};
 				if(td.getCloseable()){
-					System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Found closeable dock! " + td.getTitle());
+					logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Found closeable dock! " + td.getTitle());
 					states = new int[]{DockableState.CLOSED,DockableState.NORMAL};
 				}				
 				dockable = new StateActionDockable(dockable, new DefaultDockableStateActionFactory(), states);
 				td.setDockable(dockable);
-				System.err.println("Adding " + td.getTitle() + " to dock");
+				logger.info("Adding " + td.getTitle() + " to dock");
 				myTabDock.addDockable(dockable, new Position(intConstr));
 			}
 		});

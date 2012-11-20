@@ -2,31 +2,18 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.extras.app.menu.DefaultMenuModel;
 import nextapp.echo2.extras.app.menu.ItemModel;
 import echopointng.image.URLImageReference;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
-
 public class TipiMenu extends TipiEchoDataComponentImpl {
 	private static final long serialVersionUID = 4600213157631897024L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMenu.class);
 	public TipiMenu() {
     }
 
@@ -46,7 +33,7 @@ public class TipiMenu extends TipiEchoDataComponentImpl {
                 URL u = (URL) object;
                 b.setIcon(new URLImageReference(u));
             } else {
-                System.err.println("Can not set button icon: I guess it failed to parse (TipiButton)");
+                logger.info("Can not set button icon: I guess it failed to parse (TipiButton)");
             }
         }
         super.setComponentValue(name, object);

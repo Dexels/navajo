@@ -2,6 +2,9 @@ package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
@@ -10,7 +13,9 @@ import nextapp.echo2.app.SplitPane;
 import com.dexels.navajo.tipi.components.echoimpl.TipiEchoDataComponentImpl;
 
 public class EchoBorderLayoutImpl extends EchoLayoutImpl {
-
+	private final static Logger logger = LoggerFactory
+			.getLogger(EchoBorderLayoutImpl.class);
+	
 	public EchoBorderLayoutImpl() {
 		
 	}
@@ -115,7 +120,7 @@ public class EchoBorderLayoutImpl extends EchoLayoutImpl {
 		if(size<0) {
 			size = 38; // default size
 		}
-		System.err.println("Using size: "+size);
+		logger.info("Using size: "+size);
 		SplitPane sp = new SplitPane(orientation);
 //		sp.setBackground(new Color(0,0,255));
 		sp.add(firstComponent);

@@ -16,6 +16,9 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * JarResources: JarResources maps all resources included in a Zip or Jar file.
  * Additionaly, it provides a method to extract one as a blob.
@@ -33,7 +36,11 @@ public final class JarResources {
     // a jar file
     private File jarFile;
     
-
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(JarResources.class);
+	
+	
     /**
      * creates a JarResources. It extracts all resources from a Jar into an
      * internal hashtable, keyed by resource names.
@@ -67,7 +74,7 @@ public final class JarResources {
      *            a resource name.
      */
     public final byte[] getResource(String name) throws Exception {
-        byte[] resource = (byte[]) htJarContents.get(name);
+        byte[] resource = htJarContents.get(name);
 
         if (resource == null)
             throw new Exception("Resource not found");
@@ -133,7 +140,7 @@ public final class JarResources {
             Enumeration<? extends ZipEntry> e = zf.entries();
 
             while (e.hasMoreElements()) {
-                ZipEntry ze = (ZipEntry) e.nextElement();
+                ZipEntry ze = e.nextElement();
 
                 // System.out.println(ze.getName());
                 htSizes.put(ze.getName(), new Integer((int) ze.getSize()));
@@ -144,7 +151,7 @@ public final class JarResources {
                 try {
                     zf.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                	logger.error("Error: ", e);
                 }
             }
         }
@@ -167,15 +174,15 @@ public final class JarResources {
 
                 // -1 means unknown size.
                 if (size == -1) {
-                    size = ((Integer) htSizes.get(ze.getName())).intValue();
+                    size = htSizes.get(ze.getName()).intValue();
                 }
-                byte[] b = new byte[(int) size];
+                byte[] b = new byte[size];
                 
                 int rb = 0;
                 int chunk = 0;
 
-                while (((int) size - rb) > 0) {
-                    chunk = zis.read(b, rb, (int) size - rb);
+                while ((size - rb) > 0) {
+                    chunk = zis.read(b, rb, size - rb);
                     if (chunk == -1) {
                         break;
                     }
@@ -190,21 +197,21 @@ public final class JarResources {
                 try {
                     fis.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                	logger.error("Error: ", e);
                 }
             }
             if (bis != null) {
                 try {
                     bis.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                	logger.error("Error: ", e);
                 }
             }
             if (zis != null) {
                 try {
                     zis.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                	logger.error("Error: ", e);
                 }
             }
 
@@ -232,7 +239,7 @@ public final class JarResources {
      *       ...
      * </pre>
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
 //        JarResources jr = new JarResources(new File("/home/arjen/projecten/Navajo/tml.dtd"));
 //        Iterator iter = jr.getResources("/com/dexels/navajo/document/");

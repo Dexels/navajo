@@ -6,12 +6,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.projectbuilder.ClientActions;
 import com.dexels.navajo.tipi.projectbuilder.TipiProjectBuilder;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class TipiWebProjectBuilder extends TipiProjectBuilder {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiWebProjectBuilder.class);
+	
 	public void downloadExtensionJars(String projectName, String version, URL remoteExtensionUrl, XMLElement extensionElement,
 			File baseDir, boolean clean, boolean localSign) throws MalformedURLException, IOException {
 		URL unsigned = new URL(remoteExtensionUrl, "lib/");
@@ -31,10 +38,10 @@ public class TipiWebProjectBuilder extends TipiProjectBuilder {
 			try {
 				ClientActions.downloadFile(jar, path, webInfLib, clean, false);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
-		downloadProjectInclude(projectName, remoteExtensionUrl, extensionElement, baseDir, clean);
+		downloadProjectInclude(remoteExtensionUrl, baseDir, clean);
 
 	}
 

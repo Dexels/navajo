@@ -126,7 +126,7 @@ public class ConnectionReconnectCommand extends Command {
 		// return false, if the connection exists already
 		for (Iterator<TransitionElement> iter = newTarget.getTargetConnections().iterator(); iter
 				.hasNext();) {
-			TransitionElement conn = (TransitionElement) iter.next();
+			TransitionElement conn = iter.next();
 			// return false if a oldSource -> newTarget connection exists
 			// already
 			// and it is a differenct instance that the connection-field

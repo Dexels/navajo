@@ -56,7 +56,7 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 					TipiExecutable current = getExecutables().get(i);
 					getContext().debugLog("thread",
 							" multithread . Performing now");
-					System.err.println("In multithread block enqueueing: "
+					logger.info("In multithread block enqueueing: "
 							+ current.toString());
 					getContext().enqueueExecutable(current);
 				}
@@ -97,14 +97,14 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 			}
 			String multi = elm.getStringAttribute("multithread");
 			if ("true".equals(multi)) {
-				System.err.println("Load multithread block!");
+				logger.warn("Load multithread block!");
 				multithread = true;
 			}
 			setStackElement(new TipiStackElement("if: (" + getExpression()
 					+ ")", elm, parentExe.getStackElement()));
 			parseActions(elm.getChildren());
 		} else {
-			System.err.println("WTF?! WHAT IS THIS ELEMENT?!");
+			logger.error("WTF?! WHAT IS THIS ELEMENT?!");
 		}
 	}
 
@@ -122,7 +122,7 @@ public class TipiActionBlock extends TipiAbstractExecutable {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

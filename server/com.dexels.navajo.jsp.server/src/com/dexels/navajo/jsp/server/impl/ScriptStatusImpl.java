@@ -26,7 +26,7 @@ public class ScriptStatusImpl implements ScriptStatus {
 	
 	public final String[] acceptedCompileCode = new String[]{"java","js"};
 	
-	public ScriptStatusImpl(NavajoServerContext nsc, File scriptRoot, File currentFile, File compileRoot) throws IOException {
+	public ScriptStatusImpl(File scriptRoot, File currentFile, File compileRoot) {
 //		this.navajoServerContext = nsc;
 		this.scriptRoot = scriptRoot;
 		this.currentFile = currentFile;
@@ -41,7 +41,7 @@ public class ScriptStatusImpl implements ScriptStatus {
 		ii = pp.lastIndexOf('.');
 		this.path = pp.substring(0,ii);
 		// relative == "stuff/xyz.dat"
-		currentFile = currentFile.getCanonicalFile();
+//		this.currentFile = currentFile.getCanonicalFile();
 
 	}
 	

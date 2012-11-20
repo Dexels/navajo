@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -32,6 +35,9 @@ public class RuntimeAdapter implements Mappable {
   public String error = "";
   public String dir = "";
   
+  private final static Logger logger = LoggerFactory
+		.getLogger(RuntimeAdapter.class);
+
   private String parameterList = null;
 
   private boolean outputFinished = false;
@@ -58,7 +64,10 @@ public class RuntimeAdapter implements Mappable {
 	  this.dir = s;
   }
   
-  public void setRun(boolean b) throws UserException {
+  /**
+ * @param b  
+ */
+public void setRun(boolean b) throws UserException {
 
 	  // Note, this must be synchronized since Process is not thread safe.
 	  synchronized (semaphore) {
@@ -68,9 +77,6 @@ public class RuntimeAdapter implements Mappable {
 			  if (parameterList != null)
 				  command += " " + parameterList;
 
-			  //System.err.println("in RuntimeAdapter: about to execute: " + command);
-
-			  //Runtime rt = Runtime.getRuntime();
 			  StringTokenizer tk = new StringTokenizer(command, ";");
 
 			  while (tk.hasMoreTokens()) {
@@ -102,7 +108,7 @@ public class RuntimeAdapter implements Mappable {
 					  br_in.close();
 				  }
 				  catch (IOException ioe) {
-					  System.out.println("Exception caught printing javac result");
+					  logger.debug("Exception caught printing javac result");
 					  ioe.printStackTrace();
 				  }
 				  outputFinished = true;
@@ -120,26 +126,20 @@ public class RuntimeAdapter implements Mappable {
 					  br_in.close();
 				  }
 				  catch (IOException ioe) {
-					  System.out.println("Exception caught printing javac result");
+					  logger.debug("Exception caught printing javac result");
 					  ioe.printStackTrace();
 				  }
 				  errorFinished = true;
 
 				  while (!(errorFinished && outputFinished)) {
 					  Thread.sleep(1000);
-					  //System.err.println("WAITING FOR SCRIPT TO FINISH....");
 				  }
 
 				  output += outputWriter.toString();
 				  error += errorWriter.toString();
-				  //println("output = " + output);
-				  //System.err.println("error = " + error);
 			  }
-
-			  //System.err.println("in RuntimeAdapter: finished script.");
 		  } catch (Exception e) {
-			  e.printStackTrace(System.err);
-			  throw new UserException(-1, e.getMessage());
+			  throw new UserException(-1, e.getMessage(),e);
 		  }
 
 	  }
@@ -170,8 +170,8 @@ public class RuntimeAdapter implements Mappable {
 //    ra.setParameter("ONGELOOFELIJK");
     ra.setRun(true);
     
-    System.err.println("FINITO: " + ra.getOutput());
-    System.err.println("ERROR STRING:>" + ra.getError() + "<");
+    logger.info("FINITO: " + ra.getOutput());
+    logger.info("ERROR STRING:>" + ra.getError() + "<");
   }
 
 }

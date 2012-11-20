@@ -27,50 +27,44 @@ public class XMLDocumentUtils {
 
         if (builderFactory == null) {
             try {
-                System.out.println("Trying to use Xerces DocumentBuilderFactory instance");
                 builderFactory = DocumentBuilderFactory.newInstance();
-                //builderFactory = new org.apache.xerces.jaxp.DocumentBuilderFactoryImpl();
-                System.out.println("factory instance: " + builderFactory);
             } catch (Exception e) {
-                System.out.println("Could not find XML parser, using system default");
                 // builderFactory = DocumentBuilderFactory.newInstance();
+            	logger.error("Trouble initializing documentbuilder factory: ",e);
             }
         }
 
     }
 
-    public static Document transformToDocument(Document xmlIn, String xslContent) throws 
-    					ParserConfigurationException,
-    					TransformerConfigurationException,
-    					TransformerException, com.dexels.navajo.document.NavajoException 
-    {
-    	createDocumentBuilderFactory();
-    	if (transformerFactory == null) {
-    		try {
-    			System.out.println("Trying to use Xalan TransformerFactory instance");
-    			//transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
-    			transformerFactory = TransformerFactory.newInstance();
-    			System.out.println("factory instance: " + transformerFactory);
-    		} catch (java.lang.NoClassDefFoundError e) {
-    			System.out.println("Could not find XSLT factory, using system default");
-
-    			throw NavajoFactory.getInstance().createNavajoException("Could not instantiate XSLT");
-    		}
-
-    	}
-
-    	Transformer  transformer = transformerFactory.newTransformer(new StreamSource( new StringReader(xslContent)) );
-
-    	Document out = builderFactory.newDocumentBuilder().newDocument();
-
-    	transformer.setOutputProperty(OutputKeys.ENCODING, DEFAULT_ENCODING);
-    	transformer.transform(new DOMSource(xmlIn), new DOMResult(out));
-
-    	return out;
-
-    }
-    
-    public static Document transformToDocument(Document xmlIn, File xslFile) throws
+//    public static Document transformToDocument(Document xmlIn, String xslContent) throws 
+//    					ParserConfigurationException,
+//    					TransformerConfigurationException,
+//    					TransformerException, com.dexels.navajo.document.NavajoException 
+//    {
+//    	createDocumentBuilderFactory();
+//    	if (transformerFactory == null) {
+//    		try {
+//    			//transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
+//    			transformerFactory = TransformerFactory.newInstance();
+//    		} catch (java.lang.NoClassDefFoundError e) {
+//    			logger.warn("Could not find XSLT factory, using system default");
+//    			throw NavajoFactory.getInstance().createNavajoException("Could not instantiate XSLT");
+//    		}
+//
+//    	}
+//
+//    	Transformer  transformer = transformerFactory.newTransformer(new StreamSource( new StringReader(xslContent)) );
+//
+//    	Document out = builderFactory.newDocumentBuilder().newDocument();
+//
+//    	transformer.setOutputProperty(OutputKeys.ENCODING, DEFAULT_ENCODING);
+//    	transformer.transform(new DOMSource(xmlIn), new DOMResult(out));
+//
+//    	return out;
+//
+//    }
+//    
+    public static synchronized Document transformToDocument(Document xmlIn, File xslFile) throws
         ParserConfigurationException,
         TransformerConfigurationException,
         TransformerException, com.dexels.navajo.document.NavajoException {
@@ -78,12 +72,11 @@ public class XMLDocumentUtils {
       createDocumentBuilderFactory();
        if (transformerFactory == null) {
            try {
-               System.out.println("Trying to use Xalan TransformerFactory instance");
+               logger.info("Trying to use Xalan TransformerFactory instance");
                //transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
                 transformerFactory = TransformerFactory.newInstance();
-               System.out.println("factory instance: " + transformerFactory);
            } catch (java.lang.NoClassDefFoundError e) {
-               System.out.println("Could not find XSLT factory, using system default");
+               logger.warn("Could not find XSLT factory, using system default");
 
                throw NavajoFactory.getInstance().createNavajoException("Could not instantiate XSLT");
            }
@@ -104,17 +97,15 @@ public class XMLDocumentUtils {
     /**
      * transforms an XML-file and XSL-file into a String
      */
-    public static String transform(Document xmlIn, File xslFile)throws TransformerConfigurationException,
+    public static synchronized String transform(Document xmlIn, File xslFile)throws TransformerConfigurationException,
             TransformerException, com.dexels.navajo.document.NavajoException {
         createDocumentBuilderFactory();
         if (transformerFactory == null) {
             try {
-                System.out.println("Trying to use Xalan TransformerFactory instance");
                 //transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
                  transformerFactory = TransformerFactory.newInstance();
-                System.out.println("factory instance: " + transformerFactory);
             } catch (java.lang.NoClassDefFoundError e) {
-                System.out.println("Could not find XSLT factory, using system default");
+                logger.warn("Could not find XSLT factory, using system default");
 
                 throw NavajoFactory.getInstance().createNavajoException("Could not instantiate XSLT");
             }
@@ -152,19 +143,16 @@ public class XMLDocumentUtils {
      * encoding can be set;
      * output method = 'xml' (indented)
      */
-    public static void toXML(Node document, String dtdPublicId, String dtdSystemId, String encoding,
+    public static synchronized void toXML(Node document, String dtdPublicId, String dtdSystemId, String encoding,
                               StreamResult result)
             throws com.dexels.navajo.document.NavajoException {
 
         createDocumentBuilderFactory();
         if (transformerFactory == null) {
             try {
-                System.out.println("Trying to use Xalan TransformerFactory instance");
-                // transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
                 transformerFactory = TransformerFactory.newInstance();
-                System.out.println("factory instance: " + transformerFactory);
             } catch (java.lang.NoClassDefFoundError e) {
-                System.out.println("Could not find XSLT factory, using system default");
+                logger.warn("Could not find XSLT factory, using system default");
                 throw NavajoFactory.getInstance().createNavajoException("Could not instantiate XSLT");
             }
 
@@ -222,6 +210,7 @@ public class XMLDocumentUtils {
 
     /**
      * XML-information is read via an inputstream into a Document (DTD validation can be set)
+     * @param validation use validation? Actually unused variable
      */
     public static Document createDocument(InputStream source, boolean validation) throws com.dexels.navajo.document.NavajoException {
 
@@ -236,7 +225,7 @@ public class XMLDocumentUtils {
         	logger.error("Error: ", exception);
             throw NavajoFactory.getInstance().createNavajoException(exception.getMessage());
         } finally {
-           // ALWAY CLOSE STREAM!!
+           // ALWAYS CLOSE STREAM!!
           try {
             if (source != null) {
               source.close();

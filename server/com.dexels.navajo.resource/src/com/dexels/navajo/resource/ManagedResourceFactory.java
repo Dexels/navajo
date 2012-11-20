@@ -64,16 +64,14 @@ public abstract class ManagedResourceFactory<T> implements ManagedServiceFactory
 		return name;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public void updated(String pid, Dictionary settings)
+	public void updated(String pid, Dictionary<String, ? > settings)
 			throws ConfigurationException {
-		logger.info("Configuration received, pid: "+pid);
+		logger.info("Configuration received, pid: "+pid+" class: "+serviceClass);
 		try {
 			Object source = instantiate(bundleContext, pid,settings);
-			ServiceRegistration<T> reg =  (ServiceRegistration<T>) bundleContext.registerService(serviceClass.getName(),(T)source, settings);
+			ServiceRegistration<T> reg =  (ServiceRegistration<T>) bundleContext.registerService(serviceClass.getName(),source, settings);
 			registryMap.put(pid, reg);
-//			contextMap.put(pid, (DataSource) source);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

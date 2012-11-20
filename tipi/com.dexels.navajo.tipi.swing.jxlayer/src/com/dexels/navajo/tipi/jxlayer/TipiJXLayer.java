@@ -13,6 +13,8 @@ import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.AbstractLayerUI;
 import org.jdesktop.jxlayer.plaf.effect.BufferedImageOpEffect;
 import org.jdesktop.jxlayer.plaf.ext.LockableUI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
 import com.jhlabs.image.BlurFilter;
@@ -20,7 +22,9 @@ import com.jhlabs.image.BlurFilter;
 public class TipiJXLayer extends TipiSwingDataComponentImpl {
 
 	private static final long serialVersionUID = 117594315048385986L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiJXLayer.class);
 	@Override
 	public Object createContainer() {
 		JPanel p = new JPanel();
@@ -37,7 +41,7 @@ public class TipiJXLayer extends TipiSwingDataComponentImpl {
 				// custom painting:
 				// here we paint translucent foreground
 				// over the whole layer
-				System.err.println("paaint");
+				logger.info("paaint");
 				g2.setColor(new Color(0, 128, 0, 128));
 				g2.fillRect(0, 0, l.getWidth(), l.getHeight());
 			}

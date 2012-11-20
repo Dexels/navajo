@@ -41,7 +41,7 @@ public class JcrStreamHandler extends URLStreamHandler {
 				
 				try {
 					String file =  url.getFile();
-					System.err.println("Looking for: "+file);
+					logger.info("Looking for: "+file);
 					Node n = session.getNode(file);
 					InputStream content = n.getNode("jcr:content").getProperty("jcr:data").getBinary().getStream();
 					return content;

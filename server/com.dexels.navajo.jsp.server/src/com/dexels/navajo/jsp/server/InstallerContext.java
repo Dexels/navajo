@@ -24,7 +24,7 @@ public class InstallerContext {
 		return isValidInstallationForContext(getServletContext());
 	}
 	
-	public String getNavajoRoot(String serverContext) throws IOException {
+	public String getNavajoRoot()  {
 		return  getInstallationPath(getServletContext(),null);
 	}
 	
@@ -133,7 +133,7 @@ public class InstallerContext {
 		if (!config.exists()) {
 			return false;
 		}
-		return config != null;
+		return true;
 	}
 
 	public static String getInstallationPath(ServletContext context,

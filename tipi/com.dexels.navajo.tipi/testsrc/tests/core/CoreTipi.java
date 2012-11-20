@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import tipi.TipiCoreExtension;
 import tipi.TipiExtension;
@@ -16,6 +18,9 @@ import com.dexels.navajo.tipi.testimpl.AbstractTipiTest;
 
 public class CoreTipi extends AbstractTipiTest {
 	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CoreTipi.class);
 	@Before
 	public void setUp() throws Exception {
 		List<TipiExtension> elist = new ArrayList<TipiExtension>();
@@ -24,7 +29,7 @@ public class CoreTipi extends AbstractTipiTest {
 		elist.add(ed);
 		
 		setContext("init", new File("testsrc/tests/core"),elist);
-		System.err.println("Setup complete");
+		logger.info("Setup complete");
 	}
 
 	@Test
@@ -36,7 +41,7 @@ public class CoreTipi extends AbstractTipiTest {
 		getContext().shutdown();
 		String xx = getContext().getInfoBuffer();
 		assertEquals("event1\nevent2\n0.99\n", xx);
-		System.err.println("Test ok: "+xx);
+		logger.info("Test ok: "+xx);
 	}
 
 }

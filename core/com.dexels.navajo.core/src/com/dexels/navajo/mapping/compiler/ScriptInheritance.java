@@ -66,14 +66,10 @@ public class ScriptInheritance {
 					for (int j = 0; j < allChildrenOfParent.size(); j++) {
 						
 						if ( allChildrenOfParent.get(j).equals(child) ) {
-						
-							String nameOfInsertedMessage = null;
 							String operation = "";
-							if ( nameOfInsertedMessage == null ) {
-								nameOfInsertedMessage = (String) insertedMessage.getAttribute(REPLACE_MESSAGE);
-								insertedMessage.removeAttribute(REPLACE_MESSAGE);
-								operation = REPLACE_MESSAGE;
-							}
+							String nameOfInsertedMessage = (String) insertedMessage.getAttribute(REPLACE_MESSAGE);
+							insertedMessage.removeAttribute(REPLACE_MESSAGE);
+							operation = REPLACE_MESSAGE;
 							if ( nameOfInsertedMessage == null ) {
 								nameOfInsertedMessage = (String) insertedMessage.getAttribute(EXTEND_MESSAGE);
 								insertedMessage.removeAttribute(EXTEND_MESSAGE);
@@ -285,7 +281,9 @@ public class ScriptInheritance {
 		// find inject tags.
 		
 		Vector<XMLElement> children = ( child == null ? subScript.getChildren() : child.getChildren() );
-		
+		if(!scriptPath.endsWith("/")) {
+			scriptPath = scriptPath+"/";
+		}
 		for (int i = 0; i < children.size(); i++) {
 			if (children.get(i).getName().equalsIgnoreCase("inject")) {
 				XMLElement injectNode = children.get(i);
@@ -349,7 +347,7 @@ public class ScriptInheritance {
 		
 		// Remember tsl attributes.
 		HashMap<String,String> tslAttributes = new HashMap<String, String>();
-		Iterator all = before.enumerateAttributeNames();
+		Iterator<String> all = before.enumerateAttributeNames();
 		while ( all.hasNext() ) {
 			String name = all.next().toString();
 			String value = before.getAttribute(name)+"";

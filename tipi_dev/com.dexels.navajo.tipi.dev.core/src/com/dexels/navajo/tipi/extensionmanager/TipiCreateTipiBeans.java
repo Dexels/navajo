@@ -18,26 +18,33 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.projectbuilder.ComponentMerger;
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class TipiCreateTipiBeans extends ExtensionClassdefProcessor {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiCreateTipiBeans.class);
+	
 	@Override
 	protected void processTipiContext(URL repository, String extension, String version, List<String> extensions,
 			Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions, Map<String, XMLElement> allEvents,
 			Map<String, XMLElement> allValues, Map<String, XMLElement> allTypes, Map<String, XMLElement> allFunctions) {
-		System.err.println("Current output: "+getOutputDir());
+		logger.info("Current output: "+getOutputDir());
 		
 		URL adapterFile = getClass().getResource("Adapter.template");
 		File javaDir = new File(getOutputDir(),"javafiles");
 		javaDir.mkdirs();
-		System.err.println("Created: "+javaDir.getAbsolutePath());
+		logger.info("Created: "+javaDir.getAbsolutePath());
 		for (Entry<String, XMLElement> entry : allComponents.entrySet()) {
 			try {
-				XMLElement eee = ComponentMerger.getAssembledClassDef(allComponents, entry.getValue(), entry.getValue().getStringAttribute("name"));
-//				System.err.println("Assembled classdef: \n"+eee);
+				XMLElement eee = ComponentMerger.getAssembledClassDef(allComponents, entry.getValue());
+//				logger.info("Assembled classdef: \n"+eee);
 				String className = eee.getStringAttribute("class");
 				
 				if (className == null) {
@@ -54,26 +61,26 @@ public class TipiCreateTipiBeans extends ExtensionClassdefProcessor {
 				File file = createPackageStructure(javaDir, packageName);
 				file.mkdirs();
 				File componentFile = new File(file, nameCap + ".java");
-				System.err.println("Writing: "+componentFile.getAbsolutePath());
+				logger.info("Writing: "+componentFile.getAbsolutePath());
 				if(!componentFile.exists()) {
 					FileWriter writer = new FileWriter(componentFile);
 					createJava(writer, eee, adapterFile,nameCap,packageName);
 					
 				} else {
-					System.err.println("Warning: Duplicate componentclass: "+componentFile.getAbsolutePath());
+					logger.info("Warning: Duplicate componentclass: "+componentFile.getAbsolutePath());
 				}
 
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		try {
 			createActionClass(extension, javaDir, allActions);
 			createFunctionClass(extension, javaDir, allFunctions);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
-//		System.err.println("All functions: "+allFunctions);
+//		logger.info("All functions: "+allFunctions);
 	}
 	
 private void createActionClass(String extension, File javaDir, Map<String, XMLElement> allActions) throws IOException {
@@ -272,7 +279,7 @@ private void createFunctions(String extension, Writer writer, List<XMLElement> a
 
 	private void createComponent(XMLElement component, StringBuffer content) {
 	if(component.getStringAttribute("name").equals("label")) {
-		System.err.println(component.toString());
+		logger.info(component.toString());
 	}
 	XMLElement values = component.getElementByTagName("values");
 	if(values!=null) {
@@ -438,7 +445,7 @@ private void appendValue(XMLElement value, StringBuffer content) {
 	String type = mapType(value.getStringAttribute("type"),true);
 	String castType = mapType(value.getStringAttribute("type"),true);
 	String nameCap = name.substring(0,1).toUpperCase()+name.substring(1,name.length());
-//	System.err.println("Appending value: "+dir+" name: "+name+" type: "+type+" castType: "+castType);
+//	logger.info("Appending value: "+dir+" name: "+name+" type: "+type+" castType: "+castType);
 	if(dir.indexOf("in")!=-1) {
 		// create setter
 		content.append("  public void set"+nameCap+"("+type+" value) {\n");
@@ -469,7 +476,7 @@ public static void main(String[] args) throws IOException {
 	tcci.createFunctions("Tipi",sw, ll, actionsFile);
 
 
-	System.err.println("Res:\n"+sw.toString());
+	logger.info("Res:\n"+sw.toString());
 }
 
 		

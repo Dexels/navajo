@@ -1,5 +1,8 @@
 package com.dexels.navajo.mapping;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -83,7 +86,11 @@ import com.dexels.navajo.util.AuditLog;
 public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
 
   private static final String VERSION = "$Id$";
-	
+
+  
+private final static Logger logger = LoggerFactory
+		.getLogger(AsyncMappable.class);
+  
   public boolean isFinished = false;
   public boolean killOnFinnish = false;
   private Throwable caught = null;
@@ -147,7 +154,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
     	try {
     		parent.run();
     	} catch (Throwable e) {
-    		e.printStackTrace();
+    		logger.error("Error: ", e);
     		kill = true;
     		parent.kill();
     		parent.setException(e);
@@ -417,11 +424,9 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
 		  try {
 			  store();
 		  } catch (MappableException e) {
-			  // TODO Auto-generated catch block
-			  e.printStackTrace();
+			  logger.error("Error: ", e);
 		  } catch (UserException e) {
-			  // TODO Auto-generated catch block
-			  e.printStackTrace();
+			  logger.error("Error: ", e);
 		  }
 		  AsyncStore.getInstance().removeInstance(this.pointer);
 	  }

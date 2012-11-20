@@ -10,10 +10,18 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.util.XMLElement;
 
 public class ClasspathBuilder {
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ClasspathBuilder.class);
+	
 	public void build(String repository, String extensions, File baseDir) {
 		File classpath = new File(baseDir, ".classpath");
 		File src = new File(baseDir,"src");
@@ -50,12 +58,12 @@ public class ClasspathBuilder {
 				XMLElement currentDefinition = ClientActions.getXMLElement(new URL(repository+ext+"/definition.xml"));
 				appendEntry(currentDefinition,output,alreadyPresent);
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 //			try {
 		//		ClientActions.downloadExtensionJars(ext,repository);
 //			} catch (IOException e) {
-//				e.printStackTrace();
+//				logger.error("Error: ",e);
 //			}
 		}
 		
@@ -66,7 +74,7 @@ public class ClasspathBuilder {
 			fw.flush();
 			fw.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

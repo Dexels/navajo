@@ -8,6 +8,9 @@ import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -39,7 +42,10 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	private String errorMessage;
 	private TipiContext context;
 	private transient ResourceBundle errorMessageBundle;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseTipiErrorHandler.class);
+	
 	public BaseTipiErrorHandler() {
 		// initResource();
 	}
@@ -53,10 +59,8 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 				return;
 			}
 			errorMessageBundle = new PropertyResourceBundle(tipiResourceStream);
-			// errorMessageBundle = ResourceBundle.getBundle("tipi.validation");
 		} catch (Exception ex) {
-			// ex.printStackTrace();
-			System.err.println("No validation bundle found. No problem.");
+			logger.warn("No validation bundle found. No problem.");
 			errorMessageBundle = null;
 		}
 	}
@@ -84,27 +88,15 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 					try {
 						conditions.write(System.err);
 					} catch (NavajoException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 				}
-				// System.err.println("Message: "+errorMessage);
-				// Thread.dumpStack();
 				return errorMessage;
 			} else if(authentication!=null) {
-//				  <message name="AuthenticationError" type="simple">
-//			      <property description="Message" direction="out" name="Message" value="Invalid password" type="string"/>
-//			      <property description="User" direction="out" name="User" value="BNSY933" type="string"/>
-//			      <property description="User" direction="out" name="Webservice" value="member/InitUpdateMember" type="string"/>
-//			   </message>				
 				errorMessage = "Authentication error: "+authentication.getProperty("Message").getTypedValue()+" user: "+authentication.getProperty("User").getTypedValue()
 						+" webservice: "+authentication.getProperty("Webservice").getTypedValue();
 				return errorMessage;
 			} else if(authorization!=null) {
-//				   <message name="AuthorizationError" type="simple">
-//				      <property description="Message" direction="out" name="Message" value="Not authorized" type="string"/>
-//				      <property description="User" direction="out" name="User" value="BNSY933" type="string"/>
-//				      <property description="User" direction="out" name="Webservice" value="officialportal/ProcessQueryToDoList" type="string"/>
-//				   </message>			
 				errorMessage = "Authorization error: "+authorization.getProperty("Message").getTypedValue()+" user: "+authorization.getProperty("User").getTypedValue()
 						+" webservice: "+authorization.getProperty("Webservice").getTypedValue();
 				return errorMessage;
@@ -149,11 +141,9 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 					errorMessageBundle = new PropertyResourceBundle(
 							tipiResourceStream);
 				} else {
-					// System.err.println(
-					// "Remote retrieve of validation.properties failed.");
 				}
 			} catch (IOException e) {
-				System.err.println("Getting resource from server failed.");
+				logger.warn("Getting validation.properties from server failed.");
 			}
 		}
 	}

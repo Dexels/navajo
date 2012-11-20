@@ -14,6 +14,9 @@ import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
@@ -26,29 +29,15 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiLayout;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public abstract class TipiSwingMessageDataComponentImpl extends
 		TipiMessageDataComponentImpl implements TipiSwingComponent {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -733008132063779783L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiSwingMessageDataComponentImpl.class);
+	
 	protected TipiPopupMenu myPopupMenu = null;
 	protected TipiGradientPaint myPaint;
 	private int currentPage = -1;
@@ -242,9 +231,9 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 						TipiSwingMessageDataComponentImpl.super.loadData(n,
 								method);
 					} catch (TipiBreakException e) {
-						e.printStackTrace();
+						logger.error("Error detected",e);
 					} catch (Throwable e) {
-						e.printStackTrace();
+						logger.error("Error detected",e);
 						myContext.showInternalError("Error loading component: "
 								+ getPath() + " message: " + e.getMessage(), e);
 					}
@@ -267,7 +256,7 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 					TipiSwingMessageDataComponentImpl.super.loadValues(values,
 							event);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error detected",e);
 				}
 			}
 		});

@@ -69,7 +69,7 @@ public class DocumentWebService extends HttpServlet {
             set = dset.getName();
         } else {
 
-            dset = (DocumentSet) this.config.getDocumentSetMap().get( set );
+            dset = this.config.getDocumentSetMap().get( set );
             if ( dset == null ) {
                 throw new ServletException( "provided invalid document set '"
                         + set + "'" );

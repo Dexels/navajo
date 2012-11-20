@@ -28,8 +28,12 @@ package com.dexels.navajo.mapping;
 import java.lang.management.ThreadInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -44,6 +48,7 @@ import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.CompiledScriptFactory;
 import com.dexels.navajo.server.ConditionData;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.SystemException;
@@ -100,6 +105,12 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public String[] codeArray = null;
   public String[] descriptionArray = null;
 
+  private CompiledScriptFactory factory;
+
+  
+private final static Logger logger = LoggerFactory
+		.getLogger(CompiledScript.class);
+
   /**
    * This HashMap is used for user defined expressions in <definitions> section of a script.
    */
@@ -109,7 +120,6 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
 
   @SuppressWarnings("unused")
   private ThreadInfo myThread = null;
-  @SuppressWarnings("unused")
 
   public String getScriptName() {
 	  return getClass().getName();
@@ -178,6 +188,10 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public void setClassLoader(NavajoClassSupplier loader) {
 	  this.classLoader = loader;
   }
+  
+  public NavajoClassSupplier getClassLoader() {
+	  return this.classLoader;
+  }
 
   public abstract void finalBlock(Access access) throws Exception;
 
@@ -190,7 +204,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
 	  // Example:
 	  // dependentObjects.add( new IncludeDependency(IncludeDependency.getScriptTimeStamp("MyScript1"), "MyScript1"));
 	  // dependentObjects.add( new IncludeDependency(IncludeDependency.getScriptTimeStamp("MyScript2"), "MyScript2"));
-  };
+  }
   
   public ArrayList<Dependency> getDependentObjects() {
 	  return new ArrayList<Dependency>();
@@ -204,7 +218,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public Dependency [] getDependencies() {
 	  
 	  Dependency [] all = new Dependency[getDependentObjects().size()];
-	  all = (Dependency []) getDependentObjects().toArray(all);
+	  all = getDependentObjects().toArray(all);
 //	  for ( int i = 0; i < all.length; i++ ) {
 //		  // Normalize id's
 //		  if ( all[i] instanceof AdapterFieldDependency ) {
@@ -238,7 +252,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
       }
     }
     catch (Exception e) {
-      e.printStackTrace(System.err);
+    	logger.error("Error: ", e);
     }
     if (mtn.getParent() != null) {
       callStoreOrKill(mtn.getParent(), storeOrKill);
@@ -273,7 +287,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
 				  outMessage.addMessage(msg);
 				  msg.setType(Message.MSG_TYPE_ARRAY);
 				  for (int i = 0; i < failed.length; i++) {
-					  msg.addMessage( (Message) failed[i]);
+					  msg.addMessage( failed[i]);
 				  }
 			  }
 		  }
@@ -395,7 +409,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
       Exception {
     if (conditionArray != null) {
       //System.err.println("CHECKING CONDITIONS......, conditionArray = " + conditionArray.length);
-      ArrayList conditions = new ArrayList();
+      List<ConditionData> conditions = new ArrayList<ConditionData>();
       for (int i = 0; i < conditionArray.length; i++) {
         boolean check = (conditionArray[i].equals("") ? true :
                          Condition.evaluate(conditionArray[i], inMessage));
@@ -410,7 +424,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
         }
       }
       ConditionData[] conditionArray = new ConditionData[conditions.size()];
-      conditionArray = (ConditionData[]) conditions.toArray(conditionArray);
+      conditionArray = conditions.toArray(conditionArray);
       return conditionArray;
     }
     else {
@@ -423,7 +437,8 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
 
   /**
    * Pool for use of Navajo functions.
-   *
+   * TODO rewrite to OSGi services
+   * TODO use generics and stronger typing
    * @param name
    * @return
    */
@@ -432,7 +447,8 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
     if (f != null) {
       return f;
     }
-    f = Class.forName(name, false, classLoader).newInstance();
+    // Ignore
+    f = Class.forName(name, false, this.getClass().getClassLoader()).newInstance();
     functions.put(name, f);
     return f;
   }
@@ -529,5 +545,16 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public Selection getCurrentSelection() {
 	  return currentSelection;
   }
+  
 
+	public void setFactory(CompiledScriptFactory factory) {
+		this.factory = factory;
+	}
+
+	protected Object getResource(String name) {
+		if(this.factory!=null) {
+			return factory.getResource(name);
+		}
+		return null;
+	}
 }

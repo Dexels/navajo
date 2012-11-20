@@ -21,7 +21,7 @@ public final class Random extends FunctionInterface {
   }
 
   public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-    double result = (double) random.nextInt();
+    double result = random.nextInt();
     if (result < 0)
       result *= -1;
     int i = (int) (result/1000.0);

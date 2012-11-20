@@ -31,7 +31,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 	private static volatile Object semaphore = new String();
 	public  volatile Object semaphoreLocal = new String();
 	
-	protected SharedTribalMap() throws InstantiationException {
+	protected SharedTribalMap() {
 		//throw new InstantiationException("Instantiate this class as SharedTribalMap(id)");
 	}
 	

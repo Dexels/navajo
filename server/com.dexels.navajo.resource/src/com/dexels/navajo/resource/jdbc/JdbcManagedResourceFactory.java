@@ -72,30 +72,34 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 	@Override
 	public void updated(String pid, Dictionary settings)
 			throws ConfigurationException {
-		logger.info("Configuration received, pid: "+pid);
+//		logger.info("Configuration received, pid: "+pid);
 		try {
-			Object source = instantiate(bundleContext, pid,settings);
+			Object source = instantiate(settings);
 			ServiceRegistration<DataSource> reg =  bundleContext.registerService(DataSource.class,(DataSource)source, settings);
 			registryMap.put(pid, reg);
+			logger.info("Resource registered for: "+pid);
 //			contextMap.put(pid, (DataSource) source);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error registering service for: "+pid);
 		}
 	}
 	
 	@SuppressWarnings({ "rawtypes" })
-	public Object instantiate(BundleContext bc, String pid, Dictionary settings) throws Exception {
+	private Object instantiate(Dictionary settings) throws Exception {
 		Properties prop = new Properties(); 
 		Enumeration en = settings.keys();
 		while (en.hasMoreElements()) {
-			String key = (String) en.nextElement();
-			prop.put(key, settings.get(key));
+			final String key = (String) en.nextElement();
+			final Object value = settings.get(key);
+			logger.debug("Property element: {} value: {}",key,value);
+			prop.put(key, value);
 		}
 	    prop.put(DataSourceFactory.JDBC_URL,settings.get(DataSourceFactory.JDBC_URL)); 
 	    prop.put(DataSourceFactory.JDBC_USER, settings.get(DataSourceFactory.JDBC_USER)); 
 	    prop.put(DataSourceFactory.JDBC_PASSWORD, settings.get(DataSourceFactory.JDBC_PASSWORD)); 
 	    prop.put(DataSourceFactory.JDBC_MAX_POOL_SIZE, 10); 
 	    prop.put(DataSourceFactory.JDBC_INITIAL_POOL_SIZE, 10); 
+	    prop.put(DataSourceFactory.JDBC_DATABASE_NAME, settings.get("name")); 
 //	    prop.put(DataSourceFactory.JDBC_PROPERTY_CYCLE, arg1)
 	    DataSource source = factory.createDataSource(prop); 
 	    return source;

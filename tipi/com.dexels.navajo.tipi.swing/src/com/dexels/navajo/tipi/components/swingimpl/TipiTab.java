@@ -1,29 +1,16 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingTab;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
+
 public class TipiTab extends TipiSwingDataComponentImpl {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -6335980072890167067L;
+	
+	private final static Logger logger = LoggerFactory.getLogger(TipiTab.class);
 	private TipiSwingTab myTab;
 
 	public Object createContainer() {
@@ -32,7 +19,7 @@ public class TipiTab extends TipiSwingDataComponentImpl {
 	}
 
 	protected void setComponentValue(String name, Object object) {
-		System.err.println("Setting: " + name + " to: " + object);
+		logger.debug("Setting: " + name + " to: " + object);
 		if (name.equals("tabIcon")) {
 			// Don't know why. The propertyChangeListener seems to miss it when
 			// the icon is being set to null.

@@ -12,6 +12,8 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceFactory;
 import org.osgi.framework.ServiceRegistration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.actions.TipiActionFactory;
@@ -20,11 +22,13 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public class ServiceRegistrationUtils {
 	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ServiceRegistrationUtils.class);
 	@SuppressWarnings("rawtypes")
 	static ServiceRegistration registerWhiteBoardExtension(TipiExtension extension,
 			BundleContext context) throws FileNotFoundException {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-//		System.err.println("Registering tipi extension: " + extension.getDescription() + "class: " + extension.getClass());
 		props.put("extensionId", extension.getId());
 		props.put("type", "tipiExtension");
 		props.put("extensionDescription", extension.getDescription());
@@ -32,7 +36,6 @@ public class ServiceRegistrationUtils {
 		// getIncludes();
 		for (String include : extension.getIncludes()) {
 			
-//			System.err.println("PARSING: " + include + " from ext: " + extension.getClass().getName());
 			readDefinitionFile(extension, include,context);
 		}
 		return context.registerService(TipiExtension.class.getName(), extension, props);
@@ -42,9 +45,8 @@ public class ServiceRegistrationUtils {
 	
 	@SuppressWarnings("rawtypes")
 	static ServiceRegistration registerCoreExtension(TipiCoreExtension extension,
-			BundleContext context) throws FileNotFoundException {
+			BundleContext context) {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-//		System.err.println("Registering tipi extension: " + extension.getDescription() + "class: " + extension.getClass());
 		props.put("extensionId", extension.getId());
 		props.put("type", "tipiExtension");
 		props.put("extensionDescription", extension.getDescription());
@@ -54,9 +56,8 @@ public class ServiceRegistrationUtils {
 	
 	@SuppressWarnings("rawtypes")
 	public static ServiceRegistration registerMainExtension(TipiMainExtension extension,
-			BundleContext context) throws FileNotFoundException {
+			BundleContext context)  {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
-//		System.err.println("Registering tipi extension: " + extension.getDescription() + "class: " + extension.getClass());
 		props.put("extensionId", extension.getId());
 		props.put("type", "tipiExtension");
 		props.put("extensionDescription", extension.getDescription());
@@ -87,9 +88,8 @@ public class ServiceRegistrationUtils {
 		}
 	}
 
-	public static void registerTipiElement(XMLElement element, TipiExtension extension, BundleContext context) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public static void registerTipiElement(XMLElement element, TipiExtension extension, BundleContext context) throws ClassNotFoundException {
 		String type = element.getName();
-//		System.err.println("Registering: "+extension.getId()+" type: "+element.getName());
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
 		props.put("extensionId", extension.getId());
 		props.put("extension", extension);
@@ -111,7 +111,7 @@ public class ServiceRegistrationUtils {
 		if(elementName!=null) {
 			props.put("name", elementName);
 		} else {
-			System.err.println("element without name: "+element);
+			logger.warn("element without name: "+element);
 		}
 		if(type.equals("tipi-parser")) {
 			parseParser(context, props, element, extension);
@@ -129,7 +129,6 @@ public class ServiceRegistrationUtils {
 	
 
 
-	@SuppressWarnings("unchecked")
 	public static void parseParser(BundleContext bundleContext, Dictionary<String, Object> props, XMLElement xe, final TipiExtension extension) {
 //		String name = xe.getStringAttribute("name");
 		final String parserClass = xe.getStringAttribute("parser");
@@ -150,22 +149,21 @@ public class ServiceRegistrationUtils {
 				try {
 					ttp = pClass.newInstance();
 				} catch (IllegalAccessException ex1) {
-					System.err.println("Error instantiating class for parser: "
-							+ parserClass);
-					ex1.printStackTrace();
+					logger.error("Error instantiating class for parser: "
+							+ parserClass,ex1);
+					logger.error("Error: ",ex1);
 					return null;
 				} catch (InstantiationException ex1) {
-					System.err.println("Error instantiating class for parser: "
-							+ parserClass);
-					ex1.printStackTrace();
+					logger.error("Error instantiating class for parser: "
+							+ parserClass,ex1);
 					return null;
 				}
 				try {
 					Class<?> cc = Class.forName(classType, true, extension.getClass().getClassLoader());
 					ttp.setReturnType(cc);
 				} catch (ClassNotFoundException ex) {
-					System.err.println("Error verifying return type class for parser: "
-							+ classType);
+					logger.error("Error verifying return type class for parser: "
+							+ classType,ex);
 					return ttp;
 				}				
 				return ttp;
@@ -176,21 +174,17 @@ public class ServiceRegistrationUtils {
 					Bundle bundle,
 					org.osgi.framework.ServiceRegistration<TipiTypeParser> arg1,
 					TipiTypeParser registration) {
-				// TODO Auto-generated method stub
-				
 			}
 		};
 		bundleContext.registerService(TipiTypeParser.class.getName(), ttp, props);
 		} catch (ClassNotFoundException ex) {
-			System.err
-					.println("Error loading class for parser: " + parserClass);
+			logger.warn("Error loading class for parser: " + parserClass,ex);
 			return;
 		}
-//		parserInstanceMap.put(name, ttp);
 	}
 	
 	//	@SuppressWarnings("unchecked")
-	private static void registerTipiAction(XMLElement element,	Dictionary<String, Object> props,TipiExtension extension, BundleContext context) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+	private static void registerTipiAction(XMLElement element,	Dictionary<String, Object> props,TipiExtension extension, BundleContext context) throws ClassNotFoundException {
 		props.put("extensionId", extension.getId());
 		props.put("type", "tipiAction");
 		String className = element.getStringAttribute("class");

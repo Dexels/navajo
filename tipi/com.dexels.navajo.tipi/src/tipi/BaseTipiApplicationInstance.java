@@ -51,10 +51,7 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 
 	// Utilities:
 	
-	public static void processSettings(String deploy, String profile,  File installationFolder, ITipiExtensionContainer extensionContainer) throws IOException {
-
-//		Map<String, String> bundleValues = getBundleMap("tipi.properties");
-//		String deploy = bundleValues.get("deploy");
+	public static void processSettings(String deploy, String profile,  File installationFolder, ITipiExtensionContainer extensionContainer)  {
 		File settings = new File(installationFolder,"settings");
 
 		Map<String, String> bundleValues = getBundleMap("arguments.properties",installationFolder);
@@ -63,9 +60,9 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 			Map<String, String> profileValues = getBundleMap("profiles/"+profile+".properties",installationFolder);
 			bundleValues.putAll(profileValues);
 		} else {
-			System.err.println("No profile bundles present.");
+			logger.info("No profile bundles present.");
 		}
-		System.err.println("Settings: "+bundleValues);
+		logger.info("Settings: "+bundleValues);
 		Map<String,String> resolvedValues = new HashMap<String, String>();
 		for (Entry<String,String> entry : bundleValues.entrySet()) {
 			if(entry.getKey().indexOf("/")<0) {
@@ -78,14 +75,14 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 			}
 			
 		}
-		System.err.println("RESOLVED TO: "+resolvedValues);
+		logger.debug("RESOLVED TO: "+resolvedValues);
 		resolvedValues.put("tipi.deploy", deploy);
 		resolvedValues.put("tipi.profile", profile);
 		
 
 		// TODO Store these somewhere else
 		for (Entry<String,String> entry : resolvedValues.entrySet()) {
-			System.err.println("Setting: "+entry.getKey());
+			logger.debug("Setting: "+entry.getKey());
 			extensionContainer.setSystemProperty(entry.getKey(), entry.getValue());
 		}	
 //		return resolvedValues;
@@ -143,11 +140,9 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 					result.put(name, value);
 
 				} catch (NoSuchElementException ex) {
-					System.err.println("Error parsing system property");
+					logger.error("Error parsing system property",ex);
 				} catch (SecurityException se) {
-					System.err
-							.println("Security exception: " + se.getMessage());
-					se.printStackTrace();
+					logger.error("Error: ",se);
 				}
 			} else if (current.equals("-profile")) {
 				loadProfile(args.get(index + 1), result);

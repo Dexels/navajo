@@ -43,7 +43,7 @@ public class StandardFunctionsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		fff = (FunctionFactoryInterface) FunctionFactoryFactory.getInstance();
+		fff = FunctionFactoryFactory.getInstance();
 		cl = getClass().getClassLoader();
 	}
 
@@ -1187,39 +1187,39 @@ public class StandardFunctionsTest {
 
 	}
 
-	@Test
-	public void testGetPropertyAttribute1() throws Exception {
-
-		FunctionInterface fi = fff.getInstance(cl, "GetPropertyAttribute");
-		fi.reset();
-		fi.setInMessage(createTestNavajo());
-		Navajo doc = createTestNavajo();
-		fi.insertOperand("/Single/Vuur");
-		fi.insertOperand("direction");
-
-		Object o = fi.evaluateWithTypeChecking();
-
-		assertNotNull(o);
-		assertEquals("out", o.toString());
-
-	}
-
-	@Test
-	public void testGetPropertyAttribute2() throws Exception {
-
-		FunctionInterface fi = fff.getInstance(cl, "GetPropertyAttribute");
-		fi.reset();
-		fi.setInMessage(createTestNavajo());
-		Navajo doc = createTestNavajo();
-		fi.insertOperand("/Single/Vuur");
-		fi.insertOperand("type");
-
-		Object o = fi.evaluateWithTypeChecking();
-
-		assertNotNull(o);
-		assertEquals("integer", o.toString());
-
-	}
+//	@Test
+//	public void testGetPropertyAttribute1() throws Exception {
+//
+//		FunctionInterface fi = fff.getInstance(cl, "GetPropertyAttribute");
+//		fi.reset();
+//		fi.setInMessage(createTestNavajo());
+//		Navajo doc = createTestNavajo();
+//		fi.insertOperand("/Single/Vuur");
+//		fi.insertOperand("direction");
+//
+//		Object o = fi.evaluateWithTypeChecking();
+//
+//		assertNotNull(o);
+//		assertEquals("out", o.toString());
+//
+//	}
+//
+//	@Test
+//	public void testGetPropertyAttribute2() throws Exception {
+//
+//		FunctionInterface fi = fff.getInstance(cl, "GetPropertyAttribute");
+//		fi.reset();
+//		fi.setInMessage(createTestNavajo());
+//		Navajo doc = createTestNavajo();
+//		fi.insertOperand("/Single/Vuur");
+//		fi.insertOperand("type");
+//
+//		Object o = fi.evaluateWithTypeChecking();
+//
+//		assertNotNull(o);
+//		assertEquals("integer", o.toString());
+//
+//	}
 
 	@Test
 	public void testGetPropertySubType() throws Exception {
@@ -1591,38 +1591,6 @@ public class StandardFunctionsTest {
 		assertEquals("true", o.toString());
 	}
 
-	@Test
-	public void testEmptyBinary() throws Exception {
-
-		FunctionInterface fi = fff.getInstance(cl, "EmptyBinary");
-		fi.reset();
-
-		Object o = fi.evaluateWithTypeChecking();
-		assertNotNull(o);
-		assertEquals(Binary.class, o.getClass());
-
-	}
-
-	@Test
-	public void testElfProef() throws Exception {
-
-		FunctionInterface fi = fff.getInstance(cl, "ElfProef");
-		fi.reset();
-		fi.insertOperand("123456789");
-
-		Object o = fi.evaluateWithTypeChecking();
-		assertNotNull(o);
-		assertEquals(Boolean.class, o.getClass());
-		assertEquals("true", o.toString());
-
-		fi.reset();
-		fi.insertOperand("23232323");
-
-		o = fi.evaluateWithTypeChecking();
-		assertNotNull(o);
-		assertEquals(Boolean.class, o.getClass());
-		assertEquals("false", o.toString());
-	}
 
 	@Test
 	public void testDecimalChar() throws Exception {
@@ -1944,56 +1912,56 @@ public class StandardFunctionsTest {
 		fi.insertOperand(new String(""));
 		Object o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.TRUE, (Boolean) o);
+		assertEquals(Boolean.TRUE, o);
 
 		// Non Empty String.
 		fi.reset();
 		fi.insertOperand(new String("aap"));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.FALSE, (Boolean) o);
+		assertEquals(Boolean.FALSE, o);
 
 		// Null value.
 		fi.reset();
 		fi.insertOperand(null);
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.TRUE, (Boolean) o);
+		assertEquals(Boolean.TRUE, o);
 
 		// Empty list
 		fi.reset();
 		fi.insertOperand(new ArrayList<Object>());
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.TRUE, (Boolean) o);
+		assertEquals(Boolean.TRUE, o);
 
 		// Non Empty list.
 		fi.reset();
 		fi.insertOperand(new ArrayList<String>().add(new String("noot")));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.FALSE, (Boolean) o);
+		assertEquals(Boolean.FALSE, o);
 
 		// Empty Binary.
 		fi.reset();
 		fi.insertOperand(new Binary());
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.TRUE, (Boolean) o);
+		assertEquals(Boolean.TRUE, o);
 
 		// Non Empty Binary.
 		fi.reset();
 		fi.insertOperand(new Binary("aap".getBytes()));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.FALSE, (Boolean) o);
+		assertEquals(Boolean.FALSE, o);
 
 		// Non empty Clocktime.
 		fi.reset();
 		fi.insertOperand(new ClockTime(new java.util.Date()));
 		o = fi.evaluateWithTypeChecking();
 		assertNotNull(o);
-		assertEquals(Boolean.FALSE, (Boolean) o);
+		assertEquals(Boolean.FALSE, o);
 	}
 
 }

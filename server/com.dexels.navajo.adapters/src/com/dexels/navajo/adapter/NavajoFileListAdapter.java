@@ -6,6 +6,9 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -38,6 +41,9 @@ public class NavajoFileListAdapter
   public String conditionPath = null;
 
   public String fileNameFilter = null;
+  
+private final static Logger logger = LoggerFactory
+		.getLogger(NavajoFileListAdapter.class);
 
   // a dummy, actually
   public String column = null;
@@ -96,8 +102,6 @@ public class NavajoFileListAdapter
   }
 
   public void store() throws MappableException, UserException {
-//    String totalPath = pathPrefix + fileName;
-//    System.err.println("Total: "+totalPath);
     File f = new File(pathPrefix);
     if (!f.exists()) {
       if (!f.mkdirs()) {
@@ -150,8 +154,8 @@ private Message createFileMessage(Message parent, File entry, String pathToDescr
   if (pathToDescription!=null || conditionPath!=null || !columns.isEmpty()) {
     try {
 
-      System.err.println("Reading description. Might be slow");
-      System.err.println("Entry: "+entry);
+      logger.debug("Reading description. Might be slow");
+      logger.debug("Entry: "+entry);
 
 
       FileInputStream fis = new FileInputStream(entry);
@@ -160,9 +164,9 @@ private Message createFileMessage(Message parent, File entry, String pathToDescr
           Property desc = n.getProperty(pathToDescription);
 
           if (conditionPath!=null) {
-            System.err.println("Evaluating: "+conditionPath);
+            logger.debug("Evaluating: "+conditionPath);
             Operand o = Expression.evaluate(conditionPath, n);
-            System.err.println("Result: "+o.value);
+            logger.debug("Result: "+o.value);
             Boolean b = (Boolean)o.value;
             if (!b.booleanValue()) {
               return null;
@@ -170,7 +174,7 @@ private Message createFileMessage(Message parent, File entry, String pathToDescr
           }
 
       for (int i = 0; i < columns.size(); i++) {
-        String current = (String)columns.get(i);
+        String current = columns.get(i);
         Property p = n.getProperty(current);
         if (p!=null) {
 //          Property q = (Property)p.clone();

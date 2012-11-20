@@ -15,14 +15,20 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 
 public class CreateTextImage {
-	// private static final int max_fontsize = 40;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CreateTextImage.class);
+	
 	private static int reflectionSize = 18;
 	public static int height = 60;
 	public static int width = 265;
-
+	
 	public static Binary createTextImage(String text) {
 		Binary result = new Binary();
 
@@ -43,7 +49,7 @@ public class CreateTextImage {
 			stringbounds = fm.getStringBounds(text, targetGraphics);
 		}
 
-		System.err.println("fonsize: " + fontsize + ", bounds: " + stringbounds);
+		logger.info("fonsize: " + fontsize + ", bounds: " + stringbounds);
 
 		BufferedImage text_target = new BufferedImage(width, (int) stringbounds.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D text_targetGraphics = text_target.createGraphics();

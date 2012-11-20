@@ -33,6 +33,7 @@ import java.util.logging.Level;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.http.HTTPMapInterface;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -41,11 +42,8 @@ import com.dexels.navajo.server.enterprise.queue.Queuable;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.util.AuditLog;
 
-public class HTTPMap implements Mappable, Queuable {
+public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5398399368623971687L;
 	
 	public Binary content = null;
@@ -76,30 +74,58 @@ public class HTTPMap implements Mappable, Queuable {
 		myAccess = access;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.URLMap#setTextContent(java.lang.String)
+	 */
+	@Override
 	public void setTextContent(String s) {
 		textContent = s;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.URLMap#setContent(com.dexels.navajo.document.types.Binary)
+	 */
+	@Override
 	public void setContent(Binary b) {
 		content = b;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.URLMap#setUrl(java.lang.String)
+	 */
+	@Override
 	public void setUrl(String s) {
 		url = s;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.URLMap#setContentType(java.lang.String)
+	 */
+	@Override
 	public void setContentType(String s) {
 		contentType = s;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.URLMap#setConnectTimeOut(int)
+	 */
+	@Override
 	public void setConnectTimeOut(int i) {
 		this.connectTimeOut = i;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.URLMap#setReadTimeOut(int)
+	 */
+	@Override
 	public void setReadTimeOut(int i) {
 		this.readTimeOut = i;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.URLMap#setDoSend(boolean)
+	 */
+	@Override
 	public void setDoSend(boolean b) throws UserException {
 		if ( !queuedSend ) {
 			sendOverHTTP();
@@ -107,9 +133,9 @@ public class HTTPMap implements Mappable, Queuable {
 	}
 	
 	private final void sendOverHTTP() throws UserException {
-		instances++;
+		increaseInstanceCount();
 
-		if ( instances > 100 ) {
+		if ( isBelowInstanceThreshold()  ) {
 			AuditLog.log("HTTPMap", "WARNING: More than 100 waiting HTTP requests", Level.WARNING, myAccess.accessID);
 		}
 		try {
@@ -140,19 +166,15 @@ public class HTTPMap implements Mappable, Queuable {
 				con.setRequestProperty("Content-type", contentType);
 			}
 			if ( textContent != null ) {
-				//System.err.println("textContent: " + textContent);
 				OutputStreamWriter osw = null;
 				osw = new OutputStreamWriter(con.getOutputStream());
 				try {
 					osw.write(textContent);
 				} finally {
-					if ( osw != null ) {
-						osw.close();
-					}
+					osw.close();
 				}
 			} else if ( content != null ) {
 				OutputStream os = null;
-				//System.err.println("content: "  + content);
 				os = con.getOutputStream();
 				try {
 					content.write(os);
@@ -186,14 +208,31 @@ public class HTTPMap implements Mappable, Queuable {
 				hasConnectionTimeOut = true;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			throw new UserException(-1, e.getMessage(), e);
 		} finally {
-			instances--;
+			decreaseInstanceCount();
 		}
 	}
 	
+	
+	protected void increaseInstanceCount() {
+		instances++;
+	}
+
+	protected void decreaseInstanceCount() {
+		instances++;
+	}
+	
+
+
+	protected boolean isBelowInstanceThreshold() {
+		return instances < 100;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.URLMap#getTextResult()
+	 */
+	@Override
 	public String getTextResult() {
 		if ( result != null ) {
 			return new String(result.getData());
@@ -220,7 +259,6 @@ public class HTTPMap implements Mappable, Queuable {
 	}
 	
 	public Binary getResponse() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -237,6 +275,10 @@ public class HTTPMap implements Mappable, Queuable {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.URLMap#setRequest(com.dexels.navajo.document.types.Binary)
+	 */
+	@Override
 	public void setRequest(Binary b) {
 		setContent(b);
 	}
@@ -278,6 +320,10 @@ public class HTTPMap implements Mappable, Queuable {
 		retries = 0;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.URLMap#setMaxInstances()
+	 */
+	@Override
 	public void setMaxInstances() {
 		
 	}
@@ -295,13 +341,25 @@ public class HTTPMap implements Mappable, Queuable {
 	}
 
 	public void setMaxRunningInstances(int maxRunningInstances) {
+		setStaticMaxRunningInstances(maxRunningInstances);
+	}
+	
+	private static void setStaticMaxRunningInstances(int maxRunningInstances) {
 		HTTPMap.maxRunningInstances = maxRunningInstances;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.URLMap#setMethod(java.lang.String)
+	 */
+	@Override
 	public void setMethod(String method) {
 		this.method = method;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.URLMap#setCatchConnectionTimeOut(boolean)
+	 */
+	@Override
 	public void setCatchConnectionTimeOut(boolean catchConnectionTimeOut) {
 		this.catchConnectionTimeOut = catchConnectionTimeOut;
 	}

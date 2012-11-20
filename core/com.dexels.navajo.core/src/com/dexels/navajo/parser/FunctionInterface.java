@@ -12,7 +12,6 @@ package com.dexels.navajo.parser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.dexels.navajo.document.Message;
@@ -21,7 +20,7 @@ import com.dexels.navajo.document.NavajoFactory;
 
 public abstract class FunctionInterface {
 
-    private List<Object> operandList = null;
+    private ArrayList<Object> operandList = null;
     protected Navajo inMessage = null;
     protected Message currentMessage = null;
     
@@ -160,7 +159,8 @@ public abstract class FunctionInterface {
     	}
     }
        
-    private final void checkReturnType(Object o) throws TMLExpressionException  {
+    @SuppressWarnings("unchecked")
+	private final void checkReturnType(Object o) throws TMLExpressionException  {
     	
     	Class [] myreturntype = returnType.get(this.getClass());
     	
@@ -180,11 +180,12 @@ public abstract class FunctionInterface {
     	if ( !correct ) {
     		NavajoFactory nf = NavajoFactory.getInstance();
     		throw new TMLExpressionException("Expected returntype " + genPipedParamMsg(myreturntype) + ", got: " + 
-    				( o != null ? nf.getNavajoType(o.getClass()) : " empty" ) );
+    				( o != null ? nf.getNavajoType(o.getClass()) : " empty" )+" function: "+getClass().getName() );
     	}
     }
     
-    private final void checkTypes() throws TMLExpressionException {
+    @SuppressWarnings("unchecked")
+	private final void checkTypes() throws TMLExpressionException {
     	
     	Class [][] mytypes = types.get(this.getClass());
     	
@@ -235,7 +236,7 @@ public abstract class FunctionInterface {
     }
    
     public final void reset() {
-        operandList = new ArrayList();
+        operandList = new ArrayList<Object>();
     }
     public final void insertOperand(Object o) {
         operandList.add(o);
@@ -251,7 +252,7 @@ public abstract class FunctionInterface {
     
     public abstract Object evaluate() throws TMLExpressionException;
 
-    protected final List<?> getOperands() {
+    protected final ArrayList<?> getOperands() {
         return operandList;
     }
 

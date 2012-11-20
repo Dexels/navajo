@@ -1,0 +1,114 @@
+<tml documentImplementation="SAXP">
+   <header>
+      <transaction rpc_usr="unknown" rpc_name="GetMessage" rpc_pwd="unknown"/>
+      <callback/>
+      <client/>
+   </header>
+   <message index="-1" name="Mail" type="array_element">
+      <property direction="in" name="Subject" value="Test met kennisgeving digitale tuchtbrief: 123456789" type="string"/>
+      <property direction="in" name="ContentType" value="multipart/related; 
+boundary=&quot;----=_Part_19913_1210001736.1344006896749&quot;" type="string"/>
+      <property direction="in" name="Description" type="string"/>
+      <property direction="in" name="Disposition" type="string"/>
+      <property direction="in" name="FileName" type="string"/>
+      <property direction="in" name="ReceivedDate" type="date"/>
+      <property direction="in" name="SentDate" value="2012-08-03 17:14:56.00" type="date"/>
+      <property direction="in" name="MessageNumber" value="177" type="integer"/>
+      <property direction="in" name="From" value="noreply@knvb.nl" type="string"/>
+      <property direction="in" name="ReplyTo" value="noreply@knvb.nl" type="string"/>
+      <property direction="in" name="To" value="Secretaris-BBKY84H@club.knvb.nl" type="string"/>
+      <property direction="in" name="IsAnswered" value="false" type="boolean"/>
+      <property direction="in" name="IsDeleted" value="false" type="boolean"/>
+      <property direction="in" name="IsDraft" value="false" type="boolean"/>
+      <property direction="in" name="IsFlagged" value="false" type="boolean"/>
+      <property direction="in" name="IsRecent" value="false" type="boolean"/>
+      <property direction="in" name="IsSeen" value="true" type="boolean"/>
+      <message name="Parts" type="array">
+         <message index="0" name="Parts" type="array_element">
+            <property direction="in" name="ContentType" value="text/html" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="FileName" type="string"/>
+            <property direction="in" name="Disposition" type="string"/>
+            <property direction="in" subtype="extension=htm,handle=binary_object1427097404675931981navajo,mime=text/html" name="Content" length="456" type="binary">
+PGh0bWw+DQogIDxib2R5Pg0KICAgIDx0YWJsZSBib3JkZXI9IjAiIGFsaWduPSJjZW50ZXIiIHN0
+eWxlPSJib3JkZXItY29sbGFwc2U6IGNvbGxhcHNlOyI+DQogICAgICAgIDx0cj4NCiAgICAgICAg
+ICAgIDx0ZD4NCiAgICAgICAgICAgICAgICAgICBPbmNlIHVwb24gYSB0aW1lDQogICAgICAgICAg
+ICA8L3RkPg0KICAgICAgICA8L3RyPg0KICAgICAgICA8dHI+DQogICAgICAgICAgICA8dGQ+DQog
+ICAgICAgICAgICAgICAgPGltZyBzcmM9ImNpZDphdHRhY2gtbnItMCIgYWx0PSJib25kc2xvZ28i
+Lz4NCiAgICAgICAgICAgIDwvdGQ+DQogICAgICAgIDwvdHI+DQogICAgICAgIDx0cj4NCiAgICAg
+ICAgICAgIDx0ZD4NCiAgICAgICAgICAgICAgICAgICBFbmQgb2Ygc3RvcnkNCiAgICAgICAgICAg
+IDwvdGQ+DQogICAgICAgIDwvdHI+DQogICAgPC90YWJsZT4NCiAgPC9ib2R5Pg0KPC9odG1sPg0K
+            </property>
+         </message>
+         <message index="1" name="Parts" type="array_element">
+            <property direction="in" name="ContentType" value="image/gif; name=bondslogo" type="string"/>
+            <property direction="in" name="Description" type="string"/>
+            <property direction="in" name="FileName" value="bondslogo" type="string"/>
+            <property direction="in" name="Disposition" value="attachment" type="string"/>
+            <property direction="in" subtype="extension=gif,handle=binary_object9134583870886538007navajo,mime=image/gif" name="Content" length="3375" type="binary">
+R0lGODlhXgB4AMYAAAAAAAAAAgAABAAABQEABQEABgEBAw8OEw8PERAPFBAQEhEREx8fHx8fISAf
+JCAgICAgIi8uMy8vLy8vMTAvNDAwMDAwMjExMz8+Qz8/Pz8/QUA/REBAQEBAQkFBQ09PT09PUVBP
+VFBQUFBQUl9eY19fYWBfZGBgYGBgYnBvdHBwcHBwcnFxc359gn5+fn5+gH9+g39/f39/gYCAgo+O
+k4+Pj4+PkZCQkp6eoJ+eo5+fn5+foa+vr6+vsbCwsr6+vr6+wL++w7+/v7+/wcDAwMDAws7Ozs7O
+0M/Pz8/P0dDQ0NDQ0t7e3t7e4N/f39/f4eDf5ODg4ODg4u7u8O/v7+/v8fDw8PDw8vr6+v39/f7+
+/P7+/v7+/////f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwA
+AAAAXgB4AAAH/oBegoOEhYaHiIhdiYyNjo+QkYxOAQEClU+GXYuSnZ6fiDYCAgSXNpqcoKqrkBMC
+A6MCFqy0tY1bgk+WsKMBTrbAwYRUFrGXFlSHm8LMnsS9FlWKqc3VjlQoASXS1t2sO97hn7ji5Z9D
+Q0Xc5Obiy4QyCsYr7fWFK5avvCj23k9DQIZk8kLJWKwAQwRxSSJjhYyE/Vjhq1RpBBUblkoZC8CP
+iod8lU5FBHXDYKWHMmRkM9jBCwqTAZKM/ETBpAJwg55Q0CjggEuDl2TMfJSkyECDBJAZGpJvlKAR
+TUcJlWJDBs6hhDpQBGdSCCIIsWYRzEhKAIwk8i7RG6pF0I6D/giq1IylIBEHSwZGDBLRNMAOjAex
+cpJh7JSosIdw3b2Es0uMvpnA9sI66PAoaVQkX0rUYVRcL7gex+LnZUWvBqApO0kbYBASkDIHsUMQ
+lNDLUQp+eenRSyhlQYBbD9phKYDvQroCQOAmSHIAHYN4C4CQ7LeglwG8Dleg/BBxBbEFMa0EfRDh
+BOGtuwxQoxASC34FsRuBAEkhrRCQsPPyALygd9bJ8MEhMkBQSGaxkcODAjJUN4gQMTAHYET7CaKb
+IU446AUVVsjnGhUVFlKFEFq0pd44kVRhgwIinehFFS80UJwAHdDwBDlJVJVSSugMVAgQPcjQ2SU+
+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
+cLVgc45nJS4SCAA7
+            </property>
+         </message>
+      </message>
+   </message>
+   <methods/>
+</tml>

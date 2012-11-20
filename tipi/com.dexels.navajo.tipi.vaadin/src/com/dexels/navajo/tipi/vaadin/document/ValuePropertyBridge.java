@@ -5,6 +5,9 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.vaadin.data.Property;
@@ -15,14 +18,25 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 	protected final com.dexels.navajo.document.Property src;
 	protected final boolean valueEditable;
 	protected Object value;
+	private boolean respondToServerSideChanges = true;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ValuePropertyBridge.class);
 	
 	public ValuePropertyBridge(com.dexels.navajo.document.Property src, boolean editable) {
-//		System.err.println("Creating bridge with property: "+src.getFullPropertyName()+" path: "+editable);
 		this.src = src;
 		this.value = src.getTypedValue();
 		this.valueEditable = editable;
 	}
 	
+	public boolean isRespondToServerSideChanges() {
+		return respondToServerSideChanges;
+	}
+
+	public void setRespondToServerSideChanges(boolean respondToServerSideChanges) {
+		this.respondToServerSideChanges = respondToServerSideChanges;
+	}
+
 	@Override
 	public Object getValue() {
 		return value;
@@ -38,7 +52,7 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 		src.setAnyValue(newValue);
 		String newType = src.getType();
 		if(!oldType.equals(newType)) {
-			System.err.println("TYPE CHANGED. BAD NEWS. OLD: "+oldType+" new: "+newType);
+			logger.warn("TYPE CHANGED. BAD NEWS. OLD: "+oldType+" new: "+newType);
 		}
 		// refresh
 		this.value = src.getTypedValue();
@@ -64,7 +78,7 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 	
 	@Override
 	public void setReadOnly(boolean newStatus) {
-		System.err.println("Beware: changing readonly status?!");
+		logger.warn("Beware: changing readonly status?!");
 		src.setDirection(newStatus?com.dexels.navajo.document.Property.DIR_OUT:com.dexels.navajo.document.Property.DIR_IN);
 	}
 	
@@ -76,6 +90,10 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 			
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
+				if(!isRespondToServerSideChanges()) {
+					logger.debug("Ignoring server side event!");
+					return;
+				}
 				if(com.dexels.navajo.document.Property.PROPERTY_VALUE.equals(evt.getPropertyName())) {
 					
 					ValuePropertyBridge.this.value = evt.getNewValue();

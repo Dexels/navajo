@@ -4,7 +4,6 @@ import java.util.Hashtable;
 
 import javax.servlet.ServletException;
 
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
@@ -32,11 +31,14 @@ public class VaadinComponent {
 
 	}
 
+	/**
+	 * @param httpService The httpservice to remove
+	 */
 	public void removeHttpService(HttpService httpService) {
 		logger.info("Disconnecting http.");
 	}
 
-	protected void startup(ComponentContext ctxt) {
+	protected void startup() {
 		try {
 		logger.info("Vaadin has everything it needs, starting up...");
 		servlet = new TipiVaadinServlet();
@@ -48,15 +50,14 @@ public class VaadinComponent {
 //		httpService.registerServlet(SERVLET_ALIAS+"eval", servlet, ht, commonContext);
 		httpService.registerServlet(VAADIN_DIR_PREFIX, vfs, null, commonContext);
 	} catch (ServletException e) {
-		e.printStackTrace();
+		logger.error("Error: ",e);
 	} catch (NamespaceException e) {
-		e.printStackTrace();
+		logger.error("Error: ",e);
 	}
 	}
 
-	protected void shutdown(ComponentContext ctxt) {
-		if(httpService!=null)
-		System.err.println("SHUTTIN DOWN!");
+	protected void shutdown() {
+		logger.info("SHUTTIN DOWN!");
 
 	}
 }

@@ -27,9 +27,9 @@ public class TestRepository extends SimpleRepository {
 		}
 	}
 	
-	public String[] getServices(Access access) throws SystemException {
-		return new String[]{"MyTestService1", "YetAnotherNiceService"};
-	}
+//	public String[] getServices(Access access)  {
+//		return new String[]{"MyTestService1", "YetAnotherNiceService"};
+//	}
 	
 	public void initGlobals(String service, String username, Navajo inMessage, 
 			                Map<String,String> extraParams) throws NavajoException {

@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -13,6 +16,10 @@ public class TipiMenuSeparator extends TipiVaadinComponentImpl {
 	
 	private static final long serialVersionUID = 4197538016180545553L;
 	private MenuItem menuItem;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMenuSeparator.class);
+	
 	
     public TipiMenuSeparator() {
     }
@@ -30,7 +37,7 @@ public class TipiMenuSeparator extends TipiVaadinComponentImpl {
 			menuItem = mbb.addSeparator();
 						
 		} else {
-			System.err.println("BAD parent! "+parentMenu);
+			logger.warn("BAD parent, it should be a MenuItem "+parentMenu);
 		}
 
     	return menuItem;

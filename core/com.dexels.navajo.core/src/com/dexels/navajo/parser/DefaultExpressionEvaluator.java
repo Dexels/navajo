@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
@@ -31,17 +34,14 @@ import com.dexels.navajo.server.DispatcherFactory;
 public final class DefaultExpressionEvaluator
     implements ExpressionEvaluator {
 
-//  private long lastTime = 0;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DefaultExpressionEvaluator.class);
 
   public DefaultExpressionEvaluator() {
-//    lastTime = System.currentTimeMillis();
+	  logger.debug("Creating defaultExpressionEvaluator service");
   }
 
-  private void printStamp(String message) {
-//    long newTime = System.currentTimeMillis();
-//    System.err.println("Event: "+message+"Diff: "+(newTime-lastTime));
-//    lastTime = newTime;
-  }
 
   public final Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException {
 	  return evaluate(clause, inMessage, mappableTreeNode, parent, null);
@@ -58,8 +58,8 @@ public final class DefaultExpressionEvaluator
       return Expression.evaluate(clause, inMessage,(MappableTreeNode) mappableTreeNode,parent,currentParam);
     }
     catch (Throwable ex) {
-   	 ex.printStackTrace();
-      throw NavajoFactory.getInstance().createNavajoException("Parse error: " +
+    	
+    	throw NavajoFactory.getInstance().createNavajoException("Parse error: " +
           ex.getMessage() + "\n while parsing: " + clause,ex);
     }
   }
@@ -88,9 +88,7 @@ public final class DefaultExpressionEvaluator
     }
   }
 
-  public final void updateExpressions(Navajo n) throws NavajoException {
 
-  }
 
   private final List<Property> getExpressionList(Navajo n) throws NavajoException {
     List<Property> expressionList = new ArrayList<Property>();
@@ -118,8 +116,7 @@ public final class DefaultExpressionEvaluator
     }
   }
 
-  private final List<Property> getExpressionDependencies(Navajo n, Property p,
-                                               List<Property> expressionList) throws
+  private final List<Property> getExpressionDependencies(Navajo n, Property p) throws
       NavajoException {
 //    System.err.println("Type: " + p.getType() + " value: " + p.getValue());
     if (!p.getType().equals(Property.EXPRESSION_PROPERTY)) {
@@ -231,7 +228,7 @@ public final class DefaultExpressionEvaluator
     Map<Property,List<Property>> depMap = new HashMap<Property,List<Property>>();
     for (int i = 0; i < exprList.size(); i++) {
       Property current = exprList.get(i);
-      List<Property> l = getExpressionDependencies(n, current, exprList);
+      List<Property> l = getExpressionDependencies(n, current);
       depMap.put(current, l);
     }
     return depMap;
@@ -253,11 +250,8 @@ public final class DefaultExpressionEvaluator
   }
 
   public Map<Property,List<Property>> createDependencyMap(Navajo n) throws NavajoException {
-    printStamp("Creating depmap ");
     List<Property> l = getExpressionList(n);
-    printStamp("expressionList finished ");
     Map<Property,List<Property>> mm = getExpressionDependencyMap(n, l);
-    printStamp("createDependencyMap finished ");
     return mm;
   }
 
@@ -467,7 +461,7 @@ public final class DefaultExpressionEvaluator
     List<Property> exprList = dee.getExpressionList(n);
     for (int i = 0; i < exprList.size(); i++) {
       Property current = exprList.get(i);
-      List<Property> l = dee.getExpressionDependencies(n, current, exprList);
+      List<Property> l = dee.getExpressionDependencies(n, current);
       if (l != null) {
         for (int j = 0; j < l.size(); j++) {
         }

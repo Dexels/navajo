@@ -8,5 +8,6 @@ public interface WorkFlowInterface {
 	public String getMyId();
 	public Navajo getLocalNavajo();
 	public int getNextWorkflowEventCounter();
+	public boolean isDebug();
 	
 }

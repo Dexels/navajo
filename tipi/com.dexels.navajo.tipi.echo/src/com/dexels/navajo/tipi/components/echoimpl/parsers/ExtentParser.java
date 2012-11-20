@@ -66,7 +66,7 @@ public class ExtentParser extends TipiTypeParser {
         // return BorderFactory.createEmptyBorder(top, left, bottom, right);
         // }
         // catch (Exception ex) {
-        // System.err.println("Error while parsing border");
+        // logger.info("Error while parsing border");
         // }
         // }
         // return BorderFactory.createEmptyBorder();

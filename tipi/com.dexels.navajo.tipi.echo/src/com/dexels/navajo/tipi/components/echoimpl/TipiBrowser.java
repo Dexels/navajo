@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import echopointng.TemplatePanel;
 import echopointng.template.StringTemplateDataSource;
 
@@ -24,6 +27,9 @@ import echopointng.template.StringTemplateDataSource;
 public class TipiBrowser extends TipiEchoComponentImpl {
 
 	private static final long serialVersionUID = -2100965334468724226L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiBrowser.class);
 	private TemplatePanel templatePanel = null;
 
 	public TipiBrowser() {
@@ -48,10 +54,10 @@ public class TipiBrowser extends TipiEchoComponentImpl {
 	private void setUrl(String url) {
 		String emb = "<iframe xmlns=\"http://www.w3.org/1999/xhtml\" height=\"100%\" width=\"100%\" frameborder=\"0\" src=\"" + url + "\"/>";
 
-		System.err.println("Result: " + emb);
+		logger.info("Result: " + emb);
 		StringTemplateDataSource stds = new StringTemplateDataSource(emb);
 		templatePanel.setTemplateDataSource(stds);
-		System.err.println("Total result: "+emb);
+		logger.info("Total result: "+emb);
 	}
 
 }

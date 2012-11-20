@@ -11,6 +11,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -21,30 +24,12 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.swingclient.components.MessageTablePanel;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- * @deprecated
- */
 @Deprecated
 public class TipiMultiTable extends TipiSwingDataComponentImpl {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7851029301125017737L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiMultiTable.class);
 	private JPanel myPanel = null;
 	private boolean useTabs = true;
 	private String outerMessageName = null;
@@ -100,18 +85,18 @@ public class TipiMultiTable extends TipiSwingDataComponentImpl {
 				}
 				loadData(getNavajo(), hh);
 			} else {
-				System.err.println("Can not reload, no navajo!");
+				logger.debug("Can not reload, no navajo!");
 				Thread.dumpStack();
 			}
 		} catch (TipiException ex) {
-			ex.printStackTrace();
+			logger.error("Error detected",ex);
 		} catch (TipiBreakException e) {
-			e.printStackTrace();
+			logger.error("Error detected",e);
 		}
 	}
 
 	public Object getComponentValue(String name) {
-		System.err.println("In getter of multitable: name: " + name);
+		logger.debug("In getter of multitable: name: " + name);
 		if (name.equals("columnsButtonVisible")) {
 			return new Boolean(columnsButtonVisible);
 		}
@@ -144,7 +129,7 @@ public class TipiMultiTable extends TipiSwingDataComponentImpl {
 	// private boolean useScrollBars = true;
 	// private boolean headerVisible = false;
 	public void setComponentValue(String name, Object object) {
-		System.err.println("In setter of multitable: name: " + name
+		logger.debug("In setter of multitable: name: " + name
 				+ " value: " + object);
 		if (name.equals("columnButtonVisible")) {
 			columnsButtonVisible = (Boolean.valueOf(object.toString())
@@ -168,12 +153,12 @@ public class TipiMultiTable extends TipiSwingDataComponentImpl {
 			reload();
 		}
 		if (name.equals("outerMessageName")) {
-			System.err.println("Setting outerMessage to: " + object);
+			logger.debug("Setting outerMessage to: " + object);
 			outerMessageName = (String) object;
 			reload();
 		}
 		if (name.equals("innerMessageName")) {
-			System.err.println("Setting innerMessage to: " + object);
+			logger.debug("Setting innerMessage to: " + object);
 			innerMessageName = (String) object;
 			reload();
 		}
@@ -208,7 +193,7 @@ public class TipiMultiTable extends TipiSwingDataComponentImpl {
 					int ii = columnSize.get(i).intValue();
 					final int index = i;
 					final int value = ii;
-					// System.err.println("Setting column: " + i + " to: " +
+					// logger.debug("Setting column: " + i + " to: " +
 					// ii);
 					mtp.setColumnWidth(index, value);
 				}
@@ -225,8 +210,6 @@ public class TipiMultiTable extends TipiSwingDataComponentImpl {
 			Property titleProp = current.getProperty(titlePropertyName);
 			String title = titleProp.getValue();
 			Message inner = current.getMessage(innerMessageName);
-			// System.err.println("INNER: ");
-			// inner.write(System.err);
 			MessageTablePanel mtp = new MessageTablePanel();
 			setupTable(mtp);
 			jt.addTab(title, mtp);
@@ -255,15 +238,12 @@ public class TipiMultiTable extends TipiSwingDataComponentImpl {
 		jt.setLayout(new GridBagLayout());
 		myPanel.add(jt, BorderLayout.CENTER);
 		Message m = n.getMessage(outerMessageName);
-		// System.err.println("Message path: "+outerMessageName);
-		// System.err.println("Starting loop, "+m.getArraySize() +" elements.");
 		for (int i = 0; i < m.getArraySize(); i++) {
-			System.err.println("Message # " + i);
+			logger.debug("Message # " + i);
 			Message current = m.getMessage(i);
-			// current.write(System.err);
 			Property titleProp = current.getProperty(titlePropertyName);
 			if (titleProp == null) {
-				System.err.println("NO TITLEPROP FOUND. Looking for: "
+				logger.debug("NO TITLEPROP FOUND. Looking for: "
 						+ titlePropertyName);
 				continue;
 			}
@@ -297,24 +277,20 @@ public class TipiMultiTable extends TipiSwingDataComponentImpl {
 	public void loadData(final Navajo n, String method) throws TipiException,
 			TipiBreakException {
 		if (outerMessageName == null) {
-			System.err.println("No outermessage");
+			logger.debug("No outermessage");
 			return;
 		} else {
-			System.err.println("Outer: " + outerMessageName);
-			System.err
-					.println("exists? " + n.getMessage(outerMessageName) != null);
+			logger.debug("Outer: " + outerMessageName);
 		}
 		Message outerMessage = n.getMessage(outerMessageName);
 		if (outerMessage == null) {
 			return;
 		}
 		if (innerMessageName == null) {
-			System.err.println("No innermessage");
+			logger.debug("No innermessage");
 			return;
 		} else {
-			System.err.println("Inner: " + innerMessageName);
-			System.err.println("exists? "
-					+ outerMessage.getMessage(innerMessageName) != null);
+			logger.debug("Inner: " + innerMessageName);
 		}
 		// Message innerMessage = outerMessage.getMessage(innerMessageName);
 		// if (outerMessage != null) {
@@ -331,7 +307,7 @@ public class TipiMultiTable extends TipiSwingDataComponentImpl {
 		});
 		// }
 		// else {
-		// System.err.println("Not loading outer message null!");
+		// logger.debug("Not loading outer message null!");
 		// }
 		super.loadData(n, method);
 	}

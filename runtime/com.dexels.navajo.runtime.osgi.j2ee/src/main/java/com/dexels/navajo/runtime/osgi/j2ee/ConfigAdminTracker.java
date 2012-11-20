@@ -37,9 +37,9 @@ public class ConfigAdminTracker extends ServiceTracker {
     {
 //    	logger.info("Some kind of service detected: "+ref);
     	ConfigurationAdmin service = (ConfigurationAdmin)super.addingService(ref);
-        if (service instanceof ConfigurationAdmin) {
+        if (service != null) {
 //        	logger.info("Injecting config!");
-        	ConfigurationAdmin ca = (ConfigurationAdmin)service;
+        	ConfigurationAdmin ca = service;
         	try {
 				injectConfig(ca);
 			} catch (IOException e) {

@@ -1,5 +1,6 @@
 package com.dexels.navajo.studio.eclipse.prefs;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -8,7 +9,6 @@ import java.util.StringTokenizer;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.preference.ListEditor;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -24,6 +24,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.studio.eclipse.NavajoPluginResources;
 
@@ -51,6 +53,10 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
 
     protected Button downButton;
 
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(ListFieldEditor.class);
+	
     /**
      * The selection listener.
      */
@@ -140,7 +146,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
      * @param key
      *            the resource name used to supply the button's label text
      */
-    protected Button createPushButton(Composite parent, String label) {
+    @SuppressWarnings("deprecation")
+	protected Button createPushButton(Composite parent, String label) {
         Button button = new Button(parent, SWT.PUSH);
         button.setText(label);
         GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -398,7 +405,6 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
 
         if (index >= 0) {
             String[] selection = list.getSelection();
-            Assert.isTrue(selection.length == 1);
             list.remove(index);
             list.add(selection[0], target);
             list.setSelection(target);
@@ -431,8 +437,12 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
         StringBuffer path = new StringBuffer("");
 
         for (int i = 0; i < items.length; i++) {
-            path.append(URLEncoder.encode(items[i]));
-            path.append(NavajoPluginResources.PREF_PAGE_LIST_SEPARATOR);
+            try {
+				path.append(URLEncoder.encode(items[i],"UTF-8"));
+		        path.append(NavajoPluginResources.PREF_PAGE_LIST_SEPARATOR);
+		    } catch (UnsupportedEncodingException e) {
+		    	logger.error("Error: ", e);
+		    }
         }
         return path.toString();
     }
@@ -482,11 +492,15 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
     @Override
 	protected String[] parseString(String stringList) {
         StringTokenizer st = new StringTokenizer(stringList, NavajoPluginResources.PREF_PAGE_LIST_SEPARATOR); 
-        ArrayList v = new ArrayList();
+        java.util.List<String> v = new ArrayList<String>();
         while (st.hasMoreTokens()) {
-            v.add(URLDecoder.decode(st.nextToken()));
+            try {
+				v.add(URLDecoder.decode(st.nextToken(),"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				logger.error("Error: ", e);
+			}
         }
-        return (String[]) v.toArray(new String[v.size()]);
+        return v.toArray(new String[v.size()]);
     }
 
 }

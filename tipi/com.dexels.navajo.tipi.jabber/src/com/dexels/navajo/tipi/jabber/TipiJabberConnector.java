@@ -25,6 +25,8 @@ import org.jivesoftware.smackx.muc.HostedRoom;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.Occupant;
 import org.jivesoftware.smackx.muc.RoomInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.jabber.JabberUtils;
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
@@ -43,6 +45,10 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiJabberConnector extends TipiBaseConnector implements TipiConnector {
 
 	private static final long serialVersionUID = 1969154253419166142L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiJabberConnector.class);
+	
 	protected String server = "";
 	protected int port = 5222;
 	protected String chatDomain = "";
@@ -81,7 +87,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			}
 		}
 
-		// System.err.println("Servert: " + server +", port: " + port
+		// logger.info("Servert: " + server +", port: " + port
 		// +", conference: " + conferenceName + ", domain: " + chatDomain+
 		// ", iser: " + username + ", pw: " + password);
 
@@ -94,14 +100,14 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		connection = new XMPPConnection(config);
 
 		connection.connect();
-		// System.err.println("SAS: " + connection.getSASLAuthentication());
-		System.err.println("Connection ok. Name: " + connection.getServiceName());
+		// logger.info("SAS: " + connection.getSASLAuthentication());
+		logger.info("Connection ok. Name: " + connection.getServiceName());
 		try {
 			performTipiEvent("onConnect", null, false);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
-		// System.err.println("onConnect ok");
+		// logger.info("onConnect ok");
 		
 		connection.addPacketListener(new PacketListener() {
 			public void processPacket(Packet p) {
@@ -110,24 +116,24 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 					messageReceived(m);
 				}else{		
 					listUsers();
-//					System.err.println("What is this smeg packet? " + p.getClass() + ", id: " + p.getPacketID());
+//					logger.info("What is this smeg packet? " + p.getClass() + ", id: " + p.getPacketID());
 //					Collection<PacketExtension> ext = p.getExtensions();
 //					Iterator<PacketExtension> it = ext.iterator();
 //					while(it.hasNext()){
 //						PacketExtension et = it.next();
-//						System.err.println("Extention: " + et.getElementName());
+//						logger.info("Extention: " + et.getElementName());
 //					}
 				}
 			}
 		}, null);
 		
 		if (doLogin) {
-			// System.err.println("W00t! " +
+			// logger.info("W00t! " +
 //			 NavajoClientFactory.getClient().getSessionToken());
 			
 			// TODO resolve this static problem
 			connection.login(username, password, SessionTokenFactory.getSessionTokenProvider().getSessionToken());
-			// System.err.println("W11t!");
+			// logger.info("W11t!");
 			/*
 			 * postRoster(connection.getRoster());
 			 * connection.getRoster().addRosterListener(new RosterListener() {
@@ -142,15 +148,15 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			 * rosterUpdated(); }
 			 * 
 			 * public void presenceChanged(Presence p) {
-			 * System.err.println("Presence changed: " + p.getFrom());
+			 * logger.info("Presence changed: " + p.getFrom());
 			 * rosterUpdated(); }
 			 * 
 			 * });
 			 */
 
-			System.err.println("Login ok");
+			logger.info("Login ok");
 		} else {
-			System.err.println("Anonymous mode!");
+			logger.info("Anonymous mode!");
 			connection.loginAnonymously();
 		}
 	}
@@ -164,7 +170,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 				n.addMessage(roomList);
 
 				for (HostedRoom hostedRoom : rooms) {
-					// System.err.println("JID: " + hostedRoom.getJid() + ", " +
+					// logger.info("JID: " + hostedRoom.getJid() + ", " +
 					// hostedRoom.getName());
 
 					com.dexels.navajo.document.Message room = NavajoFactory.getInstance().createMessage(n, "Room", com.dexels.navajo.document.Message.MSG_TYPE_ARRAY_ELEMENT);
@@ -179,7 +185,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 						RoomInfo info = MultiUserChat.getRoomInfo(connection, hostedRoom.getJid());
 						occupants = info.getOccupantsCount();
 					} catch (Exception e) {
-						// System.err.println("Occupantcount unknown");
+						// logger.info("Occupantcount unknown");
 					}
 					Property roomOccupantCount = NavajoFactory.getInstance().createProperty(n, "Occupants", "integer", "" + occupants, 6, "Occupants", Property.DIR_OUT);
 					room.addProperty(roomOccupantCount);
@@ -189,7 +195,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 				// n.write(System.err);
 				injectNavajo("RoomList", n);
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 	}
@@ -205,7 +211,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			while (occupants.hasNext()) {
 
 				String occ = occupants.next();
-				// System.err.println("Adding: " + occ
+				// logger.info("Adding: " + occ
 				// +" in TipiJabberConnector");
 				Occupant oc = myMultiUserChat.getOccupant(occ);
 //				Presence pres = myMultiUserChat.getOccupantPresence(occ);
@@ -236,7 +242,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 
 	private void addConnectionListener() {
 		if (!connection.isConnected()) {
-			System.err.println("Connection not connected. skipping registration of listeners");
+			logger.info("Connection not connected. skipping registration of listeners");
 			return;
 		}
 		// connection.addPacketListener(new PacketListener() {
@@ -276,12 +282,12 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		try {
 			Thread.sleep(20000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 		// String jid = "dashboard@sportlink.com/matthijs";
 		// String jidUser = jid.substring(0, jid.indexOf("@"));
-		// System.err.println("Jod: " + jidUser);
+		// logger.info("Jod: " + jidUser);
 		// tjc.conferenceName = "conference";
 		// tjc.joinRoom("aap", "The monkey");
 
@@ -320,7 +326,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		} catch (NavajoException e1) {
 			e1.printStackTrace();
 		} catch (TipiBreakException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -332,7 +338,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			recipient = currentUser;
 		}
 		
-		// System.err.println("Name: " + recipient);
+		// logger.info("Name: " + recipient);
 //		Chat c = connection.getChatManager().createChat(recipient, null);
 		 Message m = myMultiUserChat.createMessage();
 		 m.setBody(text);
@@ -383,12 +389,12 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 	}
 
 	protected void messageReceived(Message message) {
-//		 System.err.println("Message received: "+ message.getBody());
+//		 logger.info("Message received: "+ message.getBody());
 
 		// String type = (String) message.getProperty("navajoType");
 		// String tml = (String) message.getProperty("tml");
 		// if (type != null) {
-		// System.err.println("Type found: "+type);
+		// logger.info("Type found: "+type);
 		if (!"serverResponse".equals(message.getSubject())) {
 			try {
 				Navajo n = NavajoFactory.getInstance().createNavajo(new StringReader(message.getBody()));
@@ -405,7 +411,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 						jabber.addProperty(occupant);
 						n.addMessage(jabber);
 					} catch (NavajoException e) {
-						e.printStackTrace();
+						logger.error("Error: ",e);
 					}
 
 					if (n.getHeader().getRPCName().equals("ProcessExceptionToRoom")) {
@@ -416,10 +422,10 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 				}
 			} catch (Exception e) {
 				// it was no Navajo
-				System.err.println("Ok, no Navajo: " + message.getBody());
+				logger.info("Ok, no Navajo: " + message.getBody());
 			}
 		} else {
-			System.err.println("Body: " + message.getBody() + " from: " + message.getFrom() + ", to:  " + message.getTo() + ", subjct: " + message.getSubject());
+			logger.info("Body: " + message.getBody() + " from: " + message.getFrom() + ", to:  " + message.getTo() + ", subjct: " + message.getSubject());
 
 			Map<String, Object> m = new HashMap<String, Object>();
 			m.put("body", message.getBody());
@@ -429,16 +435,16 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			String usr = st.nextToken();
 			m.put("fromJid", fromJid);
 			m.put("from", from);
-			// System.err.println("Getting: " + usr);
+			// logger.info("Getting: " + usr);
 			m.put("name", userMap.get(usr));
-			// System.err.println("Usermap: " + userMap);
-			// System.err.println("NAME: " + userMap.get(usr));
+			// logger.info("Usermap: " + userMap);
+			// logger.info("NAME: " + userMap.get(usr));
 			m.put("to", message.getTo());
 			m.put("subject", message.getSubject());
 			try {
 				performTipiEvent("onMessageReceived", m, false);
 			} catch (TipiException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 	}
@@ -453,7 +459,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 					throw new TipiException("Error connecting jabber: " + e.getMessage(), e);
 				}
 			} catch (TipiException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		if (name.equals("disconnect")) {
@@ -463,7 +469,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			try {
 				listRooms();
 			} catch (XMPPException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 		}
 		if (name.equals("send")) {
@@ -481,7 +487,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 				try {
 					sendMessage(result, recipient);
 				} catch (XMPPException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		}
@@ -496,9 +502,9 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			}
 		}
 		if (name.equals("talk")) {
-			// System.err.println("entering talk!");
+			// logger.info("entering talk!");
 			String text = (String) compMeth.getEvaluatedParameterValue("text", event);
-			// System.err.println("text:  " + text);
+			// logger.info("text:  " + text);
 			if (myMultiUserChat != null) {
 				try {
 					// myMultiUserChat.sendMessage()
@@ -507,11 +513,11 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 					m.setType(Type.groupchat);
 					myMultiUserChat.sendMessage(m);
 				} catch (XMPPException e) {
-					// System.err.println("Sent: " + text);
-					e.printStackTrace();
+					// logger.info("Sent: " + text);
+					logger.error("Error: ",e);
 				}
 			} else {
-				System.err.println("Chat not initialized");
+				logger.info("Chat not initialized");
 			}
 		}
 		if (name.equals("startListener")) {
@@ -524,7 +530,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		try {
 
 			String conferenceName = this.conferenceName + "." + connection.getServiceName();
-			// System.err.println("Connecting to conference: " + conferenceName
+			// logger.info("Connecting to conference: " + conferenceName
 			// + ", " + conferenceName.toLowerCase() + ", " + nick);
 
 			if (myMultiUserChat != null && myMultiUserChat.isJoined() && connection.isConnected()) {
@@ -533,7 +539,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 				} catch (IllegalStateException ise) {
 					// The most peculiar case is that we can still get an error
 					// stating we are NOT connected. Dispite the checks above.
-					System.err.println("WARNING: Tried leaving, but could not part.");
+					logger.info("WARNING: Tried leaving, but could not part.");
 				}
 			}
 
@@ -545,24 +551,24 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
-							e.printStackTrace();
+							logger.error("Error: ",e);
 						}
 						listUsers();
 					}
 				});
 			} catch (TipiException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 
 		} catch (XMPPException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 
 		myMultiUserChat.addParticipantListener(new PacketListener() {
 			public void processPacket(Packet p) {
-				System.err.println("Participant event...");
+				logger.info("Participant event...");
 				if (p instanceof Message) {
-					System.err.println("It is a message too :)");
+					logger.info("It is a message too :)");
 					Message m = (Message) p;
 					messageReceived(m);
 				}
@@ -573,7 +579,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 //		myMultiUserChat.addMessageListener(new PacketListener() {
 //
 //			public void processPacket(Packet p) {
-//				System.err.println("aap <------------------------------------------------ " + p);
+//				logger.info("aap <------------------------------------------------ " + p);
 //				if (p instanceof Message) {
 //					Message m = (Message) p;
 //					messageReceived(m);
@@ -590,7 +596,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		try {
 			performTipiEvent("onDisconnect", null, false);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -605,7 +611,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		try {
 			performTipiEvent("onRosterChanged", null, false);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -645,9 +651,9 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			}
 			connection.sendPacket(p);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

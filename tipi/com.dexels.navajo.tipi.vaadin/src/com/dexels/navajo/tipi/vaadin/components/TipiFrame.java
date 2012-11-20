@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.Application;
@@ -12,6 +15,9 @@ public class TipiFrame extends TipiVaadinComponentImpl {
 	private static final long serialVersionUID = -8797775838239790407L;
 	private Window mainWindow;
 	private VerticalLayout layout;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiFrame.class);
 
 	@Override
 	public Object createContainer() {
@@ -22,7 +28,7 @@ public class TipiFrame extends TipiVaadinComponentImpl {
 		this.layout.setMargin(false);
 		this.layout.setSizeFull();
 		this.mainWindow.setContent(layout);
-		System.err.println("Size: "+mainWindow.getWidth()+" ; "+mainWindow.getHeight());
+		logger.debug("Size: "+mainWindow.getWidth()+" ; "+mainWindow.getHeight());
 		return this.mainWindow;
 	}
 
@@ -33,7 +39,6 @@ public class TipiFrame extends TipiVaadinComponentImpl {
 	}
 
 	public void addToContainer(Object c, Object constraints) {
-		System.err.println("c: "+c);
 		super.addToContainer(c, constraints);
 	}
 	

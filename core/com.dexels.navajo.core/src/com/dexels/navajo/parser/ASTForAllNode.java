@@ -5,6 +5,9 @@ package com.dexels.navajo.parser;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -16,7 +19,10 @@ public final class ASTForAllNode extends SimpleNode {
     Navajo doc;
     Message parentMsg;
     MappableTreeNode mapObject;
-
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(ASTForAllNode.class);
+    
     public ASTForAllNode(int id) {
         super(id);
     }
@@ -74,11 +80,11 @@ public final class ASTForAllNode extends SimpleNode {
                 }
 
         } catch (com.dexels.navajo.server.SystemException se) {
-            se.printStackTrace();
-            throw new TMLExpressionException("Invalid expression in FORALL construct: \n" + se.getMessage());
+        	logger.error("Error: ", se);
+        	throw new TMLExpressionException("Invalid expression in FORALL construct: \n" + se.getMessage());
         } catch (NavajoException ne) {
-            ne.printStackTrace();
-            throw new TMLExpressionException("Invalid expression in FORALL construct: \n" + ne.getMessage());
+        	logger.error("Error: ", ne);
+        	throw new TMLExpressionException("Invalid expression in FORALL construct: \n" + ne.getMessage());
         }
 
         if (matchAll)

@@ -71,13 +71,20 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
         		localRp.setNavajoConfig(config);
         		return localRp;
         	}
+        	// Kind of weird, roundabout way to get to an instance
+        	if(instance!=null) {
+        		Repository r = instance.getRepository(className);
+        		if(r!=null) {
+        			return r;
+        		}
+        	}
         	Repository rp = (Repository) config.getClassloader().getClass(className).newInstance();
             rp.setNavajoConfig(config);
             System.out.println("Using alternative repository: " + className);
             return rp;
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Using default repository: SimpleRepository");
+        	logger.error("Error: ", e);
+        	System.out.println("Using default repository: SimpleRepository");
             // Use default Repository.
             Repository rp = new SimpleRepository();
 
@@ -98,7 +105,6 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
 //    	repositoryRepository.put(className, r);
 //    }
     
-    @SuppressWarnings("unchecked")
     public static Repository getRepository(NavajoClassLoader loader, String repositoryClass, NavajoConfigInterface config) {
     	Repository localRp = legacyRepositoryRepository.get(repositoryClass);
     	if(localRp!=null) {
@@ -108,13 +114,13 @@ public class RepositoryFactoryImpl implements RepositoryFactory {
 
     	try {
 			Class<? extends Repository> c = (Class<? extends Repository>)loader.getClass(repositoryClass);
-            Repository rp = (Repository) c.newInstance();
+            Repository rp = c.newInstance();
 
             rp.setNavajoConfig(config);
             return rp;
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        	logger.error("Error: ", e);
+        	return null;
         }
     }
 }

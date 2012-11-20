@@ -3,14 +3,17 @@ package com.dexels.navajo.tipi.components.swingimpl.embed;
 import java.io.IOException;
 import java.util.List;
 
-import tipi.SwingTipiApplicationInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import navajo.ExtensionDefinition;
+import tipiswing.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiUserInterface;
 import com.dexels.navajo.tipi.swingclient.SwingClient;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
-import com.dexels.navajo.version.ExtensionDefinition;
 
 /**
  * <p>
@@ -31,10 +34,12 @@ import com.dexels.navajo.version.ExtensionDefinition;
  */
 
 public class SwingEmbeddedContext extends SwingTipiContext {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -9108175308764124437L;
+
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SwingEmbeddedContext.class);
+	
 	TipiSwingStandaloneToplevel top = new TipiSwingStandaloneToplevel();
 
 	public SwingEmbeddedContext(SwingTipiApplicationInstance instance,
@@ -78,7 +83,7 @@ public class SwingEmbeddedContext extends SwingTipiContext {
 	}
 
 	public void exit() {
-		System.err.println("Exit in embedded");
+		logger.debug("Exit in embedded");
 		shutdown();
 	}
 

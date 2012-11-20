@@ -99,7 +99,7 @@ public class RDFObject {
 				predicate = getName(predicate);
 				String object = detail.getProperty("Object").getValue();
 				detailMap.put(predicate, object);
-//				System.err.println("Adding property: " + predicate + ", " + object);
+//				logger.info("Adding property: " + predicate + ", " + object);
 			}
 		}
 	}

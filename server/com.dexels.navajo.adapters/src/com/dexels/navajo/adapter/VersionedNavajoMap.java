@@ -17,6 +17,9 @@ package com.dexels.navajo.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
@@ -30,14 +33,19 @@ import com.dexels.navajo.server.UserException;
 
 public class VersionedNavajoMap extends NavajoMap {
 
+		
+		private final static Logger logger = LoggerFactory
+				.getLogger(VersionedNavajoMap.class);
+		
  public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException, AuthorizationException {
 
+	 
      super.setDoSend(method);
 
-     System.err.println("in VersionedNavajoMap store()");
+     logger.debug("in VersionedNavajoMap store()");
      if (!this.isEqual) {
 
-       System.err.println("ABOUT TO CONSTRUCT MESSAGES!");
+       logger.debug("ABOUT TO CONSTRUCT MESSAGES!");
        try {
          Navajo currentOutDoc = super.access.getOutputDoc();
 
@@ -52,13 +60,13 @@ public class VersionedNavajoMap extends NavajoMap {
          List<Method> allMethods = inMessage.getAllMethods();
          for (int i = 0; i < allMethods.size(); i++) {
            Method m = allMethods.get(i);
-           System.err.println("Adding method: " + m.getName());
+           logger.debug("Adding method: " + m.getName());
            Method a = NavajoFactory.getInstance().createMethod(currentOutDoc,
                m.getName(), "");
            List<String> required = m.getRequiredMessages();
            for (int j = 0; j < required.size(); j++) {
              String name = required.get(j);
-              System.err.println("Adding required message: " + name);
+              logger.debug("Adding required message: " + name);
              a.addRequired(name);
            }
            currentOutDoc.addMethod(a);
@@ -67,8 +75,8 @@ public class VersionedNavajoMap extends NavajoMap {
          List<Message> allMessages = inMessage.getAllMessages();
          for (int i = 0; i < allMessages.size(); i++) {
 
-           Message m = (Message) allMessages.get(i);
-            System.err.println("Adding message: " + m.getName());
+           Message m = allMessages.get(i);
+            logger.debug("Adding message: " + m.getName());
            Message a = inMessage.copyMessage(m, currentOutDoc);
            currentOutDoc.addMessage(a);
          }
@@ -83,7 +91,7 @@ public class VersionedNavajoMap extends NavajoMap {
      Navajo n = NavajoFactory.getInstance().createNavajo(new java.io.FileInputStream("/home/arjen/@@.tml"));
      n.write(System.err);
      ArrayList l = n.getAllMethods();
-     System.err.println("l = " + l.size());
+     logger.debug("l = " + l.size());
      System.exit(1);
   }
 }

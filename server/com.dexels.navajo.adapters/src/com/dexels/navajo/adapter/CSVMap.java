@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.adapter.csvmap.CSVEntryMap;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -49,10 +52,14 @@ public class CSVMap implements Mappable {
 	public String separator;
 	public int entryCount;
 	public boolean includeEmpty;
+	public boolean skipFirstRow;
+	public int maximumImportCount;
 
 	private boolean update = false;
 	private List<CSVEntryMap> draftEntries = null;
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(CSVMap.class);
+	
 	public void load(Access access) throws MappableException, UserException {
 
 	}
@@ -72,6 +79,15 @@ public class CSVMap implements Mappable {
 	public int getEntryCount() {
 		return entries.length;
 	}
+	
+	public int getEntryFieldCount() {
+	    int result = -1;
+	    if (entries != null && entries.length > 0) {
+	        CSVEntryMap e = entries[0];
+	        result = e.getEntrySize();
+	    }
+	    return result;
+	}
 
 	public CSVEntryMap[] getEntries() throws UserException {
 		try {
@@ -82,19 +98,30 @@ public class CSVMap implements Mappable {
 				f = new FileReader(fileName);
 			}
 
-			if (f != null) {
-				BufferedReader buffer = new BufferedReader(f);
-				String line = "";
-				List<CSVEntryMap> entryList = new ArrayList<CSVEntryMap>();
-				while ((line = buffer.readLine()) != null) {
-					if (includeEmpty) {
-						parseLineWithEmpty(line, entryList);
+			BufferedReader buffer = new BufferedReader(f);
+			String line = "";
+			int lineCount = 0;
+			List<CSVEntryMap> entryList = new ArrayList<CSVEntryMap>();
+			while ((line = buffer.readLine()) != null) {
+			    if (maximumImportCount == 0 || (lineCount <= maximumImportCount)) {
+					if (isSkipFirstRow() && lineCount == 0) {
+					    // First line will be skipped. Probably contains headers
 					} else {
-						parseLineDefault(line, entryList);
+    				    if (includeEmpty) {
+    						parseLineWithEmpty(line, entryList);
+    					} else {
+    						parseLineDefault(line, entryList);
+    					}
 					}
-				}
-				entries = new CSVEntryMap[entryList.size()];
-				entries = (CSVEntryMap[]) entryList.toArray(entries);
+			    }
+				lineCount++;
+			}
+//				entries = new CSVEntryMap[entryList.size()];
+//				entries = entryList.toArray(entries);
+			entries = new CSVEntryMap[entryList.size()];
+			int i = 0;
+			for (CSVEntryMap ce : entryList) {
+				entries[i++] = ce;
 			}
 		} catch (java.io.IOException ioe) {
 			throw new UserException(-1, ioe.getMessage());
@@ -142,7 +169,7 @@ public class CSVMap implements Mappable {
 		CSVEntryMap csvEntry = new CSVEntryMap();
 		csvEntry.entries = new String[currentLine.size()];
 		for (int i = 0; i < currentLine.size(); i++) {
-			csvEntry.entries[i] = (String) currentLine.get(i);
+			csvEntry.entries[i] = currentLine.get(i);
 		}
 		entryList.add(csvEntry);
 	}
@@ -162,18 +189,22 @@ public class CSVMap implements Mappable {
 		this.separator = sep;
 	}
 
-	public void setFileName(String s) throws UserException {
+	public void setFileName(String s)  {
 		this.fileName = s;
 	}
 
-	public void setFileContent(Binary b) throws UserException {
+	public void setFileContent(Binary b) {
 		this.fileContent = b;
 	}
 
 	public void store() throws MappableException, UserException {
 		if (draftEntries != null) {
 			entries = new CSVEntryMap[draftEntries.size()];
-			entries = (CSVEntryMap[]) draftEntries.toArray();
+			int i = 0;
+			for (CSVEntryMap ce : draftEntries) {
+				entries[i++] = ce;
+			}
+//			entries = (CSVEntryMap[]) draftEntries.toArray();
 		}
 		if (update) {
 			try {
@@ -181,7 +212,7 @@ public class CSVMap implements Mappable {
 				if (entries != null) {
 					FileWriter writer = new FileWriter(fileName);
 					for (int i = 0; i < entries.length; i++) {
-						CSVEntryMap e = (CSVEntryMap) entries[i];
+						CSVEntryMap e = entries[i];
 						for (int j = 0; j < e.entries.length; j++) {
 							writer.write(e.getEntry(new Integer(j)));
 							if (j < (e.entries.length - 1))
@@ -205,15 +236,26 @@ public class CSVMap implements Mappable {
 	public static void main(String[] args) throws Exception {
 		Mappable csv = new CSVMap();
 		((CSVMap) csv).setSeparator(";");
-		((CSVMap) csv).setIncludeEmpty(false);
+		((CSVMap) csv).setIncludeEmpty(true);
+		((CSVMap) csv).setSkipFirstRow(false);
 
-		Binary b = new Binary(new File("c:/csvtheanimals.csv"));
+		Binary b = new Binary(new File("C:/Temp/LedenLIJST-vertrouwelijktest.csv"));
 		((CSVMap) csv).setFileContent(b);
 		Mappable[] all = ((CSVMap) csv).getEntries();
 		for (int i = 0; i < all.length; i++) {
 			CSVEntryMap entryMap = ((CSVEntryMap) all[i]);
-			System.err.println("a = >" + entryMap.getEntry(new Integer(0)) + "< - >" + entryMap.getEntry(new Integer(1)) + "< - >"
-					+ entryMap.getEntry(new Integer(2))+"<");
+			logger.info("a = >" + entryMap.getEntry(new Integer(0)) + "< - >" + 
+			                             entryMap.getEntry(new Integer(1)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(2)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(3)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(4)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(5)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(6)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(7)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(8)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(9)) + "< - >" + 
+                                         entryMap.getEntry(new Integer(10)) + "< - >" + 
+			                             entryMap.getEntry(new Integer(11))+"<");
 		}
 	}
 
@@ -224,4 +266,20 @@ public class CSVMap implements Mappable {
 	public void setIncludeEmpty(boolean includeEmpty) {
 		this.includeEmpty = includeEmpty;
 	}
+
+    public boolean isSkipFirstRow() {
+        return skipFirstRow;
+    }
+
+    public void setSkipFirstRow(boolean skipFirstRow) {
+        this.skipFirstRow = skipFirstRow;
+    }
+
+    public int getMaximumImportCount() {
+        return maximumImportCount;
+    }
+
+    public void setMaximumImportCount(int maximumImportCount) {
+        this.maximumImportCount = maximumImportCount;
+    }
 }

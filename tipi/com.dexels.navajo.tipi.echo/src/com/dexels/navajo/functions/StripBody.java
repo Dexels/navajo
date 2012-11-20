@@ -4,11 +4,17 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 public class StripBody extends FunctionInterface {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(StripBody.class);
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() != 1) {
@@ -25,15 +31,15 @@ public class StripBody extends FunctionInterface {
 	public String stripBody(String s) {
 
 
-		System.err.println("Result: "+s);
+		logger.info("Result: "+s);
 
 		
 		s = bodyStrip(s);
 //		s = tidyString(s);
-		System.err.println("WARNING: Tidy disabled!");
+		logger.info("WARNING: Tidy disabled!");
 		s = bodyStrip(s);
 		
-		System.err.println("final Result: " + s);
+		logger.info("final Result: " + s);
 		return s;
 	}
 
@@ -59,7 +65,7 @@ public class StripBody extends FunctionInterface {
 //			s = new String(baos.toByteArray(),"UTF8");
 //		} catch (UnsupportedEncodingException e) {
 //			// TODO Auto-generated catch block
-//			e.printStackTrace();
+//			logger.error("Error: ",e);
 //		}
 //		return s;
 //	}
@@ -80,7 +86,7 @@ public class StripBody extends FunctionInterface {
 		ss = sp.stripBody(sb.toString());
 //		ss = sp.tidyString(ss);
 		ss = sp.stripBody(ss);
-		System.err.println("SS: "+ss);
+		logger.info("SS: "+ss);
 		fr.close();
 	}
 

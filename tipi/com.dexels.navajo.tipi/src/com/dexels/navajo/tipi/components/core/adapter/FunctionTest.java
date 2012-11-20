@@ -5,17 +5,9 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class FunctionTest {
 
-	public static void main(String[] arr) throws ClassNotFoundException,
-			InstantiationException, IllegalAccessException,
-			TMLExpressionException {
-		// System.err.println(":: "+randomColor());
-		// System.err.println(":: "+randomColor());
-		// System.err.println(":: "+randomColor(1));
-		// System.err.println(":: "+randomColor(2));
-		// System.err.println(":: "+randomColor(2));
+	public static void main(String[] arr)  {
 	}
 
-	@SuppressWarnings("unchecked")
 	private FunctionInterface instantiateFunction(String name)
 			throws TMLExpressionException {
 		Class<FunctionInterface> cc;

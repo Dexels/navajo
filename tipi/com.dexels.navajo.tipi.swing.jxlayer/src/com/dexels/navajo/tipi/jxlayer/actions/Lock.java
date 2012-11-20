@@ -8,6 +8,8 @@ import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.LayerUI;
 import org.jdesktop.jxlayer.plaf.effect.BufferedImageOpEffect;
 import org.jdesktop.jxlayer.plaf.ext.LockableUI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
@@ -21,7 +23,8 @@ import com.jhlabs.image.BlurFilter;
 public class Lock extends TipiAction {
 
 	private static final long serialVersionUID = 2449939873779364275L;
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(Lock.class);
 	@Override
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		SwingTipiContext stc = (SwingTipiContext)myContext;
@@ -37,7 +40,7 @@ public class Lock extends TipiAction {
 			throw new TipiException("Invalid tipi component for locking: "+getParameter("target"));
 		}
 		
-		System.err.println("Effect: "+effect+" value: "+value);
+		logger.info("Effect: "+effect+" value: "+value);
 		
 		stc.runSyncInEventThread(new Runnable(){
 
@@ -48,7 +51,7 @@ public class Lock extends TipiAction {
 				Container parent = jc.getParent();
 				// checked if this component has been locked before
 				if(parent instanceof JXLayer) {
-					System.err.println("Layer present");
+					logger.info("Layer present");
 					JXLayer<JComponent> jj = (JXLayer<JComponent>) parent;
 					LayerUI<JComponent> luj = null;
 					if(value) {
@@ -58,20 +61,20 @@ public class Lock extends TipiAction {
 						luj = jj.getUI();
 					}
 			        if(luj instanceof LockableUI) {
-			        	System.err.println("Lockable ui detected for: "+value);
+			        	logger.info("Lockable ui detected for: "+value);
 						LockableUI lu = (LockableUI)luj;
 						lu.setLocked(value);
 						jj.getParent().repaint();
 						jj.getParent().invalidate();
 						
 					} else {
-						System.err.println("No lockable ui detected. Odd."); 
+						logger.info("No lockable ui detected. Odd."); 
 					
 					}
 				} else {
 					if(!value) {
 						// request unlock, but never locked in the first place
-						System.err.println("ODD unlock");
+						logger.info("ODD unlock");
 						return;
 					}
 					// first time: insert layer between components
@@ -97,7 +100,7 @@ public class Lock extends TipiAction {
 			return new LockableUI(new BufferedImageOpEffect(new BlurFilter()));
 		}
 		if(effect.equals("busy")) {
-			System.err.println("Busy detected!");
+			logger.info("Busy detected!");
 			return new BusyPainterUI();
 		}
 		return getLockableUI("blur");

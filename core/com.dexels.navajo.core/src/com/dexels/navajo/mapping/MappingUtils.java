@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -37,9 +40,13 @@ import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"rawtypes", "unchecked"})
 public final class MappingUtils {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MappingUtils.class);
+	
     public static final String getStrippedPropertyName(String name) {
         StringTokenizer tok = new StringTokenizer(name, Navajo.MESSAGE_SEPARATOR);
         String result = "";
@@ -50,7 +57,7 @@ public final class MappingUtils {
         return result;
     }
 
-    public static final String determineNavajoType(Object o) throws TMLExpressionException {
+    public static final String determineNavajoType(Object o)  {
 
          if (o == null) {
            return "";
@@ -182,6 +189,11 @@ public final class MappingUtils {
     }
 
     if (array) {
+        if(newMsg==null) {
+        	logger.error("Null message in getMessageObject: parent null? (findbug based fix)");
+        	return null;
+        }
+
       newMsg.setType(Message.MSG_TYPE_ARRAY);
 
     }
@@ -309,11 +321,8 @@ public final class MappingUtils {
     }
     return prop;
   }
-   
-   public static final Message[] addMessage(Navajo doc, Message parent, String message,
-       String template, int count,
-       String type, String mode, String orderby) throws java.io.IOException, NavajoException,
-       org.xml.sax.SAXException, MappingException {
+
+	public static final Message[] addMessage(Navajo doc, Message parent, String message, String template, int count, String type, String mode, String orderby) throws NavajoException,MappingException {
 	 
 	 Message[] msgs = addMessage(doc, parent, message, template, count, type, mode);
 	 
@@ -329,6 +338,9 @@ public final class MappingUtils {
    public static final String getBaseMessageName(String name) {
 	   if ( name.startsWith("../") ) {
 		   return getBaseMessageName(name.substring(3));
+	   }
+	   if ( name.startsWith("/") ) {
+		   return name.substring(1);
 	   }
 	   return name;
    }
@@ -347,15 +359,18 @@ public final class MappingUtils {
 	   return parent;
    }
    
-   public static final Message[] addMessage(Navajo doc, Message parent, String message,
+   /**
+ * @param template  
+ */
+public static final Message[] addMessage(Navajo doc, Message parent, String message,
                                       String template, int count,
-                                      String type, String mode) throws java.io.IOException, NavajoException,
-                                      org.xml.sax.SAXException, MappingException {
+                                      String type, String mode) throws NavajoException,
+                                      MappingException {
 
 	/**
 	 * Added 22/5/2007: support for relative message creation.
 	 */
-    if ( message.indexOf(Navajo.MESSAGE_SEPARATOR) != -1 && parent == null ) {
+    if ( !message.startsWith("/") && message.indexOf(Navajo.MESSAGE_SEPARATOR) != -1 && parent == null ) {
       throw new MappingException(
           "No submessage constructs allowed in non-nested <message> tags: " + message);
     }
@@ -370,12 +385,12 @@ public final class MappingUtils {
     /**
      * Get the real parent message given the fact that message could contain a relative name.
      */
-    parent = getParentMessage(parent, message);
+    parent = ( message.startsWith("/") ? null : getParentMessage(parent, message) );
     
     if (parent != null) {
       existing = parent.getMessage(getBaseMessageName(message));
     } else {
-      existing = doc.getMessage(message);
+      existing = doc.getMessage(getBaseMessageName(message));
     }
 
     // If existing message is array message, respect this and make
@@ -494,7 +509,7 @@ public final class MappingUtils {
   
 public static final ArrayList getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o, 
   		Message currentParamMsg) throws
-      NavajoException, SystemException, MappingException, TMLExpressionException {
+      NavajoException, SystemException, TMLExpressionException {
     //try {
       ArrayList result = new ArrayList();
 
@@ -570,7 +585,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
   
   
   public static final void callStoreMethod(Object o) throws MappableException,
-  MappingException, UserException {
+  UserException {
 	  if (o == null || !(o instanceof Mappable)) {
 		  return;
 	  }
@@ -579,8 +594,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 	  }
   }
   
-  public static final void callKillMethod(Object o) throws MappableException,
-  MappingException, UserException {
+  public static final void callKillMethod(Object o)  {
 
 	  if (o == null || !(o instanceof Mappable)) {
 		  return;
@@ -777,78 +791,36 @@ public static final boolean isObjectMappable(String className) throws UserExcept
    * public void setNoot(double d);
    */
   public final static Object getAttributeValue(MappableTreeNode o, String name, Object[] arguments) throws com.dexels.
-      navajo.server.UserException,
-      MappingException {
+  navajo.server.UserException,
+  MappingException {
 
-    Object result = null;
-    // The ../ token is used to denote the parent of the current MappableTreeNode.
-    // e.g., $../myField or $../../myField is used to identifiy respectively the parent
-    // and the grandparent of the current MappableTreeNode.
+	  Object result = null;
+	  // The ../ token is used to denote the parent of the current MappableTreeNode.
+	  // e.g., $../myField or $../../myField is used to identifiy respectively the parent
+	  // and the grandparent of the current MappableTreeNode.
 
-    
-    while ( (name.indexOf("../")) != -1) {
-      o = o.parent;
-      if (o == null) {
-        throw new MappingException("Null parent object encountered: " + name);
-      }
-      name = name.substring(3, name.length());
-    }
 
-    result = getAttributeObject(o, name, arguments);
+	  while ( (name.indexOf("../")) != -1) {
+		  o = o.parent;
+		  if (o == null) {
+			  throw new MappingException("Null parent object encountered: " + name);
+		  }
+		  name = name.substring(3, name.length());
+	  }
 
-    if (result != null) {
+	  result = getAttributeObject(o, name, arguments);
 
-      //String type = result.getClass().getName();
-
-      if (result instanceof java.lang.String) {
-        return result;
-      } else
-      if (result instanceof java.lang.Long) {
-        return new Integer(result.toString());
-      }
-      else if (result instanceof java.lang.Float) {
-        return new Double(result.toString());
-      }
-      else if (result instanceof java.lang.Boolean) {
-        return result;
-      }
-      else if (result instanceof com.dexels.navajo.document.types.Binary) {
-        return result;
-      }
-      else if (result instanceof com.dexels.navajo.document.types.ClockTime) {
-        return result;
-      }
-      else if (result instanceof com.dexels.navajo.document.types.Money) {
-        return result;
-      }
-      else if (result instanceof java.util.Date) {
-        return result;
-      }
-      else if (result instanceof java.lang.Integer) {
-        return result;
-      }
-      else if (result instanceof java.lang.Double) {
-        return result;
-      }
-      else if (result.getClass().getName().startsWith("[Ljava.util.Vector")) {
-        return result;
-      }
-      else if (result.getClass().getName().startsWith("[L")) {
-        // Encountered array cast to ArrayList.
-        Object[] array = (Object[]) result;
-        ArrayList list = new ArrayList();
-        for (int i = 0; i < array.length; i++) {
-          list.add(array[i]);
-        }
-        return list;
-      }
-      else {
-        return result.toString();
-      }
-    }
-    else {
-      return null;
-    }
+	  if ( result != null && result.getClass().isArray() ) {
+		  // Encountered array cast to ArrayList.
+		  Object[] array = (Object[]) result;
+		  ArrayList list = new ArrayList();
+		  for (int i = 0; i < array.length; i++) {
+			  list.add(array[i]);
+		  }
+		  return list;
+	  } else {
+		  return result;
+	  }
   }
   
   public static void main(String [] args) throws Exception {

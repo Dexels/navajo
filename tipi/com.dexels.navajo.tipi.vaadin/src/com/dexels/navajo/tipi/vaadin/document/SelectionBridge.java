@@ -18,7 +18,7 @@ public class SelectionBridge implements Item {
 	private final ObjectProperty<String> value;
 	private final ObjectProperty<Boolean> isSelected;
 	
-	public SelectionBridge(com.dexels.navajo.document.Property parent, Selection src) {
+	public SelectionBridge(Selection src) {
 		this.src = src;
 //		this.parent = parent;
 		name = new ObjectProperty<String>(src.getName(),String.class,true);

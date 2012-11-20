@@ -9,9 +9,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public abstract class BaseDeploymentBuilder {
 	protected final VersionResolver myVersionResolver = new VersionResolver();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseDeploymentBuilder.class);
+	
 	public abstract String build(String repository, String developmentRepository, String extensions, Map<String,String> tipiProperties, String deployment, File baseDir, String codebase, List<String> profiles, boolean useVersioning) throws IOException;
 
 	
@@ -37,7 +43,7 @@ public abstract class BaseDeploymentBuilder {
 			if(path.exists()) {
 				fr = new FileInputStream(path);
 				p = new PropertyResourceBundle(fr);
-				System.err.println("Appending profile: "+profile);
+				logger.info("Appending profile: "+profile);
 				fr.close();
 				eb = p.getKeys();
 				while (eb.hasMoreElements()) {
@@ -46,13 +52,13 @@ public abstract class BaseDeploymentBuilder {
 				}
 			}
 		}
-		System.err.println("params: " + params);
+		logger.info("params: " + params);
 		if(deployment==null) {
-			System.err.println("No deployment supplied, so not postprocessing");
+			logger.info("No deployment supplied, so not postprocessing");
 			return params;
 		}
-		System.err.println("Processing: "+params);
-		System.err.println("Ok, now gonna post process the params!");
+		logger.info("Processing: "+params);
+		logger.info("Ok, now gonna post process the params!");
 		Map<String,String> result = new HashMap<String, String>();
 		for (Map.Entry<String, String> element : params.entrySet()) {
 			if(element.getKey().indexOf("/")==-1) {
@@ -64,13 +70,13 @@ public abstract class BaseDeploymentBuilder {
 				throw new IllegalArgumentException("Strange key in args: "+element.getKey()+" with value: "+element.getValue());
 			}
 			if(elts[0].equals(deployment)) {
-				System.err.println("Adding: "+elts[1]+" "+ element.getValue());
+				logger.info("Adding: "+elts[1]+" "+ element.getValue());
 				result.put(elts[1], element.getValue());
 			} else {
 				// ignore this setting, it's for another deployment
 			}
 		}
-		System.err.println("Result: "+result);
+		logger.info("Result: "+result);
 		return result;
 	}
 }

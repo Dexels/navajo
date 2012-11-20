@@ -49,10 +49,4 @@ public class AttributeRefParser extends BaseTipiParser {
 		return null;
 	}
 
-	public String toString(Object o, TipiComponent source) {
-		AttributeRef ar = (AttributeRef) o;
-		TipiComponent tc = ar.getTipiComponent();
-		return tc.getPath() + ":" + ar.getName();
-	}
-
 }

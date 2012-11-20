@@ -10,6 +10,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.swingclient.UserInterface;
 
 /**
@@ -33,6 +36,10 @@ import com.dexels.navajo.tipi.swingclient.UserInterface;
 
 public class IconButtonPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(IconButtonPanel.class);
+	
 	// ResourceBundle res;
 	JButton newButton = new JButton();
 	JButton saveButton = new JButton();
@@ -53,7 +60,7 @@ public class IconButtonPanel extends JPanel {
 		try {
 			jbInit();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 		setAllVisible(false);
 	}

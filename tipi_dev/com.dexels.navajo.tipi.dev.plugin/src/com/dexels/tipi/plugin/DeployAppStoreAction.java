@@ -15,29 +15,19 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.ant.AntRun;
 
 public class DeployAppStoreAction implements IObjectActionDelegate {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(DeployAppStoreAction.class);
+	
 	private ISelection selection;
 
-//	private Combo templateCombo = null;
-//	private String selectedTemplate = null;
-//	private boolean includeJarsSelected;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-	 */
-	
-//	  <property name="tipiServerUrl" value="http://localhost:8080/TipiServer/TipiAdminServlet"/>
-//	  <property name="tipiServerUsername" value="ad"/>
-//	  <property name="tipiServerPassword" value="pw"/>
-//	  <property name="tipiServerApplication" value="${ant.project.name}"/>
-
-	@SuppressWarnings("unchecked")
 	public void run(IAction action) {
 		try {
 		if (selection instanceof IStructuredSelection) {
@@ -49,6 +39,9 @@ public class DeployAppStoreAction implements IObjectActionDelegate {
 				} else if (element instanceof IAdaptable) {
 					project = (IProject) ((IAdaptable) element).getAdapter(IProject.class);
 				}
+				if(project==null) {
+					return;
+				}
 				final IProject rProject = project;
 				
 				Map<String, String> preferenceSettings = getPreferenceSettings();
@@ -56,11 +49,11 @@ public class DeployAppStoreAction implements IObjectActionDelegate {
 				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Deploying", "Server: "+preferenceSettings.get("tipiServerUrl")+" app: "+preferenceSettings.get("tipiServerApplication"));
 				InputStream antStream = getClass().getClassLoader().getResourceAsStream("com/dexels/tipi/plugin/tipiProjectBuild.xml");
 				String result = AntRun.callAnt(antStream, rProject.getLocation().toFile(), preferenceSettings);
-				System.err.println("Result: "+result);
+				logger.info("Result: "+result);
 			}
 		}
 		}catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

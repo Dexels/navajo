@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="com.dexels.navajo.compiler.tsl">
+   <implementation class="com.dexels.navajo.compiler.tsl.internal.TslCompilerComponent"/>
+   <service>
+      <provide interface="com.dexels.navajo.compiler.ScriptCompiler"/>
+   </service>
+   <reference bind="setIOConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoIOConfig" name="NavajoIOConfig" policy="dynamic" unbind="clearIOConfig"/>
+   <reference bind="setClassLoader" cardinality="1..1" interface="java.lang.ClassLoader" name="ClassLoader" policy="dynamic" target="(type=navajoScriptClassLoader)" unbind="clearClassLoader"/>
+   <reference bind="setExpressionEvaluator" cardinality="1..1" interface="com.dexels.navajo.document.ExpressionEvaluator" name="ExpressionEvaluator" policy="static" unbind="clearExpressionEvaluator"/>
+</scr:component>

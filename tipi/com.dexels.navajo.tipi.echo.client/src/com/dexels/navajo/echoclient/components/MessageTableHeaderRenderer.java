@@ -28,6 +28,9 @@
  */
 package com.dexels.navajo.echoclient.components;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Button;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
@@ -48,11 +51,10 @@ import echopointng.table.SortableTableModel;
  */
 public class MessageTableHeaderRenderer implements TableCellRenderer {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8746797472974170209L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(MessageTableHeaderRenderer.class);
 	private static final ImageReference upArrowImage = new ResourceImageReference(
 			"/echopointng/resource/images/ArrowUp.gif");
 
@@ -143,7 +145,7 @@ public class MessageTableHeaderRenderer implements TableCellRenderer {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.err.println("Boioioioin!");
+				logger.info("Boioioioin!");
 				int currentSort = model.getCurrentSortColumn();
 				int ascending = SortableTableModel.ASCENDING;
 				if (currentSort >= 0) {

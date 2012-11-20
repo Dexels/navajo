@@ -2,6 +2,9 @@ package com.dexels.navajo.tipi.components.swingimpl.parsers;
 
 import java.awt.Color;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -24,13 +27,12 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class PaintParser extends TipiTypeParser {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 3869299878939316108L;
 	private String GRADIENT = "gradient";
 	private ColorParser cp = new ColorParser();
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(PaintParser.class);
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return parsePaint(expression);
 	}
@@ -48,8 +50,7 @@ public class PaintParser extends TipiTypeParser {
 				Color c2 = (Color) cp.parse(null, colorTwo, null);
 				p = new TipiGradientPaint(direction, c1, c2);
 			} catch (Exception e) {
-				System.err
-						.println("Could not construct Paint object. returning Color.gray");
+				logger.warn("Could not construct Paint object. returning Color.gray");
 				return p;
 			}
 		}
@@ -57,7 +58,7 @@ public class PaintParser extends TipiTypeParser {
 	}
 
 	public static TipiGradientPaint parse(String s) {
-		System.err.println("PARSEDPAINT!!!!!: " + s);
+		logger.debug("PARSEDPAINT!!!!!: " + s);
 		return new PaintParser().parsePaint(s);
 	}
 }

@@ -36,7 +36,6 @@ public class InsertDocumentServlet extends HttpServlet {
 		pw.close();
 	}
 
-	@SuppressWarnings("unchecked")
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 //		PrintWriter pw = new PrintWriter(response.getWriter());

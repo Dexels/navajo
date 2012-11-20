@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.script.api.AsyncRequest;
 
 public abstract class BaseInMemoryRequest implements AsyncRequest {
@@ -18,8 +15,6 @@ public abstract class BaseInMemoryRequest implements AsyncRequest {
 	private int readCount = 0;
 	private int contentLength;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(BaseInMemoryRequest.class);
 	// private File tempFile;
 
 	protected BaseInMemoryRequest() {
@@ -31,7 +26,7 @@ public abstract class BaseInMemoryRequest implements AsyncRequest {
 	}
 
 
-	protected OutputStream getRequestOutputStream() throws IOException {
+	protected OutputStream getRequestOutputStream()  {
 		return os;
 	}
 
@@ -41,7 +36,6 @@ public abstract class BaseInMemoryRequest implements AsyncRequest {
 		getRequestOutputStream().close();
 		// FileInputStream fis = new FileInputStream(tempFile);
 		byte[] byteArray = os.toByteArray();
-		logger.info("Bytes read: "+byteArray.length);
 		return new ByteArrayInputStream(byteArray);
 	}
 

@@ -1,12 +1,5 @@
 package com.dexels.navajo.server;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.LockManager;
@@ -15,17 +8,15 @@ import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
+import com.dexels.navajo.server.monitoring.ServiceMonitor;
 
-public interface NavajoConfigInterface {
+public interface NavajoConfigInterface extends NavajoIOConfig, ServiceMonitor {
+
+	public static final int MAX_ACCESS_SET_SIZE = 50;
 
 	// Read/write configuration.
-	public Navajo readConfig(String s) throws IOException;
-	public void writeConfig(String name, Navajo conf) throws IOException;
-	public String getConfigPath();
-	public String getRootPath();
-   public InputStream getResourceBundle(String name) throws IOException;
 
-	// Indentity methods.
+	// Identity methods.
 	public String getInstanceName();
 	public String getInstanceGroup();
 	
@@ -45,36 +36,27 @@ public interface NavajoConfigInterface {
 	// Statistics.
 	public double getCurrentCPUload();
 	
-	public boolean needsFullAccessLog(Access a);
-	public InputStream getScript(String name) throws IOException;
-	public InputStream getConfig(String name) throws IOException;
 	 
 	// Webservice, user monitoring options
-	public void setMonitorOn(boolean b);
-	public boolean isMonitorOn();
-	public int getMonitorExceedTotaltime();
-	public String getMonitorUsers();
-	public String getMonitorWebservices();
-	public void setMonitorWebservices(String monitorWebservices);
-	public void setMonitorUsers(String monitorUsers);
-	public void setMonitorExceedTotaltime(int monitorExceedTotaltime);
+//	public boolean needsFullAccessLog(Access a);
+//	public void setMonitorOn(boolean b);
+//	public boolean isMonitorOn();
+//	public int getMonitorExceedTotaltime();
+//	public String getMonitorUsers();
+//	public String getMonitorWebservices();
+//	public void setMonitorWebservices(String monitorWebservices);
+//	public void setMonitorUsers(String monitorUsers);
+//	public void setMonitorExceedTotaltime(int monitorExceedTotaltime);
+//	
 	
-	
-   public File getContextRoot();
    
 	// Setters/getters.
 	public void setStatisticsRunnerEnabled(boolean b);
-	public String getAdapterPath();
-	public String getClassPath();
-	public File getJarFolder();
-	public String getScriptPath();
-	public String getResourcePath();
-	public HashMap<String,String> getProperties();
+
+//	public HashMap<String,String> getProperties();
 	public String getBetaUser();
-	public String getCompiledScriptPath();
 	public int getMaxAccessSetSize();
 	public float getAsyncTimeout();
-	public String getDbPath();
 	public void doClearCache();
 	public void doClearScriptCache();
 	public String getCompilationLanguage();
@@ -82,13 +64,23 @@ public interface NavajoConfigInterface {
 	public boolean isAsyncEnabled();
 	public boolean isIntegrityWorkerEnabled();
 	public boolean isLockManagerEnabled();
+
+	/**
+	 * This one consults the configuration
+	 * @return
+	 */
 	public boolean isEnableStatisticsRunner();
+	/**
+	 * This one asks the statisticsrunner
+	 * @return
+	 */
 	public boolean isStatisticsRunnerEnabled();
 	public boolean isCompileScripts();
 	
 	// Start modules.
-	public Message getMessage(String msg);
+//	public Message getMessage(String msg);
 	public void startTaskRunner();
 	public void startStatisticsRunner();
+	public Object getParameter(String string);
 	
 }

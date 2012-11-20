@@ -30,6 +30,9 @@ import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.dnd.BinaryTransferHandler;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
@@ -38,6 +41,10 @@ public class BinaryEditor extends JPanel implements PropertyControlled,
 		PropertyChangeListener, ActionListener {
 
 	private static final long serialVersionUID = -2197427078497022344L;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BinaryEditor.class);
+	
 	private Property myProperty = null;
 	private JLabel myBinaryLabel = new JLabel();
 
@@ -99,10 +106,10 @@ public class BinaryEditor extends JPanel implements PropertyControlled,
 
 			public void actionPerformed(ActionEvent e) {
 				if (myProperty != null) {
-					System.err.println("Clearing property!");
+					logger.info("Clearing property!");
 					myProperty.setAnyValue((Binary) null);
 				} else {
-					System.err.println("No property set!");
+					logger.info("No property set!");
 					setBinary(null);
 
 				}
@@ -158,9 +165,9 @@ public class BinaryEditor extends JPanel implements PropertyControlled,
 
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 
@@ -180,7 +187,7 @@ public class BinaryEditor extends JPanel implements PropertyControlled,
 
 	public static BufferedImage scale(int width, int height,
 			boolean keepAspect, BufferedImage original) {
-		System.err.println("width: " + width + " height: " + height);
+		logger.info("width: " + width + " height: " + height);
 		int originalWidth = original.getWidth();
 		int originalHeight = original.getHeight();
 		if (width > originalWidth) {
@@ -223,15 +230,15 @@ public class BinaryEditor extends JPanel implements PropertyControlled,
 	}
 
 	public void propertyChange(PropertyChangeEvent e) {
-		// System.err.println("Property change detected: "+e.getPropertyName()+" old: "+e.getOldValue()+" new: "+e.getNewValue());
+		// logger.info("Property change detected: "+e.getPropertyName()+" old: "+e.getOldValue()+" new: "+e.getNewValue());
 		if ("value".equals(e.getPropertyName())) {
 			// Binary old = (Binary) e.getOldValue();
 			Binary newValue = (Binary) e.getNewValue();
 			// if (old != null && newValue != null) {
-			// System.err.println("Old size: " + old.getLength() + " new size: "
+			// logger.info("Old size: " + old.getLength() + " new size: "
 			// + newValue.getLength());
 			// } else {
-			// System.err.println("Null detected!");
+			// logger.info("Null detected!");
 			// }
 			setBinary(newValue);
 		}
@@ -315,7 +322,7 @@ public class BinaryEditor extends JPanel implements PropertyControlled,
 				myBinaryLabel.setIcon(getScaled(mm, maxImgWidth, maxImgHeight));
 				invalidate();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Error: ",e);
 			}
 			revalidate();
 			return;

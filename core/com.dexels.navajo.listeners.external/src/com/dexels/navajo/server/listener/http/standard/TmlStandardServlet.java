@@ -9,10 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.LocalClient;
-import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.listener.http.impl.BaseRequestImpl;
-
+/**
+ * Warning, doesn't work any more, as the TmlScheduler will never be set, continuations and TmlListener classic do work
+ * @author frank
+ *
+ */
 public class TmlStandardServlet extends HttpServlet {
 
 	/**
@@ -40,13 +43,8 @@ public class TmlStandardServlet extends HttpServlet {
 				.getAttribute("javax.servlet.request.X509Certificate");
 		String recvEncoding = req.getHeader("Content-Encoding");
 		String sendEncoding = req.getHeader("Accept-Encoding");
-		AsyncRequest request = new BaseRequestImpl(lc,req, resp, sendEncoding, recvEncoding, certObject) {
-
-			@Override
-			public TmlRunnable instantiateRunnable() {
-				return new TmlStandardRunner(this,lc);
-			}};
-
+		AsyncRequest request = new BaseRequestImpl(lc,req, resp, sendEncoding, recvEncoding, certObject);
+		
 //		Navajo inputDoc = NavajoFactory.getInstance().createNavajo(req.getInputStream());
 //		req.getInputStream().close();
 
@@ -57,7 +55,10 @@ public class TmlStandardServlet extends HttpServlet {
 			resp.getOutputStream().close();
 			return;
 		}
-		getTmlScheduler().run(request.instantiateRunnable());
+		TmlStandardRunner tr = new TmlStandardRunner(request, lc);
+		getTmlScheduler().run(tr);
+		// TODO broken? fix
+//		getTmlScheduler().run(request.instantiateRunnable());
 	}
 
 	public TmlScheduler getTmlScheduler() {

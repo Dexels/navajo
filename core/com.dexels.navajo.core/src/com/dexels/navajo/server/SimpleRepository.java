@@ -41,13 +41,15 @@ public class SimpleRepository implements Repository, GlobalManager {
 	}
 	
 	public void activate() {
-		logger.info("Activating SimpleRepository");
 	}
 
 	public void setNavajoConfig(NavajoConfigInterface config) {
 		this.config = config;
 	}
 
+	/**
+	 * @param config the config to remove 
+	 */
 	public void clearNavajoConfig(NavajoConfigInterface config) {
 		this.config = null;
 	}
@@ -67,9 +69,9 @@ public class SimpleRepository implements Repository, GlobalManager {
 		try {
 			initGlobals(service, username, inMessage, null);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
-		return new Access(1, 1, 1, username, service, "", "", "", certificate);
+		return new Access( 1, 1, username, service, "", "", "", certificate);
 	}
 
 	/**
@@ -100,7 +102,7 @@ public class SimpleRepository implements Repository, GlobalManager {
 
 			} catch (IOException e1) {
 				logger.debug("Still can not open resource bundle. Also no big deal, I guess");
-				e1.printStackTrace();
+				logger.error("Error: ", e1);
 			} finally {
 				if ( stream != null ) {
 					try {

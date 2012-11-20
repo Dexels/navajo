@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.ContentPane;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.SplitPane;
@@ -32,28 +35,13 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author Frank Lyaruu
- * @version 1.0
- */
-
 public class TipiTable extends TipiEchoDataComponentImpl {
 
 	private static final long serialVersionUID = -4234956709132417887L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTable.class);
+	
 	private String messagePath = "";
 
 	private boolean colDefs = false;
@@ -119,7 +107,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 				try {
 					performTipiEvent(eventType, event, true);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 
 			}
@@ -136,7 +124,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 				}
 				boolean b = newPage > currentTableIndex;
 
-				System.err.println("Swtitching");
+				logger.info("Swtitching");
 				myTransitionPane.setType(!b ? TransitionPane.TYPE_CAMERA_PAN_LEFT : TransitionPane.TYPE_CAMERA_PAN_RIGHT);
 				myTransitionPane.removeAll();
 				ContentPane cp = new ContentPane();
@@ -206,7 +194,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 	protected void setComponentValue(String name, Object object) {
 		super.setComponentValue(name, object);
 		if(name.equals("rowsPerPage")) {
-			System.err.println("Wonka:"+object);
+			logger.info("Wonka:"+object);
 //			pageNavigator.set
 		}
 		if(name.equals("headervisible")) {
@@ -227,14 +215,14 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 				try {
 					TipiTable.super.load(elm, instance, context);
 				} catch (TipiException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 				MessageTable mm = (MessageTable) getActualComponent();
 
 				boolean editableColumnsFound = false;
 
 				String rowsPerPage = (String) elm.getAttribute("rowsPerPage");
-				System.err.println("Rows per page: "+rowsPerPage);
+				logger.info("Rows per page: "+rowsPerPage);
 				if (rowsPerPage != null) {
 					int rpp = Integer.parseInt(rowsPerPage);
 					MessageTable xmm = (MessageTable) getActualComponent();
@@ -341,7 +329,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 					b = getTableReport("pdf", "horizontal", new int[] { 10, 10, 10, 10 });
 					printTable(b);
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ",e);
 				}
 			}
 		}
@@ -353,7 +341,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 			param.put("report", b);
 			performTipiEvent("onReport", param, false);
 		} catch (TipiException e) {
-			e.printStackTrace();
+			logger.error("Error: ",e);
 		}
 	}
 

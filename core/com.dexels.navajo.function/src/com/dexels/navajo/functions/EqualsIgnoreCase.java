@@ -35,6 +35,6 @@ public final class EqualsIgnoreCase  extends FunctionInterface {
         String a = (String) operands.get(0);
         String b = (String) operands.get(1);
 
-        return new Boolean(a.equalsIgnoreCase(b));
+        return (a.equalsIgnoreCase(b));
     }
 }

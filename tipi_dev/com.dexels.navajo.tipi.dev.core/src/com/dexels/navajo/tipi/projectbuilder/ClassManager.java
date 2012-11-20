@@ -35,7 +35,7 @@ public final class ClassManager {
 			result = classDef;
 		} else {
 			interfaces.add(classDef);
-			result = assembleClassDefs(interfaces,name);
+			result = assembleClassDefs(interfaces);
 		}
 		return result;
 	}
@@ -83,10 +83,10 @@ public final class ClassManager {
 //		try {
 //			cc = Class.forName(fullDef, true, myContext.getClassLoader());
 //		} catch (ClassNotFoundException ex) {
-//			System.err.println("Error loading class: " + fullDef);
+//			logger.info("Error loading class: " + fullDef);
 //			ex.printStackTrace();
 //		} catch (SecurityException ex) {
-//			System.err.println("Security Error loading class: " + fullDef);
+//			logger.info("Security Error loading class: " + fullDef);
 //			ex.printStackTrace();
 //
 //		}
@@ -111,14 +111,14 @@ public final class ClassManager {
 		return null;
 	}
 	
-	private XMLElement assembleClassDefs(List<XMLElement> interfaces,String name) {
+	private XMLElement assembleClassDefs(List<XMLElement> interfaces) {
 		assert (interfaces!=null);
 		assert (interfaces.size()>0);
 		if(interfaces.size()==1) {
 			// maybe copy?
 			return interfaces.get(0);
 		}
-		ClassModel cl = new ClassModel(name);
+		ClassModel cl = new ClassModel();
 		for (XMLElement element : interfaces) {
 			cl.addDefinition(element);
 		}

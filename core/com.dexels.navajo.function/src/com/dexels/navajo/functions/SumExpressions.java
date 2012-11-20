@@ -78,7 +78,7 @@ public class SumExpressions extends FunctionInterface {
 		      String sumType = "int";
 		      double sum = 0;
 		      for (int i = 0; i < arrayMsg.size(); i++) {
-		        Message m = (Message) arrayMsg.get(i);
+		        Message m = arrayMsg.get(i);
 		      
 		        boolean evaluate = (filter != null ?
 		                            Condition.evaluate(filter, doc, null, m) : true);

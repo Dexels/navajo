@@ -223,15 +223,13 @@ public final class Access implements java.io.Serializable, Mappable {
 			this.mergedDoc = mergedDoc;
 		} else {
 			try {
-				if ( mergedDoc != null ) {
-					if ( append ) {
-						this.mergedDoc.appendDocBuffer(mergedDoc);
-					} else {
-						this.mergedDoc.merge(mergedDoc);
-					}
-				} 
+				if ( append ) {
+					this.mergedDoc.appendDocBuffer(mergedDoc);
+				} else {
+					this.mergedDoc.merge(mergedDoc);
+				}
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 	}
@@ -264,7 +262,7 @@ public final class Access implements java.io.Serializable, Mappable {
 				}
 				outputDoc = this.mergedDoc;
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		} else {
 			outputDoc = n;
@@ -337,6 +335,9 @@ public final class Access implements java.io.Serializable, Mappable {
 		}
 	}
 	
+	/**
+	 * @param accessID  
+	 */
 	public Access(int accessID, int userID, int serviceID, String rpcUser,
 			String rpcName, String userAgent, String ipAddress,
 			String hostName,
@@ -367,6 +368,11 @@ public final class Access implements java.io.Serializable, Mappable {
 		this(0, userID, serviceID, rpcUser, rpcName, userAgent, ipAddress, hostName, certificate);
 	}
 	
+	/**
+	 * Nobody cares about any supplied access ids, so better not to supply them
+	 */
+	
+	@Deprecated
 	public Access(int accessID, int userID, int serviceID, String rpcUser,
 			String rpcName, String userAgent, String ipAddress,
 			String hostName, Object certificate) {

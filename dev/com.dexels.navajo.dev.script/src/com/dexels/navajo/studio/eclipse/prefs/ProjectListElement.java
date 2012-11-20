@@ -33,7 +33,7 @@ public class ProjectListElement {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         IProject[] projects = root.getProjects();
 
-        List selectedProjects = new ArrayList();
+        List<ProjectListElement> selectedProjects = new ArrayList<ProjectListElement>();
         for (int i = 0; i < projects.length; i++) {
             if (projectIdList.contains(getID(projects[i]))) {
                 selectedProjects.add(new ProjectListElement(projects[i]));
