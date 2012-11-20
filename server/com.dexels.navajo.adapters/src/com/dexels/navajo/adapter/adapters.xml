@@ -355,12 +355,11 @@
 				direction="in" />
 			<value name="parameter" type="any" required="false" direction="in"
 				cardinality="+" />
-			<value name="resultSet" map="resultrow []" required="false"
-				direction="out" />
+			<value name="resultSet" map="resultrow []" required="false" direction="out" />
 		</values>
 		<methods>
 			<method name="addParameter">
-				<param name="value" field="parameter" type="any" required="false" />
+				<param name="value" field="parameter" type="any" required="true" />
 			</method>
 			<method name="doUpdate">
 				<param name="value" field="doUpdate" type="boolean" required="automatic"
