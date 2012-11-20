@@ -52,11 +52,17 @@ public class InsertDocumentServlet extends HttpServlet {
 					author = "unknown";
 				}
 				
+				String lucene = request.getParameter("lucene");
+				boolean useLucene = true;
+				if(lucene != null && "false".equals(lucene)){
+					useLucene = false;
+				}
+				
 				Iterator<FileItem> iter = items.iterator();
 				while (iter.hasNext()) {
 				    FileItem item = iter.next();				
 				    if(!item.isFormField()){
-				    	processFile(author, item);
+				    	processFile(author, item, useLucene);
 				    }				   
 				}
 				response.setStatus(HttpServletResponse.SC_OK);
@@ -77,7 +83,7 @@ public class InsertDocumentServlet extends HttpServlet {
 //		pw.close();
 	}
 	
-	private final void processFile(String author, FileItem item){
+	private final void processFile(String author, FileItem item, boolean useLucene){
 		try{
 			String server = this.getServletContext().getInitParameter("NavajoServer");
 			String user = this.getServletContext().getInitParameter("NavajoUser");
@@ -91,15 +97,27 @@ public class InsertDocumentServlet extends HttpServlet {
 		    InputStream is = item.getInputStream();
 		    Binary b = new Binary(is);	    
 		    
-		    Navajo ins = NavajoClientFactory.getClient().doSimpleSend("lucene/InitInsertDocument");
-		    Message insert = ins.getMessage("DocumentData");
-		    insert.getProperty("AuthorName").setValue(author);
-
-		    insert.getProperty("Name").setValue(fileName);
-		    insert.getProperty("Data").setValue(b);
-		    
-		    NavajoClientFactory.getClient().doSimpleSend(ins, "lucene/ProcessInsertDocument");
-		    
+		    if(useLucene){
+			    Navajo ins = NavajoClientFactory.getClient().doSimpleSend("lucene/InitInsertDocument");
+			    Message insert = ins.getMessage("DocumentData");
+			    insert.getProperty("AuthorName").setValue(author);
+	
+			    insert.getProperty("Name").setValue(fileName);
+			    insert.getProperty("Data").setValue(b);
+			    
+			    NavajoClientFactory.getClient().doSimpleSend(ins, "lucene/ProcessInsertDocument");
+		    } else {
+		    	Navajo ins = NavajoClientFactory.getClient().doSimpleSend("documents/InitInsertDocument");
+			    Message insert = ins.getMessage("NewDocument");
+			    
+			    insert.getProperty("ObjectId").setValue(author);
+			    insert.getProperty("ObjectType").setValue("DOCUMENT");
+			    insert.getProperty("Name").setValue(fileName);
+			    insert.getProperty("Data").setValue(b);
+			    
+			    NavajoClientFactory.getClient().doSimpleSend(ins, "documents/ProcessInsertDocument");
+			    
+		    }
 		   
 		}catch(Exception e){
 			e.printStackTrace();
