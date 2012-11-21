@@ -11,14 +11,12 @@ import org.apache.camel.impl.DefaultEndpoint;
 public class CamelEndpoint extends DefaultEndpoint {
 
     public CamelEndpoint() {
+    	System.err.println("Endpoint created");
     }
 
     public CamelEndpoint(String uri, CamelComponent component) {
         super(uri, component);
-    }
-
-    public CamelEndpoint(String endpointUri) {
-        super(endpointUri);
+    	System.err.println("Endpoint created with URI: "+uri);
     }
 
     public Producer createProducer() throws Exception {

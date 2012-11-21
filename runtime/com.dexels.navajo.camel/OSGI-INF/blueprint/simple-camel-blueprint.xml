@@ -4,10 +4,8 @@
 	<camelContext xmlns="http://camel.apache.org/schema/blueprint"
 		id="simple">
 		<route>
-			<from uri="timer:simple?period=5000" />
-			<setBody>
-				<simple>Hello World</simple>
-			</setBody>
+			<from uri="timer:simple?period=20000" />
+			<to uri="navajo:call?service=InitClub&amp;username=ROOT&amp;password=ROOT" />
 			<to uri="log:aaaap" />
 		</route>
 

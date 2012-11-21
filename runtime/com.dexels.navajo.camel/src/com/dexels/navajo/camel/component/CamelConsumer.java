@@ -2,38 +2,34 @@ package com.dexels.navajo.camel.component;
 
 import java.util.Date;
 
+import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.camel.impl.DefaultConsumer;
 import org.apache.camel.impl.ScheduledPollConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The com.dexels.navajo.camel.component consumer.
  */
-public class CamelConsumer extends ScheduledPollConsumer {
+public class CamelConsumer extends DefaultConsumer implements Consumer {
     private final CamelEndpoint endpoint;
-
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(CamelConsumer.class);
     public CamelConsumer(CamelEndpoint endpoint, Processor processor) {
-        super(endpoint, processor);
-        this.endpoint = endpoint;
+    	super(endpoint, processor);
+        
+    	this.endpoint = endpoint;
+    	logger.info("Created standard consumer");
+    }
+    
+
+    public void process() throws Exception {
+    	Exchange ex = endpoint.createExchange();
+    	getProcessor().process(ex);
     }
 
-    @Override
-    protected int poll() throws Exception {
-        Exchange exchange = endpoint.createExchange();
 
-        // create a message body
-        Date now = new Date();
-        exchange.getIn().setBody("Hello World! The time is " + now);
-
-        try {
-            // send message to next processor in the route
-            getProcessor().process(exchange);
-            return 1; // number of messages polled
-        } finally {
-            // log exception if an exception occurred and was not handled
-            if (exchange.getException() != null) {
-                getExceptionHandler().handleException("Error processing exchange", exchange, exchange.getException());
-            }
-        }
-    }
 }

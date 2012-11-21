@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  * The com.dexels.navajo.camel.component producer.
  */
 public class CamelProducer extends DefaultProducer {
-    private static final transient Logger LOG = LoggerFactory.getLogger(CamelProducer.class);
+    private static final transient Logger logger = LoggerFactory.getLogger(CamelProducer.class);
     private CamelEndpoint endpoint;
 
     public CamelProducer(CamelEndpoint endpoint) {
