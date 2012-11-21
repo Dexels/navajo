@@ -1,0 +1,3 @@
+  <feature name="navajo.core" version="2.9.22" resolver="obr"> 
+      <bundle>bundle:(&(symbolicname=com.dexels.navajo.core)(version>=2.10.41)(version<2.10.42))</bundle> 
+  </feature> 

@@ -1,0 +1,30 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.dexels.navajo</groupId>
+  <artifactId>com.dexels.navajo.karaf.feature</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Karaf feature</name>
+ <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.karaf.tooling</groupId>
+        <artifactId>features-maven-plugin</artifactId>
+        <version>2.3.0</version>
+          <executions>
+            <execution>
+              <id>generate</id>
+              <phase>generate-resources</phase>
+              <goals>
+                <goal>generate</goal>
+              </goals>
+              <configuration>
+                <bundles>src/main/resources/bundles.properties</bundles>
+                <kernelVersion>2.3.0</kernelVersion>
+                <outputFile>target/features.xml</outputFile>
+              </configuration>
+            </execution>
+          </executions>
+      </plugin>
+    </plugins>
+  </build>  
+</project>
