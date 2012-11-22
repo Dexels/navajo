@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<features name="Navajo Core">
-  <repository>dexels.navajo</repository>
-  <feature name="navajo.core" version="2.9.22" resolver="obr"> 
-<!-- 		<bundle>mvn:com.dexels.navajo/com.dexels.navajo.core/2.10.41</bundle> -->
-       <bundle>bundle:(&amp;(symbolicname=com.dexels.navajo.core)(version&gt;=2.10.41)(version&lt;2.10.42))</bundle> 
+<features name="Navajo" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+	<repository>dexels.navajo</repository>
+	<feature name="navajo.core" version="2.9.24" >
+		<bundle>mvn:com.dexels.navajo/com.dexels.navajo.core/2.10.41</bundle>
+		<!-- <bundle>obr:com.dexels.navajo.core/2.10.41</bundle> -->	
+		<!-- bundle:(&amp;(symbolicname=com.dexels.navajo.core)(version&gt;=2.10.41)(version&lt;2.10.42)) -->
+		<!-- <bundle>bundle:(symbolicname=com.dexels.navajo.core)</bundle>-->
+	</feature>
 
-  </feature>
-  
 </features>
