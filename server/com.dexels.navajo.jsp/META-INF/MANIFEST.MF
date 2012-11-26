@@ -4,8 +4,13 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.1.3.qualifier
 Bundle-ClassPath: .
-Export-Package: com.dexels.navajo.jsp.tags,
- navajojsp
+Export-Package: com.dexels.navajo.jsp.tags;
+  uses:="com.dexels.navajo.client.context,
+   com.dexels.navajo.document.types,
+   javax.servlet.jsp.tagext,
+   javax.servlet.jsp,
+   com.dexels.navajo.document",
+ navajojsp;uses:="com.dexels.navajo.version"
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.client.context,
