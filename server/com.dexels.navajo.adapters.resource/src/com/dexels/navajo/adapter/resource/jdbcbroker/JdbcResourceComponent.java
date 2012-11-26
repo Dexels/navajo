@@ -3,6 +3,7 @@ package com.dexels.navajo.adapter.resource.jdbcbroker;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
@@ -16,7 +17,7 @@ public class JdbcResourceComponent {
 	private ResourceManager manager;
 	private static JdbcResourceComponent instance = null;
 	private static final Logger logger = LoggerFactory.getLogger(JdbcResourceComponent.class);
-	private final Map<Integer,Connection> transactionMap = new HashMap<Integer, Connection>();
+	private final Map<Integer,Connection> transactionMap = new ConcurrentHashMap<Integer, Connection>();
 //	private BundleContext bundleContext;
 	
 	public void activate() {
