@@ -55,6 +55,9 @@ public abstract class AbstractCSSPropertyBorderCompositeHandler extends
 			case CSSPrimitiveValue.CSS_PX:
 				engine.applyCSSProperty(element, "border-width", value, pseudo);
 				break;
+			case CSSPrimitiveValue.CSS_STRING:
+				engine.applyCSSProperty(element, "border", value, pseudo);
+				break;
 			}
 		}
 	}
