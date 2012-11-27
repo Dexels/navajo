@@ -15,7 +15,7 @@
               <id>generate</id>
               <phase>generate-resources</phase>
               <goals>
-                <goal>generate</goal>
+                <goal>generate-features-file</goal>
               </goals>
               <configuration>
                 <bundles>src/main/resources/bundles.properties</bundles>
@@ -49,6 +49,9 @@
     								</versionRange>
     								<goals>
     									<goal>generate</goal>
+    									<goal>
+    										generate-features-file
+    									</goal>
     								</goals>
     							</pluginExecutionFilter>
     							<action>
