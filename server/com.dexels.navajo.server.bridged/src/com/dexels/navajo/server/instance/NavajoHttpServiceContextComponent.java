@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.Set;
 
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
@@ -25,10 +27,9 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 	
 	private NavajoServerInstance wrapped = null;
 	private ConfigurationAdmin myConfigurationAdmin = null;
-	private Configuration fileInstallConfiguration = null;
+	private final Set<Configuration> monitoredFolderConfigurations = new HashSet<Configuration>();
 	
 	public NavajoHttpServiceContextComponent() {
-		logger.info("*******Instantiated NavajoHttpServiceContextComponent!");
 	}
 	
 	public void activate(ComponentContext c) {
@@ -63,7 +64,8 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 			String contextPath = (String)settings.get("contextPath");
 			String servletContextPath = (String)settings.get("servletContextPath");
 			String installPath = (String)settings.get("installationPath");
-			addAdapterListener(contextPath,installPath);
+			addFolderMonitorListener(contextPath,installPath,"adapters");
+			addFolderMonitorListener(contextPath,installPath,"camel");
 			logger.info("Instantiate server: "+contextPath+" installpath: "+installPath+" servletContextPath: "+servletContextPath);
 			wrapped = NavajoContextListener.initializeServletContext(contextPath,servletContextPath,installPath);
 		} catch (Exception e) {
@@ -71,24 +73,27 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 		}
 	}
 	
-	private void addAdapterListener(String contextPath, String installPath) throws IOException, InvalidSyntaxException {
+	private void addFolderMonitorListener(String contextPath, String installPath, String subFolder) throws IOException, InvalidSyntaxException {
 		File cp = new File(installPath);
-		File adapters = new File(cp,"adapters");
-
+		File monitoredFolder = new File(cp,subFolder);
+		if(!monitoredFolder.exists()) {
+			logger.warn("FileInstaller should monitor folder: {} but it does not exist. Will not try again.", monitoredFolder.getAbsolutePath());
+			return;
+		}
 		//fileInstallConfiguration = myConfigurationAdmin.createFactoryConfiguration("org.apache.felix.fileinstall",null);
-		final String absolutePath = adapters.getAbsolutePath();
-		fileInstallConfiguration = getResourceConfig(contextPath, absolutePath);
-		Dictionary<String,Object> d = fileInstallConfiguration.getProperties();
+		final String absolutePath = monitoredFolder.getAbsolutePath();
+		Configuration newConfig = getUniqueResourceConfig(contextPath, absolutePath);
+		Dictionary<String,Object> d = newConfig.getProperties();
 		if(d==null) {
 			d = new Hashtable<String,Object>();
 		}
 		d.put("felix.fileinstall.dir",absolutePath );
 		d.put("contextPath",contextPath );
-
-		fileInstallConfiguration.update(d);	
+		monitoredFolderConfigurations.add(newConfig);
+		newConfig.update(d);	
 	}
 	
-	private Configuration getResourceConfig(String name, String path)
+	private Configuration getUniqueResourceConfig(String name, String path)
 			throws IOException, InvalidSyntaxException {
 		final String factoryPid = "org.apache.felix.fileinstall";
 		Configuration[] cc = myConfigurationAdmin
@@ -112,8 +117,11 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 
 	public void deactivate() throws IOException {
 		logger.info("Deactivating service component");
-		if(fileInstallConfiguration!=null) {
-			fileInstallConfiguration.delete();
+		if(monitoredFolderConfigurations!=null) {
+			for (Configuration c : monitoredFolderConfigurations) {
+				c.delete();
+			}
+			monitoredFolderConfigurations.clear();
 		}
 	}
 
