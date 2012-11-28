@@ -167,7 +167,7 @@ public final class DbConnectionBroker extends Object
 		// Fetch proper broker.
 		DbConnectionBroker broker = transactionContextBrokerMap.get(connectionId);
 		if ( broker == null ) {
-			logger.warn("COULD NOT FIND BROKER FOR CONNECTION ID: " + connectionId);
+			logger.error("COULD NOT FIND BROKER FOR CONNECTION ID: " + connectionId);
 			return null;
 		}
 		for ( int i = 0; i < broker.conns.length; i++ ) {
@@ -175,12 +175,12 @@ public final class DbConnectionBroker extends Object
 				if ( broker.usedmap[i] )  {
 					return broker.conns[i];
 				} else {
-					logger.debug("Trying to get unused connection: " + connectionId);
+					logger.error("Trying to get unused connection: " + connectionId);
 					return null;
 				}
 			}
 		}
-		logger.warn("Could not find connectionid: " + connectionId);
+		logger.error("Could not find connectionid: " + connectionId);
 		return null;
 	}
 	
@@ -254,6 +254,7 @@ public final class DbConnectionBroker extends Object
 							} catch (Throwable t) {
 								logger.error("Error: ", t);
 							}
+							logger.warn("Removing aged connection: " + conns[i].hashCode());
 							transactionContextBrokerMap.remove(conns[i].hashCode());
 						}
 					} catch (Throwable e) {
@@ -271,7 +272,13 @@ public final class DbConnectionBroker extends Object
 				try {
 					//long start = System.currentTimeMillis();
 					DriverManager.setLoginTimeout(5);
-					conns[i] = DriverManager.getConnection(location,username,password);
+					Connection c = DriverManager.getConnection(location,username,password);
+					while ( isDoubleEntry(c) ) {
+						logger.error("Overlapping hashcode for connection found, trying new one.");
+						c.close();
+						c = DriverManager.getConnection(location,username,password);
+					}
+					conns[i] = c;
 					
 				} catch(SQLException e) {
 					logger.error("SQL login failed",e);
@@ -304,10 +311,22 @@ public final class DbConnectionBroker extends Object
 		return null; // Duh?
 	}
 	
+	private boolean isDoubleEntry(Connection con) {
+		
+		for(int i=0; i<conns.length; i++) {
+			if ( conns[i] != null && conns[i] == con ) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private final int idOfConnection(Connection conn) {
-		for(int i=0; i<conns.length; i++)
-			if(conns[i] == conn)
+		for(int i=0; i<conns.length; i++) {
+			if(conns[i] != null && conns[i] == conn) {
 				return i;
+			}
+		}
 		return -1;
 	}
 	
