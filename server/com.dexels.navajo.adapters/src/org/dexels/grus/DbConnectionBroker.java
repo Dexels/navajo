@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ public final class DbConnectionBroker extends Object
 	
 	
 	protected static final Map<Integer,DbConnectionBroker> transactionContextBrokerMap = Collections.synchronizedMap(new HashMap<Integer,DbConnectionBroker>());
-	protected static final Map<Connection,Integer> connectionIdMap = Collections.synchronizedMap(new HashMap<Connection,Integer>());
+	protected static final ConcurrentHashMap<Connection,Integer> connectionIdMap = new ConcurrentHashMap<Connection,Integer>();
 	
 	protected final void log(String message) {
 		AuditLog.log("GRUS", Thread.currentThread().getName() + ": (url = " + location + ", user = " + username + ")" + message);
@@ -54,11 +55,7 @@ public final class DbConnectionBroker extends Object
 		}
 		final Integer integer = connectionIdMap.get(c);
 		if(integer==null) {
-			int ii = getNextUniqueInteger();
-			connectionIdMap.put(c, ii);
-			return ii;
-//			logger.error("Error! Requested the id of an unregistered connection, will die now!");
-//			throw new IllegalArgumentException("Error! Requested the id of an unregistered connection");
+			throw new IllegalArgumentException("Could not find connection id in map for connection: " + c.hashCode());
 		}
 		return integer;
 	}
@@ -239,15 +236,7 @@ public final class DbConnectionBroker extends Object
 
 		// EDIT BY FRANK: Placed wait into a loop. Also added timeout to loop, to be sure
 		if (timeoutDays > 0 && available == 0 && current == conns.length ) {
-			try {
-				wait(60000);
-			} catch(InterruptedException e) {
-				// dunno.
-				e.printStackTrace();
-			}
-			if ( available == 0 && current == conns.length ) {
 				return null;
-			}
 		}
 
 		if(closed && timeoutDays > 0) {
@@ -270,10 +259,11 @@ public final class DbConnectionBroker extends Object
 								conns[i].close();
 							} catch (Throwable t) {
 								logger.error("Error: ", t);
+							} finally {
+								logger.warn("Removing aged connection: " + getConnectionId(conns[i]));
+								transactionContextBrokerMap.remove(getConnectionId(conns[i]));
+								connectionIdMap.remove(conns[i]);
 							}
-							logger.warn("Removing aged connection: " + getConnectionId(conns[i]));
-							transactionContextBrokerMap.remove(getConnectionId(conns[i]));
-							connectionIdMap.remove(conns[i]);
 						}
 					} catch (Throwable e) {
 						logger.error("Error: ", e);
@@ -301,6 +291,7 @@ public final class DbConnectionBroker extends Object
 					}
 					id = DbConnectionBroker.getNextUniqueInteger();
 					connectionIdMap.put(c, id);
+					transactionContextBrokerMap.put(id, this);
 					logger.debug("Created new id for connection: "+id);
 					conns[i] = c;
 					
@@ -312,7 +303,6 @@ public final class DbConnectionBroker extends Object
 				aged[i] = false;
 				created[i] = System.currentTimeMillis();
 				++current;
-				transactionContextBrokerMap.put(id, this);
 				return conns[i];
 			}
 		}
@@ -331,8 +321,8 @@ public final class DbConnectionBroker extends Object
 			++available;
 			notify();
 		}
-		logger.debug("FreeConnection is removing connection id: {}",connectionIdMap.get(conn));
-		DbConnectionBroker.connectionIdMap.remove(conn);
+		//logger.debug("FreeConnection is removing connection id: {}",connectionIdMap.get(conn));
+		//DbConnectionBroker.connectionIdMap.remove(conn);
 		return null; // Duh?
 	}
 	
@@ -369,9 +359,9 @@ public final class DbConnectionBroker extends Object
 			try {
 				if(conns[i] != null) {
 					conns[i].close();
+					log("Closed connection due to destroy: " + getConnectionId(conns[i]));
 					transactionContextBrokerMap.remove(getConnectionId(conns[i]));
 					connectionIdMap.remove(conns[i]);
-					log("Closed connection due to destroy: " + getConnectionId(conns[i]));
 					conns[i] = null;
 					usedmap[i] = false;
 				}
