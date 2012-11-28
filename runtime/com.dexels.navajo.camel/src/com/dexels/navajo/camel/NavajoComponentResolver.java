@@ -1,8 +1,11 @@
 package com.dexels.navajo.camel;
 
+import java.util.Map;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Component;
 import org.apache.camel.spi.ComponentResolver;
+import org.apache.camel.spi.Registry;
 import org.apache.camel.spi.TypeConverterLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +33,27 @@ public class NavajoComponentResolver implements ComponentResolver {
 		this.camelComponent = null;
 	}
 
+	public void activate(Map<String,Object> params) {
+	}
+	
+	public void deactivate() {
+		
+	}
+	
+	public void registerProcessors(CamelContext context) {
+		Registry r = context.getRegistry();
+		System.err.println("Registry clsss: "+r);
+	}
 	
 	@Override
 	public Component resolveComponent(String name, CamelContext context)
 			throws Exception {
-		
+		registerProcessors(context);
 		return camelComponent;
 	}
+	
+	
+	
 	
 	  protected void bindComponentResolver(ComponentResolver cr) 
 	  { 
