@@ -37,6 +37,7 @@ public final class DbConnectionBroker extends Object
 	
 	
 	protected static final Map<Integer,DbConnectionBroker> transactionContextBrokerMap = Collections.synchronizedMap(new HashMap<Integer,DbConnectionBroker>());
+	protected static final Map<Connection,Integer> connectionIdMap = Collections.synchronizedMap(new HashMap<Connection,Integer>());
 	
 	protected final void log(String message) {
 		AuditLog.log("GRUS", Thread.currentThread().getName() + ": (url = " + location + ", user = " + username + ")" + message);
@@ -44,6 +45,22 @@ public final class DbConnectionBroker extends Object
 	
 	private static int getNextUniqueInteger() {
 		return connectionCounter.incrementAndGet();
+	}
+	
+	public static int getConnectionId(Connection c) {
+		if(c==null) {
+			logger.error("Error! Requested the id of a null-connection");
+			throw new IllegalArgumentException("Error! Requested the id of a null-connection");
+		}
+		final Integer integer = connectionIdMap.get(c);
+		if(integer==null) {
+			int ii = getNextUniqueInteger();
+			connectionIdMap.put(c, ii);
+			return ii;
+//			logger.error("Error! Requested the id of an unregistered connection, will die now!");
+//			throw new IllegalArgumentException("Error! Requested the id of an unregistered connection");
+		}
+		return integer;
 	}
 	
 	public DbConnectionBroker(String dbDriver,
@@ -171,7 +188,7 @@ public final class DbConnectionBroker extends Object
 			return null;
 		}
 		for ( int i = 0; i < broker.conns.length; i++ ) {
-			if ( broker.conns[i] != null && broker.conns[i].hashCode() == connectionId ) {
+			if ( broker.conns[i] != null && getConnectionId(broker.conns[i]) == connectionId ) {
 				if ( broker.usedmap[i] )  {
 					return broker.conns[i];
 				} else {
@@ -254,8 +271,9 @@ public final class DbConnectionBroker extends Object
 							} catch (Throwable t) {
 								logger.error("Error: ", t);
 							}
-							logger.warn("Removing aged connection: " + conns[i].hashCode());
-							transactionContextBrokerMap.remove(conns[i].hashCode());
+							logger.warn("Removing aged connection: " + getConnectionId(conns[i]));
+							transactionContextBrokerMap.remove(getConnectionId(conns[i]));
+							connectionIdMap.remove(conns[i]);
 						}
 					} catch (Throwable e) {
 						logger.error("Error: ", e);
@@ -269,15 +287,21 @@ public final class DbConnectionBroker extends Object
 		// Create new connection if maxconnections has not yet been reached.
 		for(int i=0; i<conns.length; i++) {
 			if( conns[i] == null ) {
+				int id = -1;
 				try {
 					//long start = System.currentTimeMillis();
 					DriverManager.setLoginTimeout(5);
 					Connection c = DriverManager.getConnection(location,username,password);
 					while ( isDoubleEntry(c) ) {
+						// We could also check if there is another Connection with the same hashCode, I think that is closer to our
+						// actual problem
 						logger.error("Overlapping hashcode for connection found, trying new one.");
 						c.close();
 						c = DriverManager.getConnection(location,username,password);
 					}
+					id = DbConnectionBroker.getNextUniqueInteger();
+					connectionIdMap.put(c, id);
+					logger.debug("Created new id for connection: "+id);
 					conns[i] = c;
 					
 				} catch(SQLException e) {
@@ -288,7 +312,7 @@ public final class DbConnectionBroker extends Object
 				aged[i] = false;
 				created[i] = System.currentTimeMillis();
 				++current;
-				transactionContextBrokerMap.put(conns[i].hashCode(), this);
+				transactionContextBrokerMap.put(id, this);
 				return conns[i];
 			}
 		}
@@ -300,14 +324,15 @@ public final class DbConnectionBroker extends Object
 	
 	public final synchronized String freeConnection(Connection conn) {
 		
-		int id = idOfConnection(conn);
+		int index = indexOfConnection(conn);
 		
-		if( id >= 0 && usedmap[id] ) {
-			usedmap[id] = false;
+		if( index >= 0 && usedmap[index] ) {
+			usedmap[index] = false;
 			++available;
 			notify();
 		}
-		
+		logger.debug("FreeConnection is removing connection id: {}",connectionIdMap.get(conn));
+		DbConnectionBroker.connectionIdMap.remove(conn);
 		return null; // Duh?
 	}
 	
@@ -321,7 +346,7 @@ public final class DbConnectionBroker extends Object
 		return false;
 	}
 	
-	private final int idOfConnection(Connection conn) {
+	private final int indexOfConnection(Connection conn) {
 		for(int i=0; i<conns.length; i++) {
 			if(conns[i] != null && conns[i] == conn) {
 				return i;
@@ -344,8 +369,9 @@ public final class DbConnectionBroker extends Object
 			try {
 				if(conns[i] != null) {
 					conns[i].close();
-					transactionContextBrokerMap.remove(conns[i].hashCode());
-					log("Closed connection due to destroy: " + conns[i].hashCode());
+					transactionContextBrokerMap.remove(getConnectionId(conns[i]));
+					connectionIdMap.remove(conns[i]);
+					log("Closed connection due to destroy: " + getConnectionId(conns[i]));
 					conns[i] = null;
 					usedmap[i] = false;
 				}
