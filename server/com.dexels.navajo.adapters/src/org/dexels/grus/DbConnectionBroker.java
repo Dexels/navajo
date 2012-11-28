@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +33,17 @@ public final class DbConnectionBroker extends Object
 	protected boolean dead = false;
 	public  boolean supportsAutocommit = true;
 	protected boolean sanityCheck = true;
+	private static final AtomicInteger connectionCounter = new AtomicInteger();
 	
 	
 	protected static final Map<Integer,DbConnectionBroker> transactionContextBrokerMap = Collections.synchronizedMap(new HashMap<Integer,DbConnectionBroker>());
 	
 	protected final void log(String message) {
 		AuditLog.log("GRUS", Thread.currentThread().getName() + ": (url = " + location + ", user = " + username + ")" + message);
+	}
+	
+	private static int getNextUniqueInteger() {
+		return connectionCounter.incrementAndGet();
 	}
 	
 	public DbConnectionBroker(String dbDriver,
