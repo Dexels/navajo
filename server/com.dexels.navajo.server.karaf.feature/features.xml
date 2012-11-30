@@ -9,6 +9,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/1.0.15</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.4.15</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.1.9</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.jabber/1.0.7</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.5</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.10.43</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/2.0.30</bundle>
@@ -34,6 +35,11 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource/1.0.7</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager/1.0.9</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.server.bridged/1.0.11</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.oracle/1.0.3</bundle>
+		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
+		<bundle dependency='true'>mvn:commons-dbcp/commons-dbcp/1.4</bundle>
+		<bundle dependency='true'>mvn:com.oracle/com.oracle.jdbc.driver/11.2.33</bundle>
+		
 		
 	</feature>
 </features>
