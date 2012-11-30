@@ -36,10 +36,15 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager/1.0.9</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.server.bridged/1.0.11</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.oracle/1.0.3</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/1.0.5</bundle>
 		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
 		<bundle dependency='true'>mvn:commons-dbcp/commons-dbcp/1.4</bundle>
 		<bundle dependency='true'>mvn:com.oracle/com.oracle.jdbc.driver/11.2.33</bundle>
-		
-		
 	</feature>
+	<feature name='navajo.dev' version='1.0.0' start-level='81' >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/1.0.1</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.birt.push/1.0.3</bundle>
+	</feature>			
+		
+	
 </features>
