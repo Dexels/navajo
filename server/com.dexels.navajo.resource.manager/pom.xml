@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>com.dexels.navajo.resource.manager</artifactId>
-  <version>1.0.9</version>
+  <version>1.0.10-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 	<parent>
 		<groupId>com.dexels.navajo</groupId>
