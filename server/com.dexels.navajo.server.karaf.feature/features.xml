@@ -1,11 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<features name="Navajo" >
-	<repository>
-		https://source.dexels.com/nexus/content/repositories/thirdparty_obr/.meta/obr.xml
-	</repository>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.2.0" name="navajo.repo">
 	<!-- scr, http, webconsole -->
-	<feature name='navajo.core' version='1.0.0' start-level='10' >
-		<feature>scr</feature>
+    <feature name='navajo.core' version='1.0.0' start-level='40' >
+	    <details>Navajo Core Components</details>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.20</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.1.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.20</bundle>
@@ -15,17 +12,18 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.10.43</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
+		<bundle dependency='true'>mvn:org.igniterealtime.smack/smack/3.2.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>
 	<feature name='navajo.server' version='1.0.0' start-level='10' >
-		<feature>navajo.core</feature>
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/1.1.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/1.0.13</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/1.0.13</bundle>
-		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jetty-bundle/2.1.0</bundle>
-		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jsp/2.1.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.1.18</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/1.0.5</bundle>
 		<bundle dependency='true'>mvn:org.glassfish.main/javax.transaction/4.0-b33</bundle>
-		javax.transaction
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.1.18</bundle>
 	</feature>
 </features>
