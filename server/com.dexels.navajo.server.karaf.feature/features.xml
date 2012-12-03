@@ -17,8 +17,6 @@
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.igniterealtime.smack/smack/3.2.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
-	</feature>
-	<feature name='navajo.server' version='1.0.0' start-level='81' >
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/1.1.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.6</bundle>
@@ -30,9 +28,13 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.queuemanager/1.0.16</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/1.1.18</bundle>
 		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
+		<bundle dependency='true'>mvn:commons-lang/commons-lang/2.4</bundle>
 		<bundle dependency='true'>mvn:commons-dbcp/commons-dbcp/1.4</bundle>
 		<bundle dependency='true'>mvn:com.oracle/com.oracle.jdbc.driver/11.2.33</bundle>
+		<bundle dependency='true'>mvn:org.apache.geronimo.modules/geronimo-mail/3.0-M1</bundle>
+		
 	</feature>
+
 	<feature name='navajo.server.osgi' version='1.0.0' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/1.0.5</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.resource/1.0.7</bundle>
@@ -55,7 +57,21 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.birt.push/1.0.5</bundle>
 	</feature>			
 	<feature name='navajo.enterprise' version='1.0.0' start-level='81' >
+		<bundle dependency='true'>mvn:org.kjkoster/org.kjkoster.zapcat/1.2.0</bundle>
+		<bundle dependency='true'>mvn:org.jgroups/org.jgroups/2.5.1</bundle>
+
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/1.0.20</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/1.0.20</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/1.0.8</bundle>
     </feature>
+	<feature name='ops' version='1.0.2' start-level='40' >
+		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jetty-bundle/2.1.0</bundle>
+		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-api/2.1.0</bundle>
+	 	<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jsp/2.1.0</bundle>
+	</feature>
+	<feature name='trans' version='1.0.1' start-level='40' >
+		<bundle dependency='true'>mvn:org.glassfish.main/javax.transaction/4.0-b33</bundle>
+	</feature>
 		
 	
 </features>
