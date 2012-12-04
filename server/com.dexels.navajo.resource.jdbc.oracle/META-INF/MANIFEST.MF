@@ -6,15 +6,19 @@ Bundle-Version: 1.0.4.qualifier
 Bundle-Activator: com.dexels.navajo.resource.jdbc.oracle.Activator
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: javax.management,
+Import-Package: com.dexels.navajo.resource,
+ com.dexels.navajo.resource.jdbc,
+ javax.management,
  javax.sql,
+ oracle.jdbc,
+ oracle.jdbc.pool,
+ oracle.jdbc.xa.client,
+ org.apache.commons.dbcp;version="1.4.0",
+ org.apache.commons.pool;version="1.4.0",
+ org.apache.commons.pool.impl;version="1.4.0",
  org.osgi.framework;version="1.3.0",
  org.osgi.service.component;version="1.1.0",
  org.osgi.service.jdbc;version="1.0.0",
  org.slf4j;version="1.6.1"
-Require-Bundle: com.dexels.navajo.resource;bundle-version="1.0.0",
- org.apache.commons.pool;bundle-version="1.4.0",
- org.apache.commons.dbcp;bundle-version="1.4.0",
- com.oracle.jdbc.driver;bundle-version="11.2.0"
 Bundle-ClassPath: .
 Service-Component: OSGI-INF/navajo.resource.oracle.xml

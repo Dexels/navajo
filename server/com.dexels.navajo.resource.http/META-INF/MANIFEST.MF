@@ -2,10 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Http resource connector
 Bundle-SymbolicName: com.dexels.navajo.resource.http
-Bundle-Version: 1.0.2.qualifier
+Bundle-Version: 1.0.4.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Service-Component: OSGI-INF/resourceManager.xml,
- OSGI-INF/httpResourceComponent.xml
+Service-Component: OSGI-INF/httpResourceComponent.xml
 Export-Package: com.dexels.navajo.resource.http
 Import-Package: org.slf4j;version="1.6.1"

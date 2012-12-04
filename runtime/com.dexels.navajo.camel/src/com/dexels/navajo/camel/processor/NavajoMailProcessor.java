@@ -5,9 +5,14 @@ import org.apache.camel.Processor;
 
 public class NavajoMailProcessor implements Processor {
 
+	public NavajoMailProcessor() {
+		System.err.println("Creating navajo mail processor");
+	}
+	
 	@Override
 	public void process(Exchange ex) throws Exception {
-		// TODO Auto-generated method stub
+//		Message in = ex.getIn();
+//		Message out = ex.getOut();
 
 	}
 

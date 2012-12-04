@@ -38,8 +38,8 @@ public class CamelComponent extends DefaultComponent implements Component {
     		ProcessorEndpoint pe = new CamelProcessorEndpoint(uri,this, cp);
     		return pe;
     	}
-    	if(remaining.equals("call")) {
-    	}
+//    	if(remaining.equals("call")) {
+//    	}
     	Endpoint endpoint = new CamelEndpoint(uri, this);
         setProperties(endpoint, parameters);
         return endpoint;

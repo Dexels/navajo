@@ -3,7 +3,6 @@ package com.dexels.navajo.resource.jdbc.oracle;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -99,9 +98,7 @@ public class OracleWrapped implements DataSource {
 		return wrapped.getConnection(username, password);
 	}
 
-	public java.util.logging.Logger getParentLogger()
-			throws SQLFeatureNotSupportedException {
-		// TODO Auto-generated method stub
+	public java.util.logging.Logger getParentLogger() {
 		return null;
 	}
 

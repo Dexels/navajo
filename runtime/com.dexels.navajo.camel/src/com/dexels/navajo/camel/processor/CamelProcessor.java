@@ -21,6 +21,11 @@ public class CamelProcessor implements Processor {
 	private String username;
 	private String password;
 	
+
+	public CamelProcessor() {
+		System.err.println("Starting processor without component");
+		this.camelComponent = null;
+	}
 	public CamelProcessor(CamelComponent cc) {
 		this.camelComponent = cc;
 	}
@@ -28,6 +33,8 @@ public class CamelProcessor implements Processor {
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		Message in = exchange.getIn();
+//		String service = (String) in.getHeader("service");
+		
 		if(in.getBody()==null) {
 			logger.error("No input in camel processor");
 			Navajo n = NavajoFactory.getInstance().createNavajo();
