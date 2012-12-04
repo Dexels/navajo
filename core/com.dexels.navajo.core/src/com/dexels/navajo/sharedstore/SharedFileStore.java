@@ -39,13 +39,18 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import navajocore.Version;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.NavajoConfigInterface;
+import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.navajo.server.NavajoObjectInputStream;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -114,7 +119,20 @@ public class SharedFileStore implements SharedStoreInterface {
 	 */
 	private static String sharedStoreName = "sharedstore";
 	private File sharedStore = null;
+
+	private NavajoConfigInterface navajoConfig;
+	private TribeManagerInterface tribeManagerInterface;
 	private final static Object lockSemaphore = new Object();
+	
+	
+	public void activate() {
+		logger.info("Started SharedFileStore");
+	}
+	
+	public void deactivate() {
+		logger.info("Stopped SharedFileStore");
+	}
+	
 	
 	/**
 	 * Constructs a (lock) name for a SharedStoreLock object.
@@ -213,8 +231,12 @@ public class SharedFileStore implements SharedStoreInterface {
 	 * @throws Exception when SharedFileStore could not be created.
 	 */
 	public SharedFileStore() throws Exception {
-		if ( DispatcherFactory.getInstance() != null ) {
-			sharedStore = new File(DispatcherFactory.getInstance().getNavajoConfig().getRootPath() + "/" + sharedStoreName);
+		if(!Version.osgiActive()) {
+			navajoConfig = DispatcherFactory.getInstance().getNavajoConfig();
+			tribeManagerInterface = TribeManagerFactory.getInstance();
+		}
+		if ( navajoConfig != null ) {
+			sharedStore = new File(navajoConfig.getRootPath() + "/" + sharedStoreName);
 			if ( !sharedStore.exists() ) {
 				if ( !sharedStore.mkdirs() ) {
 					throw new SharedStoreException("Could not create SharedFileStore");
@@ -253,7 +275,7 @@ public class SharedFileStore implements SharedStoreInterface {
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(f);
-			ois = new NavajoObjectInputStream(fis, DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
+			ois = new NavajoObjectInputStream(fis, navajoConfig.getClassloader());
 			Object o = ois.readObject();
 			return o;
 		} catch (Exception e) {
@@ -333,7 +355,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	}
 
 	public SharedStoreLock lock(String parent, String name, int lockType, boolean block) {
-		return lock(parent, name, DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), lockType, block);
+		return lock(parent, name, navajoConfig.getInstanceName(), lockType, block);
 	}
 	
 	/**
@@ -349,8 +371,8 @@ public class SharedFileStore implements SharedStoreInterface {
 	 */
 	public SharedStoreLock lock(String parent, String name, String owner, int lockType, boolean block) {
 		
-		if ( !TribeManagerFactory.getInstance().getIsChief() ) {
-			LockAnswer la = (LockAnswer) TribeManagerFactory.getInstance().askChief(
+		if ( !tribeManagerInterface.getIsChief() ) {
+			LockAnswer la = (LockAnswer) tribeManagerInterface.askChief(
 					new GetLockRequest( parent, name, lockType, block));
 			return la.mySsl;
 		} else {
@@ -391,8 +413,8 @@ public class SharedFileStore implements SharedStoreInterface {
 	 */
 	public void release(SharedStoreLock lock) {
 
-		if ( !TribeManagerFactory.getInstance().getIsChief() ) {
-			TribeManagerFactory.getInstance().askChief( new RemoveLockRequest(lock.parent, lock.name) );
+		if ( !tribeManagerInterface.getIsChief() ) {
+			tribeManagerInterface.askChief( new RemoveLockRequest(lock.parent, lock.name) );
 		} else {
 			synchronized (lockSemaphore) {
 				if ( lock != null ) {
@@ -633,5 +655,20 @@ public class SharedFileStore implements SharedStoreInterface {
 		f.setLastModified(l);
 	}
 	
+	public void setNavajoConfig(NavajoConfigInterface cnf) {
+		this.navajoConfig = cnf;
+	}
+
+	public void clearNavajoConfig(NavajoConfigInterface cnf) {
+		this.navajoConfig = null;
+	}
+
+	public void setTribeManager(TribeManagerInterface tribeManagerInterface) {
+		this.tribeManagerInterface = tribeManagerInterface;
+	}
+
+	public void clearTribeManager(TribeManagerInterface tribeManagerInterface) {
+		this.tribeManagerInterface = null;
+	}
 
 }

@@ -49,6 +49,9 @@ public final class AuditLog implements Mappable {
 
 	private volatile static String instanceName;
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(AuditLog.class);
+	
 	private String accessId;
 	
 	NavajoEventRegistry eventRegistry;
@@ -145,7 +148,7 @@ public final class AuditLog implements Mappable {
 		if ( instanceName == null && DispatcherFactory.getInstance() != null ) {
 			instanceName = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 		}
-		logToSlf(instanceName,message, subsystem, null);
+		logToSlf(instanceName,message, subsystem, Level.INFO);
 
 		eventRegistry.publishEvent(new AuditLogEvent(subsystem.toUpperCase(), message, Level.INFO));
 	}

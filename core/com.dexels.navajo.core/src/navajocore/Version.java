@@ -84,11 +84,14 @@ public class Version extends AbstractCoreExtension {
 //			} catch (Throwable e) {
 //				logger.error("Error starting navajo core bundle.",e);
 //			}
-			StatisticsRunnerInterface ptps = new DummyStatisticsRunner();
-			Dictionary<String, Object> wb = new Hashtable<String, Object>();
-			wb.put("threadClass","com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner");
-			wb.put("name","dummy");
-			dummyStats = bc.registerService(StatisticsRunnerInterface.class.getName(), ptps, wb);
+
+			
+			
+//			StatisticsRunnerInterface ptps = new DummyStatisticsRunner();
+//			Dictionary<String, Object> wb = new Hashtable<String, Object>();
+//			wb.put("threadClass","com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner");
+//			wb.put("name","dummy");
+//			dummyStats = bc.registerService(StatisticsRunnerInterface.class.getName(), ptps, wb);
 
 			registerClock();
 			registerTaskRunner();
