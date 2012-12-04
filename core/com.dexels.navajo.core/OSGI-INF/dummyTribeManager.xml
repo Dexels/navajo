@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.tribemanager.dummy">
+   <implementation class="com.dexels.navajo.server.enterprise.tribe.DummyTribeManager"/>
+   <reference bind="setNavajoConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfigInterface" policy="dynamic" unbind="clearNavajoConfig"/>
+   <service>
+      <provide interface="com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface"/>
+   </service>
+   <property name="service.ranking" type="Integer" value="-2000000000"/>
+</scr:component>

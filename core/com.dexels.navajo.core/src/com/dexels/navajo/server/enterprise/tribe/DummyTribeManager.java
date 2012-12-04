@@ -3,15 +3,26 @@ package com.dexels.navajo.server.enterprise.tribe;
 import java.util.HashSet;
 import java.util.Set;
 
+import navajocore.Version;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.NavajoConfigInterface;
 
 public class DummyTribeManager implements TribeManagerInterface {
+
+	private NavajoConfigInterface navajoConfig;
 
 	public void terminate() {
 	}
 
+	public DummyTribeManager() {
+		if(!Version.osgiActive()) {
+			navajoConfig = DispatcherFactory.getInstance().getNavajoConfig();
+		}
+	}
+	
 	public Navajo forward(Navajo in) throws Exception {
 		return null;
 	}
@@ -24,6 +35,15 @@ public class DummyTribeManager implements TribeManagerInterface {
 
 	}
 
+	public void setNavajoConfig(NavajoConfigInterface nc) {
+		this.navajoConfig = nc;
+	}
+
+	public void clearNavajoConfig(NavajoConfigInterface nc) {
+		this.navajoConfig = null;
+	}
+	
+	
 	/**
 	 * Without a Tribe I am ALWAYS the chief!
 	 */

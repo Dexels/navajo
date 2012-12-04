@@ -44,7 +44,7 @@ public class TribeManagerFactory {
 		
 	}
 
-	public static TribeManagerInterface getTribeManagerService() {
+	private static TribeManagerInterface getTribeManagerService() {
 		if(Version.osgiActive()) {
 			return getOSGiTribeManagerService();
 		}
