@@ -8,6 +8,8 @@ package com.dexels.navajo.util;
 
 import java.util.logging.Level;
 
+import navajocore.Version;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +19,7 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.UserException;
 
 /**
@@ -44,14 +47,39 @@ public final class AuditLog implements Mappable {
 	public final static String AUDIT_MESSAGE_SCRIPTCOMPILER = "Script Compiler";
 	public final static String AUDIT_MESSAGE_AUTHORISATION = "Authorisation Repository";
 
-	private static volatile String instanceName;
+	private volatile static String instanceName;
 	
 	private String accessId;
 	
-//	private final static Logger logger = Logger.getLogger("com.dexels.navajo.AuditLog");
-//	final static Logger logger = LoggerFactory.getLogger("NavajoLog");
-
-	private static final void logToSlf(String instanceName, String message, String subsystem, Level l) {
+	NavajoEventRegistry eventRegistry;
+	
+	private static AuditLog instance;
+	
+	static {
+		if ( !Version.osgiActive() ) {
+			instance = new AuditLog();
+			instance.eventRegistry = NavajoEventRegistry.getInstance();
+		}
+	}
+	
+	public AuditLog() {
+	}
+	
+	public AuditLog(String name, NavajoEventRegistry ner) {
+		instanceName = name;
+		eventRegistry = ner;
+		instance = this;
+	}
+	
+	public AuditLog getInstance() {
+		return instance;
+	}
+	
+	private final static void logToSlf(String instanceName, String message, String subsystem, Level l) {
+		instance._logToSlf(instanceName, message, subsystem, l);
+	}
+	
+	private final void _logToSlf(String instanceName, String message, String subsystem, Level l) {
 		Logger instanceLog = LoggerFactory.getLogger("NavajoLog:"+instanceName);
 		if(Level.INFO.equals(l)) {
 			instanceLog.info(message, subsystem);
@@ -97,24 +125,36 @@ public final class AuditLog implements Mappable {
 	}
 	
 	public final static void log(final String subsystem, final String message, Level level) {
+		instance._log(subsystem, message, level);
+	}
+	
+	public final void _log(final String subsystem, final String message, Level level) {
 		if ( instanceName == null && DispatcherFactory.getInstance() != null ) {
 			instanceName = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 		}
 		logToSlf(instanceName,message, subsystem, level);
 //		logger.log(level, instanceName + ":" + subsystem + message);
-		NavajoEventRegistry.getInstance().publishEvent(new AuditLogEvent(subsystem.toUpperCase(), message, level));
+		eventRegistry.publishEvent(new AuditLogEvent(subsystem.toUpperCase(), message, level));
 	}
 	
 	public final static void log(final String subsystem, final String message) {
+		instance._log(subsystem, message);
+	}
+	
+	public final void _log(final String subsystem, final String message) {
 		if ( instanceName == null && DispatcherFactory.getInstance() != null ) {
 			instanceName = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 		}
 		logToSlf(instanceName,message, subsystem, null);
 
-		NavajoEventRegistry.getInstance().publishEvent(new AuditLogEvent(subsystem.toUpperCase(), message, Level.INFO));
+		eventRegistry.publishEvent(new AuditLogEvent(subsystem.toUpperCase(), message, Level.INFO));
 	}
 	
 	public final static void log(final String subsystem, final String message,  Level level, String accessId) {
+		instance._log(subsystem, message, level, accessId);
+	}
+	
+	public final void _log(final String subsystem, final String message,  Level level, String accessId) {
 		if ( instanceName == null && DispatcherFactory.getInstance() != null ) {
 			instanceName = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 		}
@@ -123,7 +163,7 @@ public final class AuditLog implements Mappable {
 //		logger.info(instanceName + "/" + Thread.currentThread().hashCode() + ":" + subsystem + message);
 		AuditLogEvent ale = new AuditLogEvent(subsystem.toUpperCase(), message, level);
 		ale.setAccessId(accessId);
-		NavajoEventRegistry.getInstance().publishEvent(ale);
+		eventRegistry.publishEvent(ale);
 	}
 
 	public String getMessage() {
@@ -165,6 +205,6 @@ public final class AuditLog implements Mappable {
 	public void store() throws MappableException, UserException {
 		AuditLogEvent ale = new AuditLogEvent(AUDIT_MESSAGE_USER, getMessage(), getLevel());
 		ale.setAccessId(accessId);
-		NavajoEventRegistry.getInstance().publishEvent(ale);
+		instance.eventRegistry.publishEvent(ale);
 	}
 }
