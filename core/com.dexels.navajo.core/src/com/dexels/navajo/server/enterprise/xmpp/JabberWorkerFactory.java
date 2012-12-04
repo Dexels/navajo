@@ -3,6 +3,9 @@ package com.dexels.navajo.server.enterprise.xmpp;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.util.AuditLog;
@@ -11,6 +14,9 @@ public class JabberWorkerFactory {
 
 	private static volatile JabberWorkerInterface instance = null;
 	private static Object semaphore = new Object();
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JabberWorkerFactory.class);
 	
 	
 	public static void shutdown() {
@@ -51,7 +57,7 @@ public class JabberWorkerFactory {
 						}
 					} catch (Throwable e) {
 						//e.printStackTrace(System.err);
-						AuditLog.log("INIT", "WARNING: Jabber Worker not available", Level.WARNING);
+						logger.warn("INIT", "WARNING: Jabber Worker not available", e);
 						instance = new DummyJabberWorker();
 					}	
 				}
