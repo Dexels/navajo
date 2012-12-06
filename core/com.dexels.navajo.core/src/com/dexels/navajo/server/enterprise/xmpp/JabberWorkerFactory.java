@@ -67,6 +67,7 @@ public class JabberWorkerFactory {
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	protected static JabberWorkerInterface createLegacyJabberWorker() {
 		try {
 			Class c = Class.forName("com.dexels.navajo.jabber.JabberWorker");
