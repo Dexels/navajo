@@ -47,7 +47,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.navajo.server.NavajoObjectInputStream;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
