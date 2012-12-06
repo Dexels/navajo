@@ -38,9 +38,8 @@ public class Activator implements BundleActivator {
 			factory.start();
 			managedFactory = new JdbcManagedResourceFactory(bundleContext, factory,  "navajo.resource.oracle",  "Navajo Oracle Resource Driver");
 		} catch (Exception e) {
-			logger.error("Error starting oracle");
+			logger.error("Error starting oracle bundle: ",e);
 		}
-		logger.info("Bundle started");
 	}
 
 	/*
