@@ -1,12 +1,12 @@
 package com.dexels.navajo.server.enterprise.integrity;
 
 import java.lang.reflect.Method;
-import java.util.logging.Level;
 
+import navajocore.Version;
+
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.util.AuditLog;
 
 public class WorkerFactory {
 
@@ -15,6 +15,18 @@ public class WorkerFactory {
 	private final static Logger logger = LoggerFactory
 			.getLogger(WorkerFactory.class);
 
+	private static WorkerInterface getOSGiIntegrityWorker() {
+		ServiceReference<WorkerInterface> sr = Version.getDefaultBundleContext().getServiceReference(WorkerInterface.class);
+		if(sr==null) {
+			logger.warn("No JabberWorker implementation found");
+			return null;
+		}
+		WorkerInterface result = Version.getDefaultBundleContext().getService(sr);
+		Version.getDefaultBundleContext().ungetService(sr);
+		return result;
+	}
+
+	
 	/**
 	 * Beware, this functions should only be called from the authorized class that can enable this thread(!).
 	 * 
@@ -23,7 +35,9 @@ public class WorkerFactory {
 	
 	public static final WorkerInterface getInstance() {
 
-		
+		if(Version.osgiActive()) {
+			return getOSGiIntegrityWorker();
+		}
 		if ( instance != null ) {
 			return instance;
 		} else {
