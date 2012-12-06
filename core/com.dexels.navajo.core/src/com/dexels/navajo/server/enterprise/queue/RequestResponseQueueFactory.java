@@ -1,12 +1,12 @@
 package com.dexels.navajo.server.enterprise.queue;
 
 import java.lang.reflect.Method;
-import java.util.logging.Level;
 
+import navajocore.Version;
+
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.util.AuditLog;
 
 
 public class RequestResponseQueueFactory {
@@ -18,7 +18,9 @@ public class RequestResponseQueueFactory {
 			.getLogger(RequestResponseQueueFactory.class);
 	
 	public static RequestResponseQueueInterface getInstance() {
-		
+		if(Version.osgiActive()) {
+			return getOSGiRequestResponseQueue();
+		}
 		if ( instance != null ) {
 			return instance;
 		} else {
@@ -43,4 +45,16 @@ public class RequestResponseQueueFactory {
 		}
 		
 	}
+	
+	private static RequestResponseQueueInterface getOSGiRequestResponseQueue() {
+		ServiceReference<RequestResponseQueueInterface> sr = Version.getDefaultBundleContext().getServiceReference(RequestResponseQueueInterface.class);
+		if(sr==null) {
+			logger.warn("No RequestResponseQueueInterface implementation found");
+			return null;
+		}
+		RequestResponseQueueInterface result = Version.getDefaultBundleContext().getService(sr);
+		Version.getDefaultBundleContext().ungetService(sr);
+		return result;
+	}
+
 }
