@@ -49,10 +49,6 @@ public class TribeManagerFactory {
 			return getOSGiTribeManagerService();
 		}
 			try {
-				/**
-				 * These constructions will never work in an OSGi-like environment.
-				 * TODO rewrite 
-				 */
 				Class<? extends TribeManagerInterface> c = (Class<? extends TribeManagerInterface>) Class.forName("com.dexels.navajo.tribe.TribeManager");
 				TribeManagerInterface dummy = c.newInstance();
 				Method m = c.getMethod("getInstance", (Class[]) null);
