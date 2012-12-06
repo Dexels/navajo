@@ -2,15 +2,13 @@ package com.dexels.navajo.server;
 
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
-import com.dexels.navajo.lockguard.LockManager;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
-import com.dexels.navajo.server.monitoring.ServiceMonitor;
 
-public interface NavajoConfigInterface extends NavajoIOConfig, ServiceMonitor {
+public interface NavajoConfigInterface extends NavajoIOConfig {
 
 	public static final int MAX_ACCESS_SET_SIZE = 50;
 
@@ -30,7 +28,6 @@ public interface NavajoConfigInterface extends NavajoIOConfig, ServiceMonitor {
 	public void setClassloader(NavajoClassSupplier classloader);
 	public AsyncStore getAsyncStore();
 	public DescriptionProviderInterface getDescriptionProvider();
-	public LockManager getLockManager();
 	public WorkerInterface getIntegrityWorker();
 	
 	// Statistics.
@@ -38,7 +35,7 @@ public interface NavajoConfigInterface extends NavajoIOConfig, ServiceMonitor {
 	
 	 
 	// Webservice, user monitoring options
-//	public boolean needsFullAccessLog(Access a);
+    public boolean needsFullAccessLog(Access a);
 //	public void setMonitorOn(boolean b);
 //	public boolean isMonitorOn();
 //	public int getMonitorExceedTotaltime();

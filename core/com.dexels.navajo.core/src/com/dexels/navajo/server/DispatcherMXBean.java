@@ -76,21 +76,5 @@ public interface DispatcherMXBean extends ResourceManager {
 	 */
 	public void setSnmpManagers(String s);
 	
-	/**
-	 * Disable Dispatcher for new incoming requests, only handle requests currently being processed.
-	 * Requests for asynchronous web services are passed.
-	 */
-	public void disableDispatcher();
-	
-	/**
-	 * Enable a Dispatcher, i.e. accept new incoming requests.
-	 */
-	public void enableDispatcher();
-	
-	/**
-	 * Gracefully shutdown a Dispatcher, finishing already running tasks.
-	 * 
-	 */
-	public void shutdown();
 	
 }

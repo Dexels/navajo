@@ -125,6 +125,14 @@ public class SharedFileStore implements SharedStoreInterface {
 	
 	
 	public void activate() {
+		if ( navajoConfig != null ) {
+			sharedStore = new File(navajoConfig.getRootPath() + "/" + sharedStoreName);
+			if ( !sharedStore.exists() ) {
+				if ( !sharedStore.mkdirs() ) {
+					logger.error("Could not create SharedFileStore");
+				}
+			}
+		}
 		logger.info("Started SharedFileStore");
 	}
 	
@@ -233,15 +241,9 @@ public class SharedFileStore implements SharedStoreInterface {
 		if(!Version.osgiActive()) {
 			navajoConfig = DispatcherFactory.getInstance().getNavajoConfig();
 			tribeManagerInterface = TribeManagerFactory.getInstance();
-		}
-		if ( navajoConfig != null ) {
-			sharedStore = new File(navajoConfig.getRootPath() + "/" + sharedStoreName);
-			if ( !sharedStore.exists() ) {
-				if ( !sharedStore.mkdirs() ) {
-					throw new SharedStoreException("Could not create SharedFileStore");
-				}
-			}
-		}
+			activate();
+		} 
+		
 	}
 	
 	/**

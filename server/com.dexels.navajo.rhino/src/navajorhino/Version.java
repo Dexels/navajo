@@ -30,13 +30,13 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 //		RhinoRepository rp = new RhinoRepository();
 //		RepositoryFactory.registerRepository(
 //				"com.dexels.navajo.rhino.RhinoRepository", rp);
-		RhinoHandler rhinoHandler = new RhinoHandler();
-		HandlerFactory.registerHandler("com.dexels.navajo.rhino.RhinoHandler",
-				rhinoHandler);
-		
-		 Dictionary<String, Object> wb = new Hashtable<String, Object>();
-		 wb.put("handlerName", "com.dexels.navajo.rhino.RhinoHandler");
-		 handler = context.registerService(ServiceHandler.class.getName() ,rhinoHandler, wb);
+//		RhinoHandler rhinoHandler = new RhinoHandler();
+//		HandlerFactory.registerHandler("com.dexels.navajo.rhino.RhinoHandler",
+//				rhinoHandler);
+//		
+//		 Dictionary<String, Object> wb = new Hashtable<String, Object>();
+//		 wb.put("handlerName", "com.dexels.navajo.rhino.RhinoHandler");
+//		 handler = context.registerService(ServiceHandler.class.getName() ,rhinoHandler, wb);
 
 //		 Dictionary<String, Object> wb2 = new Hashtable<String, Object>();
 //		 wb2.put("repositoryName", "com.dexels.navajo.rhino.RhinoRepository");

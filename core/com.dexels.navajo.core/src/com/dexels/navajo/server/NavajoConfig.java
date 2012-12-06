@@ -7,8 +7,6 @@ import java.lang.management.OperatingSystemMXBean;
 import java.util.HashMap;
 import java.util.logging.Level;
 
-import navajocore.Version;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +17,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.loader.NavajoLegacyClassLoader;
-import com.dexels.navajo.lockguard.LockManager;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.PersistenceManagerFactory;
@@ -30,8 +27,6 @@ import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
-import com.dexels.navajo.server.monitoring.MonitorComponent;
-import com.dexels.navajo.server.monitoring.ServiceMonitor;
 
 /*
  * The default NavajoConfig class.
@@ -63,8 +58,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     
     private Message body;
     private boolean statisticsRunnerStarted = false;
-    
-    private ServiceMonitor serviceMonitor = new MonitorComponent();
     
     /**
      * Several supporting threads.
@@ -119,7 +112,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 		instance = this;
 		loadConfig(in, externalRootPath,servletContextRootPath);
 		myOs = ManagementFactory.getOperatingSystemMXBean();
-		Version.registerNavajoConfig(this);
+
 	}
 
 	
@@ -435,17 +428,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     }
     
     /*
-     * Gets the lock manager instance (if enabled).
-     * If it does not exist, the lock manager is started.
-     */
-    public LockManager getLockManager() {    	
-    	if ( !enableLockManager ) {
-    		return null;
-    	}
-    	return LockManager.getInstance();
-    }
-    
-    /*
      * Check whether asynchronous services are enabled.
      */
     @Override
@@ -711,58 +693,12 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 
 	@Override
 	public boolean needsFullAccessLog(Access a) {
-		return serviceMonitor.needsFullAccessLog(a);
+		if ( a.isDebugAll() || ( a.getCompiledScript() != null && a.getCompiledScript().isDebugAll() ) ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-
-
-	@Override
-	public boolean isMonitorOn() {
-		return serviceMonitor.isMonitorOn();
-	}
-
-
-	@Override
-	public void setMonitorOn(boolean monitorOn) {
-		serviceMonitor.setMonitorOn(monitorOn);
-	}
-
-
-	@Override
-	public String getMonitorUsers() {
-		return serviceMonitor.getMonitorUsers();
-	}
-
-
-	@Override
-	public void setMonitorUsers(String monitorUsers) {
-		serviceMonitor.setMonitorUsers(monitorUsers);
-	}
-
-
-	@Override
-	public void setMonitorWebservices(String monitorWebservices) {
-		serviceMonitor.setMonitorWebservices(monitorWebservices);
-	}
-
-
-	@Override
-	public String getMonitorWebservices() {
-		return serviceMonitor.getMonitorWebservices();
-	}
-
-
-	@Override
-	public int getMonitorExceedTotaltime() {
-		return serviceMonitor.getMonitorExceedTotaltime();
-	}
-
-
-	@Override
-	public void setMonitorExceedTotaltime(int monitorExceedTotaltime) {
-		serviceMonitor.setMonitorExceedTotaltime(monitorExceedTotaltime);
-		
-	}
-
 
 	@Override
 	public Object getParameter(String name) {

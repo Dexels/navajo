@@ -2,16 +2,13 @@ package com.dexels.navajo.mapping;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
@@ -44,7 +41,7 @@ import com.dexels.navajo.util.AuditLog;
  */
 
 @SuppressWarnings("unchecked")
-public final class AsyncStore extends GenericThread implements AsyncStoreMXBean {
+public final class AsyncStore implements AsyncStoreMXBean {
 
   private static final String VERSION = "$Id$";
 	
@@ -52,17 +49,12 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
   
   public Map objectStore = null;
   public Map accessStore = null;
-  private float timeout;
   private static int threadWait = 2000;
   private static final String id = "Navajo AsyncStore";
   
   private final static Logger logger = LoggerFactory.getLogger(AsyncStore.class);
 
   private static Object semaphore = new Object();
-  
-  public AsyncStore() {
-		super(id);
-  }
   
   /**
    * Get the singleton AsyncStore object instance.
@@ -73,6 +65,12 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
     return instance;
   }
 
+  public void activate() {
+	  JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, id);
+	  objectStore = Collections.synchronizedMap(new HashMap());
+	  accessStore = Collections.synchronizedMap(new HashMap());
+  }
+  
   /**
    * Get the singleton AsyncStore object instance given an async inactive timeout.
    *
@@ -85,37 +83,10 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 	  synchronized ( semaphore ) {
 		  if (instance == null) {
 			  instance = new AsyncStore();
-			  JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
-			  instance.timeout = timeout;
-			  instance.objectStore = Collections.synchronizedMap(new HashMap());
-			  instance.accessStore = Collections.synchronizedMap(new HashMap());
-			  instance.setSleepTime(threadWait);
-			  instance.startThread(instance);
+			  instance.activate();
 		  }
 	  }
     return instance;
-  }
-
-  /**
-   * Start the main AsyncStore loop.
-   */
-  public final void worker() {
-	  
-	  synchronized (instance) {
-		  Set s = new HashSet(objectStore.keySet());
-		  Iterator iter = s.iterator();
-		  while (iter.hasNext()) {
-			  String ref = (String) iter.next();
-			  AsyncMappable a = (AsyncMappable) objectStore.get(ref);
-			  long now = System.currentTimeMillis();
-			  if ( (now - a.getLastAccess()) > timeout ) {
-				  a.kill();
-				  objectStore.remove(ref);
-				  accessStore.remove(ref);
-				  a = null;
-			  }
-		  }
-	  }
   }
 
   /**
@@ -201,7 +172,7 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 	  instance = null;
   }
   
-  public void terminate() {
+  public void deactivate() {
 	  // Removed all async mappable instances.
 	  for (Iterator iter = objectStore.values().iterator(); iter.hasNext();) {
 		  AsyncMappable element = (AsyncMappable) iter.next();

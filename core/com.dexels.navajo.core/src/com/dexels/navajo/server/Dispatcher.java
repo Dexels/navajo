@@ -58,10 +58,6 @@ import com.dexels.navajo.events.types.ChangeNotificationEvent;
 import com.dexels.navajo.events.types.NavajoExceptionEvent;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.loader.NavajoClassSupplier;
-import com.dexels.navajo.lockguard.Lock;
-import com.dexels.navajo.lockguard.LockDefinition;
-import com.dexels.navajo.lockguard.LockManager;
-import com.dexels.navajo.lockguard.LocksExceeded;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -105,9 +101,6 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
   
 
 private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
-
-  public boolean enabled = false;
-  public boolean shutdown = false;
   
   static {
 	  try {
@@ -186,9 +179,6 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  // Startup queued adapter.
 	  RequestResponseQueueFactory.getInstance();
 	  
-	  // Bootstrap lock manager.
-	  navajoConfig.getLockManager();
-	  
 	  // Bootstrap integrity worker.
 	  navajoConfig.getIntegrityWorker();
 	
@@ -230,8 +220,6 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 		  servicesBeingStarted = false;
 	  }
 	  
-	  // Enable all incoming traffic.
-	  enabled = true;
   }
 
   public Access [] getUsers() {
@@ -445,19 +433,7 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 			  return out;
 		  }
 	  }
-	  
-	  // Check for locks.
-	  LockManager lm = navajoConfig.getLockManager();
-	  Lock [] locks = null;
-	  if ( lm != null ) {
-		  try {
-			  locks = lm.grantAccess(access);
-		  } catch (LocksExceeded le) {
-			  LockDefinition ld = le.getLockDefinition();
-			  return generateErrorMessage(access, "Could not get neccessary lock(s) for service: " + access.rpcName + " (wspattern="+ ld.webservice+",matchuser=" + ld.matchUsername + ",matchrequest="+ld.matchRequest+",maxinstancecount="+ld.maxInstanceCount+")", SystemException.LOCKS_EXCEEDED, -1, le);
-		  }
-	  }
-  
+	    
 	  try {
 		  
 		  ServiceHandler sh = createHandler(handler, access);
@@ -498,10 +474,6 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  catch (java.lang.InstantiationException ie) {
 		  throw new SystemException( -1, ie.getMessage(), ie);
 	  } finally {
-		  // Release locks.
-		  if ( lm != null && locks != null ) {
-			  lm.removeLocks(access, locks);
-		  }  
 		  // Remove stored access from worker request list.
 		  if ( integ != null ) {
 			  integ.removeFromRunningRequestsList(in);
@@ -691,41 +663,6 @@ private ServiceHandler createHandler(String handler, Access access)
         access.setException(t);
       }
 
-      if (access != null && t != null && t instanceof LocksExceeded ) {
-    	  
-    	  LocksExceeded ld = (LocksExceeded) t;
-    	  
-    	  Message locksExceeded = NavajoFactory.getInstance().createMessage(
-    	          outMessage, "LocksExceeded");
-    	  outMessage.addMessage(locksExceeded);
-    	  Property w = NavajoFactory.getInstance().createProperty(outMessage,
-    	          "Webservice", Property.STRING_PROPERTY,
-    	          access.rpcName, 200, "Webservice", Property.DIR_OUT);
-    	  locksExceeded.addProperty(w);
-    	  Property u = NavajoFactory.getInstance().createProperty(outMessage,
-    	          "Username", Property.STRING_PROPERTY,
-    	          access.rpcUser, 200, "Username", Property.DIR_OUT);
-    	  locksExceeded.addProperty(u);
-    	  Property ws = NavajoFactory.getInstance().createProperty(outMessage,
-    	          "WebservicePattern", Property.STRING_PROPERTY,
-    	          ld.getLockDefinition().getWebservice(), 200, "Webservice pattern", Property.DIR_OUT);
-    	  locksExceeded.addProperty(ws);
-    	  Property mu = NavajoFactory.getInstance().createProperty(outMessage,
-    	          "MatchUsername", Property.STRING_PROPERTY,
-    	          ld.getLockDefinition().getMatchUsername() + "", 200, "Match username", Property.DIR_OUT);
-    	  locksExceeded.addProperty(mu);
-    	  Property mr = NavajoFactory.getInstance().createProperty(outMessage,
-    	          "MatchRequest", Property.STRING_PROPERTY,
-    	          ld.getLockDefinition().getMatchRequest() + "", 200, "Match request", Property.DIR_OUT);
-    	  locksExceeded.addProperty(mr);
-    	  Property mi = NavajoFactory.getInstance().createProperty(outMessage,
-    	          "MaxInstanceCount", Property.STRING_PROPERTY,
-    	          ld.getLockDefinition().getMaxInstanceCount() + "", 200, "Maximum number of instances", Property.DIR_OUT);
-    	  locksExceeded.addProperty(mi);
-    	  
-    	  
-    	  outMessage.addMessage(locksExceeded);
-      }
       if (access != null) {
           access.setOutputDoc(outMessage);
       }
@@ -898,13 +835,6 @@ private ServiceHandler createHandler(String handler, Access access)
     int accessSetSize = accessSet.size();
     setRequestRate(clientInfo, accessSetSize);
      	             
-
-    // Check whether server is disabled...
-    if ( !enabled && !inMessage.getHeader().hasCallBackPointers() && !isSpecialwebservice(inMessage.getHeader().getRPCName())) {
-    	System.err.println("DISPATCHER DISABLED, TRY OTHER NAVAJO INSTANCE/SE");
-    	throw new FatalException("500.14");
-    }
-    
     // Check whether unkown callbackpointers are present that need to be handled by another instance.
     if ( inMessage.getHeader().hasCallBackPointers() ) {
     	String [] allRefs = inMessage.getHeader().getCallBackPointers();
@@ -1015,12 +945,6 @@ private ServiceHandler createHandler(String handler, Access access)
       	access.setDebugAll(true);
       }
       
-      if ( rpcUser.endsWith(navajoConfig.getBetaUser()) ) {
-        access.betaUser = true;
-        System.err.println("We have a beta user: " + rpcUser );
-       
-      }
-
       if ( (access.userID == -1) || (access.serviceID == -1)) { // ACCESS NOT GRANTED.
 
         String errorMessage = "";
@@ -1483,118 +1407,6 @@ public String getServerId() {
 //	  return edition;
 //  }
 
-  public boolean getEnabled() {
-	  return ((Dispatcher) DispatcherFactory.getInstance()).enabled;
-  }
-
-  public void setEnabled(boolean enabled) {
-	  ((Dispatcher) DispatcherFactory.getInstance()).enabled = enabled;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.dexels.navajo.server.DispatcherMXBean#disableDispatcher()
-   */
-  public void disableDispatcher() {
-	  
-	  ChangeNotificationEvent cne = 
-		  new ChangeNotificationEvent(AuditLog.AUDIT_MESSAGE_DISPATCHER,
-				  "Dispatcher disabled",
-			      "enabled", "boolean", 
-			      Boolean.valueOf(((Dispatcher) DispatcherFactory.getInstance()).enabled), Boolean.valueOf(false));
-	  
-	  NavajoEventRegistry.getInstance().publishEvent(cne);
-	  
-	  setEnabled(false);
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see com.dexels.navajo.server.DispatcherMXBean#enableDispatcher()
-   */
-  public void enableDispatcher() {
-	  
-	  ChangeNotificationEvent cne = 
-		  new ChangeNotificationEvent(AuditLog.AUDIT_MESSAGE_DISPATCHER,
-				  "Dispatcher enabled",
-			      "enabled", "boolean", 
-			      Boolean.valueOf(((Dispatcher) DispatcherFactory.getInstance()).enabled), Boolean.valueOf(true));
-	  
-	  NavajoEventRegistry.getInstance().publishEvent(cne);
-	  
-	  setEnabled(true);
-  }
-
-  /**
-   * Use this method to FORCE a server to be disabled. Do NOT ACCEPT ANY requests anymore even
-   * for async web service polling.
-   * 
-   * @param b
-   */
-  public void setDisabled(boolean b) {
-	  System.err.println("Removed, disabling disabled!");
-//	  ChangeNotificationEvent cne = 
-//		  new ChangeNotificationEvent(AuditLog.AUDIT_MESSAGE_DISPATCHER,
-//				  (b ? "Dispatcher unset disabled" : "Dispatcher set disabled"),
-//			      "disabled", "boolean", 
-//			      Boolean.valueOf(((Dispatcher) DispatcherFactory.getInstance()).disabled), Boolean.valueOf(b));
-//	  
-//	  NavajoEventRegistry.getInstance().publishEvent(cne);
-//	  
-//	  ((Dispatcher) DispatcherFactory.getInstance()).disabled = b;
-  }
-  
-  public void setShutdown(boolean b) {
-	  if ( b ) {
-		  shutdown();
-	  }
-  }
-  
-  /*
-   * (non-Javadoc)
-   * @see com.dexels.navajo.server.DispatcherMXBean#shutdown()
-   */
-  public void shutdown() {
-	  disableDispatcher();
-	  // Wait for all synchronous web service tasks to finish...
-	  boolean finished = false;
-	  while (!finished) {
-		  int size = 0;
-		  Iterator<Access> iter = ((Dispatcher) DispatcherFactory.getInstance()).accessSet.iterator();
-		  while ( iter.hasNext() ) {
-			  Access a = iter.next();
-			  // Do not count maintenance services...
-			  if ( !isSpecialwebservice(a.rpcName) ) {
-				  size++;
-			  }
-		  }
-		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Shutdown in progress, active services: " + size);
-		  if ( size == 0 ) {
-			  finished = true;
-		  } else {
-			  try {
-				  Thread.sleep(2000);
-			  } catch (InterruptedException e) {
-			  }
-		  }
-	  }
-	  // Wait for all asynchronous web service tasks to finish...
-	  finished = false;
-	  while (!finished) {
-		  int size = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore.size();
-		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Shutdown in progress, active async services: " + size);
-		  if ( size ==  0 ) {
-			  finished = true;
-		  } else {
-			  try {
-				  Thread.sleep(2000);
-			  } catch (InterruptedException e) {
-			  }
-		  }
-	  }
-	  
-  }
-
   public Set<Access> getAccessSet() {
 	  return accessSet;
   }
@@ -1621,9 +1433,6 @@ public String getServerId() {
 	  return 0;
   }
 
-  public boolean isAvailable(String resourceId) {
-	 return ( !shutdown );
-  }
 
   public void setHealth(String resourceId, int h) {
 	  System.err.println("Dispatcher.setHealth(" + resourceId + "," + h + ")");
@@ -1632,6 +1441,11 @@ public String getServerId() {
   
   public static ResourceManager getResourceManager(String id) {
 	  return DispatcherFactory.getInstance();
+  }
+
+  @Override
+  public boolean isAvailable(String resourceId) {
+	  return true;
   }
   
 //	private CompiledScript getOSGiService(String scriptName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
