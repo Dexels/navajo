@@ -52,26 +52,22 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 			.getLogger(NavajoConfigComponent.class);
 	
 	public NavajoConfigComponent() {
-		logger.info("========>  Navajo Config constructor.");
 	}
 	
 	public void setIOConfig(NavajoIOConfig config) {
 		this.navajoIOConfig = config;
-		logger.info("========>  Setting NavajoIOConfig");
 	}
 	
 	/**
 	 * @param config the navajoioconfig to clear
 	 */
 	public void clearIOConfig(NavajoIOConfig config) {
-		logger.info("========>  Clearing NavajoIOConfig");
 		this.navajoIOConfig = null;
 	}
 	
 
 	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.myConfigurationAdmin = configAdmin;
-		logger.info("========>  Setting ConfigurationAdmin");
 	}
 
 	/**
