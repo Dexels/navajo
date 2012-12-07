@@ -54,7 +54,6 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.events.NavajoEventRegistry;
-import com.dexels.navajo.events.types.ChangeNotificationEvent;
 import com.dexels.navajo.events.types.NavajoExceptionEvent;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.loader.NavajoClassSupplier;
@@ -481,24 +480,11 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  }
   }
 
-private ServiceHandler createHandler(String handler, Access access)
-		throws ClassNotFoundException, InstantiationException,
-		IllegalAccessException {
+private ServiceHandler createHandler(String handler, Access access) {
 	
 	
 	return HandlerFactory.createHandler(handler,navajoConfig,access);
-//	Class<? extends ServiceHandler> c;
-//	  
-//	  if ( access.betaUser ) {
-//		  c = navajoConfig.getBetaClassLoader().getClass(handler);
-//	  } else {
-//		  c = navajoConfig.getClassloader().getClass(handler);
-//	  }
-//	  
-//	  ServiceHandler sh = c.newInstance();
-//	  
-//	  sh.setInput(access);
-//	return sh;
+
 }
 
   public  final boolean doMatchCN() {

@@ -211,9 +211,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 		return 0;
 	}
 
-	@Override
-	public void setRepository(Repository newRepository) {
-	}
 
 
 	@Override

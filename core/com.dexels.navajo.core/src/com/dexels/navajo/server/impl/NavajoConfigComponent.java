@@ -36,9 +36,6 @@ import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
 public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterface {
 
 	private NavajoIOConfig navajoIOConfig = null;
-	private String instanceName;
-	private String instanceGroup;
-	private Repository repository;
 	private RepositoryFactory repositoryFactory;
 	protected NavajoClassLoader betaClassloader;
 	protected NavajoClassSupplier adapterClassloader;
@@ -219,11 +216,6 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	
 	public void clearRepositoryFactory(RepositoryFactory rf) {
 		this.repositoryFactory = null;
-	}
-	
-	@Override
-	public void setRepository(Repository newRepository) {
-		this.repository = newRepository;
 	}
 
 	@Override

@@ -49,7 +49,7 @@ public final class AsyncStore implements AsyncStoreMXBean {
   
   public Map objectStore = null;
   public Map accessStore = null;
-  private static int threadWait = 2000;
+//  private static int threadWait = 2000;
   private static final String id = "Navajo AsyncStore";
   
   private final static Logger logger = LoggerFactory.getLogger(AsyncStore.class);

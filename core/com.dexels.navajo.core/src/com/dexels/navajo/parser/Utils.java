@@ -161,7 +161,7 @@ public final class Utils extends Exception {
         else if ( o != null ) {
         	return o.toString();
         } else {
-          throw new TMLExpressionException("Unknown type: " + o.getClass().getName());
+          throw new TMLExpressionException("Unknown type, can't determine type of null value." );
         }
     }
 

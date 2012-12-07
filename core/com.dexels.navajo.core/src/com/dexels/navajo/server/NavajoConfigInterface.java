@@ -20,7 +20,6 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	
 	// Available modules.
 	public PersistenceManager getPersistenceManager();
-	public void setRepository(Repository newRepository);
 	public Repository getRepository();
 	public StatisticsRunnerInterface getStatisticsRunner();
 	public NavajoClassSupplier getClassloader();
