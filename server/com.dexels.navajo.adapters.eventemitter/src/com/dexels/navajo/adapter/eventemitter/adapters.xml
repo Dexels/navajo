@@ -1,0 +1,22 @@
+<adapterdef>
+
+	<map>
+		<tagname>sendevent</tagname>
+		<object>com.dexels.navajo.adapter.eventemitter.NavajoSendEventAdapter</object>
+		<values>
+			<value name="sendThrough" type="boolean" required="false"
+				direction="in" />
+		</values>
+		<methods>
+			<method name="addProperty">
+				<param name="name" field="propertyName" type="string"
+					required="true" />
+				<param name="value" field="value" type="any" required="true" />
+			</method>
+			<method name="send">
+				<param name="topic" field="topic" type="string" required="true" />
+			</method>
+		</methods>
+	</map>
+
+</adapterdef>
