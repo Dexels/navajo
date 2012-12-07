@@ -280,7 +280,7 @@ public class SharedFileStore implements SharedStoreInterface {
 			Object o = ois.readObject();
 			return o;
 		} catch (Exception e) {
-			throw new SharedStoreException(e.getMessage());
+			throw new SharedStoreException(e.getMessage(), e);
 		} finally {
 			if ( ois != null ) {
 				try {

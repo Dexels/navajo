@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.loader.NavajoBasicClassLoader;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.AsyncStore;
@@ -31,6 +32,7 @@ import com.dexels.navajo.server.Repository;
 import com.dexels.navajo.server.RepositoryFactory;
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
+import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
 
 public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterface {
@@ -230,6 +232,9 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 
 	@Override
 	public NavajoClassSupplier getClassloader() {
+		if ( WebserviceListenerFactory.getInstance() != null ) {
+			return new NavajoBasicClassLoader(WebserviceListenerFactory.getInstance().getClass().getClassLoader());
+		}
 		return adapterClassloader;
 	}
 
