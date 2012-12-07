@@ -5,6 +5,7 @@ import java.util.Hashtable;
 
 import navajoextension.AbstractCoreExtension;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
@@ -39,7 +40,9 @@ public class Version extends AbstractCoreExtension {
 	
 	public static boolean osgiActive() {
 		try {
-			return getDefaultBundleContext()!=null;
+			Bundle b = org.osgi.framework.FrameworkUtil.getBundle(Version.class);
+			
+			return b!=null;
 		} catch (Throwable t) {
 			t.printStackTrace();
 			return false;
@@ -145,6 +148,10 @@ public class Version extends AbstractCoreExtension {
 	}
 	
 	public static BundleContext getDefaultBundleContext() {
+		Bundle b = org.osgi.framework.FrameworkUtil.getBundle(Version.class);
+		if(b!=null) {
+			return b.getBundleContext();
+		}
 		return bundleContext;
 	}
 	
