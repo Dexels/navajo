@@ -12,7 +12,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.jabber/1.0.7</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.5</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.10.49</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/2.0.30</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/2.0.32</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.igniterealtime.smack/smack/3.2.2</bundle>
@@ -64,11 +64,11 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/1.0.20</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/1.0.8</bundle>
     </feature>
-	<feature name='ops' version='1.0.2' start-level='40' >
+<!-- 	<feature name='ops' version='1.0.2' start-level='40' >
 		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jetty-bundle/2.1.0</bundle>
 		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-api/2.1.0</bundle>
 	 	<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jsp/2.1.0</bundle>
-	</feature>
+	</feature> -->
 	<feature name='trans' version='1.0.1' start-level='40' >
 		<bundle dependency='true'>mvn:org.glassfish.main/javax.transaction/4.0-b33</bundle>
 	</feature>
