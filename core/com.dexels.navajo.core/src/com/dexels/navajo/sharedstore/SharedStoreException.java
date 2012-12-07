@@ -34,4 +34,8 @@ public class SharedStoreException extends Exception {
 	public SharedStoreException(String message) {
 		super(message);
 	}
+
+	public SharedStoreException(String message, Exception e) {
+		super(message, e);
+	}
 }
