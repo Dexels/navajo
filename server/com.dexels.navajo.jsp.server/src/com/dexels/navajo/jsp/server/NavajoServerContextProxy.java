@@ -8,7 +8,6 @@ import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.api.NavajoServerContext;
 
 public class NavajoServerContextProxy implements NavajoServerContext {
@@ -24,19 +23,6 @@ public class NavajoServerContextProxy implements NavajoServerContext {
 //		com.dexels.navajo.server.api.NavajoServerContext navajoServerContext;
 		logger.info("Hash of context: "+servletContext.hashCode());
 		bundleContext = (BundleContext) servletContext.getAttribute(BundleContext.class.getName());
-		getDispatcher();
-	}
-
-
-	@Override
-	public DispatcherInterface getDispatcher() {
-		ServiceReference<NavajoServerContext> sr = bundleContext.getServiceReference(NavajoServerContext.class);
-		if(sr!=null) {
-			NavajoServerContext nsc= bundleContext.getService(sr);
-			logger.info("ServerCONTEXT serverref found!");
-			return nsc.getDispatcher();
-		}
-		return null;
 	}
 
 	@Override
