@@ -1,5 +1,7 @@
 package com.dexels.navajo.version;
 
+
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -23,7 +25,18 @@ public  class AbstractVersion extends BaseVersion implements BundleActivator {
 		}
 	}
 
-
+	
+	public static boolean osgiActive() {
+		try {
+			Bundle b = org.osgi.framework.FrameworkUtil.getBundle(AbstractVersion.class);
+			
+			return b!=null;
+		} catch (Throwable t) {
+			return false;
+		}
+	}
+	
+	
 	public BundleContext getBundleContext() {
 		return context;
 	}

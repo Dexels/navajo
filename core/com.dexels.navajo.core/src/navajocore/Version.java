@@ -37,18 +37,7 @@ public class Version extends AbstractCoreExtension {
 
 	
 
-	
-	public static boolean osgiActive() {
-		try {
-			Bundle b = org.osgi.framework.FrameworkUtil.getBundle(Version.class);
-			
-			return b!=null;
-		} catch (Throwable t) {
-			t.printStackTrace();
-			return false;
-		}
-	}
-	
+
 	@Override
 	public void start(BundleContext bc) throws Exception {
 			super.start(bc);
