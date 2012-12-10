@@ -32,26 +32,26 @@ public class DispatcherComponent extends Dispatcher implements
 		new DispatcherFactory(this);
 	}
 	public void deactivate() {
-		logger.info("Deactivate dispatcher!");
+		logger.debug("Deactivate dispatcher!");
 		myContext = null;
 //		auditLogSr.unregister();
 	}
 
 	public void setNavajoConfig(NavajoConfigInterface nci) {
-		logger.info("setNavajoConfig dispatcher!");
+		logger.debug("setNavajoConfig dispatcher!");
 		super.setNavajoConfig(nci);
 	}
 	public void clearNavajoConfig(NavajoConfigInterface nci) {
-		logger.info("clearNavajoConfig dispatcher!");
+		logger.debug("clearNavajoConfig dispatcher!");
 		super.clearNavajoConfig(nci);
 	}
 
 	public void setBundleCreator(BundleCreator nci) {
-		logger.info("setBundleCreator dispatcher!");
+		logger.debug("setBundleCreator dispatcher!");
 		super.setBundleCreator(nci);
 	}
 	public void clearBundleCreator(BundleCreator nci) {
-		logger.info("clearBundleCreater dispatcher!");
+		logger.debug("clearBundleCreater dispatcher!");
 		super.clearBundleCreator(nci);
 	}
 
