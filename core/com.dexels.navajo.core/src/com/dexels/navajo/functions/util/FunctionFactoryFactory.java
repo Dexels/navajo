@@ -46,7 +46,7 @@ public class FunctionFactoryFactory {
 			}
 
 			try {
-				if(Version.getDefaultBundleContext()!=null) {
+				if(Version.osgiActive()) {
 					logger.debug("OSGi environment detected!");
 					func = "com.dexels.navajo.functions.util.OsgiFunctionFactory";
 				} else {
