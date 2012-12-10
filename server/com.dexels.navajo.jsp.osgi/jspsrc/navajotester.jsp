@@ -108,7 +108,6 @@
       </div>
       <!-- begin: #footer -->
       <div id="footer">Powered by <a href="http://www.navajo.nl/">Navajo</a>
-      	<c:import url="tml/manager/installwarning.jsp"></c:import>
       </div>
     </div>
   </div>
