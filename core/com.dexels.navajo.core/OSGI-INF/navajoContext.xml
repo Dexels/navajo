@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="navajo.server.http.osgi">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" deactivate="deactivate" name="navajo.server.http.osgi">
    <implementation class="com.dexels.navajo.server.impl.NavajoServerContextComponent"/>
    <service>
       <provide interface="com.dexels.navajo.server.api.NavajoServerContext"/>
