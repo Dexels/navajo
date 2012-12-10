@@ -69,7 +69,6 @@ public class NavajoContextListener implements ServletContextListener {
 		if(!Version.hasOSGiBundleContext()) {
 			logger.info("No OSGi detected. Manually inserting LocalClientWrapper into ServletContext");
 			LocalClientDispatcherWrapper lcdw = new LocalClientDispatcherWrapper();
-//			LegacyLocalClientDispatcherWrapper lcdw = new LegacyLocalClientDispatcherWrapper();
 			lcdw.setDispatcher(dispatcher);
 //			lcdw.setContext(nsi);
 			try {
