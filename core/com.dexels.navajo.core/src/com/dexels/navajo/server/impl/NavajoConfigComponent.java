@@ -87,11 +87,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 			logger.error("activation error",cc);
 		}
 	}
-	
-	public void modified(ComponentContext cc) {
-		logger.info("Modified. Just sayin'");
-	}
-	
+
 	@Override
 	public File getContextRoot() {
 		return navajoIOConfig.getContextRoot();
