@@ -173,7 +173,7 @@ public class DispatcherFactory {
 				  }
 				  
 				instance = new Dispatcher(nc);
-				navajocore.Version.registerDispatcher(instance);
+//				navajocore.Version.registerDispatcher(instance);
 				((Dispatcher) instance).init();
 				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
 				NavajoFactory.getInstance().setTempDir(instance.getTempDir());

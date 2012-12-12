@@ -116,7 +116,7 @@ public abstract class FunctionFactoryInterface implements Serializable {
 			logger.info("No function definition found for: {}, assuming class name.",name);
 			return name;
 		}
-		return functionDefinition.getObject();
+		return functionDefinition.getObject().trim();
 	}
 
 	public  FunctionDefinition getAdapterDefinition(String name, ExtensionDefinition ed)  {

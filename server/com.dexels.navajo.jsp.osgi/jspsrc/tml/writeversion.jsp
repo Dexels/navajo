@@ -8,4 +8,4 @@
 <%@ page import="com.dexels.navajo.client.context.NavajoContext"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <jsp:useBean id="navajoContext" type="com.dexels.navajo.client.context.ClientContext"  scope="application" />
-Navajo Tester build:  <% out.write(JspComponent.getInstance().getVersion()); %>
+Navajo Tester build:  <% out.write(JspComponent.getInstance().getVersion()); %> 

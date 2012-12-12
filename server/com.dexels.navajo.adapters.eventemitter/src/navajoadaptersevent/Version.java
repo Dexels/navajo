@@ -1,9 +1,18 @@
+package navajoadaptersevent;
+
+import navajoextension.AbstractCoreExtension;
+
+import org.osgi.framework.BundleContext;
+
+import com.dexels.navajo.adapter.eventemitter.EventAdapterLibrary;
+
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
  * <p>Copyright: Copyright (c) 2005</p>
  * <p>Company: Dexels BV</p>
- * @author 
+ * @author
  * @version $Id$.
  *
  * DISCLAIMER
@@ -22,25 +31,38 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.dexels.navajo.lockguard;
 
-public class LocksExceeded extends Exception {
+
+public class Version extends AbstractCoreExtension {
+
+
+	private static BundleContext bundleContext;
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2895361839237191106L;
+	public Version() {
+	}
 
-	private transient LockDefinition ld;
-	
-	public static final String VERSION = "$Id$";
 
-	public LocksExceeded(LockDefinition l) {
-		super();
-		ld = l;
+	@Override
+	public void start(BundleContext bc) throws Exception {
+		super.start(bc);
+		bundleContext = bc;
+		try {
+			EventAdapterLibrary library = new EventAdapterLibrary();
+			registerAll(library);
+		} catch (Throwable e) {
+			logger.error("Trouble starting NavajoEventEmitters bundle",e);
+			e.printStackTrace();
+		}
 	}
 	
-	public LockDefinition getLockDefinition() {
-		return ld;
+	@Override
+	public void shutdown() {
 	}
+
+
+	public static BundleContext getDefaultBundleContext() {
+		return bundleContext;
+	}
+	
+
 }

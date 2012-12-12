@@ -31,7 +31,7 @@ public class Security {
 		c.init(Cipher.ENCRYPT_MODE, key);
 		byte[] encVal = c.doFinal(Data.getBytes());
 		
-		String encryptedValue = new Base64().encode(encVal);
+		String encryptedValue = Base64.encode(encVal);
 		return encryptedValue;
 	}
 
@@ -39,7 +39,7 @@ public class Security {
 		Key key = generateKey();
 		Cipher c = Cipher.getInstance(ALGO);
 		c.init(Cipher.DECRYPT_MODE, key);
-		byte[] decordedValue = new Base64().decode(encryptedData);
+		byte[] decordedValue = Base64.decode(encryptedData);
 		byte[] decValue = c.doFinal(decordedValue);
 		String decryptedValue = new String(decValue);
 		return decryptedValue;

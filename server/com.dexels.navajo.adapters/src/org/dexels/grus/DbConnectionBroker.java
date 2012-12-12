@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +34,30 @@ public final class DbConnectionBroker extends Object
 	protected boolean dead = false;
 	public  boolean supportsAutocommit = true;
 	protected boolean sanityCheck = true;
+	private static final AtomicInteger connectionCounter = new AtomicInteger();
 	
 	
 	protected static final Map<Integer,DbConnectionBroker> transactionContextBrokerMap = Collections.synchronizedMap(new HashMap<Integer,DbConnectionBroker>());
+	protected static final ConcurrentHashMap<Connection,Integer> connectionIdMap = new ConcurrentHashMap<Connection,Integer>();
 	
 	protected final void log(String message) {
 		AuditLog.log("GRUS", Thread.currentThread().getName() + ": (url = " + location + ", user = " + username + ")" + message);
+	}
+	
+	private static int getNextUniqueInteger() {
+		return connectionCounter.incrementAndGet();
+	}
+	
+	public static int getConnectionId(Connection c) {
+		if(c==null) {
+			logger.error("Error! Requested the id of a null-connection");
+			throw new IllegalArgumentException("Error! Requested the id of a null-connection");
+		}
+		final Integer integer = connectionIdMap.get(c);
+		if(integer==null) {
+			throw new IllegalArgumentException("Could not find connection id in map for connection: " + c.hashCode());
+		}
+		return integer;
 	}
 	
 	public DbConnectionBroker(String dbDriver,
@@ -161,20 +181,20 @@ public final class DbConnectionBroker extends Object
 		// Fetch proper broker.
 		DbConnectionBroker broker = transactionContextBrokerMap.get(connectionId);
 		if ( broker == null ) {
-			logger.warn("COULD NOT FIND BROKER FOR CONNECTION ID: " + connectionId);
+			logger.error("COULD NOT FIND BROKER FOR CONNECTION ID: " + connectionId);
 			return null;
 		}
 		for ( int i = 0; i < broker.conns.length; i++ ) {
-			if ( broker.conns[i] != null && broker.conns[i].hashCode() == connectionId ) {
+			if ( broker.conns[i] != null && getConnectionId(broker.conns[i]) == connectionId ) {
 				if ( broker.usedmap[i] )  {
 					return broker.conns[i];
 				} else {
-					logger.debug("Trying to get unused connection: " + connectionId);
+					logger.error("Trying to get unused connection: " + connectionId);
 					return null;
 				}
 			}
 		}
-		logger.warn("Could not find connectionid: " + connectionId);
+		logger.error("Could not find connectionid: " + connectionId);
 		return null;
 	}
 	
@@ -216,15 +236,7 @@ public final class DbConnectionBroker extends Object
 
 		// EDIT BY FRANK: Placed wait into a loop. Also added timeout to loop, to be sure
 		if (timeoutDays > 0 && available == 0 && current == conns.length ) {
-			try {
-				wait(60000);
-			} catch(InterruptedException e) {
-				// dunno.
-				e.printStackTrace();
-			}
-			if ( available == 0 && current == conns.length ) {
 				return null;
-			}
 		}
 
 		if(closed && timeoutDays > 0) {
@@ -247,8 +259,11 @@ public final class DbConnectionBroker extends Object
 								conns[i].close();
 							} catch (Throwable t) {
 								logger.error("Error: ", t);
+							} finally {
+								logger.warn("Removing aged connection: " + getConnectionId(conns[i]));
+								transactionContextBrokerMap.remove(getConnectionId(conns[i]));
+								connectionIdMap.remove(conns[i]);
 							}
-							transactionContextBrokerMap.remove(conns[i].hashCode());
 						}
 					} catch (Throwable e) {
 						logger.error("Error: ", e);
@@ -262,10 +277,23 @@ public final class DbConnectionBroker extends Object
 		// Create new connection if maxconnections has not yet been reached.
 		for(int i=0; i<conns.length; i++) {
 			if( conns[i] == null ) {
+				int id = -1;
 				try {
 					//long start = System.currentTimeMillis();
 					DriverManager.setLoginTimeout(5);
-					conns[i] = DriverManager.getConnection(location,username,password);
+					Connection c = DriverManager.getConnection(location,username,password);
+					while ( isDoubleEntry(c) ) {
+						// We could also check if there is another Connection with the same hashCode, I think that is closer to our
+						// actual problem
+						logger.error("Overlapping hashcode for connection found, trying new one.");
+						c.close();
+						c = DriverManager.getConnection(location,username,password);
+					}
+					id = DbConnectionBroker.getNextUniqueInteger();
+					connectionIdMap.put(c, id);
+					transactionContextBrokerMap.put(id, this);
+					logger.debug("Created new id for connection: "+id);
+					conns[i] = c;
 					
 				} catch(SQLException e) {
 					logger.error("SQL login failed",e);
@@ -275,7 +303,6 @@ public final class DbConnectionBroker extends Object
 				aged[i] = false;
 				created[i] = System.currentTimeMillis();
 				++current;
-				transactionContextBrokerMap.put(conns[i].hashCode(), this);
 				return conns[i];
 			}
 		}
@@ -287,21 +314,34 @@ public final class DbConnectionBroker extends Object
 	
 	public final synchronized String freeConnection(Connection conn) {
 		
-		int id = idOfConnection(conn);
+		int index = indexOfConnection(conn);
 		
-		if( id >= 0 && usedmap[id] ) {
-			usedmap[id] = false;
+		if( index >= 0 && usedmap[index] ) {
+			usedmap[index] = false;
 			++available;
 			notify();
 		}
-		
+		//logger.debug("FreeConnection is removing connection id: {}",connectionIdMap.get(conn));
+		//DbConnectionBroker.connectionIdMap.remove(conn);
 		return null; // Duh?
 	}
 	
-	private final int idOfConnection(Connection conn) {
-		for(int i=0; i<conns.length; i++)
-			if(conns[i] == conn)
+	private boolean isDoubleEntry(Connection con) {
+		
+		for(int i=0; i<conns.length; i++) {
+			if ( conns[i] != null && conns[i] == con ) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private final int indexOfConnection(Connection conn) {
+		for(int i=0; i<conns.length; i++) {
+			if(conns[i] != null && conns[i] == conn) {
 				return i;
+			}
+		}
 		return -1;
 	}
 	
@@ -319,8 +359,9 @@ public final class DbConnectionBroker extends Object
 			try {
 				if(conns[i] != null) {
 					conns[i].close();
-					transactionContextBrokerMap.remove(conns[i].hashCode());
-					log("Closed connection due to destroy: " + conns[i].hashCode());
+					log("Closed connection due to destroy: " + getConnectionId(conns[i]));
+					transactionContextBrokerMap.remove(getConnectionId(conns[i]));
+					connectionIdMap.remove(conns[i]);
 					conns[i] = null;
 					usedmap[i] = false;
 				}

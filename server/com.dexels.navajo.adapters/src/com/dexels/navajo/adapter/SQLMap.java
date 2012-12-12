@@ -899,7 +899,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			}
 
 			if (this.con != null) {
-				this.connectionId = con.hashCode();
+				this.connectionId = DbConnectionBroker.getConnectionId(con);
 				if (this.debug) {
 					Access.writeToConsole(myAccess, this.getClass()
 							+ ": put connection no. " + this.connectionId

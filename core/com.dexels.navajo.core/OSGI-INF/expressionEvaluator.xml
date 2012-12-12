@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="com.dexels.navajo.expression">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.server.expressionparser">
    <implementation class="com.dexels.navajo.parser.DefaultExpressionEvaluator"/>
    <service>
       <provide interface="com.dexels.navajo.document.ExpressionEvaluator"/>

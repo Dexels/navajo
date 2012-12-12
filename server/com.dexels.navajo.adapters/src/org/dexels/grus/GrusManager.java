@@ -1,9 +1,11 @@
 package org.dexels.grus;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +14,7 @@ public class GrusManager implements Runnable {
 
 	private final static GrusManager instance; 
 	private Thread myThread;
-	private final HashSet<DbConnectionBroker> registeredBrokers = new HashSet<DbConnectionBroker>();
+	private final Set<DbConnectionBroker> registeredBrokers = Collections.synchronizedSet(new HashSet<DbConnectionBroker>());
 	private boolean shutdown = false;
 	
 	private final static Logger logger = LoggerFactory
@@ -61,7 +63,7 @@ public class GrusManager implements Runnable {
 					wait(60000);
 				}
 				// Make copy to avoid concurrent modification exception.com
-				Iterator<DbConnectionBroker> allBrokers = new HashSet<DbConnectionBroker>(registeredBrokers).iterator();
+				Iterator<DbConnectionBroker> allBrokers = registeredBrokers.iterator();
 				while ( allBrokers.hasNext() ) {
 					DbConnectionBroker inspectedBroker = allBrokers.next();
 					inspectedBroker.refreshConnections();

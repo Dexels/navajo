@@ -8,6 +8,11 @@ import com.dexels.navajo.util.AuditLog;
 public class WebserviceListenerFactory {
 
 	private static volatile WebserviceListenerRegistryInterface instance = null;
+	
+	public static void setInstance(WebserviceListenerRegistryInterface instance) {
+		WebserviceListenerFactory.instance = instance;
+	}
+
 	private static Object semaphore = new Object();
 	
 	public static final WebserviceListenerRegistryInterface getInstance() {

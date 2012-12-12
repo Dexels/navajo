@@ -18,7 +18,6 @@ package com.dexels.navajo.osgi.runtime;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
@@ -210,12 +209,13 @@ public class FrameworkInstance {
 			
 			@Override
 			public void bundleChanged(BundleEvent bc) {
-				logger.info("Bundle Event: "+bc.getBundle().getSymbolicName()+" : "+bc.getType());
+//				logger.info("Bundle Event: "+bc.getBundle().getSymbolicName()+" : "+bc.getType());
 			}
 		});
 		logger.info("start called called");
 //		loadBundlesFromBundleDir(felixFramework.getBundleContext());
-		loadBundlesInFolder(bundlePath);
+		loadAndStartBundlesInFolders(new String[]{bundlePath,"aux"});
+//		loadAndStartBundlesInFolder("aux");
 		logger.info("Load bundles complete");
 		registerService(bundlePath);
 	}
@@ -420,8 +420,42 @@ public class FrameworkInstance {
 				path);
 	}
 
-	protected void loadBundlesInFolder(String bundlePath) {
+	protected void loadAndStartBundlesInFolders(String[] bundlePaths) {
+		final List<Bundle> installed = new ArrayList<Bundle>();
+		for (String path : bundlePaths) {
+			List<Bundle> l = installBundlesInPath(path);
+			if(l!=null) {
+				installed.addAll(l);
+			}
+		}
+		startBundles(installed);
+	}
+	
+	
+	protected void loadAndStartBundlesInFolder(String bundlePath) {
+		final List<Bundle> installed = installBundlesInPath(bundlePath);
+		startBundles(installed);
+	}
+
+	protected void startBundles(final List<Bundle> installed) {
+		for (Bundle bundle : installed) {
+			logger.info("Starting: "+bundle.getSymbolicName());
+			try {
+				if (bundle.getHeaders().get(Constants.FRAGMENT_HOST) == null) {
+					bundle.start();
+				}
+			} catch (BundleException e) {
+				logger.error("Error starting bundle: ",e);
+			}
+		}
+	}
+
+	protected List<Bundle> installBundlesInPath(String bundlePath) {
 		File folder = new File(bundlePath);
+		if(!folder.exists()) {
+			logger.warn("Requested bundle dir missing: {}", folder.getAbsolutePath());
+			return null;
+		}
 		File[] bundles = folder.listFiles(new FilenameFilter() {
 			
 			@Override
@@ -454,16 +488,7 @@ public class FrameworkInstance {
 				}
 			}
 		}
-		for (Bundle bundle : installed) {
-			logger.info("Starting: "+bundle.getSymbolicName());
-			try {
-				if (bundle.getHeaders().get(Constants.FRAGMENT_HOST) == null) {
-					bundle.start();
-				}
-			} catch (BundleException e) {
-				logger.error("Error starting bundle: ",e);
-			}
-		}
+		return installed;
 	}
 
 	

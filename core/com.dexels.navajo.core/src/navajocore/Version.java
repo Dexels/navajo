@@ -5,26 +5,21 @@ import java.util.Hashtable;
 
 import navajoextension.AbstractCoreExtension;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.adapter.core.NavajoCoreAdapterLibrary;
 import com.dexels.navajo.events.NavajoEventRegistry;
-import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.GenericThread;
-import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 import com.dexels.navajo.server.enterprise.scheduler.ClockInterface;
 import com.dexels.navajo.server.enterprise.scheduler.DummyClock;
 import com.dexels.navajo.server.enterprise.scheduler.DummyTaskRunner;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
-import com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
-import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
-import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.resource.ResourceCheckerManager;
 import com.dexels.navajo.util.AuditLog;
@@ -45,7 +40,9 @@ public class Version extends AbstractCoreExtension {
 	
 	public static boolean osgiActive() {
 		try {
-			return getDefaultBundleContext()!=null;
+			Bundle b = org.osgi.framework.FrameworkUtil.getBundle(Version.class);
+			
+			return b!=null;
 		} catch (Throwable t) {
 			t.printStackTrace();
 			return false;
@@ -84,11 +81,14 @@ public class Version extends AbstractCoreExtension {
 //			} catch (Throwable e) {
 //				logger.error("Error starting navajo core bundle.",e);
 //			}
-			StatisticsRunnerInterface ptps = new DummyStatisticsRunner();
-			Dictionary<String, Object> wb = new Hashtable<String, Object>();
-			wb.put("threadClass","com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner");
-			wb.put("name","dummy");
-			dummyStats = bc.registerService(StatisticsRunnerInterface.class.getName(), ptps, wb);
+
+			
+			
+//			StatisticsRunnerInterface ptps = new DummyStatisticsRunner();
+//			Dictionary<String, Object> wb = new Hashtable<String, Object>();
+//			wb.put("threadClass","com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner");
+//			wb.put("name","dummy");
+//			dummyStats = bc.registerService(StatisticsRunnerInterface.class.getName(), ptps, wb);
 
 			registerClock();
 			registerTaskRunner();
@@ -130,12 +130,8 @@ public class Version extends AbstractCoreExtension {
 		  // right now I just dug up 
 
 //		  NavajoConfig.terminate();
-		  
-		  DispatcherFactory.getInstance().shutdown();
+		
 		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
-
-		  JabberWorkerFactory.shutdown();
-		  DispatcherFactory.shutdown();
 		  
 	
 	}
@@ -150,44 +146,12 @@ public class Version extends AbstractCoreExtension {
 		deregisterClock();
 		bundleContext = null;
 	}
-
-
-	public static void registerNavajoConfig(NavajoConfigInterface nc) {
-		Dictionary<String, Object> properties = new Hashtable<String, Object>();
-		properties.put("rootPath", nc.getRootPath());
-		properties.put("instanceName", nc.getInstanceName());
-		properties.put("instanceGroup", nc.getInstanceGroup());
-		try {
-			if ( getDefaultBundleContext() != null ) {
-				navajoConfig = getDefaultBundleContext().registerService(NavajoConfigInterface.class.getName(), nc, properties);
-			}else {
-				logger.warn("Could NOT find default bundle context. No OSGi?");
-			}
-		} catch (Throwable t) {
-			logger.warn("Could NOT find method getDefaultBundleContext(). No OSGi?");
-		}
-	}
-
-
-
-	public static void registerDispatcher(DispatcherInterface instance) {
-		Dictionary<String, Object> properties = new Hashtable<String, Object>();
-//		properties.put("edition", instance.getEdition());
-//		properties.put("product", instance.getProduct());
-		properties.put("applicationId", instance.getApplicationId());
-		properties.put("serverId", instance.getServerId());
-		try {
-			if ( getDefaultBundleContext() != null ) {
-				dispatcherRegistration = getDefaultBundleContext().registerService(DispatcherInterface.class.getName(), instance, properties);
-			} else {
-				logger.warn("Could NOT find default bundle context. No OSGi?");
-			}
-		} catch (Throwable t) {
-			logger.warn("Could NOT find method  getDefaultBundleContext(). No OSGi?");
-		}
-	}
 	
 	public static BundleContext getDefaultBundleContext() {
+		Bundle b = org.osgi.framework.FrameworkUtil.getBundle(Version.class);
+		if(b!=null) {
+			return b.getBundleContext();
+		}
 		return bundleContext;
 	}
 	

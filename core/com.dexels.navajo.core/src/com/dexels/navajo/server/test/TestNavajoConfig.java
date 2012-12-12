@@ -7,7 +7,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
-import com.dexels.navajo.lockguard.LockManager;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.PersistenceManagerFactory;
@@ -134,22 +133,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	}
 
 	@Override
-	public int getMonitorExceedTotaltime() {
-		return 0;
-	}
-
-	@Override
-	public String getMonitorUsers() {
-		return null;
-	}
-
-	@Override
-	public String getMonitorWebservices() {
-		return null;
-	}
-
-
-	@Override
 	public String getResourcePath() {
 		return null;
 	}
@@ -180,29 +163,8 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	}
 
 	@Override
-	public boolean isMonitorOn() {
-		return false;
-	}
-
-	@Override
 	public boolean isStatisticsRunnerEnabled() {
 		return false;
-	}
-
-	@Override
-	public void setMonitorExceedTotaltime(int monitorExceedTotaltime) {
-	}
-
-	@Override
-	public void setMonitorOn(boolean b) {
-	}
-
-	@Override
-	public void setMonitorUsers(String monitorUsers) {
-	}
-
-	@Override
-	public void setMonitorWebservices(String monitorWebservices) {
 	}
 
 	@Override
@@ -244,21 +206,11 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 		return null;
 	}
 
-
-	@Override
-	public LockManager getLockManager() {
-		
-		return null;
-	}
-
 	@Override
 	public int getMaxAccessSetSize() {
 		return 0;
 	}
 
-	@Override
-	public void setRepository(Repository newRepository) {
-	}
 
 
 	@Override

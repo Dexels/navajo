@@ -47,8 +47,8 @@ public class CSSTipiEngineImpl extends AbstractCSSSwingEngineImpl {
 		super.registerCSSPropertyHandler(ICSSPropertyBackgroundHandler.class,
 				CSSPropertyBackgroundSwingHandler.INSTANCE);
 		// Register Swing CSS Property Border Handler
-		super.registerCSSPropertyHandler(ICSSPropertyBorderHandler.class,
-				CSSPropertyBorderSwingHandler.INSTANCE);
+//		super.registerCSSPropertyHandler(ICSSPropertyBorderHandler.class,
+//				CSSPropertyBorderSwingHandler.INSTANCE);
 		// Register Swing CSS Property Classification Handler
 		super.registerCSSPropertyHandler(
 				ICSSPropertyClassificationHandler.class,

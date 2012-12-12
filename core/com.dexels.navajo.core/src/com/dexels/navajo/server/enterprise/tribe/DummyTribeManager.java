@@ -5,13 +5,20 @@ import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.DispatcherFactory;
 
 public class DummyTribeManager implements TribeManagerInterface {
+
+//	private NavajoConfigInterface navajoConfig;
 
 	public void terminate() {
 	}
 
+	public DummyTribeManager() {
+//		if(!Version.osgiActive()) {
+//			navajoConfig = DispatcherFactory.getInstance().getNavajoConfig();
+//		}
+	}
+	
 	public Navajo forward(Navajo in) throws Exception {
 		return null;
 	}
@@ -37,13 +44,11 @@ public class DummyTribeManager implements TribeManagerInterface {
 
 	public void tribalAfterWebServiceRequest(String service, Access a,
 			HashSet<String> ignoreTaskIds) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public Navajo tribalBeforeWebServiceRequest(String service, Access a,
 			HashSet<String> ignoreList) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -68,31 +73,26 @@ public class DummyTribeManager implements TribeManagerInterface {
 	}
 
 	public void multicast(Object[] recipients, SmokeSignal m) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public Answer askAnybody(Request q) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Navajo forward(Navajo in, Object address) throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void addTribeMember(TribeMemberInterface tm) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public String getMyName() {
-		return DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
+		return "dummytribemember";
 	}
 
 	public String getStatistics() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

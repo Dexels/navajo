@@ -188,7 +188,8 @@ public final class JMXHelper  {
 			synchronized ( NAVAJO_DOMAIN ) {
 				DispatcherInterface instance = DispatcherFactory.getInstance();
 				if(instance==null) {
-					throw new RuntimeException("Navajo instance not started. Is navajo context listener valid? Check web.xml");
+					logger.warn("Navajo instance not started. Is navajo context listener valid? Check web.xml");
+					return null;
 				}
 				NavajoConfigInterface navajoConfig = instance.getNavajoConfig();
 				if(navajoConfig==null) {
@@ -242,7 +243,7 @@ public final class JMXHelper  {
 	public final static void registerMXBean(Object o, String domain, String type) {
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
 		ObjectName name = getObjectName(domain, type);
-		if ( name != null ) {
+		if ( name != null ) { 
 			try {
 				mbs.registerMBean(o, name);
 			} catch (InstanceAlreadyExistsException e) {

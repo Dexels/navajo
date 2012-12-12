@@ -85,7 +85,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 
     private FormatDescription currentFormatDescription;
 
-	private MessageDigest messageDigest;
+	private transient MessageDigest messageDigest;
 
 	private byte[] digest;
     

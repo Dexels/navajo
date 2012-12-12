@@ -47,7 +47,7 @@ public class NavajoIOConfigComponent extends FileNavajoConfig implements NavajoI
 
 	@Override
 	public String getAdapterPath() {
-		return new File(rootPath,"config").getAbsolutePath();
+		return new File(rootPath,"adapters").getAbsolutePath();
 	}
 
 	@Override
