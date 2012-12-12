@@ -155,6 +155,7 @@ public class ToSecureImage extends FunctionInterface{
 	      rs.insertOperand(6);
 	      String random = (String)rs.evaluate();
 	      System.err.println("String["+i+"]: " + random);
+	      // lala
 	      
 	      tm.insertOperand(new String(random));
 	      tm.insertOperand(110);
