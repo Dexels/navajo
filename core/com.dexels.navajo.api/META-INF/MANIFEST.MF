@@ -8,5 +8,9 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  javax.servlet;version="[2.5.0,4.0.0)",
  javax.servlet.http;version="[2.5.0,4.0.0)",
- org.osgi.framework
+ org.osgi.framework,
+ org.osgi.service.log;version="1.3.0",
+ org.slf4j;version="1.6.1"
 Export-Package: com.dexels.navajo.script.api;version="1.0.0"
+Service-Component: OSGI-INF/navajoLog.xml
+
