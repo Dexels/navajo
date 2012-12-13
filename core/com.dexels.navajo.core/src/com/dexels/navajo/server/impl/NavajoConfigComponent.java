@@ -48,6 +48,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	private ConfigurationAdmin myConfigurationAdmin;
 	private PersistenceManager persistenceManager;
 	private AsyncStore asyncStore;
+	private WorkerInterface integrityWorker;
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoConfigComponent.class);
 	
@@ -88,6 +89,10 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 		}
 	}
 
+	public void deactivate() {
+		logger.info(">>>>>> deactivating navajo config");
+	}
+	
 	@Override
 	public File getContextRoot() {
 		return navajoIOConfig.getContextRoot();
@@ -256,11 +261,20 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	public void addDescriptionProvider(DescriptionProviderInterface dpi) {
 		desciptionProviders.put(dpi.getClass().getName(), dpi);
 	}
-	
+
 	public void removeDescriptionProvider(DescriptionProviderInterface dpi) {
 		desciptionProviders.remove(dpi.getClass().getName());
 	}
 
+	
+	public void removeDescriptionProvider(WorkerInterface dpi) {
+		this.integrityWorker = null;
+	}
+
+	public void setIntegrityWorker(WorkerInterface dpi) {
+		this.integrityWorker = dpi;
+	}
+	
 	@Override
 	public DescriptionProviderInterface getDescriptionProvider() {
 		return desciptionProviders.get(properties.get("descriptionProviderClass"));
@@ -268,7 +282,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 
 	@Override
 	public WorkerInterface getIntegrityWorker() {
-		return (WorkerInterface)getService(WorkerInterface.class);
+		return integrityWorker;
 	}
 
 	@Override
