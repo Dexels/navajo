@@ -4,6 +4,6 @@
    <service>
       <provide interface="com.dexels.navajo.sharedstore.SharedStoreInterface"/>
    </service>
-   <reference bind="setNavajoConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfig" policy="dynamic" unbind="clearNavajoConfig"/>
-   <reference bind="setTribeManager" cardinality="1..1" interface="com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface" name="TribeManager" policy="dynamic" unbind="clearTribeManager"/>
+   <reference bind="setNavajoConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfig" policy="static" unbind="clearNavajoConfig"/>
+   <reference bind="setTribeManager" cardinality="1..1" interface="com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface" name="TribeManager" policy="static" unbind="clearTribeManager"/>
 </scr:component>
