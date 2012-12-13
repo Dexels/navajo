@@ -224,11 +224,14 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					Color back = tb.getTabBackgroundColor();
 					Color fore = tb.getTabForegroundColor();
 					String tip = tb.getTabTooltip();
-
+					String text = tb.getTabText();
+					if(text==null) {
+						text = stringConstraints;
+					}
 					if (tabIcon != null) {
-						pane.addTab(stringConstraints, tabIcon, jc, tip);
+						pane.addTab(text, tabIcon, jc, tip);
 					} else {
-						pane.addTab(stringConstraints, jc);
+						pane.addTab(text, jc);
 					}
 					if (back != null) {
 						pane.setBackgroundAt(nextIndex, back);

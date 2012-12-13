@@ -30,6 +30,8 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 	private Color tabBackgroundColor = null;
 	private Object tabObject;
 
+	private String tabText;
+
 	public String getTabTooltip() {
 		return tabTooltip;
 	}
@@ -107,5 +109,14 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public String getTabText() {
+		return tabText;
+	}
+
+	public void setTabText(String tabText) {
+		this.tabText = tabText;
 	}
 }
