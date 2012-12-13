@@ -105,5 +105,5 @@ Service-Component: OSGI-INF/simpleRepository.xml, OSGI-INF/repositoryFactory.xml
  OSGI-INF/localClientContext.xml,OSGI-INF/navajoConfigEmitter.xml,OSGI-INF/navajoConfig.xml,OSGI-INF/dispatcher.xml, 
  OSGI-INF/expressionEvaluator.xml,OSGI-INF/navajoEventRegistry.xml,OSGI-INF/sharedFileStore.xml,
  OSGI-INF/dummyTribeManager.xml,OSGI-INF/dummyJabberWorker.xml,OSGI-INF/asyncStore.xml,OSGI-INF/navajoContext.xml,
- OSGI-INF/dummyIntegrityWorker.xml
+ OSGI-INF/dummyIntegrityWorker.xml, OSGI-INF/dummyTaskRunner.xml, OSGI-INF/dummyClock.xml
 
