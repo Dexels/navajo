@@ -23,6 +23,12 @@ public class NavajoIOConfigComponent extends FileNavajoConfig implements NavajoI
 		logger.info("NavajoIOConfigComponent activated");
 	}
 	
+	public void deactivate() {
+		logger.info("NavajoIOConfigComponent deactivated");
+	}
+	
+	
+	
 	public void setServerContext(NavajoServerContext nsc) {
 		this.context = nsc;
 		rootPath = new File(context.getInstallationPath());
