@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="ignore" deactivate="deactivate" name="navajo.config.emitter">
-   <implementation class="com.dexels.navajo.server.LegacyDispatcherFactory"/>
+   <implementation class="com.dexels.navajo.server.NavajoConfigEmitter"/>
    <reference bind="setContext" cardinality="1..1" interface="com.dexels.navajo.server.api.NavajoServerContext" name="NavajoServerContext" policy="dynamic" unbind="removeContext"/>
    <reference bind="setConfigAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="dynamic" unbind="clearConfigAdmin"/>
 </scr:component>
