@@ -14,5 +14,13 @@ public interface TaskInterface extends Serializable, TaskMXBean {
 	public void setKeepRequestResponse(boolean keepRequestResponse);
 	public void setPersisted(boolean b);
 	public void runTask();
+	public void setTrigger(TriggerInterface trigger);
+	public TriggerInterface getTrigger();
+	public String getWorkflowId();
+	public String getWorkflowDefinition();
+	public void setWorkflowDefinition(String workflowDefinition);
+	public void setForceSync(boolean b);
+	public boolean isProxy();
+	
 	
 }
