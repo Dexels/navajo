@@ -6,6 +6,7 @@ Bundle-Version: 2.10.50.qualifier
 Bundle-Activator: navajocore.Version
 Export-Package: com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.navajo.server.resource",
  com.dexels.navajo.compiler,
+ com.dexels.navajo.enterprise.scheduler.tribe,
  com.dexels.navajo.events;uses:="junit.framework",
  com.dexels.navajo.events.types;uses:="junit.framework",
  com.dexels.navajo.functions.util;uses:="navajo,com.dexels.navajo.parser,com.dexels.navajo.document.nanoimpl",
@@ -96,9 +97,13 @@ Import-Package: com.dexels.navajo.authentication.api,
  org.osgi.framework;version="1.5.0",
  org.osgi.service.cm;version="1.3.0",
  org.osgi.service.component;version="1.1.0",
+ org.osgi.service.log;version="1.3.0",
  org.slf4j,
  org.w3c.dom
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Service-Component: OSGI-INF/simpleRepository.xml, OSGI-INF/repositoryFactory.xml, OSGI-INF/statisticsRunner.xml, OSGI-INF/localClient.xml,OSGI-INF/legacyLocalClient.xml,OSGI-INF/navajoIOConfig.xml,OSGI-INF/localClientContext.xml,OSGI-INF/navajoConfigEmitter.xml,OSGI-INF/navajoConfig.xml,OSGI-INF/dispatcher.xml, OSGI-INF/expressionEvaluator.xml,OSGI-INF/navajoEventRegistry.xml,OSGI-INF/sharedFileStore.xml,OSGI-INF/dummyTribeManager.xml,OSGI-INF/dummyJabberWorker.xml,OSGI-INF/asyncStore.xml,
- OSGI-INF/navajoContext.xml
+Service-Component: OSGI-INF/simpleRepository.xml, OSGI-INF/repositoryFactory.xml, OSGI-INF/statisticsRunner.xml, OSGI-INF/localClient.xml,OSGI-INF/navajoIOConfig.xml,
+ OSGI-INF/localClientContext.xml,OSGI-INF/navajoConfigEmitter.xml,OSGI-INF/navajoConfig.xml,OSGI-INF/dispatcher.xml, 
+ OSGI-INF/expressionEvaluator.xml,OSGI-INF/navajoEventRegistry.xml,OSGI-INF/sharedFileStore.xml,
+ OSGI-INF/dummyTribeManager.xml,OSGI-INF/dummyJabberWorker.xml,OSGI-INF/asyncStore.xml,OSGI-INF/navajoContext.xml,
+ OSGI-INF/dummyIntegrityWorker.xml
 
