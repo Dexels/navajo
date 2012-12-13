@@ -8,7 +8,6 @@ public class DummyTask implements TaskInterface {
 	private static final long serialVersionUID = 4518273204586299917L;
 	private TriggerInterface trigger;
 	private String workflowDefinition;
-	private boolean forceSync;
 
 	public TaskInterface getInstance() {
 		return new DummyTask();
@@ -88,7 +87,7 @@ public class DummyTask implements TaskInterface {
 
 	@Override
 	public void setForceSync(boolean b) {
-		this.forceSync = b;
+//		this.forceSync = b;
 		
 	}
 
