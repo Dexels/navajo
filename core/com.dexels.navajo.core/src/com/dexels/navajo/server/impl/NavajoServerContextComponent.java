@@ -41,9 +41,9 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 	}
 
 	public void activate(Map<String,Object> settings) {
-		String contextPath = (String)settings.get("contextPath");
-		installationPath = (String) settings.get("installationPath");
 		try {
+			String contextPath = (String)settings.get("contextPath");
+			installationPath = (String) settings.get("installationPath");
 			addFolderMonitorListener(contextPath,installationPath,"adapters");
 			addFolderMonitorListener(contextPath,installationPath,"camel");
 		} catch (IOException e) {
@@ -55,12 +55,16 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 		}
 	}
 	
-	public void deactivate() throws IOException {
-		if(monitoredFolderConfigurations!=null) {
-			for (Configuration c : monitoredFolderConfigurations) {
-				c.delete();
+	public void deactivate()  {
+		try {
+			if(monitoredFolderConfigurations!=null) {
+				for (Configuration c : monitoredFolderConfigurations) {
+					c.delete();
+				}
+				monitoredFolderConfigurations.clear();
 			}
-			monitoredFolderConfigurations.clear();
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
 	}
 	
