@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
 
 public class DummyTribeManager implements TribeManagerInterface {
 
@@ -54,7 +55,7 @@ public class DummyTribeManager implements TribeManagerInterface {
 
 	public Set<TribeMemberInterface> getAllMembers() {
 		Set<TribeMemberInterface> s =  new HashSet<TribeMemberInterface>();
-		s.add(new TribeMemberImpl());
+		s.add(new DummyTribeMemberImpl());
 		return s;
 	}
 	
@@ -69,7 +70,7 @@ public class DummyTribeManager implements TribeManagerInterface {
 	 }
 
 	public TribeMemberInterface getMyMembership() {
-		return new TribeMemberImpl();
+		return new DummyTribeMemberImpl();
 	}
 
 	public void multicast(Object[] recipients, SmokeSignal m) {
@@ -93,6 +94,40 @@ public class DummyTribeManager implements TribeManagerInterface {
 	}
 
 	public String getStatistics() {
+		return null;
+	}
+
+	@Override
+	public boolean isInitializing() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ClusterStateInterface getClusterState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getChiefName() {
+		// TODO Auto-generated method stub
+		return "dummytribemember";
+	}
+
+	@Override
+	public void tribalAfterWebServiceRequest(
+			WebserviceListenerRegistryInterface listenerRegistry,
+			String service, Access a, HashSet<String> ignoreTaskIds) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Navajo tribalBeforeWebServiceRequest(
+			WebserviceListenerRegistryInterface listenerRegistry,
+			String service, Access a, HashSet<String> ignoreList) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

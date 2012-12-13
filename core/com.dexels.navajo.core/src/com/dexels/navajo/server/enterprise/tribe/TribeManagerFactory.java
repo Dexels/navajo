@@ -78,7 +78,7 @@ public class TribeManagerFactory {
 		if ( instance != null && tribeManagerFound ) {
 			// Startup tribal status collector.
 			try {
-				Class<?> c = Class.forName("com.dexels.navajo.tribe.TribalStatusCollector");
+				Class<?> c = Class.forName("com.dexels.navajo.tribe.impl.TribalStatusCollector");
 				Object dummy = c.newInstance();
 				Method m = c.getMethod("getInstance",(Class[]) null);
 				m.invoke(dummy, (Object[])null);
