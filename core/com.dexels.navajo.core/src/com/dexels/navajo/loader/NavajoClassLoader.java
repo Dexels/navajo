@@ -119,7 +119,7 @@ public class NavajoClassLoader extends MultiClassLoader {
         this.beta = false;
         this.compiledScriptPath = compiledScriptPath;
         instances++;
-        if(Version.getDefaultBundleContext()!=null) {
+        if(Version.osgiActive()) {
         	logger.info("OSGi environment detected. Disabling traditional jar discovery.");
         } else {
             initializeJarResources();

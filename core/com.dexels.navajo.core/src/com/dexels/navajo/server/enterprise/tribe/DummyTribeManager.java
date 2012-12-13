@@ -5,13 +5,21 @@ import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
 
 public class DummyTribeManager implements TribeManagerInterface {
+
+//	private NavajoConfigInterface navajoConfig;
 
 	public void terminate() {
 	}
 
+	public DummyTribeManager() {
+//		if(!Version.osgiActive()) {
+//			navajoConfig = DispatcherFactory.getInstance().getNavajoConfig();
+//		}
+	}
+	
 	public Navajo forward(Navajo in) throws Exception {
 		return null;
 	}
@@ -37,19 +45,17 @@ public class DummyTribeManager implements TribeManagerInterface {
 
 	public void tribalAfterWebServiceRequest(String service, Access a,
 			HashSet<String> ignoreTaskIds) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public Navajo tribalBeforeWebServiceRequest(String service, Access a,
 			HashSet<String> ignoreList) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Set<TribeMemberInterface> getAllMembers() {
 		Set<TribeMemberInterface> s =  new HashSet<TribeMemberInterface>();
-		s.add(new TribeMemberImpl());
+		s.add(new DummyTribeMemberImpl());
 		return s;
 	}
 	
@@ -64,34 +70,63 @@ public class DummyTribeManager implements TribeManagerInterface {
 	 }
 
 	public TribeMemberInterface getMyMembership() {
-		return new TribeMemberImpl();
+		return new DummyTribeMemberImpl();
 	}
 
 	public void multicast(Object[] recipients, SmokeSignal m) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public Answer askAnybody(Request q) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Navajo forward(Navajo in, Object address) throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void addTribeMember(TribeMemberInterface tm) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public String getMyName() {
-		return DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
+		return "dummytribemember";
 	}
 
 	public String getStatistics() {
+		return null;
+	}
+
+	@Override
+	public boolean isInitializing() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ClusterStateInterface getClusterState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getChiefName() {
+		// TODO Auto-generated method stub
+		return "dummytribemember";
+	}
+
+	@Override
+	public void tribalAfterWebServiceRequest(
+			WebserviceListenerRegistryInterface listenerRegistry,
+			String service, Access a, HashSet<String> ignoreTaskIds) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Navajo tribalBeforeWebServiceRequest(
+			WebserviceListenerRegistryInterface listenerRegistry,
+			String service, Access a, HashSet<String> ignoreList) {
 		// TODO Auto-generated method stub
 		return null;
 	}

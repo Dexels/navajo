@@ -13,6 +13,8 @@ import javax.management.Notification;
 import javax.management.NotificationBroadcasterSupport;
 import javax.management.NotificationListener;
 
+import navajocore.Version;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,16 +70,21 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		if ( instance != null ) {
 			return instance;
 		} else {
-			synchronized (semaphore ) {
+			
+			if ( !Version.osgiActive() ) {
+				synchronized (semaphore ) {
 
-				if ( instance == null ) {
-					instance = new NavajoEventRegistry();
-					try {
-						JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
-					} catch (Throwable t) {
-						//t.printStackTrace(System.err);
-					} 
+					if ( instance == null ) {
+						instance = new NavajoEventRegistry();
+						try {
+							JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
+						} catch (Throwable t) {
+							//t.printStackTrace(System.err);
+						} 
+					}
 				}
+			} else {
+				logger.warn("No NavajoEventRegistry instance found");
 			}
 			return instance;
 		}
@@ -306,12 +313,14 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		return registry.size();
 	}
 	
-//	public static void main(String [] args) {
-//		NavajoEventRegistry n = NavajoEventRegistry.getInstance();
-//		n.addListener(NavajoEvent.class, new NavajoEventProxy());
-//		n.addListener(NavajoEvent.class, null);
-//		logger.info(">>>> " + n.isMonitoredEvent(NavajoEvent.class, true));
-//		logger.info(">>>> " + n.isMonitoredEvent(TribeMemberDownEvent.class, true));
-//	}
+	public void activate() {
+		instance = this;
+		JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
+	}
+	
+	public void deactivate() {
+		shutdown();
+	}
+	
 
 }

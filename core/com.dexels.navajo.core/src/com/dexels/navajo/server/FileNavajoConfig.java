@@ -123,7 +123,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 
     @Override
     public final void writeConfig(String name, Navajo conf) throws IOException {
-      Writer output = new FileWriter(new File(getConfigPath() + name));
+      Writer output = new FileWriter(new File(getConfigPath() + "/" + name));
       try {
         conf.write(output);
       }
@@ -149,7 +149,7 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 	}    
     @Override
     public final Navajo readConfig(String name) throws IOException {
-    	InputStream is = inputStreamReader.getResource(getConfigPath() + name);
+    	InputStream is = inputStreamReader.getResource(getConfigPath() + "/" + name);
     	try {
     		if (is == null) {
     			return null;

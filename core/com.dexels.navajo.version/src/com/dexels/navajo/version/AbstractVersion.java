@@ -1,5 +1,7 @@
 package com.dexels.navajo.version;
 
+
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -20,12 +22,21 @@ public  class AbstractVersion extends BaseVersion implements BundleActivator {
 //		defaultContext = bc;
 		if(bc==null) {
 			logger.debug("Bundle started in non-osgi environment: {}",getClass().getName());
-		} else {
-			logger.debug("Bundle started: {}",bc.getBundle().toString());
 		}
 	}
 
-
+	
+	public static boolean osgiActive() {
+		try {
+			Bundle b = org.osgi.framework.FrameworkUtil.getBundle(AbstractVersion.class);
+			
+			return b!=null;
+		} catch (Throwable t) {
+			return false;
+		}
+	}
+	
+	
 	public BundleContext getBundleContext() {
 		return context;
 	}

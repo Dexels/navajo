@@ -163,6 +163,10 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 			e.printStackTrace();
 		}
 	}
+	
+	public void deactivate() {
+		logger.debug("Deactivating priority queue");
+	}
 
 	private void createPools(int normalPoolSize, int priorityPoolSize,
 			int systemPoolSize) {

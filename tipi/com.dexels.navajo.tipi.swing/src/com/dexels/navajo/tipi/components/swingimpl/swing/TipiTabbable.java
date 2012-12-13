@@ -14,6 +14,8 @@ public interface TipiTabbable {
 
 	public String getTabTooltip();
 
+	public String getTabText();
+
 	public void addPropertyChangeListener(PropertyChangeListener pcl);
 
 	public void removePropertyChangeListener(PropertyChangeListener pcl);

@@ -6,6 +6,8 @@ import com.dexels.navajo.server.UserException;
 public class DummyTask implements TaskInterface {
 
 	private static final long serialVersionUID = 4518273204586299917L;
+	private TriggerInterface trigger;
+	private String workflowDefinition;
 
 	public TaskInterface getInstance() {
 		return new DummyTask();
@@ -55,6 +57,43 @@ public class DummyTask implements TaskInterface {
 
 	public void runTask() {
 		
+	}
+
+	@Override
+	public void setTrigger(TriggerInterface trigger) {
+		this.trigger = trigger;
+	}
+
+	@Override
+	public TriggerInterface getTrigger() {
+		return this.trigger;
+	}
+
+	@Override
+	public String getWorkflowId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getWorkflowDefinition() {
+		return workflowDefinition;
+	}
+
+	@Override
+	public void setWorkflowDefinition(String workflowDefinition) {
+		this.workflowDefinition = workflowDefinition;
+	}
+
+	@Override
+	public void setForceSync(boolean b) {
+//		this.forceSync = b;
+		
+	}
+
+	@Override
+	public boolean isProxy() {
+		return false;
 	}
 
 }

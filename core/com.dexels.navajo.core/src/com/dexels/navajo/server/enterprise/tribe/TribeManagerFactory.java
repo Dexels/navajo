@@ -3,6 +3,12 @@ package com.dexels.navajo.server.enterprise.tribe;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 
+import navajocore.Version;
+
+import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.util.AuditLog;
 
 public class TribeManagerFactory {
@@ -10,6 +16,9 @@ public class TribeManagerFactory {
 	private static volatile TribeManagerInterface instance = null;
 	private static Object semaphore = new Object();
 	private static volatile boolean tribeManagerFound = false;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TribeManagerFactory.class);
 	
 	public static void useTestVersion() {
 		instance = new DummyTribeManager();
@@ -20,10 +29,8 @@ public class TribeManagerFactory {
 		if ( instance != null ) {
 			return instance;
 		} else {
-
 			synchronized (semaphore) {
 				if ( instance == null ) {
-				
 					instance = getTribeManagerService();
 					if(instance==null || instance instanceof DummyTribeManager) {
 						tribeManagerFound = false;
@@ -37,12 +44,11 @@ public class TribeManagerFactory {
 		
 	}
 
-	public static TribeManagerInterface getTribeManagerService() {
+	private static TribeManagerInterface getTribeManagerService() {
+		if(Version.osgiActive()) {
+			return getOSGiTribeManagerService();
+		}
 			try {
-				/**
-				 * These constructions will never work in an OSGi-like environment.
-				 * TODO rewrite 
-				 */
 				Class<? extends TribeManagerInterface> c = (Class<? extends TribeManagerInterface>) Class.forName("com.dexels.navajo.tribe.TribeManager");
 				TribeManagerInterface dummy = c.newInstance();
 				Method m = c.getMethod("getInstance", (Class[]) null);
@@ -53,11 +59,26 @@ public class TribeManagerFactory {
 			}	
 	}
 	
+
+	public static TribeManagerInterface getOSGiTribeManagerService() {
+			ServiceReference<TribeManagerInterface> sr = Version.getDefaultBundleContext().getServiceReference(TribeManagerInterface.class);
+			if(sr!=null) {
+				// TODO unsure of this
+				TribeManagerInterface tmi = Version.getDefaultBundleContext().getService(sr);
+				Version.getDefaultBundleContext().ungetService(sr);
+				return tmi;
+			} else {
+				logger.warn("No tribe manager found!");
+				return null;
+			}
+}
+
+	
 	public static void startStatusCollector() {
 		if ( instance != null && tribeManagerFound ) {
 			// Startup tribal status collector.
 			try {
-				Class<?> c = Class.forName("com.dexels.navajo.tribe.TribalStatusCollector");
+				Class<?> c = Class.forName("com.dexels.navajo.tribe.impl.TribalStatusCollector");
 				Object dummy = c.newInstance();
 				Method m = c.getMethod("getInstance",(Class[]) null);
 				m.invoke(dummy, (Object[])null);

@@ -121,7 +121,6 @@ public final class JMXHelper  {
 			}
 			server = null;
 			conn = null;
-			//System.err.println("Disconnected JMX.");
 		} catch (IOException e) {
 			AuditLog.log("Error disconnecting jmx",e, Level.SEVERE);
 		}
@@ -131,7 +130,6 @@ public final class JMXHelper  {
 			this.host = host;
 			this.port = port;
 			connect();
-			//System.err.println("Connected JMX.");
 	}
 	
 	public void connect() throws IOException {
@@ -167,9 +165,7 @@ public final class JMXHelper  {
 			long [] target = new long[1];
 			for (int i = 0; i < all.length; i++) {
 				ThreadInfo ti = mxthread.getThreadInfo(all[i]);
-				//System.err.println("Found thread: " + ti.getThreadName());
 				if ( ti.getThreadName().equals(t.getName() ) )  {
-					//System.err.println("Found thread: " + t.getName());
 					target[0] = all[i];
 					myThread = mxthread.getThreadInfo(target )[0];
 					return myThread;
@@ -188,7 +184,8 @@ public final class JMXHelper  {
 			synchronized ( NAVAJO_DOMAIN ) {
 				DispatcherInterface instance = DispatcherFactory.getInstance();
 				if(instance==null) {
-					throw new RuntimeException("Navajo instance not started. Is navajo context listener valid? Check web.xml");
+					logger.warn("Navajo instance not started. Is navajo context listener valid? Check web.xml");
+					return null;
 				}
 				NavajoConfigInterface navajoConfig = instance.getNavajoConfig();
 				if(navajoConfig==null) {
@@ -227,10 +224,10 @@ public final class JMXHelper  {
 	private static void deregisterListenersForMonitor(Monitor m) {
 		List<NotificationListener> nll = listenerMap.get(m);
 		if(nll==null) {
-			System.err.println("No listeners to deregister for monitor: "+m);
+			logger.debug("No listeners to deregister for monitor: "+m);
 			return;
 		}
-		System.err.println("# of Monitors to deregister: "+nll.size());
+		logger.debug("# of Monitors to deregister: "+nll.size());
 		for (NotificationListener notificationListener : nll) {
 			try {
 				m.removeNotificationListener(notificationListener);
@@ -242,11 +239,11 @@ public final class JMXHelper  {
 	public final static void registerMXBean(Object o, String domain, String type) {
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
 		ObjectName name = getObjectName(domain, type);
-		if ( name != null ) {
+		if ( name != null ) { 
 			try {
 				mbs.registerMBean(o, name);
 			} catch (InstanceAlreadyExistsException e) {
-				System.err.println("WARNING: InstanceAlreadyExistsException, Could not register MXBean for domain " + domain + ": " + e.getMessage());
+				logger.warn("WARNING: InstanceAlreadyExistsException, Could not register MXBean for domain " + domain + ": " + e.getMessage());
 				try {
 					mbs.unregisterMBean(name);
 					mbs.registerMBean(o, name);
@@ -257,13 +254,10 @@ public final class JMXHelper  {
 				} catch (Exception e1) {
 					logger.error("Error: ", e1);
 				}
-				//e.printStackTrace(System.err);
 			} catch (MBeanRegistrationException e) {
-				System.err.println("WARNING: MBeanRegistrationException, Could not register MXBean for domain " + domain + ": " + e.getMessage());
-				//e.printStackTrace(System.err);
+				logger.warn("WARNING: MBeanRegistrationException, Could not register MXBean for domain " + domain + ": " + e.getMessage());
 			} catch (NotCompliantMBeanException e) {
-				System.err.println("WARNING: NotCompliantMBeanException, Could not register MXBean for domain " + domain +  ": " + e.getMessage());
-				//e.printStackTrace(System.err);
+				logger.warn("WARNING: NotCompliantMBeanException, Could not register MXBean for domain " + domain +  ": " + e.getMessage());
 			} 
 		}
 		mbeans.add(name);
@@ -281,9 +275,9 @@ public final class JMXHelper  {
 				}
 			}
 		} catch (MBeanRegistrationException e) {
-			System.err.println("Deregister of: "+domain+" : "+type+" failed ("+e.getMessage()+"). Continuing");
+			logger.warn("MXBean Deregister of: "+domain+" : "+type+" failed ("+e.getMessage()+"). Continuing");
 		} catch (InstanceNotFoundException e) {
-			System.err.println("Deregister of: "+domain+" : "+type+" failed ("+e.getMessage()+"). Continuing");
+			logger.info("MXBean not found, so deregister of: "+domain+" : "+type+" failed ("+e.getMessage()+"). Continuing");
 		}
 	}
 		

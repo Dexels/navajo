@@ -335,7 +335,7 @@ public AsyncProxy [] getAsyncThreads() {
   }
 
   public boolean getMonitorOn() {
-    return DispatcherFactory.getInstance().getNavajoConfig().isMonitorOn();
+    return false;
   }
 
   /**
@@ -344,36 +344,31 @@ public AsyncProxy [] getAsyncThreads() {
    * @param monitorOn
    */
   public void setMonitorOn(boolean monitorOn) {
-    logger.debug("Setting monitor to: " + monitorOn);
-    this.monitorOn = monitorOn;
-    DispatcherFactory.getInstance().getNavajoConfig().setMonitorOn(monitorOn);
+   
   }
 
   public int getMonitorTotaltime() {
-    return DispatcherFactory.getInstance().getNavajoConfig().getMonitorExceedTotaltime();
+    return -1;
   }
 
   public String getMonitorUsers() {
-    return DispatcherFactory.getInstance().getNavajoConfig().getMonitorUsers();
+    return "";
   }
 
   public String getMonitorWS() {
-    return DispatcherFactory.getInstance().getNavajoConfig().getMonitorWebservices();
+    return "";
   }
 
   public void setMonitorWS(String monitorWS) {
-    this.monitorWS = monitorWS;
-    DispatcherFactory.getInstance().getNavajoConfig().setMonitorWebservices(monitorWS);
+   
   }
 
   public void setMonitorUsers(String monitorUsers) {
-    this.monitorUsers = monitorUsers;
-    DispatcherFactory.getInstance().getNavajoConfig().setMonitorUsers(monitorUsers);
+   
   }
 
   public void setMonitorTotaltime(int monitorTotaltime) {
-    this.monitorTotaltime = monitorTotaltime;
-    DispatcherFactory.getInstance().getNavajoConfig().setMonitorExceedTotaltime(monitorTotaltime);
+    
   }
 
   public void setWebservice(String w) {

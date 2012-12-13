@@ -19,56 +19,56 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.loader.NavajoBasicClassLoader;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
-import com.dexels.navajo.lockguard.LockManager;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
+import com.dexels.navajo.persistence.impl.PersistenceManagerImpl;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.navajo.server.Repository;
+import com.dexels.navajo.server.RepositoryFactory;
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
+import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
-import com.dexels.navajo.server.monitoring.ServiceMonitor;
 
 public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterface {
 
 	private NavajoIOConfig navajoIOConfig = null;
-	private String instanceName;
-	private String instanceGroup;
-	private Repository repository;
+	private RepositoryFactory repositoryFactory;
 	protected NavajoClassLoader betaClassloader;
 	protected NavajoClassSupplier adapterClassloader;
 	private Dictionary properties;
 	private BundleContext bundleContext;
 	private final Map<Class<?>,ServiceReference<?>> serviceReferences = new HashMap<Class<?>,ServiceReference<?>>();
+	private final Map<String, DescriptionProviderInterface> desciptionProviders = new HashMap<String,DescriptionProviderInterface>();
 	private ConfigurationAdmin myConfigurationAdmin;
+	private PersistenceManager persistenceManager;
+	private AsyncStore asyncStore;
+	private WorkerInterface integrityWorker;
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoConfigComponent.class);
 	
 	public NavajoConfigComponent() {
-		logger.info("========>  Navajo Config constructor.");
 	}
 	
 	public void setIOConfig(NavajoIOConfig config) {
 		this.navajoIOConfig = config;
-		logger.info("========>  Setting NavajoIOConfig");
 	}
 	
 	/**
 	 * @param config the navajoioconfig to clear
 	 */
 	public void clearIOConfig(NavajoIOConfig config) {
-		logger.info("========>  Clearing NavajoIOConfig");
 		this.navajoIOConfig = null;
 	}
 	
 
 	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.myConfigurationAdmin = configAdmin;
-		logger.info("========>  Setting ConfigurationAdmin");
 	}
 
 	/**
@@ -83,13 +83,14 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 		try {
 			this.properties = cc.getProperties();
 			this.bundleContext = cc.getBundleContext();
+			this.persistenceManager = new PersistenceManagerImpl();
 		} catch (Throwable e) {
 			logger.error("activation error",cc);
 		}
 	}
-	
-	public void modified(ComponentContext cc) {
-		logger.info("Modified. Just sayin'");
+
+	public void deactivate() {
+		logger.info(">>>>>> deactivating navajo config");
 	}
 	
 	@Override
@@ -184,17 +185,17 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 
 	@Override
 	public String getInstanceName() {
-		return this.instanceName;
+		return (String) properties.get("instanceName");
 	}
 
 	@Override
 	public String getInstanceGroup() {
-		return this.instanceGroup;
+		return (String) properties.get("instanceGroup");
 	}
 
 	@Override
 	public PersistenceManager getPersistenceManager() {
-		return (PersistenceManager)getService(PersistenceManager.class);
+		return this.persistenceManager;
 	}
 
 	private Object getService(Class<?> clz) {
@@ -207,15 +208,18 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 		this.serviceReferences.put(clz,ref);
 		return bundleContext.getService(ref);
 	}
-
-	@Override
-	public void setRepository(Repository newRepository) {
-		this.repository = newRepository;
+	
+	public void setRepositoryFactory(RepositoryFactory rf) {
+		this.repositoryFactory = rf;
+	}
+	
+	public void clearRepositoryFactory(RepositoryFactory rf) {
+		this.repositoryFactory = null;
 	}
 
 	@Override
 	public Repository getRepository() {
-		return this.repository;
+		return repositoryFactory.getRepository((String) properties.get("repositoryClass"));
 	}
 
 	@Override
@@ -225,6 +229,9 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 
 	@Override
 	public NavajoClassSupplier getClassloader() {
+		if ( WebserviceListenerFactory.getInstance() != null ) {
+			return new NavajoBasicClassLoader(WebserviceListenerFactory.getInstance().getClass().getClassLoader());
+		}
 		return adapterClassloader;
 	}
 
@@ -238,24 +245,44 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 		adapterClassloader = classloader;
 	}
 
+	public void setAsyncStore(AsyncStore as) {
+		this.asyncStore = as;
+	}
+	
+	public void clearAsyncStore(AsyncStore as) {
+		this.asyncStore = null;
+	}
+	
 	@Override
 	public AsyncStore getAsyncStore() {
-		return (AsyncStore)getService(AsyncStore.class);
+		return this.asyncStore;
 	}
 
+	public void addDescriptionProvider(DescriptionProviderInterface dpi) {
+		desciptionProviders.put(dpi.getClass().getName(), dpi);
+	}
+
+	public void removeDescriptionProvider(DescriptionProviderInterface dpi) {
+		desciptionProviders.remove(dpi.getClass().getName());
+	}
+
+	
+	public void removeDescriptionProvider(WorkerInterface dpi) {
+		this.integrityWorker = null;
+	}
+
+	public void setIntegrityWorker(WorkerInterface dpi) {
+		this.integrityWorker = dpi;
+	}
+	
 	@Override
 	public DescriptionProviderInterface getDescriptionProvider() {
-		return (DescriptionProviderInterface)getService(DescriptionProviderInterface.class);
-	}
-
-	@Override
-	public LockManager getLockManager() {
-		return (LockManager)getService(LockManager.class);
+		return desciptionProviders.get(properties.get("descriptionProviderClass"));
 	}
 
 	@Override
 	public WorkerInterface getIntegrityWorker() {
-		return (WorkerInterface)getService(WorkerInterface.class);
+		return integrityWorker;
 	}
 
 	@Override
@@ -266,93 +293,11 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 
 	@Override
 	public boolean needsFullAccessLog(Access a) {
-		ServiceMonitor sm = (ServiceMonitor)getService(ServiceMonitor.class);
-		if(sm!=null) {
-			return sm.needsFullAccessLog(a);
+		if ( a.isDebugAll() || ( a.getCompiledScript() != null && a.getCompiledScript().isDebugAll() ) ) {
+			return true;
+		} else {
+			return false;
 		}
-		logger.warn("Warning: needsFullAccessLog failed, no ServiceMonitor found.");
-		return false;
-	}
-
-	@Override
-	public void setMonitorOn(boolean b) {
-		ServiceMonitor sm = (ServiceMonitor)getService(ServiceMonitor.class);
-		if(sm!=null) {
-			sm.setMonitorOn(b);
-			return;
-		}
-		logger.warn("Warning: setMonitorOn failed, no ServiceMonitor found.");
-	}
-
-	@Override
-	public boolean isMonitorOn() {
-		ServiceMonitor sm = (ServiceMonitor)getService(ServiceMonitor.class);
-		if(sm!=null) {
-			return sm.isMonitorOn();
-		}
-		logger.warn("Warning: isMonitorOn failed, no ServiceMonitor found.");
-		return false;
-	}
-
-	@Override
-	public int getMonitorExceedTotaltime() {
-		ServiceMonitor sm = (ServiceMonitor)getService(ServiceMonitor.class);
-		if(sm!=null) {
-			return sm.getMonitorExceedTotaltime();
-		}
-		logger.warn("Warning: getMonitorExceedTotaltime failed, no ServiceMonitor found.");
-		return -1;
-	}
-
-	@Override
-	public String getMonitorUsers() {
-		ServiceMonitor sm = (ServiceMonitor)getService(ServiceMonitor.class);
-		if(sm!=null) {
-			return sm.getMonitorUsers();
-		}
-		logger.warn("Warning: getMonitorUsers failed, no ServiceMonitor found.");
-		return null;
-	}
-
-	@Override
-	public String getMonitorWebservices() {
-		ServiceMonitor sm = (ServiceMonitor)getService(ServiceMonitor.class);
-		if(sm!=null) {
-			return sm.getMonitorWebservices();
-		}
-		logger.warn("Warning: getMonitorWebservices failed, no ServiceMonitor found.");
-		return null;
-	}
-
-	@Override
-	public void setMonitorWebservices(String monitorWebservices) {
-		ServiceMonitor sm = (ServiceMonitor)getService(ServiceMonitor.class);
-		if(sm!=null) {
-			sm.setMonitorWebservices(monitorWebservices);
-			return;
-		}
-		logger.warn("Warning: setMonitorWebservices failed, no ServiceMonitor found.");
-	}
-
-	@Override
-	public void setMonitorUsers(String monitorUsers) {
-		ServiceMonitor sm = (ServiceMonitor)getService(ServiceMonitor.class);
-		if(sm!=null) {
-			sm.setMonitorUsers(monitorUsers);
-			return;
-		}
-		logger.warn("Warning: setMonitorUsers failed, no ServiceMonitor found.");
-	}
-
-	@Override
-	public void setMonitorExceedTotaltime(int monitorExceedTotaltime) {
-		ServiceMonitor sm = (ServiceMonitor)getService(ServiceMonitor.class);
-		if(sm!=null) {
-			sm.setMonitorExceedTotaltime(monitorExceedTotaltime);
-			return;
-		}
-		logger.warn("Warning: setMonitorExceedTotaltime failed, no ServiceMonitor found.");
-		
 	}
 
 	@Override
@@ -373,7 +318,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	@Override
 	public String getBetaUser() {
 		logger.debug("getBetaUser is deprecated, and always return null");
-		return null;
+		return "__beta__";
 	}
 
 	@Override

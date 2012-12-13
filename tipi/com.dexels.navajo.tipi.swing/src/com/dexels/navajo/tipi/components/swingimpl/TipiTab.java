@@ -25,6 +25,11 @@ public class TipiTab extends TipiSwingDataComponentImpl {
 			// the icon is being set to null.
 			myTab.setIconUrl(object);
 		}
+		if (name.equals("tabText")) {
+			// Don't know why. The propertyChangeListener seems to miss it when
+			// the icon is being set to null.
+			myTab.setTabText((String)object);
+		}
 		super.setComponentValue(name, object);
 	}
 

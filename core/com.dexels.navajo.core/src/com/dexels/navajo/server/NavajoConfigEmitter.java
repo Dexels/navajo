@@ -25,11 +25,11 @@ import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.server.api.NavajoServerContext;
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 
-public class LegacyDispatcherFactory {
+public class NavajoConfigEmitter {
 
 	private static final int MAX_ACCESS_SET_SIZE = 50;
 	private final static Logger logger = LoggerFactory
-			.getLogger(LegacyDispatcherFactory.class);
+			.getLogger(NavajoConfigEmitter.class);
 
 	private NavajoServerContext navajoContext;
 //	private NavajoServerInstance wrapped = null;

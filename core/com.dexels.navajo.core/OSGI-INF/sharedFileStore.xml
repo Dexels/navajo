@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="navajo.sharedstore.file">
+   <implementation class="com.dexels.navajo.sharedstore.SharedFileStore"/>
+   <service>
+      <provide interface="com.dexels.navajo.sharedstore.SharedStoreInterface"/>
+   </service>
+   <reference bind="setNavajoConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfig" policy="static" unbind="clearNavajoConfig"/>
+   <reference bind="setTribeManager" cardinality="1..1" interface="com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface" name="TribeManager" policy="static" unbind="clearTribeManager"/>
+</scr:component>

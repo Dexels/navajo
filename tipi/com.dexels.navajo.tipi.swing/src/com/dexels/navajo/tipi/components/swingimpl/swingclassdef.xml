@@ -1151,6 +1151,7 @@
          <value direction="in" name="tabForeground" type="color" property="tabForegroundColor" />
          <value direction="in" name="tabBackground" type="color" property="tabBackgroundColor" />
          <value direction="in" name="tabIcon" type="resource" property="iconUrl" />
+         <value direction="in" name="tabText" type="string" property="tabText" />
          <value direction="in" name="border" type="border" />
       </values>
       <methods>

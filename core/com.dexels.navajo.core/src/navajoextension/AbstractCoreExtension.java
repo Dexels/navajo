@@ -19,15 +19,13 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVersion {
 	
 	private final Set<ServiceRegistration> registrations = new HashSet<ServiceRegistration>();
-	private ServiceRegistration registration;
-	private BundleContext bundleContext;
+//	private ServiceRegistration registration;
 
 	
 
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		this.bundleContext = bc;
 	}
 
 	@Override
@@ -37,8 +35,8 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 	}
 
 	protected void deregisterAll() {
-		if(registration!=null) {
-			registration.unregister();
+		for (ServiceRegistration sr : registrations) {
+			sr.unregister();
 		}
 	}
 	
@@ -102,9 +100,11 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 		props.put("type", "function");
 //		logger.debug("registering function: {}",functionName);
 		if(fd==null) {
-			logger.debug("Function def = null!");
+			logger.warn("Function def = null. Skipping registration.");
+			return;
 		}
 		Class<? extends FunctionInterface> clz;
+		ServiceRegistration registration;
 		try {
 			clz = (Class<? extends FunctionInterface>) Class.forName(fd.getObject(),true,extensionDef.getClass().getClassLoader());
 //			logger.debug("Registering functionclass: {} context: {}"+ functionName, clz.getName(),extensionDef.getClass().getName());
@@ -112,6 +112,7 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 					Class.class.getName(),
 					clz,
 					props);
+			registrations.add(registration);
 		} catch (ClassNotFoundException e) {
 			logger.error("Error registering service: {}",functionName,e);
 		}
@@ -119,6 +120,5 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 //				FunctionInterface.class.getName(),
 //				fi.instantiateFunctionClass(fd, getClass().getClassLoader()),
 //				props);
-		registrations.add(registration);
 	}
 }

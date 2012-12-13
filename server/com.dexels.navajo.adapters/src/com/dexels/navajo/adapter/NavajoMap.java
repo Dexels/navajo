@@ -397,14 +397,14 @@ private Object waitForResult = new Object();
     }
   }
 
-  public final void setDeleteProperty(String fullName) throws UserException {
+  public final void setDeleteProperty(String fullName)  {
 	 Property p = outDoc.getProperty(fullName);
 	 if ( p != null ) {
 		 p.getParentMessage().removeProperty(p);
 	 }
   }
   
-  public final void setDeleteMessage(String fullName) throws UserException {
+  public final void setDeleteMessage(String fullName) {
 	  Message m = outDoc.getMessage(fullName);
 	  if ( m != null ) {
 			 outDoc.removeMessage(m);

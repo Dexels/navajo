@@ -196,6 +196,9 @@ public class CustomClassloaderJavaFileManager extends
 		}
 		List<BundleCapability> l = bw
 				.getCapabilities("osgi.wiring.package");
+		if(l==null) {
+			return result;
+		}
 		for (BundleCapability bundleCapability : l) {
 			String pkg = (String) bundleCapability.getAttributes().get(
 					"osgi.wiring.package");

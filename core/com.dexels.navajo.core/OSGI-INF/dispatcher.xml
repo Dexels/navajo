@@ -6,4 +6,5 @@
    <service>
       <provide interface="com.dexels.navajo.server.DispatcherInterface"/>
    </service>
+   <reference bind="setEventRegistry" unbind="clearEventRegistry" cardinality="1..1" interface="com.dexels.navajo.events.NavajoEventRegistry" name="NavajoEventRegistry" policy="dynamic"/>
 </scr:component>

@@ -1,7 +1,6 @@
 package com.dexels.navajo.adapter.resource.jdbcbroker;
 
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
