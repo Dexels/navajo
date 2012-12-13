@@ -39,7 +39,7 @@ public abstract class TipiLayoutImpl extends TipiLayout {
 	 * @param text  
 	 * @param index 
 	 */
-	protected Object parseConstraint(String text, int index) {
+	public Object parseConstraint(String text, int index) {
 		return null;
 	}
 

@@ -38,7 +38,7 @@ public class TipiGridBagLayout extends TipiLayoutImpl {
 		 */
 	}
 
-	protected Object parseConstraint(String text, int index) {
+	public Object parseConstraint(String text, int index) {
 		if (text == null) {
 			return createDefaultConstraint(index);
 		}

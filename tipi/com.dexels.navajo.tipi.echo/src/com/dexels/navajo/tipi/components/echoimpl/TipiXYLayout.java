@@ -24,7 +24,7 @@ public class TipiXYLayout extends TipiLayoutImpl {
         return super.getDefaultConstraint(tc, index);
     }
 
-    protected Object parseConstraint(String text, int index) {
+    public Object parseConstraint(String text, int index) {
         StringTokenizer st = new StringTokenizer(text, ",");
         int x = Integer.parseInt(st.nextToken());
         int y = Integer.parseInt(st.nextToken());

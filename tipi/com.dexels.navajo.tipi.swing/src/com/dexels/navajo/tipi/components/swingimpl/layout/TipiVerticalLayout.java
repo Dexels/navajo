@@ -45,7 +45,7 @@ public class TipiVerticalLayout extends TipiLayoutImpl {
 		 */
 	}
 
-	protected Object parseConstraint(String text, int index) {
+	public Object parseConstraint(String text, int index) {
 		// TipiSwingGridBagConstraints gt = new
 		// TipiSwingGridBagConstraints(text);
 		return createDefaultConstraint(index);

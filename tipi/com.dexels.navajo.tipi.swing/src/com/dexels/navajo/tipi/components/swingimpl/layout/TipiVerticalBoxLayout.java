@@ -41,7 +41,7 @@ public class TipiVerticalBoxLayout extends TipiLayoutImpl {
 		 */
 	}
 
-	protected Object parseConstraint(String text, int index) {
+	public Object parseConstraint(String text, int index) {
 		return createDefaultConstraint(index);
 	}
 

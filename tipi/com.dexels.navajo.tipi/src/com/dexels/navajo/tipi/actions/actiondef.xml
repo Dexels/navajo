@@ -130,6 +130,11 @@
       <param name="path" type="component" required="true" />
    </tipiaction>
 
+   <tipiaction name="setConstraint" class="TipiSetConstraint" package="com.dexels.navajo.tipi.actions">
+      <param name="path" type="component" required="true" />
+      <param name="constraint" type="string" required="true" />
+   </tipiaction>
+
 
    <tipiaction name="setSelectedValue" class="TipiSelectValue" package="com.dexels.navajo.tipi.actions">
       <param name="property" type="reference" required="true" />

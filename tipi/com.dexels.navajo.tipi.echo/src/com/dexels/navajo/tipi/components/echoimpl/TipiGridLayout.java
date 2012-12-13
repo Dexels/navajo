@@ -20,7 +20,7 @@ public class TipiGridLayout extends TipiLayoutImpl {
 
     }
 
-    protected Object parseConstraint(String text, int index) {
+    public Object parseConstraint(String text, int index) {
         return null;
     }
 
