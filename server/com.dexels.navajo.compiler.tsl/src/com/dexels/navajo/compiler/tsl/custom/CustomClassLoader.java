@@ -9,17 +9,15 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardLocation;
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class CustomClassLoader extends ClassLoader {
 
 	private final CustomClassloaderJavaFileManager fileManager;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(CustomClassLoader.class);
-	
+//	private final static Logger logger = LoggerFactory
+//			.getLogger(CustomClassLoader.class);
+//	
 	public CustomClassLoader(
 			CustomClassloaderJavaFileManager customJavaFileManager) {
 		this.fileManager = customJavaFileManager;
@@ -59,7 +57,6 @@ public class CustomClassLoader extends ClassLoader {
 	@Override
 	protected URL findResource(String res) {
     	String name = res.replaceAll("\\.", "/");
-    	logger.error("findResource not yet implemented: "+res+"\nor IS it?");
     	try {
 //    		fileManager.getFo
 			JavaFileObject jfo = fileManager.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, name, Kind.CLASS);
