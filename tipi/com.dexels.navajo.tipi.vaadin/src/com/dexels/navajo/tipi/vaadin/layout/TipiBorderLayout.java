@@ -58,8 +58,7 @@ public class TipiBorderLayout
   
   
   @Override
-
-  protected Object parseConstraint(String text, int index) {
+public Object parseConstraint(String text, int index) {
 
 //	  return text;
 	  if (text == null) {

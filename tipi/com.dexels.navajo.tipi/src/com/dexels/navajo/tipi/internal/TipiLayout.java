@@ -43,6 +43,12 @@ public abstract class TipiLayout implements Serializable {
 	public TipiLayout() {
 	}
 
+	public abstract Object parseConstraint(String text, int index);
+
+	public void doUpdate() {
+	}
+
+	
 	public void setContext(TipiContext tc) {
 		myContext = tc;
 	}

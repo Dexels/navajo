@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.layout;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Rectangle;
 import java.util.StringTokenizer;
 
@@ -51,6 +53,14 @@ public class TipiXYLayout extends TipiLayoutImpl {
 		int w = Integer.parseInt(st.nextToken());
 		int h = Integer.parseInt(st.nextToken());
 		return new Rectangle(x, y, w, h);
-
+	}
+	
+	@Override
+	public void doUpdate() {
+		((NullLayout)myLayout).doUpdate();
+	}
+	
+	public void addToLayout(Object component, Object constraints) {
+		((NullLayout)myLayout).addLayoutComponent((Component) component, constraints);
 	}
 }

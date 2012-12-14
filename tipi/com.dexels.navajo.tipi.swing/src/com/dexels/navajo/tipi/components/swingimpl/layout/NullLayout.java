@@ -5,12 +5,14 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager2;
 import java.awt.Rectangle;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import com.dexels.navajo.tipi.TipiComponent;
 
@@ -19,6 +21,7 @@ public class NullLayout implements LayoutManager2 {
 	private Dimension mySize;
 	private Map<Component, Rectangle> components = new HashMap<Component, Rectangle>();
 
+	private Container parent = null;
 //	private TipiXYLayout myLayout;
 //	private TipiComponent myComponent;
 
@@ -59,18 +62,39 @@ public class NullLayout implements LayoutManager2 {
 	public void invalidateLayout(Container arg0) {
 
 	}
+	
+	public Container getParent() {
+		return parent;
+	}
 
 	public Dimension maximumLayoutSize(Container parent) {
 		return new Dimension(Integer.MAX_VALUE,Integer.MAX_VALUE);
 	}
 
 	public void layoutContainer(Container parent) {
+		this.parent = parent;
 		for (Component c : components.keySet()) {
 			Rectangle r = components.get(c);
 			c.setBounds(r);
 		}
 	}
 
+	public void doUpdate() {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable(){
+
+				@Override
+				public void run() {
+					layoutContainer(getParent());
+				}});
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public Dimension minimumLayoutSize(Container parent) {
 		return new Dimension(0,0);
 	}

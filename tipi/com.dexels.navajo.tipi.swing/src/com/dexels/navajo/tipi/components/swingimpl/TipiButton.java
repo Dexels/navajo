@@ -83,11 +83,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 					((JButton) getContainer()).setText((String) object);
 				}
 				if (name.equals("icon")) {
-					if (object == null) {
-						logger.debug("Ignoring null icon");
-					} else {
-						((JButton) getContainer()).setIcon(getIcon(object));
-					}
+					((JButton) getContainer()).setIcon(getIcon(object));
 				}
 				if (name.equals("enabled")) {
 					// Just for the record.
