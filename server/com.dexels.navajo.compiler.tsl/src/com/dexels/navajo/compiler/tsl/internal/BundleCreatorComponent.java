@@ -221,11 +221,11 @@ public class BundleCreatorComponent implements BundleCreator {
 				previous.uninstall();
 				logger.debug("uninstalling bundle with URI: "+uri);
 			} else {
-				logger.info("Skipping bundle at: "+uri+" as it is already installed. Lastmod: "+new Date(previous.getLastModified())+" status: "+previous.getState());
+				logger.debug("Skipping bundle at: "+uri+" as it is already installed. Lastmod: "+new Date(previous.getLastModified())+" status: "+previous.getState());
 				return null;
 			}
 		}
-		logger.info("Installing script: "+bundleFile.getName());
+		logger.debug("Installing script: "+bundleFile.getName());
 		FileInputStream fis = new FileInputStream(bundleFile);
 		Bundle b;
 		b = this.bundleContext.installBundle(uri, fis);
@@ -545,7 +545,7 @@ public class BundleCreatorComponent implements BundleCreator {
 //		Filter filter = bundleContext.createFilter(filterString);
 		ServiceReference<CompiledScriptFactory>[] ss = (ServiceReference<CompiledScriptFactory>[]) bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filterString);
 		if(ss!=null && ss.length>0) {
-			logger.info("Service present: "+ss.length);
+			logger.debug("Service present: "+ss.length);
 		} else {
 			throw new UserException(-1,"Bundle resolved but no service available for service: "+rpcName+" probably it is missing a dependency");
 		}
