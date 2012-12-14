@@ -69,6 +69,7 @@ public final class AsyncStore implements AsyncStoreMXBean {
 	  JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, id);
 	  objectStore = Collections.synchronizedMap(new HashMap());
 	  accessStore = Collections.synchronizedMap(new HashMap());
+	  instance = this;
   }
   
   /**
