@@ -31,8 +31,8 @@
 		<bundle dependency='true'>mvn:commons-lang/commons-lang/2.4</bundle>
 		<bundle dependency='true'>mvn:commons-dbcp/commons-dbcp/1.4</bundle>
 		<bundle dependency='true'>mvn:com.oracle/com.oracle.jdbc.driver/11.2.33</bundle>
-		<bundle dependency='true'>mvn:org.apache.geronimo.modules/geronimo-mail/3.0-M1</bundle>
-		
+	<!-- 	<bundle dependency='true'>mvn:org.apache.geronimo.modules/geronimo-mail/3.0-M1</bundle>
+		 -->
 	</feature>
 
 	<feature name='navajo.server.osgi' version='1.0.0' start-level='81' >
