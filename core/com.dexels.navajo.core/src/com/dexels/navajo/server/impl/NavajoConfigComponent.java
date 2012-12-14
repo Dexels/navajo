@@ -287,7 +287,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 
 	@Override
 	public double getCurrentCPUload() {
-		logger.warn("getCurrentCPUload is not implemented");
+		logger.debug("getCurrentCPUload is not implemented");
 		return -1;
 	}
 
