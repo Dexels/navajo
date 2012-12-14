@@ -112,7 +112,7 @@ public class DirMap implements Mappable {
 			logger.info("file name: "+f.getName()+" age: "+f.getMimeType()+" age: "+f.getFileAge()+" size: "+f.getSize());
 			if(f.getName().equals("aap.txt")) {
 				logger.info("Aap detected!");
-				//f.setDelete(true);
+				f.setDelete(true);
 			}
 		}
 
