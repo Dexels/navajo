@@ -37,38 +37,38 @@ public class DirMap implements Mappable {
 	}
 
 	public FileEntryMap[] getFileEntries() {
-        Object[] res = fileEntry.values().toArray();
-        FileEntryMap[] result = new FileEntryMap[res.length];
-        for (int i = 0; i < res.length; i++) {
-            result[i] = (FileEntryMap) res[i];
-        }
+		Object[] res = fileEntry.values().toArray();
+		FileEntryMap[] result = new FileEntryMap[res.length];
+		for (int i = 0; i < res.length; i++) {
+			result[i] = (FileEntryMap) res[i];
+		}
 		
 		return result;
 	}
 
-    public void setMask(String mask) {
-        if (mask != null && ! mask.isEmpty()) {
-            fileFilter = new FileFilter(mask);
-        }
-    }
+	public void setMask(String mask) {
+		if (mask != null && ! mask.isEmpty()) {
+			fileFilter = new FileFilter(mask);
+		}
+	}
 
-    public void setInsensitive(Boolean insensitive) {
-        if (fileFilter != null) {
-            fileFilter.setInsensitive(insensitive);
-        }
-    }
+	public void setInsensitive(Boolean insensitive) {
+		if (fileFilter != null) {
+			fileFilter.setInsensitive(insensitive);
+		}
+	}
 
 
 	public synchronized void setPath(String path) {
 		this.path = path;
 		currentPath = new File(path);
-        File[] aaa = currentPath.listFiles(fileFilter);
+		File[] aaa = currentPath.listFiles(fileFilter);
 		for (File file : aaa) {
 			if(file.isFile()) {
 					FileEntryMap f = new FileEntryMap();
 					try {
 						f.setFile(file);
-	                    fileEntry.put(f.getName(), f);
+						fileEntry.put(f.getName(), f);
 					
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -105,8 +105,8 @@ public class DirMap implements Mappable {
 
 	public static void main(String[] args) throws Exception {
 		DirMap fm = new DirMap();
-        fm.setMask("*.*");
-		fm.setPath("D:/tmp");
+		fm.setMask("*.*");
+		fm.setPath(".");
 		FileEntryMap[] m = fm.getFileEntries();
 		for (FileEntryMap f : m) {
 			logger.info("file name: "+f.getName()+" age: "+f.getMimeType()+" age: "+f.getFileAge()+" size: "+f.getSize());
