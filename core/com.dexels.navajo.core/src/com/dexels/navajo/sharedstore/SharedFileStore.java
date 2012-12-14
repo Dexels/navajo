@@ -123,7 +123,6 @@ public class SharedFileStore implements SharedStoreInterface {
 	private TribeManagerInterface tribeManagerInterface;
 	private final static Object lockSemaphore = new Object();
 	
-	
 	public void activate() {
 		if ( navajoConfig != null ) {
 			sharedStore = new File(navajoConfig.getRootPath() + "/" + sharedStoreName);
@@ -133,10 +132,13 @@ public class SharedFileStore implements SharedStoreInterface {
 				}
 			}
 		}
+		SharedStoreFactory.setInstance(this);
+		
 		logger.info("Started SharedFileStore");
 	}
 	
 	public void deactivate() {
+		SharedStoreFactory.setInstance(null);
 		logger.info("Stopped SharedFileStore");
 	}
 	

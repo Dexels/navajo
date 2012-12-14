@@ -24,6 +24,8 @@
  */
 package com.dexels.navajo.sharedstore;
 
+import navajocore.Version;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,18 +48,24 @@ public class SharedStoreFactory {
 			return instance;
 		}
 		
-		synchronized (semaphore ) {
-			if ( instance != null ) {
-				return instance;
-			}
-			try {
-				instance = new SharedFileStore();
-			} catch (Exception e) {
-				logger.error("Error: ", e);
-				AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, e.getMessage());
+		if (!Version.osgiActive()) {
+			synchronized (semaphore ) {
+				if ( instance != null ) {
+					return instance;
+				}
+				try {
+					instance = new SharedFileStore();
+				} catch (Exception e) {
+					logger.error("Error: ", e);
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, e.getMessage());
+				}
 			}
 		}
 		
 		return instance;
+	}
+
+	public static void setInstance(SharedFileStore sharedFileStore) {
+		instance = sharedFileStore;
 	}
 }
