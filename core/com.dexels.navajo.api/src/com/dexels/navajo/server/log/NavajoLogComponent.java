@@ -42,7 +42,6 @@ public class NavajoLogComponent implements LogListener {
 	}
 	public void activate() {
 		try {
-			System.err.println("Logger activating");
 			logReaderService.addLogListener(this);
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -51,7 +50,6 @@ public class NavajoLogComponent implements LogListener {
 
 	public void deactivate() {
 		try {
-			System.err.println("Logger deactivating");
 			logReaderService.removeLogListener(this);
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -65,9 +63,8 @@ public class NavajoLogComponent implements LogListener {
 				|| (log.getBundle().getSymbolicName() == null)) {
 			return;
 		}
-
 		// Retrieve a Logger object, or create it if none exists.
-		Logger logger = loggers.get(log.getBundle().getBundleId());
+		Logger logger = loggers.get("osgi.log");
 		if (logger == null) {
 			logger = LoggerFactory.getLogger(log.getBundle().getSymbolicName());
 			loggers.put(log.getBundle().getBundleId(), logger);
