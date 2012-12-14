@@ -267,7 +267,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	}
 
 	
-	public void removeDescriptionProvider(WorkerInterface dpi) {
+	public void clearIntegrityWorker(WorkerInterface dpi) {
 		this.integrityWorker = null;
 	}
 

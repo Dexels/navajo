@@ -64,11 +64,9 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/1.0.20</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/1.0.8</bundle>
     </feature>
-<!-- 	<feature name='ops' version='1.0.2' start-level='40' >
-		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jetty-bundle/2.1.0</bundle>
-		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-api/2.1.0</bundle>
-	 	<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jsp/2.1.0</bundle>
-	</feature> -->
+ 	<feature name='ops' version='1.0.3' start-level='40' >
+	 	<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jsp/3.0.0-SNAPSHOT</bundle>
+	</feature>
 	<feature name='trans' version='1.0.1' start-level='40' >
 		<bundle dependency='true'>mvn:org.glassfish.main/javax.transaction/4.0-b33</bundle>
 	</feature>
