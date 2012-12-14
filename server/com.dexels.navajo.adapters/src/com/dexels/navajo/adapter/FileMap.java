@@ -30,6 +30,7 @@ public class FileMap implements Mappable {
 	public String fileName;
 	public String charsetName = null;
 	public String separator;
+	public String extentie    = ".tmp";
 
 	public FileLineMap line;
 	public FileLineMap[] lines;
@@ -37,6 +38,7 @@ public class FileMap implements Mappable {
 	public boolean persist = true;
 	public boolean exists  = false;
 	public boolean dosMode = false;
+	public boolean rename  = false;
 
 	public Binary content;
 	
@@ -82,7 +84,7 @@ public class FileMap implements Mappable {
 	 */
 	public void store() throws MappableException, UserException {
 		if (persist && fileName != null) {
-			File f = new File(fileName);
+			File f = new File(this.fileName + (this.rename ? this.extentie : ""));
 			if (f.exists()) {
 				logger.info("Deleting existing file");
 				f.delete();
@@ -97,6 +99,16 @@ public class FileMap implements Mappable {
 				if (bos != null) {
 					try {
 						bos.close();
+						if (this.rename) {
+							File foNew = new File(this.fileName);
+							if (foNew.exists()) {
+								logger.info("Deleting existing file");
+								foNew.delete();
+							}
+			    			if (f.renameTo(foNew) == false) {
+			    				throw new UserException(-1, "Rename of temporary file failed (" + this.fileName + ")");
+			        		}
+			    		}
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -139,6 +151,14 @@ public class FileMap implements Mappable {
 		this.dosMode = mode;
 	}
 
+	public void setExtentie(String extentie) {
+		this.extentie = extentie;
+	}
+
+	public void setRename(boolean rename) {
+		this.rename = rename;
+	}
+	
 	public void setContent(Binary b) throws UserException {
 
 		if (fileName == null) {
@@ -150,12 +170,23 @@ public class FileMap implements Mappable {
 
 		this.content = b;
 		try {
-			FileOutputStream fo = new FileOutputStream(this.fileName);
+			File foTemp = new File(this.fileName + (this.rename ? this.extentie : ""));
+			FileOutputStream fo = new FileOutputStream(foTemp);
 
 			b.write(fo);
 			fo.flush();
 			fo.close();
 
+			if (this.rename) {
+				File foNew = new File(this.fileName);
+				if (foNew.exists()) {
+					logger.info("Deleting existing file");
+					foNew.delete();
+				}
+    			if (foTemp.renameTo(foNew) == false) {
+    				throw new UserException(-1, "Rename of temporary file failed (" + this.fileName + ")");
+        		}
+    		}
 			this.fileName = null;
 		} catch (Exception e) {
 			e.printStackTrace();
