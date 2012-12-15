@@ -50,7 +50,6 @@ public class Version extends AbstractCoreExtension {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
-		deregisterAll();
 	}
 
 }
