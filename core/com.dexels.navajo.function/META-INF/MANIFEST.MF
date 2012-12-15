@@ -2,7 +2,7 @@ Bundle-Name: Navajo Functions
 Bundle-SymbolicName: com.dexels.navajo.function
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.1.1.qualifier
+Bundle-Version: 3.1.2
 Bundle-Activator: navajofunctions.Version
 Export-Package: com.dexels.navajo.functions,
  com.dexels.navajo.functions.scale,
