@@ -14,9 +14,7 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
