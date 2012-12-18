@@ -75,7 +75,6 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 		String eval = request.getParameter("evaluate");
-    	
 		if(eval==null) {
 			super.service(request, response);
 			return;
