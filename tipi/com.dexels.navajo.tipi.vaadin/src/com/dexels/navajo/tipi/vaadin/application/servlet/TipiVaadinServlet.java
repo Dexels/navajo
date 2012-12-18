@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.vaadin.application.servlet;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Locale;
 
 import javax.servlet.ServletConfig;
@@ -17,9 +18,9 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
 import com.vaadin.Application;
-import com.vaadin.terminal.gwt.server.ApplicationServlet;
+import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
-public class TipiVaadinServlet extends ApplicationServlet {
+public class TipiVaadinServlet extends AbstractApplicationServlet {
 
 	
 	
@@ -32,15 +33,21 @@ public class TipiVaadinServlet extends ApplicationServlet {
 
 	@Override
 	public void init(ServletConfig servletConfig) throws ServletException {
+		Enumeration<String> en = servletConfig.getInitParameterNames();
+		while (en.hasMoreElements()) {
+			String key = en.nextElement();
+			System.err.println("PARAMETERS: "+key+" value: "+servletConfig.getInitParameter(key));
+		}
 		super.init(servletConfig);
-	}
+		
+    }
 
 	
-
-	@Override
-	protected Class<? extends Application> getApplicationClass() throws ClassNotFoundException {
-		return TipiVaadinApplication.class;
-	}
+//
+//	@Override
+//	protected Class<? extends Application> getApplicationClass() throws ClassNotFoundException {
+//		return TipiVaadinApplication.class;
+//	}
 
 
 
@@ -49,7 +56,7 @@ public class TipiVaadinServlet extends ApplicationServlet {
 			throws ServletException {
 //		String appInstance = getInitParameter("application");
 //		Class<? extends Application> appInstanceClass = Class.forName(appInstance);
-		TipiVaadinApplication tipiApplication = (TipiVaadinApplication) super.getNewApplication(request);
+		TipiVaadinApplication tipiApplication = new TipiVaadinApplication();
 		tipiApplication.setLocale(new Locale("nl","NL"));
 		tipiApplication.setServletContext(getServletContext());
 		String referer = request.getHeader("x-forwarded-host");
@@ -118,6 +125,13 @@ public class TipiVaadinServlet extends ApplicationServlet {
 			}
 		}
 		
+	}
+
+
+	@Override
+	protected Class<? extends Application> getApplicationClass()
+			throws ClassNotFoundException {
+		return TipiVaadinApplication.class;
 	}
 	
 

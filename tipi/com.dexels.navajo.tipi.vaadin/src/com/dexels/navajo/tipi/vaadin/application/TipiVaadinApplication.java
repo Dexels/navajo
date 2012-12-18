@@ -20,8 +20,8 @@ import org.slf4j.LoggerFactory;
 import tipi.BaseTipiApplicationInstance;
 import tipi.TipiApplicationInstance;
 import tipi.TipiCoreExtension;
-import tipi.TipiVaadinExtension;
 import tipipackage.TipiManualExtensionRegistry;
+import tipivaadin.TipiVaadinExtension;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;

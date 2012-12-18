@@ -1,4 +1,4 @@
-package tipi;
+package tipivaadin;
 
 import java.io.File;
 
@@ -7,6 +7,9 @@ import navajo.ExtensionDefinition;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import tipi.TipiAbstractXMLExtension;
+import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.vaadin.functions.VaadinFunctionDefinition;
