@@ -67,8 +67,8 @@
 	</feature>
 	<feature name='tipi.vaadin' version='1.0.0' start-level='81' >
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.5</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.0.11</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin.bridged/1.0.9</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.1.4</bundle>
+<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin.bridged/1.0.9</bundle> -->
 	</feature>
 
 
