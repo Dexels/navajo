@@ -2,7 +2,7 @@ Bundle-Name: Navajo Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.1.33
+Bundle-Version: 1.1.34.qualifier
 Bundle-Activator: tipipackage.Version
 Export-Package: com.dexels.navajo.tipi;
   uses:="com.dexels.navajo.client,
