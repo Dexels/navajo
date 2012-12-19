@@ -455,7 +455,7 @@
 	</function>
 	<function name="IsArrayMessage" class="com.dexels.navajo.functions.IsArrayMessage">
 		<description>IsArrayMessage( Message )</description>
-		<input>message</input>
+		<input>string</input>
 		<result>boolean</result>
 	</function>
 	<function name="IsDate" class="com.dexels.navajo.functions.IsDate">
