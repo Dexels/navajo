@@ -29,6 +29,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import com.dexels.navajo.document.Navajo;
@@ -62,12 +64,16 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 	public int readTimeOut = -1;
 	public int retries = 0;
 	public int maxRetries = 100;
+	public String headerKey;
+	public String headerValue;
 	
 	private static int instances = 0;
 	private Navajo myNavajo;
 	private Access myAccess;
 
 	public static int maxRunningInstances = -1;
+	
+	private HashMap<String, String> headers = new HashMap<String, String>();
 	
 	public void load(Access access) throws MappableException, UserException {
 		myNavajo = access.getInDoc();
@@ -125,10 +131,31 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.adapter.URLMap#setDoSend(boolean)
 	 */
+
 	@Override
 	public void setDoSend(boolean b) throws UserException {
 		if ( !queuedSend ) {
 			sendOverHTTP();
+		}
+	}
+	
+	private void addHeader(String key, String value){
+		headers.put(headerKey, headerValue);
+		headerKey = null;
+		headerValue = null;
+	}
+	
+	public void setHeaderKey(String key){
+		headerKey = key;
+		if( headerValue != null){
+			addHeader(headerKey, headerValue);
+		}
+	}
+	
+	public void setHeaderValue(String value){
+		headerValue = value;
+		if( headerKey != null){
+			addHeader(headerKey, headerValue);
 		}
 	}
 	
@@ -164,6 +191,14 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 			con.setUseCaches(false);
 			if ( contentType != null ) {
 				con.setRequestProperty("Content-type", contentType);
+			}
+			// Add headers
+			if(headers.size() > 0){
+				Iterator<String> keySet = headers.keySet().iterator();
+				while(keySet.hasNext()){
+					String key = keySet.next();
+					con.setRequestProperty(key, headers.get(key));
+				}
 			}
 			if ( textContent != null ) {
 				OutputStreamWriter osw = null;
