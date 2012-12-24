@@ -373,11 +373,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 
 	@Override
 	public boolean isAsyncEnabled() {
-		Boolean b =(Boolean) getExternalConfigurationValue("navajo.server.async","enabled");
-		if(b!=null) {
-			return b;
-		}
-		return false;
+		return true;
 	}
 
 	@Override
