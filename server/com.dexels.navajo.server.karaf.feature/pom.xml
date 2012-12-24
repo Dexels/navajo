@@ -1,48 +1,76 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.dexels.navajo</groupId>
 	<artifactId>com.dexels.navajo.karaf.feature</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<name>Navajo Karaf feature</name>
-	<packaging>pom</packaging>
-	<dependencies>
-		<dependency>
-			<groupId>com.dexels.navajo</groupId>
-			<artifactId>com.dexels.navajo.listeners.external</artifactId>
-			<version>1.0.13</version>
-		</dependency>
+	<packaging>feature</packaging>
+	<parent>
+		<groupId>com.dexels.navajo</groupId>
+		<artifactId>com.dexels.navajo.super</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../../setup/com.dexels.repository</relativePath>
+	</parent>
 
-   	</dependencies>
+
 	<build>
-		<!-- <plugins> <plugin> <groupId>org.apache.karaf.tooling</groupId> <artifactId>features-maven-plugin</artifactId> 
-			<version>2.3.0</version> <executions> <execution> <id>generate</id> <phase>generate-resources</phase> 
-			<goals> <goal>generate-features-file</goal> </goals> <configuration> <bundles>src/main/resources/bundles.properties</bundles> 
-			<kernelVersion>2.3.0</kernelVersion> <outputFile>target/features.xml</outputFile> 
-			</configuration> </execution> </executions> </plugin> </plugins> -->
-
-
 		<plugins>
 			<plugin>
-				<groupId>org.apache.karaf.tooling</groupId>
-				<artifactId>features-maven-plugin</artifactId>
-				<version>2.3.0</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<file>features.xml</file>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>generate-features-file</id>
+						<phase>compile</phase>
 						<goals>
-							<goal>generate-features-file</goal>
+							<goal>run</goal>
 						</goals>
 						<configuration>
-        			        <bundles>src/main/resources/bundles.properties</bundles>
-                			<kernelVersion>2.2.6</kernelVersion>
-		                	<outputFile>target/features.xml</outputFile>
-              				<karafVersion>3.0.0-SNAPSHOT</karafVersion>
+							<tasks>
+								<path id="maven-ant-tasks.classpath" path="lib/maven-ant-tasks-2.1.3.jar" />
+								<typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+									uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
+								<mkdir dir="target" />
+								<copy todir="target" failonerror="false">
+									<fileset dir="src/main/resources">
+										<include name="*.xml" />
+									</fileset>
+								</copy>
+								<artifact:deploy file="src/main/resources/features.xml" />
+							</tasks>
 						</configuration>
+
+					</execution>
+					<execution>
+						<id>compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>features.xml</include>
+				</includes>
+			</resource>
+		</resources>
 
 		<pluginManagement>
 			<plugins>
