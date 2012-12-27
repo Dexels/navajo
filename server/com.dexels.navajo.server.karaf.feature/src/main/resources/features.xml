@@ -27,7 +27,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/1.0.17</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/1.0.21</bundle>
 
 		
 	<!-- 	<bundle dependency='true'>mvn:org.apache.geronimo.modules/geronimo-mail/3.0-M1</bundle>
@@ -104,5 +104,9 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:org.glassfish.main/javax.transaction/4.0-b33</bundle>
 	</feature>
 		
+	<feature name='jetty.jsp' version='1.0.1' start-level='40' >
+		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jsp/1.1.4</bundle>
+	</feature>
+
 	
 </features>
