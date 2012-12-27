@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo">
-
-<!-- <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="karaf-2.2.9">
-<feature name="karaf-framework" description="Karaf core feature" version="2.2.9" resolver="(obr)">
-<bundle start-level="5">mvn:org.ops4j.pax.url/pax-url-mvn/1.2.8</bundle>
-<bundle start-level="5">mvn:org.ops4j.pax.url/pax-url-wrap/1.2.8</bundle>
-<bundle start-level="8">mvn:org.ops4j.pax.logging/pax-logging-api/1.6.9</bundle>
-<bundle start-level="8">
-mvn:org.ops4j.pax.logging/pax-logging-service/1.6.9
-</bundle>
-<bundle start-level="10">
-mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
-</bundle> -->
-
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.2.0" name="navajo.repo">
 	<!-- scr, http, webconsole -->
     <feature name='navajo.core' version='1.0.1' start-level='80' >
 	    <details>Navajo Core Components</details>

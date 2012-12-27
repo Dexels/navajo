@@ -3,113 +3,13 @@
 	xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>com.dexels.navajo.karaf.feature</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<name>Navajo Karaf feature</name>
-	<packaging>feature</packaging>
+	<packaging>features.xml</packaging>
 	<parent>
 		<groupId>com.dexels.navajo</groupId>
 		<artifactId>com.dexels.navajo.super</artifactId>
 		<version>1.0.0</version>
 		<relativePath>../../setup/com.dexels.repository</relativePath>
 	</parent>
-
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<file>features.xml</file>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.5</version>
-			</plugin>
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								<path id="maven-ant-tasks.classpath" path="lib/maven-ant-tasks-2.1.3.jar" />
-								<typedef resource="org/apache/maven/artifact/ant/antlib.xml"
-									uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
-								<mkdir dir="target" />
-								<copy todir="target" failonerror="false">
-									<fileset dir="src/main/resources">
-										<include name="*.xml" />
-									</fileset>
-								</copy>
-								<artifact:deploy file="src/main/resources/features.xml" />
-							</tasks>
-						</configuration>
-
-					</execution>
-					<execution>
-						<id>compile</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>features.xml</include>
-				</includes>
-			</resource>
-		</resources>
-
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.apache.karaf.tooling
-										</groupId>
-										<artifactId>
-											features-maven-plugin
-										</artifactId>
-										<versionRange>
-											[2.3.0,)
-										</versionRange>
-										<goals>
-											<goal>generate</goal>
-											<goal>
-												generate-features-file
-											</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
 </project>
