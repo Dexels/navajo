@@ -27,7 +27,7 @@ public class TmlStandardServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		final LocalClient lc = (LocalClient) req.getServletContext().getAttribute("localClient");
+		final LocalClient lc = (LocalClient) getServletContext().getAttribute("localClient");
 		if(lc==null) {
 			resp.sendError(500, "No local client registered in servlet context");
 			return;
