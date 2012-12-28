@@ -14,7 +14,7 @@
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/1.0.15</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/1.0.17</bundle>
 
 		
 	<!-- 	<bundle dependency='true'>mvn:org.apache.geronimo.modules/geronimo-mail/3.0-M1</bundle>
@@ -41,9 +41,8 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>	
 
-	<feature name='navajo.server.osgi' version='1.0.0' start-level='81' >
+	<feature name='navajo.server.osgi' version='1.0.1' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/1.0.1</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.server.bridged/1.0.11</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/1.0.7</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/1.0.5</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.resource/1.0.9</bundle>
@@ -60,7 +59,7 @@
 		<bundle dependency='true'>mvn:com.oracle/com.oracle.jdbc.driver/11.2.33</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.webconsole.branding/1.0.5</bundle>
 <!--		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.server.logback/1.0.1</bundle>-->
- 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.0.6</bundle> 
+ 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.0.8</bundle> 
 	</feature>
 	<feature name='tipi.core' version='1.0.0' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/1.1.31</bundle>

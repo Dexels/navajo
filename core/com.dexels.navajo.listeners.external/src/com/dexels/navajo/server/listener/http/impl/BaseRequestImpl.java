@@ -288,6 +288,7 @@ public class BaseRequestImpl extends BaseInMemoryRequest implements
 				}
 			} catch (IOException e) {
 				logger.error("Error: ", e);
+				ready = true;
 			}
 			if (read <= -1) {
 				ready = true;

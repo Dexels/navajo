@@ -97,6 +97,13 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 	private void registerFunction(BundleContext bundleContext,FunctionFactoryInterface fi,
 			String functionName, FunctionDefinition fd, ExtensionDefinition extensionDef) {
 		Dictionary<String, Object> props = new Hashtable<String, Object>();
+		if(functionName==null) {
+			logger.warn("Can not register function: No functionName supplied");
+			return;
+		}
+		if(fd==null) {
+			logger.warn("Can not register function: {} as the FuncitonDefinition is null", functionName);
+		}
 		props.put("functionName", functionName);
 		props.put("functionDefinition", fd);
 		props.put("type", "function");
@@ -110,11 +117,13 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 		try {
 			clz = (Class<? extends FunctionInterface>) Class.forName(fd.getObject(),true,extensionDef.getClass().getClassLoader());
 //			logger.debug("Registering functionclass: {} context: {}"+ functionName, clz.getName(),extensionDef.getClass().getName());
-			registration = bundleContext.registerService(
-					Class.class.getName(),
-					clz,
-					props);
-			registrations.add(registration);
+			if(bundleContext!=null) {
+				registration = bundleContext.registerService(
+						Class.class.getName(),
+						clz,
+						props);
+				registrations.add(registration);
+			}
 		} catch (ClassNotFoundException e) {
 			logger.error("Error registering service: {}",functionName,e);
 		}
