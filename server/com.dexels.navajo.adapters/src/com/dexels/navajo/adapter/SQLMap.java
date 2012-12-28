@@ -140,7 +140,7 @@ import com.dexels.navajo.util.AuditLog;
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
 public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, Debugable, StreamClosable {
 
-	protected final static int INFINITE = 50000;
+	protected final static int INFINITE = 10000;
 	protected final String USERPWDDELIMITER = "/";
 	protected final String DEFAULTSRCNAME = "default";
 
