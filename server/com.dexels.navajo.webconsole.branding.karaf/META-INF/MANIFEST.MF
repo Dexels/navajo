@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Built-By: flyaruu
+Bundle-Name: Navajo Branding Fragment for Apache Karaf
+Bundle-Vendor: Dexels
+Fragment-Host: org.apache.karaf.webconsole
+Bundle-Version: 1.0.6.qualifier
+Bundle-ManifestVersion: 2
+Bundle-Description: Dexels Branding for Webconsole Karaf
+Bundle-DocURL: https://github.com/Dexels/navajo/
+Bundle-SymbolicName: com.dexels.navajo.webconsole.branding.karaf
+
