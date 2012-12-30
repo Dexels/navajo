@@ -27,6 +27,7 @@ public class JspComponent {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(JspComponent.class);
+	private HttpContext httpContext;
 	
 	public WebContainer getWebContainer() {
 		return webContainer;
@@ -76,7 +77,7 @@ public class JspComponent {
 		this.bundleContext = cc.getBundleContext();
 		instance = this;
         try {
-            final HttpContext httpContext = webContainer.createDefaultHttpContext();
+            httpContext = webContainer.createDefaultHttpContext();
             Dictionary<String,Object> contextProperties = new Hashtable<String,Object>();
             logger.info("Injecting forced Navajo path: "+navajoConfig.getRootPath());
             contextProperties.put("forcedNavajoPath", navajoConfig.getRootPath());
@@ -112,14 +113,20 @@ public class JspComponent {
 	        webContainer.registerWelcomeFiles(new String[]{"index.html"}, false, httpContext);
         } catch (NamespaceException e) {
 			logger.error("Error: ", e);
-		} catch(Throwable e) {
-			logger.error("Throwable: ", e);
 		}
 
 	}
 
 	public void deactivate() {
 		instance = null;
+		if(webContainer==null) {
+			return;
+		}
+		if(httpContext==null) {
+			return;
+		}
+//		HttpContext context = webContainer.
+		webContainer.unregisterJsps(httpContext);
 	}
 
 }
