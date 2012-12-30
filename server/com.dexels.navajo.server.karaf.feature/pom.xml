@@ -3,7 +3,7 @@
 	xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>com.dexels.navajo.karaf.feature</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 	<name>Navajo Karaf feature</name>
 	<packaging>features.xml</packaging>
 	<parent>
