@@ -70,8 +70,8 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.mysql/com.mysql.jdbc/5.1.18</bundle>
 		<bundle dependency='true'>mvn:com.h2database/h2/1.3.168</bundle>
 		<bundle dependency='true'>mvn:com.oracle/com.oracle.jdbc.driver/11.2.33</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.webconsole.branding.karaf/1.0.5</bundle>
-<!--		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.server.logback/1.0.1</bundle>-->
+<!--		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.webconsole.branding.karaf/1.0.5</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.server.logback/1.0.1</bundle>-->
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.0.10</bundle> 
 	</feature>
 	<feature name='tipi.core' version='1.0.0' start-level='81' >
@@ -81,6 +81,14 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.5</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.1.4</bundle>
 <!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin.bridged/1.0.9</bundle> -->
+	</feature>
+
+	<feature name='navajo.camel' version='1.0.3' start-level='81' >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/1.0.3</bundle>
+	</feature>
+
+	<feature name='navajo.openshift' version='0.9.0' start-level='81' >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager.openshift/1.0.14</bundle>
 	</feature>
 
 
@@ -96,6 +104,8 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/1.0.22</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/1.0.12</bundle>
     </feature>
+    
+    <!-- 
  	<feature name='ops' version='1.0.3' start-level='40' >
 	 	<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jsp/3.0.0-SNAPSHOT</bundle>
 	 	<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-extender-whiteboard/3.0.0-SNAPSHOT</bundle>
@@ -103,7 +113,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	<feature name='trans' version='1.0.1' start-level='40' >
 		<bundle dependency='true'>mvn:org.glassfish.main/javax.transaction/4.0-b33</bundle>
 	</feature>
-		
+		 -->
 	<feature name='jetty.jsp' version='1.0.1' start-level='40' >
 		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jsp/1.1.4</bundle>
 		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-extender-whiteboard/1.1.4</bundle>
