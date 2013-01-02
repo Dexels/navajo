@@ -19,6 +19,7 @@ Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.tipi.classdef,
  com.dexels.navajo.tipi.components.core,
  com.dexels.navajo.tipi.components.question,
+ com.dexels.navajo.tipi.context,
  com.dexels.navajo.tipi.internal,
  com.dexels.navajo.tipi.internal.cookie,
  com.dexels.navajo.tipi.tipixml,
@@ -55,4 +56,4 @@ Bundle-ClassPath: lib/borderlayout-0.3.jar,
  lib/vaadin-calendar-cval-2.0-1.2.0.jar,
  lib/openlayers-wrapper-0.9.1.jar,
  .
-Service-Component: OSGI-INF/vaadinServlet.xml,OSGI-INF/vaadinResourceServlet.xml
+Service-Component: OSGI-INF/tipi.vaadin.servlet.xml,OSGI-INF/tipi.vaadin.servlet.resource.xml
