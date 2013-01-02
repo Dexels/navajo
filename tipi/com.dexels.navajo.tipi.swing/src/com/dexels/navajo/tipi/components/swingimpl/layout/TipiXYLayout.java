@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl.layout;
 
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Rectangle;
 import java.util.StringTokenizer;
 
