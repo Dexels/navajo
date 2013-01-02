@@ -63,6 +63,7 @@ Export-Package: com.dexels.navajo.tipi;
    com.dexels.navajo.tipi.tipixml,
    com.dexels.navajo.document",
  com.dexels.navajo.tipi.connectors;uses:="com.dexels.navajo.tipi.components.core,com.dexels.navajo.tipi,com.dexels.navajo.document",
+ com.dexels.navajo.tipi.context,
  com.dexels.navajo.tipi.headless;uses:="tipi,com.dexels.navajo.tipi",
  com.dexels.navajo.tipi.internal;
   uses:="com.dexels.navajo.tipi.internal.cache,
@@ -106,3 +107,4 @@ Import-Package: com.dexels.navajo.client,
  org.slf4j;version="1.6.1"
 Bundle-ClassPath: beansclasses/,
  .
+Service-Component: OSGI-INF/tipi.context.manager.xml,OSGI-INF/tipi.context.instance.xml
