@@ -54,21 +54,31 @@ public final class Round extends FunctionInterface {
         return "Round(float, integer).";
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-        Object a = this.getOperands().get(0);
-        Object b = this.getOperands().get(1);
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+		Object a = this.getOperands().get( 0 );
+		Object b = this.getOperands().get( 1 );
 
-        try {
-            Double d = (Double) a;
-            Integer i = (Integer) b;
-            double dd = d.doubleValue();
-            int digits = i.intValue();
+		try {
+			Double d = ( Double ) a;
+			Integer i = ( Integer ) b;
+			double dd = d.doubleValue();
+			int digits = i.intValue();
 
-            dd = (int) (dd * Math.pow(10.0, digits))
-                    / Math.pow(10.0, digits);
-            return new Double(dd);
-        } catch (Exception e) {
-            throw new TMLExpressionException(this, "Illegal type specified in Round() function: " + e.getMessage());
-        }
-    }
+			dd = ( (int) ( 0.5 + dd * Math.pow( 10.0, ( double ) digits ) ) ) / Math.pow( 10.0, ( double ) digits );
+
+			return new Double( dd );
+		} catch ( Exception e ) {
+			throw new TMLExpressionException( this, "Illegal type specified in Round() function: " + e.getMessage() );
+		}
+	}
+
+	public static void main(String [] args) throws Exception {
+		Round r = new Round();
+
+		r.reset();
+		r.insertOperand( new Double( 3.141592 ) );
+		r.insertOperand( new Integer( 4 ) );
+
+		System.err.println("Input " + r.getOperand( 0 ) + ", rounded to " + r.getOperand( 1 ) + " digits: " + r.evaluate() );
+	}
 }
