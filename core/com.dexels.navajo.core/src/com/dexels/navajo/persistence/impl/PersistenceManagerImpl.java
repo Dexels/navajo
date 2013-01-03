@@ -118,6 +118,11 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 			synchronized ( semaphore ) {
 				if ( this.sharedPersistenceStore == null ) {
 					sharedPersistenceStore = SharedStoreFactory.getInstance();
+					if(sharedPersistenceStore==null) {
+						// now what?
+						// just ignore?
+						return;
+					}
 					if ( TribeManagerFactory.getInstance().getIsChief() ) {
 						sharedPersistenceStore.removeAll(CACHE_PATH); // Remove all cached entries when restarted.
 					}
