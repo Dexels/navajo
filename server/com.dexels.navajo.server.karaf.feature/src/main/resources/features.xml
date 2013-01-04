@@ -64,8 +64,8 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager/1.0.11</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.oracle/1.0.3</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.mongodb/1.0.3</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.mysql/1.0.3</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.h2/1.0.1</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.mysql/1.0.5</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.h2/1.0.2</bundle>
 		<bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/2.9.3</bundle>
 		<bundle dependency='true'>mvn:com.mysql/com.mysql.jdbc/5.1.18</bundle>
 		<bundle dependency='true'>mvn:com.h2database/h2/1.3.168</bundle>
