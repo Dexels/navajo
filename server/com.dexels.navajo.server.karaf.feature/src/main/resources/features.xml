@@ -14,7 +14,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 </bundle> -->
 
 	<!-- scr, http, webconsole -->
-    <feature name='navajo.core' version='1.0.2' start-level='80'  >
+    <feature name='navajo.core' version='1.0.3' start-level='80'  >
 	    <details>Navajo Core Components</details>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.20</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.1.6</bundle>
@@ -34,7 +34,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		 -->
 	</feature>
 
-	<feature name='navajo.server' version='1.0.0' start-level='81' >
+	<feature name='navajo.server' version='1.0.1' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/1.1.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/1.0.17</bundle>
@@ -74,10 +74,10 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.server.logback/1.0.1</bundle>-->
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.0.10</bundle> 
 	</feature>
-	<feature name='tipi.core' version='1.0.1' start-level='81' >
+	<feature name='tipi.core' version='1.0.2' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/1.1.35</bundle>
 	</feature>
-	<feature name='tipi.vaadin' version='1.0.1' start-level='81' >
+	<feature name='tipi.vaadin' version='1.0.2' start-level='81' >
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.5</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.1.6</bundle>
 <!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin.bridged/1.0.9</bundle> -->
@@ -87,7 +87,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/1.0.3</bundle>
 	</feature>
 
-	<feature name='navajo.openshift' version='0.9.0' start-level='81' >
+	<feature name='navajo.openshift' version='0.9.1' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager.openshift/1.0.16</bundle>
 	</feature>
 
@@ -96,7 +96,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/1.0.7</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.birt.push/1.0.5</bundle>
 	</feature>			
-	<feature name='navajo.enterprise' version='1.0.1' start-level='81' >
+	<feature name='navajo.enterprise' version='1.0.2' start-level='81' >
 		<bundle dependency='true'>mvn:org.jgroups/jgroups/3.2.4</bundle>
 <!-- Disabled, fix 'Waiting for the Chief problem' -->
 <!-- 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.cluster/1.0.1</bundle> -->
