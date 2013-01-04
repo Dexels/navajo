@@ -84,7 +84,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	</feature>
 
 	<feature name='navajo.camel' version='1.0.3' start-level='81' >
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/1.0.7</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/1.0.9</bundle>
 	</feature>
 
 	<feature name='navajo.openshift' version='0.9.1' start-level='81' >
