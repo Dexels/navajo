@@ -156,8 +156,7 @@ public class TmlContinuationServlet extends HttpServlet implements
 			}
 			final LocalClient lc = getLocalClient(req);
 
-			Object certObject = req
-					.getAttribute("javax.servlet.request.X509Certificate");
+			Object certObject = req.getAttribute("javax.servlet.request.X509Certificate");
 			String contentEncoding = req.getHeader("Content-Encoding");
 			String acceptEncoding = req.getHeader("Accept-Encoding");
 			AsyncRequest request = null;
@@ -167,13 +166,6 @@ public class TmlContinuationServlet extends HttpServlet implements
 				Navajo in = TmlHttpServlet.constructFromRequest(req);
 				request = new BaseRequestImpl(lc, in, req,resp);
 			}
-		
-			boolean check = getTmlScheduler().checkNavajo(request.getInputDocument());
-			if (!check) {
-				resp.getOutputStream().close();
-				return;
-			}
-
 			TmlContinuationRunner instantiateRunnable = new TmlContinuationRunner(request,lc);
 			req.setAttribute("tmlRunner", instantiateRunnable);
 			getTmlScheduler().submit(instantiateRunnable, false);

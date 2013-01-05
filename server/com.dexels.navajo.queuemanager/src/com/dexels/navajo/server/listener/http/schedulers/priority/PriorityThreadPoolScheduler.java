@@ -327,11 +327,6 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		processed++;
 		
 	}
-	
-	@Override
-	public final boolean checkNavajo(Navajo input) {
-		return true;
-	}
 
 	@Override
 	public final int getTimeout() {
