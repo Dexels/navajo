@@ -3,8 +3,6 @@ package com.dexels.navajo.script.api;
 
 import java.io.IOException;
 
-import com.dexels.navajo.document.Navajo;
-
 public interface Scheduler {
 
 	
@@ -17,16 +15,6 @@ public interface Scheduler {
 	 */
 	public int getTimeout();
 	
-	/**
-	 * Called when the request navajo is complete.
-	 * Here you get another opportunity to reject a navajo call by returning false.
-	 * You have access to all headers and other parts of the navajo object.
-	 * @param input
-	 * @param tr 
-	 * @return
-	 */
-	public boolean checkNavajo(Navajo input);
-
 	/**
 	 * The runner object is complete, so we can schedule it now.
 	 * TODO Huh? Why an IO exception?
