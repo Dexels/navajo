@@ -159,8 +159,8 @@ public class TmlContinuationServlet extends HttpServlet implements
 			AsyncRequest request = constructRequest(req, resp, lc);
 			TmlContinuationRunner instantiateRunnable = new TmlContinuationRunner(request,lc);
 			req.setAttribute("tmlRunner", instantiateRunnable);
-			getTmlScheduler().submit(instantiateRunnable, false);
 			instantiateRunnable.suspendContinuation();
+			getTmlScheduler().submit(instantiateRunnable, false);
 		} catch (Throwable e) {
 			logger.error("Servlet call failed dramatically", e);
 		}
