@@ -32,13 +32,7 @@ public class TmlStandardServlet extends HttpServlet {
 			resp.sendError(500, "No local client registered in servlet context");
 			return;
 		}		
-		boolean precheck = myScheduler.preCheckRequest(req);
-		if (!precheck) {
-			req.getInputStream().close();
-			resp.getOutputStream().close();
-			return;
-		}
-		
+
 		Object certObject = req
 				.getAttribute("javax.servlet.request.X509Certificate");
 		String recvEncoding = req.getHeader("Content-Encoding");

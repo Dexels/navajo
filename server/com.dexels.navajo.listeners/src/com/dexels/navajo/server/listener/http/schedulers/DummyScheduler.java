@@ -26,11 +26,6 @@ public class DummyScheduler implements TmlScheduler {
 	}
 
 	@Override
-	public boolean preCheckRequest(HttpServletRequest request) {
-		return true;
-	}
-
-	@Override
 	public void run(TmlRunnable myRunner) {
 		myRunner.run();
 	}

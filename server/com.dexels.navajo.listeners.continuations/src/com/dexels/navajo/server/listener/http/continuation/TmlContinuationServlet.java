@@ -154,26 +154,7 @@ public class TmlContinuationServlet extends HttpServlet implements
 				// tmlRunner.endTransaction();
 				return;
 			}
-			LocalClient tempClient = localClient;
-			if (localClient == null) {
-				tempClient = (LocalClient) req.getServletContext()
-						.getAttribute("localClient");
-			}
-
-			final LocalClient lc = tempClient;
-			if (lc == null) {
-				logger.error("No localclient found");
-				resp.sendError(500,
-						"No local client registered in servlet context");
-				return;
-			}
-			boolean precheck = getTmlScheduler().preCheckRequest(req);
-			if (!precheck) {
-				logger.warn("Precheck failed!");
-				req.getInputStream().close();
-				resp.getOutputStream().close();
-				return;
-			}
+			final LocalClient lc = getLocalClient(req);
 
 			Object certObject = req
 					.getAttribute("javax.servlet.request.X509Certificate");
@@ -200,6 +181,24 @@ public class TmlContinuationServlet extends HttpServlet implements
 		} catch (Throwable e) {
 			logger.error("Servlet call failed dramatically", e);
 		}
+	}
+
+	protected LocalClient getLocalClient(final HttpServletRequest req)
+			throws ServletException {
+		LocalClient tempClient = localClient;
+		if (localClient == null) {
+			tempClient = (LocalClient) req.getServletContext()
+					.getAttribute("localClient");
+		}
+
+		final LocalClient lc = tempClient;
+		if (lc == null) {
+			logger.error("No localclient found");
+//				resp.sendError(500,
+//						"No local client registered in servlet context");
+			throw new ServletException("No local client registered in servlet context");
+		}
+		return lc;
 	}
 
 	@Override
