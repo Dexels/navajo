@@ -1,6 +1,7 @@
 package com.dexels.navajo.server.listener.http.continuation;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -151,21 +152,11 @@ public class TmlContinuationServlet extends HttpServlet implements
 			TmlContinuationRunner tmlRunner = (TmlContinuationRunner) req
 					.getAttribute("tmlRunner");
 			if (tmlRunner != null) {
-				// tmlRunner.endTransaction();
 				return;
 			}
 			final LocalClient lc = getLocalClient(req);
 
-			Object certObject = req.getAttribute("javax.servlet.request.X509Certificate");
-			String contentEncoding = req.getHeader("Content-Encoding");
-			String acceptEncoding = req.getHeader("Accept-Encoding");
-			AsyncRequest request = null;
-			if("POST".equals( req.getMethod())) {
-				request = new BaseRequestImpl(lc, req, resp,acceptEncoding, contentEncoding, certObject);
-			} else {
-				Navajo in = TmlHttpServlet.constructFromRequest(req);
-				request = new BaseRequestImpl(lc, in, req,resp);
-			}
+			AsyncRequest request = constructRequest(req, resp, lc);
 			TmlContinuationRunner instantiateRunnable = new TmlContinuationRunner(request,lc);
 			req.setAttribute("tmlRunner", instantiateRunnable);
 			getTmlScheduler().submit(instantiateRunnable, false);
@@ -173,6 +164,22 @@ public class TmlContinuationServlet extends HttpServlet implements
 		} catch (Throwable e) {
 			logger.error("Servlet call failed dramatically", e);
 		}
+	}
+
+	protected AsyncRequest constructRequest(final HttpServletRequest req,
+			HttpServletResponse resp, final LocalClient lc)
+			throws UnsupportedEncodingException, IOException {
+		Object certObject = req.getAttribute("javax.servlet.request.X509Certificate");
+		String contentEncoding = req.getHeader("Content-Encoding");
+		String acceptEncoding = req.getHeader("Accept-Encoding");
+		AsyncRequest request = null;
+		if("POST".equals( req.getMethod())) {
+			request = new BaseRequestImpl(lc, req, resp,acceptEncoding, contentEncoding, certObject);
+		} else {
+			Navajo in = TmlHttpServlet.constructFromRequest(req);
+			request = new BaseRequestImpl(lc, in, req,resp);
+		}
+		return request;
 	}
 
 	protected LocalClient getLocalClient(final HttpServletRequest req)
@@ -194,12 +201,15 @@ public class TmlContinuationServlet extends HttpServlet implements
 	}
 
 	@Override
-	public TmlScheduler getTmlScheduler() {
+	public TmlScheduler getTmlScheduler() throws ServletException {
 		if (tmlScheduler != null) {
 			return tmlScheduler;
 		}
 		TmlScheduler attribute = (TmlScheduler) getServletContext()
 				.getAttribute("tmlScheduler");
+		if(attribute==null) {
+			throw new ServletException("Can not use scheduling servlet: No scheduler found.");
+		}
 		return attribute;
 	}
 
