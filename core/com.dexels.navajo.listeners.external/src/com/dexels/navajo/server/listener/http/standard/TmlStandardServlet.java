@@ -39,16 +39,7 @@ public class TmlStandardServlet extends HttpServlet {
 		String sendEncoding = req.getHeader("Accept-Encoding");
 		AsyncRequest request = new BaseRequestImpl(lc,req, resp, sendEncoding, recvEncoding, certObject);
 		
-//		Navajo inputDoc = NavajoFactory.getInstance().createNavajo(req.getInputStream());
-//		req.getInputStream().close();
 
-
-
-		boolean check = getTmlScheduler().checkNavajo(request.getInputDocument());
-		if (!check) {
-			resp.getOutputStream().close();
-			return;
-		}
 		TmlStandardRunner tr = new TmlStandardRunner(request, lc);
 		getTmlScheduler().run(tr);
 		// TODO broken? fix
