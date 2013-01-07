@@ -13,7 +13,10 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  org.apache.camel.component;version="2.10.2",
  org.apache.camel.impl;version="2.10.2",
  org.apache.camel.spi;version="2.10.2",
+ org.apache.camel.support;version="2.10.2",
  org.osgi.framework;version="1.6.0",
  org.slf4j;version="1.6.1"
-Service-Component: OSGI-INF/navajoCamelComponentResolver.xml,
- OSGI-INF/navajoCamelComponent.xml
+Service-Component: OSGI-INF/navajoCamelComponentResolver.xml,OSGI-INF/navajoCamelComponent.xml,
+ OSGI-INF/.xml
+Export-Package: com.dexels.navajo.camel.component,
+ com.dexels.navajo.camel.consumer

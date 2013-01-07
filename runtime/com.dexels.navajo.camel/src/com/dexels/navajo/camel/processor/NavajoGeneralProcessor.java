@@ -62,7 +62,7 @@ public class NavajoGeneralProcessor implements Processor {
 			p.setAnyValue(in.getBody());
 			body.addProperty(p);
 			
-			logger.info("Processed cammel interaction. ");
+			logger.info("Processed camel interaction. ");
 			outputNavajo.write(System.err);
 		} catch (Throwable e) {
 			logger.error("Trouble in processor: ",e);
