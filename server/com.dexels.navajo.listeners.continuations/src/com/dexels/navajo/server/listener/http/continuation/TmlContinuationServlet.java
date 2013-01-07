@@ -15,6 +15,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.SchedulableServlet;
+import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.script.api.TmlScheduler;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
 import com.dexels.navajo.server.listener.http.impl.BaseRequestImpl;
@@ -64,106 +65,37 @@ public class TmlContinuationServlet extends HttpServlet implements
 		logger.info("Continuation servlet component deactivated");
 	}
 
-//	public void doGet(final HttpServletRequest request, final HttpServletResponse response) {
-//		final Continuation continuation = ContinuationSupport
-//				.getContinuation(request);
-//
-//		try {
-//			doPost(request,response);
-//		} catch (ServletException e1) {
-//			e1.printStackTrace();
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
-//		if(true) {
-//			return;
-//		}
-//		// if this is not a timeout
-//		if (continuation.isExpired()) {
-//			try {
-//				response.getWriter().write("Expired");
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//			return;
-//		}
-//
-//		// suspend the request
-//		continuation.suspend(response); // response may be wrapped.
-//		System.err.println("Suspended");
-//		// register with async service. The code here will depend on the
-//		// the service used (see Jetty HttpClient for example)
-//		Timer t = new Timer();
-//		t.schedule(new TimerTask() {
-//			
-//			@Override
-//			public void run() {
-//				try {
-//					response.getWriter().write("Complete: "+new Date());
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//				continuation.complete();
-//			}
-//		}, 5000);
-//	}
-//
-//	@Override
-//	protected void service(final HttpServletRequest req, HttpServletResponse resp)
-//			throws ServletException, IOException {
-//		final PrintWriter writer = resp.getWriter();
-//		try {
-//			final Continuation continuation = ContinuationSupport
-//					.getContinuation(req);
-//			continuation.suspend(resp); // response may be wrapped.
-//			// register with async service. The code here will depend on the
-//			// the service used (see Jetty HttpClient for example)
-//			Timer t = new Timer();
-//			t.schedule(new TimerTask() {
-//				
-//				@Override
-//				public void run() {
-//					try {
-//						System.err.println("Exiting Servlet ...");
-//						
-//						ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//						CopyUtils.copy(getClass().getResourceAsStream("tmlexample.xml"), baos);
-//						byte[] data = baos.toByteArray();
-//						System.err.println("! data: "+data.length);
-//						CopyUtils.copy(data, writer);
-//						writer.flush();
-//						writer.close();
-//						System.err.println("post caught");
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
-//					continuation.complete();
-//				}
-//			}, 5000);
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//		}
-//	}
-//	
 	@Override
 	protected void service(final HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
-			TmlContinuationRunner tmlRunner = (TmlContinuationRunner) req
-					.getAttribute("tmlRunner");
-			if (tmlRunner != null) {
-				return;
+			TmlRunnable instantiateRunnable = prepareRunnable(req,resp);
+			if(instantiateRunnable!=null) {
+				getTmlScheduler().submit(instantiateRunnable, false);
 			}
-			final LocalClient lc = getLocalClient(req);
-
-			AsyncRequest request = constructRequest(req, resp, lc);
-			TmlContinuationRunner instantiateRunnable = new TmlContinuationRunner(request,lc);
-			req.setAttribute("tmlRunner", instantiateRunnable);
-			instantiateRunnable.suspendContinuation();
-			getTmlScheduler().submit(instantiateRunnable, false);
 		} catch (Throwable e) {
+			if(e instanceof ServletException) {
+				throw (ServletException)e;
+			}
 			logger.error("Servlet call failed dramatically", e);
 		}
+	}
+
+	protected TmlRunnable prepareRunnable(
+			final HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, UnsupportedEncodingException, IOException {
+		TmlContinuationRunner tmlRunner = (TmlContinuationRunner) req
+				.getAttribute("tmlRunner");
+		if (tmlRunner != null) {
+			return null;
+		}
+		final LocalClient lc = getLocalClient(req);
+
+		AsyncRequest request = constructRequest(req, resp, lc);
+		TmlContinuationRunner instantiateRunnable = new TmlContinuationRunner(request,lc);
+		req.setAttribute("tmlRunner", instantiateRunnable);
+		instantiateRunnable.suspendContinuation();
+		return instantiateRunnable;
 	}
 
 	protected AsyncRequest constructRequest(final HttpServletRequest req,
