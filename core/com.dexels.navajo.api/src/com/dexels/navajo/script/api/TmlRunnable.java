@@ -17,6 +17,7 @@ public interface TmlRunnable extends Runnable {
 	
 	public Navajo getInputNavajo() throws IOException;
 	public void setResponseNavajo(Navajo n) ;
+	public Navajo getResponseNavajo() ;
 	
 	public RequestQueue getRequestQueue();
 	public void setRequestQueue(RequestQueue rq);

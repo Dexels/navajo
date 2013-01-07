@@ -228,4 +228,9 @@ public void setAccess(Access a) {
 	setAttribute("access", a);
 }
 
+@Override
+public Navajo getResponseNavajo() {
+	return environment.getResponse();
+}
+
 }

@@ -1412,8 +1412,9 @@ public void onResponse(Navajo response) {
 
   }
 
+  // FIXME I think this is a bit strange
   public void setResponseNavajo(Navajo n)  {
-		logger.warn("Set input navajo in NavajoMap... Isn't this odd?");	
+		logger.warn("Set input navajo in NavajoMap... Isn't this odd? Shouldn't it be the output navajo?");	
 		inDoc = n;
 	}
 
@@ -1455,6 +1456,11 @@ public void setAttribute(String name, Object value) {
 @Override
 public Set<String> getAttributeNames() {
 	return Collections.unmodifiableSet(attributes.keySet());
+}
+
+@Override
+public Navajo getResponseNavajo() {
+	return inDoc;
 }
 
 }

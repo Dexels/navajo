@@ -1400,4 +1400,9 @@ public Set<String> getAttributeNames() {
 public void setAccess(Access a) {
 	setAttribute("access", a);
 }
+
+@Override
+public Navajo getResponseNavajo() {
+	return inDoc;
+}
 }

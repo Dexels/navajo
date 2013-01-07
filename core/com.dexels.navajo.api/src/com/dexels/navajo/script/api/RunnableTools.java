@@ -99,6 +99,11 @@ public class RunnableTools {
 				target.setRequestQueue(rq);
 			}
 
+			@Override
+			public Navajo getResponseNavajo() {
+				return target.getResponseNavajo();
+			}
+
 			
 		};
 		return t;
