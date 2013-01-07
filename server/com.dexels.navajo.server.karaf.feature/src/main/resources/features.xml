@@ -120,6 +120,6 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-api/1.1.4</bundle>
 	</feature>
 
-	<feature name="http" version="1.0.0"></feature>
+	<feature name="http" version="2.5.0"></feature>
 	
 </features>
