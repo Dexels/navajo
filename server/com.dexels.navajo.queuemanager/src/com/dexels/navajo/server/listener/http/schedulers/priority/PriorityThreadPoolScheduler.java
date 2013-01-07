@@ -327,11 +327,6 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		processed++;
 		
 	}
-	
-	@Override
-	public final boolean checkNavajo(Navajo input) {
-		return true;
-	}
 
 	@Override
 	public final int getTimeout() {
@@ -342,11 +337,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		this.timeout = timeout;
 	}
 
-	@Override
-	public final boolean preCheckRequest(final HttpServletRequest request) {
-		return true;
-	}	
-	
+
 	public final double getExpectedNormalQueueTime() {
 		return queueMap.get("normalPool").getExpectedQueueTime();
 	}

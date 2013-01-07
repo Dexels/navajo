@@ -1,9 +1,7 @@
 package com.dexels.navajo.server.listener.http.schedulers;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.script.api.TmlScheduler;
@@ -15,19 +13,10 @@ public class DummyScheduler implements TmlScheduler {
 
 	}
 
-	@Override
-	public boolean checkNavajo(Navajo input) {
-		return true;
-	}
 
 	@Override
 	public int getTimeout() {
 		return 0;
-	}
-
-	@Override
-	public boolean preCheckRequest(HttpServletRequest request) {
-		return true;
 	}
 
 	@Override

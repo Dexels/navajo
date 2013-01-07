@@ -1,6 +1,7 @@
 package com.dexels.navajo.camel;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Component;
@@ -10,7 +11,7 @@ import org.apache.camel.spi.TypeConverterLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.camel.component.CamelComponent;
+import com.dexels.navajo.camel.component.NavajoCamelComponent;
 
 public class NavajoComponentResolver implements ComponentResolver {
 
@@ -18,22 +19,25 @@ public class NavajoComponentResolver implements ComponentResolver {
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoComponentResolver.class);
 	
-	private CamelComponent camelComponent;
+	private NavajoCamelComponent camelComponent;
 	
 	public NavajoComponentResolver() {
 		super();
 		logger.info("Camel component resolver");
 	}
 	
-	public void setCamelComponent(CamelComponent component) {
+	public void setCamelComponent(NavajoCamelComponent component) {
 		this.camelComponent = component;
 	}
 
-	public void clearCamelComponent(CamelComponent component) {
+	public void clearCamelComponent(NavajoCamelComponent component) {
 		this.camelComponent = null;
 	}
 
 	public void activate(Map<String,Object> params) {
+		for (Entry<String,Object> e : params.entrySet()) {
+			logger.info("Activation param: {}",e.getKey(),e.getValue());
+		}
 	}
 	
 	public void deactivate() {

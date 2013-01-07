@@ -28,37 +28,46 @@ public class NavajoGeneralProcessor implements Processor {
 	
 	@Override
 	public void process(Exchange ex) throws Exception {
-		org.apache.camel.Message in = ex.getIn();
-		org.apache.camel.Message out = ex.getOut();
-		Navajo outputNavajo = NavajoFactory.getInstance().createNavajo();
-		out.setBody(outputNavajo);
-		
-		Message headers = NavajoFactory.getInstance().createMessage(outputNavajo, "Headers");
-		outputNavajo.addMessage(headers);
-		for (Entry<String,Object> ie : in.getHeaders().entrySet()) {
-			Property p = NavajoFactory.getInstance().createProperty(outputNavajo, ie.getKey(),Property.STRING_PROPERTY, "",0, "", Property.DIR_IN);
-			p.setAnyValue(ie.getValue());
-			headers.addProperty(p);
+		System.err.println("starting process");
+		try {
+			org.apache.camel.Message in = ex.getIn();
+			org.apache.camel.Message out = ex.getOut();
+			logger.info("in: "+in);
+			logger.info("out: "+out);
+
+			Navajo outputNavajo = NavajoFactory.getInstance().createNavajo();
+			out.setBody(outputNavajo);
+			
+			Message headers = NavajoFactory.getInstance().createMessage(outputNavajo, "Headers");
+			outputNavajo.addMessage(headers);
+			for (Entry<String,Object> ie : in.getHeaders().entrySet()) {
+				Property p = NavajoFactory.getInstance().createProperty(outputNavajo, ie.getKey(),Property.STRING_PROPERTY, "",0, "", Property.DIR_IN);
+				p.setAnyValue(ie.getValue());
+				headers.addProperty(p);
+			}
+			Message attachments = NavajoFactory.getInstance().createMessage(outputNavajo, "Attachments");
+			outputNavajo.addMessage(attachments);
+			final Set<Entry<String, DataHandler>> attachmentSet = in.getAttachments().entrySet();
+			logger.info("# of attachments: {}",attachmentSet.size());
+			for (Entry<String,DataHandler> ie : attachmentSet) {
+				Property p = NavajoFactory.getInstance().createProperty(outputNavajo, ie.getKey(),Property.STRING_PROPERTY, "",0, "", Property.DIR_IN);
+				Binary b = new Binary(ie.getValue().getInputStream());
+				p.setAnyValue(b);
+				attachments.addProperty(p);
+			}
+			
+			Message body = NavajoFactory.getInstance().createMessage(outputNavajo, "Body");
+			outputNavajo.addMessage(body);
+			Property p = NavajoFactory.getInstance().createProperty(outputNavajo, "Body",Property.STRING_PROPERTY, "",0, "", Property.DIR_IN);
+			p.setAnyValue(in.getBody());
+			body.addProperty(p);
+			
+			logger.info("Processed camel interaction. ");
+			outputNavajo.write(System.err);
+		} catch (Throwable e) {
+			logger.error("Trouble in processor: ",e);
+			e.printStackTrace();
 		}
-		Message attachments = NavajoFactory.getInstance().createMessage(outputNavajo, "Attachments");
-		outputNavajo.addMessage(attachments);
-		final Set<Entry<String, DataHandler>> attachmentSet = in.getAttachments().entrySet();
-		logger.info("# of attachments: {}",attachmentSet.size());
-		for (Entry<String,DataHandler> ie : attachmentSet) {
-			Property p = NavajoFactory.getInstance().createProperty(outputNavajo, ie.getKey(),Property.STRING_PROPERTY, "",0, "", Property.DIR_IN);
-			Binary b = new Binary(ie.getValue().getInputStream());
-			p.setAnyValue(b);
-			attachments.addProperty(p);
-		}
-		
-		Message body = NavajoFactory.getInstance().createMessage(outputNavajo, "Body");
-		outputNavajo.addMessage(body);
-		Property p = NavajoFactory.getInstance().createProperty(outputNavajo, "Body",Property.STRING_PROPERTY, "",0, "", Property.DIR_IN);
-		p.setAnyValue(in.getBody());
-		body.addProperty(p);
-		
-		logger.info("Processed cammel interaction. ");
-		outputNavajo.write(System.err);
 		
 		
 	}

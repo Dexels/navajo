@@ -2,7 +2,7 @@ package com.dexels.navajo.camel.processor;
 
 import org.apache.camel.impl.ProcessorEndpoint;
 
-import com.dexels.navajo.camel.component.CamelComponent;
+import com.dexels.navajo.camel.component.NavajoCamelComponent;
 
 public class CamelProcessorEndpoint extends ProcessorEndpoint {
 	
@@ -11,7 +11,7 @@ public class CamelProcessorEndpoint extends ProcessorEndpoint {
 	private final CamelProcessor myProcessor;
 
 	
-	public CamelProcessorEndpoint(String uri, CamelComponent cp, CamelProcessor p) {
+	public CamelProcessorEndpoint(String uri, NavajoCamelComponent cp, CamelProcessor p) {
 		super(uri,cp,p);
 		this.myProcessor = p;
 //		this.camelComponent = cp;

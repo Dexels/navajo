@@ -27,8 +27,10 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.actionmanager.OSGiActionManager;
 import com.dexels.navajo.tipi.classdef.OSGiClassManager;
+import com.dexels.navajo.tipi.context.ContextInstance;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.application.eval.EvalHandler;
+import com.dexels.navajo.tipi.vaadin.application.servlet.TipiVaadinServlet;
 import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
@@ -55,7 +57,9 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	private final TipiManualExtensionRegistry extensionRegistry = new TipiManualExtensionRegistry();
 //	private transient Timer shutdownTimer = null;
 	private WindowCloseManager windowCloseManager;
-private String referer;
+	private String referer;
+	private ContextInstance contextInstance;
+	private TipiVaadinServlet servlet;
 
 	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinApplication.class);
 
@@ -234,15 +238,21 @@ private String referer;
 			this.installationFolder = new File(servletContext.getRealPath("/application"));
 			logger.info("Application dir resolved to: " + installationFolder.getAbsolutePath());
 		} else {
-			List<String> installationSettings = VaadinInstallationPathResolver.getInstallationPath(this.servletContext);
-			String installationPath = installationSettings.get(0);
-			if (installationSettings.size() > 1) {
-				this.applicationDeploy = installationSettings.get(1);
+			if(contextInstance!=null) {
+				this.installationFolder = new File(contextInstance.getPath());
+				this.applicationDeploy = contextInstance.getDeployment();
+				this.applicationProfile = contextInstance.getProfile();
+			} else {
+				List<String> installationSettings = VaadinInstallationPathResolver.getInstallationPath(this.servletContext);
+				String installationPath = installationSettings.get(0);
+				if (installationSettings.size() > 1) {
+					this.applicationDeploy = installationSettings.get(1);
+				}
+				if (installationSettings.size() > 2) {
+					this.applicationProfile = installationSettings.get(2);
+				}
+				this.installationFolder = new File(installationPath);
 			}
-			if (installationSettings.size() > 2) {
-				this.applicationProfile = installationSettings.get(2);
-			}
-			this.installationFolder = new File(installationPath);
 		}
 	}
 
@@ -302,7 +312,29 @@ private String referer;
 	}
 
 
+	public void setContextInstance(ContextInstance ci) {
+		this.contextInstance = ci;
+	}
+	
+	public void clearContextInstance(ContextInstance ci) {
+		this.contextInstance = null;
+	}
 
 
+	@Override
+	public void close() {
+		if(this.servlet!=null) {
+			this.servlet.applicationClosed(this);
+		}
+		super.close();
+	}
+
+
+
+	public void setServlet(TipiVaadinServlet tipiVaadinServlet) {
+		this.servlet = tipiVaadinServlet;
+	}
+
+	
 
 }

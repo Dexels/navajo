@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.context.ContextInstance;
 import com.dexels.navajo.tipi.vaadin.application.VaadinInstallationPathResolver;
 
 /**
@@ -39,6 +40,8 @@ public class VaadinFileServlet extends HttpServlet {
 
 	private String filePath;
 
+	private ContextInstance contextInstance = null;
+
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(VaadinFileServlet.class);
@@ -49,15 +52,17 @@ public class VaadinFileServlet extends HttpServlet {
 
 		// Define base path somehow. You can define it as init-param of the
 		// servlet.
-		try {
-			this.filePath = VaadinInstallationPathResolver.getInstallationPath(getServletContext()).get(0);
-		} catch (TipiException e) {
-			throw new ServletException("Error resolving Tipi installation path. ",e);
+		if(contextInstance !=null) {
+			logger.info("Injected context instance found!");
+			this.filePath = contextInstance.getPath();
+		} else {
+			try {
+				this.filePath = VaadinInstallationPathResolver.getInstallationPath(getServletContext()).get(0);
+			} catch (TipiException e) {
+				throw new ServletException("Error resolving Tipi installation path. ",e);
+			}
+			
 		}
-
-		// In a Windows environment with the Applicationserver running on the
-		// c: volume, the above path is exactly the same as "c:\files".
-		// In UNIX, it is just straightforward "/files".
 	}
 
 	protected void doGet(HttpServletRequest request,
@@ -144,6 +149,14 @@ public class VaadinFileServlet extends HttpServlet {
 				logger.error("Error: ",e);
 			}
 		}
+	}
+
+	public void setContextInstance(ContextInstance ci) {
+		this.contextInstance = ci;
+	}
+	
+	public void clearContextInstance(ContextInstance ci) {
+		this.contextInstance = null;
 	}
 
 }
