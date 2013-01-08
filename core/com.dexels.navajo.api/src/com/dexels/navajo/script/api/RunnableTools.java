@@ -55,8 +55,6 @@ public class RunnableTools {
 				return target.getRequestQueue();
 			}
 
-
-
 			public boolean isAborted() {
 				return target.isAborted();
 			}
@@ -102,6 +100,11 @@ public class RunnableTools {
 			@Override
 			public Navajo getResponseNavajo() {
 				return target.getResponseNavajo();
+			}
+
+			@Override
+			public AsyncRequest getRequest() {
+				return target.getRequest();
 			}
 
 			

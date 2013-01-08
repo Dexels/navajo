@@ -25,7 +25,8 @@ public interface TmlRunnable extends Runnable {
 	
 	public boolean isAborted();
 	public void abort(String string);
-	
+	public AsyncRequest getRequest();
+
 	public String getUrl();
 
 //	public Access getAccess();
