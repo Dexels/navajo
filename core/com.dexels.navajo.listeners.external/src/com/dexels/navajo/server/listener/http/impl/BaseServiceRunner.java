@@ -167,7 +167,7 @@ public abstract class BaseServiceRunner  implements
 		}
 	}
 
-	protected AsyncRequest getRequest() {
+	public AsyncRequest getRequest() {
 		return myRequest;
 	}
 
