@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.TmlRunnable;
@@ -231,6 +232,12 @@ public void setAccess(Access a) {
 @Override
 public Navajo getResponseNavajo() {
 	return environment.getResponse();
+}
+
+@Override
+public AsyncRequest getRequest() {
+	logger.warn("No asyncRequest is being stored in JavaScript based continuation runnable. Returning null.");
+	return null;
 }
 
 }
