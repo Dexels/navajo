@@ -1,20 +1,15 @@
 package com.dexels.navajo.camel.component;
 
-import java.io.IOException;
-
 import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
-import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.impl.DefaultEndpoint;
-import org.apache.camel.impl.DefaultMessage;
-import org.apache.camel.spi.Synchronization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.camel.component.impl.CamelConsumerImpl;
-import com.dexels.navajo.script.api.TmlRunnable;
+import com.dexels.navajo.camel.message.NavajoMessage;
 
 /**
  * Represents a com.dexels.navajo.camel.component endpoint.
@@ -40,8 +35,7 @@ public class CamelEndpoint extends DefaultEndpoint {
 	}
 
 	public Producer createProducer() throws Exception {
-		throw new UnsupportedOperationException(
-				"You cannot send messages to this endpoint:" + getEndpointUri());
+		return new NavajoCamelProducer(this);
 	}
 
 	public Consumer createConsumer(Processor processor) throws Exception {
@@ -54,63 +48,66 @@ public class CamelEndpoint extends DefaultEndpoint {
 		return true;
 	}
 
-	public Exchange createFakeNavajoExchange() {
-		Exchange e = createExchange();
-		Message m = new DefaultMessage();
-		e.setIn(m);
-		e.addOnCompletion(new Synchronization() {
+//	public Exchange createFakeNavajoExchange() {
+//		Exchange e = createExchange();
+//		Message m = new DefaultMessage();
+//		e.setIn(m);
+//		e.addOnCompletion(new Synchronization() {
+//
+//			@Override
+//			public void onFailure(Exchange ex) {
+//				logger.error("Firing on failure: ");
+//
+//			}
+//
+//			@Override
+//			public void onComplete(Exchange ex) {
+//				logger.error("Firing on complete: ");
+//			}
+//		});
+//		return e;
+//	}
 
-			@Override
-			public void onFailure(Exchange ex) {
-				logger.error("Firing on failure: ");
+//	public Exchange createNavajoExchange(final TmlRunnable tml) {
+//
+//		Exchange e = createExchange();
+//		Message m = new DefaultMessage();
+//		e.setIn(m);
+//		try {
+//			m.setBody(tml.getInputNavajo());
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
+//
+//		e.addOnCompletion(new Synchronization() {
+//
+//			@Override
+//			public void onFailure(Exchange ex) {
+//				logger.error("Firing on faillure: ");
+//				tml.abort("trouble");
+//			}
+//
+//			@Override
+//			public void onComplete(Exchange ex) {
+//				try {
+//					logger.error("Firing on complete: ");
+//					tml.endTransaction();
+//				} catch (IOException e) {
+//					logger.error("Error ending transaction.");
+//				}
+//
+//			}
+//		});
+//		return e;
 
-			}
-
-			@Override
-			public void onComplete(Exchange ex) {
-				logger.error("Firing on complete: ");
-			}
-		});
-		return e;
-	}
-
-	public Exchange createNavajoExchange(final TmlRunnable tml) {
-
-		Exchange e = createExchange();
-		Message m = new DefaultMessage();
-		e.setIn(m);
-		try {
-			m.setBody(tml.getInputNavajo());
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-
-		e.addOnCompletion(new Synchronization() {
-
-			@Override
-			public void onFailure(Exchange ex) {
-				logger.error("Firing on faillure: ");
-				tml.abort("trouble");
-			}
-
-			@Override
-			public void onComplete(Exchange ex) {
-				try {
-					logger.error("Firing on complete: ");
-					tml.endTransaction();
-				} catch (IOException e) {
-					logger.error("Error ending transaction.");
-				}
-
-			}
-		});
-		return e;
-
-	}
+//	}
 
 	@Override
 	public Exchange createExchange() {
-		return super.createExchange();
+		Exchange e = super.createExchange();
+		e.setIn(new NavajoMessage());
+		return e;
+		
 	}
 
 }
