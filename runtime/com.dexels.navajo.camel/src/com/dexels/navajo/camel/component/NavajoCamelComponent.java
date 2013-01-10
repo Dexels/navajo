@@ -63,11 +63,11 @@ public class NavajoCamelComponent extends DefaultComponent implements Component 
 	protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
     	System.err.println("uri: "+uri);
     	System.err.println("remaining: "+remaining);
-    	if(remaining.equals("call")) {
-    		CamelProcessor cp = new CamelProcessor(this);
-    		ProcessorEndpoint pe = new CamelProcessorEndpoint(uri,this, cp);
-    		return pe;
-    	}
+//    	if(remaining.equals("call")) {
+//    		CamelProcessor cp = new CamelProcessor(this);
+//    		ProcessorEndpoint pe = new CamelProcessorEndpoint(uri,this, cp);
+//    		return pe;
+//    	}
 //    	if(remaining.equals("call")) {
 //    	}
     	CamelEndpoint endpoint = new CamelEndpoint(uri, this);

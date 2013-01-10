@@ -40,6 +40,7 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
+import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.SchedulerRegistry;
 import com.dexels.navajo.script.api.TmlRunnable;
@@ -1412,8 +1413,9 @@ public void onResponse(Navajo response) {
 
   }
 
+  // FIXME I think this is a bit strange
   public void setResponseNavajo(Navajo n)  {
-		logger.warn("Set input navajo in NavajoMap... Isn't this odd?");	
+		logger.warn("Set input navajo in NavajoMap... Isn't this odd? Shouldn't it be the output navajo?");	
 		inDoc = n;
 	}
 
@@ -1455,6 +1457,17 @@ public void setAttribute(String name, Object value) {
 @Override
 public Set<String> getAttributeNames() {
 	return Collections.unmodifiableSet(attributes.keySet());
+}
+
+@Override
+public Navajo getResponseNavajo() {
+	return inDoc;
+}
+
+@Override
+public AsyncRequest getRequest() {
+	logger.warn("No asyncrequest in NavajoMap. Returning null.");
+	return null;
 }
 
 }

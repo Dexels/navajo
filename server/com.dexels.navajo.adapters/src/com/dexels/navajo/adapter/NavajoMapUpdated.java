@@ -39,6 +39,7 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
+import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.Scheduler;
 import com.dexels.navajo.script.api.SchedulerRegistry;
@@ -1400,4 +1401,17 @@ public Set<String> getAttributeNames() {
 public void setAccess(Access a) {
 	setAttribute("access", a);
 }
+
+@Override
+public Navajo getResponseNavajo() {
+	return inDoc;
+}
+
+
+@Override
+public AsyncRequest getRequest() {
+	logger.warn("No asyncrequest in NavajoMap. Returning null.");
+	return null;
+}
+
 }

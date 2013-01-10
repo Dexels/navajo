@@ -1,7 +1,5 @@
 package com.dexels.navajo.camel.component.impl;
 
-import java.io.IOException;
-
 import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -38,10 +36,15 @@ public class CamelConsumerImpl extends DefaultConsumer implements Consumer, Nava
 	 */
     @Override
 	public void process(final TmlRunnable tr) throws Exception {
+		long scheduledAt = System.currentTimeMillis();
+
     	Exchange ex = endpoint.createExchange();
     	for (String key : tr.getAttributeNames()) {
 			ex.setProperty(key, tr.getAttribute(key));
 		}
+    	ex.setProperty("scheduledAt", scheduledAt);
+    	ex.setProperty("asyncRequest", tr.getRequest());
+    	ex.setProperty("tmlRunnable", tr);
     	Message m = new DefaultMessage();
     	Navajo in = tr.getInputNavajo();
     	Message out = new DefaultMessage();
@@ -49,6 +52,14 @@ public class CamelConsumerImpl extends DefaultConsumer implements Consumer, Nava
 //    	tr.getInputNavajo();
     	ex.setIn(m);
     	ex.setOut(out);
+
+    	String rpcName = in.getHeader().getRPCName();
+    	String rpcUser = in.getHeader().getRPCUser();
+    	m.setHeader("rpcName", rpcName);
+    	m.setHeader("rpcUser", rpcUser);
+    	
+    	// TODO add all header attributes as camel headers.
+    	
     	ex.addOnCompletion(new Synchronization() {
 
 			@Override
@@ -59,14 +70,15 @@ public class CamelConsumerImpl extends DefaultConsumer implements Consumer, Nava
 
 			@Override
 			public void onComplete(Exchange ex) {
-				logger.error("Firing on complete: ");
-				try {
-					tr.endTransaction();
-				} catch (IOException e) {
-					logger.error("Network problem when ending transaction",e);
-				}
+//				logger.error("Firing on complete: ");
+//				try {
+//					tr.setResponseNavajo((Navajo) ex.getOut().getBody());
+//					tr.endTransaction();
+//				} catch (IOException e) {
+//					logger.error("Network problem when ending transaction",e);
+//				}
 			}
-		});    	
+		});
     	getProcessor().process(ex);
     }
 

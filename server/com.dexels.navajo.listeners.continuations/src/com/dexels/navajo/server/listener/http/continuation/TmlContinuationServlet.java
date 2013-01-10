@@ -69,7 +69,7 @@ public class TmlContinuationServlet extends HttpServlet implements
 	protected void service(final HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
-			TmlRunnable instantiateRunnable = prepareRunnable(req,resp);
+			TmlRunnable instantiateRunnable = TmlContinuationServlet.prepareRunnable(req,resp,getLocalClient());
 			if(instantiateRunnable!=null) {
 				getTmlScheduler().submit(instantiateRunnable, false);
 			}
@@ -81,24 +81,25 @@ public class TmlContinuationServlet extends HttpServlet implements
 		}
 	}
 
-	protected TmlRunnable prepareRunnable(
-			final HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, UnsupportedEncodingException, IOException {
+	// Made static to indicate independence of fields
+	public static TmlRunnable prepareRunnable(
+			final HttpServletRequest req, HttpServletResponse resp, LocalClient localClient2)
+			throws UnsupportedEncodingException, IOException {
 		TmlContinuationRunner tmlRunner = (TmlContinuationRunner) req
 				.getAttribute("tmlRunner");
 		if (tmlRunner != null) {
 			return null;
 		}
-		final LocalClient lc = getLocalClient(req);
 
-		AsyncRequest request = constructRequest(req, resp, lc);
-		TmlContinuationRunner instantiateRunnable = new TmlContinuationRunner(request,lc);
+		AsyncRequest request = constructRequest(req, resp, localClient2);
+		TmlContinuationRunner instantiateRunnable = new TmlContinuationRunner(request,localClient2);
 		req.setAttribute("tmlRunner", instantiateRunnable);
 		instantiateRunnable.suspendContinuation();
 		return instantiateRunnable;
 	}
 
-	protected AsyncRequest constructRequest(final HttpServletRequest req,
+	// Made static to indicate independence of fields
+	private static AsyncRequest constructRequest(final HttpServletRequest req,
 			HttpServletResponse resp, final LocalClient lc)
 			throws UnsupportedEncodingException, IOException {
 		Object certObject = req.getAttribute("javax.servlet.request.X509Certificate");

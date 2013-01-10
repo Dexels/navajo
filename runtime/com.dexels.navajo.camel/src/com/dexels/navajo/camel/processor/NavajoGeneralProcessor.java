@@ -10,6 +10,7 @@ import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.camel.message.NavajoMessage;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -31,7 +32,7 @@ public class NavajoGeneralProcessor implements Processor {
 		System.err.println("starting process");
 		try {
 			org.apache.camel.Message in = ex.getIn();
-			org.apache.camel.Message out = ex.getOut();
+			org.apache.camel.Message out = new NavajoMessage();
 			logger.info("in: "+in);
 			logger.info("out: "+out);
 
@@ -50,7 +51,8 @@ public class NavajoGeneralProcessor implements Processor {
 			final Set<Entry<String, DataHandler>> attachmentSet = in.getAttachments().entrySet();
 			logger.info("# of attachments: {}",attachmentSet.size());
 			for (Entry<String,DataHandler> ie : attachmentSet) {
-				Property p = NavajoFactory.getInstance().createProperty(outputNavajo, ie.getKey(),Property.STRING_PROPERTY, "",0, "", Property.DIR_IN);
+				
+				Property p = NavajoFactory.getInstance().createProperty(outputNavajo, ie.getKey(),Property.BINARY_PROPERTY, "",0, "", Property.DIR_IN);
 				Binary b = new Binary(ie.getValue().getInputStream());
 				p.setAnyValue(b);
 				attachments.addProperty(p);
@@ -63,10 +65,9 @@ public class NavajoGeneralProcessor implements Processor {
 			body.addProperty(p);
 			
 			logger.info("Processed camel interaction. ");
-			outputNavajo.write(System.err);
+//			outputNavajo.write(System.err);
 		} catch (Throwable e) {
 			logger.error("Trouble in processor: ",e);
-			e.printStackTrace();
 		}
 		
 		
