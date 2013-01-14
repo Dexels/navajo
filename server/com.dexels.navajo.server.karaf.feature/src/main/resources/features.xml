@@ -83,7 +83,8 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	</feature>
 
 	<feature name='navajo.camel' version='1.0.4' start-level='81' >
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/1.0.9</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/1.0.11</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.camel/1.0.1</bundle>
 		<feature version="2.10.2">camel</feature>
 	</feature>
 
