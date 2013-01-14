@@ -80,31 +80,56 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	<feature name='tipi.vaadin' version='1.0.2' start-level='81' >
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.5</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.1.6</bundle>
-<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin.bridged/1.0.9</bundle> -->
 	</feature>
 
-	<feature name='navajo.camel' version='1.0.3' start-level='81' >
+	<feature name='navajo.camel' version='1.0.4' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/1.0.9</bundle>
+		<feature version="2.10.2">camel</feature>
 	</feature>
 
 	<feature name='navajo.openshift' version='0.9.1' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager.openshift/1.0.16</bundle>
 	</feature>
 
+	<feature name='navajo.optional' version='1.0.0' start-level='81' >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.twitter/1.0.10</bundle>
+	</feature>
 
 	<feature name='navajo.dev' version='1.0.0' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/1.0.7</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.birt.push/1.0.5</bundle>
 	</feature>			
-	<feature name='navajo.enterprise' version='1.0.2' start-level='81' >
-		<bundle dependency='true'>mvn:org.jgroups/jgroups/3.2.4</bundle>
-<!-- Disabled, fix 'Waiting for the Chief problem' -->
-<!-- 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.cluster/1.0.1</bundle> -->
+
+
+	<feature name='navajo.enterprise' version='1.0.3' start-level='81' >
+		<feature version="1.0.2">navajo.enterprise.core</feature>
+		<feature version="1.0.2">navajo.enterprise.lucene</feature>
+		<feature version="1.0.0">navajo.enterprise.cluster</feature>
+	</feature>
+	
+	<feature name='navajo.enterprise.core' version='1.0.2' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/1.0.26</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/1.0.22</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/1.0.14</bundle>
+		<feature version="1.0.0">navajo.core.jabber</feature>
     </feature>
     
+	<feature name='navajo.enterprise.lucene' version='1.0.2' start-level='81' >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.lucene/1.0.12</bundle>
+<!-- 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene/3.0.0_1</bundle> -->
+		<bundle dependency='true'>mvn:com.dexels.thirdparty/org.apache.lucene.core/2.9.1</bundle>
+		<bundle dependency='true'>mvn:com.dexels.thirdparty/org.apache.lucene.queries/2.9.1</bundle>
+		<bundle dependency='true'>mvn:com.dexels.thirdparty/org.apache.lucene.spellchecker/2.9.1</bundle>
+<!-- 		<bundle dependency='true'>mvn:com.dexels.thirdparty/org.apache.lucene.analysis/2.9.1</bundle>
+		<bundle dependency='true'>mvn:com.dexels.thirdparty/org.apache.lucene.misc/2.9.1</bundle> -->
+		<bundle dependency='true'>mvn:org.apache.tika/tika-core/1.1</bundle>
+		<bundle dependency='true'>mvn:org.apache.tika/tika-parsers/1.1</bundle>
+	</feature>
+	<feature name='navajo.enterprise.cluster' version='1.0.0' start-level='81' >
+	<!-- Disabled, fix 'Waiting for the Chief problem' -->
+		<bundle dependency='true'>mvn:org.jgroups/jgroups/3.2.4</bundle>
+ 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.cluster/1.0.1</bundle>
+	</feature>
     <!-- 
  	<feature name='ops' version='1.0.3' start-level='40' >
 	 	<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jsp/3.0.0-SNAPSHOT</bundle>
