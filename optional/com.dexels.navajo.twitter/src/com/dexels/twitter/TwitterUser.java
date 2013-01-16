@@ -3,7 +3,7 @@ package com.dexels.twitter;
 import java.net.URI;
 import java.util.Date;
 
-import winterwell.jtwitter.Twitter.User;
+import winterwell.jtwitter.User;
 
 public class TwitterUser {
 	private String 			screenName;

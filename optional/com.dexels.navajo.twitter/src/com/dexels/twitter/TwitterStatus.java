@@ -3,7 +3,7 @@ package com.dexels.twitter;
 import java.util.Date;
 import java.util.List;
 
-import winterwell.jtwitter.Twitter.Status;
+import winterwell.jtwitter.Status;
 
 public class TwitterStatus {
 	private Date 			createdAt;
