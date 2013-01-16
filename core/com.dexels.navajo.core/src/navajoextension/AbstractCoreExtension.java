@@ -34,7 +34,7 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 		deregisterAll();
 	}
 
-	protected void deregisterAll() {
+	private void deregisterAll() {
 		for (ServiceRegistration sr : registrations) {
 //			final String property = (String) sr.getReference().getProperty("functionName");
 //			logger.info("Deregistering: "+property);
