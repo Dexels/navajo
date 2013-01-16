@@ -93,6 +93,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	</feature>
 
 	<feature name='navajo.optional' version='1.0.0' start-level='81' >
+		<!-- Add functions.pdf + twitter dependencies -->
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.twitter/1.0.10</bundle>
 	</feature>
 
