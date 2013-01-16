@@ -21,20 +21,19 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.server.UserException;
 
 public class TwitterAdapter {
-	private Twitter twit = null;
-//	private String username = null;//, status;
+	private Twitter twit;
+	private String username, password; //, status;
 	private String currentUser;
 	private String token1;
 	private String token2;
 //	private Binary signPost;
 	
-	
+	private OAuthSignpostClient mySignPost = null; 
+		
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TwitterAdapter.class);
-	private OAuthSignpostClient mySignPost = null; 
-		
-	private final static String API_KEY = "UVyOkSE0F1i2YcqaPc0jYg";
+	final static String API_KEY = "UVyOkSE0F1i2YcqaPc0jYg";
 	private final static String API_SECRET = "7Uhm0fVFrSesY0Czamuy86ZnyetVPkYjLLgG8N3rabE";
 	
 	
@@ -46,7 +45,7 @@ public class TwitterAdapter {
 	@SuppressWarnings("deprecation")
 	public TwitterStatus getStatus(){
 		if (twit == null) {
-			twit = new Twitter(null, (String)null);
+			twit = new Twitter(username, password);
 		}
 		Status s;
 		if(currentUser == null){
@@ -57,11 +56,8 @@ public class TwitterAdapter {
 		return new TwitterStatus(s);
 	}
 	
-	/**
-	 * @param username  
-	 */
-	public void setUsername(String username) {
-		logger.warn("Ignoring username");
+	public void setUsername(String s) {
+		this.username = s;
 	}
 	
 	public void setToken1(String t) {
@@ -220,13 +216,34 @@ public class TwitterAdapter {
 		return tws;
 	}
 	
+	public String getDisplayName(){
+		if ( twit == null ) {
+			return null;
+		}
+		if ( twit.getStatus() != null ) {
+			return twit.getStatus().getUser().getName();
+		} else {
+			twit.setStatus(".");
+			return twit.getStatus().getUser().getName();
+		}
+	}
+	
 	public String getScreenName(){
 		return twit.getScreenName();
 	}
 	
 	public String getUserName() {
-		//return twit.getUser(twit.getScreenName()).getName();
-		return twit.getSelf().getName();
+		if ( twit == null ) {
+			return null;
+		}
+		if ( twit.getStatus() != null ) {
+			return twit.getStatus().getUser().getScreenName();
+		} else {
+			
+			
+			twit.setStatus(".");
+			return twit.getStatus().getUser().getScreenName();
+		}
 	}
 	
 	public String[] getTrends(){
