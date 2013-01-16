@@ -2,7 +2,7 @@ Bundle-Name: Navajo Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.1.32.qualifier
+Bundle-Version: 1.1.36.qualifier
 Bundle-Activator: tipipackage.Version
 Export-Package: com.dexels.navajo.tipi;
   uses:="com.dexels.navajo.client,
@@ -63,6 +63,7 @@ Export-Package: com.dexels.navajo.tipi;
    com.dexels.navajo.tipi.tipixml,
    com.dexels.navajo.document",
  com.dexels.navajo.tipi.connectors;uses:="com.dexels.navajo.tipi.components.core,com.dexels.navajo.tipi,com.dexels.navajo.document",
+ com.dexels.navajo.tipi.context,
  com.dexels.navajo.tipi.headless;uses:="tipi,com.dexels.navajo.tipi",
  com.dexels.navajo.tipi.internal;
   uses:="com.dexels.navajo.tipi.internal.cache,
@@ -106,3 +107,4 @@ Import-Package: com.dexels.navajo.client,
  org.slf4j;version="1.6.1"
 Bundle-ClassPath: beansclasses/,
  .
+Service-Component: OSGI-INF/tipi.context.manager.xml,OSGI-INF/tipi.context.instance.xml

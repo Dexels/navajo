@@ -1,8 +1,9 @@
 package com.dexels.navajo.tipi.vaadin.application.servlet;
 
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.tipi.context.ContextInstance;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
@@ -30,14 +32,16 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 8125011483209557703L;
-
+	private ContextInstance contextInstance;
+	private Set<Application> applications = new HashSet<Application>();
+	
 	@Override
 	public void init(ServletConfig servletConfig) throws ServletException {
-		Enumeration<String> en = servletConfig.getInitParameterNames();
-		while (en.hasMoreElements()) {
-			String key = en.nextElement();
-			System.err.println("PARAMETERS: "+key+" value: "+servletConfig.getInitParameter(key));
-		}
+//		Enumeration<String> en = servletConfig.getInitParameterNames();
+//		while (en.hasMoreElements()) {
+//			String key = en.nextElement();
+//			System.err.println("PARAMETERS: "+key+" value: "+servletConfig.getInitParameter(key));
+//		}
 		super.init(servletConfig);
 		
     }
@@ -57,6 +61,12 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 //		String appInstance = getInitParameter("application");
 //		Class<? extends Application> appInstanceClass = Class.forName(appInstance);
 		TipiVaadinApplication tipiApplication = new TipiVaadinApplication();
+		tipiApplication.setServlet(this);
+		applicationStarted(tipiApplication);
+		if(contextInstance!=null) {
+			logger.info("injected instance found");
+			tipiApplication.setContextInstance(contextInstance);
+		}
 		tipiApplication.setLocale(new Locale("nl","NL"));
 		tipiApplication.setServletContext(getServletContext());
 		String referer = request.getHeader("x-forwarded-host");
@@ -126,7 +136,18 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		
 	}
 
+	public void activate() {
+		logger.info("Activating Vaadin Servlet");
+	}
 
+	public void deactivate() {
+		logger.info("Deactivating Vaadin Servlet");
+		for (Application  a: applications) {
+			a.close();
+		}
+	}
+
+	
 	@Override
 	protected Class<? extends Application> getApplicationClass()
 			throws ClassNotFoundException {
@@ -134,6 +155,19 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 	}
 	
 
-
+	public void setContextInstance(ContextInstance ci) {
+		this.contextInstance = ci;
+	}
 	
+	public void clearContextInstance(ContextInstance ci) {
+		this.contextInstance = null;
+	}
+
+	private void applicationStarted(Application a) {
+		applications.add(a);
+	}
+
+	public void applicationClosed(Application a) {
+		applications.remove(a);
+	}
 }

@@ -23,7 +23,6 @@ import com.dexels.navajo.server.listener.http.standard.TmlStandardRunner;
 public class TmlContinuationRunner extends TmlStandardRunner {
 
 	private final Continuation continuation;
-	private Navajo outDoc;
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(TmlContinuationRunner.class);
@@ -39,7 +38,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 		super.abort(reason);
 		try {
 			logger.warn("Abort: "+reason+" generating outdoc and resuming");
-			outDoc = getLocalClient().generateAbortMessage(reason);
+			setResponseNavajo(getLocalClient().generateAbortMessage(reason));
 			resumeContinuation();
 		} catch (FatalException e) {
 			logger.error("Error: ", e);
@@ -68,7 +67,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 			MDC.put("maxMemory", ""+maxMem);
 			MDC.put("usedMemory", ""+usedMem);
 			schedulingStatus = schedulingStatus + ", totalmemory=" + maxMem + "Mb, usedmemory=" + usedMem + "Mb";
-			getRequest().writeOutput(getInputNavajo(), outDoc, scheduledAt, startedAt, schedulingStatus);
+			getRequest().writeOutput(getInputNavajo(), getResponseNavajo(), scheduledAt, startedAt, schedulingStatus);
 			continuation.complete();
 		} catch (NavajoException e) {
 			e.printStackTrace();
@@ -102,7 +101,7 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 				      String queueId = getRequestQueue().getId();
 				      
 					  ClientInfo clientInfo = getRequest().createClientInfo(scheduledAt, startedAt, queueSize, queueId);
-					  outDoc = getLocalClient().handleInternal(in, getRequest().getCert(), clientInfo);
+					  setResponseNavajo(getLocalClient().handleInternal(in, getRequest().getCert(), clientInfo));
 				  } catch (NavajoDoneException e) {
 					  // temp catch, to be able to pre
 					  continuationFound = true;

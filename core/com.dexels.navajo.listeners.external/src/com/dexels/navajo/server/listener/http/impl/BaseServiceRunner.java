@@ -38,7 +38,7 @@ public abstract class BaseServiceRunner  implements
 	private boolean committed = false;
 	private boolean isAborted = false;
 	private final Map<String, Object> attributes = new HashMap<String, Object>();
-
+	private Navajo responseNavajo = null;
 	// public void setResponse(HttpServletResponse response) {
 	// this.response = response;
 	// }
@@ -167,7 +167,7 @@ public abstract class BaseServiceRunner  implements
 		}
 	}
 
-	protected AsyncRequest getRequest() {
+	public AsyncRequest getRequest() {
 		return myRequest;
 	}
 
@@ -234,8 +234,11 @@ public abstract class BaseServiceRunner  implements
 	}
 	@Override
 	public void setResponseNavajo(Navajo n) {
-//		outputDoc = n;
+		responseNavajo = n;
 
 	}
 
+	public Navajo getResponseNavajo() {
+		return responseNavajo;
+	}
 }

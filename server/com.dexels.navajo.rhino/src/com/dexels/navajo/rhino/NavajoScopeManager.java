@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
+import java.util.Set;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
@@ -64,6 +65,11 @@ public class NavajoScopeManager {
 		}
 		cx.evaluateReader(globalScope, r, fileName, 1, null);
 		Context.exit();
+		Set<String> keys = parameters.keySet();
+		for (String e : keys) {
+			ScriptableObject.putProperty(globalScope, e,null);
+		}
+
 		NavajoScopeManager.getInstance().releaseScope(globalScope);
 	}
 //	private void cleanScope(Scriptable scope) {

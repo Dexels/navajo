@@ -6,7 +6,7 @@ import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.camel.component.CamelComponent;
+import com.dexels.navajo.camel.component.NavajoCamelComponent;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -16,7 +16,7 @@ public class CamelProcessor implements Processor {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(CamelProcessor.class);
-	private final CamelComponent camelComponent;
+	private final NavajoCamelComponent camelComponent;
 	private String service;
 	private String username;
 	private String password;
@@ -26,7 +26,7 @@ public class CamelProcessor implements Processor {
 		System.err.println("Starting processor without component");
 		this.camelComponent = null;
 	}
-	public CamelProcessor(CamelComponent cc) {
+	public CamelProcessor(NavajoCamelComponent cc) {
 		this.camelComponent = cc;
 	}
 	

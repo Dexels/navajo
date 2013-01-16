@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tipi Vaadin
 Bundle-SymbolicName: com.dexels.navajo.tipi.vaadin
-Bundle-Version: 1.1.5.qualifier
+Bundle-Version: 1.1.7.qualifier
 Bundle-Activator: tipivaadin.TipiVaadinExtension
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -19,6 +19,7 @@ Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.tipi.classdef,
  com.dexels.navajo.tipi.components.core,
  com.dexels.navajo.tipi.components.question,
+ com.dexels.navajo.tipi.context,
  com.dexels.navajo.tipi.internal,
  com.dexels.navajo.tipi.internal.cookie,
  com.dexels.navajo.tipi.tipixml,
@@ -55,4 +56,4 @@ Bundle-ClassPath: lib/borderlayout-0.3.jar,
  lib/vaadin-calendar-cval-2.0-1.2.0.jar,
  lib/openlayers-wrapper-0.9.1.jar,
  .
-Service-Component: OSGI-INF/vaadinServlet.xml,OSGI-INF/vaadinResourceServlet.xml
+Service-Component: OSGI-INF/tipi.vaadin.servlet.xml,OSGI-INF/tipi.vaadin.servlet.resource.xml

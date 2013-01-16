@@ -4,7 +4,7 @@
     <artifactId>com.dexels.navajo.server.deploy</artifactId>
     <groupId>com.dexels.navajo</groupId>
     <packaging>war</packaging>
-    <version>2.9.31</version>
+    <version>2.9.36</version>
     <name>com.dexels.navajo.war Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <parent>
@@ -139,10 +139,11 @@
             <version>3.2.2</version>
         </dependency>
 
+	<!-- Hacked version, removed jzlib packages, as they'll class with the Eclipse-signed one. -->
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.smackx</artifactId>
-            <version>3.2.2</version>
+            <version>3.2.3</version>
         </dependency>
 
 <!-- Omitted because of JCRAFT.JZLIB conflict!
@@ -159,7 +160,7 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.adapters</artifactId>
-            <version>1.1.18</version>
+            <version>1.1.22</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -188,7 +189,7 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.function</artifactId>
-            <version>2.0.30</version>
+            <version>3.1.2</version>
             <scope>runtime</scope>
         </dependency>
 

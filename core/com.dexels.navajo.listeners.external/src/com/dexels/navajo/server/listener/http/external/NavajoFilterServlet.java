@@ -74,19 +74,6 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 			final HttpServletResponse resp) throws ServletException,
 			IOException {
 
-		if(getTmlScheduler()!=null) {
-			boolean precheck = getTmlScheduler().preCheckRequest(req);
-			if (!precheck) {
-				req.getInputStream().close();
-				resp.getOutputStream().close();
-				return;
-			}
-		}
-
-//		Object certObject = req
-//				.getAttribute("javax.servlet.request.X509Certificate");
-//		String recvEncoding = req.getHeader("Content-Encoding");
-//		String sendEncoding = req.getHeader("Accept-Encoding");
 
 		Navajo input = buildRequest(getInitParameter("inputFilterClass"), req);
 //		boolean check = getTmlScheduler().checkNavajo(input);

@@ -1,0 +1,11 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Tipi Context" name="Tipi Context" id="tipi.context.instance">
+    <AD name="Context name"  id="context" required="true" type="String" default="~"/>
+    <AD name="Path"  id="path" required="true" type="String" default=""/>
+    <AD name="Deployment"  id="deployment" required="true" type="String" default="production"/>
+    <AD name="Profile"  id="profile" required="true" type="String" default=""/>
+  </OCD>
+  <Designate factoryPid="tipi.context.instance" pid="tipi.context.instance">
+     <Object ocdref="tipi.context.instance"/>
+  </Designate>
+</metatype:MetaData>

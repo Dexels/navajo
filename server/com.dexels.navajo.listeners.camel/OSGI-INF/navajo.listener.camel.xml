@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="navajo.listener.camel">
+   <implementation class="com.dexels.navajo.listeners.camel.CamelContinuationServlet"/>
+   <reference bind="setLocalClient" cardinality="1..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="dynamic" unbind="clearLocalClient"/>
+   <reference bind="setConsumer" cardinality="1..1" interface="com.dexels.navajo.camel.consumer.NavajoCamelConsumer" name="Consumer" policy="dynamic" unbind="clearConsumer"/>
+   <property name="alias" type="String" value="/Camel"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="endPointId" type="String" value="default"/>
+
+</scr:component>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="tipi.vaadin.servlet.resource">
+   <implementation class="com.dexels.navajo.tipi.vaadin.application.servlet.VaadinFileServlet"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="alias" type="String" value="/VAADIN"/>
+   <reference bind="setContextInstance" cardinality="1..1" interface="com.dexels.navajo.tipi.context.ContextInstance" name="ContextInstance" policy="static" unbind="clearContextInstance"/>
+</scr:component>

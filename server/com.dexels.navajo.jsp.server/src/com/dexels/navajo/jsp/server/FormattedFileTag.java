@@ -141,13 +141,11 @@ public class FormattedFileTag  extends BaseNavajoTag {
 	}
 
 	public String resolveScriptPath(String path) {
-		logger.info("Resolving: "+path);
 		if(serverContext==null) {
 			 return getPageContext().getServletContext().getRealPath(path);
 		} 
 		File root = getServerContext().getNavajoRoot();
 		String absolutePath = new File(root,path).getAbsolutePath();
-		System.err.println("FormatFile: Resolved path: "+absolutePath);
 		return absolutePath;
 	}
 

@@ -2113,6 +2113,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
       try {
 		objectMappable = MappingUtils.isObjectMappable(className);
 	} catch (UserException e) {
+		logger.debug("Trouble mapping: {} doing a fallback.",className,e);
 		objectMappable = MappingUtils.isObjectMappable(className,loader);
 	}
 	
