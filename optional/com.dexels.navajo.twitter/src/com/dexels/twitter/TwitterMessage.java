@@ -2,7 +2,7 @@ package com.dexels.twitter;
 
 import java.util.Date;
 
-import winterwell.jtwitter.Twitter.Message;
+import winterwell.jtwitter.Message;
 
 public class TwitterMessage {
 	private Date 			createdAt;

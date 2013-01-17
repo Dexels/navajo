@@ -21,7 +21,6 @@ public class Version extends AbstractCoreExtension {
 	@Override
 	public void stop(BundleContext bc) throws Exception {
 		super.stop(bc);
-		deregisterAll();
 	}
 	
 	

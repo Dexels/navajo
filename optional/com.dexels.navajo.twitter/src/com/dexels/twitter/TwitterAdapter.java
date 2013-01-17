@@ -1,7 +1,7 @@
 package com.dexels.twitter;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
@@ -11,30 +11,29 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import winterwell.jtwitter.Message;
 import winterwell.jtwitter.OAuthSignpostClient;
+import winterwell.jtwitter.Status;
 import winterwell.jtwitter.Twitter;
-import winterwell.jtwitter.Twitter.Message;
-import winterwell.jtwitter.Twitter.Status;
-import winterwell.jtwitter.Twitter.User;
+import winterwell.jtwitter.User;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.server.UserException;
 
 public class TwitterAdapter {
-	private Twitter twit = null;
-//	private String username = null;//, status;
+	private Twitter twit;
+	private String username, password; //, status;
 	private String currentUser;
 	private String token1;
 	private String token2;
 //	private Binary signPost;
 	
-	
+	private OAuthSignpostClient mySignPost = null; 
+		
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TwitterAdapter.class);
-	private OAuthSignpostClient mySignPost = null; 
-		
-	private final static String API_KEY = "UVyOkSE0F1i2YcqaPc0jYg";
+	final static String API_KEY = "UVyOkSE0F1i2YcqaPc0jYg";
 	private final static String API_SECRET = "7Uhm0fVFrSesY0Czamuy86ZnyetVPkYjLLgG8N3rabE";
 	
 	
@@ -46,7 +45,7 @@ public class TwitterAdapter {
 	@SuppressWarnings("deprecation")
 	public TwitterStatus getStatus(){
 		if (twit == null) {
-			twit = new Twitter(null, (String)null);
+			twit = new Twitter(username, password);
 		}
 		Status s;
 		if(currentUser == null){
@@ -57,11 +56,8 @@ public class TwitterAdapter {
 		return new TwitterStatus(s);
 	}
 	
-	/**
-	 * @param username  
-	 */
-	public void setUsername(String username) {
-		logger.warn("Ignoring username");
+	public void setUsername(String s) {
+		this.username = s;
 	}
 	
 	public void setToken1(String t) {
@@ -130,14 +126,14 @@ public class TwitterAdapter {
 		return tws;
 	}
 	
-	public TwitterUser[] getFeatured(){
-		List<User> users = twit.getFeatured();
-		TwitterUser[] twu = new TwitterUser[users.size()];
-		for(int i=0;i<users.size();i++){
-			twu[i] = new TwitterUser(users.get(i));
-		}
-		return twu;
-	}
+//	public TwitterUser[] getFeatured(){
+//		List<User> users = twit.getFeatured();
+//		TwitterUser[] twu = new TwitterUser[users.size()];
+//		for(int i=0;i<users.size();i++){
+//			twu[i] = new TwitterUser(users.get(i));
+//		}
+//		return twu;
+//	}
 	
 	public TwitterUser[] getFollowers(){
 		List<User> users;
@@ -189,14 +185,14 @@ public class TwitterAdapter {
 		return tws;
 	}
 	
-	public TwitterStatus[] getPublicTimeline(){
-		List<Status> timeline = twit.getPublicTimeline();		
-		TwitterStatus[] tws = new TwitterStatus[timeline.size()];
-		for(int i=0;i<timeline.size();i++){
-			tws[i] = new TwitterStatus(timeline.get(i));
-		}
-		return tws;
-	}
+//	public TwitterStatus[] getPublicTimeline(){
+//		List<Status> timeline = twit.getPublicTimeline();		
+//		TwitterStatus[] tws = new TwitterStatus[timeline.size()];
+//		for(int i=0;i<timeline.size();i++){
+//			tws[i] = new TwitterStatus(timeline.get(i));
+//		}
+//		return tws;
+//	}
 	
 	public int getRateLimitStatus(){
 		return twit.getRateLimitStatus();
@@ -220,12 +216,34 @@ public class TwitterAdapter {
 		return tws;
 	}
 	
+	public String getDisplayName(){
+		if ( twit == null ) {
+			return null;
+		}
+		if ( twit.getStatus() != null ) {
+			return twit.getStatus().getUser().getName();
+		} else {
+			twit.setStatus(".");
+			return twit.getStatus().getUser().getName();
+		}
+	}
+	
 	public String getScreenName(){
 		return twit.getScreenName();
 	}
 	
 	public String getUserName() {
-		return twit.getUser(twit.getScreenName()).getName();
+		if ( twit == null ) {
+			return null;
+		}
+		if ( twit.getStatus() != null ) {
+			return twit.getStatus().getUser().getScreenName();
+		} else {
+			
+			
+			twit.setStatus(".");
+			return twit.getStatus().getUser().getScreenName();
+		}
 	}
 	
 	public String[] getTrends(){
@@ -328,6 +346,37 @@ public class TwitterAdapter {
 	public static void main(String [] args) throws Exception {
 		// Make an oauth client (you'll want to change this bit)
 		
+		// T1: 120028662-XVGkW8KfPcTCf1t7P0O1ERhCkaEckPpdp4tkLRCm
+		// T2: Tsry73LpbdmIgCS1clJCo0npeZ5m21ocFYIZI7Ww
+		
+		TwitterAdapter ta = new TwitterAdapter();
+		
+		//ta.setToken1("120028662-XVGkW8KfPcTCf1t7P0O1ERhCkaEckPpdp4tkLRCm");
+		//ta.setToken2("Tsry73LpbdmIgCS1clJCo0npeZ5m21ocFYIZI7Ww");
+		
+		
+		String url = ta.getBrowserURL();
+		Binary sign = ta.getSignPost();
+		System.err.println("URL: " + url);
+		
+		String pin = new BufferedReader(new InputStreamReader(System.in)).readLine();
+		ta.setSignPost(sign);
+		ta.setPincode(pin);
+		
+		String token1 = ta.getToken1();
+		String token2 = ta.getToken2();
+		
+		System.err.println("token 1: " + token1);
+		System.err.println("token 2: " + token2);
+		
+		ta.setToken1(token1);
+		ta.setToken2(token2);
+		
+		//ta.setUsername("bbfw63x");
+		String name = ta.getUserName();
+		System.err.println("Naam: " + name);
+		
+		/*
 		OAuthSignpostClient oauthClient = 
 		new OAuthSignpostClient(API_KEY, API_SECRET, "oob");
 		   
@@ -357,7 +406,7 @@ public class TwitterAdapter {
 		System.out.println(twitter.getStatus("bbfw63x"));
 		// Set my status
 		twitter.setSource("Navajo Integrator");
-		Status s = twitter.updateStatus("Nog een keer ietsie wat ook...");
+		Status s = twitter.updateStatus("Nog een keer hoppa wat ook...");
 		
 	  System.err.println(s.getText());
 	  
@@ -367,9 +416,11 @@ public class TwitterAdapter {
 		  System.err.println(followers.get(i));
 	  }
 	  
-	  ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/Users/arjenschoneveld/oauth.class")));
-	  oos.writeObject(oauthClient);
-	  oos.close();
+	  
+	  */
+//	  ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/Users/arjenschoneveld/oauth.class")));
+//	  oos.writeObject(oauthClient);
+//	  oos.close();
 	  
 	}
 

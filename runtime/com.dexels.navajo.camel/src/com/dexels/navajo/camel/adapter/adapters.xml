@@ -1,0 +1,18 @@
+<adapterdef>
+
+    <map>
+        <tagname>camel</tagname>
+        <object>com.dexels.navajo.camel.adapter.CamelAdapter</object>
+        <values>
+            <value name="resource" type="string" required="true" direction="in"/>
+            <value name="endpointName" type="string" required="true" direction="in"/>
+            <value name="body" type="any" required="false" direction="in"/>
+        </values>
+        <methods>
+			<method name="addHeader">
+				<param name="name" field="propertyName" type="string" required="true" />
+				<param name="value" field="propertyValue" type="any" required="true" />
+			</method>
+        </methods>
+    </map>
+    </adapterdef>
