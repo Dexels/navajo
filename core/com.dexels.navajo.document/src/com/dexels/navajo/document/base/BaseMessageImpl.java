@@ -256,7 +256,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		return new ArrayList<Message>(messageList);
 	}
 
-	public final void addProperty(Property q) {
+	public final void  addProperty(Property q) {
+		addProperty(q, false);
+	}
+	
+	public final void addProperty(Property q, boolean preferExistingPropertyValue) {
 		if (q == null) {
 			throw new NullPointerException("Message: can not add null property");
 		}
@@ -277,7 +281,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			propertyList.add(q);
 			propertyMap.put(p.getName(), p);
 			p.setParent(this);
-		} else {
+		} else if (!preferExistingPropertyValue) {
 			this.removeProperty(oldProperty);
 			propertyList.add(q);
 			propertyMap.put(p.getName(), p);
@@ -746,10 +750,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	 * @param m
 	 * @param properties
 	 */
-	private final void addProperties(Message m, ArrayList<Property> properties) {
+	private final void addProperties(Message m, ArrayList<Property> properties, boolean preferMyProperties) {
 		
 		for (int i = 0; i < properties.size(); i++) {
-			m.addProperty(properties.get(i));
+			m.addProperty(properties.get(i), preferMyProperties);
 		}
 	}
 	
@@ -761,14 +765,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	 * @param origMsg
 	 * @param mergeThisMsg
 	 */
-	public final void mergeMessage(Message origMsg, Message mergeThisMsg) {
+	private final void mergeMessage(Message origMsg, Message mergeThisMsg, boolean preferOrigMessage) {
 		
 		if (messageList == null || messageMap == null) {
 			return;
 		}
 	
 		// Add all properties of new message.
-		addProperties(origMsg, mergeThisMsg.getAllProperties());
+		addProperties(origMsg, mergeThisMsg.getAllProperties(), preferOrigMessage);
 		
 		// Find overlapping children.
 		ArrayList<Message> childrenPrev = origMsg.getAllMessages();
@@ -1523,9 +1527,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	}
 
 	public Message mergeMessage(Message m) {
+		return mergeMessage(m, false);
+	}
+	
+	public Message mergeMessage(Message m, boolean preferThisMessage) {
 		Message prevMsg = getMessage(m.getName());
 		if (prevMsg != null) {
-			mergeMessage(prevMsg, m);
+			mergeMessage(prevMsg, m, preferThisMessage);
 			return m;
 		} else {
 			return null;

@@ -223,8 +223,12 @@ private final static Logger logger = LoggerFactory
   }
   
   public Message mergeMessage(Message m) {
-	    return rootMessage.mergeMessage(m);
-	  }
+	  return rootMessage.mergeMessage(m);
+  }
+  
+  private Message mergeMessage(Message m, boolean preferThisNavajo) {
+	  return rootMessage.mergeMessage(m, preferThisNavajo);
+  }
 
   public Message copyMessage(String s, Navajo n) {
     Message m = getMessage(s);
@@ -581,6 +585,10 @@ public final void printElementJSONTypeless(final Writer sw) throws IOException {
 }
 
 public Navajo merge(Navajo with) throws NavajoException {
+	return merge(with, false);
+}
+
+public Navajo merge(Navajo with, boolean preferThisNavajo) throws NavajoException {
 
 	// Find duplicate messages.
 	ArrayList<Message> superMessages = this.getAllMessages();
@@ -593,7 +601,7 @@ public Navajo merge(Navajo with) throws NavajoException {
 			if ( superMsg.getName().equals(subMsg.getName()) ) {
 				// Found duplicate!
 				Message newMsg = subMsg.copy(this);
-				this.mergeMessage(newMsg);
+				this.mergeMessage(newMsg, preferThisNavajo);
 			}
 		}
 	}
