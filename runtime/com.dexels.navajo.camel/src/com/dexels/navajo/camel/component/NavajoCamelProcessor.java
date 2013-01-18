@@ -9,13 +9,12 @@ import com.dexels.navajo.script.api.TmlRunnable;
 
 /**
  * The com.dexels.navajo.camel.component producer.
- * This one should only be used as 'sink'
  */
-public class NavajoCamelProducer extends DefaultProducer {
+public class NavajoCamelProcessor extends DefaultProducer {
 //    private static final transient Logger logger = LoggerFactory.getLogger(CamelProducer.class);
 //    private CamelEndpoint endpoint;
 
-    public NavajoCamelProducer(CamelEndpoint endpoint) {
+    public NavajoCamelProcessor(CamelEndpoint endpoint) {
         super(endpoint);
 //        this.endpoint = endpoint;
     }
