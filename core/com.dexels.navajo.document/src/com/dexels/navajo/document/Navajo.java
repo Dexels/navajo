@@ -360,6 +360,19 @@ public interface Navajo
    */
   public Navajo merge(Navajo with) throws NavajoException;
   
+  /**
+   * Merge Navajo with other Navajo. Navajo is merged by merging Messages.
+   * Messages in the current Navajo are replaced with messages in Navajo with.
+   * Basically the Navajo with is "laid over" the current Navajo, i.e. it is a kind
+   * of Message based inheritance.
+   * 
+   * @param with
+   * @param preferThis, if this parameter is set to true, the property values/types of this Navajo is prefered.
+   * @return
+   * @throws NavajoException
+   */
+  public Navajo merge(Navajo with, boolean preferThis) throws NavajoException;
+  
   public Map<String,Message> getMessages();
   
   /**

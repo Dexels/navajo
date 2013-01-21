@@ -32,12 +32,6 @@ import com.dexels.navajo.util.AuditLog;
 
 
 
-/**
- * TODO use softreference listener to persist objects to disk...??
- * 
- * @author arjen
- *
- */
 class Frequency implements Serializable {
 
 	/**
@@ -130,11 +124,11 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 					accessFrequency = new SharedTribalMap<String,Frequency>(FREQUENCE_MAP_ID);
 					inMemoryCache = SharedTribalMap.registerMap(inMemoryCache, false);
 					accessFrequency = SharedTribalMap.registerMap(accessFrequency, false);
-					System.err.println("============================================================================");
-					System.err.println("inMemoryCache = " + inMemoryCache);
-					System.err.println("accessFrequency = " + accessFrequency);
-					System.err.println("sharedPersistenceStore = " + sharedPersistenceStore);
-					System.err.println("============================================================================");
+					logger.info("============================================================================");
+					logger.info("inMemoryCache = " + inMemoryCache);
+					logger.info("accessFrequency = " + accessFrequency);
+					logger.info("sharedPersistenceStore = " + sharedPersistenceStore);
+					logger.info("============================================================================");
 					// Register myself to the NavajoCompileScriptEvent in order to detect script recompiles and removed
 					// cached scripts accordingly.
 					NavajoEventRegistry.getInstance().addListener(NavajoCompileScriptEvent.class, this);
@@ -282,27 +276,22 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
         	
             if ( sharedPersistenceStore.exists(path, key) ) {
             	
-            	System.err.println("FOUND " + key + " IN PERSISTENT STORE...");
                 if (isExpired(sharedPersistenceStore.lastModified(path, key), expirationInterval)) {
-                	System.err.println("REMOVING EXPIRED FILE CACHE ENTRY: " + key);
                 	sharedPersistenceStore.remove(path, key);
                 	NavajoEventRegistry.getInstance().publishEvent(new CacheExpiryEvent(service, key));
                     return null;
                 }
                 
-                long start = System.currentTimeMillis();
                 InputStream is = sharedPersistenceStore.getStream(path, key);
                 if ( is != null ) {
                 	pc = NavajoFactory.getInstance().createNavajo(is);
                 	is.close();
                 }
-                System.err.println("CACHE READ TOOK: " + ( System.currentTimeMillis() - start ) + " millis.");
                 if (inMemoryCache.get(key) == null) {
                 	memoryOperation(key, service, pc, false);
                 }
                 
             } else {
-            	System.err.println("DID NOT FIND " + key + " IN PERSISTENT STORE...");
             	
                 return null;
             }
@@ -343,10 +332,8 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 	
 	private void removeCachedObjects(PersistenceManagerImpl pm, String parent, String myKey) {
 		String [] all = pm.sharedPersistenceStore.getObjects(parent);
-		System.err.println("IN removeCachedObjects, parent = " + parent + ", key = " + myKey + ", FOUND: " + all.length);
 		for ( int i = 0; i < all.length; i++ ) {
 			if ( all[i].startsWith(myKey) ) {
-				System.err.println("REMOVE KEY: " + all[i]);
 				pm.sharedPersistenceStore.remove(parent, all[i]);
 			}
 		}	

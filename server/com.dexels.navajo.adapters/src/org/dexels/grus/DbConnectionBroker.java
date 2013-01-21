@@ -36,6 +36,7 @@ public final class DbConnectionBroker extends Object
 	protected boolean sanityCheck = true;
 	private static final AtomicInteger connectionCounter = new AtomicInteger();
 	
+	private final static int LOGIN_TIMEOUT = 10;
 	
 	protected static final Map<Integer,DbConnectionBroker> transactionContextBrokerMap = Collections.synchronizedMap(new HashMap<Integer,DbConnectionBroker>());
 	protected static final ConcurrentHashMap<Connection,Integer> connectionIdMap = new ConcurrentHashMap<Connection,Integer>();
@@ -280,7 +281,7 @@ public final class DbConnectionBroker extends Object
 				int id = -1;
 				try {
 					//long start = System.currentTimeMillis();
-					DriverManager.setLoginTimeout(5);
+					DriverManager.setLoginTimeout(LOGIN_TIMEOUT);
 					Connection c = DriverManager.getConnection(location,username,password);
 					while ( isDoubleEntry(c) ) {
 						// We could also check if there is another Connection with the same hashCode, I think that is closer to our

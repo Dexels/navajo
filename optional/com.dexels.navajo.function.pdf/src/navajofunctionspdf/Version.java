@@ -45,12 +45,7 @@ public class Version extends AbstractCoreExtension {
 		PDFFunctionDefinitions extensionDef = new PDFFunctionDefinitions();
 		registerAll(extensionDef);
 	}
-	
-	@Override
-	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		deregisterAll();
-	}
+
 
 	public static void main(String [] args) {
 		Version v = new Version();

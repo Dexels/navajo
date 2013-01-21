@@ -198,6 +198,12 @@ public interface Message
   public void addProperty(Property p);
 
   /**
+   * Add a property to a message. If a property with the specified name already exists,
+   * replace it with the new one unless preferMyProperties is set to true.
+   */
+  public void addProperty(Property property, boolean preferMyProperties);
+  
+  /**
    * Use this method to add an element message to an array type message. The index
    * of the message element is automatically set.
    *
@@ -227,6 +233,16 @@ public interface Message
    * @return Message
    */
   public Message mergeMessage(Message m);
+  
+  /**
+   * Replaces a message with messsage m. The location of the message in the XML will NOT change.
+   * 
+   * @param m
+   * @param preferThisMessage, if set to true existing property values/types in this message are preferred over merge Message m
+   * 
+   * @return Message
+   */
+  public Message mergeMessage(Message m, boolean preferThisMessage);
 
   /**
    * Mask message instance with a message 'mask'
@@ -457,6 +473,6 @@ public interface Message
 
 	public List<Message> getElements();
 
-
+	
 
 }

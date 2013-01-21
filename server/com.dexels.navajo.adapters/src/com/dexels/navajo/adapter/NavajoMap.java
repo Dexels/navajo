@@ -566,7 +566,12 @@ private Object waitForResult = new Object();
 		  // If currentOutDoc flag was set, make sure to copy outdoc.
 		  if ( this.useCurrentOutDoc ) {
 			  if ( this.outDoc != null ) {
-				 this.outDoc.merge(access.getOutputDoc().copy()) ;
+				  /**
+				   * NOTE: THIS MERGE OPERATION WILL CAUSE EXISTING PROPERTIES IN outDoc TO
+				   * BE OVERWRITTEN WITH THE SAME PROPERTIES IN access.getOutputDoc().
+				   * THIS IS NOT EXPECTED BEHAVIOR.
+				   */
+				 this.outDoc.merge(access.getOutputDoc().copy(), true) ;
 			  } else {
 				  this.outDoc = access.getOutputDoc().copy();
 			  }
@@ -944,6 +949,9 @@ private Object waitForResult = new Object();
 
     try {
       Message msg = MappingUtils.getMessageObject(currentFullName, null, false, outDoc, false, "", -1);
+      if ( msg == null ) {
+    	  throw new UserException(-1, "Could not create property " + currentFullName + ". Perhaps a missing message name?");
+      }
       msg.addProperty(p);
     } catch (Exception e) {
       throw new UserException(-1, e.getMessage(),e);
