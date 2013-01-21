@@ -72,12 +72,13 @@ public class AsyncClient {
 																// to every address
 		client.setTimeout(30000); // 30 seconds timeout; if no server reply, the
 											// request expires
-		// client.setThreadPool(executor);
-//		try {
-//			client.start();
-//		} catch (Exception e) {
-//			logger.error("Error: ", e);
-//		}
+	
+		//client.setThreadPool(executor);
+		try {
+			client.start();
+		} catch (Exception e) {
+			logger.error("Error: ", e);
+		}
 		logger.warn("Skipped the 'start' method call, it seems to have vanished. Don't know if it's a problem.");
 	}
 
@@ -94,6 +95,17 @@ public class AsyncClient {
 		}
 		input.addHeader(NavajoFactory.getInstance().createHeader(input, service, username, password, -1));
 		callService(server, input, continuation);
+	}
+	
+	public void callService(String url, String username, String password, Navajo input, String service, final NavajoResponseHandler continuation) throws IOException,
+	NavajoException {
+		if(input==null) {
+			input = NavajoFactory.getInstance().createNavajo();
+		} else {
+			input = input.copy();
+		}
+		input.addHeader(NavajoFactory.getInstance().createHeader(input, service, username, password, -1));	
+		callService(url, input, continuation);
 	}
 
 	public void callService(Access inputAccess, Navajo input, final String service, final TmlRunnable onSuccess, final TmlRunnable onFail, final NavajoResponseCallback navajoResponseCallback)
