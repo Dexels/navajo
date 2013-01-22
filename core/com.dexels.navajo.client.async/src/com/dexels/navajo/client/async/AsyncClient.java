@@ -221,7 +221,11 @@ public class AsyncClient {
 			protected void onResponseComplete() throws IOException {
 				super.onResponseComplete();
 				// TODO: Add streaming?
-//				int status = super.getResponseStatus();
+				int status = super.getResponseStatus();
+				if ( status != 200 ) {
+					onException(new Exception("Could not open URL:" + server));
+					return;
+				}
 				byte[] responseContentBytes = getResponseContentBytes();
 				if(responseContentBytes!=null) {
 					ByteArrayInputStream bais = new ByteArrayInputStream(responseContentBytes);
