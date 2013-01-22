@@ -25,6 +25,7 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.listeners,
  com.dexels.navajo.core
 Import-Package: com.dexels.navajo.client,
+ com.dexels.navajo.client.async,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.nanoimpl;version="2.2.0",
