@@ -13,10 +13,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+//import javax.mail.Session;
+//import javax.mail.Transport;
+//import javax.mail.internet.InternetAddress;
+//import javax.mail.internet.MimeMessage;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
@@ -156,37 +156,37 @@ public class TestHttpClient {
 		    return result;
 		  }
 	
-	private static final void sendMail(String content, Session session, String recipients, boolean debug)  {
-
-		try {
-			
-			javax.mail.Message msg = new MimeMessage(session);
-
-			msg.setFrom(new InternetAddress("noreply@sportlink.com"));
-
-			String [] recipientArray = recipients.split(",");
-			
-			InternetAddress[] addresses = new InternetAddress[recipientArray.length];
-
-			for (int i = 0; i < recipientArray.length; i++) {
-				addresses[i] = new InternetAddress(recipientArray[i]);
-			}
-
-			msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
-
-			msg.setSubject( (debug ? "Debug ACE Testscript" : "ACE Testscript failed" ));
-			msg.setSentDate(new java.util.Date());
-
-			msg.setText(content);
-			
-			Transport.send(msg);
-
-		} catch (Exception e) {
-			
-			e.printStackTrace(System.err);
-			
-		}
-	}
+//	private static final void sendMail(String content, Session session, String recipients, boolean debug)  {
+//
+//		try {
+//			
+//			javax.mail.Message msg = new MimeMessage(session);
+//
+//			msg.setFrom(new InternetAddress("noreply@sportlink.com"));
+//
+//			String [] recipientArray = recipients.split(",");
+//			
+//			InternetAddress[] addresses = new InternetAddress[recipientArray.length];
+//
+//			for (int i = 0; i < recipientArray.length; i++) {
+//				addresses[i] = new InternetAddress(recipientArray[i]);
+//			}
+//
+//			msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
+//
+//			msg.setSubject( (debug ? "Debug ACE Testscript" : "ACE Testscript failed" ));
+//			msg.setSentDate(new java.util.Date());
+//
+//			msg.setText(content);
+//			
+//			Transport.send(msg);
+//
+//		} catch (Exception e) {
+//			
+//			e.printStackTrace(System.err);
+//			
+//		}
+//	}
 	
 	public static void main(String [] args) throws Exception {
 		
@@ -215,7 +215,7 @@ public class TestHttpClient {
 		Properties props = System.getProperties();
 		props.put("mail.smtp.host", mailserver);
 		props.put("mail.smtp.port", "25");
-		Session session = Session.getInstance(props);
+		//Session session = Session.getInstance(props);
 		
 		double total = 0;
 		for (int i = 0; i < Integer.parseInt(loopCount); i++) {
@@ -233,7 +233,7 @@ public class TestHttpClient {
 			 if ( 1 == 2 && ( debug || header.indexOf("accessId") == -1 )) {
 					 System.err.println(header+"---------------------------------\n");
 					 // SEND MAIL FOR FAILURE
-					 sendMail(header, session, mail, debug);
+					 //sendMail(header, session, mail, debug);
 					 
 				// }
 				 //System.exit(1);
