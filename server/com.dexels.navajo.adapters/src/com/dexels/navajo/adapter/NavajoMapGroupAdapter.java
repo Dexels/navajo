@@ -38,6 +38,7 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 	
 	public String id;
 	public String appendTo;
+	public String messagePointer;
 	public com.dexels.navajo.adapter.navajomap.MessageMap [] messages;
 	
 	private final static Logger logger = LoggerFactory.getLogger(NavajoMapGroupAdapter.class);
@@ -159,7 +160,14 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 	}
 	
 	public void setMessagePointer(String p) {
-		
+		this.messagePointer = p;
+	}
+	
+	public com.dexels.navajo.adapter.navajomap.MessageMap [] getMessages() throws UserException {
+		if ( this.id == null || this.messagePointer == null ) {
+			throw new UserException(-1, "Specify navajomap id and set messagepointer before calling getMessages");
+		}
+		return getMessages(id, messagePointer);
 	}
 	
 	public com.dexels.navajo.adapter.navajomap.MessageMap [] getMessages(String id, String messagePointer) throws UserException {

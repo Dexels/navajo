@@ -232,11 +232,16 @@
 		<description>This adapter can be used to group other Navajo maps typically as a barrier for asynchronous service calls
 		</description>
 		<methods>
-			<!-- Creates a new property -->
+			<!-- Append response from non-blocking called navajomap -->
 			<method name="appendResponse">
 				<param name="id" field="id" type="string" required="false" />
 				<param name="appendTo" field="appendTo" type="any" required="false" />
 				<param name="append" field="append" type="string" required="true" />
+			</method>
+			<!-- Set messagePointer for a specified NavajoMap id -->
+			<method name="setMessagePointer">
+				<param name="id" field="id" type="string" required="true" />
+				<param name="messagePointer" field="messagePointer" type="string" required="true" />
 			</method>
 		</methods>
 	</map>
