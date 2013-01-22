@@ -20,9 +20,9 @@ public class ResourceComponent implements HttpResource {
 //	private ExecutorService threadPool = null;
 	
 	public void activate(Map<String, String> settings) {
-		logger.info("Activating HTTP connector with: " + settings);
+		logger.debug("Activating HTTP connector with: " + settings);
 		for (Entry<String, String> e : settings.entrySet()) {
-			logger.info("key: " + e.getKey() + " value: " + e.getValue());
+			logger.debug("key: " + e.getKey() + " value: " + e.getValue());
 		}
 		this.url = settings.get("url");
 //		threadPool = Executors.newFixedThreadPool
@@ -30,16 +30,15 @@ public class ResourceComponent implements HttpResource {
 	}
 
 	public void modified(Map<String,String> settings) {
-		logger.info("Modifying HTTP connector with: " + settings);
+		logger.debug("Modifying HTTP connector with: " + settings);
 	}
 	
 	public void deactivate() {
-		System.err.println("Deactivating HTTP connector");
+		logger.debug("Deactivating HTTP connector");
 	}
 
 	@Override
 	public Future<InputStream> callAsync() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
