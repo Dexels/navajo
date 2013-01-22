@@ -54,7 +54,8 @@ public class OracleWrapped implements DataSource {
 	}
 	
 	public void deactivate() {
-		
+		logger.info("Oracle driver deactivated");
+
 	}
 	
 	@Override

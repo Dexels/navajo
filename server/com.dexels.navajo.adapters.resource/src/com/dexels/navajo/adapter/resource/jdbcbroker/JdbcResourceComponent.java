@@ -1,29 +1,34 @@
 package com.dexels.navajo.adapter.resource.jdbcbroker;
 
 import java.sql.Connection;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
 
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.resource.manager.ResourceManager;
 
 public class JdbcResourceComponent {
-	private ResourceManager manager;
 	private static JdbcResourceComponent instance = null;
 	private static final Logger logger = LoggerFactory.getLogger(JdbcResourceComponent.class);
 	private final Map<Integer,Connection> transactionMap = new ConcurrentHashMap<Integer, Connection>();
 //	private BundleContext bundleContext;
+	private static BundleContext bundleContext;
 	
-	public void activate() {
+	public void activate(BundleContext bc) {
+		bundleContext = bc;
 		setInstance(this);
 	}
 
 	public void deactivate() {
+		bundleContext = null;
 		setInstance(null);
 	}
 
@@ -33,7 +38,6 @@ public class JdbcResourceComponent {
 	}
 	public void setResourceManager(ResourceManager r) {
 		logger.info("Adding Resource Manager, instantiating JdbcResourceComponent");
-		manager = r;
 		instance = this;
 	}
 
@@ -42,7 +46,6 @@ public class JdbcResourceComponent {
 	 */
 	public void removeResourceManager(ResourceManager r) {
 		logger.info("Removing Resource Manager, uninstantiating JdbcResourceComponent");
-		manager = null;
 		instance = null;
 		transactionMap.clear();
 	}
@@ -54,8 +57,8 @@ public class JdbcResourceComponent {
 
 	public static DataSource getJdbc(String name) {
 		try {
-			final ResourceManager mngr = getInstance().manager;
-			DataSource dataSource = mngr.getDataSource(name);
+//			final ResourceManager mngr = getInstance().manager;
+			DataSource dataSource = getDataSource(name);
 			return dataSource;
 		} catch (InvalidSyntaxException e) {
 			logger.error("Can not resolve datasource{}",name,e);
@@ -63,6 +66,21 @@ public class JdbcResourceComponent {
 		}
 	}
 	
+	
+
+	public static DataSource getDataSource(String shortName) throws InvalidSyntaxException {
+		ServiceReference<DataSource> ss = getDataSourceReference(shortName);
+		return bundleContext.getService(ss);
+	}
+	private static ServiceReference<DataSource> getDataSourceReference(String shortName) throws InvalidSyntaxException {
+		logger.debug("Getting datasource reference: "+shortName);
+		Collection<ServiceReference<DataSource>> dlist = bundleContext.getServiceReferences(DataSource.class,"(name="+shortName+")");
+		if(dlist.size()!=1) {
+			logger.info("Matched: {} datasources.",dlist.size());
+		}
+		ServiceReference<DataSource> dref = dlist.iterator().next();
+		return dref;
+	}
 	
 
 	public static void setTestConnection() {
