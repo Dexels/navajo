@@ -13,8 +13,6 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import javax.sql.DataSource;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -112,19 +110,6 @@ public class ResourceManager {
 //		addResourceReference(rr);
 	}
 
-	public DataSource getDataSource(String shortName) throws InvalidSyntaxException {
-		ServiceReference<DataSource> ss = getDataSourceReference(shortName);
-		return bundleContext.getService(ss);
-	}
-	private ServiceReference<DataSource> getDataSourceReference(String shortName) throws InvalidSyntaxException {
-		logger.debug("Getting datasource reference: "+shortName);
-		Collection<ServiceReference<DataSource>> dlist = bundleContext.getServiceReferences(DataSource.class,"(name="+shortName+")");
-		if(dlist.size()!=1) {
-			logger.info("Matched: {} datasources.",dlist.size());
-		}
-		ServiceReference<DataSource> dref = dlist.iterator().next();
-		return dref;
-	}
 
 	private ServiceReference<Object> getResourceReference(String shortName) throws InvalidSyntaxException {
 		Collection<ServiceReference<Object>> dlist = bundleContext.getServiceReferences(Object.class,"(name="+shortName+")");

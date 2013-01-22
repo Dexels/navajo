@@ -14,9 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.mapping.DependentResource;
+import com.dexels.navajo.mapping.GenericDependentResource;
 import com.dexels.navajo.mapping.HasDependentResources;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.mapping.compiler.meta.AdapterResourceDependency;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 
@@ -76,8 +78,8 @@ public class CamelAdapter implements Mappable, HasDependentResources {
 	@Override
 	public DependentResource[] getDependentResourceFields() {
 		return new DependentResource[] {
-//				new GenericDependentResource("resource", "resource",
-//						AdapterResourceDependency.class)
+				new GenericDependentResource("resource", "resource",
+						AdapterResourceDependency.class)
 		};
 	}
 
