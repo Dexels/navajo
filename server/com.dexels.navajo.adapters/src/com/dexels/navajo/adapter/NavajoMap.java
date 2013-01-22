@@ -22,6 +22,9 @@ import com.dexels.navajo.adapter.navajomap.MessageMap;
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
 import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
+import com.dexels.navajo.client.NavajoResponseHandler;
+import com.dexels.navajo.client.async.AsyncClient;
+import com.dexels.navajo.client.async.AsyncClientFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -63,7 +66,7 @@ import com.dexels.navajo.util.AuditLog;
  * @version $Id$
  */
 
-public class NavajoMap extends AsyncMappable implements Mappable, HasDependentResources, TmlRunnable {
+public class NavajoMap extends AsyncMappable implements Mappable, HasDependentResources, TmlRunnable, NavajoResponseHandler {
 
   public String doSend;
   public Binary navajo;
@@ -144,8 +147,22 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   private boolean serviceFinished = false;
   private Exception myException = null;
   
+  private NavajoMapResponseListener myResponseListener = null;
+  private String id;
+  
+  public String getId() {
+	  return id;
+  }
 
-  private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
+  public void setId(String id) {
+	  this.id = id;
+  }
+
+public void setMyResponseListener(NavajoMapResponseListener myResponseListener) {
+	  this.myResponseListener = myResponseListener;
+  }
+
+private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
 
   public boolean isBlock() {
 	  return block;
@@ -551,7 +568,7 @@ private Object waitForResult = new Object();
    * @throws UserException
    */
   public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException, AuthorizationException {
-
+  
 	  // Reset current msgPointer when performing new doSend.
 	  msgPointer = null;
 	  setMethod(method);
@@ -602,14 +619,27 @@ private Object waitForResult = new Object();
 //			  if (keyStore != null) {
 //				  nc.setSecure(keyStore, keyPassword, true);
 //			  }
-			  if ( trigger == null ) {
+			  if ( !block ) {
+
+				  try {
+					  AsyncClient ac = AsyncClientFactory.getInstance();
+					  //AsyncClient ac = new AsyncClient(server.startsWith("http") ? server : "http://" + server, username, password);
+					  ac.callService(server.startsWith("http") ? server : "http://" + server, username, password, outDoc, method, this);
+				  } catch (Exception e) {
+					  throw new UserException(-1, e.getMessage(), e);
+				  }
+			  } else if ( trigger == null ) {
 				  inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true, false);
+				  serviceFinished = true;
+				  serviceCalled = true;
+				  continueAfterRun();
 			  } else {
 				  inDoc = nc.doScheduledSend(outDoc, method, "now", "", "");
+				  serviceFinished = true;
+				  serviceCalled = true;
+				  continueAfterRun();
 			  }
-			  serviceFinished = true;
 			  serviceCalled = true;
-			  continueAfterRun();
 		  } // Internal request.
 		  else {
 			  try {
@@ -1132,13 +1162,20 @@ private Object waitForResult = new Object();
 	      }
 		  
 	  } finally {
-		  waitForResult();
+		  if ( !block ) {
+			  synchronized (waitForResult) {
+				  waitForResult.notify();
+			  }
+			  if ( myResponseListener != null ) {
+				  myResponseListener.onNavajoResponse(this);
+			  }
+		  }
 	  }  
 	 
   }
   
   public void run()  {
-
+  
 	  try {
 		  Header h = outDoc.getHeader();
 		  if (h == null) {
@@ -1373,12 +1410,36 @@ public void setTaskId(String t) {
   }
 
   /**
+   * This is a callback method for the async Navajo Client.
+   * 
  * @param response  
  */
-public void onResponse(Navajo response) {
-
+  public void onResponse(Navajo response) {
+	  inDoc = response;
+	  serviceFinished = true;
+	  serviceCalled = true;
+	  try {
+		continueAfterRun();
+	} catch (Exception e) {
+		logger.error(e.getMessage(), e);
+	} 
   }
 
+  /**
+   * This is a callback method for the async Navajo Client.
+   */
+  @Override
+  public void onFail(Throwable t) throws IOException {
+	  Navajo response = NavajoFactory.getInstance().createNavajo();
+      Message error = NavajoFactory.getInstance().createMessage(response, "error");
+      response.addMessage(error);
+      Property msg = NavajoFactory.getInstance().createProperty(response, "message", Property.STRING_PROPERTY, t.getMessage(), 0, "", "");
+      Property code = NavajoFactory.getInstance().createProperty(response, "code", Property.STRING_PROPERTY, "unknown", 0, "", "");
+      error.addProperty(msg);
+      error.addProperty(code);
+      onResponse(response);
+  }
+  
   @Override
   public void abort(String reason) {
 	  logger.warn("Aborting navajomap: "+reason);
