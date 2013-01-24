@@ -227,6 +227,26 @@
 	</map>
 	<!-- Navajo adapter -->
 	<map>
+		<tagname>navajogroup</tagname>
+		<object>com.dexels.navajo.adapter.NavajoMapGroupAdapter</object>
+		<description>This adapter can be used to group other Navajo maps typically as a barrier for asynchronous service calls
+		</description>
+		<methods>
+			<!-- Append response from non-blocking called navajomap -->
+			<method name="appendResponse">
+				<param name="id" field="id" type="string" required="false" />
+				<param name="appendTo" field="appendTo" type="any" required="false" />
+				<param name="append" field="append" type="string" required="true" />
+			</method>
+			<!-- Set messagePointer for a specified NavajoMap id -->
+			<method name="setMessagePointer">
+				<param name="id" field="id" type="string" required="true" />
+				<param name="messagePointer" field="messagePointer" type="string" required="true" />
+			</method>
+		</methods>
+	</map>
+	<!-- Navajo adapter -->
+	<map>
 		<tagname>navajomap</tagname>
 		<object>com.dexels.navajo.adapter.NavajoMap</object>
 		<description>This adapter can be used to call other Navajo services,
@@ -237,6 +257,8 @@
 			<value name="sendThrough" type="boolean" required="false"
 				direction="in" />
 			<value name="server" type="string" required="false" direction="in" />
+			<value name="id" type="string" required="false" direction="in" />
+			<value name="block" type="boolean" required="false" direction="in" />
 			<value name="username" type="string" required="false"
 				direction="in" />
 			<value name="password" type="string" required="false"

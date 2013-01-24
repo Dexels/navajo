@@ -527,7 +527,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		return null;
 	}
 	
-	@SuppressWarnings({ "rawtypes" })
+	@SuppressWarnings("unchecked")
 	private CompiledScript waitForService(String rpcPath) throws Exception {
 		String rpcName = rpcPath.replaceAll("/", ".");
 //		script://person/InitSearchPersons

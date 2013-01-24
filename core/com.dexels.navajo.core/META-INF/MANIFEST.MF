@@ -47,6 +47,7 @@ Export-Package: com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.na
  com.dexels.navajo.server.enterprise.tribe;uses:="com.dexels.navajo.server,com.dexels.navajo.mapping,com.dexels.navajo.document",
  com.dexels.navajo.server.enterprise.workflow,
  com.dexels.navajo.server.enterprise.xmpp,
+ com.dexels.navajo.server.internal,
  com.dexels.navajo.server.jmx;uses:="javax.management.monitor,javax.management.openmbean,javax.management",
  com.dexels.navajo.server.resource;uses:="junit.framework,com.dexels.navajo.server,com.dexels.navajo.mapping",
  com.dexels.navajo.server.statistics.impl,
