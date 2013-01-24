@@ -31,7 +31,7 @@ public class ToSecureImage extends FunctionInterface{
   private int width = 110;
   private int height = 30;
   private String str;
-  Component observer = new Label();
+  Component observer = null;
   Random rnd = new Random();
 
   public ToSecureImage() {
