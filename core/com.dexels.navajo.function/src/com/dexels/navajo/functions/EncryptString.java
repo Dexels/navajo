@@ -21,7 +21,7 @@ public class EncryptString extends FunctionInterface {
 		
 		try {
 			Security s = new Security(key);
-			result = s.encrypt(message);
+			result = s.encrypt(message).replace("\n", "");
 		} catch (Exception e) {
 			throw new TMLExpressionException(e.getMessage());
 		}
@@ -33,8 +33,8 @@ public class EncryptString extends FunctionInterface {
 		
 		EncryptString e = new EncryptString();
 		e.reset();
-		e.insertOperand("Secret");
 		e.insertOperand("BBFW06E");
+		e.insertOperand("mypassword");
 		String result = (String) e.evaluate();
 		System.err.println("result: " + result);
 	}
