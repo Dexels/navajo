@@ -96,7 +96,8 @@ public class NavajoConfigEmitter {
 	private void createNavajoConfigConfiguration(URL configurationUrl,
 			String rootPath) throws IOException, SystemException {
 		InputStream is = configurationUrl.openStream();
-		logger.info("Setting up configuration for rootpath: "+rootPath);
+		logger.debug("Setting up configuration for rootpath: {}",rootPath);
+		logger.debug("Setting up configuration url: {}",configurationUrl);
 		Dictionary<String, Object> data = new Hashtable<String, Object>();
 		Navajo configuration = NavajoFactory.getInstance().createNavajo(is);
 
