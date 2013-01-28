@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Context
-Bundle-SymbolicName: com.dexels.navajo.context
+Bundle-SymbolicName: com.dexels.navajo.instance.factory
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
