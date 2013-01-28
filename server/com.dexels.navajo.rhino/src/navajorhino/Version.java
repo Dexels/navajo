@@ -1,15 +1,9 @@
 package navajorhino;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
-import com.dexels.navajo.rhino.RhinoHandler;
-import com.dexels.navajo.server.HandlerFactory;
-import com.dexels.navajo.server.ServiceHandler;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
