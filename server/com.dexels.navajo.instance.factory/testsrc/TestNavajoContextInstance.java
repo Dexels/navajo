@@ -21,7 +21,7 @@ public class TestNavajoContextInstance {
 	public void test() {
 		Map<String,Object> properties = new HashMap<String,Object>();
 		properties.put("installationPath", "/Users/frank/git/sportlink.restructure");
-		context.activate(null,properties);
+		context.activate(properties);
 		
 	}
 

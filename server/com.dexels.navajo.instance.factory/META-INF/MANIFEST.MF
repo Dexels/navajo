@@ -12,5 +12,5 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  org.osgi.service.cm;version="1.4.0",
  org.osgi.util.tracker;version="1.5.0",
  org.slf4j;version="1.6.1"
-Service-Component: OSGI-INF/navajoContext.xml,
- OSGI-INF/navajo.resource.group.xml
+Service-Component: OSGI-INF/navajoContext.xml,OSGI-INF/navajo.resource.group.xml,
+ OSGI-INF/navajo.resource.repository.xml
