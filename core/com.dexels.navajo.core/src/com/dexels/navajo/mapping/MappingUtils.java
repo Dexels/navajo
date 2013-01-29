@@ -13,8 +13,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -605,6 +608,10 @@ public static final boolean isObjectMappable(String className) throws UserExcept
   }
 
   /**
+   * Returns the type for given "field" in Class c.
+   * Field can be public/private field with name "field" or a getter/setter with name getField()/setField().
+   * If type of field is an array (Object []) the underlying simple Object type is returned.
+   * If type of field is java.util.Iterator<Object>, the generic type is returned.
    * 
    * @param c
    * @param field
@@ -618,6 +625,9 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 		  String type = determineTypeForField(field, c);
 		  if (type.startsWith("[L")) { // We have an array determine member type.
 			  type = type.substring(2, type.length() - 1);
+		  }
+		  if (type.equals("java.util.Iterator") ) {
+			 return ((Class<?>) getTypeForField(field, c, true)).getName();
 		  }
 		  return type;
 	  } catch (Exception nsfe) {
@@ -695,41 +705,68 @@ public static final boolean isObjectMappable(String className) throws UserExcept
   * @throws MappingException
   */
  private static final String determineTypeForField(String name, Class c) throws MappingException {
-
-	 if ( name.indexOf("(") != -1 ) {
-		 name = name.substring(0, name.indexOf("("));
-	 }
-	 
-	 try {
-		 return c.getField(name).getType().getName();
-	 } catch (Exception e) {
-		 try {
-			 return c.getDeclaredField(name).getType().getName();
-		 } catch (Exception e2) {
-			 try {
-				 Method m = c.getMethod(constructGetMethod(name), (Class[])null);
-				 return m.getReturnType().getName();
-			 } catch (NoSuchMethodException nsme) {
-				 // Try set method.
-				 Method [] methods = c.getMethods();
-				 String setMethod = constructSetMethod(name);
-				 for ( int j = 0; j < methods.length; j++ ) {
-					 if ( methods[j].getName().equals(setMethod) ) {
-						 Class [] types = methods[j].getParameterTypes();
-						 String type = types[0].getName();
-						 return type;
-					 }
-				 }
-				 throw new MappingException("Could not find method " + constructGetMethod(name) + " in Mappable object: " + c.getSimpleName());
-			 }
-		 }
-	 }
+	 return ((Class<?>) getTypeForField(name, c, true)).getName();
  }
   
   public static final boolean isArrayAttribute(Class c, String field) throws MappingException {
 	  return determineTypeForField(field, c).startsWith("[L");	  
   }
-
+  
+  public static final boolean isIteratorAttribute(Class c, String field) throws MappingException {
+	  try {
+		return getTypeForField(field, c, false).equals(Iterator.class);
+	} catch (Exception e) {
+		return false;
+	}	  
+  }
+  
+  private static final Type getTypeForField(String name, Class c, boolean fetchGenericType) throws MappingException {
+	  
+		 if ( name.indexOf("(") != -1 ) {
+			 name = name.substring(0, name.indexOf("("));
+		 }
+		 
+		 try {
+			 if ( c.getField(name).getType().equals(Iterator.class) && fetchGenericType ) {
+				 ParameterizedType pt = (ParameterizedType) c.getField(name).getGenericType();
+				 return ((Class<?>) pt.getActualTypeArguments()[0]);
+			 } else {
+				 return c.getField(name).getType();
+			 }
+		 } catch (Exception e) {
+			 try {
+				 if ( c.getDeclaredField(name).getType().equals(Iterator.class) && fetchGenericType ) {
+					 ParameterizedType pt = (ParameterizedType) c.getDeclaredField(name).getGenericType();
+					 return ((Class<?>) pt.getActualTypeArguments()[0]);
+				 } else {
+					 return c.getDeclaredField(name).getType();
+				 }
+			 } catch (Exception e2) {
+				 try {
+					 Method m = c.getMethod(constructGetMethod(name), (Class[])null);
+					 if ( m.getReturnType().equals(Iterator.class) && fetchGenericType ) {
+						 ParameterizedType pt = (ParameterizedType) m.getGenericReturnType();
+						 return ((Class<?>) pt.getActualTypeArguments()[0]);
+					 } else {
+						 return m.getReturnType();
+					 }
+				 } catch (NoSuchMethodException nsme) {
+					 // Try set method.
+					 Method [] methods = c.getMethods();
+					 String setMethod = constructSetMethod(name);
+					 for ( int j = 0; j < methods.length; j++ ) {
+						 if ( methods[j].getName().equals(setMethod) ) {
+							 Class [] types = methods[j].getParameterTypes();
+							 Type type = types[0];
+							 return type;
+						 }
+					 }
+					 throw new MappingException("Could not find method " + constructGetMethod(name) + " in Mappable object: " + c.getSimpleName());
+				 }
+			 }
+		 }
+	 }
+  
   public static final String createPackageName(String packagePath) {
 
     if (packagePath.equals(""))
@@ -836,6 +873,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 //	  
 //	 
 //	  n.write(System.err);
+	  
 	  
 	 System.err.println(createPackageName("include/SelectedGlobals.xml".replaceAll("\\.xml", "")));
 //	  SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");

@@ -17,7 +17,7 @@ public class SQLMapConstants {
 		try {
     	    Repository r = DispatcherFactory.getInstance().getNavajoConfig().getRepository();
     		if (r != null) {
-    		    r.useLegacyDateMode();
+    		    return r.useLegacyDateMode();
     		}
 		} catch (NullPointerException e) {
 		    // TODO: figure out a nice solution here

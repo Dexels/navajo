@@ -13,6 +13,7 @@ import java.sql.SQLWarning;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.sqlmap.ConnectionBrokerManager;
 import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
+import com.dexels.navajo.adapter.sqlmap.ResultSetIterator;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.adapter.sqlmap.SQLBatchUpdateHelper;
 import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
@@ -190,6 +192,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	protected Connection con = null;
 	protected PreparedStatement statement = null;
+	private ResultSetIterator myResultSetIterator = null;
 	protected ArrayList parameters = null;
 
 	protected final ArrayList binaryStreamList = new ArrayList();
@@ -488,6 +491,10 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	public void store() throws MappableException, UserException {
 
+		if ( myResultSetIterator != null ) {
+			myResultSetIterator.close();
+			resetAll();
+		}
 		cleanupBinaryStreams();
 
 		if (transactionContext == -1) {
@@ -503,6 +510,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			try {
 				if (con != null && !con.isClosed()) {
 					// if defaultUsername was set, set it back.
+					
 					if (resetSession != null) {
 						PreparedStatement stmt = con.prepareStatement(resetSession);
 						stmt.executeUpdate();
@@ -1078,6 +1086,66 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 	}
 
+	public final static ResultSetMap getResultSetMap(ResultSetMetaData meta, int columns, ResultSet rs) throws Exception  {
+
+		ResultSetMap rm = new ResultSetMap();
+
+		for (int i = 1; i < (columns + 1); i++) {
+			String param = meta.getColumnLabel(i);
+			int type = meta.getColumnType(i);
+
+			Object value = null;
+			value = SQLMapHelper.getColumnValue(rs, type, i);
+			rm.addValue(param.toUpperCase(), value);
+		}
+
+		return rm;
+	}
+
+	public Iterator<ResultSetMap> getStreamingResultSet() throws UserException {
+		requestCount++;
+		ResultSet rs = null;
+
+		long start = 0;
+		if (debug || timeAlert > 0) {
+			start = System.currentTimeMillis();
+		}
+
+		try {
+			if (resultSet == null) {
+				rs = getDBResultSet(false);
+			}
+
+			if (debug) {
+				Access.writeToConsole(myAccess, "SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET\n");
+			}
+
+			if (rs != null) {
+				int columns = 0;
+				ResultSetMetaData meta = null;
+				try {
+					meta = rs.getMetaData();
+					columns = meta.getColumnCount();
+				} catch (Exception e) {
+					throw new UserException(-1, "Error getting metadata / columns", e);
+				}
+				// Check if previous version exists, if so, close it.
+				if ( myResultSetIterator != null ) {
+					myResultSetIterator.close();
+				}
+				myResultSetIterator = new ResultSetIterator(rs, meta, columns);
+				return myResultSetIterator;
+			} else {
+				return null;
+			}
+		} catch (SQLException sqle) {
+			sqle.printStackTrace(Access.getConsoleWriter(myAccess));
+			AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access"));
+			throw new UserException(-1, sqle.getMessage(), sqle);
+		} 
+		
+	}
+	
 	protected ResultSetMap[] getResultSet(boolean updateOnly) throws UserException {
 		requestCount++;
 		ResultSet rs = null;
@@ -1116,16 +1184,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					while (rs.next()) {
 
 						if ((index >= startIndex) && ( index <= endIndex) ) {
-							ResultSetMap rm = new ResultSetMap();
-
-							for (int i = 1; i < (columns + 1); i++) {
-								String param = meta.getColumnLabel(i);
-								int type = meta.getColumnType(i);
-
-								Object value = null;
-								value = SQLMapHelper.getColumnValue(rs, type, i);
-								rm.addValue(param.toUpperCase(), value);
-							}
+							ResultSetMap rm = getResultSetMap(meta, columns, rs);
 							dummy.add(rm);
 							viewCount++;
 						}
