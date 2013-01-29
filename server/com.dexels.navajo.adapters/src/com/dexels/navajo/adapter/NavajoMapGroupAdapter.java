@@ -89,7 +89,7 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 		}
 	} 
 	
-	public void setJoinedMap(NavajoMap nm) throws UserException {
+	public void setJoinedMap(NavajoMap nm) {
 		if ( nm.getId() == null ) {
 			id = (sequence++) + "";
 			nm.setId(id);
@@ -151,7 +151,7 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 		this.appendTo = a;
 	}
 	
-	public void setAppend(String messageOffset) throws UserException {
+	public void setAppend(String messageOffset) {
 		if ( id == null ) {
 			id = FIRST_RESULT;
 		}
@@ -176,7 +176,7 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 		return nm.getMessages();
 	}
 	
-	private final void setAppend(String id, AppendNavajoMap messageOffset) throws UserException {
+	private final void setAppend(String id, AppendNavajoMap messageOffset) {
 		appendMap.put(id, messageOffset);
 	}
 	

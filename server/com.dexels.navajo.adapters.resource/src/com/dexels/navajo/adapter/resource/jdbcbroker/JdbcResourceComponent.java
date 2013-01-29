@@ -13,8 +13,6 @@ import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.resource.manager.ResourceManager;
-
 public class JdbcResourceComponent {
 	private static JdbcResourceComponent instance = null;
 	private static final Logger logger = LoggerFactory.getLogger(JdbcResourceComponent.class);
@@ -36,19 +34,19 @@ public class JdbcResourceComponent {
 		instance = jdbcResourceComponent;
 		
 	}
-	public void setResourceManager(ResourceManager r) {
-		logger.info("Adding Resource Manager, instantiating JdbcResourceComponent");
-		instance = this;
-	}
-
-	/**
-	 * @param r the resource manager to remove 
-	 */
-	public void removeResourceManager(ResourceManager r) {
-		logger.info("Removing Resource Manager, uninstantiating JdbcResourceComponent");
-		instance = null;
-		transactionMap.clear();
-	}
+//	public void setResourceManager(ResourceManager r) {
+//		logger.info("Adding Resource Manager, instantiating JdbcResourceComponent");
+//		instance = this;
+//	}
+//
+//	/**
+//	 * @param r the resource manager to remove 
+//	 */
+//	public void removeResourceManager(ResourceManager r) {
+//		logger.info("Removing Resource Manager, uninstantiating JdbcResourceComponent");
+//		instance = null;
+//		transactionMap.clear();
+//	}
 	
 	public static JdbcResourceComponent getInstance() {
 		return instance;

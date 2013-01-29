@@ -18,8 +18,6 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -32,21 +30,20 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.api.NavajoServerContext;
 
-public class NavajoContextInstanceFactory {
+public class NavajoContextInstanceFactory implements NavajoServerContext {
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoContextInstanceFactory.class);
 
-	private NavajoServerContext context = null;
 	private File rootPath = null;
 	private File settings = null;
-	private BundleContext bundleContext;
+//	private BundleContext bundleContext;
 	private ConfigurationAdmin configAdmin;
 
 	private final Set<String> resourcePids = new HashSet<String>();
 
 
-	public void activate(BundleContext context, Map<String,Object> properties) {
-		this.bundleContext = context;
+	public void activate(Map<String,Object> properties) {
+//		this.bundleContext = context;
 		logger.info("NavajoContextInstance activated");
 		String installPath = (String) properties.get("installationPath");
 		rootPath = new File(installPath);
@@ -209,31 +206,31 @@ public class NavajoContextInstanceFactory {
 		logger.info("NavajoContextInstance deactivated");
 	}
 
-	private void registerInstance(String instance) throws IOException {
-		logger.info("Registering instance: {}",instance);
-		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
-		settings.put("instance", instance);
-		final String filter = "(instance="+instance+")";
-		Configuration cc = null;
-		try {
-			Configuration[] c = configAdmin.listConfigurations(filter);
-			if(c!=null && c.length>1) {
-				logger.warn("Multiple configurations found for filter: {}", filter);
-			}
-			if(c!=null && c.length>0) {
-				cc = c[0];
-			}
-		} catch (InvalidSyntaxException e) {
-			logger.error("Error in filter: {}",filter,e);
-		}
-		if(cc==null) {
-			cc = configAdmin.createFactoryConfiguration("navajo.instance",null);
-			resourcePids.add(cc.getPid());
-		}
-		cc.update(settings);
-		logger.debug("Instance settings for source: {} : {}",instance,settings);
-
-	}
+//	private void registerInstance(String instance) throws IOException {
+//		logger.info("Registering instance: {}",instance);
+//		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
+//		settings.put("instance", instance);
+//		final String filter = "(instance="+instance+")";
+//		Configuration cc = null;
+//		try {
+//			Configuration[] c = configAdmin.listConfigurations(filter);
+//			if(c!=null && c.length>1) {
+//				logger.warn("Multiple configurations found for filter: {}", filter);
+//			}
+//			if(c!=null && c.length>0) {
+//				cc = c[0];
+//			}
+//		} catch (InvalidSyntaxException e) {
+//			logger.error("Error in filter: {}",filter,e);
+//		}
+//		if(cc==null) {
+//			cc = configAdmin.createFactoryConfiguration("navajo.instance",null);
+//			resourcePids.add(cc.getPid());
+//		}
+//		cc.update(settings);
+//		logger.debug("Instance settings for source: {} : {}",instance,settings);
+//
+//	}
 	
 	private void addDatasource(String instance,Message dataSource) throws IOException {
 		String name = dataSource.getName();
@@ -304,6 +301,11 @@ public class NavajoContextInstanceFactory {
 	 */
 	public void clearConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.configAdmin = null;
+	}
+
+	@Override
+	public String getInstallationPath() {
+		return rootPath.getAbsolutePath();
 	}
 
 	

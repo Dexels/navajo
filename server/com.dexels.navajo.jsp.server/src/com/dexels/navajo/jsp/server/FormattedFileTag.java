@@ -10,9 +10,6 @@ import java.io.OutputStream;
 
 import javax.servlet.jsp.JspException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.jsp.tags.BaseNavajoTag;
 import com.uwyn.jhighlight.renderer.Renderer;
@@ -28,8 +25,6 @@ public class FormattedFileTag  extends BaseNavajoTag {
 	private Object content;
 
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(FormattedFileTag.class);
 	
 	public synchronized Object getContent() {
 		return content;

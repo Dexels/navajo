@@ -55,7 +55,7 @@ public class ApplyCss extends TipiAction {
 			}
 		});
 		//		String style = "JLabel {uppercase:true}";
-		long mark = System.currentTimeMillis();
+//		long mark = System.currentTimeMillis();
 		try {
 			engine.registerCSSPropertyHandlerProvider(new ICSSPropertyHandlerProvider() {
 				
@@ -82,10 +82,10 @@ public class ApplyCss extends TipiAction {
 			if(styleString!=null) {
 				engine.parseStyleSheet(new StringReader(styleString));
 			}
-			long afterparse = System.currentTimeMillis();
-			engine.applyStyles(engine.getElement(component), true);
-			long afterapply = System.currentTimeMillis();
-			logTime((afterparse-mark),(afterapply-afterparse));
+//			long afterparse = System.currentTimeMillis();
+//			engine.applyStyles(engine.getElement(component), true);
+//			long afterapply = System.currentTimeMillis();
+//			logTime((afterparse-mark),(afterapply-afterparse));
 
 			engine.dispose();
 		} catch (IOException e) {
