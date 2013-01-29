@@ -50,4 +50,12 @@ public class DummyAttachmentMap implements AttachmentMapInterface {
 		logger.debug("in setEncoding(" + s + ")");
 	}
 
+	public String getAttachContentDisposition() {
+		return null;
+	}
+
+	public void setAttachContentDisposition(String s) {
+		logger.debug("in setAttachContentDisposition(" + s + ")");
+	}
+
 }

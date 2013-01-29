@@ -1,0 +1,11 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+
+  <OCD description="Navajo Server Context Factory" name="Navajo Server Context Factory" id="navajo.server.context.factory" >
+    <AD name="installationPath"  id="installationPath" required="true" type="String" default="/Users/frank/git/sportlink.restructure"/>
+  </OCD>
+
+  <Designate pid="navajo.server.context.factory" >
+     <Object ocdref="navajo.server.context.factory"/>
+  </Designate>
+
+</metatype:MetaData>

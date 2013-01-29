@@ -57,12 +57,9 @@ public class PushComponent {
 
 	// Check regardless of leading slashes TODO Check for pull
 	private boolean hasContext(String contextName) {
-//		logger.info("# of ci's: "+contextIdentifiers.size());
-//		logger.info("ci's: "+contextIdentifiers);
 
 		for (ContextIdentifier c : contextIdentifiers) {
 			String con = c.getContextPath();
-//			logger.info("Checking context identifier: "+c.getClass()+" checking for: "+contextName+" against: "+con);
 			String ctxName = contextName;
 			if(ctxName.equals(con)) {
 				return true;
@@ -90,7 +87,6 @@ public class PushComponent {
 		}
 		d.put("installationPath", installationPath);
 		factoryConfiguration.update(d);
-//		logger.info(">>>>>>>>>>>>>INJECT CONPLETE: "+installationPath);
 	}
 	
 	private void setupNavajo(String contextName, String contextPath) throws IOException {
