@@ -20,6 +20,10 @@ public class ResourceRepositoryImpl implements ResourceRepository {
 		instance = null;
 	}
 
+	public static ResourceRepository getInstance() {
+		return instance;
+	}
+	
 	public void addResourceGroup(ResourceGroup group) {
 		resourceGroups.put(group.getName(), group);
 	}
