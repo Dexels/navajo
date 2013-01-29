@@ -1,0 +1,12 @@
+<tml documentImplementation="SAXP">
+   <header useComet="true" applicationId="SPORTLINK DWF 1.390000">
+      <transaction rpc_usr="BVZQ41F" rpc_name="external/iphone/ProcessInsertMatchEvent" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="NewMatchEvent" type="simple">
+      <property direction="in" name="Ios" value="2013-01-29 02:52:39:00" type="date"/>
+      <property direction="in" name="Correct" value="2013-01-29 02:52:39.00" type="date"/>
+   </message>
+   <methods/>
+</tml>
