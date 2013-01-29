@@ -103,7 +103,7 @@ public class TipiElement extends ElementAdapter implements NodeList {
 //			if (o != null)
 //				return o.toString();
 //		} catch (Exception e) {
-//			// logger.error("Error: ",e);
+//			// g.error("Error: ",e);
 //		}
 //		return "";
 	}
