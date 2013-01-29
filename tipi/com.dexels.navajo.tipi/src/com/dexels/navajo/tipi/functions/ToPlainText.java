@@ -43,10 +43,55 @@ public class ToPlainText extends FunctionInterface {
         if (!(pp instanceof String)) {
             throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
         } else {
-            result = "<html>" + pp + "</html>";
-            if (getOperands().size() > 1) {
+        	String intermediateResult = (String) pp;
+        	boolean hadHtmlTag = false;
+        	if (intermediateResult.startsWith("<html>") && intermediateResult.endsWith("</html>"))
+        	{
+        		hadHtmlTag = true;
+        		intermediateResult = intermediateResult.substring(6, intermediateResult.length()-7);
+        	}
+        	boolean done = false;
+        	while (!done)
+        	{
+        		// undo ToBold
+            	if (intermediateResult.startsWith("<b>") && intermediateResult.endsWith("</b>"))
+            	{
+            		intermediateResult = intermediateResult.substring(3, intermediateResult.length()-4);
+            	}
+        		// undo ToItalic
+            	else if (intermediateResult.startsWith("<i>") && intermediateResult.endsWith("</i>"))
+            	{
+            		intermediateResult = intermediateResult.substring(3, intermediateResult.length()-4);
+            	}
+        		// undo ToSubscript
+            	else if (intermediateResult.startsWith("<sub>") && intermediateResult.endsWith("</sub>"))
+            	{
+            		intermediateResult = intermediateResult.substring(5, intermediateResult.length()-6);
+            	}
+        		// undo ToSuperscript
+            	else if (intermediateResult.startsWith("<sup>") && intermediateResult.endsWith("</sup>"))
+            	{
+            		intermediateResult = intermediateResult.substring(5, intermediateResult.length()-6);
+            	}
+        		// undo ToUnderline
+            	else if (intermediateResult.startsWith("<u>") && intermediateResult.endsWith("</u>"))
+            	{
+            		intermediateResult = intermediateResult.substring(3, intermediateResult.length()-4);
+            	}
+            	// remove intermediate html tags if we already started with one on the outside
+            	else if (hadHtmlTag && intermediateResult.startsWith("<html>") && intermediateResult.endsWith("</html>"))
+            	{
+            		intermediateResult = intermediateResult.substring(6, intermediateResult.length()-7);
+            	}
+            	else
+            	{
+            		done = true;
+            	}
+        	}
+            result = "<html>" + intermediateResult + "</html>";
+            if (!hadHtmlTag && getOperands().size() > 1) {
                 if (getOperand(1) instanceof Boolean && (Boolean)getOperand(1)) {
-                    result = pp.toString();
+                    result = intermediateResult.toString();
                 }
             }
         }
