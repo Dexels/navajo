@@ -38,6 +38,9 @@ public class Activator implements BundleActivator {
 		Activator.context = bundleContext;
 		
 		compiler = ToolProvider.getSystemJavaCompiler();
+		if(compiler==null) {
+			throw new RuntimeException("Error: Toolprovider did not supply a system compiler!");
+		}
 		compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
 
 			@Override

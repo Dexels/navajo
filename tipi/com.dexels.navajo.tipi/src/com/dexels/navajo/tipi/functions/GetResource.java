@@ -41,7 +41,7 @@ public class GetResource extends FunctionInterface {
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() == 0) {
 			throw new TMLExpressionException(this,
-					"GetResource NEEEDS arguments");
+					"GetResource NEEDS arguments");
 		}
 
 		Object pp = getOperand(0);

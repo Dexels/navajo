@@ -225,6 +225,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		} else {
 			messageMap.put(name, m);
 		}
+		// When mode="ignore" is set always clear array children before inserting new one.
+		if ( getType().equals(MSG_TYPE_ARRAY) && Message.MSG_MODE_IGNORE.equals(getMode())) {
+			messageList.clear();
+		}
 		messageList.add(m);
 
 		return m;

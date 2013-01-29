@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" deactivate="deactivate" immediate="true" name="navajo.server.context.factory">
+   <implementation class="com.dexels.navajo.context.NavajoContextInstanceFactory"/>
+   <reference bind="setConfigAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="dynamic" unbind="clearConfigAdmin"/>
+   <service>
+      <provide interface="com.dexels.navajo.server.api.NavajoServerContext"/>
+   </service>
+</scr:component>

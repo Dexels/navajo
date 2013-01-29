@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <functiondef>
+    <function name="ExistsResource" class="com.dexels.navajo.tipi.functions.ExistsResource">
+        <description>Checks for the existence of the given resource</description>
+        <input>context,string</input>
+        <result>boolean</result>
+    </function>
     <function name="FindComponent" class="com.dexels.navajo.tipi.functions.FindComponent">
         <description>Looks for a component with the given ID, will look downwards from the current component. It will do a PRE order tree search.</description>
         <input>component,path</input>

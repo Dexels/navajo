@@ -64,7 +64,7 @@ public final class Round extends FunctionInterface {
 			double dd = d.doubleValue();
 			int digits = i.intValue();
 
-			dd = ( (int) ( 0.5 + dd * Math.pow( 10.0, ( double ) digits ) ) ) / Math.pow( 10.0, ( double ) digits );
+			dd = ( (int) ( 0.5 + dd * Math.pow( 10.0, digits ) ) ) / Math.pow( 10.0, digits );
 
 			return new Double( dd );
 		} catch ( Exception e ) {
