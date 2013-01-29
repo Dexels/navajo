@@ -27,7 +27,6 @@ public class SchedulerTools {
 //		return createScheduler(context);
 //	}
 	
-	@SuppressWarnings("unchecked")
 	public static TmlScheduler createScheduler(ServletContext context) {
 		String schedulerName = context.getInitParameter("schedulerClass");
 		if (schedulerName != null) {
