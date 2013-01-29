@@ -35,6 +35,11 @@
     <AD name="Name"  id="name" required="true" type="String" default="navajostore"/>
     <AD name="Type"  id="type" required="true" type="String" default="com.dexels.navajo.enterprise.adapter.navajostore.OracleStore"/>
   </OCD>
+  <OCD description="Navajo Server Context/Instance" name="Navajo Server Context" id="navajo.server.http.osgi" >
+    <AD name="contextPath"    id="contextPath"   required="true"  type="String" default="/"/>   
+    <AD name="servletContextPath"  id="servletContextPath" required="false" type="String" />
+    <AD name="installationPath"  id="installationPath" required="true" type="String" default="/mypath"/>
+  </OCD>
 
   <Designate pid="navajo.server.store" >
      <Object ocdref="navajo.server.store"/>
@@ -58,5 +63,7 @@
   <Designate pid="navajo.server.config" >
      <Object ocdref="navajo.server.config"/>
   </Designate>
-
+  <Designate pid="navajo.server.http.osgi">
+     <Object ocdref="navajo.server.http.osgi"/>
+  </Designate>
 </metatype:MetaData>

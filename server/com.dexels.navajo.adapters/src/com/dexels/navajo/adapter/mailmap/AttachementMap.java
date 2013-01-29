@@ -33,6 +33,7 @@ public class AttachementMap implements Mappable, Serializable, AttachmentMapInte
   public String attachFile = null;
   
   public String attachContentHeader = null;
+  public String attachContentDisposition = "attachment";
   // Encoding is e.g. base64
   public String encoding = null;
 
@@ -71,6 +72,12 @@ public class AttachementMap implements Mappable, Serializable, AttachmentMapInte
   }
   public void setAttachContentHeader(String s) {
   	attachContentHeader = s;
+  }
+  public String getAttachContentDisposition() {
+	    return attachContentDisposition;
+  }
+  public void setAttachContentDisposition(String s) {
+	  attachContentDisposition = s;
   }
 
   public static void main(String [] args) {

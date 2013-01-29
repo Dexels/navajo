@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -675,6 +676,7 @@ public String messageNode(int ident, Element n, String className, String objectN
     boolean isArrayAttr = false;
     boolean isSubMapped = false;
     boolean forceArray = false;
+    boolean isIterator = false;
     String mapPath = null;
     
     // Check if <message> is mapped to an object attribute:
@@ -723,6 +725,11 @@ public String messageNode(int ident, Element n, String className, String objectN
         	  type = Message.MSG_TYPE_ARRAY;
           } else {
         	  isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
+        	  isIterator = MappingUtils.isIteratorAttribute(contextClass, ref);
+        	 
+        	  if ( isIterator ) {
+        		  isArrayAttr = true;
+        	  }
         	  if (isArrayAttr) {
         		  type = Message.MSG_TYPE_ARRAY;
         	  }
@@ -842,12 +849,13 @@ public String messageNode(int ident, Element n, String className, String objectN
     	  }
       }
 
-      String mappableArrayDefinition = "Object [] " + mappableArrayName + " = null;\n";
+      String mappableArrayDefinition = ( isIterator ? "java.util.Iterator<" + subClassName + "> " + mappableArrayName + " = null;\n" : "Object [] " + mappableArrayName + " = null;\n" );
       variableClipboard.add(mappableArrayDefinition);
       
-      
-      result.append(printIdent(ident + 2) + "int " + lengthName + " = " + 
-    		  "(" + mappableArrayName + " == null ? 0 : " + mappableArrayName + ".length);\n");
+      if ( !isIterator ) {
+    	  result.append(printIdent(ident + 2) + "int " + lengthName + " = " + 
+    			  "(" + mappableArrayName + " == null ? 0 : " + mappableArrayName + ".length);\n");
+      }
       
       String startIndexVar = "startIndex"+(startIndexCounter++);
 
@@ -863,14 +871,24 @@ public String messageNode(int ident, Element n, String className, String objectN
       result.append(printIdent(ident + 2) + "int " + offsetElementVar + " = " +
       (elementOffset.equals("") ? "1" : "((Integer) Expression.evaluate(\"" + elementOffset + "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg).value).intValue()") + ";\n");
 
-      result.append(printIdent(ident + 2) + "for (int i" + (ident + 2) +
-                    " = " + startElementVar + "; i" + (ident + 2) + " < " + lengthName + "; i" +
-                    (ident + 2) + " = i" + (ident + 2) +"+"+ offsetElementVar + ") {\n if (!kill) {\n");
-
+      if ( !isIterator ) {
+    	  result.append(printIdent(ident + 2) + "for (int i" + (ident + 2) +
+    			  " = " + startElementVar + "; i" + (ident + 2) + " < " + lengthName + "; i" +
+    			  (ident + 2) + " = i" + (ident + 2) +"+"+ offsetElementVar + ") {\n if (!kill) {\n");
+      } else {
+    	  // while ( mappableArrayName.hasNext() ) {\n if (!kill) {\n
+    	  result.append(printIdent(ident + 2) + "while (" + mappableArrayName + ".hasNext() ) {\n if (!kill) {\n");
+      }
+      
       result.append(printIdent(ident + 4) + "treeNodeStack.push(currentMap);\n");
-      result.append(printIdent(ident + 4) +
-                    "currentMap = new MappableTreeNode(access, currentMap, " + mappableArrayName + "[i" + (ident + 2) + "], true);\n");
-  
+      
+      if ( !isIterator ) {
+    	  result.append(printIdent(ident + 4) +
+    			  "currentMap = new MappableTreeNode(access, currentMap, " + mappableArrayName + "[i" + (ident + 2) + "], true);\n");
+      } else {
+    	  result.append(printIdent(ident + 4) +
+    			  "currentMap = new MappableTreeNode(access, currentMap, " + mappableArrayName + ".next(), true);\n");
+      }
       
       // If filter is specified, evaluate filter first:
       if (!filter.equals("")) {
@@ -2113,7 +2131,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
       try {
 		objectMappable = MappingUtils.isObjectMappable(className);
 	} catch (UserException e) {
-		logger.debug("Trouble mapping: {} doing a fallback.",className,e);
+//		logger.debug("Trouble mapping: {} doing a fallback.",className,e);
 		objectMappable = MappingUtils.isObjectMappable(className,loader);
 	}
 	

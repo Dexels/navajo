@@ -222,8 +222,7 @@ public class MailMap implements MailMapInterface, Mappable,
 
 				if (attachments != null) {
 					for (int i = 0; i < attachments.size(); i++) {
-						AttachmentMapInterface am = attachments
-								.get(i);
+						AttachmentMapInterface am = attachments.get(i);
 						String file = am.getAttachFile();
 						String userFileName = am.getAttachFileName();
 						Binary content = am.getAttachFileContent();
@@ -257,7 +256,8 @@ public class MailMap implements MailMapInterface, Mappable,
 						}
 
 						// iPhone headers
-						bp.setDisposition("attachment");
+						//bp.setDisposition("attachment");
+						bp.setDisposition(am.getAttachContentDisposition());
 
 						multipart.addBodyPart(bp);
 					}

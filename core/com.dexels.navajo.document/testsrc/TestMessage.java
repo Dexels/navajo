@@ -389,6 +389,25 @@ public class TestMessage {
   }
   
   @Test
+  public void testArrayMessagesWithModeIsIgnore() throws Exception {
+		 
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  testDoc.addMessage(m);
+	  Message a = NavajoFactory.getInstance().createMessage(testDoc, "MyArrayMessage", "array");
+	  a.setMode(Message.MSG_MODE_IGNORE);
+	  m.addMessage(a);
+	  for (int i = 0; i < 5; i++) {
+		  Message a1 = NavajoFactory.getInstance().createMessage(testDoc, "MyArrayMessage");
+		  a.addMessage(a1);
+		  Property p = NavajoFactory.getInstance().createProperty(testDoc, "MyProp", "string", "noot" + i, 0, "", "in");
+		  a1.addProperty(p);
+	  }
+	  assertEquals("array", testDoc.getMessage("/MyTop/MyArrayMessage").getType());
+	  assertEquals(1, testDoc.getMessage("/MyTop/MyArrayMessage").getArraySize());
+	  
+  }
+  
+  @Test
   public void testArrayMessagesWithHash() throws Exception {
 		 
 	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
@@ -447,7 +466,7 @@ public class TestMessage {
 	  for (int i = 0; i < 2; i++) {
 		  Message a1 = NavajoFactory.getInstance().createMessage(testDoc, "MyArrayMessage");
 		  a.addMessage(a1);
-		  String type = ( i == 1 ? "" : "integer" );
+		  String type = ( i == 0 ? "integer" : "" );
 		  Property p = NavajoFactory.getInstance().createProperty(testDoc, "MyProp", type, ""+i, 0, "", "in");
 		  a1.addProperty(p);
 		  Property p2 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp2", type, ""+i, 0, "", "in");

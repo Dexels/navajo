@@ -1,0 +1,26 @@
+<tml>
+	<message name="datasources">
+		<message name="h2_test">
+			<property name="url" value="jdbc:h2:~/test" />
+			<property name="type" value="h2" />
+			<property name="user" value="root" />
+			<property name="password" value="root" />
+		</message>
+		<message name="test">
+			<property name="url" value="jdbc:mysql://localhost/test" />
+			<property name="type" value="mysql" />
+			<property name="user" value="root" />
+			<property name="password" value="root" />
+		</message>
+		<message name="default">
+			<property name="type" value="oracle" />
+			<property name="url" value="jdbc:oracle:thin:@10.0.0.1:1521:1521:aardnoot" />
+			<property name="user" value="knvbkern" />
+			<property name="password" value="knvb" />
+		</message>
+		<message name="httptest">
+			<property name="type" value="http" />
+			<property name="url" value="localhost:9090/system/console" />
+		</message>
+	</message>
+</tml>

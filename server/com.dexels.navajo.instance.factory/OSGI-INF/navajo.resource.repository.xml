@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" deactivate="deactivate" name="navajo.resource.repository">
+   <implementation class="com.dexels.navajo.resource.group.impl.ResourceRepositoryImpl"/>
+   <service>
+      <provide interface="com.dexels.navajo.resource.group.ResourceRepository"/>
+   </service>
+   <reference bind="addResourceGroup" cardinality="0..n" interface="com.dexels.navajo.resource.group.ResourceGroup" name="ResourceGroup" policy="dynamic" unbind="removeResourceGroup"/>
+</scr:component>

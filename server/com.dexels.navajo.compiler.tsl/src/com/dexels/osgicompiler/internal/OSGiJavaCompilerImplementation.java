@@ -83,6 +83,17 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 //		}
 	}
 
+	private JavaCompiler getEclipseCompiler() {
+		try {
+			Class<? extends JavaCompiler> jc = (Class<? extends JavaCompiler>) Class.forName("org.eclipse.jdt.internal.compiler.tool.EclipseCompiler");
+			JavaCompiler jj = jc.newInstance();
+			return jj;
+		} catch (Exception e) {
+			logger.warn("Error retrieving Eclipse compiler", e);
+		}
+		return null;
+	}
+
 	public void deactivate() {
 		logger.info("Deactivating java compiler");
 		try {
