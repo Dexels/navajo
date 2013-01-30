@@ -2462,10 +2462,22 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	      tslDoc = XMLDocumentUtils.createDocument(is, false);
 	     
 	      NodeList tsl = tslDoc.getElementsByTagName("tsl");
-	      NodeList tml = tslDoc.getElementsByTagName("tml");
-	      if(tml!=null && tml.getLength()>0) {
-	    	  throw new SkipCompilationException("Direct tml needs no compilation");
-	      }
+//	      NodeList tml = tslDoc.getElementsByTagName("tml");
+//	      if(tml!=null && tml.getLength()>0) {
+//	    	  throw new SkipCompilationException("Direct tml needs no compilation");
+//	      }
+	      // Invesitigate if it's a direct tml script:
+	      NodeList nodes = tslDoc.getChildNodes();
+	      for (int i=0;i<nodes.getLength() ;i++  ) {
+			Node n = nodes.item(i);
+			if(n instanceof Element) {
+				Element e = (Element)n;
+				if(e.getTagName().equals("tml") || e.getTagName().equals("message")) {
+			    	  throw new SkipCompilationException("Direct tml needs no compilation");
+				}
+			}
+		}
+	      
 	      if (tsl == null || tsl.getLength() != 1 || !(tsl.item(0) instanceof Element)) {
 	        throw new SystemException(-1, "Invalid or non existing script file: " + scriptPath + "/" + packagePath + "/" + script + ".xml");
 	      }
