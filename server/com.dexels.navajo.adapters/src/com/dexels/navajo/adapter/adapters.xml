@@ -1,6 +1,18 @@
 <adapterdef>
 
 	<map>
+		<tagname>sqldatasourcemap</tagname>
+		<object>com.dexels.navajo.adapter.sqlmap.SQLMapDatasourceMap</object>
+	</map>
+	<map>
+		<tagname>querymap</tagname>
+		<object>com.dexels.navajo.adapter.QueryMap</object>
+	</map>
+	<map>
+		<tagname>runtime</tagname>
+		<object>com.dexels.navajo.adapter.RuntimeAdapter</object>
+	</map>
+	<map>
 		<tagname>filemap</tagname>
 		<object>com.dexels.navajo.adapter.FileMap</object>
 	</map>
