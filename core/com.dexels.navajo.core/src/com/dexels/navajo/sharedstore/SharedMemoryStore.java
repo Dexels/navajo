@@ -5,17 +5,23 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 class Entry {
 
 	long lastModified;
 	Object value;
+	final String name;
 	
-	public Entry(Object v) {
+	public Entry(String name, Object v) {
 		this.value = v;
+		this.name = name;
 		lastModified = System.currentTimeMillis();
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public long getLastModified() {
@@ -34,25 +40,23 @@ class Entry {
 
 public class SharedMemoryStore implements SharedStoreInterface {
 
-	ConcurrentHashMap<String, Map<String, Entry>> store = new ConcurrentHashMap<String, Map<String,Entry>>();
+	ConcurrentHashMap<String, Entry> store = new ConcurrentHashMap<String, Entry>();
+	
+	private final String constructName(String parent, String name) {
+		return parent + "/" + name;
+	}
 	
 	@Override
 	public void remove(String parent, String name) {
-		Map<String,Entry> pMap = store.get(parent);
-		if ( pMap != null ) {
-			pMap.remove(name);
-			System.err.println("Removed " + parent + "/" + name + ", size: " + pMap.size());
-		}
-		
+		removeEntry(parent, name);
 	}
 	
 	@Override
 	public void removeAll(String parent) {
-		Iterator<String> parents = new HashSet<String>(store.keySet()).iterator();
-		while ( parents.hasNext() ) {
-			String key = parents.next();
-			// Remove parents that either start with the given parent + "/" name or are equal to the given parent name.
-			if ( key.startsWith(parent + "/") || key.equals(parent)) {
+		Iterator<String> entries = new HashSet<String>(store.keySet()).iterator();
+		while ( entries.hasNext() ) {
+			String key = entries.next();
+			if ( key.startsWith(parent + "/") ) {
 				store.remove(key);
 			}
 		}
@@ -63,10 +67,8 @@ public class SharedMemoryStore implements SharedStoreInterface {
 		if ( append || requireLock ) {
 			throw new SharedStoreException("Append / requireLock semantics not supported for this store type");
 		}
-		Entry e = new Entry(value);
-		createParent(parent);
-		Map<String, Entry> pMap = store.get(parent);
-		pMap.put(name, e);
+		Entry e = new Entry(constructName(parent, name), value);
+		store.put(e.getName(), e);
 	}
 
 	@Override
@@ -76,17 +78,20 @@ public class SharedMemoryStore implements SharedStoreInterface {
 
 	@Override
 	public void  createParent(String parent) throws SharedStoreException {
-		ConcurrentHashMap<String, Entry> pMap = new ConcurrentHashMap<String, Entry>();
-		store.putIfAbsent(parent, pMap);
+		// Do nothing.
 	}
 
+	private void removeEntry(String parent, String name) {
+		Entry e = store.get(constructName(parent, name));
+		if ( e != null ) {
+			store.remove(constructName(parent, name));
+		}
+	}
+	
 	private Entry getEntry(String parent, String name) {
-		Map<String,Entry> pMap = store.get(parent);
-		if ( pMap != null ) {
-			Entry e = pMap.get(name);
-			if ( e != null ) {
-				return e;
-			}
+		Entry e = store.get(constructName(parent, name));
+		if ( e != null ) {
+			return e;
 		}
 		return null;
 	}
@@ -128,7 +133,6 @@ public class SharedMemoryStore implements SharedStoreInterface {
 
 	@Override
 	public Object get(String parent, String name) throws SharedStoreException {
-		System.err.println("In SharedMemoryStore. Getting " + parent + "/" + name);
 		Entry e = getEntry(parent, name);
 		if ( e != null ) {
 			return e.value;
@@ -159,16 +163,31 @@ public class SharedMemoryStore implements SharedStoreInterface {
 
 	@Override
 	public String[] getObjects(String parent) {
-		Map<String,Entry> objects = store.get(parent);
-		if ( objects != null ) {
-			String [] keys = new String[objects.size()];
-			keys = objects.keySet().toArray(keys);
+		
+		Set<String> entries = new HashSet<String>();
+		Iterator<String> allObjects = store.keySet().iterator();
+		while ( allObjects.hasNext() ) {
+			String key = allObjects.next();
+			// Fetch name part.
+			String name = key.substring(key.lastIndexOf("/") + 1);
+			if ( (parent+"/"+name).equals(key) ) {
+				entries.add(name);
+			}
+		}
+		
+		if ( entries.size() > 0) {
+			String [] keys = new String[entries.size()];
+			keys = entries.toArray(keys);
 			return keys;
 		} else {
 			return new String[]{};
 		}
 	}
 
+	public int getSize() {
+		return store.size();
+		
+	}
 	@Override
 	public String[] getParentObjects(String parent) {
 		throw new RuntimeException("Not Implemented");

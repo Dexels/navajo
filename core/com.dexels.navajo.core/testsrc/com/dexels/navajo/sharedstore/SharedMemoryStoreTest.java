@@ -234,4 +234,80 @@ public class SharedMemoryStoreTest {
 		Assert.assertEquals(0, obs.length);
 	}
 
+	@Test
+	public void testStoreWithThreads() throws Exception {
+
+		si.removeAll("myparent");
+		
+		int MAXTHREADS = 5000;
+		final MySerializableObject[] objects = new MySerializableObject[MAXTHREADS];
+		for (int i = 0; i < MAXTHREADS; i++) {
+			objects[i] = new MySerializableObject();
+			objects[i].setField("field-" + i);
+		}
+
+		// Define threads.
+		Thread[] threads = new Thread[MAXTHREADS];
+		for (int i = 0; i < MAXTHREADS; i++) {
+			final int index = i;
+			threads[i] = new Thread() {
+				public void run() {
+					try {
+						si.store("myparent", "mystoredobject" + index, objects[index], false, false);
+					} catch (SharedStoreException e) {
+						e.printStackTrace();
+					}
+				}
+			};
+		}
+
+		// Start threads.
+		for (int i = 0; i < MAXTHREADS; i++) {
+			threads[i].start();
+		}
+
+		// Join threads.
+		for (int i = 0; i < MAXTHREADS; i++) {
+			threads[i].join();
+		}
+
+		System.err.println("size: " + ((SharedMemoryStore) si).getSize());
+		// Asserts
+		Assert.assertEquals(MAXTHREADS, si.getObjects("myparent").length);
+		
+		for (int i = 0; i < MAXTHREADS; i++) {
+			MySerializableObject o = (MySerializableObject) si.get("myparent", "mystoredobject" + i);
+			Assert.assertNotNull(o.getField());
+			Assert.assertEquals("field-" + i, o.getField());
+		}
+		
+		for (int i = 0; i < MAXTHREADS; i++) {
+			final int index = i;
+			threads[i] = new Thread() {
+				public void run() {
+					si.remove("myparent", "mystoredobject" + index);
+				}
+			};
+		}
+
+		// Start threads.
+		for (int i = 0; i < MAXTHREADS; i++) {
+			threads[i].start();
+		}
+
+		// Join threads.
+		for (int i = 0; i < MAXTHREADS; i++) {
+			threads[i].join();
+		}
+		
+		Assert.assertEquals(0, si.getObjects("myparent").length);
+
+	}
+	
+	public static void main(String [] args) throws Exception {
+		
+		SharedMemoryStoreTest t = new SharedMemoryStoreTest();
+		t.setUp();
+		t.testStoreWithThreads();
+	}
 }
