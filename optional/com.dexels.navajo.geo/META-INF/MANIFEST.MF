@@ -6,4 +6,4 @@ Bundle-Version: 1.0.3.qualifier
 Bundle-Vendor: Dexels
 Import-Package: junit.framework,
  org.osgi.framework;version="1.5.0"
-Export-Package: com.dexels.navajo.geo
+Export-Package: com.dexels.navajo.geo.tools

@@ -1,4 +1,4 @@
-package com.dexels.navajo.geo;
+package com.dexels.navajo.geo.tools;
 
 public class Tools {
 
