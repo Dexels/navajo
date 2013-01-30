@@ -4,6 +4,56 @@
 		<tagname>filemap</tagname>
 		<object>com.dexels.navajo.adapter.FileMap</object>
 	</map>
+	<map>
+		<tagname>filelinemap</tagname>
+		<object>com.dexels.navajo.adapter.filemap.FileLineMap</object>
+	</map>
+	<map>
+		<tagname>filerecordmap</tagname>
+		<object>com.dexels.navajo.adapter.filemap.FileRecordMap</object>
+	</map>
+	<map>
+		<tagname>asyncproxy</tagname>
+		<object>com.dexels.navajo.adapter.AsyncProxyMap</object>
+	</map>
+	<map>
+		<tagname>tokenizer</tagname>
+		<object>com.dexels.navajo.adapter.TokenizerMap</object>
+	</map>	
+	<map>
+		<tagname>oracleadministrator</tagname>
+		<object>com.dexels.navajo.adapter.OracleAdministratorMap</object>
+	</map>
+	<map>
+		<tagname>zipmap</tagname>
+		<object>com.dexels.navajo.adapter.ZipMap</object>
+	</map>
+	
+	<map>
+		<tagname>description</tagname>
+		<object>com.dexels.navajo.adapter.DescriptionMap</object>
+	</map>	
+	<map>
+		<tagname>save</tagname>
+		<object>com.dexels.navajo.adapter.NavajoSaveAdapter</object>
+	</map>	
+
+	<map>
+		<tagname>load</tagname>
+		<object>com.dexels.navajo.adapter.NavajoLoadAdapter</object>
+	</map>	
+	<map>
+		<tagname>filelist</tagname>
+		<object>com.dexels.navajo.adapter.NavajoFileListAdapter</object>
+	</map>	
+
+	
+	<map>
+		<tagname>option</tagname>
+		<object>com.dexels.navajo.adapter.OptionMap</object>
+	</map>	
+	
+	
 	<!-- Loops files in a directory -->
 	<map>
 		<tagname>fileentry</tagname>

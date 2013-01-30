@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import com.dexels.navajo.adapters.NavajoSvgRenderAdapter;
+import com.dexels.navajo.adapters.svg.NavajoSvgRenderAdapter;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLParseException;

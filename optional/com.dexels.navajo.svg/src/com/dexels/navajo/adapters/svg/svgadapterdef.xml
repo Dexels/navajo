@@ -1,0 +1,9 @@
+<adapterdef>
+
+   <map>
+        <tagname>svg</tagname>
+        <object>com.dexels.navajo.adapters.svg.NavajoSvgRenderAdapter</object>
+        <values>
+        </values>
+    </map>
+</adapterdef>
