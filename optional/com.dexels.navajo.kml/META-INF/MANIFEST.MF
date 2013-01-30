@@ -4,21 +4,22 @@ Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.5.qualifier
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.navajo.client,
+Import-Package: com.dexels.navajo.adapters.svg,
+ com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.metadata;version="2.2.0",
  com.dexels.navajo.document.nanoimpl;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.mapping,
+ com.dexels.navajo.server,
  javax.imageio,
  javax.servlet;version="[2.5.0,4.0.0)",
  javax.servlet.http;version="[2.5.0,4.0.0)",
  junit.framework,
+ navajo;version="1.1.0",
+ navajoextension,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"
-Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.5",
- com.dexels.navajo.core;bundle-version="2.9.4",
- com.dexels.navajo.listeners;bundle-version="3.1.5",
- com.dexels.navajo.svg;bundle-version="1.0.0";resolution:=optional
 Bundle-ClassPath: lib/milStd2525_png.jar,
  lib/omcorba.jar,
  lib/omj3d.jar,
@@ -26,4 +27,6 @@ Bundle-ClassPath: lib/milStd2525_png.jar,
  lib/openmap.jar,
  .
 Export-Package: com.dexels.geospatial,
- com.dexels.navajo.geo
+ com.dexels.navajo.geo,
+ com.dexels.navajo.geo.impl
+Bundle-Activator: navajokml.Version
