@@ -20,3 +20,5 @@ Bundle-Activator: navajotsl.Activator
 Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.10"
 Service-Component: OSGI-INF/navajoTslCompiler.xml, OSGI-INF/javaCompiler.xml, OSGI-INF/javaCompilerComponent.xml, OSGI-INF/bundleCreator.xml
 Export-Package: com.dexels.osgicompiler
+Bundle-ClassPath: lib/commons-compress-1.4.1.jar,
+ .

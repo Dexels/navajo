@@ -2,9 +2,22 @@ Bundle-Name: Navajo Twitter Adapter
 Bundle-SymbolicName: com.dexels.navajo.twitter
 Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.15.qualifier
+Bundle-Version: 1.0.16.qualifier
 Bundle-Activator: navajotwitter.Version
-Export-Package: com.dexels.twitter
+Export-Package: com.dexels.twitter,
+ com.google.gdata.util.common.base,
+ com.winterwell.jgeoplanet,
+ oauth.signpost,
+ oauth.signpost.basic,
+ oauth.signpost.commonshttp,
+ oauth.signpost.exception,
+ oauth.signpost.http,
+ oauth.signpost.signature,
+ winterwell.json,
+ winterwell.jtwitter,
+ winterwell.jtwitter.android,
+ winterwell.jtwitter.ecosystem,
+ winterwell.jtwitter.guts
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.client;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.0"

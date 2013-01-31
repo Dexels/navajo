@@ -35,7 +35,6 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -142,7 +141,6 @@ private void initialize(ClassLoader loader) {
   }
   
   private String replaceQuotes(String str) {
-
 	  if ( str.startsWith("#")) {
 		  str = "(String) userDefinedRules.get(\"" + str.substring(1) + "\")";
 		  return str;
@@ -153,6 +151,8 @@ private void initialize(ClassLoader loader) {
 			  if (c == '"') {
 				  result.append("\\\"");
 			  } else if ( c == '\n') {
+				  result.append(" ");
+			  } else if ( c == '\r') {
 				  result.append(" ");
 			  }
 			  else {
@@ -515,6 +515,8 @@ public String optimizeExpresssion(int ident, String clause, String className, St
 	    	if ( value == null ) {
 	    		Node child = valueElt.getFirstChild();
 	    		value = child.getNodeValue();
+	            value = value.replace('\r', ' ');
+	            value = value.replace('\n', ' ');
 	    	}
 	    }
 	    
@@ -528,6 +530,8 @@ public String optimizeExpresssion(int ident, String clause, String className, St
 	    	} else if (child != null) {
 	    		isStringOperand = Boolean.TRUE;
 	    		value = child.getNodeValue();
+	            value = value.replace('\r', ' ');
+	            value = value.replace('\n', ' ');
 	    	}
 	    	else {
 	    		throw new Exception("Error @" +
@@ -537,6 +541,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
 	    } else {
 	    	value = value.trim();
 	    	value = value.replaceAll("\n", " ");
+	    	value = value.replaceAll("\r", " ");
 	    	value = XMLutils.XMLUnescape(value);
 	    }
 	    
@@ -607,6 +612,9 @@ public String optimizeExpresssion(int ident, String clause, String className, St
         condition = (condition == null) ? "" : condition;
         description = (description == null) ? "" : description;
         if (!condition.equals("")) {
+        	
+        	condition = condition.replace('\r', ' ');
+        	condition = condition.replace('\n', ' ');
           result.append(printIdent(ident) + "if (Condition.evaluate(" +
                         replaceQuotes(condition) +
                         ", access.getInDoc(), null, null, null)) {\n");
@@ -699,6 +707,10 @@ public String messageNode(int ident, Element n, String className, String objectN
           forceArray = type.equals(Message.MSG_TYPE_ARRAY); //( nextElt.getAttribute("forcearray") != null && !nextElt.getAttribute("forcearray").equals("") );
           //System.err.println("forceArray =  " + forceArray);
           filter = nextElt.getAttribute("filter");
+          if(filter!=null) {
+        	  filter = filter.replace('\r', ' ');
+        	  filter = filter.replace('\n', ' ');
+          }
           startElement = nextElt.getAttribute("start_element");
           elementOffset = nextElt.getAttribute("element_offset");
           startElement = ((startElement == null || startElement.equals("")) ? "" : startElement);
@@ -2345,6 +2357,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
           if (rules.item(j).getNodeName().equals("define")) {
         	  String name = ((Element) rules.item(j)).getAttribute("name");
         	  String expression = rules.item(j).getFirstChild().getNodeValue();
+        	  expression = expression.replace('\r', ' ');
         	  expression = expression.replace('\n', ' ');
         	  generatedCode.append("userDefinedRules.put(\"" + name + "\",\"" + expression + "\");\n");
           }
@@ -2390,6 +2403,9 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
          if (value.equals("")) {
            throw new UserException(-1, "Validation syntax error: value attribute missing or empty");
          }
+         value = value.replace('\r', ' ');
+         value = value.replace('\n', ' ');
+//         System.err.println(value);
          // Check if condition evaluates to true, for evaluating validation ;)
          hasValidations = true;
          conditionString.append("\""+condition.replace('\n', ' ').trim()+"\"");
@@ -2429,7 +2445,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
  }
 
 
-  private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, Writer fo, List<Dependency> deps) throws SystemException{
+  private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, Writer fo, List<Dependency> deps) throws SystemException, SkipCompilationException{
 	  
 	  boolean debugInput = false;
 	  boolean debugOutput = false;
@@ -2446,10 +2462,30 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	      tslDoc = XMLDocumentUtils.createDocument(is, false);
 	     
 	      NodeList tsl = tslDoc.getElementsByTagName("tsl");
+//	      NodeList tml = tslDoc.getElementsByTagName("tml");
+//	      if(tml!=null && tml.getLength()>0) {
+//	    	  throw new SkipCompilationException("Direct tml needs no compilation");
+//	      }
+	      // Invesitigate if it's a direct tml script:
+	      NodeList nodes = tslDoc.getChildNodes();
+	      for (int i=0;i<nodes.getLength() ;i++  ) {
+			Node n = nodes.item(i);
+			if(n instanceof Element) {
+				Element e = (Element)n;
+				if(e.getTagName().equals("tml") || e.getTagName().equals("message")) {
+			    	  throw new SkipCompilationException("Direct tml needs no compilation");
+				}
+			}
+		}
+	      
 	      if (tsl == null || tsl.getLength() != 1 || !(tsl.item(0) instanceof Element)) {
 	        throw new SystemException(-1, "Invalid or non existing script file: " + scriptPath + "/" + packagePath + "/" + script + ".xml");
 	      }
 	      Element tslElt = (Element) tsl.item(0);
+	      boolean includeOnly = "true".equals(tslElt.getAttribute("includeOnly"));
+	      if(includeOnly) {
+	    	  throw new SkipCompilationException("Include only for: "+scriptPath);
+	    	}
 	      String debugLevel = tslElt.getAttribute("debug");
 	      debugInput = (debugLevel.indexOf("request") != -1);
 	      debugOutput = (debugLevel.indexOf("response") != -1);
@@ -2620,12 +2656,14 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 
 	      fo.write(result.toString());
 	      fo.close();
+	    } catch (SkipCompilationException e) {
+	    	throw(e);
 	    } catch (Exception e) {
 	      throw new SystemException(-1, "Error while generating Java code for script: " + script, e);
 	    } 
   }
     
-  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, Writer outputWriter, List<Dependency> deps) throws SystemException {
+  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, Writer outputWriter, List<Dependency> deps) throws SystemException, SkipCompilationException {
 
 	    String fullScriptPath = scriptPath + "/" + packagePath + "/" + script + ".xml";
 	    
@@ -2665,6 +2703,8 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 			}
 			compileScript(is, packagePath, script, scriptPath, outputWriter,deps);
 			
+		} catch (SkipCompilationException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new SystemException(-1, "Error while generating Java code for script: " + script, e);
 		} finally {
@@ -2721,8 +2761,9 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
        tslCompiler.compileScript(bareScript, input, output,scriptPackagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"),deps);
        
        return javaFile;
-     }
-     catch (Throwable ex) {
+     } catch (SkipCompilationException ex) {
+    	throw ex;
+     } catch (Throwable ex) {
        logger.error("Error compiling script: "+script,ex);
        //System.err.println("delete javaFile: "+javaFile.toString());
        // Isn't this what 'finally' is for?

@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import com.dexels.navajo.adapters.NavajoSvgRenderAdapter;
+import com.dexels.navajo.adapters.svg.NavajoSvgRenderAdapter;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.metadata.FormatDescription;
