@@ -2445,7 +2445,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
  }
 
 
-  private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, Writer fo, List<Dependency> deps) throws SystemException{
+  private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, Writer fo, List<Dependency> deps) throws SystemException, SkipCompilationException{
 	  
 	  boolean debugInput = false;
 	  boolean debugOutput = false;
@@ -2462,10 +2462,30 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	      tslDoc = XMLDocumentUtils.createDocument(is, false);
 	     
 	      NodeList tsl = tslDoc.getElementsByTagName("tsl");
+//	      NodeList tml = tslDoc.getElementsByTagName("tml");
+//	      if(tml!=null && tml.getLength()>0) {
+//	    	  throw new SkipCompilationException("Direct tml needs no compilation");
+//	      }
+	      // Invesitigate if it's a direct tml script:
+	      NodeList nodes = tslDoc.getChildNodes();
+	      for (int i=0;i<nodes.getLength() ;i++  ) {
+			Node n = nodes.item(i);
+			if(n instanceof Element) {
+				Element e = (Element)n;
+				if(e.getTagName().equals("tml") || e.getTagName().equals("message")) {
+			    	  throw new SkipCompilationException("Direct tml needs no compilation");
+				}
+			}
+		}
+	      
 	      if (tsl == null || tsl.getLength() != 1 || !(tsl.item(0) instanceof Element)) {
 	        throw new SystemException(-1, "Invalid or non existing script file: " + scriptPath + "/" + packagePath + "/" + script + ".xml");
 	      }
 	      Element tslElt = (Element) tsl.item(0);
+	      boolean includeOnly = "true".equals(tslElt.getAttribute("includeOnly"));
+	      if(includeOnly) {
+	    	  throw new SkipCompilationException("Include only for: "+scriptPath);
+	    	}
 	      String debugLevel = tslElt.getAttribute("debug");
 	      debugInput = (debugLevel.indexOf("request") != -1);
 	      debugOutput = (debugLevel.indexOf("response") != -1);
@@ -2636,12 +2656,14 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 
 	      fo.write(result.toString());
 	      fo.close();
+	    } catch (SkipCompilationException e) {
+	    	throw(e);
 	    } catch (Exception e) {
 	      throw new SystemException(-1, "Error while generating Java code for script: " + script, e);
 	    } 
   }
     
-  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, Writer outputWriter, List<Dependency> deps) throws SystemException {
+  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, Writer outputWriter, List<Dependency> deps) throws SystemException, SkipCompilationException {
 
 	    String fullScriptPath = scriptPath + "/" + packagePath + "/" + script + ".xml";
 	    
@@ -2681,6 +2703,8 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 			}
 			compileScript(is, packagePath, script, scriptPath, outputWriter,deps);
 			
+		} catch (SkipCompilationException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new SystemException(-1, "Error while generating Java code for script: " + script, e);
 		} finally {
@@ -2737,8 +2761,9 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
        tslCompiler.compileScript(bareScript, input, output,scriptPackagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"),deps);
        
        return javaFile;
-     }
-     catch (Throwable ex) {
+     } catch (SkipCompilationException ex) {
+    	throw ex;
+     } catch (Throwable ex) {
        logger.error("Error compiling script: "+script,ex);
        //System.err.println("delete javaFile: "+javaFile.toString());
        // Isn't this what 'finally' is for?
