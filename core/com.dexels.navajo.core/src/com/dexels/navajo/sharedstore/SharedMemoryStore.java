@@ -8,13 +8,13 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-class Entry {
+class SharedStoreEntry {
 
 	long lastModified;
 	Object value;
 	final String name;
 	
-	public Entry(String name, Object v) {
+	public SharedStoreEntry(String name, Object v) {
 		this.value = v;
 		this.name = name;
 		lastModified = System.currentTimeMillis();
@@ -40,7 +40,7 @@ class Entry {
 
 public class SharedMemoryStore implements SharedStoreInterface {
 
-	ConcurrentHashMap<String, Entry> store = new ConcurrentHashMap<String, Entry>();
+	ConcurrentHashMap<String, SharedStoreEntry> store = new ConcurrentHashMap<String, SharedStoreEntry>();
 	
 	private final String constructName(String parent, String name) {
 		return parent + "/" + name;
@@ -67,7 +67,7 @@ public class SharedMemoryStore implements SharedStoreInterface {
 		if ( append || requireLock ) {
 			throw new SharedStoreException("Append / requireLock semantics not supported for this store type");
 		}
-		Entry e = new Entry(constructName(parent, name), value);
+		SharedStoreEntry e = new SharedStoreEntry(constructName(parent, name), value);
 		store.put(e.getName(), e);
 	}
 
@@ -82,14 +82,14 @@ public class SharedMemoryStore implements SharedStoreInterface {
 	}
 
 	private void removeEntry(String parent, String name) {
-		Entry e = store.get(constructName(parent, name));
+		SharedStoreEntry e = store.get(constructName(parent, name));
 		if ( e != null ) {
 			store.remove(constructName(parent, name));
 		}
 	}
 	
-	private Entry getEntry(String parent, String name) {
-		Entry e = store.get(constructName(parent, name));
+	private SharedStoreEntry getEntry(String parent, String name) {
+		SharedStoreEntry e = store.get(constructName(parent, name));
 		if ( e != null ) {
 			return e;
 		}
@@ -98,7 +98,7 @@ public class SharedMemoryStore implements SharedStoreInterface {
 	
 	@Override
 	public long lastModified(String parent, String name) {
-		Entry e = getEntry(parent, name);
+		SharedStoreEntry e = getEntry(parent, name);
 		if ( e != null ) {
 			return e.getLastModified();
 		} else {
@@ -109,7 +109,7 @@ public class SharedMemoryStore implements SharedStoreInterface {
 	@Override
 	public void setLastModified(String parent, String name, long l)
 			throws IOException {
-		Entry e = getEntry(parent, name);
+		SharedStoreEntry e = getEntry(parent, name);
 		if ( e != null ) {
 			e.setLastModified(l);
 		}
@@ -133,7 +133,7 @@ public class SharedMemoryStore implements SharedStoreInterface {
 
 	@Override
 	public Object get(String parent, String name) throws SharedStoreException {
-		Entry e = getEntry(parent, name);
+		SharedStoreEntry e = getEntry(parent, name);
 		if ( e != null ) {
 			return e.value;
 		} else {
