@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.enterprise.workflow.WorkFlowManagerInterface;
 
 public class DummyWebserviceListener implements WebserviceListenerRegistryInterface {
 
@@ -47,6 +48,12 @@ public class DummyWebserviceListener implements WebserviceListenerRegistryInterf
 	public boolean isRegisteredWebservice(String string) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void setWorkflowManager(WorkFlowManagerInterface wfmi) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
