@@ -30,11 +30,6 @@ public class ConnectionBroker {
 		logger.debug("Registering driver: "+df.getClass()+" : "+DataSourceFactory.JDBC_DESCRIPTION);
 		String name = df.getClass().getName();
 		driverMap.put(name, df);
-//		try {
-//			test(df);
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
 	}
 
 	public void unregisterDriver(DataSourceFactory df) {
@@ -45,22 +40,4 @@ public class ConnectionBroker {
 		DataSourceFactory dsf = driverMap.get(name);
 		return dsf.createConnectionPoolDataSource(settings);
 	}
-	
-//	public void test(DataSourceFactory factory) throws SQLException {
-//			Properties prop = new Properties(); 
-//		    prop.put(DataSourceFactory.JDBC_URL, "jdbc:h2:~/h2test"); 
-//		    prop.put(DataSourceFactory.JDBC_USER, "sa"); 
-//		    prop.put(DataSourceFactory.JDBC_PASSWORD, ""); 
-//		    DataSource source = factory.createDataSource(prop); 
-//		    Connection connection = source.getConnection(); 
-//		    Statement stm = connection.createStatement(); 
-////		  int o=  stm.executeUpdate("CREATE TABLE OEMPALOEMPA"); 
-//		    ResultSet result = stm.executeQuery("SELECT * FROM OEMPALOEMPA"); 
-//		    while (result.next()) { 
-//		        System.out.println(result.getObject(1)); 
-//		    } 
-//		    result.close(); 
-//		    stm.close(); 
-//		    connection.close(); 
-//	}
 }
