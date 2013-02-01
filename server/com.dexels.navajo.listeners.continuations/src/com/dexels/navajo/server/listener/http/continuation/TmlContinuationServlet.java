@@ -69,7 +69,11 @@ public class TmlContinuationServlet extends HttpServlet implements
 	protected void service(final HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
-			TmlRunnable instantiateRunnable = TmlContinuationServlet.prepareRunnable(req,resp,getLocalClient());
+			LocalClient localClient = getLocalClient();
+			if ( localClient == null ) {
+				localClient = getLocalClient(req);
+			}
+			TmlRunnable instantiateRunnable = TmlContinuationServlet.prepareRunnable(req,resp,localClient);
 			if(instantiateRunnable!=null) {
 				getTmlScheduler().submit(instantiateRunnable, false);
 			}
