@@ -38,7 +38,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	private File settings = null;
 //	private BundleContext bundleContext;
 	private ConfigurationAdmin configAdmin;
-
+//	private final Map<String,Set<String>> aliasesForDataSource = new HashMap<String, Set<String>>();
 	private final Set<String> resourcePids = new HashSet<String>();
 
 
@@ -53,10 +53,11 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		File[] fd = settings.listFiles();
 		File globalPropertyFile = new File(settings,"application.properties");
 		Map<String,Object> globalProperties = readProperties(globalPropertyFile);
-		Map<String,Message> globalResources = readResources(globalResourceFile);
+		Map<String,Set<String>> aliases = new HashMap<String, Set<String>>();
+		Map<String,Message> globalResources = readResources(globalResourceFile,aliases);
 		for (Message dataSource : globalResources.values()) {
 			try {
-				addDatasource("*",dataSource);
+				addDatasource("*",dataSource,aliases);
 			} catch (IOException e) {
 				logger.error("Error: ", e);
 			}
@@ -75,7 +76,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		}
 	}
 	
-	private Map<String,Message> readResources(File resource) {
+	private Map<String,Message> readResources(File resource, Map<String, Set<String>> aliases) {
 		Map<String,Message> result = new HashMap<String, Message>();
 		FileReader fr = null;
 		try {
@@ -90,6 +91,20 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			if(m==null) {
 				logger.warn("In datasource definitions, no 'resources' found.");
 				return result;
+			}
+			Message aliasMap = n.getMessage("alias");
+			if(aliasMap!=null) {
+				List<Property> aliasProps = aliasMap.getAllProperties();
+				for (Property property : aliasProps) {
+					String aliasValue = (String) property.getTypedValue();
+					String name = property.getName();
+					Set<String> found = aliases.get(aliasValue);
+					if(found==null) {
+						found = new HashSet<String>();
+						aliases.put(aliasValue, found);
+					}
+					found.add(name);
+				}
 			}
 			List<Message> sources = m.getAllMessages();
 			for (Message rsrc : sources) {
@@ -151,16 +166,17 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			copyOfProperties.putAll(instanceSpecific);
 		}
 		File instanceResource = new File(config,"resources.xml");
-		Map<String,Message> resources = readResources(instanceResource);
+		Map<String,Set<String>> aliases = new HashMap<String, Set<String>>();
+		Map<String,Message> resources = readResources(instanceResource,aliases);
 //		copyOfResources.putAll(resources);
 //		registerInstance(name);
 		registerInstanceProperties(name,copyOfProperties);
-		registerInstanceResources(name,resources);
+		registerInstanceResources(name,resources,aliases);
 	}
 
-	private void registerInstanceResources(String name,Map<String, Message> resources) throws IOException {
+	private void registerInstanceResources(String name,Map<String, Message> resources, Map<String, Set<String>> aliases) throws IOException {
 		for (Message dataSource : resources.values()) {
-			addDatasource(name,dataSource);
+			addDatasource(name,dataSource, aliases);
 		}
 	}
 
@@ -232,7 +248,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 //
 //	}
 	
-	private void addDatasource(String instance,Message dataSource) throws IOException {
+	private void addDatasource(String instance,Message dataSource, Map<String, Set<String>> aliases) throws IOException {
 		String name = dataSource.getName();
 		List<Property> props = dataSource.getAllProperties();
 		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
@@ -243,7 +259,16 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			}
 			settings.put(property.getName(), property.getTypedValue());
 		}
-		settings.put("name", "navajo.resource."+name);
+		Set<String> allNames = new HashSet<String>();
+		allNames.add("navajo.resource."+name);
+		Set<String> aliased = aliases.get(name);
+		if(aliased!=null) {
+			for (String alias : aliased) {
+				allNames.add("navajo.resource."+alias);
+			}
+			allNames.addAll(aliased);
+		}
+		settings.put("name", allNames.toArray(new String[0]));
 		settings.put("instance", instance);
 		String type = (String)dataSource.getProperty("type").getTypedValue();
 		
