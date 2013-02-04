@@ -33,6 +33,8 @@ public class ContextPathManager {
 	public void activate() throws IOException {
 		// TODO skip pull config for now
 		injectAll(new String[] { "com.dexels.navajo.runtime.provisioning.push" });
+
+		
 		// injectAll(new
 		// String[]{"com.dexels.navajo.runtime.provisioning.push","com.dexels.navajo.runtime.provisioning.pull"});
 
@@ -42,6 +44,17 @@ public class ContextPathManager {
 		for (String resourceType : resourceTypes) {
 			Map<String, String> systemContexts = loadSystemContexts(resourceType);
 			inject(systemContexts, resourceType);
+//			navajo.context
+	
+			// bit odd to do it here, we need some refactoring.
+			String forcedNavajoPath = System.getProperty("navajo.context");
+			if(forcedNavajoPath!=null) {
+				String resolved = systemContexts.get(forcedNavajoPath);
+				if(resolved!=null) {
+					logger.info("Injecting default context: "+forcedNavajoPath+" resolved to: "+resolved);
+					createDefaultContext(forcedNavajoPath,resolved);
+				}
+			}
 		}
 	}
 
@@ -55,6 +68,14 @@ public class ContextPathManager {
 	// }
 	// return result;
 	// }
+
+	private void createDefaultContext(String forcedNavajoPath, String resolved) throws IOException {
+		Configuration cc = configurationAdmin.getConfiguration("navajo.server.http.osgi");
+		Dictionary<String, Object> settings = new Hashtable<String, Object>();
+		settings.put("contextPath", forcedNavajoPath);
+		settings.put("installationPath", resolved);
+		cc.update(settings);;
+	}
 
 	// TODO do this in a more thread safe manner?
 	public void deactivate() {

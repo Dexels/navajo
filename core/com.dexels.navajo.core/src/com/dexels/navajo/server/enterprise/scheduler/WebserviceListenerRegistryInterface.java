@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.enterprise.workflow.WorkFlowManagerInterface;
 
 public interface WebserviceListenerRegistryInterface {
 
@@ -17,6 +18,7 @@ public interface WebserviceListenerRegistryInterface {
 	public boolean afterWebservice(String webservice, Access a,
 			HashSet<String> ignoreTaskList, boolean locally);
 	public boolean isRegisteredWebservice(String string);
+	public void setWorkflowManager(WorkFlowManagerInterface wfmi);
 
 	
 }

@@ -141,6 +141,7 @@ private void initialize(ClassLoader loader) {
   }
   
   private String replaceQuotes(String str) {
+
 	  if ( str.startsWith("#")) {
 		  str = "(String) userDefinedRules.get(\"" + str.substring(1) + "\")";
 		  return str;
@@ -515,8 +516,6 @@ public String optimizeExpresssion(int ident, String clause, String className, St
 	    	if ( value == null ) {
 	    		Node child = valueElt.getFirstChild();
 	    		value = child.getNodeValue();
-	            value = value.replace('\r', ' ');
-	            value = value.replace('\n', ' ');
 	    	}
 	    }
 	    
@@ -530,8 +529,6 @@ public String optimizeExpresssion(int ident, String clause, String className, St
 	    	} else if (child != null) {
 	    		isStringOperand = Boolean.TRUE;
 	    		value = child.getNodeValue();
-	            value = value.replace('\r', ' ');
-	            value = value.replace('\n', ' ');
 	    	}
 	    	else {
 	    		throw new Exception("Error @" +
@@ -2403,8 +2400,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
          if (value.equals("")) {
            throw new UserException(-1, "Validation syntax error: value attribute missing or empty");
          }
-         value = value.replace('\r', ' ');
-         value = value.replace('\n', ' ');
+         value = value.replaceAll("\r", "");
 //         System.err.println(value);
          // Check if condition evaluates to true, for evaluating validation ;)
          hasValidations = true;

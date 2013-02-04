@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
 
-<target name="Navajo Develop" sequenceNumber="722">
+<target name="Navajo Develop" sequenceNumber="728">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.datatools.connectivity.feature.feature.group" version="1.8.2.v201010181125-7C7b8mEt1Zwkn9kfkUHHsoP_3to"/>
-<unit id="org.eclipse.datatools.enablement.feature.feature.group" version="1.8.2.v201010181125-7J8x7UBWwUN6z02z-fiI_w4x4uLf"/>
-<unit id="org.eclipse.datatools.enablement.oda.designer.feature.feature.group" version="1.8.2.v201010181125-3328s735357795A78"/>
-<unit id="org.eclipse.datatools.modelbase.feature.feature.group" version="1.8.2.v201010181125-77078CcNBGKBZI_FcRd"/>
-<unit id="org.eclipse.datatools.connectivity.oda.designer.feature.feature.group" version="1.8.2.v201010181125-4107w3121151A1A53"/>
-<repository location="https://source.dexels.com/eclipse/dtp"/>
+<unit id="org.eclipse.xtext.xbase.feature.group" version="2.0.1.v201108020636"/>
+<unit id="org.eclipse.xtext.xtend2.sdk.feature.group" version="2.0.1.v201108020636"/>
+<unit id="org.eclipse.xtext.docs.feature.group" version="2.0.1.v201108020636"/>
+<unit id="org.eclipse.xtext.examples.feature.group" version="2.0.1.v201108020636"/>
+<unit id="org.eclipse.xtext.runtime.feature.group" version="2.0.1.v201108020636"/>
+<unit id="org.eclipse.xtext.sdk.feature.group" version="2.0.1.v201108020636"/>
+<unit id="org.eclipse.xtext.ui.feature.group" version="2.0.1.v201108020636"/>
+<repository location="https://source.dexels.com/eclipse/xtext2/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.xpand.feature.group" version="1.1.1.v201108020519"/>
@@ -226,15 +228,16 @@
 <repository location="https://source.dexels.com/eclipse/orbit_mirror"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.equinox.p2.extras.feature.feature.group" version="1.0.0.v20110519-7A4FD3DiVOManmZvpLOsnBhnPQM3"/>
-<unit id="org.eclipse.help.feature.group" version="1.3.0.v20110327-7i7uFFiFFt6ZqnbOrMXLd1"/>
-<unit id="org.eclipse.platform.feature.group" version="3.7.0.v20110530-9gF7UHNFFt4cwE-pkZDJ7oz-mj4OSEIlu9SEv0f"/>
-<unit id="org.eclipse.equinox.executable.feature.group" version="3.5.0.v20110530-7P7NFUFFLWUl76mart"/>
-<unit id="org.eclipse.rcp.feature.group" version="3.7.0.v20110216-9DB5Fm1FpBGy_AaVz-mFamgY"/>
-<unit id="org.eclipse.equinox.p2.core.feature.feature.group" version="1.0.0.v20110519-8290FZ-FWmE7gdAgmOPL2_C"/>
-<unit id="org.eclipse.equinox.p2.user.ui.feature.group" version="2.1.1.v20110526-6-Bg9JXOePwKUTU7X0teV1RtDu-e"/>
-<unit id="org.eclipse.equinox.p2.rcp.feature.feature.group" version="1.0.0.v20110519-782EoBqNKGUkVQrqOf0z-BhnPQM3"/>
-<repository location="https://source.dexels.com/eclipse/indigo/"/>
+<unit id="org.eclipse.birt.chart.feature.group" version="2.6.2.r262_v20101008-7f9T7OFPWowQ1naKt1Wwu4"/>
+<unit id="org.eclipse.birt.chart.osgi.runtime.feature.group" version="2.6.2.r262_v20101025-7pA07UFXyNCqK4YeHKOHG4"/>
+<unit id="org.eclipse.birt.chart.osgi.runtime.sdk.feature.group" version="2.6.2.r262_v20101025-57B380uJ5kQKa0QGtPC_p7XRRmMY"/>
+<unit id="org.eclipse.birt.osgi.runtime.feature.group" version="2.6.2.r262_v20101008-8rCb8PFubg_q4z-DYPjIdlu"/>
+<unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="2.6.2.r262_v20101008-57B381wLglLKxfjdt881PQeMU42p"/>
+<unit id="org.eclipse.birt.example.source.feature.group" version="2.6.2.r262_v20101008-7F7e7CDBRmTc_XEMHBHMm"/>
+<unit id="org.eclipse.birt.feature.group" version="2.6.2.r262_v20101008-9iF7A9JGHMBCRz-R8tbxRel8kQrI"/>
+<unit id="org.eclipse.birt.nl.feature.group" version="2.6.2.v20110215-1647"/>
+<unit id="org.eclipse.birt.dtp.nl.feature.group" version="2.5.2.v20110215-1647"/>
+<repository location="https://source.dexels.com/eclipse/birt"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.draw2d.feature.group" version="3.6.2.v20110128-0100-4517w3122123901211"/>
@@ -252,41 +255,17 @@
 <repository location="https://source.dexels.com/eclipse/gef"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.birt.chart.feature.group" version="2.6.2.r262_v20101008-7f9T7OFPWowQ1naKt1Wwu4"/>
-<unit id="org.eclipse.birt.chart.osgi.runtime.feature.group" version="2.6.2.r262_v20101025-7pA07UFXyNCqK4YeHKOHG4"/>
-<unit id="org.eclipse.birt.chart.osgi.runtime.sdk.feature.group" version="2.6.2.r262_v20101025-57B380uJ5kQKa0QGtPC_p7XRRmMY"/>
-<unit id="org.eclipse.birt.osgi.runtime.feature.group" version="2.6.2.r262_v20101008-8rCb8PFubg_q4z-DYPjIdlu"/>
-<unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="2.6.2.r262_v20101008-57B381wLglLKxfjdt881PQeMU42p"/>
-<unit id="org.eclipse.birt.example.source.feature.group" version="2.6.2.r262_v20101008-7F7e7CDBRmTc_XEMHBHMm"/>
-<unit id="org.eclipse.birt.feature.group" version="2.6.2.r262_v20101008-9iF7A9JGHMBCRz-R8tbxRel8kQrI"/>
-<unit id="org.eclipse.birt.nl.feature.group" version="2.6.2.v20110215-1647"/>
-<unit id="org.eclipse.birt.dtp.nl.feature.group" version="2.5.2.v20110215-1647"/>
-<repository location="https://source.dexels.com/eclipse/birt"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.e4.rcp.feature.group" version="1.1.0.v20120521-2329-8yFTIGF3GGduEYqkQB9M3DKn"/>
-<unit id="org.eclipse.platform.feature.group" version="4.2.0.v20120608-135145-9JF7BHV8FyMteji0Oi_ePMz0xuZ8TVo7lV0z0ecb"/>
-<unit id="org.eclipse.rcp.feature.group" version="4.2.0.v20120528-1648-7IAPA7BrHQicRpNdOz-Obz-rlRCA"/>
-<unit id="org.eclipse.emf.ecore.feature.group" version="2.8.0.v20120606-0717"/>
-<unit id="org.eclipse.emf.common.feature.group" version="2.8.0.v20120606-0717"/>
-<unit id="org.eclipse.equinox.p2.user.ui.feature.group" version="2.2.0.v20120524-0542-62DG9JXTlSiz-UbcP0w0KGe8CBOP"/>
-<unit id="org.eclipse.equinox.p2.rcp.feature.feature.group" version="1.1.0.v20120524-0542-785EoBqNKNYz-GX2sUgCaBtr2dhs"/>
-<repository location="https://source.dexels.com/eclipse/platform_4.2"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.xtext.xbase.feature.group" version="2.0.1.v201108020636"/>
-<unit id="org.eclipse.xtext.xtend2.sdk.feature.group" version="2.0.1.v201108020636"/>
-<unit id="org.eclipse.xtext.docs.feature.group" version="2.0.1.v201108020636"/>
-<unit id="org.eclipse.xtext.examples.feature.group" version="2.0.1.v201108020636"/>
-<unit id="org.eclipse.xtext.runtime.feature.group" version="2.0.1.v201108020636"/>
-<unit id="org.eclipse.xtext.sdk.feature.group" version="2.0.1.v201108020636"/>
-<unit id="org.eclipse.xtext.ui.feature.group" version="2.0.1.v201108020636"/>
-<repository location="https://source.dexels.com/eclipse/xtext2/"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.mwe2.runtime.sdk.feature.group" version="2.0.1.v201108020506"/>
 <unit id="org.eclipse.emf.mwe.core.feature.group" version="1.1.1.v201108020506"/>
 <repository location="https://source.dexels.com/eclipse/mwe"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.datatools.connectivity.feature.feature.group" version="1.8.2.v201010181125-7C7b8mEt1Zwkn9kfkUHHsoP_3to"/>
+<unit id="org.eclipse.datatools.enablement.feature.feature.group" version="1.8.2.v201010181125-7J8x7UBWwUN6z02z-fiI_w4x4uLf"/>
+<unit id="org.eclipse.datatools.enablement.oda.designer.feature.feature.group" version="1.8.2.v201010181125-3328s735357795A78"/>
+<unit id="org.eclipse.datatools.modelbase.feature.feature.group" version="1.8.2.v201010181125-77078CcNBGKBZI_FcRd"/>
+<unit id="org.eclipse.datatools.connectivity.oda.designer.feature.feature.group" version="1.8.2.v201010181125-4107w3121151A1A53"/>
+<repository location="https://source.dexels.com/eclipse/dtp"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.server.core.feature.group" version="1.2.0.v20120522-1841-7K7VFMRF7RZHQYI0Yh8U-ov"/>
@@ -295,10 +274,6 @@
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.8.0.v20120522-1841-7M7fA78g5_y-eMftHxcd13UXuq5J"/>
 <unit id="org.eclipse.equinox.server.servletbridge.feature.group" version="1.0.101.v20120522-1841-42F9w9oB58B5KBB2ADHO"/>
 <repository location="https://source.dexels.com/eclipse/equinox_3.8"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jdt.feature.group" version="3.8.1.v20120814-104540-8-8nFqpFNOfwKDRVz-tXOcL5d_83"/>
-<repository location="https://source.dexels.com/eclipse/jdt_4.2.1"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.ecore.feature.group" version="2.7.1.v20110912-0920"/>
@@ -315,8 +290,33 @@
 <repository location="https://source.dexels.com/eclipse/jetty8"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="com.dexels.thirdparty.feature.feature.group" version="1.4.14.RELEASE"/>
-<repository location="https://source.dexels.com/eclipse/3rdparty_1.4.14"/>
+<unit id="org.eclipse.equinox.p2.extras.feature.feature.group" version="1.0.0.v20110519-7A4FD3DiVOManmZvpLOsnBhnPQM3"/>
+<unit id="org.eclipse.help.feature.group" version="1.3.0.v20110327-7i7uFFiFFt6ZqnbOrMXLd1"/>
+<unit id="org.eclipse.platform.feature.group" version="3.7.0.v20110530-9gF7UHNFFt4cwE-pkZDJ7oz-mj4OSEIlu9SEv0f"/>
+<unit id="org.eclipse.equinox.executable.feature.group" version="3.5.0.v20110530-7P7NFUFFLWUl76mart"/>
+<unit id="org.eclipse.rcp.feature.group" version="3.7.0.v20110216-9DB5Fm1FpBGy_AaVz-mFamgY"/>
+<unit id="org.eclipse.equinox.p2.core.feature.feature.group" version="1.0.0.v20110519-8290FZ-FWmE7gdAgmOPL2_C"/>
+<unit id="org.eclipse.equinox.p2.user.ui.feature.group" version="2.1.1.v20110526-6-Bg9JXOePwKUTU7X0teV1RtDu-e"/>
+<unit id="org.eclipse.equinox.p2.rcp.feature.feature.group" version="1.0.0.v20110519-782EoBqNKGUkVQrqOf0z-BhnPQM3"/>
+<repository location="https://source.dexels.com/eclipse/indigo/"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jdt.feature.group" version="3.8.1.v20120814-104540-8-8nFqpFNOfwKDRVz-tXOcL5d_83"/>
+<repository location="https://source.dexels.com/eclipse/jdt_4.2.1"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.e4.rcp.feature.group" version="1.1.0.v20120521-2329-8yFTIGF3GGduEYqkQB9M3DKn"/>
+<unit id="org.eclipse.platform.feature.group" version="4.2.0.v20120608-135145-9JF7BHV8FyMteji0Oi_ePMz0xuZ8TVo7lV0z0ecb"/>
+<unit id="org.eclipse.rcp.feature.group" version="4.2.0.v20120528-1648-7IAPA7BrHQicRpNdOz-Obz-rlRCA"/>
+<unit id="org.eclipse.emf.ecore.feature.group" version="2.8.0.v20120606-0717"/>
+<unit id="org.eclipse.emf.common.feature.group" version="2.8.0.v20120606-0717"/>
+<unit id="org.eclipse.equinox.p2.user.ui.feature.group" version="2.2.0.v20120524-0542-62DG9JXTlSiz-UbcP0w0KGe8CBOP"/>
+<unit id="org.eclipse.equinox.p2.rcp.feature.feature.group" version="1.1.0.v20120524-0542-785EoBqNKNYz-GX2sUgCaBtr2dhs"/>
+<repository location="https://source.dexels.com/eclipse/platform_4.2"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="com.dexels.thirdparty.feature.feature.group" version="1.4.15.RELEASE"/>
+<repository location="https://source.dexels.com/eclipse/3rdparty_1.4.15"/>
 </location>
 </locations>
 <includeBundles>
