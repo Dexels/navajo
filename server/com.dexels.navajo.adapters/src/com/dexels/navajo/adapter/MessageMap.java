@@ -321,7 +321,11 @@ public class MessageMap implements Mappable {
 	private int getMessageHash(Message m) {
 		int hashCode = 0;
 		for ( int i = 0; i < m.getAllProperties().size(); i++ ) {
-			hashCode += m.getAllProperties().get(i).getValue().hashCode();
+			if (  m.getAllProperties().get(i) != null && m.getAllProperties().get(i).getValue() != null ) {
+				hashCode += m.getAllProperties().get(i).getValue().hashCode();
+			} else {
+				hashCode += "".hashCode();
+			}
 		}
 		return hashCode;
 	}

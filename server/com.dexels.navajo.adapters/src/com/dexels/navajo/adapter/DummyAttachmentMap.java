@@ -58,4 +58,11 @@ public class DummyAttachmentMap implements AttachmentMapInterface {
 		logger.debug("in setAttachContentDisposition(" + s + ")");
 	}
 
+	public String getAttachContentType() {
+		return null;
+	}
+
+	public void setAttachContentType(String s) {
+		logger.debug("in setAttachContentType(" + s + ")");
+	}
 }
