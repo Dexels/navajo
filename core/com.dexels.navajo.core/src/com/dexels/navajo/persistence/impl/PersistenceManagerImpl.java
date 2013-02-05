@@ -101,6 +101,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 	
 	public PersistenceManagerImpl() throws InstantiationException {
 		try {
+			SharedTribalMap a;
 			Class.forName("com.dexels.navajo.sharedstore.map.SharedTribalMap");
 		} catch (ClassNotFoundException e) {
 			throw new InstantiationException(e.getMessage());

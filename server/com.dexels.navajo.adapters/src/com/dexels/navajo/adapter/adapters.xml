@@ -1,6 +1,14 @@
 <adapterdef>
 
 	<map>
+		<tagname>asynctest</tagname>
+		<object>com.dexels.navajo.mapping.AsyncTest</object>
+	</map>
+	<map>
+		<tagname>asyncproxy</tagname>
+		<object>com.dexels.navajo.adapter.AsyncProxy</object>
+	</map>	
+	<map>
 		<tagname>sqldatasourcemap</tagname>
 		<object>com.dexels.navajo.adapter.sqlmap.SQLMapDatasourceMap</object>
 	</map>
@@ -25,13 +33,17 @@
 		<object>com.dexels.navajo.adapter.filemap.FileRecordMap</object>
 	</map>
 	<map>
-		<tagname>asyncproxy</tagname>
+		<tagname>asyncproxymap</tagname>
 		<object>com.dexels.navajo.adapter.AsyncProxyMap</object>
 	</map>
 	<map>
 		<tagname>tokenizer</tagname>
 		<object>com.dexels.navajo.adapter.TokenizerMap</object>
 	</map>	
+	<map>
+		<tagname>databaseinfo</tagname>
+		<object>com.dexels.navajo.adapter.sqlmap.DatabaseInfo</object>
+	</map>
 	<map>
 		<tagname>oracleadministrator</tagname>
 		<object>com.dexels.navajo.adapter.OracleAdministratorMap</object>
