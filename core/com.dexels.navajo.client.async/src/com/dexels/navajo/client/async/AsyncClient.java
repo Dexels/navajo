@@ -33,6 +33,9 @@ public class AsyncClient {
 	private int actualCalls = 0;
 	private static AsyncClient instance;
 
+	private final static int CONNECT_TIMEOUT = 2000;
+	private final static int READ_TIMEOUT = 60000;
+	private final static int MAX_CONNECTIONS_PER_ADDRESS = 200;
 	
 	public synchronized int getActualCalls() {
 		return actualCalls;
@@ -68,11 +71,12 @@ public class AsyncClient {
 //		myThreadPool = new NavajoThreadPool();
 //		client.setThreadPool(myThreadPool);
 		client.setConnectorType(HttpClient.CONNECTOR_SELECT_CHANNEL);
-		client.setMaxConnectionsPerAddress(200); // max 200 concurrent connections
+		client.setMaxConnectionsPerAddress(MAX_CONNECTIONS_PER_ADDRESS); // max 200 concurrent connections
 																// to every address
-		client.setTimeout(30000); // 30 seconds timeout; if no server reply, the
+		client.setTimeout(READ_TIMEOUT); // if no server reply, the
 											// request expires
-	
+		client.setConnectTimeout(CONNECT_TIMEOUT);
+		
 		//client.setThreadPool(executor);
 		try {
 			client.start();
