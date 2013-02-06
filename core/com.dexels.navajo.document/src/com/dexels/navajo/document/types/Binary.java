@@ -181,32 +181,15 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
     
     private void loadBinaryFromStream(InputStream is, boolean close) throws IOException, FileNotFoundException {
-        OutputStream fos = createTempFileOutputStream();
+        OutputStream os = createTempFileOutputStream();
         messageDigest.reset();
-        copyResource(fos, is,close);
-//		byte[] buffer = new byte[1024];
-//		try {
-//			while ((b = is.read(buffer, 0, buffer.length)) != -1) {
-//				fos.write(buffer, 0, b);
-//				logger.info("Updating digest: "+b);
-//				messageDigest.update(buffer, 0, b);
-//			}
-//		} finally {
-//
-//			try {
-//				fos.close();
-//			} catch (IOException e) {}
-//			if ( close ) {
-//				try {
-//					is.close();
-//				} catch (IOException e) {}
-//			}
-//		}
+        copyResource(os, is,close);
+
 
 		setDigest(messageDigest.digest());
-    	if(NavajoFactory.getInstance().isSandboxMode()) {
-    		inMemory = ((ByteArrayOutputStream)fos).toByteArray();
-    	}
+//    	if(NavajoFactory.getInstance().isSandboxMode()) {
+//    		inMemory = ((ByteArrayOutputStream)os).toByteArray();
+//    	}
     	if ( this.mimetype == null ) {
         	this.mimetype = getSubType("mime");
         	this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
