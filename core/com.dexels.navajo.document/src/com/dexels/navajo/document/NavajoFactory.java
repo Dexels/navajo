@@ -627,6 +627,11 @@ public boolean isSandboxMode() {
 	return sandboxMode;
 }
 
+public void setSandboxMode(boolean b) {
+	sandboxMode = b;
+}
+
+
 public void removeHandle(String name) {
 	binaryStorage.remove(name);
 }

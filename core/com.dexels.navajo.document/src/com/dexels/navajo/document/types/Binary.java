@@ -391,6 +391,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     
     public long getLength() {
     	if (NavajoFactory.getInstance().isSandboxMode()) {
+    		if(inMemory!=null) {
+    			return inMemory.length;
+    		}
     		byte[] b = NavajoFactory.getInstance().getHandle(dataFile.getName());
     		if (b==null) {
 				return 0;
@@ -530,6 +533,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 		} finally {
 			if(closeInput) {
 				in.close();
+				out.close();
 			}
 		}
     }
