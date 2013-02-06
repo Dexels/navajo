@@ -70,7 +70,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	private static final long serialVersionUID = 5167262782916246791L;
 	protected String myName;
 	protected String myValue = null;
-	private static final Logger logger = LoggerFactory.getLogger(Property.class);
+	private static final Logger logger = LoggerFactory.getLogger(BasePropertyImpl.class);
 
 	protected final ArrayList<BaseSelectionImpl> selectionList = new ArrayList<BaseSelectionImpl>() {
 		private static final long serialVersionUID = 2460743050491944290L;
@@ -1760,8 +1760,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 //		Thread.dumpStack();
 
 		if (myPropertyDataListeners.size() > 5) {
-			logger.info("Multiple property listeners detected!" + myPropertyDataListeners.size()+" path: "+getFullPropertyName());
-			logger.info(">>> "+myPropertyDataListeners);
+			logger.debug("Multiple property listeners detected!" + myPropertyDataListeners.size()+" path: "+getFullPropertyName());
+			logger.debug(">>> "+myPropertyDataListeners);
 		}
 		if (myPropertyDataListeners.size() > 5) {
 //			for (PropertyChangeListener xxp : myPropertyDataListeners) {
