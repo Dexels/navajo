@@ -44,6 +44,4 @@
     	<tagname>persistencemanager</tagname>
 		<object>com.dexels.navajo.persistence.impl.PersistenceManagerImpl</object>
     </map>
-    
-    com.dexels.navajo.persistence.impl
 </adapterdef>
