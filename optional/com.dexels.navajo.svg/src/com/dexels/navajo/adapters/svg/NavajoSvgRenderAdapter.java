@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapters;
+package com.dexels.navajo.adapters.svg;
 
 import java.io.*;
 

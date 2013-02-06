@@ -215,6 +215,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 						String userFileName = am.getAttachFileName();
 						Binary content = am.getAttachFileContent();
 						String encoding = am.getEncoding();
+						String attachContentType = am.getAttachContentType();
 						MimeBodyPart bp = new MimeBodyPart();
 
 						logger.debug("Embedding: " + userFileName);
@@ -241,6 +242,9 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 						}
 
 						bp.setFileName(userFileName);
+						if (attachContentType != null ) {
+							bp.setHeader("Content-Type", attachContentType);
+						}
 						bp.setHeader("Content-ID", "<attach-nr-" + i + ">");
 						related.addBodyPart(bp);
 					}
@@ -259,6 +263,8 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 						String userFileName = am.getAttachFileName();
 						Binary content = am.getAttachFileContent();
 						String encoding = am.getEncoding();
+						String attachContentType = am.getAttachContentType();
+						String attachContentDisposition = am.getAttachContentDisposition();
 						MimeBodyPart bp = new MimeBodyPart();
 
 						logger.debug("Attaching: " + userFileName);
@@ -285,7 +291,11 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 						}
 
 						bp.setFileName(userFileName);
-						bp.setDisposition("attachment");
+						if (attachContentType != null ) {
+							bp.setHeader("Content-Type", attachContentType);
+						}
+						bp.setDisposition(attachContentDisposition);
+//						bp.setDisposition("attachment");
 
 						multipart.addBodyPart(bp);
 					}

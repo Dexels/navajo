@@ -8,6 +8,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -835,4 +836,29 @@ public class TestProperty {
 
 	}
 
+	@SuppressWarnings("null")
+	@Test
+	public void testDateTime() {
+		Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("iphone.xml"));
+		Property ios = n.getMessage("NewMatchEvent").getProperty("Ios");
+		Property correct = n.getMessage("NewMatchEvent").getProperty("Correct");
+		Object correctValue = correct.getTypedValue();
+		Object iosValue = ios.getTypedValue();
+		assertTrue(correctValue!=null);
+		assertTrue(iosValue!=null);
+		assertEquals(Date.class, correctValue.getClass());
+		assertEquals(Date.class, iosValue.getClass());
+		Date correctDate = (Date)correctValue;
+		Date iosDate = (Date)iosValue;
+		Calendar c = Calendar.getInstance();
+		c.setTime(correctDate);
+		assertFalse(c.get(Calendar.HOUR_OF_DAY)==0);
+
+		Calendar iosCalendar = Calendar.getInstance();
+		iosCalendar.setTime(iosDate);
+		assertFalse(iosCalendar.get(Calendar.HOUR_OF_DAY)==0);
+
+		
+		n.write(System.err);
+	}
 }

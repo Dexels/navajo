@@ -4,7 +4,7 @@
     <artifactId>com.dexels.navajo.server.deploy</artifactId>
     <groupId>com.dexels.navajo</groupId>
     <packaging>war</packaging>
-    <version>2.9.37.1</version>
+    <version>2.10.1</version>
     <name>com.dexels.navajo.war Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <parent>
@@ -17,17 +17,17 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.version</artifactId>
-            <version>1.1.4</version>
+            <version>1.1.6</version>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.document</artifactId>
-            <version>2.2.20</version>
+            <version>2.2.22</version>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.api</artifactId>
-            <version>1.0.15</version>
+            <version>1.0.20</version>
         </dependency>
 		<dependency>
 		  <groupId>org.mozilla</groupId>
@@ -42,22 +42,22 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.jsp.server</artifactId>
-            <version>1.1.6</version>
+            <version>1.1.8</version>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.client</artifactId>
-            <version>3.4.15</version>
+            <version>3.4.17</version>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.listeners.continuations</artifactId>
-            <version>1.0.13</version>
+            <version>1.1.4</version>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.listeners.external</artifactId>
-            <version>1.0.13</version>
+            <version>1.0.23</version>
         </dependency>
         <dependency>
             <groupId>jstl</groupId>
@@ -91,6 +91,7 @@
             <version>4.2.0</version>
             <scope>runtime</scope>
         </dependency>
+<!-- follow sportlink style for bleeding edge
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -101,6 +102,7 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.6.4</version>
         </dependency>
+-->
         <dependency>
             <groupId>taglibs</groupId>
             <artifactId>standard</artifactId>
@@ -139,7 +141,7 @@
             <version>3.2.2</version>
         </dependency>
 
-	<!-- Hacked version, removed jzlib packages, as they'll class with the Eclipse-signed one. -->
+	<!-- Hacked version, removed jzlib packages, as they'll clash with the Eclipse-signed one. -->
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.smackx</artifactId>
@@ -160,7 +162,7 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.adapters</artifactId>
-            <version>1.1.22</version>
+            <version>1.1.24</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -175,47 +177,47 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.core</artifactId>
-            <version>2.10.47</version>
+            <version>2.12.1</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.client.async</artifactId>
-            <version>1.1.9</version>
+            <version>1.1.11</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.function</artifactId>
-            <version>3.1.4</version>
+            <version>3.1.6</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.listeners</artifactId>
-            <version>3.1.18</version>
+            <version>3.1.20</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.queuemanager</artifactId>
-            <version>1.0.16</version>
+            <version>1.0.18</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.rhino</artifactId>
-            <version>1.1.8</version>
+            <version>1.1.16</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.rhino.continuations</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.8</version>
             <scope>runtime</scope>
         </dependency>
 	        <dependency>

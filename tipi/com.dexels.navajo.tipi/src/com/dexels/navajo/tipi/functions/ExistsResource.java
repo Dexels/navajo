@@ -4,12 +4,15 @@
  */
 package com.dexels.navajo.tipi.functions;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.FileInputStreamReader;
 import com.dexels.navajo.tipi.TipiContext;
 
 /**
@@ -62,8 +65,7 @@ public class ExistsResource extends FunctionInterface {
 			// try to get the resource. Any exception = false. Success = true.
 			try
 			{
-				tt.getResourceURL(name);
-				return Boolean.TRUE;
+		        return Boolean.valueOf(check(tt.getResourceURL(name)));
 			}
 			catch(Exception e)
 			{
@@ -76,5 +78,23 @@ public class ExistsResource extends FunctionInterface {
 				+ pp.getClass().getName());
 
 	}
+
+    public boolean check(URL u) {
+        InputStream os = null;
+        try {
+            os = u.openConnection().getInputStream();
+           return true;
+        } catch (IOException e) {
+           return false;
+        } finally {
+            if (os!=null) {
+               try {
+                   os.close();
+               } catch (IOException e) {
+            	   logger.info("Closing problem: ",e);
+               }
+           }
+        }
+    }
 
 }

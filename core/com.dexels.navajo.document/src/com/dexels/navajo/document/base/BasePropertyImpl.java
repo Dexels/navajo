@@ -606,11 +606,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				return d;
 			} catch (Exception ex) {
 				try {
-					SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
+					SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT4 );
 					Date d = dateFormat2.parse(getValue());
 					return d;
 				} catch (Exception ex2) {
-					logger.info("Sorry I really can't parse that date: " + getValue());
+					try {
+						SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
+						Date d = dateFormat2.parse(getValue());
+						return d;
+					} catch (Exception ex3) {
+						logger.info("Sorry I really can't parse that date: " + getValue());
+					}
 				}
 			}
 		} else if (getType().equals(Property.INTEGER_PROPERTY)) {

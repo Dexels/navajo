@@ -2,7 +2,7 @@ Bundle-Name: Navajo Listeners Jetty Continuations
 Bundle-SymbolicName: com.dexels.navajo.listeners.continuations
 Bundle-Description: Continuations
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.18.qualifier
+Bundle-Version: 1.1.5.qualifier
 Bundle-Activator: navajolistenerscontinuations.Version
 Bundle-ClassPath: .
 Include-Resource: lib

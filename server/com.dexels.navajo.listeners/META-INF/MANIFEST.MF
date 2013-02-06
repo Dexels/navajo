@@ -2,7 +2,7 @@ Bundle-Name: Navajo Listeners
 Bundle-SymbolicName: com.dexels.navajo.listeners
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.1.19.qualifier
+Bundle-Version: 3.1.21.qualifier
 Bundle-Activator: navajolisteners.Version
 Bundle-ClassPath: .
 Include-Resource: lib

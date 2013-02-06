@@ -5,6 +5,7 @@
 		<methods>
 			<method name="login">
 				<value name="username" field="username" type="string" required="true"/>
+				<value name="password" field="password" type="string" required="false"/>
 				<value name="token1" field="token1" type="string" required="true" />
 				<value name="token2" field="token2" type="string" required="true" />
 			</method>

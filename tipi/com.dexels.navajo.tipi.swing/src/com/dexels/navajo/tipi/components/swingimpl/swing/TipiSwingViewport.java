@@ -25,10 +25,6 @@ public class TipiSwingViewport extends JViewport {
 
 	@Override
 	public void setViewPosition(Point p) {
-		if (p.y == 0 && p.x == 642) {
-			Thread.dumpStack();
-		}
-
 		super.setViewPosition(p);
 	}
 

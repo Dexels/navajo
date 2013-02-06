@@ -49,13 +49,13 @@ public class TribeManagerFactory {
 			return getOSGiTribeManagerService();
 		}
 			try {
-				Class<? extends TribeManagerInterface> c = (Class<? extends TribeManagerInterface>) Class.forName("com.dexels.navajo.tribe.TribeManager");
+				Class<? extends TribeManagerInterface> c = (Class<? extends TribeManagerInterface>) Class.forName("com.dexels.navajo.enterprise.cluster.TribeManager");
 				TribeManagerInterface dummy = c.newInstance();
 				Method m = c.getMethod("getInstance", (Class[]) null);
 				return (TribeManagerInterface) m.invoke(dummy, (Object[])null);
 			} catch (Throwable e) {
-				AuditLog.log("INIT", "WARNING: Tribe Manager not available", Level.WARNING);
-				 return new DummyTribeManager();
+				logger.error("Could not start Tribe Manager", e);
+				return new DummyTribeManager();
 			}	
 	}
 	
