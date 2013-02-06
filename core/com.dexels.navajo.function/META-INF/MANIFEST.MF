@@ -4,9 +4,9 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 3.1.7.qualifier
 Bundle-Activator: navajofunctions.Version
-Export-Package: com.dexels.navajo.functions,
- com.dexels.navajo.functions.scale,
- com.dexels.navajo.functions.test,
+Export-Package: com.dexels.navajo.functions;version="3.1.7",
+ com.dexels.navajo.functions.scale;version="3.1.7",
+ com.dexels.navajo.functions.test;version="3.1.7",
  navajofunctions
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.core;bundle-version="2.10.0"
