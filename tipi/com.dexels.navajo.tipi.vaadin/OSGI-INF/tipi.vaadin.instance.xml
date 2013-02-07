@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="tipi.vaadin.instance">
+   <implementation class="com.dexels.navajo.tipi.vaadin.instance.impl.InstanceConfigurationProviderImpl"/>
+   <reference bind="setConfigAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="dynamic" unbind="clearConfigAdmin"/>
+   <service>
+      <provide interface="com.dexels.navajo.tipi.vaadin.instance.InstanceConfigurationProvider"/>
+   </service>
+</scr:component>
