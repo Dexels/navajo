@@ -18,7 +18,7 @@
 	<pluginRepositories>
 		<pluginRepository>
 			<id>tycho_spiritus</id>
-			<url>https://source.dexels.com/nexus/content/repositories/tycho/</url>
+			<url>https://repo.dexels.com/content/repositories/tycho/</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
@@ -42,8 +42,8 @@
 				<enabled>false</enabled>
 			</snapshots>
 			<id>central</id>
-			<name>Central Spiritus</name>
-			<url>https://source.dexels.com/nexus/content/groups/public/</url>
+			<name>Dexels Central</name>
+			<url>https://repo.dexels.com/content/groups/public/</url>
 			<layout>default</layout>
 		</repository>
 
@@ -236,7 +236,7 @@
 			<id>dexels</id>
 			<name>Dexels Repository</name>
 			<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
-			<url>https://source.dexels.com/nexus/content/repositories/navajo/</url>
+			<url>https://repo.dexels.com/content/repositories/navajo/</url>
 
 			<layout>default</layout>
 		</repository>
@@ -244,8 +244,8 @@
 			<uniqueVersion>true</uniqueVersion>
 			<id>dexels_snap</id>
 			<name>Dexels Snapshots</name>
-			<url>https://source.dexels.com/nexus/content/repositories/navajo_snapshot</url>
-			<layout>legacy</layout>
+			<url>https://repo.dexels.com/content/repositories/navajo_snapshot</url>
+			<layout>default</layout>
 		</snapshotRepository>
 	</distributionManagement>
 	<organization>
