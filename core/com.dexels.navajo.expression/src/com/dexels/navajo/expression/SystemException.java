@@ -8,10 +8,10 @@
  * @author Arjen Schoneveld
  * @version $Id$
  */
-package com.dexels.navajo.server;
+package com.dexels.navajo.expression;
 
 
-public class SystemException extends com.dexels.navajo.expression.SystemException {
+public class SystemException extends Exception {
 
     /**
 	 * 

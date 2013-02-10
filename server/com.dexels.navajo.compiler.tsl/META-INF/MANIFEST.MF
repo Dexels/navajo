@@ -7,6 +7,7 @@ Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.nanoimpl;version="2.2.0",
+ com.dexels.navajo.script.api;version="1.0.0",
  javax.tools,
  org.apache.commons.io,
  org.osgi.framework;version="1.6.0",

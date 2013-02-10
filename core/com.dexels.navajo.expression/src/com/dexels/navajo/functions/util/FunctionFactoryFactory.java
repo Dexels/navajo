@@ -6,7 +6,7 @@ import java.security.AccessControlException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import navajocore.Version;
+import navajoexpression.Version;
 
 import com.dexels.navajo.parser.FunctionInterface;
 

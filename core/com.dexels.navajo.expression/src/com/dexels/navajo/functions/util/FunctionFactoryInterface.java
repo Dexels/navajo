@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.UserException;
 
 public abstract class FunctionFactoryInterface implements Serializable {
 

@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.mapping.MappableTreeNode;
-import com.dexels.navajo.mapping.MappingUtils;
-import com.dexels.navajo.mapping.bean.DomainObjectMapper;
+import com.dexels.navajo.mapping.base.MappableTreeNode;
+import com.dexels.navajo.mapping.base.MappingUtils;
+import com.dexels.navajo.mapping.base.bean.DomainObjectMapper;
 
 @SuppressWarnings("unchecked")
 public final class ASTMappableNode extends SimpleNode {

@@ -115,7 +115,7 @@ package com.dexels.navajo.parser;
  *
  */
 
-import navajocore.Version;
+import navajoexpression.Version;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -155,6 +155,7 @@ public final class ASTFunctionNode extends SimpleNode {
 
 		
 		FunctionFactoryInterface fff = FunctionFactoryFactory.getInstance();
+//		cl = fff.get
 		FunctionInterface f = null;
 		
 		if(Version.osgiActive()) {

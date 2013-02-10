@@ -10,14 +10,14 @@ import java.util.Vector;
 import javax.imageio.spi.ServiceRegistry;
 
 import navajo.ExtensionDefinition;
-import navajocore.Version;
+import navajoexpression.Version;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
+import com.dexels.navajo.mapping.base.compiler.meta.MapMetaData;
 import com.dexels.navajo.server.DispatcherFactory;
 
 public class JarFunctionFactory extends FunctionFactoryInterface implements Serializable {

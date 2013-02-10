@@ -11,7 +11,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.NavajoType;
-import com.dexels.navajo.util.Util;
 
 /**
  *
@@ -37,6 +36,20 @@ public final class ASTTmlNode extends SimpleNode {
         super(id);
     }
 
+    private final boolean isRegularExpression(String s) {
+
+        if (s.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR))
+          return isRegularExpression(s.substring((Navajo.PARENT_MESSAGE +Navajo.MESSAGE_SEPARATOR).length()));
+        if ((s.indexOf("*") != -1) || (s.indexOf(".") != -1)
+                || (s.indexOf("\\") != -1) || (s.indexOf("?") != -1)
+                || (s.indexOf("[") != -1) || (s.indexOf("]") != -1)
+                )
+            return true;
+        else
+            return false;
+
+    }
+    
     public final Object interpret() throws TMLExpressionException {
 
         ArrayList match = null;
@@ -79,7 +92,7 @@ public final class ASTTmlNode extends SimpleNode {
         	val = val.substring(2);
         }
     
-        if (Util.isRegularExpression(val))
+        if (isRegularExpression(val))
             singleMatch = false;
         else
             singleMatch = true;

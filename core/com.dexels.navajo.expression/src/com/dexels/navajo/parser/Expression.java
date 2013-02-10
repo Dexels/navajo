@@ -11,6 +11,7 @@ package com.dexels.navajo.parser;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import com.dexels.navajo.document.DocumentUtils;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -18,9 +19,8 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.mapping.MappableTreeNode;
-import com.dexels.navajo.mapping.MappingUtils;
-import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.mapping.base.MappableTreeNode;
+import com.dexels.navajo.expression.SystemException;
 import com.dexels.navajo.tipilink.TipiLink;
 
 public final class Expression {
@@ -67,7 +67,7 @@ public final class Expression {
         if (aap == null)
             return new Operand(null, "", "");
 
-      String type = MappingUtils.determineNavajoType(aap);
+      String type = DocumentUtils.determineNavajoType(aap);
       return new Operand(aap, type, "");
 
     }

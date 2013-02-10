@@ -43,6 +43,7 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.loader.NavajoClassSupplier;
+import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;

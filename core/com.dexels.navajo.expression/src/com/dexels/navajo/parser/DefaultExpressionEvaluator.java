@@ -18,7 +18,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.mapping.base.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;
 
 

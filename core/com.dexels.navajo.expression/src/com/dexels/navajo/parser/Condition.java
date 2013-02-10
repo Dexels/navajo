@@ -15,8 +15,8 @@ package com.dexels.navajo.parser;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.mapping.MappableTreeNode;
-import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.mapping.base.MappableTreeNode;
+import com.dexels.navajo.expression.SystemException;
 
 public final class Condition {
 

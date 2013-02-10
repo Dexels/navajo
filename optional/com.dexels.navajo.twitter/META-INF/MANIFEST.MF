@@ -23,6 +23,7 @@ Require-Bundle: com.dexels.navajo.client;bundle-version="1.0.0",
  com.dexels.navajo.core;bundle-version="2.9.0"
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.version,
  navajo,
  org.osgi.framework;version="1.5.0",

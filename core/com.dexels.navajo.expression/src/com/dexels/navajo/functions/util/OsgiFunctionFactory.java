@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import navajocore.Version;
+import navajoexpression.Version;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -110,7 +110,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	
 	@SuppressWarnings("unchecked")
 	public Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
-		BundleContext context = navajocore.Version.getDefaultBundleContext();
+		BundleContext context = navajoexpression.Version.getDefaultBundleContext();
 		try {
 			ServiceReference[] refs = context.getServiceReferences(interfaceClass.getName(), "("+serviceKey+"="+name+")");
 			if(refs==null) {

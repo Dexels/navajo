@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.mapping.base.MappableTreeNode;
 
 public final class ASTForAllNode extends SimpleNode {
 
@@ -79,7 +79,7 @@ public final class ASTForAllNode extends SimpleNode {
                         return Boolean.TRUE;
                 }
 
-        } catch (com.dexels.navajo.server.SystemException se) {
+        } catch (com.dexels.navajo.expression.SystemException se) {
         	logger.error("Error: ", se);
         	throw new TMLExpressionException("Invalid expression in FORALL construct: \n" + se.getMessage());
         } catch (NavajoException ne) {

@@ -2,6 +2,7 @@ package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.adapter.sqlmap.RecordMap;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
+import com.dexels.navajo.document.DocumentUtils;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -54,7 +55,7 @@ public class QueryMap extends SQLMap {
           try {
             Object value = columns[j].getRecordValue();
             String type = (value != null ?
-                           MappingUtils.determineNavajoType(value) : "unknown");
+            		DocumentUtils.determineNavajoType(value) : "unknown");
             //String sValue = (value != null ? Util.toString(value, type) : "");
             Property prop = NavajoFactory.getInstance().createProperty(
                 outputDoc,
