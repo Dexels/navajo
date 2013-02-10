@@ -9,16 +9,20 @@ Export-Package: com.dexels.navajo.rhino,
  com.dexels.navajo.rhino.flow,
  com.dexels.navajo.rhino.include
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.0"
 Bundle-ClassPath: .,
  lib/js.jar
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.nanoimpl;version="2.2.0",
+ com.dexels.navajo.functions.util,
  com.dexels.navajo.listener.http.queuemanager.api,
+ com.dexels.navajo.mapping,
+ com.dexels.navajo.mapping.compiler.meta,
+ com.dexels.navajo.parser,
  com.dexels.navajo.queuemanager,
  com.dexels.navajo.script.api,
+ com.dexels.navajo.server,
  com.dexels.navajo.version,
  javax.script,
  org.osgi.framework;version="1.5.0",

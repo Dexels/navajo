@@ -14,7 +14,6 @@ Import-Package: com.dexels.navajo.client,
  org.slf4j;version="1.6.1"
 Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  com.dexels.navajo.tipi.vaadin;bundle-version="0.1.0",
- com.dexels.navajo.core;bundle-version="2.9.4",
  com.dexels.navajo.function;bundle-version="2.0.5",
  org.eclipse.jetty.http;bundle-version="7.4.1",
  org.eclipse.jetty.server;bundle-version="7.4.1",

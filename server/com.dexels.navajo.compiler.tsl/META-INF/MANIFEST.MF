@@ -5,8 +5,13 @@ Bundle-SymbolicName: com.dexels.navajo.compiler.tsl
 Bundle-Version: 1.0.10.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: com.dexels.navajo.document;version="2.2.0",
+Import-Package: com.dexels.navajo.compiler,
+ com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.nanoimpl;version="2.2.0",
+ com.dexels.navajo.mapping,
+ com.dexels.navajo.mapping.compiler,
+ com.dexels.navajo.mapping.compiler.meta,
+ com.dexels.navajo.server,
  javax.tools,
  org.apache.commons.io,
  org.osgi.framework;version="1.6.0",
@@ -17,7 +22,6 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  org.osgi.util.tracker;version="1.5.0",
  org.slf4j;version="1.6.1"
 Bundle-Activator: navajotsl.Activator
-Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.10"
 Service-Component: OSGI-INF/navajoTslCompiler.xml, OSGI-INF/javaCompiler.xml, OSGI-INF/javaCompilerComponent.xml, OSGI-INF/bundleCreator.xml
 Export-Package: com.dexels.osgicompiler
 Bundle-ClassPath: lib/commons-compress-1.4.1.jar,

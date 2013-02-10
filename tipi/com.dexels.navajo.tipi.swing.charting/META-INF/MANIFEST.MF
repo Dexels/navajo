@@ -5,9 +5,7 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.12.qualifier
 Export-Package: com.dexels.navajo.tipi.charting
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.client,
- com.dexels.navajo.tipi,
- com.dexels.navajo.core,
+Require-Bundle: com.dexels.navajo.tipi,
  com.dexels.navajo.tipi.swing;bundle-version="[1.2.0,2.0.0)",
  com.dexels.navajo.tipi.swing.deps;bundle-version="[1.2.0,2.0.0)",
  com.dexels.navajo.tipi.swing.client;bundle-version="[1.2.0,2.0.0)"
@@ -17,6 +15,8 @@ Bundle-ClassPath: lib/gnujaxp.jar,
  lib/jfreechart-1.0.13.jar,
   .
 Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.tipilink,
  com.dexels.navajo.version,
+ navajoextension,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"
