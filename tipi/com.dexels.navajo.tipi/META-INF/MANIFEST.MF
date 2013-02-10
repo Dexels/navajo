@@ -89,17 +89,20 @@ Export-Package: com.dexels.navajo.tipi;
    com.dexels.navajo.tipi.tipixml",
  tipipackage;uses:="com.dexels.navajo.version,org.osgi.framework,tipi"
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.core;bundle-version="2.10.6"
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.metadata;version="2.2.0",
  com.dexels.navajo.document.notifier,
  com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.functions.util,
+ com.dexels.navajo.parser,
+ com.dexels.navajo.tipilink,
  com.dexels.navajo.version;version="1.1.0",
  javax.imageio.spi,
  javax.script,
  navajo;version="1.1.0",
+ navajoextension,
  org.junit;version="4.8.2";resolution:=optional,
  org.junit.runner;version="4.8.2";resolution:=optional,
  org.junit.runners;version="4.8.2";resolution:=optional,
