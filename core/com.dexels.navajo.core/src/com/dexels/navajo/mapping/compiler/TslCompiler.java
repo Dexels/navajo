@@ -71,6 +71,7 @@ import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaDataFactory;
+import com.dexels.navajo.mapping.compiler.meta.impl.MapMetaDataImpl;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.GenericHandler;
@@ -134,6 +135,14 @@ private void initialize(ClassLoader loader) {
 	if (loader == null) {
 	  this.loader = this.getClass().getClassLoader();
 	}
+//	logger.info("Initializing MapMetaData!");
+//	try {
+//		final MapMetaDataImpl newInstance = new MapMetaDataImpl();
+//		newInstance.readConfig();
+//		MapMetaDataFactory.setInstance(newInstance);
+//	} catch (Exception e) {
+//		logger.error("Error initializing MapMetaData!",e);
+//	}
 }
   
   public NavajoIOConfig getNavajoIOConfig() {
@@ -641,7 +650,6 @@ public String optimizeExpresssion(int ident, String clause, String className, St
     return result.toString();
   }
 
-  @SuppressWarnings("unchecked")
 public String messageNode(int ident, Element n, String className, String objectName, List<Dependency> deps) throws Exception {
     StringBuffer result = new StringBuffer();
 
@@ -1164,7 +1172,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     }
     else {
       result.append(printIdent(ident) +
-          "type = (sValue != null) ? MappingUtils.determineNavajoType(sValue) : \"" +
+          "type = (sValue != null) ? DocumentUtils.determineNavajoType(sValue) : \"" +
                     type + "\";\n");
     }
 
@@ -1374,7 +1382,6 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 	  }
   }
   
-  @SuppressWarnings("unchecked")
 public String fieldNode(int ident, Element n, String className,
                           String objectName, List<Dependency> dependencies) throws Exception {
 
@@ -2648,7 +2655,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	    try {
 	    	
 	    	// Check for metascript.
-	    	if ( MapMetaData.isMetaScript(script, scriptPath, packagePath) ) {
+	    	if ( MapMetaDataFactory.getInstance().isMetaScript(script, scriptPath, packagePath) ) {
 	    		scriptType = "navascript";
 	    		MapMetaData mmd = MapMetaDataFactory.getInstance();
 	    		InputStream metais = navajoIOConfig.getScript(packagePath+"/"+script);

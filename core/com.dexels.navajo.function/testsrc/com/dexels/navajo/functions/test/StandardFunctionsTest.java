@@ -16,7 +16,6 @@ import org.dexels.utils.Base64;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -31,9 +30,6 @@ import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.test.TestDispatcher;
-import com.dexels.navajo.server.test.TestNavajoConfig;
 
 @SuppressWarnings("unused")
 public class StandardFunctionsTest {
@@ -975,23 +971,6 @@ public class StandardFunctionsTest {
 
 	}
 
-	@Test
-	public void testIsServiceCached() throws Exception {
-
-		FunctionInterface fi = fff.getInstance(cl, "IsServiceCached");
-		fi.reset();
-		fi.insertOperand("aap");
-		fi.insertOperand("noot");
-
-		try {
-			Object o = fi.evaluateWithTypeChecking();
-
-			assertNotNull(o);
-		} catch (NullPointerException n) {
-
-		}
-
-	}
 
 	@Test
 	public void testIsNull() throws Exception {
@@ -1503,57 +1482,10 @@ public class StandardFunctionsTest {
 		assertEquals("true", o.toString());
 	}
 
-	@Test
-	public void testExecuteScript() throws Exception {
 
-		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(
-				new TestNavajoConfig()));
-
-		FunctionInterface fi = fff.getInstance(cl, "ExecuteScript");
-		fi.reset();
-		Navajo doc = createTestNavajo();
-		Header h = NavajoFactory.getInstance().createHeader(doc, "aap", "noot",
-				"mies", -1);
-		doc.addHeader(h);
-
-		fi.setInMessage(doc);
-
-		fi.insertOperand("<tsl/>");
-
-		try {
-			Object o = fi.evaluateWithTypeChecking();
-		} catch (Exception cnfe) {
-		}
-
-	}
-
-	@Test
-	public void testEvaluateExpression() throws Exception {
-
-		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(
-				new TestNavajoConfig()));
-
-		FunctionInterface fi = fff.getInstance(cl, "EvaluateExpression");
-		fi.reset();
-		Navajo doc = createTestNavajo();
-		Header h = NavajoFactory.getInstance().createHeader(doc, "aap", "noot",
-				"mies", -1);
-		doc.addHeader(h);
-
-		fi.setInMessage(doc);
-
-		fi.insertOperand("true");
-
-		Object o = fi.evaluateWithTypeChecking();
-		assertNotNull(o);
-
-	}
 
 	@Test
 	public void testEuro() throws Exception {
-
-		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(
-				new TestNavajoConfig()));
 
 		FunctionInterface fi = fff.getInstance(cl, "Euro");
 		fi.reset();

@@ -1,4 +1,4 @@
-package com.dexels.navajo.functions;
+package com.dexels.navajo.functions.core;
 
 import java.io.IOException;
 

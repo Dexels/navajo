@@ -7,6 +7,9 @@ import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.adapter.core.NavajoCoreAdapterLibrary;
 import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.functions.core.CoreFunctionDefinitions;
+import com.dexels.navajo.mapping.compiler.meta.MapMetaDataFactory;
+import com.dexels.navajo.mapping.compiler.meta.impl.MapMetaDataImpl;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
@@ -24,11 +27,6 @@ public class Version extends AbstractCoreExtension {
 //	private ServiceRegistration dummyStats;
 	
 	private static BundleContext bundleContext;
-//	private ServiceRegistration clockRegistration;
-//	private ServiceRegistration taskRunnerRegistration;
-
-	
-
 
 	@Override
 	public void start(BundleContext bc) throws Exception {
@@ -37,42 +35,8 @@ public class Version extends AbstractCoreExtension {
 			logger.debug("Bundle context set in Navajo Version: "+osgiActive()+" hash: "+Version.class.hashCode());
 			NavajoCoreAdapterLibrary library = new NavajoCoreAdapterLibrary();
 			registerAll(library);
-//			NavajoConfigComponent ncc = new NavajoConfigComponent();
-//			ncc.activate(null);
-//			
-//			FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
-//			fi.init();
-//			
-//			fi.clearFunctionNames();
-//
-//			fi.injectExtension(library);
-//			try {
-//				for(String adapterName: fi.getAdapterNames(library)) {
-//
-//					String adapterClass = fi.getAdapterClass(adapterName,library);
-//					Class<?> c = Class.forName(adapterClass);
-//
-//					 Dictionary<String, Object> props = new Hashtable<String, Object>();
-//					 props.put("adapterName", adapterName);
-//					 props.put("adapterClass", c.getName());
-//					 if(adapterClass!=null) {
-//						context.registerService(Class.class.getName(), c, props);
-//					}
-//				}
-//			} catch (Throwable e) {
-//				logger.error("Error starting navajo core bundle.",e);
-//			}
-
-			
-			
-//			StatisticsRunnerInterface ptps = new DummyStatisticsRunner();
-//			Dictionary<String, Object> wb = new Hashtable<String, Object>();
-//			wb.put("threadClass","com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner");
-//			wb.put("name","dummy");
-//			dummyStats = bc.registerService(StatisticsRunnerInterface.class.getName(), ptps, wb);
-
-//			registerClock();
-//			registerTaskRunner();
+			CoreFunctionDefinitions functions = new CoreFunctionDefinitions();
+			registerAll(functions);
 
 	}
 

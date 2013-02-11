@@ -58,13 +58,7 @@
 		<input />
 		<result />
 	</function>
-	<function name="CallService" class="com.dexels.navajo.functions.CallService">
-		<description>Calls a service using request Navajo and evaluates an
-			expression
-		</description>
-		<input>string,string</input>
-		<result>any</result>
-	</function>
+	
 	<function name="CheckDate" class="com.dexels.navajo.functions.CheckDate">
 		<description>Checks whether the input param is a date, returns true if
 			this is the case
@@ -193,12 +187,7 @@
 		<input />
 		<result />
 	</function>
-	<function name="EvaluateExpression"
-		class="com.dexels.navajo.functions.EvaluateExpression">
-		<description>Evaluate a Navajo expression</description>
-		<input />
-		<result />
-	</function>
+
 	<function name="EvaluateParameters"
 		class="com.dexels.navajo.functions.EvaluateParameters">
 		<description>Fill in parameter properties, like EvaluateExpression,
@@ -207,13 +196,7 @@
 		<input>string</input>
 		<result>string</result>
 	</function>
-	<function name="ExecuteScript" class="com.dexels.navajo.functions.ExecuteScript">
-		<description>ExecuteScript is used execute a Navajo script, the result
-			is a Binary (xml) object
-		</description>
-		<input />
-		<result />
-	</function>
+
 	<function name="Exists" class="com.dexels.navajo.functions.Exists">
 		<description>Evaluates a condition (expression evaluating to a
 			boolean) under any the messages of an array message. It will return a
@@ -244,11 +227,6 @@
 		</description>
 		<input>binary</input>
 		<result>integer</result>
-	</function>
-	<function name="FileString" class="com.dexels.navajo.functions.FileString">
-		<description>Reads a file into a string</description>
-		<input>string</input>
-		<result>string</result>
 	</function>
 	<function name="ForAll" class="com.dexels.navajo.functions.ForAll">
 		<description>Evaluates a condition (expression evaluating to a
@@ -294,14 +272,7 @@
 		<input />
 		<result />
 	</function>
-	<function name="GetContextResource"
-		class="com.dexels.navajo.functions.GetContextResource">
-		<description>GetContextResource gets the contents of a file in the
-			servletcontext/resources folder
-		</description>
-		<input />
-		<result />
-	</function>
+
 	<function name="GetCurrentMessage" class="com.dexels.navajo.functions.GetCurrentMessage">
 		<description>This function will return the current message
 		</description>
@@ -380,12 +351,6 @@
 		<input />
 		<result />
 	</function>
-	<function name="GetReportFile" class="com.dexels.navajo.functions.GetReportFile">
-		<description>Reads a report file from the script folder to a binary
-		</description>
-		<input>string</input>
-		<result>binary</result>
-	</function>
 	<function name="GetSelectedName" class="com.dexels.navajo.functions.GetSelectedName">
 		<description>Gets the name of a selected property</description>
 		<input />
@@ -425,12 +390,6 @@
 		<description>Gets a typed value from a property object</description>
 		<input />
 		<result />
-	</function>
-	<function name="GetVersionInfo" class="com.dexels.navajo.functions.GetVersionInfo">
-		<description>Gets the version info of a specific Version object
-		</description>
-		<input>string</input>
-		<result>string</result>
 	</function>
 	<function name="GetWeekDayDate" class="com.dexels.navajo.functions.GetWeekDayDate">
 		<description>This function return the a calendar date of the first
@@ -482,13 +441,7 @@
 		<input>string|integer|double|float</input>
 		<result>boolean</result>
 	</function>
-	<function name="IsServiceCached" class="com.dexels.navajo.functions.IsServiceCached">
-		<description>Function to check whether a service with optionally
-			service key values is cached
-		</description>
-		<input>string,string</input>
-		<result>boolean</result>
-	</function>
+
 	<function name="KeyValueMap" class="com.dexels.navajo.functions.KeyValueMap">
 		<description>KeyValueMap(string,string,string)</description>
 		<input>string,string,string</input>
@@ -498,11 +451,6 @@
 		<description>Return the maximum of to given numbers.</description>
 		<input>integer|float,integer|float</input>
 		<result>integer|float</result>
-	</function>
-	<function name="MD5Sum" class="com.dexels.navajo.functions.MD5Sum">
-		<description>Get the MD5Sum of a supplied object.</description>
-		<input>any</input>
-		<result>string</result>
 	</function>
 	<function name="MergeNavajo" class="com.dexels.navajo.functions.MergeNavajo">
 		<description>Merges two navajo objects</description>

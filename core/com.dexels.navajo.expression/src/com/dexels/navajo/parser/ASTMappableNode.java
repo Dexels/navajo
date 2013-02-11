@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.mapping.base.MappableTreeNodeInterface;
+import com.dexels.navajo.mapping.wrapper.MappingUtilFactory;
 
 @SuppressWarnings("unchecked")
 public final class ASTMappableNode extends SimpleNode {
@@ -53,7 +54,7 @@ public final class ASTMappableNode extends SimpleNode {
         try {
         	Object oValue = null;
         	try {
-        		oValue = MappingUtils.getAttributeValue(mapObject, val, parameterArray);
+        		oValue = MappingUtilFactory.getInstance().getAttributeValue(mapObject, val, parameterArray);
         	} catch (Exception e2) {
         		logger.error("Error: ", e2);
         			throw new TMLExpressionException("Failed getting attribute value", e2);
