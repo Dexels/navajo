@@ -19,10 +19,25 @@ public class FunctionFactoryFactory {
 	private final static Logger logger = LoggerFactory
 			.getLogger(FunctionFactoryFactory.class);
 	
+	private static ClassLoader legacyClassLoader;
+	
+	
+	public static ClassLoader getLegacyClassLoader() {
+		return legacyClassLoader;
+	}
+
+
+
+	public static void setLegacyClassLoader(ClassLoader legacyClassLoader) {
+		FunctionFactoryFactory.legacyClassLoader = legacyClassLoader;
+	}
+
+
+
 	private FunctionFactoryFactory() {	
 	}
 	
-
+	
 		
 	public static FunctionFactoryInterface getInstance() {
 //		FunctionFactoryInterface fii;

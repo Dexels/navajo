@@ -18,8 +18,8 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.mapping.base.MappableTreeNode;
-import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
+import com.dexels.navajo.mapping.base.MappableTreeNodeInterface;
 
 
 /**
@@ -55,7 +55,7 @@ public final class DefaultExpressionEvaluator
 
     }
     try {
-      return Expression.evaluate(clause, inMessage,(MappableTreeNode) mappableTreeNode,parent,currentParam);
+      return Expression.evaluate(clause, inMessage,(MappableTreeNodeInterface) mappableTreeNode,parent,currentParam);
     }
     catch (Throwable ex) {
     	
@@ -81,7 +81,7 @@ public final class DefaultExpressionEvaluator
       NavajoException {
     try {
       return Expression.match(matchString, inMessage,
-                              (MappableTreeNode) mappableTreeNode, parent);
+                              (MappableTreeNodeInterface) mappableTreeNode, parent);
     }
     catch (Exception ex) {
       throw NavajoFactory.getInstance().createNavajoException(ex);
@@ -477,6 +477,6 @@ public final class DefaultExpressionEvaluator
   }
 
   public ClassLoader getScriptClassLoader() {
-	  return DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
+	  return FunctionFactoryFactory.getLegacyClassLoader();
   }
 }

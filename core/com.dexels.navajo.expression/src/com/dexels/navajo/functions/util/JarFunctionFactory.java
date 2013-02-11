@@ -17,8 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
-import com.dexels.navajo.mapping.base.compiler.meta.MapMetaData;
-import com.dexels.navajo.server.DispatcherFactory;
 
 public class JarFunctionFactory extends FunctionFactoryInterface implements Serializable {
 
@@ -71,7 +69,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 			FunctionDefinition functionDefinition = new FunctionDefinition(className, null, null, null);
 			getAdapterConfig(fd).put(name, functionDefinition);
 			try {
-				MapMetaData.getInstance().addMapDefinition(element);
+				MapMetaDataFactory.getInstance().addMapDefinition(element);
 			} catch (Exception e) {
 				logger.error("Error: ", e);
 			}
@@ -122,10 +120,9 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 			fuds = new HashMap<String, FunctionDefinition>();
 			setDefaultConfig(fuds);
 		}
-		ClassLoader myClassLoader = null;
-		if ( DispatcherFactory.getInstance() != null ) {
-			myClassLoader = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
-		} else {
+		ClassLoader myClassLoader = FunctionFactoryFactory.getLegacyClassLoader();
+		
+		if ( myClassLoader == null ) {
 			myClassLoader = getClass().getClassLoader();
 		}
 		

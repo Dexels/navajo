@@ -5,9 +5,7 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.28.qualifier
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi.echo.client;bundle-version="1.0.1",
- com.dexels.navajo.tipi;bundle-version="1.0.63",
- com.dexels.navajo.client;bundle-version="3.0.6",
- javax.servlet;bundle-version="2.5.0"
+ com.dexels.navajo.tipi;bundle-version="1.1.42"
 Export-Package: com.dexels.navajo.tipi.components.echoimpl,
  com.dexels.navajo.tipi.components.echoimpl.embed,
  com.dexels.navajo.tipi.components.echoimpl.helpers,
@@ -20,6 +18,8 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.parser,
  com.dexels.navajo.version,
+ javax.servlet;version="2.5.0",
+ javax.servlet.http;version="3.0.0",
  javax.xml.parsers,
  javax.xml.transform,
  javax.xml.transform.dom,
@@ -27,6 +27,7 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  navajo,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1",
- org.w3c.dom
-Bundle-ClassPath: lib/iText.jar
+ org.w3c.dom,
+ tipi
+Bundle-ClassPath: .,lib/iText.jar
 

@@ -27,6 +27,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.expression.SystemException;
 
 public class SimpleRepository implements Repository, GlobalManager {
 

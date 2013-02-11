@@ -31,17 +31,11 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.document.types.Memo;
-import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.document.types.Percentage;
-import com.dexels.navajo.document.types.StopwatchTime;
-import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.expression.SystemException;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
-import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
 @SuppressWarnings({"rawtypes", "unchecked"})

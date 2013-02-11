@@ -346,7 +346,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 	private void processNavaScript(XMLElement current, IndentWriter os) {
 		StringWriter sw = new StringWriter();
 		try {
-			MapMetaData.getInstance().parse(current, scriptName, sw);
+			MapMetaDataFactory.getInstance().parse(current, scriptName, sw);
 			StringReader sr = new StringReader(sw.toString());
 			XMLElement xx = new CaseSensitiveXMLElement();
 			xx.parseFromReader(sr);

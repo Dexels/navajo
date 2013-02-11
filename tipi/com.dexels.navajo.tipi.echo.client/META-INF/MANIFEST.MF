@@ -4,12 +4,10 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.28.qualifier
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.function;bundle-version="2.0.6",
- com.dexels.navajo.tipi;bundle-version="1.0.63",
- javax.servlet;bundle-version="2.5.0"
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.functions.scale;version="3.1.7",
  com.dexels.navajo.version,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"

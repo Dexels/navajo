@@ -40,14 +40,13 @@ public class MapMetaData {
 
 	protected final HashMap<String, MapDefinition> maps = new HashMap<String, MapDefinition>();
 	
-	private static MapMetaData instance = null;
 //	private String configPath = null;
 	
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(MapMetaData.class);
 	
-	private MapMetaData() {
+	MapMetaData() {
 		// Create empty MapDefinition.
 		MapDefinition empty = new MapDefinition(this);
 		empty.tagName = "__empty__";
@@ -56,9 +55,7 @@ public class MapMetaData {
 		maps.put("__empty__", empty);
 	}
 	
-	private void readConfig() throws Exception {
-
-		synchronized (instance) {
+	public synchronized void readConfig() throws Exception {
 
 			ClassLoader myClassLoader = null;
 			if ( DispatcherFactory.getInstance() != null ) {
@@ -103,29 +100,12 @@ public class MapMetaData {
 			} catch (Exception e) {
 				logger.error("Error: ", e);
 			}
-	
-		}
 	}
 
 	public MapDefinition addMapDefinition(XMLElement map) throws Exception {
 		MapDefinition md = MapDefinition.parseDef(map);
 		maps.put(md.tagName, md);
 		return md;
-	}
-	
-//	public static MapMetaData getInstance() throws Exception {
-//		return getInstance("aap");
-//	}
-	
-	public static synchronized MapMetaData getInstance() throws Exception {
-		if ( instance != null ) {
-			return instance;
-		} else {
-			instance = new MapMetaData();
-            // Read map definitions from config file.
-			instance.readConfig();
-		}
-		return instance;
 	}
 	
 	public Set<String> getMapDefinitions() {
@@ -171,7 +151,7 @@ public class MapMetaData {
 		return sw.toString();
 	}
 	
-	public void parse(Reader br, String scriptName, Writer sw) throws Exception {
+	private void parse(Reader br, String scriptName, Writer sw) throws Exception {
 		XMLElement in = new CaseSensitiveXMLElement();
 		
 		in.parseFromReader(br);
@@ -219,13 +199,12 @@ public class MapMetaData {
 			//e.printStackTrace(System.err);
 			return false;
 		}
-		
 	}
 	
 	public static void main(String [] args) throws Exception {
 		
 		new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
-		MapMetaData mmd = MapMetaData.getInstance();
+		MapMetaData mmd = MapMetaDataFactory.getInstance();
 		//System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
 		
 		String result = mmd.parse("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/InitTest.xml");

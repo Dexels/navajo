@@ -5,11 +5,12 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.9.qualifier
 Bundle-Activator: navajofunctionspdf.Version
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.0"
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.parser,
  com.dexels.navajo.version,
  navajo,
+ navajoextension,
  org.apache.pdfbox;version="1.7.1",
  org.apache.pdfbox.exceptions;version="1.7.1",
  org.apache.pdfbox.pdmodel;version="1.7.1",

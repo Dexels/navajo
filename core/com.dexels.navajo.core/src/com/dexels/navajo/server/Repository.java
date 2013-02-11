@@ -1,6 +1,7 @@
 package com.dexels.navajo.server;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.expression.SystemException;
 
 /**
  * Title:        Navajo Product Project

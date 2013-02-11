@@ -4,7 +4,7 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.1.42.qualifier
 Bundle-Activator: tipipackage.Version
-Export-Package: com.dexels.navajo.tipi;
+Export-Package: com.dexels.navajo.tipi;version="1.1.42";
   uses:="com.dexels.navajo.client,
    com.dexels.navajo.tipi.connectors,
    com.dexels.navajo.tipi.internal.cookie,
@@ -22,64 +22,65 @@ Export-Package: com.dexels.navajo.tipi;
    com.dexels.navajo.document,
    com.dexels.navajo.document.notifier,
    com.dexels.navajo.tipi.tipixml",
- com.dexels.navajo.tipi.actionmanager;
+ com.dexels.navajo.tipi.actionmanager;version="1.1.42";
   uses:="navajo,
    com.dexels.navajo.tipi.internal,
    org.osgi.framework,
    com.dexels.navajo.tipi,
    com.dexels.navajo.tipi.actions,
    com.dexels.navajo.tipi.tipixml",
- com.dexels.navajo.tipi.actions;
+ com.dexels.navajo.tipi.actions;version="1.1.42";
   uses:="navajo,
    com.dexels.navajo.tipi.internal,
    com.dexels.navajo.tipi,
    org.w3c.dom,
    com.dexels.navajo.tipi.tipixml",
- com.dexels.navajo.tipi.actions.adapters;uses:="com.dexels.navajo.tipi.internal,com.dexels.navajo.tipi",
- com.dexels.navajo.tipi.animation,
- com.dexels.navajo.tipi.application,
- com.dexels.navajo.tipi.classdef;
+ com.dexels.navajo.tipi.actions.adapters;version="1.1.42";uses:="com.dexels.navajo.tipi.internal,com.dexels.navajo.tipi",
+ com.dexels.navajo.tipi.animation;version="1.1.42",
+ com.dexels.navajo.tipi.application;version="1.1.42",
+ com.dexels.navajo.tipi.classdef;version="1.1.42";
   uses:="navajo,
    com.dexels.navajo.functions.util,
    com.dexels.navajo.tipi.internal,
    org.osgi.framework,
    com.dexels.navajo.tipi,
    com.dexels.navajo.tipi.tipixml",
- com.dexels.navajo.tipi.components.core;
+ com.dexels.navajo.tipi.components.core;version="1.1.42";
   uses:="com.dexels.navajo.tipi.components.core.adapter,
    com.dexels.navajo.tipi.internal,
    tipi,
    com.dexels.navajo.tipi,
    com.dexels.navajo.document,
    com.dexels.navajo.tipi.tipixml",
- com.dexels.navajo.tipi.components.core.adapter;uses:="com.dexels.navajo.tipi.internal,com.dexels.navajo.tipi",
- com.dexels.navajo.tipi.components.core.formatters.core;uses:="com.dexels.navajo.tipi.components.core",
- com.dexels.navajo.tipi.components.core.impl,
- com.dexels.navajo.tipi.components.core.parsers;uses:="com.dexels.navajo.tipi.internal,com.dexels.navajo.tipi,com.dexels.navajo.document",
- com.dexels.navajo.tipi.components.question;
+ com.dexels.navajo.tipi.components.core.adapter;version="1.1.42";uses:="com.dexels.navajo.tipi.internal,com.dexels.navajo.tipi",
+ com.dexels.navajo.tipi.components.core.formatters.core;version="1.1.42";uses:="com.dexels.navajo.tipi.components.core",
+ com.dexels.navajo.tipi.components.core.impl;version="1.1.42",
+ com.dexels.navajo.tipi.components.core.parsers;version="1.1.42";uses:="com.dexels.navajo.tipi.internal,com.dexels.navajo.tipi,com.dexels.navajo.document",
+ com.dexels.navajo.tipi.components.question;version="1.1.42";
   uses:="com.dexels.navajo.tipi.internal,
    com.dexels.navajo.tipi.components.core,
    com.dexels.navajo.tipi,
    com.dexels.navajo.tipi.tipixml,
    com.dexels.navajo.document",
- com.dexels.navajo.tipi.connectors;uses:="com.dexels.navajo.tipi.components.core,com.dexels.navajo.tipi,com.dexels.navajo.document",
- com.dexels.navajo.tipi.context,
- com.dexels.navajo.tipi.headless;uses:="tipi,com.dexels.navajo.tipi",
- com.dexels.navajo.tipi.internal;
+ com.dexels.navajo.tipi.connectors;version="1.1.42";uses:="com.dexels.navajo.tipi.components.core,com.dexels.navajo.tipi,com.dexels.navajo.document",
+ com.dexels.navajo.tipi.context;version="1.1.42",
+ com.dexels.navajo.tipi.context.impl,
+ com.dexels.navajo.tipi.headless;version="1.1.42";uses:="tipi,com.dexels.navajo.tipi",
+ com.dexels.navajo.tipi.internal;version="1.1.42";
   uses:="com.dexels.navajo.tipi.internal.cache,
    com.dexels.navajo.document.types,
    com.dexels.navajo.tipi,
    com.dexels.navajo.tipi.actions,
    com.dexels.navajo.tipi.tipixml,
    com.dexels.navajo.document",
- com.dexels.navajo.tipi.internal.cache,
- com.dexels.navajo.tipi.internal.cache.impl,
- com.dexels.navajo.tipi.internal.cookie,
- com.dexels.navajo.tipi.internal.cookie.impl,
- com.dexels.navajo.tipi.testimpl,
- com.dexels.navajo.tipi.tipixml,
- com.dexels.navajo.tipi.validation;uses:="com.dexels.navajo.tipi",
- tipi;
+ com.dexels.navajo.tipi.internal.cache;version="1.1.42",
+ com.dexels.navajo.tipi.internal.cache.impl;version="1.1.42",
+ com.dexels.navajo.tipi.internal.cookie;version="1.1.42",
+ com.dexels.navajo.tipi.internal.cookie.impl;version="1.1.42",
+ com.dexels.navajo.tipi.testimpl;version="1.1.42",
+ com.dexels.navajo.tipi.tipixml;version="1.1.42",
+ com.dexels.navajo.tipi.validation;version="1.1.42";uses:="com.dexels.navajo.tipi",
+ tipi;version="1.1.42";
   uses:="navajo,
    com.dexels.navajo.tipi.actions.adapters,
    tipipackage,
@@ -87,7 +88,7 @@ Export-Package: com.dexels.navajo.tipi;
    com.dexels.navajo.tipi,
    com.dexels.navajo.document,
    com.dexels.navajo.tipi.tipixml",
- tipipackage;uses:="com.dexels.navajo.version,org.osgi.framework,tipi"
+ tipipackage;version="1.1.42";uses:="com.dexels.navajo.version,org.osgi.framework,tipi"
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",

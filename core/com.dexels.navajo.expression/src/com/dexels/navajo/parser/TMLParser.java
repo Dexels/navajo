@@ -3,7 +3,7 @@ package com.dexels.navajo.parser;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.mapping.base.MappableTreeNode;
+import com.dexels.navajo.mapping.base.MappableTreeNodeInterface;
 import com.dexels.navajo.tipilink.TipiLink;
 
 @SuppressWarnings({"unchecked","unused"})
@@ -12,7 +12,7 @@ import com.dexels.navajo.tipilink.TipiLink;
 public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLParserConstants {/*@bgen(jjtree)*/
   protected JJTTMLParserState jjtree = new JJTTMLParserState();
   protected Navajo inputDoc;
-  protected MappableTreeNode mapObject;
+  protected MappableTreeNodeInterface mapObject;
   protected Message parentMsg;
   protected Message parentParamMsg;
   protected Selection parentSel;
@@ -22,7 +22,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     this.inputDoc = doc;
   }
 
-  public void setMappableObject(MappableTreeNode o) {
+  public void setMappableObject(MappableTreeNodeInterface o) {
     this.mapObject = o;
   }
 

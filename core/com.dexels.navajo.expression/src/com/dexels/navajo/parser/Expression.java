@@ -19,14 +19,14 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.mapping.base.MappableTreeNode;
 import com.dexels.navajo.expression.SystemException;
+import com.dexels.navajo.mapping.base.MappableTreeNodeInterface;
 import com.dexels.navajo.tipilink.TipiLink;
 
 public final class Expression {
 
     public final static Operand evaluate(String clause, 
-    		Navajo inMessage, MappableTreeNode o, Message parent, Message paramParent,
+    		Navajo inMessage, MappableTreeNodeInterface o, Message parent, Message paramParent,
 			Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
 
         Object aap = null;
@@ -72,15 +72,15 @@ public final class Expression {
 
     }
 
-    public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
+    public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNodeInterface o, Message parent, Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
     	return evaluate(clause, inMessage, o, parent, null, sel, tl);
     }
     
-    public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
+    public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNodeInterface o, Message parent) throws TMLExpressionException, SystemException {
         return evaluate(clause, inMessage, o, parent, null, null, null);
     }
 
-    public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, Message parentParam) throws TMLExpressionException, SystemException {
+    public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNodeInterface o, Message parent, Message parentParam) throws TMLExpressionException, SystemException {
         return evaluate(clause, inMessage, o, parent, parentParam, null, null);
     }
     
@@ -88,7 +88,7 @@ public final class Expression {
         return evaluate(clause, inMessage, null, null, null, null, null);
     }
 
-    public final static Message match(String matchString, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
+    public final static Message match(String matchString, Navajo inMessage, MappableTreeNodeInterface o, Message parent) throws TMLExpressionException, SystemException {
 
         try {
             StringTokenizer tokens = new StringTokenizer(matchString, ";");

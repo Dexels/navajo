@@ -15,12 +15,12 @@ package com.dexels.navajo.parser;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.mapping.base.MappableTreeNode;
 import com.dexels.navajo.expression.SystemException;
+import com.dexels.navajo.mapping.base.MappableTreeNodeInterface;
 
 public final class Condition {
 
-    public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, 
+    public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNodeInterface o, Message parent, 
     		Message paramParent
     		) throws TMLExpressionException, SystemException {
 
@@ -58,7 +58,7 @@ public final class Condition {
         return evaluate(clause, inMessage, null, null, null);
     }
 
-    public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
+    public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNodeInterface o, Message parent) throws TMLExpressionException, SystemException {
     			return evaluate(clause, inMessage, o, parent, null);
     }
 }

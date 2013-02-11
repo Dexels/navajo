@@ -123,7 +123,6 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.functions.util.OSGiFunctionFactoryFactory;
-import com.dexels.navajo.server.DispatcherFactory;
 
 
 public final class ASTFunctionNode extends SimpleNode {
@@ -142,16 +141,6 @@ public final class ASTFunctionNode extends SimpleNode {
 
 	public final Object interpret() throws TMLExpressionException {
 
-		ClassLoader cl = null;
-		if ( DispatcherFactory.getInstance() == null ) {
-			cl = getClass().getClassLoader();
-		} else if ( doc != null && doc.getHeader() != null && 
-				doc.getHeader().getRPCUser() != null && 
-				!doc.getHeader().getRPCUser().endsWith(DispatcherFactory.getInstance().getNavajoConfig().getBetaUser())) {
-			cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
-		} else {
-			cl = DispatcherFactory.getInstance().getNavajoConfig().getBetaClassLoader();
-		}
 
 		
 		FunctionFactoryInterface fff = FunctionFactoryFactory.getInstance();
@@ -161,7 +150,7 @@ public final class ASTFunctionNode extends SimpleNode {
 		if(Version.osgiActive()) {
 			f = OSGiFunctionFactoryFactory.getFunctionInterface(functionName);
 		} else {
-			f = fff.getInstance(cl, functionName);
+			f = getLegacyFunction(fff);
 		}
 		f.inMessage = doc;
 		f.currentMessage = parentMsg;
@@ -176,6 +165,22 @@ public final class ASTFunctionNode extends SimpleNode {
 
 		return result;
 
+	}
+
+	protected FunctionInterface getLegacyFunction(FunctionFactoryInterface fff) {
+		FunctionInterface f;
+		ClassLoader cl = FunctionFactoryFactory.getLegacyClassLoader();
+//		if ( DispatcherFactory.getInstance() == null ) {
+//			cl = getClass().getClassLoader();
+//		} else if ( doc != null && doc.getHeader() != null && 
+//				doc.getHeader().getRPCUser() != null && 
+//				!doc.getHeader().getRPCUser().endsWith(DispatcherFactory.getInstance().getNavajoConfig().getBetaUser())) {
+//			cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
+//		} else {
+//			cl = DispatcherFactory.getInstance().getNavajoConfig().getBetaClassLoader();
+//		}
+		f = fff.getInstance(cl, functionName);
+		return f;
 	}
 
 }

@@ -7,14 +7,15 @@ Bundle-Activator: navajobirt.Version
 Export-Package: com.dexels.navajo.birt,
  com.dexels.navajo.birt.adapter
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.0",
- com.dexels.navajo.core;bundle-version="2.9.0"
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.script.api;version="1.0.0",
+ com.dexels.navajo.mapping,
+ com.dexels.navajo.server,
  com.dexels.navajo.version,
  navajo,
+ navajoextension,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"

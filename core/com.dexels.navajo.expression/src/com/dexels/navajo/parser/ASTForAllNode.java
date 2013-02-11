@@ -11,14 +11,14 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.mapping.base.MappableTreeNode;
+import com.dexels.navajo.mapping.base.MappableTreeNodeInterface;
 
 public final class ASTForAllNode extends SimpleNode {
 
     String functionName;
     Navajo doc;
     Message parentMsg;
-    MappableTreeNode mapObject;
+    MappableTreeNodeInterface mapObject;
     
 	private final static Logger logger = LoggerFactory
 			.getLogger(ASTForAllNode.class);

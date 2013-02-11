@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.mapping.base.MappableTreeNode;
-import com.dexels.navajo.mapping.base.MappingUtils;
-import com.dexels.navajo.mapping.base.bean.DomainObjectMapper;
+import com.dexels.navajo.mapping.base.MappableTreeNodeInterface;
 
 @SuppressWarnings("unchecked")
 public final class ASTMappableNode extends SimpleNode {
@@ -19,7 +17,7 @@ public final class ASTMappableNode extends SimpleNode {
 	private final static Logger logger = LoggerFactory
 			.getLogger(ASTMappableNode.class);
     String val = "";
-    MappableTreeNode mapObject;
+    MappableTreeNodeInterface mapObject;
     int args = 0;
 
     public ASTMappableNode(int id) {
@@ -58,12 +56,7 @@ public final class ASTMappableNode extends SimpleNode {
         		oValue = MappingUtils.getAttributeValue(mapObject, val, parameterArray);
         	} catch (Exception e2) {
         		logger.error("Error: ", e2);
-        		// Maybe domainobjectmapper?
-        		if ( mapObject.myObject instanceof DomainObjectMapper ) {
-        			oValue = ((DomainObjectMapper) mapObject.myObject).getDomainObjectAttribute(val, parameterArray);
-        		} else {
-        			throw new TMLExpressionException(e2.getMessage());
-        		}
+        			throw new TMLExpressionException("Failed getting attribute value", e2);
         	}
             if (oValue == null)
                 return null;

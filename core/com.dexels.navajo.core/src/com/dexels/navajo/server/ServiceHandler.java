@@ -27,6 +27,7 @@ package com.dexels.navajo.server;
  */
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.expression.SystemException;
 import com.dexels.navajo.persistence.Constructor;
 import com.dexels.navajo.persistence.Persistable;
 import com.dexels.navajo.script.api.NavajoDoneException;

@@ -42,6 +42,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.expression.SystemException;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
@@ -52,7 +53,6 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.CompiledScriptFactory;
 import com.dexels.navajo.server.ConditionData;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
 @SuppressWarnings("unchecked")

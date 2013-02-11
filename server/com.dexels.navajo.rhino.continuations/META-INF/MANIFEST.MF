@@ -6,17 +6,19 @@ Bundle-Version: 1.0.9.qualifier
 Bundle-Activator: navajorhinocontinuations.Version
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: com.dexels.navajo.client,
+Import-Package: com.dexels.navajo.adapter,
+ com.dexels.navajo.client,
+ com.dexels.navajo.client.async,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.expression,
+ com.dexels.navajo.mapping,
  com.dexels.navajo.rhino,
  com.dexels.navajo.script.api,
+ com.dexels.navajo.server,
  com.dexels.navajo.version,
  javax.script,
  navajo,
+ navajoextension,
  org.mozilla.javascript,
  org.osgi.framework;version="1.3.0",
  org.slf4j;version="1.6.1"
-Require-Bundle: com.dexels.navajo.adapters;bundle-version="1.0.7",
- com.dexels.navajo.client.async;bundle-version="1.0.6",
- com.dexels.navajo.core;bundle-version="2.9.7"

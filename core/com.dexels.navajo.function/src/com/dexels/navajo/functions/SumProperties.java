@@ -10,11 +10,11 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Percentage;
+import com.dexels.navajo.expression.SystemException;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.SystemException;
 
 /**
  * <p>Title: Navajo Product Project</p>

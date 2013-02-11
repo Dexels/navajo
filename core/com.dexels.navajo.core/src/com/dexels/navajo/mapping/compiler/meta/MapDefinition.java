@@ -62,7 +62,7 @@ public class MapDefinition {
 	
 	public static MapDefinition parseDef(XMLElement e) throws Exception {
 
-		MapDefinition md = new MapDefinition(MapMetaData.getInstance());
+		MapDefinition md = new MapDefinition(MapMetaDataFactory.getInstance());
 		
 		XMLElement c = e.getElementByTagName("tagname");
 		if ( c != null) {
