@@ -9,7 +9,6 @@ import org.apache.camel.Component;
 import org.apache.camel.Consumer;
 import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultComponent;
-import org.apache.camel.impl.ProcessorEndpoint;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
@@ -17,8 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.camel.component.impl.CamelConsumerImpl;
 import com.dexels.navajo.camel.consumer.NavajoCamelConsumer;
-import com.dexels.navajo.camel.processor.CamelProcessor;
-import com.dexels.navajo.camel.processor.CamelProcessorEndpoint;
 import com.dexels.navajo.script.api.LocalClient;
 
 /**

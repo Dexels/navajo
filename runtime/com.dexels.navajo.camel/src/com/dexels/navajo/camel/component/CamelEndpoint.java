@@ -16,7 +16,7 @@ import com.dexels.navajo.camel.message.NavajoMessage;
  */
 public class CamelEndpoint extends DefaultEndpoint {
 
-	private String instance;
+//	private String instance;
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(CamelEndpoint.class);
@@ -31,7 +31,7 @@ public class CamelEndpoint extends DefaultEndpoint {
 
 	public void setInstance(String instance) {
 		logger.info("Instance set to: " + instance);
-		this.instance = instance;
+//		this.instance = instance;
 	}
 
 	public Producer createProducer() throws Exception {
