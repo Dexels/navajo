@@ -38,39 +38,6 @@ public class NavajoMessage extends DefaultMessage implements Message {
 		setBody(n.copy());
 	}
 
-//	@Override
-//	public DataHandler getAttachment(String arg0) {
-//		return null;
-//	}
-//
-//	@Override
-//	public Set<String> getAttachmentNames() {
-//		return null;
-//	}
-//
-//	@Override
-//	public Map<String, DataHandler> getAttachments() {
-//		return null;
-//	}
-
-//	@Override
-//	public Object getBody() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public <T> T getBody(Class<T> arg0) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
-//	@Override
-//	public Exchange getExchange() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
 	@Override
 	public Object getHeader(String header) {
 		Object res = super.getHeader(header);
@@ -144,30 +111,7 @@ public class NavajoMessage extends DefaultMessage implements Message {
 
 	}
 
-	
-//	@Override
-//	public Object getMandatoryBody() throws InvalidPayloadException {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public <T> T getMandatoryBody(Class<T> arg0) throws InvalidPayloadException {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public String getMessageId() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
-//	@Override
-//	public boolean hasAttachments() {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
 
 	@Override
 	public boolean hasHeaders() {
@@ -182,64 +126,4 @@ public class NavajoMessage extends DefaultMessage implements Message {
 		}
 		return false;
 	}
-
-//	@Override
-//	public boolean isFault() {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//	@Override
-//	public void removeAttachment(String arg0) {
-//		// TODO Auto-generated method stub
-//
-//	}
-
-//	@Override
-//	public Object removeHeader(String header) {
-//		return super.removeHeader(header);
-//	}
-//
-//	@Override
-//	public boolean removeHeaders(String pattern) {
-//		return super.removeHeaders(pattern);
-//	}
-//
-//	@Override
-//	public boolean removeHeaders(String arg0, String... arg1) {
-//		return super.removeHeaders(arg0, arg1);
-//	}
-
-//	@Override
-//	public void setAttachments(Map<String, DataHandler> arg0) {
-//		// TODO Auto-generated method stub
-//
-//	}
-//
-//	@Override
-//	public void setBody(Object arg0) {
-//		// TODO Auto-generated method stub
-//
-//	}
-//
-//	@Override
-//	public <T> void setBody(Object arg0, Class<T> arg1) {
-//		// TODO Auto-generated method stub
-//
-//	}
-
-//	@Override
-//	public void setFault(boolean arg0) {
-//		// TODO Auto-generated method stub
-//
-//	}
-
-
-//	@Override
-//	public void setMessageId(String arg0) {
-//		// TODO Auto-generated method stub
-//
-//	}
-//
-
 }

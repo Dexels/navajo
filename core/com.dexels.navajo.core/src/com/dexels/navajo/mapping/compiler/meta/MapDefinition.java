@@ -34,6 +34,15 @@ public class MapDefinition {
 		return values.keySet();
 	}
 	
+	public void setMethodDefinition(String name, MethodDefinition md) {
+		methods.put(name, md);
+	}
+
+	public void setValueDefinition(String name, ValueDefinition vd) {
+		values.put(name, vd);
+	}
+
+	
 	public ValueDefinition getValueDefinition(String name) {
 		return values.get(name);
 	}
@@ -58,48 +67,6 @@ public class MapDefinition {
 		}
 		String value = e.getName().substring(e.getName().indexOf(".") + 1);
 		return value;
-	}
-	
-	public static MapDefinition parseDef(XMLElement e) throws Exception {
-
-		MapDefinition md = new MapDefinition(MapMetaData.getInstance());
-		
-		XMLElement c = e.getElementByTagName("tagname");
-		if ( c != null) {
-			md.tagName = c.getContent();
-		} 
-		XMLElement o = e.getElementByTagName("object");
-		if ( o != null ) {
-			md.objectName = o.getContent();
-		}
-		XMLElement d = e.getElementByTagName("description");
-		if ( d != null ) {
-			md.description = d.getContent();
-		}
-		XMLElement a = e.getElementByTagName("abstract");
-		if ( a != null ) {
-			md.abstractMap = a.getContent().equals("true");
-		}
-		XMLElement valuesTag = e.getElementByTagName("values");
-		if ( valuesTag != null ) {
-			Vector<XMLElement> ch = valuesTag.getChildren();
-			for ( int i = 0; i < ch.size(); i++ ) {
-				XMLElement v = ch.get(i);
-				ValueDefinition vd = ValueDefinition.parseDef(v);
-				md.values.put(vd.getName(), vd);
-			}
-		}
-		XMLElement methodsTag = e.getElementByTagName("methods");
-		if ( methodsTag != null ) {
-			Vector<XMLElement> ch = methodsTag.getChildren();
-			for ( int i = 0; i < ch.size(); i++ ) {
-				XMLElement v = ch.get(i);
-				MethodDefinition mdef = MethodDefinition.parseDef(v);
-				md.methods.put(mdef.getName(), mdef);
-			}
-		}
-		
-		return md;
 	}
 
 	private void generateFieldCode(XMLElement child, XMLElement mout, String filename, boolean isMethod) throws Exception {

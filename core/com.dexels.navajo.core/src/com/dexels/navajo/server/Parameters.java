@@ -16,6 +16,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.expression.SystemException;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;

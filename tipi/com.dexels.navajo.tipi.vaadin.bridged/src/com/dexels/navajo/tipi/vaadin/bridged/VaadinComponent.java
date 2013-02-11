@@ -47,7 +47,6 @@ public class VaadinComponent {
 		ht.put("application", "com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication");
 		VaadinFileServlet vfs = new VaadinFileServlet();
 		httpService.registerServlet(SERVLET_ALIAS, servlet, ht, commonContext);
-//		httpService.registerServlet(SERVLET_ALIAS+"eval", servlet, ht, commonContext);
 		httpService.registerServlet(VAADIN_DIR_PREFIX, vfs, null, commonContext);
 	} catch (ServletException e) {
 		logger.error("Error: ",e);

@@ -3,6 +3,7 @@ package com.dexels.navajo.adapter.sqlmap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.dexels.navajo.document.DocumentUtils;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.MappingUtils;
@@ -104,7 +105,7 @@ public class ResultSetMap implements Mappable {
     }
 
     public final String getType(final String columnName) throws UserException {
-        return MappingUtils.determineNavajoType(getColumnValue(columnName));
+        return DocumentUtils.determineNavajoType(getColumnValue(columnName));
     }
 
 }

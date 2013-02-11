@@ -34,7 +34,7 @@ public class AsyncProxyMap extends AsyncMappable {
 		.getLogger(AsyncProxyMap.class);
 
 
-  public void load(Access access) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+  public void load(Access access) throws UserException, com.dexels.navajo.mapping.MappableException {
     username = access.rpcUser;
     password = access.rpcPwd;
     this.access = access;

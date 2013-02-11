@@ -74,7 +74,7 @@ public class ContextPathManager {
 		Dictionary<String, Object> settings = new Hashtable<String, Object>();
 		settings.put("contextPath", forcedNavajoPath);
 		settings.put("installationPath", resolved);
-		cc.update(settings);;
+		cc.update(settings);
 	}
 
 	// TODO do this in a more thread safe manner?

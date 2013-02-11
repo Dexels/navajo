@@ -22,6 +22,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
+import com.dexels.navajo.expression.SystemException;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.CompiledScript;

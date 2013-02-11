@@ -13,6 +13,7 @@ import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
+import com.dexels.navajo.mapping.compiler.meta.MapMetaDataFactory;
 import com.dexels.navajo.mapping.compiler.meta.ParameterDefinition;
 import com.dexels.navajo.mapping.compiler.meta.ValueDefinition;
 
@@ -22,7 +23,7 @@ public class GenerateXSD {
 	
 	private void generateMethods(XMLElement choice, String adapterName) throws Exception {
 		// Generate methods.
-		Iterator<String> methods = MapMetaData.getInstance().getMapDefinition(adapterName).getMethodDefinitions().iterator();
+		Iterator<String> methods = MapMetaDataFactory.getInstance().getMapDefinition(adapterName).getMethodDefinitions().iterator();
 		while ( methods.hasNext() ) {
 			CaseSensitiveXMLElement x = new CaseSensitiveXMLElement("xs:element");
 			String method = methods.next();
@@ -32,9 +33,9 @@ public class GenerateXSD {
 			x.addChild(typex);
 			// Add parameters.
 			int count = 0;
-			Iterator<String> params =  MapMetaData.getInstance().getMapDefinition(adapterName).getMethodDefinition(method).getParameters().iterator();
+			Iterator<String> params =  MapMetaDataFactory.getInstance().getMapDefinition(adapterName).getMethodDefinition(method).getParameters().iterator();
 			while ( params.hasNext() ) {
-				ParameterDefinition pd = MapMetaData.getInstance().getMapDefinition(adapterName).getMethodDefinition(method).getParameterDefinition(params.next());
+				ParameterDefinition pd = MapMetaDataFactory.getInstance().getMapDefinition(adapterName).getMethodDefinition(method).getParameterDefinition(params.next());
 				
 				if ( !pd.getRequired().equals("automatic") ) {
 					CaseSensitiveXMLElement xp = new CaseSensitiveXMLElement("xs:attribute");
@@ -55,10 +56,10 @@ public class GenerateXSD {
 	
 	private void generateSetters(XMLElement type, XMLElement choice, String adapterName, boolean addAsAttribute) throws Exception {
 		// Generate setters.
-		Iterator<String> setters = MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinitions().iterator();
+		Iterator<String> setters = MapMetaDataFactory.getInstance().getMapDefinition(adapterName).getValueDefinitions().iterator();
 		while ( setters.hasNext() ) {
 			CaseSensitiveXMLElement x = new CaseSensitiveXMLElement("xs:element");
-			ValueDefinition vd = MapMetaData.getInstance().getMapDefinition(adapterName).getValueDefinition(setters.next());
+			ValueDefinition vd = MapMetaDataFactory.getInstance().getMapDefinition(adapterName).getValueDefinition(setters.next());
 			x.setAttribute("type", ( vd.getDirection().equals("out") ? "MapType": "SetterType") );
 			x.setAttribute("name", adapterName + "." + vd.getName());
 			choice.addChild(x);
@@ -196,7 +197,7 @@ public class GenerateXSD {
 		fis.close();
 		
 		
-		MapMetaData mmd = MapMetaData.getInstance();
+		MapMetaData mmd = MapMetaDataFactory.getInstance();
 		Set<String> maps = mmd.getMapDefinitions();
 		
 		Iterator<String> all = maps.iterator();

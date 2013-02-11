@@ -10,13 +10,13 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.expression.SystemException;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.AuthorizationException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.ServiceHandler;
-import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
 public class RhinoHandler extends ServiceHandler {

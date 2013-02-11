@@ -13,7 +13,6 @@ import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.SystemException;
 
 
 /**
@@ -101,7 +100,7 @@ public class ForAll extends FunctionInterface {
 							return Boolean.FALSE;
 						}
 					}
-				} catch (SystemException ex) {
+				} catch (com.dexels.navajo.expression.SystemException ex) {
 					logger.error("Error: ", ex);
 				}
 			}

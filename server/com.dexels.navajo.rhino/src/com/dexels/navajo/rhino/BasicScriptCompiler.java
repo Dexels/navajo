@@ -31,7 +31,7 @@ import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLParseException;
-import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
+import com.dexels.navajo.mapping.compiler.meta.MapMetaDataFactory;
 import com.dexels.navajo.mapping.compiler.meta.MissingParameterException;
 
 public class BasicScriptCompiler implements ScriptCompiler {
@@ -346,7 +346,7 @@ public class BasicScriptCompiler implements ScriptCompiler {
 	private void processNavaScript(XMLElement current, IndentWriter os) {
 		StringWriter sw = new StringWriter();
 		try {
-			MapMetaData.getInstance().parse(current, scriptName, sw);
+			MapMetaDataFactory.getInstance().parse(current, scriptName, sw);
 			StringReader sr = new StringReader(sw.toString());
 			XMLElement xx = new CaseSensitiveXMLElement();
 			xx.parseFromReader(sr);

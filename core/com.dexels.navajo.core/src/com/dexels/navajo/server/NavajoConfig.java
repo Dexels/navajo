@@ -14,6 +14,8 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.expression.SystemException;
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.loader.NavajoLegacyClassLoader;
@@ -106,7 +108,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 	public NavajoConfig(NavajoClassSupplier ncs, InputStream in, String externalRootPath, String servletContextRootPath)  throws SystemException {
 
 		classPath = System.getProperty("java.class.path");
-		adapterClassloader = ncs;
+		setClassloader(ncs);
 		// BIG NOTE: instance SHOULD be set at this point since instance needs to be known by classes
 		// called during loadConfig()!!
 		instance = this;
@@ -618,6 +620,7 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     @Override
 	public void setClassloader(NavajoClassSupplier classloader) {
 		this.adapterClassloader = classloader;
+		FunctionFactoryFactory.setLegacyClassLoader(classloader);
 	}
 	
     @Override

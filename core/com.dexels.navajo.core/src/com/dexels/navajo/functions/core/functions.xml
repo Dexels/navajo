@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- This file is in alphabetical order -->
+<functiondef>
+	<function name="CallService" class="com.dexels.navajo.functions.core.CallService">
+		<description>Calls a service using request Navajo and evaluates an
+			expression
+		</description>
+		<input>string,string</input>
+		<result>any</result>
+	</function>
+	<function name="EvaluateExpression"
+		class="com.dexels.navajo.functions.core.EvaluateExpression">
+		<description>Evaluate a Navajo expression</description>
+		<input />
+		<result />
+	</function>
+	<function name="ExecuteScript" class="com.dexels.navajo.functions.core.ExecuteScript">
+		<description>ExecuteScript is used execute a Navajo script, the result
+			is a Binary (xml) object
+		</description>
+		<input />
+		<result />
+	</function>
+	<function name="FileString" class="com.dexels.navajo.functions.core.FileString">
+		<description>Reads a file into a string</description>
+		<input>string</input>
+		<result>string</result>
+	</function>
+	<function name="GetContextResource"
+		class="com.dexels.navajo.functions.core.GetContextResource">
+		<description>GetContextResource gets the contents of a file in the
+			servletcontext/resources folder
+		</description>
+		<input />
+		<result />
+	</function>
+	<function name="IsServiceCached" class="com.dexels.navajo.functions.core.IsServiceCached">
+		<description>Function to check whether a service with optionally
+			service key values is cached
+		</description>
+		<input>string,string</input>
+		<result>boolean</result>
+	</function>	
+	<function name="GetReportFile" class="com.dexels.navajo.functions.core.GetReportFile">
+		<description>Reads a report file from the script folder to a binary
+		</description>
+		<input>string</input>
+		<result>binary</result>
+	</function>
+	<function name="GetVersionInfo" class="com.dexels.navajo.functions.core.GetVersionInfo">
+		<description>Gets the version info of a specific Version object
+		</description>
+		<input>string</input>
+		<result>string</result>
+	</function>
+	<function name="MD5Sum" class="com.dexels.navajo.functions.core.MD5Sum">
+		<description>Get the MD5Sum of a supplied object.</description>
+		<input>any</input>
+		<result>string</result>
+	</function>
+</functiondef>

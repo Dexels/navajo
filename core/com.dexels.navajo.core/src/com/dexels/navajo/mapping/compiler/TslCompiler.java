@@ -55,6 +55,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
+import com.dexels.navajo.expression.SystemException;
 import com.dexels.navajo.legacy.compiler.EclipseCompiler;
 import com.dexels.navajo.legacy.compiler.JavaCompiler;
 import com.dexels.navajo.legacy.compiler.SunJavaCompiler;
@@ -63,18 +64,18 @@ import com.dexels.navajo.mapping.DependentResource;
 import com.dexels.navajo.mapping.GenericMultipleDependentResource;
 import com.dexels.navajo.mapping.HasDependentResources;
 import com.dexels.navajo.mapping.MappingUtils;
-import com.dexels.navajo.mapping.bean.DomainObjectMapper;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
+import com.dexels.navajo.mapping.compiler.meta.MapMetaDataFactory;
+import com.dexels.navajo.mapping.compiler.meta.impl.MapMetaDataImpl;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.NavajoIOConfig;
-import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.internal.LegacyNavajoIOConfig;
 
@@ -134,6 +135,14 @@ private void initialize(ClassLoader loader) {
 	if (loader == null) {
 	  this.loader = this.getClass().getClassLoader();
 	}
+//	logger.info("Initializing MapMetaData!");
+//	try {
+//		final MapMetaDataImpl newInstance = new MapMetaDataImpl();
+//		newInstance.readConfig();
+//		MapMetaDataFactory.setInstance(newInstance);
+//	} catch (Exception e) {
+//		logger.error("Error initializing MapMetaData!",e);
+//	}
 }
   
   public NavajoIOConfig getNavajoIOConfig() {
@@ -439,7 +448,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
         exact = false;
         //System.err.println("TMLExpressionException, COULD NOT OPTIMIZE EXPRESSION: " + clause);
       }
-      catch (com.dexels.navajo.server.SystemException se) {
+      catch (SystemException se) {
         exact = false;
         if ( !clause.startsWith("#")) {
         	throw new UserException(-1, "Could not compile script, Invalid expression: " + clause);
@@ -641,7 +650,6 @@ public String optimizeExpresssion(int ident, String clause, String className, St
     return result.toString();
   }
 
-  @SuppressWarnings("unchecked")
 public String messageNode(int ident, Element n, String className, String objectName, List<Dependency> deps) throws Exception {
     StringBuffer result = new StringBuffer();
 
@@ -728,21 +736,15 @@ public String messageNode(int ident, Element n, String className, String objectN
           
           //System.out.println("in MessageNode(), new contextClass = " + contextClass);
           
-          if ( DomainObjectMapper.class.isAssignableFrom(contextClass)) {
-        	  //System.err.println("Got a parent DomainObjectMapper...");
-        	  isArrayAttr = forceArray;
-        	  type = Message.MSG_TYPE_ARRAY;
-          } else {
-        	  isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
-        	  isIterator = MappingUtils.isIteratorAttribute(contextClass, ref);
-        	 
-        	  if ( isIterator ) {
-        		  isArrayAttr = true;
-        	  }
-        	  if (isArrayAttr) {
-        		  type = Message.MSG_TYPE_ARRAY;
-        	  }
-          }
+    	  isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
+    	  isIterator = MappingUtils.isIteratorAttribute(contextClass, ref);
+    	 
+    	  if ( isIterator ) {
+    		  isArrayAttr = true;
+    	  }
+    	  if (isArrayAttr) {
+    		  type = Message.MSG_TYPE_ARRAY;
+    	  }
           isSubMapped = true;
     }
     ////System.out.println("isArrayAttr = " + isArrayAttr);
@@ -809,14 +811,7 @@ public String messageNode(int ident, Element n, String className, String objectN
     	subClassName = MappingUtils.getFieldType(contextClass, ref);
       	contextClass = Class.forName(subClassName, false, loader);
       } catch (Exception e) { 
-    		isDomainObjectMapper = contextClass.isAssignableFrom(DomainObjectMapper.class);
-    		subClassName = "com.dexels.navajo.mapping.bean.DomainObjectMapper";
-    		contextClass = com.dexels.navajo.mapping.bean.DomainObjectMapper.class;
-        	if ( isDomainObjectMapper ) {
-        		type = "java.lang.Object";
-        	} else {
-        		throw new Exception("Could not find adapter: " + subClassName); 
-        	}
+    			throw new Exception("Could not find adapter: " + subClassName); 
       }
 
       addDependency("dependentObjects.add( new JavaDependency( -1, \"" + subClassName + "\"));\n", "JAVA"+subClassName);
@@ -1018,17 +1013,13 @@ result.append(printIdent(ident + 4) +
       contextClassStack.push(contextClass);
       String subClassName = null;
       
-      if ( DomainObjectMapper.class.isAssignableFrom(contextClass) ) {
-    	  subClassName = "com.dexels.navajo.mapping.bean.DomainObjectMapper";
-    	  contextClass = DomainObjectMapper.class;
-      } else {
-    	  subClassName = MappingUtils.getFieldType(contextClass, ref);
-    	  contextClass = null;
-    	  try {
-    		  contextClass = Class.forName(subClassName, false, loader);
-    	  } catch (Exception e) { throw new Exception("Could not find adapter " + subClassName); }
-
-      }
+			subClassName = MappingUtils.getFieldType(contextClass, ref);
+			contextClass = null;
+			try {
+				contextClass = Class.forName(subClassName, false, loader);
+			} catch (Exception e) {
+				throw new Exception("Could not find adapter " + subClassName);
+			}
    
       addDependency("dependentObjects.add( new JavaDependency( -1, \"" + subClassName + "\"));\n", "JAVA"+subClassName);
       
@@ -1181,7 +1172,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     }
     else {
       result.append(printIdent(ident) +
-          "type = (sValue != null) ? MappingUtils.determineNavajoType(sValue) : \"" +
+          "type = (sValue != null) ? DocumentUtils.determineNavajoType(sValue) : \"" +
                     type + "\";\n");
     }
 
@@ -1391,7 +1382,6 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 	  }
   }
   
-  @SuppressWarnings("unchecked")
 public String fieldNode(int ident, Element n, String className,
                           String objectName, List<Dependency> dependencies) throws Exception {
 
@@ -1486,12 +1476,7 @@ public String fieldNode(int ident, Element n, String className,
         	type = MappingUtils.getFieldType(localContextClass, attribute);
         	checkDependentFieldResource(localContextClass, attribute, exprValues,dependencies);	
         } catch (Exception e) { 
-        	isDomainObjectMapper = localContextClass.isAssignableFrom(DomainObjectMapper.class);
-        	if ( isDomainObjectMapper ) {
-        		type = "java.lang.Object";
-        	} else {
-        		throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName(),e);
-        	}
+        	throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName(),e);
         }
         
         if (type.equals("java.lang.String")) {
@@ -2228,7 +2213,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
     		                 IncludeDependency.getScriptTimeStamp(fileName) + "\"), \"" + script + "\"));\n", "INCLUDE"+script);
   
     if ( includeDoc.getElementsByTagName("tsl").item(0) == null ) { // Maybe it is navascript??
-    	String tslResult = MapMetaData.getInstance().parse(scriptPath + "/" + fileName  + ".xml");
+    	String tslResult = MapMetaDataFactory.getInstance().parse(scriptPath + "/" + fileName  + ".xml");
     	includeDoc = XMLDocumentUtils.createDocument(new ByteArrayInputStream(tslResult.getBytes()), false);
     }
     
@@ -2475,7 +2460,8 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 		}
 	      
 	      if (tsl == null || tsl.getLength() != 1 || !(tsl.item(0) instanceof Element)) {
-	        throw new SystemException(-1, "Invalid or non existing script file: " + scriptPath + "/" + packagePath + "/" + script + ".xml");
+	    	throw new SkipCompilationException("Ignoring file: "+scriptPath);
+//	        throw new SystemException(-1, "Invalid or non existing script file: " + scriptPath + "/" + packagePath + "/" + script + ".xml");
 	      }
 	      Element tslElt = (Element) tsl.item(0);
 	      boolean includeOnly = "true".equals(tslElt.getAttribute("includeOnly"));
@@ -2669,9 +2655,9 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	    try {
 	    	
 	    	// Check for metascript.
-	    	if ( MapMetaData.isMetaScript(script, scriptPath, packagePath) ) {
+	    	if ( MapMetaDataFactory.getInstance().isMetaScript(script, scriptPath, packagePath) ) {
 	    		scriptType = "navascript";
-	    		MapMetaData mmd = MapMetaData.getInstance();
+	    		MapMetaData mmd = MapMetaDataFactory.getInstance();
 	    		InputStream metais = navajoIOConfig.getScript(packagePath+"/"+script);
 
 	    		String intermed = mmd.parse(fullScriptPath,metais);

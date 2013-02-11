@@ -31,16 +31,11 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.document.types.Memo;
-import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.document.types.Percentage;
-import com.dexels.navajo.document.types.StopwatchTime;
+import com.dexels.navajo.expression.SystemException;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
-import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -60,53 +55,7 @@ public final class MappingUtils {
         return result;
     }
 
-    public static final String determineNavajoType(Object o)  {
 
-         if (o == null) {
-           return "";
-         }
-         if (o instanceof Integer)
-            return Property.INTEGER_PROPERTY;
-        else if (o instanceof String)
-            return Property.STRING_PROPERTY;
-        else if (o instanceof java.util.Date)
-            return Property.DATE_PROPERTY;
-        else if (o instanceof Double)
-            return Property.FLOAT_PROPERTY;
-        else if (o instanceof Float)
-            return Property.FLOAT_PROPERTY;
-        else if (o instanceof ArrayList)
-            return Property.SELECTION_PROPERTY;
-        else if (o instanceof Boolean)
-            return Property.BOOLEAN_PROPERTY;
-        else if (o.getClass().getName().startsWith("[Ljava.util.Vector"))
-            return Property.POINTS_PROPERTY;
-        // Added by arjen 19/2/2004.
-        else if (o instanceof Money)
-          return Property.MONEY_PROPERTY;
-        else if (o instanceof Percentage)
-          return Property.PERCENTAGE_PROPERTY;
-        else if (o instanceof ClockTime)
-          return Property.CLOCKTIME_PROPERTY;
-        else if (o instanceof StopwatchTime)
-            return Property.STOPWATCHTIME_PROPERTY;
-        // Added by frank... To enable tipi-expressions, without creating a dep
-        else if (o.getClass().getName().startsWith("com.dexels.navajo.tipi"))
-          return Property.TIPI_PROPERTY;
-        else if (o instanceof Message)
-          return Message.MSG_DEFINITION;
-        else if (o instanceof Binary)
-          return Property.BINARY_PROPERTY;
-        else if (o instanceof Memo)
-            return Property.MEMO_PROPERTY;
-        else if (o instanceof Selection []) {
-        	return Property.SELECTION_PROPERTY;
-        }
-        else
-          return "unknown";
-
-//            throw new TMLExpressionException("Could not determine NavajoType for Java type: " + o.getClass().getName());
-    }
 
    public static final Message getMessageObject(String name, Message parent,
                                                 boolean messageOnly,
@@ -712,7 +661,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 	  return determineTypeForField(field, c).startsWith("[L");	  
   }
   
-  public static final boolean isIteratorAttribute(Class c, String field) throws MappingException {
+  public static final boolean isIteratorAttribute(Class c, String field) {
 	  try {
 		return getTypeForField(field, c, false).equals(Iterator.class);
 	} catch (Exception e) {
@@ -729,7 +678,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 		 try {
 			 if ( c.getField(name).getType().equals(Iterator.class) && fetchGenericType ) {
 				 ParameterizedType pt = (ParameterizedType) c.getField(name).getGenericType();
-				 return ((Class<?>) pt.getActualTypeArguments()[0]);
+				 return (pt.getActualTypeArguments()[0]);
 			 } else {
 				 return c.getField(name).getType();
 			 }
@@ -737,7 +686,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 			 try {
 				 if ( c.getDeclaredField(name).getType().equals(Iterator.class) && fetchGenericType ) {
 					 ParameterizedType pt = (ParameterizedType) c.getDeclaredField(name).getGenericType();
-					 return ((Class<?>) pt.getActualTypeArguments()[0]);
+					 return (pt.getActualTypeArguments()[0]);
 				 } else {
 					 return c.getDeclaredField(name).getType();
 				 }
@@ -746,7 +695,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 					 Method m = c.getMethod(constructGetMethod(name), (Class[])null);
 					 if ( m.getReturnType().equals(Iterator.class) && fetchGenericType ) {
 						 ParameterizedType pt = (ParameterizedType) m.getGenericReturnType();
-						 return ((Class<?>) pt.getActualTypeArguments()[0]);
+						 return (pt.getActualTypeArguments()[0]);
 					 } else {
 						 return m.getReturnType();
 					 }

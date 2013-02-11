@@ -21,6 +21,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.expression.SystemException;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.server.api.NavajoServerContext;
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;

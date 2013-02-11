@@ -3,6 +3,16 @@ package com.dexels.navajo.adapter.core;
 import java.io.InputStream;
 import java.util.List;
 
+import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.mapping.MappingException;
+import com.dexels.navajo.mapping.MappingUtils;
+import com.dexels.navajo.mapping.base.MappableTreeNodeInterface;
+import com.dexels.navajo.mapping.compiler.meta.MapMetaDataFactory;
+import com.dexels.navajo.mapping.compiler.meta.impl.MapMetaDataImpl;
+import com.dexels.navajo.mapping.wrapper.MappingUtilFactory;
+import com.dexels.navajo.mapping.wrapper.MappingUtilInterface;
+import com.dexels.navajo.script.api.UserException;
+
 import navajo.ExtensionDefinition;
 
 
@@ -12,6 +22,25 @@ public class NavajoCoreAdapterLibrary implements ExtensionDefinition {
 	
 	private static final long serialVersionUID = 3364296653069922647L;
 	private transient ClassLoader extensionClassLoader = null;
+	
+	public NavajoCoreAdapterLibrary() {
+		MappingUtilFactory.setInstance(new MappingUtilInterface() {
+			
+			@Override
+			public Object getAttributeValue(MappableTreeNodeInterface o, String name,
+					Object[] arguments) throws UserException {
+				try {
+					return MappingUtils.getAttributeObject((MappableTreeNode) o, name, arguments);
+				} catch (com.dexels.navajo.server.UserException e) {
+					throw new UserException(e.code,e.getMessage(),e);
+				} catch (MappingException e) {
+					throw new UserException(-1,e.getMessage(),e);
+				}
+			}
+		});
+		MapMetaDataFactory.setInstance(new MapMetaDataImpl());
+
+	}
 	
 	public InputStream getDefinitionAsStream() {
 		return getClass().getResourceAsStream("coreadapters.xml");

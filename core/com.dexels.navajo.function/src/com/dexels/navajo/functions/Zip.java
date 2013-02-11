@@ -72,10 +72,10 @@ public class Zip extends FunctionInterface {
 			zo.putNextEntry(entry);
 			//zo.write( i.getData() );
 			i.write( zo );
-			fos.flush();
-			zo.closeEntry();
+//			zo.closeEntry();
 			zo.close();
 			//byte [] result = baos.toByteArray();
+			fos.flush();
 			fos.close();
 			
 			Binary b = new Binary( tempFile, false );
@@ -84,7 +84,7 @@ public class Zip extends FunctionInterface {
 			return b;
 		} catch (Exception e) {
 			
-			throw new TMLExpressionException(this, e.getMessage());
+			throw new TMLExpressionException(this,"Zip function failed", e);
 		} finally {
 			if ( tempFile != null ) {
 				tempFile.delete();

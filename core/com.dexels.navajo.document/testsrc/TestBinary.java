@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.Binary;
 
 /**
@@ -47,6 +48,7 @@ public class TestBinary {
 	
 	@Before
 	public void setUp() throws IOException {
+		NavajoFactory.getInstance().setSandboxMode(true);
 		fixture.setUp();
 		binary1 = new Binary(getClass().getResourceAsStream("binary1.txt"));
 		binary2 = new Binary(getClass().getResourceAsStream("binary2.txt"));
@@ -64,6 +66,14 @@ public class TestBinary {
 	@After
 	public void tearDown() {
 		fixture.tearDown();
+	}
+	
+	@Test
+	public void testSandBox() {
+		NavajoFactory.getInstance().setSandboxMode(true);
+		Binary binary_x = new Binary(getClass().getResourceAsStream("binary1.txt"));
+		long l = binary_x.getLength();
+		System.err.println(":: "+l);
 	}
 //
 	@Test

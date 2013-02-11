@@ -11,11 +11,11 @@ import com.dexels.navajo.client.async.AsyncClient;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.expression.SystemException;
 import com.dexels.navajo.rhino.ContinuationRunnable;
 import com.dexels.navajo.script.api.NavajoResponseCallback;
 import com.dexels.navajo.script.api.RunnableTools;
 import com.dexels.navajo.script.api.TmlRunnable;
-import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
 public class NavajoMapContinuations extends NavajoMapUpdated {

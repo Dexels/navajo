@@ -2,41 +2,6 @@
 
 <!-- Yet unused, it is still declared in NavajoAdapters' adapters.xml -->
     <map>
-        <tagname>service</tagname>
-        <object>com.dexels.navajo.mapping.bean.ServiceMapper</object>
-        <values>
-            <value name="serviceClass" type="string" required="true" direction="in"/>
-            <value name="serviceMethod" type="string" required="true" direction="in"/>
-        </values>
-        <methods>
-            <method name="invoke">
-                <param name="value" field="invoke" type="boolean" required="automatic" value="true"/>
-            </method>
-        </methods>
-    </map>
-    
-         <map>
-        <tagname>testbean</tagname>
-        <object>com.dexels.navajo.mapping.bean.TestBean</object>
-        <values>
-            <value name="monkey" type="string" required="false" direction="in"/>          
-            <value name="today" type="date" required="false" direction="in"/>          
-        </values>
-        <methods>
-            <method name="addAttribute">                
-                <param name="path" field="attributePath" type="string" required="true"/>
-                <param name="name" field="attributeName" type="string" required="true"/>
-                <param name="value" field="attributeValue" type="string" required="true"/>
-            </method>
-            <method name="dumpObject">
-                <param name="value" field="dumpObject" type="boolean" required="automatic" value="true"/>
-            </method>
-            <method name="buildContent">
-                <param name="value" field="buildContent" type="boolean" required="automatic" value="true"/>
-            </method>
-        </methods>
-    </map>
-    <map>
     	<tagname>propertydescription</tagname>
 		<object>com.dexels.navajo.server.enterprise.descriptionprovider.PropertyDescription</object>
     </map>
@@ -44,5 +9,5 @@
     	<tagname>persistencemanager</tagname>
 		<object>com.dexels.navajo.persistence.impl.PersistenceManagerImpl</object>
     </map>
-    
+
 </adapterdef>

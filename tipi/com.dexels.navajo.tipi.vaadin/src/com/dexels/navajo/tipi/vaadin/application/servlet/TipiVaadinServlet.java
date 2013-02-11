@@ -28,32 +28,15 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiVaadinServlet.class);
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 8125011483209557703L;
 	private ContextInstance contextInstance;
 	private Set<Application> applications = new HashSet<Application>();
 	
 	@Override
 	public void init(ServletConfig servletConfig) throws ServletException {
-//		Enumeration<String> en = servletConfig.getInitParameterNames();
-//		while (en.hasMoreElements()) {
-//			String key = en.nextElement();
-//			System.err.println("PARAMETERS: "+key+" value: "+servletConfig.getInitParameter(key));
-//		}
 		super.init(servletConfig);
-		
     }
-
-	
-//
-//	@Override
-//	protected Class<? extends Application> getApplicationClass() throws ClassNotFoundException {
-//		return TipiVaadinApplication.class;
-//	}
-
-
 
 	@Override
 	protected Application getNewApplication(HttpServletRequest request)

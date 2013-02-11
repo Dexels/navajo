@@ -1,12 +1,15 @@
 package com.dexels.navajo.birt.adapter;
 
-import java.io.*;
+import java.io.IOException;
 
-import com.dexels.navajo.birt.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.*;
+import com.dexels.navajo.birt.BirtUtils;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.UserException;
 
 public class CreateBirtMap implements Mappable {
 
