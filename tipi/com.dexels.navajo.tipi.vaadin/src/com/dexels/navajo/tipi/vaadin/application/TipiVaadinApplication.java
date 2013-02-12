@@ -11,7 +11,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import navajo.ExtensionDefinition;
 
 import org.slf4j.Logger;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import tipi.BaseTipiApplicationInstance;
 import tipi.TipiApplicationInstance;
-import tipi.TipiCoreExtension;
 import tipipackage.TipiManualExtensionRegistry;
 import tipivaadin.TipiVaadinExtension;
 
@@ -65,7 +63,6 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 	@Override
 	public void init() {
-		ApplicationUtils.detectGae();
 		actualInit();
 	}
 
@@ -85,12 +82,6 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 			EvalHandler eval = new EvalHandler(this);
 			mainWindow.addParameterHandler(eval);
 			mainWindow.addURIHandler(eval);
-			if (ApplicationUtils.isRunningInGae()) {
-				TipiCoreExtension tce = new TipiCoreExtension();
-				TipiVaadinExtension tve = new TipiVaadinExtension();
-				extensionRegistry.registerTipiExtension(tce);
-				extensionRegistry.registerTipiExtension(tve);
-			}
 
 			try {
 				setCurrentContext(createContext());
@@ -130,26 +121,16 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 			throw new IOException("Error resolving tipi installation directory.", e1);
 		}
 		TipiVaadinExtension instance = TipiVaadinExtension.getInstance();
-		if (!ApplicationUtils.isRunningInGae()) {
-			ApplicationUtils.checkForExtensions(getInstallationFolder());
-			instance.getTipiExtensionRegistry().debugExtensions();
-		}
 
 		VaadinTipiContext va;
-		logger.info("Extensionlist: "+extensionRegistry);
 		try {
 			va = new VaadinTipiContext(this,installationFolder, extensionRegistry.getExtensionList());
 		} catch (Throwable e2) {
 			logger.error("Error: ",e2);
 			return null;
 		}
-//		va.setInstallationFolder(installationFolder);
 		va.setClassManager(new OSGiClassManager(TipiVaadinExtension.getInstance().getBundleContext(), va));
 		va.setActionManager(new OSGiActionManager(TipiVaadinExtension.getInstance().getBundleContext()));
-		logger.debug("VaadinTipiContext created. Cloudmode: "+ApplicationUtils.isRunningInGae());
-		if (ApplicationUtils.isRunningInGae()) {
-			extensionRegistry.loadExtensions(va);
-		}
 		BaseTipiApplicationInstance.processSettings(applicationDeploy, applicationProfile, installationFolder, va);
 
 		String theme = va.getSystemProperty("tipi.vaadin.theme");
@@ -159,21 +140,15 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		va.setMainWindow(getMainWindow());
 		va.setContextName(this.servletContext.getContextPath());
 
-		if (!ApplicationUtils.isRunningInGae()) {
-			instance.getTipiExtensionRegistry().loadExtensions(va);
-		} else {
-			extensionRegistry.loadExtensions(va);
-		}
+//		if (!ApplicationUtils.isRunningInGae()) {
+//			instance.getTipiExtensionRegistry().loadExtensions(va);
+//		} else {
+//			extensionRegistry.loadExtensions(va);
+//		}
 
 		((BrowserCookieManager) va.getCookieManager()).setRequest(request);
 		((BrowserCookieManager) va.getCookieManager()).setResponse(response);
-		
 
-		if(ApplicationUtils.isRunningInGae()) {
-			logger.warn("Disabling compression due to NavajoClient/Listener bug, but forcing GZIP compression");
-			va.getClient().setAllowCompression(false);
-			va.getClient().setForceGzip(true);
-		}
 		try {
 			loadTipi(va, "start.xml", instance);
 		} catch (TipiException e) {
@@ -231,28 +206,21 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	}
 
 	private void setupInstallationFolder() throws TipiException {
-
-		if (ApplicationUtils.isRunningInGae()) {
-			this.applicationProfile = "knvb";
-			this.applicationDeploy = "test";
-			this.installationFolder = new File(servletContext.getRealPath("/application"));
-			logger.info("Application dir resolved to: " + installationFolder.getAbsolutePath());
+		if (contextInstance != null) {
+			this.installationFolder = new File(contextInstance.getPath());
+			this.applicationDeploy = contextInstance.getDeployment();
+			this.applicationProfile = contextInstance.getProfile();
 		} else {
-			if(contextInstance!=null) {
-				this.installationFolder = new File(contextInstance.getPath());
-				this.applicationDeploy = contextInstance.getDeployment();
-				this.applicationProfile = contextInstance.getProfile();
-			} else {
-				List<String> installationSettings = VaadinInstallationPathResolver.getInstallationPath(this.servletContext);
-				String installationPath = installationSettings.get(0);
-				if (installationSettings.size() > 1) {
-					this.applicationDeploy = installationSettings.get(1);
-				}
-				if (installationSettings.size() > 2) {
-					this.applicationProfile = installationSettings.get(2);
-				}
-				this.installationFolder = new File(installationPath);
+			List<String> installationSettings = VaadinInstallationPathResolver
+					.getInstallationPath(this.servletContext);
+			String installationPath = installationSettings.get(0);
+			if (installationSettings.size() > 1) {
+				this.applicationDeploy = installationSettings.get(1);
 			}
+			if (installationSettings.size() > 2) {
+				this.applicationProfile = installationSettings.get(2);
+			}
+			this.installationFolder = new File(installationPath);
 		}
 	}
 
@@ -266,12 +234,6 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 			if(getCurrentContext().getCookieManager()!=null) {
 				((BrowserCookieManager) getCurrentContext().getCookieManager()).setRequest(request);
 				((BrowserCookieManager) getCurrentContext().getCookieManager()).setResponse(response);
-			}
-		}
-
-		if(!ApplicationUtils.isRunningInGae()) {
-			if(windowCloseManager!=null) {
-				windowCloseManager.cancelShutdownTimer();
 			}
 		}
 	}

@@ -16,30 +16,7 @@ import com.vaadin.terminal.gwt.server.WebBrowser;
 
 public class ApplicationUtils {
 	
-	private static boolean isRunningInGae = false;
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationUtils.class);
-
-	public static boolean isRunningInGae() {
-		return isRunningInGae;
-	}
-
-	public static void setRunningInGae(boolean isRunningInGae) {
-		ApplicationUtils.isRunningInGae = isRunningInGae;
-	}
-
-	/**
-	 * Detect if we're in the App Engine
-	 */
-	public static void detectGae() {
-		try {
-			Class.forName("com.google.appengine.api.LifecycleManager");
-			ApplicationUtils.isRunningInGae = true;
-		} catch (ClassNotFoundException e) {
-			ApplicationUtils.isRunningInGae = false;
-		}
-		
-	}
-
 
 	public static void setupContext(final WebApplicationContext context) {
 		SessionTokenFactory.setSessionTokenProvider(new SessionTokenProvider() {
@@ -105,5 +82,8 @@ public class ApplicationUtils {
 		logger.info("Loading extensions in: ", installationFolder.getAbsolutePath());
 		TipiVaadinExtension.getInstance().initialializeExtension(installationFolder);
 	}
+	
+	
+	
 
 }
