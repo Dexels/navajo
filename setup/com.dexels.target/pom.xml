@@ -29,9 +29,9 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>navajo_spiritus.target</file>
+									<file>repo.dexels.com.target</file>
 									<type>target</type>
-									<classifier>navajo_spiritus</classifier>
+									<classifier>repo.dexels.com</classifier>
 								</artifact>
 							</artifacts>
 						</configuration>

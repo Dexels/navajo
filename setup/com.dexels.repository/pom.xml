@@ -66,7 +66,7 @@
 							<groupId>com.dexels.navajo</groupId>
 							<artifactId>targetplatform</artifactId>
 							<version>1.0.4-SNAPSHOT</version>
-							<classifier>navajo_spiritus</classifier>
+							<classifier>repo.dexels.com</classifier>
 						</artifact>
 					</target>
 					<ignoreTychoRepositories>false</ignoreTychoRepositories>
