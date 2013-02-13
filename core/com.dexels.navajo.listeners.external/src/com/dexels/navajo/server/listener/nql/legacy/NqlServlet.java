@@ -18,7 +18,6 @@ import com.dexels.navajo.client.nql.OutputCallback;
 import com.dexels.navajo.client.nql.internal.NQLContext;
 import com.dexels.navajo.document.NavajoException;
 
-@SuppressWarnings("restriction")
 public class NqlServlet extends com.dexels.navajo.server.listener.nql.NqlServlet {
 
 	private static final long serialVersionUID = -1365612001727053259L;

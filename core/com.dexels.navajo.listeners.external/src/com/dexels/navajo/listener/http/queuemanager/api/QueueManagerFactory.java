@@ -9,7 +9,6 @@ public class QueueManagerFactory {
 	private final static Logger logger = LoggerFactory
 			.getLogger(QueueManagerFactory.class);
 	
-	@SuppressWarnings("unchecked")
 	public synchronized static QueueManager getInstance() {
 		logger.warn("In static QueueManager getter, should only happen in non-OSGi");
 		
