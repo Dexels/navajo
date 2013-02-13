@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.vaadin.instance.impl;
 
+import java.io.File;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
@@ -12,44 +13,50 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.context.ContextInstance;
-import com.dexels.navajo.tipi.vaadin.application.servlet.TipiVaadinServlet;
+import com.dexels.navajo.tipi.vaadin.application.servlet.VaadinFileServlet;
 
-public class TipiInstanceImpl {
+public class TipiVaadinGlobalInstance {
 	
-	
+	private ServiceRegistration<Servlet> fileRegistration;
+	private BundleContext bundleContext = null;
+
 	private final static Logger logger = LoggerFactory
-			.getLogger(TipiInstanceImpl.class);
-	private ServiceRegistration<Servlet> tipiServlet;
+			.getLogger(TipiVaadinGlobalInstance.class);
 	
 	public void activate(final Map<String,Object> settings, BundleContext bundleContext) {
-		logger.info("Activating Tipi Instance: {}",settings);
-		final String profile = (String) settings.get("tipi.instance.profile");
-		final String deployment= (String) settings.get("tipi.instance.deployment");
-		TipiVaadinServlet tvs = new TipiVaadinServlet();
-		
+		this.bundleContext = bundleContext;
+		String root = (String) settings.get("rootPath");
+		logger.info("========>  Activating");
+		File rootFolder = new File(root);
+
+		registerFileServlet(rootFolder.getAbsolutePath(), bundleContext);
+	}
+	
+	private void registerFileServlet(final String rootPath, BundleContext bundleContext) {
+		VaadinFileServlet vfs = new VaadinFileServlet();
 		ContextInstance ci = new ContextInstance() {
 			
 			@Override
 			public String getProfile() {
-				return profile;
+				throw new UnsupportedOperationException("The Tipi File servlet is not profile dependent.");
 			}
 			
 			@Override
 			public String getPath() {
-				return (String) settings.get("tipi.instance.path");
+				return rootPath;
 			}
 			
 			@Override
 			public String getDeployment() {
-				return deployment;
+				throw new UnsupportedOperationException("The Tipi File servlet is not deployment dependent.");
 			}
 			@Override
 			public String getContext() {
-				return null;
+				return "unknown context";
 			}
 		};
-		tvs.setContextInstance(ci);
-		tipiServlet = registerServlet(bundleContext, "/"+deployment+"/"+profile, tvs);
+		vfs.setContextInstance(ci);
+		fileRegistration = registerServlet(bundleContext, "/VAADIN", vfs);
 	}
 
 	protected ServiceRegistration<Servlet> registerServlet(BundleContext bundleContext,
@@ -58,8 +65,11 @@ public class TipiInstanceImpl {
 		 vaadinRegistrationSettings.put("alias", alias);
 			return bundleContext.registerService(Servlet.class, s, vaadinRegistrationSettings);
 	}
-
 	public void deactivate() {
-		tipiServlet.unregister();
+		logger.info(">>>>>> deactivating tipi global provider");
+		if(fileRegistration!=null) {
+			fileRegistration.unregister();
+		}
+		
 	}
 }

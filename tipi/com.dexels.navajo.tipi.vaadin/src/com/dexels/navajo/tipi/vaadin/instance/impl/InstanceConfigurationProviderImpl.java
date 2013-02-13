@@ -23,8 +23,6 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.context.ContextInstance;
-import com.dexels.navajo.tipi.vaadin.application.servlet.VaadinFileServlet;
 import com.dexels.navajo.tipi.vaadin.instance.InstanceConfigurationProvider;
 
 public class InstanceConfigurationProviderImpl implements
@@ -84,9 +82,12 @@ public class InstanceConfigurationProviderImpl implements
 		
 		try {
 			emitLogbackConfiguration(root);
+			emitTipiGlobal(root);
+
 		} catch (IOException e1) {
-			logger.error("Error emitting logback configuration",e1);
+			logger.error("Error emitting global configurations:",e1);
 		}
+		
 		FileInputStream fis;
 		try {
 			File profileDir = new File(rootFolder,"settings/profiles");
@@ -158,7 +159,7 @@ public class InstanceConfigurationProviderImpl implements
 			}
 
 
-			registerFileServlet(rootFolder.getAbsolutePath(), bundleContext);
+//			registerFileServlet(rootFolder.getAbsolutePath(), bundleContext);
 			emitDeployments();
 		} catch (IOException e) {
 			logger.error("Error: ", e);
@@ -171,35 +172,15 @@ public class InstanceConfigurationProviderImpl implements
 		settings.put("rootPath", filePath);
 		settings.put("logbackPath", "settings/logback.xml");
 		emitConfig("navajo.logback",settings);
-
 	}
 
-	private void registerFileServlet(final String rootPath, BundleContext bundleContext) {
-		VaadinFileServlet vfs = new VaadinFileServlet();
-		ContextInstance ci = new ContextInstance() {
-			
-			@Override
-			public String getProfile() {
-				throw new UnsupportedOperationException("The Tipi File servlet is not profile dependent.");
-			}
-			
-			@Override
-			public String getPath() {
-				return rootPath;
-			}
-			
-			@Override
-			public String getDeployment() {
-				throw new UnsupportedOperationException("The Tipi File servlet is not deployment dependent.");
-			}
-			@Override
-			public String getContext() {
-				return "unknown context";
-			}
-		};
-		vfs.setContextInstance(ci);
-		fileRegistration = registerServlet(bundleContext, "/VAADIN", vfs);
+	private void emitTipiGlobal(String filePath) throws IOException {
+//		emitIfChanged("navajo.logback", filter, settings)
+		Dictionary<String,Object> settings = new Hashtable<String, Object>();
+		settings.put("rootPath", filePath);
+		emitConfig("tipi.instance.global",settings);
 	}
+
 	
 	protected ServiceRegistration<Servlet> registerServlet(BundleContext bundleContext,
 			final String alias, Servlet s) {
