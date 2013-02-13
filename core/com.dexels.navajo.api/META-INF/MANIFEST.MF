@@ -13,5 +13,4 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  org.slf4j;version="1.6.1"
 Export-Package: com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.system;version="1.0.0"
-Service-Component: OSGI-INF/navajoLog.xml
 
