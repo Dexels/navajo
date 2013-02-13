@@ -123,6 +123,10 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 		this.dispatcher = null;
 	}
 	
+	public DispatcherInterface getDispatcher() {
+		return this.dispatcher;
+	}
+	
 
 	public void deactivate() throws IOException {
 		logger.info("Deactivating service component");
