@@ -27,7 +27,6 @@ import com.dexels.navajo.tipi.actionmanager.OSGiActionManager;
 import com.dexels.navajo.tipi.classdef.OSGiClassManager;
 import com.dexels.navajo.tipi.context.ContextInstance;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
-import com.dexels.navajo.tipi.vaadin.application.ApplicationUtils;
 import com.dexels.navajo.tipi.vaadin.application.VaadinInstallationPathResolver;
 import com.dexels.navajo.tipi.vaadin.application.WindowCloseManager;
 import com.dexels.navajo.tipi.vaadin.application.eval.EvalHandler;
@@ -36,7 +35,6 @@ import com.dexels.navajo.tipi.vaadin.touch.servlet.TipiVaadinTouchServlet;
 import com.vaadin.addon.touchkit.ui.TouchKitApplication;
 import com.vaadin.addon.touchkit.ui.TouchKitWindow;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
-import com.vaadin.terminal.gwt.server.WebApplicationContext;
 
 public class TipiVaadinTouchApplication extends TouchKitApplication implements TipiApplicationInstance, HttpServletRequestListener,
 		Serializable {

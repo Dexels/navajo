@@ -81,6 +81,12 @@ public class InstanceConfigurationProviderImpl implements
 		if(!arguments.exists()) {
 			logger.error("No arguments found: "+arguments.getAbsolutePath());
 		}
+		
+		try {
+			emitLogbackConfiguration(root);
+		} catch (IOException e1) {
+			logger.error("Error emitting logback configuration",e1);
+		}
 		FileInputStream fis;
 		try {
 			File profileDir = new File(rootFolder,"settings/profiles");
@@ -152,19 +158,6 @@ public class InstanceConfigurationProviderImpl implements
 			}
 
 
-//			for (String profile : profiles) {
-//				for (String deployment : deployments) {
-//					Map<String,Map<String,Object>> deploymentMap = deploymentSettings.get(deployment);
-//					Map<String,Object> profileSettings = deploymentMap.get(profile);
-//					if(profileSettings==null) {
-//						profileSettings = 
-//					}
-//				}
-//				
-//			}
-//			
-//			for (String deployment : deployments) {
-//			}
 			registerFileServlet(rootFolder.getAbsolutePath(), bundleContext);
 			emitDeployments();
 		} catch (IOException e) {
@@ -172,6 +165,15 @@ public class InstanceConfigurationProviderImpl implements
 		}
 	}
 	
+	private void emitLogbackConfiguration(String filePath) throws IOException {
+//		emitIfChanged("navajo.logback", filter, settings)
+		Dictionary<String,Object> settings = new Hashtable<String, Object>();
+		settings.put("rootPath", filePath);
+		settings.put("logbackPath", "settings/logback.xml");
+		emitConfig("navajo.logback",settings);
+
+	}
+
 	private void registerFileServlet(final String rootPath, BundleContext bundleContext) {
 		VaadinFileServlet vfs = new VaadinFileServlet();
 		ContextInstance ci = new ContextInstance() {
@@ -217,16 +219,30 @@ public class InstanceConfigurationProviderImpl implements
 				o.put("tipi.instance.deployment", deployment);
 				o.put("tipi.instance.path", rootFolder.getAbsolutePath());
 				o.putAll(global);
-				emitIfChanged("tipi.instance", filter, o);
+//				for (Entry<String,Object> e : global.entrySet()) {
+//					o.put(e.getKey(), e.getValue());
+//				}
+				String pid = "tipi.instance";
+				String implementation = (String) o.get("tipi.instance.implementation");
+				if(implementation!=null) {
+					pid = "tipi.instance."+implementation;
+				}
+				emitFactoryIfChanged(pid, filter, o);
 			}
 		}
 	}
+
 	
-	private void emitIfChanged(String pid, String filter,Dictionary<String,Object> settings) throws IOException {
-		updateIfChanged(createOrReuse(pid, filter), settings);
+	private void emitConfig(String pid, Dictionary<String,Object> settings) throws IOException {
+		Configuration config =  configAdmin.getConfiguration(pid);
+		updateIfChanged(config, settings);
+	}
+
+	private void emitFactoryIfChanged(String pid, String filter,Dictionary<String,Object> settings) throws IOException {
+		updateIfChanged(createOrReuseFactoryConfiguration(pid, filter), settings);
 	}
 	
-	protected Configuration createOrReuse(String pid, final String filter)
+	protected Configuration createOrReuseFactoryConfiguration(String pid, final String filter)
 			throws IOException {
 		Configuration cc = null;
 		try {
@@ -256,6 +272,8 @@ public class InstanceConfigurationProviderImpl implements
 				logger.info("Ignoring equal");
 			}
 		} else {
+			// this will make this component 'own' this configuration, unsure if this is desirable.
+			resourcePids.put(c.getPid(),c);
 			c.update(settings);
 		}
 	}

@@ -1,10 +1,15 @@
 package com.dexels.navajo.tipi.vaadin.touch.servlet;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,6 +21,7 @@ import com.dexels.navajo.tipi.context.ContextInstance;
 import com.dexels.navajo.tipi.vaadin.touch.application.TipiVaadinTouchApplication;
 import com.vaadin.Application;
 import com.vaadin.addon.touchkit.server.TouchKitApplicationServlet;
+import com.vaadin.terminal.gwt.server.Constants;
 
 public class TipiVaadinTouchServlet extends TouchKitApplicationServlet {
 
@@ -28,8 +34,44 @@ public class TipiVaadinTouchServlet extends TouchKitApplicationServlet {
 	private Set<Application> applications = new HashSet<Application>();
 
 	
-	public void init(ServletConfig servletConfig) throws ServletException {
-		super.init(servletConfig);
+	public void init(final ServletConfig servletConfig) throws ServletException {
+		ServletConfig wrap = new ServletConfig(){
+
+			@Override
+			public String getServletName() {
+				return servletConfig.getServletName();
+			}
+
+			@Override
+			public ServletContext getServletContext() {
+				return servletConfig.getServletContext();
+			}
+
+			@Override
+			public String getInitParameter(String name) {
+				if("application".equals(name)) {
+					return TipiVaadinTouchApplication.class.getName();
+				}
+				if(Constants.PARAMETER_WIDGETSET.equals(name)) {
+					return "com.dexels.navajo.tipi.vaadin.touch.widgetset.Com_dexels_navajo_tipi_vaadin_touchWidgetset";
+				}
+				return servletConfig.getInitParameter(name);
+			}
+
+			@Override
+			public Enumeration<String> getInitParameterNames() {
+				final Enumeration<String> en = servletConfig.getInitParameterNames();
+				List<String> l = new ArrayList<String>();
+				while (en.hasMoreElements()) {
+					String name = en.nextElement();
+					l.add(name);
+				}
+				l.add("application");
+				l.add(Constants.PARAMETER_WIDGETSET);
+				Enumeration<String> ext = Collections.enumeration(l);
+				return ext;
+			}};
+		super.init(wrap);
 	}
 
 	

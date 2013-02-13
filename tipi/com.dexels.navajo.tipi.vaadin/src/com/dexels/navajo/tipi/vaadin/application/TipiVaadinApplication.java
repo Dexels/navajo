@@ -53,7 +53,6 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	private String applicationDeploy;
 
 	private final TipiManualExtensionRegistry extensionRegistry = new TipiManualExtensionRegistry();
-//	private transient Timer shutdownTimer = null;
 	private WindowCloseManager windowCloseManager;
 	private String referer;
 	private ContextInstance contextInstance;
@@ -124,7 +123,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 		VaadinTipiContext va;
 		try {
-			va = new VaadinTipiContext(this,installationFolder, extensionRegistry.getExtensionList());
+			va = new VaadinTipiContext(this, installationFolder, extensionRegistry.getExtensionList());
 		} catch (Throwable e2) {
 			logger.error("Error: ",e2);
 			return null;
@@ -139,12 +138,6 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 		va.setMainWindow(getMainWindow());
 		va.setContextName(this.servletContext.getContextPath());
-
-//		if (!ApplicationUtils.isRunningInGae()) {
-//			instance.getTipiExtensionRegistry().loadExtensions(va);
-//		} else {
-//			extensionRegistry.loadExtensions(va);
-//		}
 
 		((BrowserCookieManager) va.getCookieManager()).setRequest(request);
 		((BrowserCookieManager) va.getCookieManager()).setResponse(response);
@@ -235,6 +228,10 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 				((BrowserCookieManager) getCurrentContext().getCookieManager()).setRequest(request);
 				((BrowserCookieManager) getCurrentContext().getCookieManager()).setResponse(response);
 			}
+		}
+
+		if(windowCloseManager!=null) {
+			windowCloseManager.cancelShutdownTimer();
 		}
 	}
 
