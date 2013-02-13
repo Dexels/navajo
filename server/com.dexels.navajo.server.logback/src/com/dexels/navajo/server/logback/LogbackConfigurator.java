@@ -15,8 +15,6 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 
-import com.dexels.navajo.server.api.NavajoServerContext;
-
 public class LogbackConfigurator {
 
 	public void activate(Map<String, Object> settings) {
