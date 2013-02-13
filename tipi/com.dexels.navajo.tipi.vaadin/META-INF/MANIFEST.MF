@@ -59,4 +59,4 @@ Bundle-ClassPath: lib/borderlayout-0.3.jar,
  lib/openlayers-wrapper-0.9.1.jar,
  .
 Service-Component: OSGI-INF/tipi.vaadin.servlet.xml,OSGI-INF/tipi.vaadin.servlet.resource.xml,OSGI-INF/tipi.instance.xml,
- OSGI-INF/tipi.instance.global.xml,OSGI-INF/tipi.multitenant.instance.xml
+ OSGI-INF/tipi.instance.global.xml
