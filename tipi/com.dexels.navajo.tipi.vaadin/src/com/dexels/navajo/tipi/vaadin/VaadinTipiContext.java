@@ -213,8 +213,4 @@ public class VaadinTipiContext extends TipiContext {
 		return sr;
 	}
 	
-	private StreamSource resolve(URL u)  {
-		return new URLInputStreamSource(u);
-	}
-	
 }

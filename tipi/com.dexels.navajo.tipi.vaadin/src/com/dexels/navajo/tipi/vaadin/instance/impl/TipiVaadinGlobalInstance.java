@@ -18,13 +18,11 @@ import com.dexels.navajo.tipi.vaadin.application.servlet.VaadinFileServlet;
 public class TipiVaadinGlobalInstance {
 	
 	private ServiceRegistration<Servlet> fileRegistration;
-	private BundleContext bundleContext = null;
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiVaadinGlobalInstance.class);
 	
 	public void activate(final Map<String,Object> settings, BundleContext bundleContext) {
-		this.bundleContext = bundleContext;
 		String root = (String) settings.get("rootPath");
 		logger.info("========>  Activating");
 		File rootFolder = new File(root);
