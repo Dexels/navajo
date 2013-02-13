@@ -109,7 +109,9 @@ Import-Package: com.dexels.navajo.client,
  org.junit.runner;version="4.8.2";resolution:=optional,
  org.junit.runners;version="4.8.2";resolution:=optional,
  org.osgi.framework;version="1.5.0",
+ org.osgi.service.cm;version="1.4.0",
  org.slf4j;version="1.6.1"
 Bundle-ClassPath: beansclasses/,
  .
-Service-Component: OSGI-INF/tipi.context.manager.xml,OSGI-INF/tipi.context.instance.xml
+Service-Component: OSGI-INF/tipi.context.manager.xml,OSGI-INF/tipi.context.instance.xml,
+ OSGI-INF/tipi.multitenant.instance.xml

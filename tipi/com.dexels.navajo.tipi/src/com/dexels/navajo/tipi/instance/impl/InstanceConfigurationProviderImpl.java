@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.vaadin.instance.impl;
+package com.dexels.navajo.tipi.instance.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,17 +13,15 @@ import java.util.Map.Entry;
 import java.util.PropertyResourceBundle;
 import java.util.Set;
 
-import javax.servlet.Servlet;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.vaadin.instance.InstanceConfigurationProvider;
+import com.dexels.navajo.tipi.instance.InstanceConfigurationProvider;
+
 
 public class InstanceConfigurationProviderImpl implements
 		InstanceConfigurationProvider {
@@ -43,8 +41,6 @@ public class InstanceConfigurationProviderImpl implements
 
 	private File rootFolder;
 
-	private ServiceRegistration<Servlet> fileRegistration;
-	
 	@Override
 	public Set<String> getProfiles() {
 		return Collections.unmodifiableSet(profiles);
@@ -181,14 +177,6 @@ public class InstanceConfigurationProviderImpl implements
 		emitConfig("tipi.instance.global",settings);
 	}
 
-	
-	protected ServiceRegistration<Servlet> registerServlet(BundleContext bundleContext,
-			final String alias, Servlet s) {
-		Dictionary<String, Object> vaadinRegistrationSettings = new Hashtable<String, Object>();
-		 vaadinRegistrationSettings.put("alias", alias);
-			return bundleContext.registerService(Servlet.class, s, vaadinRegistrationSettings);
-	}
-
 	public void emitDeployments() throws IOException {
 		for (String deployment : deployments) {
 			for (String profile : profiles) {
@@ -269,10 +257,6 @@ public class InstanceConfigurationProviderImpl implements
 				logger.error("Problem deleting configuration for pid: "+entry.getKey(),e);
 			}
 		}
-		if(fileRegistration!=null) {
-			fileRegistration.unregister();
-		}
-		
 	}
 	
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="TipiVaadin" isMain="true" requiresMain="" project="TipiVaadin" version="0" title="Tipi Vaadin" vendor="Dexels" homepage="http://www.vaadin.com">
+	<description>
+		Standard vaadin implementation
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/vaadin/touch/vaadintouchclassdef.xml"/>
+	</includes>
+	<jars>
+		<jar path="vaadin-touchkit-agpi-2.0.0.jar"/>
+	</jars>
+	<requires>
+		<require path="TipiVaadin" id="TipiVaadin"/>
+	</requires>
+	
+</extension>

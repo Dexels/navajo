@@ -59,11 +59,13 @@ public class NavajoMessage extends DefaultMessage implements Message {
 		return res==null?defaultValue:res;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getHeader(String header, Class<T> cc) {
 		return (T) getHeader(header);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getHeader(String header, Object defaultValue, Class<T> cc) {
 		return (T) getHeader(header,defaultValue);

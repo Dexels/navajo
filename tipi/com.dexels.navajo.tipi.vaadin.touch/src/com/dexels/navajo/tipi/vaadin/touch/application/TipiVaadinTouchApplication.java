@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.vaadin.application;
+package com.dexels.navajo.tipi.vaadin.touch.application;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,16 +27,16 @@ import com.dexels.navajo.tipi.actionmanager.OSGiActionManager;
 import com.dexels.navajo.tipi.classdef.OSGiClassManager;
 import com.dexels.navajo.tipi.context.ContextInstance;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
+import com.dexels.navajo.tipi.vaadin.application.VaadinInstallationPathResolver;
+import com.dexels.navajo.tipi.vaadin.application.WindowCloseManager;
 import com.dexels.navajo.tipi.vaadin.application.eval.EvalHandler;
-import com.dexels.navajo.tipi.vaadin.application.servlet.TipiVaadinServlet;
 import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
-import com.vaadin.Application;
+import com.dexels.navajo.tipi.vaadin.touch.servlet.TipiVaadinTouchServlet;
+import com.vaadin.addon.touchkit.ui.TouchKitApplication;
+import com.vaadin.addon.touchkit.ui.TouchKitWindow;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
-import com.vaadin.terminal.gwt.server.WebApplicationContext;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class TipiVaadinApplication extends Application implements TipiApplicationInstance, HttpServletRequestListener,
+public class TipiVaadinTouchApplication extends TouchKitApplication implements TipiApplicationInstance, HttpServletRequestListener,
 		Serializable {
 
 	private static final long serialVersionUID = -5962249453869298788L;
@@ -56,9 +56,9 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	private WindowCloseManager windowCloseManager;
 	private String referer;
 	private ContextInstance contextInstance;
-	private TipiVaadinServlet servlet;
+	private TipiVaadinTouchServlet servlet;
 
-	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinApplication.class);
+	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinTouchApplication.class);
 
 	@Override
 	public void init() {
@@ -68,32 +68,61 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 
 	protected void actualInit() {
-		final WebApplicationContext context = ((WebApplicationContext) getContext());
-		
-		ApplicationUtils.setupContext(context);
+//		final WebApplicationContext context = ((WebApplicationContext) getContext());
+//		
+//		ApplicationUtils.setupContext(context);
 		
 		try {
+//			TouchKitWindow		
+			final TouchKitWindow mainWindow = new TouchKitWindow();
+			configureMainWindow(mainWindow);
+//			setMainWindow(mainWindow);
+//	        setTheme("mobilemail");
 
-			VerticalLayout componentContainer = new VerticalLayout();
-			componentContainer.setSizeFull();
-			final Window mainWindow = new Window("Tipi Vaadin", componentContainer);
-			setMainWindow(mainWindow);
-			EvalHandler eval = new EvalHandler(this);
-			mainWindow.addParameterHandler(eval);
-			mainWindow.addURIHandler(eval);
-
-			try {
-				setCurrentContext(createContext());
-
-			} catch (Exception e) {
-				logger.error("Error: ",e);
-			}
+//	        NavigationManager nm = new NavigationManager();
+//	        mainWindow.setContent(nm);
+	        setMainWindow(mainWindow);
+//	        NavigationView nv = new NavigationView("Hoei");
+//	        nm.addComponent(nv);
 			windowCloseManager = new WindowCloseManager(this, getCurrentContext());
+			EvalHandler eval = new EvalHandler(this);
+			getMainWindow().addParameterHandler(eval);
+			getMainWindow().addURIHandler(eval);
+			setTheme("mobilemail");
 
 		} catch (Throwable t) {
-			logger.error("Error: ",t);
+			t.printStackTrace();
 		}
 	}
+
+	 private void configureMainWindow(TouchKitWindow mainWindow) {
+	        // These configurations modify how the app behaves as "ios webapp".
+		 System.err.println("Applicationurl: "+getURL());
+	        mainWindow.addApplicationIcon(getContextUrl()
+	                + "VAADIN/themes/oao/logo_slb.png");
+	        mainWindow.setStartupImage(getContextUrl()
+	                + "VAADIN/themes/oao/logo.png");
+	        mainWindow.setWebAppCapable(true);
+//	        mainWindow.setPersistentSessionCookie(true);
+
+	    }
+	
+	@Override
+	public void onBrowserDetailsReady() {
+		System.err.println("BBBSize: "+getMainWindow().getWidth()+" :: "+getMainWindow().getHeight());
+		try {
+			setCurrentContext(createContext());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+//	private void setupView(NavigationView navigationView) {
+//		navigationView.setCaption("aaaap");
+//	}
+//
 
 
 	@Override
@@ -233,6 +262,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		if(windowCloseManager!=null) {
 			windowCloseManager.cancelShutdownTimer();
 		}
+		super.onRequestStart(request, response);
 	}
 
 
@@ -241,7 +271,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 	@Override
 	public void onRequestEnd(HttpServletRequest request, HttpServletResponse response) {
-		// clean up request refs? Also in CookieManager?
+		super.onRequestEnd(request, response);
 	}
 
 
@@ -290,8 +320,8 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 
 
-	public void setServlet(TipiVaadinServlet tipiVaadinServlet) {
-		this.servlet = tipiVaadinServlet;
+	public void setServlet(TipiVaadinTouchServlet tipiVaadinTouchServlet) {
+		this.servlet = tipiVaadinTouchServlet;
 	}
 
 	
