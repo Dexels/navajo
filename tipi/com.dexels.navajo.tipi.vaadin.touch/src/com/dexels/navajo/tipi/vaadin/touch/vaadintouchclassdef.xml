@@ -1,0 +1,71 @@
+<tid>
+	<!-- Identical to panel -->
+	<tipiclass class="TipiNavigationManager" name="navigationmanager" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.touch.components"
+		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+		<events>
+		</events>
+		<values>
+			<value direction="in" name="logo" type="resource" />
+		</values>
+		<methods />
+	</tipiclass>
+	<tipiclass class="TipiNavigationView" name="navigationview" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.touch.components"
+		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+		<events>
+		</events>
+		<values>
+			<value direction="in" name="title" type="string" />
+		</values>
+		<methods />
+	</tipiclass>
+	<tipiclass class="TipiVerticalComponentGroup" name="verticalgroup" implements="basecomponent,datacomponent"  package="com.dexels.navajo.tipi.vaadin.touch.components"
+		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+		<events>
+		</events>
+		<values>
+			<value direction="in" name="title" type="string" />
+		</values>
+		<methods />
+	</tipiclass>
+	<tipiclass class="TipiHorizontalComponentGroup" name="horizontalgroup" implements="basecomponent,datacomponent"  package="com.dexels.navajo.tipi.vaadin.touch.components"
+		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+		<events>
+		</events>
+		<values>
+			<value direction="in" name="title" type="string" />
+		</values>
+		<methods />
+	</tipiclass>
+		<tipiclass class="TipiNavigationButton" name="navigationbutton" implements="button"  package="com.dexels.navajo.tipi.vaadin.touch.components"
+		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+		<events>
+		</events>
+		<values>
+		</values>
+		<methods />
+	</tipiclass>
+	
+		<tipiclass addtocontainer="false" childcount="*" class="TipiPopover" implements="basecomponent,datacomponent,vaadincomponent" 
+		layoutmanager="true" module="container" name="popover" package="com.dexels.navajo.tipi.vaadin.touch.components" studio-icon="dialog.gif"
+		toplevel="true" type="tipi">
+		<events>
+			<event name="onWindowClosed" />
+		</events>
+		<values>
+			<value direction="inout" name="title" type="string" />
+			<value direction="in" name="x" type="integer" />
+			<value direction="in" name="y" type="integer" />
+			<value direction="in" name="h" type="float" />
+			<value direction="in" name="w" type="float" />
+			<value direction="in" name="closable" type="boolean" />
+			<value direction="in" name="resizable" type="boolean" />
+			
+		</values>
+		<methods>
+			<method name="show" />
+			<method name="hide" />
+			<method name="dispose" />
+		</methods>
+	</tipiclass>
+	
+</tid>
