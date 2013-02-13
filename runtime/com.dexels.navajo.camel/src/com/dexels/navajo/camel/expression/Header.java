@@ -30,8 +30,6 @@ import org.apache.camel.spi.Required;
 import org.apache.camel.spi.RouteContext;
 import org.apache.camel.util.ObjectHelper;
 
-import com.dexels.navajo.camel.expression.NoOutputExpressionNode;
-
 /**
  * Represents an XML &lt;setHeader/&gt; element
  */

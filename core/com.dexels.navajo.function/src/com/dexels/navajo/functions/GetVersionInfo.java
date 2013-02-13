@@ -39,7 +39,6 @@ public final class GetVersionInfo extends FunctionInterface {
 		return "GetVersionInfo([package name])";
 	}
 
-	@SuppressWarnings("unchecked")
 	public final Object evaluate() throws TMLExpressionException {
 		Object o = getOperand(0);
 		String packageName = o+"";
