@@ -1,9 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Jgit connector for Tipi
-Bundle-SymbolicName: com.dexels.navajo.tipi.jgit
+Bundle-Name: Jgit connector
+Bundle-SymbolicName: com.dexels.navajo.jgit
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: com.dexels.navajo.tipi.jgit.Activator
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.jcraft.jsch;version="0.1.46",
