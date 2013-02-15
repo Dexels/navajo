@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-Name: Navajo Client
 Bundle-SymbolicName: com.dexels.navajo.client.nql
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.1
 Bundle-Activator: navajonql.Version
 Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.client.nql,
