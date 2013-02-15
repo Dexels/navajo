@@ -215,7 +215,7 @@ public class InstanceConfigurationProviderImpl implements
 
 	
 	private void emitConfig(String pid, Dictionary<String,Object> settings) throws IOException {
-		Configuration config =  configAdmin.getConfiguration(pid);
+		Configuration config =  configAdmin.getConfiguration(pid,null);
 		updateIfChanged(config, settings);
 	}
 
