@@ -68,7 +68,7 @@ public class LogbackConfigurator {
 	}
 
 	public void deactivate() {
-		System.err.println("deactivating");
+		System.err.println("deactivating logback. Note: This doesn't really do anything.");
 	}
 
 }

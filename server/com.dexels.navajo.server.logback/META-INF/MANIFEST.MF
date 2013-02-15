@@ -24,4 +24,4 @@ Import-Package: ch.qos.logback.classic;version="0.9.27",
  ch.qos.logback.core.util;version="0.9.27",
  org.osgi.framework;version="1.3.0",
  org.slf4j;version="1.6.1"
-Service-Component: OSGI-INF/logbackLegacy.xml,OSGI-INF/logback.xml
+Service-Component: OSGI-INF/logback.xml
