@@ -1,0 +1,8 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo/Tipi Instance Path" name="Navajo/Tipi Instance Path" id="navajo.multitenant.instance" >
+    <AD name="installationPath"  id="path" required="true" type="String" default="/Users/frank/git/memberportal/com.sportlink.memberportal.tipi"/>
+  </OCD>
+  <Designate pid="navajo.multitenant.instance">
+     <Object ocdref="navajo.multitenant.instance"/>
+  </Designate>
+</metatype:MetaData>

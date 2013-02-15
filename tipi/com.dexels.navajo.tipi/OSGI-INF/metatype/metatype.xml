@@ -5,12 +5,6 @@
     <AD name="Deployment"  id="deployment" required="true" type="String" default="production"/>
     <AD name="Profile"  id="profile" required="true" type="String" default=""/>
   </OCD>
-  <OCD description="Tipi Vaadin Path" name="Tipi Vaadin Path" id="tipi.multitenant.instance" >
-    <AD name="installationPath"  id="path" required="true" type="String" default="/Users/frank/git/memberportal/com.sportlink.memberportal.tipi"/>
-  </OCD>
-  <Designate pid="tipi.multitenant.instance">
-     <Object ocdref="tipi.multitenant.instance"/>
-  </Designate>
   <Designate factoryPid="tipi.context.instance" pid="tipi.context.instance">
      <Object ocdref="tipi.context.instance"/>
   </Designate>

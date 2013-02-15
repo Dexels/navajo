@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.instance.impl;
+package com.dexels.navajo.instance.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +20,7 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.instance.InstanceConfigurationProvider;
+import com.dexels.navajo.instance.InstanceConfigurationProvider;
 
 
 public class InstanceConfigurationProviderImpl implements

@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.instance;
+package com.dexels.navajo.instance;
 
 import java.util.Set;
 
