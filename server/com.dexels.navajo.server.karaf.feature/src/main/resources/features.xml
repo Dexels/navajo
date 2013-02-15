@@ -14,27 +14,53 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 </bundle> -->
 
 	<!-- scr, http, webconsole -->
-    <feature name='navajo.core' version='1.0.4' start-level='80'  >
+    <feature name='navajo.core' version='1.0.4' start-level='80'>
 	    <details>Navajo Core Components</details>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.29</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.1.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/1.0.22</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.expression/1.0.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.4.15</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.1.9</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.5</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.11.2</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.2</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
-		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
-		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/1.0.21</bundle>
+
 
 		
 	<!-- 	<bundle dependency='true'>mvn:org.apache.geronimo.modules/geronimo-mail/3.0-M1</bundle>
 		 -->
 	</feature>
 
+    <feature name='navajo.client.async' version='1.0.0' start-level='80'  >
+		<!-- check dependencies -->
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.1.9</bundle>
+	</feature>
+	
+		
+	<feature name='navajo.client.jabber' version='1.0.0' start-level='81' >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.jabber/1.0.7</bundle>
+		<bundle dependency='true'>mvn:org.igniterealtime.smack/smack/3.2.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
+	</feature>	
+
+    <feature name='navajo.client.nql' version='1.0.0' start-level='80'  >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.nql/1.0.0</bundle>
+	</feature>
+
+    <feature name='navajo.core.function' version='1.0.0' start-level='80'  >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.2</bundle>
+	</feature>
+
+    <feature name='navajo.server.adapter' version='1.0.0' start-level='80'  >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/1.1.20</bundle>
+	</feature>
+
+
+
 	<feature name='navajo.server' version='1.0.1' start-level='81' >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.5</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.11.2</bundle>
+		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
+		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/1.0.21</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/1.1.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/1.0.17</bundle>
@@ -42,17 +68,10 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino/1.1.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino.continuations/1.0.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.queuemanager/1.0.16</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/1.1.20</bundle>
 		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
 		<bundle dependency='true'>mvn:commons-lang/commons-lang/2.4</bundle>
 		<bundle dependency='true'>mvn:commons-dbcp/commons-dbcp/1.4</bundle>
 	</feature>
-	
-	<feature name='navajo.core.jabber' version='1.0.0' start-level='81' >
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.jabber/1.0.7</bundle>
-		<bundle dependency='true'>mvn:org.igniterealtime.smack/smack/3.2.2</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
-	</feature>	
 
 	<feature name='navajo.server.osgi' version='1.0.2' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/1.0.1</bundle>
@@ -77,10 +96,22 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	<feature name='tipi.core' version='1.0.2' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/1.1.35</bundle>
 	</feature>
+	
+	<feature name='tipi.core.css' version='1.0.2' start-level='81' >
+		<!-- add other w3c / sac dependencies -->
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css/1.0.13</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css.tkui/1.0.11</bundle>
+	</feature>
+
 	<feature name='tipi.vaadin' version='1.0.2' start-level='81' >
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.5</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.1.6</bundle>
 	</feature>
+
+	<feature name='tipi.vaadin.touch' version='1.0.0' start-level='81' >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin.touch/1.0.0</bundle>
+	</feature>
+
 
 	<feature name='navajo.camel' version='1.0.4' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/1.0.1</bundle>
