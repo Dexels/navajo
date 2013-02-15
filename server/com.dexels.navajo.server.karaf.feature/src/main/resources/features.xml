@@ -28,7 +28,6 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<!-- check dependencies -->
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.1.13</bundle>
 	</feature>
-	
 		
 	<feature name='navajo.client.jabber' version='1.0.0' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.jabber/1.0.7</bundle>
@@ -41,7 +40,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	</feature>
 
     <feature name='navajo.core.function' version='1.0.0' start-level='80'  >
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.2.0</bundle>
 	</feature>
 
     <feature name='navajo.server.adapter' version='1.0.0' start-level='80'  >
@@ -52,13 +51,13 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 
 	<feature name='navajo.server' version='1.0.1' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.5</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.11.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/3.0.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.nql/1.0.1</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/1.0.21</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/1.0.25</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/1.1.2</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.6</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/1.0.17</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.1.18</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino/1.1.14</bundle>
@@ -90,23 +89,28 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.0.10</bundle> 
 	</feature>
 	<feature name='tipi.core' version='1.0.2' start-level='81' >
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/1.1.35</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/1.1.43</bundle>
 	</feature>
 	
 	<feature name='tipi.core.css' version='1.0.2' start-level='81' >
 		<!-- add other w3c / sac dependencies -->
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css/1.0.13</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css.tkui/1.0.11</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css/1.1.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.css.tkui/1.1.0</bundle>
 	</feature>
 
-	<feature name='tipi.vaadin' version='1.0.2' start-level='81' >
+	<feature name='tipi.vaadin' version='1.0.3' start-level='81' >
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.5</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.1.6</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.2.2</bundle>
 	</feature>
 
 	<feature name='tipi.vaadin.touch' version='1.0.0' start-level='81' >
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin.touch/1.0.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin.touch/0.2.0</bundle>
 	</feature>
+
+	<feature name='tipi.mail' version='1.1.10' start-level='81' >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.mail/1.1.10</bundle>
+	</feature>
+
 
 
 	<feature name='navajo.camel' version='1.0.4' start-level='81' >
