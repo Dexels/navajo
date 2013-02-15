@@ -16,22 +16,17 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	<!-- scr, http, webconsole -->
     <feature name='navajo.core' version='1.0.4' start-level='80'>
 	    <details>Navajo Core Components</details>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.29</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.1.6</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.28</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.1.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/1.0.22</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.expression/1.0.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.expression/1.0.1</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.5.0</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
-
-
-		
-	<!-- 	<bundle dependency='true'>mvn:org.apache.geronimo.modules/geronimo-mail/3.0-M1</bundle>
-		 -->
 	</feature>
 
     <feature name='navajo.client.async' version='1.0.0' start-level='80'  >
 		<!-- check dependencies -->
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.1.9</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.1.13</bundle>
 	</feature>
 	
 		
@@ -58,6 +53,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	<feature name='navajo.server' version='1.0.1' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.5</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.11.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.nql/1.0.1</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/1.0.21</bundle>
