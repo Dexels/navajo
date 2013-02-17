@@ -35,7 +35,6 @@ public class InstanceConfigurationProviderImpl implements
 	private final Set<String> deployments = new HashSet<String>();
 	private final Set<String> profiles = new HashSet<String>();
 	private final Map<String,Object> global = new HashMap<String, Object>();
-//	private final Map<String,Map<String,Object>> profileSettings = new HashMap<String,Map<String,Object>>();
 	private final Map<String,Map<String,Map<String,Object>>> deploymentSettings = new HashMap<String,Map<String,Map<String,Object>>>();
 	
 	private final static Logger logger = LoggerFactory
@@ -71,10 +70,10 @@ public class InstanceConfigurationProviderImpl implements
 		deployments.clear();
 		profiles.clear();
 		resourcePids.clear();
-//		"/Users/frank/git/memberportal/com.sportlink.memberportal.tipi"
 		String root = (String) parameters.get("path");
-		logger.info("========>  Activating");
+		logger.info("========>  Activating root folder: {}",root);
 		rootFolder = new File(root);
+
 		File arguments = new File(rootFolder,"settings/arguments.properties");
 		if(!arguments.exists()) {
 			logger.error("No arguments found: "+arguments.getAbsolutePath());
@@ -157,9 +156,6 @@ public class InstanceConfigurationProviderImpl implements
 					}
 				}
 			}
-
-
-//			registerFileServlet(rootFolder.getAbsolutePath(), bundleContext);
 			emitDeployments();
 		} catch (IOException e) {
 			logger.error("Error: ", e);
