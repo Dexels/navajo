@@ -458,6 +458,13 @@ private Object waitForResult = new Object();
 	  addProperty(currentProperty);
   }
   
+  public final void setPropertyType(String type) throws UserException {
+	  if ( currentProperty == null ) {
+		  throw new UserException(-1, "Set property name first");
+	  }
+	  currentProperty.setType(type);
+  }
+  
   public final void setBooleanProperty(boolean b) throws UserException {
     currentProperty.setType(Property.BOOLEAN_PROPERTY);
     currentProperty.setValue(b);
