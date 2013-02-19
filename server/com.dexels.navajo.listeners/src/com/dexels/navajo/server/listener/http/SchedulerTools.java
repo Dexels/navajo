@@ -18,7 +18,6 @@ public class SchedulerTools {
 
 	private static final Logger logger = LoggerFactory.getLogger(SchedulerTools.class);
 
-	@SuppressWarnings("unchecked")
 	public static TmlScheduler createScheduler(ServletContext context) {
 		String schedulerName = context.getInitParameter("schedulerClass");
 		if (schedulerName != null) {
