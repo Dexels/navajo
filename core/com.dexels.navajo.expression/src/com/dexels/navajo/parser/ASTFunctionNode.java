@@ -142,7 +142,6 @@ public final class ASTFunctionNode extends SimpleNode {
 	public final Object interpret() throws TMLExpressionException {
 
 
-		
 		FunctionFactoryInterface fff = FunctionFactoryFactory.getInstance();
 //		cl = fff.get
 		FunctionInterface f = null;

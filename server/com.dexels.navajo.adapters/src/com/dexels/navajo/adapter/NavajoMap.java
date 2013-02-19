@@ -150,6 +150,9 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   private NavajoMapResponseListener myResponseListener = null;
   private String id;
   
+  private List<String> deletedProperties = new ArrayList<String>();
+  private List<String> deletedMessages = new ArrayList<String>();
+  
   public String getId() {
 	  return id;
   }
@@ -415,11 +418,15 @@ private Object waitForResult = new Object();
     }
   }
 
-  public final void setDeleteProperty(String fullName)  {
-	 Property p = outDoc.getProperty(fullName);
-	 if ( p != null ) {
-		 p.getParentMessage().removeProperty(p);
-	 }
+  public final void setDeleteProperty(String fullName) throws UserException {
+	  setPropertyName(fullName);
+	  if ( currentProperty != null ) {
+		  Message m = currentProperty.getParentMessage();
+		  deletedProperties.add(fullName);
+		  if ( m != null ) {
+			  m.removeProperty(currentProperty);
+		  }
+	  }
   }
   
   public final void setDeleteMessage(String fullName) {
@@ -427,6 +434,7 @@ private Object waitForResult = new Object();
 	  if ( m != null ) {
 			 outDoc.removeMessage(m);
 	  }
+	  deletedMessages.add(fullName);
   }
   
   public final void setIntegerProperty(int i) throws UserException {
@@ -456,6 +464,13 @@ private Object waitForResult = new Object();
 		  currentProperty.setAnyValue(o);
 	  }
 	  addProperty(currentProperty);
+  }
+  
+  public final void setPropertyType(String type) throws UserException {
+	  if ( currentProperty == null ) {
+		  throw new UserException(-1, "Set property name first");
+	  }
+	  currentProperty.setType(type);
   }
   
   public final void setBooleanProperty(boolean b) throws UserException {
@@ -601,6 +616,29 @@ private Object waitForResult = new Object();
 				} catch (NavajoException e) {
 					e.printStackTrace(Access.getConsoleWriter(access));
 				}
+			  }
+			  
+			  // Check for deleted messages.
+			  if ( deletedMessages.size() > 0 ) {
+				  for (String dMn: deletedMessages ) {
+					  Message dM = outDoc.getMessage(dMn);
+					  if ( dM != null ) {
+						  Navajo rN = dM.getRootDoc();
+						  rN.removeMessage(dMn);
+					  }
+				  }
+			  }
+			  // Check for deleted properties.
+			  if ( deletedProperties.size() > 0 ) {
+				  for (String dPn: deletedProperties) {
+					  if ( dPn != null ) {
+						  Property dP = outDoc.getProperty(dPn);
+						  if ( dP != null ) {
+							  Message dm = dP.getParentMessage();
+							  dm.removeProperty(dP);
+						  }
+					  }
+				  }
 			  }
 		  }
 		  
