@@ -67,8 +67,7 @@ Export-Package: com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.na
   uses:="com.dexels.navajo.server,
    com.dexels.navajo.mapping,
    org.w3c.dom,
-   com.dexels.navajo.document",
- navajoextension
+   com.dexels.navajo.document"
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.authentication.api,
  com.dexels.navajo.client,
@@ -93,6 +92,7 @@ Import-Package: com.dexels.navajo.authentication.api,
  javax.management.openmbean,
  javax.management.remote,
  navajo,
+ navajoextension;version="2.0.0",
  org.apache.commons.io,
  org.junit;resolution:=optional,
  org.junit.runner;resolution:=optional,

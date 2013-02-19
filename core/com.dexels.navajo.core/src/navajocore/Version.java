@@ -8,8 +8,6 @@ import org.osgi.framework.BundleContext;
 import com.dexels.navajo.adapter.core.NavajoCoreAdapterLibrary;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.functions.core.CoreFunctionDefinitions;
-import com.dexels.navajo.mapping.compiler.meta.MapMetaDataFactory;
-import com.dexels.navajo.mapping.compiler.meta.impl.MapMetaDataImpl;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
