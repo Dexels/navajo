@@ -97,6 +97,14 @@ public class XMLStreamMap implements Mappable {
 		}
 	}
 	
+	public void setValue(String value) throws UserException {
+		try {
+			
+			xtw.writeCharacters(value);
+		} catch (Exception e) {
+			throw new UserException(452, e.getMessage());
+		}
+	}
 	/**
 	 * @param b  
 	 */
