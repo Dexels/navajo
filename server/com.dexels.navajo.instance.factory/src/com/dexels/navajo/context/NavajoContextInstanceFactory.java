@@ -53,7 +53,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		File[] fd = settings.listFiles();
 		File globalPropertyFile = new File(settings,"application.properties");
 		Map<String,Object> globalProperties = readProperties(globalPropertyFile);
-		Map<String,Message> globalResources = readResources(globalResourceFile);
+		Map<Set<String>,Message> globalResources = readResources(globalResourceFile);
 		for (Message dataSource : globalResources.values()) {
 			try {
 				addDatasource("*",dataSource);
@@ -75,8 +75,8 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		}
 	}
 	
-	private Map<String,Message> readResources(File resource) {
-		Map<String,Message> result = new HashMap<String, Message>();
+	private Map<Set<String>,Message> readResources(File resource) {
+		Map<Set<String>,Message> result = new HashMap<Set<String>, Message>();
 		FileReader fr = null;
 		try {
 			fr = new FileReader(resource);
@@ -93,7 +93,9 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			}
 			List<Message> sources = m.getAllMessages();
 			for (Message rsrc : sources) {
-				result.put(rsrc.getName(), rsrc);
+				Set<String> nameSet = new HashSet<String>();
+				nameSet.add(rsrc.getName());
+				result.put(nameSet, rsrc);
 			}
 			logger.info("# of resources: "+result.size());
 		} catch (FileNotFoundException e) {
@@ -107,6 +109,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 				}
 			}
 		}
+		// process aliases
 		return result;
 	}
 
@@ -138,7 +141,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		return result;
 	}
 
-	private void appendInstance(String name, File instanceFolder, Map<String, Object> globalProperties, Map<String, Message> globalResources) throws IOException {
+	private void appendInstance(String name, File instanceFolder, Map<String, Object> globalProperties, Map<Set<String>, Message> globalResources) throws IOException {
 		logger.info ("Name: "+name);
 		Map<String, Object> copyOfProperties = new HashMap<String, Object>(globalProperties);
 //		copyOfProperties.putAll(globalProperties);
@@ -151,14 +154,14 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			copyOfProperties.putAll(instanceSpecific);
 		}
 		File instanceResource = new File(config,"resources.xml");
-		Map<String,Message> resources = readResources(instanceResource);
+		Map<Set<String>,Message> resources = readResources(instanceResource);
 //		copyOfResources.putAll(resources);
 //		registerInstance(name);
 		registerInstanceProperties(name,copyOfProperties);
 		registerInstanceResources(name,resources);
 	}
 
-	private void registerInstanceResources(String name,Map<String, Message> resources) throws IOException {
+	private void registerInstanceResources(String name,Map<Set<String>, Message> resources) throws IOException {
 		for (Message dataSource : resources.values()) {
 			addDatasource(name,dataSource);
 		}
@@ -243,6 +246,14 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			}
 			settings.put(property.getName(), property.getTypedValue());
 		}
+//		Property p = dataSource.getProperty("alias");
+//		if(p!=null) {
+//			Object o = p.getTypedValue();
+//			String s = p.getValue();
+//			if(s!=null) {
+//				System.err.println(": "+o);
+//			}
+//		}
 		settings.put("name", "navajo.resource."+name);
 		settings.put("instance", instance);
 		String type = (String)dataSource.getProperty("type").getTypedValue();
@@ -289,6 +300,8 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			if(!old.equals(settings)) {
 				c.update(settings);
 			}
+		} else{
+			c.update(settings);
 		}
 	}
 	
