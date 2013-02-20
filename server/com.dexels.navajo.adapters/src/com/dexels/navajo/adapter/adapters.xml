@@ -353,6 +353,7 @@
 			<method name="createproperty">
 				<param name="name" field="propertyName" type="string"
 					required="true" />
+				<param name="type" field="propertyType" type="string" required="false"/>
 				<param name="value" field="property" type="any" required="true" />
 			</method>
 			<!--  Deletes a property -->

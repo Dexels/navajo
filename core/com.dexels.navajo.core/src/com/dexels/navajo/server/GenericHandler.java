@@ -281,8 +281,7 @@ public final class GenericHandler extends ServiceHandler {
     	NavajoClassSupplier newLoader = loadedClasses.get(className);
          if (newLoader == null ) {
          	newLoader = new NavajoClassLoader(null, DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath(), 
-         			( isBetaUser ? DispatcherFactory.getInstance().getNavajoConfig().getBetaClassLoader() : 
-         				DispatcherFactory.getInstance().getNavajoConfig().getClassloader() ) );
+         			DispatcherFactory.getInstance().getNavajoConfig().getClassloader() );
          	// Use concurrent hashmap: if key exists, return existing classloader.
          	NavajoClassSupplier ncs = loadedClasses.putIfAbsent(className, newLoader);
          	if ( ncs != null ) {

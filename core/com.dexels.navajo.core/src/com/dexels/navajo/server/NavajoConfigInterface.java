@@ -23,7 +23,7 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	public Repository getRepository();
 	public StatisticsRunnerInterface getStatisticsRunner();
 	public NavajoClassSupplier getClassloader();
-	public NavajoClassLoader getBetaClassLoader();
+	
 	public void setClassloader(NavajoClassSupplier classloader);
 	public AsyncStore getAsyncStore();
 	public DescriptionProviderInterface getDescriptionProvider();
@@ -50,7 +50,6 @@ public interface NavajoConfigInterface extends NavajoIOConfig {
 	public void setStatisticsRunnerEnabled(boolean b);
 
 //	public HashMap<String,String> getProperties();
-	public String getBetaUser();
 	public int getMaxAccessSetSize();
 	public float getAsyncTimeout();
 	public void doClearCache();

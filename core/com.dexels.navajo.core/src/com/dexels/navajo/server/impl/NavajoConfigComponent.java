@@ -236,11 +236,6 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	}
 
 	@Override
-	public NavajoClassLoader getBetaClassLoader() {
-		return betaClassloader;
-	}
-
-	@Override
 	public void setClassloader(NavajoClassSupplier classloader) {
 		adapterClassloader = classloader;
 	}
@@ -313,12 +308,6 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	@Override
 	public String getResourcePath() {
 		return (String) properties.get("resource");
-	}
-
-	@Override
-	public String getBetaUser() {
-		logger.debug("getBetaUser is deprecated, and always return null");
-		return "__beta__";
 	}
 
 	@Override
