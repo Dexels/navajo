@@ -8,6 +8,8 @@ import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
+import oauth.signpost.basic.DefaultOAuthProvider;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -283,7 +285,13 @@ public class TwitterAdapter {
 	
 	private void createSignPostObkect() {
 		if ( mySignPost == null ) {
+			DefaultOAuthProvider provider = new DefaultOAuthProvider(
+	                "https://api.twitter.com/oauth/request_token",
+	                "https://api.twitter.com/oauth/access_token",
+	                "https://api.twitter.com/oauth/authorize");
+	
 			mySignPost =	new OAuthSignpostClient(API_KEY, API_SECRET, "oob");
+			mySignPost.setProvider(provider);
 		}
 	}
 	
@@ -351,9 +359,9 @@ public class TwitterAdapter {
 		
 		TwitterAdapter ta = new TwitterAdapter();
 		
-		//ta.setToken1("120028662-XVGkW8KfPcTCf1t7P0O1ERhCkaEckPpdp4tkLRCm");
-		//ta.setToken2("Tsry73LpbdmIgCS1clJCo0npeZ5m21ocFYIZI7Ww");
-		
+//		ta.setToken1("120028662-XVGkW8KfPcTCf1t7P0O1ERhCkaEckPpdp4tkLRCm");
+//		ta.setToken2("Tsry73LpbdmIgCS1clJCo0npeZ5m21ocFYIZI7Ww");
+	
 		
 		String url = ta.getBrowserURL();
 		Binary sign = ta.getSignPost();
