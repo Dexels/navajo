@@ -16,7 +16,6 @@ import tipi.TipiExtension;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.vaadin.application.ApplicationUtils;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
 import com.dexels.navajo.tipi.vaadin.components.io.URLInputStreamSource;
 import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
@@ -201,11 +200,7 @@ public class VaadinTipiContext extends TipiContext {
 		String lastMimeType = null;
 		StreamSource is = null;
 		if (u instanceof URL) {
-			if (ApplicationUtils.isRunningInGae()) {
-					is = resolve((URL) u);
-			} else {
-					is = new URLInputStreamSource((URL) u);
-			}
+			is = new URLInputStreamSource((URL) u);
 		}
 		if (u instanceof Binary) {
 			lastMimeType = ((Binary)u).guessContentType();
@@ -216,10 +211,6 @@ public class VaadinTipiContext extends TipiContext {
 		StreamResource sr = new StreamResource(is, ""+u,getApplication());
 		sr.setMIMEType(lastMimeType);
 		return sr;
-	}
-	
-	private StreamSource resolve(URL u)  {
-		return new URLInputStreamSource(u);
 	}
 	
 }

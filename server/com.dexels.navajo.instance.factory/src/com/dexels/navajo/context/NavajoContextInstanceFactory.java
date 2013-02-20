@@ -280,7 +280,8 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 //		Configuration cc = configAdmin.getConfiguration("navajo.resource."+instance+"."+name,null);
 		final String filter = "(&(instance="+instance+")(name=navajo.resource."+name+"))";
 		Configuration cc = createOrReuse("navajo.resource."+type, filter);
-		cc.update(settings);
+		updateIfChanged(cc, settings);
+//		cc.update(settings);
 		logger.debug("Data source settings for source: {} : {}",name,settings);
 		
 		addResourceGroup(name,instance,type);
@@ -305,6 +306,15 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			resourcePids.add(cc.getPid());
 		}
 		return cc;
+	}
+	
+	private void updateIfChanged(Configuration c, Dictionary<String,Object> settings) throws IOException {
+		Dictionary<String,Object> old = c.getProperties();
+		if(old!=null) {
+			if(!old.equals(settings)) {
+				c.update(settings);
+			}
+		}
 	}
 	
 

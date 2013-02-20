@@ -18,13 +18,14 @@ package com.dexels.navajo.camel.expression;
 
 import java.util.Collections;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.apache.camel.Expression;
+import org.apache.camel.Predicate;
 import org.apache.camel.model.ExpressionNode;
 import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.Predicate;
 import org.apache.camel.model.language.ExpressionDefinition;
 
 /**

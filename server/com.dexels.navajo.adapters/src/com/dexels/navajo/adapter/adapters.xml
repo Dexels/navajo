@@ -1,6 +1,14 @@
 <adapterdef>
 
 	<map>
+		<tagname>asynctest</tagname>
+		<object>com.dexels.navajo.mapping.AsyncTest</object>
+	</map>
+	<map>
+		<tagname>asyncproxy</tagname>
+		<object>com.dexels.navajo.adapter.AsyncProxy</object>
+	</map>	
+	<map>
 		<tagname>sqldatasourcemap</tagname>
 		<object>com.dexels.navajo.adapter.sqlmap.SQLMapDatasourceMap</object>
 	</map>
@@ -25,13 +33,17 @@
 		<object>com.dexels.navajo.adapter.filemap.FileRecordMap</object>
 	</map>
 	<map>
-		<tagname>asyncproxy</tagname>
+		<tagname>asyncproxymap</tagname>
 		<object>com.dexels.navajo.adapter.AsyncProxyMap</object>
 	</map>
 	<map>
 		<tagname>tokenizer</tagname>
 		<object>com.dexels.navajo.adapter.TokenizerMap</object>
 	</map>	
+	<map>
+		<tagname>databaseinfo</tagname>
+		<object>com.dexels.navajo.adapter.sqlmap.DatabaseInfo</object>
+	</map>
 	<map>
 		<tagname>oracleadministrator</tagname>
 		<object>com.dexels.navajo.adapter.OracleAdministratorMap</object>
@@ -341,6 +353,7 @@
 			<method name="createproperty">
 				<param name="name" field="propertyName" type="string"
 					required="true" />
+				<param name="type" field="propertyType" type="string" required="false"/>
 				<param name="value" field="property" type="any" required="true" />
 			</method>
 			<!--  Deletes a property -->
@@ -548,6 +561,10 @@
 				<param name="value" field="attributeValue" type="string"
 					required="true" />
 			</method>
+			<method name="setValue">
+				<param name="value" field="value" type="string"
+					required="true" />
+			</method>
 		</methods>
 	</map>
 	<!-- XML adapter oldstyle, memory inefficient -->
@@ -667,6 +684,19 @@
 					required="automatic" value="true" />
 			</method>
 		</methods>
+	</map>
+
+	<!-- TmlToPain adapter -->
+	<!-- necessary because Pain requires a very specific order of elements. --> 
+	<!-- The adapter imposes the order and ignores elements outside this order but otherwise behaves as tml2xml map -->
+	<map>
+		<tagname>tml2pain</tagname>
+		<object>com.dexels.navajo.adapter.TmlToPainMap</object>
+		<values>
+			<value name="rootPath" type="string" required="true" direction="in" />
+			<value name="separator" type="string" required="false" direction="in" />
+			<value name="content" type="binary" required="false" direction="out" />
+		</values>
 	</map>
 
 	<map>

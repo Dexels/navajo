@@ -2475,7 +2475,8 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 		}
 	      
 	      if (tsl == null || tsl.getLength() != 1 || !(tsl.item(0) instanceof Element)) {
-	        throw new SystemException(-1, "Invalid or non existing script file: " + scriptPath + "/" + packagePath + "/" + script + ".xml");
+	    	throw new SkipCompilationException("Ignoring file: "+scriptPath);
+//	        throw new SystemException(-1, "Invalid or non existing script file: " + scriptPath + "/" + packagePath + "/" + script + ".xml");
 	      }
 	      Element tslElt = (Element) tsl.item(0);
 	      boolean includeOnly = "true".equals(tslElt.getAttribute("includeOnly"));

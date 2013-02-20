@@ -4,9 +4,7 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.18.qualifier
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.tipi,
- com.dexels.navajo.core,
- com.dexels.navajo.client;bundle-version="3.0.2"
+Require-Bundle: com.dexels.navajo.tipi
 Bundle-ClassPath: .,
  lib/smack.jar,
  lib/smackx.jar
@@ -14,6 +12,7 @@ Bundle-Activator: tipi.TipiJabberExtension
 Import-Package: com.dexels.navajo.client.jabber,
  com.dexels.navajo.client.sessiontoken,
  com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.tipilink,
  com.dexels.navajo.version,
  javax.net,
  javax.net.ssl,

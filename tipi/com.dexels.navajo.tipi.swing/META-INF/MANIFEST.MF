@@ -11,7 +11,6 @@ Export-Package: com.dexels.navajo.tipi.components.swingimpl,
  tipiswing
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi,
- com.dexels.navajo.core,
  com.dexels.navajo.tipi.swing.deps,
  com.dexels.navajo.tipi.swing.client;bundle-version="1.0.3"
 Bundle-ClassPath: .
@@ -19,6 +18,8 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.metadata;version="2.2.0",
  com.dexels.navajo.document.notifier,
  com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.parser,
+ com.dexels.navajo.tipilink,
  com.dexels.navajo.version,
  javax.imageio,
  javax.sound.sampled,
@@ -40,6 +41,7 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  javax.swing.tree,
  javax.swing.undo,
  navajo,
+ navajoextension,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

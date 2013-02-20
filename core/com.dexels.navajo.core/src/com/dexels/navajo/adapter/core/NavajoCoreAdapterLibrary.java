@@ -14,7 +14,7 @@ public class NavajoCoreAdapterLibrary implements ExtensionDefinition {
 	private transient ClassLoader extensionClassLoader = null;
 	
 	public InputStream getDefinitionAsStream() {
-		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/adapter/core/coreadapters.xml");
+		return getClass().getResourceAsStream("coreadapters.xml");
 	}
 
 	public String getConnectorId() {

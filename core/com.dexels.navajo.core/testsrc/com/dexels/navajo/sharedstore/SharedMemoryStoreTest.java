@@ -1,24 +1,13 @@
 package com.dexels.navajo.sharedstore;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Serializable;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.test.TestNavajoConfig;
 
 class MySerializableObject implements Serializable {
 

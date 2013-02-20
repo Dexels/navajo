@@ -712,7 +712,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 	  return determineTypeForField(field, c).startsWith("[L");	  
   }
   
-  public static final boolean isIteratorAttribute(Class c, String field) throws MappingException {
+  public static final boolean isIteratorAttribute(Class c, String field) {
 	  try {
 		return getTypeForField(field, c, false).equals(Iterator.class);
 	} catch (Exception e) {
@@ -729,7 +729,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 		 try {
 			 if ( c.getField(name).getType().equals(Iterator.class) && fetchGenericType ) {
 				 ParameterizedType pt = (ParameterizedType) c.getField(name).getGenericType();
-				 return ((Class<?>) pt.getActualTypeArguments()[0]);
+				 return (pt.getActualTypeArguments()[0]);
 			 } else {
 				 return c.getField(name).getType();
 			 }
@@ -737,7 +737,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 			 try {
 				 if ( c.getDeclaredField(name).getType().equals(Iterator.class) && fetchGenericType ) {
 					 ParameterizedType pt = (ParameterizedType) c.getDeclaredField(name).getGenericType();
-					 return ((Class<?>) pt.getActualTypeArguments()[0]);
+					 return (pt.getActualTypeArguments()[0]);
 				 } else {
 					 return c.getDeclaredField(name).getType();
 				 }
@@ -746,7 +746,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 					 Method m = c.getMethod(constructGetMethod(name), (Class[])null);
 					 if ( m.getReturnType().equals(Iterator.class) && fetchGenericType ) {
 						 ParameterizedType pt = (ParameterizedType) m.getGenericReturnType();
-						 return ((Class<?>) pt.getActualTypeArguments()[0]);
+						 return (pt.getActualTypeArguments()[0]);
 					 } else {
 						 return m.getReturnType();
 					 }

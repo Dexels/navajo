@@ -11,7 +11,6 @@ Export-Package: com.dexels.navajo.tipi.components.swingimpl,
  navajoswingtipi
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi,
- com.dexels.navajo.core,
  com.dexels.navajo.tipi.swing.deps,
  com.dexels.navajo.tipi.swing.client;bundle-version="1.0.3",
  com.dexels.navajo.tipi.swing;bundle-version="1.1.7",
@@ -20,6 +19,7 @@ Bundle-ClassPath: .,
  lib/gluegen-rt.jar,
  lib/jogl.jar
 Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.tipilink,
  com.dexels.navajo.version,
  com.jogamp.opengl.util,
  com.jogamp.opengl.util.awt,
@@ -49,6 +49,7 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  javax.swing.text.rtf,
  javax.swing.tree,
  javax.swing.undo,
+ navajoextension,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

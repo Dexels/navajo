@@ -113,16 +113,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	}
 
 	@Override
-	public NavajoClassLoader getBetaClassLoader() {
-		return (NavajoClassLoader) getClassloader();
-	}
-
-	@Override
-	public String getBetaUser() {
-		return "beta";
-	}
-
-	@Override
 	public String getCompiledScriptPath() {
 		return null;
 	}

@@ -2,9 +2,7 @@ package com.dexels.navajo.client;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Iterator;
@@ -13,18 +11,16 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 
-//import javax.mail.Session;
-//import javax.mail.Transport;
-//import javax.mail.internet.InternetAddress;
-//import javax.mail.internet.MimeMessage;
-
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.jcraft.jzlib.DeflaterOutputStream;
-import com.jcraft.jzlib.InflaterInputStream;
+//import javax.mail.Session;
+//import javax.mail.Transport;
+//import javax.mail.internet.InternetAddress;
+//import javax.mail.internet.MimeMessage;
 
 public class TestHttpClient {
 
@@ -124,34 +120,7 @@ public class TestHttpClient {
 	    		System.err.println("Got error code: " + con.getResponseCode());
 	    	}
 		    
-		    if ( false ) {
-		    InputStream in = null;
-		    Navajo n = null;
-		    try {
-		    	
-		    	//} else {
-		    		in = new InflaterInputStream(con.getInputStream());
-		    		//in = con.getInputStream();
-		    	//}
-		    	if ( in != null ) {
-		    		result = printHeader(con.getHeaderFields());
-		    		try {
-		    		n = NavajoFactory.getInstance().createNavajo(in);
-		    		StringWriter sb = new StringWriter();
-		    		n.write(sb);
-		    		result = result + "\n" + sb.toString();
-		    		} catch (Throwable t) {
-		    			result = result + t.getLocalizedMessage();
-		    		}
-		    	}
-		    } finally {
-		    	if ( in != null ) {
-		    		in.close();
-		    		in = null;
-		    	}
-		    	//con.disconnect();
-		    }
-		    }
+
 		    
 		    return result;
 		  }
@@ -190,7 +159,6 @@ public class TestHttpClient {
 	
 	public static void main(String [] args) throws Exception {
 		
-		boolean debug = false;
 		
 		if ( args.length < 5 ) {
 			System.err.println("Usage: TestHttpClient [Postman URL] [Mail ontvangers] [Mail Server] [Aantal iteraties] [Max rate] {[debug]}");
@@ -203,7 +171,6 @@ public class TestHttpClient {
 		Integer maxRate = Integer.parseInt(args[4]);
 		double minTime = (1.0/maxRate)*1000.0;
 		if ( args.length > 5 ) {
-			debug = true;
 			loopCount = "1";
 		}
 		System.err.println("url  = " + url);
@@ -221,7 +188,6 @@ public class TestHttpClient {
 		for (int i = 0; i < Integer.parseInt(loopCount); i++) {
 			try {
 			 long start = System.currentTimeMillis();
-			 String header = TestHttpClient.call(url);
 			 long end = System.currentTimeMillis();
 			 double sleepTime = (minTime - ( end - start ));
 			 //System.err.println("sleepTime: " + sleepTime);
@@ -230,14 +196,7 @@ public class TestHttpClient {
 				 end = System.currentTimeMillis();
 			 }
 			 total += ( end - start )/1000.0;
-			 if ( 1 == 2 && ( debug || header.indexOf("accessId") == -1 )) {
-					 System.err.println(header+"---------------------------------\n");
-					 // SEND MAIL FOR FAILURE
-					 //sendMail(header, session, mail, debug);
-					 
-				// }
-				 //System.exit(1);
-			   }
+
 			} catch (Exception e) {
 				e.printStackTrace(System.err);
 				//System.exit(1);

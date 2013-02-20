@@ -317,7 +317,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		File classFileInPlace = new File(bundlePackageDir, script + ".class");
 		File factoryClassFileInPlace = new File(bundlePackageDir, script
 				+ "Factory.class");
-		File parent = classFile.getParentFile();
+//		File parent = classFile.getParentFile();
 //		if(!parent.exists()) {
 //			parent.mkdirs();
 //		}
@@ -580,7 +580,6 @@ public class BundleCreatorComponent implements BundleCreator {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	private CompiledScript waitForService(String rpcPath) throws Exception {
 		String rpcName = rpcPath.replaceAll("/", ".");
 		// script://person/InitSearchPersons

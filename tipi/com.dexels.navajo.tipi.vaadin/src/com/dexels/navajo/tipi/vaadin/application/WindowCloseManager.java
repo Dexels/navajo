@@ -35,18 +35,16 @@ public class WindowCloseManager implements CloseListener {
 	}
 
 	protected void handleWindowClose() {
-		if(!ApplicationUtils.isRunningInGae()) {
-			 shutdownTimer  = new Timer("DisconnectTimer",true);
-			 shutdownTimer.schedule(new TimerTask(){
+		 shutdownTimer  = new Timer("DisconnectTimer",true);
+		 shutdownTimer.schedule(new TimerTask(){
 
-				@Override
-				public void run() {
-					logger.debug("Shutdown firing!");
-					tipiContext.shutdown();
-					application.close();
-					logger.info("Shutting down instance. Goodbye");
-				}}, 10000);
-		}
+			@Override
+			public void run() {
+				logger.debug("Shutdown firing!");
+				tipiContext.shutdown();
+				application.close();
+				logger.info("Shutting down instance. Goodbye");
+			}}, 10000);
 	}
 	
 	public void cancelShutdownTimer() {

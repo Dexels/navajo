@@ -1,12 +1,9 @@
 package com.dexels.navajo.server.enterprise.scheduler;
 
 import java.lang.reflect.Method;
-import java.util.logging.Level;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.util.AuditLog;
 
 public class WebserviceListenerFactory {
 

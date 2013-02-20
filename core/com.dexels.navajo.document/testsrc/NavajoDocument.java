@@ -7,7 +7,9 @@ import org.junit.runners.Suite;
 	TestProperty.class, 
 	TestSelection.class, 
 	TestMessage.class,
-	TestNavajo.class})  
+	TestNavajo.class,
+	TestBinary.class,
+	TestXmlParser.class})  
 public class NavajoDocument  {
 
   public NavajoDocument() {

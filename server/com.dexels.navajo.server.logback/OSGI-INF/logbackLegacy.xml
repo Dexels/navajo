@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" enabled="true" name="com.dexels.navajo.server.logback">
+   <implementation class="com.dexels.navajo.server.logback.LegacyLogbackConfigurator"/>
+   <reference bind="setNavajoContext" cardinality="1..1" interface="com.dexels.navajo.server.api.NavajoServerContext" name="NavajoServerContext" policy="dynamic" target="(objectClass=com.dexels.navajo.server.api.NavajoServerContext)" unbind="clearNavajoContext"/>
+</scr:component>

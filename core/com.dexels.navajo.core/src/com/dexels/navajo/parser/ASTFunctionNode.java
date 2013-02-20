@@ -145,15 +145,10 @@ public final class ASTFunctionNode extends SimpleNode {
 		ClassLoader cl = null;
 		if ( DispatcherFactory.getInstance() == null ) {
 			cl = getClass().getClassLoader();
-		} else if ( doc != null && doc.getHeader() != null && 
-				doc.getHeader().getRPCUser() != null && 
-				!doc.getHeader().getRPCUser().endsWith(DispatcherFactory.getInstance().getNavajoConfig().getBetaUser())) {
+		} else  {
 			cl = DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
-		} else {
-			cl = DispatcherFactory.getInstance().getNavajoConfig().getBetaClassLoader();
-		}
+		} 
 
-		
 		FunctionFactoryInterface fff = FunctionFactoryFactory.getInstance();
 		FunctionInterface f = null;
 		
