@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.article.command.element">
+   <implementation class="com.dexels.navajo.article.command.impl.ElementCommand"/>
+   <property name="command.name" type="String" value="element"/>
+   <service>
+      <provide interface="com.dexels.navajo.article.command.ArticleCommand"/>
+   </service>
+</scr:component>
