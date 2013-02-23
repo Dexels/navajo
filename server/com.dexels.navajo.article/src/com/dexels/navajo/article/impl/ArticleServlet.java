@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,23 +27,27 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 
 	private ArticleContext context;
 	
-	public void activate() {
-		logger.info("Activating acticle component");
+	public ArticleServlet() {
+		
 	}
-
-	public void deactivate() {
-		logger.info("Deactivating acticle component");
-	}
+	
+//	public void activate() {
+//		logger.info("Activating acticle component");
+//	}
+//
+//	public void deactivate() {
+//		logger.info("Deactivating acticle component");
+//	}
 	
 	public ArticleContext getContext() {
 		return context;
 	}
 
-	public void setContext(ArticleContext context) {
+	public void setArticleContext(ArticleContext context) {
 		this.context = context;
 	}
 
-	public void clearContext(ArticleContext context) {
+	public void clearArticleContext(ArticleContext context) {
 		this.context = null;
 	}
 
@@ -51,6 +56,9 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 			throws ServletException, IOException {
 
 		String pathInfo = req.getPathInfo();
+		if(pathInfo==null) {
+			throw new ServletException("No article found, please specify after article");
+		}
 		File article = context.resolveArticle(pathInfo);
 		if(article.exists()) {
 			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article);
@@ -63,6 +71,11 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		} else {
 			throw new FileNotFoundException("Unknown article: "+article.getAbsolutePath());
 		}
+	}
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
 	}
 
 

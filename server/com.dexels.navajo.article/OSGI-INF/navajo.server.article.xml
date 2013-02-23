@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="navajo.server.article">
-   <implementation class="com.dexels.navajo.article.impl.ServletArticleRuntimeImpl"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="navajo.server.article">
+   <implementation class="com.dexels.navajo.article.impl.ServletContextImpl"/>
    <service>
       <provide interface="com.dexels.navajo.article.ArticleContext"/>
    </service>

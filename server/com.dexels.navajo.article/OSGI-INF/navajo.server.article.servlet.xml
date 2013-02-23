@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="navajo.server.article.servlet">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.server.article.servlet">
    <implementation class="com.dexels.navajo.article.impl.ArticleServlet"/>
+   <reference bind="setArticleContext" cardinality="1..1" interface="com.dexels.navajo.article.ArticleContext" name="ArticleContext" policy="dynamic" unbind="clearArticleContext"/>
+   <property name="alias" type="String" value="/article"/>
    <service>
       <provide interface="javax.servlet.Servlet"/>
    </service>
-   <reference bind="setContext" cardinality="1..1" interface="com.dexels.navajo.article.ArticleContext" name="ArticleContext" policy="dynamic" unbind="clearContext"/>
-   <property name="alias" type="String" value="/article"/>
 </scr:component>
