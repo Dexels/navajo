@@ -473,6 +473,8 @@ public interface Message
 
 	public List<Message> getElements();
 
+	public void printElementJSONTypeless(final Writer sw) throws IOException;
+
 	
 
 }
