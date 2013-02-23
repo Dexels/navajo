@@ -49,5 +49,9 @@ public class TestRuntimeImpl extends BaseRuntimeImpl {
 	public Writer getOutputWriter() throws IOException {
 		return writer;
 	}
+	
+	public String getOutput() {
+		return writer.toString();
+	}
 
 }

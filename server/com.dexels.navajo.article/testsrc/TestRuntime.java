@@ -45,6 +45,8 @@ public class TestRuntime {
 		File art =context.resolveArticle("/searchclub");
 		TestRuntimeImpl tr = new TestRuntimeImpl(art);
 		context.interpretArticle(art,tr);
+		System.err.println( tr.getOutput());
+		
 	}
 
 }

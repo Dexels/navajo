@@ -53,7 +53,8 @@ public class TableCommand implements ArticleCommand {
 			throw new ArticleException("Path: "+path+" was not found in navajo : "+service);
 		}
 		try {
-			m.write(runtime.getOutputWriter());
+			
+			m.printElementJSONTypeless(runtime.getOutputWriter());
 		} catch (IOException e) {
 			throw new ArticleException("Error writing result", e);
 		}
