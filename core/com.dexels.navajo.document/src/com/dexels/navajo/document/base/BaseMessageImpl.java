@@ -1642,6 +1642,12 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		super.printElementJSON(writer, isArrayMessage());
 		
 	}
+	
+	  public void writeSimpleJSON(Writer writer) throws IOException {
+		  writer.write("{");
+		  printElementJSONTypeless(writer);
+		  writer.write("}");
+	  }
 
 	public static void main(String [] args) {
 		

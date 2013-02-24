@@ -366,6 +366,8 @@ public interface Message
 
   public void writeJSON(Writer writer) throws IOException;
   
+  public void writeSimpleJSON(Writer writer) throws IOException;
+
   /**
    * Set the message map for retreiving the right values for 'toString()'
    *
@@ -473,8 +475,5 @@ public interface Message
 
 	public List<Message> getElements();
 
-	public void printElementJSONTypeless(final Writer sw) throws IOException;
-
-	
 
 }
