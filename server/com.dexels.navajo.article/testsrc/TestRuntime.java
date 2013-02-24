@@ -1,7 +1,13 @@
 import java.io.File;
 import java.io.IOException;
 
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -28,7 +34,7 @@ public class TestRuntime {
 			@Override
 			public Navajo call(Navajo n) throws FatalException {
 				logger.info("Calling: "+n.getHeader().getRPCName());
-				n.write(System.err);
+//				n.write(System.err);
 				Navajo res = NavajoFactory.getInstance().createNavajo();
 				
 				return res;
@@ -45,8 +51,14 @@ public class TestRuntime {
 		File art =context.resolveArticle("/searchclub");
 		TestRuntimeImpl tr = new TestRuntimeImpl(art);
 		context.interpretArticle(art,tr);
-		System.err.println( tr.getOutput());
-		
-	}
+		String out =tr.getOutput();
+
+		  ObjectMapper mapper = new ObjectMapper();
+		  // (note: can also use more specific type, like ArrayNode or ObjectNode!)
+		  JsonNode rootNode = mapper.readValue(out, JsonNode.class); 
+		  Assert.assertEquals(8, rootNode.get("Club").size());
+		  
+		  
+		}
 
 }

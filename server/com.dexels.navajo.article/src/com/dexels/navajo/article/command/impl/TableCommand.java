@@ -54,7 +54,7 @@ public class TableCommand implements ArticleCommand {
 		}
 		try {
 			
-			m.printElementJSONTypeless(runtime.getOutputWriter());
+			m.writeSimpleJSON(runtime.getOutputWriter());
 		} catch (IOException e) {
 			throw new ArticleException("Error writing result", e);
 		}
