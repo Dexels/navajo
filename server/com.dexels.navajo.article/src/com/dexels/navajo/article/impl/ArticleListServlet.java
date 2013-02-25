@@ -3,6 +3,7 @@ package com.dexels.navajo.article.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -11,18 +12,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
 
-public class ArticleServlet extends HttpServlet implements Servlet {
+public class ArticleListServlet extends HttpServlet implements Servlet {
 
 	private static final long serialVersionUID = -6895324256139435015L;
 
 
 	private ArticleContext context;
 	
-	public ArticleServlet() {
+	public ArticleListServlet() {
 		
 	}
 	
@@ -54,7 +57,9 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		if(token==null) {
 			throw new ServletException("Please supply a token");
 		}
-		
+		List<String> articles = context.listArticles();
+		ObjectMapper om = new ObjectMapper();
+		om.writeValue(resp.getWriter(), articles);
 		String pathInfo = req.getPathInfo();
 		if(pathInfo==null) {
 			throw new ServletException("No article found, please specify after article");

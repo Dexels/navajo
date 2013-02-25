@@ -1,10 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Assert;
@@ -52,11 +49,11 @@ public class TestRuntime {
 		TestRuntimeImpl tr = new TestRuntimeImpl(art);
 		context.interpretArticle(art,tr);
 		String out =tr.getOutput();
-
+		System.err.println(out);
 		  ObjectMapper mapper = new ObjectMapper();
 		  // (note: can also use more specific type, like ArrayNode or ObjectNode!)
 		  JsonNode rootNode = mapper.readValue(out, JsonNode.class); 
-		  Assert.assertEquals(8, rootNode.get("Club").size());
+		  Assert.assertEquals(8, rootNode.get("result").get("Club").size());
 		  
 		  
 		}

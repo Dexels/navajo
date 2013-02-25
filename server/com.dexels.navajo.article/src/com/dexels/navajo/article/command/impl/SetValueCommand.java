@@ -30,8 +30,8 @@ public class SetValueCommand implements ArticleCommand {
 	}
 
 	@Override
-	public void execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters) throws ArticleException {
-		
+	public boolean execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters) throws ArticleException {
+		return false;
 	}
 
 }

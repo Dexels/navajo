@@ -37,7 +37,7 @@ public class ServiceCommand implements ArticleCommand {
 
 	
 	@Override
-	public void execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters) throws ArticleException {
+	public boolean execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters) throws ArticleException {
 		String name = parameters.get("name");
 		if(name==null) {
 			throw new ArticleException("Command: "+this.getName()+" can't be executed without required parameters: "+name);
@@ -47,13 +47,14 @@ public class ServiceCommand implements ArticleCommand {
 			Navajo res = runtime.getNavajo(name);
 			if(res!=null) {
 				runtime.pushNavajo(name,res);
-				return;
+				return false;
 			}
 		}
 		Navajo n = NavajoFactory.getInstance().createNavajo();
-		Header h = NavajoFactory.getInstance().createHeader(n, name, runtime.getUser(), runtime.getPassword(), -1);
+		Header h = NavajoFactory.getInstance().createHeader(n, name, runtime.getUsername(), runtime.getPassword(), -1);
 		n.addHeader(h);
 		runtime.pushNavajo(name, performCall(runtime, name, n));
+		return false;
 	}
 
 	protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n)

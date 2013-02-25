@@ -2,9 +2,12 @@ package com.dexels.navajo.article.impl;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -46,9 +49,28 @@ public abstract class BaseContextImpl implements ArticleContext {
 	public ArticleCommand getCommand(String name) {
 		return commands.get(name);
 	}
+
+	@Override
+	public List<String> listArticles() {
+		String root = getConfig().getRootPath();
+		File rootFolder = new File(root);
+		File articles = new File(rootFolder,"article");
+		String[] list = articles.list(new FilenameFilter() {
+			
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".xml");
+			}
+		});
+		List<String> result = new ArrayList<String>();
+		for (String elt : list) {
+			result.add(elt.substring(0, elt.lastIndexOf('.')));
+		}
+		return result;
+	}
+
 	
 	public File resolveArticle(String pathInfo) {
-		System.err.println("path: " + pathInfo);
 		String sub = pathInfo.substring(1);
 		String root = getConfig().getRootPath();
 		File rootFolder = new File(root);

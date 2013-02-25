@@ -15,12 +15,12 @@ public interface ArticleRuntime {
 	public Navajo getNavajo(String name);
 
 	public String getPassword();
-
-	public String getUser();
+	public String getUsername();
 	
 	public void setMimeType(String mime);
 	
 	public Writer getOutputWriter() throws IOException;
 
 	public Navajo getNavajo();
+
 }

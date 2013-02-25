@@ -3,6 +3,7 @@ package com.dexels.navajo.article.impl;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,12 +15,18 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	
 	private final HttpServletRequest request;
 	private final HttpServletResponse response;
-
+	private String token = null;
+	private String username;
 	
 	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, File article) throws IOException {
 		super(article);
 		this.request = req;
 		this.response = resp;
+		this.token = URLDecoder.decode(req.getParameter("token"),"UTF-8");
+		System.err.println("token: "+this.token);
+		token=token.replaceAll(" ", "+");
+		System.err.println("t0ken: "+this.token);
+		this.username = req.getParameter("username");
 	}
 	@Override
 	public Object resolveArgument(String name) {
@@ -38,11 +45,12 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	
 	@Override
 	public String getPassword() {
-		return "some_password";
+		return token;
 	}
+	
 	@Override
-	public String getUser() {
-		return "some_username";
+	public String getUsername() {
+		return username;
 	}
 
 }

@@ -9,5 +9,5 @@ import com.dexels.navajo.article.ArticleRuntime;
 public interface ArticleCommand {
 
 	public String getName();
-	public void execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters) throws ArticleException;
+	public boolean execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters) throws ArticleException;
 }

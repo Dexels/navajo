@@ -41,7 +41,7 @@ public class TestRuntimeImpl extends BaseRuntimeImpl {
 		return "some_password";
 	}
 	@Override
-	public String getUser() {
+	public String getUsername() {
 		return "some_username";
 	}
 

@@ -44,21 +44,35 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 
 	public void execute(ArticleContext context) throws ArticleException {
 		List<XMLElement> children = article.getChildren();
-		for (XMLElement e : children) {
-			String name = e.getName();
-			ArticleCommand ac = context.getCommand(name);
-			if(ac==null) {
-				throw new ArticleException("Unknown command: "+name);
+
+		try {
+			getOutputWriter().write("{");
+			boolean first = true;
+			for (XMLElement e : children) {
+				String name = e.getName();
+				ArticleCommand ac = context.getCommand(name);
+				if(ac==null) {
+					throw new ArticleException("Unknown command: "+name);
+				}
+				Map<String,String> parameters = new HashMap<String, String>();
+				 
+				for (Iterator<String> iterator = e.enumerateAttributeNames(); iterator.hasNext();) {
+					String attributeName = iterator.next();
+					parameters.put(attributeName, e.getStringAttribute(attributeName));
+				}
+				if(!first) {
+					getOutputWriter().write(",");
+				}
+				if(ac.execute(this, context, parameters)) {
+					first = false;
+				}
+
 			}
-			Map<String,String> parameters = new HashMap<String, String>();
-			 
-			for (Iterator<String> iterator = e.enumerateAttributeNames(); iterator.hasNext();) {
-				String attributeName = iterator.next();
-				parameters.put(attributeName, e.getStringAttribute(attributeName));
-			}
-			ac.execute(this, context, parameters);
+			getOutputWriter().write("}");
+	} catch (IOException e1) {
+			e1.printStackTrace();
 		}
-//		setMimeType("text/plain");
+	//		setMimeType("text/plain");
 		
 	}
 	@Override
