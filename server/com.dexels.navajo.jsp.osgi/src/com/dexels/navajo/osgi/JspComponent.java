@@ -8,7 +8,6 @@ import javax.servlet.ServletContextListener;
 
 import org.ops4j.pax.web.service.WebContainer;
 import org.osgi.framework.BundleContext;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
@@ -72,8 +71,8 @@ public class JspComponent {
 		return bundleContext.getBundle().getVersion().toString();
 	}
 
-	public void activate(ComponentContext cc) {
-		this.bundleContext = cc.getBundleContext();
+	public void activate(BundleContext cc) {
+		this.bundleContext = cc;
 		instance = this;
 		try {
 			httpContext = webContainer.createDefaultHttpContext();
