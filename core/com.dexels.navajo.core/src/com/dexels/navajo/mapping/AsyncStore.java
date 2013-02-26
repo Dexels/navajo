@@ -99,7 +99,6 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
    */
   public final void worker() {
 	  
-	  logger.info("In AsyncStore worker");
 	  synchronized (instance) {
 		  Set<String> s = new HashSet<String>(objectStore.keySet());
 		  Iterator<String> iter = s.iterator();
