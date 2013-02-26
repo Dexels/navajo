@@ -1175,8 +1175,13 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     }
 
     if (!hasChildren || isSelection) {
-      result.append(printIdent(ident) + "sValue = new String(\"" + value +
+      if ( !isSelection ) {
+          result.append(printIdent(ident) + "sValue = new StringLiteral(\"" + value +
                     "\");\n");
+      } else {
+    	  result.append(printIdent(ident) + "sValue = new String(\"" + value +
+                  "\");\n");
+      }
       result.append(printIdent(ident) + "type = \"" + type + "\";\n");
     }
     else {
