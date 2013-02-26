@@ -2,13 +2,16 @@ package com.dexels.navajo.mapping;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
@@ -40,17 +43,17 @@ import com.dexels.navajo.util.AuditLog;
  * ====================================================================
  */
 
-@SuppressWarnings("unchecked")
-public final class AsyncStore implements AsyncStoreMXBean {
+public final class AsyncStore extends GenericThread implements AsyncStoreMXBean {
 
   private static final String VERSION = "$Id$";
 	
   private static volatile AsyncStore instance = null;
   
-  public Map objectStore = null;
-  public Map accessStore = null;
-//  private static int threadWait = 2000;
-  private static final String id = "Navajo AsyncStore";
+  public final Map<String,AsyncMappable> objectStore = Collections.synchronizedMap(new HashMap<String,AsyncMappable>());
+  public final Map<String,Access> accessStore = Collections.synchronizedMap(new HashMap<String,Access>());
+  private float timeout = 3600000; 
+  private final static int threadWait = 2000;
+  private final static String id = "Navajo AsyncStore";
   
   private final static Logger logger = LoggerFactory.getLogger(AsyncStore.class);
 
@@ -67,9 +70,9 @@ public final class AsyncStore implements AsyncStoreMXBean {
 
   public void activate() {
 	  JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, id);
-	  objectStore = Collections.synchronizedMap(new HashMap());
-	  accessStore = Collections.synchronizedMap(new HashMap());
 	  instance = this;
+	  this.setSleepTime(threadWait);
+	  this.startThread(this);
   }
   
   /**
@@ -84,10 +87,36 @@ public final class AsyncStore implements AsyncStoreMXBean {
 	  synchronized ( semaphore ) {
 		  if (instance == null) {
 			  instance = new AsyncStore();
+			  instance.timeout = timeout;
 			  instance.activate();
 		  }
 	  }
     return instance;
+  }
+
+  /**
+   * Start the main AsyncStore loop.
+   */
+  public final void worker() {
+	  
+	  logger.info("In AsyncStore worker");
+	  synchronized (instance) {
+		  Set<String> s = new HashSet<String>(objectStore.keySet());
+		  Iterator<String> iter = s.iterator();
+		  while (iter.hasNext()) {
+			  String ref = iter.next();
+			  AsyncMappable a = objectStore.get(ref);
+			  long now = System.currentTimeMillis();
+			  logger.info("a: " + a + ", lastaccess: " + a.getLastAccess());
+			  if ( (now - a.getLastAccess()) > timeout ) {
+				 logger.info("About to kill: " + a);
+				  a.kill();
+				  objectStore.remove(ref);
+				  accessStore.remove(ref);
+				  a = null;
+			  }
+		  }
+	  }
   }
 
   /**
@@ -101,8 +130,6 @@ public final class AsyncStore implements AsyncStoreMXBean {
     String ref = o.hashCode() + "";
     objectStore.put(ref + "", o);
     accessStore.put(ref + "", a);
-    // Register Async mappable as MXBean.
-    // JMXHelper.registerMXBean(o, JMXHelper.ASYNC_DOMAIN, o.getClassName() + "-" + ref);
     return ref;
   }
 
@@ -113,12 +140,12 @@ public final class AsyncStore implements AsyncStoreMXBean {
    * @return
    */
   public final Access getAccessObject(String ref) {
-    Object o = accessStore.get(ref);
+    Access o = accessStore.get(ref);
     if (o == null) {
       return null;
     }
     else {
-      return (Access) o;
+      return o;
     }
   }
 
@@ -129,14 +156,14 @@ public final class AsyncStore implements AsyncStoreMXBean {
    * @return
    */
   public final AsyncMappable getInstance(String ref) {
-    Object o = objectStore.get(ref);
+	AsyncMappable o = objectStore.get(ref);
     if (o == null) {
       return null;
     }
     else {
       // Always  set lastaccess timestamp when retrieving asyncmappable object.
-      ((AsyncMappable) o).setLastAccess();
-      return (AsyncMappable) o;
+      o.setLastAccess();
+      return o;
     }
   }
 
@@ -146,8 +173,7 @@ public final class AsyncStore implements AsyncStoreMXBean {
    * @param ref
    */
   public final synchronized void removeInstance(String ref) {
-//	  System.err.println("About to remove async instance: " + ref);
-	  Object o = objectStore.get(ref);
+	  AsyncMappable o = objectStore.get(ref);
 
 	  if (o == null) {
 		  return;
@@ -174,9 +200,11 @@ public final class AsyncStore implements AsyncStoreMXBean {
   }
   
   public void deactivate() {
+	  // Stop thread.
+	  this.kill();
 	  // Removed all async mappable instances.
-	  for (Iterator iter = objectStore.values().iterator(); iter.hasNext();) {
-		  AsyncMappable element = (AsyncMappable) iter.next();
+	  for (Iterator<AsyncMappable> iter = objectStore.values().iterator(); iter.hasNext();) {
+		  AsyncMappable element = iter.next();
 		  try {
 			  element.setKill(true);
 		  } catch (Throwable e) {
@@ -184,7 +212,6 @@ public final class AsyncStore implements AsyncStoreMXBean {
 		  }
 	  }
 	  objectStore.clear();
-	  // Remove all Access objects.
 	  accessStore.clear();
 	  try {
 		  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
