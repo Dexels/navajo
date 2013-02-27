@@ -1,0 +1,43 @@
+<tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" cpuload="-1.0" authorisationTime="438" queueId="null" serverTime="513" threadCount="0" processingTime="20" accessId="1361550415308-1" queueTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="club/InitUpdateClub" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="Club" type="simple">
+      <property direction="in" name="ClubIdentifier" value="" length="8" type="string"/>
+      <property direction="in" name="LastName" value="-" length="8" type="string"/>
+   </message>
+   <methods>
+      <method name="club/ProcessQueryAnnualReports"/>
+      <method name="match/ProcessGetOpenReceiptMatches"/>
+      <method name="competition/ProcessCheckClubContradictions"/>
+      <method name="club/ProcessGetClubAccommodations"/>
+      <method name="club/ProcessQueryClubHomeAwayPreferences"/>
+      <method name="club/ProcessQueryDigitalCommunication"/>
+      <method name="club/ProcessQueryClub"/>
+      <method name="club/ProcessGetClubActivities"/>
+      <method name="club/ProcessQueryClubPreferences"/>
+      <method name="club/ProcessGetClubAccommodations"/>
+      <method name="club/ProcessGetDefaultClubFacility"/>
+      <method name="club/ProcessQueryClubReceipts"/>
+      <method name="competition/knvbnl/ProcessGetThisWeeksProgram"/>
+      <method name="competition/knvbnl/ProcessGetLastWeeksProgram"/>
+      <method name="facility/ProcessQueryClubFacilities"/>
+      <method name="team/ProcessQueryTeamBlackoutDates"/>
+      <method name="club/ProcessQueryClubContributions"/>
+      <method name="club/ProcessQueryOtherSports"/>
+      <method name="team/InitQueryTeams"/>
+      <method name="team/InitUpdateTeam"/>
+      <method name="club/ProcessQueryClubFunctions"/>
+      <method name="member/ProcessQueryAllMembersPerClub"/>
+      <method name="member/ProcessQueryAllPlayersPerClub"/>
+      <method name="discipline/license/ProcessQueryClubMilestones"/>
+      <method name="discipline/license/ProcessGetHistoricalPlans"/>
+      <method name="clubforms/ProcessGetNewForms"/>
+      <method name="competition/cif/ProcessGetPreventionMatrix"/>
+      <method name="vla/ProcessPrintClubOfficials"/>
+      <method name="vla/clubforms/InitListFiles"/>
+      <method name="club/ProcessGetClubFacilityStatistics"/>
+   </methods>
+</tml>

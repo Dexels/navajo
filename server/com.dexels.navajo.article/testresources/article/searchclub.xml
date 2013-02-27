@@ -1,0 +1,7 @@
+<article aantalregels="@aantalregels">
+    <service name="club/InitSearchClubs"/>
+    <setvalue service="club/InitSearchClubs" element="ClubSearch/SearchName" value="hoe"/>
+    <service input="club/InitSearchClubs" name="club/ProcessSearchClubs"/>
+     <table name="result" columnWidths="60,25,45,200,0,60" columnLabels="Datum,Tijd,Scheidsrechter,Wedstrijd,Id,Info" columns="datum,aanvangstijd,scheidsrechters,wedstrijd,wedstrijdcode,meer" customLayout="UnsortableTableLayout" service="club/ProcessSearchClubs" article="wedstrijddetails" link="meer" key="wedstrijdcode" path="Club"/>
+ 
+</article>

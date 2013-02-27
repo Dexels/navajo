@@ -201,6 +201,10 @@ private final static Logger logger = LoggerFactory
    */
   public abstract void setValidations();
   
+  public void dumpRequest() {
+	  
+  }
+  
   public void setDependencies() {
 	  // Example:
 	  // dependentObjects.add( new IncludeDependency(IncludeDependency.getScriptTimeStamp("MyScript1"), "MyScript1"));
@@ -272,6 +276,7 @@ private final static Logger logger = LoggerFactory
 	  long start = System.currentTimeMillis();
 	  
 	  try {
+		  dumpRequest();
 		  setValidations();
 
 		  currentParamMsg = access.getInDoc().getMessage("__parms__");
