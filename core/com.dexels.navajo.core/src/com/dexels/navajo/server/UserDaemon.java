@@ -38,6 +38,11 @@ public class UserDaemon extends GenericThread {
 					+ ": already got service with this name.");
 		}
 	}
+	
+	public void kill() {
+		super.kill();
+		userServices.remove(this.getMyId());
+	}
 
 	protected static UserDaemon getInstance(String id) {
 		return userServices.get(id);
