@@ -79,7 +79,7 @@ public class TableCommand implements ArticleCommand {
 				n.writeJSONTypeless(runtime.getOutputWriter());
 
 			} else {
-				m.writeSimpleJSON(runtime.getOutputWriter(),null);
+				m.writeSimpleJSON(runtime.getOutputWriter(),columnFilter);
 			}
 		} catch (IOException e) {
 			throw new ArticleException("Error writing result", e);
