@@ -22,13 +22,16 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 	private final Stack<Navajo> navajoStack = new Stack<Navajo>();
 	private final Map<String,Navajo> navajoStore = new HashMap<String,Navajo>();
 	protected final XMLElement article;
-	
-	protected BaseRuntimeImpl(XMLElement article) {
+	private final String articleName;
+
+	protected BaseRuntimeImpl(String articleName, XMLElement article) {
 		this.article = article;
+		this.articleName = articleName;
 	}
 	
-	protected BaseRuntimeImpl(File articleFile) throws IOException {
+	protected BaseRuntimeImpl(String articleName, File articleFile) throws IOException {
 		article = new CaseSensitiveXMLElement();
+		this.articleName = articleName;
 		Reader r = null;
 		try {
 			r = new FileReader(articleFile);
@@ -44,10 +47,12 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 
 	public void execute(ArticleContext context) throws ArticleException {
 		List<XMLElement> children = article.getChildren();
-
+		int i = 0;
 		try {
 			getOutputWriter().write("{");
 			boolean first = true;
+			int count = children.size();
+			
 			for (XMLElement e : children) {
 				String name = e.getName();
 				ArticleCommand ac = context.getCommand(name);
@@ -60,11 +65,12 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 					String attributeName = iterator.next();
 					parameters.put(attributeName, e.getStringAttribute(attributeName));
 				}
-				if(!first) {
-					getOutputWriter().write(",");
-				}
+				System.err.println("Calling command # "+(i++));
 				if(ac.execute(this, context, parameters)) {
 					first = false;
+					if(!first && count!=i) {
+						getOutputWriter().write(",");
+					}
 				}
 
 			}
@@ -87,6 +93,14 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 	
 	@Override
 	public Navajo getNavajo() {
+		if(navajoStack.isEmpty()) {
+			return null;
+		}
 		return navajoStack.peek();
+	}
+
+	@Override
+	public String getArticleName() {
+		return articleName;
 	}
 }

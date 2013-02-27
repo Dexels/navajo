@@ -46,27 +46,40 @@ public class TableCommand implements ArticleCommand {
 			throw new ArticleException("No service parameter supplied for table.");
 		}
 		String path = parameters.get("path");
-		if(path==null) {
-			throw new ArticleException("No path parameter supplied for table.");
-		}
+//		if(path==null) {
+//			throw new ArticleException("No path parameter supplied for table.");
+//		}
 		Navajo n = runtime.getNavajo(service);
 		if(n==null) {
 			throw new ArticleException("Navajo: "+service+" was not found in table command");
 		}
-		Message m = n.getMessage(path);
+
+		Message m = null;
+		if(path!=null) {
+			m = n.getMessage(path);
+		}
 //		if(m==null) {
 //			n.write(System.err);
 //			throw new ArticleException("Path: "+path+" was not found in navajo : "+service);
 //		}
 		try {
 			runtime.setMimeType("text/json");
-			runtime.getOutputWriter().write("\""+parameters.get("name")+"\" : ");
+			String tableName = parameters.get("name");
+			if(tableName==null) {
+				tableName = "data";
+			}
+			String columns = parameters.get("columns");
+			String[] columnFilter = null;
+			if(columns!=null) {
+				columnFilter = columns.split(",");
+			}
+			runtime.getOutputWriter().write("\""+tableName+"\" : ");
 			if (m==null) {
 				logger.warn("Ignoring table command. Message: {} not found. Dumping all.",path);
 				n.writeJSONTypeless(runtime.getOutputWriter());
 
 			} else {
-				m.writeSimpleJSON(runtime.getOutputWriter());
+				m.writeSimpleJSON(runtime.getOutputWriter(),null);
 			}
 		} catch (IOException e) {
 			throw new ArticleException("Error writing result", e);
