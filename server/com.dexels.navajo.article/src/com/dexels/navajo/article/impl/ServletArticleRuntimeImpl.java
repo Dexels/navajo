@@ -8,8 +8,6 @@ import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.JsonNode;
-
 import com.dexels.navajo.article.ArticleRuntime;
 
 public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements ArticleRuntime {

@@ -1,7 +1,5 @@
 package com.dexels.navajo.article.impl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -15,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.dexels.navajo.article.ArticleContext;
-import com.dexels.navajo.article.ArticleException;
-import com.dexels.navajo.article.ArticleRuntime;
 
 public class ArticleListServlet extends HttpServlet implements Servlet {
 

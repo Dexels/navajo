@@ -3,7 +3,6 @@ package com.dexels.navajo.article;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
 import com.dexels.navajo.document.Navajo;

@@ -56,7 +56,7 @@ public class TestRuntime {
 		  ObjectMapper mapper = new ObjectMapper();
 		  
 		  // (note: can also use more specific type, like ArrayNode or ObjectNode!)
-		  JsonNode rootNode = mapper.readValue(out, JsonNode.class); 
+		  mapper.readValue(out, JsonNode.class); 
 //		  Assert.assertEquals(8, rootNode.get("result").get("Club").size());
 		}
 
