@@ -3,6 +3,9 @@ package com.dexels.navajo.article.command.impl;
 import java.io.IOException;
 import java.util.Map;
 
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.node.ObjectNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,23 +72,59 @@ public class TableCommand implements ArticleCommand {
 				tableName = "data";
 			}
 			String columns = parameters.get("columns");
-			String[] columnFilter = null;
+			String[] columnsArray = null;
 			if(columns!=null) {
-				columnFilter = columns.split(",");
+				columnsArray = columns.split(",");
 			}
-			runtime.getOutputWriter().write("\""+tableName+"\" : ");
+			String columnLabels = parameters.get("columnLabels");
+			String[] columnLabelsArray = null;
+			if(columnLabels!=null) {
+				columnLabelsArray = columnLabels.split(",");
+			}
+			String columnWidths = parameters.get("columnWidths");
+			String[] columnWidthsArray = null;
+			if(columnWidths!=null) {
+				columnWidthsArray = columnWidths.split(",");
+			}
+
+//			runtime.getOutputWriter().write("\""+tableName+"\" : ");
 			if (m==null) {
 				logger.warn("Ignoring table command. Message: {} not found. Dumping all.",path);
 				n.writeJSONTypeless(runtime.getOutputWriter());
-
 			} else {
-				m.writeSimpleJSON(runtime.getOutputWriter(),columnFilter);
+				m.writeSimpleJSON(tableName,runtime.getOutputWriter(),columnsArray);
 			}
+			appendMetadata(runtime,tableName,columnsArray,columnLabelsArray,columnWidthsArray,parameters.get("key"),parameters.get("link"));
+			
 		} catch (IOException e) {
 			throw new ArticleException("Error writing result", e);
 		}
 		return true;
 //		m.write(System.err);
+	}
+
+	private void appendMetadata(ArticleRuntime runtime, String name, String[] columns, String[] columnLabels,
+			String[] columnWidths, String key, String link) {
+		ObjectMapper om = new ObjectMapper();
+		ObjectNode root = runtime.getMetadataRootNode();
+		ObjectNode tbl = om.createObjectNode();
+		root.put(name, tbl);
+		if(columns==null) {
+			return;
+		}
+		int i = 0;
+		for (String column : columns) {
+			ObjectNode columnNode = om.createObjectNode();
+			tbl.put(column, columnNode);
+			if(columnLabels!=null) {
+				columnNode.put("description", columnLabels[i]);
+			}
+//			if(columnWidths!=null) {
+//				columnNode.put("length", columnWidths[i]);
+//			}
+
+			i++;
+		}
 	}
 
 }

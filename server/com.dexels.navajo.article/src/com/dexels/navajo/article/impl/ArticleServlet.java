@@ -64,6 +64,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article,pathInfo);
 			try {
 				runtime.execute(context);
+				resp.setContentType("text/json");
 			} catch (ArticleException e) {
 				throw new ServletException("Problem executing article", e);
 			}

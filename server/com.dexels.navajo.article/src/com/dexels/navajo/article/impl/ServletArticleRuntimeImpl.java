@@ -8,6 +8,8 @@ import java.net.URLDecoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.JsonNode;
+
 import com.dexels.navajo.article.ArticleRuntime;
 
 public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements ArticleRuntime {
@@ -23,9 +25,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 		this.request = req;
 		this.response = resp;
 		this.token = URLDecoder.decode(req.getParameter("token"),"UTF-8");
-		System.err.println("token: "+this.token);
 		token=token.replaceAll(" ", "+");
-		System.err.println("t0ken: "+this.token);
 		this.username = req.getParameter("username");
 	}
 	@Override
@@ -53,6 +53,5 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	public String getUsername() {
 		return username;
 	}
-
 
 }
