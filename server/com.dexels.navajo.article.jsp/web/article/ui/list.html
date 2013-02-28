@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap-responsive.min.css" rel="stylesheet"
+	media="screen">
+<link href="css/docs.css" rel="stylesheet" media="screen">
+
+</head>
+<body>
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/purl.js"></script>
+	<script src="js/navajoarticle.js"></script>
+	<script>
+		/*var token = $.url().param('token');*/
+		var token = 'epPm/1NY+hygYpOpGDHB2aMEjSJ558CNywPLwd/KA4nOV4Fkh9vtuSJGQZqsEJDpMdf/MhkOcqNO6LGdYH4tWxBIZo3niZKOkK+6gD61U8g=';
+		var username = '@BBFW06E';
+		$
+				.getJSON(
+						'../list?username=' + username + '&token=' + token,
+						function(data) {
+							var items = [];
+							var ids = [];
+							$
+									.each(
+											data,
+											function(key, val) {
+												items
+														.push('<li><a href="#'+val+'" id="'+val+'"><i class="icon-chevron-right"></i>'
+																+ val
+																+ '</a></li>');
+												ids.push("#" + val);
+											});
+							$('#list').append(items.join(''));
+
+							$.each(ids, function(key, val) {
+								$(val).click(function(e) {
+									var article = e.currentTarget.hash.substring(1);
+									//alert("Handler for .click() called. "+article);
+									console.log(e);
+									loadarticle('/article/'+article+'?username='+username+'&token='+token,'#my-table');
+								});
+
+							});
+
+						});
+	</script>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span2 bs-docs-sidebar">
+				<ul id="list" class="nav nav-list bs-docs-sidenav">
+				</ul>
+			</div>
+			<div class="span10">
+				<table class="table table-striped" id="my-table">
+					<thead></thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+</html>
