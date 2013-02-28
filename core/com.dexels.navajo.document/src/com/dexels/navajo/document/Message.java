@@ -368,6 +368,8 @@ public interface Message
   
   public void writeSimpleJSON(Writer writer) throws IOException;
 
+  public void writeSimpleJSON(Writer writer,String[] properties) throws IOException;
+
   /**
    * Set the message map for retreiving the right values for 'toString()'
    *

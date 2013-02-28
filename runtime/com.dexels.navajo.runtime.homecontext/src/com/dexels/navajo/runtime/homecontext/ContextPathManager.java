@@ -74,9 +74,23 @@ public class ContextPathManager {
 		Dictionary<String, Object> settings = new Hashtable<String, Object>();
 		settings.put("contextPath", forcedNavajoPath);
 		settings.put("installationPath", resolved);
-		cc.update(settings);
+		updateIfChanged(cc, settings);
 	}
 
+	private void updateIfChanged(Configuration c, Dictionary<String,Object> settings) throws IOException {
+		Dictionary<String,Object> old = c.getProperties();
+		if(old!=null) {
+			if(!old.equals(settings)) {
+				c.update(settings);
+			} else {
+				logger.info("Ignoring equal");
+			}
+		} else {
+			// this will make this component 'own' this configuration, unsure if this is desirable.
+			c.update(settings);
+		}
+	}
+	
 	// TODO do this in a more thread safe manner?
 	public void deactivate() {
 		logger.info("Deactivating: " + configurations.size()

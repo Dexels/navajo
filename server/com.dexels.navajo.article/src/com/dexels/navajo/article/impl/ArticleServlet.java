@@ -61,7 +61,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		}
 		File article = context.resolveArticle(pathInfo);
 		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article);
+			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article,pathInfo);
 			try {
 				runtime.execute(context);
 			} catch (ArticleException e) {

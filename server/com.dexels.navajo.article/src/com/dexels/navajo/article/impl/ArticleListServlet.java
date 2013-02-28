@@ -64,9 +64,11 @@ public class ArticleListServlet extends HttpServlet implements Servlet {
 		if(pathInfo==null) {
 			throw new ServletException("No article found, please specify after article");
 		}
+		String articleName = pathInfo.substring(1);
+		
 		File article = context.resolveArticle(pathInfo);
 		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article);
+			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article,articleName);
 			try {
 				runtime.execute(context);
 			} catch (ArticleException e) {

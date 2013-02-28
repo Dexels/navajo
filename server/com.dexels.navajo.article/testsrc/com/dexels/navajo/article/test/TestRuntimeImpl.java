@@ -18,16 +18,16 @@ public class TestRuntimeImpl extends BaseRuntimeImpl {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TestRuntimeImpl.class);
 	
-	public TestRuntimeImpl(XMLElement article) {
-		super(article);
+	public TestRuntimeImpl(String articleName, XMLElement article) {
+		super(articleName,article);
 	}
 	
-	public TestRuntimeImpl(File articleFile) throws IOException {
-		super(articleFile);
+	public TestRuntimeImpl(String articleName, File articleFile) throws IOException {
+		super(articleName,articleFile);
 	}
 
 	@Override
-	public Object resolveArgument(String name) {
+	public String resolveArgument(String name) {
 		return null;
 	}
 

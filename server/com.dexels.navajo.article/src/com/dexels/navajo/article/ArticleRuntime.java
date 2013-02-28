@@ -6,7 +6,7 @@ import java.io.Writer;
 import com.dexels.navajo.document.Navajo;
 
 public interface ArticleRuntime {
-	public Object resolveArgument(String name);
+	public String resolveArgument(String name);
 
 	public void execute(ArticleContext articleServlet) throws ArticleException;
 
@@ -22,5 +22,7 @@ public interface ArticleRuntime {
 	public Writer getOutputWriter() throws IOException;
 
 	public Navajo getNavajo();
+
+	public String getArticleName();
 
 }

@@ -1476,8 +1476,11 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	    }
 	    
 	    
-	   
-	public void printElementJSONTypeless(final Writer sw) throws IOException {
+		public void printElementJSONTypeless(final Writer sw) throws IOException {
+			printElementJSONTypeless(sw, null);
+		}	   
+
+		public void printElementJSONTypeless(final Writer sw, String[] propertyFilter) throws IOException {
 		ArrayList<Message> messages = getAllMessages();
 		ArrayList<Property> properties = getAllProperties();
 
@@ -1497,24 +1500,50 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		} else if (getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
 			writeElement(sw, "{");
 			int cnt = 0;
-			for (Property p : properties) {
-				if (cnt > 0) {
-					writeElement(sw, ", ");
+			if (propertyFilter!=null) {
+				for (String s : propertyFilter) {
+					if (cnt > 0) {
+						writeElement(sw, ", ");
+					}
+					Property p = getProperty(s);
+					if(s!=null) {
+						((BaseNode) p).printElementJSONTypeless(sw);
+						cnt++;
+					}
 				}
-				((BaseNode) p).printElementJSONTypeless(sw);
-				cnt++;
+			} else {
+				for (Property p : properties) {
+					if (cnt > 0) {
+						writeElement(sw, ", ");
+					}
+					((BaseNode) p).printElementJSONTypeless(sw);
+					cnt++;
+				}
 			}
 			writeElement(sw, "}");
 
 		} else if (getType().equals(Message.MSG_TYPE_SIMPLE)) {
 			writeElement(sw, "\"" + getName() + "\" : {");
 			int cnt = 0;
-			for (Property p : properties) {
-				if (cnt > 0) {
-					writeElement(sw, ", ");
+			if (propertyFilter!=null) {
+				for (String s : propertyFilter) {
+					if (cnt > 0) {
+						writeElement(sw, ", ");
+					}
+					Property p = getProperty(s);
+					if(s!=null) {
+						((BaseNode) p).printElementJSONTypeless(sw);
+						cnt++;
+					}
 				}
-				((BaseNode) p).printElementJSONTypeless(sw);
-				cnt++;
+			} else {
+				for (Property p : properties) {
+					if (cnt > 0) {
+						writeElement(sw, ", ");
+					}
+					((BaseNode) p).printElementJSONTypeless(sw);
+					cnt++;
+				}
 			}
 			writeElement(sw, "}");
 
@@ -1649,6 +1678,13 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		  writer.write("}");
 	  }
 
+	public void writeSimpleJSON(Writer writer, String[] properties)
+			throws IOException {
+		writer.write("{");
+		printElementJSONTypeless(writer, properties);
+		writer.write("}");
+	}
+	 
 	public static void main(String [] args) {
 		
 		Navajo testDoc = null;

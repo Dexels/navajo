@@ -46,7 +46,7 @@ public class TestRuntime {
 	@Test
 	public void test() throws IOException, ArticleException {
 		File art =context.resolveArticle("/searchclub");
-		TestRuntimeImpl tr = new TestRuntimeImpl(art);
+		TestRuntimeImpl tr = new TestRuntimeImpl("searchclub",art);
 		context.interpretArticle(art,tr);
 		String out =tr.getOutput();
 		System.err.println(out);

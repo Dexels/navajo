@@ -18,8 +18,8 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	private String token = null;
 	private String username;
 	
-	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, File article) throws IOException {
-		super(article);
+	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, File article,String articleName) throws IOException {
+		super(articleName,article);
 		this.request = req;
 		this.response = resp;
 		this.token = URLDecoder.decode(req.getParameter("token"),"UTF-8");
@@ -29,8 +29,9 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 		this.username = req.getParameter("username");
 	}
 	@Override
-	public Object resolveArgument(String name) {
-		return request.getParameter(name);
+	public String resolveArgument(String name) {
+		
+		return request.getParameter(name.substring(1));
 	}
 
 	@Override
@@ -52,5 +53,6 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	public String getUsername() {
 		return username;
 	}
+
 
 }

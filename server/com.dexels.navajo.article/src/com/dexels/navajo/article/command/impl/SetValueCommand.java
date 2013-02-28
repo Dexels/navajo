@@ -6,6 +6,8 @@ import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.command.ArticleCommand;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 
 public class SetValueCommand implements ArticleCommand {
 
@@ -31,6 +33,36 @@ public class SetValueCommand implements ArticleCommand {
 
 	@Override
 	public boolean execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters) throws ArticleException {
+//	    <setvalue service="clubsites/nl/init" element="parameters/poulecode" value="@poulecode"/>
+		String service = parameters.get("service");
+		if(service==null) {
+			throw new ArticleException("Article problem in "+runtime.getArticleName()+". setvalue requires a service, which is not supplied.");
+		}
+		String element = parameters.get("element");
+		if(element==null) {
+			throw new ArticleException("Article problem in "+runtime.getArticleName()+". setvalue requires a element, which is not supplied.");
+		}
+		Navajo n = runtime.getNavajo(service);
+		if(n==null) {
+			throw new ArticleException("Article problem in "+runtime.getArticleName()+". Requested service: "+service+" is not loaded.");
+		}
+		Property p = n.getProperty(element);
+		if(p==null) {
+			throw new ArticleException("Article problem in "+runtime.getArticleName()+". Requested element: "+element+" in service "+service+" is not found.");
+		}
+		String value = parameters.get("value");
+		if(value==null) {
+			throw new ArticleException("Article problem in "+runtime.getArticleName()+". setvalue requires a value, which is not supplied.");
+		}
+		if(value.startsWith("@")) {
+			String resolved = runtime.resolveArgument(value);
+			if(resolved==null) {
+				throw new ArticleException("Article problem in "+runtime.getArticleName()+". setvalue refers to argument: "+value+" which is not supplied");
+			}
+			p.setValue(resolved);
+		} else {
+			p.setValue(value);
+		}
 		return false;
 	}
 

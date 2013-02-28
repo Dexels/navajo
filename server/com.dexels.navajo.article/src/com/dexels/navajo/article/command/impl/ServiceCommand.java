@@ -50,10 +50,29 @@ public class ServiceCommand implements ArticleCommand {
 				return false;
 			}
 		}
-		Navajo n = NavajoFactory.getInstance().createNavajo();
+		String input = parameters.get("input");
+		Navajo n = null;
+		if(input!=null) {
+			n = runtime.getNavajo(input);
+			if(n==null) {
+				throw new ArticleException("Command: "+this.getName()+" supplies an 'input' parameter: "+input+", but that navajo object can not be found"+name);
+			}
+		}
+		if(runtime.getNavajo()!=null) {
+			n = runtime.getNavajo();
+		} else {
+			n = NavajoFactory.getInstance().createNavajo();
+		}
 		Header h = NavajoFactory.getInstance().createHeader(n, name, runtime.getUsername(), runtime.getPassword(), -1);
 		n.addHeader(h);
-		runtime.pushNavajo(name, performCall(runtime, name, n));
+		System.err.println("REQUEST:");
+		n.write(System.err);
+		System.err.println("END OF REQUEST");
+		final Navajo result = performCall(runtime, name, n);
+		System.err.println("RESULT:");
+		result.write(System.err);
+		System.err.println("END OF RESULT");
+		runtime.pushNavajo(name, result);
 		return false;
 	}
 
