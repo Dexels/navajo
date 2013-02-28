@@ -3,47 +3,37 @@ package com.dexels.navajo.sharedstore;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-class SharedStoreEntry {
-
-	long lastModified;
-	Object value;
-	final String name;
-	
-	public SharedStoreEntry(String name, Object v) {
-		this.value = v;
-		this.name = name;
-		lastModified = System.currentTimeMillis();
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public long getLastModified() {
-		return lastModified;
-	}
-	
-	public void setLastModified(long l) {
-		this.lastModified = l;
-	}
-	
-	public void update(Object v) {
-		this.value = v;
-		lastModified = System.currentTimeMillis();
-	}
-}
-
 public class SharedMemoryStore implements SharedStoreInterface {
 
-	ConcurrentHashMap<String, SharedStoreEntry> store = new ConcurrentHashMap<String, SharedStoreEntry>();
+	Map<String, SharedStoreEntry> store = null;
+	SharedStoreEntryFactory ssf = null;
 	
 	private final String constructName(String parent, String name) {
 		return parent + "/" + name;
+	}
+	
+	public SharedMemoryStore(Map<String, SharedStoreEntry> storeImpl, SharedStoreEntryFactory entryFactory) {
+		store = storeImpl;
+		ssf = entryFactory;
+	}
+	
+	public SharedMemoryStore() {
+		store = new ConcurrentHashMap<String, SharedStoreEntry>();
+	}
+	
+	public void setSharedStoreEntryFactory(SharedStoreEntryFactory entryFactory) {
+		ssf = entryFactory;
+	}
+	
+	public void setStoreImplementation(Map<String,SharedStoreEntry> storeImpl) {
+		this.store = storeImpl;
 	}
 	
 	@Override
@@ -63,11 +53,11 @@ public class SharedMemoryStore implements SharedStoreInterface {
 	}
 
 	@Override
-	public void store(String parent, String name, Object value, boolean append, boolean requireLock) throws SharedStoreException {
+	public void store(String parent, String name, Serializable value, boolean append, boolean requireLock) throws SharedStoreException {
 		if ( append || requireLock ) {
 			throw new SharedStoreException("Append / requireLock semantics not supported for this store type");
 		}
-		SharedStoreEntry e = new SharedStoreEntry(constructName(parent, name), value);
+		SharedStoreEntry e = ssf.constructSharedStoreEntry(constructName(parent, name), value);
 		store.put(e.getName(), e);
 	}
 
@@ -132,10 +122,10 @@ public class SharedMemoryStore implements SharedStoreInterface {
 	}
 
 	@Override
-	public Object get(String parent, String name) throws SharedStoreException {
+	public Serializable get(String parent, String name) throws SharedStoreException {
 		SharedStoreEntry e = getEntry(parent, name);
 		if ( e != null ) {
-			return e.value;
+			return e.getValue();
 		} else {
 			throw new SharedStoreException("No such object: " + parent + "/" + name);
 		}
