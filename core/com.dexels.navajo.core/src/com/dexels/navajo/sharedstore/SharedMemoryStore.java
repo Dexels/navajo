@@ -16,7 +16,7 @@ public class SharedMemoryStore implements SharedStoreInterface {
 	SharedStoreEntryFactory ssf = null;
 	
 	private final String constructName(String parent, String name) {
-		return parent + "/" + name;
+		return parent + "/" + name.replace('/', '_');
 	}
 	
 	public SharedMemoryStore(Map<String, SharedStoreEntry> storeImpl, SharedStoreEntryFactory entryFactory) {
