@@ -3,7 +3,7 @@ Bundle-Name: Navajo Client
 Bundle-SymbolicName: com.dexels.navajo.client
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.4.19
+Bundle-Version: 3.4.20.qualifier
 Bundle-Activator: navajoclient.Version
 Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.client;uses:="com.dexels.navajo.document",
