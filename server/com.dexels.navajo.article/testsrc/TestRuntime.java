@@ -67,13 +67,11 @@ public class TestRuntime {
 		context.interpretArticle(art,tr);
 		String out =tr.getOutput();
 		System.err.println(out);
-		  ObjectMapper mapper = new ObjectMapper();
-		  
-		  // (note: can also use more specific type, like ArrayNode or ObjectNode!)
-		  JsonNode rootNode = mapper.readValue(out, JsonNode.class); 
-		    ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-		    System.out.println(writer.writeValueAsString(rootNode));
-			  Assert.assertEquals(24, rootNode.get("data").get("verjaardagen").size());
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode rootNode = mapper.readValue(out, JsonNode.class);
+		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+		System.out.println(writer.writeValueAsString(rootNode));
+		Assert.assertEquals(24, rootNode.get("data").get("verjaardagen").size());
 
 	}
 

@@ -54,4 +54,9 @@ public class TestRuntimeImpl extends BaseRuntimeImpl {
 		return writer.toString();
 	}
 
+	@Override
+	public void commit() throws IOException {
+		//
+	}
+
 }

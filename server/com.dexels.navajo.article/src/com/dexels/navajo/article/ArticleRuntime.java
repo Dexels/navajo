@@ -29,4 +29,5 @@ public interface ArticleRuntime {
 	
 	public ObjectNode getMetadataRootNode();
 
+	public void commit() throws IOException;
 }

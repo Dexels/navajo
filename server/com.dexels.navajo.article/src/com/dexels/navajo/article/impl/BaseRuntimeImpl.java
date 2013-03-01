@@ -94,6 +94,7 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 			mapper.writeValue(getOutputWriter(), rootNode);
 //			getOutputWriter().write("bombombom");
 			getOutputWriter().write("}");
+			commit();
 	} catch (IOException e1) {
 		logger.error("Error: ", e1);
 	}
