@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Home context reader
 Bundle-SymbolicName: com.dexels.navajo.runtime.homecontext
-Bundle-Version: 1.0.4
+Bundle-Version: 1.0.5.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.osgi.runtime,
