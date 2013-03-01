@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -272,14 +273,14 @@ public class SharedFileStore implements SharedStoreInterface {
 	/**
 	 * Returns the Object that was serialized in the file identified by its parent (path) and its name.
 	 */
-	public Object get(String parent, String name) throws SharedStoreException {
+	public Serializable get(String parent, String name) throws SharedStoreException {
 		File f = new File(sharedStore, parent + "/" + name);
 		NavajoObjectInputStream ois = null;
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(f);
 			ois = new NavajoObjectInputStream(fis, navajoConfig.getClassloader());
-			Object o = ois.readObject();
+			Serializable o = (Serializable) ois.readObject();
 			return o;
 		} catch (Exception e) {
 			throw new SharedStoreException(e.getMessage(), e);
@@ -434,7 +435,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	 * @param parent  
 	 * @param o 
 	 */
-	public String store(String parent, Object o) {
+	public String store(String parent, Serializable o) {
 		return null;
 	}
 
@@ -449,7 +450,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	 * the object is always stored.
 	 * 
 	 */
-	public void store(String parent, String name, Object o, boolean append, boolean requireLock) throws SharedStoreException {
+	public void store(String parent, String name, Serializable o, boolean append, boolean requireLock) throws SharedStoreException {
 
 		SharedStoreLock ssl = null;
 		try {

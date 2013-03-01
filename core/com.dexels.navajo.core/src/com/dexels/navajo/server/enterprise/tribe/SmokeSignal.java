@@ -44,9 +44,9 @@ public abstract class SmokeSignal implements Serializable {
 	
 	public String sender;
 	public String key;
-	public Object value;
+	public Serializable value;
 	
-	public SmokeSignal(String sender, String key, Object value) {
+	public SmokeSignal(String sender, String key, Serializable value) {
 		this.key = key;
 		this.value = value;
 		this.sender = sender;
