@@ -1477,24 +1477,34 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	    
 	    
 		public void printElementJSONTypeless(final Writer sw) throws IOException {
-			printElementJSONTypeless(sw, null);
+			printElementJSONTypeless(getName(), sw, null);
 		}	   
 
-		public void printElementJSONTypeless(final Writer sw, String[] propertyFilter) throws IOException {
+		private void printElementJSONTypeless(String name, final Writer sw, String[] propertyFilter) throws IOException {
 		ArrayList<Message> messages = getAllMessages();
 		ArrayList<Property> properties = getAllProperties();
 
 		// all overridden
 
 		if (getType().equals(Message.MSG_TYPE_ARRAY)) {
-			writeElement(sw, "\"" + getName() + "\" : [");
+			writeElement(sw, "\"" + name + "\" : [");
 			int cnt = 0;
-			for (Message m : messages) {
-				if (cnt > 0) {
-					writeElement(sw, ", ");
+			if(propertyFilter!=null) {
+				for (Message m : messages) {
+					if (cnt > 0) {
+						writeElement(sw, ", ");
+					}
+					((BaseMessageImpl) m).printElementJSONTypeless(name,sw,propertyFilter);
+					cnt++;
 				}
-				((BaseNode) m).printElementJSONTypeless(sw);
-				cnt++;
+			} else {
+				for (Message m : messages) {
+					if (cnt > 0) {
+						writeElement(sw, ", ");
+					}
+					((BaseNode) m).printElementJSONTypeless(sw);
+					cnt++;
+				}
 			}
 			writeElement(sw, "]");
 		} else if (getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
@@ -1506,7 +1516,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 						writeElement(sw, ", ");
 					}
 					Property p = getProperty(s);
-					if(s!=null) {
+					if(p!=null) {
 						((BaseNode) p).printElementJSONTypeless(sw);
 						cnt++;
 					}
@@ -1678,12 +1688,20 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		  writer.write("}");
 	  }
 
+	  @Override
 	public void writeSimpleJSON(Writer writer, String[] properties)
 			throws IOException {
 		writer.write("{");
-		printElementJSONTypeless(writer, properties);
+		printElementJSONTypeless(getName(), writer, properties);
 		writer.write("}");
 	}
+	  
+	  @Override
+	public void writeSimpleJSON(String name, Writer writer, String[] properties)
+			throws IOException {
+		printElementJSONTypeless(name,writer, properties);
+	}
+
 	 
 	public static void main(String [] args) {
 		

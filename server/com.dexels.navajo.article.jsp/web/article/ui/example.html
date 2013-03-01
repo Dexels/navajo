@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap-responsive.min.css" rel="stylesheet"
+	media="screen">
+<link href="css/docs.css" rel="stylesheet" media="screen">
+
+</head>
+<body>
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/purl.js"></script>
+	<script type="text/javascript">
+		var data = [ "foo", "bar" ];
+		var token = 'epPm/1NY+hygYpOpGDHB2aMEjSJ558CNywPLwd/KA4nOV4Fkh9vtuSJGQZqsEJDpMdf/MhkOcqNO6LGdYH4tWxBIZo3niZKOkK+6gD61U8g=';
+		var username = '@BBFW06E';
+
+		$.getJSON('../verjaardagen?username='+username+'&token='+token, function(data) {
+			var items = [];
+			$.each(data.data.verjaardagen, function(key, val) {
+				items.push('<tr><td>'+val.verjaardag+'</td><td>'+val.volledigenaam+'</td></tr>');
+				console.log(val);
+			});
+			$('#my-table > tbody:last').append(items.join('aap'));
+		});
+	</script>
+	<table class="table table-striped" id="my-table">
+		<thead>
+		<tr><td>Datum</td><td>Naam</td></tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</body>
+</html>

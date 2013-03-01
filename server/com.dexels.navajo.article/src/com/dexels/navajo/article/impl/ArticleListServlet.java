@@ -1,7 +1,5 @@
 package com.dexels.navajo.article.impl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -15,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.dexels.navajo.article.ArticleContext;
-import com.dexels.navajo.article.ArticleException;
-import com.dexels.navajo.article.ArticleRuntime;
 
 public class ArticleListServlet extends HttpServlet implements Servlet {
 
@@ -60,24 +56,6 @@ public class ArticleListServlet extends HttpServlet implements Servlet {
 		List<String> articles = context.listArticles();
 		ObjectMapper om = new ObjectMapper();
 		om.writeValue(resp.getWriter(), articles);
-		String pathInfo = req.getPathInfo();
-		if(pathInfo==null) {
-			throw new ServletException("No article found, please specify after article");
-		}
-		String articleName = pathInfo.substring(1);
-		
-		File article = context.resolveArticle(pathInfo);
-		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article,articleName);
-			try {
-				runtime.execute(context);
-			} catch (ArticleException e) {
-				throw new ServletException("Problem executing article", e);
-			}
-
-		} else {
-			throw new FileNotFoundException("Unknown article: "+article.getAbsolutePath());
-		}
 	}
 
 	@Override

@@ -1,12 +1,14 @@
 package com.dexels.navajo.article.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +54,10 @@ public abstract class BaseContextImpl implements ArticleContext {
 
 	@Override
 	public List<String> listArticles() {
+		return listArticles(true);
+	}
+
+	protected List<String> listArticles(boolean filterArticlesWithArguments) {
 		String root = getConfig().getRootPath();
 		File rootFolder = new File(root);
 		File articles = new File(rootFolder,"article");
@@ -64,12 +70,46 @@ public abstract class BaseContextImpl implements ArticleContext {
 		});
 		List<String> result = new ArrayList<String>();
 		for (String elt : list) {
-			result.add(elt.substring(0, elt.lastIndexOf('.')));
+			if(filterArticlesWithArguments) {
+				Map<String,String> arguments = getArticleArguments(new File(articles,elt));
+				if(arguments.isEmpty()) {
+					result.add(elt.substring(0, elt.lastIndexOf('.')));
+				}
+			} else {
+				result.add(elt.substring(0, elt.lastIndexOf('.')));
+			}
+			
 		}
 		return result;
 	}
 
 	
+	private Map<String, String> getArticleArguments(File file) {
+		FileReader fr = null;
+		Map<String,String> result = new HashMap<String, String>();
+		try {
+			fr = new FileReader(file);
+			XMLElement x = new CaseSensitiveXMLElement();
+			x.parseFromReader(fr);
+			final Iterator<String> enumerateAttributeNames = x.enumerateAttributeNames();
+			while(enumerateAttributeNames.hasNext()) {
+				String attr = enumerateAttributeNames.next();
+				result.put(attr, x.getStringAttribute(attr));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if(fr!=null) {
+				try {
+					fr.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		
+		return result;
+	}
+
 	public File resolveArticle(String pathInfo) {
 		String sub = pathInfo.substring(1);
 		String root = getConfig().getRootPath();

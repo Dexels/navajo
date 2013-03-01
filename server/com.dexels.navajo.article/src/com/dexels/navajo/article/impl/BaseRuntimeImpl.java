@@ -10,6 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ObjectNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
@@ -19,18 +25,27 @@ import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public abstract class BaseRuntimeImpl  implements ArticleRuntime {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BaseRuntimeImpl.class);
+	
 	private final Stack<Navajo> navajoStack = new Stack<Navajo>();
 	private final Map<String,Navajo> navajoStore = new HashMap<String,Navajo>();
 	protected final XMLElement article;
 	private final String articleName;
 
+	private final ObjectMapper mapper = new ObjectMapper();
+	private final ObjectNode rootNode;
+	
 	protected BaseRuntimeImpl(String articleName, XMLElement article) {
+		rootNode = mapper.createObjectNode();
 		this.article = article;
 		this.articleName = articleName;
 	}
 	
 	protected BaseRuntimeImpl(String articleName, File articleFile) throws IOException {
 		article = new CaseSensitiveXMLElement();
+		rootNode = mapper.createObjectNode();
 		this.articleName = articleName;
 		Reader r = null;
 		try {
@@ -49,7 +64,7 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 		List<XMLElement> children = article.getChildren();
 		int i = 0;
 		try {
-			getOutputWriter().write("{");
+			getOutputWriter().write("{ \"data\" : {");
 			boolean first = true;
 			int count = children.size();
 			
@@ -74,10 +89,15 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 				}
 
 			}
+			getOutputWriter().write("}, \"metadata\": ");
+			mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+			mapper.writeValue(getOutputWriter(), rootNode);
+//			getOutputWriter().write("bombombom");
 			getOutputWriter().write("}");
+			commit();
 	} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		logger.error("Error: ", e1);
+	}
 	//		setMimeType("text/plain");
 		
 	}
@@ -103,4 +123,11 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 	public String getArticleName() {
 		return articleName;
 	}
+	
+	@Override
+	public ObjectNode getMetadataRootNode() {
+		return rootNode;
+	}
+
+
 }

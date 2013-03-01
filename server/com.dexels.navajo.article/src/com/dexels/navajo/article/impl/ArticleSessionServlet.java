@@ -1,7 +1,5 @@
 package com.dexels.navajo.article.impl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.servlet.Servlet;
@@ -12,17 +10,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dexels.navajo.article.ArticleContext;
-import com.dexels.navajo.article.ArticleException;
-import com.dexels.navajo.article.ArticleRuntime;
 
-public class ArticleServlet extends HttpServlet implements Servlet {
+public class ArticleSessionServlet extends HttpServlet implements Servlet {
 
 	private static final long serialVersionUID = -6895324256139435015L;
 
 
 	private ArticleContext context;
 	
-	public ArticleServlet() {
+	public ArticleSessionServlet() {
 		
 	}
 	
@@ -54,24 +50,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		if(token==null) {
 			throw new ServletException("Please supply a token");
 		}
-		
-		String pathInfo = req.getPathInfo();
-		if(pathInfo==null) {
-			throw new ServletException("No article found, please specify after article");
-		}
-		File article = context.resolveArticle(pathInfo);
-		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article,pathInfo);
-			try {
-				runtime.execute(context);
-				resp.setContentType("text/json");
-			} catch (ArticleException e) {
-				throw new ServletException("Problem executing article", e);
-			}
-
-		} else {
-			throw new FileNotFoundException("Unknown article: "+article.getAbsolutePath());
-		}
+		req.getSession().setAttribute("token", token);
 	}
 
 	@Override
