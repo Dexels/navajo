@@ -49,7 +49,8 @@ public class TribeManagerFactory {
 			return getOSGiTribeManagerService();
 		}
 			try {
-				Class<? extends TribeManagerInterface> c = (Class<? extends TribeManagerInterface>) Class.forName("com.dexels.navajo.enterprise.cluster.TribeManager");
+				Class<? extends TribeManagerInterface> c = (Class<? extends TribeManagerInterface>) 
+						Class.forName("com.dexels.navajo.hazelcast.tribe.HazelcastTribeManager");
 				TribeManagerInterface dummy = c.newInstance();
 				Method m = c.getMethod("getInstance", (Class[]) null);
 				return (TribeManagerInterface) m.invoke(dummy, (Object[])null);
