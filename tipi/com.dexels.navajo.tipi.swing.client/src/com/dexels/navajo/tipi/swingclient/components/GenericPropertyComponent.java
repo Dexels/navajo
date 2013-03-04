@@ -1239,16 +1239,8 @@ public class GenericPropertyComponent extends JPanel {
 
 	private final void createRadioButtonPropertyField(Property p) {
 		if (myRadioButtonField == null) {
-			myRadioButtonField = new PropertyRadioSelection();
-			if (checkboxGroupColumnCount > 0) {
-				myRadioButtonField.setColumnMode(true);
-				myRadioButtonField.setColumns(checkboxGroupColumnCount);
-			} else {
-				myRadioButtonField.setColumnMode(false);
-			}
-
-			myRadioButtonField
-					.addFocusListener(new java.awt.event.FocusAdapter() {
+			myRadioButtonField = new PropertyRadioSelection(
+					new java.awt.event.FocusAdapter() {
 						public final void focusGained(FocusEvent e) {
 							myRadioButtonField_focusGained(e);
 						}
@@ -1257,6 +1249,13 @@ public class GenericPropertyComponent extends JPanel {
 							myRadioButtonField_focusLost(e);
 						}
 					});
+			if (checkboxGroupColumnCount > 0) {
+				myRadioButtonField.setColumnMode(true);
+				myRadioButtonField.setColumns(checkboxGroupColumnCount);
+			} else {
+				myRadioButtonField.setColumnMode(false);
+			}
+
 			myRadioButtonField
 					.addActionListener(new java.awt.event.ActionListener() {
 						public final void actionPerformed(ActionEvent e) {
@@ -1267,6 +1266,7 @@ public class GenericPropertyComponent extends JPanel {
 		}
 		myRadioButtonField.setProperty(p);
 		addPropertyComponent(myRadioButtonField, true);
+		myRadioButtonField.setFocusable(false);
 	}
 
 	private final void createClockTimeField(Property p) {
@@ -1455,11 +1455,19 @@ public class GenericPropertyComponent extends JPanel {
 	}
 
 	final void myRadioButtonField_focusGained(FocusEvent e) {
-		fireTipiEvent("onFocusGained");
+		if (e.getOppositeComponent() == null || e.getOppositeComponent().getParent() == null || e.getComponent().getParent() == null ||
+				!e.getOppositeComponent().getParent().equals(e.getComponent().getParent()))
+		{
+			fireTipiEvent("onFocusGained");
+		}
 	}
 
 	final void myRadioButtonField_focusLost(FocusEvent e) {
-		fireTipiEvent("onFocusLost");
+		if (e.getOppositeComponent() == null || e.getOppositeComponent().getParent() == null || e.getComponent().getParent() == null ||
+				!e.getOppositeComponent().getParent().equals(e.getComponent().getParent()))
+		{
+			fireTipiEvent("onFocusLost");
+		}
 	}
 
 	// final void myRadioButtonField_itemStateChanged(ItemEvent e) {

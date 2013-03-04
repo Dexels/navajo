@@ -59,6 +59,10 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 
   private static Object semaphore = new Object();
   
+  public AsyncStore() {
+	  super(id);
+  }
+  
   /**
    * Get the singleton AsyncStore object instance.
    *
