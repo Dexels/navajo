@@ -1,17 +1,17 @@
 package com.dexels.navajo.enterprise.scheduler.tribe;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
+import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
 
 public class BeforeWebServiceAnswer extends Answer {
 
 	private Navajo myNavajo;
 	
-	public BeforeWebServiceAnswer(WebserviceListenerRegistryInterface listenerRegistry, BeforeWebServiceRequest q) {
+	public BeforeWebServiceAnswer(BeforeWebServiceRequest q) {
 		super(q);
 		// Emit 'beforeWebservice'.
-		myNavajo = listenerRegistry.beforeWebservice(q.getWebservice(), q.getMyAccess(), q.getIgnoreTaskIds(), true);
+		myNavajo = WebserviceListenerFactory.getInstance().beforeWebservice(q.getWebservice(), q.getMyAccess(), q.getIgnoreTaskIds(), true);
 	}
 
 	/**
