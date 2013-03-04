@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Logback configurator for Navajo
 Bundle-SymbolicName: com.dexels.navajo.server.logback
-Bundle-Version: 1.0.2.qualifier
+Bundle-Version: 1.0.4.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: ch.qos.logback.classic;version="0.9.27",
