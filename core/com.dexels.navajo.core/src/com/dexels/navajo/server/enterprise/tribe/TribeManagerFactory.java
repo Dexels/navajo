@@ -53,7 +53,8 @@ public class TribeManagerFactory {
 						Class.forName("com.dexels.navajo.hazelcast.tribe.HazelcastTribeManager");
 				TribeManagerInterface dummy = c.newInstance();
 				Method m = c.getMethod("configure", (Class[]) null);
-				return (TribeManagerInterface) m.invoke(dummy, (Object[])null);
+				m.invoke(dummy, (Object[])null);
+				return dummy;
 			} catch (Throwable e) {
 				logger.error("Could not start Tribe Manager", e);
 				return new DummyTribeManager();
