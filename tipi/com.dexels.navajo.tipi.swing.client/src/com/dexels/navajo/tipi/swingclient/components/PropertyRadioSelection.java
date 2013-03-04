@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,10 +51,12 @@ public final class PropertyRadioSelection extends JPanel implements
 			.getLogger(PropertyRadioSelection.class);
 	private Property myProperty = null;
 	private final ButtonGroup myGroup = new ButtonGroup();
+	private JRadioButton lastButtonOfGroup = null;
 
 	private final Map<JRadioButton, Selection> selectionMap = new HashMap<JRadioButton, Selection>();
 	private final List<ButtonModel> buttonList = new ArrayList<ButtonModel>();
 	private final ArrayList<ActionListener> myActionListeners = new ArrayList<ActionListener>();
+	private final FocusAdapter myFocusListener;
 
 	// private static final int VERTICAL = 1;
 	// private static final int HORIZONTAL = 2;
@@ -62,9 +65,14 @@ public final class PropertyRadioSelection extends JPanel implements
 	private boolean columnMode;
 	private int checkboxGroupColumnCount;
 
-	public PropertyRadioSelection() {
+	public PropertyRadioSelection()
+	{
+		this(null);
+	}
+	public PropertyRadioSelection(FocusAdapter focusAdapter) {
+		
 		setVertical();
-
+		myFocusListener = focusAdapter;
 	}
 
 	public final void setVertical() {
@@ -153,9 +161,11 @@ public final class PropertyRadioSelection extends JPanel implements
 		jr.setText(s.getName() != null ? s.getName() : s.getValue());
 		myGroup.add(jr);
 		jr.addActionListener(this);
+		jr.addFocusListener(myFocusListener);
 		if (s.isSelected()) {
 			jr.setSelected(true);
 		}
+		lastButtonOfGroup = jr;
 		// jr.addItemListener(new ItemListener() {
 		// public void itemStateChanged(ItemEvent ce) {
 		// if (ce.getStateChange()==ItemEvent.SELECTED) {
@@ -183,6 +193,7 @@ public final class PropertyRadioSelection extends JPanel implements
 	public final void actionPerformed(ActionEvent e) {
 		logger.info("Radio action performed");
 		updateProperty((JRadioButton) e.getSource());
+		lastButtonOfGroup.transferFocus();
 	}
 
 	private final void updateProperty(JRadioButton source) {
