@@ -44,7 +44,9 @@ public abstract class Request implements Serializable {
 	private Object recipient;
 	
 	public Request() {
-		owner = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
+		if ( DispatcherFactory.getInstance() != null ) {
+			owner = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
+		}
 		guid = hashCode() + "-" + System.currentTimeMillis();
 	}
 	

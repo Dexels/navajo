@@ -8,7 +8,6 @@ import javax.servlet.ServletContextListener;
 
 import org.ops4j.pax.web.service.WebContainer;
 import org.osgi.framework.BundleContext;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
@@ -23,12 +22,11 @@ public class JspComponent {
 	private ClientContext clientContext;
 	private BundleContext bundleContext;
 	private static JspComponent instance;
-	
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(JspComponent.class);
 	private HttpContext httpContext;
-	
+
 	public WebContainer getWebContainer() {
 		return webContainer;
 	}
@@ -40,7 +38,7 @@ public class JspComponent {
 	public void clearWebContainer(WebContainer webcontainer) {
 		this.webContainer = null;
 	}
-	
+
 	public NavajoConfigInterface getNavajoConfig() {
 		return navajoConfig;
 	}
@@ -64,54 +62,65 @@ public class JspComponent {
 	public void clearClientContext(ClientContext clientContext) {
 		this.clientContext = null;
 	}
-	
+
 	public static JspComponent getInstance() {
 		return instance;
 	}
-	
+
 	public String getVersion() {
 		return bundleContext.getBundle().getVersion().toString();
 	}
-	
-	public void activate(ComponentContext cc) {
-		this.bundleContext = cc.getBundleContext();
+
+	public void activate(BundleContext cc) {
+		this.bundleContext = cc;
 		instance = this;
-        try {
-            httpContext = webContainer.createDefaultHttpContext();
-            Dictionary<String,Object> contextProperties = new Hashtable<String,Object>();
-            logger.info("Injecting forced Navajo path: "+navajoConfig.getRootPath());
-            contextProperties.put("forcedNavajoPath", navajoConfig.getRootPath());
-            webContainer.setContextParam(contextProperties,httpContext);
-            webContainer.registerEventListener(new ServletContextListener() {
-				
+		try {
+			httpContext = webContainer.createDefaultHttpContext();
+			Dictionary<String, Object> contextProperties = new Hashtable<String, Object>();
+			logger.info("Injecting forced Navajo path: "
+					+ navajoConfig.getRootPath());
+			contextProperties.put("forcedNavajoPath",
+					navajoConfig.getRootPath());
+			webContainer.setContextParam(contextProperties, httpContext);
+			webContainer.registerEventListener(new ServletContextListener() {
+
 				@Override
 				public void contextInitialized(ServletContextEvent sce) {
-					sce.getServletContext().setAttribute("navajoContext", clientContext);
+					sce.getServletContext().setAttribute("navajoContext",
+							clientContext);
 				}
-				
+
 				@Override
 				public void contextDestroyed(ServletContextEvent sce) {
 					logger.debug("Context destroyed.");
 				}
 			}, httpContext);
-            
-            //            PageContext pc = new Page
-            
-            webContainer.registerJsps( new String[]{ "/index.jsp" },httpContext);
-            webContainer.registerJsps( new String[]{ "/main.jsp" },httpContext);
-            webContainer.registerJsps( new String[]{ "/navajotester.jsp" },httpContext);
-            webContainer.registerJsps( new String[]{ "/tml/*" },httpContext);
-            webContainer.registerJsps( new String[]{ "/tml/manager/*" },httpContext);
-            webContainer.registerJsps( new String[]{ "/tml/installer/*" },httpContext);
-			webContainer.registerResources("/index.html", "/index.html", httpContext);
+
+			// PageContext pc = new Page
+
+			webContainer.registerJsps(new String[] { "/index.jsp" },
+					httpContext);
+			webContainer
+					.registerJsps(new String[] { "/main.jsp" }, httpContext);
+			webContainer.registerJsps(new String[] { "/navajotester.jsp" },
+					httpContext);
+			webContainer.registerJsps(new String[] { "/tml/*" }, httpContext);
+			webContainer.registerJsps(new String[] { "/tml/manager/*" },
+					httpContext);
+			webContainer.registerJsps(new String[] { "/tml/installer/*" },
+					httpContext);
+			webContainer.registerResources("/index.html", "/index.html",
+					httpContext);
 			webContainer.registerResources("/images", "/images", httpContext);
-	        webContainer.registerResources("/css", "/css", httpContext);
-	        webContainer.registerResources("/js", "/js", httpContext);
-	        webContainer.registerResources("/resources", "/resources", httpContext);
-	        webContainer.registerResources("/yaml", "/yaml", httpContext);
-	        webContainer.registerResources("/WEB-INF", "/WEB-INF", httpContext);
-	        webContainer.registerWelcomeFiles(new String[]{"index.html"}, false, httpContext);
-        } catch (NamespaceException e) {
+			webContainer.registerResources("/css", "/css", httpContext);
+			webContainer.registerResources("/js", "/js", httpContext);
+			webContainer.registerResources("/resources", "/resources",
+					httpContext);
+			webContainer.registerResources("/yaml", "/yaml", httpContext);
+			webContainer.registerResources("/WEB-INF", "/WEB-INF", httpContext);
+			webContainer.registerWelcomeFiles(new String[] { "index.html" },
+					false, httpContext);
+		} catch (NamespaceException e) {
 			logger.error("Error: ", e);
 		}
 
@@ -119,13 +128,13 @@ public class JspComponent {
 
 	public void deactivate() {
 		instance = null;
-		if(webContainer==null) {
+		if (webContainer == null) {
 			return;
 		}
-		if(httpContext==null) {
+		if (httpContext == null) {
 			return;
 		}
-//		HttpContext context = webContainer.
+		// HttpContext context = webContainer.
 		webContainer.unregisterJsps(httpContext);
 	}
 

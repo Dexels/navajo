@@ -1,0 +1,50 @@
+{
+	"data" : {
+		"verjaardagen" : [
+			{"verjaardag" : "27 feb", "volledigenaam" : "Finn Buscher"}, 
+			{"verjaardag" : "27 feb", "volledigenaam" : "Randy Derksema"}, 
+			{"verjaardag" : "27 feb", "volledigenaam" : "Jesse de Groot"}, 
+			{"verjaardag" : "28 feb", "volledigenaam" : "John Lakeman"}, 
+			{"verjaardag" : "28 feb", "volledigenaam" : "Casper ten Wolde"}, 
+			{"verjaardag" : "01 mrt", "volledigenaam" : "Zola van Zwol"}, 
+			{"verjaardag" : "02 mrt", "volledigenaam" : "Robin van Gasteren"}, 
+			{"verjaardag" : "02 mrt", "volledigenaam" : "Chris de Gier"}, 
+			{"verjaardag" : "02 mrt", "volledigenaam" : "Timothy Laurens van Lochem"}, 
+			{"verjaardag" : "02 mrt", "volledigenaam" : "Wouter Stam"}, 
+			{"verjaardag" : "03 mrt", "volledigenaam" : "Mitchel Geurs"}, 
+			{"verjaardag" : "03 mrt", "volledigenaam" : "Inci de Hoog"}, 
+			{"verjaardag" : "03 mrt", "volledigenaam" : "Rachel Kaag"}, 
+			{"verjaardag" : "03 mrt", "volledigenaam" : "Luuk Kramer"}, 
+			{"verjaardag" : "03 mrt", "volledigenaam" : "Sem Spruijt"}, 
+			{"verjaardag" : "04 mrt", "volledigenaam" : "Sjoerd Bregman"}, 
+			{"verjaardag" : "04 mrt", "volledigenaam" : "Tjerk de Groot"}, 
+			{"verjaardag" : "04 mrt", "volledigenaam" : "Thijs Peerdeman"}, 
+			{"verjaardag" : "04 mrt", "volledigenaam" : "Jesse van Reijsen"}, 
+			{"verjaardag" : "04 mrt", "volledigenaam" : "Kelvin Rutgrink"}, 
+			{"verjaardag" : "04 mrt", "volledigenaam" : "Sam Wittensleger"}, 
+			{"verjaardag" : "05 mrt", "volledigenaam" : "Djen Stef Rood"}, 
+			{"verjaardag" : "05 mrt", "volledigenaam" : "Erik Visser"}, 
+			{"verjaardag" : "05 mrt", "volledigenaam" : "Bas de Zwart"}, 
+			{"verjaardag" : "06 mrt", "volledigenaam" : "Zohair el Jarroudi"}
+		]
+		},
+	 metadata : {
+	 	"verjaardagen" : {
+			"verjaardag" : {
+				"description" : "Verjaardag",
+				"type" : "string"
+				"article" : "testarticle",
+				"link" : "id"
+			},
+			"volledigenaam" : {
+				"description" : "Volledige naam",
+				"type" : "string"
+			},
+			"more" : {
+				"description: "Details",
+				"type" : "link",
+			}
+	 	}
+	 }
+	
+}

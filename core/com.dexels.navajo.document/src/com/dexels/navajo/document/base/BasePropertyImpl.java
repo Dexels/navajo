@@ -1007,6 +1007,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	}
 
+	public final void setUnCheckedStringAsValue(String s) {
+		myValue = s;
+	}
+	
 	public final String setCheckedValue(String v) {
 
 		// if (EXPRESSION_PROPERTY.equals(getType())&&
@@ -1866,6 +1870,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				value = s.getValue();
 			}
 		}
+		value = value.replace("\"", "\\\"");
 		writeElement(sw, "\"" + getName() + "\" : \"" + value + "\"");		
 	}
 

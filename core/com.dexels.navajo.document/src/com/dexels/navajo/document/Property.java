@@ -524,6 +524,9 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    * @param Object value
    */
   public void setAnyValue(Object o);
+  
+  public void setUnCheckedStringAsValue(String s);
+  
 /**
  * Clones the Property, only it ignores the value
  * @return

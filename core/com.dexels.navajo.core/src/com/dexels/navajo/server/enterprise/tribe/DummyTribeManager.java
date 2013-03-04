@@ -43,16 +43,6 @@ public class DummyTribeManager implements TribeManagerInterface {
 		return q.getAnswer();
 	}
 
-	public void tribalAfterWebServiceRequest(String service, Access a,
-			HashSet<String> ignoreTaskIds) {
-		
-	}
-
-	public Navajo tribalBeforeWebServiceRequest(String service, Access a,
-			HashSet<String> ignoreList) {
-		return null;
-	}
-
 	public Set<TribeMemberInterface> getAllMembers() {
 		Set<TribeMemberInterface> s =  new HashSet<TribeMemberInterface>();
 		s.add(new DummyTribeMemberImpl());
@@ -117,7 +107,6 @@ public class DummyTribeManager implements TribeManagerInterface {
 
 	@Override
 	public void tribalAfterWebServiceRequest(
-			WebserviceListenerRegistryInterface listenerRegistry,
 			String service, Access a, HashSet<String> ignoreTaskIds) {
 		// TODO Auto-generated method stub
 		
@@ -125,7 +114,6 @@ public class DummyTribeManager implements TribeManagerInterface {
 
 	@Override
 	public Navajo tribalBeforeWebServiceRequest(
-			WebserviceListenerRegistryInterface listenerRegistry,
 			String service, Access a, HashSet<String> ignoreList) {
 		// TODO Auto-generated method stub
 		return null;
