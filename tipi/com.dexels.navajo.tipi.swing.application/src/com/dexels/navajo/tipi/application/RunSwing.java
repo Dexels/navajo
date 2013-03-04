@@ -21,6 +21,7 @@ public class RunSwing {
 	 * @throws XMLParseException 
 	 */
 	public static void main(String[] args) throws XMLParseException, IOException {
+		// enableFocusLogging(); // outputs all focus statements to log. Helpful in determining what focus is doing.
 		TipiCoreExtension tce = new TipiCoreExtension();
 		tce.loadDescriptor();
 		tce.getTipiExtensionRegistry().registerTipiExtension(tce);
@@ -32,6 +33,21 @@ public class RunSwing {
 		ApplicationComponent ac = new ApplicationComponent();
 //		"/Users/frank/Documents/workspace42/SportlinkClub"
 		ac.bootApplication(null, path, deploy, profile);
+	}
+	
+	// Copied from web and didn't want to bother about finding the correct logger implmentation.
+	private static void enableFocusLogging()
+	{
+	      // Obtain a reference to the logger
+        java.util.logging.Logger focusLog = java.util.logging.Logger.getLogger("java.awt.focus.Component");
+        // The logger should log all messages
+        focusLog.setLevel(java.util.logging.Level.ALL);
+        // Create a new handler
+        java.util.logging.ConsoleHandler handler = new java.util.logging.ConsoleHandler();
+        // The handler must handle all messages
+        handler.setLevel(java.util.logging.Level.ALL);
+        // Add the handler to the logger
+        focusLog.addHandler(handler);
 	}
 
 }
