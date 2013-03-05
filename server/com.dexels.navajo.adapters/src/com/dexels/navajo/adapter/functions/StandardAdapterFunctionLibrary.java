@@ -3,10 +3,10 @@ package com.dexels.navajo.adapter.functions;
 import java.io.InputStream;
 import java.util.List;
 
+import navajo.ExtensionDefinition;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import navajo.ExtensionDefinition;
 
 
 

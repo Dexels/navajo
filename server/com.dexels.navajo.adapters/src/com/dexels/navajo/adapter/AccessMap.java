@@ -168,7 +168,7 @@ private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
       }
     }
     if (showDetails == false) { //Try async store
-      myAccess = (Access) com.dexels.navajo.mapping.AsyncStore.getInstance().accessStore.get(id);
+      myAccess = com.dexels.navajo.mapping.AsyncStore.getInstance().accessStore.get(id);
       if (myAccess != null) {
         showDetails = true;
       }
