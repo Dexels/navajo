@@ -35,7 +35,7 @@ public class RunSwing {
 		ac.bootApplication(null, path, deploy, profile);
 	}
 	
-	// Copied from web and didn't want to bother about finding the correct logger implmentation.
+	// Copied from web and didn't want to bother about finding the correct logger implementation.
 	private static void enableFocusLogging()
 	{
 	      // Obtain a reference to the logger

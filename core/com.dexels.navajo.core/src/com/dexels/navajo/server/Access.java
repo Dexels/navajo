@@ -102,8 +102,8 @@ public final class Access implements java.io.Serializable, Mappable {
 	public boolean compressedSend = false;
 	public boolean isFinished = false;
 	public int contentLength;
-	public Binary requestNavajo;
-	public Binary responseNavajo;
+	public transient Binary requestNavajo;
+	public transient Binary responseNavajo;
 	public boolean debugAll;
 	
 	private String requestUrl;
@@ -114,7 +114,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	private transient Object scriptEnvironment = null;
 	
 
-	private Throwable myException;
+	private transient Throwable myException;
 	private Navajo outputDoc;
 	private Navajo inDoc;
 	// The mergedDoc can be used to merge a previously set Navajo with the outputDoc.
@@ -138,7 +138,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	private String waitingForPreviousRequest = null;
 	private transient Thread myThread = null;
 
-	private HashMap<Integer, MapStatistics> mapStatistics = null;
+	private transient HashMap<Integer, MapStatistics> mapStatistics = null;
 
 	// In order to manage continuations, I might need the original runnable.
 	// This service (and it's Access object) may be used by many different threads during its execution, but only
