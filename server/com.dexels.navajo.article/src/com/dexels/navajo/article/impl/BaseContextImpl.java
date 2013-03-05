@@ -1,7 +1,6 @@
 package com.dexels.navajo.article.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
