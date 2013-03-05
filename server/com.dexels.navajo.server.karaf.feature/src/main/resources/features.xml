@@ -34,6 +34,9 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		 -->
 	</feature>
 
+	<feature name='navajo.server' version='1.0.0' start-level='81' >
+	</feature>
+
 	<feature name='navajo.server' version='1.0.1' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/1.1.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.6</bundle>
