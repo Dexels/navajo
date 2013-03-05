@@ -269,6 +269,9 @@ public final class MappingUtils {
     				value = "";
     			}
     			prop = ref.getRootDoc().getNavajoFactory().createProperty(outputDoc, actualName, type, "", length, description, direction);
+    			if ( (value instanceof StringLiteral) ) {
+    				value = value.toString();
+    			}
     			prop.setAnyValue(value);
     			prop.setType(type);
     		}
@@ -288,6 +291,9 @@ public final class MappingUtils {
     		}
     		else {
     			prop = ref.getRootDoc().getNavajoFactory().createProperty(tmlDoc, actualName, type, "", length, description, direction);
+    			if ( (value instanceof StringLiteral) ) {
+    				value = value.toString();
+    			}
     			prop.setAnyValue(value);
     			prop.setType(type);
     		}
