@@ -1003,14 +1003,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public TipiAction instantiateTipiAction(XMLElement definition,
 			TipiComponent parent, TipiExecutable parentExe)
 			throws TipiException {
-		String type = (String) definition.getAttribute("type");
-		if (type == null) {
-			type = definition.getName();
-		}
-		if (type == null) {
-			throw new TipiException("Undefined action type in: "
-					+ definition.toString());
-		}
 		return myActionManager.instantiateAction(definition, parent, parentExe);
 	}
 
