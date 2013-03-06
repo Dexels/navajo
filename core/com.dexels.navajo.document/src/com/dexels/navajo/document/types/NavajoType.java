@@ -58,4 +58,11 @@ private Map<String,String> subTypeMap = null;
       subTypeMap = NavajoFactory.getInstance().parseSubTypes(subtype);
     }
   }
+  
+  public void putSubType(String key, String value) {
+	  if(subTypeMap==null) {
+		  subTypeMap = new HashMap<String, String>();
+	  }
+	  subTypeMap.put(key, value);
+  }
 }
