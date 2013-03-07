@@ -1476,45 +1476,84 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	    }
 	    
 	    
-	   
-	public void printElementJSONTypeless(final Writer sw) throws IOException {
+		public void printElementJSONTypeless(final Writer sw) throws IOException {
+			printElementJSONTypeless(getName(), sw, null);
+		}	   
+
+		private void printElementJSONTypeless(String name, final Writer sw, String[] propertyFilter) throws IOException {
 		ArrayList<Message> messages = getAllMessages();
 		ArrayList<Property> properties = getAllProperties();
 
 		// all overridden
 
 		if (getType().equals(Message.MSG_TYPE_ARRAY)) {
-			writeElement(sw, "\"" + getName() + "\" : [");
+			writeElement(sw, "\"" + name + "\" : [");
 			int cnt = 0;
-			for (Message m : messages) {
-				if (cnt > 0) {
-					writeElement(sw, ", ");
+			if(propertyFilter!=null) {
+				for (Message m : messages) {
+					if (cnt > 0) {
+						writeElement(sw, ", ");
+					}
+					((BaseMessageImpl) m).printElementJSONTypeless(name,sw,propertyFilter);
+					cnt++;
 				}
-				((BaseNode) m).printElementJSONTypeless(sw);
-				cnt++;
+			} else {
+				for (Message m : messages) {
+					if (cnt > 0) {
+						writeElement(sw, ", ");
+					}
+					((BaseNode) m).printElementJSONTypeless(sw);
+					cnt++;
+				}
 			}
 			writeElement(sw, "]");
 		} else if (getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
 			writeElement(sw, "{");
 			int cnt = 0;
-			for (Property p : properties) {
-				if (cnt > 0) {
-					writeElement(sw, ", ");
+			if (propertyFilter!=null) {
+				for (String s : propertyFilter) {
+					if (cnt > 0) {
+						writeElement(sw, ", ");
+					}
+					Property p = getProperty(s);
+					if(p!=null) {
+						((BaseNode) p).printElementJSONTypeless(sw);
+						cnt++;
+					}
 				}
-				((BaseNode) p).printElementJSONTypeless(sw);
-				cnt++;
+			} else {
+				for (Property p : properties) {
+					if (cnt > 0) {
+						writeElement(sw, ", ");
+					}
+					((BaseNode) p).printElementJSONTypeless(sw);
+					cnt++;
+				}
 			}
 			writeElement(sw, "}");
 
 		} else if (getType().equals(Message.MSG_TYPE_SIMPLE)) {
 			writeElement(sw, "\"" + getName() + "\" : {");
 			int cnt = 0;
-			for (Property p : properties) {
-				if (cnt > 0) {
-					writeElement(sw, ", ");
+			if (propertyFilter!=null) {
+				for (String s : propertyFilter) {
+					if (cnt > 0) {
+						writeElement(sw, ", ");
+					}
+					Property p = getProperty(s);
+					if(s!=null) {
+						((BaseNode) p).printElementJSONTypeless(sw);
+						cnt++;
+					}
 				}
-				((BaseNode) p).printElementJSONTypeless(sw);
-				cnt++;
+			} else {
+				for (Property p : properties) {
+					if (cnt > 0) {
+						writeElement(sw, ", ");
+					}
+					((BaseNode) p).printElementJSONTypeless(sw);
+					cnt++;
+				}
 			}
 			writeElement(sw, "}");
 
@@ -1642,7 +1681,28 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		super.printElementJSON(writer, isArrayMessage());
 		
 	}
+	
+	  public void writeSimpleJSON(Writer writer) throws IOException {
+		  writer.write("{");
+		  printElementJSONTypeless(writer);
+		  writer.write("}");
+	  }
 
+	  @Override
+	public void writeSimpleJSON(Writer writer, String[] properties)
+			throws IOException {
+		writer.write("{");
+		printElementJSONTypeless(getName(), writer, properties);
+		writer.write("}");
+	}
+	  
+	  @Override
+	public void writeSimpleJSON(String name, Writer writer, String[] properties)
+			throws IOException {
+		printElementJSONTypeless(name,writer, properties);
+	}
+
+	 
 	public static void main(String [] args) {
 		
 		Navajo testDoc = null;

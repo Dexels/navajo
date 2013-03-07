@@ -33,6 +33,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.http.HTTPMapInterface;
@@ -72,6 +75,9 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 	private Access myAccess;
 
 	public static int maxRunningInstances = -1;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(HTTPMap.class);
 	
 	private HashMap<String, String> headers = new HashMap<String, String>();
 	
@@ -238,11 +244,14 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		} catch (java.net.SocketTimeoutException sto) {
 			// 
 			if (!catchConnectionTimeOut) {
+				AuditLog.log("HTTPMap", "Got connectiontimeout", Level.WARNING, myAccess.accessID);
 				throw new UserException(-1, sto.getMessage(), sto);
-			} else {
+			} else {	
+				AuditLog.log("HTTPMap", "Got connectiontimeout", Level.WARNING, myAccess.accessID);
 				hasConnectionTimeOut = true;
 			}
 		} catch (Exception e) {
+			AuditLog.log("HTTPMap", "Got other exception: " + e.getMessage(), Level.WARNING, myAccess.accessID);
 			throw new UserException(-1, e.getMessage(), e);
 		} finally {
 			decreaseInstanceCount();
@@ -305,6 +314,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 			if ( myAccess != null ) {
 				myAccess.setException(e);
 			}
+			logger.warn("Error performing HTTP: " + e.getMessage() + ", for access: " + (myAccess != null ? myAccess.accessID : "unknown" ));
 			return false;
 		}
 		return true;

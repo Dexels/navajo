@@ -284,7 +284,7 @@ public class NavajoConfigEmitter {
 		}
 		
 		addAllProperties(body.getMessage("parameters"),data);
-		injectConfiguration("navajo.server.config", data);
+		updateIfChanged("navajo.server.config", data);
 	}
 /**
  * Dump all parameter properties into the fray:
@@ -313,6 +313,21 @@ public class NavajoConfigEmitter {
 		registeredConfigurations.add(c);
 		c.update(d);
 		
+	}
+	
+	private void updateIfChanged(String pid, Dictionary<String,Object> settings) throws IOException {
+		Configuration c = myConfigurationAdmin.getConfiguration(pid,null);
+		Dictionary<String,Object> old = c.getProperties();
+		if(old!=null) {
+			if(!old.equals(settings)) {
+				c.update(settings);
+			} else {
+				logger.info("Ignoring equal");
+			}
+		} else {
+			logger.info("Updating config for pid: "+c.getPid());
+			c.update(settings);
+		}
 	}
 
 	private final static String properDir(String in) {

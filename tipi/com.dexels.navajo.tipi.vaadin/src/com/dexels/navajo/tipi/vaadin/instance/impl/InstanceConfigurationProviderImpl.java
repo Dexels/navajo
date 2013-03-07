@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.vaadin.instance.InstanceConfigurationProvider;
 
+@Deprecated
 public class InstanceConfigurationProviderImpl implements
 		InstanceConfigurationProvider {
 

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.taskrunner.dummy">
-   <implementation class="com.dexels.navajo.server.enterprise.scheduler.DummyTaskRunner"/>
-   <property name="service.ranking" type="Integer" value="-2000000000"/>
-   <service>
-      <provide interface="com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface"/>
-   </service>
-</scr:component>

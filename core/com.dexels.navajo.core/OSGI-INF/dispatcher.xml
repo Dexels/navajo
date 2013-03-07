@@ -7,4 +7,5 @@
       <provide interface="com.dexels.navajo.server.DispatcherInterface"/>
    </service>
    <reference bind="setEventRegistry" unbind="clearEventRegistry" cardinality="1..1" interface="com.dexels.navajo.events.NavajoEventRegistry" name="NavajoEventRegistry" policy="dynamic"/>
+   <reference bind="setTribeManager" unbind="clearTribeManager" cardinality="1..1" interface="com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface" name="TribeManagerInterface" policy="dynamic"/>
 </scr:component>

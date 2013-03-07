@@ -4,7 +4,7 @@
     <artifactId>com.dexels.navajo.server.deploy</artifactId>
     <groupId>com.dexels.navajo</groupId>
     <packaging>war</packaging>
-    <version>2.10.2_sportlink</version>
+    <version>2.10.4_sportlink</version>
     <name>com.dexels.navajo.war Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <parent>
@@ -17,12 +17,12 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.version</artifactId>
-            <version>1.1.6</version>
+            <version>1.1.8</version>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.document</artifactId>
-            <version>2.2.22</version>
+            <version>2.2.34</version>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
@@ -37,17 +37,17 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.jsp</artifactId>
-            <version>1.1.2</version>
+            <version>1.1.4</version>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.jsp.server</artifactId>
-            <version>1.1.8</version>
+            <version>1.1.10</version>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.client</artifactId>
-            <version>3.4.17</version>
+            <version>3.4.19</version>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
@@ -91,17 +91,6 @@
             <version>4.2.0</version>
             <scope>runtime</scope>
         </dependency>
-<!-- follow sportlink style for bleeding edge
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.6.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.6.4</version>
-        </dependency>-->
         <dependency>
             <groupId>taglibs</groupId>
             <artifactId>standard</artifactId>
@@ -161,7 +150,7 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.adapters</artifactId>
-            <version>1.1.30</version>
+            <version>1.1.32</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -176,21 +165,21 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.core</artifactId>
-            <version>2.12.3</version>
+            <version>2.12.9</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.client.async</artifactId>
-            <version>1.1.11</version>
+            <version>1.1.13</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.function</artifactId>
-            <version>3.1.6</version>
+            <version>3.1.8</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -210,13 +199,13 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.rhino</artifactId>
-            <version>1.1.16</version>
+            <version>1.1.18</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.rhino.continuations</artifactId>
-            <version>1.0.8</version>
+            <version>1.0.10</version>
             <scope>runtime</scope>
         </dependency>
 	        <dependency>

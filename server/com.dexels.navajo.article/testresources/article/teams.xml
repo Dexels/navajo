@@ -1,0 +1,10 @@
+<article>
+    <service name="clubsites/nl/init"/>
+    <setvalue service="clubsites/nl/init" element="parameters/spelsoort" value="VE"/>
+    <service input="clubsites/nl/init" name="clubsites/nl/teamoverzicht"/>
+    <table name="veld" columns="poulecode,teamcode,teamnaam,competitienaam,spelsoort,klasse,poule" subkey="teamcode" service="clubsites/nl/teamoverzicht" article="team-details" link="teamnaam" key="poulecode" path="teams"/>
+    <service name="clubsites/nl/init"/>
+    <setvalue service="clubsites/nl/init" element="parameters/spelsoort" value="ZA"/>
+    <service input="clubsites/nl/init" name="clubsites/nl/teamoverzicht"/>
+    <table name="zaal" columns="poulecode,teamcode,teamnaam,competitienaam,spelsoort,klasse,poule" subkey="teamcode" service="clubsites/nl/teamoverzicht" article="team-details" link="teamnaam" key="poulecode" path="teams"/>
+</article>

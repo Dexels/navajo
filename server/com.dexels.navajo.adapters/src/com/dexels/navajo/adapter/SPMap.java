@@ -14,7 +14,6 @@ package com.dexels.navajo.adapter;
  */
 
 import java.io.InputStream;
-import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -32,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
 import com.dexels.navajo.adapter.sqlmap.SQLMapHelper;
-import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;

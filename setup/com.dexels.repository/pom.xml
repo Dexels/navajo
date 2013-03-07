@@ -261,6 +261,6 @@
 	</issueManagement>
 	<ciManagement>
 		<system>jenkins</system>
-		<url>https://source.dexels.com/jenkins/</url>
+		<url>https://repo.dexels.com/jenkins/</url>
 	</ciManagement>
 </project>

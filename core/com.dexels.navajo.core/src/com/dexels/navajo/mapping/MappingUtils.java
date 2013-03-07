@@ -269,6 +269,9 @@ public final class MappingUtils {
     				value = "";
     			}
     			prop = ref.getRootDoc().getNavajoFactory().createProperty(outputDoc, actualName, type, "", length, description, direction);
+    			if ( (value instanceof StringLiteral) ) {
+    				value = value.toString();
+    			}
     			prop.setAnyValue(value);
     			prop.setType(type);
     		}
@@ -288,6 +291,9 @@ public final class MappingUtils {
     		}
     		else {
     			prop = ref.getRootDoc().getNavajoFactory().createProperty(tmlDoc, actualName, type, "", length, description, direction);
+    			if ( (value instanceof StringLiteral) ) {
+    				value = value.toString();
+    			}
     			prop.setAnyValue(value);
     			prop.setType(type);
     		}
@@ -297,6 +303,9 @@ public final class MappingUtils {
     else { // Existing property.
     	prop.clearValue();
     	prop.setType(type);
+    	if ( Property.DIR_IN.equals(direction) || Property.DIR_OUT.equals(direction) ) {
+    		prop.setDirection(direction);
+    	}   	
     	if (Property.BINARY_PROPERTY.equals(type)) {
     		if (value != null && (value instanceof Binary)) {
     			prop.setValue( (Binary) value);
@@ -308,7 +317,11 @@ public final class MappingUtils {
     		prop.setValue((Selection []) value);
     	}  else if ( !Property.SELECTION_PROPERTY.equals(type) ) {
     		if (value != null) {
-    			prop.setAnyValue(value);
+    			if ( (value instanceof StringLiteral) ) {
+    				prop.setUnCheckedStringAsValue(((StringLiteral) value).toString());
+    			} else {
+    				prop.setAnyValue(value);
+    			}
     		}
     		else {
     			prop.clearValue();

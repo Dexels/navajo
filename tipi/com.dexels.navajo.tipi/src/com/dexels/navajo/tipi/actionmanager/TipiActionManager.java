@@ -73,6 +73,10 @@ public class TipiActionManager implements Serializable, IActionManager {
 		if (name == null) {
 			name = instance.getName();
 		}
+		if (name == null) {
+			throw new TipiException("Undefined action type in: "
+					+ instance.toString());
+		}
 		TipiActionFactory taf = getActionFactory(name);
 		if(taf==null) {
 			logger.warn("Missing action factory for action: {}",name);

@@ -1,5 +1,7 @@
 package com.dexels.navajo.sharedstore.map;
 
+import java.io.Serializable;
+
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 
 public class TribalMapSignal extends SmokeSignal {
@@ -10,7 +12,7 @@ public class TribalMapSignal extends SmokeSignal {
 	public final static String CREATEMAP = "createmap";
 	public final static String DELETEMAP = "deletemap";
 	
-	public TribalMapSignal(String sender, String key, Object value) {
+	public TribalMapSignal(String sender, String key, Serializable value) {
 		super(sender, key, value);
 	}
 

@@ -27,6 +27,7 @@ package com.dexels.navajo.sharedstore;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 
 
 /**
@@ -66,7 +67,7 @@ public interface SharedStoreInterface {
 	 * @param append, if set to true the object is appended to an existing value. 
 	 * @param requireLock, if requireLock is set; the call will block until a lock could be set.
 	 */
-	public void store(String parent, String name, Object value, boolean append, boolean requireLock) throws SharedStoreException;
+	public void store(String parent, String name, Serializable value, boolean append, boolean requireLock) throws SharedStoreException;
 	
 	/**
 	 * Store text in the shared store. If store object with same name already exists, a SharedStoreException is thrown.
@@ -136,7 +137,7 @@ public interface SharedStoreInterface {
 	 * @param name
 	 * @return 
 	 */
-	public Object get(String parent, String name) throws SharedStoreException;
+	public Serializable get(String parent, String name) throws SharedStoreException;
 	
 	/**
 	 * Gets an object from the store as a stream for reading.

@@ -1,5 +1,7 @@
 package com.dexels.navajo.server.enterprise.scheduler;
 
+import java.io.Serializable;
+
 import com.dexels.navajo.document.Navajo;
 
 /**
@@ -8,7 +10,7 @@ import com.dexels.navajo.document.Navajo;
  * @author arjen
  *
  */
-public interface Listener  {
+public interface Listener extends Serializable {
 	
 	public String getListenerId();
 

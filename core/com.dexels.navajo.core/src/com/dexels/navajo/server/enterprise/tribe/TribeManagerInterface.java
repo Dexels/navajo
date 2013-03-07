@@ -76,7 +76,7 @@ public interface TribeManagerInterface {
 	 * @param a
 	 * @param ignoreTaskIds
 	 */
-	public void tribalAfterWebServiceRequest(WebserviceListenerRegistryInterface listenerRegistry, String service, Access a, HashSet<String> ignoreTaskIds);
+	public void tribalAfterWebServiceRequest(String service, Access a, HashSet<String> ignoreTaskIds);
 	
 	/**
 	 * 
@@ -85,7 +85,7 @@ public interface TribeManagerInterface {
 	 * @param ignoreList
 	 * @return
 	 */
-	public Navajo tribalBeforeWebServiceRequest(WebserviceListenerRegistryInterface listenerRegistry, String service, Access a, HashSet<String> ignoreList);
+	public Navajo tribalBeforeWebServiceRequest(String service, Access a, HashSet<String> ignoreList);
 	
 	/**
 	 * 

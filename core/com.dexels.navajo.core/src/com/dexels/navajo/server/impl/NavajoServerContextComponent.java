@@ -3,10 +3,12 @@ package com.dexels.navajo.server.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
@@ -19,7 +21,7 @@ import com.dexels.navajo.server.api.NavajoServerContext;
 public class NavajoServerContextComponent implements NavajoServerContext {
 
 	private String installationPath;
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoServerContextComponent.class);
 	
@@ -30,7 +32,8 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 //	}
 	
 	private ConfigurationAdmin myConfigurationAdmin = null;
-	private final Set<Configuration> monitoredFolderConfigurations = new HashSet<Configuration>();
+//	private final Set<Configuration> monitoredFolderConfigurations = new HashSet<Configuration>();
+	private final Map<String,Configuration> resourcePids = new HashMap<String,Configuration>();
 
 	public void setConfigurationAdmin(ConfigurationAdmin ca) {
 		this.myConfigurationAdmin = ca;
@@ -46,6 +49,8 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 			installationPath = (String) settings.get("installationPath");
 			addFolderMonitorListener(contextPath,installationPath,"adapters");
 			addFolderMonitorListener(contextPath,installationPath,"camel");
+			emitLogbackConfiguration(installationPath);
+			
 		} catch (IOException e) {
 			logger.error("Error creating folder monitor: ",e);
 		} catch (InvalidSyntaxException e) {
@@ -57,14 +62,21 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 	
 	public void deactivate()  {
 		try {
-			if(monitoredFolderConfigurations!=null) {
-				for (Configuration c : monitoredFolderConfigurations) {
-					c.delete();
+//			if(monitoredFolderConfigurations!=null) {
+//				for (Configuration c : monitoredFolderConfigurations) {
+//					c.delete();
+//				}
+//				monitoredFolderConfigurations.clear();
+//			}
+			for (Entry<String,Configuration> entry : resourcePids.entrySet()) {
+				try {
+					entry.getValue().delete();
+				} catch (IOException e) {
+					logger.error("Problem deleting configuration for pid: "+entry.getKey(),e);
 				}
-				monitoredFolderConfigurations.clear();
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	
@@ -89,7 +101,8 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 		}
 		d.put("felix.fileinstall.dir",absolutePath );
 		d.put("contextPath",contextPath );
-		monitoredFolderConfigurations.add(newConfig);
+		String pid = newConfig.getPid();
+		resourcePids.put(pid, newConfig);
 		newConfig.update(d);	
 	}
 	
@@ -110,6 +123,40 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 			Configuration c = myConfigurationAdmin.createFactoryConfiguration(
 					factoryPid, null);
 			return c;
+		}
+	}
+	
+	private void emitLogbackConfiguration(String filePath) throws IOException {
+		final String logbackPath = "config/logback.xml";
+//		emitIfChanged("navajo.logback", filter, settings)
+		File root = new File(filePath);
+		File logbackConfigFile = new File(root,logbackPath);
+		if(!logbackConfigFile.exists()) {
+			logger.warn("No logback configuration file found. Not emitting configuration");
+			return;
+		}
+		Dictionary<String,Object> settings = new Hashtable<String, Object>();
+		settings.put("rootPath", filePath);
+		settings.put("logbackPath", logbackPath);
+		emitConfig("navajo.logback",settings);
+	}
+	
+	private void emitConfig(String pid, Dictionary<String,Object> settings) throws IOException {
+		Configuration config =  myConfigurationAdmin.getConfiguration(pid);
+		updateIfChanged(config, settings);
+	}
+	private void updateIfChanged(Configuration c, Dictionary<String,Object> settings) throws IOException {
+		Dictionary<String,Object> old = c.getProperties();
+		if(old!=null) {
+			if(!old.equals(settings)) {
+				c.update(settings);
+			} else {
+				logger.info("Ignoring equal");
+			}
+		} else {
+			// this will make this component 'own' this configuration, unsure if this is desirable.
+			resourcePids.put(c.getPid(),c);
+			c.update(settings);
 		}
 	}
 	

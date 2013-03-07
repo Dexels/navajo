@@ -20,7 +20,7 @@ import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
  * @version 1.0
  */
 
-public class TipiScreen extends TipiDataComponentImpl {
+public class TipiScreen extends TipiDataComponentImpl implements ScopeLimit{
 	/**
 	 * 
 	 */

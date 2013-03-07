@@ -1175,8 +1175,13 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     }
 
     if (!hasChildren || isSelection) {
-      result.append(printIdent(ident) + "sValue = new String(\"" + value +
+      if ( !isSelection ) {
+          result.append(printIdent(ident) + "sValue = new StringLiteral(\"" + value +
                     "\");\n");
+      } else {
+    	  result.append(printIdent(ident) + "sValue = new String(\"" + value +
+                  "\");\n");
+      }
       result.append(printIdent(ident) + "type = \"" + type + "\";\n");
     }
     else {
@@ -2440,7 +2445,17 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 
  }
 
-
+  private void dumpRequestMethod(boolean debugInput, StringBuffer generatedCode) {
+	
+	  if ( debugInput ) {
+		  generatedCode.append("public final void dumpRequest() {\n");
+		  generatedCode.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
+		  generatedCode.append("myAccess.getInDoc().write(System.err);\n");
+		  generatedCode.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
+		  generatedCode.append("}\n\n");
+	  }
+  }
+  
   private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, Writer fo, List<Dependency> deps) throws SystemException, SkipCompilationException{
 	  
 	  boolean debugInput = false;
@@ -2563,6 +2578,9 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	        includeNode(scriptPath, includeArray[i], tslDoc);
 	      }
 	      
+	      // Generate dump request Navajo
+	      dumpRequestMethod( (debugInput || debugAll), result);
+	      
 	      // Generate validation code.
 	      generateValidations(tslDoc, result);
 
@@ -2575,13 +2593,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	      if ( debugAll ) {
 	    	  result.append("setDebugAll(true);\n");
 	      }
-	      if (debugInput) {
-	       result.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
-	       result.append("access.getInDoc().write(System.err);\n");
-	       result.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
-	     }
-
-//	      result.append("outDoc = access.getOutputDoc();\n");
+	     
 	      result.append("inDoc = access.getInDoc();\n");
 
 	      // File Rules HashMap
@@ -2595,7 +2607,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	        result.append(str);
 	      }
 
-	      if (debugOutput) {
+	      if (debugOutput || debugAll ) {
 	        result.append("System.err.println(\"\\n --------- BEGIN NAVAJO RESPONSE ---------\\n\");\n");
 	        result.append("access.getOutputDoc().write(System.err);\n");
 	        result.append("System.err.println(\"\\n --------- END NAVAJO RESPONSE ---------\\n\");\n");

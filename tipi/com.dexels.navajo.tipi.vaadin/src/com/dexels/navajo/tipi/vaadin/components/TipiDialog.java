@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
+import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -7,7 +8,7 @@ import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
 
-public class TipiDialog extends TipiVaadinComponentImpl {
+public class TipiDialog extends TipiVaadinComponentImpl implements ScopeLimit{
 
 	private static final long serialVersionUID = 5476906786366044908L;
 	private Window dialog;

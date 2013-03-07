@@ -1,0 +1,112 @@
+<tml documentImplementation="SAXP">
+   <header requestParseTime="0" queueSize="0" cpuload="-1.0" authorisationTime="12" queueId="null" serverTime="1167" threadCount="0" processingTime="0" accessId="1361553385040-3" queueTime="0">
+      <transaction rpc_usr="ROOT" rpc_name="club/ProcessSearchClubs" rpc_pwd=""/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="ClubSearch" type="simple">
+      <property description="Relatiecode" direction="in" name="OrganizationId" value="" length="12" type="string"/>
+      <property description="Regiocode" direction="in" name="RegionCode" value="" length="35" type="string"/>
+      <property description="Zoeknaam" direction="in" name="SearchName" value="hoe" length="15" type="string"/>
+      <property description="Korte naam" direction="in" name="ShortName" value="" length="15" type="string"/>
+      <property description="Vereniging" direction="in" name="ClubName" value="" length="36" type="string"/>
+      <property description="Plaats" direction="in" name="CityName" value="" length="36" type="string"/>
+      <property description="Gemeente" direction="in" name="CommunityName" value="" length="36" type="string"/>
+      <property description="Gemeentecode" direction="in" name="CommunityId" value="" length="36" type="string"/>
+      <property direction="in" name="Max" value="" length="10" type="integer"/>
+      <property direction="in" name="Min" value="" length="10" type="integer"/>
+      <property direction="in" name="SportId" value="" length="10" type="string"/>
+      <property description="Opgeheven verenigingen tonen" direction="in" name="ShowLiquidated" value="false" length="10" type="boolean"/>
+   </message>
+   <message name="__globals__" type="simple">
+      <property direction="out" name="NavajoUser" value="ROOT" length="50" type="string"/>
+      <property direction="out" name="NavajoMethod" value="club/ProcessSearchClubs" length="50" type="string"/>
+      <property direction="out" name="MassMailingLogin" value="fransw/tripod" length="10" type="string"/>
+      <property direction="out" name="BrokerInFolder" value="/home/sportlink/knvb/brokerIn/exceptions" length="10" type="string"/>
+      <property direction="out" name="BrokerCertificate" value="/home/sportlink/knvb/brokerCertificates/cert-prod.crt" length="10" type="string"/>
+      <property direction="out" name="RequiredClubVersion" value="5.0" length="10" type="string"/>
+      <property direction="out" name="DefaultUnionMemberRole" value="UNIONMEMBER" length="10" type="string"/>
+      <property direction="out" name="CrystalBasePath" value="/home/crystal/bobje/tomcat/webapps/ROOT/reports/" length="10" type="string"/>
+      <property direction="out" name="BrokerPrivatekey" value="/home/sportlink/knvb/brokerCertificates/key-prod.pkcs8" length="10" type="string"/>
+      <property direction="out" name="SmartStreamIncomingDir" value="." length="10" type="string"/>
+      <property direction="out" name="VLAApplicationMode" value="ASP" length="10" type="string"/>
+      <property direction="out" name="BrokerURL" value="http://80.79.42.72/" length="10" type="string"/>
+      <property direction="out" name="DefaultUnionIdentifier" value="KNVB-UNION" length="10" type="string"/>
+      <property direction="out" name="NavajoPwd" value="R20T" length="10" type="string"/>
+      <property direction="out" name="SmartStreamLogin" value="fransw/tripod" length="10" type="string"/>
+      <property direction="out" name="CrystalDatasourceUser" value="knvbkern" length="10" type="string"/>
+      <property direction="out" name="SynchronizeWithSybase" value="0" length="10" type="string"/>
+      <property direction="out" name="CrystalPassword" value="Sp0rtl1nk_cr7st4L" length="10" type="string"/>
+      <property direction="out" name="UnionIdentifier" value="KNVB-UNION" length="10" type="string"/>
+      <property direction="out" name="KNVBNLFtpPassword" value="L11nXz" length="10" type="string"/>
+      <property direction="out" name="IdentifierPattern" value="[A-Z]{4}[0-9]{2}[A-Z0-9]{1}" length="10" type="string"/>
+      <property direction="out" name="ApplicationInstance" value="KNVB" length="10" type="string"/>
+      <property direction="out" name="DefaultOfficialEndTime" value="23:00" length="10" type="string"/>
+      <property direction="out" name="SSLHome" value="/home/sportlink/ssl/" length="10" type="string"/>
+      <property direction="out" name="CrystalServer" value="penelope1:6400" length="10" type="string"/>
+      <property direction="out" name="EnsduOutgoingDir" value="." length="10" type="string"/>
+      <property direction="out" name="KNVBNLFtpHost" value="import.knvb.nl" length="10" type="string"/>
+      <property direction="out" name="CoreSysPostmanURI" value="localhost/sportlink/knvb/servlet/Postman" length="10" type="string"/>
+      <property direction="out" name="DummyDate" value="1970-01-01" length="10" type="string"/>
+      <property direction="out" name="EnsduHost" value="localhost" length="10" type="string"/>
+      <property direction="out" name="SmartStreamHost" value="localhost" length="10" type="string"/>
+      <property direction="out" name="SMTPServer" value="localhost" length="10" type="string"/>
+      <property direction="out" name="EnsduLogin" value="sportlink/sp0rtl1nk" length="10" type="string"/>
+      <property direction="out" name="ClubFormDirectory" value="/home/sportlink/knvb/aspclubforms" length="10" type="string"/>
+      <property direction="out" name="ClubApplicationVersion" value="5.0" length="10" type="string"/>
+      <property direction="out" name="DefaultSport" value="VOETBAL" length="10" type="string"/>
+      <property direction="out" name="KNVBNLFtpUser" value="ftp-sportlink" length="10" type="string"/>
+      <property direction="out" name="MDeskPostFix" value="@district.knvb.nl" length="10" type="string"/>
+      <property direction="out" name="DefaultOfficialStartTime" value="07:00" length="10" type="string"/>
+      <property direction="out" name="CrystalUser" value="Administrator" length="10" type="string"/>
+      <property direction="out" name="KernelSchemaOwner" value="knvbkern" length="10" type="string"/>
+      <property direction="out" name="DefaultTZRegion" value="CET" length="10" type="string"/>
+      <property direction="out" name="EnsduEmailStylesheet" value="/home/sportlink/navajo/test/tomcat-1/knvb/xsl/playerspass-batchresult.xsl" length="10" type="string"/>
+      <property direction="out" name="NavajoUsr" value="ROOT" length="10" type="string"/>
+      <property direction="out" name="MailServer" value="localhost" length="10" type="string"/>
+      <property direction="out" name="EnsduEmailRecipients" value="Martin Bergman &lt;mbergman@dexels.com&gt;" length="10" type="string"/>
+      <property direction="out" name="CrystalDatasourcePassword" value="knvb" length="10" type="string"/>
+      <property direction="out" name="CrystalDatasourceServer" value="SLTEST01" length="10" type="string"/>
+      <property direction="out" name="CrystalReferenceUrl" value="keepme.txt" length="10" type="string"/>
+      <property direction="out" name="MDeskMailServer" value="localhost" length="10" type="string"/>
+      <property direction="out" name="MassMailingIncomingDir" value="." length="10" type="string"/>
+      <property direction="out" name="CrystalBaseUrl" value="http://penelope1:8080/reports/" length="10" type="string"/>
+      <property direction="out" name="CrystalDatasourceName" value="" length="10" type="string"/>
+      <property direction="out" name="EnsduIncomingDir" value="." length="10" type="string"/>
+      <property direction="out" name="MassMailingHost" value="localhost" length="10" type="string"/>
+      <property direction="out" name="DefaultSportIdentifier" value="SOCCER" length="10" type="string"/>
+      <property direction="out" name="PassTechSupportRecipients" value="Martin Bergman &lt;mbergman@dexels.com&gt;" length="10" type="string"/>
+      <property direction="out" name="MigrateCompetitionYear" value="2004" length="10" type="string"/>
+      <property direction="out" name="UserRoles" value="ADMINISTRATOR;BASE_USER;COMPETITION_DEPT;FINANCE;FINANCE_RUNNING_ACCOUNTS;MEMBER_DEPT;ORG_PER_AV_FINANCE_CHARGES;ORG_PER_EMPLOYEE_CONTRACTS;ORG_PER_EVENT_MANAGER;ORG_PER_EVENT_USER;ORG_PER_PUBLIC_SERVICEDESK;ORG_PER_RESTRICTED_CONTRACTS;SUPERMEMBER_DEPT;ADMINISTRATOR;BASE_USER;COMPETITION_DEPT;FINANCE;FINANCE_RUNNING_ACCOUNTS;MEMBER_DEPT;ORG_PER_AV_FINANCE_CHARGES;ORG_PER_EVENT_MANAGER;ORG_PER_EVENT_USER;ORG_PER_PUBLIC_SERVICEDESK;REPORT_COMPETITION_AV;ADMINISTRATOR;COMPETITION_DEPT;FINANCE;FINANCE_RUNNING_ACCOUNTS;OPERATOR;ORG_PER_AV_FINANCE_CHARGES;ORG_PER_CLUBFORMS;ORG_PER_EMPLOYEE_CONTRACTS;ORG_PER_EVENT_MANAGER;ORG_PER_PUBLIC_SERVICEDESK;ORG_PER_RESTRICTED_CONTRACTS;REPORT_DISCIPLINE_AV;BASE_USER;COMPETITION_DEPT;MEMBER_DEPT;REPORT_COMPETITION_AV;FINANCE_RUNNING_ACCOUNTS;OPERATOR;ORG_PER_PUBLIC_SERVICEDESK;REPORT_DISCIPLINE_AV;REPORT_OC_AV;ACTIVITIES_DEPT;ADMINISTRATOR;BASE_USER;COMPETITION_DEPT;FINANCE;FINANCE_RUNNING_ACCOUNTS;MEMBER_DEPT;OPERATOR;ORG_PER_AV_FINANCE_CHARGES;ORG_PER_EMPLOYEE_CONTRACTS;ORG_PER_EVENT_MANAGER;ORG_PER_PUBLIC_SERVICEDESK;ORG_PER_RESTRICTED_CONTRACTS;ORG_PER_SENTENCE_ADMIN;ADMINISTRATOR;COMPETITION_DEPT;FINANCE;FINANCE_RUNNING_ACCOUNTS;OPERATOR;ORG_PER_AV_FINANCE_CHARGES;ORG_PER_CLUBFORMS;ORG_PER_EMPLOYEE_CONTRACTS;ORG_PER_EVENT_MANAGER;ORG_PER_PUBLIC_SERVICEDESK;ORG_PER_RESTRICTED_CONTRACTS;SUPERMEMBER_DEPT;ADMINISTRATOR;BASE_USER;COMPETITION_DEPT;FINANCE;FINANCE_RUNNING_ACCOUNTS;ORG_PER_AV_FINANCE_CHARGES;ORG_PER_EMPLOYEE_CONTRACTS;ORG_PER_EVENT_MANAGER;ORG_PER_PUBLIC_SERVICEDESK;ORG_PER_RESTRICTED_CONTRACTS;ADMINISTRATOR;COMPETITION_DEPT;EBVRVT;EBVUSER;EXTRANETUSER;FINANCE;LEGAL_DEPT_CONTRACTS;LEGAL_DEPT_PLAYER_AGENTS;LICENSE_DEPT;MARKET_DEPT_INTERNATIONALS;ORG_PER_BV_MEMBERS;ORG_PER_BV_OFFICIALS;ORG_PER_BV_REVISIONIST;ORG_PER_PUBLIC_SERVICEDESK;STADIUMBAN_DEPT;SUPERMEMBER_DEPT;" length="10" type="string"/>
+      <property direction="out" name="RegionOwner" value="%" length="10" type="string"/>
+   </message>
+   <message name="__parms__" type="simple">
+      <property direction="" name="RegionCode" value="" type="string"/>
+      <property direction="" name="NameSearch" value=" OR UPPER( oa.attribvalue ) LIKE ? " type="string"/>
+      <property direction="" name="SearchOnOrganizationId" value="false" type="boolean"/>
+      <property direction="" name="NavajoUser" value="ROOT" type="string"/>
+      <property direction="" name="UpdateBy" value="ROOT/%" type="string"/>
+      <property direction="" name="DatabaseProductName" value="Oracle" type="string"/>
+      <property direction="" name="DatabaseVersion" value="20.1" type="string"/>
+      <property direction="" name="Query" value="
+            SELECT   vc.organizationid
+            ,        oa.attribvalue AS searchname
+            ,        vc.name
+            ,        vc.shortname
+            ,        vc.city
+            ,        vc.communityname
+            ,        vc.parentorganizationid
+            ,        ( SELECT o.name
+                       FROM   organization o
+                       WHERE  o.organizationid = vc.parentorganizationid
+                       AND    rownum           = 1
+                     ) AS parentname
+            ,        vc.veldregiodesc
+            FROM     vw_club vc LEFT OUTER JOIN organizationattribute oa ON ( oa.organizationid = vc.organizationid AND oa.attribname = 'SEARCH_NAME' )
+            WHERE    1 = 1
+        AND vc.typeoforganization IN ('CLUB') AND vc.dissolveddt &gt; SYSDATE AND ( 1 = 0  OR UPPER( oa.attribvalue ) LIKE ?  )  AND ( vc.parentorganizationid LIKE UPPER( ? ) OR vc.parentorganizationid IS NULL )  ORDER BY UPPER( vc.name )" type="string"/>
+   </message>
+   <methods>
+      <method name="club/ProcessSearchClubs"/>
+   </methods>
+</tml>

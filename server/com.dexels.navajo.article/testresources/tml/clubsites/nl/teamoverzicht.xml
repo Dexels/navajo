@@ -1,0 +1,136 @@
+<tml documentImplementation="SAXP">
+   <header>
+      <transaction rpc_usr="@BBFW06E" rpc_name="clubsites/nl/init" rpc_pwd="epPm/1NY+hygYpOpGDHB2aMEjSJ558CNywPLwd/KA4nOV4Fkh9vtuSJGQZqsEJDpMdf/MhkOcqNO6LGdYH4tWxBIZo3niZKOkK+6gD61U8g="/>
+      <callback/>
+      <client/>
+   </header>
+   <message name="teams" type="array">
+      <message index="0" name="teams" type="array_element">
+         <property direction="out" name="teamcode" value="115400" type="integer"/>
+         <property direction="out" name="lokaleteamcode" value="-1" type="string"/>
+         <property direction="out" name="poulecode" value="303743" type="integer"/>
+         <property direction="out" name="teamnaam" value="1" type="string"/>
+         <property direction="out" name="competitienaam" value="B1000 Mannen KNVB beker Amateurs poule" type="string"/>
+         <property direction="out" name="klasse" value="Groep 1" type="string"/>
+         <property direction="out" name="poule" value="028" type="string"/>
+         <property direction="out" name="klassepoule" value="Groep 1 028" type="string"/>
+         <property direction="out" name="spelsoort" value="Veld ZO" type="string"/>
+         <property direction="out" name="competitiesoort" value="Beker" type="string"/>
+         <property direction="out" name="geslacht" value="man" type="string"/>
+         <property direction="out" name="teamsoort" value="bond" type="string"/>
+      </message>
+      <message index="1" name="teams" type="array_element">
+         <property direction="out" name="teamcode" value="115400" type="integer"/>
+         <property direction="out" name="lokaleteamcode" value="-1" type="string"/>
+         <property direction="out" name="poulecode" value="" type="string"/>
+         <property direction="out" name="teamnaam" value="1" type="string"/>
+         <property direction="out" name="competitienaam" value="B1010 Mannen KNVB beker Amateurs 1e ronde" type="string"/>
+         <property direction="out" name="klasse" value="Groep 1" type="string"/>
+         <property direction="out" name="poule" value="" type="string"/>
+         <property direction="out" name="klassepoule" value="Groep 1 " type="string"/>
+         <property direction="out" name="spelsoort" value="Veld ZO" type="string"/>
+         <property direction="out" name="competitiesoort" value="Beker" type="string"/>
+         <property direction="out" name="geslacht" value="man" type="string"/>
+         <property direction="out" name="teamsoort" value="bond" type="string"/>
+      </message>
+      <message index="2" name="teams" type="array_element">
+         <property direction="out" name="teamcode" value="115400" type="integer"/>
+         <property direction="out" name="lokaleteamcode" value="-1" type="string"/>
+         <property direction="out" name="poulecode" value="298924" type="integer"/>
+         <property direction="out" name="teamnaam" value="1" type="string"/>
+         <property direction="out" name="competitienaam" value="0512 Mannen Zondag standaard" type="string"/>
+         <property direction="out" name="klasse" value="3e klasse" type="string"/>
+         <property direction="out" name="poule" value="A" type="string"/>
+         <property direction="out" name="klassepoule" value="3e klasse A" type="string"/>
+         <property direction="out" name="spelsoort" value="Veld ZO" type="string"/>
+         <property direction="out" name="competitiesoort" value="Regulier" type="string"/>
+         <property direction="out" name="geslacht" value="man" type="string"/>
+         <property direction="out" name="teamsoort" value="bond" type="string"/>
+      </message>
+      <message index="3" name="teams" type="array_element">
+         <property direction="out" name="teamcode" value="115416" type="integer"/>
+         <property direction="out" name="lokaleteamcode" value="-1" type="string"/>
+         <property direction="out" name="poulecode" value="305044" type="integer"/>
+         <property direction="out" name="teamnaam" value="2" type="string"/>
+         <property direction="out" name="competitienaam" value="B1600 Mannen beker reserve zondag poule" type="string"/>
+         <property direction="out" name="klasse" value="Groep 1" type="string"/>
+         <property direction="out" name="poule" value="010" type="string"/>
+         <property direction="out" name="klassepoule" value="Groep 1 010" type="string"/>
+         <property direction="out" name="spelsoort" value="Veld ZO" type="string"/>
+         <property direction="out" name="competitiesoort" value="Beker" type="string"/>
+         <property direction="out" name="geslacht" value="man" type="string"/>
+         <property direction="out" name="teamsoort" value="bond" type="string"/>
+      </message>
+      <message index="4" name="teams" type="array_element">
+         <property direction="out" name="teamcode" value="115416" type="integer"/>
+         <property direction="out" name="lokaleteamcode" value="-1" type="string"/>
+         <property direction="out" name="poulecode" value="299341" type="integer"/>
+         <property direction="out" name="teamnaam" value="2" type="string"/>
+         <property direction="out" name="competitienaam" value="0519 Mannen Zondag reserve" type="string"/>
+         <property direction="out" name="klasse" value="4e klasse" type="string"/>
+         <property direction="out" name="poule" value="02" type="string"/>
+         <property direction="out" name="klassepoule" value="4e klasse 02" type="string"/>
+         <property direction="out" name="spelsoort" value="Veld ZO" type="string"/>
+         <property direction="out" name="competitiesoort" value="Regulier" type="string"/>
+         <property direction="out" name="geslacht" value="man" type="string"/>
+         <property direction="out" name="teamsoort" value="bond" type="string"/>
+      </message>
+      <message index="5" name="teams" type="array_element">
+         <property direction="out" name="teamcode" value="115417" type="integer"/>
+         <property direction="out" name="lokaleteamcode" value="-1" type="string"/>
+         <property direction="out" name="poulecode" value="305046" type="integer"/>
+         <property direction="out" name="teamnaam" value="3" type="string"/>
+         <property direction="out" name="competitienaam" value="B1600 Mannen beker reserve zondag poule" type="string"/>
+         <property direction="out" name="klasse" value="Groep 1" type="string"/>
+         <property direction="out" name="poule" value="012" type="string"/>
+         <property direction="out" name="klassepoule" value="Groep 1 012" type="string"/>
+         <property direction="out" name="spelsoort" value="Veld ZO" type="string"/>
+         <property direction="out" name="competitiesoort" value="Beker" type="string"/>
+         <property direction="out" name="geslacht" value="man" type="string"/>
+         <property direction="out" name="teamsoort" value="bond" type="string"/>
+      </message>
+      <message index="6" name="teams" type="array_element">
+         <property direction="out" name="teamcode" value="115417" type="integer"/>
+         <property direction="out" name="lokaleteamcode" value="-1" type="string"/>
+         <property direction="out" name="poulecode" value="300319" type="integer"/>
+         <property direction="out" name="teamnaam" value="3" type="string"/>
+         <property direction="out" name="competitienaam" value="0519 Mannen Zondag reserve" type="string"/>
+         <property direction="out" name="klasse" value="5e klasse" type="string"/>
+         <property direction="out" name="poule" value="02" type="string"/>
+         <property direction="out" name="klassepoule" value="5e klasse 02" type="string"/>
+         <property direction="out" name="spelsoort" value="Veld ZO" type="string"/>
+         <property direction="out" name="competitiesoort" value="Regulier" type="string"/>
+         <property direction="out" name="geslacht" value="man" type="string"/>
+         <property direction="out" name="teamsoort" value="bond" type="string"/>
+      </message>
+      <message index="7" name="teams" type="array_element">
+         <property direction="out" name="teamcode" value="115419" type="integer"/>
+         <property direction="out" name="lokaleteamcode" value="-1" type="string"/>
+         <property direction="out" name="poulecode" value="305053" type="integer"/>
+         <property direction="out" name="teamnaam" value="4" type="string"/>
+         <property direction="out" name="competitienaam" value="B1600 Mannen beker reserve zondag poule" type="string"/>
+         <property direction="out" name="klasse" value="Groep 1" type="string"/>
+         <property direction="out" name="poule" value="019" type="string"/>
+         <property direction="out" name="klassepoule" value="Groep 1 019" type="string"/>
+         <property direction="out" name="spelsoort" value="Veld ZO" type="string"/>
+         <property direction="out" name="competitiesoort" value="Beker" type="string"/>
+         <property direction="out" name="geslacht" value="man" type="string"/>
+         <property direction="out" name="teamsoort" value="bond" type="string"/>
+      </message>
+      <message index="8" name="teams" type="array_element">
+         <property direction="out" name="teamcode" value="115419" type="integer"/>
+         <property direction="out" name="lokaleteamcode" value="-1" type="string"/>
+         <property direction="out" name="poulecode" value="300889" type="integer"/>
+         <property direction="out" name="teamnaam" value="4" type="string"/>
+         <property direction="out" name="competitienaam" value="0519 Mannen Zondag reserve" type="string"/>
+         <property direction="out" name="klasse" value="7e klasse" type="string"/>
+         <property direction="out" name="poule" value="04" type="string"/>
+         <property direction="out" name="klassepoule" value="7e klasse 04" type="string"/>
+         <property direction="out" name="spelsoort" value="Veld ZO" type="string"/>
+         <property direction="out" name="competitiesoort" value="Regulier" type="string"/>
+         <property direction="out" name="geslacht" value="man" type="string"/>
+         <property direction="out" name="teamsoort" value="bond" type="string"/>
+      </message>
+   </message>
+   <methods/>
+</tml>

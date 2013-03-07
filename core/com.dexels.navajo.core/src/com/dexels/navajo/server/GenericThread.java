@@ -167,6 +167,7 @@ public class GenericThread implements Runnable, Mappable {
 		if ( thread != null ) {
 			thread.interrupt();
 		}
+		finishThread();
 		terminate();
 	}
 	
@@ -209,6 +210,10 @@ public class GenericThread implements Runnable, Mappable {
 	
 	public String getMyId() {
 		return this.myId;
+	}
+	
+	public String getClassName() {
+		return this.getClass().getName();
 	}
 	
 	public GenericThread [] getAllThreads() {
