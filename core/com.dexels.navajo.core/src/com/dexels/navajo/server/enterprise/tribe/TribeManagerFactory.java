@@ -13,9 +13,9 @@ import com.dexels.navajo.util.AuditLog;
 
 public class TribeManagerFactory {
 
-	private static volatile TribeManagerInterface instance = null;
+	private static TribeManagerInterface instance = null;
 	private static Object semaphore = new Object();
-	private static volatile boolean tribeManagerFound = false;
+	private static boolean tribeManagerFound = false;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TribeManagerFactory.class);
