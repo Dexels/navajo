@@ -4,6 +4,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Window;
 
+import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 
@@ -25,7 +26,7 @@ import com.dexels.navajo.tipi.TipiContext;
  * @version 1.0
  */
  
-public class TipiScreen extends TipiEchoDataComponentImpl {
+public class TipiScreen extends TipiEchoDataComponentImpl implements ScopeLimit{
 	private static final long serialVersionUID = -7390275807974040579L;
     public TipiScreen() {
         setId("init");

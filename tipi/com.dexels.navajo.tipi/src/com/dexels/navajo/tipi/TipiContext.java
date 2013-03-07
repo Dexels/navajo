@@ -78,6 +78,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiFileStorageManager;
 import com.dexels.navajo.tipi.internal.TipiGeneralAspManager;
 import com.dexels.navajo.tipi.internal.TipiLayout;
+import com.dexels.navajo.tipi.internal.TipiMethod;
 import com.dexels.navajo.tipi.internal.TipiNullStorageManager;
 import com.dexels.navajo.tipi.internal.TipiResourceLoader;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
@@ -168,6 +169,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	protected IClassManager classManager = new ClassManager(this);
 	protected final Stack<DescriptionProvider> descriptionProviderStack = new Stack<DescriptionProvider>();
 	protected final Map<String, Object> globalMap = new HashMap<String, Object>();
+	protected final Map<String, XMLElement> globalMethodsMap = new HashMap<String, XMLElement>();
+
 	protected final long startTime = System.currentTimeMillis();
 	private final List<ShutdownListener> shutdownListeners = new ArrayList<ShutdownListener>();
 	private TipiResourceLoader tipiResourceLoader;
@@ -1289,7 +1292,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			tl.setContext(this);
 			return tl;
 		}
-		throw new TipiException("INSTANTIATING UNKOWN SORT OF CLASS THING.");
+		throw new TipiException("INSTANTIATING UNKNOWN SORT OF CLASS THING.");
 	}
 
 	public void addTipiInstance(String service, TipiDataComponent instance) {
@@ -2859,6 +2862,20 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public void setClassManager(IClassManager classManager) {
 		this.classManager = classManager;
 		
+	}
+
+	public void addGlobalMethod(XMLElement method) throws TipiException {
+		String name = method.getStringAttribute("name");
+		if (globalMethodsMap.containsKey(name))
+		{
+			throw new TipiException("Duplicate name for globalmethod definition " + method);
+		}
+		globalMethodsMap.put(name, method);
+		
+	}
+
+	public XMLElement getGlobalMethod(String name) {
+		return globalMethodsMap.get(name);
 	}
 
 

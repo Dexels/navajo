@@ -14,6 +14,7 @@ import nextapp.echo2.app.event.WindowPaneEvent;
 import nextapp.echo2.app.event.WindowPaneListener;
 
 import com.dexels.navajo.echoclient.components.Styles;
+import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
@@ -35,7 +36,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @todo Need to refactor menus in internalframes. Now still uses the old mode
  *       Frank
  */
-public final class TipiWindow extends TipiEchoDataComponentImpl {
+public final class TipiWindow extends TipiEchoDataComponentImpl implements ScopeLimit{
 	private static final long serialVersionUID = 6587665353415100107L;
 	
 	private final static Logger logger = LoggerFactory

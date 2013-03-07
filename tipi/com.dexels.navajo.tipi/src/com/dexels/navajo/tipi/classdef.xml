@@ -234,6 +234,16 @@
 	<description>
 	</description>
    </tipi-parser>
+   <tipi-parser name="local" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.LocalParser">
+	<description>
+		Local values - stored in the first component implementing ScopeLimit up in the tree. Currently Windows, Dialogs and Frames implement this.
+	</description>
+   </tipi-parser>
+   <tipi-parser name="localref" type="com.dexels.navajo.tipi.internal.LocalRef" parser="com.dexels.navajo.tipi.components.core.parsers.LocalRefParser">
+	<description>
+		Reference to local values - stored in the first component implementing ScopeLimit up in the tree. Currently Windows, Dialogs and Frames implement this.
+	</description>
+   </tipi-parser>
    <tipi-parser name="systemref" type="com.dexels.navajo.tipi.internal.SystemPropertyRef" parser="com.dexels.navajo.tipi.components.core.parsers.SystemPropertyRefParser">
 	<description>
 	</description>

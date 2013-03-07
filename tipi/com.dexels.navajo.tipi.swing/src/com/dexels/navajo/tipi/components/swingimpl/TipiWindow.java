@@ -15,6 +15,7 @@ import javax.swing.event.InternalFrameEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
@@ -40,7 +41,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public final class TipiWindow
 // extends DefaultTipi {
-		extends TipiSwingDataComponentImpl {
+		extends TipiSwingDataComponentImpl implements ScopeLimit{
 
 	private static final long serialVersionUID = -4916285139918344888L;
 	
