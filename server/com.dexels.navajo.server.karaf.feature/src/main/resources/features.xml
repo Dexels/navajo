@@ -101,7 +101,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	</feature>
 
 	<feature name='navajo.dev' version='1.0.0' start-level='81' >
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/1.0.7</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/1.0.9</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.birt.push/1.0.5</bundle>
 	</feature>			
 
