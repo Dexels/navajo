@@ -96,11 +96,11 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager.openshift/1.0.16</bundle>
 	</feature>
 
-	<feature name='navajo.article' version='1.0.1' start-level='81' >
+	<feature name='navajo.article' version='1.0.2' start-level='81' >
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/1.0.3</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article.jsp/1.0.3</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article.jsp/1.0.5</bundle>
 	</feature>
 	
 	<feature name='navajo.optional' version='1.0.1' start-level='81' >
