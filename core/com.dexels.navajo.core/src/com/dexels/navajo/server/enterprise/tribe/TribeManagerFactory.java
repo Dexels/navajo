@@ -13,7 +13,7 @@ import com.dexels.navajo.util.AuditLog;
 
 public class TribeManagerFactory {
 
-	private static TribeManagerInterface instance = null;
+	private static volatile TribeManagerInterface instance = null;
 	private static Object semaphore = new Object();
 	private static boolean tribeManagerFound = false;
 	
@@ -26,21 +26,19 @@ public class TribeManagerFactory {
 	
 	public static TribeManagerInterface getInstance() {
 		
-		if ( instance != null ) {
-			return instance;
-		} else {
+		if (instance == null ) {
 			synchronized (semaphore) {
 				if ( instance == null ) {
 					instance = getTribeManagerService();
-					if(instance==null || instance instanceof DummyTribeManager) {
+					if(instance == null || instance instanceof DummyTribeManager) {
 						tribeManagerFound = false;
 					} else {
 						tribeManagerFound = true;
 					}
 				}
-				return instance;
 			}
 		}
+		return instance;
 		
 	}
 
