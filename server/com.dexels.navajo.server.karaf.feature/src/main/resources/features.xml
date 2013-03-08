@@ -16,6 +16,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	<!-- scr, http, webconsole -->
     <feature name='navajo.core' version='1.0.4' start-level='80'  >
 	    <details>Navajo Core Components</details>
+		<feature version="1.0.2">navajo.enterprise.core</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.34</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.1.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/1.0.20</bundle>
@@ -34,8 +35,6 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		 -->
 	</feature>
 
-	<feature name='navajo.server' version='1.0.0' start-level='81' >
-	</feature>
 
 	<feature name='navajo.server' version='1.0.2' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/1.1.4</bundle>
@@ -57,7 +56,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>	
 
-	<feature name='navajo.server.osgi' version='1.0.3' start-level='81' >
+	<feature name='navajo.server.osgi' version='1.0.4' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/1.0.1</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/1.1.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/1.0.15</bundle>
@@ -74,7 +73,9 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.h2database/h2/1.3.168</bundle>
 		<bundle dependency='true'>mvn:com.oracle/com.oracle.jdbc.driver/11.2.33</bundle>
 <!--		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.webconsole.branding.karaf/1.0.5</bundle>-->
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.server.logback/1.0.1</bundle>
+
+<!-- Logback isn't present in Karaf, although it can be added -->
+<!-- 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.server.logback/1.0.1</bundle> -->
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.0.10</bundle> 
 	</feature>
 	<feature name='tipi.core' version='1.0.3' start-level='81' >
@@ -95,7 +96,9 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager.openshift/1.0.16</bundle>
 	</feature>
 
-	<feature name='navajo.article' version='1.0.0' start-level='81' >
+	<feature name='navajo.article' version='1.0.1' start-level='81' >
+		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
+		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/1.0.3</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article.jsp/1.0.3</bundle>
 	</feature>
@@ -124,15 +127,15 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<feature version="1.0.0">navajo.core.jabber</feature>
     </feature>
     
-	<feature name='navajo.enterprise.lucene' version='1.0.2' start-level='81' >
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.lucene/1.0.20</bundle>
+	<feature name='navajo.enterprise.lucene' version='1.0.3' start-level='81' >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.lucene/1.0.22</bundle>
  		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene/3.6.0_1</bundle> 
 		<bundle dependency='true'>mvn:org.apache.tika/tika-core/1.3</bundle>
 		<bundle dependency='true'>mvn:org.apache.tika/tika-bundle/1.3</bundle>
 	</feature>
-	<feature name='navajo.enterprise.cluster' version='1.0.0' start-level='81' >
+	<feature name='navajo.enterprise.cluster' version='1.0.1' start-level='81' >
 		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.5</bundle>
- 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/1.0.5</bundle>
+ 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/1.0.7</bundle>
 	</feature>
 
 	<feature name='jetty.jsp' version='1.0.1' start-level='40' >
@@ -140,7 +143,5 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-extender-whiteboard/1.1.4</bundle>
 		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-api/1.1.4</bundle>
 	</feature>
-
-	<feature name="http" version="2.5.0"></feature>
 	
 </features>
