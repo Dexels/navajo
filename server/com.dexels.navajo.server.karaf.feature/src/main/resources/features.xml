@@ -14,7 +14,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 </bundle> -->
 
 	<!-- scr, http, webconsole -->
-    <feature name='navajo.core' version='1.0.3' start-level='80'  >
+    <feature name='navajo.core' version='1.0.4' start-level='80'  >
 	    <details>Navajo Core Components</details>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.34</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.1.8</bundle>
@@ -37,7 +37,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	<feature name='navajo.server' version='1.0.0' start-level='81' >
 	</feature>
 
-	<feature name='navajo.server' version='1.0.1' start-level='81' >
+	<feature name='navajo.server' version='1.0.2' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/1.1.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/1.1.4</bundle>
@@ -57,7 +57,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>	
 
-	<feature name='navajo.server.osgi' version='1.0.2' start-level='81' >
+	<feature name='navajo.server.osgi' version='1.0.3' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/1.0.1</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/1.1.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/1.0.15</bundle>
@@ -77,10 +77,10 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.server.logback/1.0.1</bundle>
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.0.10</bundle> 
 	</feature>
-	<feature name='tipi.core' version='1.0.2' start-level='81' >
+	<feature name='tipi.core' version='1.0.3' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/1.1.43</bundle>
 	</feature>
-	<feature name='tipi.vaadin' version='1.0.2' start-level='81' >
+	<feature name='tipi.vaadin' version='1.0.3' start-level='81' >
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.5</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.1.8</bundle>
 	</feature>
@@ -95,12 +95,17 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager.openshift/1.0.16</bundle>
 	</feature>
 
-	<feature name='navajo.optional' version='1.0.0' start-level='81' >
+	<feature name='navajo.article' version='1.0.0' start-level='81' >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/1.0.3</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article.jsp/1.0.3</bundle>
+	</feature>
+	
+	<feature name='navajo.optional' version='1.0.1' start-level='81' >
 		<!-- Add functions.pdf + twitter dependencies -->
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.twitter/1.0.18</bundle>
 	</feature>
 
-	<feature name='navajo.dev' version='1.0.0' start-level='81' >
+	<feature name='navajo.dev' version='1.0.1' start-level='81' >
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/1.0.9</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.birt.push/1.0.5</bundle>
 	</feature>			
