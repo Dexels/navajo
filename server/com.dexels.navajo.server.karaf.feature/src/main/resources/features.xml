@@ -87,7 +87,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/1.1.43</bundle>
 	</feature>
 	<feature name='tipi.vaadin' version='1.0.3' start-level='81' >
-		<feature version="1.0.4">tipi.core</feature>
+		<feature version="1.0.3">tipi.core</feature>
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.5</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.1.8</bundle>
 	</feature>
@@ -103,7 +103,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager.openshift/1.0.16</bundle>
 	</feature>
 
-	<feature name='navajo.article' version='1.0.3' start-level='81' >
+	<feature name='navajo.article' version='1.0.4' start-level='81' >
 		<feature version="1.0.2">navajo.server</feature>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
@@ -118,7 +118,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	</feature>
 
 	<feature name='navajo.dev' version='1.0.1' start-level='81' >
-		<feature version="1.0.2">navajo.server</feature>
+		<feature version="1.0.4">navajo.server.osgi</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/1.0.9</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.birt.push/1.0.5</bundle>
 	</feature>			
@@ -126,7 +126,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	<feature name='navajo.opensource' version='1.0.0' start-level='81' >
 		<feature version="1.0.4">navajo.server.osgi</feature>
 		<feature version="1.0.1">navajo.optional</feature>
-		<feature version="1.0.3">navajo.article</feature>
+		<feature version="1.0.4">navajo.article</feature>
 	</feature>
 
 	<feature name='navajo.enterprise' version='1.0.6' start-level='81' >
@@ -154,12 +154,4 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.5</bundle>
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/1.0.7</bundle>
 	</feature>
-
-<!-- 
-	<feature name='jetty.jsp' version='1.0.2' start-level='40' >
-		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jsp/3.0.0.M3</bundle>
-		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-extender-whiteboard/3.0.0.M3</bundle>
-	</feature>
-	-->
-	
 </features>
