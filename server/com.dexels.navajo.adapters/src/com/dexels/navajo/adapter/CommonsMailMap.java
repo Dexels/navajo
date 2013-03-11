@@ -1,6 +1,5 @@
 package com.dexels.navajo.adapter;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.logging.Level;
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import javax.mail.Transport;
 
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
@@ -38,6 +36,7 @@ import com.dexels.navajo.util.AuditLog;
 public class CommonsMailMap implements Mappable, Queuable {
 	private static final long serialVersionUID = 5625969473841204407L;
 	private final static Logger logger = LoggerFactory.getLogger(CommonsMailMap.class);
+	@SuppressWarnings("unused")
 	private Navajo doc = null;
 	private Navajo myNavajo;
 	private Access myAccess;
@@ -68,34 +67,65 @@ public class CommonsMailMap implements Mappable, Queuable {
 	
 	public CommonsMailMap() {}
 	
-	// This is where the actual mail is constructed and send
+	/**
+	 * Create the new HtmlEmail message and set session props
+	 * @return HtmlEmail
+	 * @throws UserException
+	 * @throws EmailException
+	 */
+	private HtmlEmail getNewHtmlEmail() throws UserException, EmailException {
+		// Create the email message
+		Session session = createSession();
+		
+		HtmlEmail email = new HtmlEmail();
+		email.setMailSession(session);
+		if (from == null || "".equals(from)) {
+			throw new UserException(-1, "Error: Required sender address not set!");
+		}
+		return email;
+	}
+	
+	/**
+	 * Fill the basics like addressee
+	 * @param email
+	 * @return HtmlEmail
+	 * @throws EmailException
+	 */
+	private HtmlEmail fillHtmlEmailBasics(HtmlEmail email) throws EmailException {
+	    email.setFrom(this.from, "");
+		// Add addressees
+		if (this.to != null) {
+			email.addTo(this.getToArray(this.to));
+		}
+		if (this.cc != null) {
+			email.addTo(this.getCcArray(this.cc));
+		}
+		if (this.bcc != null) {
+			email.addTo(this.getBccArray(this.bcc));
+		}
+		
+	    // Subject
+		email.setSubject(this.getSubject());
+
+		return email;
+	}
+	
+	/**
+	 * This is where the actual mail is constructed and send
+	 * Inline images can be used through attachments
+	 * Annotation is cid:{?}. This will be replaced with cid:?
+	 * The first ? refers to the index number in the attachments starting with 0
+	 * The second ? will contain the generated id
+	 * EXAMPLE:
+	 * <hmtl>Some text <img src=\"cid:{0}\"></html>
+	 * The {0} will then be replaced with the first generated inline tag
+	 * @throws UserException
+	 */
 	public void sendMail() throws UserException {
 		try {
-			//Session session = createSession();
-			
-			// Create the email message
-			HtmlEmail email = new HtmlEmail();
-			//email.getMailSession();
-			email.setHostName(this.getMailServer());
-			email.setAuthentication(this.getSmtpUser(), this.getSmtpPass());
-			if (from == null || "".equals(from)) {
-				throw new UserException(-1, "Error: Required sender address not set!");
-			}
-		    email.setFrom(this.from, "");
-			
-			// Add addressees
-			if (this.to != null) {
-				email.addTo(this.getToArray(this.to));
-			}
-			if (this.cc != null) {
-				email.addTo(this.getCcArray(this.cc));
-			}
-			if (this.bcc != null) {
-				email.addTo(this.getBccArray(this.bcc));
-			}
-		    // Subject
-			email.setSubject(this.getSubject());
-		  
+			// Create the email message and fill the basics
+			HtmlEmail email = getNewHtmlEmail();
+			fillHtmlEmailBasics(email);
 		    // add attachments
 			List<String> inlineImages = new ArrayList<String>();
 			if (this.attachments != null) {
@@ -105,24 +135,22 @@ public class CommonsMailMap implements Mappable, Queuable {
 					String userFileName = am.getAttachFileName();
 					Binary content = am.getAttachFileContent();
 					String contentDisposition = am.getAttachContentDisposition();
-					String encoding = am.getEncoding();
+					//String encoding = am.getEncoding();
+
+					// Figure out how to get the path and then the url
+					String fileName = "";
+					if (content != null) {
+						fileName = content.getTempFileName(false);
+					} else {
+						fileName = file;
+					}
+				    URL url = new URL("file:/" + fileName);
+					
 					if (contentDisposition != null && contentDisposition.equalsIgnoreCase("Inline")) {
 					    // embed the image and get the content id
-						URL url = null;
-						if (content != null) {
-							url = new URL("file:/" + content.getTempFileName(false));
-						} else {
-						    url = new URL("file:/" + file);
-						}
 					    inlineImages.add(email.embed(url, userFileName));
 					} else {
-						String fileName = "";
-						if (content != null) {
-							fileName = content.getTempFileName(false);
-						} else {
-							fileName = file;
-						}
-						email.attach(this.getEmailAttachment(fileName, contentDisposition, userFileName, userFileName));
+						email.attach(this.getEmailAttachment(fileName, url, contentDisposition, userFileName, userFileName));
 					}
 				}
 			}
@@ -170,7 +198,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 	 * @param name
 	 * @return EmailAttachment
 	 */
-	private EmailAttachment getEmailAttachment(String path, String disposition, String description, String name) {
+	private EmailAttachment getEmailAttachment(String path, URL url, String disposition, String description, String name) {
 		  // Create the attachment
 		  EmailAttachment attachment = new EmailAttachment();
 		  attachment.setPath(path);
@@ -181,6 +209,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 		  }
 		  attachment.setDescription(description);
 		  attachment.setName(name);
+		  attachment.setURL(url);
 		  return attachment;
 	}
 
@@ -463,57 +492,5 @@ public class CommonsMailMap implements Mappable, Queuable {
 			attachments = new ArrayList<AttachmentMapInterface>();
 		}
 		attachments.add(m);
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		CommonsMailMap amm = new CommonsMailMap();
-		amm.setMailServer("smtp.xs4all.nl");
-		amm.setSmtpUser("verik@xs4all.nl");
-		amm.setSmtpPass("erik1234");
-		amm.setFrom("verik@xs4all.nl");
-		amm.setTo("versteege@xs4all.nl");
-		amm.setSubject("Onderwerpje");
-		String html = "<html>The apache logo - <img src=\"cid:{0}\"><p>Stukje tekst</p><br><p>Nog wat: <img src=\"cid:{1}\"></p></html>";
-		amm.setBodyText(html);
-		AttachementMap[] multipleAttachments = new AttachementMap[4];
-		AttachementMap am1 = new AttachementMap();
-		am1.setAttachContentDisposition("Inline");
-		am1.setEncoding("base64");
-//		am1.setAttachFile("C:/Users/Erik/AppData/Local/Temp/binary_object4493766756995929647navajo");
-		try {
-			am1.setAttachFileContent(new Binary(new java.io.File("C:/Users/Erik/AppData/Local/Temp/binary_object4493766756995929647navajo")));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		am1.setAttachFileName("Logo");
-		multipleAttachments[0] = am1;
-		AttachementMap am2 = new AttachementMap();
-		am2.setAttachContentDisposition("Attachment");
-		am2.setEncoding("base64");
-		am2.setAttachFile("C:/Users/Erik/AppData/Local/Temp/binary_object61428862815599238navajo");
-		am2.setAttachFileName("plaatje");
-		multipleAttachments[1] = am2;
-		AttachementMap am3 = new AttachementMap();
-		am3 = new AttachementMap();
-		am3.setAttachContentDisposition("Attachment");
-		am3.setEncoding("base64");
-		am3.setAttachFile("C:/Users/Erik/AppData/Local/Temp/nsmail.pdf");
-		am3.setAttachFileName("nsmail.pdf");
-		multipleAttachments[2] = am3;
-		AttachementMap am4 = new AttachementMap();
-		am4.setAttachContentDisposition("Inline");
-		am4.setEncoding("base64");
-		am4.setAttachFile("C:/Users/Erik/AppData/Local/Temp/binary_object61428862815599238navajo");
-		am4.setAttachFileName("Logo2");
-		multipleAttachments[3] = am4;
-		amm.setMultipleAttachments(multipleAttachments);
-		try {
-			amm.sendMail();
-		} catch (UserException e) {
-			e.printStackTrace();
-		}
 	}
 }
