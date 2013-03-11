@@ -5,7 +5,6 @@ import java.util.Set;
 
 import navajo.ExtensionDefinition;
 
-
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionResolver;
 import com.dexels.navajo.tipi.TipiComponent;

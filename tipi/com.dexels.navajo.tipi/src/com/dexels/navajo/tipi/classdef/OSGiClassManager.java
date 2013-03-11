@@ -8,7 +8,6 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
-
 import navajo.ExtensionDefinition;
 
 import org.osgi.framework.BundleContext;
