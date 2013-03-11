@@ -166,10 +166,10 @@ public class CommonsMailMap implements Mappable, Queuable {
 		  // send the email
 		  email.send();
 		} catch (MalformedURLException e) {
-			AuditLog.log("ApacheMailMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
+			AuditLog.log("CommonsMailMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
 			throw new UserException(-1, e.getMessage(), e);
 		} catch (EmailException e) {
-			AuditLog.log("ApacheMailMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
+			AuditLog.log("CommonsMailMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
 			throw new UserException(-1, e.getMessage(), e);
 		}
 	}
@@ -304,7 +304,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 			try {
 				RequestResponseQueueFactory.getInstance().send(this, 100);
 			} catch (Exception e) {
-				AuditLog.log("ApacheMailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
+				AuditLog.log("CommonsMailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
 				logger.error("Error: sending request (?)",e);
 			}
 		}
@@ -319,7 +319,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 			sendMail();
 		} catch (Exception e) {
 			if (myAccess != null) {
-				AuditLog.log("ApacheMailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
+				AuditLog.log("CommonsMailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
 				myAccess.setException(e);
 			}
 			return false;
