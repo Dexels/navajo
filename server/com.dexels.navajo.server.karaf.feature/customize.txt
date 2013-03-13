@@ -1,0 +1,3 @@
+mvn:com.dexels.navajo/com.dexels.navajo.karaf.feature/1.0.10/features.xml,mvn:org.apache.camel.karaf/apache-camel/2.10.2/xml/features
+
+https://repo.dexels.com/content/groups/public/

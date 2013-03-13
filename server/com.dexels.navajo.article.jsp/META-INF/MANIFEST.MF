@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo JSP article tester
 Bundle-SymbolicName: com.dexels.navajo.article.jsp
-Bundle-Version: 1.0.8.qualifier
+Bundle-Version: 1.0.10.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.client.context,
@@ -11,7 +11,7 @@ Import-Package: com.dexels.navajo.client.context,
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.server,
  javax.servlet;version="3.0.0",
- org.ops4j.pax.web.service;version="3.0.0.M1",
+ org.ops4j.pax.web.service;version="[2.0.0,3.1.0)",
  org.osgi.framework;version="1.5.0",
  org.osgi.service.http;version="[1.2.0,2.0.0)",
  org.slf4j;version="1.6.1"

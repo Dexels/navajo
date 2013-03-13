@@ -78,7 +78,6 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiFileStorageManager;
 import com.dexels.navajo.tipi.internal.TipiGeneralAspManager;
 import com.dexels.navajo.tipi.internal.TipiLayout;
-import com.dexels.navajo.tipi.internal.TipiMethod;
 import com.dexels.navajo.tipi.internal.TipiNullStorageManager;
 import com.dexels.navajo.tipi.internal.TipiResourceLoader;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;

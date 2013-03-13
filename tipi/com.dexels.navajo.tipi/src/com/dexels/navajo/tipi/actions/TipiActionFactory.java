@@ -8,7 +8,6 @@ import java.util.Map;
 
 import navajo.ExtensionDefinition;
 
-
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;

@@ -16,7 +16,8 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	<!-- scr, http, webconsole -->
     <feature name='navajo.core' version='1.0.4' start-level='80'  >
 	    <details>Navajo Core Components</details>
-		<feature version="1.0.2">navajo.enterprise.core</feature>
+		<feature version="[2.3.0,3.1.0)">scr</feature>
+
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.34</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.1.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/1.0.20</bundle>
@@ -37,6 +38,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 
 
 	<feature name='navajo.server' version='1.0.2' start-level='81' >
+		<feature version="1.0.4">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/1.1.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/1.1.4</bundle>
@@ -51,12 +53,14 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 	</feature>
 	
 	<feature name='navajo.core.jabber' version='1.0.0' start-level='81' >
+		<feature version="1.0.4">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.jabber/1.0.7</bundle>
 		<bundle dependency='true'>mvn:org.igniterealtime.smack/smack/3.2.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>	
 
 	<feature name='navajo.server.osgi' version='1.0.4' start-level='81' >
+		<feature version="1.0.2">navajo.server</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/1.0.1</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/1.1.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/1.0.15</bundle>
@@ -79,14 +83,17 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.0.10</bundle> 
 	</feature>
 	<feature name='tipi.core' version='1.0.3' start-level='81' >
+		<feature version="1.0.4">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/1.1.43</bundle>
 	</feature>
 	<feature name='tipi.vaadin' version='1.0.3' start-level='81' >
+		<feature version="1.0.3">tipi.core</feature>
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.5</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.1.8</bundle>
 	</feature>
 
 	<feature name='navajo.camel' version='1.0.4' start-level='81' >
+		<feature version="1.0.2">navajo.server</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/1.0.5</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.camel/1.0.3</bundle>
 		<feature version="2.10.2">camel</feature>
@@ -96,32 +103,41 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager.openshift/1.0.16</bundle>
 	</feature>
 
-	<feature name='navajo.article' version='1.0.2' start-level='81' >
+	<feature name='navajo.article' version='1.0.4' start-level='81' >
+		<feature version="1.0.2">navajo.server</feature>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/1.0.3</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article.jsp/1.0.5</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article.jsp/1.0.9</bundle>
 	</feature>
 	
 	<feature name='navajo.optional' version='1.0.1' start-level='81' >
+		<feature version="1.0.2">navajo.server</feature>
 		<!-- Add functions.pdf + twitter dependencies -->
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.twitter/1.0.18</bundle>
 	</feature>
 
 	<feature name='navajo.dev' version='1.0.1' start-level='81' >
+		<feature version="1.0.4">navajo.server.osgi</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/1.0.9</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.birt.push/1.0.5</bundle>
 	</feature>			
 
+	<feature name='navajo.opensource' version='1.0.0' start-level='81' >
+		<feature version="1.0.4">navajo.server.osgi</feature>
+		<feature version="1.0.1">navajo.optional</feature>
+		<feature version="1.0.4">navajo.article</feature>
+	</feature>
 
-	<feature name='navajo.enterprise' version='1.0.3' start-level='81' >
-		<feature version="1.0.2">navajo.enterprise.core</feature>
-		<feature version="1.0.2">navajo.enterprise.lucene</feature>
-		<feature version="1.0.0">navajo.enterprise.cluster</feature>
+	<feature name='navajo.enterprise' version='1.0.6' start-level='81' >
+		<feature version="1.0.0">navajo.opensource</feature>
+		<feature version="1.0.3">navajo.enterprise.core</feature>
+		<feature version="1.0.3">navajo.enterprise.lucene</feature>
+		<feature version="1.0.2">navajo.enterprise.cluster</feature>
 	</feature>
 	
-	<feature name='navajo.enterprise.core' version='1.0.2' start-level='81' >
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/1.1.12</bundle>
+	<feature name='navajo.enterprise.core' version='1.0.3' start-level='81' >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/1.1.18</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/1.0.28</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/1.0.16</bundle>
 		<feature version="1.0.0">navajo.core.jabber</feature>
@@ -133,15 +149,9 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:org.apache.tika/tika-core/1.3</bundle>
 		<bundle dependency='true'>mvn:org.apache.tika/tika-bundle/1.3</bundle>
 	</feature>
-	<feature name='navajo.enterprise.cluster' version='1.0.1' start-level='81' >
+	<feature name='navajo.enterprise.cluster' version='1.0.2' start-level='81' >
+		<feature version="1.0.3">navajo.enterprise.core</feature>
 		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.5</bundle>
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/1.0.7</bundle>
 	</feature>
-
-	<feature name='jetty.jsp' version='1.0.1' start-level='40' >
-		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-jsp/1.1.4</bundle>
-		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-extender-whiteboard/1.1.4</bundle>
-		<bundle dependency='true'>mvn:org.ops4j.pax.web/pax-web-api/1.1.4</bundle>
-	</feature>
-	
 </features>

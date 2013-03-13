@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import navajo.ExtensionDefinition;
 
-
 import com.dexels.navajo.document.Navajo;
 
 public interface TipiStandaloneToplevelContainer {
