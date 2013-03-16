@@ -89,8 +89,7 @@ public class TmlToPainMap implements Mappable {
 				hasBeenBuild = true;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new UserException(392, e.getMessage());
+			throw new UserException(392, e.getMessage(),e);
 		}
 	}
 
