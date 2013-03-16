@@ -45,7 +45,14 @@ public class SystemException extends Exception {
       this.code = code;
       this.message = message;
     }
+    public SystemException(String message, Throwable t) {
+        super(t);
+      this.code = -1;
+      this.message = message;
+      this.t = t;
+    }
 
+    
     public SystemException(int code, String message, Throwable t) {
         super(t);
       this.code = code;
