@@ -6,6 +6,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.types.Binary;
@@ -17,6 +20,10 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 
 public class BundleManagerMap implements Mappable {
+
+		
+	private final static Logger logger = LoggerFactory
+			.getLogger(BundleManagerMap.class);
 
 	@Override
 	public void load(Access access) throws MappableException, UserException {
@@ -60,7 +67,7 @@ public class BundleManagerMap implements Mappable {
 			xe.write(out);
 			out.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		Binary result = new Binary(baos.toByteArray());
 		result.setExtension("xml");

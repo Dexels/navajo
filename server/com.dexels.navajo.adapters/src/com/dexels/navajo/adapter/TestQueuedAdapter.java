@@ -34,7 +34,7 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 		try {
 			RequestResponseQueueFactory.getInstance().send(this, 100);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -75,11 +75,12 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 	}
 
 	public boolean send() {
-		logger.debug("DOING SOME WORK IN TESTADAPTER (" + this.hashCode() + ") .........." );
+		logger.debug("DOING SOME WORK IN TESTADAPTER (" + this.hashCode()
+				+ ") ..........");
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		logger.debug("....HE, HE, EINDELIJK KLAAR (" + this.hashCode() + ")");
 		return true;

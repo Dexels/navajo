@@ -238,12 +238,7 @@ private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
 	      in.removeMessage("__parms__");
 	      
 		  java.io.StringWriter sw = new java.io.StringWriter();
-		  try {
-			  in.write(sw);
-		  }
-		  catch (NavajoException ex) {
-			  ex.printStackTrace();
-		  }
+		  in.write(sw);
 		  responseNavajo = sw.toString();
 	  }
 	  return responseNavajo;
@@ -255,12 +250,7 @@ private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
       in.removeMessage("__globals__");
       in.removeMessage("__parms__");
       java.io.StringWriter sw = new java.io.StringWriter();
-      try {
-        in.write(sw);
-      }
-      catch (NavajoException ex) {
-        ex.printStackTrace();
-      }
+      in.write(sw);
       requestNavajo = sw.toString();
     }
     return requestNavajo;

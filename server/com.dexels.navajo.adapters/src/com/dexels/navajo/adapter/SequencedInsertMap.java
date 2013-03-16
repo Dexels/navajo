@@ -88,7 +88,6 @@ public class SequencedInsertMap extends SQLMap {
 
       }
       catch (SQLException sqle) {
-        sqle.printStackTrace();
         throw new UserException( -1, sqle.getMessage());
       }
 
@@ -130,7 +129,6 @@ public class SequencedInsertMap extends SQLMap {
 
       }
       catch (SQLException sqle) {
-        sqle.printStackTrace();
         throw new UserException( -1, sqle.getMessage());
       }
 

@@ -25,14 +25,12 @@ public final class MultipleValueQuery extends SingleValueQuery {
 			}
 		} catch (Exception e) {
 			sql.kill();
-			e.printStackTrace();
-			throw new TMLExpressionException(this, "Fatal error: " + e.getMessage());
+			throw new TMLExpressionException(this, "Fatal error: " + e.getMessage(),e);
 		} finally {
 			try {
 				sql.store();
 			} catch (Exception e1) {
-				e1.printStackTrace();
-				throw new TMLExpressionException(this, "Fatal error: " + e1.getMessage());
+				throw new TMLExpressionException(this, "Fatal error: " + e1.getMessage(),e1);
 			}
 			//System.out.println("SingleValueQuery(), result = " + result);
 		}

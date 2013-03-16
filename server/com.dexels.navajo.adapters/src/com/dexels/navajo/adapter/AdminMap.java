@@ -163,7 +163,7 @@ public class AdminMap implements Mappable {
 			try {
 				sql.store();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 

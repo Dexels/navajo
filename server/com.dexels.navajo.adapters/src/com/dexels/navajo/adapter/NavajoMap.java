@@ -216,7 +216,7 @@ private Object waitForResult = new Object();
 			  try {
 				  waitForResult.wait();
 			  } catch (InterruptedException e) {
-				  e.printStackTrace();
+				  logger.error("Error: ", e);
 			  }
 		  }
 	  }
@@ -702,14 +702,15 @@ private Object waitForResult = new Object();
 					  }
 				  }
 			  } catch (IOException e) {
-				  e.printStackTrace();
+				  throw new SystemException("Error submitting to remote server:",e);
+
 			  }
 		  }
 
 	  } catch (com.dexels.navajo.client.ClientException e) {
-		  throw new SystemException(-1, e.getMessage());
+		  throw new SystemException("Error connecting to remote server", e);
 	  } catch (NavajoException e) {
-		  throw new SystemException(-1, e.getMessage());
+		  throw new SystemException("Error connecting to remote server",e);
 	} 
 
   }

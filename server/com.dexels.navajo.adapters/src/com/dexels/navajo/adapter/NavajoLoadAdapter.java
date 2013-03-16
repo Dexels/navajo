@@ -82,8 +82,7 @@ public class NavajoLoadAdapter
     }
 
     catch (Exception ex) {
-      ex.printStackTrace();
-      throw new MappableException("Could not parse file!");
+      throw new MappableException("Could not parse file!",ex);
     }
     finally {
       if (fr!=null) {
@@ -92,7 +91,7 @@ public class NavajoLoadAdapter
         }
         catch (IOException ex1) {
 // whatever
-          ex1.printStackTrace();
+        	logger.error("Error: ", ex1);
         }
       }
     }

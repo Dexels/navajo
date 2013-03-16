@@ -37,6 +37,9 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -48,6 +51,9 @@ import com.dexels.navajo.server.UserException;
 
 public class TagMap implements Mappable {
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(TagMap.class);
+	
 	public final String PREFIX_PATTERN   = "^[0-9]+";
 	public final String PREFIX_SEPARATOR = "@";
 	public final int    DEFAULT_INDENT   = 2;
@@ -141,7 +147,7 @@ public class TagMap implements Mappable {
 			xe.parseFromReader( new StringReader( insertChild ) );
 		}
 		catch (IOException ex) {
-			ex.printStackTrace();
+			logger.error("XML parse problem: ", ex);
 		}
 
 		// get child based on childName set

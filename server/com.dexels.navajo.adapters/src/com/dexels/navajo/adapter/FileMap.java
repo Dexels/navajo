@@ -98,7 +98,7 @@ public class FileMap implements Mappable {
 					try {
 						bos.close();
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 				}
 			}
@@ -158,7 +158,7 @@ public class FileMap implements Mappable {
 
 			this.fileName = null;
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new UserException("Error writing file: "+this.fileName,e);
 		}
 	}
 

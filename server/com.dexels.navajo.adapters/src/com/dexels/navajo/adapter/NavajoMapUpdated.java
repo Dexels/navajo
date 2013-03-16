@@ -197,7 +197,7 @@ public boolean isBlock() {
 			  try {
 				  waitForResult.wait();
 			  } catch (InterruptedException e) {
-				  e.printStackTrace();
+				  logger.error("Error: ", e);
 			  }
 		  }
 	  }
@@ -1074,16 +1074,14 @@ protected void prepareSend(String method) {
 
 		  continueAfterRun();
 	  } catch (Exception e) {
-		  logger.debug("EXCEPTION CAUGHT IN navajomap");
-		  e.printStackTrace();
+		  logger.debug("EXCEPTION CAUGHT IN navajomap",e);
 	  } catch (Throwable e) {
-		  logger.debug("Throwable CAUGHT IN navajomap");
-		  e.printStackTrace();
+		  logger.debug("Throwable CAUGHT IN navajomap",e);
 	  } finally {
 		  try {
 			endTransaction();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error ending transaction: ", e);
 		}
 		  setIsFinished();
 	  }
@@ -1358,11 +1356,7 @@ public String getUrl() {
 
 public void setResponseNavajo(Navajo n)  {
 	logger.debug("Result of calling navajo map:");	
-	try {
-		n.write(System.err);
-	} catch (NavajoException e) {
-		e.printStackTrace();
-	}
+	n.write(System.err);
 	inDoc = n;
 }
 
