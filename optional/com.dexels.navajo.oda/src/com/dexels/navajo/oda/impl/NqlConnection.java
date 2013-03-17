@@ -65,12 +65,10 @@ public class NqlConnection implements IConnection
 			System.err.println("Contents: "+new String(b.getData()));
 			is.close();
 	    } catch (MalformedURLException e1) {
-			e1.printStackTrace();
 			throw new OdaException(e1);
 	    } catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	    	throw new OdaException(e);
+	    }
 	}
 
 	
@@ -81,19 +79,12 @@ public class NqlConnection implements IConnection
 			URL u = new URL(totalUrl);
 			InputStream is = u.openStream();
 			Navajo result = NavajoFactory.getInstance().createNavajo(is);
-			try {
-				is.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			is.close();
 			result.write(System.err);
 			resultMessage = result.getAllMessages().get(0);
 			return result;
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
+			throw NavajoFactory.getInstance().createNavajoException(e);
 		}
 	}
 //	http://spiritus.dexels.nl:9080/NavajoNql/Nql?query=call:person/InitSearchPersons|call:person/ProcessSearchPersons|output:Persons|format:tml	

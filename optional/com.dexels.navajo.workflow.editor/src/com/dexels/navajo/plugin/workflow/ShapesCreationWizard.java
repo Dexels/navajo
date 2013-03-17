@@ -23,6 +23,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.ide.IDE;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Create new new .shape-file. Those files can be used with the ShapesEditor
@@ -34,7 +36,10 @@ public class ShapesCreationWizard extends Wizard implements INewWizard {
 
 	private static int fileCount = 1;
 	private CreationPage page1;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ShapesCreationWizard.class);
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -122,7 +127,7 @@ public class ShapesCreationWizard extends Wizard implements INewWizard {
 				try {
 					IDE.openEditor(page, newFile, true);
 				} catch (PartInitException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 					return false;
 				}
 			}

@@ -81,7 +81,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 public class SwingTipiContext extends TipiContext {
 
 	private static final long serialVersionUID = -538400075423823232L;
-
+//	JFXPanel x;
 	private TipiSwingSplash splash;
 
 	private final Set<Thread> threadSet = Collections

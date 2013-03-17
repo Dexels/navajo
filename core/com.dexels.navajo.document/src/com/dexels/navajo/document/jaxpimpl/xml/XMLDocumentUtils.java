@@ -33,7 +33,6 @@ public class XMLDocumentUtils {
             	logger.error("Trouble initializing documentbuilder factory: ",e);
             }
         }
-
     }
 
 //    public static Document transformToDocument(Document xmlIn, String xslContent) throws 
@@ -64,35 +63,6 @@ public class XMLDocumentUtils {
 //
 //    }
 //    
-    public static synchronized Document transformToDocument(Document xmlIn, File xslFile) throws
-        ParserConfigurationException,
-        TransformerConfigurationException,
-        TransformerException, com.dexels.navajo.document.NavajoException {
-
-      createDocumentBuilderFactory();
-       if (transformerFactory == null) {
-           try {
-               logger.info("Trying to use Xalan TransformerFactory instance");
-               //transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
-                transformerFactory = TransformerFactory.newInstance();
-           } catch (java.lang.NoClassDefFoundError e) {
-               logger.warn("Could not find XSLT factory, using system default");
-
-               throw NavajoFactory.getInstance().createNavajoException("Could not instantiate XSLT");
-           }
-
-       }
-
-       Transformer  transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
-
-       Document out = builderFactory.newDocumentBuilder().newDocument();
-
-       transformer.setOutputProperty(OutputKeys.ENCODING, DEFAULT_ENCODING);
-       transformer.transform(new DOMSource(xmlIn), new DOMResult(out));
-
-       return out;
-
-     }
 
     /**
      * transforms an XML-file and XSL-file into a String

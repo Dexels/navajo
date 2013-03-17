@@ -9,12 +9,18 @@ import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;
 
 public final class SecurePDF extends FunctionInterface{
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SecurePDF.class);
+	
 	public String remarks() {
         return "Returns a pdf where all text has been replaced by images";
     }
@@ -47,7 +53,7 @@ public final class SecurePDF extends FunctionInterface{
 				doc.close();
 				return secured;
         	} catch(Exception e){
-        		e.printStackTrace();
+        		logger.error("Error: ", e);
         	}
         }
     	return null;
@@ -65,7 +71,7 @@ public final class SecurePDF extends FunctionInterface{
     			result.write(new FileOutputStream(new File("/Users/arjenschoneveld/converted.pdf")));
     		}
     	}catch(Exception e){
-    		e.printStackTrace();
+    		logger.error("Error: ", e);
     	}
     }
 

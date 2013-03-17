@@ -42,8 +42,8 @@ public class RhinoHandler extends ServiceHandler {
 			logger.info("NavajoDone caught in handler. Rethrowing");
 			throw e1;
 		} catch (Throwable e) {
+			logger.error("Error: ", e);
 
-			e.printStackTrace();
 			try {
 				Navajo generateErrorMessage = DispatcherFactory.getInstance()
 						.generateErrorMessage(access, e.getMessage(), -1, 1, e);
@@ -51,7 +51,7 @@ public class RhinoHandler extends ServiceHandler {
 				access.setOutputDoc(generateErrorMessage);
 				return generateErrorMessage;
 			} catch (Throwable e1) {
-				e1.printStackTrace();
+				logger.error("Error: ", e1);
 			}
 
 		}

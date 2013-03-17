@@ -122,9 +122,9 @@ public class BinaryTransferHandler extends TransferHandler {
 				}
 
 			} catch (UnsupportedFlavorException e1) {
-				e1.printStackTrace();
+				logger.error("Error: ", e1);
 			} catch (IOException ex) {
-				ex.printStackTrace();
+				logger.error("Error: ", ex);
 			}
 
 		} catch (IOException e) {

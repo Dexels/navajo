@@ -96,7 +96,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 				result.put(attr, x.getStringAttribute(attr));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Problem parsing article: ", e);
 		} finally {
 			if(fr!=null) {
 				try {
@@ -134,7 +134,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 				try {
 					r.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 			}
 		}

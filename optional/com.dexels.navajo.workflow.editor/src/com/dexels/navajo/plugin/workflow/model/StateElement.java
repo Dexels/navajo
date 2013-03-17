@@ -9,12 +9,18 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class StateElement extends WorkflowModelElement {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(StateElement.class);
+	
 	/**
 	 * A static array of property descriptors. There is one IPropertyDescriptor
 	 * entry per editable property.
@@ -328,7 +334,7 @@ public class StateElement extends WorkflowModelElement {
 					s.load(currentChild);
 
 				} catch (Throwable e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 				// addConnection(s);
 			} else {

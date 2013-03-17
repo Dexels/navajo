@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.events.types.AuditLogEvent;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -21,6 +23,10 @@ public class NavajoEventRegistryTest {
 
 	static String message;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoEventRegistryTest.class);
+	
 	@Before
 	public void setUp() throws Exception {
 		new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
@@ -147,8 +153,7 @@ public class NavajoEventRegistryTest {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 				message = "Received AuditLogEvent!";
 				System.err.println(message);
@@ -166,8 +171,7 @@ public class NavajoEventRegistryTest {
 			try {
 				semaphore.wait(2000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 		// Now it should have a value...

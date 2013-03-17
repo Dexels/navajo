@@ -7,6 +7,8 @@ import java.io.Reader;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -18,6 +20,10 @@ import com.google.inject.Inject;
 public class NavajoResourceFinder implements INavajoResourceFinder{
 	
 	private IProject currentProject;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoResourceFinder.class);
+	
 	@Inject
 	public NavajoResourceFinder() {
 		
@@ -55,7 +61,7 @@ public class NavajoResourceFinder implements INavajoResourceFinder{
 			xe = new CaseSensitiveXMLElement();
 			xe.parseFromReader(r);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			return null;
 		} finally {
 			if(r!=null) {

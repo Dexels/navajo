@@ -181,7 +181,7 @@ public class AsyncClient {
 				try {
 					continuation.onFail(null);
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error handling expired connection: ", e);
 				} finally {
 					setActualCalls(getActualCalls()-1);
 				}
@@ -201,7 +201,7 @@ public class AsyncClient {
 				try {
 					continuation.onFail(x);
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error handling connection: ", x);
 				} finally {
 					setActualCalls(getActualCalls()-1);
 				}
@@ -239,8 +239,7 @@ public class AsyncClient {
 							continuation.onResponse(response);
 						}
 					} catch (RuntimeException e) {
-						e.printStackTrace();
-						logger.debug("Illegal TML detected:\n"+new String(responseContentBytes));
+						logger.info("Illegal TML detected:\n"+new String(responseContentBytes),e);
 					} finally {
 						setActualCalls(getActualCalls()-1);
 					}
@@ -289,7 +288,7 @@ public class AsyncClient {
 					logger.debug("Response2 ..");
 					n.write(System.err);
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 			}
 
@@ -311,9 +310,9 @@ public class AsyncClient {
 					n.write(System.err);
 					ac.callService(n, "person/ProcessSearchPersons", showOutput);
 				} catch (NavajoException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 			}
 

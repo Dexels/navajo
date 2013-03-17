@@ -84,7 +84,7 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 			registryMap.put(pid, reg);
 			contextMap.put(pid, (DB) source);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 

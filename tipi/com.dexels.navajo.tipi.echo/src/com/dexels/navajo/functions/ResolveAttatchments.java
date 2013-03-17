@@ -42,7 +42,6 @@ public class ResolveAttatchments extends FunctionInterface {
 	}
 
 	private void resolve(String text, String expression) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -73,7 +72,7 @@ public class ResolveAttatchments extends FunctionInterface {
 			dd = d.newDocumentBuilder();
 			doc = dd.parse(new ByteArrayInputStream(result.getBytes()), "aap ");
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 
 		if (doc == null) {

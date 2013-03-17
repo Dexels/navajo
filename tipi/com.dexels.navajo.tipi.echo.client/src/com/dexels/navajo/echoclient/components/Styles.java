@@ -76,7 +76,6 @@ public class Styles {
 			// DEFAULT_STYLE_SHEET = StyleSheetLoader.load("Default.stylesheet",
 			// Thread.currentThread().getContextClassLoader());
 		} catch (ComponentXmlException ex) {
-			ex.printStackTrace();
 			throw new RuntimeException(ex);
 		}
 
