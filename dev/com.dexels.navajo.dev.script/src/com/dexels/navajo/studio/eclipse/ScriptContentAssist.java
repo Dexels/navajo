@@ -17,13 +17,18 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 public class ScriptContentAssist implements IContentAssistProcessor {
 
     private ContextInformationValidator contextInfoValidator;
-
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(ScriptContentAssist.class);
+	
     private String error = "No error";
 
     public ScriptContentAssist() {
@@ -43,8 +48,8 @@ public class ScriptContentAssist implements IContentAssistProcessor {
             }
             return proposals;
         } catch (BadLocationException e) {
-            e.printStackTrace();
-            return null;
+        	logger.error("Error: ", e);
+        	return null;
         }
     }
 

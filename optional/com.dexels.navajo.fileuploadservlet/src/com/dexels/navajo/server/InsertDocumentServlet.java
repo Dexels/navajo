@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.*;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Message;
@@ -23,7 +25,10 @@ import com.dexels.navajo.document.types.Binary;
 public class InsertDocumentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(InsertDocumentServlet.class);
+	
 	public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		PrintWriter pw = new PrintWriter(response.getWriter());
 		
@@ -70,7 +75,7 @@ public class InsertDocumentServlet extends HttpServlet {
 
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		} else {
 
@@ -119,7 +124,7 @@ public class InsertDocumentServlet extends HttpServlet {
 		    }
 		   
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 

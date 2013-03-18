@@ -49,29 +49,24 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 
 	@Override
 	public void endTransaction() throws IOException {
-		try {
-			// writeOutput moved from execute to here, as the scheduler thread shouldn't touch the response output stream
-//			writeOutput(getInputNavajo(), outDoc);
-			TmlScheduler ts = getTmlScheduler();
-			String schedulingStatus = null;
-			if(ts!=null) {
-				schedulingStatus = ts.getSchedulingStatus();
-			}
-			// Show memory usage.
-			long maxMem = 0;
-			long usedMem = 0;
-			if ( getAttribute("maxmemory") != null && !getAttribute("maxmemory").equals("") ) {
-				maxMem = ((Long) getAttribute("maxmemory")) >> 20;
-				usedMem = ((Long) getAttribute("usedmemory")) >> 20;
-			}
-			MDC.put("maxMemory", ""+maxMem);
-			MDC.put("usedMemory", ""+usedMem);
-			schedulingStatus = schedulingStatus + ", totalmemory=" + maxMem + "Mb, usedmemory=" + usedMem + "Mb";
-			getRequest().writeOutput(getInputNavajo(), getResponseNavajo(), scheduledAt, startedAt, schedulingStatus);
-			continuation.complete();
-		} catch (NavajoException e) {
-			e.printStackTrace();
+		TmlScheduler ts = getTmlScheduler();
+		String schedulingStatus = null;
+		if(ts!=null) {
+			schedulingStatus = ts.getSchedulingStatus();
 		}
+		// Show memory usage.
+		long maxMem = 0;
+		long usedMem = 0;
+		if ( getAttribute("maxmemory") != null && !getAttribute("maxmemory").equals("") ) {
+			maxMem = ((Long) getAttribute("maxmemory")) >> 20;
+			usedMem = ((Long) getAttribute("usedmemory")) >> 20;
+		}
+		MDC.put("maxMemory", ""+maxMem);
+		MDC.put("usedMemory", ""+usedMem);
+		schedulingStatus = schedulingStatus + ", totalmemory=" + maxMem + "Mb, usedmemory=" + usedMem + "Mb";
+		getRequest().writeOutput(getInputNavajo(), getResponseNavajo(), scheduledAt, startedAt, schedulingStatus);
+		continuation.complete();
+
 		if ( getRequestQueue() != null ) { // Check whether there is a request queue available.
 			getRequestQueue().finished();
 		}

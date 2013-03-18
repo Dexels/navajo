@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -17,6 +18,10 @@ import ch.qos.logback.core.util.StatusPrinter;
 
 public class LogbackConfigurator {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(LogbackConfigurator.class);
+	
 	public void activate(Map<String, Object> settings) {
 		try {
 			String rootPath = (String) settings.get("rootPath");
@@ -32,18 +37,18 @@ public class LogbackConfigurator {
 				joranFis = new FileInputStream(joranFile);
 				loadLogbackConfig(joranFis, settings);
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			} finally {
 				if (joranFis != null) {
 					try {
 						joranFis.close();
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 				}
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -62,7 +67,7 @@ public class LogbackConfigurator {
 			StatusPrinter.print(lc);
 
 		} catch (JoranException je) {
-			je.printStackTrace();
+			logger.error("Error: ", je);
 		}
 
 	}

@@ -56,7 +56,7 @@ public class TipiMenuBar extends TipiEchoDataComponentImpl {
 				try {
 					tmi.performAction();
 				} catch (TipiException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 			}
 		}});   	  

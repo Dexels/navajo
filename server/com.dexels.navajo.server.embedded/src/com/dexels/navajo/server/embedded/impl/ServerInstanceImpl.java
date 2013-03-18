@@ -11,6 +11,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.component.LifeCycle;
 import org.eclipse.jetty.util.component.LifeCycle.Listener;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -28,6 +29,10 @@ import com.dexels.navajo.server.listener.nql.legacy.NqlServlet;
 public class ServerInstanceImpl implements ServerInstance {
 //	private String projectName;
 	private int port;
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ServerInstanceImpl.class);
 	
 	private Server jettyServer;
 	private NavajoRemoteContext localContext;
@@ -93,9 +98,9 @@ public class ServerInstanceImpl implements ServerInstance {
 			port = jettyServer.getConnectors()[0].getPort();
 			return port;
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return -1;
 	}
@@ -155,7 +160,7 @@ public class ServerInstanceImpl implements ServerInstance {
 						jettyServer.join();
 //						EmbeddedServerActivator.this.serverStopped(jettyServer);
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 					Thread.currentThread().setContextClassLoader(currentContextLoader );
 		        }
@@ -190,7 +195,7 @@ public class ServerInstanceImpl implements ServerInstance {
 					System.err.println("Server stopped");
 					ServerInstanceImpl.this.jettyServer = null;
 				} catch (Throwable e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 			}
 		};

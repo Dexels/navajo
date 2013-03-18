@@ -27,4 +27,5 @@ Export-Package: com.dexels.navajo.studio.script.plugin.views
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.parser,
- com.dexels.navajo.version
+ com.dexels.navajo.version,
+ org.slf4j;version="1.6.1"
