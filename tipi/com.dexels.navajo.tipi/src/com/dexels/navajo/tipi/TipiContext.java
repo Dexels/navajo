@@ -2601,12 +2601,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		String service = rootDoc.getHeader().getRPCName();
 		if (xx == null) {
 			xx = new LinkedList<PropertyChangeListener>();
-			try {
-				propertyBindMap.put(
-						service + ":" + master.getFullPropertyName(), xx);
-			} catch (NavajoException e1) {
-				e1.printStackTrace();
-			}
+			propertyBindMap.put(service + ":" + master.getFullPropertyName(), xx);
 		}
 		// TODO beware, equality depends on equal property paths
 		if (!xx.contains(pp)) {
@@ -2778,7 +2773,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public void showInternalError(String errorString, Throwable t) {
 		if (t != null) {
-			t.printStackTrace();
+			logger.error("Error: ", t);
 		}
 	}
 

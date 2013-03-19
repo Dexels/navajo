@@ -680,7 +680,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 					new Class[] { PropertyChangeListener.class });
 			m.invoke(c, new Object[] { pcl });
 		} catch (NoSuchMethodException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		} catch (Exception e) {
 			throw new TipiException("Trouble binding: " + this
 					+ " conainerProperty: " + containerPropertyName, e);
@@ -961,7 +961,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 					}
 					m.invoke(c, new Object[] { p });
 				} catch (NoSuchMethodException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				} catch (Exception e) {
 					logger.error("Error: ",e);
 				}
