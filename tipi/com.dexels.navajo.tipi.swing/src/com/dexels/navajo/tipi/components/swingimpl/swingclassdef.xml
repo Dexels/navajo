@@ -953,6 +953,7 @@
          <value direction="inout" name="title" type="string" />
          <value direction="inout" name="messagepath" type="string" />
          <value direction="inout" name="modal" type="boolean" />
+         <value direction="in" name="settingsService" type="string" property="settingsService" />
          <value direction="in" name="x" type="integer" />
          <value direction="in" name="y" type="integer" />
          <value direction="in" name="h" type="integer" />
@@ -978,6 +979,7 @@
       <values>
          <value direction="in" name="icon" type="resource" property="iconUrl" />
          <value direction="inout" name="title" type="string" property="title" />
+         <value direction="in" name="settingsService" type="string" property="settingsService" />
          <value direction="inout" name="x" type="integer" value="50" property="x" />
          <value direction="inout" name="y" type="integer" value="50" property="y" />
          <value direction="inout" name="h" type="integer" value="50" property="h" />
@@ -1009,6 +1011,7 @@
       </events>
       <values>
          <!--     <value name="visible" direction="in" type="boolean"/>-->
+         <value direction="in" name="settingsService" type="string" property="settingsService" />
          <value direction="inout" name="x" type="integer" value="50" property="x">
             <description>X position of the window</description>
          </value>
@@ -1082,6 +1085,7 @@
       <values>
          <value direction="in" name="icon" type="resource" />
          <value direction="inout" name="title" type="string" />
+         <value direction="in" name="settingsService" type="string" property="settingsService" />
          <value direction="in" name="x" type="integer" value="0" />
          <value direction="in" name="y" type="integer" value="0" />
          <value direction="in" name="h" type="integer" value="480" />
@@ -1235,6 +1239,7 @@
       </events>
       <values>
          <value direction="inout" name="title" type="string" />
+         <value direction="in" name="settingsService" type="string" property="settingsService" />
          <value direction="in" name="x" type="integer" />
          <value direction="in" name="y" type="integer" />
          <value direction="in" name="h" type="integer" />

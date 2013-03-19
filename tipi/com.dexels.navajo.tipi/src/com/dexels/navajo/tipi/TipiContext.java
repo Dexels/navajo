@@ -2066,8 +2066,35 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 
 	public void exit() {
+		// first trigger the onWindowClosed event for all the children of the toplevel component (since there is a hidden TipiScreen hiding behind the first component we have xml control over)
+		try {
+			// if a breakException occurs at any of these, no exit.
+			for (TipiComponent tipiComponent : getDefaultTopLevel().getChildren())
+			{
+				tipiComponent.performTipiEvent("onWindowClosed", null, true);
+			}
+			performExit();
+		} catch (TipiException e1) {
+			logger.error("Unexpected error", e1);
+			performExit();
+		}
+	}
+	
+	private void performExit()
+	{
+		final TipiContext thisContext = this;
+		Thread shutdownThread = new Thread("TipiDoExit") {
+			public void run() {
+				thisContext.doExit();
+
+			}
+		};
+		shutdownThread.start();
 	}
 
+	public void doExit() {
+	}
+	
 	public void addShutdownListener(ShutdownListener sl) {
 		shutdownListeners.add(sl);
 	}
@@ -2083,6 +2110,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			return;
 		}
 
+		// dispose all tipi components recursively (except for the default top level). Has a chance of firing the onDispose event(s)
+		for (TipiComponent tp : getDefaultTopLevel().getChildren())
+		{
+			disposeTipiComponent(tp);
+		}
+		
 		if (myThreadPool != null) {
 			logger.info("Shutting down threadpool. # of poolthreads: "+getPoolSize());
 			myThreadPool.shutdown();
@@ -2777,6 +2810,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 
 	public void showInternalError(String errorString, Throwable t) {
+		logger.error(errorString);
 		if (t != null) {
 			t.printStackTrace();
 		}
