@@ -29,7 +29,9 @@ public class TipiExit extends TipiAction {
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
+
 		myContext.exit();
+		myContext = null;
 		// System.exit(0);
 	}
 }

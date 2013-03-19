@@ -82,7 +82,7 @@ public class SwingEmbeddedContext extends SwingTipiContext {
 		top.removeAllChildren();
 	}
 
-	public void exit() {
+	public void doExit() {
 		logger.debug("Exit in embedded");
 		shutdown();
 	}

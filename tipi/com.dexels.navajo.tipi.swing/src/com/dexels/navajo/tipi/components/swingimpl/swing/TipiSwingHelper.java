@@ -123,32 +123,29 @@ public class TipiSwingHelper implements TipiHelper {
 				logger.error("Error detected",exe);
 			}
 		}
+		// leaving this (empty) structure for the final else error.
 		if (te.isTrigger("onWindowClosed")) {
 			if (JInternalFrame.class.isInstance(c)) {
-				// JInternalFrame jj = (JInternalFrame) c;
-				// jj.addInternalFrameListener(new InternalFrameAdapter() {
-				// public void internalFrameClosing(InternalFrameEvent e) {
-				// try {
-				// myComponent.performTipiEvent("onWindowClosed", null,
-				// te.isSync());
-				// }
-				// catch (TipiException ex) {
-				// logger.error("Error detected",ex);
-				// }
-				// }
-				// });
+				// handled in TipiDialog & TipiWindow
 			} else if (JFrame.class.isInstance(c)) {
-				JFrame jj = (JFrame) c;
-				jj.addWindowListener(new WindowAdapter() {
-					public void windowClosed(WindowEvent e) {
-						try {
-							myComponent.performTipiEvent("onWindowClosed",
-									null, te.isSync());
-						} catch (TipiException ex) {
-							logger.error("Error detected",ex);
+				if (TipiSwingFrameImpl.class.isInstance(c))
+				{
+				// handled in TipiSwingFrameImpl
+				}
+				else
+				{
+					JFrame jj = (JFrame) c;
+					jj.addWindowListener(new WindowAdapter() {
+						public void windowClosed(WindowEvent e) {
+							try {
+								myComponent.performTipiEvent("onWindowClosed",
+										null, te.isSync());
+							} catch (TipiException ex) {
+								logger.error("Error detected", ex);
+							}
 						}
-					}
-				});
+					});
+				}
 			} else if (JApplet.class.isInstance(c)) {
 				// do nothing.
 
