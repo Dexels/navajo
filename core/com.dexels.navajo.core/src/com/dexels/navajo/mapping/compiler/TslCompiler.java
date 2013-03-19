@@ -900,7 +900,7 @@ public String messageNode(int ident, Element n, String className, String objectN
       }
       
       // If filter is specified, evaluate filter first:
-      if (!filter.equals("")) {
+      if (filter!=null && !filter.equals("")) {
         result.append(printIdent(ident + 4) + "if (Condition.evaluate(" +
                       replaceQuotes(filter) +
                       ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) {\n");
@@ -956,7 +956,7 @@ result.append(printIdent(ident + 4) +
         "currentParamMsg = (Message) paramMsgStack.pop();\n");
       }
 
-      if (!filter.equals("")) {
+      if (filter!=null && !filter.equals("")) {
         ident -= 2;
         result.append(printIdent(ident + 4) + "}\n");
       }

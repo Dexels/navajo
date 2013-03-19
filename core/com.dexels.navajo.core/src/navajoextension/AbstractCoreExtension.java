@@ -5,10 +5,10 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
+import navajo.ExtensionDefinition;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-
-import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;

@@ -176,7 +176,7 @@ public class EchoTipiContext extends TipiContext {
 //        return myServerContext;
 //    }
 
-    public void exit() {
+    public void doExit() {
     	shutdown();
     	ApplicationInstance ai = ApplicationInstance.getActive();
          if (ai instanceof TipiEchoInstance) {

@@ -605,7 +605,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 			XMLElement classdef, XMLElement definition) {
 	}
 
-	public void loadStartValues(XMLElement element, TipiEvent event) {
+	public void loadStartValues(XMLElement element, TipiEvent event) {	
 		Iterator<String> it = componentValues.keySet().iterator();
 		while (it.hasNext()) {
 			String key = it.next();
@@ -979,7 +979,16 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		// logger.error("Error: ",e);
 		// }
 		removeAllChildren();
-		clearAllComponents();
+		// fire onDispose event before the event list is cleared.
+		try {
+			performTipiEvent("onDispose", null, true);
+		} catch (TipiBreakException e) {
+			logger.warn("Error, but continuing, when firing the onDispose event for: " + this);
+			e.printStackTrace();
+		} catch (TipiException e) {
+			logger.warn("Error, but continuing, when firing the onDispose event for: " + this);
+			e.printStackTrace();
+		}
 		helperDispose();
 		isDisposed = true;
 		myContainerListeners.clear();
