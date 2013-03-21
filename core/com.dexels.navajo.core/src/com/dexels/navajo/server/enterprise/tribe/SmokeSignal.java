@@ -26,8 +26,6 @@ package com.dexels.navajo.server.enterprise.tribe;
 
 import java.io.Serializable;
 
-import com.dexels.navajo.server.DispatcherFactory;
-
 /**
  * A SmokeSignal is use the instantiate a process ( proccesMessage() ) on an member of the Navajo cluster.
  * The process can be parameterized by a key/value pair.
@@ -42,14 +40,14 @@ public abstract class SmokeSignal implements Serializable {
 	 */
 	private static final long serialVersionUID = 1159623466118822005L;
 	
-	public String sender;
-	public String key;
-	public Serializable value;
+	public final String sender;
+	public final String key;
+	public final Serializable value;
 	
-	public SmokeSignal(String sender, String key, Serializable value) {
+	public SmokeSignal(String key, Serializable value) {
 		this.key = key;
 		this.value = value;
-		this.sender = sender;
+		this.sender = TribeManagerFactory.getInstance().getMyUniqueId();
 	}
 
 	public String getKey() {
@@ -65,7 +63,7 @@ public abstract class SmokeSignal implements Serializable {
 	}
 	
 	public boolean iAmTheSender() {
-		return sender.equals(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName());
+		return sender.equals(TribeManagerFactory.getInstance().getMyUniqueId());
 	}
 	
 	/**

@@ -132,5 +132,7 @@ public interface TribeManagerInterface {
 	public ClusterStateInterface getClusterState();
 
 	public String getChiefName();
+
+	String getMyUniqueId();
     
 }

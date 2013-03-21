@@ -32,7 +32,7 @@ public class ServiceRequest extends Request {
 	private static final long serialVersionUID = 2821719303061929705L;
 	
 	private final Navajo request;
-	private boolean skipAuthorization = false;
+	private final boolean skipAuthorization;
 	
 	public ServiceRequest(Navajo request, boolean skipAuthorization) {
 		super();
@@ -44,9 +44,9 @@ public class ServiceRequest extends Request {
 	
 	public Answer getAnswer() {
 		
-		String origin = request.getHeader().getHeaderAttribute("origin");
+		String origin = getRequest().getHeader().getHeaderAttribute("origin");
 		if ( origin != null && !origin.equals("")) {
-			if ( origin.equals(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName())) {
+			if ( origin.equals(TribeManagerFactory.getInstance().getMyUniqueId()) ) {
 				return null;
 			}
 		}

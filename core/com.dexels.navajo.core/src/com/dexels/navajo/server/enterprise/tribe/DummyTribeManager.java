@@ -119,4 +119,10 @@ public class DummyTribeManager implements TribeManagerInterface {
 		return null;
 	}
 
+	@Override
+	public String getMyUniqueId() {
+		// TODO Auto-generated method stub
+		return "dummytribemember";
+	}
+
 }
