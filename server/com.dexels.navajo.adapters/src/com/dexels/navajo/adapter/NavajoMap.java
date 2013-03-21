@@ -303,7 +303,21 @@ private Object waitForResult = new Object();
 			  if (currentMsg != null) {
 				  if ( appendTo != null ) {
 					  if ( appendTo.equals(Navajo.MESSAGE_SEPARATOR)) {
-						  currentDoc.addMessage(clone, true);
+						  /**
+						   * NOTE 21/3/2013 (AS): USING ADDMESSAGE USING OVERWRITE FLAG
+						   * WILL CAUSE CURRENTMSG TO BE OVERWRITTEN IFF CLONE MSG NAME IS THE SAME!!!
+						   * THIS WILL CREATE A "DANGLING" MSG POINTER RENDERING ALL FURTHER
+						   * MESSAGE ADDITIONS USELESS (THEY WILL NOT APPEAR)
+						   * 
+						   * THEREFORE: CHECK WHETHER NAME OF CURRENT OUT MESSAGE POINTER EQUALS
+						   * THAT OF CLONE MESSAGE.
+						   */
+						  
+						  if ( clone.getName().equals(currentMsg.getName() ) ) {
+							  currentMsg.merge(clone);
+						  } else {
+							  currentDoc.addMessage(clone, true);
+						  }
 					  } else if ( currentMsg.getMessage(appendTo) != null ) {
 						  if ( currentMsg.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
 							  currentMsg.getMessage(appendTo).addMessage(clone);
