@@ -12,8 +12,8 @@ public class TribalMapSignal extends SmokeSignal {
 	public final static String CREATEMAP = "createmap";
 	public final static String DELETEMAP = "deletemap";
 	
-	public TribalMapSignal(String sender, String key, Serializable value) {
-		super(sender, key, value);
+	public TribalMapSignal(String key, Serializable value) {
+		super(key, value);
 	}
 
 	/**

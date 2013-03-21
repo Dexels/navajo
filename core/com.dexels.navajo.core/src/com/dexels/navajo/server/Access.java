@@ -119,12 +119,12 @@ public final class Access implements java.io.Serializable, Mappable {
 	private Navajo inDoc;
 	// The mergedDoc can be used to merge a previously set Navajo with the outputDoc.
 	// If the mergeDoc is not empty, it will ALWAYS be merged when setOutputDoc is called.
-	private Navajo mergedDoc;
+	private transient Navajo mergedDoc;
 
-	private Message currentOutMessage;
+	private transient Message currentOutMessage;
 	private transient Object userCertificate;
 	private static Object mutex = new Object();
-	private Set<Map<?,?>> piggyBackData = null;
+	private transient Set<Map<?,?>> piggyBackData = null;
 	private String clientToken = null;
 	private String clientInfo = null;
 	
@@ -135,7 +135,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	private transient StringWriter consoleContent = new StringWriter();
 	private transient PrintWriter consoleOutput = new PrintWriter(consoleContent);
 
-	private String waitingForPreviousRequest = null;
+	private transient String waitingForPreviousRequest = null;
 	private transient Thread myThread = null;
 
 	private transient HashMap<Integer, MapStatistics> mapStatistics = null;
@@ -506,6 +506,11 @@ public final class Access implements java.io.Serializable, Mappable {
 	}
 
 	public void setInDoc(Navajo in) {
+		
+		if ( in == null ) {
+			return;
+		}
+		
 		this.inDoc = in;
 		if ( in.getHeader() != null ) {
 			// Check for parent access id header.

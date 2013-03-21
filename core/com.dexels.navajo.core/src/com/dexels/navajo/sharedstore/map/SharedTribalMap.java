@@ -63,7 +63,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 		synchronized (semaphore) {
 			if ( registeredMaps.get(stm.getId()) == null || overwrite ) {
 				registerMapLocal(stm);
-				TribalMapSignal tms = new TribalMapSignal(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.CREATEMAP, stm.getId());
+				TribalMapSignal tms = new TribalMapSignal(TribalMapSignal.CREATEMAP, stm.getId());
 				TribeManagerFactory.getInstance().broadcast(tms);
 				return stm;
 			} else {
@@ -92,7 +92,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 	public static void deregisterMap(String id) {
 		synchronized (semaphore) {
 			deregisterMapLocal(id);
-			TribalMapSignal tms = new TribalMapSignal(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.DELETEMAP, id);
+			TribalMapSignal tms = new TribalMapSignal(TribalMapSignal.DELETEMAP, id);
 			TribeManagerFactory.getInstance().broadcast(tms);
 		}
 	}
@@ -113,7 +113,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 	public static void deregisterMap(SharedTribalMap stm) {
 		synchronized (semaphore) {
 			deregisterMapLocal(stm.getId());
-			TribalMapSignal tms = new TribalMapSignal(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.DELETEMAP, stm.getId());
+			TribalMapSignal tms = new TribalMapSignal(TribalMapSignal.DELETEMAP, stm.getId());
 			TribeManagerFactory.getInstance().broadcast(tms);
 		}
 	}
@@ -143,7 +143,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 			Object o = putLocal(key, value);
 
 			SharedTribalElement ste = new SharedTribalElement(getId(), key, value);
-			TribalMapSignal tms = new TribalMapSignal(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.PUT, ste);
+			TribalMapSignal tms = new TribalMapSignal(TribalMapSignal.PUT, ste);
 			TribeManagerFactory.getInstance().broadcast(tms);
 
 			return o;
@@ -190,7 +190,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 	public void clear() {
 		clearLocal();
 		SharedTribalElement ste = new SharedTribalElement(getId(), null, null);
-		TribalMapSignal tms = new TribalMapSignal(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.CLEAR, ste);
+		TribalMapSignal tms = new TribalMapSignal(TribalMapSignal.CLEAR, ste);
 		TribeManagerFactory.getInstance().broadcast(tms);
 	}
 	
@@ -219,7 +219,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 		try {
 			Object o = removeLocal(key);
 			SharedTribalElement ste = new SharedTribalElement(getId(), key, null);
-			TribalMapSignal tms = new TribalMapSignal(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.REMOVE, ste);
+			TribalMapSignal tms = new TribalMapSignal(TribalMapSignal.REMOVE, ste);
 			TribeManagerFactory.getInstance().broadcast(tms);
 			
 			return o;
