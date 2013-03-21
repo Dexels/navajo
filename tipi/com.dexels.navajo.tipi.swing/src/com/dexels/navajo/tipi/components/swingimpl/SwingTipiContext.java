@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
-import java.awt.Window;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
