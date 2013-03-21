@@ -15,6 +15,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -47,6 +49,9 @@ class SerializableObject implements Serializable {
 
 public class SharedStoreInterfaceTest {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SharedStoreInterfaceTest.class);
 	private SharedStoreInterface si;
 	boolean locked = false;
 	boolean threadAssertFailed = false;
@@ -118,7 +123,7 @@ public class SharedStoreInterfaceTest {
 								objects[index], false, true);
 						locks++;
 					} catch (SharedStoreException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 				}
 			};
@@ -174,8 +179,7 @@ public class SharedStoreInterfaceTest {
 								objects[index], false, false);
 						locks++;
 					} catch (SharedStoreException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 				}
 			};
@@ -378,7 +382,7 @@ public class SharedStoreInterfaceTest {
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 					si.release(ssl);
 					System.err.println("RELEASED: " + ssl);
@@ -406,7 +410,7 @@ public class SharedStoreInterfaceTest {
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 					si.release(ssl);
 					System.err.println("RELEASED: " + ssl);
@@ -434,7 +438,7 @@ public class SharedStoreInterfaceTest {
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 					si.release(ssl);
 					System.err.println("RELEASED: " + ssl);

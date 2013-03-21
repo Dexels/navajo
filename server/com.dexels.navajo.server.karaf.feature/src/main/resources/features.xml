@@ -109,7 +109,7 @@ mvn:org.apache.felix/org.apache.felix.configadmin/1.2.8
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/1.0.3</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article.jsp/1.0.9</bundle>
-	</feature>
+	</feature>g
 	
 	<feature name='navajo.optional' version='1.0.1' start-level='81' >
 		<feature version="1.0.2">navajo.server</feature>

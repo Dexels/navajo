@@ -6,6 +6,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -13,6 +16,10 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 
 public abstract class BareTestCase  {
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(BareTestCase.class);
 	
 	/**
 	 * Asserts that a condition is true. If it isn't it throws
@@ -71,7 +78,7 @@ public abstract class BareTestCase  {
 			p.setAnyValue(value);
 			return p;
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			fail(e.getMessage());
 		}
 		return null;
@@ -93,11 +100,7 @@ public abstract class BareTestCase  {
 		if(path.indexOf("/")==-1) {
 			Message mm =  NavajoFactory.getInstance().createMessage(n, path);
 			if(parent==null) {
-				try {
-					n.addMessage(mm);
-				} catch (NavajoException e) {
-					e.printStackTrace();
-				}
+				n.addMessage(mm);
 			} else {
 				parent.addMessage(mm);
 			}
@@ -117,11 +120,7 @@ public abstract class BareTestCase  {
 	}
 	
 	public final void dump(Navajo n) {
-		try {
-			n.write(System.err);
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
+		n.write(System.err);
 	}
 	
 	public final Navajo createNavajo() {

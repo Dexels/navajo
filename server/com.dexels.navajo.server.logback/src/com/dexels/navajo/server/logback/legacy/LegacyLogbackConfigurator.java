@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -19,8 +20,9 @@ import com.dexels.navajo.server.api.NavajoServerContext;
 public class LegacyLogbackConfigurator {
 
 	
-//	private final static Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 	
+	private final static Logger logger = LoggerFactory
+			.getLogger(LegacyLogbackConfigurator.class);
 	private NavajoServerContext navajoServerContext;
 
 	
@@ -52,18 +54,18 @@ public class LegacyLogbackConfigurator {
 				 joranFis = new FileInputStream(joranFile);
 				 loadLogbackConfig(joranFis,path);
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			} finally {
 				if(joranFis!=null) {
 					try {
 						joranFis.close();
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 				}
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	
@@ -82,7 +84,7 @@ public class LegacyLogbackConfigurator {
 	      StatusPrinter.print(lc);
 	      
 	    } catch (JoranException je) {
-	       je.printStackTrace();
+	    	logger.error("Error: ", je);
 	    }
 
 	}

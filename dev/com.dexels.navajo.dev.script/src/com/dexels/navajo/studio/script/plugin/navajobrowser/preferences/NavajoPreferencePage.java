@@ -29,6 +29,8 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -50,6 +52,10 @@ import com.dexels.navajo.studio.script.plugin.navajobrowser.PreferenceComponentF
 
 public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoPreferencePage.class);
+	
     private Text serverField;
     private Text usernameField;
     private Text passwordField;
@@ -166,14 +172,7 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
                 System.err.println("FirsT: "+sel.getFirstElement());
 //                IStructuredSelection sel2 = (IStructuredSelection)defaultProjectSelector.getCombo().getSelection();
                 currentDefaultProject = (IProject)sel.getFirstElement();
-//                System.err.println("FirsT: "+sel2.getFirstElement());
             }});
-//        if (navajoProjects == null || navajoProjects.size()==0) {
-//            formToolKit.createLabel(navajoComposite, "No open navajo projects found.");
-//            
-//        } else {
-//            formToolKit.createLabel(navajoComposite, navajoProjects.size()+" open navajo project(s) found.");
-//        }
      }
     
     private void createTmlBrowserParts() {
@@ -261,7 +260,6 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
         testButton.addSelectionListener(new SelectionListener(){
             public void widgetSelected(SelectionEvent e) {
                 ServerEntry sel = (ServerEntry)((IStructuredSelection)selector.getSelection()).getFirstElement();
-//                List<ServerEntry> al = NavajoScriptPluginPlugin.getDefault().getServerEntries();
                         try {
                             Navajo n = sel.runInit("InitNavajoStatus");
                             Message msg = n.getMessage("error");
@@ -282,8 +280,8 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
                             }
                             NavajoScriptPluginPlugin.getDefault().showInfo("Seems fine. Running version: "+ver);
                         } catch (Exception e1) {
-                            e1.printStackTrace();
-                            NavajoScriptPluginPlugin.getDefault().showInfo("Something crashed. Message: "+e1.getMessage());
+                        	logger.error("Error: ", e1);
+                        	NavajoScriptPluginPlugin.getDefault().showInfo("Something crashed. Message: "+e1.getMessage());
                         }
               }
 

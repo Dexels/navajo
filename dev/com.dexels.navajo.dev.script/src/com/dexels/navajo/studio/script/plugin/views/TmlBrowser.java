@@ -45,6 +45,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.ide.IDE;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Navajo;
@@ -60,7 +62,10 @@ import com.dexels.navajo.studio.script.plugin.editors.TmlFormComposite;
 
 public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener, IServerEntryListener {
     private Navajo myCurrentNavajo = null;
-
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(TmlBrowser.class);
+	
      private TmlFormComposite formComposite;
     private ComboViewer selector;
     private TextViewer myService;
@@ -269,7 +274,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
                 IDE.openEditor(page, nai, "org.eclipse.ui.DefaultTextEditor");
 //                page.openEditor(nai, "org.eclipse.ui.DefaultTextEditor");
             } catch (PartInitException e) {
-                e.printStackTrace();
+            	logger.error("Error: ", e);
             }
         }
     }
@@ -314,8 +319,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
                             setNavajo(myCurrentNavajo, currentService);
                                     return Status.OK_STATUS;
                         } catch (ClientException e) {
-                            e.printStackTrace();
-                            return Status.OK_STATUS;
+                        	logger.error("Error: ", e);
+                        	return Status.OK_STATUS;
                         }
                     }};
                     j.schedule();
@@ -408,8 +413,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
                     }
                     return Status.OK_STATUS;
                 } catch (ClientException e) {
-                    e.printStackTrace();
-                    return Status.OK_STATUS;
+                	logger.error("Error: ", e);
+                	return Status.OK_STATUS;
                 }
             }};
             j.schedule();

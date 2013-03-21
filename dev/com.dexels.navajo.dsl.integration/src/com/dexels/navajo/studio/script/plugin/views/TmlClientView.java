@@ -32,6 +32,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.ide.IDE;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Navajo;
@@ -49,12 +51,14 @@ import com.dexels.navajo.studio.script.plugin.editors.TmlFormComposite;
 import com.google.inject.Injector;
 @Deprecated
 public class TmlClientView extends BaseNavajoView implements IServerEntryListener,INavajoActivityListener {
-    private Navajo myCurrentNavajo = null;
+
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TmlClientView.class);
+	
+	private Navajo myCurrentNavajo = null;
     private TmlFormComposite formComposite;
-//    private TextViewer myService;
-//    private Button goButton;
     private Button backButton;
-//    private ComboViewer localeBox;
     private Button forwardButton;
     private Button reloadButton;
     private Button sourceButton;
@@ -194,7 +198,7 @@ public class TmlClientView extends BaseNavajoView implements IServerEntryListene
                     IDE.openEditor(page, nai, ee[0].getId());
             	}
             } catch (PartInitException e) {
-                e.printStackTrace();
+            	logger.error("Error: ", e);
             }
         }
     }
@@ -229,7 +233,6 @@ public class TmlClientView extends BaseNavajoView implements IServerEntryListene
 		            setNavajo(myCurrentNavajo, currentService);
 		                    return Status.OK_STATUS;
 		        } catch (ClientException e) {
-		            e.printStackTrace();
 		            return Status.OK_STATUS;
 		        }
 		    }};
@@ -323,7 +326,6 @@ public class TmlClientView extends BaseNavajoView implements IServerEntryListene
      * @see org.eclipse.ui.IWorkbenchPart#setFocus()
      */
     public void setFocus() {
-        // TODO Auto-generated method stub
     }
 
     public void setNavajo(final Navajo n, final String scriptName) {

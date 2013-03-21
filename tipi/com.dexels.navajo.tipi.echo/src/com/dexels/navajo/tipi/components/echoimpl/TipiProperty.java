@@ -74,7 +74,7 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
             performTipiEvent(eventType, m, false);
             // }
         } catch (Exception ex) {
-            ex.printStackTrace();
+        	logger.error("Error: ", ex);
         }
     }
 

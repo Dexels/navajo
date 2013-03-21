@@ -122,8 +122,6 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
         } catch (NavajoPluginException e) {
             NavajoScriptPluginPlugin.getDefault().log("Problem in baseNavajoAction: ",e);
         } catch (CoreException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
             NavajoScriptPluginPlugin.getDefault().log("Core exception in NavajoAction",e);
         }
 

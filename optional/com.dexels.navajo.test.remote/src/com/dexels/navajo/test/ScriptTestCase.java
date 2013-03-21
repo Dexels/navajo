@@ -1,15 +1,19 @@
 package com.dexels.navajo.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
-import static org.junit.Assert.*;
 
 
 public abstract class ScriptTestCase extends BareTestCase {
@@ -103,11 +107,7 @@ public abstract class ScriptTestCase extends BareTestCase {
 		}
 		Message message = getResultNavajo().getMessage("error");
 		if(message!=null) {
-			try {
-				message.write(System.err);
-			} catch (NavajoException e) {
-				e.printStackTrace();
-			}
+			message.write(System.err);
 		}
 		if(message!=null) {
 			fail("Error message found: "+getPropertyValue("error/message"));		
@@ -127,14 +127,7 @@ public abstract class ScriptTestCase extends BareTestCase {
 
 		Message message = getResultNavajo().getMessage("ConditionErrors");
 		if(message!=null) {
-			try {
-				message.write(System.err);
-			} catch (NavajoException e) {
-				e.printStackTrace();
-			}
-//			for (Message element : message.getAllMessages()) {
-////				super.
-//			}
+			message.write(System.err);
 			fail("Condition error found: "+getPropertyValue("ConditionErrors@0/Description")+"\nFailedExpression: "+getPropertyValue("ConditionErrors@0/FailedExpression")+"\n");
 		}
 //		assertNull(message);
@@ -148,11 +141,7 @@ public abstract class ScriptTestCase extends BareTestCase {
 
 		Message message = getResultNavajo().getMessage("AuthorizationError");
 		if(message!=null) {
-			try {
-				message.write(System.err);
-			} catch (NavajoException e) {
-				e.printStackTrace();
-			}
+			message.write(System.err);
 		}
 		assertNull(message);
 		
@@ -204,11 +193,7 @@ public abstract class ScriptTestCase extends BareTestCase {
 	}
 
 	public final void dumpResult()  {
-		try {
-			getResultNavajo().write(System.err);
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
+		getResultNavajo().write(System.err);
 	}
 
 }
