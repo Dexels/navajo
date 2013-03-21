@@ -65,7 +65,7 @@ public class SharedStoreFactory {
 		return instance;
 	}
 
-	public static void setInstance(SharedFileStore sharedFileStore) {
+	public static void setInstance(SharedStoreInterface sharedFileStore) {
 		instance = sharedFileStore;
 	}
 }

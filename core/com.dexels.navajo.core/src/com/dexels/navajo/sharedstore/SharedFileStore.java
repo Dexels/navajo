@@ -266,7 +266,7 @@ public class SharedFileStore implements SharedStoreInterface {
 		try {
 			return new FileInputStream(f);
 		} catch (FileNotFoundException e) {
-			throw new SharedStoreException(e.getMessage());
+			throw new SharedStoreException(e.getMessage(), e);
 		}
 	}
 	
