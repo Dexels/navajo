@@ -6,6 +6,6 @@
 		uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
 	<target name="deploy">
 		<artifact:pom id="mypom" file="pom.xml" />
-		<artifact:deploy file="src/main/resources/features.xml" pomrefid="mypom"  ></artifact:deploy>
+		<artifact:deploy file="src/main/resources/features.xml" pomrefid="mypom"  	></artifact:deploy>
 	</target>
 </project>
