@@ -46,9 +46,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 		  JMXHelper.deregisterMXBean( JMXHelper.NAVAJO_DOMAIN, "ConnectionBrokerManager");
 		  brokerMap.clear();
 	  } catch (Throwable e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+		  logger.error("Error: ", e);
+	  }
 	  
   }
   

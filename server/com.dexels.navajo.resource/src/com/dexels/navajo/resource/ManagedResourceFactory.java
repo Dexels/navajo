@@ -73,7 +73,7 @@ public abstract class ManagedResourceFactory<T> implements ManagedServiceFactory
 			ServiceRegistration<T> reg =  (ServiceRegistration<T>) bundleContext.registerService(serviceClass.getName(),source, settings);
 			registryMap.put(pid, reg);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	

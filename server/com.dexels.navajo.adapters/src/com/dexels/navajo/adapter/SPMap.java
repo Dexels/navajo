@@ -223,9 +223,7 @@ public class SPMap extends SQLMap {
       }
     }
     catch (SQLException sqle) {
-      sqle.printStackTrace();
-      AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE, myAccess.accessID);
-      
+      AuditLog.log( sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), "SPMap",Level.SEVERE, myAccess.accessID);
       throw new UserException( -1,  sqle.getLocalizedMessage() + "/" + sqle.getSQLState());
     }
     finally {
@@ -406,8 +404,7 @@ public class SPMap extends SQLMap {
       }
     }
     catch (SQLException sqle) {
-    	AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE, myAccess.accessID);
-      sqle.printStackTrace();
+    	AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(),sqle, Level.SEVERE, myAccess.accessID);
     }
     super.store();
   }
@@ -421,8 +418,7 @@ public class SPMap extends SQLMap {
       }
     }
     catch (SQLException sqle) {
-    	AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE, myAccess.accessID);
-      sqle.printStackTrace();
+    	AuditLog.log( "SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(),sqle,Level.SEVERE, myAccess.accessID);
     }
     super.kill();
   }

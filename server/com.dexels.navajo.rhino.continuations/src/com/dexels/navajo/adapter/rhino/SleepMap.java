@@ -1,5 +1,7 @@
 package com.dexels.navajo.adapter.rhino;
 
+import java.io.IOException;
+
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.rhino.ContinuationRunnable;
@@ -17,8 +19,9 @@ public class SleepMap implements Mappable {
 
 	/**
 	 * @param method  
+	 * @throws IOException 
 	 */
-	public void setSleep(final String method) {
+	public void setSleep(final String method) throws IOException {
 		ContinuationRunnable cr = ContinuationMapUtils.getContinuation(access);
 		ContinuationMapUtils.scheduleAndContinue(cr);
 		cr.releaseCurrentThread();

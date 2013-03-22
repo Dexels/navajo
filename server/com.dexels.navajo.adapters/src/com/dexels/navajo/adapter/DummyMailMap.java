@@ -108,7 +108,7 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 			fw.write(this.sender + "," + this.recipients + "," + this.cc + "," + this.bcc + "," + this.subject + "," + this.text + "\n");
 			fw.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new UserException(-1, "Error writing dummy data", e);
 		}
 		
 	}

@@ -88,7 +88,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 			// TO
 			// e.printStackTrace();
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Error: ", t);
 		} finally {
 			logger.info("exiting continuescript");
 		}
@@ -117,7 +117,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 				originalRunnable.writeOutput(getAccess().getInDoc(),
 						getAccess().getOutputDoc());
 			} catch (NavajoException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 			originalRunnable.endTransaction();
 		} else {

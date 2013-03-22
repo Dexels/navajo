@@ -85,7 +85,7 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 		try {
 			store();
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 		}
 	} 
 	
@@ -121,7 +121,7 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 				try {
 					hasResult.wait(60000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 			}
 		}
@@ -134,7 +134,7 @@ public class NavajoMapGroupAdapter implements Mappable, NavajoMapResponseListene
 				try {
 					hasResult.wait(timeout);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 			}
 		}

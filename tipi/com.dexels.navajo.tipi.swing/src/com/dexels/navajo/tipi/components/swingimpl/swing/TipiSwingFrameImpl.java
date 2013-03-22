@@ -16,6 +16,7 @@ import org.jdesktop.animation.transitions.TransitionTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.components.swingimpl.TipiMenubar;
 import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
@@ -48,16 +49,17 @@ public class TipiSwingFrameImpl extends JFrame implements TopLevel,
 			.getLogger(TipiSwingFrameImpl.class);
 	
 	BorderLayout borderLayout1 = new BorderLayout();
-
+	
 	// private TipiSwingDataComponentImpl me;
 
 	public TipiSwingFrameImpl(TipiSwingDataComponentImpl me) {
 		// final TipiSwingFrameImpl tsf = this;
+		final TipiComponent tipiComponent = me;
 		setVisible(false);
 		getContentPane().setLayout(borderLayout1);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				System.exit(0);
+				tipiComponent.getContext().exit();
 			}
 		});
 	}

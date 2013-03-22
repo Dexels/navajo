@@ -18,6 +18,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 
@@ -31,9 +34,10 @@ import de.xeinfach.kafenio.component.ExtendedHTMLDocument;
  * 
  */
 public class SwingEditor extends KafenioPanel {
-	/**
-	 * 
-	 */
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SwingEditor.class);
+	
 	private static final long serialVersionUID = 2156410387429367534L;
 	private Property myProperty;
 	private ArrayList<Binary> attachments = new ArrayList<Binary>();
@@ -89,7 +93,7 @@ public class SwingEditor extends KafenioPanel {
 		try {
 			getExtendedHtmlDoc().insertString(caretPos, text, null);
 		} catch (BadLocationException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -130,7 +134,7 @@ public class SwingEditor extends KafenioPanel {
 			text = replaceString(text, "&#8224;", " ");
 			return text;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return null;
 	}
@@ -165,7 +169,7 @@ public class SwingEditor extends KafenioPanel {
 					System.err.println("Result: " + kp.getProcessedText());
 					System.err.println("Result2: "+result);
 				} catch (BadLocationException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 
 			}

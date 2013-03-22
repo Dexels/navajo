@@ -1294,7 +1294,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 						fireTipiEvent("onValueChanged");
 
 					} catch (NavajoException ex) {
-						ex.printStackTrace();
+						logger.error("Error: ", ex);
 					}
 
 				}

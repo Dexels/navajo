@@ -46,7 +46,7 @@ public class HeadlessTipiContext extends TipiContext {
 
 	}
 
-	public void exit() {
+	public void doExit() {
 		shutdown();
 		// myInvokingThread.interrupt();
 	}

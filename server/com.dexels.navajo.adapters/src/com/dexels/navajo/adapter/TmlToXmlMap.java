@@ -116,8 +116,7 @@ public class TmlToXmlMap implements Mappable {
 				hasBeenBuild = true;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new UserException(392, e.getMessage());
+			throw new UserException(392, e.getMessage(),e);
 		}
 	}
 
@@ -127,7 +126,7 @@ public class TmlToXmlMap implements Mappable {
 				getContent().write(System.err);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -210,8 +209,7 @@ public class TmlToXmlMap implements Mappable {
 			}
 		}
 	}
-	public static void main(String[] args) {
-		try {
+	public static void main(String[] args) throws UserException {
 			TmlToXmlMap t2x = new TmlToXmlMap();
 
 			Navajo n = NavajoFactory.getInstance().createNavajo();
@@ -248,8 +246,5 @@ public class TmlToXmlMap implements Mappable {
 			t2x.setBuildContent(true);
 			t2x.setDumpObject(true);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }

@@ -605,7 +605,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 			XMLElement classdef, XMLElement definition) {
 	}
 
-	public void loadStartValues(XMLElement element, TipiEvent event) {
+	public void loadStartValues(XMLElement element, TipiEvent event) {	
 		Iterator<String> it = componentValues.keySet().iterator();
 		while (it.hasNext()) {
 			String key = it.next();
@@ -680,7 +680,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 					new Class[] { PropertyChangeListener.class });
 			m.invoke(c, new Object[] { pcl });
 		} catch (NoSuchMethodException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		} catch (Exception e) {
 			throw new TipiException("Trouble binding: " + this
 					+ " conainerProperty: " + containerPropertyName, e);
@@ -961,7 +961,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 					}
 					m.invoke(c, new Object[] { p });
 				} catch (NoSuchMethodException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				} catch (Exception e) {
 					logger.error("Error: ",e);
 				}
@@ -979,7 +979,16 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		// logger.error("Error: ",e);
 		// }
 		removeAllChildren();
-		clearAllComponents();
+		// fire onDispose event before the event list is cleared.
+		try {
+			performTipiEvent("onDispose", null, true);
+		} catch (TipiBreakException e) {
+			logger.warn("Error, but continuing, when firing the onDispose event for: " + this);
+			e.printStackTrace();
+		} catch (TipiException e) {
+			logger.warn("Error, but continuing, when firing the onDispose event for: " + this);
+			e.printStackTrace();
+		}
 		helperDispose();
 		isDisposed = true;
 		myContainerListeners.clear();

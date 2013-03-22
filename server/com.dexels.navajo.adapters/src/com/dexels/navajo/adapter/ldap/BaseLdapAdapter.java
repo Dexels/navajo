@@ -111,7 +111,7 @@ public class BaseLdapAdapter implements Mappable {
 				logger.info("o: " + o);
 			}
 		} catch (NamingException e) {
-			e.printStackTrace();
+			logger.error("LDAP problem: ", e);
 		}
 
 		return null;

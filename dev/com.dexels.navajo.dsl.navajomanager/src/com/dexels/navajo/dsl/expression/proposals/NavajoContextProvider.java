@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -21,6 +24,10 @@ public class NavajoContextProvider implements INavajoProjectContextProvider {
 	protected java.util.Map<String, AdapterProposal> adapterMap = new HashMap<String, AdapterProposal>();
 	protected List<InputTmlProposal> tmlProposal = new ArrayList<InputTmlProposal>();
 	private INavajoResourceFinder navajoResourceFinder= null;
+	
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoContextProvider.class);
 	
 	public NavajoContextProvider(INavajoResourceFinder navajoResourceFinder) {
 		initialize(navajoResourceFinder);
@@ -72,7 +79,7 @@ public class NavajoContextProvider implements INavajoProjectContextProvider {
 			setInputNavajo(inputNavajo);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -81,9 +88,9 @@ public class NavajoContextProvider implements INavajoProjectContextProvider {
 		try {
 			adaptersList = getNavajoResourceFinder().getAdapters();
 		} catch (XMLParseException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		if(adaptersList==null) {
 			return;
@@ -138,9 +145,9 @@ public class NavajoContextProvider implements INavajoProjectContextProvider {
 		try {
 			functionList = getNavajoResourceFinder().getFunctions();
 		} catch (XMLParseException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		if(functionList==null) {
 			return;
@@ -191,7 +198,7 @@ public class NavajoContextProvider implements INavajoProjectContextProvider {
 				listPropertyPaths(message,result);
 			}
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return result;
 	}

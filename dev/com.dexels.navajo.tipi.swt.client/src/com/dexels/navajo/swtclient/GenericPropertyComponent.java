@@ -238,8 +238,8 @@ public class GenericPropertyComponent {
                     setBinaryLabel(b, fileImageLabel);
 
                 } catch (Exception e1) {
-                    e1.printStackTrace();
-                    // } finally {
+                	logger.error("Error: ", e1);
+                	// } finally {
                     // if (fis!=null) {
                     // try {
                     // fis.close();
@@ -278,13 +278,13 @@ public class GenericPropertyComponent {
                     }
                     fis.flush();
                 } catch (Exception e1) {
-                    e1.printStackTrace();
+                	logger.error("Error: ", e1);
                 } finally {
                     if (fis != null) {
                         try {
                             fis.close();
                         } catch (IOException e1) {
-                            e1.printStackTrace();
+                        	logger.error("Error: ", e1);
                         }
                     }
                 }
@@ -442,7 +442,7 @@ public class GenericPropertyComponent {
                     dp.setDate(d);
                     myProperty.setValue(navajoDateFormat.format(d));
                 } catch (ParseException e1) {
-                    e1.printStackTrace();
+                	logger.error("Error: ", e1);
                 }
                 if (myProperty.getValue() == null) {
                     ttt.setText(oldVal);
@@ -620,7 +620,7 @@ public class GenericPropertyComponent {
             }
             currentControl = comp;
         } catch (NavajoException e1) {
-            e1.printStackTrace();
+        	logger.error("Error: ", e1);
         }
 
     }

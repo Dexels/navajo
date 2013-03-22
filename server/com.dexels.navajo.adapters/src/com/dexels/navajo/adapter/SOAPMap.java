@@ -197,7 +197,7 @@ public class SOAPMap implements Mappable {
 					try {
 						connection.close();
 					} catch (SOAPException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 				}
 			}

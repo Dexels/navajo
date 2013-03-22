@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
 
 public class DummyTribeManager implements TribeManagerInterface {
 
@@ -117,6 +116,12 @@ public class DummyTribeManager implements TribeManagerInterface {
 			String service, Access a, HashSet<String> ignoreList) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String getMyUniqueId() {
+		// TODO Auto-generated method stub
+		return "dummytribemember";
 	}
 
 }

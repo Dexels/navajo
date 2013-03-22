@@ -26,6 +26,8 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.studio.script.plugin.NavajoPluginException;
 import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
@@ -41,7 +43,10 @@ import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
 public class NewScriptWizard extends Wizard implements INewWizard {
     private NewScriptWizardPage page;
-
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(NewScriptWizard.class);
+	
 
     protected IResource selectedFile = null;
 
@@ -151,7 +156,7 @@ public class NewScriptWizard extends Wizard implements INewWizard {
             }
             stream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+        	logger.error("Error: ", e);
         }
         monitor.worked(1);
         monitor.setTaskName("Opening file for editing...");

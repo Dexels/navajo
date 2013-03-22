@@ -483,7 +483,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                     isr.close();
                 }
             } catch (IOException e1) {
-                e1.printStackTrace();
+            	logger.error("Error: ", e1);
             }
         }
     }
@@ -616,7 +616,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                 try {
                     iss.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                	logger.error("Error: ", e);
                 }
             }
         }
@@ -837,7 +837,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                 bout.write(buffer, 0, read);
             }
         } catch (IOException e) {
-            e.printStackTrace();
             throw new CoreException(Status.CANCEL_STATUS);
         } finally {
             try {
@@ -850,7 +849,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
                 }
             } catch (IOException e1) {
-                e1.printStackTrace();
                 throw new CoreException(Status.CANCEL_STATUS);
             }
 
@@ -1068,14 +1066,14 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             Navajo n = NavajoFactory.getInstance().createNavajo(s);
             return n;
         } catch (CoreException e) {
-            e.printStackTrace();
+        	logger.error("Error: ", e);
         } finally {
             try {
                 if (s!=null) {
                     s.close();
                 }
             } catch (IOException e1) {
-                e1.printStackTrace();
+            	logger.error("Error: ", e1);
             }
          }
         return null;

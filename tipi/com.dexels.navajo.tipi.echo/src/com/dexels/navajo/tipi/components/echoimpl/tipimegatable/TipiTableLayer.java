@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
@@ -36,8 +39,13 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 public class TipiTableLayer extends TipiTableBaseLayer {
-    private final ArrayList columns = new ArrayList();
-
+    
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TipiTableLayer.class);
+	
+	private final ArrayList columns = new ArrayList();
+    
     private final ArrayList columnSize = new ArrayList();
 
     private final ArrayList columnName = new ArrayList();
@@ -184,7 +192,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
                 try {
                     myTable.performTipiEvent("onActionPerformed", m, false);
                 } catch (TipiException ex) {
-                    ex.printStackTrace();
+                	logger.error("Error: ", ex);
                 }
             }
         });

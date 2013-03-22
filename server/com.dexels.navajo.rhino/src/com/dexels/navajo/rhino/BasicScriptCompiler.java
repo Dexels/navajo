@@ -352,30 +352,30 @@ public class BasicScriptCompiler implements ScriptCompiler {
 			xx.parseFromReader(sr);
 			process(xx, os);
 		} catch (MissingParameterException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			try {
 				processCompileError(e.getMessage(),
 						"MissingParameterException", e, os);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				logger.error("Error: ", e1);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			try {
 				System.err
 						.println("Debatable contruction: Generates an error js file. Should be rewritten, I think. Don't know what I was thinking");
 				processCompileError(e.getMessage(), "IOException", e, os);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				logger.error("Error: ", e1);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			try {
 				System.err
 						.println("Debatable contruction: Generates an error js file. Should be rewritten, I think. Don't know what I was thinking");
 				processCompileError(e.getMessage(), "IOException", e, os);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				logger.error("Error: ", e1);
 			}
 		}
 

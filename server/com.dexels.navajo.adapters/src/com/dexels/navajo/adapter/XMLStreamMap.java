@@ -1,6 +1,8 @@
 package com.dexels.navajo.adapter;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
@@ -142,8 +144,7 @@ public class XMLStreamMap implements Mappable {
 		}		
 	}
 	
-	public static void main(String[] args){
-	try{
+	public static void main(String[] args) throws UserException, MappableException, FileNotFoundException, IOException{
 		XMLStreamMap map = new XMLStreamMap();
 		map.load(null);
 		map.setIndent(1);
@@ -171,10 +172,6 @@ public class XMLStreamMap implements Mappable {
 		Binary content = map.getContent();
 		content.write(new FileOutputStream("c:/serial-xml.xml"));
 		logger.info("done..");
-	}catch(Exception e){
-		e.printStackTrace();
-	}
-		
 	}
 
 }

@@ -371,21 +371,13 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		if (o instanceof Navajo) {
 			Navajo n = (Navajo) o;
 			System.err.println("Navajo on top:");
-			try {
-				n.write(System.err);
-			} catch (NavajoException e) {
-				e.printStackTrace();
-			}
+			n.write(System.err);
 		} else if (o instanceof Message) {
 			System.err.println("Message on top: "
 					+ ((Message) o).getFullMessageName());
 		} else if (o instanceof Property) {
-			try {
 				System.err.println("Property on top: "
 						+ ((Property) o).getFullPropertyName());
-			} catch (NavajoException e) {
-				e.printStackTrace();
-			}
 
 		} else {
 			if (o != null) {
@@ -563,14 +555,8 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 	private String createPropertyPath(Property p) {
 		String navajoName = getServiceName(p.getRootDoc());
 		String prop;
-		try {
-			prop = p.getFullPropertyName();
-			return navajoName + ":" + prop;
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
-
-		return null;
+		prop = p.getFullPropertyName();
+		return navajoName + ":" + prop;
 	}
 
 	public Property parsePropertyPath(String path) {
@@ -745,7 +731,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 			}
 			return pp;
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		// return p;
 		return null;

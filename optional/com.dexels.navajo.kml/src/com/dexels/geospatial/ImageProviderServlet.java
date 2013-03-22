@@ -106,6 +106,9 @@ public class ImageProviderServlet extends HttpServlet {
 				linesWithText++;
 			}
 		}		
+		if(bounds==null) {
+			return bi;
+		}
 		
 		int x = (int)((width / 2.0) - (bounds.getWidth() / 2));
 		double y_offset = (height / 2.0); 

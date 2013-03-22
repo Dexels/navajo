@@ -11,7 +11,6 @@ import navajo.ExtensionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;

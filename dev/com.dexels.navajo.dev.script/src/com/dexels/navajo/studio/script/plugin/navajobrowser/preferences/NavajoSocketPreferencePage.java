@@ -26,6 +26,8 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
@@ -39,6 +41,9 @@ public class NavajoSocketPreferencePage extends PreferencePage implements IWorkb
     private Text usernameText;
     private Text passwordText;
     private Text portText;
+    
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoSocketPreferencePage.class);
 
     @Override
 	public Control createContents(Composite parent) {
@@ -105,8 +110,8 @@ public class NavajoSocketPreferencePage extends PreferencePage implements IWorkb
                 return false;
            }
         } catch (Exception e) {
-            e.printStackTrace();
-            NavajoScriptPluginPlugin.getDefault().showError("The server url should have the format:  hostname:port");
+        	logger.error("Error: ", e);
+        	NavajoScriptPluginPlugin.getDefault().showError("The server url should have the format:  hostname:port");
             return false;
         }
         if (serverUrlText.getText().indexOf("/")!=-1) {

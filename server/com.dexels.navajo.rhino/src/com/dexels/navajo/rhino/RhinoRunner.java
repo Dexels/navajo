@@ -283,7 +283,7 @@ public class RhinoRunner {
 			DispatcherFactory.getInstance().generateErrorMessage(a, message,
 					-1, 0, e);
 		} catch (FatalException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 	}
 

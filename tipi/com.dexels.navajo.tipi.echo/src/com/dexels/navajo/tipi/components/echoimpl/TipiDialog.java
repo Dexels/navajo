@@ -131,7 +131,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl implements ScopeLimit{
         try {
             performTipiEvent("onWindowClosed", null, true);
         } catch (TipiException ex) {
-            ex.printStackTrace();
+        	logger.error("Error: ", ex);
         }
         myContext.disposeTipiComponent(this);
     }

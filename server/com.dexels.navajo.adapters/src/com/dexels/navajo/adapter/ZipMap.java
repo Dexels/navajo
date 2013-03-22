@@ -63,7 +63,7 @@ public class ZipMap implements Mappable {
 		try {
 			zo.putNextEntry(entry);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Zip problem: ", e);
 		}
 	}
 
@@ -73,7 +73,7 @@ public class ZipMap implements Mappable {
 			content.write( zo );
 			zo.closeEntry();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Zip problem: ", e);
 		}
 
 	}

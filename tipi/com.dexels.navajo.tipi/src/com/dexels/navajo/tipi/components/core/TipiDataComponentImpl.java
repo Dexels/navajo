@@ -49,6 +49,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	private static final long serialVersionUID = -8051817615319907555L;
 	private final List<String> myServices = new ArrayList<String>();
 	protected String myMethod;
+	protected String mySettingsService = null;
 	protected final Set<TipiComponent> propertyComponentSet = new HashSet<TipiComponent>();
 	
 	private final static Logger logger = LoggerFactory
@@ -94,6 +95,34 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 
 	}
 
+	public void loadStartValues(XMLElement element, TipiEvent event) {
+		super.loadStartValues(element, event);
+		// see if a value called settingsService has just been set to the component
+		try
+		{
+			mySettingsService = (String) this.getValue("settingsService");
+		}
+		catch(UnsupportedOperationException uoe)
+		{
+			// nothing wrong, it is just not available for this class.
+		}
+		if (mySettingsService != null)
+		{
+			loadServices(mySettingsService);
+			Navajo settings = this.getContext().getNavajo(mySettingsService);
+			if (settings != null)
+			{
+				try
+				{
+					loadData(settings, mySettingsService);
+				}
+				catch(TipiException te)
+				{
+					logger.error("Something going wrong loading the settings data for component " + this + " with settings " + settings, te);
+				}
+			}
+		}
+	}
 	public void registerPropertyChild(TipiComponent component) {
 		propertyComponentSet.add(component);
 	}
@@ -172,16 +201,164 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			throw new TipiException("Loading with null Navajo! ");
 		}
 		myNavajo = n;
-
-		// );
-		for (TipiComponent tc : propertyComponentSet) {
-			tc.loadPropertiesFromNavajo(n);
+		if (method.equals(mySettingsService))
+		{
+			extractUserSettings(n);
 		}
-		loadProperties(n);
-		cascadeLoad(n, method);
-		doPerformOnLoad(method, n, true);
+		else
+		{
+
+			// );
+			for (TipiComponent tc : propertyComponentSet) {
+				tc.loadPropertiesFromNavajo(n);
+			}
+			loadProperties(n);
+			cascadeLoad(n, method);
+			doPerformOnLoad(method, n, true);
+		}
 		doLayout();
 
+	}
+
+	private void extractUserSettings(Navajo n) {
+		// find the x, y, w and h values and set them as values to this component.
+		Message userSettings = n.getMessage("UserSettings");
+		for (int i=0; i<userSettings.getArraySize();i++)
+		{
+			Message singleComponentUserSettings = userSettings.getMessage(i);
+			if (singleComponentUserSettings != null && singleComponentUserSettings.getProperty("ObjectName").getValue().equals(myName) && singleComponentUserSettings.getProperty("ObjectType").getValue().equalsIgnoreCase(this.getClass().getName()))
+			{
+				Integer propertyX = 0;
+				Integer propertyY = 0;
+				Integer propertyW = 0;
+				Integer propertyH = 0;
+				if (singleComponentUserSettings.getProperty("PropertyY") != null && singleComponentUserSettings.getProperty("PropertyY").getTypedValue() != null)
+				{
+					propertyY = (Integer) singleComponentUserSettings.getProperty("PropertyY").getTypedValue();
+				}
+				if (singleComponentUserSettings.getProperty("PropertyW") != null && singleComponentUserSettings.getProperty("PropertyW").getTypedValue() != null)
+				{
+					propertyW = (Integer) singleComponentUserSettings.getProperty("PropertyW").getTypedValue();
+				}
+				if (singleComponentUserSettings.getProperty("PropertyH") != null && singleComponentUserSettings.getProperty("PropertyH").getTypedValue() != null)
+				{
+					propertyH = (Integer) singleComponentUserSettings.getProperty("PropertyH").getTypedValue();
+				}
+				if (singleComponentUserSettings.getProperty("PropertyX") != null && singleComponentUserSettings.getProperty("PropertyX").getTypedValue() != null)
+				{
+					propertyX = (Integer) singleComponentUserSettings.getProperty("PropertyX").getTypedValue();
+				}
+				// set the values
+				this.setValue("x", propertyX);
+				this.setValue("y", propertyY);
+				if (propertyW > 0)
+				{
+					this.setValue("w", propertyW);
+				}
+				if (propertyH > 0)
+				{
+					this.setValue("h", propertyH);
+				}
+			}
+		}
+	}
+
+	private void saveUserSettings() {
+		if (mySettingsService != null)
+		{
+			Navajo n = this.getContext().getNavajo(mySettingsService);
+			if (n != null)
+			{
+				Message userSettings = n.getMessage("UserSettings");
+				Message thisComponentUserSettings = null;
+				for (int i=0; i<userSettings.getArraySize();i++)
+				{
+					Message singleComponentUserSettings = userSettings.getMessage(i);
+					if (singleComponentUserSettings != null && singleComponentUserSettings.getProperty("ObjectName").getValue().equals(myName) && singleComponentUserSettings.getProperty("ObjectType").getValue().equalsIgnoreCase(this.getClass().getName()))
+					{
+						thisComponentUserSettings = singleComponentUserSettings;
+					}
+				}
+				if (thisComponentUserSettings == null)
+				{ // this component doesn't have an entry in the arraylist so we need to add it.
+					thisComponentUserSettings = NavajoFactory.getInstance().createMessage(n, "UserSettings", Message.MSG_TYPE_ARRAY_ELEMENT);
+					userSettings.addElement(thisComponentUserSettings);
+
+					// set objectname & objecttype properties
+					Property p = NavajoFactory.getInstance().createProperty(n, "ObjectName", "String",
+							null, 0, "ObjectName", Property.DIR_IN);
+					thisComponentUserSettings.addProperty(p);
+					p.setAnyValue(myName);
+					
+					p = NavajoFactory.getInstance().createProperty(n, "ObjectType", "String",
+							null, 0, "ObjectType", Property.DIR_IN);
+					thisComponentUserSettings.addProperty(p);
+					p.setAnyValue(this.getClass().getName());
+				}
+				
+				// save the settings
+				String name = "PropertyX";
+				Property p = null;
+				if (thisComponentUserSettings.getProperty(name) != null)
+				{
+					p = thisComponentUserSettings.getProperty(name);
+				}
+				else
+				{ // add the property
+					p = NavajoFactory.getInstance().createProperty(n, name, "Integer",
+							null, 0, name, Property.DIR_IN);
+					thisComponentUserSettings.addProperty(p);
+				}
+				p.setAnyValue(this.getValue("x"));
+				//y
+				name = "PropertyY";
+				p = null;
+				if (thisComponentUserSettings.getProperty(name) != null)
+				{
+					p = thisComponentUserSettings.getProperty(name);
+				}
+				else
+				{ // add the property
+					p = NavajoFactory.getInstance().createProperty(n, name, "Integer",
+							null, 0, name, Property.DIR_IN);
+					thisComponentUserSettings.addProperty(p);
+				}
+				p.setAnyValue(this.getValue("y"));
+				//width
+				name = "PropertyW";
+				p = null;
+				if (thisComponentUserSettings.getProperty(name) != null)
+				{
+					p = thisComponentUserSettings.getProperty(name);
+				}
+				else
+				{ // add the property
+					p = NavajoFactory.getInstance().createProperty(n, name, "Integer",
+							null, 0, name, Property.DIR_IN);
+					thisComponentUserSettings.addProperty(p);
+				}
+				p.setAnyValue(this.getValue("w"));
+				//height
+				name = "PropertyH";
+				p = null;
+				if (thisComponentUserSettings.getProperty(name) != null)
+				{
+					p = thisComponentUserSettings.getProperty(name);
+				}
+				else
+				{ // add the property
+					p = NavajoFactory.getInstance().createProperty(n, name, "Integer",
+							null, 0, name, Property.DIR_IN);
+					thisComponentUserSettings.addProperty(p);
+				}
+				p.setAnyValue(this.getValue("h"));
+
+			}
+			else
+			{
+				logger.error("Couldn't save user settings because the expected navajo (" + mySettingsService + ") was not available.");
+			}
+		}
 	}
 
 	protected void loadMessages(Navajo n) {
@@ -365,6 +542,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	}
 
 	public void disposeComponent() {
+		saveUserSettings();
 		super.disposeComponent();
 		myContext.removeTipiInstance(this);
 		myNavajo = null;

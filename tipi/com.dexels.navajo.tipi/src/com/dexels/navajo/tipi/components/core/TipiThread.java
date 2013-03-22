@@ -114,7 +114,6 @@ public class TipiThread extends Thread implements Comparable<TipiThread>, Serial
 				return;
 			} catch (Throwable t) {
 				logger.error("Caught uncaught exception in thread:",t);
-				t.printStackTrace();
 			}
 		}
 	}

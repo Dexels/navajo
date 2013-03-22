@@ -124,26 +124,18 @@ public abstract class ScriptEnvironment implements Serializable {
 	}
 
 	public void dump(Navajo n) {
-		try {
-			if (n == null) {
-				System.err.println("[Null navajo]");
-			} else {
-				n.write(System.err);
-			}
-		} catch (NavajoException e) {
-			e.printStackTrace();
+		if (n == null) {
+			System.err.println("[Null navajo]");
+		} else {
+			n.write(System.err);
 		}
 	}
 
 	public void dump(Message m) {
-		try {
-			if (m == null) {
-				System.err.println("[Null message]");
-			} else {
-				m.write(System.err);
-			}
-		} catch (NavajoException e) {
-			e.printStackTrace();
+		if (m == null) {
+			System.err.println("[Null message]");
+		} else {
+			m.write(System.err);
 		}
 	}
 
@@ -428,10 +420,9 @@ public abstract class ScriptEnvironment implements Serializable {
 			System.err.println("Reserialize successful!");
 			return oo;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return c;
 	}
@@ -503,9 +494,9 @@ public abstract class ScriptEnvironment implements Serializable {
 			logger.debug("Returning instantiate map: "+obj);
 			return obj;
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return null;
 	}

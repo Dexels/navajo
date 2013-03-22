@@ -94,6 +94,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl implements ScopeLimit{
 			myFrame.getContentPane().add(mySuperPanel, BorderLayout.CENTER);
 			mySuperPanel.setLayout(new BorderLayout());
 			((SwingTipiContext) myContext).addTopLevel(myFrame);
+
 			// mySuperPanel.addC
 			return myFrame;
 		}
@@ -141,6 +142,28 @@ public class TipiFrame extends TipiSwingDataComponentImpl implements ScopeLimit{
 				}
 			});
 		}
+	}
+
+	public void disposeComponent() {
+		runSyncInEventThread(new Runnable() {
+
+			public void run() {
+				JFrame jj = (JFrame) getContainer();
+				if (jj != null) {
+					jj.dispose();
+					Container parent = jj.getParent();
+					if (parent != null) {
+						parent.remove(jj);
+					}
+				}
+
+				clearContainer();
+				myToplevel = null;
+				mySuperPanel = null;
+			}
+		});
+		TipiFrame.super.disposeComponent();
+
 	}
 
 	public void removeFromContainer(final Object c) {

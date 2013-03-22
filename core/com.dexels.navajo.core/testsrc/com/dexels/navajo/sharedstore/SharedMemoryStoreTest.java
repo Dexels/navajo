@@ -8,12 +8,12 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class MySerializableObject implements Serializable {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 7806593130574518792L;
 
 	private String field;
@@ -35,6 +35,10 @@ class MySerializableObject implements Serializable {
 }
 public class SharedMemoryStoreTest {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(SharedMemoryStoreTest.class);
+	
 	private SharedStoreInterface si;
 	boolean locked = false;
 	boolean threadAssertFailed = false;
@@ -244,7 +248,7 @@ public class SharedMemoryStoreTest {
 					try {
 						si.store("myparent", "mystoredobject" + index, objects[index], false, false);
 					} catch (SharedStoreException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 				}
 			};

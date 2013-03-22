@@ -5,8 +5,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-public class ScriptTestCreator {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class ScriptTestCreator {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ScriptTestCreator.class);
+	
 	public void create(File scriptDir, File outputDir) {
 		System.err.println("Entering file enumeration: "+scriptDir);
 		FileSystemEnumerator dss = new FileSystemEnumerator(scriptDir);
@@ -17,13 +23,12 @@ public class ScriptTestCreator {
 				createFile(in,ame,outputDir);
 			}
 		} catch (Throwable e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 		try {
 			createManifest(l,outputDir);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -63,12 +68,11 @@ public class ScriptTestCreator {
 		try {
 			writeJava(destFile, packagee, className);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
 	private void writeJava(File destFile, String packagee, String className) throws IOException {
-		// TODO Auto-generated method stub
 		if(destFile.exists()) {
 			System.err.println("Skipping existing file: "+destFile);
 			return;

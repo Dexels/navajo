@@ -9,11 +9,16 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardLocation;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class CustomClassLoader extends ClassLoader {
 
 	private final CustomClassloaderJavaFileManager fileManager;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CustomClassLoader.class);
 	
 //	private final static Logger logger = LoggerFactory
 //			.getLogger(CustomClassLoader.class);
@@ -48,8 +53,8 @@ public class CustomClassLoader extends ClassLoader {
 			IOUtils.copy(jfo.openInputStream(), baos);
 			return baos.toByteArray();
     	} catch (IOException e) {
-			e.printStackTrace();
-		}
+    		logger.error("Error: ", e);
+    	}
     	return null;
     }
     
@@ -64,8 +69,8 @@ public class CustomClassLoader extends ClassLoader {
 				return null;
 			}
     	} catch (IOException e) {
-			e.printStackTrace();
-		}
+    		logger.error("Error: ", e);
+    	}
 		return super.findResource(res);
 	}
 

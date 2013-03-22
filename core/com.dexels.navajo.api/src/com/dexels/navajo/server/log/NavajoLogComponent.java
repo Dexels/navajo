@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory;
 
 public class NavajoLogComponent implements LogListener {
 	private LogService logService;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoLogComponent.class);
+	
 	HashMap<Long, Logger> loggers = new HashMap<Long,Logger>();
 
 	public LogService getLogService() {
@@ -44,7 +48,7 @@ public class NavajoLogComponent implements LogListener {
 		try {
 			logReaderService.addLogListener(this);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -52,7 +56,7 @@ public class NavajoLogComponent implements LogListener {
 		try {
 			logReaderService.removeLogListener(this);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 

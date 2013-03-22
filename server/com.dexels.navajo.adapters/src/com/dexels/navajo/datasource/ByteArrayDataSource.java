@@ -9,9 +9,15 @@ import java.io.UnsupportedEncodingException;
 
 import javax.activation.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ByteArrayDataSource implements DataSource {
 
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ByteArrayDataSource.class);
+	
     private byte[] m_data;
     private String m_type;
     private String m_name;
@@ -34,7 +40,7 @@ public class ByteArrayDataSource implements DataSource {
 
             m_data = os.toByteArray();
         } catch (IOException ioex) {
-           ioex.printStackTrace(System.err);
+        	logger.error("Error: ", ioex);
         }
     }
 
@@ -67,7 +73,7 @@ public class ByteArrayDataSource implements DataSource {
         try {
             m_data = data.getBytes(charset);
         } catch (UnsupportedEncodingException uex) {
-            uex.printStackTrace(System.err);
+        	logger.error("Error: ", uex);
         }
     }
 

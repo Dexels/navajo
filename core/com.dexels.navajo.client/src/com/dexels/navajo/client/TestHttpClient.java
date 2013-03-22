@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -25,6 +28,9 @@ import com.jcraft.jzlib.DeflaterOutputStream;
 public class TestHttpClient {
 
 	private static Random rand = new Random(System.currentTimeMillis());
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TestHttpClient.class);
 	
 	public static String printHeader(Map<String, List<String>> header) {
 		
@@ -198,8 +204,7 @@ public class TestHttpClient {
 			 total += ( end - start )/1000.0;
 
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
-				//System.exit(1);
+				logger.error("Error: ", e);
 			}
 			 if ( i % 100 == 0) {
 				 System.err.println("i: " + i + ", rate: " + 1.0/(total/100));

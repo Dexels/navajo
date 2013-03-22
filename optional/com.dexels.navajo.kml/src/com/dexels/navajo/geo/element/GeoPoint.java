@@ -78,6 +78,14 @@ public class GeoPoint extends GeoElement {
 		c.addChild(point);
 		return c;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	
+
+	
 	public boolean equals(Object o) {
 		if(!(o instanceof GeoPoint)) {
 			return false;
@@ -108,5 +116,5 @@ public class GeoPoint extends GeoElement {
 		e = new Double(g.lon);
 		return d.compareTo(e);
 	}
-	
+
 }

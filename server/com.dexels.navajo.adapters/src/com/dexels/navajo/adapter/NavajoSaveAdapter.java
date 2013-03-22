@@ -1,7 +1,6 @@
 package com.dexels.navajo.adapter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -136,19 +135,16 @@ private final static Logger logger = LoggerFactory
         fw.flush();
         fw.close();
       }
-      catch (FileNotFoundException ex1) {
-        ex1.printStackTrace();
-      }
       catch (IOException ex1) {
-        ex1.printStackTrace();
-     }
+    	  throw new UserException("Can not access file: "+fileName, ex1);
+      }
      finally {
        if (fw!=null) {
         try {
           fw.close();
         }
         catch (IOException ex2) {
-          ex2.printStackTrace();
+        	logger.error("Error: ", ex2);
         }
        }
      }
@@ -172,7 +168,7 @@ private final static Logger logger = LoggerFactory
             fw.close();
           }
           catch (IOException ex3) {
-            ex3.printStackTrace();
+        	  logger.error("Error: ", ex3);
           }
          }
        }

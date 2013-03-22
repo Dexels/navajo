@@ -16,6 +16,8 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin;
 
@@ -33,6 +35,7 @@ public class PreferenceComponentFactory {
 class ProjectViewLabelProvider extends LabelProvider implements ILabelProvider {
 
 
+	
     @Override
 	public String getText(Object element) {
         IProject ip = (IProject)element;
@@ -43,7 +46,10 @@ class ProjectViewLabelProvider extends LabelProvider implements ILabelProvider {
 class ProjectViewContentProvider implements IStructuredContentProvider {
 
     private final String myNature;
-    public ProjectViewContentProvider(String nature) {
+	private final static Logger logger = LoggerFactory
+			.getLogger(ProjectViewContentProvider.class);
+
+	public ProjectViewContentProvider(String nature) {
         myNature = nature;
     }
 
@@ -59,7 +65,7 @@ class ProjectViewContentProvider implements IStructuredContentProvider {
             l = NavajoScriptPluginPlugin.getProjectsByNature(myNature);
             return l.toArray();
         } catch (CoreException e) {
-            e.printStackTrace();
+        	logger.error("Error: ", e);
         }
         return new Object[]{};
     }

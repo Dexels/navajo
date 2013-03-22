@@ -40,12 +40,8 @@ public class ContinuationMapUtils {
 
 	//
 
-	protected static void scheduleAndContinue(ContinuationRunnable continueWith) {
-		try {
+	protected static void scheduleAndContinue(ContinuationRunnable continueWith) throws IOException {
 			SchedulerRegistry.getScheduler().submit(continueWith, false);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

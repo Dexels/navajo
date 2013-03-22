@@ -60,7 +60,6 @@ public class ProxyMap implements Mappable {
                                      (password == null ? access.rpcPwd : password), -1);
         access.setOutputDoc(out);
       } catch (Exception e) {
-        e.printStackTrace();
         throw new UserException(-1, e.getMessage());
       }
   }
