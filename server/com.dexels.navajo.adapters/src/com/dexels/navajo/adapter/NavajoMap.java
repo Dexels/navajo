@@ -166,6 +166,7 @@ public void setMyResponseListener(NavajoMapResponseListener myResponseListener) 
   }
 
 private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
+private static final long MAX_WAITTIME = 300000;
 
   public boolean isBlock() {
 	  return block;
@@ -214,7 +215,7 @@ private Object waitForResult = new Object();
 		  //
 		  synchronized (waitForResult) {
 			  try {
-				  waitForResult.wait();
+				  waitForResult.wait(MAX_WAITTIME);
 			  } catch (InterruptedException e) {
 				  logger.error("Error: ", e);
 			  }
@@ -1483,14 +1484,19 @@ public void setTaskId(String t) {
    */
   @Override
   public void onFail(Throwable t) throws IOException {
-	  Navajo response = NavajoFactory.getInstance().createNavajo();
-      Message error = NavajoFactory.getInstance().createMessage(response, "error");
-      response.addMessage(error);
-      Property msg = NavajoFactory.getInstance().createProperty(response, "message", Property.STRING_PROPERTY, t.getMessage(), 0, "", "");
-      Property code = NavajoFactory.getInstance().createProperty(response, "code", Property.STRING_PROPERTY, "unknown", 0, "", "");
-      error.addProperty(msg);
-      error.addProperty(code);
-      onResponse(response);
+	  Navajo response = null;
+	  try {
+		  response = NavajoFactory.getInstance().createNavajo();
+		  Message error = NavajoFactory.getInstance().createMessage(response, "error");
+		  response.addMessage(error);
+		  Property msg = NavajoFactory.getInstance().createProperty(response, "message", Property.STRING_PROPERTY,
+				  ( t != null ? t.getMessage() : "unknown" ), 0, "", "");
+		  Property code = NavajoFactory.getInstance().createProperty(response, "code", Property.STRING_PROPERTY, "unknown", 0, "", "");
+		  error.addProperty(msg);
+		  error.addProperty(code);
+	  } finally {
+		  onResponse(response);
+	  }
   }
   
   @Override
