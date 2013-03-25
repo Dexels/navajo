@@ -468,18 +468,22 @@ public class TestMessage {
 		  a.addMessage(a1);
 		  String type = ( i == 0 ? "integer" : "" );
 		  Property p = NavajoFactory.getInstance().createProperty(testDoc, "MyProp", type, ""+i, 0, "", "in");
+		  p.setAnyValue(i);
 		  a1.addProperty(p);
 		  Property p2 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp2", type, ""+i, 0, "", "in");
+		  p2.setAnyValue(i);
 		  a1.addProperty(p2);
 		  // Set type of first child to definition.
 		  if ( i == 0 ) {
 			  a1.setType(Message.MSG_TYPE_DEFINITION);
 		  }
 	  }
+	  testDoc.write(System.err);
+	  
 	  Assert.assertEquals(1, a.getArraySize());
 	  Assert.assertNotNull(a.getDefinitionMessage());
 	  Assert.assertEquals("integer", a.getAllMessages().get(0).getProperty("MyProp").getType());
-	  testDoc.write(System.err);
+	
   }
   
   @Test

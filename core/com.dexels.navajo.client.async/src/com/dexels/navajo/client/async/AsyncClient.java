@@ -34,7 +34,7 @@ public class AsyncClient {
 	private static AsyncClient instance;
 
 	private final static int CONNECT_TIMEOUT = 2000;
-	private final static int READ_TIMEOUT = 60000;
+	private final static int READ_TIMEOUT = 300000;
 	private final static int MAX_CONNECTIONS_PER_ADDRESS = 200;
 	
 	public synchronized int getActualCalls() {

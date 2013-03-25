@@ -2,12 +2,18 @@ package com.dexels.navajo.server.enterprise.tribe;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 
 public interface TribeManagerInterface {
 
+	public Lock getLock(String name);
+	
+	public void releaseLock(Lock lock);
+	
+	
 	/**
 	 * Terminate the Tribal Membership.
 	 */

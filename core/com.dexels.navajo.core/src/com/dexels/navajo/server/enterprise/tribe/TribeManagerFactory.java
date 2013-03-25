@@ -96,4 +96,8 @@ public class TribeManagerFactory {
 		instance.terminate();
 		instance = null;
 	}
+
+	public static void setInstance(TribeManagerInterface tm) {
+		instance = tm;
+	}
 }
