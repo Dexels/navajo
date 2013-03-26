@@ -118,6 +118,21 @@ public class VaadinTipiContext extends TipiContext {
 		logger.info("Splash {}",s);
 
 	}
+	
+	@Override
+	public void showWarning(String text, String title)
+	{
+		Notification not = new Notification(text, title, Notification.TYPE_WARNING_MESSAGE);
+		mainWindow.showNotification(not);
+	}
+
+	
+	@Override
+	public void showError(String text, String title)
+	{
+		Notification not = new Notification(text, title, Notification.TYPE_ERROR_MESSAGE);
+		mainWindow.showNotification(not);
+	}
 
 	@Override
 	public void showInfo(String text, String title) {
