@@ -38,7 +38,7 @@ public class NavajoTunnelComponentImpl {
 		} else {
 			remotePort = Integer.parseInt(""+remotePortString);
 		}
-		final Object sshPortString = settings.get("remoteport");
+		final Object sshPortString = settings.get("sshport");
 		Integer sshPort = null;
 		if (sshPortString instanceof Integer) {
 			sshPort = (Integer) sshPortString;
