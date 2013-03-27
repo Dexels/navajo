@@ -1,0 +1,15 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+  <OCD description="Navajo Tunnel Configuration" name="Navajo Tunnel Configuration" id="navajo.tunnel">
+    <AD name="username"  id="username" required="true" type="String" default=""/>
+    <AD name="host"  id="host" required="true" type="String" default=""/>
+    <AD name="keyfile"  id="keyfile" required="true" type="String" default=""/>
+    <AD name="remoteport"  id="remoteport" required="true" type="Integer" default=""/>
+    <AD name="localport"  id="localport" required="true" type="Integer" default=""/>
+    <AD name="sshport"  id="sshport" required="true" type="Integer" default="22"/>
+  </OCD>
+
+  <Designate factoryPid="navajo.tunnel" >
+     <Object ocdref="navajo.tunnel"/>
+  </Designate>
+
+</metatype:MetaData>
