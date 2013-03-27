@@ -106,7 +106,7 @@ public class TipiPerformMethod extends TipiAction {
 		Operand method = getEvaluatedParameter("method", event);
 		TipiDataComponent evalTipi = null;
 		Operand tipi = getEvaluatedParameter("tipipath", event);
-		if (tipi != null) {
+		if (tipi != null && tipi instanceof TipiDataComponent) {
 			evalTipi = (TipiDataComponent) tipi.value;
 		}
 //		myContext.getClient().setCondensed(condenseCheck);
