@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
-    <feature resolver="(obr)" name='navajo.core' version='1.0.26' start-level='80'  >
+    <feature resolver="(obr)" name='navajo.core' version='1.0.27' start-level='80'  >
 	    <details>Navajo Core Components</details>
-		<feature version="[2.3.0,3.1.0)">scr</feature>
-		<feature version="[2.3.0,3.1.0)">eventadmin</feature>
 
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.66</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.6</bundle>
@@ -25,7 +23,9 @@
 	</feature>
 	<feature resolver="(obr)" name='pax-http' version='3.0.0.M3' start-level='81' >
     </feature>
-    <feature resolver="(obr)" name='navajo.server' version='1.0.11' start-level='81' >
+	<feature resolver="(obr)" name='pax-war' version='3.0.0.M3' start-level='81' >
+    </feature>
+	<feature resolver="(obr)" name='navajo.server' version='1.0.11' start-level='81' >
 		<feature version="[1.0.15,2)">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/1.1.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.14</bundle>

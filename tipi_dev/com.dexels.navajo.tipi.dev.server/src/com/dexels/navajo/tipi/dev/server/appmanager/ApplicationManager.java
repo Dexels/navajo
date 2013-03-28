@@ -25,6 +25,7 @@ public interface ApplicationManager {
 	
 	public String getClientSecret();
 	
+	// Members of this organization will be granted access
 	public String getOrganization();
 
 	public String getApplicationName();
