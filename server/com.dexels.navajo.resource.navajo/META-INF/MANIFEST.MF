@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Http HTTP connector
-Bundle-SymbolicName: com.dexels.navajo.resource.http
+Bundle-SymbolicName: com.dexels.navajo.resource.navajo
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
