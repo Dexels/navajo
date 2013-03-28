@@ -27,6 +27,8 @@ import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
+import com.dexels.navajo.sharedstore.SharedFileStore;
+import com.dexels.navajo.sharedstore.SharedStoreInterface;
 
 /*
  * The default NavajoConfig class.
@@ -41,6 +43,8 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 	public String scriptPath;
 	
 	private String repositoryClass = "com.dexels.navajo.server.SimpleRepository";
+	private String sharedStoreClass;
+	
 	private String auditLevel;
 	private HashMap<String,Object> dbProperties = new HashMap<String,Object>();
 	public String store;
@@ -242,6 +246,10 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 					
 			if ( body.getProperty("repository/class") != null ) {
 				repositoryClass = body.getProperty("repository/class").getValue();
+			}
+			
+			if ( body.getProperty("sharedstore/class") != null ) {
+				sharedStoreClass = body.getProperty("sharedstore/class").getValue();
 			}
 			
     		// Read navajostore parameters.
@@ -527,6 +535,22 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     	return repository;
     }
 
+    public final SharedStoreInterface getSharedStore() {
+    	try {
+    		if ( sharedStoreClass != null ) {
+    			Class c = Class.forName(sharedStoreClass);
+    			SharedStoreInterface ssi = (SharedStoreInterface) c.newInstance();
+    			return ssi;
+    		} else {
+    			logger.warn("No SharedStore implementation defined, using default: SharedFileStore");
+    			return new SharedFileStore();
+    		}
+    	} catch (Exception e) {
+    		logger.error("Could not instantiate SharedStore implementation.");
+    		return null;
+    	}
+    }
+    
     /*
      * Returns the instance of the Persistence Manager.
      */
