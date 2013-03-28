@@ -18,6 +18,8 @@ import com.dexels.navajo.server.SimpleRepository;
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
+import com.dexels.navajo.sharedstore.SharedFileStore;
+import com.dexels.navajo.sharedstore.SharedStoreInterface;
 
 public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigInterface {
 
@@ -242,6 +244,17 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	@Override
 	public Object getParameter(String string) {
 		return null;
+	}
+
+	@Override
+	public SharedStoreInterface getSharedStore() {
+		try {
+			return new SharedFileStore();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 
