@@ -1538,20 +1538,19 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					hosturl = navajoServer;
 					username = navajoUsername;
 					password = navajoPassword;
-					String url = getClient().getServerUrl();
+//					String url = getClient().getServerUrl();
 					getClient().setServerUrl(hosturl);
 					getClient().setUsername(username);
 					getClient().setPassword(password);
 					reply = getClient().doSimpleSend(n, service, ch,
 							expirtationInterval);
-					getClient().setServerUrl(url);
+//					getClient().setServerUrl(url);
 					debugLog("data", "simpleSend to host: " + hosturl
 							+ " username: " + username + " method: " + service);
 			} else {
 				reply = getClient().doSimpleSend(n, service, ch,
 						expirtationInterval);
-				debugLog("data", "simpleSend client: "
-						+ getClient().getClientName() + " method: " + service);
+				debugLog("data", "simpleSend method: " + service);
 			}
 		} catch (Throwable ex) {
 			logger.error("Sending problem:",ex);
@@ -2269,18 +2268,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		// newline
 
 		return result;
-	}
-
-	public URL getBinaryUrl(Binary b) {
-		String url = getClient().getServerUrl();
-		URL u;
-		try {
-			u = new URL(url + "?GetBinary=true&handle=" + b.getHandle());
-			return u;
-		} catch (MalformedURLException e) {
-			logger.error("Error: ",e);
-			return null;
-		}
 	}
 
 	/**

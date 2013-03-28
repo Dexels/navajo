@@ -43,7 +43,7 @@ public class NavajoRemoteContext extends NavajoContext {
 		if(myClient==null) {
 			throw new ClientException(1,-1,"No client has been set up!");
 		}
-		logger.info("Calling to server: "+myClient.getServerUrl()+" username: "+myClient.getUsername()+" pass: "+myClient.getPassword()+" hash: "+myClient.hashCode());
+//		logger.info("Calling to server: "+myClient.getServerUrl()+" username: "+myClient.getUsername()+" pass: "+myClient.getPassword()+" hash: "+myClient.hashCode());
 		if(input==null) {
 			input = NavajoFactory.getInstance().createNavajo();
 		}

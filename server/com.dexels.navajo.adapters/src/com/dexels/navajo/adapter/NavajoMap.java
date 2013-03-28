@@ -669,14 +669,10 @@ private Object waitForResult = new Object();
 		  
 		  if (server != null) { // External request.
 			  ClientInterface nc = NavajoClientFactory.createClient();
-//			  if (keyStore != null) {
-//				  nc.setSecure(keyStore, keyPassword, true);
-//			  }
 			  if ( !block ) {
 
 				  try {
 					  AsyncClient ac = AsyncClientFactory.getInstance();
-					  //AsyncClient ac = new AsyncClient(server.startsWith("http") ? server : "http://" + server, username, password);
 					  ac.callService(server.startsWith("http") ? server : "http://" + server, username, password, outDoc, method, this);
 				  } catch (Exception e) {
 					  throw new UserException(-1, e.getMessage(), e);

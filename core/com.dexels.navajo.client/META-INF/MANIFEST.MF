@@ -8,7 +8,6 @@ Bundle-Activator: navajoclient.Version
 Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.client;uses:="com.dexels.navajo.document",
  com.dexels.navajo.client.context;uses:="com.dexels.navajo.document",
- com.dexels.navajo.client.logger;uses:="com.dexels.navajo.document",
  com.dexels.navajo.client.nql;uses:="com.dexels.navajo.client.context,com.dexels.navajo.client.nql.internal",
  com.dexels.navajo.client.nql.internal;x-internal:=true,
  com.dexels.navajo.client.nql.internal.command;x-internal:=true,
