@@ -20,12 +20,31 @@ public class NavajoTunnelComponentImpl {
 	private NavajoIOConfig navajoConfig;
 	
 	public void activate(Map<String,Object> settings) throws Exception{
+		logger.info("Setting up tunnel with settings: {}",settings);
 		String username = (String) settings.get("username");
 		String host = (String) settings.get("host");
 		String keyfile = (String) settings.get("keyfile");
-		Integer localPort = (Integer) settings.get("localport");
-		Integer remotePort = (Integer) settings.get("remoteport");
-		Integer sshPort = (Integer) settings.get("sshport");
+		final Object localPortString = settings.get("localport");
+		Integer localPort = null;
+		if (localPortString instanceof Integer) {
+			localPort = (Integer) localPortString;
+		} else {
+			localPort = Integer.parseInt(""+localPortString);
+		}
+		final Object remotePortString = settings.get("remoteport");
+		Integer remotePort = null;
+		if (remotePortString instanceof Integer) {
+			remotePort = (Integer) remotePortString;
+		} else {
+			remotePort = Integer.parseInt(""+remotePortString);
+		}
+		final Object sshPortString = settings.get("sshport");
+		Integer sshPort = null;
+		if (sshPortString instanceof Integer) {
+			sshPort = (Integer) sshPortString;
+		} else {
+			sshPort = Integer.parseInt(""+sshPortString);
+		}
 		connect(username, host, remotePort, localPort, sshPort, keyfile);
 	}
 

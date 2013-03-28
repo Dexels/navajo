@@ -19,7 +19,6 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -62,7 +61,7 @@ public static final int DIRECT_PROTOCOL = 0;
   private int loadBalancingMode = LBMODE_MANUAL;
   private String username = null;
   private String password = null;
-  protected boolean condensed = true;
+  private boolean condensed = true;
 
   private String[] serverUrls;
   private double[] serverLoads;
@@ -73,7 +72,7 @@ public static final int DIRECT_PROTOCOL = 0;
 			.getLogger(NavajoClient.class);
 	//  private NavajoPushSession pushSession = null;
   
-  protected int protocol = HTTP_PROTOCOL;
+  private int protocol = HTTP_PROTOCOL;
   private boolean setSecure = false;
 //  private SSLSocketFactory sslFactory = null;
   //private String keystore, passphrase;
@@ -83,7 +82,6 @@ public static final int DIRECT_PROTOCOL = 0;
   THIS IS A SAFE VALUE CAUSE INTEGRITY WORKER DOES NOT YET WORKER OVER MULTIPLE SERVER INSTANCES!!! */
   
   private int currentServerIndex;
-  private transient Thread keepAliveThread = null;
   //private static int instances = 0;
   
   // Warning: Not thread safe!
@@ -91,8 +89,6 @@ public static final int DIRECT_PROTOCOL = 0;
   private final Map<String,Long> disabledServers = new HashMap<String,Long>();
 
 
-  private long lastActivity;
-	private int keepAliveDelay;
 	private int globalRetryCounter = 0;
 	private String localeCode = null;
 	private String subLocale;
@@ -101,80 +97,16 @@ public static final int DIRECT_PROTOCOL = 0;
 	private SystemInfoProvider systemInfoProvider;
 	private SessionTokenProvider sessionTokenProvider;
 
-//	private static boolean silent = true;
-//	  
-//  private boolean killed = false;
-//  private boolean pingStarted = false;
-//  
-  // Disable for one minute. Bit short, should be maybe an hour, but better for debugging.
   private static final long serverDisableTimeout = 60000;
-  
 
-
-  /**
-   * Returns "http"
-   * @return String
-   */
-  public final String getClientName() {
-    return "http";
-  }
-
-  protected NavajoClient() {
-
+   NavajoClient() {
    }
-
-	
-	  //instances++;
-	  //logger.info("NavajoClient instances: " + instances);
-
-  /**
-   * Construct a NavajoClient with a given protocol
-   * @param protocol int
-   */
-  public NavajoClient(int protocol) {
-	this();
-    this.protocol = protocol;
-  }
-
-  
-  /**
-   * Not used
-   * @param config URL
-   * @throws ClientException
-   */
-  public final void init(URL config) throws ClientException {
-    // not implemented
-  }
-
-  /**
-   * Gets this NavajoClient object's username
-   * @return String
-   */
-  public final String getUsername() {
-    return username;
-  }
-
-  /**
-   * Gets this NavajoClient object's password
-   * @return String
-   */
-  public final String getPassword() {
-//    logger.info("Getting password: "+password);
-    return password;
-  }
-
-  /**
-   * Gets this NavajoClient object's server URL
-   * @return String
-   */
-  public final String getServerUrl() {
-    return getCurrentHost();
-  }
 
   /**
    * Set the username
    * @param s String
    */
+  @Override
   public final void setUsername(String s) {
     username = s;
   }
@@ -184,6 +116,7 @@ public static final int DIRECT_PROTOCOL = 0;
    * @param url String
    * USE SET SERVERURLS
    */
+  @Override
   public final void setServerUrl(String url) {
 	  serverUrls = new String[]{url};
 	  setServers(serverUrls);
@@ -193,17 +126,9 @@ public static final int DIRECT_PROTOCOL = 0;
    * Set the password
    * @param pw String
    */
+  @Override
   public final void setPassword(String pw) {
     password = pw;
-  }
-
-  /**
-   * Sets the retry interval in milliseconds, this is the interval between the return of a request and the consecutive
-   * retry request. Retries will be done when the target host can not be reached or returned an connection error
-   * @param interval long
-   */
-  public final void setRetryInterval(long interval) {
-    retryInterval = interval;
   }
 
   /**
@@ -224,6 +149,7 @@ public static final int DIRECT_PROTOCOL = 0;
    * @throws ClientException
    * @return Navajo
    */
+  @Override
   public final Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval) throws ClientException {
     if (v != null) {
       v.clearConditionErrors();
@@ -243,6 +169,7 @@ public static final int DIRECT_PROTOCOL = 0;
    * @throws ClientException
    * @return Navajo
    */
+  @Override
   public final Navajo doSimpleSend(Navajo out, String method) throws ClientException {
     return doSimpleSend(out, method, -1);
   }
@@ -257,7 +184,7 @@ public static final int DIRECT_PROTOCOL = 0;
    * @throws ClientException
    * @return Navajo
    */
-  public final Navajo doSimpleSend(Navajo out, String method, long expirationInterval) throws ClientException {
+  private final Navajo doSimpleSend(Navajo out, String method, long expirationInterval) throws ClientException {
     if (username == null) {
       throw new ClientException(1, 1, "No username set!");
     }
@@ -271,29 +198,6 @@ public static final int DIRECT_PROTOCOL = 0;
   }
 
 
-  /**
-   * Internal function for creating a URLConnection based on this Client's security settings
-   * @param url URL
-   * @throws IOException
-   * @return URLConnection
-   */
-  public URLConnection createUrlConnection(URL url) throws IOException {
-//    URL url;
-//    if (setSecure) {
-//      url = new URL("https://" + name);
-//    }
-//    else {
-//      url = new URL("http://" + name);
-//    }
-    //logger.info("in doTransaction: opening url: " + url.toString());
-	  HttpURLConnection con = null;
-      con = (HttpURLConnection) url.openConnection();
-    con.setDoOutput(true);
-    con.setDoInput(true);
-    con.setUseCaches(false);
-    con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
-    return con;
-  }
 
   private final void copyResource(OutputStream out, InputStream in){
 	  BufferedInputStream bin = new BufferedInputStream(in);
@@ -322,7 +226,7 @@ public static final int DIRECT_PROTOCOL = 0;
 	  }
   }
   
-  protected final String readErrorStream(final HttpURLConnection myCon) {
+  private final String readErrorStream(final HttpURLConnection myCon) {
 	  try {
 		  if ( myCon != null ) {
 			  int respCode = myCon.getResponseCode();
@@ -339,6 +243,7 @@ public static final int DIRECT_PROTOCOL = 0;
 			  return "HTTP Status error " + respCode;
 		  }
 	  } catch (IOException ioe) {
+		  logger.error("Error: "+ioe);
 	  }
 	  return null;
   }
@@ -352,7 +257,7 @@ public static final int DIRECT_PROTOCOL = 0;
    */
   
   @SuppressWarnings("resource")
-protected Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, NavajoException {
+private Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, NavajoException {
     URL url;
     //useCompression = false;
     
@@ -507,6 +412,7 @@ protected Navajo doTransaction(String name, Navajo d, boolean useCompression, bo
    * @throws ClientException
    * @return Navajo
    */
+  @Override
   public final Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval) throws ClientException {
     return doSimpleSend(out, server, method, user, password, expirationInterval, allowCompression, false);
   }
@@ -550,6 +456,7 @@ protected Navajo doTransaction(String name, Navajo d, boolean useCompression, bo
    * @throws ClientException
    * @return Navajo
    */
+  @Override
   public final Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression, boolean allowPreparseProxy) throws ClientException {
     // NOTE: prefix persistence key with method, because same Navajo object could be used as a request
     // for multiple methods!
@@ -709,10 +616,6 @@ protected Navajo doTransaction(String name, Navajo d, boolean useCompression, bo
 	  }
   }
 
-  protected boolean shouldOutputStreamClose() {
-	  return true;
-  }
-
 
 /**
    * Add piggyback data to header.
@@ -779,7 +682,6 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     	}
     }
     catch (IOException uhe) {
-    	//readErrorStream(myCon);
     	logger.info(uhe.getMessage());
     	if (attemptsLeft <= 0) {
     		disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
@@ -789,8 +691,6 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     	}
     	else {
     		attemptsLeft--;
-//    		logger.info("Sending: ");
-//    		out.write(System.err);
     		return retryTransaction(server, out, false, allowPreparseProxy, attemptsLeft, interval, n);
     	}
     }
@@ -798,45 +698,6 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
   }
 
 
-  /**
-   * Perform a synchronous webservice call
-   * @param method String
-   * @param messagePath String
-   * @throws ClientException
-   * @return Message
-   */
-  public final Message doSimpleSend(String method, String messagePath) throws ClientException {
-    return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method, messagePath);
-  }
-
-  /**
-   * Perform a synchronous webservice call
-   * @param n Navajo
-   * @param method String
-   * @param messagePath String
-   * @throws ClientException
-   * @return Message
-   */
-  public final Message doSimpleSend(Navajo n, String method, String messagePath) throws ClientException {
-    return doSimpleSend(n, method).getMessage(messagePath);
-  }
-
-  /**
-   * Perform a synchronous webservice call
-   * @param n Navajo
-   * @param method String
-   * @param v ConditionErrorHandler
-   * @throws ClientException
-   * @return Navajo
-   */
-  public final Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws ClientException {
-    if (v != null) {
-      v.clearConditionErrors();
-    }
-    Navajo result = doSimpleSend(n, method);
-    checkValidation(result, v);
-    return result;
-  }
 
   private final void checkValidation(Navajo result, ConditionErrorHandler v) {
     Message conditionErrors = result.getMessage("ConditionErrors");
@@ -851,52 +712,17 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
    * @throws ClientException
    * @return Navajo
    */
+  @Override
   public final Navajo doSimpleSend(String method) throws ClientException {
     return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method);
   }
 
-  /**
-   * Perform a synchronous webservice call
-   * @param method String
-   * @param expirationInterval long
-   * @throws ClientException
-   * @return Navajo
-   */
-  public final Navajo doSimpleSend(String method, long expirationInterval) throws ClientException {
-    return doSimpleSend(NavajoFactory.getInstance().createNavajo(), method, expirationInterval);
-  }
-
-
-
-
-  public int getQueueSize() {
-    return 0;
-  }
-
-  public int getActiveThreads() {
-    return -1;
-  }
-
-  public void setCondensed(boolean b) {
-    condensed = b;
-  }
-
-  
-
- 
-
-public void destroy() {
-		
-}
-
-
-
+  @Override
 public void setServers(String[] servers) {
 	serverUrls = servers;
 	serverLoads = new double[serverUrls.length];
 	if (servers.length>0) {
 		currentServerIndex = randomize.nextInt(servers.length);
-//		logger.info("Starting at server # "+currentServerIndex);
 	}
 //	logger.info("servers = " + servers[0] + ", loadBalancingMode = " + loadBalancingMode);
 //	if ( loadBalancingMode != LBMODE_MANUAL ) {
@@ -905,6 +731,7 @@ public void setServers(String[] servers) {
 //	}
 }
 
+  @Override
 public String getCurrentHost() {
 	if (serverUrls!=null && serverUrls.length>0) {
 		return serverUrls[currentServerIndex];
@@ -912,6 +739,10 @@ public String getCurrentHost() {
 	return null;
 }
 
+  @Override
+  /**
+   * I think only used in testing
+   */
 public void setCurrentHost(String host) {
 	for (int i = 0; i < serverUrls.length; i++) {
 		if ( serverUrls[i].equals(host) ) {
@@ -922,10 +753,6 @@ public void setCurrentHost(String host) {
 	}
 }
 
-public final String getCurrentHost(int serverIndex) {
-		return serverUrls[serverIndex];
-}
-
 /**
  * Switch the current server.
  * If force flag is set. The server with the minimum load is ALWAYS set as the current server.
@@ -933,7 +760,7 @@ public final String getCurrentHost(int serverIndex) {
  * For LBMODE_DYNAMIC_MINLOAD the server is ALWAYS switched.
  * @param force
  */
-public final void switchServer(boolean force) {
+private final void switchServer(boolean force) {
 	
 	if ( loadBalancingMode == LBMODE_MANUAL ) {
 		return;
@@ -968,95 +795,12 @@ public final void switchServer(boolean force) {
 	
 }
 
-//  public static void main(String[] args) throws Exception {
-//	  System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
-//		
-//	  NavajoClient nc = new NavajoClient();
-//	  //nc.setSecure("/home/arjen/BBKY84H.keystore", "kl1p_g31t", true);
-//	  Navajo out = NavajoFactory.getInstance().createNavajo();
-//	  
-//	  Navajo aap = nc.doSimpleSend(out, "ficus:3000/sportlink/knvb/servlet/Postman", "InitBM", "ROOT", "", -1);
-//	  //out.write(System.err);
-//	  //logger.info("RESPONSE:");
-//	  //aap.write(System.err);
-//	  
-//	  Navajo dummy = NavajoFactory.getInstance().createNavajo();
-//	  BufferedInputStream stream = nc.retryTransaction("ficus:3000/sportlink/knvb/servlet/Postman", out, false, 3, 4000, dummy);
-//	  Navajo aap2 = NavajoFactory.getInstance().createNavajo(stream);
-//	  //aap2.write(System.err);
-//	  
-//  }
-
-	private void checkKeepalive() throws ClientException {
-		if (keepAliveDelay>0) {
-			if (System.currentTimeMillis()-keepAliveDelay>lastActivity) {
-				doSimpleSend("navajo/InitKeepAlive");
-			}
-		}
-	}
-	/** sets the keepalive frequency. It will send a keepalive event (single threaded) after millis
-	 *  milliseconds of inactivity.
-	 * @throws ClientException 
-	 * @throws ClientException 
-	 */
-
-	public void setKeepAlive(int millis) throws ClientException {
-		if (keepAliveDelay>0 && keepAliveDelay < 5000) {
-			throw new IllegalArgumentException("setKeepAlive: ");
-		}
-		keepAliveDelay = millis;
-//		checkKeepalive();
-		if (keepAliveThread==null) {
-			keepAliveThread = new Thread(new Runnable(){
-				public void run() {
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						logger.error("Error: ", e);
-					}
-					while (keepAliveDelay>0) {
-						try {
-							checkKeepalive();
-							Thread.sleep(keepAliveDelay);
-						} catch(Throwable t) {
-							logger.error("Error: ", t);
-						}
-					
-					}
-					keepAliveThread = null;
-				}},"KeepAliveThread");
-			keepAliveThread.setDaemon(true);
-			keepAliveThread.start();
-		}
-		
-	}
-
-	public Navajo doSpecificSend(Navajo out, String method, int serverIndex)  throws ClientException{
-			    if (username == null) {
-			      throw new ClientException(1, 1, "No username set!");
-			    }
-			    if (password == null) {
-			      throw new ClientException(1, 1, "No password set!");
-			    }
-			    if (getCurrentHost() == null) {
-			      throw new ClientException(1, 1, "No host set!");
-			    }
-
-			    return doSimpleSend(out, getCurrentHost(serverIndex), method, username, password, -1, allowCompression, true);
-		}
-
-
-
-	public void setLocaleCode(String locale) {
+	@Override
+public void setLocaleCode(String locale) {
 		this.localeCode  = locale;
 	}
 
-	public String getLocaleCode() {
-		return this.localeCode;
-	}
-
-
-
+	@Override
 	public void setSubLocaleCode(String locale) {
 		this.subLocale = locale;
 	}
@@ -1107,17 +851,8 @@ public final void switchServer(boolean force) {
 		
 		return doSimpleSend(out, method);
 	}
-	public void dispose() {
-//		killed = true;
-	}
-	
-	public void init(String rootPath, String serverXmlPath) throws ClientException {
-	}
 
-	public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format) throws NavajoException {
-		return getArrayMessageReport(m, propertyNames, propertyTitles, columnWidths, format, null,null);
-	}
-	
+	@Override
 	public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format, String orientation, int[] margins) throws NavajoException {
 //		Message m = in.getMessage(messagePath);
 		if(m==null) {
@@ -1196,28 +931,17 @@ public final void switchServer(boolean force) {
 		}
 	}
 
-	public int getLoadBalancingMode() {
-		return loadBalancingMode;
-	}
-
-	public void setLoadBalancingMode(int i) {
-		loadBalancingMode = i;
-	}
-	
-
-	
-	public boolean isAllowCompression() {
-		return allowCompression;
-	}
-
+	@Override
 	public void setAllowCompression(boolean allowCompression) {
 		this.allowCompression = allowCompression;
 	}
 
+	@Override
 	public void setForceGzip(boolean forceGzip) {
 		this.forceGzip = forceGzip;
 	}
 
+	@Override
 	public SystemInfoProvider getSystemInfoProvider() {
 		if(this.systemInfoProvider==null) {
 			return SystemInfoFactory.getSystemInfo();
@@ -1225,10 +949,12 @@ public final void switchServer(boolean force) {
 		return systemInfoProvider;
 	}
 	
+	@Override
 	public void setSystemInfoProvider(SystemInfoProvider sip) {
 		this.systemInfoProvider = sip;
 	}	
 	
+	@Override
 	public SessionTokenProvider getSessionTokenProvider() {
 		if(sessionTokenProvider==null) {
 			return SessionTokenFactory.getSessionTokenProvider();
@@ -1236,18 +962,8 @@ public final void switchServer(boolean force) {
 		return this.sessionTokenProvider;
 	}
 	
+	@Override
 	public void setSessionTokenProvider(SessionTokenProvider stp) {
 		this.sessionTokenProvider = stp;
-	}
- 
-	public static void main(String [] args) throws Exception {
-		ClientInterface nc = NavajoClientFactory.createClient();
-//		nc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
-//		nc.doTransaction("penelope1.dexels.com/sportlink/knvb/servlet/Postman", NavajoFactory.getInstance().createNavajo(), false, false);
-		nc.setUsername("ROOT");
-		nc.setPassword("ROOT");
-		nc.setServerUrl("spiritus.dexels.nl:9080/JsSportlink/Comet");
-		Navajo res = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "tests/InitNavajoMapTest3");
-		res.write(System.err);
 	}
 }

@@ -12,7 +12,6 @@ Bundle-ClassPath: lib/jetty-client-7.0.2.v20100331.jar,
  lib/jetty-util-7.0.2.v20100331.jar,.
 Bundle-Activator: navajoasyncclient.Version
 Import-Package: com.dexels.navajo.client,
- com.dexels.navajo.client.logger,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.script.api,
  com.dexels.navajo.server,
