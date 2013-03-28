@@ -20,16 +20,22 @@ public class DefaultNavajoWrap implements NavajoRug {
 	private final String reference;
 	
 	public DefaultNavajoWrap(Navajo n) {
-		reference = SerializationUtil.serializeNavajo(SharedStoreFactory.getInstance(), n, 
-				System.currentTimeMillis() + "-" + n.hashCode() + ".xml");
+		reference = SerializationUtil.serializeNavajo(n, System.currentTimeMillis() + "-" + n.hashCode() + ".xml");
+	}
+	
+	public DefaultNavajoWrap(Navajo n, String id) {
+		if ( !id.endsWith(".xml") ) {
+			id = id + ".xml";
+		}
+		reference = SerializationUtil.serializeNavajo(n, id + ".xml");
 	}
 	
 	public Navajo getNavajo() {
-		return SerializationUtil.deserializeNavajo(SharedStoreFactory.getInstance(), reference);
+		return SerializationUtil.deserializeNavajo(reference);
 	}
 	
 	@Override
 	public void finalize() {
-		SerializationUtil.removeNavajo(SharedStoreFactory.getInstance(), reference);
+		SerializationUtil.removeNavajo(reference);
 	}
 }
