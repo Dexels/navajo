@@ -62,7 +62,6 @@ public class ScriptTestContext  {
 		}
 		
 		ClientInterface c = NavajoClientFactory.getClient();
-		c.setLoadBalancingMode(ClientInterface.LBMODE_MANUAL);
 		setupClient(c, altProfile);			  
 	//	Navajo result = c.doSimpleSend(input,"", script,"","",-1,false,false);
 		Navajo result = c.doSimpleSend(input,script);
