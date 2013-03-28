@@ -15,14 +15,16 @@ public class SerializationUtil {
 	private final static Logger logger = LoggerFactory.getLogger(SerializationUtil.class);
 	private final static String SHAREDSTORE_PARENT = "clusternavajoobjects";
 	
-	public static boolean existsNavajo(SharedStoreInterface ssi, String name) {
+	public static boolean existsNavajo(String name) {
+		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		if ( ssi == null || name == null ) {
 			return false;
 		}
 		return ssi.exists(SHAREDSTORE_PARENT, name);
 	}
 	
-	public static void removeNavajo(SharedStoreInterface ssi, String name) {
+	public static void removeNavajo(String name) {
+		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		if ( name == null || ssi == null ) {
 			return;
 		}
@@ -31,7 +33,8 @@ public class SerializationUtil {
 		} catch (Throwable t) { }
 	}
 	
-	public static Navajo deserializeNavajo(SharedStoreInterface ssi, String name) {
+	public static Navajo deserializeNavajo(String name) {
+		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		if ( name == null || !ssi.exists(SHAREDSTORE_PARENT, name) ) {
 			return null;
 		}
@@ -55,7 +58,8 @@ public class SerializationUtil {
 		return null;
 	}
 	
-	public static String serializeNavajo(SharedStoreInterface ssi, Navajo n, String name) {
+	public static String serializeNavajo(Navajo n, String name) {
+		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		if ( n == null ) {
 			return null;
 		}
@@ -78,7 +82,8 @@ public class SerializationUtil {
 		return null;
 	}
 	
-	public static void removeAllNavajos(SharedStoreInterface ssi) {
+	public static void removeAllNavajos() {
+		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		ssi.removeAll(SerializationUtil.SHAREDSTORE_PARENT);
 	}
 }
