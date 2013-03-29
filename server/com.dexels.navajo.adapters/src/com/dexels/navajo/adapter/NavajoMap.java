@@ -668,25 +668,11 @@ private Object waitForResult = new Object();
 		  }
 		  
 		  if (server != null) { // External request.
-			  ClientInterface nc = NavajoClientFactory.createClient();
-			  if ( !block ) {
-
-				  try {
-					  AsyncClient ac = AsyncClientFactory.getInstance();
-					  ac.callService(server.startsWith("http") ? server : "http://" + server, username, password, outDoc, method, this);
-				  } catch (Exception e) {
-					  throw new UserException(-1, e.getMessage(), e);
-				  }
-			  } else if ( trigger == null ) {
-				  inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true, false);
-				  serviceFinished = true;
-				  serviceCalled = true;
-				  continueAfterRun();
-			  } else {
-				  inDoc = nc.doScheduledSend(outDoc, method, "now", "", "");
-				  serviceFinished = true;
-				  serviceCalled = true;
-				  continueAfterRun();
+			  try {
+				  AsyncClient ac = AsyncClientFactory.getInstance();
+				  ac.callService(server.startsWith("http") ? server : "http://" + server, username, password, outDoc, method, this);
+			  } catch (Exception e) {
+				  throw new UserException(-1, e.getMessage(), e);
 			  }
 			  serviceCalled = true;
 		  } // Internal request.
@@ -718,8 +704,6 @@ private Object waitForResult = new Object();
 			  }
 		  }
 
-	  } catch (com.dexels.navajo.client.ClientException e) {
-		  throw new SystemException("Error connecting to remote server", e);
 	  } catch (NavajoException e) {
 		  throw new SystemException("Error connecting to remote server",e);
 	} 

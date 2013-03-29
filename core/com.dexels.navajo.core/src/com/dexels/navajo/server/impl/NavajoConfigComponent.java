@@ -34,6 +34,7 @@ import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProvid
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
+import com.dexels.navajo.sharedstore.SharedStoreInterface;
 
 public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterface {
 
@@ -429,6 +430,12 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	@Override
 	public Object getParameter(String string) {
 		return properties.get(string);
+	}
+
+	@Override
+	public SharedStoreInterface getSharedStore() {
+		logger.warn("This method is not implemented for OSGi");
+		throw new NoSuchMethodError("Method not supported by OSGi");
 	}
 
 	
