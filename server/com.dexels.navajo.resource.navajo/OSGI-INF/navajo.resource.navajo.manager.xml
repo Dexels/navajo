@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="navajo.resource.navajo.manager">
+   <implementation class="com.dexels.navajo.resource.navajo.impl.NavajoClientResourceManager"/>
+   <reference  bind="addAsyncClient" cardinality="0..n" interface="com.dexels.navajo.client.async.AsyncClient" name="AsyncClient" policy="dynamic" unbind="removeAsyncClient"/>
+</scr:component>
