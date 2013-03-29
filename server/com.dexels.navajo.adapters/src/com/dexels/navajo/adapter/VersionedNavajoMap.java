@@ -26,7 +26,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.server.AuthorizationException;
 import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
@@ -37,7 +36,7 @@ public class VersionedNavajoMap extends NavajoMap {
 		private final static Logger logger = LoggerFactory
 				.getLogger(VersionedNavajoMap.class);
 		
- public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException, AuthorizationException {
+ public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException {
 
 	 
      super.setDoSend(method);
