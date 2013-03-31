@@ -9,8 +9,8 @@ Bundle-ClassPath: .,
  lib/mail.jar
 Export-Package: com.dexels.navajo.tipi.mail
 Bundle-Activator: tipi.TipiMailExtension
-Import-Package: com.dexels.navajo.document;version="2.2.0",
- com.dexels.navajo.document.types;version="2.2.0",
+Import-Package: com.dexels.navajo.document,
+ com.dexels.navajo.document.types,
  com.dexels.navajo.parser,
  com.dexels.navajo.tipilink,
  com.dexels.navajo.version,
