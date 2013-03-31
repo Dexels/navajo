@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Command
+Bundle-SymbolicName: com.dexels.navajo.karaf.command
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: DEXELS
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Blueprint: OSGI-INF/blueprint/*.xml
+Import-Package: org.apache.felix.gogo.api;version="0.10.0",
+ org.apache.felix.service.command;status=provisional;version="0.10.0",
+ org.apache.karaf.shell.commands,
+ org.apache.karaf.shell.console,
+ org.osgi.framework;version="1.3.0"
+Service-Component: OSGI-INF/navajo.command.hello.xml
