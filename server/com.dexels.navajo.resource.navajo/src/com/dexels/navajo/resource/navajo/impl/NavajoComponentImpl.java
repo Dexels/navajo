@@ -39,7 +39,7 @@ public class NavajoComponentImpl implements AsyncClient  {
 		this.name = settings.get("name");
 		async.setUsername(username);
 		async.setPassword(password);
-		async.setUsername(server);
+		async.setServer(server);
 		logger.debug("Configuring navajo connector with: " + settings);
 		for (Entry<String, String> e : settings.entrySet()) {
 			logger.debug("key: " + e.getKey() + " value: " + e.getValue());
