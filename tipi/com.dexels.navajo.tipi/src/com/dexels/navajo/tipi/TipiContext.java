@@ -2074,7 +2074,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			{
 				tipiComponent.performTipiEvent("onWindowClosed", null, true);
 			}
-			FunctionFactoryFactory.getInstance().removeFunctionResolver(classManager);
 			
 			performExit();
 		} catch (TipiException e1) {
@@ -2096,6 +2095,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 
 	public void doExit() {
+		FunctionFactoryFactory.getInstance().removeFunctionResolver(classManager);
 	}
 	
 	public void addShutdownListener(ShutdownListener sl) {
