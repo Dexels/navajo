@@ -102,7 +102,7 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.client</artifactId>
-			<version>3.4.19</version>
+			<version>3.4.21</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
