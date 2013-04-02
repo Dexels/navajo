@@ -103,6 +103,28 @@ public class CommandHandler {
 		LoginCommand login = new LoginCommand();
 		login.setNqlContext(nqlContext);
 		registerCommand(login,"login");
+		
+		SharedStore_ls ls = new SharedStore_ls();
+		registerCommand(ls, "ls");
+		
+		SharedStore_cd changedir = new SharedStore_cd();
+		registerCommand(changedir, "cd");
+		
+		SharedStore_cat cat = new SharedStore_cat();
+		registerCommand(cat, "cat");
+		
+		SharedStore_get get = new SharedStore_get();
+		registerCommand(get, "get");
+		
+		SharedStore_pwd pwd = new SharedStore_pwd();
+		registerCommand(pwd, "pwd");
+		
+		SharedStore_rm rm = new SharedStore_rm();
+		registerCommand(rm, "rm");
+		
+		SharedStore_sharedstore sharedstore = new SharedStore_sharedstore();
+		registerCommand(sharedstore, "sharedstore");
+		
 
 	}
 

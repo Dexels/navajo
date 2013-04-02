@@ -183,4 +183,27 @@ public class SharedMemoryStore implements SharedStoreInterface {
 		throw new RuntimeException("Not Implemented");
 	}
 
+	@Override
+	public SharedStoreEntry[] getEntries(String parent) {
+		Set<SharedStoreEntry> entries = new HashSet<SharedStoreEntry>();
+		Iterator<String> allObjects = store.keySet().iterator();
+		while ( allObjects.hasNext() ) {
+			String key = allObjects.next();
+			// Fetch name part.
+			SharedStoreEntry sse = store.get(key);
+			String name = key.substring(key.lastIndexOf("/") + 1);
+			if ( (parent+"/"+name).equals(key) ) {
+				entries.add(sse);
+			}
+		}
+		
+		if ( entries.size() > 0) {
+			SharedStoreEntry [] keys = new SharedStoreEntry[entries.size()];
+			keys = entries.toArray(keys);
+			return keys;
+		} else {
+			return new SharedStoreEntry[]{};
+		}
+	}
+
 }

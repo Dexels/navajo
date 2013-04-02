@@ -163,6 +163,12 @@ public class SimpleSharedStore implements SharedStoreInterface {
 	public void release() {
 		storeRoot.delete();
 	}
+
+	@Override
+	public SharedStoreEntry[] getEntries(String parent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
 
