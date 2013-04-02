@@ -72,7 +72,21 @@
 			<artifactId>org.apache.servicemix.bundles.jzlib</artifactId>
 			<version>1.1.1_1</version>
 		</dependency>
-
+			<dependency>
+			<groupId>com.dexels.navajo</groupId>
+			<artifactId>com.dexels.navajo.version</artifactId>
+			<version>1.1.10</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dexels.navajo</groupId>
+			<artifactId>com.dexels.navajo.document</artifactId>
+			<version>2.2.18</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dexels.navajo</groupId>
+			<artifactId>com.dexels.navajo.api</artifactId>
+			<version>1.0.15</version>
+		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
