@@ -3,6 +3,14 @@ package com.dexels.navajo.client.async.impl;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
@@ -11,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.NavajoResponseHandler;
-import com.dexels.navajo.client.async.AsyncClient;
+import com.dexels.navajo.client.async.ManualAsyncClient;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -21,10 +29,11 @@ import com.dexels.navajo.script.api.SchedulerRegistry;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.Access;
 
-public class AsyncClientImpl implements AsyncClient {
+public class AsyncClientImpl implements ManualAsyncClient {
 
 	private HttpClient client;
 
+	private String name;
 	private String server;
 	private String username;
 	private String password;
@@ -32,7 +41,6 @@ public class AsyncClientImpl implements AsyncClient {
 	private final static Logger logger = LoggerFactory.getLogger(AsyncClientImpl.class);
 	
 	private int actualCalls = 0;
-	private static AsyncClient instance;
 
 	private final static int CONNECT_TIMEOUT = 2000;
 	private final static int READ_TIMEOUT = 300000;
@@ -41,38 +49,16 @@ public class AsyncClientImpl implements AsyncClient {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.client.async.AsyncClient#getActualCalls()
 	 */
-	@Override
-	public synchronized int getActualCalls() {
+	private synchronized int getActualCalls() {
 		return actualCalls;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.client.async.AsyncClient#setActualCalls(int)
 	 */
-	@Override
-	public synchronized void setActualCalls(int actualCalls) {
+	private synchronized void setActualCalls(int actualCalls) {
 		this.actualCalls = actualCalls;
 		logger.debug("Calls now: "+this.actualCalls);
-	}
-
-
-	public static synchronized AsyncClient getInstance() {
-		if (instance == null) {
-			instance = new AsyncClientImpl();
-		}
-		return instance;
-	}
-
-	/**
-	 * @param args
-	 * @throws Exception
-	 */
-
-	public AsyncClientImpl(String server, String username, String password) throws Exception {
-		this();
-		this.server = server;
-		this.username = username;
-		this.password = password;
 	}
 
 	public AsyncClientImpl() {
@@ -96,19 +82,10 @@ public class AsyncClientImpl implements AsyncClient {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.client.async.AsyncClient#callService(java.lang.String, com.dexels.navajo.client.NavajoResponseHandler)
-	 */
-	@Override
-	public void callService(String service, final NavajoResponseHandler continuation) throws IOException, NavajoException {
-		callService(null, service, continuation);
-	}
-
-	/* (non-Javadoc)
 	 * @see com.dexels.navajo.client.async.AsyncClient#callService(com.dexels.navajo.document.Navajo, java.lang.String, com.dexels.navajo.client.NavajoResponseHandler)
 	 */
 	@Override
-	public void callService(Navajo input, String service, final NavajoResponseHandler continuation) throws IOException,
-			NavajoException {
+	public void callService(Navajo input, String service, final NavajoResponseHandler continuation) throws IOException {
 		if(input==null) {
 			input = NavajoFactory.getInstance().createNavajo();
 		} else {
@@ -116,6 +93,42 @@ public class AsyncClientImpl implements AsyncClient {
 		}
 		input.addHeader(NavajoFactory.getInstance().createHeader(input, service, username, password, -1));
 		callService(server, input, continuation);
+	}
+	
+	@Override
+	public Navajo callService(final Navajo input, final String service) throws IOException{
+		
+		final Object semaphore = new Object();
+		final Set<Navajo> result = new HashSet<Navajo>();
+				
+		NavajoResponseHandler nrh = new NavajoResponseHandler() {
+			
+			@Override
+			public void onResponse(Navajo n) {
+				result.add(n);
+				synchronized (semaphore) {
+					semaphore.notify();
+				}
+			}
+			
+			@Override
+			public void onFail(Throwable t) throws IOException {
+				logger.error("Problem calling navajo: ",t);
+				synchronized (semaphore) {
+					semaphore.notify();
+				}
+				
+			}
+		};
+		callService(input, service, nrh);
+		synchronized (semaphore) {
+			try {
+				semaphore.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		return result.iterator().next();
 	}
 	
 	/* (non-Javadoc)
@@ -293,21 +306,14 @@ public class AsyncClientImpl implements AsyncClient {
 		client.send(exchange);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.dexels.navajo.client.async.AsyncClient#createBlankNavajo(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public Navajo createBlankNavajo(String service, String user, String password) {
-		Navajo result = NavajoFactory.getInstance().createNavajo();
-		result.addHeader(NavajoFactory.getInstance().createHeader(result, service, user, password, -1));
-		return result;
-	}
-
 	public static void main(String[] args) throws Exception {
 
-		final AsyncClient ac = new AsyncClientImpl("http://spiritus.dexels.nl:9080/JsSportlink/Comet", "ROOT", "ROOT");
+		final ManualAsyncClient ac = new AsyncClientImpl();
 //		final AsyncClient ac = new AsyncClient("http://10.0.0.100:8080/JsSportlink/Comet", "ROOT", "ROOT");
 //		final AsyncClient ac = new AsyncClient("http://localhost:9080/JsSportlink/Comet", "ROOT", "ROOT");
+		ac.setServer("http://spiritus.dexels.nl:9080/JsSportlink/Comet");
+		ac.setPassword("ROOT");
+		ac.setServer("ROOT");
 		
 		final NavajoResponseHandler showOutput = new NavajoResponseHandler() {
 			@Override
@@ -356,10 +362,10 @@ public class AsyncClientImpl implements AsyncClient {
 				String service = "tests/InitSleepMap";
 //				String service = "person/InitSearchPersons";
 		
-		
+		Navajo input = NavajoFactory.getInstance().createNavajo();
 		for (int i = 0; i < 100; i++) {
 //			String service = "tests/InitNavajoMapTest3";
-			ac.callService(service, showOutput);
+			ac.callService(input, service, showOutput);
 			System.out.println("Exchange sent");
 		}
 		// Optionally set the HTTP method
@@ -369,22 +375,6 @@ public class AsyncClientImpl implements AsyncClient {
 		Thread.sleep(10000);
 //		ac.
 //		ac.myThreadPool.rootPool.shutdownScheduler();
-	}
-
-	/* (non-Javadoc)
-	 * @see com.dexels.navajo.client.async.AsyncClient#getClient()
-	 */
-	@Override
-	public HttpClient getClient() {
-		return client;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.dexels.navajo.client.async.AsyncClient#setClient(org.eclipse.jetty.client.HttpClient)
-	 */
-	@Override
-	public void setClient(HttpClient client) {
-		this.client = client;
 	}
 
 	/* (non-Javadoc)
@@ -403,6 +393,16 @@ public class AsyncClientImpl implements AsyncClient {
 		this.server = server;
 	}
 
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.client.async.AsyncClient#getUsername()
 	 */
@@ -433,6 +433,11 @@ public class AsyncClientImpl implements AsyncClient {
 	@Override
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Override
+	public void close() {
+		client.destroy();
 	}
 
 }

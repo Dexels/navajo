@@ -1,71 +1,79 @@
 package com.dexels.navajo.resource.navajo.impl;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.script.api.ClientInfo;
-import com.dexels.navajo.script.api.FatalException;
-import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.client.NavajoResponseHandler;
+import com.dexels.navajo.client.async.AsyncClient;
+import com.dexels.navajo.client.async.AsyncClientFactory;
+import com.dexels.navajo.client.async.ManualAsyncClient;
 import com.dexels.navajo.document.Navajo;
 
-public class NavajoComponentImpl implements LocalClient  {
+public class NavajoComponentImpl implements AsyncClient  {
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoComponentImpl.class);
 	
+	private ManualAsyncClient async = null;
+
+	private String name;
+
+//	private String username;
+//	private String password;
+//	private String server;
+//	private String server;
+	
 	public void activate(Map<String, String> settings) {
-		logger.debug("Activating HTTP connector with: " + settings);
+		async = AsyncClientFactory.createInstance();
+		modify(settings);
+	}
+
+	public void modify(Map<String, String> settings) {
+		String username = settings.get("username");
+		String password = settings.get("password");
+		String server = settings.get("server");
+		this.name = settings.get("name");
+		async.setUsername(username);
+		async.setPassword(password);
+		async.setServer(server);
+		logger.debug("Configuring navajo connector with: " + settings);
 		for (Entry<String, String> e : settings.entrySet()) {
 			logger.debug("key: " + e.getKey() + " value: " + e.getValue());
 		}
+	}	
+	public void deactivate() {
+		logger.debug("Deactivating HTTP connector");
+		async.close();
+	}
+
+
+	@Override
+	public void callService(Navajo input, String service,
+			NavajoResponseHandler continuation) throws IOException {
+
+		async.callService(input, service, continuation);
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void setName(String name) {
+		// TODO Auto-generated method stub
 		
 	}
 
-	
-	public void deactivate() {
-		logger.debug("Deactivating HTTP connector");
-	}
-
-
 	@Override
-	public Navajo call(Navajo n) throws FatalException {
-		return null;
+	public Navajo callService(Navajo input, String service) throws IOException {
+		return async.callService(input, service);
 	}
 
 
-	@Override
-	public Navajo generateAbortMessage(String reason) throws FatalException {
-		return null;
-	}
-
-
-	@Override
-	public Navajo handleCallback(Navajo n, String callback) {
-		return null;
-	}
-
-
-	@Override
-	public Navajo handleInternal(Navajo in, Object cert, ClientInfo clientInfo)
-			throws FatalException {
-		return null;
-	}
-
-
-	@Override
-	public boolean isSpecialWebservice(String name) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public String getApplicationId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

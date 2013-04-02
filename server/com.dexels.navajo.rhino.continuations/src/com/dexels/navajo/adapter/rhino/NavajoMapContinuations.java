@@ -80,7 +80,7 @@ public class NavajoMapContinuations extends NavajoMapUpdated {
 				outDoc.addMessage(globals);
 			}
 
-			AsyncClientFactory.getInstance().callService(this.access, outDoc, method,
+			AsyncClientFactory.getManualInstance().callService(this.access, outDoc, method,
 					on2, null, new NavajoResponseCallback() {
 
 						@Override

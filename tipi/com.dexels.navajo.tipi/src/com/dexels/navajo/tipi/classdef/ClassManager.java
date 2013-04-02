@@ -30,9 +30,8 @@ public final class ClassManager extends BaseClassManager implements Serializable
 	private final static Logger logger = LoggerFactory
 			.getLogger(ClassManager.class);
 	
-	public ClassManager(TipiContext context) {
-		super(context);
-		assert (context != null);
+	public ClassManager(ClassLoader parentClassLoader) {
+		super(parentClassLoader);
 	}
 
 	@Override
@@ -126,7 +125,7 @@ public final class ClassManager extends BaseClassManager implements Serializable
 			}
 			logger.info("FALLBACK: Loading class without Extension definition");
 			
-			cc = Class.forName(fullDef, true, myContext.getClassLoader());
+			cc = Class.forName(fullDef, true,parentClassLoader);
 		} catch (ClassNotFoundException ex) {
 			logger.error("Error loading class: " + fullDef,ex);
 		} catch (SecurityException ex) {

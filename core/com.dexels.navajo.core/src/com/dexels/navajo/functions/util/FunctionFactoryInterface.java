@@ -175,7 +175,12 @@ public abstract class FunctionFactoryInterface implements Serializable {
 
 	
 	public Set<String> getFunctionNames(ExtensionDefinition ed) {
-		return functionConfig.get(ed).keySet();
+		final Map<String, FunctionDefinition> functionsForExtension = functionConfig.get(ed);
+		if(functionsForExtension==null) {
+			logger.error("Error listing function names for definition: "+ed.getDescription()+" id: "+ed.getId());
+			return null;
+		}
+		return functionsForExtension.keySet();
 	}
 	public void clearFunctionNames() {
 		functionConfig.clear();
@@ -200,25 +205,6 @@ public abstract class FunctionFactoryInterface implements Serializable {
 		} catch (Exception e) {
 			logger.error("Function: "+functionName+" not found!",e);
 			return null;
-			// Try legacy mode.
-//			try {
-//				Class<FunctionInterface> myClass = (Class<FunctionInterface>) Class.forName("com.dexels.navajo.functions."+functionName, true, cl);
-//				FunctionInterface fi = myClass.newInstance();
-//				if (!fi.isInitialized()) {
-//					fi.setTypes(null, null);
-//				}
-//				return fi;
-//			} catch (ClassNotFoundException e1) {
-//				throw new TMLExpressionException("Could find class for function: " + getDef(functionName)+" name: "+functionName,e1);
-//			} catch (IllegalAccessException e2) {
-//				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject(),e2);
-//			} catch (InstantiationException e3) {
-//				throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject(),e3);
-//			}
-//		} catch (InstantiationException e) {
-//			throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject());
-//		} catch (IllegalAccessException e) {
-//			throw new TMLExpressionException("Could not instantiate class: " + getDef(functionName).getObject());
 		}
 	}
 

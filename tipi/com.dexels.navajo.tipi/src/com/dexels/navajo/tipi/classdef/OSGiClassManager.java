@@ -35,7 +35,7 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 			.getLogger(OSGiClassManager.class);
 	
 	public OSGiClassManager(BundleContext bc, TipiContext tc) {
-		super(tc);
+		super(tc.getClassLoader());
 		myBundleContext = bc;
 	}
 	@Override

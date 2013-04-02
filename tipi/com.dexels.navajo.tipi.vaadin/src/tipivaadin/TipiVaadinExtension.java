@@ -11,7 +11,10 @@ import org.slf4j.LoggerFactory;
 import tipi.TipiAbstractXMLExtension;
 import tipi.TipiExtension;
 
+import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.classdef.ClassManager;
+import com.dexels.navajo.tipi.classdef.IClassManager;
 import com.dexels.navajo.tipi.vaadin.functions.VaadinFunctionDefinition;
 
 public class TipiVaadinExtension extends TipiAbstractXMLExtension implements TipiExtension {
@@ -23,6 +26,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	private static TipiVaadinExtension instance = null;
 	
 	private transient BundleContext context;
+	protected IClassManager classManager = null;
 	
 	private File installationFolder = null;
 	
@@ -52,10 +56,13 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	public void start(BundleContext bc) throws Exception {
 		this.context = bc;
 		super.start(bc);
+		classManager = new ClassManager(this.getClass().getClassLoader());
 		registerTipiExtension(context);
 		ExtensionDefinition extensionDef = new VaadinFunctionDefinition();
 		registerAll(extensionDef);
 		logger.debug("Started vaadin tipi bundle");
+		FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
+
 //		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
 //		fi.init();
 //		fi.clearFunctionNames();
@@ -79,6 +86,8 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		deregisterTipiExtension(context);
+		FunctionFactoryFactory.getInstance().removeFunctionResolver(classManager);
+		
 		super.stop(context);
 	}
 	
