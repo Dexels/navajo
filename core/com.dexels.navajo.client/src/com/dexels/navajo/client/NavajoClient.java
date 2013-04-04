@@ -1061,6 +1061,10 @@ public final void switchServer(boolean force) {
 		this.subLocale = locale;
 	}
 
+	public String getSubLocaleCode() {
+		return this.subLocale;
+	}
+	
 	/**
 	 * Schedule a webservice @ a certain time. Note that this method does NOT return the response
 	 * of the scheduled webservice. It contains a Navajo with the status of the scheduling.

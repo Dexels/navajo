@@ -112,6 +112,7 @@ public void setLocaleCode(String locale);
 public String getLocaleCode();
 
 public void setSubLocaleCode(String locale);
+public String getSubLocaleCode();
 
 public String getCurrentHost();
 
