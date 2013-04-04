@@ -6,22 +6,20 @@ Bundle-Version: 1.1.14.qualifier
 Export-Package: com.dexels.navajo.client.async,
  navajoasyncclient
 Bundle-Vendor: Dexels
-Bundle-ClassPath: lib/jetty-client-7.0.2.v20100331.jar,
- lib/jetty-http-7.0.2.v20100331.jar,
- lib/jetty-io-7.0.2.v20100331.jar,
- lib/jetty-util-7.0.2.v20100331.jar,.
+Bundle-ClassPath: .
 Bundle-Activator: navajoasyncclient.Version
 Import-Package: com.dexels.navajo.client,
- com.dexels.navajo.client.logger,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.script.api,
  com.dexels.navajo.server,
  com.dexels.navajo.version,
- org.eclipse.jetty.client;version="7.4.1.v20110513",
- org.eclipse.jetty.client.security;version="7.4.1.v20110513",
- org.eclipse.jetty.http;version="7.4.1.v20110513",
- org.eclipse.jetty.io;version="7.4.1.v20110513",
- org.eclipse.jetty.util;version="7.4.1.v20110513",
- org.eclipse.jetty.util.component;version="7.4.1.v20110513",
+ org.eclipse.jetty.client,
+ org.eclipse.jetty.client.security,
+ org.eclipse.jetty.http,
+ org.eclipse.jetty.io,
+ org.eclipse.jetty.util,
+ org.eclipse.jetty.util.component,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="1.6.1"
+Service-Component: OSGI-INF/navajo.resource.navajo.manager.xml
+ 

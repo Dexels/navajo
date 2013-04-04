@@ -20,11 +20,11 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.navajomap.MessageMap;
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
-import com.dexels.navajo.client.ClientInterface;
-import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.NavajoResponseHandler;
 import com.dexels.navajo.client.async.AsyncClient;
 import com.dexels.navajo.client.async.AsyncClientFactory;
+import com.dexels.navajo.client.async.ManualAsyncClient;
+import com.dexels.navajo.client.async.NavajoClientResourceManager;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -177,6 +177,7 @@ private static final long MAX_WAITTIME = 300000;
   }
 
 private Object waitForResult = new Object();
+private String resource;
   
   public void load(Access access) throws MappableException, UserException {
     this.access = access;
@@ -597,7 +598,7 @@ private Object waitForResult = new Object();
    * @param method
    * @throws UserException
    */
-  public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException, AuthorizationException {
+  public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException {
   
 	  // Reset current msgPointer when performing new doSend.
 	  msgPointer = null;
@@ -666,34 +667,21 @@ private Object waitForResult = new Object();
 				  e.printStackTrace(Access.getConsoleWriter(access));
 			  }
 		  }
-		  
-		  if (server != null) { // External request.
-			  ClientInterface nc = NavajoClientFactory.createClient();
-//			  if (keyStore != null) {
-//				  nc.setSecure(keyStore, keyPassword, true);
-//			  }
-			  if ( !block ) {
-
+		  if(this.resource!=null) {
+			  serviceCalled = true;
+			  AsyncClient ac = NavajoClientResourceManager.getInstance().getAsyncClient(this.resource);
+			  ac.callService(outDoc, method);
+		  } else 
+			  if (server != null) { // External request.
 				  try {
-					  AsyncClient ac = AsyncClientFactory.getInstance();
-					  //AsyncClient ac = new AsyncClient(server.startsWith("http") ? server : "http://" + server, username, password);
+					  ManualAsyncClient ac = AsyncClientFactory.getManualInstance();
 					  ac.callService(server.startsWith("http") ? server : "http://" + server, username, password, outDoc, method, this);
 				  } catch (Exception e) {
 					  throw new UserException(-1, e.getMessage(), e);
 				  }
-			  } else if ( trigger == null ) {
-				  inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true, false);
-				  serviceFinished = true;
+				  
 				  serviceCalled = true;
-				  continueAfterRun();
-			  } else {
-				  inDoc = nc.doScheduledSend(outDoc, method, "now", "", "");
-				  serviceFinished = true;
-				  serviceCalled = true;
-				  continueAfterRun();
-			  }
-			  serviceCalled = true;
-		  } // Internal request.
+			  } // Internal request.
 		  else {
 			  try {
 				  inDoc = null;
@@ -722,9 +710,9 @@ private Object waitForResult = new Object();
 			  }
 		  }
 
-	  } catch (com.dexels.navajo.client.ClientException e) {
-		  throw new SystemException("Error connecting to remote server", e);
 	  } catch (NavajoException e) {
+		  throw new SystemException("Error connecting to remote server",e);
+	} catch (IOException e) {
 		  throw new SystemException("Error connecting to remote server",e);
 	} 
 
@@ -1596,6 +1584,14 @@ public Navajo getResponseNavajo() {
 public AsyncRequest getRequest() {
 	logger.warn("No asyncrequest in NavajoMap. Returning null.");
 	return null;
+}
+
+public String getResource() {
+	return resource;
+}
+
+public void setResource(String resourceName) {
+	this.resource = resourceName;
 }
 
 }

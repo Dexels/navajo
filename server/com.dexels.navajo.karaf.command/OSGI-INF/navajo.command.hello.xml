@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.command.hello">
+   <implementation class="com.dexels.navajo.karaf.command.HelloShellCommand"/>
+   <property name="osgi.command.function" type="String" value="testcommand"/>
+   <property name="osgi.command.scope" type="String" value="aap"/>
+   <service>
+      <provide interface="com.dexels.navajo.karaf.command.HelloShellCommand"/>
+   </service>
+</scr:component>

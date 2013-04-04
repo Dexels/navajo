@@ -170,7 +170,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	protected int poolSize = 6;
 //	private final Map<String, TipiTypeParser> parserInstanceMap = new HashMap<String, TipiTypeParser>();
 	protected TipiStorageManager myStorageManager = null;
-	protected IClassManager classManager = new ClassManager(this);
+	protected IClassManager classManager;
 	protected final Stack<DescriptionProvider> descriptionProviderStack = new Stack<DescriptionProvider>();
 	protected final Map<String, Object> globalMap = new HashMap<String, Object>();
 	protected final Map<String, XMLElement> globalMethodsMap = new HashMap<String, XMLElement>();
@@ -218,14 +218,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public TipiContext(TipiApplicationInstance myApplication, TipiContext parent) {
 		this.myApplication = myApplication;
 		List<TipiExtension> extensionList = getExtensionFromServiceEnumeration();
+		classManager = new ClassManager(getClass().getClassLoader());
 		
-		initializeContext(extensionList, parent);
+		initializeContext(myApplication,extensionList, parent);
 		FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
 	}
 	
 	public TipiContext(TipiApplicationInstance myApplication, List<TipiExtension> extensionList) {
 		this.myApplication = myApplication;
-		initializeContext(extensionList, null);
+		classManager = new ClassManager(getClass().getClassLoader());
+		initializeContext(myApplication,extensionList, null);
 		FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
 	}
 
@@ -255,13 +257,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public TipiContext(TipiApplicationInstance myApplication,
 			List<TipiExtension> preload, TipiContext parent) {
 		this.myApplication = myApplication;
-
+		classManager = new ClassManager(getClass().getClassLoader());
 		// this();
-		initializeContext(preload, parent);
+		initializeContext(myApplication,preload, parent);
 		FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
 	}
 
-	private void initializeContext(List<TipiExtension> preload, TipiContext parent) {
+	private void initializeContext(TipiApplicationInstance myApplication,List<TipiExtension> preload, TipiContext parent) {
 
 		myParentContext = parent;
 		initializeExtensions(preload.iterator());
@@ -1733,20 +1735,19 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					hosturl = navajoServer;
 					username = navajoUsername;
 					password = navajoPassword;
-					String url = getClient().getServerUrl();
+//					String url = getClient().getServerUrl();
 					getClient().setServerUrl(hosturl);
 					getClient().setUsername(username);
 					getClient().setPassword(password);
 					reply = getClient().doSimpleSend(n, service, ch,
 							expirtationInterval);
-					getClient().setServerUrl(url);
+//					getClient().setServerUrl(url);
 					debugLog("data", "simpleSend to host: " + hosturl
 							+ " username: " + username + " method: " + service);
 			} else {
 				reply = getClient().doSimpleSend(n, service, ch,
 						expirtationInterval);
-				debugLog("data", "simpleSend client: "
-						+ getClient().getClientName() + " method: " + service);
+				debugLog("data", "simpleSend method: " + service);
 			}
 		} catch (Throwable ex) {
 			logger.error("Sending problem:",ex);
@@ -2269,6 +2270,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			{
 				tipiComponent.performTipiEvent("onWindowClosed", null, true);
 			}
+			
 			performExit();
 		} catch (TipiException e1) {
 			logger.error("Unexpected error", e1);
@@ -2289,6 +2291,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 
 	public void doExit() {
+		FunctionFactoryFactory.getInstance().removeFunctionResolver(classManager);
 	}
 	
 	public void addShutdownListener(ShutdownListener sl) {
@@ -2465,18 +2468,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		// newline
 
 		return result;
-	}
-
-	public URL getBinaryUrl(Binary b) {
-		String url = getClient().getServerUrl();
-		URL u;
-		try {
-			u = new URL(url + "?GetBinary=true&handle=" + b.getHandle());
-			return u;
-		} catch (MalformedURLException e) {
-			logger.error("Error: ",e);
-			return null;
-		}
 	}
 
 	/**

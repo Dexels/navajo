@@ -29,6 +29,7 @@ import navajocore.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.util.AuditLog;
 
 public class SharedStoreFactory {
@@ -54,7 +55,8 @@ public class SharedStoreFactory {
 					return instance;
 				}
 				try {
-					instance = new SharedFileStore();
+					// TODO: Fetch SharedStore implementation from server.xml
+					instance = DispatcherFactory.getInstance().getNavajoConfig().getSharedStore();
 				} catch (Exception e) {
 					logger.error("Error: ", e);
 					AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, e.getMessage());

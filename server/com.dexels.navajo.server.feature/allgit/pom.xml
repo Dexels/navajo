@@ -34,6 +34,7 @@
 		<module>../../com.dexels.navajo.compiler.tsl</module>
 		<module>../../com.dexels.navajo.article</module>
 		<module>../../com.dexels.navajo.article.jsp</module>
+		<module>../../com.dexels.navajo.tunnel</module>
 		<module>../</module>
 
 	</modules>

@@ -9,6 +9,19 @@ import com.dexels.navajo.server.Access;
 
 public interface TribeManagerInterface {
 
+	public String getTribalId();
+	
+	/**
+	 * Tribal Topic methods.
+	 */
+	public TribalTopic getTopic(String name);
+	
+	/**
+	 * Tribal locking methods.
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public Lock getLock(String name);
 	
 	public void releaseLock(Lock lock);

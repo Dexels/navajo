@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Http HTTP connector
+Bundle-SymbolicName: com.dexels.navajo.resource.navajo
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: DEXELS
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Service-Component: OSGI-INF/navajoResourceComponent.xml
+Import-Package: com.dexels.navajo.client,
+ com.dexels.navajo.client.async,
+ com.dexels.navajo.document;version="2.2.1",
+ com.dexels.navajo.script.api;version="1.0.0",
+ com.dexels.navajo.server,
+ junit.framework;version="[4.0.0,5.0.0)";resolution:=optional,
+ org.junit;version="4.10.0",
+ org.slf4j;version="1.6.1"

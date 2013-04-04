@@ -62,6 +62,11 @@ public class VaadinTipiContext extends TipiContext {
 	}
 
 	@Override
+	public void exit() {
+		doExit();
+	}
+	
+	@Override
 	public void doExit() {
 		super.doExit();
 // TODO FIX

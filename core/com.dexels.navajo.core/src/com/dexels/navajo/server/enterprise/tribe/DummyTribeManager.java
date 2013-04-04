@@ -12,12 +12,14 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
 
 public class DummyTribeManager implements TribeManagerInterface {
 
 //	private NavajoConfigInterface navajoConfig;
 
 	private Map<String,Lock> mLocks = new HashMap<String,Lock>();
+	private Map<String,TribalTopic> topics = new HashMap<String,TribalTopic>();
 	
 	public void terminate() {
 	}
@@ -160,6 +162,22 @@ public class DummyTribeManager implements TribeManagerInterface {
 				mLocks.remove(found);
 			}
 		}
+	}
+
+	@Override
+	public synchronized TribalTopic getTopic(String name) {
+		if ( topics.containsKey(name) ) {
+			return topics.get(name);
+		} else {
+			DummyTopic dt = new DummyTopic();
+			topics.put(name, dt);
+			return dt;
+		}
+	}
+
+	@Override
+	public String getTribalId() {
+		return DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup();
 	}
 
 }

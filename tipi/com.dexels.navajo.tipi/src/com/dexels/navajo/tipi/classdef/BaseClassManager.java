@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.tipi.TipiComponent;
-import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -21,8 +20,8 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public abstract class BaseClassManager implements IClassManager {
 
-	protected TipiContext myContext;
 	private final Map<String, TipiTypeParser> parserInstanceMap = new HashMap<String, TipiTypeParser>();
+	protected ClassLoader parentClassLoader;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseClassManager.class);
@@ -34,8 +33,8 @@ public abstract class BaseClassManager implements IClassManager {
 	 * com.dexels.navajo.tipi.classdef.IClassManager#getTipiClass(com.dexels
 	 * .navajo.tipi.tipixml.XMLElement)
 	 */
-	public BaseClassManager(TipiContext context) {
-		this.myContext = context;
+	public BaseClassManager(ClassLoader parentClassLoader) {
+		this.parentClassLoader = parentClassLoader;
 	}
 
 	public Class<?> getTipiClass(XMLElement xe) {
@@ -53,7 +52,7 @@ public abstract class BaseClassManager implements IClassManager {
 			}
 			logger.info("FALLBACK: Loading class without Extension definition");
 
-			cc = Class.forName(fullDef, true, myContext.getClassLoader());
+			cc = Class.forName(fullDef, true, parentClassLoader);
 		} catch (ClassNotFoundException ex) {
 			logger.error("Error loading class: " + fullDef,ex);
 		} catch (SecurityException ex) {
@@ -171,7 +170,7 @@ public abstract class BaseClassManager implements IClassManager {
 		Class<TipiTypeParser> pClass = null;
 		try {
 			pClass = (Class<TipiTypeParser>) Class.forName(parserClass, true,
-					myContext.getClassLoader());
+					parentClassLoader);
 		} catch (ClassNotFoundException ex) {
 			logger.info("Error loading class for parser: " + parserClass);
 			return null;
@@ -190,7 +189,7 @@ public abstract class BaseClassManager implements IClassManager {
 		}
 		try {
 			Class<?> cc = Class.forName(classType, true,
-					myContext.getClassLoader());
+					parentClassLoader);
 			ttp.setReturnType(cc);
 			NavajoFactory.getInstance().addNavajoType(name,cc);
 		} catch (ClassNotFoundException ex) {

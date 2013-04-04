@@ -41,7 +41,6 @@ public class SimpleScheduler implements Scheduler {
 
 	public void submit(TmlRunnable myRunner, boolean priority)
 			throws IOException {
-		System.err.println("Submitting to simple pool...");
 		normalPool.submit(myRunner);
 	}
 

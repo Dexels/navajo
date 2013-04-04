@@ -25,7 +25,6 @@ public class BasicClientTest {
 		System.err.println("=============================== TEST SETUP ============================================");
 		myClient = NavajoClientFactory.getClient();
 		// Use manual load balancing in order to fully control scenario's to enable/disable servers.
-		myClient.setLoadBalancingMode(ClientInterface.LBMODE_MANUAL);
 		myClient.setServers(new String[]{"atlas.dexels.com/sportlink/knvb/Postman"});
 		myClient.setForceGzip(true);
 		System.err.println("=======================================================================================");

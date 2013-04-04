@@ -3,7 +3,7 @@
     <AD name="url"   id="url"   required="true"  type="String" default="localhost"/>   
     <AD name="name"  id="name" required="true" type="String" default="http://localhost:8080"/>
   </OCD>
-  <Designate factoryPid="navajo.resource.http" pid="navajo.resource.http">
+  <Designate factoryPid="navajo.resource.http">
      <Object ocdref="navajo.resource.http"/>
   </Designate>
 </metatype:MetaData>
