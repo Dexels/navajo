@@ -24,6 +24,7 @@ public class NavajoTunnelComponentImpl {
 		String username = (String) settings.get("username");
 		String host = (String) settings.get("host");
 		String keyfile = (String) settings.get("keyfile");
+		String localhost = (String) settings.get("localhost");
 		final Object localPortString = settings.get("localport");
 		Integer localPort = null;
 		if (localPortString instanceof Integer) {
@@ -45,7 +46,7 @@ public class NavajoTunnelComponentImpl {
 		} else {
 			sshPort = Integer.parseInt(""+sshPortString);
 		}
-		connect(username, host, remotePort, localPort, sshPort, keyfile);
+		connect(username, host, remotePort,localhost, localPort, sshPort, keyfile);
 	}
 
 	public void deactivate() {
@@ -67,7 +68,7 @@ public class NavajoTunnelComponentImpl {
 		return this.navajoConfig;
 	}
 	
-	public void connect(String username, String host, int remotePort,int localPort,int sshPort, String privateKey) throws JSchException {
+	public void connect(String username, String host, int remotePort,String localhost, int localPort,int sshPort, String privateKey) throws JSchException {
 		int assigned = 0;
 			JSch.setLogger(new JschLoggerBridge(logger));
 
@@ -84,7 +85,7 @@ public class NavajoTunnelComponentImpl {
             session.setTimeout(10000);
             session.connect();            
              
-            assigned = session.setPortForwardingL(localPort, 
+            assigned = session.setPortForwardingL(localhost, localPort, 
                     host, remotePort);
             session.setDaemonThread(true);
              System.err.println("assigned: "+assigned);
@@ -98,7 +99,7 @@ public class NavajoTunnelComponentImpl {
 	
 	public static void main(String[] args) throws InterruptedException, JSchException {
 		NavajoTunnelComponentImpl ntci = new NavajoTunnelComponentImpl();
-		ntci.connect("flyaruu", "10.0.0.1", 1521, 21521, 22,"/Users/frank/.ssh/id_rsa");
+		ntci.connect("flyaruu", "10.0.0.1", 1521, "localhost",21521, 22,"/Users/frank/.ssh/id_rsa");
 		Thread.sleep(10000);
 	}
 }
