@@ -48,7 +48,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
-import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
