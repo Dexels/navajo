@@ -37,8 +37,9 @@ import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 	    ResultSet rset = stmt.executeQuery ("select * from sport");
 
 	    // Iterate through the result and print the employee names
-	    while (rset.next ())
-	      System.out.println (rset.getString (1));
+	    while (rset.next ()) {
+		      System.out.println (rset.getString (1));
+	    }
 
 	    // Close the RseultSet
 	    rset.close();
