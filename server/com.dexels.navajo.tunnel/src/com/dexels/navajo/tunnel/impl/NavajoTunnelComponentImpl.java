@@ -1,6 +1,8 @@
 package com.dexels.navajo.tunnel.impl;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,8 @@ public class NavajoTunnelComponentImpl implements Tunnel {
 	private String name;
 	private int localport;
 	private String type;
+	
+	private final Map<String,Object> parameters = new HashMap<String, Object>();
 	
 	public void activate(Map<String,Object> settings) throws Exception{
 		logger.info("Setting up tunnel with settings: {}",settings);
@@ -56,6 +60,9 @@ public class NavajoTunnelComponentImpl implements Tunnel {
 		} else {
 			sshPort = Integer.parseInt(""+sshPortString);
 		}
+		parameters.clear();
+		parameters.putAll(settings);
+		
 		connect(username, host, remotePort,localhost, localPort, sshPort, keyfile);
 	}
 
@@ -82,7 +89,7 @@ public class NavajoTunnelComponentImpl implements Tunnel {
 		return this.navajoConfig;
 	}
 	
-	public void connect(String username, String host, int remotePort,String localhost, int localPort,int sshPort, String privateKey) throws JSchException {
+	private void connect(String username, String host, int remotePort,String localhost, int localPort,int sshPort, String privateKey) throws JSchException {
 		int assigned = 0;
 			JSch.setLogger(new JschLoggerBridge(logger));
 
@@ -135,5 +142,10 @@ public class NavajoTunnelComponentImpl implements Tunnel {
 	@Override
 	public int getLocalPort() {
 		return localport;
+	}
+
+	@Override
+	public Object getParameter(String key) {
+		return parameters.get(key);
 	}
 }

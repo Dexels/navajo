@@ -11,7 +11,7 @@
     <AD name="sshport"  id="sshport" required="true" type="Integer" default="22"/>
   </OCD>
 
-  <Designate factoryPid="navajo.tunnel" >
+  <Designate factoryPid="navajo.tunnel">
      <Object ocdref="navajo.tunnel"/>
   </Designate>
 </metatype:MetaData>

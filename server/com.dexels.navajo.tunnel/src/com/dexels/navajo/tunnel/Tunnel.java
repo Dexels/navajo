@@ -5,4 +5,5 @@ public interface Tunnel {
 	public String getType();
 	public String getLocalHost();
 	public int getLocalPort();
+	public Object getParameter(String key);
 }
