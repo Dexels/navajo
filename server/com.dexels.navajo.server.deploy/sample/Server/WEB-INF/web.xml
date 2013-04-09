@@ -18,6 +18,12 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         <load-on-startup>-1</load-on-startup>	
 	</servlet>
 	
+	<servlet>
+		<servlet-name>Renflex</servlet-name>
+		<servlet-class>com.dexels.navajo.server.listener.soap.SoapListenerBizTalk</servlet-class>
+        <load-on-startup>-1</load-on-startup>	
+	</servlet>
+	
 	
 	<!-- Not DRY, would prefer a proper client -->
 	<servlet>
@@ -86,6 +92,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>Rest</servlet-name>
 		<url-pattern>/Rest</url-pattern>
 	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Renflex</servlet-name>
+		<url-pattern>/Renflex</url-pattern>
+	</servlet-mapping>
 	
 	<servlet-mapping>
 		<servlet-name>Nql</servlet-name>
@@ -97,6 +108,8 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<url-pattern>/Laszlo</url-pattern>
 		<url-pattern>/servlet/Laszlo</url-pattern>
 	</servlet-mapping>
+	
+	
 		<!-- <servlet-name>Comet</servlet-name>-->
 
 <!-- 	
