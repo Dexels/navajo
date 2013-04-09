@@ -21,8 +21,8 @@ import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 	    // Set connection parameters
 	    ocpds.setURL("jdbc:oracle:thin:@10.0.0.1:1521:aardnoot");
 //	    ocpds.setDriverType("thin");
-	    ocpds.setUser("simsalabim");
-	    ocpds.setPassword("whoosh");
+	    ocpds.setUser("knvbkern");
+	    ocpds.setPassword("knvb");
 
 	    // Create a pooled connection
 	    PooledConnection pc  = ocpds.getPooledConnection();

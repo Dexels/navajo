@@ -52,12 +52,6 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 	@Override
 	public void deleted(String pid) {
 		logger.info("Shutting down instance: "+pid);
-//		DataSource nc = contextMap.get(pid);
-//		if(nc==null) {
-//			logger.warn("Strange: Deleting, but already gone.");
-//			return;
-//		}
-//		contextMap.remove(pid);
 		ServiceRegistration<DataSource> reg = registryMap.get(pid);
 		reg.unregister();
 
