@@ -60,7 +60,7 @@ public class DefaultDayRenderer extends JPanel implements DayRendererInterface {
 		if (d.getDate() != null) {
 
 			Calendar todaysCalendar = Calendar.getInstance();
-			todaysCalendar.set(Calendar.HOUR, 0);
+			todaysCalendar.set(Calendar.HOUR_OF_DAY, 0);
 			todaysCalendar.set(Calendar.MINUTE, 0);
 			todaysCalendar.set(Calendar.SECOND, 0);
 			todaysCalendar.set(Calendar.MILLISECOND, 0);
@@ -68,7 +68,7 @@ public class DefaultDayRenderer extends JPanel implements DayRendererInterface {
 
 			Calendar dayCalendar = Calendar.getInstance();
 			dayCalendar.setTime(d.getDate());
-			dayCalendar.set(Calendar.HOUR, 0);
+			dayCalendar.set(Calendar.HOUR_OF_DAY, 0);
 			dayCalendar.set(Calendar.MINUTE, 0);
 			dayCalendar.set(Calendar.SECOND, 0);
 			dayCalendar.set(Calendar.MILLISECOND, 0);
