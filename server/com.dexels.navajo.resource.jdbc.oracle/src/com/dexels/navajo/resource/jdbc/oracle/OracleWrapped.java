@@ -3,15 +3,14 @@ package com.dexels.navajo.resource.jdbc.oracle;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Dictionary;
-import java.util.Enumeration;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.sql.DataSource;
 
 import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,17 +30,15 @@ public class OracleWrapped implements DataSource {
 		logger.info("Oracle driver constructed");
 	}
 	
-	public void activate(ComponentContext cc) {
+	public void activate(Map<String,Object> settings) {
 		data = new OracleJDBCDataSourceService();
 		try {
 			Properties p = new Properties();
-			Dictionary d = cc.getProperties();
-			final Enumeration keys = d.keys();
-			while (keys.hasMoreElements()) {
-				String key = (String)keys.nextElement();
-				p.put(key, d.get(key));
+			for (Entry<String,Object> element : settings.entrySet()) {
+				p.put(element.getKey(),element.getValue());
 				
 			}
+
 				datasource = new OracleConnectionPoolDataSource();
 			
 			wrapped = data.setup(datasource,p);

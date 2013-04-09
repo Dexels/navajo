@@ -89,7 +89,6 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 				logger.error("Error: ",e);
 			}
 			windowCloseManager = new WindowCloseManager(this, getCurrentContext());
-
 		} catch (Throwable t) {
 			logger.error("Error: ",t);
 		}
