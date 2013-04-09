@@ -44,7 +44,7 @@ public final class DateSubstract extends FunctionInterface {
 
 		Calendar cc = Calendar.getInstance();
 		cc.clear();
-		cc.add(Calendar.HOUR,hours);
+		cc.add(Calendar.HOUR_OF_DAY,hours);
 		cc.add(Calendar.MILLISECOND,millis);
 		return cc.getTime();
 	}
