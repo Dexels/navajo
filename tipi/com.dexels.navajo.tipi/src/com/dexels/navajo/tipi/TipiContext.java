@@ -1130,6 +1130,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	 */
 	public void reloadCssDefinitions()
 	{
+		// CSS caching part 1 - turn this on
+		/*
 		for (String definition : tipiCssMap.keySet())
 		{
 			try
@@ -1142,6 +1144,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			}
 		}
 		reapplyCss(getDefaultTopLevel());
+		*/
 	}
 	
 	public void reapplyCss(TipiComponent tc)
@@ -1591,14 +1594,15 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 		}
 		tipiComponentMap.put(defname, elm);
-		try
+		// CSS caching part 1 - turn this on
+/*		try
 		{
 			loadCssDefinition(defname, locationMap.get(defname));
 		}
 		catch(IOException ioe)
 		{
 			logger.debug("Something going wrong loading css definitions for " + defname, ioe);
-		}
+		} */
 
 		if (!hasDebugger) {
 			// debug mode, don't cache at all

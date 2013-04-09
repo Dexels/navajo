@@ -796,8 +796,13 @@ private final void switchServer(boolean force) {
 }
 
 	@Override
-public void setLocaleCode(String locale) {
+	public void setLocaleCode(String locale) {
 		this.localeCode  = locale;
+	}
+
+	@Override
+	public String getLocaleCode() {
+		return this.localeCode;
 	}
 
 	@Override
@@ -805,6 +810,7 @@ public void setLocaleCode(String locale) {
 		this.subLocale = locale;
 	}
 
+	@Override
 	public String getSubLocaleCode() {
 		return this.subLocale;
 	}
