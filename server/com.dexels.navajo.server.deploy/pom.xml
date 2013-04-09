@@ -91,21 +91,6 @@
             <version>4.2.0</version>
             <scope>runtime</scope>
         </dependency>
-<<<<<<< HEAD
-<!--
-         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.6.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.6.4</version>
-        </dependency>
--->
-=======
->>>>>>> dab278f5fb0594717d2bf8b57da72b7fdba9cfd6
         <dependency>
             <groupId>taglibs</groupId>
             <artifactId>standard</artifactId>
