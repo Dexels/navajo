@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.functions.util.FunctionDefinition;
-import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public final class ClassManager extends BaseClassManager implements Serializable, IClassManager {

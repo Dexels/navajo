@@ -97,6 +97,7 @@
    </tipiaction>
    <tipiaction name="setLocale" class="TipiSetLocale" package="com.dexels.navajo.tipi.actions">
       <param name="locale" type="string" required="true" />
+      <param name="subLocale" type="string" />
       <!--<param name="context" type="string"/>-->
    </tipiaction>
    <tipiaction name="setSubLocale" class="TipiSetSubLocale" package="com.dexels.navajo.tipi.actions">

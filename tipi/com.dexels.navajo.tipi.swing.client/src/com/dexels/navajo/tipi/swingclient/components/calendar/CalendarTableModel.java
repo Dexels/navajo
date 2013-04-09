@@ -183,7 +183,7 @@ public class CalendarTableModel implements TableModel {
 			cc.set(Calendar.MONTH, month);
 			cc.set(Calendar.YEAR, year);
 			cc.set(Calendar.DATE, i);
-			cc.set(Calendar.HOUR, 0);
+			cc.set(Calendar.HOUR_OF_DAY, 0);
 			cc.set(Calendar.MINUTE, 0);
 			cc.set(Calendar.SECOND, 0);
 			cc.set(Calendar.MILLISECOND, 0);

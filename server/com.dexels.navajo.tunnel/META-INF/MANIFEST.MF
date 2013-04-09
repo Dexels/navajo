@@ -10,3 +10,4 @@ Import-Package: com.dexels.navajo.server,
  com.jcraft.jsch;version="[0.1.46,0.2.0)",
  org.slf4j;version="1.6.1"
 Bundle-ClassPath: .
+Export-Package: com.dexels.navajo.tunnel
