@@ -25,7 +25,6 @@
 package com.dexels.navajo.server.enterprise.tribe;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.DispatcherFactory;
 
 public class ServiceRequest extends Request {
 
