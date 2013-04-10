@@ -47,7 +47,7 @@ import com.dexels.navajo.mapping.MappableException;
  */
 public class GenericThread implements Runnable, Mappable {
 
-	public String myId;
+	protected String threadId;
 	public boolean killed = false;
 	public GenericThread [] allThreads;
 	public String status = EMBRYO;
@@ -70,30 +70,30 @@ public class GenericThread implements Runnable, Mappable {
 	private static Map<String,GenericThread> threadPool = Collections.synchronizedMap(new HashMap<String,GenericThread>());
 	
 	public GenericThread() {
-		myId = "dummy";
+		threadId = "dummy";
 	}
 	
 	public GenericThread(String id) {
-		myId = id;
+		threadId = id;
 		status = NOTSTARTED;
 	}
 	
 	public void finishThread() {
 		//System.err.println("Finishing GenericThread: " + myId);
 		if ( threadPool != null ) {
-			threadPool.remove(myId);
+			threadPool.remove(threadId);
 		}
 	}
 	
 	public void startThread(GenericThread instance) {
 		
-		thread = new Thread(instance,myId);
+		thread = new Thread(instance,threadId);
 		thread.setDaemon(true);
 		thread.start();
-		if ( !threadPool.containsKey(instance.myId) ) {
-			threadPool.put(instance.myId, instance);
+		if ( !threadPool.containsKey(instance.threadId) ) {
+			threadPool.put(instance.threadId, instance);
 		} else {
-			throw new RuntimeException("Could not start service " + instance.myId + ": already started");
+			throw new RuntimeException("Could not start service " + instance.threadId + ": already started");
 		}
 	
 	}
@@ -131,7 +131,7 @@ public class GenericThread implements Runnable, Mappable {
 				status = SLEEPING;
 				inactive();
 			}
-			logger.debug("Thread " + myId + " is dying");
+			logger.debug("Thread " + threadId + " is dying");
 			status = DEAD;
 		} finally {
 			finishThread();
@@ -218,7 +218,7 @@ public class GenericThread implements Runnable, Mappable {
 	}
 	
 	public String getMyId() {
-		return this.myId;
+		return this.threadId;
 	}
 	
 	public String getClassName() {
