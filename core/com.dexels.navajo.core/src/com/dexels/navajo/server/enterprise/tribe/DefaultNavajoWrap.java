@@ -2,7 +2,6 @@ package com.dexels.navajo.server.enterprise.tribe;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.sharedstore.SerializationUtil;
-import com.dexels.navajo.sharedstore.SharedStoreFactory;
 
 /**
  * Wraps a Navajo object in a nice rug for cross Tribal transportation purposes

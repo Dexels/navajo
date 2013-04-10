@@ -192,7 +192,9 @@ private String resource;
   }
 
   public void store() throws MappableException, UserException {
-
+	  if ( block ) {
+		  waitForResult();
+	  }
   }
 
   /**
@@ -1204,14 +1206,12 @@ private String resource;
 	      }
 		  
 	  } finally {
-		  if ( !block ) {
-			  synchronized (waitForResult) {
+		   synchronized (waitForResult) {
 				  waitForResult.notify();
 			  }
 			  if ( myResponseListener != null ) {
 				  myResponseListener.onNavajoResponse(this);
 			  }
-		  }
 	  }  
 	 
   }
