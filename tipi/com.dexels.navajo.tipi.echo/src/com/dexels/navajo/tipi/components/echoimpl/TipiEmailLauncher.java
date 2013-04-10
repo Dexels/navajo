@@ -40,8 +40,7 @@ public class TipiEmailLauncher extends TipiEchoDataComponentImpl {
                     return;
                 }
             } catch (Exception ex) {
-                logger.info("Could not find data in 'messagepath'! \n");
-                ex.printStackTrace();
+                logger.info("Could not find data in 'messagepath'! \n",ex);
                 return;
             }
             createEmail(propertyName, clubName);

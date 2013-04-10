@@ -10,6 +10,7 @@ import javax.swing.RootPaneContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 
@@ -30,7 +31,7 @@ import com.dexels.navajo.tipi.TipiContext;
  * @author not attributable
  * @version 1.0
  */
-public class TipiScreen extends TipiSwingDataComponentImpl {
+public class TipiScreen extends TipiSwingDataComponentImpl implements ScopeLimit{
 	private static final long serialVersionUID = -4453008939836688032L;
 
 	

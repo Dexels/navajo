@@ -53,11 +53,10 @@ public class TipiServeBinary extends TipiAction {
 			}
 
 		} catch (TipiBreakException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		} catch (TipiException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
-
 	}
 
 	private void legacyOpenBinary(TipiEvent e) {
@@ -119,9 +118,9 @@ public class TipiServeBinary extends TipiAction {
 			Command brc = new BrowserOpenWindowCommand(result.toString(), "reports" + random, "_blank");
 			ApplicationInstance.getActive().enqueueCommand(brc);
 		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 	}
 

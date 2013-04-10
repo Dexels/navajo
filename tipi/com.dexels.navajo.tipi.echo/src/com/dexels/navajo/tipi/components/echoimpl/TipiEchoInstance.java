@@ -204,7 +204,7 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 			logger.info("Context created: "+newContext.hashCode());
 			initServlet(newContext, myServletConfig.getInitParameterNames(),ed);
 		} catch (Throwable ex) {
-			ex.printStackTrace();
+			logger.error("Error: ", ex);
 		}
 		return newContext;
 	}

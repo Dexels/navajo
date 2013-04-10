@@ -133,7 +133,7 @@ public class XMLMap extends TagMap implements Mappable {
 			xe.parseFromReader(new StringReader(s));
 		}
 		catch (IOException ex) {
-			ex.printStackTrace();
+			throw new UserException("Error parsing:", ex);
 		}
 		this.name = xe.getName();
 

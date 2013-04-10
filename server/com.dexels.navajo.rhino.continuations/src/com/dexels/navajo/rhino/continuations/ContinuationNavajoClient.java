@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.NavajoResponseHandler;
-import com.dexels.navajo.client.async.AsyncClient;
+import com.dexels.navajo.client.async.ManualAsyncClient;
 import com.dexels.navajo.client.async.AsyncClientFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -51,7 +51,7 @@ public class ContinuationNavajoClient {
 		}
 	}
 
-	public AsyncClient getClient() {
-		return AsyncClientFactory.getInstance();
+	public ManualAsyncClient getClient() {
+		return AsyncClientFactory.getManualInstance();
 	}
 }

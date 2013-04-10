@@ -8,7 +8,6 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
-
 import navajo.ExtensionDefinition;
 
 import org.osgi.framework.BundleContext;
@@ -36,7 +35,7 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 			.getLogger(OSGiClassManager.class);
 	
 	public OSGiClassManager(BundleContext bc, TipiContext tc) {
-		super(tc);
+		super(tc.getClassLoader());
 		myBundleContext = bc;
 	}
 	@Override

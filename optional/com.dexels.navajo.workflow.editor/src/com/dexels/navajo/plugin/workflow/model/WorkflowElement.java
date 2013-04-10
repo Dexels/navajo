@@ -16,6 +16,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -28,7 +30,10 @@ public class WorkflowElement extends WorkflowModelElement {
 	public static final String CHILD_REMOVED_PROP = "ShapesDiagram.ChildRemoved";
 	private List<StateElement> shapes = new ArrayList<StateElement>();
 	private Map<String,StateElement> shapeMap = new HashMap<String,StateElement>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(WorkflowElement.class);
+	
 	public void load(InputStream is) throws XMLParseException, IOException {
 		InputStreamReader isr = new InputStreamReader(is);
 		XMLElement e = new CaseSensitiveXMLElement();
@@ -129,9 +134,9 @@ public class WorkflowElement extends WorkflowModelElement {
 			f.setContents(bais, IResource.KEEP_HISTORY, ip);
 
 		} catch (CoreException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 

@@ -103,6 +103,7 @@ public class MapDefinition {
 	}
 
 	private void generateFieldCode(XMLElement child, XMLElement mout, String filename, boolean isMethod) throws Exception {
+		//System.err.println("In generateFieldCode: " + child);
 		// First process children...
 		if ( child.getChildren().size() > 0 && !child.getFirstChild().getName().equals("value") ) {
 			Vector<XMLElement> vc = child.getChildren();
@@ -192,6 +193,7 @@ public class MapDefinition {
 		XMLElement map = null;
 		
 		//System.err.println("IN GENERATECODE FOR : " + in.getName() + ", tagname is: " + tagName + ", linenr: " + in.getLineNr());
+		//System.err.println("In generateCode: " + in);
 		if ( in.getName().equals("map."+tagName)  ) {
 			map = new TSLElement(in, "map");
 			map.setAttribute("object", objectName);

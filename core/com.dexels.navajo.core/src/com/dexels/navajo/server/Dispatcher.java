@@ -1078,55 +1078,50 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 		Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated, AfterWebServiceEmitter emit) {
 	if (access != null && !scheduledWebservice) {
 		
-		// Always make sure header contains original rpcName and rpcUser
-		// (BUT NOT PASSWORD!).
-		Header h = outMessage.getHeader();
-		if (h == null) {
-			h = NavajoFactory.getInstance().createHeader(outMessage, rpcName, rpcUser, "", -1);
-			outMessage.addHeader(h);
-		} else {
-			h.setRPCName(rpcName);
-			h.setRPCUser(rpcUser);
-		}
-		// Set accessId to make sure it can be used as reference by triggered tasks.
-		h.setHeaderAttribute("accessId", access.getAccessID());
-		
-		// If emitter is specified, first fire emitter.
-		if ( emit != null ) {
-			emit.emit(access.getOutputDoc());
-		}
+		try { 
+			// Always make sure header contains original rpcName and rpcUser
+			// (BUT NOT PASSWORD!).
+			Header h = outMessage.getHeader();
+			if (h == null) {
+				h = NavajoFactory.getInstance().createHeader(outMessage, rpcName, rpcUser, "", -1);
+				outMessage.addHeader(h);
+			} else {
+				h.setRPCName(rpcName);
+				h.setRPCUser(rpcUser);
+			}
+			// Set accessId to make sure it can be used as reference by triggered tasks.
+			h.setHeaderAttribute("accessId", access.getAccessID());
 
-		// Call after web service event...
-		afterWebServiceActivated = WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
-		
-//		access.getOriginalRunnable().
-		// Remove access object from set of active webservices first.
-		accessSet.remove(access);
-		// Set access to finished state.
-		access.setFinished();
+			// If emitter is specified, first fire emitter.
+			if ( emit != null ) {
+				emit.emit(access.getOutputDoc());
+			}
 
-		
-		// Translate property descriptions.
-		updatePropertyDescriptions(inMessage, outMessage);
-		access.storeStatistics(h);
+			// Call after web service event...
 
-		// Call Navajoresponse event.
-		access.setException(myException);
+			afterWebServiceActivated = WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
 
-		NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
+			// Set access to finished state.
+			access.setFinished();
 
-		// Publish exception event if exception occurred.
-		if (myException != null) {
-			NavajoEventRegistry.getInstance().publishEvent(
-					new NavajoExceptionEvent(rpcName, access.getAccessID(), rpcUser, myException));
-		}
+			// Translate property descriptions.
+			updatePropertyDescriptions(inMessage, outMessage);
+			access.storeStatistics(h);
 
-//		appendServerBroadCast(access, inMessage, h);
+			// Call Navajoresponse event.
+			access.setException(myException);
 
-		if (!afterWebServiceActivated) { // Nullify Access object if it
-													// did not result in an After
-													// Webservice action...s
-			access = null;
+			NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
+
+			// Publish exception event if exception occurred.
+			if (myException != null) {
+				NavajoEventRegistry.getInstance().publishEvent(
+						new NavajoExceptionEvent(rpcName, access.getAccessID(), rpcUser, myException));
+			}
+
+		} finally {
+			// Remove access object from set of active webservices first.
+			accessSet.remove(access);
 		}
 	}
 

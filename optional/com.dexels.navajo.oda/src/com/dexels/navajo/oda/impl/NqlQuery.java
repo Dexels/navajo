@@ -79,11 +79,10 @@ public class NqlQuery implements IQuery
 		try {
 			return new NqlResultSetMetaData(getConnection().getResult());
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new OdaException(e);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			throw new OdaException(e);
 		}
-		return null;
 	}
 
 	/*
@@ -98,11 +97,10 @@ public class NqlQuery implements IQuery
 			IResultSet resultSet = new NqlResultSetMetaData(nn.getAllMessages().get(0));
 			return resultSet;
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new OdaException(e);
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			throw new OdaException(e);
 		}
-		return null;
 	}
 
 	/*

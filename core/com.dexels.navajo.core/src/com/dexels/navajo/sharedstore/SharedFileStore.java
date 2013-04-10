@@ -266,7 +266,7 @@ public class SharedFileStore implements SharedStoreInterface {
 		try {
 			return new FileInputStream(f);
 		} catch (FileNotFoundException e) {
-			throw new SharedStoreException(e.getMessage());
+			throw new SharedStoreException(e.getMessage(), e);
 		}
 	}
 	
@@ -673,6 +673,27 @@ public class SharedFileStore implements SharedStoreInterface {
 
 	public void clearTribeManager(TribeManagerInterface tribeManagerInterface) {
 		this.tribeManagerInterface = null;
+	}
+
+	@Override
+	public SharedStoreEntry[] getEntries(String parent) {
+		ArrayList<SharedStoreEntry> names = new ArrayList<SharedStoreEntry>();
+		File p = new File(sharedStore, parent);
+		File [] fs = p.listFiles(); 
+		// Sort files on last modification date
+		if ( fs != null) {
+			Arrays.sort(fs, new FileComparator());
+			for (int i = 0; i < fs.length; i++) {
+				if ( fs[i].isFile()) {
+					SharedStoreEntry sse = new SharedStoreEntry(parent, fs[i].getName(), fs[i].lastModified(), "unknown", fs[i].getTotalSpace());
+					names.add(sse);
+				}
+			}
+		}
+		SharedStoreEntry [] result = new SharedStoreEntry[names.size()];
+		result = names.toArray(result);
+
+		return result;
 	}
 
 }

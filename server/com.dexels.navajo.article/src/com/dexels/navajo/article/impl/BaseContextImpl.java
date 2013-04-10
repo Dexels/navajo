@@ -1,7 +1,6 @@
 package com.dexels.navajo.article.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -97,7 +96,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 				result.put(attr, x.getStringAttribute(attr));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Problem parsing article: ", e);
 		} finally {
 			if(fr!=null) {
 				try {
@@ -135,7 +134,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 				try {
 					r.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 			}
 		}

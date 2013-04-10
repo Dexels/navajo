@@ -21,6 +21,7 @@ import javax.swing.UIManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.swingimpl.embed.SwingEmbeddedContext;
@@ -29,7 +30,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingFrameImpl;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
 
 
-public class TipiFrame extends TipiSwingDataComponentImpl {
+public class TipiFrame extends TipiSwingDataComponentImpl implements ScopeLimit{
 	private static final long serialVersionUID = -1945154266267368285L;
 	
 	private final static Logger logger = LoggerFactory
@@ -93,6 +94,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 			myFrame.getContentPane().add(mySuperPanel, BorderLayout.CENTER);
 			mySuperPanel.setLayout(new BorderLayout());
 			((SwingTipiContext) myContext).addTopLevel(myFrame);
+
 			// mySuperPanel.addC
 			return myFrame;
 		}
@@ -140,6 +142,28 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 				}
 			});
 		}
+	}
+
+	public void disposeComponent() {
+		runSyncInEventThread(new Runnable() {
+
+			public void run() {
+				JFrame jj = (JFrame) getContainer();
+				if (jj != null) {
+					jj.dispose();
+					Container parent = jj.getParent();
+					if (parent != null) {
+						parent.remove(jj);
+					}
+				}
+
+				clearContainer();
+				myToplevel = null;
+				mySuperPanel = null;
+			}
+		});
+		TipiFrame.super.disposeComponent();
+
 	}
 
 	public void removeFromContainer(final Object c) {

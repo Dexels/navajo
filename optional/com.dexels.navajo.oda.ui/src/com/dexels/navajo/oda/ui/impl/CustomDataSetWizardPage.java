@@ -31,6 +31,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Auto-generated implementation of an ODA data set designer page
@@ -45,6 +47,10 @@ import org.eclipse.swt.widgets.Text;
 public class CustomDataSetWizardPage extends DataSetWizardPage
 {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(CustomDataSetWizardPage.class);
+	
     private static String DEFAULT_MESSAGE = "Define the query text for the data set";
     
     private transient Text m_queryTextField;
@@ -257,8 +263,7 @@ public class CustomDataSetWizardPage extends DataSetWizardPage
             // not able to get current metadata, reset previous derived metadata
             dataSetDesign.setResultSets( null );
             dataSetDesign.setParameters( null );
-            
-            e.printStackTrace();
+            logger.error("Error: ", e);
         }
         finally
         {
@@ -287,7 +292,7 @@ public class CustomDataSetWizardPage extends DataSetWizardPage
         {
             // no result set definition available, reset previous derived metadata
             dataSetDesign.setResultSets( null );
-            e.printStackTrace();
+            logger.error("Error: ", e);
         }
         
         // proceed to get parameter design definition
@@ -300,7 +305,7 @@ public class CustomDataSetWizardPage extends DataSetWizardPage
         {
             // no parameter definition available, reset previous derived metadata
             dataSetDesign.setParameters( null );
-            ex.printStackTrace();
+            logger.error("Error: ", ex);
         }
         
         /*
@@ -376,8 +381,7 @@ public class CustomDataSetWizardPage extends DataSetWizardPage
         }
         catch ( OdaException e )
         {
-            // ignore
-            e.printStackTrace();
+        	logger.error("Error: ", e);
         }
     }
 

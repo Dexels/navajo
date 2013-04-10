@@ -84,7 +84,7 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
                         // m.refreshExpression();
                         myNavajo.refreshExpression();
                     } catch (NavajoException ex) {
-                        ex.printStackTrace();
+                    	logger.error("Error: ", ex);
                     }
                 } else {
                     logger.info("NULL MESSAGE?**********************");
@@ -163,8 +163,8 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
             try {
                 flatten(serviceName, hostUrl, username, password, pincode, keystore, keypass);
             } catch (Exception ex) {
-                ex.printStackTrace();
-                if(compMeth.getAction()!=null) {
+            	logger.error("Error: ", ex);
+            	if(compMeth.getAction()!=null) {
                 	compMeth.getAction().dumpStack(ex.getMessage());
                 	
                 }

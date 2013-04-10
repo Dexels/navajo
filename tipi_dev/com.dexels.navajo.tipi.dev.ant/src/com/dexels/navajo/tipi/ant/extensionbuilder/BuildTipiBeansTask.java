@@ -71,7 +71,6 @@ public class BuildTipiBeansTask extends org.apache.tools.ant.Task {
 			String projectName = getProject().getProperty("ant.project.name");
 			ExtensionActions.buildTipiBeans(getProject().getBaseDir(),distribution,distribution,projectName,version,destDir,repository);
 		} catch (IOException e1) {
-			e1.printStackTrace();
 			throw new BuildException("Error building documentation ",e1);
 		}
 	}

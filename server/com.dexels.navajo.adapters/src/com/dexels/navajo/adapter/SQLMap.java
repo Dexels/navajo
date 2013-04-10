@@ -1043,7 +1043,6 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				// For Sybase compatibility: sybase does not like to be called
 				// using executeQuery() if query does not return a resultset.
 				if (e.getMessage().indexOf("JZ0R2") == -1) {
-					e.printStackTrace(Access.getConsoleWriter(myAccess));
 					throw e;
 				}
 			}
@@ -1219,8 +1218,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				resultSet = (ResultSetMap[]) dummy.toArray(resultSet);
 			}
 		} catch (SQLException sqle) {
-			sqle.printStackTrace(Access.getConsoleWriter(myAccess));
-			AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access"));
+			AuditLog.log("SQLMap", sqle.getMessage(),sqle, Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access"));
 			throw new UserException(-1, sqle.getMessage(), sqle);
 		} finally {
 			if (rs != null) {

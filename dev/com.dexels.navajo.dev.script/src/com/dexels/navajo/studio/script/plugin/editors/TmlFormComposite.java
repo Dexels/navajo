@@ -53,6 +53,8 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.ResourceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.birt.BirtUtils;
 import com.dexels.navajo.client.ClientException;
@@ -79,6 +81,10 @@ import com.dexels.navajo.swtclient.SwtFactory;
 
 public class TmlFormComposite extends Composite {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(TmlFormComposite.class);
+	
 	private static final Color LINK_BACKGROUND_COLOR = new Color(Display.getCurrent(), 240, 240, 220);
 //	private static final Color BLUE_BACKGROUND_COLOR = new Color(Display.getCurrent(), 220, 220, 240);
 
@@ -195,7 +201,7 @@ public class TmlFormComposite extends Composite {
 		try {
 			al = n.getAllMessages();
 		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 			return;
 		}
 		for (Iterator<Message> iter = al.iterator(); iter.hasNext();) {
@@ -334,17 +340,12 @@ public class TmlFormComposite extends Composite {
 		Job j = new Job("Running Navajo...") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				try {
-					Navajo cp = NavajoFactory.getInstance().createNavajo();
-					cp.addMessage(element.copy(cp));
-					if(myServerEntry!=null) {
-							Binary b = myServerEntry.getArrayMessageReport(element, propertyNames, propertyTitles, columnWidths, "pdf","landscape", new int[]{5,5,5,5});
-							GenericPropertyComponent.openBinary(b);
-						
-					}
+				Navajo cp = NavajoFactory.getInstance().createNavajo();
+				cp.addMessage(element.copy(cp));
+				if(myServerEntry!=null) {
+						Binary b = myServerEntry.getArrayMessageReport(element, propertyNames, propertyTitles, columnWidths, "pdf","landscape", new int[]{5,5,5,5});
+						GenericPropertyComponent.openBinary(b);
 					
-				} catch (NavajoException e) {
-					e.printStackTrace();
 				}
 				return Status.OK_STATUS;
 			}
@@ -451,7 +452,7 @@ public class TmlFormComposite extends Composite {
 					try {
 						runHref(myCurrentNavajo, element.getName(),false, scriptName);
 					} catch (Exception e1) {
-						e1.printStackTrace();
+						logger.error("Error: ", e1);
 					}
 				}
 			});
@@ -590,7 +591,7 @@ public class TmlFormComposite extends Composite {
 				try {
 					runHref(copiedNavajo, "ProcessPrintGenericBirt", false, null);
 				} catch (Exception e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 		}
 		});
@@ -614,7 +615,7 @@ public class TmlFormComposite extends Composite {
 					runHref(myCurrentNavajo.copy(), "ProcessPrintGenericBirt", true, myCurrentName);
 
 				} catch (Exception e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 			}
 		});
@@ -633,16 +634,8 @@ public class TmlFormComposite extends Composite {
 	private void runHref(final Navajo nav,final String name, final boolean reload,
 			final String sourceTmlName) throws Exception {
 		fireScriptCalled(nav,name);
-		System.err.println("RUNHREF: file: [[null]] name: " + name + " reload: " + reload);
 		nav.getHeader().setHeaderAttribute("sourceScript", sourceTmlName);
-		
-		try {
-			System.err.println("BEFORE running run: ");
-			nav.getHeader().write(System.err);
-			System.err.println("End of href.");
-		} catch (NavajoException ex) {
-			ex.printStackTrace();
-		}
+		nav.getHeader().write(System.err);
 		
 		// I think this is for the TmlBrowser
 		runScript(nav, name);
@@ -667,14 +660,8 @@ public class TmlFormComposite extends Composite {
 						}
 						final Navajo n = output;
 					
-						try {
-							System.err.println("Href run: ");
-							nav.getHeader().write(System.err);
-							n.getHeader().write(System.err);
-							System.err.println("End of href.");
-						} catch (NavajoException e) {
-							e.printStackTrace();
-						}
+						nav.getHeader().write(System.err);
+						n.getHeader().write(System.err);
 						Display.getDefault().syncExec(new Runnable() {
 
 							public void run() {
@@ -682,7 +669,7 @@ public class TmlFormComposite extends Composite {
 							}
 						});
 					} catch (ClientException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 					return Status.OK_STATUS;
 				}
@@ -788,13 +775,11 @@ public class TmlFormComposite extends Composite {
 
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (NavajoException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch(Throwable t) {
-			t.printStackTrace();
+			logger.error("Error: ", t);
 		}
 	}
 
@@ -881,7 +866,7 @@ public class TmlFormComposite extends Composite {
 			}
 
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		}
 	}
 

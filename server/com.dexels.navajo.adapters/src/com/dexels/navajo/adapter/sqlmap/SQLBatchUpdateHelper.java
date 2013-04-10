@@ -196,7 +196,6 @@ public class SQLBatchUpdateHelper {
 					// called using executeQuery() if query does not return a
 					// resultset.
 					if (e.getMessage().indexOf("JZ0R2") == -1) {
-						e.printStackTrace();
 						throw e;
 					}
 				}

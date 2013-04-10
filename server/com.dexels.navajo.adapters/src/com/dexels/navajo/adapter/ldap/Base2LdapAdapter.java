@@ -98,7 +98,7 @@ public class Base2LdapAdapter implements Mappable {
 				logger.debug("o: " + o);
 			}
 		} catch (NamingException e) {
-			e.printStackTrace();
+			logger.error("Error listing ldab: ", e);
 		}
 
 		return null;
@@ -188,13 +188,8 @@ public class Base2LdapAdapter implements Mappable {
 				String uid = current.getProperty("PersonId").getValue();
 				addGroupMember("uid", uid, "member", clubMemberContext);
 			} catch (Exception e) {
-				e.printStackTrace();
-				logger.debug("Adding member failed, continuing");
-				try {
-					current.write(System.err);
-				} catch (NavajoException e1) {
-					e1.printStackTrace();
-				}
+				logger.debug("Adding member failed, continuing",e);
+				current.write(System.err);
 			}
 		}
 	}
@@ -262,11 +257,7 @@ public class Base2LdapAdapter implements Mappable {
 		Map<String,String> memberMap = new HashMap<String, String>();
 		memberMap.put("member", "cn=dummy");
 		
-		try {
-			entity.write(System.err);
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
+		entity.write(System.err);
 		String clubId = entity.getProperty("ClubIdentifier").getValue();
 		String clubName = entity.getProperty("ClubName").getValue();
 		logger.debug("Owner: "+clubId);

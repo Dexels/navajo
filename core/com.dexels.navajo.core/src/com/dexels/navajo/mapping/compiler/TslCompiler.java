@@ -900,7 +900,7 @@ public String messageNode(int ident, Element n, String className, String objectN
       }
       
       // If filter is specified, evaluate filter first:
-      if (!filter.equals("")) {
+      if (filter!=null && !filter.equals("")) {
         result.append(printIdent(ident + 4) + "if (Condition.evaluate(" +
                       replaceQuotes(filter) +
                       ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) {\n");
@@ -956,7 +956,7 @@ result.append(printIdent(ident + 4) +
         "currentParamMsg = (Message) paramMsgStack.pop();\n");
       }
 
-      if (!filter.equals("")) {
+      if (filter!=null && !filter.equals("")) {
         ident -= 2;
         result.append(printIdent(ident + 4) + "}\n");
       }
@@ -2267,6 +2267,16 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
   public String compile(int ident, Node n, String className, String objectName, List<Dependency> deps) throws
       Exception {
     StringBuffer result = new StringBuffer();
+    /*
+    if (n instanceof Element)
+    {
+    	System.err.println("in compile(), node name = " + n.getNodeName() + ", attribute name = " + ((Element) n).getAttribute("name"));
+    }
+    else
+    {
+    	System.err.println("in compile(), node not of type element " + n.getNodeName());
+    } 
+    */
     //System.err.println("in compile(), className = " + className + ", objectName = " + objectName);
 
     if (n.getNodeName().equals("include") ) {

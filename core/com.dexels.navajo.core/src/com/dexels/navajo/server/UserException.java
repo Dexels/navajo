@@ -40,6 +40,14 @@ public class UserException extends Exception {
         super();
     }
 
+    public UserException(String message, Throwable t) {
+    	super(t);
+        this.code = -1;
+        this.message = message;
+        this.t = t;
+
+    }
+    
     public UserException(int code, String message, Throwable t) {
     	super(t);
         this.code = code;

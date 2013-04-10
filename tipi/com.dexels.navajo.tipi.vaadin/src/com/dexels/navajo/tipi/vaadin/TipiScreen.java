@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.vaadin;
 
+import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
@@ -22,7 +23,7 @@ import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
  * @version 1.0
  */
  
-public class TipiScreen extends TipiDataComponentImpl {
+public class TipiScreen extends TipiDataComponentImpl implements ScopeLimit{
     
 	private static final long serialVersionUID = -6832475289705107584L;
 

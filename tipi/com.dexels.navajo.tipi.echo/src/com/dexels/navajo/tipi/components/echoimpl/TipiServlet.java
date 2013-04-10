@@ -44,7 +44,6 @@ public class TipiServlet extends WebContainerServlet {
          	HttpSession hs = WebRenderServlet.getActiveConnection().getRequest().getSession();
          	hs.setAttribute("tipiInstance",tipiInstance);
         } catch (Throwable ex) {
-            ex.printStackTrace();
             throw new RuntimeException(ex);
         }
 

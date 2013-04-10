@@ -2,13 +2,31 @@ package com.dexels.navajo.server.enterprise.tribe;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
 
 public interface TribeManagerInterface {
 
+	public String getTribalId();
+	
+	/**
+	 * Tribal Topic methods.
+	 */
+	public TribalTopic getTopic(String name);
+	
+	/**
+	 * Tribal locking methods.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public Lock getLock(String name);
+	
+	public void releaseLock(Lock lock);
+	
+	
 	/**
 	 * Terminate the Tribal Membership.
 	 */
@@ -132,5 +150,7 @@ public interface TribeManagerInterface {
 	public ClusterStateInterface getClusterState();
 
 	public String getChiefName();
+
+	String getMyUniqueId();
     
 }

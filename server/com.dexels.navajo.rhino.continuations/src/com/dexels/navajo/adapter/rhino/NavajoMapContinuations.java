@@ -7,10 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.NavajoMapUpdated;
-import com.dexels.navajo.client.async.AsyncClient;
+import com.dexels.navajo.client.async.AsyncClientFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.rhino.ContinuationRunnable;
 import com.dexels.navajo.script.api.NavajoResponseCallback;
 import com.dexels.navajo.script.api.RunnableTools;
@@ -81,7 +80,7 @@ public class NavajoMapContinuations extends NavajoMapUpdated {
 				outDoc.addMessage(globals);
 			}
 
-			AsyncClient.getInstance().callService(this.access, outDoc, method,
+			AsyncClientFactory.getManualInstance().callService(this.access, outDoc, method,
 					on2, null, new NavajoResponseCallback() {
 
 						@Override
@@ -102,9 +101,7 @@ public class NavajoMapContinuations extends NavajoMapUpdated {
 						}
 					});
 		} catch (IOException e2) {
-			e2.printStackTrace();
-		} catch (NavajoException e2) {
-			e2.printStackTrace();
+			logger.error("Error: ", e2);
 		}
 	}
 

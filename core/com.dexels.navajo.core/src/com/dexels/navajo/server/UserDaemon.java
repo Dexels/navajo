@@ -64,7 +64,7 @@ public class UserDaemon extends GenericThread {
 			services = DispatcherFactory.getInstance().getNavajoConfig()
 					.readConfig("daemons.xml");
 		} catch (Exception e1) {
-			logger.error("No 'deamons.xml' configuration file found, abandoning UserDaemon startup.");
+			logger.error("No 'daemons.xml' configuration file found, abandoning UserDaemon startup.");
 			return;
 		}
 		if (services != null && services.getMessage("daemons") != null) {

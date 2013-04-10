@@ -30,6 +30,7 @@ import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.dexels.navajo.tipi.PropertyHandler;
 import com.dexels.navajo.tipi.PropertyLinkRequest;
 import com.dexels.navajo.tipi.PropertyValidatable;
+import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiComponentMethod;
@@ -75,6 +76,8 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	private Set<String> allLinks = new HashSet<String>();
 
 	private final Map<String, TipiComponent> tipiComponentMap = new HashMap<String, TipiComponent>();
+	private final Map<String, XMLElement> localMethodsMap = new HashMap<String, XMLElement>();
+	private final Map<String, Object> localValuesMap = new HashMap<String, Object>();
 
 	protected final List<PropertyComponent> properties = new ArrayList<PropertyComponent>();
 	protected final List<MessageComponent> messages = new ArrayList<MessageComponent>();
@@ -458,6 +461,12 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 			if (child.getName().equals("layout")
 					|| child.getName().startsWith("l.")) {
 				instantiateWithLayout(child);
+			} else if (child.getName().equals("globalmethod"))
+			{
+				myContext.addGlobalMethod(child);
+			} else if (child.getName().equals("localmethod"))
+			{
+				this.getScopeHomeComponent().addLocalMethod(child);
 			} else {
 				if (child.getName().equals("tipi-instance")
 						|| child.getName().equals("component-instance")
@@ -596,7 +605,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 			XMLElement classdef, XMLElement definition) {
 	}
 
-	public void loadStartValues(XMLElement element, TipiEvent event) {
+	public void loadStartValues(XMLElement element, TipiEvent event) {	
 		Iterator<String> it = componentValues.keySet().iterator();
 		while (it.hasNext()) {
 			String key = it.next();
@@ -671,7 +680,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 					new Class[] { PropertyChangeListener.class });
 			m.invoke(c, new Object[] { pcl });
 		} catch (NoSuchMethodException e1) {
-			e1.printStackTrace();
+			logger.error("Error: ", e1);
 		} catch (Exception e) {
 			throw new TipiException("Trouble binding: " + this
 					+ " conainerProperty: " + containerPropertyName, e);
@@ -952,7 +961,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 					}
 					m.invoke(c, new Object[] { p });
 				} catch (NoSuchMethodException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				} catch (Exception e) {
 					logger.error("Error: ",e);
 				}
@@ -970,7 +979,16 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		// logger.error("Error: ",e);
 		// }
 		removeAllChildren();
-		clearAllComponents();
+		// fire onDispose event before the event list is cleared.
+		try {
+			performTipiEvent("onDispose", null, true);
+		} catch (TipiBreakException e) {
+			logger.warn("Error, but continuing, when firing the onDispose event for: " + this);
+			e.printStackTrace();
+		} catch (TipiException e) {
+			logger.warn("Error, but continuing, when firing the onDispose event for: " + this);
+			e.printStackTrace();
+		}
 		helperDispose();
 		isDisposed = true;
 		myContainerListeners.clear();
@@ -1535,4 +1553,62 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return componentClassName;
 	}
 	
+	public void addLocalMethod(XMLElement method) throws TipiException {
+		String name = method.getStringAttribute("name");
+		if (localMethodsMap.containsKey(name))
+		{
+			throw new TipiException("Duplicate name for localmethod definition " + method + " at component: " + this.myId);
+		}
+		localMethodsMap.put(name, method);
+		
+	}
+
+	public XMLElement getLocalMethod(String name) {
+		if(!isScopeLimit())
+		{
+			logger.warn("Local method is being retrieved from a non-ScopeLimit implementing component! " + this.myId);
+		}
+		return localMethodsMap.get(name);
+	}
+
+	public void setLocalValue(String expression, Object value){
+		if(!isScopeLimit())
+		{
+			logger.warn("Local method is being stored in a non-ScopeLimit implementing component! " + this.myId);
+		}
+		localValuesMap.put(expression, value);
+		
+	}
+
+	public Object getLocalValue(String expression) {
+		if(!isScopeLimit())
+		{
+			logger.warn("Local value is being retrieved from a non-ScopeLimit implementing component! " + this.myId);
+		}
+		return localValuesMap.get(expression);
+	}
+	
+	public boolean containsLocalValue(String expression){
+		if(!isScopeLimit())
+		{
+			logger.warn("Local value is being stored in a non-ScopeLimit implementing component! " + this.myId);
+		}
+		return localValuesMap.containsKey(expression);
+	}
+	
+	public boolean isScopeLimit()
+	{
+		return this instanceof ScopeLimit;
+	}
+
+	public TipiComponent getScopeHomeComponent() {
+		if (isScopeLimit()) {
+			return this;
+		}
+		if (getTipiParent() == null) {
+			return null;
+		}
+		return getTipiParent().getScopeHomeComponent();
+	}
+
 }

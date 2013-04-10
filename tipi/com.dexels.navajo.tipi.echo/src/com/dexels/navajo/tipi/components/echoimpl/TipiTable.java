@@ -90,7 +90,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 					performTipiEvent("onSelectionChanged", tempMap, false);
 
 				} catch (Exception ex) {
-					ex.printStackTrace();
+					logger.error("Error: ", ex);
 				}
 			}
 		});

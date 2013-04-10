@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" deactivate="deactivate" name="navajo.tunnel">
+   <implementation class="com.dexels.navajo.tunnel.impl.NavajoTunnelComponentImpl"/>
+   <service>
+      <provide interface="com.dexels.navajo.tunnel.Tunnel"/>
+   </service>
+</scr:component>

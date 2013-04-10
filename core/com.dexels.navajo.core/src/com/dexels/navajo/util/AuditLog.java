@@ -134,12 +134,19 @@ public final class AuditLog implements Mappable {
 	public static final void log(final String subsystem, final String message,  Level level, String accessId) {
 		
 		logToSlf(message, subsystem, level);
-//		logger.info(instanceName + "/" + Thread.currentThread().hashCode() + ":" + subsystem + message);
 		AuditLogEvent ale = new AuditLogEvent(subsystem.toUpperCase(), message, level);
 		ale.setAccessId(accessId);
 		publishEvent(ale);
 	}
 	
+	public static final void log( String subsystem,  final String message,Throwable t, Level level, String accessId) {
+		
+		logToSlf(message,t, level);
+		AuditLogEvent ale = new AuditLogEvent(subsystem.toUpperCase(), message, level);
+		ale.setAccessId(accessId);
+		publishEvent(ale);
+	}
+
 	
 	private static void publishEvent(AuditLogEvent ale) {
 		NavajoEventRegistry ner = NavajoEventRegistry.getInstance();

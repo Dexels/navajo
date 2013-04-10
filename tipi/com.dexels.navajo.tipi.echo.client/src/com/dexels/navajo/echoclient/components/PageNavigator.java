@@ -192,7 +192,7 @@ public class PageNavigator extends Row {
 					myTable.getTableReport("pdf", "horizontal", new int[] { 5,
 							5, 5, 5 });
 				} catch (NavajoException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 			}
 		});

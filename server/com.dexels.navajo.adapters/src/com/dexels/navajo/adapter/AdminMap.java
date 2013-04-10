@@ -163,7 +163,7 @@ public class AdminMap implements Mappable {
 			try {
 				sql.store();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 
@@ -203,7 +203,7 @@ public AsyncProxy [] getAsyncThreads() {
 	 List<AsyncProxy> l = new ArrayList<AsyncProxy>();
      while (iter.hasNext()) {
        AsyncMappable am = (AsyncMappable) iter.next();
-       Access ac = (Access) com.dexels.navajo.mapping.AsyncStore.getInstance().accessStore.get(am.pointer);
+       Access ac = com.dexels.navajo.mapping.AsyncStore.getInstance().accessStore.get(am.pointer);
        AsyncProxy o = new AsyncProxy();
        o.user = ac.rpcUser;
        o.rpcName = ac.rpcName;

@@ -24,8 +24,8 @@ public class MembershipSmokeSignal extends SmokeSignal implements Serializable {
 	public static final String INTRODUCTION = "introduction";
 	public static final String REMOVAL = "removal";
 	
-	public MembershipSmokeSignal(String sender, String key, Serializable value) {
-		super(sender, key, value);
+	public MembershipSmokeSignal(String key, Serializable value) {
+		super(key, value);
 	}
 
 	@SuppressWarnings("rawtypes")

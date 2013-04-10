@@ -50,7 +50,7 @@ public class EchoEmbeddedContext extends EchoTipiContext {
 		top.removeAllChildren();
 	}
 
-	public void exit() {
+	public void doExit() {
 		logger.info("Exit in embedded");
 		shutdown();
 	}

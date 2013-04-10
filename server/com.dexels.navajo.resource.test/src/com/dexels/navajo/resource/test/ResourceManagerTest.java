@@ -54,7 +54,7 @@ public class ResourceManagerTest {
 		try {
 			testResourceManager();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		setInstance(this);
 	}
@@ -286,7 +286,7 @@ public void testOracle() throws Exception, SQLException {
 				response = cc.call(n);
 				response.write(System.err);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 		

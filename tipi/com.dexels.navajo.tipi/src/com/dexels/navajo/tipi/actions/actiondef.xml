@@ -97,6 +97,7 @@
    </tipiaction>
    <tipiaction name="setLocale" class="TipiSetLocale" package="com.dexels.navajo.tipi.actions">
       <param name="locale" type="string" required="true" />
+      <param name="subLocale" type="string" />
       <!--<param name="context" type="string"/>-->
    </tipiaction>
    <tipiaction name="setSubLocale" class="TipiSetSubLocale" package="com.dexels.navajo.tipi.actions">
@@ -158,6 +159,11 @@
    <tipiaction name="performTipiMethod" class="TipiPerformTipiMethod" package="com.dexels.navajo.tipi.actions">
       <param name="path" type="tipi" required="true" />
       <param name="name" type="string" required="true" />
+   </tipiaction>
+   <!-- executes a method defined in either <localmethod> or <globalmethod> tags -->
+   <tipiaction name="executeMethod" class="TipiExecuteMethod" package="com.dexels.navajo.tipi.actions">
+      <param name="name" type="string" required="true" />
+      <param name="rootComponent" type="component" required="false" />
    </tipiaction>
    <tipiaction name="instantiate" class="TipiInstantiateTipi" package="com.dexels.navajo.tipi.actions">
       <param name="name" type="string" required="true" />

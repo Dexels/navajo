@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
-import java.awt.Window;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -81,7 +80,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 public class SwingTipiContext extends TipiContext {
 
 	private static final long serialVersionUID = -538400075423823232L;
-
+//	JFXPanel x;
 	private TipiSwingSplash splash;
 
 	private final Set<Thread> threadSet = Collections
@@ -402,34 +401,18 @@ public class SwingTipiContext extends TipiContext {
 		return myOtherRoot;
 	}
 
-	public void exit() {
+	public void doExit() {
 		if (myAppletRoot != null) {
 			myAppletRoot.reload();
 		} else {
 			shutdown();
 
-			super.exit();
+			super.doExit();
+			// Should not be necessary anymore, but for safety reasons...
 			System.exit(0);
 		}
 	}
 
-	public void shutdown() {
-		super.shutdown();
-		// TODO: Move this to swingtipi or something
-		if (getTopLevel() instanceof RootPaneContainer) {
-			RootPaneContainer rpc = (RootPaneContainer) getTopLevel();
-			logger.debug("Doing allright!");
-			if (rpc instanceof Window) {
-				Window w = (Window) rpc;
-				w.setVisible(false);
-				w.dispose();
-				logger.debug("Ciao!");
-			}
-
-		} else {
-			logger.info("NEED REFACTOR in TIPICONTEXT, around line 2230.");
-		}
-	}
 	public void setDefaultDesktop(TipiSwingDesktop jp) {
 		defaultDesktop = jp;
 

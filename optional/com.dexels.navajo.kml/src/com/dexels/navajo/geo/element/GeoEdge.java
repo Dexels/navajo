@@ -39,6 +39,12 @@ public class GeoEdge extends GeoElement {
 		c.addChild(point);
 		return c;
 	}
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	
 	public boolean equals(Object o) {
 		if(!(o instanceof GeoEdge)) {
 			return false;

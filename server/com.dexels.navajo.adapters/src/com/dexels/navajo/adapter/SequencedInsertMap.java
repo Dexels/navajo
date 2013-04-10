@@ -12,11 +12,12 @@ package com.dexels.navajo.adapter;
  * @version $Id: SequencedInsertMap.java,v 1.6 2012/03/30 15:38:45 frank Exp $
  */
 
-import com.dexels.navajo.server.UserException;
-import java.text.MessageFormat;
-import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.MessageFormat;
+
+import com.dexels.navajo.server.UserException;
 
 public class SequencedInsertMap extends SQLMap {
 
@@ -87,7 +88,6 @@ public class SequencedInsertMap extends SQLMap {
 
       }
       catch (SQLException sqle) {
-        sqle.printStackTrace();
         throw new UserException( -1, sqle.getMessage());
       }
 
@@ -129,7 +129,6 @@ public class SequencedInsertMap extends SQLMap {
 
       }
       catch (SQLException sqle) {
-        sqle.printStackTrace();
         throw new UserException( -1, sqle.getMessage());
       }
 

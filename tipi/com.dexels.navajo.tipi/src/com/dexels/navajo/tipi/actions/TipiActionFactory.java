@@ -8,7 +8,6 @@ import java.util.Map;
 
 import navajo.ExtensionDefinition;
 
-
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
@@ -28,7 +27,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 /**
  * This class is created for every action definition. It is capable of creating
  * different instances for its action. The different instances can be associated
- * to diffferent events and components. The actual parameters will differ, but
+ * to different events and components. The actual parameters will differ, but
  * the allowed/required ones will be the same for every action this factory
  * instance can create.
  */

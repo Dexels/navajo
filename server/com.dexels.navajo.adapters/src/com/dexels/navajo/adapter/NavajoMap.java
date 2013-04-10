@@ -20,11 +20,11 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.navajomap.MessageMap;
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
-import com.dexels.navajo.client.ClientInterface;
-import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.NavajoResponseHandler;
 import com.dexels.navajo.client.async.AsyncClient;
 import com.dexels.navajo.client.async.AsyncClientFactory;
+import com.dexels.navajo.client.async.ManualAsyncClient;
+import com.dexels.navajo.client.async.NavajoClientResourceManager;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -166,6 +166,7 @@ public void setMyResponseListener(NavajoMapResponseListener myResponseListener) 
   }
 
 private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
+private static final long MAX_WAITTIME = 300000;
 
   public boolean isBlock() {
 	  return block;
@@ -176,6 +177,7 @@ private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
   }
 
 private Object waitForResult = new Object();
+private String resource;
   
   public void load(Access access) throws MappableException, UserException {
     this.access = access;
@@ -214,9 +216,9 @@ private Object waitForResult = new Object();
 		  //
 		  synchronized (waitForResult) {
 			  try {
-				  waitForResult.wait();
+				  waitForResult.wait(MAX_WAITTIME);
 			  } catch (InterruptedException e) {
-				  e.printStackTrace();
+				  logger.error("Error: ", e);
 			  }
 		  }
 	  }
@@ -303,7 +305,21 @@ private Object waitForResult = new Object();
 			  if (currentMsg != null) {
 				  if ( appendTo != null ) {
 					  if ( appendTo.equals(Navajo.MESSAGE_SEPARATOR)) {
-						  currentDoc.addMessage(clone, true);
+						  /**
+						   * NOTE 21/3/2013 (AS): USING ADDMESSAGE USING OVERWRITE FLAG
+						   * WILL CAUSE CURRENTMSG TO BE OVERWRITTEN IFF CLONE MSG NAME IS THE SAME!!!
+						   * THIS WILL CREATE A "DANGLING" MSG POINTER RENDERING ALL FURTHER
+						   * MESSAGE ADDITIONS USELESS (THEY WILL NOT APPEAR)
+						   * 
+						   * THEREFORE: CHECK WHETHER NAME OF CURRENT OUT MESSAGE POINTER EQUALS
+						   * THAT OF CLONE MESSAGE.
+						   */
+						  
+						  if ( clone.getName().equals(currentMsg.getName() ) ) {
+							  currentMsg.merge(clone);
+						  } else {
+							  currentDoc.addMessage(clone, true);
+						  }
 					  } else if ( currentMsg.getMessage(appendTo) != null ) {
 						  if ( currentMsg.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
 							  currentMsg.getMessage(appendTo).addMessage(clone);
@@ -582,7 +598,7 @@ private Object waitForResult = new Object();
    * @param method
    * @throws UserException
    */
-  public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException, AuthorizationException {
+  public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException {
   
 	  // Reset current msgPointer when performing new doSend.
 	  msgPointer = null;
@@ -651,34 +667,21 @@ private Object waitForResult = new Object();
 				  e.printStackTrace(Access.getConsoleWriter(access));
 			  }
 		  }
-		  
-		  if (server != null) { // External request.
-			  ClientInterface nc = NavajoClientFactory.createClient();
-//			  if (keyStore != null) {
-//				  nc.setSecure(keyStore, keyPassword, true);
-//			  }
-			  if ( !block ) {
-
+		  if(this.resource!=null) {
+			  serviceCalled = true;
+			  AsyncClient ac = NavajoClientResourceManager.getInstance().getAsyncClient(this.resource);
+			  ac.callService(outDoc, method);
+		  } else 
+			  if (server != null) { // External request.
 				  try {
-					  AsyncClient ac = AsyncClientFactory.getInstance();
-					  //AsyncClient ac = new AsyncClient(server.startsWith("http") ? server : "http://" + server, username, password);
+					  ManualAsyncClient ac = AsyncClientFactory.getManualInstance();
 					  ac.callService(server.startsWith("http") ? server : "http://" + server, username, password, outDoc, method, this);
 				  } catch (Exception e) {
 					  throw new UserException(-1, e.getMessage(), e);
 				  }
-			  } else if ( trigger == null ) {
-				  inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true, false);
-				  serviceFinished = true;
+				  
 				  serviceCalled = true;
-				  continueAfterRun();
-			  } else {
-				  inDoc = nc.doScheduledSend(outDoc, method, "now", "", "");
-				  serviceFinished = true;
-				  serviceCalled = true;
-				  continueAfterRun();
-			  }
-			  serviceCalled = true;
-		  } // Internal request.
+			  } // Internal request.
 		  else {
 			  try {
 				  inDoc = null;
@@ -702,14 +705,15 @@ private Object waitForResult = new Object();
 					  }
 				  }
 			  } catch (IOException e) {
-				  e.printStackTrace();
+				  throw new SystemException("Error submitting to remote server:",e);
+
 			  }
 		  }
 
-	  } catch (com.dexels.navajo.client.ClientException e) {
-		  throw new SystemException(-1, e.getMessage());
 	  } catch (NavajoException e) {
-		  throw new SystemException(-1, e.getMessage());
+		  throw new SystemException("Error connecting to remote server",e);
+	} catch (IOException e) {
+		  throw new SystemException("Error connecting to remote server",e);
 	} 
 
   }
@@ -1468,14 +1472,19 @@ public void setTaskId(String t) {
    */
   @Override
   public void onFail(Throwable t) throws IOException {
-	  Navajo response = NavajoFactory.getInstance().createNavajo();
-      Message error = NavajoFactory.getInstance().createMessage(response, "error");
-      response.addMessage(error);
-      Property msg = NavajoFactory.getInstance().createProperty(response, "message", Property.STRING_PROPERTY, t.getMessage(), 0, "", "");
-      Property code = NavajoFactory.getInstance().createProperty(response, "code", Property.STRING_PROPERTY, "unknown", 0, "", "");
-      error.addProperty(msg);
-      error.addProperty(code);
-      onResponse(response);
+	  Navajo response = null;
+	  try {
+		  response = NavajoFactory.getInstance().createNavajo();
+		  Message error = NavajoFactory.getInstance().createMessage(response, "error");
+		  response.addMessage(error);
+		  Property msg = NavajoFactory.getInstance().createProperty(response, "message", Property.STRING_PROPERTY,
+				  ( t != null ? t.getMessage() : "unknown" ), 0, "", "");
+		  Property code = NavajoFactory.getInstance().createProperty(response, "code", Property.STRING_PROPERTY, "unknown", 0, "", "");
+		  error.addProperty(msg);
+		  error.addProperty(code);
+	  } finally {
+		  onResponse(response);
+	  }
   }
   
   @Override
@@ -1575,6 +1584,14 @@ public Navajo getResponseNavajo() {
 public AsyncRequest getRequest() {
 	logger.warn("No asyncrequest in NavajoMap. Returning null.");
 	return null;
+}
+
+public String getResource() {
+	return resource;
+}
+
+public void setResource(String resourceName) {
+	this.resource = resourceName;
 }
 
 }

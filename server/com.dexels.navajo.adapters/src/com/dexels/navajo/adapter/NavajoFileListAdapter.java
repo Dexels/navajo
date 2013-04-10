@@ -3,6 +3,7 @@ package com.dexels.navajo.adapter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,9 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
 /**
@@ -111,12 +114,7 @@ private final static Logger logger = LoggerFactory
     }
     Navajo n = NavajoFactory.getInstance().createNavajo();
     Message filesMessage = NavajoFactory.getInstance().createMessage(n,"Files",Message.MSG_TYPE_ARRAY);
-    try {
-      n.addMessage(filesMessage);
-    }
-    catch (NavajoException ex2) {
-      ex2.printStackTrace();
-    }
+    n.addMessage(filesMessage);
     File[] files;
     if (fileNameFilter!=null) {
       FilenameFilter ff = new FilenameFilter() {
@@ -129,15 +127,10 @@ private final static Logger logger = LoggerFactory
       files = f.listFiles();
     }
     for (int i = 0; i < files.length; i++) {
-      try {
         Message m = createFileMessage(filesMessage, files[i], descriptionPath);
         if (m!=null) {
           filesMessage.addMessage(m);
         }
-      }
-      catch (NavajoException ex1) {
-        ex1.printStackTrace();
-      }
     }
     access.setOutputDoc(n);
   }
@@ -189,9 +182,13 @@ private Message createFileMessage(Message parent, File entry, String pathToDescr
 
 
     }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
+    catch (IOException ex) {
+    	throw NavajoFactory.getInstance().createNavajoException("Error listing files:",ex);
+    } catch (TMLExpressionException e) {
+    	throw NavajoFactory.getInstance().createNavajoException("Error listing files:",e);
+	} catch (SystemException e) {
+    	throw NavajoFactory.getInstance().createNavajoException("Error listing files:",e);
+	}
   }
   m.addProperty(filePath);
   m.addProperty(fileFullPath);

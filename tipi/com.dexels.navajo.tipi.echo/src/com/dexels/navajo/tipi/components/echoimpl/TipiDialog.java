@@ -15,6 +15,7 @@ import nextapp.echo2.app.event.WindowPaneEvent;
 import nextapp.echo2.app.event.WindowPaneListener;
 
 import com.dexels.navajo.echoclient.components.Styles;
+import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiComponentMethod;
@@ -43,7 +44,7 @@ import echopointng.LightBox;
  * @author not attributable
  * @version 1.0
  */
-public class TipiDialog extends TipiEchoDataComponentImpl {
+public class TipiDialog extends TipiEchoDataComponentImpl implements ScopeLimit{
 	private static final long serialVersionUID = 686157003404928933L;
 	
 	private final static Logger logger = LoggerFactory
@@ -130,7 +131,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         try {
             performTipiEvent("onWindowClosed", null, true);
         } catch (TipiException ex) {
-            ex.printStackTrace();
+        	logger.error("Error: ", ex);
         }
         myContext.disposeTipiComponent(this);
     }

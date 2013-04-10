@@ -6,6 +6,8 @@ import org.eclipse.osgi.framework.console.CommandProvider;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.parser.FunctionInterface;
@@ -13,7 +15,10 @@ import com.dexels.navajo.parser.FunctionInterface;
 public class FunctionListCommand implements CommandProvider {
 
 	private final BundleContext bundleContext;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(FunctionListCommand.class);
+	
 	public FunctionListCommand(BundleContext bc) {
 		this.bundleContext = bc;
 	}
@@ -44,8 +49,8 @@ public class FunctionListCommand implements CommandProvider {
 //				}
 			}
 		 } catch (InvalidSyntaxException e) {
-			ci.printStackTrace(e);
-		}
+			 logger.error("Error: ", e);
+		 }
 	 }
 		 public void _adapters(CommandInterpreter ci) {
 			 String serviceFilter = null;
@@ -71,8 +76,8 @@ public class FunctionListCommand implements CommandProvider {
 //					}
 				}
 			 } catch (InvalidSyntaxException e) {
-				ci.printStackTrace(e);
-			}
+				 logger.error("Error: ", e);
+			 }
 
 	 }
 }

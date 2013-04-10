@@ -108,8 +108,7 @@ public void setRun(boolean b) throws UserException {
 					  br_in.close();
 				  }
 				  catch (IOException ioe) {
-					  logger.debug("Exception caught printing javac result");
-					  ioe.printStackTrace();
+					  logger.error("Exception caught printing javac result",ioe);
 				  }
 				  outputFinished = true;
 
@@ -126,8 +125,7 @@ public void setRun(boolean b) throws UserException {
 					  br_in.close();
 				  }
 				  catch (IOException ioe) {
-					  logger.debug("Exception caught printing javac result");
-					  ioe.printStackTrace();
+					  logger.debug("Exception caught printing javac result",ioe);
 				  }
 				  errorFinished = true;
 

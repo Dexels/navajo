@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.instance.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Dictionary;
@@ -63,7 +64,7 @@ public class InstanceConfigurationProviderImpl implements
 		this.configAdmin = null;
 	}
 	
-	public void activate(Map<String,Object> parameters, BundleContext bundleContext) {
+	public void activate(Map<String,Object> parameters, BundleContext bundleContext) throws FileNotFoundException {
 		deployments.clear();
 		profiles.clear();
 		resourcePids.clear();
@@ -71,6 +72,11 @@ public class InstanceConfigurationProviderImpl implements
 		String root = (String) parameters.get("path");
 		logger.info("========>  Activating");
 		rootFolder = new File(root);
+		
+		if(!rootFolder.exists()) {
+			throw new FileNotFoundException("Tipi root path not found: "+root+". Disabling tipi instance provider for now");
+		}
+		
 		File arguments = new File(rootFolder,"settings/arguments.properties");
 		if(!arguments.exists()) {
 			logger.error("No arguments found: "+arguments.getAbsolutePath());
@@ -188,9 +194,6 @@ public class InstanceConfigurationProviderImpl implements
 				o.put("tipi.instance.deployment", deployment);
 				o.put("tipi.instance.path", rootFolder.getAbsolutePath());
 				o.putAll(global);
-//				for (Entry<String,Object> e : global.entrySet()) {
-//					o.put(e.getKey(), e.getValue());
-//				}
 				String pid = "tipi.instance";
 				String implementation = (String) o.get("tipi.instance.implementation");
 				if(implementation!=null) {
@@ -203,7 +206,7 @@ public class InstanceConfigurationProviderImpl implements
 
 	
 	private void emitConfig(String pid, Dictionary<String,Object> settings) throws IOException {
-		Configuration config =  configAdmin.getConfiguration(pid);
+		Configuration config =  configAdmin.getConfiguration(pid,null);
 		updateIfChanged(config, settings);
 	}
 

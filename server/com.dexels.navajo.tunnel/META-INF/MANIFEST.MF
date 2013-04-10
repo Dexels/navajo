@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Navajo SSH Tunnel
+Bundle-SymbolicName: com.dexels.navajo.tunnel
+Bundle-Version: 1.0.8.qualifier
+Bundle-Vendor: DEXELS
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Service-Component: OSGI-INF/navajo.tunnel.xml
+Import-Package: com.dexels.navajo.server,
+ com.jcraft.jsch;version="[0.1.46,0.2.0)",
+ org.slf4j;version="1.6.1"
+Bundle-ClassPath: .
+Export-Package: com.dexels.navajo.tunnel

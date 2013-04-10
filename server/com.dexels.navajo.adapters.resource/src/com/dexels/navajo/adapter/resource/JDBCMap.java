@@ -750,7 +750,6 @@ public final Object getColumnName(final Integer index) throws UserException {
 					if (debug) {
 						Access.writeToConsole(myAccess, "batch mode did not provide a fully baked result set, sorry.\n");
 						Access.writeToConsole(myAccess, "SQL exception is '" + e.toString() + "'\n");
-						e.printStackTrace();
 						logger.warn("Some sql problem: ", e);
 					}
 					rs.close();
@@ -1021,9 +1020,9 @@ public final Object getColumnName(final Integer index) throws UserException {
 			try {
 				createConnection();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			} catch (UserException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
 		return transactionContext;

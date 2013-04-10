@@ -27,83 +27,23 @@ public interface ClientInterface {
   public final static int LBMODE_DYNAMIC_MINLOAD = 1;
   public final static int LBMODE_STATIC_MINLOAD = 2;
 
-  public String getClientName();
-
-//  public URLConnection createUrlConnection(URL url) throws IOException;
-
-//  public void addComparedServices(String serviceQuery, String serviceUpdate);
-
   public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval) throws ClientException;
-
   public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression, boolean allowPreparseProxy) throws ClientException;
-
   public Navajo doSimpleSend(Navajo out, String method) throws ClientException;
-  
-  public Navajo doSimpleSend(Navajo out, String method, long expirationInterval) throws ClientException;
-
-  public Message doSimpleSend(Navajo out, String method, String messagePath) throws ClientException;
-
-
   public Navajo doSimpleSend(String method) throws ClientException;
-
   public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval) throws ClientException;
-
-  public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws ClientException;
-
   public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException;
-
-  public void init(String rootPath, String serverXmlPath) throws ClientException;
-
-  public void setLoadBalancingMode(int i);
-  
-  public int getLoadBalancingMode();
-  
-  public String getUsername();
-
-  public String getPassword();
-
-  public String getServerUrl();
-
   public void setUsername(String s);
-
   public void setPassword(String pw);
-
   public void setServerUrl(String url);
-
-   
   public void setRetryAttempts(int noOfAttempts);
+  public void setServers(String[] servers);
+  public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format, String orientation, int[] margins) throws NavajoException;
 
-  public void setRetryInterval(long interval);
-
-
-
-  public int getQueueSize();
-
-  public int getActiveThreads();
-
-
-
-
-public void destroy();
-
-public void setServers(String[] servers);
-
-public Binary getArrayMessageReport(Message m, String[] propertyNames,String[] propertyTitles, int[] columnWidths, String format) throws NavajoException;
-public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format, String orientation, int[] margins) throws NavajoException;
-
-	public SystemInfoProvider getSystemInfoProvider();
-	public void setSystemInfoProvider(SystemInfoProvider sip);
-	public SessionTokenProvider getSessionTokenProvider();
-	public void setSessionTokenProvider(SessionTokenProvider stp);
-
-
-public void setKeepAlive(int millis) throws ClientException;
-
-/*
- * Do simple send to a specific server
- */
-public Navajo doSpecificSend(Navajo out, String method, int serverIndex)  throws ClientException;
-
+public SystemInfoProvider getSystemInfoProvider();
+public void setSystemInfoProvider(SystemInfoProvider sip);
+public SessionTokenProvider getSessionTokenProvider();
+public void setSessionTokenProvider(SessionTokenProvider stp);
 
 /*
  * sets the locale for the client, it will be appended to the header
@@ -112,6 +52,7 @@ public void setLocaleCode(String locale);
 public String getLocaleCode();
 
 public void setSubLocaleCode(String locale);
+public String getSubLocaleCode();
 
 public String getCurrentHost();
 

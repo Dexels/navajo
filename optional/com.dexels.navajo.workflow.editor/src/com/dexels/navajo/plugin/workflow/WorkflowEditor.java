@@ -33,6 +33,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IPageSite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.plugin.workflow.model.WorkflowElement;
 import com.dexels.navajo.plugin.workflow.parts.WorkflowEditPartFactory;
@@ -43,7 +45,10 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 	private WorkflowElement diagram;
 	private static PaletteRoot PALETTE_MODEL;
 	private IFile currentFile;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(WorkflowEditor.class);
+	
 	@Override
 	protected PaletteRoot getPaletteRoot() {
 		if (PALETTE_MODEL == null) {
@@ -160,7 +165,7 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 
 	private void handleLoadException(Exception e) {
 		System.err.println("** Load failed. Using default model. **");
-		e.printStackTrace();
+		logger.error("Error: ", e);
 		diagram = new WorkflowElement();
 	}
 
@@ -207,7 +212,7 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 		} catch (IOException e) {
 			handleLoadException(e);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 

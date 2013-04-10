@@ -14,12 +14,19 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.types.Binary;
 
 /** Class which scales images and keeping transparency
  * @author Erik Versteeg
  */
 public class ImageScaler {
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ImageScaler.class);
+	
     private static Binary scale(Binary b, int width, int height, boolean keepAspect, boolean alsoScaleUp, boolean clipToCenter, boolean cropToCenter) throws IOException {
     	if (b==null || b.getLength()<=0) {
             return null;
@@ -472,7 +479,7 @@ public class ImageScaler {
 //		b = new Binary(new File("C:/_GedeeldeMap/DSC_0001.jpg"));
 		b = new Binary(new File("C:/Users/Erik/Desktop/logo1.png"));
 	} catch (IOException e1) {
-		e1.printStackTrace();
+		logger.error("Error: ", e1);
 	}
       Integer width = 600;
       Integer height = 800;

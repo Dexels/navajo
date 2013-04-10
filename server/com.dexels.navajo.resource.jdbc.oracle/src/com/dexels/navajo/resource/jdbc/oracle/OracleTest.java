@@ -20,9 +20,9 @@ import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 
 	    // Set connection parameters
 	    ocpds.setURL("jdbc:oracle:thin:@10.0.0.1:1521:aardnoot");
-	    ocpds.setDriverType("thin");
+//	    ocpds.setDriverType("thin");
 	    ocpds.setUser("knvbkern");
-	    ocpds.setPassword("kern");
+	    ocpds.setPassword("knvb");
 
 	    // Create a pooled connection
 	    PooledConnection pc  = ocpds.getPooledConnection();
@@ -37,8 +37,9 @@ import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 	    ResultSet rset = stmt.executeQuery ("select * from sport");
 
 	    // Iterate through the result and print the employee names
-	    while (rset.next ())
-	      System.out.println (rset.getString (1));
+	    while (rset.next ()) {
+		      System.out.println (rset.getString (1));
+	    }
 
 	    // Close the RseultSet
 	    rset.close();

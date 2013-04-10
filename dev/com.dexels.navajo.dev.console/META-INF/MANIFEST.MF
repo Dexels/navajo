@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Console commands
 Bundle-SymbolicName: com.dexels.navajo.dev.console
-Bundle-Version: 1.0.8.qualifier
+Bundle-Version: 1.0.10.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.client,
@@ -13,6 +13,7 @@ Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.functions.util,
  com.dexels.navajo.parser,
  com.dexels.navajo.script.api,
+ com.dexels.navajo.sharedstore,
  com.dexels.osgicompiler,
  javax.servlet;version="[2.5.0,4.0.0)",
  javax.servlet.http;version="[2.5.0,4.0.0)",

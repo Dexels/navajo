@@ -160,7 +160,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 			}
 			createPools(normalPoolSize,priorityPoolSize,systemPoolSize);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 	
@@ -244,7 +244,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 					sa = ResourceCheckerManager.getInstance().getResourceChecker(getServiceName(), myRunner.getInputNavajo()).getServiceAvailability();
 					return sa.getStatus();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 				}
 				return "ok";
 			}
@@ -260,7 +260,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 				try {
 					return myRunner.getInputNavajo();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Error: ", e);
 					return null;
 				}
 			}
@@ -277,7 +277,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 				logger.info(RESOLUTION_SCRIPT_DOES_NOT_EXIST, "Could not find queue resolution script, using default queue.",e);
 				return getDefaultQueue();
 			}
-			e.printStackTrace(System.err);
+			logger.error("Error: ", e);
 			return null;
 		}
 		

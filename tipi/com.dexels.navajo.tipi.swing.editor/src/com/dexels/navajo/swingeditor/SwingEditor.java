@@ -165,7 +165,7 @@ public class SwingEditor extends KafenioPanel {
 				try {
 					extendedHtmlDoc.getText(0, extendedHtmlDoc.getLength());
 				} catch (BadLocationException e1) {
-					e1.printStackTrace();
+					logger.error("Error: ", e1);
 				}
 
 			}

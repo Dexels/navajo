@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.actionmanager;
 
 import java.util.Collection;
 
-
 import navajo.ExtensionDefinition;
 
 import org.osgi.framework.BundleContext;
@@ -15,7 +14,7 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.actions.TipiActionFactory;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-public class OSGiActionManager extends TipiActionManager implements IActionManager {
+public class OSGiActionManager extends TipiActionManager{
 
 	
 	private final static Logger logger = LoggerFactory

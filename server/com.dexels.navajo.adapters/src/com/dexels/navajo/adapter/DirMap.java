@@ -58,7 +58,7 @@ public class DirMap implements Mappable {
 						fileEntry.add(f);
 					
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error("Error: ", e);
 					}
 	
 			}

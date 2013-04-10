@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import org.osgi.framework.InvalidSyntaxException;

@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
@@ -16,7 +19,10 @@ import com.dexels.navajo.document.Selection;
 public class ElementCommand implements ArticleCommand {
 
 	private String name;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ElementCommand.class);
+	
 	public ElementCommand() {
 		// default constructor
 	}
@@ -65,7 +71,7 @@ public class ElementCommand implements ArticleCommand {
 		try {
 			printElementJSONTypeless(p, runtime.getOutputWriter());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 		return true;
 	}

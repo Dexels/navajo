@@ -71,7 +71,6 @@ public void load(Access access) throws MappableException, UserException {
 //        sqlMapConfigFile = XMLutils.createNavajoInstance(config. getConfigPath() + "/sqlmap.xml");
         sqlMapConfigFile = config.readConfig("/sqlmap.xml");
       } catch (Exception e) {
-        e.printStackTrace();
         throw new MappableException(e.getMessage());
       }
       //logger.debug(sqlMapConfigFile.toString());

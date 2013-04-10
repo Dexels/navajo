@@ -9,7 +9,6 @@ import navajo.ExtensionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
@@ -72,6 +71,10 @@ public class TipiActionManager implements Serializable, IActionManager {
 		String name = (String) instance.getAttribute("type");
 		if (name == null) {
 			name = instance.getName();
+		}
+		if (name == null) {
+			throw new TipiException("Undefined action type in: "
+					+ instance.toString());
 		}
 		TipiActionFactory taf = getActionFactory(name);
 		if(taf==null) {

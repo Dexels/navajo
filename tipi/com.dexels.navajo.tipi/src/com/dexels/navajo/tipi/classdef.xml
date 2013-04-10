@@ -23,6 +23,13 @@
 				block until this event has completed.
 			</description>
          </event>
+         <event name="onDispose">
+			<description>
+				The onDispose event gets fired before a component has been disposed but after all its children have been disposed. 
+				It is a synchronous event, so the thread causing the onDispose call (usually by disposing something) will
+				block until this event has completed. All breaks in this event will be ignored in that the disposal will complete regardless.
+			</description>
+         </event>
          
       </events>
    </tipiclass>
@@ -232,6 +239,16 @@
    </tipi-parser>
    <tipi-parser name="globalref" type="com.dexels.navajo.tipi.internal.GlobalRef" parser="com.dexels.navajo.tipi.components.core.parsers.GlobalRefParser">
 	<description>
+	</description>
+   </tipi-parser>
+   <tipi-parser name="local" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.LocalParser">
+	<description>
+		Local values - stored in the first component implementing ScopeLimit up in the tree. Currently Windows, Dialogs and Frames implement this.
+	</description>
+   </tipi-parser>
+   <tipi-parser name="localref" type="com.dexels.navajo.tipi.internal.LocalRef" parser="com.dexels.navajo.tipi.components.core.parsers.LocalRefParser">
+	<description>
+		Reference to local values - stored in the first component implementing ScopeLimit up in the tree. Currently Windows, Dialogs and Frames implement this.
 	</description>
    </tipi-parser>
    <tipi-parser name="systemref" type="com.dexels.navajo.tipi.internal.SystemPropertyRef" parser="com.dexels.navajo.tipi.components.core.parsers.SystemPropertyRefParser">

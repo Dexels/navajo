@@ -2,6 +2,8 @@ package com.dexels.navajo.resource.http.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -52,5 +54,18 @@ public class ResourceComponent implements HttpResource {
 	@Override
 	public String getURL() {
 		return url;
+	}
+
+	@Override
+	public InputStream call(OutputStream os) throws MalformedURLException,
+			IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Future<InputStream> callAsync(OutputStream os) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

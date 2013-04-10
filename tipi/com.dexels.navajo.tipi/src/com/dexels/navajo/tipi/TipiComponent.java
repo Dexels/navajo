@@ -276,4 +276,18 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 	public void setClassName(String defname);
 
 	public String getClassName();
+	
+	public void addLocalMethod(XMLElement method) throws TipiException;
+
+	public XMLElement getLocalMethod(String name);
+
+	public void setLocalValue(String expression, Object value);
+
+	public Object getLocalValue(String expression);
+
+	public boolean containsLocalValue(String expression);
+
+	public boolean isScopeLimit();
+	
+	public TipiComponent getScopeHomeComponent();
 }

@@ -1,6 +1,5 @@
 package com.dexels.navajo.dsl.expression.proposals;
 
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 
 public class InputTmlProposal {
@@ -27,12 +26,7 @@ public class InputTmlProposal {
 	}
 
 	public String getProposal() {
-		try {
-			return "[" + (isAbsolute()?getProperty().getFullPropertyName():getProperty().getName())+"]";
-		} catch (NavajoException e) {
-			e.printStackTrace();
-			return "Trouble composing proposal";
-		}
+		return "[" + (isAbsolute()?getProperty().getFullPropertyName():getProperty().getName())+"]";
 	}
 
 	public String getProposalDescription() {
