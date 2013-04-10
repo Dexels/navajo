@@ -25,6 +25,8 @@ public class GrusConnection {
 	
 	private static final AtomicInteger connectionCounter = new AtomicInteger();
 	private static final Map<Long,GrusConnection> registeredConnections = new ConcurrentHashMap<Long, GrusConnection>();
+	
+	@Deprecated
 	private static final Map<Connection,GrusConnection> connectionMapping = new ConcurrentHashMap<Connection, GrusConnection>();
 	
 	public GrusConnection(String location, String username, String password, DbConnectionBroker broker, double maxAge) {
@@ -82,6 +84,7 @@ public class GrusConnection {
 		return id;
 	}
 	
+	@Deprecated
 	public static GrusConnection getGrusConnectionByConnection(Connection conn) {
 		return connectionMapping.get(conn);
 	}

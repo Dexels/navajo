@@ -19,6 +19,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import org.dexels.grus.DbConnectionBroker;
+import org.dexels.grus.GrusConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,6 +192,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	public boolean showHeader = true;
 
 	protected Connection con = null;
+	protected GrusConnection gc = null;
 	protected PreparedStatement statement = null;
 	private ResultSetIterator myResultSetIterator = null;
 	protected ArrayList parameters = null;
@@ -531,9 +533,13 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? myAccess.accessID : "unknown access"));
 				throw new UserException(-1, sqle.getMessage(), sqle);
 			} finally {
-				if (fixedBroker != null && con != null && myConnectionBroker != null) {
+				if (fixedBroker != null && myConnectionBroker != null) {
 					// Free connection.
-					myConnectionBroker.freeConnection(con);
+					if ( gc != null ) {
+						myConnectionBroker.freeConnection(gc);
+					} else {
+						myConnectionBroker.freeConnection(con);
+					}
 				}
 			}
 		}
@@ -807,12 +813,16 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 		if (transactionContext != -1) {
 
-			con = DbConnectionBroker.getConnection(transactionContext);
+			GrusConnection gc = DbConnectionBroker.getGrusConnection(transactionContext);
+			if (gc == null) {
+				throw new UserException(-1, "Invalid transaction context set: " + transactionContext);
+			}
+			con = gc.getConnection();
 			if (con == null) {
 				throw new UserException(-1, "Invalid transaction context set: " + transactionContext);
 			}
 			// Set myConnectionBroker.
-			myConnectionBroker = DbConnectionBroker.getConnectionBroker(transactionContext);
+			myConnectionBroker = gc.getMyBroker();
 			// Make sure to set connection id.
 			this.connectionId = transactionContext;
 		}
@@ -836,30 +846,20 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 								+ fixedBroker);
 			}
 
-			con = myConnectionBroker.getConnection();
+			gc = myConnectionBroker.getGrusConnection();
+			if ( gc == null ) {
+				AuditLog.log("SQLMap",
+						"Could (still) not connect to database: " + datasource
+								+ " (" + this.username + ")"
+								+ ", check your connection", Level.SEVERE);
+
+				throw new UserException(-1, "Could not connect to database: "
+						+ datasource + " (" + this.username + ")"
+						+ ", check your connection");
+			}
+			con = gc.getConnection();
 
 			if (con == null) {
-				// AuditLog.log("SQLMap", "Could not connect to database: " +
-				// datasource + ", one more try with fresh broker....",
-				// Level.WARNING, (myAccess != null ? myAccess.accessID :
-				// "unknown access"));
-				//
-				// Message msg = configFile.getMessage("/datasources/" +
-				// datasource);
-				// try {
-				// createDataSource(msg, navajoConfig);
-				// }
-				// catch (NavajoException ne) {
-				// AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE);
-				// throw new UserException( -1, ne.getMessage());
-				// } catch (Throwable t) {
-				// AuditLog.log("SQLMap", t.getMessage(), Level.SEVERE);
-				// throw new UserException( -1, t.getMessage());
-				// }
-				// myConnectionBroker = fixedBroker.get(this.datasource, null,
-				// null);
-				// con = myConnectionBroker.getConnection();
-				// if (con == null) {
 				AuditLog.log("SQLMap",
 						"Could (still) not connect to database: " + datasource
 								+ " (" + this.username + ")"
@@ -907,7 +907,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			}
 
 			if (this.con != null) {
-				this.connectionId = DbConnectionBroker.getConnectionId(con);
+				this.connectionId = (int) gc.getId();
 				if (this.debug) {
 					Access.writeToConsole(myAccess, this.getClass()
 							+ ": put connection no. " + this.connectionId

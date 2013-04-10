@@ -1,7 +1,6 @@
 package org.dexels.grus;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
@@ -78,23 +77,16 @@ public final class DbConnectionBroker
 		}
 	}
 	
-	/**
-	 * This method return a Connection object based on a connection id (connection hashcode).
-	 * 
-	 * @param connectionId
-	 * @return
-	 */
-	public static Connection getConnection(int connectionId) {
+	public static GrusConnection getGrusConnection(int connectionId) {
 
 		GrusConnection gc = GrusConnection.getGrusConnectionById(connectionId);
 		if ( gc != null ) {
-			return gc.getConnection();
+			return gc;
 		} else {
 			logger.error("Could not find connection id: " + connectionId);
 			return null;
 		}
 	}
-	
 	
 	public final synchronized void refreshConnections() {
 		
@@ -104,14 +96,24 @@ public final class DbConnectionBroker
 		
 	}
 	
-	public final synchronized Connection getConnection() {
+	@Deprecated
+	public final Connection getConnection() {
+		GrusConnection gc = getGrusConnection();
+		if ( gc != null ) {
+			return gc.getConnection();
+		} else {
+			return null;
+		}
+	}
+	
+	public final synchronized GrusConnection getGrusConnection() {
 
 		if ( availableConnectionsStack.size() > 0 ) {
 			GrusConnection gc = availableConnectionsStack.pop();
 			if ( gc != null ) {
 				if ( !gc.isAged() ) {
 					inUse.add(gc);
-					return gc.getConnection();
+					return gc;
 				} else {
 					logger.info("Destroying GrusConnection " + gc.getId() + " due to old age.");
 					gc.destroy();
@@ -123,7 +125,7 @@ public final class DbConnectionBroker
 			try {
 				GrusConnection gc = new GrusConnection(location, username, password, this, timeoutDays);
 				inUse.add(gc);
-				return gc.getConnection();
+				return gc;
 			} catch (Exception e) {
 				logger.error("Could not created connection: " + e.getMessage(), e);
 			}
@@ -135,25 +137,32 @@ public final class DbConnectionBroker
 
 	}
 	
-	public final synchronized void freeConnection(Connection conn) {
+	public final synchronized void freeConnection(GrusConnection gc) {
 
-		GrusConnection gc = GrusConnection.getGrusConnectionByConnection(conn);
-		
-		if ( !inUse.contains(gc) ) {
+		if (!inUse.remove(gc) ) {
 			logger.warn("Freeing connection that is not in use..");
 		}
-		if ( gc == null ) {
+		availableConnectionsStack.push(gc);
+
+	}
+	
+	@Deprecated
+	public final void freeConnection(Connection conn) {
+
+		logger.warn("In freeConnection(Connection)");
+		
+		GrusConnection gc = GrusConnection.getGrusConnectionByConnection(conn);
+		if ( gc != null ) {
+			freeConnection(gc);
+		} else {
 			logger.error("Could not find GrusConnection for Connection: " + conn);
 			if ( conn != null ) {
 				try {
 					logger.warn("Closing Connection anyway...");
 					conn.close();
-				} catch (SQLException e) {
+				} catch (Exception e) {
 				}
 			}
-		} else {
-			inUse.remove(gc);
-			availableConnectionsStack.push(gc);
 		}
 
 	}
@@ -215,11 +224,4 @@ public final class DbConnectionBroker
 		return GrusManager.getInstance().getInstances();
 	}
 
-	public static DbConnectionBroker getConnectionBroker(int transactionContext) {
-		return GrusConnection.getGrusConnectionById(transactionContext).getMyBroker();
-	}
-
-	public static int getConnectionId(Connection con) {
-		return (int) GrusConnection.getGrusConnectionByConnection(con).getId();
-	}
 }
