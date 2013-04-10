@@ -56,7 +56,7 @@ public class GenericThread implements Runnable, Mappable {
 	
 	private Thread thread = null;
 	private int sleepTime = 1000;
-	
+
 	public final static String EMBRYO = "Embryo";
 	public final static String SLEEPING = "Sleeping";
 	public final static String WORKING = "Working";
@@ -126,7 +126,7 @@ public class GenericThread implements Runnable, Mappable {
 					worker();
 					totalWorkTime += ( System.currentTimeMillis() - start );
 				} catch (Throwable t) {
-					logger.error("Error: ", t);
+					threadFailed(t);
 				}
 				status = SLEEPING;
 				inactive();
@@ -138,6 +138,15 @@ public class GenericThread implements Runnable, Mappable {
 		}
 	}
 	
+	/**
+	 * Called when the worker() method threw an exception
+	 * Override to change the standard behaviour.
+	 * @param t
+	 */
+	protected void threadFailed(Throwable t) {
+		logger.error("Error: ", t);
+	}
+
 	public final void setSleepTime(int i) {
 		sleepTime = i;
 	}
