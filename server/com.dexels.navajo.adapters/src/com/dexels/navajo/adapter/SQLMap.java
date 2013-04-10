@@ -191,7 +191,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	public String separator = ";";
 	public boolean showHeader = true;
 
-	protected Connection con = null;
+	@Deprecated
+	protected Connection con = null; // This field should be removed. Use GrusConnection instead.
 	protected GrusConnection gc = null;
 	protected PreparedStatement statement = null;
 	private ResultSetIterator myResultSetIterator = null;
