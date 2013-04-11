@@ -121,7 +121,7 @@ public final class DbConnectionBroker
 			}
 		}
 
-		if ( availableConnectionsStack.size() < maxConnections ) {
+		if ( getSize() < maxConnections ) {
 			try {
 				GrusConnection gc = new GrusConnection(location, username, password, this, timeoutDays);
 				inUse.add(gc);
@@ -141,8 +141,10 @@ public final class DbConnectionBroker
 
 		if (!inUse.remove(gc) ) {
 			logger.warn("Freeing connection that is not in use..");
+			gc.destroy();
+		} else {
+			availableConnectionsStack.push(gc);
 		}
-		availableConnectionsStack.push(gc);
 
 	}
 	
