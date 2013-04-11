@@ -33,7 +33,7 @@ import com.dexels.navajo.document.Property;
 //import javax.mail.internet.InternetAddress;
 //import javax.mail.internet.MimeMessage;
 
-public class TestHttpClient implements NavajoResponseHandler {
+public class TestHttpClient extends Thread implements NavajoResponseHandler {
 
 	private static Random rand = new Random(System.currentTimeMillis());
 	
@@ -41,6 +41,22 @@ public class TestHttpClient implements NavajoResponseHandler {
 	private Navajo response = null;
 	private boolean fail = false;
 	private Integer timeout;
+	
+	final String loopCount;
+	final String url;
+	final Navajo n;
+	final String assertString; 
+	final Integer sleep;
+	final double minTime;
+	
+	public TestHttpClient(String loopCount, String url, Navajo n, String assertString, Integer sleep, double minTime) {
+		this.loopCount = loopCount;
+		this.url = url;
+		this.n = n;
+		this.assertString = assertString;
+		this.sleep = sleep;
+		this.minTime = minTime;
+	}
 	
 	public Integer getTimeout() {
 		return timeout;
@@ -80,6 +96,41 @@ public class TestHttpClient implements NavajoResponseHandler {
 
 	}
 	
+	public void run() {
+		double total = 0;
+		int failedCount = 0;
+		for (int i = 0; i < Integer.parseInt(loopCount); i++) {
+			try {
+			 long start = System.currentTimeMillis();
+			 call(url, n);
+			 String result = getResult();
+			 long end = System.currentTimeMillis();
+			 
+			 String serverTime = ( response != null ? response.getHeader().getHeaderAttribute("serverTime") : null );
+			 if ( result == null || result.indexOf(assertString) == -1 ) {
+				 if ( result != null && result.indexOf(assertString) == -1 ) {
+					 System.err.println(result);
+					
+				 }
+				 System.err.println(this + "," + i + ", Failed, " + ( end - start ) + ", " + serverTime + ", "+ ( ++failedCount) );
+			 } else {
+				 System.err.println(this + "," + i + ", Success, " +  ( end - start ) + ", " + serverTime + ", " + failedCount );
+			 }
+			 double sleepTime = ( sleep != null ? sleep : (minTime - ( end - start )) );
+			 //System.err.println("sleepTime: " + sleepTime);
+			 if ( sleepTime > 0 ) {
+				 Thread.sleep((long) sleepTime);
+				 end = System.currentTimeMillis();
+			 }
+			 total += ( end - start )/1000.0;
+
+			} catch (Exception e) {
+				logger.error("Error: ", e);
+			}
+		}
+		
+	}
+	
 	public static void main(String [] args) throws Exception {
 		
 		
@@ -95,6 +146,7 @@ public class TestHttpClient implements NavajoResponseHandler {
 		Integer timeout = null;
 		String request = null;
 		String assertString = null;
+		Integer threads = 1;
 		
 		// Set parameters.
 		for ( int i = 0; i < args.length; i++ ) {
@@ -112,6 +164,8 @@ public class TestHttpClient implements NavajoResponseHandler {
 				assertString = args[++i];
 			} else if ( args[i].equals("-timeout") ) {
 				timeout = Integer.parseInt(args[++i]);
+			} else if ( args[i].equals("-threads") ) {
+				threads = Integer.parseInt(args[++i]);
 			}
 		}
 		
@@ -130,44 +184,23 @@ public class TestHttpClient implements NavajoResponseHandler {
 		Navajo n = NavajoFactory.getInstance().createNavajo(fis);
 		fis.close();
 		
-		TestHttpClient c = new TestHttpClient();
-		c.setTimeout(timeout);
-		
-		double total = 0;
-		int failedCount = 0;
-		for (int i = 0; i < Integer.parseInt(loopCount); i++) {
-			try {
-			 long start = System.currentTimeMillis();
-			 c.call(url, n);
-			 String result = c.getResult();
-			 long end = System.currentTimeMillis();
-			 
-			 String serverTime = ( c.response != null ? c.response.getHeader().getHeaderAttribute("serverTime") : null );
-			 if ( result == null || result.indexOf(assertString) == -1 ) {
-				 if ( result != null && result.indexOf(assertString) == -1 ) {
-					 System.err.println(result);
-					
-				 }
-				 System.err.println(i + ", Failed, " + ( end - start ) + ", " + serverTime + ", "+ ( ++failedCount) );
-			 } else {
-				 System.err.println(i + ", Success, " +  ( end - start ) + ", " + serverTime + ", " + failedCount );
-			 }
-			 double sleepTime = ( sleep != null ? sleep : (minTime - ( end - start )) );
-			 //System.err.println("sleepTime: " + sleepTime);
-			 if ( sleepTime > 0 ) {
-				 Thread.sleep((long) sleepTime);
-				 end = System.currentTimeMillis();
-			 }
-			 total += ( end - start )/1000.0;
-
-			} catch (Exception e) {
-				logger.error("Error: ", e);
-			}
-//			 if ( i % 100 == 0) {
-//				 System.err.println("i: " + i + ", rate: " + 1.0/(total/100));
-//				 total = 0;
-//			 }
+		TestHttpClient [] workers = new TestHttpClient[threads];
+		for ( int i = 0; i < workers.length; i++ ) {
+			workers[i] = new TestHttpClient(loopCount, url, n, assertString, sleep, minTime);
+			workers[i].setTimeout(timeout);
 		}
+		
+		// Start up
+		for ( int i = 0; i < workers.length; i++ ) {
+			workers[i].start();
+		}
+	
+		// Join
+		for ( int i = 0; i < workers.length; i++ ) {
+			workers[i].join();
+		}
+		
+	
 		
 	}
 

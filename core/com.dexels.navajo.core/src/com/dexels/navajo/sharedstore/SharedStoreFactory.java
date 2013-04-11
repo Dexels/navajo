@@ -55,7 +55,6 @@ public class SharedStoreFactory {
 					return instance;
 				}
 				try {
-					// TODO: Fetch SharedStore implementation from server.xml
 					instance = DispatcherFactory.getInstance().getNavajoConfig().getSharedStore();
 				} catch (Exception e) {
 					logger.error("Error: ", e);

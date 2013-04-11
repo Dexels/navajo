@@ -1711,7 +1711,7 @@ public String fieldNode(int ident, Element n, String className,
         ident = ident-2;
         result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
-        result.append(printIdent(ident + 2) + "MappingUtils.callKillMethod( " + subObjectsName + "[" + loopCounterName + "]);\n");
+        result.append(printIdent(ident + 2) + "MappingUtils.callKillOrStoreMethod( " + subObjectsName + "[" + loopCounterName + "], e" + ident + ");\n");
         result.append(printIdent(ident + 2) + "throw e" + ident + ";\n");
 
         result.append(printIdent(ident) + "}\n");
@@ -1793,9 +1793,8 @@ public String fieldNode(int ident, Element n, String className,
         }  
         
         ident = ident-2;        
-        result.append(printIdent(ident) + "} catch (Exception e" + 
-        		ident +                    ") {\n");        
-        result.append(printIdent(ident + 2) + "MappingUtils.callKillMethod( "+ subObjectsName + ");\n");        
+        result.append(printIdent(ident) + "} catch (Exception e" + ident + ") {\n");        
+        result.append(printIdent(ident + 2) + "MappingUtils.callKillOrStoreMethod( "+ subObjectsName + ", e" + ident + ");\n");        
         result.append(printIdent(ident + 2) + "throw e" + ident + ";\n");         
         result.append(printIdent(ident) + "}\n");                
         result.append(printIdent(ident) + "MappingUtils.callStoreMethod(" + subObjectsName + ");\n");         
@@ -2120,7 +2119,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
       result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
       result.append(printIdent(ident) +
-                    " MappingUtils.callKillMethod(currentMap.myObject);\n");
+                    " MappingUtils.callKillOrStoreMethod(currentMap.myObject, e" + ident + ");\n");
       result.append(printIdent(ident) +
                     " DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().removeInstance(currentMap.ref);\n");
 
@@ -2166,7 +2165,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 
       result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
-      result.append(printIdent(ident) + "MappingUtils.callKillMethod( " + objectName + ");\n");
+      result.append(printIdent(ident) + "MappingUtils.callKillOrStoreMethod( " + objectName + ", e" + ident + ");\n");
       result.append(printIdent(ident) + "  throw e" + ident + ";\n");
       result.append(printIdent(ident) + "}\n");
       result.append(printIdent(ident) + "MappingUtils.callStoreMethod(" + objectName + ");\n");
@@ -2604,6 +2603,8 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	    	  result.append("setDebugAll(true);\n");
 	      }
 	     
+	      result.append("try {\n");
+	      
 	      result.append("inDoc = access.getInDoc();\n");
 
 	      // File Rules HashMap
@@ -2617,6 +2618,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	        result.append(str);
 	      }
 
+	      result.append("} finally {\n");
 	      if (debugOutput || debugAll ) {
 	        result.append("System.err.println(\"\\n --------- BEGIN NAVAJO RESPONSE ---------\\n\");\n");
 	        result.append("access.getOutputDoc().write(System.err);\n");
@@ -2630,7 +2632,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	    	  result.append("   e.printStackTrace(System.err);\n");
 	    	  result.append("}\n");
 	      }
-	    
+	      result.append("}\n");
 	      
 	      result.append("}// EOM\n");
 
