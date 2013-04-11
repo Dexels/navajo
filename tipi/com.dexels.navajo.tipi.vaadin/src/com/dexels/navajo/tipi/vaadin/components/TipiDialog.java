@@ -1,15 +1,23 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.CloseEvent;
+import com.vaadin.ui.Window.CloseListener;
 
 public class TipiDialog extends TipiVaadinComponentImpl implements ScopeLimit{
 
+	private static final Logger logger = LoggerFactory.getLogger(TipiDialog.class);
 	private static final long serialVersionUID = 5476906786366044908L;
 	private Window dialog;
 
@@ -17,9 +25,34 @@ public class TipiDialog extends TipiVaadinComponentImpl implements ScopeLimit{
 	public Object createContainer() {
 		dialog = new Window();
 		dialog.setModal(true);
+		dialog.addListener(new CloseListener() {
+			private static final long serialVersionUID = 938584507552292618L;
+
+			@Override
+            public void windowClose(CloseEvent e) {
+
+            	try	{
+            		try {
+            			performTipiEvent("onWindowClosed", null, true);
+            		} catch (TipiException e1) {
+            			logger.error("Exception at onWindowClosed, ignoring...", e1);
+            		}
+            		disposeComponent();
+        		} catch (TipiBreakException e1) {
+					if (e1.getType() == TipiBreakException.COMPONENT_DISPOSED) {
+						disposeComponent();
+					}
+        		}
+            }
+        });
 		return dialog;
 	}
 
+	  @Override
+	public void disposeComponent() {
+		super.disposeComponent();
+		getVaadinApplication().getMainWindow().removeWindow(dialog);
+	}
 	
 	
 	  @Override

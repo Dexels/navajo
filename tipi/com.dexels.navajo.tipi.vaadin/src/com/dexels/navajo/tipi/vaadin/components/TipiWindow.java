@@ -1,13 +1,21 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.tipi.ScopeLimit;
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.CloseEvent;
+import com.vaadin.ui.Window.CloseListener;
 
 public class TipiWindow extends TipiVaadinComponentImpl implements ScopeLimit{
 
+	private static final Logger logger = LoggerFactory.getLogger(TipiWindow.class);
 	private static final long serialVersionUID = -4874496951046547933L;
 	private Window window;
 
@@ -36,6 +44,27 @@ public class TipiWindow extends TipiVaadinComponentImpl implements ScopeLimit{
 //				}
 //			}
 //		});
+		window.addListener(new CloseListener() {
+
+			private static final long serialVersionUID = -5365729943023879264L;
+
+			@Override
+            public void windowClose(CloseEvent e) {
+
+            	try	{
+            		try {
+            			performTipiEvent("onWindowClosed", null, true);
+            		} catch (TipiException e1) {
+            			logger.error("Exception at onWindowClosed, ignoring...", e1);
+            		}
+            		disposeComponent();
+        		} catch (TipiBreakException e1) {
+					if (e1.getType() == TipiBreakException.COMPONENT_DISPOSED) {
+	            		disposeComponent();
+					}
+        		}
+            }
+        });
 		getVaadinApplication().getMainWindow().addWindow(window);
 		return window;
 	}
