@@ -619,6 +619,25 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 		  ( (Mappable) o).kill();
 	  }
   }
+  
+  public static final void callKillOrStoreMethod(Object o, Exception e)  {
+
+	  if (o == null || !(o instanceof Mappable)) {
+		  return;
+	  }
+	  if (o instanceof Mappable) {
+		  if ( e instanceof BreakEvent ) {
+			  try {
+				( (Mappable) o).store();
+			} catch (Exception e1) {
+				logger.error(e1.getMessage(), e1);
+				( (Mappable) o).kill();
+			} 
+		  } else {
+			  ( (Mappable) o).kill();
+		  }
+	  }
+  }
 
   /**
    * Returns the type for given "field" in Class c.
