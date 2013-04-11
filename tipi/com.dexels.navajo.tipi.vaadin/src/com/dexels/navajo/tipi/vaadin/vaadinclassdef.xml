@@ -366,8 +366,6 @@
 			
 		</values>
 		<methods>
-			<method name="show" />
-			<method name="hide" />
 			<method name="dispose" />
 		</methods>
 	</tipiclass>
