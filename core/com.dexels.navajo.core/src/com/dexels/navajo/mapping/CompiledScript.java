@@ -301,16 +301,9 @@ private final static Logger logger = LoggerFactory
 				  execute(access);
 			  }
 			  catch (com.dexels.navajo.mapping.BreakEvent be) {
-				  // Be sure that all maps are killed()!
-				  if (currentMap != null) {
-					  callStoreOrKill(currentMap, "kill");
-				  }
 				  throw be;
 			  }
 			  catch (Exception e) {
-				  if (currentMap != null && currentMap.getParent() != null) {
-					  callStoreOrKill(currentMap.getParent(), "kill");
-				  }
 				  throw e;
 			  } finally {
 				  // TODO Will fail epically with continuations. Just because this thread will die doesn't mean this scirpt is done.
