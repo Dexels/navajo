@@ -4,7 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.peter.contextmenu.ContextMenu;
 
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.vaadin.Application;
@@ -176,6 +179,14 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 		return super.getComponentValue(name);
 	}
 	
+	@Override
+    protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
+    	super.performComponentMethod(name, compMeth, event);
+    	if (name.equals("show") || name.equals("hide"))
+    	{
+    		throw new UnsupportedOperationException("Vaadin does not support show or hide. Use instantiate and dispose instead.");
+    	}
+    }
 	public Component getVaadinContainer() {
 		Object o = getContainer();
 		if(o instanceof Component) {

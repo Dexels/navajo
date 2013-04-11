@@ -1,65 +1,30 @@
 package org.dexels.grus;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.ArrayDeque;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Deque;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.util.AuditLog;
-
-public final class DbConnectionBroker extends Object
+public final class DbConnectionBroker 
 {
 	protected String location, username, password;
-
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(DbConnectionBroker.class);
+	private final static Logger logger = LoggerFactory.getLogger(DbConnectionBroker.class);
+	
 	protected String dbIdentifier;
-	protected Connection[] conns;
-	protected boolean[] usedmap;
-	protected long[] created;
-	protected boolean[] aged;
-	//private int minimum;    // Minimum number of connections (unused)
-	protected int current;    // Current number of open connections
-	protected int available;  // Number of available connections
+	
+	protected int maxConnections;
 	protected double timeoutDays;
-	protected boolean closed; // Whether closed for business
 	protected boolean dead = false;
 	public  boolean supportsAutocommit = true;
-	protected boolean sanityCheck = true;
-	private static final AtomicInteger connectionCounter = new AtomicInteger();
 	
-	private final static int LOGIN_TIMEOUT = 10;
-	
-	protected static final Map<Integer,DbConnectionBroker> transactionContextBrokerMap = Collections.synchronizedMap(new HashMap<Integer,DbConnectionBroker>());
-	protected static final ConcurrentHashMap<Connection,Integer> connectionIdMap = new ConcurrentHashMap<Connection,Integer>();
-	
-	protected final void log(String message) {
-		AuditLog.log("GRUS", Thread.currentThread().getName() + ": (url = " + location + ", user = " + username + ")" + message);
-	}
-	
-	private static int getNextUniqueInteger() {
-		return connectionCounter.incrementAndGet();
-	}
-	
-	public static int getConnectionId(Connection c) {
-		if(c==null) {
-			logger.error("Error! Requested the id of a null-connection");
-			throw new IllegalArgumentException("Error! Requested the id of a null-connection");
-		}
-		final Integer integer = connectionIdMap.get(c);
-		if(integer==null) {
-			throw new IllegalArgumentException("Could not find connection id in map for connection: " + c.hashCode());
-		}
-		return integer;
-	}
+	protected final Deque<GrusConnection> availableConnectionsStack;
+	protected final Set<GrusConnection> inUse = Collections.newSetFromMap(new ConcurrentHashMap<GrusConnection, Boolean>());
 	
 	public DbConnectionBroker(String dbDriver,
 			String dbServer,
@@ -97,299 +62,134 @@ public final class DbConnectionBroker extends Object
 		location  = dbServer;
 		username  = dbLogin;
 		password  = dbPassword;
-		//minimum   = minConns;
-		current   = 0;
-		available = 0;
+		maxConnections = maxConns;
 		timeoutDays = maxConnTime;
 		
 		if ( timeoutDays == 0 ) {
 			maxConns = 1;
 		}
-		
-		conns   = new Connection[maxConns];
-		usedmap = new boolean[maxConns];
-		created = new long[maxConns];
-		aged    = new boolean[maxConns];
-		for(int i=0; i<conns.length; i++) {
-			conns[i]    = null;
-			usedmap[i]  = false;
-			aged[i]     = false;
-			created[i]  = 0;
-		}
-		closed = false;
+
+		availableConnectionsStack = new ArrayDeque<GrusConnection>(maxConnections);
 		
 		if ( timeoutDays > 0 ) {
-			
-			Connection con = getConnection();
-			freeConnection(con);
 			GrusManager.getInstance().addBroker(this);
-			
-            log("Started new connectionbroker thread for: " + dbDriver + "/" + dbServer + "/" + dbLogin + ", refresh = " + timeoutDays);
+            logger.info("Started new connectionbroker thread for: " + dbDriver + "/" + dbServer + "/" + dbLogin + ", refresh = " + timeoutDays);
 		}
 	}
 	
-	private final boolean testConnection(final Connection conn) {
+	public static GrusConnection getGrusConnection(int connectionId) {
 
-		if ( conn == null ) {
-			log("TESTCONNECTION: CONN = NULL...");
-			return false;	
-		}
-		
-		try {
-			if(conn.isClosed()) {
-				log("TESTCONNECTION: CONN WAS CLOSED...");
-				return false;
-			}
-
-			if ( sanityCheck ) {
-				// Check if it is the proper connection...
-
-				String metaUsername = conn.getMetaData().getUserName();
-				
-				// MySql fix: My sql will add @localhost after the username, which confuses this test.
-				// It won't reuse connections because this test always fails.
-				if(metaUsername.indexOf("@")!=-1) {
-					metaUsername = metaUsername.split("@")[0];
-				}
-				String metaLocation = conn.getMetaData().getURL();
-				if ( !metaUsername.toLowerCase().equals(this.username.toLowerCase()) ||
-						!metaLocation.toLowerCase().equals(this.location.toLowerCase())) {
-					try {
-						logger.warn("FOUND ILLEGAL CONNECTION: ");
-						AuditLog.log("GRUS", "Found ILLEGAL connection " + metaLocation+"/"+metaUsername +
-								", EXPECTED: " + this.location + "/" + this.username);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					return false;
-				}
-			}
-		} catch(Exception e) {
-			log("TESTCONNECTION: CONN HAD EXCEPTION: " + e.getMessage());
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * This method return a Connection object based on a connection id (connection hashcode).
-	 * 
-	 * @param connectionId
-	 * @return
-	 */
-	public static synchronized  Connection getConnection(int connectionId) {
-		
-		// Fetch proper broker.
-		DbConnectionBroker broker = transactionContextBrokerMap.get(connectionId);
-		if ( broker == null ) {
-			logger.error("COULD NOT FIND BROKER FOR CONNECTION ID: " + connectionId);
+		GrusConnection gc = GrusConnection.getGrusConnectionById(connectionId);
+		if ( gc != null ) {
+			return gc;
+		} else {
+			logger.error("Could not find connection id: " + connectionId);
 			return null;
 		}
-		for ( int i = 0; i < broker.conns.length; i++ ) {
-			if ( broker.conns[i] != null && getConnectionId(broker.conns[i]) == connectionId ) {
-				if ( broker.usedmap[i] )  {
-					return broker.conns[i];
-				} else {
-					logger.error("Trying to get unused connection: " + connectionId);
-					return null;
-				}
-			}
-		}
-		logger.error("Could not find connectionid: " + connectionId);
-		return null;
-	}
-	
-	/** 
-	 * Fetch DbConnectionBroker based on connectionId
-	 * 
-	 * @param connectionId
-	 * @return
-	 */
-	public static DbConnectionBroker getConnectionBroker(int connectionId) {
-		
-		DbConnectionBroker broker = transactionContextBrokerMap.get(connectionId);
-		if ( broker == null ) {
-			logger.warn("COULD NOT FIND BROKER FOR CONNECTION ID: " + connectionId);
-			return null;
-		}
-		return broker;
 	}
 	
 	public final synchronized void refreshConnections() {
 		
-		long maxAge = (long) (System.currentTimeMillis() - this.timeoutDays * 86400000L);
-		// Check IDLE time, created[i] contains timestamp of last use.
-		
-		if ( this.conns != null ) {
-			for (int i = 0; i < this.conns.length; i++) {
-				if (this.conns[i] != null && this.created[i] < maxAge) {
-					this.aged[i] = true;
-				}
-			}
+		for ( GrusConnection gc : availableConnectionsStack ) {
+			gc.setAged();
 		}
 		
 	}
 	
-	public final synchronized Connection getConnection() {
-		if(closed && timeoutDays > 0) {
+	@Deprecated
+	public final Connection getConnection() {
+		GrusConnection gc = getGrusConnection();
+		if ( gc != null ) {
+			return gc.getConnection();
+		} else {
 			return null;
 		}
+	}
+	
+	public final synchronized GrusConnection getGrusConnection() {
 
-		// EDIT BY FRANK: Placed wait into a loop. Also added timeout to loop, to be sure
-		if (timeoutDays > 0 && available == 0 && current == conns.length ) {
-				return null;
-		}
-
-		if(closed && timeoutDays > 0) {
-			return null;
-		}
-
-		// Check for available existing connection.
-		for(int i=0; i<conns.length; i++) {
-			if(conns[i] != null && usedmap[i] == false) {
-				// Test connection and check whether connection has not yet aged.
-				--available;
-				if(testConnection(conns[i]) && !aged[i]) {
-					usedmap[i] = true;
-					return conns[i];
+		if ( availableConnectionsStack.size() > 0 ) {
+			GrusConnection gc = availableConnectionsStack.pop();
+			if ( gc != null ) {
+				if ( !gc.isAged() ) {
+					inUse.add(gc);
+					return gc;
 				} else {
-					try {
-						if ( conns[i] != null ) {
-							try {
-								--current;
-								conns[i].close();
-							} catch (Throwable t) {
-								logger.error("Error: ", t);
-							} finally {
-								logger.warn("Removing aged connection: " + getConnectionId(conns[i]));
-								transactionContextBrokerMap.remove(getConnectionId(conns[i]));
-								connectionIdMap.remove(conns[i]);
-							}
-						}
-					} catch (Throwable e) {
-						logger.error("Error: ", e);
-					}
-					conns[i] = null;
-					usedmap[i] = false;
+					logger.info("Destroying GrusConnection " + gc.getId() + " due to old age.");
+					gc.destroy();
 				}
 			}
 		}
-		
-		// Create new connection if maxconnections has not yet been reached.
-		for(int i=0; i<conns.length; i++) {
-			if( conns[i] == null ) {
-				int id = -1;
-				try {
-					//long start = System.currentTimeMillis();
-					DriverManager.setLoginTimeout(LOGIN_TIMEOUT);
-					Connection c = DriverManager.getConnection(location,username,password);
-					while ( isDoubleEntry(c) ) {
-						// We could also check if there is another Connection with the same hashCode, I think that is closer to our
-						// actual problem
-						logger.error("Overlapping hashcode for connection found, trying new one.");
-						c.close();
-						c = DriverManager.getConnection(location,username,password);
-					}
-					id = DbConnectionBroker.getNextUniqueInteger();
-					connectionIdMap.put(c, id);
-					transactionContextBrokerMap.put(id, this);
-					logger.debug("Created new id for connection: "+id);
-					conns[i] = c;
-					
-				} catch(SQLException e) {
-					logger.error("SQL login failed",e);
-					return null;
-				}
-				usedmap[i] = true;
-				aged[i] = false;
-				created[i] = System.currentTimeMillis();
-				++current;
-				return conns[i];
-			}
-		}
-//         "Assertion failure: no connections, retrying...");
-//		return getConnection();
-		log("@@@@@ RETURNING NULL!! THIS SHOULD NOT HAPPEN");
-		return null;
-	}
-	
-	public final synchronized String freeConnection(Connection conn) {
-		
-		int index = indexOfConnection(conn);
-		
-		if( index >= 0 && usedmap[index] ) {
-			usedmap[index] = false;
-			++available;
-			notify();
-		}
-		//logger.debug("FreeConnection is removing connection id: {}",connectionIdMap.get(conn));
-		//DbConnectionBroker.connectionIdMap.remove(conn);
-		return null; // Duh?
-	}
-	
-	private boolean isDoubleEntry(Connection con) {
-		
-		for(int i=0; i<conns.length; i++) {
-			if ( conns[i] != null && conns[i] == con ) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private final int indexOfConnection(Connection conn) {
-		for(int i=0; i<conns.length; i++) {
-			if(conns[i] != null && conns[i] == conn) {
-				return i;
-			}
-		}
-		return -1;
-	}
-	
-	private final void destroy(int millis) throws SQLException
-	{
-		SQLException ex = null;
-		
-		log("In destroy, millis: " + millis);
-		closed = true;
-		dead = true;
-		
-		GrusManager.getInstance().removeBroker(this);
-		
-		for(int i=0; i<conns.length; i++) {
+
+		if ( getSize() < maxConnections ) {
 			try {
-				if(conns[i] != null) {
-					conns[i].close();
-					log("Closed connection due to destroy: " + getConnectionId(conns[i]));
-					transactionContextBrokerMap.remove(getConnectionId(conns[i]));
-					connectionIdMap.remove(conns[i]);
-					conns[i] = null;
-					usedmap[i] = false;
-				}
-			} catch(SQLException e) {
-				ex = e;
+				GrusConnection gc = new GrusConnection(location, username, password, this, timeoutDays);
+				inUse.add(gc);
+				return gc;
+			} catch (Exception e) {
+				logger.error("Could not created connection: " + e.getMessage(), e);
 			}
-		}
-		if(ex != null) {
-			throw ex;
+		} else {
+			logger.error("No more database connections left");
 		}
 		
+		return null;
+
+	}
+	
+	public final synchronized void freeConnection(GrusConnection gc) {
+
+		if (!inUse.remove(gc) ) {
+			logger.warn("Freeing connection that is not in use..");
+			gc.destroy();
+		} else {
+			availableConnectionsStack.push(gc);
+		}
+
+	}
+	
+	@Deprecated
+	public final void freeConnection(Connection conn) {
+
+		logger.warn("In freeConnection(Connection)");
+		
+		GrusConnection gc = GrusConnection.getGrusConnectionByConnection(conn);
+		if ( gc != null ) {
+			freeConnection(gc);
+		} else {
+			logger.error("Could not find GrusConnection for Connection: " + conn);
+			if ( conn != null ) {
+				try {
+					logger.warn("Closing Connection anyway...");
+					conn.close();
+				} catch (Exception e) {
+				}
+			}
+		}
+
 	}
 	
 	public synchronized void destroy() {
-		try { destroy(2000); } catch(SQLException e) { }
+		logger.warn(location + "/" + username + ": In destroy()");
+		dead = true;
+		GrusManager.getInstance().removeBroker(this);
+		for ( GrusConnection gc: availableConnectionsStack ) {
+			gc.destroy();
+		}
+		availableConnectionsStack.clear();
+		inUse.clear();
 	}
 	
 	public final int getUseCount() {
-		return current - available;
+		return inUse.size();
 	}
 	
 	public final int getSize() {
-		return current;
+		return availableConnectionsStack.size() + inUse.size();
 	}
 	
 	public final int getMaxCount() {
-		return conns.length;
+		return maxConnections;
 	}
 	
 	public final String getDbIdentifier() {
@@ -417,12 +217,13 @@ public final class DbConnectionBroker extends Object
 	 * 
 	 */
 	public void setCloseAll() {
-		for (int i = 0; i < aged.length; i++) {
-			aged[i] = true;
+		for ( GrusConnection gc: availableConnectionsStack ) {
+			gc.setAgedForced();
 		}
 	}
 
 	public final static int getInstances() {
 		return GrusManager.getInstance().getInstances();
 	}
+
 }

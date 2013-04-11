@@ -60,8 +60,6 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 		try {
 			readConfig();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			logger.warn("Cache controller configuration problem, not fatal", e);
 		}
 	}
@@ -85,7 +83,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 				logger.error("Error: ", t);
 			} 
 			
-			instance.myId = id;
+			instance.threadId = id;
 			instance.setSleepTime(5000);
 			instance.startThread(instance);
 

@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.dexels.grus.DbConnectionBroker;
+import org.dexels.grus.GrusConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -566,18 +567,21 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     	this.broker.setDbIdentifier(this.type);
     	// Only get metadata if started in 'broker' mode (i.e. refresh > 0 )
     	if (this.broker != null && refresh > 0) {
-    		Connection c = this.broker.getConnection();
-    		if (c != null) {
+    		GrusConnection gc = this.broker.getGrusConnection();
+    		if ( gc != null ) {
     			try {
-    				DatabaseMetaData dbmd = c.getMetaData();
-    				broker.supportsAutocommit = dbmd.supportsTransactions();
-    				dbInfo = new DatabaseInfo(dbmd, this.datasource);
+    				Connection c = gc.getConnection();
+    				if (c != null) {
+    					DatabaseMetaData dbmd = c.getMetaData();
+    					broker.supportsAutocommit = dbmd.supportsTransactions();
+    					dbInfo = new DatabaseInfo(dbmd, this.datasource);
+    				}
     			}
     			catch (SQLException ex) {
     				logger.error("Error: ", ex);
     			}
     			finally {
-    				this.broker.freeConnection(c);
+    				this.broker.freeConnection(gc);
     			}
     		}
     	}
