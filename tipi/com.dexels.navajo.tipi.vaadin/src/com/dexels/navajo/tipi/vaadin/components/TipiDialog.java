@@ -45,6 +45,7 @@ public class TipiDialog extends TipiVaadinComponentImpl implements ScopeLimit{
         		}
             }
         });
+		getVaadinApplication().getMainWindow().addWindow(dialog);
 		return dialog;
 	}
 
@@ -95,10 +96,7 @@ public class TipiDialog extends TipiVaadinComponentImpl implements ScopeLimit{
 	
 	    protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
 	        super.performComponentMethod(name, compMeth, event);
-	        if (name.equals("show")) {
-				getVaadinApplication().getMainWindow().addWindow(dialog);
-	        }
-	        if (name.equals("hide") || name.equals("dispose")) {
+	        if (name.equals("dispose")) {
 				getVaadinApplication().getMainWindow().removeWindow(dialog);
 	        }
 	    }
