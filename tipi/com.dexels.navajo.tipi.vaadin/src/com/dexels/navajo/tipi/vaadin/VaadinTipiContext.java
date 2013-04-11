@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,7 +128,10 @@ public class VaadinTipiContext extends TipiContext {
 	@Override
 	public void showWarning(String text, String title)
 	{
-		Notification not = new Notification(text, title, Notification.TYPE_WARNING_MESSAGE);
+		Notification not = new Notification(text, "", Notification.TYPE_WARNING_MESSAGE);
+		not.setPosition(7);
+		not.setDelayMsec(1500);
+		not.setDescription("");
 		mainWindow.showNotification(not);
 	}
 
@@ -135,13 +139,17 @@ public class VaadinTipiContext extends TipiContext {
 	@Override
 	public void showError(String text, String title)
 	{
-		Notification not = new Notification(text, title, Notification.TYPE_ERROR_MESSAGE);
+		Notification not = new Notification(text, "", Notification.TYPE_ERROR_MESSAGE);
+		not.setDelayMsec(1500);
+		not.setPosition(7);
 		mainWindow.showNotification(not);
 	}
 
 	@Override
 	public void showInfo(String text, String title) {
 		Notification not = new Notification(text, title);
+		not.setPosition(7);
+		not.setStyleName("info");
 		mainWindow.showNotification(not);
 	}
 
