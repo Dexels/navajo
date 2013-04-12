@@ -73,7 +73,7 @@ public static final int DIRECT_PROTOCOL = 0;
 	//  private NavajoPushSession pushSession = null;
   
   private int protocol = HTTP_PROTOCOL;
-  private boolean setSecure = false;
+  private boolean useHttps = false;
 //  private SSLSocketFactory sslFactory = null;
   //private String keystore, passphrase;
   private long retryInterval = 1000; // default retry interval is 500 milliseconds
@@ -262,7 +262,7 @@ private Navajo doTransaction(String name, Navajo d, boolean useCompression, bool
     //useCompression = false;
     
     
-    if (setSecure) {
+    if (useHttps) {
       url = new URL("https://" + name );
     }
     else {
@@ -389,7 +389,15 @@ private Navajo doTransaction(String name, Navajo d, boolean useCompression, bool
 	return n;
   }
 
-  private void appendHeaderToHttp(HttpURLConnection con, Header header) {
+  public boolean useHttps() {
+	return useHttps;
+}
+
+public void setHttps(boolean useHttps) {
+	this.useHttps = useHttps;
+}
+
+private void appendHeaderToHttp(HttpURLConnection con, Header header) {
 	  con.setRequestProperty("rpcName",header.getRPCName());
 	  con.setRequestProperty("rpcPass",header.getRPCPassword());
 	  con.setRequestProperty("rpcUser",header.getRPCUser());
