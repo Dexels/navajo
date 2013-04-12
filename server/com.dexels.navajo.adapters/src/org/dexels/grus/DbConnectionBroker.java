@@ -126,7 +126,7 @@ public final class DbConnectionBroker
 				GrusConnection gc = new GrusConnection(location, username, password, this, timeoutDays);
 				inUse.add(gc);
 				return gc;
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				logger.error("Could not created connection: " + e.getMessage(), e);
 			}
 		} else {
