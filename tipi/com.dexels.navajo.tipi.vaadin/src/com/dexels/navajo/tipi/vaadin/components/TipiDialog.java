@@ -37,10 +37,10 @@ public class TipiDialog extends TipiVaadinComponentImpl implements ScopeLimit{
             		} catch (TipiException e1) {
             			logger.error("Exception at onWindowClosed, ignoring...", e1);
             		}
-            		disposeComponent();
+            		myContext.disposeTipiComponent(TipiDialog.this);
         		} catch (TipiBreakException e1) {
 					if (e1.getType() == TipiBreakException.COMPONENT_DISPOSED) {
-						disposeComponent();
+	            		myContext.disposeTipiComponent(TipiDialog.this);
 					}
         		}
             }
