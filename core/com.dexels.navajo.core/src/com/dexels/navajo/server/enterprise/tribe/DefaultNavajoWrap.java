@@ -34,7 +34,7 @@ public class DefaultNavajoWrap implements NavajoRug {
 		if ( n == null ) {
 			logger.error("Cannot wrap null Navajo");
 		}
-		reference = SerializationUtil.serializeNavajo(n, uniqueId.incrementAndGet() + ".xml");
+		reference = SerializationUtil.serializeNavajo(n, System.currentTimeMillis() + "-" + uniqueId.incrementAndGet() + ".xml");
 		logger.info("Created DefaultNavajoWrap: " + reference);
 	}
 	
