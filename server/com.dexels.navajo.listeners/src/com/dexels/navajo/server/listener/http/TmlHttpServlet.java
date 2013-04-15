@@ -354,8 +354,12 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		String sendEncoding = request.getHeader("Accept-Encoding");
 		String recvEncoding = request.getHeader("Content-Encoding");
 
-		MDC.put("Accept-Encoding", sendEncoding);
-		MDC.put("Content-Encoding", recvEncoding);
+		if(sendEncoding!=null) {
+			MDC.put("Accept-Encoding", sendEncoding);
+		}
+		if(recvEncoding!=null) {
+			MDC.put("Content-Encoding", recvEncoding);
+		}
 		DispatcherInterface dis = null;
 		BufferedReader r = null;
 		BufferedWriter out = null;
@@ -579,6 +583,9 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 
 	private Navajo fallbackHandleTransaction(DispatcherInterface dis, Navajo in,
 			Object certObject, ClientInfo clientInfo) throws FatalException {
+		if(dis==null) {
+			throw new FatalException("Navajo configuration problem: No dispatcher available.");
+		}
 		Navajo outDoc = dis.removeInternalMessages(dis.handle(in, certObject,clientInfo));
 		return outDoc;
 	}

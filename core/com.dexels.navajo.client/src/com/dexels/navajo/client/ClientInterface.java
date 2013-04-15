@@ -60,6 +60,10 @@ public void setCurrentHost(String host);
 
 public void setAllowCompression(boolean allowCompression);
 
+
+public boolean useHttps();
+public void setHttps(boolean useHttps);
+
 /**
  * Created to force the client to encode the request using Gzip (GAE related)
  * @param forceGzip
