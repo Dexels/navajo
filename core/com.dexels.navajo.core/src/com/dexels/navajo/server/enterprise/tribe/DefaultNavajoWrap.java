@@ -28,10 +28,16 @@ public class DefaultNavajoWrap implements NavajoRug {
 	private final static Logger logger = LoggerFactory.getLogger(DefaultNavajoWrap.class);
 	
 	public DefaultNavajoWrap(Navajo n) {
+		if ( n == null ) {
+			logger.error("Cannot wrap null Navajo");
+		}
 		reference = SerializationUtil.serializeNavajo(n, System.currentTimeMillis() + "-" + n.hashCode() + ".xml");
 	}
 	
 	public DefaultNavajoWrap(Navajo n, String id) {
+		if ( n == null ) {
+			logger.error("Cannot wrap null Navajo: " + id);
+		}
 		if ( !id.endsWith(".xml") ) {
 			id = id + ".xml";
 		}
