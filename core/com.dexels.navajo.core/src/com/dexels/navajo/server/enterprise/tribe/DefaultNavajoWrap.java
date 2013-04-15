@@ -24,7 +24,7 @@ public class DefaultNavajoWrap implements NavajoRug {
 	 */
 	private static final long serialVersionUID = -4689405438923422437L;
 	private transient Navajo myNavajo = null;
-	private AtomicLong uniqueId = new AtomicLong();
+	private final static AtomicLong uniqueId = new AtomicLong();
 	
 	public final String reference;
 	
@@ -34,7 +34,7 @@ public class DefaultNavajoWrap implements NavajoRug {
 		if ( n == null ) {
 			logger.error("Cannot wrap null Navajo");
 		}
-		reference = SerializationUtil.serializeNavajo(n, uniqueId.incrementAndGet() + ".xml");
+		reference = SerializationUtil.serializeNavajo(n, System.currentTimeMillis() + "-" + uniqueId.incrementAndGet() + ".xml");
 		logger.info("Created DefaultNavajoWrap: " + reference);
 	}
 	
