@@ -1,5 +1,7 @@
 package com.dexels.navajo.server.enterprise.tribe;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,7 @@ public class DefaultNavajoWrap implements NavajoRug {
 	 */
 	private static final long serialVersionUID = -4689405438923422437L;
 	private transient Navajo myNavajo = null;
+	private AtomicLong uniqueId = new AtomicLong();
 	
 	public final String reference;
 	
@@ -31,7 +34,8 @@ public class DefaultNavajoWrap implements NavajoRug {
 		if ( n == null ) {
 			logger.error("Cannot wrap null Navajo");
 		}
-		reference = SerializationUtil.serializeNavajo(n, System.currentTimeMillis() + "-" + n.hashCode() + ".xml");
+		reference = SerializationUtil.serializeNavajo(n, uniqueId.incrementAndGet() + ".xml");
+		logger.info("Created DefaultNavajoWrap: " + reference);
 	}
 	
 	public DefaultNavajoWrap(Navajo n, String id) {
@@ -42,6 +46,7 @@ public class DefaultNavajoWrap implements NavajoRug {
 			id = id + ".xml";
 		}
 		reference = SerializationUtil.serializeNavajo(n, id + ".xml");
+		logger.info("Created DefaultNavajoWrap: " + reference);
 	}
 	
 	public Navajo getNavajo() {
@@ -51,6 +56,7 @@ public class DefaultNavajoWrap implements NavajoRug {
 				logger.error("Could not de-serialize Navajo object: " + reference);
 			}
 		}
+		logger.info("Getting DefaultNavajoWrap: " + reference);
 		return myNavajo;
 	}
 	
