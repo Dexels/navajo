@@ -24,6 +24,7 @@ public class SerializationUtil {
 	}
 	
 	public static void removeNavajo(String name) {
+		logger.warn("In removeNavajo(" + name + ")");
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		if ( name == null || ssi == null ) {
 			return;
@@ -83,6 +84,8 @@ public class SerializationUtil {
 	}
 	
 	public static void removeAllNavajos() {
+		logger.warn("In removeAllNavajos()");
+		Thread.dumpStack();
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		ssi.removeAll(SerializationUtil.SHAREDSTORE_PARENT);
 	}
