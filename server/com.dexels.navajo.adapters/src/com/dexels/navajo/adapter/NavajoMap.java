@@ -192,7 +192,7 @@ private String resource;
   }
 
   public void store() throws MappableException, UserException {
-	  if ( block ) {
+	  if ( block && serviceCalled ) {
 		  waitForResult();
 	  }
   }
