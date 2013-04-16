@@ -1,6 +1,7 @@
 package com.dexels.navajo.resource.navajo.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -72,6 +73,23 @@ public class NavajoComponentImpl implements AsyncClient  {
 	@Override
 	public Navajo callService(Navajo input, String service) throws IOException {
 		return async.callService(input, service);
+	}
+
+	@Override
+	public void setClientCertificate(String algorithm, String type,
+			InputStream is, char[] password) throws IOException {
+		async.setClientCertificate(algorithm, type, is, password);
+	}
+
+	@Override
+	public boolean useHttps() {
+		return async.useHttps();
+	}
+
+	@Override
+	public void setHttps(boolean useHttps) {
+		async.setHttps(useHttps);
+		
 	}
 
 

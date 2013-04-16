@@ -1,5 +1,8 @@
 package com.dexels.navajo.client.async;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import com.dexels.navajo.client.async.impl.AsyncClientImpl;
 
 
@@ -19,8 +22,12 @@ public class AsyncClientFactory {
 			return client;
 		}
 	}
+	
+//	public static ManualAsyncClient getServerInstance(String url, )
 
 	public static ManualAsyncClient createInstance() {
 		return new AsyncClientImpl();
 	}
+
+
 }
