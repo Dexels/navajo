@@ -17,12 +17,14 @@ import java.util.Set;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.functions.util.FunctionDefinition;
 
 public abstract class FunctionInterface {
 
     private ArrayList<Object> operandList = null;
     protected Navajo inMessage = null;
     protected Message currentMessage = null;
+    protected FunctionDefinition myFunctionDefinition = null;
     
     public void setCurrentMessage(Message currentMessage) {
 		this.currentMessage = currentMessage;
@@ -36,6 +38,8 @@ public abstract class FunctionInterface {
 	private final static HashMap<Class<? extends FunctionInterface>, Class [][]> types = new HashMap<Class<? extends FunctionInterface>, Class[][]>();
 	@SuppressWarnings("rawtypes")
 	private final static HashMap<Class<? extends FunctionInterface>, Class []> returnType = new HashMap<Class<? extends FunctionInterface>, Class[]>();
+	private Class[][] myinputtypes;
+	private Class[] myreturntypes;
     
     public abstract String remarks();
     
@@ -90,6 +94,17 @@ public abstract class FunctionInterface {
     public FunctionInterface() {
     }
     
+    public void load(FunctionDefinition fd) {
+    	myFunctionDefinition = fd;
+    	if(fd.getInputParams()!=null) {
+        	myinputtypes = loadInputTypes(fd.getInputParams());
+    	}
+    	if(fd.getResultParam()!=null) {
+    		myreturntypes = loadReturnType(fd.getResultParam());
+    	}
+    }
+    
+    // Legacy
     public final void setTypes(String [][] navajotypes, String [] navajoReturnType) {
     	if ( initialized.contains(this.getClass()) ) {
     		return;
@@ -100,56 +115,16 @@ public abstract class FunctionInterface {
         		return;
         	}
     		
-    		NavajoFactory nf = NavajoFactory.getInstance();
     		
     		if ( navajotypes != null ) {
     			
-    			// Convert navajo types to Java classes.
-        	
-        		Class [][] mytypes = new Class[navajotypes.length][];
-        		boolean hasEmptyOptions = false;
-        		boolean hasMultipleOptions = false;
-        		
-    			for (int i = 0; i < navajotypes.length; i++) {
-    				mytypes[i] = new Class[navajotypes[i].length];
-    				boolean emptyOptionSpecified = false;
-    				boolean multipleOptionsSpecified = false;
-    				for (int j = 0; j < navajotypes[i].length; j++) {
-
-    					if ( navajotypes[i][j] != null && navajotypes[i][j].trim().equals("...") ) {
-    						mytypes[i][j] = Set.class; // Use Set class to denote multiple parameter option.
-    						multipleOptionsSpecified = true;
-    						hasMultipleOptions = true;
-    					} else if ( navajotypes[i][j] == null || navajotypes[i][j].trim().equalsIgnoreCase("empty") ) {
-    						mytypes[i][j] = null;
-    						emptyOptionSpecified = true;
-    						hasEmptyOptions = true;
-    					} else {
-    						mytypes[i][j] = nf.getJavaType(navajotypes[i][j].trim());
-    					}
-    				}
-
-    				if ( hasMultipleOptions && !multipleOptionsSpecified) {
-    					throw new IllegalArgumentException("Multiple parameter options can only be specified in one sequence of last parameters.");
-    				}
-
-    				if ( hasEmptyOptions && !emptyOptionSpecified && !hasMultipleOptions ) {
-    					throw new IllegalArgumentException("Empty parameter options can only be specified in one sequence of last parameters.");
-    				}
-    			}
+    			Class[][] mytypes = loadInputTypes(navajotypes);
     			types.put(this.getClass(), mytypes);
     		}
     		
     		if ( navajoReturnType != null ) {
     			// Set returntype.
-    			Class [] myreturnType = new Class[navajoReturnType.length];
-    			for (int i = 0; i < navajoReturnType.length; i++) {
-    				if ( navajoReturnType[i] == null || navajoReturnType[i].equalsIgnoreCase("empty") ) {
-    					myreturnType[i] = null;
-    				} else {
-    					myreturnType[i] = nf.getJavaType(navajoReturnType[i]);
-    				}
-    			}
+        		Class[] myreturnType = loadReturnType(navajoReturnType);
     			returnType.put(this.getClass(), myreturnType);
     		}
     		
@@ -158,11 +133,69 @@ public abstract class FunctionInterface {
     		
     	}
     }
+
+	private Class[] loadReturnType(String[] navajoReturnType) {
+		NavajoFactory nf = NavajoFactory.getInstance();
+		Class [] myreturnType = new Class[navajoReturnType.length];
+		for (int i = 0; i < navajoReturnType.length; i++) {
+			if ( navajoReturnType[i] == null || navajoReturnType[i].equalsIgnoreCase("empty") ) {
+				myreturnType[i] = null;
+			} else {
+				myreturnType[i] = nf.getJavaType(navajoReturnType[i]);
+			}
+		}
+		return myreturnType;
+	}
+
+	private Class[][] loadInputTypes(String[][] navajotypes) {
+		// Convert navajo types to Java classes.
+     	
+		NavajoFactory nf = NavajoFactory.getInstance();
+		Class [][] mytypes = new Class[navajotypes.length][];
+		boolean hasEmptyOptions = false;
+		boolean hasMultipleOptions = false;
+		
+		for (int i = 0; i < navajotypes.length; i++) {
+			mytypes[i] = new Class[navajotypes[i].length];
+			boolean emptyOptionSpecified = false;
+			boolean multipleOptionsSpecified = false;
+			for (int j = 0; j < navajotypes[i].length; j++) {
+
+				if ( navajotypes[i][j] != null && navajotypes[i][j].trim().equals("...") ) {
+					mytypes[i][j] = Set.class; // Use Set class to denote multiple parameter option.
+					multipleOptionsSpecified = true;
+					hasMultipleOptions = true;
+				} else if ( navajotypes[i][j] == null || navajotypes[i][j].trim().equalsIgnoreCase("empty") ) {
+					mytypes[i][j] = null;
+					emptyOptionSpecified = true;
+					hasEmptyOptions = true;
+				} else {
+					mytypes[i][j] = nf.getJavaType(navajotypes[i][j].trim());
+				}
+			}
+
+			if ( hasMultipleOptions && !multipleOptionsSpecified) {
+				throw new IllegalArgumentException("Multiple parameter options can only be specified in one sequence of last parameters.");
+			}
+
+			if ( hasEmptyOptions && !emptyOptionSpecified && !hasMultipleOptions ) {
+				throw new IllegalArgumentException("Empty parameter options can only be specified in one sequence of last parameters.");
+			}
+		}
+		return mytypes;
+	}
        
     @SuppressWarnings("unchecked")
 	private final void checkReturnType(Object o) throws TMLExpressionException  {
     	
-    	Class [] myreturntype = returnType.get(this.getClass());
+    	Class [] myreturntype = null;
+    	
+    	if(myreturntypes!=null) {
+    		myreturntype = myreturntypes;
+    	} else {
+    		myreturntype = returnType.get(this.getClass());
+    	}
+    	
     	
     	if ( myreturntype == null ) {
     		return;
@@ -186,8 +219,14 @@ public abstract class FunctionInterface {
     
     @SuppressWarnings("unchecked")
 	private final void checkTypes() throws TMLExpressionException {
+    	 
+    	Class [][] mytypes = null;
+    	if(myinputtypes!=null) {
+    		mytypes = myinputtypes;
+    	} else {
+    		mytypes = types.get(this.getClass());
+    	}
     	
-    	Class [][] mytypes = types.get(this.getClass());
     	
     	if ( mytypes != null ) {
     		StringBuffer msg = new StringBuffer();
