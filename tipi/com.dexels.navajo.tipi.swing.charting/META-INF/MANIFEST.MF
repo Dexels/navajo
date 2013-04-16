@@ -3,7 +3,7 @@ Bundle-SymbolicName: com.dexels.navajo.tipi.charting
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.12.qualifier
-Export-Package: com.dexels.navajo.tipi.charting
+Export-Package: com.dexels.navajo.tipi.swing.charting
 Bundle-Vendor: Dexels
 Bundle-ClassPath: lib/gnujaxp.jar,
  lib/iText-2.1.5.jar,
@@ -13,8 +13,8 @@ Bundle-ClassPath: lib/gnujaxp.jar,
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.tipi;version="1.1.42",
  com.dexels.navajo.tipi.components.core;version="1.1.42",
- com.dexels.navajo.tipi.components.swingimpl,
- com.dexels.navajo.tipi.components.swingimpl.parsers,
+ com.dexels.navajo.tipi.components.swingimpl;version="[1.0.0,1.1.0)",
+ com.dexels.navajo.tipi.components.swingimpl.parsers;version="[1.0.0,1.1.0)",
  com.dexels.navajo.tipi.internal;version="1.1.42",
  com.dexels.navajo.tipi.tipixml;version="1.1.42",
  com.dexels.navajo.tipilink,
