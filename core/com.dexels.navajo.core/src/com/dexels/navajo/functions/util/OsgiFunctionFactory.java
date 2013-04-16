@@ -22,27 +22,19 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	private final static Logger logger = LoggerFactory
 			.getLogger(OsgiFunctionFactory.class);
 
-	@SuppressWarnings("unchecked")
 	public FunctionInterface getInstance(final ClassLoader cl, final String functionName)  {
-		Class<? extends FunctionInterface> osgiResolutionClass = (Class<? extends FunctionInterface>) getComponent(functionName, "functionName", Class.class);
-
-		if (osgiResolutionClass==null) {
-			logger.debug("OSGi failed. Going old skool");
+		FunctionDefinition fd = (FunctionDefinition) getComponent(functionName, "functionName", FunctionDefinition.class);
+		if(fd==null) {
+			logger.debug("OSGi function resolution for function: {} failed, going old school.",functionName);
 			return super.getInstance(cl, functionName);
-		} else {
-			FunctionInterface osgiResolution;
-			try {
-				osgiResolution = osgiResolutionClass.newInstance();
-				return osgiResolution;
-			} catch (InstantiationException e) {
-				logger.debug("OSGi failed (InstantiationException). Going old skool",e);
-				return super.getInstance(cl, functionName);
-			} catch (IllegalAccessException e) {
-				logger.debug("OSGi failed (IllegalAccessException). Going old skool",e);
-				return super.getInstance(cl, functionName);
-			}
-
 		}
+//		Class<? extends FunctionInterface> osgiResolutionClass = fd.getFunctionClass();
+		FunctionInterface osgiResolution = fd.getFunctionInstance();
+		if (osgiResolution==null) {
+			logger.debug("OSGi function resolution for function: {} failed, going old school.",functionName);
+			return super.getInstance(cl, functionName);
+		}
+		return osgiResolution;
 	}
 	
 	
@@ -137,8 +129,8 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	}	
 	
 	@Override
-	public void parseFunction(Map<String, FunctionDefinition> fuds,
+	public FunctionDefinition parseFunction(Map<String, FunctionDefinition> fuds,
 			 XMLElement element) {
-		super.parseFunction(fuds, element);
+		return super.parseFunction(fuds, element);
 	}
 }
