@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.charting;
+package com.dexels.navajo.tipi.swing.charting;
 
 
 import java.awt.Color;

@@ -8,7 +8,7 @@
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<properties>
-		<tycho-version>0.16.0</tycho-version>
+		<tycho-version>0.17.0</tycho-version>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
 		<!-- <forceContextQualifier>20120229-1926</forceContextQualifier> -->
 
