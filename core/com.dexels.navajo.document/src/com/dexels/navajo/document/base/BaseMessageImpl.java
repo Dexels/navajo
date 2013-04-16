@@ -1368,6 +1368,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 									// logger.info("Instantiating function " +
 									// compareFunction);
 									ExpressionEvaluator ee = NavajoFactory.getInstance().getExpressionEvaluator();
+									c = ee.getComparator(compareFunction);
 									ClassLoader cl = ee.getScriptClassLoader();
 									// logger.info("Classloader is " + cl);
 									compareClass = (Class<? extends Comparator>) Class.forName(compareFunction, true, cl);

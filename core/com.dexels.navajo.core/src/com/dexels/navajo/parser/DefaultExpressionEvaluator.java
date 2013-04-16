@@ -1,6 +1,7 @@
 package com.dexels.navajo.parser;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -479,4 +480,23 @@ public final class DefaultExpressionEvaluator
   public ClassLoader getScriptClassLoader() {
 	  return DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
   }
+
+
+@Override
+public Comparator getComparator(String compareFunction) {
+	ClassLoader cl = getScriptClassLoader();
+	try {
+		Class<? extends Comparator> compareClass = (Class<? extends Comparator>) Class.forName(compareFunction, true, cl);
+		Comparator c = compareClass.newInstance();
+		return c;
+	} catch (InstantiationException e) {
+		logger.error("Can not find compare function: "+compareFunction+" in non-OSGI mode",e);
+	} catch (IllegalAccessException e) {
+		logger.error("Can not find compare function: "+compareFunction+" in non-OSGI mode",e);
+	} catch (ClassNotFoundException e) {
+		logger.error("Can not find compare function: "+compareFunction+" in non-OSGI mode",e);
+	}
+
+	return null;
+}
 }
