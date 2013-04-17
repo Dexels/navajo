@@ -29,6 +29,7 @@ public class NavajoTunnelComponentImpl implements Tunnel {
 	private final Map<String,Object> parameters = new HashMap<String, Object>();
 	
 	public void activate(Map<String,Object> settings) throws Exception{
+		System.err.println("Activate tunnel");
 		logger.info("Setting up tunnel with settings: {}",settings);
 		String username = (String) settings.get("username");
 		String host = (String) settings.get("host");
@@ -93,6 +94,7 @@ public class NavajoTunnelComponentImpl implements Tunnel {
 		int assigned = 0;
 			JSch.setLogger(new JschLoggerBridge(logger));
 
+			
 			jsch = new JSch(); 
 			jsch.addIdentity(privateKey);
             session = jsch.getSession(username, host, sshPort);
