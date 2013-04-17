@@ -470,6 +470,11 @@
 		</input>
 		<result>boolean</result>
 	</function>
+    <function name="IsFutureDate" class="com.dexels.navajo.functions.IsFutureDate">
+        <description>IsFutureDate(date|string)</description>
+        <input>date|string</input>
+        <result>boolean</result>
+    </function>
 	<function name="IsNull" class="com.dexels.navajo.functions.IsNull">
 		<description>Will return true if the supplied argument is null, false
 			otherwise
