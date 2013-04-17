@@ -19,16 +19,7 @@ import com.dexels.navajo.util.AuditLog;
 
 public class Version extends AbstractCoreExtension {
 
-//	private static ServiceRegistration navajoConfig;
-//	private static ServiceRegistration dispatcherRegistration;
-//	private ServiceRegistration dummyStats;
-	
 	private static BundleContext bundleContext;
-//	private ServiceRegistration clockRegistration;
-//	private ServiceRegistration taskRunnerRegistration;
-
-	
-
 
 	@Override
 	public void start(BundleContext bc) throws Exception {
@@ -37,42 +28,6 @@ public class Version extends AbstractCoreExtension {
 			logger.debug("Bundle context set in Navajo Version: "+osgiActive()+" hash: "+Version.class.hashCode());
 			NavajoCoreAdapterLibrary library = new NavajoCoreAdapterLibrary();
 			registerAll(library);
-//			NavajoConfigComponent ncc = new NavajoConfigComponent();
-//			ncc.activate(null);
-//			
-//			FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
-//			fi.init();
-//			
-//			fi.clearFunctionNames();
-//
-//			fi.injectExtension(library);
-//			try {
-//				for(String adapterName: fi.getAdapterNames(library)) {
-//
-//					String adapterClass = fi.getAdapterClass(adapterName,library);
-//					Class<?> c = Class.forName(adapterClass);
-//
-//					 Dictionary<String, Object> props = new Hashtable<String, Object>();
-//					 props.put("adapterName", adapterName);
-//					 props.put("adapterClass", c.getName());
-//					 if(adapterClass!=null) {
-//						context.registerService(Class.class.getName(), c, props);
-//					}
-//				}
-//			} catch (Throwable e) {
-//				logger.error("Error starting navajo core bundle.",e);
-//			}
-
-			
-			
-//			StatisticsRunnerInterface ptps = new DummyStatisticsRunner();
-//			Dictionary<String, Object> wb = new Hashtable<String, Object>();
-//			wb.put("threadClass","com.dexels.navajo.server.enterprise.statistics.DummyStatisticsRunner");
-//			wb.put("name","dummy");
-//			dummyStats = bc.registerService(StatisticsRunnerInterface.class.getName(), ptps, wb);
-
-//			registerClock();
-//			registerTaskRunner();
 
 	}
 
@@ -121,8 +76,6 @@ public class Version extends AbstractCoreExtension {
 	@Override
 	public void stop(BundleContext arg0) throws Exception {
 		super.stop(arg0);
-//		deregisterTaskRunner();
-//		deregisterClock();
 		bundleContext = null;
 	}
 	
@@ -134,32 +87,4 @@ public class Version extends AbstractCoreExtension {
 		return bundleContext;
 	}
 	
-//	private void registerClock() {
-//		Dictionary<String, Object> properties = new Hashtable<String, Object>();
-//		properties.put("service.ranking", Integer.MIN_VALUE);
-//		ClockInterface c = new DummyClock();
-//		clockRegistration = getDefaultBundleContext().registerService(ClockInterface.class, c, properties);
-//	}
-//	
-//	private void deregisterClock() {
-//		if(clockRegistration!=null) {
-//			clockRegistration.unregister();
-//		}
-//	}
-//	
-//	private void registerTaskRunner() {
-//		Dictionary<String, Object> properties = new Hashtable<String, Object>();
-//		properties.put("service.ranking", Integer.MIN_VALUE);
-//		TaskRunnerInterface c = new DummyTaskRunner();
-//		taskRunnerRegistration = getDefaultBundleContext().registerService(TaskRunnerInterface.class, c, properties);
-//	}
-//	
-//	private void deregisterTaskRunner() {
-//		if(taskRunnerRegistration!=null) {
-//			taskRunnerRegistration.unregister();
-//		}
-//	}
-	
-	
-
 }

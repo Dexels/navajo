@@ -2,7 +2,7 @@
 <tid errorhandler="error">
 	<tipiclass addtocontainer="true" childcount="*" class="TipiTimeChart"
 		layoutmanager="false" module="dashboard" name="timechart"
-		package="com.dexels.navajo.tipi.charting" studio-icon="tabs.gif" type="tipi">
+		package="com.dexels.navajo.tipi.swing.charting" studio-icon="tabs.gif" type="tipi">
 		<events>
 			<event name="onInstantiate" />
 			<event name="onLoad">
@@ -22,7 +22,7 @@
 	</tipiclass>
 	<tipiclass addtocontainer="true" childcount="*" class="TipiDialChart"
 		layoutmanager="false" module="dashboard" name="dialchart"
-		package="com.dexels.navajo.tipi.charting" studio-icon="tabs.gif" type="tipi">
+		package="com.dexels.navajo.tipi.swing.charting" studio-icon="tabs.gif" type="tipi">
 		<events>
 			<event name="onInstantiate" />
 			<event name="onLoad">
@@ -49,7 +49,7 @@
 	</tipiclass>
 	<tipiclass addtocontainer="true" childcount="*"
 		class="TipiGenericChart" layoutmanager="false" module="dashboard"
-		name="chart" package="com.dexels.navajo.tipi.charting" studio-icon="tabs.gif"
+		name="chart" package="com.dexels.navajo.tipi.swing.charting" studio-icon="tabs.gif"
 		type="tipi">
 		<events>
 			<event name="onInstantiate" />

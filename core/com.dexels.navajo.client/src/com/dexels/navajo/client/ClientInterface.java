@@ -8,6 +8,9 @@ package com.dexels.navajo.client;
  * @author not attributable
  * @version 1.0
  */
+import java.io.IOException;
+import java.io.InputStream;
+
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
 import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
 import com.dexels.navajo.document.Message;
@@ -59,6 +62,20 @@ public String getCurrentHost();
 public void setCurrentHost(String host);
 
 public void setAllowCompression(boolean allowCompression);
+
+
+public boolean useHttps();
+public void setHttps(boolean useHttps);
+
+/**
+ * set the SSL socket factory to use whenever an HTTPS call is made.
+ * @param algorithm, the algorithm to use, for example: SunX509
+ * @param type Type of the keystore, for example PKCS12 or JKS
+ * @param source InputStream of the client certificate, supply null to reset the socketfactory to default
+ * @param password the keystore password
+ */
+
+public void setClientCertificate(String algorithm, String type, InputStream is, char[] password) throws IOException;
 
 /**
  * Created to force the client to encode the request using Gzip (GAE related)

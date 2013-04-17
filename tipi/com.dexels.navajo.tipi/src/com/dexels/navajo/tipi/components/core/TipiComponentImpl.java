@@ -992,7 +992,6 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		helperDispose();
 		isDisposed = true;
 		myContainerListeners.clear();
-
 	}
 
 	public final boolean isDisposed() {
