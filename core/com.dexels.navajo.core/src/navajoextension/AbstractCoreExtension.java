@@ -103,24 +103,32 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 		}
 		if(fd==null) {
 			logger.warn("Can not register function: {} as the FuncitonDefinition is null", functionName);
-		}
-		props.put("functionName", functionName);
-		props.put("functionDefinition", fd);
-		props.put("type", "function");
-//		logger.debug("registering function: {}",functionName);
-		if(fd==null) {
-			logger.warn("Function def = null. Skipping registration.");
 			return;
 		}
+		props.put("functionName", functionName);
+		props.put("description", fd.getDescription());
+		String[][] inputParams = fd.getInputParams();
+		if(inputParams!=null) {
+			props.put("input", inputParams);
+		}
+		
+		final String[] resultParam = fd.getResultParam();
+		if(resultParam!=null) {
+			props.put("output", resultParam);
+		}
+
+		props.put("type", "function");
+//		logger.debug("registering function: {}",functionName);
 		Class<? extends FunctionInterface> clz;
 		ServiceRegistration registration;
 		try {
 			clz = (Class<? extends FunctionInterface>) Class.forName(fd.getObject(),true,extensionDef.getClass().getClassLoader());
 //			logger.debug("Registering functionclass: {} context: {}"+ functionName, clz.getName(),extensionDef.getClass().getName());
+			fd.setFunctionClass(clz);
 			if(bundleContext!=null) {
 				registration = bundleContext.registerService(
-						Class.class.getName(),
-						clz,
+						FunctionDefinition.class,
+						fd,
 						props);
 				registrations.add(registration);
 			}

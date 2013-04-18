@@ -1,6 +1,7 @@
 package com.dexels.navajo.client;
 
 
+
 import org.junit.Test;
 
 import com.dexels.navajo.document.Navajo;
@@ -21,16 +22,21 @@ public class BasicClientTest {
 	 * @throws java.lang.Exception
 	 */
 	@Test
-	public void testSometing() throws Exception {
+	public void testSomething() throws Exception {
 		System.err.println("=============================== TEST SETUP ============================================");
 		myClient = NavajoClientFactory.getClient();
 		// Use manual load balancing in order to fully control scenario's to enable/disable servers.
-		myClient.setServers(new String[]{"atlas.dexels.com/sportlink/knvb/Postman"});
-		myClient.setForceGzip(true);
+		myClient.setRetryAttempts(0);
+		myClient.setServers(new String[]{"source.dexels.com:8183/PostmanLegacy"});
+//		myClient.setServers(new String[]{"source.dexels.com/test/Postman"});
+		
+		myClient.setClientCertificate("SunX509","JKS", getClass().getClassLoader().getResourceAsStream("client.jks"), "password".toCharArray());
+		myClient.setHttps(true);
 		System.err.println("=======================================================================================");
-		myClient.setUsername("iphone");
-		myClient.setPassword("1phone");
-		Navajo reply = myClient.doSimpleSend("external/iphone/InitLogin");
+		myClient.setUsername("noot");
+		myClient.setPassword("aap");
+		myClient.setAllowCompression(false);
+		Navajo reply = myClient.doSimpleSend("external/TestScript");
 		reply.write(System.err);
 	}
 

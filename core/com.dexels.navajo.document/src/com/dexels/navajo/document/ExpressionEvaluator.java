@@ -19,4 +19,5 @@ public interface ExpressionEvaluator {
   public Map<Property,List<Property>> createDependencyMap(Navajo n) throws NavajoException;
   public List<Property> processRefreshQueue(Map<Property,List<Property>> depMap) throws NavajoException;
   public ClassLoader getScriptClassLoader();
+  public Comparator getComparator(String compareFunction);
 }

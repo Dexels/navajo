@@ -18,19 +18,11 @@ public class OSGiFunctionFactoryFactory  {
 		// no instances
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static FunctionInterface getFunctionInterface(final String functionName)  {
-		final Class<? extends FunctionInterface> componentClass = (Class<? extends FunctionInterface>) getComponent(functionName, "functionName", Class.class);
-		FunctionInterface osgiResolution;
-		try {
-			osgiResolution = componentClass.newInstance();
-			return osgiResolution;
-		} catch (InstantiationException e) {
-			logger.error("Instantiation problem for function: "+functionName,e);
-		} catch (IllegalAccessException e) {
-			logger.error("Instantiation problem for function: "+functionName,e);
-		}
-		return null;
+		FunctionDefinition fd = (FunctionDefinition) getComponent(functionName,
+				"functionName", FunctionDefinition.class);
+		FunctionInterface instance = fd.getFunctionInstance();
+		return instance;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

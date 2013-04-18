@@ -352,7 +352,7 @@ private final static Logger logger = LoggerFactory
     			  inMessage);
       }
       catch (com.dexels.navajo.parser.TMLExpressionException ee) {
-    	  throw new UserException( -1, "Invalid condition: " + ee.getMessage());
+    	  throw new UserException( -1, "Invalid condition: " + ee.getMessage(),ee);
       }
       
       if (!valid) {

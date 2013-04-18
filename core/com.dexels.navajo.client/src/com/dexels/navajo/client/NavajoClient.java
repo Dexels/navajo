@@ -19,6 +19,13 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,6 +38,11 @@ import java.util.Random;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,6 +108,7 @@ public static final int DIRECT_PROTOCOL = 0;
 	private boolean forceGzip = false;
 	private SystemInfoProvider systemInfoProvider;
 	private SessionTokenProvider sessionTokenProvider;
+	private SSLSocketFactory socketFactory;
 
   private static final long serverDisableTimeout = 60000;
 
@@ -270,6 +283,12 @@ private Navajo doTransaction(String name, Navajo d, boolean useCompression, bool
     }
     HttpURLConnection con = null;
       con = (HttpURLConnection) url.openConnection();
+      if(useHttps) {
+    	  HttpsURLConnection httpsCon = (HttpsURLConnection) con;
+    	  if(socketFactory!=null) {
+    		  httpsCon.setSSLSocketFactory(socketFactory);
+    	  }
+      }
       con.setRequestMethod("POST");
       con.setConnectTimeout(CONNECT_TIMEOUT);
     
@@ -984,4 +1003,47 @@ private final void switchServer(boolean force) {
 	public void setSessionTokenProvider(SessionTokenProvider stp) {
 		this.sessionTokenProvider = stp;
 	}
+
+	/**
+	 * set the SSL socket factory to use whenever an HTTPS call is made.
+	 * @param algorithm, the algorithm to use, for example: SunX509
+	 * @param type Type of the keystore, for example PKCS12 or JKS
+	 * @param source InputStream of the client certificate, supply null to reset the socketfactory to default
+	 * @param password the keystore password
+	 */
+	@Override
+	public void setClientCertificate(String algorithm, String keyStoreType, InputStream source,
+			char[] password) throws IOException {
+		if(source==null) {
+			this.socketFactory = null;
+			return;
+		}
+		SSLContext context;
+		try {
+			KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(algorithm);
+			  KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+			  try {
+				keyStore.load(source, password);
+			} finally {
+				source.close();
+			}
+			keyManagerFactory.init(keyStore, password);
+			context = SSLContext.getInstance("TLS");
+			context.init(keyManagerFactory.getKeyManagers(), null, new SecureRandom());
+			this.socketFactory = context.getSocketFactory();
+			return;
+		} catch (UnrecoverableKeyException e) {
+			throw new IOException("Error loading certificate: ",e);
+		} catch (KeyManagementException e) {
+			throw new IOException("Error loading certificate: ",e);
+		} catch (NoSuchAlgorithmException e) {
+			throw new IOException("Error loading certificate: ",e);
+		} catch (KeyStoreException e) {
+			throw new IOException("Error loading certificate: ",e);
+		} catch (CertificateException e) {
+			throw new IOException("Error loading certificate: ",e);
+		}
+	}
+
+
 }

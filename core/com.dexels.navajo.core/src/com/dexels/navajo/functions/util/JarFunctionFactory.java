@@ -87,7 +87,7 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 		}
 	}
 	
-	public void parseFunction(Map<String, FunctionDefinition> fuds,
+	public FunctionDefinition parseFunction(Map<String, FunctionDefinition> fuds,
 			XMLElement element) {
 		Vector<XMLElement> def = element.getChildren();
 		String name = (String) element.getAttribute("name");
@@ -111,8 +111,9 @@ public class JarFunctionFactory extends FunctionFactoryInterface implements Seri
 			FunctionDefinition functionDefinition = new FunctionDefinition(object, description, inputParams, resultParam);
 			functionDefinition.setXmlElement(element);
 			fuds.put(name, functionDefinition);
-			
+			return functionDefinition;
 		}
+		return null;
 	}
 	
 	@Override

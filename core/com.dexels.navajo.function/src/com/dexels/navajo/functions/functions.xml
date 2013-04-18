@@ -227,6 +227,11 @@
 		<input />
 		<result />
 	</function>
+	<function name="ExistsSelectionValue" class="com.dexels.navajo.functions.ExistsSelectionValue">
+		<description>Checks if the given value is available as one of the options in the given selection property</description>
+		<input>property, string</input>
+		<result>boolean</result>
+	</function>
 	<function name="File" class="com.dexels.navajo.functions.File">
 		<description>Reads a file</description>
 		<input>string</input>
@@ -470,6 +475,11 @@
 		</input>
 		<result>boolean</result>
 	</function>
+    <function name="IsFutureDate" class="com.dexels.navajo.functions.IsFutureDate">
+        <description>IsFutureDate(date|string)</description>
+        <input>date|string</input>
+        <result>boolean</result>
+    </function>
 	<function name="IsNull" class="com.dexels.navajo.functions.IsNull">
 		<description>Will return true if the supplied argument is null, false
 			otherwise

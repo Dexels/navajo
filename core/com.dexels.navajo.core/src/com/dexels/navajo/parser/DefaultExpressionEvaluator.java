@@ -1,15 +1,23 @@
 package com.dexels.navajo.parser;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import navajocore.Version;
+
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.comparatormanager.ComparatorManager;
+import com.dexels.navajo.comparatormanager.ComparatorManagerFactory;
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
@@ -18,6 +26,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.comparator.ComparatorFactory;
 import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;
 
@@ -479,4 +488,38 @@ public final class DefaultExpressionEvaluator
   public ClassLoader getScriptClassLoader() {
 	  return DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
   }
+
+
+@Override
+public Comparator getComparator(String compareFunction) {
+	if(!Version.osgiActive()) {
+		return getLegacyComparator(compareFunction);
+	}
+	final ComparatorManager instance = ComparatorManagerFactory.getInstance();
+	if(instance==null) {
+		logger.warn("No ComparatorManager available.");
+		return null;
+	}
+	return instance.getComparator(compareFunction);
+}
+
+private Comparator getLegacyComparator(String compareFunction) {
+	ClassLoader cl = getScriptClassLoader();
+	if(cl==null) {
+		cl = getClass().getClassLoader();
+	}
+	try {
+		Class<? extends Comparator> compareClass = (Class<? extends Comparator>) Class.forName(compareFunction, true, cl);
+		Comparator c = compareClass.newInstance();
+		return c;
+	} catch (InstantiationException e) {
+		logger.error("Can not find compare function: "+compareFunction+" in non-OSGI mode",e);
+	} catch (IllegalAccessException e) {
+		logger.error("Can not find compare function: "+compareFunction+" in non-OSGI mode",e);
+	} catch (ClassNotFoundException e) {
+		logger.error("Can not find compare function: "+compareFunction+" in non-OSGI mode",e);
+	}
+
+	return null;
+}
 }

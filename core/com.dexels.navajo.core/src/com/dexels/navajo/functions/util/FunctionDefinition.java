@@ -3,10 +3,17 @@ package com.dexels.navajo.functions.util;
 
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.parser.FunctionInterface;
 
 public final class FunctionDefinition implements Serializable {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(FunctionDefinition.class);
 	private static final long serialVersionUID = 8105107847721249814L;
 	// = fully qualified class name, actually
 	private final String object;
@@ -14,6 +21,7 @@ public final class FunctionDefinition implements Serializable {
 	private final String [][] inputParams;
 	private final String [] resultParam;
 	private XMLElement xmlElement;
+	private Class<? extends FunctionInterface> functionClass;
 	
 	public FunctionDefinition(final String object, final String description, final String inputParams, final String resultParam) {
 		this.object = object;
@@ -65,5 +73,35 @@ public final class FunctionDefinition implements Serializable {
 
 	public XMLElement getXmlElement() {
 		return xmlElement;
+	}
+
+	public Class<? extends FunctionInterface> getFunctionClass() {
+		return functionClass;
+	}
+
+	public void setFunctionClass(Class<? extends FunctionInterface> clz) {
+		this.functionClass = clz;
+	}
+	
+	public FunctionInterface getFunctionInstance() {
+		try {
+			final Class<? extends FunctionInterface> fc = getFunctionClass();
+			if(fc==null) {
+				logger.debug("No function class found for function with name: "+getDescription());
+				return null;
+			}
+			FunctionInterface osgiResolution = fc.newInstance();
+			if (!osgiResolution.isInitialized()) {
+				osgiResolution.setTypes(getInputParams(), getResultParam());
+			}
+			return osgiResolution;
+		} catch (InstantiationException e) {
+			logger.debug("OSGi failed (InstantiationException). Going old skool",e);
+			return null;
+		} catch (IllegalAccessException e) {
+			logger.debug("OSGi failed (IllegalAccessException). Going old skool",e);
+			return null;
+		}
+
 	}
 }
