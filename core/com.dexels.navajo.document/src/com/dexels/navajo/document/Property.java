@@ -131,7 +131,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public Selection getSelection(String name) throws NavajoException;
 
   /**
-   * Get a selection option with a specific name if it exists. If it does not exists, return null.
+   * Get a selection option with a specific value if it exists. If it does not exists, return null.
    * If the property is not of type "selection", a NavajoException is thrown.
    */
   public Selection getSelectionByValue(String value) throws NavajoException;
