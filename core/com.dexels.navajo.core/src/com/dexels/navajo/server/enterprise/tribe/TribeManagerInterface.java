@@ -1,6 +1,7 @@
 package com.dexels.navajo.server.enterprise.tribe;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 
@@ -15,6 +16,10 @@ public interface TribeManagerInterface {
 	 * Tribal Topic methods.
 	 */
 	public TribalTopic getTopic(String name);
+	
+	public Map getDistributedMap(String name);
+	
+	public TribalNumber getDistributedCounter(String name);
 	
 	/**
 	 * Tribal locking methods.
