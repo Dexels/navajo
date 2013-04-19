@@ -42,7 +42,7 @@ public class GrusConnection {
 		created = System.currentTimeMillis();
 		registeredConnections.put(id, this);
 		connectionMapping.put(myConnection, this);
-		logger.info("Created new GrusConnection " + id + ", for Connection: " + myConnection);
+		logger.info("Created new GrusConnection " + id + "/" + username + "@" + location + ", for Connection: " + myConnection);
 	}
 	
 	public Connection getConnection() {
