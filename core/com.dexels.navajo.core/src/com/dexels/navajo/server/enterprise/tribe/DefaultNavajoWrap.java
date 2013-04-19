@@ -159,7 +159,7 @@ class WrapCollector extends GenericThread {
 					if ( count == null || count.intValue() == 0 ) {
 						try {
 							SerializationUtil.removeNavajo(key.getReference());
-							logger.info("Removing " + key.getReference());
+							logger.debug("Removing " + key.getReference());
 						} finally {
 							referenceCount.remove(reference);
 						}
