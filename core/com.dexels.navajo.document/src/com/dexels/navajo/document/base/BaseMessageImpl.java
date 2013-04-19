@@ -1364,15 +1364,17 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 								String compareFunction = oV.substring(0, oV.indexOf("("));
 								Comparator c = null;
 								try {
-									Class<? extends Comparator> compareClass = null;
+//									Class<? extends Comparator> compareClass = null;
 									// logger.info("Instantiating function " +
 									// compareFunction);
 									ExpressionEvaluator ee = NavajoFactory.getInstance().getExpressionEvaluator();
-									ClassLoader cl = ee.getScriptClassLoader();
-									// logger.info("Classloader is " + cl);
-									compareClass = (Class<? extends Comparator>) Class.forName(compareFunction, true, cl);
-									c = compareClass.newInstance();
-									compare = c.compare(this, m);
+									c = ee.getComparator(compareFunction);
+									if(c==null) {
+										logger.error("Comparator not found: {}. Not sorting.",compareFunction);
+										compare = 0;
+									} else {
+										compare = c.compare(this, m);
+									}
 								} catch (Exception e) {
 									logger.error("Error: ",e);
 									compare = 0;
