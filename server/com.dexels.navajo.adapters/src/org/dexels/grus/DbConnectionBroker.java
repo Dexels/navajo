@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Semaphore;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ public final class DbConnectionBroker
 	
 	protected final Deque<GrusConnection> availableConnectionsStack;
 	protected final Set<GrusConnection> inUse = Collections.newSetFromMap(new ConcurrentHashMap<GrusConnection, Boolean>());
+	private final Semaphore availableConnections;
 	
 	public DbConnectionBroker(String dbDriver,
 			String dbServer,
@@ -70,6 +72,7 @@ public final class DbConnectionBroker
 		}
 
 		availableConnectionsStack = new ArrayDeque<GrusConnection>(maxConnections);
+		availableConnections = new Semaphore(maxConnections - 1);
 		
 		if ( timeoutDays > 0 ) {
 			GrusManager.getInstance().addBroker(this);
@@ -106,46 +109,67 @@ public final class DbConnectionBroker
 		}
 	}
 	
-	public final synchronized GrusConnection getGrusConnection() {
+	public final GrusConnection getGrusConnection() {
 
-		if ( availableConnectionsStack.size() > 0 ) {
-			GrusConnection gc = availableConnectionsStack.pop();
-			if ( gc != null ) {
-				if ( !gc.isAged() ) {
-					inUse.add(gc);
-					return gc;
-				} else {
-					logger.info("Destroying GrusConnection " + gc.getId() + " due to old age.");
-					gc.destroy();
+		// Try to acquire connection. If not available block
+		try {
+			availableConnections.acquire();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+
+		synchronized (this ) {
+
+			if ( availableConnectionsStack.size() > 0 ) {
+				GrusConnection gc = availableConnectionsStack.pop();
+				if ( gc != null ) {
+					if ( !gc.isAged() ) {
+						inUse.add(gc);
+						return gc;
+					} else {
+						logger.info("Destroying GrusConnection " + gc.getId() + " due to old age.");
+						gc.destroy();
+					}
 				}
 			}
+			
+			if ( getSize() < maxConnections ) {
+				try {
+					GrusConnection gc = new GrusConnection(location, username, password, this, timeoutDays);
+					inUse.add(gc);
+					return gc;
+				} catch (Throwable e) {
+					logger.error("Could not created connection: " + e.getMessage(), e);
+					availableConnections.release();
+				}
+			}
+
+			
 		}
 
-		if ( getSize() < maxConnections ) {
-			try {
-				GrusConnection gc = new GrusConnection(location, username, password, this, timeoutDays);
-				inUse.add(gc);
-				return gc;
-			} catch (Throwable e) {
-				logger.error("Could not created connection: " + e.getMessage(), e);
-			}
-		} else {
-			logger.error("No more database connections left");
-		}
-		
 		return null;
 
 	}
 	
-	public final synchronized void freeConnection(GrusConnection gc) {
+	public final void freeConnection(GrusConnection gc) {
 
-		if (!inUse.remove(gc) ) {
-			logger.warn("Freeing connection that is not in use..");
-			gc.destroy();
-		} else {
-			availableConnectionsStack.push(gc);
+		if ( gc == null )
+			return;
+
+		try {
+			synchronized (this ) {
+				if (!inUse.remove(gc) ) {
+					logger.warn("Freeing connection that is not in use..");
+					gc.destroy();
+				} else {
+					availableConnectionsStack.push(gc);
+				}
+			}
+		} finally {
+			if ( gc != null ) {
+				availableConnections.release();
+			}
 		}
-
 	}
 	
 	@Deprecated
