@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="navajo.resource.oracle.tunnel">
-   <implementation class="com.dexels.navajo.resource.jdbc.oracle.TunnelOracleImpl"/>
-   <reference bind="addTunnel" cardinality="1..1" interface="com.dexels.navajo.tunnel.Tunnel" name="Tunnel" policy="dynamic" target="(type=oracle)" unbind="clearTunnel"/>
-</scr:component>
