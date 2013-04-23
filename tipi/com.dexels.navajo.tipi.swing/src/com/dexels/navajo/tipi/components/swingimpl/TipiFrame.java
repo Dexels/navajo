@@ -369,6 +369,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl implements ScopeLimit{
 	 * @todo Implement this com.dexels.navajo.tipi.TipiComponent method
 	 */
 	public void componentInstantiated() {
+		super.componentInstantiated();
 		if (getContainer() instanceof TipiSwingFrame) {
 			runSyncInEventThread(new Runnable() {
 				public void run() {

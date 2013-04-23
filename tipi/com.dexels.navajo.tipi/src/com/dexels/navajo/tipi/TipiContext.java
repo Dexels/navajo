@@ -13,6 +13,7 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -160,6 +161,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	protected final List<TipiActivityListener> myActivityListeners = new ArrayList<TipiActivityListener>();
 	private final List<TipiNavajoListener> navajoListenerList = new ArrayList<TipiNavajoListener>();
+	private final List<TipiComponentInstantiatedListener> componentInstantiatedListenerList = new ArrayList<TipiComponentInstantiatedListener>();
 
 	private CookieManager myCookieManager;
 
@@ -305,6 +307,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		while (tt.hasNext()) {
 			TipiExtension element = tt.next();
 			extensionMap.put(element.getId(), element);
+			element.initialize(this);
 			if (element.requiresMainImplementation() == null
 					&& !element.isMainImplementation()) {
 				coreExtensionList.add(element);
@@ -315,7 +318,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			} else {
 				optionalExtensionList.add(element);
 			}
-			element.initialize(this);
 		}
 		List<TipiExtension> allExtensions = new LinkedList<TipiExtension>();
 		allExtensions.addAll(mainExtensionList);
@@ -382,6 +384,20 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public TipiResourceLoader getGenericResourceLoader() {
 		return genericResourceLoader;
+	}
+
+	public void addComponentInstantiatedListener(TipiComponentInstantiatedListener tcil) {
+		componentInstantiatedListenerList.add(tcil);
+	}
+
+	public void removeComponentInstantiatedListener(TipiComponentInstantiatedListener tcil) {
+		componentInstantiatedListenerList.remove(tcil);
+	}
+
+	public void fireComponentInstantiated(TipiComponent tc) {
+		for (TipiComponentInstantiatedListener element : componentInstantiatedListenerList) {
+			element.componentInstantiated(tc);
+		}
 	}
 
 	public void addNavajoListener(TipiNavajoListener tnl) {
@@ -1123,6 +1139,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 
 		tipiCssMap.put(definition, cssResources);
+		// If the "main" definition hasn't been loaded yet, do so now (only if we're not trying to load the main definition. This prevents a possible infinite loop.
+		if (!definition.equals("main") && !tipiCssMap.containsKey("main"))
+		{
+			loadCssDefinition("main", null);
+		}
 	}
 	
 	/**
@@ -1130,55 +1151,59 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	 */
 	public void reloadCssDefinitions()
 	{
-		// CSS caching part 1 - turn this on
-		/*
 		for (String definition : tipiCssMap.keySet())
 		{
-			try
-			{
-				loadCssDefinition(definition, locationMap.get(definition));
-			}
-			catch(IOException ioe)
-			{
-				logger.error("Something going wrong reloading CSS definitions for definition " + definition);
-			}
+			reloadCssDefinitions(definition);
 		}
 		reapplyCss(getDefaultTopLevel());
-		*/
+	}
+	/**
+	 * Reloads all current Css definitions. This should happen only when locale and/or sublocale have changed.
+	 */
+	public void reloadCssDefinitions(String definition)
+	{
+		// CSS caching part 1 - turn this on
+		try
+		{
+			loadCssDefinition(definition, locationMap.get(definition));
+		}
+		catch(IOException ioe)
+		{
+			logger.error("Something going wrong reloading CSS definitions for definition " + definition);
+		}
 	}
 	
 	public void reapplyCss(TipiComponent tc)
 	{
 		if (tc.isHomeComponent())
 		{
-			applyCss(tc);
+			// slight hack, will result in CSS reapplying. 
+			// If we are going to use componentInstantiated for something else, perhaps a differentiation mechanism should be made.
+			fireComponentInstantiated(tc);
 		}
 		for (TipiComponent child : tc.getChildren())
 		{
 			reapplyCss(child);
 		}
 	}
-	public void applyCss(TipiComponent tc)
+	public List<String> getCssDefinitions(String definition)
 	{
-		List<String> cssDefinitions = tipiCssMap.get(tc.getName());
+		List<String> cssDefinitions = tipiCssMap.get(definition);
 		// perhaps not yet cached?
-		if (cssDefinitions.isEmpty())
+		if (cssDefinitions == null || cssDefinitions.isEmpty())
 		{
 			try
 			{
-				loadCssDefinition(tc.getName(), locationMap.get(tc.getName()));
+				loadCssDefinition(definition, locationMap.get(definition));
+				cssDefinitions = tipiCssMap.get(definition);
 			}
 			catch(IOException ioe)
 			{
-				logger.error("Something going wrong loading CSS definitions for component " + tc.getName());
-				return;
+				logger.error("Something going wrong loading CSS definitions for component " + definition);
+				return Collections.emptyList();
 			}
 		}
-		for (String css : cssDefinitions)
-		{
-			logger.info("(not yet) Applying CSS definition: \n" + css);
-			//TODO: Make it a real applying
-		}
+		return cssDefinitions;
 	}
 
 	public TipiActionBlock instantiateTipiActionBlock(XMLElement definition,
@@ -1272,7 +1297,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			tc.loadMethodDefinitions(this, definition, classDef);
 			// -----------------------------
 			tc.loadStartValues(definition, event);
-
 			tc.commitToUi();
 			return tc;
 		} else {
@@ -1349,7 +1373,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 			}
 		}
-
 		tc.componentInstantiated();
 
 		return tc;
@@ -1595,14 +1618,14 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 		tipiComponentMap.put(defname, elm);
 		// CSS caching part 1 - turn this on
-/*		try
+		try
 		{
 			loadCssDefinition(defname, locationMap.get(defname));
 		}
 		catch(IOException ioe)
 		{
 			logger.debug("Something going wrong loading css definitions for " + defname, ioe);
-		} */
+		} 
 
 		if (!hasDebugger) {
 			// debug mode, don't cache at all
