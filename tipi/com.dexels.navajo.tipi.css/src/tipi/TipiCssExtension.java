@@ -15,7 +15,9 @@ import com.dexels.navajo.tipi.css.actions.ApplyCss;
 		}
 
 		public void initialize(TipiContext tc) {
-			tc.addComponentInstantiatedListener(new ApplyCss());
+			ApplyCss componentInstantiatedListener = new ApplyCss();
+			componentInstantiatedListener.setContext(tc);
+			tc.addComponentInstantiatedListener(componentInstantiatedListener);
 
 		}
 

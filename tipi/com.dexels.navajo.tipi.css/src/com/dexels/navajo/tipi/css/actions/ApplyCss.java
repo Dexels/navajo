@@ -132,15 +132,22 @@ public class ApplyCss extends TipiAction implements TipiComponentInstantiatedLis
 		if (engine != null)
 		{
 //			long afterparse = System.currentTimeMillis();
-			engine.applyStyles(engine.getElement(component), true);
+			try
+			{
+				engine.applyStyles(engine.getElement(component), true);
+			}
+			catch(UnsupportedOperationException uoe)
+			{
+				logger.warn("Registering exception, but continuing: ", uoe);
+			}
 //			long afterapply = System.currentTimeMillis();
 //			logTime((afterparse-mark),(afterapply-afterparse));
 
 			engine.dispose();
 		}
 	}
-	@Override
-	public void componentInstantiated(TipiComponent tc) {
+
+	public void doComponentInstantiated(TipiComponent tc) {
 		if (tc.getName() != null)
 		{
 			for (String cssDefinition : tc.getContext().getCssDefinitions("main"))
@@ -152,5 +159,17 @@ public class ApplyCss extends TipiAction implements TipiComponentInstantiatedLis
 				applyCss(tc, cssDefinition, null, null);
 			}
 		}
+	}
+	@Override
+	public void componentInstantiated(final TipiComponent tc){
+		getContext().runSyncInEventThread(new Runnable(){
+
+			@Override
+			public void run() {
+				doComponentInstantiated(tc);
+				
+			}});
+
+		
 	}
 }

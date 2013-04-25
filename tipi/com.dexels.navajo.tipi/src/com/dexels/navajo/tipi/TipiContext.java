@@ -1108,7 +1108,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	private void loadCssDefinition(String definition, String location) throws IOException
 	{
 		logger.info("Finding CSS files for definition: " + definition + " with location " + location);
-		logger.info("Current locale is " + getClient().getLocaleCode() + " and current subLocale is " + getClient().getSubLocaleCode());
+		logger.debug("Current locale is " + getClient().getLocaleCode() + " and current subLocale is " + getClient().getSubLocaleCode());
 		// first try in the same dir as the definition file (ie location)
 		String strippedLocation = null;
 		if (location != null && location.lastIndexOf("/") != -1)
@@ -1188,22 +1188,21 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 	public List<String> getCssDefinitions(String definition)
 	{
-		List<String> cssDefinitions = tipiCssMap.get(definition);
-		// perhaps not yet cached?
-		if (cssDefinitions == null || cssDefinitions.isEmpty())
+		// perhaps not yet cached? Turn this off for now because it is probably a big performance drain. Do return an empty list though (prevent NPE further on)
+		if (!tipiCssMap.containsKey(definition))
 		{
+			
 			try
 			{
 				loadCssDefinition(definition, locationMap.get(definition));
-				cssDefinitions = tipiCssMap.get(definition);
 			}
 			catch(IOException ioe)
 			{
 				logger.error("Something going wrong loading CSS definitions for component " + definition);
-				return Collections.emptyList();
+				tipiCssMap.put(definition, new ArrayList<String>());
 			}
 		}
-		return cssDefinitions;
+		return tipiCssMap.get(definition);
 	}
 
 	public TipiActionBlock instantiateTipiActionBlock(XMLElement definition,
