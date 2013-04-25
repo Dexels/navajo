@@ -123,11 +123,17 @@ public final class DbConnectionBroker
 			if ( availableConnectionsStack.size() > 0 ) {
 				GrusConnection gc = availableConnectionsStack.pop();
 				if ( gc != null ) {
-					if ( !gc.isAged() ) {
+					boolean isClosed = false;
+					try {
+						isClosed = gc.getConnection().isClosed();
+					} catch (Exception e) {
+						isClosed = true;
+					}
+					if ( !gc.isAged() && gc.getConnection() != null && !isClosed ) {
 						inUse.add(gc);
 						return gc;
 					} else {
-						logger.info("Destroying GrusConnection " + gc.getId() + " due to old age.");
+						logger.info("Destroying GrusConnection " + gc.getId() + " due to " + ( isClosed ? " closed connection." : "old age."));
 						gc.destroy();
 					}
 				}
@@ -156,17 +162,24 @@ public final class DbConnectionBroker
 		if ( gc == null )
 			return;
 
+		boolean released = false;
 		try {
 			synchronized (this ) {
 				if (!inUse.remove(gc) ) {
-					logger.warn("Freeing connection that is not in use..");
-					gc.destroy();
+					logger.warn("Freeing connection that is not in use: " + gc.getId() + ", is on stack: " + availableConnectionsStack.contains(gc));
+					Thread.dumpStack();
+					// If GrusConnection is not on the stack, destroy this 'illegal' connection.
+					if ( !availableConnectionsStack.contains(gc) ) {
+						gc.destroy();
+						logger.warn("Destroying connection that is both NOT in use and NOT and the available connections stack. THIS SHOULD NOT HAPPEN!");
+					}
 				} else {
+					released = true;
 					availableConnectionsStack.push(gc);
 				}
 			}
 		} finally {
-			if ( gc != null ) {
+			if ( gc != null && released ) {
 				availableConnections.release();
 			}
 		}
