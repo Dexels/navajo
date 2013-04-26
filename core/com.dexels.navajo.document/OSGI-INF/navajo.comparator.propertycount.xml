@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="false" name="navajo.comparator.propertycount">
+   <implementation class="com.dexels.navajo.document.comparator.impl.PropertyCountComparatorFactory"/>
+   <service>
+      <provide interface="com.dexels.navajo.document.comparator.ComparatorFactory"/>
+   </service>
+   <property name="name" type="String" value="com.dexels.navajo.document.comparator.impl.PropertyCountComparator"/>
+</scr:component>
+ 

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -176,6 +177,16 @@ public class DummyTribeManager implements TribeManagerInterface {
 	@Override
 	public String getTribalId() {
 		return DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup();
+	}
+
+	@Override
+	public Map getDistributedMap(String name) {
+		return new HashMap();
+	}
+
+	@Override
+	public TribalNumber getDistributedCounter(String name) {
+		return new DefaultTribalNumber();
 	}
 
 }

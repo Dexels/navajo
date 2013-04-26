@@ -24,7 +24,6 @@ public class SerializationUtil {
 	}
 	
 	public static void removeNavajo(String name) {
-		logger.warn("In removeNavajo(" + name + ")");
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		if ( name == null || ssi == null ) {
 			return;
@@ -54,7 +53,6 @@ public class SerializationUtil {
 					logger.error("Could not close deserialization request...", e);
 				}
 			}
-			ssi.remove(SHAREDSTORE_PARENT, name);
 		}
 		return null;
 	}
