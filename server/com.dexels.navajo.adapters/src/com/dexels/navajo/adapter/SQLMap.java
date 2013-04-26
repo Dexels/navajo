@@ -494,6 +494,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	public void store() throws MappableException, UserException {
 
+		if ( con == null && gc == null ) {
+			logger.warn("SQLMap.store() called on empty connection.");
+			return;
+		}
+		
 		if ( myResultSetIterator != null ) {
 			myResultSetIterator.close();
 			resetAll();
@@ -541,7 +546,12 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					} else {
 						myConnectionBroker.freeConnection(con);
 					}
+					// Make sure to set some these to null to prevent double freeing.
+					myConnectionBroker = null;
+					con = null;
+					gc = null;
 				}
+				
 			}
 		}
 
