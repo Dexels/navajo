@@ -172,7 +172,11 @@ public final class DbConnectionBroker
 	}
 	
 	/**
-	 * TODO: What if GrusConnection is freeed by a thread that does not own this GrusConnection??
+	 * Free a GrusConnection object for use by others.
+	 * This method is resilient to the following unwanted situations:
+	 * (1) If gc is null nothing happens
+	 * (2) if gc is not in use and marked as available, nothing happens
+	 * (3) if gc has been freed before, nothing happens.
 	 * 
 	 * @param gc
 	 */

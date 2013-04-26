@@ -36,7 +36,7 @@ public class GrusConnection {
 		return instanceId;
 	}
 
-	public long setInstanceId(long instanceId) {
+	protected long setInstanceId(long instanceId) {
 		this.instanceId = instanceId;
 		return instanceId;
 	}
