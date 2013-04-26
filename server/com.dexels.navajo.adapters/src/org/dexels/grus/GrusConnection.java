@@ -26,6 +26,21 @@ public class GrusConnection {
 	private static final AtomicInteger connectionCounter = new AtomicInteger();
 	private static final Map<Long,GrusConnection> registeredConnections = new ConcurrentHashMap<Long, GrusConnection>();
 	
+	/**
+	 * InstanceId is used to uniquely define a GrusConnection instance that is in use.
+	 * It can be used to make sure that a GrusConnection is not freed twice.
+	 */
+	long instanceId;
+	
+	public long getInstanceId() {
+		return instanceId;
+	}
+
+	public long setInstanceId(long instanceId) {
+		this.instanceId = instanceId;
+		return instanceId;
+	}
+
 	@Deprecated
 	private static final Map<Connection,GrusConnection> connectionMapping = new ConcurrentHashMap<Connection, GrusConnection>();
 	
