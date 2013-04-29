@@ -60,7 +60,9 @@ public class BinaryOpener {
 				if (url.indexOf(' ') != -1) {
 					logger.info("Warning, spaces in URL, might fail");
 				}
-				if (url.toLowerCase().endsWith(".doc") || url.toLowerCase().endsWith(".xls") || url.toLowerCase().endsWith(".ppt")
+				if (url.toLowerCase().endsWith(".doc") || url.toLowerCase().endsWith(".docx")
+						|| url.toLowerCase().endsWith(".xls") || url.toLowerCase().endsWith(".xlsx")
+						|| url.toLowerCase().endsWith(".ppt") || url.toLowerCase().endsWith(".pptx")
 						|| url.toLowerCase().endsWith(".txt") || url.toLowerCase().endsWith(".rtf")) {
 					cmd = "ooffice " + url;
 				} else if (url.toLowerCase().endsWith(".jpg") || url.toLowerCase().endsWith(".gif") || url.toLowerCase().endsWith(".png")
