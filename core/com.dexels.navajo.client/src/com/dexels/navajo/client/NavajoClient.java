@@ -511,7 +511,11 @@ private void appendHeaderToHttp(HttpURLConnection con, Header header) {
 			  header.setExpirationInterval(expirationInterval);
 		  }
 		  // ALWAY SET REQUEST ID AT THIS POINT.
-		  header.setRequestId( Guid.create() );
+		  if ( header.getRequestId() != null && header.getRequestId().equals("42") ) {
+			  System.err.println("ENCOUNTERED TEST!!!");
+		  } else {
+			  header.setRequestId( Guid.create() );
+		  }
 		  String sessionToken = getSessionTokenProvider().getSessionToken();
 		header.setHeaderAttribute("clientToken", sessionToken);
 		  header.setHeaderAttribute("clientInfo", getSystemInfoProvider().toString());
