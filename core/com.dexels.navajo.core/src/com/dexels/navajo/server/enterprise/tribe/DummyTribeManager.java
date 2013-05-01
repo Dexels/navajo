@@ -1,10 +1,12 @@
 package com.dexels.navajo.server.enterprise.tribe;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -180,13 +182,18 @@ public class DummyTribeManager implements TribeManagerInterface {
 	}
 
 	@Override
-	public Map getDistributedMap(String name) {
-		return new HashMap();
+	public ConcurrentHashMap getDistributedMap(String name) {
+		return new ConcurrentHashMap();
 	}
 
 	@Override
 	public TribalNumber getDistributedCounter(String name) {
 		return new DefaultTribalNumber();
+	}
+
+	@Override
+	public Set getDistributedSet(String name) {
+		return Collections.newSetFromMap(new ConcurrentHashMap());
 	}
 
 }
