@@ -46,7 +46,7 @@ public class WorkerFactory {
 				
 				if ( instance == null ) {
 					try {
-						Class<? extends WorkerInterface> c = (Class<? extends WorkerInterface>) Class.forName("com.dexels.navajo.integrity.Worker");
+						Class<? extends WorkerInterface> c = (Class<? extends WorkerInterface>) Class.forName("com.dexels.navajo.integrity.TribalWorker");
 						WorkerInterface dummy = c.newInstance();
 						Method m = c.getMethod("getInstance", (Class[])null);
 						instance = (WorkerInterface) m.invoke(dummy, (Object[])null);

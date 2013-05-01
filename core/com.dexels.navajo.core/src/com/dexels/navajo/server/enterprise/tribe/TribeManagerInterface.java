@@ -19,6 +19,8 @@ public interface TribeManagerInterface {
 	
 	public Map getDistributedMap(String name);
 	
+	public Set getDistributedSet(String name);
+	
 	public TribalNumber getDistributedCounter(String name);
 	
 	/**
