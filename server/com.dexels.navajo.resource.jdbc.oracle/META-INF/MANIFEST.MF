@@ -8,7 +8,6 @@ Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.resource,
  com.dexels.navajo.resource.jdbc,
- com.dexels.navajo.tunnel,
  javax.management,
  javax.sql,
  oracle.jdbc,
@@ -22,5 +21,4 @@ Import-Package: com.dexels.navajo.resource,
  org.osgi.service.jdbc;version="1.0.0",
  org.slf4j;version="1.6.1"
 Bundle-ClassPath: .
-Service-Component: OSGI-INF/navajo.resource.oracle.xml,
- OSGI-INF/navajo.resource.navajo.manager.xml
+Service-Component: OSGI-INF/navajo.resource.oracle.xml

@@ -4,6 +4,7 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.css.actions.ApplyCss;
 
 	public class TipiCssExtension extends TipiAbstractXMLExtension implements BundleActivator {
 
@@ -14,7 +15,9 @@ import com.dexels.navajo.tipi.TipiContext;
 		}
 
 		public void initialize(TipiContext tc) {
-			// Do nothing
+			ApplyCss componentInstantiatedListener = new ApplyCss();
+			componentInstantiatedListener.setContext(tc);
+			tc.addComponentInstantiatedListener(componentInstantiatedListener);
 
 		}
 
