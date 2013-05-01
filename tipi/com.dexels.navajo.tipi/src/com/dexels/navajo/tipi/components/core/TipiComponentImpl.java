@@ -1342,6 +1342,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	}
 
 	public void componentInstantiated() {
+		myContext.fireComponentInstantiated(this);
 	}
 
 	public void addHelper(TipiHelper th) {

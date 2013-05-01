@@ -443,21 +443,14 @@ public class SwingTipiContext extends TipiContext {
 
 	private void showInfo(final String text, final String title,
 			final int messageType) {
-		// swing implementation.
-		runSyncInEventThread(new Runnable() {
-
-			public void run() {
-				if (getOtherRoot() != null) {
-					TipiModalInternalFrame.showInternalMessage(getOtherRoot()
-							.getRootPane(), getOtherRoot().getContentPane(),
-							title, text, getPoolSize(), messageType);
-				} else 
-					JOptionPane.showMessageDialog((Component) getTopDialog(),
-							text, title, messageType);
-
-			}
-		});
-
+		TipiMessageDialog info = new TipiMessageDialog("messages");
+		info.initialize(this);
+		info.setValue("text", text);
+		info.setValue("title", title);
+		info.setValue("messageType", messageType);
+		info.setValue("cssClass", text);
+		info.componentInstantiated();
+		info.initContainer();
 	}
 
 	@Override

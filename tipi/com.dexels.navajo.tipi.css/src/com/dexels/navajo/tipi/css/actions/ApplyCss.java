@@ -18,12 +18,13 @@ import org.w3c.dom.css.CSSStyleDeclaration;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiComponentInstantiatedListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.css.actions.impl.TipiPropertyHandler;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-public class ApplyCss extends TipiAction {
+public class ApplyCss extends TipiAction implements TipiComponentInstantiatedListener{
 
 	private static final long serialVersionUID = 5481600392557969470L;
 	
@@ -46,6 +47,43 @@ public class ApplyCss extends TipiAction {
 		String styleString = (String) getEvaluatedParameterValue("style", event);
 		TipiComponent component = (TipiComponent) getEvaluatedParameterValue("component", event);
 		URL styleResource = (URL) getEvaluatedParameterValue("styleSheet", event);
+		if (styleString == null && styleResource == null)
+		{
+			Boolean forceReloadCssDefinition = (Boolean) getEvaluatedParameterValue("forceReloadCssDefinition", event);
+			if (forceReloadCssDefinition == null)
+			{
+				forceReloadCssDefinition = false;
+			}
+			Boolean skipMainCss = (Boolean) getEvaluatedParameterValue("skipMainCss", event);
+			if (skipMainCss == null)
+			{
+				skipMainCss = false;
+			}
+			if (forceReloadCssDefinition)
+			{
+				component.getContext().reloadCssDefinitions("main");
+				component.getContext().reloadCssDefinitions(component.getName());
+			}
+			if (!skipMainCss)
+			{
+				for (String cssDefinition : component.getContext().getCssDefinitions("main"))
+				{
+					applyCss(component, cssDefinition, null, event);
+				}
+			}
+			for (String cssDefinition : component.getContext().getCssDefinitions(component.getName()))
+			{
+				applyCss(component, cssDefinition, null, event);
+			}
+		}
+		else
+		{
+			applyCss(component, styleString, styleResource, event);
+		}
+	}
+	
+	public static CSSTipiEngineImpl initializeEngine(TipiComponent component, String styleString, URL styleResource, final TipiEvent event)
+	{
 		CSSTipiEngineImpl engine = new CSSTipiEngineImpl();
 		engine.setErrorHandler(new CSSErrorHandler() {
 			@Override
@@ -81,14 +119,57 @@ public class ApplyCss extends TipiAction {
 			if(styleString!=null) {
 				engine.parseStyleSheet(new StringReader(styleString));
 			}
+			return engine;
+		} catch (IOException e) {
+			logger.error("Error: ",e);
+		}
+		return null;
+	}
+		
+	public static void applyCss(TipiComponent component, String styleString, URL styleResource, final TipiEvent event)
+	{
+		CSSTipiEngineImpl engine = initializeEngine(component, styleString, styleResource, event);
+		if (engine != null)
+		{
 //			long afterparse = System.currentTimeMillis();
-			engine.applyStyles(engine.getElement(component), true);
+			try
+			{
+				engine.applyStyles(engine.getElement(component), true);
+			}
+			catch(UnsupportedOperationException uoe)
+			{
+				logger.warn("Registering exception, but continuing: ", uoe);
+			}
 //			long afterapply = System.currentTimeMillis();
 //			logTime((afterparse-mark),(afterapply-afterparse));
 
 			engine.dispose();
-		} catch (IOException e) {
-			logger.error("Error: ",e);
 		}
+	}
+
+	public void doComponentInstantiated(TipiComponent tc) {
+		if (tc.getName() != null)
+		{
+			for (String cssDefinition : tc.getContext().getCssDefinitions("main"))
+			{
+				applyCss(tc, cssDefinition, null, null);
+			}
+			for (String cssDefinition : tc.getContext().getCssDefinitions(tc.getName()))
+			{
+				applyCss(tc, cssDefinition, null, null);
+			}
+		}
+	}
+	@Override
+	public void componentInstantiated(final TipiComponent tc){
+		getContext().runSyncInEventThread(new Runnable(){
+
+			@Override
+			public void run() {
+				doComponentInstantiated(tc);
+				
+			}});
+
+		
 	}
 }
