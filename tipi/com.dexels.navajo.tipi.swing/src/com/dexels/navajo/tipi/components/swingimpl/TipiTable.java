@@ -238,7 +238,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 			if (child.getName().equals("column")) {
 				columnList.add(child);
 				try {
-					loadColumn(i, child, columnMessage);
+					loadColumn(i, child, columnMessage, null);
 				} catch (NavajoException e) {
 					throw new TipiException("Error loading columns... ", e);
 				}
@@ -283,7 +283,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		});
 	}
 
-	private void reloadColumns() throws NavajoException {
+	private void reloadColumns(Message m) throws NavajoException {
 		mm.removeAllColumns();
 		columnCondition.clear();
 		List<Message> ss = columnMessage.getAllMessages();
@@ -294,14 +294,13 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 
 		for (XMLElement child : columnList) {
 
-			loadColumn(i++, child, columnMessage);
+			loadColumn(i++, child, columnMessage, m);
 		}
 
 	}
 
-	private void loadColumn(int i, XMLElement child, Message columnArrayMessage)
+	private void loadColumn(int i, XMLElement child, Message columnArrayMessage, Message definitionMessage)
 			throws NavajoException {
-		String label = (String) child.getAttribute("label");
 		String name = (String) child.getAttribute("name");
 		String editableString = (String) child.getAttribute("editable");
 		String aggr = child.getStringAttribute("aggregate");
@@ -309,6 +308,38 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		String typehint = child.getStringAttribute("typeHint");
 		int size = child.getIntAttribute("size", -1);
 
+		// try to use the property (that this column points to) from the message the table listens to
+		// only if label is not specified (for backwards compatibility)
+		String label = (String) child.getAttribute("label");
+		if (label == null || label.trim().isEmpty())
+		{
+			if (definitionMessage != null && definitionMessage.isArrayMessage())
+			{
+				Message singleEntry = null;
+				if (definitionMessage.getDefinitionMessage() != null)
+				{
+					singleEntry = definitionMessage.getDefinitionMessage();
+				}
+				else if (definitionMessage.getArraySize() > 0)
+				{
+					singleEntry = definitionMessage.getMessage(0);
+				}
+				
+				if (singleEntry != null)
+				{
+					Property defProp = singleEntry.getProperty(name);
+					if (defProp != null)
+					{
+						label = defProp.getDescription();
+					}
+				}
+			}
+		}
+		if (label == null)
+		{
+			label = "";
+		}
+		
 		Message columnMessage = NavajoFactory.getInstance().createMessage(
 				myContext.getStateNavajo(), "Columns",
 				Message.MSG_TYPE_ARRAY_ELEMENT);
@@ -429,11 +460,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 			public void run() {
 				flushAggregateValues();
 				updateConditionalRemarks();
-				try {
-					reloadColumns();
-				} catch (NavajoException e) {
-					logger.error("Error detected",e);
-				}
 			}
 		});
 		final MessageTablePanel mtp = (MessageTablePanel) getContainer();
@@ -444,7 +470,12 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 			if (m != null) {
 				runSyncInEventThread(new Runnable() {
 					public void run() {
-
+						// first reload the columns using the message found
+						try {
+							reloadColumns(m);
+						} catch (NavajoException e) {
+							logger.error("Error detected",e);
+						}
 						// Hardcode it to true. If the component seems to work
 						// fine (check the output) set to false for a small (?)
 						// perf. gain.

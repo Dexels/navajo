@@ -3,10 +3,12 @@
 
 	<tipiaction name="applyCss" class="ApplyCss" package="com.dexels.navajo.tipi.css.actions">
 		<description>
-			Open a file load dialog, and put the selected value (as a binary) in the supplied property
+			Apply CSS to the given component. Uses the CSS cached by the TipiContext &amp; also starts by applying main.css
 		</description>
 		<param name="styleSheet" type="resource" required="false" />
 		<param name="style" type="string" required="false" />
+		<param name="skipMainCss" type="boolean" required="false"/>
+		<param name="forceReloadCssDefinition" type="boolean" required="false"/>
 		<param name="component" type="component" required="true" />
 	</tipiaction>
 

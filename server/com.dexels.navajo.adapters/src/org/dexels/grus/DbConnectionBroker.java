@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
@@ -24,9 +25,18 @@ public final class DbConnectionBroker
 	protected boolean dead = false;
 	public  boolean supportsAutocommit = true;
 	
+	// Following set is used to hold unique GrusConnection instance id's that have been made available.
+	protected final Set<Long> usedConnectionInstanceIds;
+	private long instanceCounter = -1;
+	
+	// Following data structures are used to keep track of available GrusConnection objects and GrusConnections objects
+	// that are in use.
 	protected final Deque<GrusConnection> availableConnectionsStack;
 	protected final Set<GrusConnection> inUse = Collections.newSetFromMap(new ConcurrentHashMap<GrusConnection, Boolean>());
+	
+	// The cardinality of this semaphore equals the maximum number of connections that this data source allows.
 	private final Semaphore availableConnections;
+
 	
 	public DbConnectionBroker(String dbDriver,
 			String dbServer,
@@ -72,11 +82,13 @@ public final class DbConnectionBroker
 		}
 
 		availableConnectionsStack = new ArrayDeque<GrusConnection>(maxConnections);
+		usedConnectionInstanceIds = new HashSet<Long>();
+		
 		availableConnections = new Semaphore(maxConnections - 1);
 		
 		if ( timeoutDays > 0 ) {
 			GrusManager.getInstance().addBroker(this);
-            logger.info("Started new connectionbroker thread for: " + dbDriver + "/" + dbServer + "/" + dbLogin + ", refresh = " + timeoutDays);
+            logger.info("Started new connectionbroker for: " + dbDriver + "/" + dbServer + "/" + dbLogin + ", refresh = " + timeoutDays);
 		}
 	}
 	
@@ -123,11 +135,18 @@ public final class DbConnectionBroker
 			if ( availableConnectionsStack.size() > 0 ) {
 				GrusConnection gc = availableConnectionsStack.pop();
 				if ( gc != null ) {
-					if ( !gc.isAged() ) {
+					boolean isClosed = false;
+					try {
+						isClosed = ( gc.getConnection() == null || gc.getConnection().isClosed() );
+					} catch (Exception e) {
+						isClosed = true;
+					}
+					if ( !gc.isAged() && !isClosed ) {
 						inUse.add(gc);
+						usedConnectionInstanceIds.add(gc.setInstanceId(instanceCounter++));
 						return gc;
 					} else {
-						logger.info("Destroying GrusConnection " + gc.getId() + " due to old age.");
+						logger.info("Destroying GrusConnection " + gc.getId() + " due to " + ( isClosed ? "closed connection." : "old age."));
 						gc.destroy();
 					}
 				}
@@ -137,6 +156,7 @@ public final class DbConnectionBroker
 				try {
 					GrusConnection gc = new GrusConnection(location, username, password, this, timeoutDays);
 					inUse.add(gc);
+					usedConnectionInstanceIds.add(gc.setInstanceId(instanceCounter++));
 					return gc;
 				} catch (Throwable e) {
 					logger.error("Could not created connection: " + e.getMessage(), e);
@@ -151,22 +171,44 @@ public final class DbConnectionBroker
 
 	}
 	
+	/**
+	 * Free a GrusConnection object for use by others.
+	 * This method is resilient to the following unwanted situations:
+	 * (1) If gc is null nothing happens
+	 * (2) if gc is not in use and marked as available, nothing happens
+	 * (3) if gc has been freed before, nothing happens.
+	 * 
+	 * @param gc
+	 */
 	public final void freeConnection(GrusConnection gc) {
 
 		if ( gc == null )
 			return;
 
+		boolean released = false;
 		try {
-			synchronized (this ) {
+			synchronized (this) {
 				if (!inUse.remove(gc) ) {
-					logger.warn("Freeing connection that is not in use..");
-					gc.destroy();
+					logger.warn("Attempting to free connection that is not in use: " + gc.getId() + ", is on stack: " + availableConnectionsStack.contains(gc));
+					Thread.dumpStack();
+					// If GrusConnection is not on the stack, destroy this 'illegal' connection.
+					if ( !availableConnectionsStack.contains(gc) ) {
+						gc.destroy();
+						logger.error("Destroying connection that is both NOT in use and NOT and the available connections stack. THIS SHOULD NOT HAPPEN!");
+					}
 				} else {
-					availableConnectionsStack.push(gc);
+					if ( usedConnectionInstanceIds.contains(gc.getInstanceId()) ) {
+						released = true;
+						usedConnectionInstanceIds.remove(gc.getInstanceId());
+						availableConnectionsStack.push(gc);
+					} else {
+						logger.warn("Attempting to free connection that was already freed: " + gc.getInstanceId());
+						Thread.dumpStack();
+					}
 				}
 			}
 		} finally {
-			if ( gc != null ) {
+			if ( gc != null && released ) {
 				availableConnections.release();
 			}
 		}
