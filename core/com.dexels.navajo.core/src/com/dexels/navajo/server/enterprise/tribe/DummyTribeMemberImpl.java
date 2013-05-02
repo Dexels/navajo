@@ -48,4 +48,10 @@ public class DummyTribeMemberImpl implements TribeMemberInterface {
 		return false;
 	}
 
+	@Override
+	public String getMemberId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
