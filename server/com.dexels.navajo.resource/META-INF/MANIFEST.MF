@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OSGi based connection broker
 Bundle-SymbolicName: com.dexels.navajo.resource
-Bundle-Version: 1.0.15.qualifier
+Bundle-Version: 1.0.16
 Bundle-Activator: com.dexels.connectionbroker.Activator
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
