@@ -8,4 +8,4 @@
 		<artifact:pom id="mypom" file="pom.xml" />
 		<artifact:deploy file="src/main/resources/features.xml" pomrefid="mypom"  	></artifact:deploy>
 	</target>
-</project>
+</project>	
