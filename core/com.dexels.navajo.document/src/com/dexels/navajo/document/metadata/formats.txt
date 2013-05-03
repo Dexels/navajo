@@ -17,17 +17,29 @@
 #     hexadecimal string if you need either character.
 # (8) Minimum valid file size for this format
 
-odt;OPENOFFICE;Open Office;application/vnd.oasis.opendocument.text;odt;50;"vnd.oasis.opendocument";40
+odt;OPENOFFICE WRITER;Open Office Writer;application/vnd.oasis.opendocument.text;odt;50;"vnd.oasis.opendocument.text";40
+ods;OPENOFFICE CALC;Open Office Calc;application/vnd.oasis.opendocument.text;ods;50;"vnd.oasis.opendocument.spreadsheet";40
 archive;BZ2;Bzip2 (bz2);application/x-bzip2;bz2,tbz2;0;425a683931;20;
 archive;GZ;GNU Zip (gz);application/x-gzip;gz,tgz;0;1f8b;20;
 archive;RAR;Rar;application/x-rar-compressed;rar;0;526172211a;20;
+# The zip archive is found for new ms office documents. See FormatIdentification.java
 archive;ZIP;PKWare Zip (ZIP);application/zip;zip;0;"PK";20;
 audio;MIDI;Midi (MID);audio/unknown;mid,midi;0;"MThd";20;
 audio;MP3;MPEG audio (mp3);audio/mpeg;mp3,mp2;0;"ID3";20;
 ics;ICS;iCal/vCal format;text/calendar;ics,ICS,vcal;0;"BEGIN:VCALENDAR";20;
 vcf;VCF;vCard format;text/x-vcard;vcf,VCF;0;"BEGIN:VCARD";20;
 doc;DOC;Ms Word 2003 (doc);application/msword;doc,docx;39;"<?mso-application progid="Word.Document"?>";100;
+doc;MSWORD;MS Word;application/msword;doc;0;fe370023;20;
+doc;MSWORD;MS Word;application/msword;doc;0;d0cf11e0a1b11ae1000000000000000000000000000000003b;20;
+doc;MSWORD;MS Word;application/msword;doc;0;dba52d000000;20;
+doc;XLS;MS Excel;application/excel;xls;0;d0cf11e0a1b11ae1000000000000000000000000000000003e;20;
 doc;XLS;Ms Excel 2003 (doc);application/excel;xls,xla,xlsx;39;"<?mso-application progid="Excel.Sheet"?>";100;
+
+# The (new) ms office documents are actually zipfiles. They will be handled differently in FormatIdentification.java
+doc;XLSX;MS Excel;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;xlsx;0;"PK";20;
+doc;DOCX;MS Word;application/vnd.openxmlformats-officedocument.wordprocessingml.document;docx;0;"PK";20;
+doc;PPTX;MS Powerpoint;application/vnd.openxmlformats-officedocument.presentationml.presentation;pptx;0;"PK";20;
+
 doc;HTML;Hypertext Markup Language (HTML);text/html;htm,html;0;"<HEAD";20;
 doc;HTML;Hypertext Markup Language (HTML);text/html;htm,html;0;"<head";20;
 doc;HTML;Hypertext Markup Language (HTML);text/html;htm,html;0;"<TITLE";20;
@@ -61,7 +73,4 @@ video;ASF;Microsoft Advanced Streaming Format (ASF);video/x-msvideo;wmv;0;3026b2
 video;MOV;Quicktime video (MOV);video/quicktime;mov;4;"moov";20;
 video;MPEG;MPEG video (MPG);video/mpeg;mpg,mpeg;0;000001b3;20;
 video;MPEG;MPEG video (MPG);video/mpeg;mpg,mpeg;0;000001ba;20;
-doc;MSWORD;MS Word;application/msword;doc;0;fe370023;20;
-doc;MSWORD;MS Word;application/msword;doc;0;d0cf11e0a1b1;20;
-doc;MSWORD;MS Word;application/msword;doc;0;dba52d000000;20;
 rss;XML;Rss feed;application/rss+xml;rss;0;"<rss";10;
