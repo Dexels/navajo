@@ -2,7 +2,6 @@ package com.dexels.navajo.tunnel.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +32,12 @@ public class NavajoTunnelComponentImpl implements Tunnel {
 		logger.info("Setting up tunnel with settings: {}",settings);
 		String username = (String) settings.get("username");
 		String host = (String) settings.get("host");
+		String sshHost = (String) settings.get("sshHost");
+		if(sshHost==null) {
+			logger.info("No sshHost supplied, using host: "+host);
+			sshHost =host;
+		}
+
 		String keyfile = (String) settings.get("keyfile");
 
 		this.type = (String) settings.get("type");
@@ -64,7 +69,7 @@ public class NavajoTunnelComponentImpl implements Tunnel {
 		parameters.clear();
 		parameters.putAll(settings);
 		
-		connect(username, host, remotePort,localhost, localPort, sshPort, keyfile);
+		connect(username, sshHost, host, remotePort,localhost, localPort, sshPort, keyfile);
 	}
 
 	public void deactivate() {
@@ -90,14 +95,14 @@ public class NavajoTunnelComponentImpl implements Tunnel {
 		return this.navajoConfig;
 	}
 	
-	private void connect(String username, String host, int remotePort,String localhost, int localPort,int sshPort, String privateKey) throws JSchException {
+	private void connect(String username, String sshHost, String host, int remotePort,String localhost, int localPort,int sshPort, String privateKey) throws JSchException {
 		int assigned = 0;
 			JSch.setLogger(new JschLoggerBridge(logger));
 
 			
 			jsch = new JSch(); 
 			jsch.addIdentity(privateKey);
-            session = jsch.getSession(username, host, sshPort);
+            session = jsch.getSession(username, sshHost, sshPort);
 
 			java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
@@ -122,8 +127,8 @@ public class NavajoTunnelComponentImpl implements Tunnel {
 	
 	public static void main(String[] args) throws InterruptedException, JSchException {
 		NavajoTunnelComponentImpl ntci = new NavajoTunnelComponentImpl();
-		ntci.connect("flyaruu", "10.0.0.1", 1521, "localhost",21521, 22,"/Users/frank/.ssh/id_rsa");
-		Thread.sleep(10000);
+		ntci.connect("flyaruu", "10.0.0.1","10.10.10.160", 1521, "localhost",21521, 22,"/Users/frank/.ssh/id_rsa");
+		Thread.sleep(1000000);
 	}
 
 	@Override

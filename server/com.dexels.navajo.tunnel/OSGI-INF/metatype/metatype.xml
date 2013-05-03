@@ -2,6 +2,7 @@
   <OCD description="Navajo Tunnel Configuration" name="Navajo Tunnel Configuration" id="navajo.tunnel">
     <AD name="username"  id="username" required="true" type="String" default=""/>
     <AD name="host"  id="host" required="true" type="String" default=""/>
+    <AD name="sshHost"  id="sshHost" required="false" type="String" />
     <AD name="name"  id="name" required="false" type="String" default=""/>
     <AD name="type"  id="type" required="false" type="String" default=""/>
     <AD name="localhost"  id="localhost" required="false" type="String" default="0.0.0.0"/>
