@@ -1,7 +1,6 @@
 package com.dexels.navajo.functions;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.dexels.navajo.parser.FunctionInterface;
