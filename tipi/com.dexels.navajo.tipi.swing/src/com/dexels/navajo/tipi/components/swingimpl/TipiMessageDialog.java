@@ -37,6 +37,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 	private String title = "";
 	private String text = "";
 	private String cssClass = "";
+	private String cssStyle = "";
 	private int messageType = JOptionPane.INFORMATION_MESSAGE;
 	
 	private static final XMLElement acceptedValues;
@@ -48,6 +49,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
          <value direction="inout" name="title" type="string" />
          <value direction="inout" name="text" type="string" />
          <value direction="inout" name="cssClass" type="string" />
+         <value direction="inout" name="cssStyle" type="string" />
          <value direction="inout" name="messageType" type="string" />
        </values>
 	 */
@@ -72,12 +74,18 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		cssClass.setAttribute("name", "cssClass");
 		cssClass.setAttribute("type", "string");
 		cssClass.setName("value");
+		XMLElement cssStyle = new XMLElement();
+		cssStyle.setAttribute("direction", "inout");
+		cssStyle.setAttribute("name", "cssClass");
+		cssStyle.setAttribute("type", "string");
+		cssStyle.setName("value");
 		acceptedValues = new XMLElement();
 		acceptedValues.setAttribute("name", "values");
 		acceptedValues.addChild(title);
 		acceptedValues.addChild(text);
 		acceptedValues.addChild(messageType);
 		acceptedValues.addChild(cssClass);
+		acceptedValues.addChild(cssStyle);
 	}
 
 	
@@ -149,6 +157,9 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 				if (name.equals("cssClass")) {
 					cssClass = object.toString();
 				}
+				if (name.equals("cssStyle")) {
+					cssStyle = object.toString();
+				}
 			}
 		});
 		super.setComponentValue(name, object);
@@ -163,6 +174,9 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		}
 		if ("cssClass".equals(name)) {
 			return cssClass;
+		}
+		if ("cssStyle".equals(name)) {
+			return cssStyle;
 		}
 		if ("messageType".equals(name)) {
 			return messageType;
