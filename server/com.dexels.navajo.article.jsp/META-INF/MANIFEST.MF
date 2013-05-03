@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo JSP article tester
 Bundle-SymbolicName: com.dexels.navajo.article.jsp
-Bundle-Version: 1.0.10.qualifier
+Bundle-Version: 1.0.11
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.client.context,
