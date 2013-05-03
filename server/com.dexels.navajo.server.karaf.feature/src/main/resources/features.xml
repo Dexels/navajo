@@ -11,6 +11,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.4.30</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.1.20</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.5</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.18</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.12.36</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
@@ -22,8 +23,9 @@
 		 -->
 	</feature>
 
-    <feature resolver="(obr)" name='navajo.function' version='1.0.0' start-level='80'  >
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.16</bundle>
+    <feature resolver="(obr)" name='navajo.function' version='1.0.2' start-level='80'  >
+		<feature version="[1.0.5,2)">navajo.core</feature>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.18</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.server' version='1.0.6' start-level='81' >
@@ -78,7 +80,7 @@
 
 	<feature resolver="(obr)" name='tipi.core' version='1.0.8' start-level='81' >
 		<feature version="[1.0.5,2)">navajo.core</feature>
-		<feature version="[1.0.0,2)">navajo.function</feature>
+		<!-- <feature version="[1.0.0,2)">navajo.function</feature> -->
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/1.1.62</bundle>
 	</feature>
 	<feature resolver="(obr)" name='tipi.vaadin' version='1.0.6' start-level='81' >
@@ -125,7 +127,7 @@
 
 	<feature resolver="(obr)" name='navajo.opensource' version='1.0.4' start-level='81' >
 		<feature version="[1.0.5,2)">navajo.server.osgi</feature>
-		<feature version="[1.0.0,2)">navajo.function</feature>
+		<!-- <feature version="[1.0.0,2)">navajo.function</feature> -->
 		<feature version="[1.0.3,2)">navajo.optional</feature>
 		<feature version="[1.0.6,2)">navajo.article</feature>
 	</feature>
