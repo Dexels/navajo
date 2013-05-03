@@ -36,11 +36,11 @@ public class JspComponent {
 	public void activate(BundleContext bc) {
 		this.bundleContext = bc;
 		try {
-			httpContext = webContainer.createDefaultHttpContext();
-			webContainer.registerJsps(new String[] { "/index.jsp" },httpContext);
+			httpContext = webContainer.getDefaultSharedHttpContext();
+//			webContainer.registerJsps(new String[] { "/index.jsp" },httpContext);
 			webContainer.registerResources("/article/ui", "/article/ui", httpContext);
-			webContainer.registerWelcomeFiles(new String[] { "index.html" },
-					false, httpContext);
+//			webContainer.registerWelcomeFiles(new String[] { "index.html" },
+//					false, httpContext);
 		} catch (NamespaceException e) {
 			logger.error("Error: ", e);
 		}
