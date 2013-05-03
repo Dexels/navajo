@@ -201,7 +201,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			throw new TipiException("Loading with null Navajo! ");
 		}
 		myNavajo = n;
-		if (method.equals(mySettingsService))
+		if (method!=null && method.equals(mySettingsService))
 		{
 			extractUserSettings(n);
 		}
