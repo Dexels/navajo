@@ -18,6 +18,7 @@ public class DecryptString extends FunctionInterface {
 		
 		String key = (String) getOperand(0);
 		String message = (String) getOperand(1);
+		System.err.println("Decrypting: |"+key+"|");
 		
 		try {
 			Security s = new Security(key);
@@ -31,7 +32,8 @@ public class DecryptString extends FunctionInterface {
 
 	public static void main(String [] args) throws Exception {
 		
-		String s = "yNho7EsOZGaLwdzdE1Ig5A==";
+		String s = "6jyZodUTXHmq5vR36F3Sf8AQw5Eil4Hubn0sEdAas4nOV4Fkh9vtuSJGQZqsEJDpIV+XnvNoaL7EPjhzy/AlLn9ZLmyFTxbLcC79a/quGHo=";
+//		String t = "6jyZodUTXHmq5vR36F3Sf8AQw5Eil4Hubn0sEdAas4nOV4Fkh9vtuSJGQZqsEJDpIV+XnvNoaL7EPjhzy/AlLn9ZLmyFTxbLcC79a/quGHo=";
 		DecryptString e = new DecryptString();
 		e.reset();
 		e.insertOperand("Secret");
