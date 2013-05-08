@@ -48,7 +48,7 @@ public class ServiceCommand implements ArticleCommand {
 			throw new ArticleException("Command: "+this.getName()+" can't be executed without required parameters: "+name);
 		}
 		String refresh = parameters.get("refresh");
-		if("false".equals(refresh)) {
+		if( "false".equals(refresh)) {
 			Navajo res = runtime.getNavajo(name);
 			if(res!=null) {
 				runtime.pushNavajo(name,res);
