@@ -2,7 +2,7 @@ Bundle-Name: Navajo KML Adapters
 Bundle-SymbolicName: com.dexels.navajo.kml
 Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.5.qualifier
+Bundle-Version: 1.0.7.qualifier
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.adapters.svg,
  com.dexels.navajo.client,
