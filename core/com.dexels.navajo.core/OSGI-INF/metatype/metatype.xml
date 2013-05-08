@@ -40,6 +40,11 @@
     <AD name="servletContextPath"  id="servletContextPath" required="false" type="String" />
     <AD name="installationPath"  id="installationPath" required="true" type="String" default="/mypath"/>
   </OCD>
+ <OCD description="Dummy Tribemanager" name="Dummy Tribemanager" id="navajo.server.tribemanager.dummy" >
+    <AD name="Enable"  id="enable" required="true" type="Boolean" default="true"/>
+  </OCD>
+ 
+
 
   <Designate pid="navajo.server.store" >
      <Object ocdref="navajo.server.store"/>
@@ -66,4 +71,10 @@
   <Designate pid="navajo.server.http.osgi">
      <Object ocdref="navajo.server.http.osgi"/>
   </Designate>
+  <Designate pid="navajo.server.tribemanager.dummy">
+     <Object ocdref="navajo.server.tribemanager.dummy"/>
+  </Designate>
+
+  
+  
 </metatype:MetaData>

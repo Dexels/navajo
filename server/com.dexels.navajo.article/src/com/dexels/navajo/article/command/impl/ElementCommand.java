@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +17,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class ElementCommand implements ArticleCommand {
 
@@ -86,6 +89,11 @@ public class ElementCommand implements ArticleCommand {
 		}
 		
 		sw.write( "\"" + p.getFullPropertyName() + "\" : \"" + value + "\"");		
+	}
+
+	@Override
+	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,ObjectMapper mapper) {
+		return false;
 	}
 
 }

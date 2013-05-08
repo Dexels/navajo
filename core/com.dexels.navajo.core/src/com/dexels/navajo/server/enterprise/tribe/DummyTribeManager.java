@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -100,39 +99,33 @@ public class DummyTribeManager implements TribeManagerInterface {
 
 	@Override
 	public boolean isInitializing() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public ClusterStateInterface getClusterState() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getChiefName() {
-		// TODO Auto-generated method stub
 		return "dummytribemember";
 	}
 
 	@Override
 	public void tribalAfterWebServiceRequest(
 			String service, Access a, HashSet<String> ignoreTaskIds) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public Navajo tribalBeforeWebServiceRequest(
 			String service, Access a, HashSet<String> ignoreList) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getMyUniqueId() {
-		// TODO Auto-generated method stub
 		return "dummytribemember";
 	}
 

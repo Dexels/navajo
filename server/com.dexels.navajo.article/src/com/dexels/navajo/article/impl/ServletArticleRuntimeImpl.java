@@ -78,6 +78,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 			response.getWriter().write(writer.toString());
 			return;
 		}
+		
 		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 		writer.writeValue(response.getWriter(), rootNode);
 //		IOUtils.copy(new StringReader(writer.toString()), response.getWriter());

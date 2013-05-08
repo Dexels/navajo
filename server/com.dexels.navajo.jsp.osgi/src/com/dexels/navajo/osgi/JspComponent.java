@@ -75,7 +75,7 @@ public class JspComponent {
 		this.bundleContext = cc;
 		instance = this;
 		try {
-			httpContext = webContainer.getDefaultSharedHttpContext();
+			httpContext = webContainer.createDefaultHttpContext();
 			Dictionary<String, Object> contextProperties = new Hashtable<String, Object>();
 			logger.info("Injecting forced Navajo path: "
 					+ navajoConfig.getRootPath());

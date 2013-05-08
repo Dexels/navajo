@@ -70,6 +70,10 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 			
 			for (XMLElement e : children) {
 				String name = e.getName();
+				if(name.startsWith("_")) {
+					// tags starting with '_' are declarative, not interesting at runtime
+					continue;
+				}
 				ArticleCommand ac = context.getCommand(name);
 				if(ac==null) {
 					throw new ArticleException("Unknown command: "+name);
@@ -89,17 +93,14 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 				}
 
 			}
-			getOutputWriter().write("}, \"metadata\": ");
+			getOutputWriter().write("}");
 			mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
 			mapper.writeValue(getOutputWriter(), rootNode);
-//			getOutputWriter().write("bombombom");
 			getOutputWriter().write("}");
 			commit();
 	} catch (IOException e1) {
 		logger.error("Error: ", e1);
 	}
-	//		setMimeType("text/plain");
-		
 	}
 	@Override
 	public void pushNavajo(String name,Navajo res) {

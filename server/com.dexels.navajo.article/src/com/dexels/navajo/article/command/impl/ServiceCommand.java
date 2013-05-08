@@ -1,6 +1,11 @@
 package com.dexels.navajo.article.command.impl;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Map;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
 
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
@@ -9,6 +14,7 @@ import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 
@@ -96,5 +102,10 @@ public class ServiceCommand implements ArticleCommand {
 
 	public void setLocalClient(LocalClient localClient) {
 		this.localClient = localClient;
+	}
+
+	@Override
+	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,ObjectMapper mapper) {
+		return false;
 	}
 }
