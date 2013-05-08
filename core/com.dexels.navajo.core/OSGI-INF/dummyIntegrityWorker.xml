@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.enterprise.integrity.worker.dummy">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" enabled="false" immediate="false" name="navajo.enterprise.integrity.worker.dummy">
    <implementation class="com.dexels.navajo.server.enterprise.integrity.DummyWorker"/>
    <service>
       <provide interface="com.dexels.navajo.server.enterprise.integrity.WorkerInterface"/>

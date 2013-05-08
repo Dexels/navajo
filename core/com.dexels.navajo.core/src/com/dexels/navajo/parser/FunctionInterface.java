@@ -283,9 +283,9 @@ public abstract class FunctionInterface {
 
     public Object evaluateWithTypeChecking() throws TMLExpressionException {
     	// Check types.
-    	checkTypes();
+    	//checkTypes();
     	Object o = evaluate();
-    	checkReturnType(o);
+    	//checkReturnType(o);
     	return o;
     }
     
