@@ -1,9 +1,8 @@
 package com.dexels.navajo.article.command;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Map;
 
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 
@@ -15,6 +14,6 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 public interface ArticleCommand {
 
 	public String getName();
-	public boolean execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters) throws ArticleException;
+	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException;
 	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,ObjectMapper mapper);
 }

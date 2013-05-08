@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
+import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +49,7 @@ public class ElementCommand implements ArticleCommand {
 
 	
 	@Override
-	public boolean execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters) throws ArticleException {
+	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException {
 		String service = parameters.get("service");
 		Navajo current = null;
 		if(service==null) {
@@ -71,12 +73,14 @@ public class ElementCommand implements ArticleCommand {
 //		if(writeLabel) {
 //			
 //		}
-		try {
-			printElementJSONTypeless(p, runtime.getOutputWriter());
-		} catch (IOException e) {
-			logger.error("Error: ", e);
-		}
-		return true;
+		ObjectNode on = runtime.getObjectMapper().createObjectNode();
+		on.put(name, p.getValue());
+//		try {
+//			printElementJSONTypeless(p, runtime.getOutputWriter());
+//		} catch (IOException e) {
+//			logger.error("Error: ", e);
+//		}
+		return on;
 	}
 	
 	public void printElementJSONTypeless(Property p, final Writer sw) throws NavajoException, IOException {

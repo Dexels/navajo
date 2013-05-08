@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -11,7 +12,10 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
+import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,26 +28,27 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
-public abstract class BaseRuntimeImpl  implements ArticleRuntime {
-	
+public abstract class BaseRuntimeImpl implements ArticleRuntime {
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseRuntimeImpl.class);
-	
+
 	private final Stack<Navajo> navajoStack = new Stack<Navajo>();
-	private final Map<String,Navajo> navajoStore = new HashMap<String,Navajo>();
+	private final Map<String, Navajo> navajoStore = new HashMap<String, Navajo>();
 	protected final XMLElement article;
 	private final String articleName;
 
 	private final ObjectMapper mapper = new ObjectMapper();
 	private final ObjectNode rootNode;
-	
+
 	protected BaseRuntimeImpl(String articleName, XMLElement article) {
 		rootNode = mapper.createObjectNode();
 		this.article = article;
 		this.articleName = articleName;
 	}
-	
-	protected BaseRuntimeImpl(String articleName, File articleFile) throws IOException {
+
+	protected BaseRuntimeImpl(String articleName, File articleFile)
+			throws IOException {
 		article = new CaseSensitiveXMLElement();
 		rootNode = mapper.createObjectNode();
 		this.articleName = articleName;
@@ -53,8 +58,8 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 			article.parseFromReader(r);
 		} catch (IOException e) {
 			throw e;
-		}  finally {
-			if(r!=null) {
+		} finally {
+			if (r != null) {
 				r.close();
 			}
 		}
@@ -64,57 +69,81 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 		List<XMLElement> children = article.getChildren();
 		int i = 0;
 		try {
-			getOutputWriter().write("{ \"data\" : {");
+//			getOutputWriter().write("{ \"data\" : {");
 			boolean first = true;
 			int count = children.size();
-			
+			List<JsonNode> elements = new ArrayList<JsonNode>();
 			for (XMLElement e : children) {
 				String name = e.getName();
-				if(name.startsWith("_")) {
-					// tags starting with '_' are declarative, not interesting at runtime
+				if (name.startsWith("_")) {
+					// tags starting with '_' are declarative, not interesting
+					// at runtime
 					continue;
 				}
 				ArticleCommand ac = context.getCommand(name);
-				if(ac==null) {
-					throw new ArticleException("Unknown command: "+name);
+				if (ac == null) {
+					throw new ArticleException("Unknown command: " + name);
 				}
-				Map<String,String> parameters = new HashMap<String, String>();
-				 
-				for (Iterator<String> iterator = e.enumerateAttributeNames(); iterator.hasNext();) {
-					String attributeName = iterator.next();
-					parameters.put(attributeName, e.getStringAttribute(attributeName));
-				}
-				System.err.println("Calling command # "+(i++));
-				if(ac.execute(this, context, parameters)) {
-					first = false;
-					if(!first && count!=i) {
-						getOutputWriter().write(",");
-					}
-				}
+				Map<String, String> parameters = new HashMap<String, String>();
 
+				for (Iterator<String> iterator = e.enumerateAttributeNames(); iterator
+						.hasNext();) {
+					String attributeName = iterator.next();
+					parameters.put(attributeName,
+							e.getStringAttribute(attributeName));
+				}
+				System.err.println("Calling command # " + (i++));
+				JsonNode node =ac.execute(this, context, parameters, e);
+				
+				if (node!=null) {
+					elements.add(node);
+				}
 			}
-			getOutputWriter().write("}");
-			mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
-			mapper.writeValue(getOutputWriter(), rootNode);
-			getOutputWriter().write("}");
-			commit();
-	} catch (IOException e1) {
-		logger.error("Error: ", e1);
+			if(elements.size()==0) {
+				writeNode(getObjectMapper().createObjectNode());
+			} else if(elements.size()==1) {
+				writeNode(elements.iterator().next());
+			} else {
+				ArrayNode an = getObjectMapper().createArrayNode();
+				for (JsonNode jsonNode : elements) {
+					an.add(jsonNode);
+				}
+				writeNode(an);
+			}
+//			mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+//			mapper.writeValue(getOutputWriter(), rootNode);
+//			commit();
+		} catch (IOException e1) {
+			logger.error("Error: ", e1);
+		}
 	}
-	}
+
 	@Override
-	public void pushNavajo(String name,Navajo res) {
+	public ObjectMapper getObjectMapper() {
+		return mapper;
+	}
+	
+	@Override
+	public void writeNode(JsonNode node) throws IOException {
+		setMimeType("text/json");
+		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+		writer.writeValue(getOutputWriter(),node);
+	}
+	
+	@Override
+	public void pushNavajo(String name, Navajo res) {
 		navajoStack.push(res);
 		navajoStore.put(name, res);
 	}
+
 	@Override
 	public Navajo getNavajo(String name) {
 		return navajoStore.get(name);
 	}
-	
+
 	@Override
 	public Navajo getNavajo() {
-		if(navajoStack.isEmpty()) {
+		if (navajoStack.isEmpty()) {
 			return null;
 		}
 		return navajoStack.peek();
@@ -124,11 +153,10 @@ public abstract class BaseRuntimeImpl  implements ArticleRuntime {
 	public String getArticleName() {
 		return articleName;
 	}
-	
+
 	@Override
 	public ObjectNode getMetadataRootNode() {
 		return rootNode;
 	}
-
 
 }

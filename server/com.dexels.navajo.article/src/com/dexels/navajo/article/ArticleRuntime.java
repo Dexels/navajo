@@ -3,12 +3,14 @@ package com.dexels.navajo.article;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 
 import com.dexels.navajo.document.Navajo;
 
 public interface ArticleRuntime {
-	public String resolveArgument(String name);
+	public String resolveArgument(String name) throws ArticleException;
 
 	public void execute(ArticleContext articleServlet) throws ArticleException;
 
@@ -30,4 +32,8 @@ public interface ArticleRuntime {
 	public ObjectNode getMetadataRootNode();
 
 	public void commit() throws IOException;
+
+	public void writeNode(JsonNode node) throws IOException;
+
+	public ObjectMapper getObjectMapper();
 }
