@@ -76,7 +76,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		cssClass.setName("value");
 		XMLElement cssStyle = new XMLElement();
 		cssStyle.setAttribute("direction", "inout");
-		cssStyle.setAttribute("name", "cssClass");
+		cssStyle.setAttribute("name", "cssStyle");
 		cssStyle.setAttribute("type", "string");
 		cssStyle.setName("value");
 		acceptedValues = new XMLElement();

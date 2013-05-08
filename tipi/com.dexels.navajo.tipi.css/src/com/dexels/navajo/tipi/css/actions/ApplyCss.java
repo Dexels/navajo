@@ -88,7 +88,7 @@ public class ApplyCss extends TipiAction implements TipiComponentInstantiatedLis
 		engine.setErrorHandler(new CSSErrorHandler() {
 			@Override
 			public void error(Exception e) {
-				logger.error("Error: ",e);
+				logger.error("CSS Error: ",e);
 			}
 		});
 		//		String style = "JLabel {uppercase:true}";
@@ -136,7 +136,7 @@ public class ApplyCss extends TipiAction implements TipiComponentInstantiatedLis
 			{
 				engine.applyStyles(engine.getElement(component), true);
 			}
-			catch(UnsupportedOperationException uoe)
+			catch(Throwable uoe)
 			{
 				logger.warn("Registering exception, but continuing: ", uoe);
 			}
