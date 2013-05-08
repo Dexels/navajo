@@ -7,6 +7,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.dexels.utils.Base64;
 
+import com.dexels.navajo.document.types.Binary;
+
 public class Security {
 
 	private static final String ALGO = "AES";
@@ -25,6 +27,18 @@ public class Security {
 		keyValue = secret.getBytes(Charset.forName("US-ASCII"));
 	}
 	
+	public String encrypt(Binary data) throws Exception {
+		
+		Key key = generateKey();
+		Cipher c = Cipher.getInstance(ALGO);
+		c.init(Cipher.ENCRYPT_MODE, key);
+		byte[] encVal = c.doFinal(data.getData());
+		
+		String encryptedValue = Base64.encode(encVal);
+		return encryptedValue;
+		
+	}
+	
 	public String encrypt(String Data) throws Exception {
 		Key key = generateKey();
 		Cipher c = Cipher.getInstance(ALGO);
@@ -35,6 +49,16 @@ public class Security {
 		return encryptedValue;
 	}
 
+	public Binary decryptBinary(String encryptedData) throws Exception {
+		Key key = generateKey();
+		Cipher c = Cipher.getInstance(ALGO);
+		c.init(Cipher.DECRYPT_MODE, key);
+		byte[] decordedValue = Base64.decode(encryptedData);
+		byte[] decValue = c.doFinal(decordedValue);
+		Binary b = new Binary(decValue);
+		return b;
+	}
+	
 	public String decrypt(String encryptedData) throws Exception {
 		Key key = generateKey();
 		Cipher c = Cipher.getInstance(ALGO);
@@ -53,7 +77,7 @@ public class Security {
     public static void main(String[] args) throws Exception {
 
         String password = "mypassword";
-        Security s = new Security("N");
+        Security s = new Security("%#'/'_+!@");
         String passwordEnc = s.encrypt(password);
         String passwordDec = s.decrypt(passwordEnc);
 
