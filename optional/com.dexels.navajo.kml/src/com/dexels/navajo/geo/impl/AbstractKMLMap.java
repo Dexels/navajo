@@ -155,7 +155,7 @@ public abstract class AbstractKMLMap {
 
 	public File createPointKmlFile(Navajo n, String messagePath) throws XMLParseException, IOException {
 		Message m = n.getMessage(messagePath);
-		List<Message> ll = m.getAllMessages();
+		List<Message> ll = ( m != null ? m.getAllMessages() : null );
 		XMLElement kml = new CaseSensitiveXMLElement("kml");
 		XMLElement document = new CaseSensitiveXMLElement("Document");
 		kml.addChild(document);
@@ -189,11 +189,32 @@ public abstract class AbstractKMLMap {
 			}
 		}
 
-		for (Message message : ll) {
-			XMLElement placemark = createPointPlaceMark(message);
-			//XMLElement placemark = createCirclePlacemark(message);
-			if (placemark != null) {
-				document.addChild(placemark);
+		Message hasFolders = n.getMessage("Folders");
+		
+		if ( hasFolders != null ) {
+			List<Message> folders = hasFolders.getAllMessages();
+			for ( Message folder: folders ) {
+				String name = folder.getProperty("Name").getValue();
+				XMLElement folderElt = createFolder(name);
+				m = folder.getMessage(messagePath);
+				ll = m.getAllMessages();
+				for (Message message : ll) {
+					XMLElement placemark = createPointPlaceMark(message);
+					if (placemark != null) {
+						folderElt.addChild(placemark);
+					}
+				}
+				if ( folderElt != null ) {
+					document.addChild(folderElt);
+				}
+			}
+		} else {
+			for (Message message : ll) {
+				XMLElement placemark = createPointPlaceMark(message);
+				//XMLElement placemark = createCirclePlacemark(message);
+				if (placemark != null) {
+					document.addChild(placemark);
+				}
 			}
 		}
 
@@ -293,9 +314,19 @@ public abstract class AbstractKMLMap {
 
 	}
 
+	private XMLElement createFolder(String name) {
+	
+		XMLElement folder = new CaseSensitiveXMLElement("Folder");
+		XMLElement nameElt = new CaseSensitiveXMLElement("name");
+		nameElt.setContent(name);
+		folder.addChild(nameElt);
+		
+		return folder;
+	}
+	
 	private XMLElement createPointPlaceMark(Message message) {
 		XMLElement placemark = new CaseSensitiveXMLElement("Placemark");
-		placemark.setAttribute("id", message.getProperty("OrganizationId").getTypedValue());
+		placemark.setAttribute("id", message.getProperty("Id").getTypedValue());
 		placemark.addTagKeyValue("name", message.getProperty("Name").getValue());
 
 		XMLElement point = new CaseSensitiveXMLElement("Point");
