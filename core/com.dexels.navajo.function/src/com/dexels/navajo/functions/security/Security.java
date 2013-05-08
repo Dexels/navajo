@@ -21,7 +21,7 @@ public class Security {
 		} else if ( secret.length() < 16 ) {
 			int missing = 16 - secret.length();
 			for ( int i = 0; i < missing; i++ ) {
-				secret = secret + Character.toString((char) (i % 10 + 80 + secret.length()));
+				secret = secret + (i % 10);
 			}
 		}
 		keyValue = secret.getBytes(Charset.forName("US-ASCII"));
