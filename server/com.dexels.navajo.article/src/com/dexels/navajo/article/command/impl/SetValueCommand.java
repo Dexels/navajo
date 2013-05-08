@@ -1,9 +1,8 @@
 package com.dexels.navajo.article.command.impl;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Map;
 
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 
@@ -38,7 +37,7 @@ public class SetValueCommand implements ArticleCommand {
 	}
 
 	@Override
-	public boolean execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters) throws ArticleException {
+	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement xmlElement) throws ArticleException {
 //	    <setvalue service="clubsites/nl/init" element="parameters/poulecode" value="@poulecode"/>
 		String service = parameters.get("service");
 		if(service==null) {
@@ -69,7 +68,7 @@ public class SetValueCommand implements ArticleCommand {
 		} else {
 			p.setValue(value);
 		}
-		return false;
+		return null;
 	}
 
 	@Override

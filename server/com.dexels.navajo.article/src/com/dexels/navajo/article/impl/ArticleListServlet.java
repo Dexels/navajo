@@ -80,14 +80,6 @@ public class ArticleListServlet extends HttpServlet implements Servlet {
 		}
 
 	}
-//
-//	@Override
-//	public void init(ServletConfig config) throws ServletException {
-//		super.init(config);
-//	}
-
-
-	// element, submit, setvalue, service, table?, table, setusername
 
 
 }

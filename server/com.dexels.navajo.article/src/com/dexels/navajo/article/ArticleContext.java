@@ -2,10 +2,8 @@ package com.dexels.navajo.article;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.List;
 
-import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 

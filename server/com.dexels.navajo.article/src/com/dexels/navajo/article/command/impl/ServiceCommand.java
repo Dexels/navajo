@@ -1,9 +1,8 @@
 package com.dexels.navajo.article.command.impl;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Map;
 
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 
@@ -43,7 +42,7 @@ public class ServiceCommand implements ArticleCommand {
 
 	
 	@Override
-	public boolean execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters) throws ArticleException {
+	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException {
 		String name = parameters.get("name");
 		if(name==null) {
 			throw new ArticleException("Command: "+this.getName()+" can't be executed without required parameters: "+name);
@@ -53,7 +52,7 @@ public class ServiceCommand implements ArticleCommand {
 			Navajo res = runtime.getNavajo(name);
 			if(res!=null) {
 				runtime.pushNavajo(name,res);
-				return false;
+				return null;
 			}
 		}
 		String input = parameters.get("input");
@@ -79,7 +78,7 @@ public class ServiceCommand implements ArticleCommand {
 		result.write(System.err);
 		System.err.println("END OF RESULT");
 		runtime.pushNavajo(name, result);
-		return false;
+		return null;
 	}
 
 	protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n)

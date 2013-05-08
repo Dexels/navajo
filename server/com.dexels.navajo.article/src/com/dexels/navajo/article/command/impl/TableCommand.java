@@ -1,9 +1,12 @@
 package com.dexels.navajo.article.command.impl;
 
 import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
@@ -16,6 +19,7 @@ import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class TableCommand implements ArticleCommand {
@@ -44,7 +48,7 @@ public class TableCommand implements ArticleCommand {
 	}
 
 	@Override
-	public boolean execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters) throws ArticleException {
+	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException {
 //		runtime.setMimeType("text/plain");
 		String service = parameters.get("service");
 		if(service==null) {
@@ -73,57 +77,65 @@ public class TableCommand implements ArticleCommand {
 			if(tableName==null) {
 				tableName = "data";
 			}
+			List<XMLElement> columnList = element.getChildren();
+			List<String> columnIds = new ArrayList<String>();
+			for (XMLElement xmlElement : columnList) {
+				columnIds.add(xmlElement.getStringAttribute("id"));
+			}
 			String columns = parameters.get("columns");
-			String[] columnsArray = null;
-			if(columns!=null) {
-				columnsArray = columns.split(",");
-			}
-			String columnLabels = parameters.get("columnLabels");
-			String[] columnLabelsArray = null;
-			if(columnLabels!=null) {
-				columnLabelsArray = columnLabels.split(",");
-			}
-			String columnWidths = parameters.get("columnWidths");
-			String[] columnWidthsArray = null;
-			if(columnWidths!=null) {
-				columnWidthsArray = columnWidths.split(",");
-			}
 
 //			runtime.getOutputWriter().write("\""+tableName+"\" : ");
 			if (m==null) {
 				logger.warn("Ignoring table command. Message: {} not found. Dumping all.",path);
 				n.writeJSONTypeless(runtime.getOutputWriter());
 			} else {
-				m.writeSimpleJSON(tableName,runtime.getOutputWriter(),columnsArray);
+				return writeJSON(m,tableName, runtime,columnIds);
 			}
-			appendMetadata(runtime,tableName,columnsArray,columnLabelsArray,columnWidthsArray,parameters.get("key"),parameters.get("link"));
+//			appendMetadata(runtime,tableName,columnsArray,columnLabelsArray,columnWidthsArray,parameters.get("key"),parameters.get("link"));
 			
 		} catch (IOException e) {
 			throw new ArticleException("Error writing result", e);
 		}
-		return true;
+		return null;
 //		m.write(System.err);
 	}
 
-	private void appendMetadata(ArticleRuntime runtime, String name, String[] columns, String[] columnLabels,
-			String[] columnWidths, String key, String link) {
-		ObjectMapper om = new ObjectMapper();
-		ObjectNode root = runtime.getMetadataRootNode();
-		ObjectNode tbl = om.createObjectNode();
-		root.put(name, tbl);
-		if(columns==null) {
-			return;
-		}
-		int i = 0;
-		for (String column : columns) {
-			ObjectNode columnNode = om.createObjectNode();
-			tbl.put(column, columnNode);
-			if(columnLabels!=null) {
-				columnNode.put("description", columnLabels[i]);
+	private JsonNode writeJSON(Message m, String name, ArticleRuntime runtime, List<String> columns) throws IOException {
+		//m.writeSimpleJSON(name,runtime.getOutputWriter(),columns);
+		// assume array for now
+		List<Message> output = m.getElements();
+		ArrayNode an = runtime.getObjectMapper().createArrayNode();
+		for (Message elt : output) {
+			ObjectNode on = runtime.getObjectMapper().createObjectNode();
+			for (String id : columns) {
+				Property p = elt.getProperty(id);
+				if(p!=null) {
+					on.put(id, p.getValue());
+				}
 			}
-			i++;
+			an.add(on);
 		}
+		return an;
 	}
+//	private void appendMetadata(ArticleRuntime runtime, String name, String[] columns, String[] columnLabels,
+//			String[] columnWidths, String key, String link) {
+//		ObjectMapper om = new ObjectMapper();
+//		ObjectNode root = runtime.getMetadataRootNode();
+//		ObjectNode tbl = om.createObjectNode();
+//		root.put(name, tbl);
+//		if(columns==null) {
+//			return;
+//		}
+//		int i = 0;
+//		for (String column : columns) {
+//			ObjectNode columnNode = om.createObjectNode();
+//			tbl.put(column, columnNode);
+//			if(columnLabels!=null) {
+//				columnNode.put("description", columnLabels[i]);
+//			}
+//			i++;
+//		}
+//	}
 
 	@Override
 	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,ObjectMapper mapper) {
