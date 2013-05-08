@@ -4,20 +4,28 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
+import org.codehaus.jackson.node.ObjectNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.article.ArticleContext;
+import com.dexels.navajo.article.ArticleException;
 
 public class ArticleListServlet extends HttpServlet implements Servlet {
 
 	private static final long serialVersionUID = -6895324256139435015L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ArticleListServlet.class);
+	
 
 	private ArticleContext context;
 	
@@ -48,20 +56,35 @@ public class ArticleListServlet extends HttpServlet implements Servlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-//		BZ2kTR4xD1Yqrkr0PlHP+3VOpTuzQzF3vzikqTjBLFioMmoofvpE0ykd1UT2tYPtayqzbWHrDdJA289Y1/IZGKa3h5/d9RMXzi65OsEP7W4=
-		String token = req.getParameter("token");
-		if(token==null) {
-			throw new ServletException("Please supply a token");
-		}
-		List<String> articles = context.listArticles();
-		ObjectMapper om = new ObjectMapper();
-		om.writeValue(resp.getWriter(), articles);
-	}
+		// BZ2kTR4xD1Yqrkr0PlHP+3VOpTuzQzF3vzikqTjBLFioMmoofvpE0ykd1UT2tYPtayqzbWHrDdJA289Y1/IZGKa3h5/d9RMXzi65OsEP7W4=
+		try {
+			String token = req.getParameter("token");
+			if (token == null) {
+				throw new ServletException("Please supply a token");
+			}
+			List<String> articles = context.listArticles();
+			System.err.println("ARTicles: "+articles);
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectNode rootNode = mapper.createObjectNode(); 
+			for (String article : articles) {
+				logger.info("Meta of article:"+article);
+				context.writeArticleMeta(article, rootNode,mapper);
+				// context.getArticleMeta(article);
+			}
+			mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+			ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
+			writer.writeValue(resp.getWriter(), rootNode);
+		} catch (ArticleException e) {
+			logger.error("Error: ", e);
+		}
+
 	}
+//
+//	@Override
+//	public void init(ServletConfig config) throws ServletException {
+//		super.init(config);
+//	}
 
 
 	// element, submit, setvalue, service, table?, table, setusername

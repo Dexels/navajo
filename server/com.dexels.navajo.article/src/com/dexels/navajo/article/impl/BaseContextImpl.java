@@ -5,12 +5,17 @@ import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
+import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +58,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 
 	@Override
 	public List<String> listArticles() {
-		return listArticles(true);
+		return listArticles(false);
 	}
 
 	protected List<String> listArticles(boolean filterArticlesWithArguments) {
@@ -64,7 +69,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 			
 			@Override
 			public boolean accept(File dir, String name) {
-				return name.endsWith(".xml");
+				return name.endsWith("clubscheidsrechters.xml");
 			}
 		});
 		List<String> result = new ArrayList<String>();
@@ -110,7 +115,13 @@ public abstract class BaseContextImpl implements ArticleContext {
 	}
 
 	public File resolveArticle(String pathInfo) {
-		String sub = pathInfo.substring(1);
+		String sub;
+		if(pathInfo.startsWith("/")) {
+			sub = pathInfo.substring(1);
+		} else {
+			sub = pathInfo;
+		}
+		
 		String root = getConfig().getRootPath();
 		File rootFolder = new File(root);
 		File articles = new File(rootFolder,"article");
@@ -139,7 +150,77 @@ public abstract class BaseContextImpl implements ArticleContext {
 			}
 		}
 	}
+	
+	public void interpretMeta(XMLElement article, ObjectMapper mapper, ObjectNode articleNode) throws ArticleException {
+		int i = 0;
+			XMLElement argTag = article.getChildByTagName("_arguments");
+			ArrayNode inputArgs = mapper.createArrayNode();
+			articleNode.put("input", inputArgs);
+			if(argTag!=null) {
+				List<XMLElement> args = argTag.getChildren();
+				for (XMLElement xmlElement : args) {
+//					name="aantalregels" description="Maximum aantal regels" type="integer" optional="true" default="5"
+					ObjectNode input = mapper.createObjectNode();
+					input.put("name", xmlElement.getStringAttribute("name"));
+					input.put("description", xmlElement.getStringAttribute("description"));
+					input.put("type", xmlElement.getStringAttribute("type"));
+					input.put("optional", xmlElement.getBooleanAttribute("optional", "true", "false", true));
+					input.put("default", xmlElement.getStringAttribute("default"));
+					inputArgs.add(input);
+				}
+			}
+			ArrayNode outputArgs = mapper.createArrayNode();
+			articleNode.put("output", outputArgs);
+			List<XMLElement> children = article.getChildren();
+			
+			for (XMLElement e : children) {
+				String name = e.getName();
+				if(name.startsWith("_")) {
+					continue;
+				}
+				ArticleCommand ac = getCommand(name);
+				if(ac==null) {
+					throw new ArticleException("Unknown command: "+name);
+				}
+				Map<String,String> parameters = new HashMap<String, String>();
+				 
+				for (Iterator<String> iterator = e.enumerateAttributeNames(); iterator.hasNext();) {
+					String attributeName = iterator.next();
+					parameters.put(attributeName, e.getStringAttribute(attributeName));
+				}
+				System.err.println("Calling command # "+(i++));
+				if(ac.writeMetadata(e,outputArgs,mapper)) {
+				}
 
+			}
+	}
+
+	@Override
+	public void writeArticleMeta(String name,ObjectNode w, ObjectMapper mapper) throws ArticleException {
+		System.err.println("AAAP: "+name);
+		File in = resolveArticle(name);
+		FileReader fr = null;
+		try {
+			ObjectNode article = mapper.createObjectNode();
+			w.put(name, article);
+			fr = new FileReader(in);
+			XMLElement x = new CaseSensitiveXMLElement();
+			x.parseFromReader(fr);
+			article.put("name", name);
+			interpretMeta(x, mapper,article);
+			System.err.println("x:\n"+x);
+		} catch (IOException e) {
+			logger.error("Problem parsing article: ", e);
+		} finally {
+			if(fr!=null) {
+				try {
+					fr.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		
+	}
 
 	public NavajoIOConfig getConfig() {
 		return config;

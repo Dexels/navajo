@@ -1,9 +1,11 @@
 package com.dexels.navajo.article.command.impl;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class TableCommand implements ArticleCommand {
 
@@ -118,12 +121,27 @@ public class TableCommand implements ArticleCommand {
 			if(columnLabels!=null) {
 				columnNode.put("description", columnLabels[i]);
 			}
-//			if(columnWidths!=null) {
-//				columnNode.put("length", columnWidths[i]);
-//			}
-
 			i++;
 		}
+	}
+
+	@Override
+	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,ObjectMapper mapper) {
+//		<column label=\"Datum\" type=\"date\" id=\"datum\"/>
+		ObjectNode on = mapper.createObjectNode();
+		outputArgs.add(on);
+		on.put("key", e.getStringAttribute("key"));
+		List<XMLElement> children = e.getChildrenByTagName("column");
+		ArrayNode an = mapper.createArrayNode();
+		on.put("columns", an);
+		for (XMLElement xmlElement : children) {
+			ObjectNode column = mapper.createObjectNode();
+			an.add(column);
+			column.put("id",xmlElement.getStringAttribute("id"));
+			column.put("type",xmlElement.getStringAttribute("type"));
+			column.put("label",xmlElement.getStringAttribute("label"));
+		}
+		return true;
 	}
 
 }
