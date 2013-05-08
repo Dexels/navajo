@@ -154,13 +154,15 @@ public class FormatIdentification implements Serializable
 		InputStream input = null;
 		BufferedReader br = null;
 	    ZipInputStream zipInput = null;
+	    ZipFile zipFile = null;
+	    boolean deleteFile = false;
 
 		try {
 			if (file == null) {
 				file = createTempFile(data);
-				file.deleteOnExit();
+				deleteFile = true;
 			}
-		    final ZipFile zipFile = new ZipFile(file);
+		    zipFile = new ZipFile(file);
 		    final Enumeration<? extends ZipEntry> entries = zipFile.entries();
 
             // Create label for breaking
@@ -204,7 +206,6 @@ public class FormatIdentification implements Serializable
 		            }
 		        }
 		    }
-		    zipFile.close();
 		} catch (final IOException ioe) {
 			logger.error("Error: ", ioe);
 			return null;
@@ -219,6 +220,12 @@ public class FormatIdentification implements Serializable
 				}
 				if (input != null) {
 					input.close();
+				}
+				if (zipFile != null) {
+				    zipFile.close();
+				}
+				if (deleteFile) {
+					file.delete();
 				}
 			} catch (IOException e) {
 				logger.error("Error: ", e);
