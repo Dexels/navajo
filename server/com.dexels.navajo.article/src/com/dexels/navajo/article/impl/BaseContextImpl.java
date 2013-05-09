@@ -67,7 +67,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 			
 			@Override
 			public boolean accept(File dir, String name) {
-				return name.endsWith("clubscheidsrechters.xml");
+				return name.endsWith(".xml");
 			}
 		});
 		List<String> result = new ArrayList<String>();
@@ -195,7 +195,6 @@ public abstract class BaseContextImpl implements ArticleContext {
 
 	@Override
 	public void writeArticleMeta(String name,ObjectNode w, ObjectMapper mapper) throws ArticleException {
-		System.err.println("AAAP: "+name);
 		File in = resolveArticle(name);
 		FileReader fr = null;
 		try {
