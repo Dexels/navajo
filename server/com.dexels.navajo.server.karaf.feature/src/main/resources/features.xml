@@ -159,6 +159,7 @@
 
 	<feature resolver="(obr)" name='sportlink.libraries' version='1.0.7' start-level='81' >
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.nevobo.dps/1.0.0</bundle> -->
+		<feature version="[1.0.0,2)">navajo.function</feature> 
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.aaa/1.0.16</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/1.0.30</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.functions/1.0.11</bundle>

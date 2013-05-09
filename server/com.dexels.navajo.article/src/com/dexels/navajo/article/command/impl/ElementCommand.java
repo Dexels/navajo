@@ -83,17 +83,7 @@ public class ElementCommand implements ArticleCommand {
 		return on;
 	}
 	
-	public void printElementJSONTypeless(Property p, final Writer sw) throws NavajoException, IOException {
-		String value = p.getValue();
-		if(p.getType().equals(Property.SELECTION_PROPERTY)){
-			Selection s = p.getSelected();
-			if(s != null){
-				value = s.getValue();
-			}
-		}
-		
-		sw.write( "\"" + p.getFullPropertyName() + "\" : \"" + value + "\"");		
-	}
+
 
 	@Override
 	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,ObjectMapper mapper) {

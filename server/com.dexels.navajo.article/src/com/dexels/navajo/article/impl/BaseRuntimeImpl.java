@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;

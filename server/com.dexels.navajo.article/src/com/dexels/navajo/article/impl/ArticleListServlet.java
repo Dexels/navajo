@@ -62,14 +62,19 @@ public class ArticleListServlet extends HttpServlet implements Servlet {
 			if (token == null) {
 				throw new ServletException("Please supply a token");
 			}
-			List<String> articles = context.listArticles();
-			System.err.println("ARTicles: "+articles);
 			ObjectMapper mapper = new ObjectMapper();
 			ObjectNode rootNode = mapper.createObjectNode(); 
-			for (String article : articles) {
-				logger.info("Meta of article:"+article);
-				context.writeArticleMeta(article, rootNode,mapper);
-				// context.getArticleMeta(article);
+			String requestedArticle = req.getParameter("article");
+			if(requestedArticle!=null) {
+				context.writeArticleMeta(requestedArticle, rootNode, mapper);
+			} else {
+				List<String> articles = context.listArticles();
+				System.err.println("ARTicles: "+articles);
+				for (String article : articles) {
+					logger.info("Meta of article:"+article);
+					context.writeArticleMeta(article, rootNode,mapper);
+					// context.getArticleMeta(article);
+				}
 			}
 			mapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
 			ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
