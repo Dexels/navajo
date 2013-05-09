@@ -1,7 +1,5 @@
 package com.dexels.navajo.article.command.impl;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
@@ -16,9 +14,7 @@ import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class ElementCommand implements ArticleCommand {
