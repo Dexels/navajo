@@ -11,9 +11,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
+
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
+import com.dexels.navajo.article.DirectOutputThrowable;
 
 public class ArticleServlet extends HttpServlet implements Servlet {
 
@@ -61,12 +64,16 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		}
 		File article = context.resolveArticle(pathInfo);
 		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article,pathInfo);
+			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article,pathInfo,req.getParameterMap());
 			try {
 				runtime.execute(context);
 				resp.setContentType("text/json");
 			} catch (ArticleException e) {
 				throw new ServletException("Problem executing article", e);
+			} catch (DirectOutputThrowable e) {
+				resp.setContentType(e.getMimeType());
+				IOUtils.copy(e.getStream(), resp.getOutputStream());
+				return;
 			}
 
 		} else {

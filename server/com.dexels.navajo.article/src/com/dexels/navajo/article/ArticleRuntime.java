@@ -2,6 +2,7 @@ package com.dexels.navajo.article;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -12,7 +13,7 @@ import com.dexels.navajo.document.Navajo;
 public interface ArticleRuntime {
 	public String resolveArgument(String name) throws ArticleException;
 
-	public void execute(ArticleContext articleServlet) throws ArticleException;
+	public void execute(ArticleContext articleServlet) throws ArticleException, DirectOutputThrowable;
 
 	public void pushNavajo(String name,Navajo res);
 
@@ -36,4 +37,8 @@ public interface ArticleRuntime {
 	public void writeNode(JsonNode node) throws IOException;
 
 	public ObjectMapper getObjectMapper();
+
+	public Map<String, String[]> getParameterMap();
+
+	public ObjectNode getGroupNode(String name) throws ArticleException;
 }

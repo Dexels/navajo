@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
+import com.dexels.navajo.article.DirectOutputThrowable;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
@@ -64,13 +65,41 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 		}
 	}
 
-	public void execute(ArticleContext context) throws ArticleException {
+	public ObjectNode getGroupNode(ObjectNode parent, String name) throws ArticleException {
+		JsonNode existing = parent.get(name);
+		if(existing!=null) {
+			if(existing instanceof ObjectNode) {
+				return (ObjectNode) existing;
+			} else {
+				throw new ArticleException("Error getting group node: "+name+" there is an existing node, but it is not an ObjectNode");
+			}
+		}
+		ObjectNode result = mapper.createObjectNode();
+		rootNode.put(name, result);
+		return result;
+	}
+	
+	@Override
+	public ObjectNode getGroupNode( String name) throws ArticleException {
+		System.err.println("||||||||||||||||| GETTTING>>>> "+name);
+		String[] split = name.split("/");
+		int i = 0;
+		ObjectNode current = null;
+		for (String path : split) {
+			if(i==0) {
+				current = getGroupNode(rootNode,path);
+			} else {
+				current = getGroupNode(current,path);
+			}
+			i++;
+		}
+		return current;
+	}
+
+	public void execute(ArticleContext context) throws ArticleException, DirectOutputThrowable {
 		List<XMLElement> children = article.getChildren();
 		int i = 0;
 		try {
-//			getOutputWriter().write("{ \"data\" : {");
-			boolean first = true;
-			int count = children.size();
 			List<JsonNode> elements = new ArrayList<JsonNode>();
 			for (XMLElement e : children) {
 				String name = e.getName();
@@ -98,8 +127,9 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 					elements.add(node);
 				}
 			}
+			// TODO bit shaky now
 			if(elements.size()==0) {
-				writeNode(getObjectMapper().createObjectNode());
+				writeNode(rootNode);
 			} else if(elements.size()==1) {
 				writeNode(elements.iterator().next());
 			} else {

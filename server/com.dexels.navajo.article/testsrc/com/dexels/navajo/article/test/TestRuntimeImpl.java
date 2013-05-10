@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Collections;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +59,11 @@ public class TestRuntimeImpl extends BaseRuntimeImpl {
 	@Override
 	public void commit() throws IOException {
 		//
+	}
+
+	@Override
+	public Map<String, String[]> getParameterMap() {
+		return Collections.emptyMap();
 	}
 
 }

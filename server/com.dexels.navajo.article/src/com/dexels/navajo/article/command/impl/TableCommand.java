@@ -1,10 +1,13 @@
 package com.dexels.navajo.article.command.impl;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -25,121 +28,190 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 public class TableCommand implements ArticleCommand {
 
 	private String name;
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(TableCommand.class);
-	
+
 	public TableCommand() {
 		// default constructor
 	}
-	
+
 	// for testing, no need to call activate this way
 	public TableCommand(String name) {
 		this.name = name;
 	}
-	
 
-	public void activate(Map<String,String> settings) {
+	public void activate(Map<String, String> settings) {
 		this.name = settings.get("command.name");
 	}
+
 	@Override
 	public String getName() {
 		return name;
 	}
 
 	@Override
-	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException {
-//		runtime.setMimeType("text/plain");
+	public JsonNode execute(ArticleRuntime runtime, ArticleContext context,
+			Map<String, String> parameters, XMLElement element)
+			throws ArticleException {
+		// runtime.setMimeType("text/plain");
 		String service = parameters.get("service");
-		if(service==null) {
-			throw new ArticleException("No service parameter supplied for table.");
+		if (service == null) {
+			throw new ArticleException(
+					"No service parameter supplied for table.");
 		}
 		String path = parameters.get("path");
-//		if(path==null) {
-//			throw new ArticleException("No path parameter supplied for table.");
-//		}
+		// if(path==null) {
+		// throw new ArticleException("No path parameter supplied for table.");
+		// }
 		Navajo n = runtime.getNavajo(service);
-		if(n==null) {
-			throw new ArticleException("Navajo: "+service+" was not found in table command");
+		if (n == null) {
+			throw new ArticleException("Navajo: " + service
+					+ " was not found in table command");
 		}
 
 		Message m = null;
-		if(path!=null) {
+		if (path != null) {
 			m = n.getMessage(path);
 		}
-//		if(m==null) {
-//			n.write(System.err);
-//			throw new ArticleException("Path: "+path+" was not found in navajo : "+service);
-//		}
+		// if(m==null) {
+		// n.write(System.err);
+		// throw new
+		// ArticleException("Path: "+path+" was not found in navajo : "+service);
+		// }
 		try {
 			runtime.setMimeType("text/json");
 			String tableName = parameters.get("name");
-			if(tableName==null) {
+			if (tableName == null) {
 				tableName = "data";
 			}
 			List<XMLElement> columnList = element.getChildren();
 			List<String> columnIds = new ArrayList<String>();
+			Map<String, String> targetMap = new HashMap<String, String>();
 			for (XMLElement xmlElement : columnList) {
-				columnIds.add(xmlElement.getStringAttribute("id"));
+				final String id = xmlElement.getStringAttribute("id");
+				columnIds.add(id);
+				String target = xmlElement.getStringAttribute("target");
+				if (target != null) {
+					targetMap.put(id, target);
+				}
 			}
-			String columns = parameters.get("columns");
+			// String columns = parameters.get("columns");
 
-//			runtime.getOutputWriter().write("\""+tableName+"\" : ");
-			if (m==null) {
-				logger.warn("Ignoring table command. Message: {} not found. Dumping all.",path);
+			// runtime.getOutputWriter().write("\""+tableName+"\" : ");
+			if (m == null) {
+				logger.warn(
+						"Ignoring table command. Message: {} not found. Dumping all.",
+						path);
 				n.writeJSONTypeless(runtime.getOutputWriter());
 			} else {
-				return writeJSON(m,tableName, runtime,columnIds);
+				return writeJSON(m, tableName, runtime, columnIds, targetMap);
 			}
-//			appendMetadata(runtime,tableName,columnsArray,columnLabelsArray,columnWidthsArray,parameters.get("key"),parameters.get("link"));
-			
+			// appendMetadata(runtime,tableName,columnsArray,columnLabelsArray,columnWidthsArray,parameters.get("key"),parameters.get("link"));
+
 		} catch (IOException e) {
 			throw new ArticleException("Error writing result", e);
 		}
 		return null;
-//		m.write(System.err);
+		// m.write(System.err);
 	}
 
-	private JsonNode writeJSON(Message m, String name, ArticleRuntime runtime, List<String> columns) throws IOException {
-		//m.writeSimpleJSON(name,runtime.getOutputWriter(),columns);
+	private JsonNode writeJSON(Message m, String name, ArticleRuntime runtime,
+			List<String> columns, Map<String, String> targetMap)
+			throws ArticleException {
+		// m.writeSimpleJSON(name,runtime.getOutputWriter(),columns);
 		// assume array for now
 		List<Message> output = m.getElements();
 		ArrayNode an = runtime.getObjectMapper().createArrayNode();
 		for (Message elt : output) {
 			ObjectNode on = runtime.getObjectMapper().createObjectNode();
 			for (String id : columns) {
-				Property p = elt.getProperty(id);
-				if(p!=null) {
-					on.put(id, p.getValue());
+				String target = targetMap.get(id);
+				if (target != null) {
+					String resolvedTarget = resolveTarget(target, runtime, elt);
+					on.put(id, resolvedTarget);
+				} else {
+					Property p = elt.getProperty(id);
+					if (p != null) {
+						on.put(id, p.getValue());
+					}
 				}
 			}
 			an.add(on);
 		}
 		return an;
 	}
-//	private void appendMetadata(ArticleRuntime runtime, String name, String[] columns, String[] columnLabels,
-//			String[] columnWidths, String key, String link) {
-//		ObjectMapper om = new ObjectMapper();
-//		ObjectNode root = runtime.getMetadataRootNode();
-//		ObjectNode tbl = om.createObjectNode();
-//		root.put(name, tbl);
-//		if(columns==null) {
-//			return;
-//		}
-//		int i = 0;
-//		for (String column : columns) {
-//			ObjectNode columnNode = om.createObjectNode();
-//			tbl.put(column, columnNode);
-//			if(columnLabels!=null) {
-//				columnNode.put("description", columnLabels[i]);
-//			}
-//			i++;
-//		}
-//	}
+
+	// private void appendMetadata(ArticleRuntime runtime, String name, String[]
+	// columns, String[] columnLabels,
+	// String[] columnWidths, String key, String link) {
+	// ObjectMapper om = new ObjectMapper();
+	// ObjectNode root = runtime.getMetadataRootNode();
+	// ObjectNode tbl = om.createObjectNode();
+	// root.put(name, tbl);
+	// if(columns==null) {
+	// return;
+	// }
+	// int i = 0;
+	// for (String column : columns) {
+	// ObjectNode columnNode = om.createObjectNode();
+	// tbl.put(column, columnNode);
+	// if(columnLabels!=null) {
+	// columnNode.put("description", columnLabels[i]);
+	// }
+	// i++;
+	// }
+	// }
+
+	private String resolveTarget(String target, ArticleRuntime runtime,
+			Message elt) throws ArticleException {
+		final String resolved = replaceTokens(target, elt);
+		Map<String, String[]> params = runtime.getParameterMap();
+		boolean paramsPresent = resolved.indexOf('?') != -1;
+		StringBuffer sb = new StringBuffer(resolved);
+		for (Entry<String, String[]> e : params.entrySet()) {
+			if (!paramsPresent) {
+				sb.append('?');
+				paramsPresent = true;
+			} else {
+				sb.append('&');
+			}
+			sb.append(e.getKey());
+			sb.append("=");
+			sb.append(e.getValue()[0]);
+		}
+		return sb.toString();
+	}
+
+	private String replaceTokens(String text, Message msg)
+			throws ArticleException {
+		Pattern pattern = Pattern.compile("\\$\\{(.+?)\\}");
+		Matcher matcher = pattern.matcher(text);
+		StringBuffer buffer = new StringBuffer();
+		while (matcher.find()) {
+
+			final String group = matcher.group(1);
+			Property p = msg.getProperty(group);
+			if (p == null) {
+				throw new ArticleException(
+						"Error resolving target. Referenced property: " + group
+								+ " not found in message");
+			}
+
+			String replacement = p.getValue();
+			if (replacement != null) {
+				matcher.appendReplacement(buffer, "");
+				buffer.append(replacement);
+			}
+		}
+		matcher.appendTail(buffer);
+		return buffer.toString();
+	}
 
 	@Override
-	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,ObjectMapper mapper) {
-//		<column label=\"Datum\" type=\"date\" id=\"datum\"/>
+	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,
+			ObjectMapper mapper) {
+		// <column label=\"Datum\" type=\"date\" id=\"datum\"/>
 		ObjectNode on = mapper.createObjectNode();
 		outputArgs.add(on);
 		on.put("key", e.getStringAttribute("key"));
@@ -149,11 +221,20 @@ public class TableCommand implements ArticleCommand {
 		for (XMLElement xmlElement : children) {
 			ObjectNode column = mapper.createObjectNode();
 			an.add(column);
-			column.put("id",xmlElement.getStringAttribute("id"));
-			column.put("type",xmlElement.getStringAttribute("type"));
-			column.put("label",xmlElement.getStringAttribute("label"));
+			column.put("id", xmlElement.getStringAttribute("id"));
+			column.put("type", xmlElement.getStringAttribute("type"));
+			column.put("label", xmlElement.getStringAttribute("label"));
 		}
 		return true;
 	}
+
+	// public static void main(String[] args) {
+	// String a = "aap ${arg1} mies ${arg2}";
+	// Map<String,String> replacements = new HashMap<String, String>();
+	// replacements.put("arg1", "noot");
+	// replacements.put("arg2", "wim");
+	// String result = replaceTokens(a, replacements);
+	// System.err.println("result: "+result);
+	// }
 
 }

@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
+import com.dexels.navajo.article.DirectOutputThrowable;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
@@ -129,7 +130,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 	}
 
 	@Override
-	public void interpretArticle(File article, ArticleRuntime ac) throws IOException, ArticleException {
+	public void interpretArticle(File article, ArticleRuntime ac) throws IOException, ArticleException, DirectOutputThrowable {
 		XMLElement articleXml = new CaseSensitiveXMLElement();
 		Reader r = null;
 		try {

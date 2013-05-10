@@ -1,28 +1,27 @@
 package com.dexels.navajo.article.command.impl;
 
+import java.io.ByteArrayInputStream;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
+import com.dexels.navajo.article.DirectOutputThrowable;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.types.Binary;
 
 public class ElementCommand implements ArticleCommand {
 
 	private String name;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(ElementCommand.class);
 	
 	public ElementCommand() {
 		// default constructor
@@ -45,7 +44,7 @@ public class ElementCommand implements ArticleCommand {
 
 	
 	@Override
-	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException {
+	public JsonNode execute(ArticleRuntime runtime, ArticleContext context, Map<String,String> parameters, XMLElement element) throws ArticleException, DirectOutputThrowable {
 		String service = parameters.get("service");
 		Navajo current = null;
 		if(service==null) {
@@ -65,18 +64,45 @@ public class ElementCommand implements ArticleCommand {
 			current.write(System.err);
 			throw new ArticleException("No property: "+name+" found in current navajo.");
 		}
+		
+		
 //		boolean writeLabel = "true".equals(parameters.get("showlabel"));
 //		if(writeLabel) {
 //			
 //		}
-		ObjectNode on = runtime.getObjectMapper().createObjectNode();
-		on.put(name, p.getValue());
+		if(parameters.get("direct")!=null) {
+			Object value = p.getTypedValue();
+			if (value instanceof Binary) {
+				Binary b = (Binary)value;
+				String mime = b.getMimeType();
+				if(mime==null) {
+					mime = b.guessContentType();
+				}
+				throw new DirectOutputThrowable(mime,b.getDataAsStream());
+			} else {
+				String string = ""+value;
+				ByteArrayInputStream bais = new ByteArrayInputStream(string.getBytes());
+				throw new DirectOutputThrowable("text/plain",bais);
+			}
+		}
+		
+		if(name.indexOf('/')!=-1) {
+			String msgpath = name.substring(0, name.lastIndexOf('/'));
+			String propname = name.substring(name.lastIndexOf('/')+1,name.length());
+			ObjectNode msgNode = runtime.getGroupNode(msgpath);
+			msgNode.put(propname, p.getValue());
+			return null;
+		} else {
+			ObjectNode on = runtime.getObjectMapper().createObjectNode();
+			on.put(name, p.getValue());
+			return on;
+		}
+		
 //		try {
 //			printElementJSONTypeless(p, runtime.getOutputWriter());
 //		} catch (IOException e) {
 //			logger.error("Error: ", e);
 //		}
-		return on;
 	}
 	
 

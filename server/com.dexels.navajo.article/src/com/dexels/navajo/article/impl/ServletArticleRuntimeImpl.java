@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URLDecoder;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,14 +29,16 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	private final HttpServletResponse response;
 	private String token = null;
 	private String username;
-	private final StringWriter writer = new StringWriter(); 
+	private final StringWriter writer = new StringWriter();
+	private Map<String, String[]> parameterMap; 
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(ServletArticleRuntimeImpl.class);
 	
-	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, File article,String articleName) throws IOException {
+	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, File article,String articleName, Map<String, String[]> parameterMap) throws IOException {
 		super(articleName,article);
 		this.request = req;
+		this.parameterMap = parameterMap;
 		this.response = resp;
 		this.token = URLDecoder.decode(req.getParameter("token"),"UTF-8");
 		token=token.replaceAll(" ", "+");
@@ -73,6 +76,11 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	public Writer getOutputWriter() throws IOException {
 		return response.getWriter();
 //		return writer;
+	}
+	
+	@Override
+	public Map<String,String[]> getParameterMap() {
+		return this.parameterMap;
 	}
 
 	
