@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo">
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
     <feature resolver="(obr)" name='navajo.core' version='1.0.11' start-level='80'  >
 	    <details>Navajo Core Components</details>
