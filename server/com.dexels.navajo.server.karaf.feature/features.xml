@@ -104,11 +104,11 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager.openshift/1.0.16</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.article' version='1.0.12' start-level='81' >
+	<feature resolver="(obr)" name='navajo.article' version='1.0.13' start-level='81' >
 		<feature version="[1.0.4,2)">navajo.server</feature>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/1.0.13</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/1.0.15</bundle>
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article.jsp/1.0.11</bundle>-->
 	</feature>
 	
