@@ -87,10 +87,16 @@ public class TableCommand implements ArticleCommand {
 			}
 			List<XMLElement> columnList = element.getChildren();
 			List<String> columnIds = new ArrayList<String>();
-			Map<String, String> targetMap = new HashMap<String, String>();
+			final Map<String, String> targetMap = new HashMap<String, String>();
+			final Map<String, String> propertyMap = new HashMap<String, String>();
 			for (XMLElement xmlElement : columnList) {
 				final String id = xmlElement.getStringAttribute("id");
+				final String propertyName = xmlElement.getStringAttribute("propertyName");
+				if(propertyName!=null) {
+					propertyMap.put(id, propertyName);
+				}
 				columnIds.add(id);
+				
 				String target = xmlElement.getStringAttribute("target");
 				if (target != null) {
 					targetMap.put(id, target);
@@ -105,7 +111,7 @@ public class TableCommand implements ArticleCommand {
 						path);
 				n.writeJSONTypeless(runtime.getOutputWriter());
 			} else {
-				return writeJSON(m, tableName, runtime, columnIds, targetMap);
+				return writeJSON(m, tableName, runtime, columnIds, targetMap,propertyMap);
 			}
 			// appendMetadata(runtime,tableName,columnsArray,columnLabelsArray,columnWidthsArray,parameters.get("key"),parameters.get("link"));
 
@@ -117,7 +123,7 @@ public class TableCommand implements ArticleCommand {
 	}
 
 	private JsonNode writeJSON(Message m, String name, ArticleRuntime runtime,
-			List<String> columns, Map<String, String> targetMap)
+			List<String> columns, Map<String, String> targetMap, Map<String, String> propertyMap)
 			throws ArticleException {
 		// m.writeSimpleJSON(name,runtime.getOutputWriter(),columns);
 		// assume array for now
@@ -126,12 +132,16 @@ public class TableCommand implements ArticleCommand {
 		for (Message elt : output) {
 			ObjectNode on = runtime.getObjectMapper().createObjectNode();
 			for (String id : columns) {
+				String propertyName = propertyMap.get(id);
+				if(propertyName==null) {
+					propertyName = id;
+				}
 				String target = targetMap.get(id);
 				if (target != null) {
 					String resolvedTarget = resolveTarget(target, runtime, elt);
 					on.put(id, resolvedTarget);
 				} else {
-					Property p = elt.getProperty(id);
+					Property p = elt.getProperty(propertyName);
 					if (p != null) {
 						on.put(id, p.getValue());
 					}
@@ -222,8 +232,18 @@ public class TableCommand implements ArticleCommand {
 			ObjectNode column = mapper.createObjectNode();
 			an.add(column);
 			column.put("id", xmlElement.getStringAttribute("id"));
-			column.put("type", xmlElement.getStringAttribute("type"));
-			column.put("label", xmlElement.getStringAttribute("label"));
+			final String type = xmlElement.getStringAttribute("type");
+			if(type!=null) {
+				column.put("type", type);
+			}
+			final String label = xmlElement.getStringAttribute("label");
+			if(label!=null) {
+				column.put("label", label);
+			}
+			final String target = xmlElement.getStringAttribute("target");
+			if(target!=null) {
+				column.put("target", target);
+			}
 		}
 		return true;
 	}

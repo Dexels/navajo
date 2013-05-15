@@ -53,6 +53,9 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 			return res;
 		}
 		XMLElement args = article.getElementByTagName("_arguments");
+		if(args==null) {
+			throw new ArticleException("Unspecified parameter reference: "+name+". No argument data found.");
+		}
 		List<XMLElement> lts = args.getChildren();
 		for (XMLElement xmlElement : lts) {
 			if(trimmedName.equals(xmlElement.getStringAttribute("name"))) {
