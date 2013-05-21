@@ -1151,7 +1151,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	 */
 	public void reloadCssDefinitions()
 	{
-		for (String definition : tipiCssMap.keySet())
+		// it is possible that reloadCssDefinitions results in the addition of "main" to the keySet. This situation results in an NPE without the following precaution
+		String[] defKeys = tipiCssMap.keySet().toArray(new String[tipiCssMap.keySet().size()]);
+		for (String definition : defKeys)
 		{
 			reloadCssDefinitions(definition);
 		}
@@ -1162,7 +1164,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	 */
 	public void reloadCssDefinitions(String definition)
 	{
-		// CSS caching part 1 - turn this on
 		try
 		{
 			loadCssDefinition(definition, locationMap.get(definition));
@@ -1616,15 +1617,24 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 		}
 		tipiComponentMap.put(defname, elm);
-		// CSS caching part 1 - turn this on
-		try
+		
+		Object applyCss = elm.getAttribute("applyCss", "false");
+		if (applyCss != null && applyCss.toString().equals("true"))
 		{
-			loadCssDefinition(defname, locationMap.get(defname));
+			try
+			{
+				loadCssDefinition(defname, locationMap.get(defname));
+			}
+			catch(IOException ioe)
+			{
+				logger.debug("Something going wrong loading css definitions for " + defname, ioe);
+			}
 		}
-		catch(IOException ioe)
+		else
 		{
-			logger.debug("Something going wrong loading css definitions for " + defname, ioe);
-		} 
+			tipiCssMap.put(defname, new ArrayList<String>());  
+			
+		}
 
 		if (!hasDebugger) {
 			// debug mode, don't cache at all
