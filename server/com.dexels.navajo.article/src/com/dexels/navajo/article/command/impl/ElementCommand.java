@@ -59,10 +59,15 @@ public class ElementCommand implements ArticleCommand {
 		if(name==null) {
 			throw new ArticleException("No 'name' parameter found in element. This is required.");
 		}
-		Property p = current.getProperty(name);
+		String propertyName = parameters.get("propertyName");
+		if(propertyName==null) {
+			propertyName = name;
+		}
+
+		Property p = current.getProperty(propertyName);
 		if(p==null) {
 			current.write(System.err);
-			throw new ArticleException("No property: "+name+" found in current navajo.");
+			throw new ArticleException("No property: "+propertyName+" found in current navajo.");
 		}
 		
 		
