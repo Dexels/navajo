@@ -30,7 +30,7 @@ public interface BundleCreator {
 //	public Collection<Long> installBundles(String scriptPrefix) throws BundleException;
 
 	public void createBundle(String script, Date date, String extension,
-			List<String> failures, List<String> success, List<String> skipped, boolean force,boolean keepIntermediateFiles) throws Exception;
+			List<String> failures, List<String> success, List<String> skipped, boolean force,boolean keepIntermediateFiles, String tenant) throws Exception;
 
 	public Date getBundleInstallationDate(String scriptPath);
 	public Date getScriptModificationDate(String scriptPath);
@@ -57,8 +57,7 @@ public interface BundleCreator {
 	 * @return Null if not found
 	 * @throws ClassNotFoundException if something weird happened
 	 */
-	public CompiledScript getCompiledScript(String rpcName)
-			throws ClassNotFoundException;
+	public CompiledScript getCompiledScript(String rpcName, String tenant) throws ClassNotFoundException;
 
 	/**
 	 * Same as getCompiledScript, only will try to install (and compile if needed) bundle if it isn't there.
@@ -66,5 +65,6 @@ public interface BundleCreator {
 	 * @return
 	 * @throws Exception
 	 */
-	public CompiledScript getOnDemandScriptService(String rpcName) throws Exception;
+	public CompiledScript getOnDemandScriptService(String rpcName, String tenant) throws Exception;
+
 }

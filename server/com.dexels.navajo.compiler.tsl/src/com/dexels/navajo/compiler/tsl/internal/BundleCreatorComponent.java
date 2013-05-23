@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -106,7 +108,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	public void createBundle(String scriptName, Date compilationDate,
 			String scriptExtension, List<String> failures,
 			List<String> success, List<String> skipped, boolean force,
-			boolean keepIntermediate) throws Exception {
+			boolean keepIntermediate, String tenant) throws Exception {
 
 		String script = scriptName.replaceAll("\\.", "/");
 
@@ -117,7 +119,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		List<Dependency> dependencies = new ArrayList<Dependency>();
 		if (f.isDirectory()) {
 			compileAllIn(f, compilationDate, failures, success, skipped, force,
-					keepIntermediate);
+					keepIntermediate,tenant);
 		} else {
 			File scriptFile = new File(scriptFolder, script + "."
 					+ scriptExtension);
@@ -134,7 +136,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			} else {
 				try {
 					scriptCompiler.compileTsl(script, formatCompilationDate,
-							dependencies);
+							dependencies, tenant);
 					javaCompiler.compileJava(script);
 					javaCompiler.compileJava(script + "Factory");
 					createBundleJar(script, keepIntermediate);
@@ -150,7 +152,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	private void compileAllIn(File baseDir, Date compileDate,
 			List<String> failures, List<String> success, List<String> skipped,
-			boolean force, boolean keepIntermediate) throws Exception {
+			boolean force, boolean keepIntermediate, String tenant) throws Exception {
 		final String extension = "xml";
 		File scriptPath = new File(navajoIOConfig.getScriptPath());
 
@@ -166,7 +168,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			String withoutEx = relative.substring(0, relative.lastIndexOf('.'));
 			try {
 				createBundle(withoutEx, compileDate, extension, failures,
-						success, skipped, force, keepIntermediate);
+						success, skipped, force, keepIntermediate,tenant);
 			} catch (Exception e) {
 				logger.error("Error compiling script: " + relative, e);
 				failures.add("Error compiling script: " + relative);
@@ -236,13 +238,16 @@ public class BundleCreatorComponent implements BundleCreator {
 		} catch (FileNotFoundException e1) {
 			failures.add(e1.getLocalizedMessage());
 			reportInstallationError(scriptPath, e1);
+		} catch (MalformedURLException e) {
+			failures.add(e.getLocalizedMessage());
+			reportInstallationError(scriptPath, e);
 		}
 	}
 
 	private Bundle doInstall(String scriptPath, boolean force)
-			throws BundleException, FileNotFoundException {
+			throws BundleException, FileNotFoundException, MalformedURLException {
 		File bundleFile = getScriptBundleJar(scriptPath);
-		final String uri = SCRIPTPROTOCOL + scriptPath;
+		final String uri = bundleFile.toURI().toURL().toString(); // SCRIPTPROTOCOL + scriptPath;
 		Bundle previous = bundleContext.getBundle(uri);
 		if (previous != null) {
 			if (force) {
@@ -487,9 +492,9 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	@Override
-	public CompiledScript getOnDemandScriptService(String rpcName)
+	public CompiledScript getOnDemandScriptService(String rpcName, String tenant)
 			throws Exception {
-		CompiledScript sc = getCompiledScript(rpcName);
+		CompiledScript sc = getCompiledScript(rpcName,tenant);
 
 		if (sc != null) {
 			boolean needsRecompile = checkForRecompile(rpcName);
@@ -504,7 +509,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		// so no resolution
 		if (needsCompilation(rpcName)) {
 			createBundle(rpcName, new Date(), "xml", failures, success,
-					skipped, false, false);
+					skipped, false, false,tenant);
 			force = true;
 			// createBundleJar(rpcName, formatCompilationDate(new Date()),
 			// false);
@@ -546,12 +551,12 @@ public class BundleCreatorComponent implements BundleCreator {
 		return false;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public CompiledScript getCompiledScript(String rpcName)
+	public CompiledScript getCompiledScript(String rpcName, String tenant)
 			throws ClassNotFoundException {
-		String filter = "(navajo.scriptName=" + rpcName + ")";
-
+		String scriptName = rpcName.replaceAll("/", ".");
+		String filter = "(&(navajo.scriptName=" + scriptName + ")(|(navajo.tenant="+tenant+")(!(navajo.tenant=*))))";
+		
 		ServiceReference[] sr;
 		try {
 			sr = bundleContext.getServiceReferences(
@@ -583,7 +588,13 @@ public class BundleCreatorComponent implements BundleCreator {
 	private CompiledScript waitForService(String rpcPath) throws Exception {
 		String rpcName = rpcPath.replaceAll("/", ".");
 		// script://person/InitSearchPersons
-		final String bundleURI = SCRIPTPROTOCOL + rpcPath;
+		File cscripts = new File(navajoIOConfig.getCompiledScriptPath());
+		File scriptFile = new File(cscripts,rpcPath+".jar");
+		System.err.println("Path: "+scriptFile.getAbsolutePath());
+		URL u = scriptFile.toURI().toURL();
+		
+		final String bundleURI = u.toString();
+//		final String bundleURI = SCRIPTPROTOCOL + rpcPath;
 		Bundle scriptBundle = bundleContext.getBundle(bundleURI);
 		if (scriptBundle == null) {
 			throw new UserException(-1, "Can not resolve bundle for service: "

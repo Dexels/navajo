@@ -18,6 +18,7 @@ import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
 
 /**
@@ -55,12 +56,12 @@ public class ResourceChecker {
 
 		this.webservice = webservice;
 		// Don't know if this is needed
-		new GenericHandler();
+		GenericHandler gh = new GenericHandler(DispatcherFactory.getInstance().getNavajoConfig());
 		StringBuffer compilerErrors = new StringBuffer();
 		try {
 			Access a = new Access();
 			a.rpcName = webservice;
-			this.myCompiledScript = GenericHandler.compileScript(a, compilerErrors);
+			this.myCompiledScript = gh.compileScript(a, compilerErrors);
 			if ( myCompiledScript == null ) {
 				System.err.println("ResourceChecker: Could not find compiledscript for: " + webservice);
 			} else {
