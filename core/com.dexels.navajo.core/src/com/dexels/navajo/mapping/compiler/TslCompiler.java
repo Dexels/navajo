@@ -642,7 +642,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
   }
 
   @SuppressWarnings("unchecked")
-public String messageNode(int ident, Element n, String className, String objectName, List<Dependency> deps) throws Exception {
+public String messageNode(int ident, Element n, String className, String objectName, List<Dependency> deps, String tenant) throws Exception {
     StringBuffer result = new StringBuffer();
 
 
@@ -937,7 +937,7 @@ result.append(printIdent(ident + 4) +
 
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
-          result.append(compile(ident + 4, children.item(i), subClassName, subObjectName,deps));
+          result.append(compile(ident + 4, children.item(i), subClassName, subObjectName,deps,tenant));
         }
       }
 
@@ -1041,7 +1041,7 @@ result.append(printIdent(ident + 4) +
 
       NodeList children = nextElt.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
-        result.append(compile(ident + 4, children.item(i), subClassName, subObjectName,deps));
+        result.append(compile(ident + 4, children.item(i), subClassName, subObjectName,deps,tenant));
       }
 
       contextClass = contextClassStack.pop();
@@ -1056,7 +1056,7 @@ result.append(printIdent(ident + 4) +
       NodeList children = n.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         result.append(compile(ident + 2, children.item(i), className,
-                              objectName,deps));
+                              objectName,deps,tenant));
       }
     }
     
@@ -1398,7 +1398,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
   
   @SuppressWarnings("unchecked")
 public String fieldNode(int ident, Element n, String className,
-                          String objectName, List<Dependency> dependencies) throws Exception {
+                          String objectName, List<Dependency> dependencies, String tenant) throws Exception {
 
     StringBuffer result = new StringBuffer();
 
@@ -1705,7 +1705,7 @@ public String fieldNode(int ident, Element n, String className,
 
         children = mapNode.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
-          result.append(compile(ident + 2, children.item(i), type, subObjectsName + "[" + loopCounterName + "]",dependencies));
+          result.append(compile(ident + 2, children.item(i), type, subObjectsName + "[" + loopCounterName + "]",dependencies,tenant));
         }
 
         ident = ident-2;
@@ -1789,7 +1789,7 @@ public String fieldNode(int ident, Element n, String className,
         // Recursively dive into children.
         children = mapNode.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
-          result.append(compile(ident + 2, children.item(i), type, subObjectsName,dependencies ));
+          result.append(compile(ident + 2, children.item(i), type, subObjectsName,dependencies,tenant ));
         }  
         
         ident = ident-2;        
@@ -1914,7 +1914,7 @@ public String fieldNode(int ident, Element n, String className,
     return result.toString();
   }
 
-public String mapNode(int ident, Element n, List<Dependency> deps) throws Exception {
+public String mapNode(int ident, Element n, List<Dependency> deps, String tenant) throws Exception {
 
 
     StringBuffer result = new StringBuffer();
@@ -2079,7 +2079,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
       children = response.item(0).getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
-          result.append(compile(ident + 2, children.item(i), className, aoName,deps));
+          result.append(compile(ident + 2, children.item(i), className, aoName,deps,tenant));
         }
       }
       result.append(printIdent(ident) + "} else if (" + asyncStatusName +
@@ -2087,7 +2087,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
       children = request.item(0).getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
-          result.append(compile(ident + 2, children.item(i), className, aoName,deps));
+          result.append(compile(ident + 2, children.item(i), className, aoName,deps,tenant));
         }
       }
       result.append(printIdent(ident) + "} else if (" + asyncStatusName +
@@ -2095,7 +2095,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
       children = running.item(0).getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         if (children.item(i)instanceof Element) {
-          result.append(compile(ident + 2, children.item(i), className, aoName,deps));
+          result.append(compile(ident + 2, children.item(i), className, aoName,deps,tenant));
         }
       }
       result.append(printIdent(ident) + "}\n");
@@ -2160,7 +2160,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
       NodeList children = n.getChildNodes();
       for (int i = 0; i < children.getLength(); i++) {
         result.append(compile(ident + 2, children.item(i), className,
-                              objectName,deps));
+                              objectName,deps,tenant));
       }
 
       result.append(printIdent(ident) + "} catch (Exception e" + ident +
@@ -2197,7 +2197,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
    * @param parent
    * @throws Exception
    */
-  private final void includeNode(String scriptPath, Node n, Document parent) throws Exception {
+  private final void includeNode(String scriptPath, Node n, Document parent,String tenant) throws Exception {
 
 	included++;
 	
@@ -2214,7 +2214,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 
     // Construct scriptName:
     // First try if applicationGroup specific script exists.
-    String fileName =  script + "_" + GenericHandler.applicationGroup;
+    String fileName =  script + "_" + tenant;
     
     Document includeDoc = null;
     File includedFile = new File(scriptPath + "/" + fileName  + ".xml");
@@ -2263,7 +2263,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 
   }
 
-  public String compile(int ident, Node n, String className, String objectName, List<Dependency> deps) throws
+  public String compile(int ident, Node n, String className, String objectName, List<Dependency> deps, String tenant) throws
       Exception {
     StringBuffer result = new StringBuffer();
     /*
@@ -2279,16 +2279,16 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
     //System.err.println("in compile(), className = " + className + ", objectName = " + objectName);
 
     if (n.getNodeName().equals("include") ) {
-    	includeNode(scriptPath, n, n.getParentNode().getOwnerDocument());
+    	includeNode(scriptPath, n, n.getParentNode().getOwnerDocument(),tenant);
     } else
     if (n.getNodeName().equals("map")) {
       result.append(printIdent(ident) +
                     "{ // Starting new mappable object context. \n");
-      result.append(mapNode(ident + 2, (Element) n,deps));
+      result.append(mapNode(ident + 2, (Element) n,deps,tenant));
       result.append(printIdent(ident) + "} // EOF MapContext \n");
     }
     else if (n.getNodeName().equals("field")) {
-      result.append(fieldNode(ident, (Element) n, className, objectName,deps));
+      result.append(fieldNode(ident, (Element) n, className, objectName,deps,tenant));
     }
     else if ((n.getNodeName().equals("param") && !((Element) n).getAttribute("type").equals("array")  ) ||
              n.getNodeName().equals("property")) {
@@ -2305,7 +2305,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
       methodBuffer.append(printIdent(ident) + "private final void " + methodName + "(Access access) throws Exception {\n\n");
       ident+=2;
       methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
-      methodBuffer.append(messageNode(ident, (Element) n, className, objectName,deps));
+      methodBuffer.append(messageNode(ident, (Element) n, className, objectName,deps,tenant));
       methodBuffer.append(printIdent(ident) + "}\n");
       ident-=2;
       methodBuffer.append("}\n");
@@ -2335,7 +2335,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
     return result.toString();
   }
 
-  private final void generateFinalBlock( Document d, StringBuffer generatedCode, List<Dependency> deps) throws Exception {
+  private final void generateFinalBlock( Document d, StringBuffer generatedCode, List<Dependency> deps, String tenant) throws Exception {
       generatedCode.append("public final void finalBlock(Access access) throws Exception {\n");
 
       NodeList list = d.getElementsByTagName("finally");
@@ -2343,7 +2343,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
       if (list != null && list.getLength() > 0) {
         NodeList children = list.item(0).getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
-          String str = compile(0, children.item(i), "", "",deps);
+          String str = compile(0, children.item(i), "", "",deps,tenant);
           generatedCode.append(str);
         }
       }
@@ -2465,7 +2465,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	  }
   }
   
-  private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, Writer fo, List<Dependency> deps) throws SystemException, SkipCompilationException{
+  private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, Writer fo, List<Dependency> deps, String tenant) throws SystemException, SkipCompilationException{
 	  
 	  boolean debugInput = false;
 	  boolean debugOutput = false;
@@ -2584,7 +2584,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	      
 	      for (int i = 0; i < includeArray.length; i++) {
 	        //System.err.println("ABOUT TO RESOLVE INCLUDE: " + includeArray[i]);
-	        includeNode(scriptPath, includeArray[i], tslDoc);
+	        includeNode(scriptPath, includeArray[i], tslDoc,tenant);
 	      }
 	      
 	      // Generate dump request Navajo
@@ -2594,7 +2594,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	      generateValidations(tslDoc, result);
 
 	      // Generate final block code.
-	      generateFinalBlock(tslDoc, result,deps);
+	      generateFinalBlock(tslDoc, result,deps,tenant);
 
 	      String methodDef = "public final void execute(Access access) throws Exception { \n\n";
 	      result.append(methodDef);
@@ -2614,7 +2614,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	      //System.err.println("FOUND " + children.getLength() + " CHILDREN");
 	      for (int i = 0; i < children.getLength(); i++) {
 	    	
-	        String str = compile(0, children.item(i), "", "",deps);
+	        String str = compile(0, children.item(i), "", "",deps,tenant);
 	        result.append(str);
 	      }
 
@@ -2684,7 +2684,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 	    } 
   }
     
-  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, Writer outputWriter, List<Dependency> deps) throws SystemException, SkipCompilationException {
+  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, Writer outputWriter, List<Dependency> deps, String tenant) throws SystemException, SkipCompilationException {
 
 	    String fullScriptPath = scriptPath + "/" + packagePath + "/" + script + ".xml";
 	    
@@ -2722,7 +2722,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 		                 IncludeDependency.getScriptTimeStamp(inheritedScripts.get(i)) + "\"), \"" + 
 		                 inheritedScripts.get(i) + "\"));\n", "INHERIT"+inheritedScripts.get(i));
 			}
-			compileScript(is, packagePath, script, scriptPath, outputWriter,deps);
+			compileScript(is, packagePath, script, scriptPath, outputWriter,deps,tenant);
 			
 		} catch (SkipCompilationException e) {
 			throw e;
@@ -2746,8 +2746,8 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 
 
   private String compileToJava(String script,
-          String input, String output, String packagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig,List<Dependency> deps) throws Exception {
-	  return compileToJava(script, input, output, packagePath, packagePath, classLoader, navajoIOConfig,deps);
+          String input, String output, String packagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig,List<Dependency> deps, String tenant) throws Exception {
+	  return compileToJava(script, input, output, packagePath, packagePath, classLoader, navajoIOConfig,deps, tenant);
   }
   
   /**
@@ -2763,7 +2763,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
    * @throws Exception
    */
   public String compileToJava(String script,
-                                        String input, String output, String packagePath, String scriptPackagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig, List<Dependency> deps) throws Exception {
+                                        String input, String output, String packagePath, String scriptPackagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig, List<Dependency> deps, String tenant) throws Exception {
     String javaFile = output + "/" + script + ".java";
    TslCompiler tslCompiler = new TslCompiler(classLoader,navajoIOConfig);
      try {
@@ -2779,7 +2779,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 //    	   packagePath = packagePath + "/";
 //       }
 
-       tslCompiler.compileScript(bareScript, input, output,scriptPackagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"),deps);
+       tslCompiler.compileScript(bareScript, input, output,scriptPackagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"),deps,tenant);
        
        return javaFile;
      } catch (SkipCompilationException ex) {
@@ -2800,7 +2800,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
   }
   
   private void compileStandAlone(boolean all, String script,
-                                        String input, String output, String packagePath, String[] extraclasspath, String configPath, List<Dependency> deps) {
+                                        String input, String output, String packagePath, String[] extraclasspath, String configPath, List<Dependency> deps, String tenant) {
      try {
       TslCompiler tslCompiler = new TslCompiler(null);
         try {
@@ -2816,7 +2816,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
           //System.err.println("Using package path: "+packagePath);
 		Writer w = navajoIOConfig.getOutputWriter(output, packagePath, script, ".java");
 
-		tslCompiler.compileScript(bareScript, input, output,packagePath,w,deps);
+		tslCompiler.compileScript(bareScript, input, output,packagePath,w,deps,tenant);
           
           ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
         }
@@ -2875,7 +2875,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
     }
   }
 
-  private ArrayList<String> compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig) {
+  private ArrayList<String> compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig, String tenant) {
     System.err.println("Entering compiledirectory: " + currentDir + " output: " +
                        outputPath + " offset: " + offsetPath);
     ArrayList<String> files = new ArrayList<String>();
@@ -2889,7 +2889,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
           System.err.println("Entering directory: " + current.getName());
           ArrayList<String> subDir = compileDirectoryToJava(currentDir, outputPath,
               offsetPath.equals("") ? current.getName() :
-              (offsetPath + "/" + current.getName()),classLoader,navajoConfig);
+              (offsetPath + "/" + current.getName()),classLoader,navajoConfig,tenant);
           files.addAll(subDir);
         }
         else {
@@ -2912,7 +2912,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
             String javaFile = null;
             try {
                 javaFile = compileToJava(compileName, currentDir.toString(),
-                              outputPath.toString(), offsetPath,classLoader,navajoConfig,new ArrayList<Dependency>());
+                              outputPath.toString(), offsetPath,classLoader,navajoConfig,new ArrayList<Dependency>(),tenant);
                 files.add(javaFile);
             } catch (Exception e) {
                logger.error("Error: ", e);
@@ -2924,7 +2924,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
     return files;
   }
 
-  public void fastCompileDirectory(File currentDir, File outputPath, String offsetPath, String[] extraclasspath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig) {
+  public void fastCompileDirectory(File currentDir, File outputPath, String offsetPath, String[] extraclasspath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig, String tenant) {
 
     StringBuffer classPath = new StringBuffer();
     classPath.append(System.getProperty("java.class.path"));
@@ -2936,7 +2936,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
       }
     }
 
-    ArrayList<String> javaFiles =  compileDirectoryToJava(currentDir, outputPath, offsetPath,classLoader,navajoConfig);
+    ArrayList<String> javaFiles =  compileDirectoryToJava(currentDir, outputPath, offsetPath,classLoader,navajoConfig, tenant);
     System.err.println("javaFiles: "+javaFiles);
     JavaCompiler compiler = new SunJavaCompiler();
 //    StringBuffer javaBuffer = new StringBuffer();
@@ -2958,7 +2958,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
 
   }
 
-  public static void compileDirectory(File currentDir, File outputPath, String offsetPath, String[] classpath,String configPath) {
+  public static void compileDirectory(File currentDir, File outputPath, String offsetPath, String[] classpath,String configPath, String tenant) {
 
 	  TslCompiler compiler = new TslCompiler(null, new LegacyNavajoIOConfig());
 	List<Dependency> deps = new ArrayList<Dependency>();
@@ -2972,7 +2972,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
         File current = scripts[i];
         if (current.isDirectory()) {
           System.err.println("Entering directory: "+current.getName());
-          compileDirectory(currentDir, outputPath, offsetPath.equals("") ? current.getName() : (offsetPath + "/"+ current.getName()),classpath, configPath);
+          compileDirectory(currentDir, outputPath, offsetPath.equals("") ? current.getName() : (offsetPath + "/"+ current.getName()),classpath, configPath, tenant);
         } else {
           if (current.getName().endsWith(".xml")) {
             String name = current.getName().substring(0,current.getName().indexOf("."));
@@ -2988,7 +2988,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps) throws Except
             } else {
               compileName = offsetPath+"/"+name;
             }
-            compiler.compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath,classpath,configPath,deps);
+            compiler.compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath,classpath,configPath,deps,tenant);
             logger.info("Standalone compile finished. Detected dependencies: "+deps);
           }
         }
@@ -3062,7 +3062,7 @@ public static void main(String[] args) throws Exception {
    if (all) {
      File scriptDir = new File(input);
      File outDir = new File(output);
-     compileDirectory(scriptDir, outDir, "",null,configPath);
+     compileDirectory(scriptDir, outDir, "",null,configPath,"knvb");
    }
  }
 

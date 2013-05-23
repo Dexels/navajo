@@ -34,6 +34,10 @@ public class LoadCommand {
 	@Descriptor(value = "install a script with a certain path.") 
 	public void loadbundle(CommandSession session, @Descriptor(value = "Force installation if the script is already installed") @Parameter(names = { "-f", "--force" }, presentValue = "true", absentValue = "false") boolean force,@Descriptor(value = "The path, prefix, or '/' to install everything")  String script) {
 		try {
+			
+//			, @Descriptor(value ="The current tenant to assume, will use 'default' if unspecified") @Parameter(absentValue="default", names = {"-t","--tenant"}) String tenant
+			String tenant = "default";
+			session.getConsole().println("Installing path: "+script+" for tenant: "+tenant);
 			if(script.equals("/")) {
 				script = "";
 			}
@@ -41,7 +45,7 @@ public class LoadCommand {
 			List<String> failed = new ArrayList<String>();
 			List<String> skipped = new ArrayList<String>();
 //			this.bundleCreator.installAllBundles("",script,);
-			this.bundleCreator.installBundles(script, failed, success, skipped,force);
+			this.bundleCreator.installBundles(script,tenant, failed, success, skipped,force);
 			for (String fail : failed) {
 				session.getConsole().println("Installation error: "+fail);
 			}

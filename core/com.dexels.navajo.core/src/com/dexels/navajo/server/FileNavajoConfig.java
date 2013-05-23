@@ -2,6 +2,7 @@ package com.dexels.navajo.server;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -86,10 +87,12 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 			File f = new File(getContextRoot(),"scripts/"+name+".xml");
 			if(!f.exists()) {
 				f = new File(getContextRoot(),"scripts/"+name+".tsl");
+				if(f.exists()) {
+					logger.error("Using *.tsl extensions is not supported");
+				}
 			}
 			logger.debug("Looking into contextroot: "+f.getAbsolutePath());
 			if(f.exists()) {
-				System.err.println("Retrieving script from servlet context: "+path);
 				return new FileInputStream(f);
 			}
 		}
@@ -97,25 +100,64 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
     }
 
 	@Override
-	public Date getScriptModificationDate(String scriptPackage) {
-//		System.err.println("getScriptModificationDate: "+scriptPackage);
-		String name = scriptPackage.replaceAll("\\.", "/");
-		String scriptPath = getScriptPath();
-		if(!scriptPath.endsWith("/")) {
-			scriptPath = scriptPath+"/";
-		}
-		String path = scriptPath + name + ".xml";
-		File scr = new File(path);
-		if(!scr.exists()) {
-			logger.warn("Can't determine age of script: "+name+" as it doesn't exist");
-			return null;
-		}
+	public Date getScriptModificationDate(String scriptPackage, String tenant) throws FileNotFoundException {
+		File scr = getApplicableScriptFile(scriptPackage, tenant);
 		return new Date(scr.lastModified());
 		
 	}
+	
+	@Override
+	public File getApplicableBundleForScript(String rpcName, String tenant) {
+		try {
+			return getApplicableFile(rpcName, tenant, getCompiledScriptPath(), ".jar");
+		} catch (FileNotFoundException e) {
+			return null;
+		}
+	}
+	
+	@Override
+	public File getApplicableScriptFile(String rpcName, String tenant) throws FileNotFoundException {
+		return getApplicableFile(rpcName, tenant, getScriptPath(), ".xml");
+	}
 
-
-    @Override
+	@Override
+	public boolean hasTenantScriptFile(String rpcName, String tenant) {
+		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, getScriptPath(), ".xml");
+		return qualifiedFile!=null;
+	}
+	
+	
+	private File getTenantSpecificFile(String rpcName, String tenant, String parent, String extension) {
+		String name = rpcName.replaceAll("\\.", "/");
+		if(!parent.endsWith("/")) {
+			parent = parent+"/";
+		}
+		String qualifiedPath = parent + name + "_" + tenant + extension;
+		File qualifiedFile = new File(qualifiedPath);
+		if(qualifiedFile.exists()) {
+			return qualifiedFile;
+		}
+		return null;
+	}
+	
+	private File getApplicableFile(String rpcName, String tenant, String parent, String extension) throws FileNotFoundException {
+		String name = rpcName.replaceAll("\\.", "/");
+		if(!parent.endsWith("/")) {
+			parent = parent+"/";
+		}
+		String path = parent + name + extension;
+		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, parent, extension);
+		File generalFile = new File(path);
+		if(qualifiedFile != null) {
+			return qualifiedFile;
+		}
+		if(!generalFile.exists()) {
+			throw new FileNotFoundException("Script not found: "+path);
+		}
+		return generalFile;
+	}
+	
+	@Override
     public final InputStream getConfig(String name) throws IOException {
       InputStream input = inputStreamReader.getResource(getConfigPath() + "/" + name);
       return input;
@@ -165,4 +207,5 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
     		}
     	}
     }
+    
 }
