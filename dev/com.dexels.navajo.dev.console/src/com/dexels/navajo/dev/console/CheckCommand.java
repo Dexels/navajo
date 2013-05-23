@@ -1,6 +1,7 @@
 package com.dexels.navajo.dev.console;
 
 
+import java.io.FileNotFoundException;
 import java.util.Date;
 
 import org.apache.felix.service.command.CommandSession;
@@ -29,10 +30,10 @@ public class CheckCommand {
 
 	@Descriptor(value = "Check the modification dates of a certain script.") 
 
-	public void check(CommandSession session, String script) {
-		Date installed = bundleCreator.getBundleInstallationDate(script);
-		Date modified = bundleCreator.getScriptModificationDate(script);
-		Date compiled = bundleCreator.getCompiledModificationDate(script);
+	public void check(CommandSession session, @Descriptor(value = "The path of the script") String script,@Descriptor(value = "The current tenant")  String tenant) throws FileNotFoundException {
+		Date installed = bundleCreator.getBundleInstallationDate(script,tenant);
+		Date modified = bundleCreator.getScriptModificationDate(script,tenant);
+		Date compiled = bundleCreator.getCompiledModificationDate(script,tenant);
 		session.getConsole().println("Modified at: "+modified);
 		session.getConsole().println("Compiled at: "+compiled);
 		session.getConsole().println("Installed at: "+installed);

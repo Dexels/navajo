@@ -31,6 +31,10 @@ public class CompileServlet extends HttpServlet {
 			resp.sendError(500,"No script parameter supplied");
 			return;
 		}
+		String tenant = req.getParameter("tenant");
+		if(tenant==null) {
+			tenant = "default";
+		}
 		boolean force = true;
 		boolean keepIntermediateFiles = false;
 		
@@ -51,7 +55,7 @@ public class CompileServlet extends HttpServlet {
 			for (String failed : failures) {
 				logger.info("Failed: "+failed);
 			}
-			bundleCreator.installBundles(script, failures, success, skipped, true);
+			bundleCreator.installBundles(script,tenant, failures, success, skipped, true);
 		} catch (Throwable e) {
 			logger.error("Error compiling scripts form servlet:",e);
 		}
