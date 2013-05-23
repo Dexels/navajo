@@ -128,8 +128,8 @@ public class BundleCreatorComponent implements BundleCreator {
 						+ " full path: " + scriptFile.getAbsolutePath());
 				return;
 			}
-			Date compiled = getCompiledModificationDate(script);
-			Date modified = getScriptModificationDate(script);
+			Date compiled = getCompiledModificationDate(script,tenant);
+			Date modified = getScriptModificationDate(script,tenant);
 			if (!force && compiled != null && compiled.after(modified)) {
 				// logger.debug("Skipping up-to-date script: "+scriptFile.getAbsolutePath());
 				skipped.add(script);
@@ -178,30 +178,30 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	@Override
-	public void installBundles(String scriptPath, List<String> failures,
+	public void installBundles(String scriptPath,String tenant, List<String> failures,
 			List<String> success, List<String> skipped, boolean force)
 			throws Exception {
 		// final String extension = "jar";
 		File outputFolder = new File(navajoIOConfig.getCompiledScriptPath());
 		File f = new File(outputFolder, scriptPath);
-		File jarFile = getScriptBundleJar(scriptPath);
+		File jarFile = getScriptBundleJar(scriptPath,tenant);
 		// new File(outputFolder,scriptPath+"."+extension);
 
-		if (jarFile.exists()) {
-			installBundle(scriptPath, failures, success, skipped, force);
+		if (jarFile!=null && jarFile.exists()) {
+			installBundle(scriptPath,tenant, failures, success, skipped, force);
 		} else {
 			if (f.isDirectory()) {
-				installBundles(f, failures, success, skipped, force);
+				installBundles(tenant,f, failures, success, skipped, force);
 			} else {
 				logger.error("Jar not found: " + scriptPath + " full path: "
-						+ jarFile.getAbsolutePath());
+						+ jarFile);
 				return;
 			}
 		}
 
 	}
 
-	private void installBundles(File baseDir, List<String> failures,
+	private void installBundles(String tenant, File baseDir, List<String> failures,
 			List<String> success, List<String> skipped, boolean force)
 			throws Exception {
 		final String extension = "jar";
@@ -217,16 +217,16 @@ public class BundleCreatorComponent implements BundleCreator {
 			}
 			// logger.info("File: "+relative);
 			String withoutEx = relative.substring(0, relative.lastIndexOf('.'));
-			installBundle(withoutEx, failures, success, skipped, force);
+			installBundle(withoutEx, tenant,failures, success, skipped, force);
 
 		}
 	}
 
 	@Override
-	public void installBundle(String scriptPath, List<String> failures,
+	public void installBundle(String scriptPath, String tenant, List<String> failures,
 			List<String> success, List<String> skipped, boolean force) {
 		try {
-			Bundle b = doInstall(scriptPath, force);
+			Bundle b = doInstall(scriptPath,tenant, force);
 			if (b == null) {
 				skipped.add(scriptPath);
 			} else {
@@ -244,9 +244,9 @@ public class BundleCreatorComponent implements BundleCreator {
 		}
 	}
 
-	private Bundle doInstall(String scriptPath, boolean force)
+	private Bundle doInstall(String scriptPath, String tenant, boolean force)
 			throws BundleException, FileNotFoundException, MalformedURLException {
-		File bundleFile = getScriptBundleJar(scriptPath);
+		File bundleFile = getScriptBundleJar(scriptPath,tenant);
 		final String uri = bundleFile.toURI().toURL().toString(); // SCRIPTPROTOCOL + scriptPath;
 		Bundle previous = bundleContext.getBundle(uri);
 		if (previous != null) {
@@ -399,47 +399,75 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	@Override
-	public Date getBundleInstallationDate(String scriptPath) {
-		String scrpt = scriptPath.replaceAll("/", ".");
-		final String bundleURI = SCRIPTPROTOCOL + scrpt;
-		Bundle b = this.bundleContext.getBundle(bundleURI);
-		if (b == null) {
-			logger.warn("Can not determine age of bundle: " + bundleURI
-					+ " as it can not be found.");
-			return null;
+	public Date getBundleInstallationDate(String scriptPath,String tenant) {
+//		String scrpt = scriptPath.replaceAll("/", ".");
+//		final String bundleURI = SCRIPTPROTOCOL + scrpt;
+		File cscripts = new File(navajoIOConfig.getCompiledScriptPath());
+		File bundleFile = new File(cscripts,scriptPath+".jar");
+		URL u;
+		try {
+			u = bundleFile.toURI().toURL();
+			final String bundleURI = u.toString();
+			
+			Bundle b = this.bundleContext.getBundle(bundleURI);
+			if (b == null) {
+				logger.warn("Can not determine age of bundle: " + bundleURI
+						+ " as it can not be found.");
+				return null;
+			}
+			return new Date(b.getLastModified());
+		} catch (MalformedURLException e) {
+			logger.error("Bad bundle URI for file: "+bundleFile.toString(),e);
 		}
-		return new Date(b.getLastModified());
+		return null;
 	}
 
 	@Override
-	public Date getScriptModificationDate(String scriptPath) {
-		return navajoIOConfig.getScriptModificationDate(scriptPath);
+	public Date getScriptModificationDate(String scriptPath, String tenant) throws FileNotFoundException {
+		return navajoIOConfig.getScriptModificationDate(scriptPath, tenant);
 	}
 
+	
 	@Override
-	public Date getCompiledModificationDate(String script) {
-		String scriptPath = script.replaceAll("\\.", "/");
-		File jarFile = getScriptBundleJar(scriptPath);
-		if (!jarFile.exists()) {
+	public Date getCompiledModificationDate(String scriptPath, String tenant) {
+		String scriptName = scriptPath.replaceAll("\\.", "/");
+		File jarFile = navajoIOConfig.getApplicableBundleForScript(scriptName,tenant);
+//		public File getApplicableBundleForScript(String rpcName, String tenant) throws FileNotFoundException;
+
+		if (jarFile==null || !jarFile.exists()) {
 			return null;
 		}
 		return new Date(jarFile.lastModified());
 	}
 
-	private File getScriptBundleJar(String script) {
-		String scriptPath = script.replaceAll("\\.", "/");
-		final String extension = "jar";
-		File compiledScriptPath = new File(
-				navajoIOConfig.getCompiledScriptPath());
-		File jarFile = new File(compiledScriptPath, scriptPath + "."
-				+ extension);
-		return jarFile;
+	private File getScriptBundleJar(String script, String tenant) {
+		return navajoIOConfig.getApplicableBundleForScript(script, tenant);
 	}
 
-	private boolean needsCompilation(String scriptPath)
+	private boolean checkForRecompile(String rpcName, String tenant) throws FileNotFoundException {
+		Date mod = getScriptModificationDate(rpcName,tenant);
+		if (mod == null) {
+			logger.error("No modification date for script: " + rpcName
+					+ " this is weird.");
+			return false;
+		}
+		Date install = getBundleInstallationDate(rpcName,tenant);
+		if (install != null) {
+			if (install.before(mod)) {
+				logger.debug("Install: " + install);
+				logger.debug("mod: " + mod);
+				logger.debug("comp: ", getCompiledModificationDate(rpcName,tenant));
+				logger.debug("Obsolete script found. Needs recompile.");
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean needsCompilation(String scriptPath,String tenant)
 			throws FileNotFoundException {
-		Date compiled = getCompiledModificationDate(scriptPath);
-		Date script = getScriptModificationDate(scriptPath);
+		Date compiled = getCompiledModificationDate(scriptPath,tenant);
+		Date script = getScriptModificationDate(scriptPath,tenant);
 		if (script == null) {
 			throw new FileNotFoundException("Script " + scriptPath
 					+ " is missing!");
@@ -497,7 +525,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		CompiledScript sc = getCompiledScript(rpcName,tenant);
 
 		if (sc != null) {
-			boolean needsRecompile = checkForRecompile(rpcName);
+			boolean needsRecompile = checkForRecompile(rpcName,tenant);
 			if (!needsRecompile) {
 				return sc;
 			}
@@ -507,7 +535,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		List<String> skipped = new ArrayList<String>();
 		boolean force = false;
 		// so no resolution
-		if (needsCompilation(rpcName)) {
+		if (needsCompilation(rpcName,tenant)) {
 			createBundle(rpcName, new Date(), "xml", failures, success,
 					skipped, false, false,tenant);
 			force = true;
@@ -516,12 +544,13 @@ public class BundleCreatorComponent implements BundleCreator {
 		}
 
 		// File bundleJar = getScriptBundleJar(rpcName);
-		installBundle(rpcName, failures, success, skipped, force);
+		installBundle(rpcName, tenant,failures, success, skipped, force);
 
 		logger.debug("On demand installation finished, waiting for service...");
-		CompiledScript cs = waitForService(rpcName);
+//		CompiledScript cs = waitForService(rpcName,tenant);
+		return getCompiledScript(rpcName, tenant);
 
-		return cs;
+//	/	return cs;
 		//
 		// List<String> failures = new ArrayList<String>();
 		// List<String> success = new ArrayList<String>();
@@ -531,31 +560,19 @@ public class BundleCreatorComponent implements BundleCreator {
 		//
 	}
 
-	private boolean checkForRecompile(String rpcName) {
-		Date mod = getScriptModificationDate(rpcName);
-		if (mod == null) {
-			logger.error("No modification date for script: " + rpcName
-					+ " this is weird.");
-			return false;
-		}
-		Date install = getBundleInstallationDate(rpcName);
-		if (install != null) {
-			if (install.before(mod)) {
-				logger.debug("Install: " + install);
-				logger.debug("mod: " + mod);
-				logger.debug("comp: ", getCompiledModificationDate(rpcName));
-				logger.debug("Obsolete script found. Needs recompile.");
-				return true;
-			}
-		}
-		return false;
-	}
 
 	@Override
 	public CompiledScript getCompiledScript(String rpcName, String tenant)
 			throws ClassNotFoundException {
 		String scriptName = rpcName.replaceAll("/", ".");
-		String filter = "(&(navajo.scriptName=" + scriptName + ")(|(navajo.tenant="+tenant+")(!(navajo.tenant=*))))";
+		String filter = null;
+		
+		if(navajoIOConfig.hasTenantScriptFile(rpcName, tenant)) {
+			filter = "(&(navajo.scriptName=" + scriptName + ")(navajo.tenant="+tenant+"))";
+		} else {
+			filter = "(&(navajo.scriptName=" + scriptName + ")(!(navajo.tenant=*)))";
+		}
+			
 		
 		ServiceReference[] sr;
 		try {
@@ -585,7 +602,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		return null;
 	}
 
-	private CompiledScript waitForService(String rpcPath) throws Exception {
+	private CompiledScript waitForService(String rpcPath, String tenant) throws Exception {
 		String rpcName = rpcPath.replaceAll("/", ".");
 		// script://person/InitSearchPersons
 		File cscripts = new File(navajoIOConfig.getCompiledScriptPath());
@@ -605,34 +622,34 @@ public class BundleCreatorComponent implements BundleCreator {
 					+ rpcName + " bundle with URI: " + bundleURI
 					+ " is not active. State: " + scriptBundle.getState());
 		}
-
-		String filterString = "(navajo.scriptName=" + rpcName + ")";
-		logger.debug("waiting for service...: " + rpcName);
-		// Filter filter = bundleContext.createFilter(filterString);
-		ServiceReference<CompiledScriptFactory>[] ss = (ServiceReference<CompiledScriptFactory>[]) bundleContext
-				.getServiceReferences(CompiledScriptFactory.class.getName(),
-						filterString);
-		if (ss != null && ss.length > 0) {
-			logger.debug("Service present: " + ss.length);
-		} else {
-			throw new UserException(-1,
-					"Bundle resolved but no service available for service: "
-							+ rpcName + " probably it is missing a dependency");
-		}
+		return getCompiledScript(rpcName, tenant);
+//		String filterString = "(navajo.scriptName=" + rpcName + ")";
+//		logger.debug("waiting for service...: " + rpcName);
+//		// Filter filter = bundleContext.createFilter(filterString);
+//		ServiceReference<CompiledScriptFactory>[] ss = (ServiceReference<CompiledScriptFactory>[]) bundleContext
+//				.getServiceReferences(CompiledScriptFactory.class.getName(),
+//						filterString);
+//		if (ss != null && ss.length > 0) {
+//			logger.debug("Service present: " + ss.length);
+//		} else {
+//			throw new UserException(-1,
+//					"Bundle resolved but no service available for service: "
+//							+ rpcName + " probably it is missing a dependency");
+//		}
 		// ServiceTracker tr = new ServiceTracker(bundleContext,filter,null);
 		// tr.open();
 		// CompiledScriptFactory result = (CompiledScriptFactory)
 		// tr.waitForService(12000);
-		CompiledScriptFactory result = bundleContext.getService(ss[0]);
-
-		if (result == null) {
-			logger.error("Service resolution failed!");
-			throw new UserException(-1, "Can not resolve bundle for service: "
-					+ rpcName);
-		}
-		CompiledScript cc = result.getCompiledScript();
-		// tr.close();
-		return cc;
+//		CompiledScriptFactory result = bundleContext.getService(ss[0]);
+//
+//		if (result == null) {
+//			logger.error("Service resolution failed!");
+//			throw new UserException(-1, "Can not resolve bundle for service: "
+//					+ rpcName);
+//		}
+//		CompiledScript cc = result.getCompiledScript();
+//		// tr.close();
+//		return cc;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

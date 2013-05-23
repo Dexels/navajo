@@ -1,6 +1,7 @@
 package com.dexels.navajo.server.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -168,8 +169,8 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	}
 
 	@Override
-	public Date getScriptModificationDate(String scriptPath) {
-		return navajoIOConfig.getScriptModificationDate(scriptPath);
+	public Date getScriptModificationDate(String scriptPath, String tenant) throws FileNotFoundException {
+		return navajoIOConfig.getScriptModificationDate(scriptPath, tenant);
 	}
 
 	@Override
@@ -283,7 +284,6 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 
 	@Override
 	public double getCurrentCPUload() {
-		logger.debug("getCurrentCPUload is not implemented");
 		return -1;
 	}
 
@@ -436,6 +436,22 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	public SharedStoreInterface getSharedStore() {
 		logger.warn("This method is not implemented for OSGi");
 		throw new NoSuchMethodError("Method not supported by OSGi");
+	}
+
+	@Override
+	public File getApplicableScriptFile(String rpcName, String tenant)
+			throws FileNotFoundException {
+		return navajoIOConfig.getApplicableScriptFile(rpcName, tenant);
+	}
+
+	@Override
+	public File getApplicableBundleForScript(String rpcName, String tenant) {
+		return navajoIOConfig.getApplicableBundleForScript(rpcName, tenant);
+	}
+
+	@Override
+	public boolean hasTenantScriptFile(String rpcName, String tenant) {
+		return navajoIOConfig.hasTenantScriptFile(rpcName, tenant);
 	}
 
 	
