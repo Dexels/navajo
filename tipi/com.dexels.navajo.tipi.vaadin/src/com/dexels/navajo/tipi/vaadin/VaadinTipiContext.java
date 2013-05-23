@@ -17,6 +17,7 @@ import tipi.TipiExtension;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
 import com.dexels.navajo.tipi.vaadin.components.io.URLInputStreamSource;
@@ -127,7 +128,7 @@ public class VaadinTipiContext extends TipiContext {
 	}
 	
 	@Override
-	public void showWarning(String text, String title){
+	public void showWarning(String text, String title, TipiComponent tc){
 		Notification not = new Notification("",text, Notification.TYPE_WARNING_MESSAGE);
 		not.setPosition(7);
 		not.setDelayMsec(1500);
@@ -135,7 +136,7 @@ public class VaadinTipiContext extends TipiContext {
 	}
 	
 	@Override
-	public void showError(String text, String title)
+	public void showError(String text, String title, TipiComponent tc)
 	{
 		Notification not = new Notification("", text, Notification.TYPE_ERROR_MESSAGE);
 		not.setDelayMsec(1500);
@@ -144,7 +145,7 @@ public class VaadinTipiContext extends TipiContext {
 	}
 
 	@Override
-	public void showInfo(String text, String title) {
+	public void showInfo(String text, String title, TipiComponent tc) {
 		Notification not = new Notification(title, text);
 		not.setPosition(7);
 		not.setStyleName("info");
@@ -152,9 +153,9 @@ public class VaadinTipiContext extends TipiContext {
 	}
 
 	@Override
-	public void showQuestion(String text, String title, String[] options)
+	public void showQuestion(String text, String title, String[] options, TipiComponent tc)
 			throws TipiBreakException {
-
+		// not in use, vaadin's version of the TipiShowQuestion action handles the entirety
 	}
 
 	public void setMainWindow(Window mainWindow) {

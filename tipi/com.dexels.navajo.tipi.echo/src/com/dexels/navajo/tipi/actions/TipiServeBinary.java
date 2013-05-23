@@ -93,7 +93,7 @@ public class TipiServeBinary extends TipiAction {
 			}
 			if (b == null) {
 				logger.info("No binary found!");
-				myContext.showInfo("can not open binary property!", "info");
+				myContext.showInfo("can not open binary property!", "info", null);
 				return;
 			}
 			String extension = b.getExtension();

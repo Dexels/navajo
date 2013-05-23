@@ -13,7 +13,6 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -50,7 +49,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
-import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.functions.util.FunctionDefinition;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
@@ -1036,6 +1034,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			logger.debug("Error resolving tipi location", e);
 			// classload failed. Continuing.
 		}
+		
 		if (genericResourceLoader != null)
 		{
 			try {
@@ -1055,7 +1054,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				return iss;
 			} catch (IOException e) {
 				logger.debug("Error resolving tipi location", e);
-			} 
+			}
 		}
 		return null;
 	}
@@ -1092,10 +1091,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		{
 			cssResources.add(result);
 		}
-		result = resolveCssResource(baseLocation + "_" + getClient().getLocaleCode() + "_" + getClient().getSubLocaleCode() + ".css");
-		if (result != null && !result.isEmpty())
+		if (getClient().getSubLocaleCode() != null && !getClient().getSubLocaleCode().isEmpty())
 		{
-			cssResources.add(result);
+			result = resolveCssResource(baseLocation + "_" + getClient().getLocaleCode() + "_" + getClient().getSubLocaleCode().toLowerCase() + ".css");
+			if (result != null && !result.isEmpty())
+			{
+				cssResources.add(result);
+			}
 		}
 		return cssResources;
 	}
@@ -1909,7 +1911,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				if (!hasUserDefinedErrorHandler) {
 					logger.error("Delivering usererror: \n"
 							+ errorMessage);
-					showWarning(errorMessage, "Invoerfout");
+					showWarning(errorMessage, "Invoerfout", event.getComponent());
 				}
 				if (breakOnError) {
 					throw new TipiBreakException(
@@ -2511,9 +2513,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	 * 
 	 * @param text
 	 * @param title
+	 * @param tc
 	 */
-	public void showError(final String text, final String title) {
-		showInfo(text, title);
+	public void showError(final String text, final String title, final TipiComponent tc) {
+		showInfo(text, title, tc);
 	}
 
 	/**
@@ -2521,15 +2524,16 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	 * 
 	 * @param text
 	 * @param title
+	 * @param tc
 	 */
-	public void showWarning(String text, String title) {
-		showInfo(text, title);
+	public void showWarning(String text, String title, final TipiComponent tc) {
+		showInfo(text, title, tc);
 	}
 
-	public abstract void showInfo(final String text, final String title);
+	public abstract void showInfo(final String text, final String title, final TipiComponent tc);
 
 	public abstract void showQuestion(final String text, final String title,
-			String[] options) throws TipiBreakException;
+			String[] options, final TipiComponent tc) throws TipiBreakException;
 
 	public String generateComponentId(TipiComponent parent,
 			TipiComponent component)  {

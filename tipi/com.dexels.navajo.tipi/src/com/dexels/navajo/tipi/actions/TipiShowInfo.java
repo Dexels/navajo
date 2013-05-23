@@ -43,6 +43,6 @@ public class TipiShowInfo extends TipiAction {
 			result = oo.toString();
 		}
 		final String txt = result.replaceAll("\n", " ");
-		myContext.showInfo(txt, "");
+		myContext.showInfo(txt, "", event.getComponent());
 	}
 }

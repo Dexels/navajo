@@ -33,6 +33,6 @@ public class TipiShowError extends TipiAction {
 			result = oo.toString();
 		}
 		final String txt = (result).replaceAll("\n", " ");
-		myContext.showError(txt, "Info");
+		myContext.showError(txt, "Info", event.getComponent());
 	}
 }
