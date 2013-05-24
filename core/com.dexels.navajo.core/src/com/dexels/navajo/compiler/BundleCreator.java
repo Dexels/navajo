@@ -65,7 +65,7 @@ public interface BundleCreator {
 	 * @return
 	 * @throws Exception
 	 */
-	public CompiledScript getOnDemandScriptService(String rpcName, String tenant) throws Exception;
+	public CompiledScript getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified) throws Exception;
 
 
 }

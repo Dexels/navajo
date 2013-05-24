@@ -56,7 +56,7 @@ public interface NavajoIOConfig {
 	@Deprecated
 	public File getJarFolder();
 
-	boolean hasTenantScriptFile(String rpcName, String tenant);
+	public boolean hasTenantScriptFile(String rpcName, String tenant);
 
 
 }

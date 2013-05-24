@@ -549,7 +549,7 @@ public final class GenericHandler extends ServiceHandler {
 			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
 			return null;
 		}
-		CompiledScript sc = bc.getOnDemandScriptService(rpcName,tenantConfig.getInstanceGroup());
+		CompiledScript sc = bc.getOnDemandScriptService(rpcName,tenantConfig.getInstanceGroup(),tenantConfig.hasTenantScriptFile(rpcName,tenantConfig.getInstanceGroup()));
 		// wait for it..
 		bundleContext.ungetService(ref);
 		return sc;

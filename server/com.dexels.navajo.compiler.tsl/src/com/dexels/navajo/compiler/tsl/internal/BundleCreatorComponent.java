@@ -121,8 +121,9 @@ public class BundleCreatorComponent implements BundleCreator {
 			compileAllIn(f, compilationDate, failures, success, skipped, force,
 					keepIntermediate,tenant);
 		} else {
-			File scriptFile = new File(scriptFolder, script + "."
-					+ scriptExtension);
+			File scriptFile = navajoIOConfig.getApplicableScriptFile(script, tenant);
+//			File scriptFile = new File(scriptFolder, script + "."
+//					+ scriptExtension);
 			if (!scriptFile.exists()) {
 				logger.error("Script or folder not found: " + script
 						+ " full path: " + scriptFile.getAbsolutePath());
@@ -139,7 +140,7 @@ public class BundleCreatorComponent implements BundleCreator {
 							dependencies, tenant);
 					javaCompiler.compileJava(script);
 					javaCompiler.compileJava(script + "Factory");
-					createBundleJar(script, keepIntermediate);
+					createBundleJar(script, tenant,keepIntermediate);
 					success.add(script);
 				} catch (SkipCompilationException e) {
 					logger.debug("Script fragment: {} ignored.",script);
@@ -274,7 +275,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		return relative;
 	}
 
-	private File createBundleJar(String scriptPath,
+	private File createBundleJar(String scriptPath, String tenant,
 			boolean keepIntermediateFiles) throws IOException {
 		String packagePath = null;
 		String script = null;
@@ -330,7 +331,10 @@ public class BundleCreatorComponent implements BundleCreator {
 		FileUtils.copyFile(factoryClassFile, factoryClassFileInPlace);
 		FileUtils.copyFile(manifestFile, metainfManifest);
 		FileUtils.copyFile(dsFile, osgiinfScript);
-		final File jarFile = new File(outB, scriptPath + ".jar");
+//		final File jarFile = new File(outB, scriptPath + ".jar");
+		final File jarFile = navajoIOConfig.getApplicableBundleForScript(scriptPath, tenant);
+		
+		
 		addFolderToJar(bundleDir, null, jarFile, bundleDir.getAbsolutePath()
 				+ "/");
 		if (!keepIntermediateFiles) {
@@ -400,10 +404,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	@Override
 	public Date getBundleInstallationDate(String scriptPath,String tenant) {
-//		String scrpt = scriptPath.replaceAll("/", ".");
-//		final String bundleURI = SCRIPTPROTOCOL + scrpt;
-		File cscripts = new File(navajoIOConfig.getCompiledScriptPath());
-		File bundleFile = new File(cscripts,scriptPath+".jar");
+		File bundleFile = navajoIOConfig.getApplicableBundleForScript(scriptPath, tenant);
 		URL u;
 		try {
 			u = bundleFile.toURI().toURL();
@@ -444,7 +445,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		return navajoIOConfig.getApplicableBundleForScript(script, tenant);
 	}
 
-	private boolean checkForRecompile(String rpcName, String tenant) throws FileNotFoundException {
+	private boolean checkForRecompile(String rpcName, String tenant, boolean tenantQualified) throws FileNotFoundException {
 		Date mod = getScriptModificationDate(rpcName,tenant);
 		if (mod == null) {
 			logger.error("No modification date for script: " + rpcName
@@ -520,12 +521,12 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	@Override
-	public CompiledScript getOnDemandScriptService(String rpcName, String tenant)
+	public CompiledScript getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified)
 			throws Exception {
 		CompiledScript sc = getCompiledScript(rpcName,tenant);
 
 		if (sc != null) {
-			boolean needsRecompile = checkForRecompile(rpcName,tenant);
+			boolean needsRecompile = checkForRecompile(rpcName,tenant,tenantQualified);
 			if (!needsRecompile) {
 				return sc;
 			}
@@ -566,10 +567,13 @@ public class BundleCreatorComponent implements BundleCreator {
 			throws ClassNotFoundException {
 		String scriptName = rpcName.replaceAll("/", ".");
 		String filter = null;
+		boolean tenantQualified;
 		
 		if(navajoIOConfig.hasTenantScriptFile(rpcName, tenant)) {
+			tenantQualified = true;
 			filter = "(&(navajo.scriptName=" + scriptName + ")(navajo.tenant="+tenant+"))";
 		} else {
+			tenantQualified = false;
 			filter = "(&(navajo.scriptName=" + scriptName + ")(!(navajo.tenant=*)))";
 		}
 			
