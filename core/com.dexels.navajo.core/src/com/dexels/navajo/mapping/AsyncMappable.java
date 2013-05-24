@@ -363,7 +363,6 @@ private final static Logger logger = LoggerFactory
           h = NavajoFactory.getInstance().createHeader(inMessage, "", "", "", -1);
         inMessage.addHeader(h);
     }
-    System.out.println(inMessage.toString());
     if (isFinished) {
       if (caught != null) {
         throw new UserException(-1, caught.getMessage());
