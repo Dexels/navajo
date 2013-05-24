@@ -22,7 +22,7 @@
 		 -->
 	</feature>
 
-    <feature resolver="(obr)" name='navajo.function' version='1.0.5' start-level='80'  >
+    <feature resolver="(obr)" name='navajo.function' version='1.0.6' start-level='80'  >
 		<feature version="[1.0.5,2)">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.22</bundle>
 	</feature>

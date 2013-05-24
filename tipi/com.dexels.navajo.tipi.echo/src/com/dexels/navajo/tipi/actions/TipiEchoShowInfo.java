@@ -31,7 +31,7 @@ public class TipiEchoShowInfo extends TipiAction {
 
     protected void execute(TipiEvent e) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
         Operand text = getEvaluatedParameter("text", e);
-        myContext.showInfo(""+text.value, "Info");
+        myContext.showInfo(""+text.value, "Info", e.getComponent());
 
     }
 

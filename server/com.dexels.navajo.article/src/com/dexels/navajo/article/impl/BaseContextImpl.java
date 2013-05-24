@@ -152,6 +152,11 @@ public abstract class BaseContextImpl implements ArticleContext {
 	
 	public void interpretMeta(XMLElement article, ObjectMapper mapper, ObjectNode articleNode) throws ArticleException {
 		int i = 0;
+		
+		String outputType = article.getStringAttribute("output");
+		if(outputType!=null) {
+			articleNode.put("output", outputType);
+		}
 			XMLElement argTag = article.getChildByTagName("_arguments");
 			ArrayNode inputArgs = mapper.createArrayNode();
 			articleNode.put("input", inputArgs);

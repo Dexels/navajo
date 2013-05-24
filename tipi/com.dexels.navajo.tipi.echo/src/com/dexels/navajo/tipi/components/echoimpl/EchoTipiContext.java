@@ -21,6 +21,7 @@ import nextapp.echo2.webrender.Connection;
 import nextapp.echo2.webrender.WebRenderServlet;
 
 import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
@@ -276,7 +277,7 @@ public class EchoTipiContext extends TipiContext {
     
 
 
-	public void showInfo(String text, String title) {
+	public void showInfo(String text, String title, TipiComponent tc) {
 		logger.info("ALERTING: "+text);
 		text = text.replaceAll("\n", "\\\\n");
 		logger.info("ALERTING2: "+text);
@@ -314,14 +315,14 @@ public class EchoTipiContext extends TipiContext {
 
 	
 	public void showInternalError(String errorString, Throwable t) {
-		showInfo("Internal error: "+errorString,"Problem:");
+		showInfo("Internal error: "+errorString,"Problem:", null);
 		super.showInternalError(errorString, t);
 	}
 	
 
 	@Override
-	public void showQuestion(String text, String title, String[] options) throws TipiBreakException {
-		showInfo("showQuestion not supported", "Warning");
+	public void showQuestion(String text, String title, String[] options, TipiComponent tc) throws TipiBreakException {
+		showInfo("showQuestion not supported", "Warning", tc);
 	}
 
 //	public void showWarning(String text, String title) {

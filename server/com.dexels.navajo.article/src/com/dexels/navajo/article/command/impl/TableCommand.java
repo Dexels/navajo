@@ -224,7 +224,14 @@ public class TableCommand implements ArticleCommand {
 		// <column label=\"Datum\" type=\"date\" id=\"datum\"/>
 		ObjectNode on = mapper.createObjectNode();
 		outputArgs.add(on);
-		on.put("key", e.getStringAttribute("key"));
+		final String key = e.getStringAttribute("key");
+		if(key!=null) {
+			on.put("key", key);
+		}
+		final String highlight = e.getStringAttribute("highlight");
+		if(highlight!=null) {
+			on.put("highlight", highlight);
+		}
 		List<XMLElement> children = e.getChildrenByTagName("column");
 		ArrayNode an = mapper.createArrayNode();
 		on.put("columns", an);
@@ -243,6 +250,10 @@ public class TableCommand implements ArticleCommand {
 			final String target = xmlElement.getStringAttribute("target");
 			if(target!=null) {
 				column.put("target", target);
+			}
+			final String hidden = xmlElement.getStringAttribute("hidden");
+			if(hidden!=null) {
+				column.put("hidden", hidden);
 			}
 		}
 		return true;

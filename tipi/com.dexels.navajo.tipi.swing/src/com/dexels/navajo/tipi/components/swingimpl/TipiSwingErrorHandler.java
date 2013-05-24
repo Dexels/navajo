@@ -34,11 +34,11 @@ public class TipiSwingErrorHandler extends BaseTipiErrorHandler {
 
 	public void showError(Exception e) {
 		TipiContext c = getContext();
-		c.showError(e.getMessage(), "");
+		c.showError(e.getMessage(), "", null);
 	}
 
 	public void showErrorDialog(final String error) {
-		getContext().showError(error, "");
+		getContext().showError(error, "", null);
 	}
 	// public Object createContainer(){
 	// return new JPanel();

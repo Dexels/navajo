@@ -162,14 +162,25 @@ public class ApplyCss extends TipiAction implements TipiComponentInstantiatedLis
 	}
 	@Override
 	public void componentInstantiated(final TipiComponent tc){
-		getContext().runSyncInEventThread(new Runnable(){
-
-			@Override
-			public void run() {
-				doComponentInstantiated(tc);
-				
-			}});
-
+		try
+		{
+			//Only apply if this component wants CSS.
+			Object applyCss = tc.getValue("applyCss");
+			if (applyCss != null && applyCss.toString().equals("true"))
+			{
+				getContext().runSyncInEventThread(new Runnable(){
+					
+					@Override
+					public void run() {
+						doComponentInstantiated(tc);
+						
+					}});
+			}
+		}
+		catch(UnsupportedOperationException uoe)
+		{
+			// nothing wrong, applyCss is not a possible value for this TipiComponent
+		}
 		
 	}
 }

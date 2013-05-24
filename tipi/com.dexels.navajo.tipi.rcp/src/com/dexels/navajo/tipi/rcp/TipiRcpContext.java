@@ -14,6 +14,7 @@ import tipi.TipiApplicationInstance;
 import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiRcpContext extends TipiContext {
@@ -76,12 +77,12 @@ public class TipiRcpContext extends TipiContext {
 	}
 
 	@Override
-	public void showInfo(String text, String title) {
+	public void showInfo(String text, String title, TipiComponent tc) {
 
 	}
 
 	@Override
-	public void showQuestion(String text, String title, String[] options)
+	public void showQuestion(String text, String title, String[] options, TipiComponent tc)
 			throws TipiBreakException {
 
 	}

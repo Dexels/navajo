@@ -12,6 +12,8 @@
 			Abstract component, used by all components.
 		</description>
 		<values>
+			<!-- determines whether to cache css definitions and apply them. The applying also only works if a CSS library is active. -->
+           <value direction="in" name="applyCss" type="boolean" value="false"/>
            <value direction="in" name="cssClass" type="string" />
            <value direction="in" name="cssStyle" type="string" />
 		</values>
