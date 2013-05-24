@@ -181,7 +181,7 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 	}
 
 	public void setInstanceId(String id) {
-		logger.info("Setting sublocale to: " + id);
+		logger.info("Setting instanceid to: " + id);
 		instanceId = id;
 	}
 
