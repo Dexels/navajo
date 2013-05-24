@@ -110,7 +110,6 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 			  String ref = iter.next();
 			  AsyncMappable a = objectStore.get(ref);
 			  long now = System.currentTimeMillis();
-			  logger.info("a: " + a + ", lastaccess: " + a.getLastAccess());
 			  if ( (now - a.getLastAccess()) > timeout ) {
 				 logger.info("About to kill: " + a);
 				  a.kill();
