@@ -1911,7 +1911,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				if (!hasUserDefinedErrorHandler) {
 					logger.error("Delivering usererror: \n"
 							+ errorMessage);
-					showWarning(errorMessage, "Invoerfout", event.getComponent());
+					showWarning(errorMessage, "Invoerfout", event == null ? null : event.getComponent());
 				}
 				if (breakOnError) {
 					throw new TipiBreakException(
