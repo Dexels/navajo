@@ -68,7 +68,7 @@ public class TipiButton extends TipiVaadinComponentImpl {
 	  }
 
 	@Override
-	protected void performComponentMethod(String name,
+	protected synchronized void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event)
 			throws TipiBreakException {
 		super.performComponentMethod(name, compMeth, event);

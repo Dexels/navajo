@@ -249,7 +249,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		});
 	}
 
-	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
+	protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
 		int count = this.table.getContainerDataSource().size();
 		if (count != 0) {
 	
