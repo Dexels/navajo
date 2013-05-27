@@ -21,7 +21,7 @@ Export-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.http,
  com.dexels.navajo.jdbc,
  navajoadapters,
- org.dexels.grus
+ org.dexels.grus;version="1.0.0"
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.adapter.navajomap.manager,
  com.dexels.navajo.client,
