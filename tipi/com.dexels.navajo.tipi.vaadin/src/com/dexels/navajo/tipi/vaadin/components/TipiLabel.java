@@ -33,6 +33,10 @@ public class TipiLabel extends TipiVaadinComponentImpl {
 		        if ("icon".equals(name)) {
 	                v.setIcon( getResource(object));
 		        }
+		        if("cssClass".equals(name)){
+		        
+		        	v.addStyleName(""+object);
+		        }
 	  }
 
 }
