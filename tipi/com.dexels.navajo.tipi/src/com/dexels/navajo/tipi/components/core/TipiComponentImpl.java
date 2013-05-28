@@ -105,13 +105,19 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	private final Map<String, PropertyChangeListener> myDataListeners = new HashMap<String, PropertyChangeListener>();
 	private String extension;
 	private String componentType;
-
+	private int idCount = 0;
+	
 	private TipiExtension myParentExtension;
 
 	public TipiExtension getParentExtension() {
 		return myParentExtension;
 	}
 
+	@Override
+	public int generateChildId() {
+		return idCount++;
+	}
+	
 	public void setParentExtension(TipiExtension myParentExtension) {
 		this.myParentExtension = myParentExtension;
 	}
@@ -498,6 +504,10 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	}
 
 	public void setId(String id) {
+		if(myId!=null) {
+			logger.debug("Not resetting id. Value: "+myId+" requested id: "+id);
+			return;
+		}
 		myId = id;
 	}
 
@@ -811,7 +821,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
-	public final String getId() {
+	public String getId() {
 		if (myId == null) {
 			myId = myContext.generateComponentId(getTipiParent(), this);
 		}
