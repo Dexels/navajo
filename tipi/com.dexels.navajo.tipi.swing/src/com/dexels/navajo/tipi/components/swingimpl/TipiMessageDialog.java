@@ -1,12 +1,15 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.Component;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiModalInternalFrame;
@@ -30,7 +33,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 
-// VERY IMPORTANT -- do not add this component to any classdefinition xml. It is not intended for normal usage, only to be able to apply CSS to showInfo/showWarning/showError
+// VERY IMPORTANT -- do not add this component to any classdefinition xml. It is not intended for normal usage, only to be able to apply CSS to showInfo/showWarning/showError/showQuestion
 public class TipiMessageDialog extends TipiSwingComponentImpl{
 
 	private static final long serialVersionUID = 8645510749158311198L;
@@ -39,6 +42,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 	private String cssClass = "";
 	private String cssStyle = "";
 	private int messageType = JOptionPane.INFORMATION_MESSAGE;
+	private String[] myOptions;
 	
 	private static final XMLElement acceptedValues;
 	
@@ -79,6 +83,12 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		cssStyle.setAttribute("name", "cssStyle");
 		cssStyle.setAttribute("type", "string");
 		cssStyle.setName("value");
+		XMLElement applyCss = new XMLElement();
+		applyCss.setAttribute("direction", "inout");
+		applyCss.setAttribute("name", "applyCss");
+		applyCss.setAttribute("type", "boolean");
+		applyCss.setAttribute("value", "true");
+		applyCss.setName("value");
 		acceptedValues = new XMLElement();
 		acceptedValues.setAttribute("name", "values");
 		acceptedValues.addChild(title);
@@ -86,6 +96,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		acceptedValues.addChild(messageType);
 		acceptedValues.addChild(cssClass);
 		acceptedValues.addChild(cssStyle);
+		acceptedValues.addChild(applyCss);
 	}
 
 	
@@ -93,8 +104,13 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 			.getLogger(TipiMessageDialog.class);
 	
 	public TipiMessageDialog(String name) {
+		this(name, null);
+	}
+	
+	public TipiMessageDialog(String name, String[] options) {
 		myId = name;
 		myName = name;
+		myOptions = options;
 	}
 	
 	public void initialize(TipiContext tc)
@@ -119,20 +135,41 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		// shouldn't do anything
 	}
 	public Object createContainer() {
+		final Set<Integer> responseSet = new HashSet<Integer>();
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
 
-				if (mySwingTipiContext.getOtherRoot() != null) {
-					TipiModalInternalFrame.showInternalMessage(mySwingTipiContext.getOtherRoot()
-							.getRootPane(), mySwingTipiContext.getOtherRoot().getContentPane(),
-							title, text, mySwingTipiContext.getPoolSize(), messageType);
-				} else 
-					JOptionPane.showMessageDialog((Component) mySwingTipiContext.getTopDialog(),
-							text, title, messageType);
+				if (messageType == -1)
+				{
+					int response = JOptionPane
+							.showOptionDialog((Component) mySwingTipiContext.getTopDialog(), text,
+									title, JOptionPane.YES_NO_OPTION,
+									JOptionPane.QUESTION_MESSAGE, null, myOptions,
+									myOptions[0]);
+					responseSet.add(response);
+					
+				}
+				else
+				{
+					if (mySwingTipiContext.getOtherRoot() != null) {
+						TipiModalInternalFrame.showInternalMessage(mySwingTipiContext.getOtherRoot()
+								.getRootPane(), mySwingTipiContext.getOtherRoot().getContentPane(),
+								title, text, mySwingTipiContext.getPoolSize(), messageType);
+					} else 
+						JOptionPane.showMessageDialog((Component) mySwingTipiContext.getTopDialog(),
+								text, title, messageType);
+					}
 
 			}
 		});
+		if (messageType == -1)
+		{
+			int response = responseSet.iterator().next();
+			if (response != 0) {
+				throw new TipiBreakException(TipiBreakException.USER_BREAK);
+			}
+		}
 		return null;
 	}
 

@@ -152,6 +152,11 @@ public abstract class BaseContextImpl implements ArticleContext {
 	
 	public void interpretMeta(XMLElement article, ObjectMapper mapper, ObjectNode articleNode) throws ArticleException {
 		int i = 0;
+		
+		String outputType = article.getStringAttribute("output");
+		if(outputType!=null) {
+			articleNode.put("output", outputType);
+		}
 			XMLElement argTag = article.getChildByTagName("_arguments");
 			ArrayNode inputArgs = mapper.createArrayNode();
 			articleNode.put("input", inputArgs);
@@ -163,8 +168,21 @@ public abstract class BaseContextImpl implements ArticleContext {
 					input.put("name", xmlElement.getStringAttribute("name"));
 					input.put("description", xmlElement.getStringAttribute("description"));
 					input.put("type", xmlElement.getStringAttribute("type"));
-					input.put("optional", xmlElement.getBooleanAttribute("optional", "true", "false", true));
-					input.put("default", xmlElement.getStringAttribute("default"));
+					final boolean optional = xmlElement.getBooleanAttribute("optional", "true", "false", false);
+					input.put("optional", optional);
+					
+					final String defaultValue = xmlElement.getStringAttribute("default");
+					if(defaultValue!=null) {
+						input.put("default", defaultValue);
+					}
+					final String sourcearticle = xmlElement.getStringAttribute("sourcearticle");
+					if (sourcearticle!=null) {
+						input.put("sourcearticle", sourcearticle);
+					}
+					final String sourcekey = xmlElement.getStringAttribute("sourcekey");
+					if(sourcekey!=null) {
+						input.put("sourcekey", sourcekey);
+					}
 					inputArgs.add(input);
 				}
 			}

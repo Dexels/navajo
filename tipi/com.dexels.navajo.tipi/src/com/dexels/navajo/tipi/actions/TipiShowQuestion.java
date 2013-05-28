@@ -34,6 +34,6 @@ public class TipiShowQuestion extends TipiAction {
 		if (title == null) {
 			title = "Vraag";
 		}
-		myContext.showQuestion((String) o.value, title, options);
+		myContext.showQuestion((String) o.value, title, options, event.getComponent());
 	}
 }

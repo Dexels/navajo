@@ -2,7 +2,7 @@ Bundle-Name: Navajo Tipi Substance wrapper
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.substance
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.1.27.qualifier
+Bundle-Version: 1.1.29.qualifier
 Bundle-Vendor: Dexels
 DynamicImport-Package: *
 Import-Package: com.dexels.navajo.document;version="2.2.0",

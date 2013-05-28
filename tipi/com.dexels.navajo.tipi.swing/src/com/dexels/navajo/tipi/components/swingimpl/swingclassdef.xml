@@ -389,7 +389,7 @@
 				The color of a selected row	
     	 	</description>
          </value>
-         <value direction="inout" name="selectedIndex" type="integer" property="selectedIndex">
+         <value direction="inout" name="selectedIndex" type="integer">
          	<description>
 				The selected row of the table, or -1 if no row has been selected.\\
 				You can both get and set this value.

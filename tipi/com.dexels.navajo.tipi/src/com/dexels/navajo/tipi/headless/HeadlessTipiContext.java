@@ -10,6 +10,7 @@ import java.util.Queue;
 import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
 
@@ -84,14 +85,14 @@ public class HeadlessTipiContext extends TipiContext {
 	}
 
 	@Override
-	public void showInfo(String text, String title) {
+	public void showInfo(String text, String title, TipiComponent tc) {
 		infoBuffer.append(text);
 		infoBuffer.append("\n");
 		infoQueue.offer(text);
 	}
 
 	@Override
-	public void showQuestion(String text, String title, String[] options)
+	public void showQuestion(String text, String title, String[] options, TipiComponent tc)
 			throws TipiBreakException {
 		infoBuffer.append(text);
 		infoBuffer.append("\n");

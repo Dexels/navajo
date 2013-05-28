@@ -139,7 +139,7 @@ public class TipiMap extends TipiMessagePanel  {
 	
 	
 	@Override
-	protected void performComponentMethod(String name,
+	protected synchronized void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event)
 			throws TipiBreakException {
 		if(name.equals("mark")) {

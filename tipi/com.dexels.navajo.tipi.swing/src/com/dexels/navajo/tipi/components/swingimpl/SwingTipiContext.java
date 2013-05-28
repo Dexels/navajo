@@ -423,27 +423,30 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	public void showQuestion(final String text, final String title,
-			final String[] options) throws TipiBreakException {
-		final Set<Integer> responseSet = new HashSet<Integer>();
-		runSyncInEventThread(new Runnable() {
-			public void run() {
-				int response = JOptionPane
-						.showOptionDialog((Component) getTopDialog(), text,
-								title, JOptionPane.YES_NO_OPTION,
-								JOptionPane.QUESTION_MESSAGE, null, options,
-								options[0]);
-				responseSet.add(response);
-			}
-		});
-		int response = responseSet.iterator().next();
-		if (response != 0) {
-			throw new TipiBreakException(TipiBreakException.USER_BREAK);
+			final String[] options, final TipiComponent tc) throws TipiBreakException {
+		String name = "messages";
+		if (tc != null && tc.getHomeComponent() != null)
+		{
+			name = tc.getHomeComponent().getName();
 		}
+		TipiMessageDialog info = new TipiMessageDialog(name, options);
+		info.initialize(this);
+		info.setValue("text", text);
+		info.setValue("title", title);
+		info.setValue("messageType", -1);
+		info.setValue("cssClass", text);
+		info.componentInstantiated();
+		info.initContainer();
 	}
 
 	private void showInfo(final String text, final String title,
-			final int messageType) {
-		TipiMessageDialog info = new TipiMessageDialog("messages");
+			final int messageType, final TipiComponent tc) {
+		String name = "messages";
+		if (tc != null && tc.getHomeComponent() != null)
+		{
+			name = tc.getHomeComponent().getName();
+		}
+		TipiMessageDialog info = new TipiMessageDialog(name);
 		info.initialize(this);
 		info.setValue("text", text);
 		info.setValue("title", title);
@@ -454,21 +457,21 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	@Override
-	public void showInfo(final String text, final String title) {
+	public void showInfo(final String text, final String title, final TipiComponent tc) {
 		logger.info("ShowInfo: "+text+" title: "+title);
-		showInfo(text, title, JOptionPane.INFORMATION_MESSAGE);
+		showInfo(text, title, JOptionPane.INFORMATION_MESSAGE, tc);
 	}
 
 	@Override
-	public void showError(final String text, final String title) {
+	public void showError(final String text, final String title, final TipiComponent tc) {
 		logger.error("ShowError: "+text+" title: "+title);
-		showInfo(text, title, JOptionPane.ERROR_MESSAGE);
+		showInfo(text, title, JOptionPane.ERROR_MESSAGE, tc);
 	}
 
 	@Override
-	public void showWarning(final String text, final String title) {
+	public void showWarning(final String text, final String title, final TipiComponent tc) {
 		logger.warn("ShowWarning: "+text+" title: "+title);
-		showInfo(text, title, JOptionPane.WARNING_MESSAGE);
+		showInfo(text, title, JOptionPane.WARNING_MESSAGE, tc);
 	}
 
 	// TODO refactor into more 
@@ -662,7 +665,7 @@ public class SwingTipiContext extends TipiContext {
 	public void showInternalError(String errorString, Throwable t) {
 		super.showInternalError(errorString, t);
 		if (fakeJars) {
-			showInfo("Internal error: " + errorString, "Internal error");
+			showInfo("Internal error: " + errorString, "Internal error", null);
 		}
 	}
 
@@ -752,7 +755,7 @@ public class SwingTipiContext extends TipiContext {
 
 	@Override
 	public void showFatalStartupError(String message) {
-		showError(message, "Fatal startup error!");
+		showError(message, "Fatal startup error!", null);
 	}
 
 

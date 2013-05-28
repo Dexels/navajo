@@ -38,7 +38,7 @@ public class HttpResourceLoader extends ClassPathResourceLoader implements Seria
 		try {
 			is = uc.getInputStream();
 		} catch (IOException e) {
-			logger.error("Error: ",e);
+			logger.debug("Error but trying super method: ",e);
 		}
 		if (is != null) {
 			if ("gzip".equals(uc.getContentEncoding())) {

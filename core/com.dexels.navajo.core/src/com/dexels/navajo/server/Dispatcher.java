@@ -839,9 +839,7 @@ private ServiceHandler createHandler(String handler, Access access) {
     		} else {
     			System.err.println("DID NOT FIND ANY OWNERS OF ASYNCREF...");
     		}
-    	} else {
-    		System.err.println("FOUND ASYNCREF: " + allRefs[0] + " ON MYSELF!!");
-    	}
+    	} 
     }
       Header header = inMessage.getHeader();
       rpcName = header.getRPCName();
