@@ -65,6 +65,14 @@
 		</description>
 	</value>
 	</values>
+	<methods>
+		<method name="removeStyle">
+			<param name="style" type="string" required="true"/>
+		</method>
+		<method name="setVisibility">
+			<param name="visible" type="boolean" required="true"/>
+		</method>
+	</methods>
   </tipiclass>
 
     <tipiclass class="TipiBrowser" name="browser" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.components" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
@@ -201,7 +209,7 @@
 	
 	
 	
-		<tipiclass addtocontainer="true" implements="basecomponent,datacomponent,vaadincomponent"  class="TipiHtmlLabel" module="component"
+	<tipiclass addtocontainer="true" implements="basecomponent,datacomponent,vaadincomponent"  class="TipiHtmlLabel" module="component"
 		name="htmllabel" childcount="0" package="com.dexels.navajo.tipi.vaadin.components" propertycomponent="false" studio-icon="button.gif"
 		type="component">
 		<values>
@@ -283,6 +291,7 @@
 	<tipiclass class="TipiPanel" name="panel" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.components"
 		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
 		<events>
+			<event name="onActionPerformed" />
 		</events>
 
 		<methods />
@@ -394,7 +403,7 @@
     <tipiclass addtocontainer="true" childcount="1" class="TipiScroll" layoutmanager="false"
         module="container" name="scroll" package="com.dexels.navajo.tipi.vaadin.components"
         studio-icon="scroll.gif" type="tipi">
-        <events>
+        <events>	
             <event name="onInstantiate"/>
         </events>
         <values>
@@ -800,11 +809,14 @@
             <param name="message" type="message" />
             <param name="navajo" type="navajo" />
          </event>
+         <event name="onActionPerformed">
+         </event>
       </events>
       <values>
          <!-- only addition from panel -->
          <value direction="in" name="messageName" type="string" />
           <value direction="in" name="message" type="message" />
+          <value direction="inout" name="height" type="string"/>
       </values>
       <methods />
    </tipiclass>
