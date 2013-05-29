@@ -35,8 +35,6 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.12</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/1.1.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.1.26</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino/1.1.20</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino.continuations/1.0.12</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.queuemanager/1.0.20</bundle>
 		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
 		<bundle dependency='true'>mvn:commons-lang/commons-lang/2.4</bundle>
@@ -44,11 +42,15 @@
 		<bundle dependency='true'>mvn:org.apache.commons/commons-email/1.3.1</bundle>
 	</feature>
 	
+    <feature resolver="(obr)" name='navajo.rhino' version='1.0.0' start-level='81'  >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino/1.1.22</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino.continuations/1.0.12</bundle>
+	</feature>
+
     <feature resolver="(obr)" name='navajo.adapter' version='1.0.0' start-level='81'  >
-		<feature version="[1.0.5,2)">navajo.core</feature>
+		<feature version="[1.0.5,2)">navajo.server</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/1.1.50</bundle>
 	</feature>
-	
 	
 	<feature resolver="(obr)" name='navajo.core.jabber' version='1.0.1' start-level='81' >
 		<feature version="[1.0.5,2)">navajo.core</feature>
