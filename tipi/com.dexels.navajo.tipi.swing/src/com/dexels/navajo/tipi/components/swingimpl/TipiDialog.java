@@ -66,6 +66,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl implements ScopeLimit
 	private boolean decorated = true;
 	private boolean showing = false;
 	private String title = "";
+	private Object iconUrl = null;
 	private JMenuBar myBar = null;
 	private Rectangle myBounds = new Rectangle(-1, -1, -1, -1);
 	private boolean ignoreClose = false;
@@ -262,6 +263,11 @@ public class TipiDialog extends TipiSwingDataComponentImpl implements ScopeLimit
 					}
 					return;
 				}
+				if (name.equals("icon")) {
+					iconUrl = object; 
+					possiblySetIconAtContainer();
+					return;
+				}
 				if (name.equals("x")) {
 					myBounds.x = ((Integer) object).intValue();
 					resetDialogBounds();
@@ -298,6 +304,10 @@ public class TipiDialog extends TipiSwingDataComponentImpl implements ScopeLimit
 		if ("title".equals(name)) {
 			// return ( (JDialog) getDialogContainer()).getTitle();
 			return title;
+		}
+		if ("icon".equals(name))
+		{
+			return iconUrl;
 		}
 		if (name.equals("x")) {
 			return new Integer(myBounds.x);
@@ -356,6 +366,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl implements ScopeLimit
 			// logger.debug("Standard dialog mode");
 			constructStandardDialog();
 		}
+		possiblySetIconAtContainer();
 	}
 
 	private void constructAppletDialog() {
@@ -524,6 +535,14 @@ public class TipiDialog extends TipiSwingDataComponentImpl implements ScopeLimit
 		}
 
 		mySwingTipiContext.addDialog(myDialog);
+	}
+	
+	private void possiblySetIconAtContainer()
+	{
+		if (iconUrl != null && myRootPaneContainer != null && myRootPaneContainer instanceof TipiSwingDialog)
+		{
+			((TipiSwingDialog) myRootPaneContainer).setIconUrl(iconUrl);
+		}
 	}
 
 	private synchronized Rectangle getDialogBounds() {
