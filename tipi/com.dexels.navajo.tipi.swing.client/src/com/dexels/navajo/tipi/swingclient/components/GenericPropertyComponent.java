@@ -1371,7 +1371,6 @@ public class GenericPropertyComponent extends JPanel {
 				return getPreferredSize();
 			}
 		};
-
 		memoFieldScrollPane.getViewport().add(myMemoField);
 		memoFieldScrollPane
 				.setHorizontalScrollBarPolicy(horizontalScrolls ? JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
@@ -1379,6 +1378,8 @@ public class GenericPropertyComponent extends JPanel {
 		memoFieldScrollPane
 				.setVerticalScrollBarPolicy(verticalScrolls ? JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
 						: JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		memoFieldScrollPane.setPreferredSize(memoFieldScrollPane.getPreferredSize());
+
 		myMemoField.setProperty(p);
 		if (toolTipText != null) {
 			myMemoField.setToolTipText(toolTipText);
