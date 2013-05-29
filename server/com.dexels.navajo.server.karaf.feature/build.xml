@@ -6,7 +6,7 @@
 		uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
 
 	<property name="output" value="output" />
-	<property name="version" value="1.0.74" />
+	<property name="version" value="1.0.76" />
 
 	
 	<target name="prepare">
