@@ -15,5 +15,5 @@ Import-Package: com.dexels.navajo.camel.component,
  org.apache.camel.builder;version="2.10.2",
  org.apache.camel.impl;version="2.10.2",
  org.apache.camel.model;version="2.10.2",
- org.slf4j;version="1.6.1"
+ org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/navajo.listener.camel.xml

@@ -2,7 +2,7 @@ Bundle-Name: Navajo Swing Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.2.26.qualifier
+Bundle-Version: 1.2.32.qualifier
 Bundle-Activator: tipiswing.TipiSwingExtension
 Export-Package: com.dexels.navajo.tipi.components.swingimpl;version="1.0.0",
  com.dexels.navajo.tipi.components.swingimpl.parsers;version="1.0.0",
@@ -61,7 +61,7 @@ Import-Package: com.dexels.navajo.dnd,
  org.jdesktop.animation.timing.interpolation;version="1.1.0",
  org.jdesktop.animation.transitions;version="1.1.0",
  org.osgi.framework;version="1.5.0",
- org.slf4j;version="1.6.1",
+ org.slf4j;version="[1.6.1,1.8.0)",
  tipi,
  tipipackage;version="1.1.42"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

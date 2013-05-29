@@ -13,7 +13,7 @@ Import-Package: com.dexels.navajo.client,
  org.junit;version="4.8.2";resolution:=optional,
  org.junit.runner;version="4.8.2";resolution:=optional,
  org.osgi.framework;version="1.5.0",
- org.slf4j;version="1.6.1"
+ org.slf4j;version="[1.6.1,1.8.0)"
 Export-Package: com.dexels.navajo.queuemanager,
  com.dexels.navajo.queuemanager.api,
  navajoqueuemanager

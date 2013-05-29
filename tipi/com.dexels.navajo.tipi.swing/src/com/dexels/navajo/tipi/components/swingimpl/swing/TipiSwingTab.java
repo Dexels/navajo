@@ -117,6 +117,8 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 	}
 
 	public void setTabText(String tabText) {
+		String old = this.tabText;
 		this.tabText = tabText;
+		firePropertyChange("tabText", old, tabText);
 	}
 }

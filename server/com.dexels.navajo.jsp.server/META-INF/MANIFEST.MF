@@ -19,7 +19,7 @@ Import-Package: com.dexels.navajo.client,
  javax.servlet.jsp.tagext;version="[2.1.0,3.0.0)",
  org.apache.tools.ant;resolution:=optional,
  org.osgi.framework;version="1.5.0",
- org.slf4j;version="1.6.1"
+ org.slf4j;version="[1.6.1,1.8.0)"
 Export-Package: com.dexels.navajo.installer,
  com.dexels.navajo.jsp.server,
  com.dexels.navajo.jsp.server.impl,

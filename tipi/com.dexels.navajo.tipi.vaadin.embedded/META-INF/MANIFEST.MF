@@ -37,7 +37,7 @@ Import-Package: ch.qos.logback.classic;version="0.9.27",
  org.eclipse.jetty.util.resource;version="8.1.4.v20120524",
  org.eclipse.jetty.xml;version="8.1.4.v20120524",
  org.osgi.framework;version="1.5.0",
- org.slf4j;version="1.6.1"
+ org.slf4j;version="[1.6.1,1.8.0)"
 Export-Package: com.dexels.navajo.tipi.vaadin.embedded
 Bundle-ClassPath: .
 Bundle-Activator: com.dexels.navajo.tipi.vaadin.embedded.activator.Activator

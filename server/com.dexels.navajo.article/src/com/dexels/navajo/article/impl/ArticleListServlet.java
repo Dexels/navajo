@@ -69,9 +69,7 @@ public class ArticleListServlet extends HttpServlet implements Servlet {
 				context.writeArticleMeta(requestedArticle, rootNode, mapper);
 			} else {
 				List<String> articles = context.listArticles();
-				System.err.println("ARTicles: "+articles);
 				for (String article : articles) {
-					logger.info("Meta of article:"+article);
 					context.writeArticleMeta(article, rootNode,mapper);
 					// context.getArticleMeta(article);
 				}

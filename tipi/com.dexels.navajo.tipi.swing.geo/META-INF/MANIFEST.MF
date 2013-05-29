@@ -18,5 +18,5 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.version,
  navajoextension,
  org.osgi.framework;version="1.5.0",
- org.slf4j;version="1.6.1"
+ org.slf4j;version="[1.6.1,1.8.0)"
 Export-Package: com.dexels.navajo.tipi.swing.geo

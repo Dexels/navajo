@@ -100,6 +100,7 @@ public final class PropertyRadioSelection extends JPanel implements
 			// logger.info("Null prop");
 			return;
 		}
+		boolean editable = p.isDirIn();
 		myProperty = p;
 		if (!Property.SELECTION_PROPERTY.equals(p.getType())) {
 			throw new RuntimeException("No selection property.");
@@ -125,12 +126,12 @@ public final class PropertyRadioSelection extends JPanel implements
 																		// starts
 																		// at 0
 					if (row + 1 > req) {
-						add(createButton(s), new GridBagConstraints(col, row,
+						add(createButton(s, editable), new GridBagConstraints(col, row,
 								1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST,
 								GridBagConstraints.HORIZONTAL, new Insets(0, 0,
 										0, 0), 0, 0));
 					} else {
-						add(createButton(s), new GridBagConstraints(col, row,
+						add(createButton(s, editable), new GridBagConstraints(col, row,
 								1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST,
 								GridBagConstraints.HORIZONTAL, new Insets(0, 0,
 										0, 0), 0, 0));
@@ -141,7 +142,7 @@ public final class PropertyRadioSelection extends JPanel implements
 						col++;
 					}
 				} else {
-					add(createButton(s), new GridBagConstraints(0, i, 1, 1, 1,
+					add(createButton(s, editable), new GridBagConstraints(0, i, 1, 1, 1,
 							1.0, GridBagConstraints.NORTHWEST,
 							GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0,
 							0));
@@ -154,11 +155,12 @@ public final class PropertyRadioSelection extends JPanel implements
 
 	}
 
-	private final JComponent createButton(Selection s) {
+	private final JComponent createButton(Selection s, Boolean editable) {
 		JRadioButton jr = new JRadioButton();
 		selectionMap.put(jr, s);
 		buttonList.add(jr.getModel());
 		jr.setText(s.getName() != null ? s.getName() : s.getValue());
+		jr.setEnabled(editable);
 		myGroup.add(jr);
 		jr.addActionListener(this);
 		jr.addFocusListener(myFocusListener);

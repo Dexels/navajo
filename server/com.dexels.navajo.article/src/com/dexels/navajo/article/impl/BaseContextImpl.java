@@ -125,7 +125,6 @@ public abstract class BaseContextImpl implements ArticleContext {
 		File rootFolder = new File(root);
 		File articles = new File(rootFolder,"article");
 		File article = new File(articles,sub+".xml");
-		System.err.println("Looking for file: "+article.getAbsolutePath());
 		return article;
 	}
 
@@ -151,7 +150,6 @@ public abstract class BaseContextImpl implements ArticleContext {
 	}
 	
 	public void interpretMeta(XMLElement article, ObjectMapper mapper, ObjectNode articleNode) throws ArticleException {
-		int i = 0;
 		
 		String outputType = article.getStringAttribute("output");
 		if(outputType!=null) {
@@ -205,7 +203,6 @@ public abstract class BaseContextImpl implements ArticleContext {
 					String attributeName = iterator.next();
 					parameters.put(attributeName, e.getStringAttribute(attributeName));
 				}
-				System.err.println("Calling command # "+(i++));
 				if(ac.writeMetadata(e,outputArgs,mapper)) {
 				}
 
@@ -224,7 +221,6 @@ public abstract class BaseContextImpl implements ArticleContext {
 			x.parseFromReader(fr);
 			article.put("name", name);
 			interpretMeta(x, mapper,article);
-			System.err.println("x:\n"+x);
 		} catch (IOException e) {
 			logger.error("Problem parsing article: ", e);
 		} finally {

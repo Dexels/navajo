@@ -77,15 +77,15 @@
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.test/1.0.10</bundle> 
 	</feature>
 
-	<feature resolver="(obr)" name='tipi.core' version='1.0.8' start-level='81' >
+	<feature resolver="(obr)" name='tipi.core' version='1.0.10' start-level='81' >
 		<feature version="[1.0.5,2)">navajo.core</feature>
 		<!-- <feature version="[1.0.0,2)">navajo.function</feature> -->
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/1.1.62</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/1.1.73</bundle>
 	</feature>
-	<feature resolver="(obr)" name='tipi.vaadin' version='1.0.6' start-level='81' >
-		<feature version="[1.0.6,2)">tipi.core</feature>
+	<feature resolver="(obr)" name='tipi.vaadin' version='1.0.7' start-level='81' >
+		<feature version="[1.0.9,2)">tipi.core</feature>
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.5</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.1.20</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.1.22</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='tipi.mail' version='1.0.0' start-level='81' >
