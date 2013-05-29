@@ -33,7 +33,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 
-// VERY IMPORTANT -- do not add this component to any classdefinition xml. It is not intended for normal usage, only to be able to apply CSS to showInfo/showWarning/showError/showQuestion
+// VERY IMPORTANT -- do not add this component to any classdefinition xml. It is not intended for normal usage, only to be able to apply CSS to showInfo/showWarning/showError/showQuestion/askValue
 public class TipiMessageDialog extends TipiSwingComponentImpl{
 
 	private static final long serialVersionUID = 8645510749158311198L;
@@ -41,8 +41,14 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 	private String text = "";
 	private String cssClass = "";
 	private String cssStyle = "";
+	/**
+	 * messageType == -1   --> showQuestion
+	 * messageType == -2   --> askValue
+	 */
 	private int messageType = JOptionPane.INFORMATION_MESSAGE;
 	private String[] myOptions;
+	private String myInitialValue;
+	private String myGlobalName;
 	
 	private static final XMLElement acceptedValues;
 	
@@ -129,6 +135,12 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		}
 	}
 	
+	public void initializeAskValue(String initialValue, String globalName)
+	{
+		myInitialValue = initialValue;
+		myGlobalName = globalName;
+	}
+	
 	@Override
 	public void setContainer(Object o)
 	{
@@ -149,6 +161,18 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 									myOptions[0]);
 					responseSet.add(response);
 					
+				}
+				else if (messageType == -2)
+				{
+					String response = JOptionPane.showInputDialog(
+							(Component) mySwingTipiContext.getTopLevel(), text,
+							myInitialValue);
+					if (response != null) {
+						mySwingTipiContext.setGlobalValue(myGlobalName, response);
+					} else {
+						throw new TipiBreakException(TipiBreakException.USER_BREAK);
+
+					}
 				}
 				else
 				{

@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.components.swingimpl.TipiMessageDialog;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -41,27 +42,27 @@ public class TipiAskValue extends TipiAction {
 		final Operand globalvalue = getEvaluatedParameter("value", event);
 		final Operand initialValue = getEvaluatedParameter("initialValue",
 				event);
-
-		myContext.runSyncInEventThread(new Runnable() {
-
-			public void run() {
-				String initVal = "";
-				if (initialValue != null) {
-					if (initialValue.value != null) {
-						initVal = "" + initialValue.value;
-					}
-				}
-				String response = JOptionPane.showInputDialog(
-						(Component) myContext.getTopLevel(), text.value,
-						initVal);
-				if (response != null) {
-					myContext.setGlobalValue("" + globalvalue.value, response);
-				} else {
-					throw new TipiBreakException(TipiBreakException.USER_BREAK);
-
-				}
+		String initVal = "";
+		if (initialValue != null) {
+			if (initialValue.value != null) {
+				initVal = "" + initialValue.value;
 			}
-		});
-	}
+		}
+		String name = "messages";
 
+		if (event.getComponent() != null && event.getComponent().getHomeComponent() != null)
+		{
+			name = event.getComponent().getHomeComponent().getName();
+		}
+		TipiMessageDialog info = new TipiMessageDialog(name);
+		info.initialize(myContext);
+		info.initializeAskValue(initVal, "" + globalvalue.value);
+		info.setValue("text", text.value);
+		info.setValue("title", "");
+		info.setValue("messageType", -2);
+		info.setValue("cssClass", text.value);
+		info.componentInstantiated();
+		info.initContainer();
+		
+	}
 }
