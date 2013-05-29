@@ -251,6 +251,20 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 									}
 								});
 							}
+							else if (evt.getPropertyName().equals("tabText")) {
+								runSyncInEventThread(new Runnable() {
+									public void run() {
+										pane.setTitleAt(nextIndex, evt.getNewValue().toString());
+									}
+								});
+							}
+							else if (evt.getPropertyName().equals("tabToolTip")) {
+								runSyncInEventThread(new Runnable() {
+									public void run() {
+										pane.setToolTipTextAt(nextIndex, evt.getNewValue().toString());
+									}
+								});
+							}
 
 						}
 					});
