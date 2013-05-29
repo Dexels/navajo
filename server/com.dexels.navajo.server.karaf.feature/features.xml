@@ -22,15 +22,15 @@
 		 -->
 	</feature>
 
-    <feature resolver="(obr)" name='navajo.function' version='1.0.6' start-level='80'  >
+    <feature resolver="(obr)" name='navajo.function' version='1.0.7' start-level='80'  >
 		<feature version="[1.0.5,2)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.22</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.24</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.server' version='1.0.6' start-level='81' >
 		<feature version="[1.0.5,2)">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/1.1.4</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.11</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.12</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/1.1.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.1.24</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino/1.1.20</bundle>
