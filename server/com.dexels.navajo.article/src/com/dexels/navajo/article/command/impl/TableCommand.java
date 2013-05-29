@@ -54,31 +54,21 @@ public class TableCommand implements ArticleCommand {
 	public JsonNode execute(ArticleRuntime runtime, ArticleContext context,
 			Map<String, String> parameters, XMLElement element)
 			throws ArticleException {
-		// runtime.setMimeType("text/plain");
 		String service = parameters.get("service");
 		if (service == null) {
 			throw new ArticleException(
 					"No service parameter supplied for table.");
 		}
 		String path = parameters.get("path");
-		// if(path==null) {
-		// throw new ArticleException("No path parameter supplied for table.");
-		// }
 		Navajo n = runtime.getNavajo(service);
 		if (n == null) {
 			throw new ArticleException("Navajo: " + service
 					+ " was not found in table command");
 		}
-
 		Message m = null;
 		if (path != null) {
 			m = n.getMessage(path);
 		}
-		// if(m==null) {
-		// n.write(System.err);
-		// throw new
-		// ArticleException("Path: "+path+" was not found in navajo : "+service);
-		// }
 		try {
 			runtime.setMimeType("text/json");
 			String tableName = parameters.get("name");
@@ -102,9 +92,6 @@ public class TableCommand implements ArticleCommand {
 					targetMap.put(id, target);
 				}
 			}
-			// String columns = parameters.get("columns");
-
-			// runtime.getOutputWriter().write("\""+tableName+"\" : ");
 			if (m == null) {
 				logger.warn(
 						"Ignoring table command. Message: {} not found. Dumping all.",
@@ -113,20 +100,16 @@ public class TableCommand implements ArticleCommand {
 			} else {
 				return writeJSON(m, tableName, runtime, columnIds, targetMap,propertyMap);
 			}
-			// appendMetadata(runtime,tableName,columnsArray,columnLabelsArray,columnWidthsArray,parameters.get("key"),parameters.get("link"));
 
 		} catch (IOException e) {
 			throw new ArticleException("Error writing result", e);
 		}
 		return null;
-		// m.write(System.err);
 	}
 
 	private JsonNode writeJSON(Message m, String name, ArticleRuntime runtime,
 			List<String> columns, Map<String, String> targetMap, Map<String, String> propertyMap)
 			throws ArticleException {
-		// m.writeSimpleJSON(name,runtime.getOutputWriter(),columns);
-		// assume array for now
 		List<Message> output = m.getElements();
 		ArrayNode an = runtime.getObjectMapper().createArrayNode();
 		for (Message elt : output) {

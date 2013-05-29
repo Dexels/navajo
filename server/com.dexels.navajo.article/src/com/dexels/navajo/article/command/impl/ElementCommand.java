@@ -70,11 +70,6 @@ public class ElementCommand implements ArticleCommand {
 			throw new ArticleException("No property: "+propertyName+" found in current navajo.");
 		}
 		
-		
-//		boolean writeLabel = "true".equals(parameters.get("showlabel"));
-//		if(writeLabel) {
-//			
-//		}
 		if(parameters.get("direct")!=null) {
 			Object value = p.getTypedValue();
 			if (value instanceof Binary) {
@@ -102,12 +97,6 @@ public class ElementCommand implements ArticleCommand {
 			on.put(name, p.getValue());
 			return on;
 		}
-		
-//		try {
-//			printElementJSONTypeless(p, runtime.getOutputWriter());
-//		} catch (IOException e) {
-//			logger.error("Error: ", e);
-//		}
 	}
 	
 

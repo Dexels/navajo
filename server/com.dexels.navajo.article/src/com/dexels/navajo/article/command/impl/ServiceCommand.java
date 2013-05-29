@@ -70,13 +70,7 @@ public class ServiceCommand implements ArticleCommand {
 		}
 		Header h = NavajoFactory.getInstance().createHeader(n, name, runtime.getUsername(), runtime.getPassword(), -1);
 		n.addHeader(h);
-		System.err.println("REQUEST:");
-		n.write(System.err);
-		System.err.println("END OF REQUEST");
 		final Navajo result = performCall(runtime, name, n);
-		System.err.println("RESULT:");
-		result.write(System.err);
-		System.err.println("END OF RESULT");
 		runtime.pushNavajo(name, result);
 		return null;
 	}
