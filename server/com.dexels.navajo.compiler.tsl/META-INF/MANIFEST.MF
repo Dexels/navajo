@@ -20,7 +20,7 @@ Import-Package: com.dexels.navajo.compiler,
  org.osgi.service.component;version="1.1.0",
  org.osgi.service.event;version="1.1.0",
  org.osgi.util.tracker;version="1.5.0",
- org.slf4j;version="1.6.1"
+ org.slf4j;version="[1.6.1,1.8.0)"
 Bundle-Activator: navajotsl.Activator
 Service-Component: OSGI-INF/navajoTslCompiler.xml, OSGI-INF/javaCompiler.xml, OSGI-INF/javaCompilerComponent.xml, OSGI-INF/bundleCreator.xml
 Export-Package: com.dexels.osgicompiler

@@ -8,4 +8,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Service-Component: OSGI-INF/httpResourceComponent.xml
 Export-Package: com.dexels.navajo.resource.http
 Import-Package: com.dexels.navajo.client.async,
- org.slf4j;version="1.6.1"
+ org.slf4j;version="[1.6.1,1.8.0)"

@@ -3,6 +3,7 @@
    <implementation class="com.dexels.navajo.article.impl.ArticleServlet"/>
    <reference bind="setArticleContext" cardinality="1..1" interface="com.dexels.navajo.article.ArticleContext" name="ArticleContext" policy="dynamic" unbind="clearArticleContext"/>
    <property name="alias" type="String" value="/article"/>
+   <property name="servlet-name" type="String" value="article"/>
    <service>
       <provide interface="javax.servlet.Servlet"/>
    </service>

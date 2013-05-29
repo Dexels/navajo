@@ -25,5 +25,5 @@ Import-Package: ch.qos.logback.classic;version="0.9.27",
  com.dexels.navajo.server,
  com.dexels.navajo.server.api,
  org.osgi.framework;version="1.3.0",
- org.slf4j;version="1.6.1"
+ org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/logbackLegacy.xml,OSGI-INF/logback.xml

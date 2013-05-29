@@ -9,4 +9,4 @@ Export-Package: com.dexels.navajo.version;version="1.1.0";uses:="org.osgi.framew
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .
 Import-Package: org.osgi.framework,
- org.slf4j;version="1.6.1"
+ org.slf4j;version="[1.6.1,1.8.0)"
