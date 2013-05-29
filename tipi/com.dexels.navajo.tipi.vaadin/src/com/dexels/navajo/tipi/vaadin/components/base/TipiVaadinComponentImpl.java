@@ -6,6 +6,8 @@ import org.vaadin.peter.contextmenu.ContextMenu;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
@@ -185,6 +187,28 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
     	if (name.equals("show") || name.equals("hide"))
     	{
     		throw new UnsupportedOperationException("Vaadin does not support show or hide. Use instantiate and dispose instead.");
+    	}
+    	if (name.equals("removeStyle"))
+    	{
+    		Object o = compMeth.getEvaluatedParameterValue("style", event);
+    		if (o != null && o.toString() != null){
+    			getActualVaadinComponent().removeStyleName(o.toString());
+    		}
+    		else{
+    			logger.error("At removeStyle, style is a required parameter.");
+    			throw new TipiBreakException(TipiBreakException.BREAK_BLOCK);
+    		}
+    	}
+    	if(name.equals("setVisibility")){
+    		Object o = compMeth.getEvaluatedParameterValue("visible", event);
+    		if (o != null){
+    			getActualVaadinComponent().setVisible((Boolean) o);
+    			getActualVaadinComponent().setHeight("100%");
+    		}
+    		else{
+    			logger.error("At setVisibility, style is a required parameter.");
+    			throw new TipiBreakException(TipiBreakException.BREAK_BLOCK);
+    		}
     	}
     }
 	public Component getVaadinContainer() {

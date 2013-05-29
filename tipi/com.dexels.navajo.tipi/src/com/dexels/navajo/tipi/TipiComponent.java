@@ -290,4 +290,6 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 	public boolean isScopeLimit();
 	
 	public TipiComponent getScopeHomeComponent();
+
+	public int generateChildId();
 }

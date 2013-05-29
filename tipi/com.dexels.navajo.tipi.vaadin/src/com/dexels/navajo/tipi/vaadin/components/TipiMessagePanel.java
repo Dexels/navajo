@@ -13,6 +13,9 @@ import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.MessageComponent;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.VerticalLayout;
 
 public class TipiMessagePanel extends TipiVaadinComponentImpl implements
@@ -57,6 +60,9 @@ public class TipiMessagePanel extends TipiVaadinComponentImpl implements
 			setMessage((Message) object);
 			return;
 		}
+		if(name.equals("height")){
+			((Sizeable) getContainer()).setHeight("" + object);
+		}
 		super.setComponentValue(name, object);
 	}
 
@@ -81,11 +87,27 @@ public class TipiMessagePanel extends TipiVaadinComponentImpl implements
 		if (name.equals("message")) {
 			return getMessage();
 		}
+		if(name.equals("height")){
+			return ((Sizeable) getContainer()).getHeight();
+		}
 		return super.getComponentValue(name);
 	}
 
 	public Object createContainer() {
-		VerticalLayout myPanel = new VerticalLayout();
+		VerticalLayout myPanel = new VerticalLayout();		
+		myPanel.addListener(new LayoutClickListener() {
+	            private static final long serialVersionUID = 5527999180793601282L;
+	            @Override
+	            public void layoutClick(LayoutClickEvent event) {
+	                try {
+	                	performTipiEvent("onActionPerformed", null, true);
+					} catch (TipiBreakException e) {
+						logger.error("Error: ",e);
+					} catch (TipiException e) {
+						logger.error("Error: ",e);
+					}
+	            }
+	        });
 		return myPanel;
 	}
 

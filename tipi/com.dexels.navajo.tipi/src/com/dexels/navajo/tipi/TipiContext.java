@@ -1473,9 +1473,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			if(parent!=null) {
 				tc.setParentContainer(parent.getContainer());
 			}
-			if (tc.getId() == null) {
-				tc.setId(generateComponentId(null, tc));
-			}
+			tc.setId(generateComponentId(parent, tc));
 			tc.setPropertyComponent(classDef.getBooleanAttribute("propertycomponent", "true", "false", false));
 			tc.initContainer();
 			tc.instantiateComponent(instance, classDef);
@@ -2538,9 +2536,15 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public String generateComponentId(TipiComponent parent,
 			TipiComponent component)  {
 		if (component == parent) {
-			return component.getClass().getName() + "@" + Math.random();
+			//return component.getClass().getName() + "@" + Math.random();
+			return component.getClass().getName() + "@" + parent.generateChildId();
 		}
-		return component.getClass().getName() + "@" + component.hashCode();
+		if (parent==null) {
+			//return component.getClass().getName() + "@" + component.hashCode();
+			return component.getClass().getName() + "@" + component.generateChildId();
+		}
+		return component.getClass().getName() + "@" + parent.generateChildId();
+//		return component.getClass().getName() + "@" + component.hashCode();
 
 	}
 
