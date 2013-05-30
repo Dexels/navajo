@@ -169,6 +169,12 @@ public class SimpleSharedStore implements SharedStoreInterface {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public long getNextAtomicLong(String id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }
 

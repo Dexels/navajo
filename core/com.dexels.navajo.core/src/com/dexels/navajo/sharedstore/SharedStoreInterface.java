@@ -195,4 +195,11 @@ public interface SharedStoreInterface {
 	 */
 	public String [] getParentObjects(String parent);
 	
+	/**
+	 * Fetches (and increments) the next atomic long for a unique sequence id.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public long getNextAtomicLong(String id);
 }
