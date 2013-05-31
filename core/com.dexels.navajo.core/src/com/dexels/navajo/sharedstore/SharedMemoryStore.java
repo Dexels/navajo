@@ -206,4 +206,9 @@ public class SharedMemoryStore implements SharedStoreInterface {
 		}
 	}
 
+	@Override
+	public long getNextAtomicLong(String id) {
+		return 0;
+	}
+
 }

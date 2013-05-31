@@ -241,14 +241,4 @@ public class TableCommand implements ArticleCommand {
 		}
 		return true;
 	}
-
-	// public static void main(String[] args) {
-	// String a = "aap ${arg1} mies ${arg2}";
-	// Map<String,String> replacements = new HashMap<String, String>();
-	// replacements.put("arg1", "noot");
-	// replacements.put("arg2", "wim");
-	// String result = replaceTokens(a, replacements);
-	// System.err.println("result: "+result);
-	// }
-
 }
