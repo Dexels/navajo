@@ -12,6 +12,6 @@ import com.dexels.navajo.mapping.compiler.meta.Dependency;
  */
 public interface ScriptCompiler {
 
-	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies, String tenant) throws Exception;
+	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies, String tenant, boolean hasTenantSpecificFile) throws Exception;
 
 }

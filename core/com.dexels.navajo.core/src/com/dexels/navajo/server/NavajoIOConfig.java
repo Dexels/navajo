@@ -15,6 +15,7 @@ public interface NavajoIOConfig {
 	public File getContextRoot();
 
 	public InputStream getScript(String name) throws IOException;
+	public InputStream getScript(String name, String tenant) throws IOException;
 	public InputStream getConfig(String name) throws IOException;
     public InputStream getResourceBundle(String name) throws IOException;
     public Writer getOutputWriter(String outputPath, String scriptPackage, String scriptName, String extension) throws IOException;

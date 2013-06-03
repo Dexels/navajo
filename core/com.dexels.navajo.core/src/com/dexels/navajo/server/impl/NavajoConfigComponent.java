@@ -454,5 +454,10 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 		return navajoIOConfig.hasTenantScriptFile(rpcName, tenant);
 	}
 
+	@Override
+	public InputStream getScript(String name, String tenant) throws IOException {
+		return navajoIOConfig.getScript(name, tenant);
+	}
+
 	
 }

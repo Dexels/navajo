@@ -34,7 +34,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	 * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String)
 	 */
 	@Override
-	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies, String tenant) throws Exception {
+	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies, String tenant, boolean hasTenantSpecificFile) throws Exception {
 		String packagePath = null;
 		String script = null;
 		if(scriptPath.indexOf('/')>=0) {
@@ -61,8 +61,12 @@ public class TslCompilerComponent implements ScriptCompiler {
 //    	   scriptPackage = "defaultPackage";
 //       }
 		String scriptString = scriptPath.replaceAll("_", "|");
+		String scriptSource = script;
+//		if(hasTenantSpecificFile) {
+//			scriptSource = script+"_"+tenant;
+//		}
 //		String scriptString = scriptPath.replaceAll("/", "_");
-		compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc, navajoIOConfig,dependencies,tenant);
+		compiler.compileToJava(scriptSource, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc, navajoIOConfig,dependencies,tenant,hasTenantSpecificFile);
 		//		logger.info("Javafile: "+javaFile);
 //		System.err.println("Packages: "+packages);
 		Set<String> dependentResources = new HashSet<String>();
@@ -94,7 +98,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		generateFactoryClass(script, packagePath,dependentResources);
 
 		generateManifest(scriptString,"1.0.0",packagePath, script,packages,compileDate);
-		generateDs(packagePath, script,dependencies,dependentResources);
+		generateDs(packagePath, script,dependencies,dependentResources,tenant,hasTenantSpecificFile);
 	}
 	
 	private void generateFactoryClass(String script, String packagePath, Set<String> resources) throws IOException {
@@ -197,7 +201,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.close();
 	}
 	
-	private void generateDs(String packagePath, String script,List<Dependency> dependencies, Set<String> dependentResources) throws IOException {
+	private void generateDs(String packagePath, String script,List<Dependency> dependencies, Set<String> dependentResources,final String tenant, boolean hasTenantSpecificFile) throws IOException {
 		
 		String fullName;
 		if (packagePath.equals("")) {
@@ -213,13 +217,14 @@ public class TslCompilerComponent implements ScriptCompiler {
 			javaPackagePath = packagePath.replaceAll("/", ".");
 		}
 		String symbolicName = null;
-		String tenant = null;
+//		String tenant = null;
 		
 		symbolicName = fullName.replaceAll("/", ".");
 		if(symbolicName.indexOf("_")!=-1) {
 			final String[] split = symbolicName.split("_");
 			symbolicName = split[0];
-			tenant = split[1];
+//			tenant = split[1];
+			logger.error("Anomaly in creating bundle: shouldn't happen");
 		}
 
 		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
@@ -238,7 +243,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		provide.setAttribute("interface", "com.dexels.navajo.server.CompiledScriptFactory");
 
 		addProperty("navajo.scriptName","String",symbolicName, xe);
-		if(tenant!=null) {
+		if(hasTenantSpecificFile) {
 			addProperty("navajo.tenant","String",tenant, xe);
 			addProperty("service.ranking","Integer","1000", xe);
 		} else {

@@ -358,10 +358,11 @@ public final class GenericHandler extends ServiceHandler {
     							com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
 
     							try {
-    								tslCompiler.compileScript(serviceName, 
+    								final String tenant = tenantConfig.getInstanceGroup();
+									tslCompiler.compileScript(serviceName, 
     										scriptPath,
     										properties.getCompiledScriptPath(),
-    										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps,tenantConfig.getInstanceGroup());
+    										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps,tenant,tenantConfig.hasTenantScriptFile(serviceName, tenant));
     							} catch (SystemException ex) {
     								sourceFile.delete();
     								AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER , ex.getMessage(), Level.SEVERE, a.accessID);

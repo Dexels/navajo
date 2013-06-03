@@ -2684,9 +2684,14 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
 	    } 
   }
     
-  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, Writer outputWriter, List<Dependency> deps, String tenant) throws SystemException, SkipCompilationException {
+  public void compileScript(String script, String scriptPath, String workingPath, String packagePath, Writer outputWriter, List<Dependency> deps, String tenant, boolean hasTenantSpecificScript) throws SystemException, SkipCompilationException {
 
-	    String fullScriptPath = scriptPath + "/" + packagePath + "/" + script + ".xml";
+	    String fullScriptPath = null;
+	    if(hasTenantSpecificScript) {
+		    fullScriptPath = scriptPath + "/" + packagePath + "/" + script +"_"+tenant+".xml";
+	    } else {
+		    fullScriptPath = scriptPath + "/" + packagePath + "/" + script + ".xml";
+	    }
 	    
 	    ArrayList<String> inheritedScripts = new ArrayList<String>();
 	    InputStream is = null;
@@ -2697,16 +2702,16 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
 	    	if ( MapMetaData.isMetaScript(script, scriptPath, packagePath) ) {
 	    		scriptType = "navascript";
 	    		MapMetaData mmd = MapMetaData.getInstance();
-	    		InputStream metais = navajoIOConfig.getScript(packagePath+"/"+script);
+	    		InputStream metais = navajoIOConfig.getScript(packagePath+"/"+script,tenant);
 
 	    		String intermed = mmd.parse(fullScriptPath,metais);
 	    		metais.close();
 				is = new ByteArrayInputStream(intermed.getBytes());
 	    	} else {
-	    		is = navajoIOConfig.getScript(packagePath+"/"+script);
+	    		is = navajoIOConfig.getScript(packagePath+"/"+script,tenant);
 	    	}
 	    	
-	    	InputStream sis = navajoIOConfig.getScript(packagePath+"/"+script);
+	    	InputStream sis = navajoIOConfig.getScript(packagePath+"/"+script,tenant);
 	    	logger.debug("Getting script: "+packagePath+"/"+script);
 	    	if ( ScriptInheritance.containsInject(sis)) {
 	    		// Inheritance preprocessor before compiling.
@@ -2746,8 +2751,8 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
 
 
   private String compileToJava(String script,
-          String input, String output, String packagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig,List<Dependency> deps, String tenant) throws Exception {
-	  return compileToJava(script, input, output, packagePath, packagePath, classLoader, navajoIOConfig,deps, tenant);
+          String input, String output, String packagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig,List<Dependency> deps, String tenant,boolean hasTenantSpecificScript) throws Exception {
+	  return compileToJava(script, input, output, packagePath, packagePath, classLoader, navajoIOConfig,deps, tenant,hasTenantSpecificScript);
   }
   
   /**
@@ -2763,7 +2768,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
    * @throws Exception
    */
   public String compileToJava(String script,
-                                        String input, String output, String packagePath, String scriptPackagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig, List<Dependency> deps, String tenant) throws Exception {
+                                        String input, String output, String packagePath, String scriptPackagePath, ClassLoader classLoader, NavajoIOConfig navajoIOConfig, List<Dependency> deps, String tenant, boolean hasTenantSpecificScript) throws Exception {
     String javaFile = output + "/" + script + ".java";
    TslCompiler tslCompiler = new TslCompiler(classLoader,navajoIOConfig);
      try {
@@ -2779,7 +2784,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
 //    	   packagePath = packagePath + "/";
 //       }
 
-       tslCompiler.compileScript(bareScript, input, output,scriptPackagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"),deps,tenant);
+       tslCompiler.compileScript(bareScript, input, output,scriptPackagePath,navajoIOConfig.getOutputWriter(output, packagePath, script, ".java"),deps,tenant,hasTenantSpecificScript);
        
        return javaFile;
      } catch (SkipCompilationException ex) {
@@ -2800,7 +2805,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
   }
   
   private void compileStandAlone(boolean all, String script,
-                                        String input, String output, String packagePath, String[] extraclasspath, String configPath, List<Dependency> deps, String tenant) {
+                                        String input, String output, String packagePath, String[] extraclasspath, String configPath, List<Dependency> deps, String tenant, boolean hasTenantSpecificScript) {
      try {
       TslCompiler tslCompiler = new TslCompiler(null);
         try {
@@ -2816,7 +2821,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
           //System.err.println("Using package path: "+packagePath);
 		Writer w = navajoIOConfig.getOutputWriter(output, packagePath, script, ".java");
 
-		tslCompiler.compileScript(bareScript, input, output,packagePath,w,deps,tenant);
+		tslCompiler.compileScript(bareScript, input, output,packagePath,w,deps,tenant,hasTenantSpecificScript);
           
           ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
         }
@@ -2875,7 +2880,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
     }
   }
 
-  private ArrayList<String> compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig, String tenant) {
+  private ArrayList<String> compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig, String tenant, boolean hasTenantSpecificScript) {
     System.err.println("Entering compiledirectory: " + currentDir + " output: " +
                        outputPath + " offset: " + offsetPath);
     ArrayList<String> files = new ArrayList<String>();
@@ -2889,7 +2894,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
           System.err.println("Entering directory: " + current.getName());
           ArrayList<String> subDir = compileDirectoryToJava(currentDir, outputPath,
               offsetPath.equals("") ? current.getName() :
-              (offsetPath + "/" + current.getName()),classLoader,navajoConfig,tenant);
+              (offsetPath + "/" + current.getName()),classLoader,navajoConfig,tenant,hasTenantSpecificScript);
           files.addAll(subDir);
         }
         else {
@@ -2912,7 +2917,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
             String javaFile = null;
             try {
                 javaFile = compileToJava(compileName, currentDir.toString(),
-                              outputPath.toString(), offsetPath,classLoader,navajoConfig,new ArrayList<Dependency>(),tenant);
+                              outputPath.toString(), offsetPath,classLoader,navajoConfig,new ArrayList<Dependency>(),tenant,hasTenantSpecificScript);
                 files.add(javaFile);
             } catch (Exception e) {
                logger.error("Error: ", e);
@@ -2924,7 +2929,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
     return files;
   }
 
-  public void fastCompileDirectory(File currentDir, File outputPath, String offsetPath, String[] extraclasspath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig, String tenant) {
+  public void fastCompileDirectory(File currentDir, File outputPath, String offsetPath, String[] extraclasspath, NavajoClassLoader classLoader, NavajoIOConfig navajoConfig, String tenant,boolean hasTenantSpecificScript) {
 
     StringBuffer classPath = new StringBuffer();
     classPath.append(System.getProperty("java.class.path"));
@@ -2936,7 +2941,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
       }
     }
 
-    ArrayList<String> javaFiles =  compileDirectoryToJava(currentDir, outputPath, offsetPath,classLoader,navajoConfig, tenant);
+    ArrayList<String> javaFiles =  compileDirectoryToJava(currentDir, outputPath, offsetPath,classLoader,navajoConfig, tenant,hasTenantSpecificScript);
     System.err.println("javaFiles: "+javaFiles);
     JavaCompiler compiler = new SunJavaCompiler();
 //    StringBuffer javaBuffer = new StringBuffer();
@@ -2960,7 +2965,8 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
 
   public static void compileDirectory(File currentDir, File outputPath, String offsetPath, String[] classpath,String configPath, String tenant) {
 
-	  TslCompiler compiler = new TslCompiler(null, new LegacyNavajoIOConfig());
+	  final LegacyNavajoIOConfig legacyNavajoIOConfig = new LegacyNavajoIOConfig();
+	TslCompiler compiler = new TslCompiler(null, legacyNavajoIOConfig);
 	List<Dependency> deps = new ArrayList<Dependency>();
 	  System.err.println("Entering compiledirectory: "+currentDir+" output: "+outputPath+" offset: "+offsetPath);
 
@@ -2988,7 +2994,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
             } else {
               compileName = offsetPath+"/"+name;
             }
-            compiler.compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath,classpath,configPath,deps,tenant);
+            compiler.compileStandAlone(false,compileName,currentDir.toString(),outputPath.toString(),offsetPath,classpath,configPath,deps,tenant,legacyNavajoIOConfig.hasTenantScriptFile(compileName, tenant));
             logger.info("Standalone compile finished. Detected dependencies: "+deps);
           }
         }

@@ -69,14 +69,25 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 		return fix;
     }
 	
+
     @Override
     public final InputStream getScript(String name) throws IOException {
+    	return getScript(name, null);
+    }
+    
+	@Override
+    public final InputStream getScript(String name, String tenant) throws IOException {
     	InputStream input;
 		String scriptPath = getScriptPath();
 		if(!scriptPath.endsWith("/")) {
 			scriptPath = scriptPath+"/";
 		}
-		String path = scriptPath + name + ".xml";
+		String path = null;
+		if(hasTenantScriptFile(name, tenant)) {
+			path = scriptPath + name +"_"+tenant+ ".xml";
+		} else {
+			path = scriptPath + name + ".xml";
+		}
 		input = inputStreamReader.getResource(path);
 		if(input==null) {
     		path = scriptPath + name + ".tsl";
@@ -108,45 +119,66 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 	
 	@Override
 	public File getApplicableBundleForScript(String rpcName, String tenant) {
+
 		try {
-			return getApplicableFile(rpcName, tenant, getCompiledScriptPath(), ".jar");
+			if(hasTenantScriptFile(rpcName, tenant)) {
+				return getApplicableFile(rpcName, tenant, getCompiledScriptPath(), ".jar",false);
+			} else {
+				return getGenericFile(rpcName, getCompiledScriptPath(),  ".jar");
+			}
+//			File script = getApplicableFile(rpcName, tenant, getScriptPath(), ".xml",true);
+//			return getApplicableFile(rpcName, tenant, getCompiledScriptPath(), ".jar",false);
 		} catch (FileNotFoundException e) {
+			logger.error("Missing file",e);
 			return null;
 		}
 	}
 	
 	@Override
 	public File getApplicableScriptFile(String rpcName, String tenant) throws FileNotFoundException {
-		return getApplicableFile(rpcName, tenant, getScriptPath(), ".xml");
+		return getApplicableFile(rpcName, tenant, getScriptPath(), ".xml",true);
 	}
 
 	@Override
 	public boolean hasTenantScriptFile(String rpcName, String tenant) {
-		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, getScriptPath(), ".xml");
+		if(tenant==null) {
+			return false;
+		}
+		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, getScriptPath(), ".xml",true);
 		return qualifiedFile!=null;
 	}
 	
 	
-	private File getTenantSpecificFile(String rpcName, String tenant, String parent, String extension) {
+	private File getTenantSpecificFile(String rpcName, String tenant, String parent, String extension, boolean checkIfExists) {
 		String name = rpcName.replaceAll("\\.", "/");
 		if(!parent.endsWith("/")) {
 			parent = parent+"/";
 		}
 		String qualifiedPath = parent + name + "_" + tenant + extension;
 		File qualifiedFile = new File(qualifiedPath);
-		if(qualifiedFile.exists()) {
+		if(!checkIfExists || qualifiedFile.exists()) {
 			return qualifiedFile;
 		}
 		return null;
 	}
 	
-	private File getApplicableFile(String rpcName, String tenant, String parent, String extension) throws FileNotFoundException {
+	private File getGenericFile(String rpcName,  String parent, String extension) {
+		String name = rpcName.replaceAll("\\.", "/");
+		if(!parent.endsWith("/")) {
+			parent = parent+"/";
+		}
+		String qualifiedPath = parent + name + extension;
+		File file = new File(qualifiedPath);
+		return file;
+	}
+	
+	private File getApplicableFile(String rpcName, String tenant, String parent, String extension, boolean checkIfExists) throws FileNotFoundException {
 		String name = rpcName.replaceAll("\\.", "/");
 		if(!parent.endsWith("/")) {
 			parent = parent+"/";
 		}
 		String path = parent + name + extension;
-		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, parent, extension);
+		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, parent, extension,checkIfExists);
 		File generalFile = new File(path);
 		if(qualifiedFile != null) {
 			return qualifiedFile;

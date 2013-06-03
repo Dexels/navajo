@@ -122,6 +122,7 @@ public class BundleCreatorComponent implements BundleCreator {
 					keepIntermediate,tenant);
 		} else {
 			File scriptFile = navajoIOConfig.getApplicableScriptFile(script, tenant);
+			boolean hasTenantSpecificFile = navajoIOConfig.hasTenantScriptFile(script, tenant);
 //			File scriptFile = new File(scriptFolder, script + "."
 //					+ scriptExtension);
 			if (!scriptFile.exists()) {
@@ -137,10 +138,10 @@ public class BundleCreatorComponent implements BundleCreator {
 			} else {
 				try {
 					scriptCompiler.compileTsl(script, formatCompilationDate,
-							dependencies, tenant);
+							dependencies, tenant,hasTenantSpecificFile);
 					javaCompiler.compileJava(script);
 					javaCompiler.compileJava(script + "Factory");
-					createBundleJar(script, tenant,keepIntermediate);
+					createBundleJar(script, tenant,keepIntermediate,hasTenantSpecificFile);
 					success.add(script);
 				} catch (SkipCompilationException e) {
 					logger.debug("Script fragment: {} ignored.",script);
@@ -276,7 +277,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	private File createBundleJar(String scriptPath, String tenant,
-			boolean keepIntermediateFiles) throws IOException {
+			boolean keepIntermediateFiles, boolean useTenantSpecificFile) throws IOException {
 		String packagePath = null;
 		String script = null;
 		if (scriptPath.indexOf('/') >= 0) {
@@ -335,8 +336,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		final File jarFile = navajoIOConfig.getApplicableBundleForScript(scriptPath, tenant);
 		
 		
-		addFolderToJar(bundleDir, null, jarFile, bundleDir.getAbsolutePath()
-				+ "/");
+		addFolderToJar(bundleDir, null, jarFile, bundleDir.getAbsolutePath()+ "/");
 		if (!keepIntermediateFiles) {
 			classFile.delete();
 			manifestFile.delete();
