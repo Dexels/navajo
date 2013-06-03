@@ -105,8 +105,7 @@
             <property direction="in" name="FileName" type="string"/>
             <property direction="in" name="ReceivedDate" type="date"/>
             <property direction="in" name="SentDate" value="2011-11-21 16:22:32.00" type="date"/>
-            <propert14:36:30.583 [310268208@qtp-1068244514-4] DEBUG com.dexels.navajo.tipi.TipiContext - category: event    event: finished event: onActionPerformed in componenttipi://init/menu/data/mailBox
-y direction="in" name="MessageNumber" value="73" type="integer"/>
+            <property direction="in" name="MessageNumber" value="73" type="integer"/>
             <property direction="in" name="From" value="oost@knvb.nl" type="string"/>
             <property direction="in" name="ReplyTo" value="oost@knvb.nl" type="string"/>
             <property direction="in" name="To" value="BNTD742@official.knvb.nl" type="string"/>

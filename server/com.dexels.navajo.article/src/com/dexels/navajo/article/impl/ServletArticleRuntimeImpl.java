@@ -78,7 +78,6 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	@Override
 	public Writer getOutputWriter() throws IOException {
 		return response.getWriter();
-//		return writer;
 	}
 	
 	@Override
@@ -113,7 +112,6 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 		
 		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 		writer.writeValue(response.getWriter(), rootNode);
-//		IOUtils.copy(new StringReader(writer.toString()), response.getWriter());
 	}
 
 }

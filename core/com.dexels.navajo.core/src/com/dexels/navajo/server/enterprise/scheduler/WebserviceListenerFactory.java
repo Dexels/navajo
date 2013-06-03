@@ -27,6 +27,8 @@ public class WebserviceListenerFactory {
 				
 				if ( instance == null ) {
 					try {
+						// TODO This does not work at all in OSGi
+						
 						Class<WebserviceListenerRegistryInterface> c = (Class<WebserviceListenerRegistryInterface>) Class.forName("com.dexels.navajo.scheduler.WebserviceListenerRegistry");
 						WebserviceListenerRegistryInterface dummy = c.newInstance();
 						Method m = c.getMethod("getInstance", (Class<?>[])null);

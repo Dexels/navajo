@@ -31,7 +31,7 @@
 								<artifact>
 									<file>repo.dexels.com.target</file>
 									<type>target</type>
-									<classifier>navajo_spiritus</classifier>
+									<classifier>repo.dexels.com</classifier>
 								</artifact>
 							</artifacts>
 						</configuration>

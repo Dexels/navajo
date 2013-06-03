@@ -696,4 +696,29 @@ public class SharedFileStore implements SharedStoreInterface {
 		return result;
 	}
 
+	@Override
+	public synchronized long getNextAtomicLong(String id) {
+		
+		SharedStoreLock ssl = lock("__SEQUENCES__", id, 0, true);
+		try {
+			if ( exists("__SEQUENCES__", id) ) {
+				Long l = (Long) get("__SEQUENCES__", id);
+				l = l.longValue() + 1;
+				store("__SEQUENCES__", id, l, false, false);
+				return l;
+			} else {
+				Long l = new Long(0);
+				store("__SEQUENCES__", id, l, false, false);
+				return l;
+			}
+		} catch (SharedStoreException e) {
+			e.printStackTrace(System.err);
+			logger.error(e.getMessage(), e);
+			return -1;
+		} finally {
+			if ( ssl != null ) {
+			release(ssl);
+			}
+		}
+	}
 }

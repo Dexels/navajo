@@ -63,6 +63,7 @@ public class SharedStoreInterfaceTest {
 		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
 		DispatcherFactory.getInstance().setUseAuthorisation(false);
 		si = SharedStoreFactory.getInstance();
+		si.removeAll("");
 	}
 
 	private void deleteFiles(File f) {
@@ -677,6 +678,14 @@ public class SharedStoreInterfaceTest {
 		obs = si.getObjects("myparet");
 		Assert.assertNotNull(obs);
 		Assert.assertEquals(0, obs.length);
+	}
+	
+	@Test
+	public void testGetNextAtomicLong() {
+		long l = si.getNextAtomicLong("MySequence");
+		Assert.assertEquals(0, l);
+		l = si.getNextAtomicLong("MySequence");
+		Assert.assertEquals(1, l);
 	}
 
 }

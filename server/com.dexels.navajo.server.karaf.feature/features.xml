@@ -22,25 +22,35 @@
 		 -->
 	</feature>
 
-    <feature resolver="(obr)" name='navajo.function' version='1.0.6' start-level='80'  >
+    <feature resolver="(obr)" name='navajo.function' version='1.0.7' start-level='80'  >
 		<feature version="[1.0.5,2)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.22</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.24</bundle>
 	</feature>
+
+
 
 	<feature resolver="(obr)" name='navajo.server' version='1.0.6' start-level='81' >
 		<feature version="[1.0.5,2)">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/1.1.4</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.11</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/1.1.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.1.24</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino/1.1.20</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino.continuations/1.0.12</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.12</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/1.1.8</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.1.26</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.queuemanager/1.0.20</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/1.1.50</bundle>
 		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
 		<bundle dependency='true'>mvn:commons-lang/commons-lang/2.4</bundle>
 		<bundle dependency='true'>mvn:commons-dbcp/commons-dbcp/1.4</bundle>
 		<bundle dependency='true'>mvn:org.apache.commons/commons-email/1.3.1</bundle>
+	</feature>
+	
+    <feature resolver="(obr)" name='navajo.rhino' version='1.0.0' start-level='81'  >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino/1.1.22</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino.continuations/1.0.12</bundle>
+	</feature>
+
+    <feature resolver="(obr)" name='navajo.adapter' version='1.0.1' start-level='81'  >
+		<feature version="[1.0.5,2)">navajo.server</feature>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/1.1.50</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.resource/1.0.17</bundle>
 	</feature>
 	
 	<feature resolver="(obr)" name='navajo.core.jabber' version='1.0.1' start-level='81' >
@@ -50,12 +60,11 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>	
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='1.0.17' start-level='81' >
+	<feature resolver="(obr)" name='navajo.server.osgi' version='1.0.18' start-level='81' >
 		<feature version="[1.0.4,2)">navajo.server</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/1.0.1</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/1.1.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/1.0.17</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.resource/1.0.17</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.http/1.0.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource/1.0.16</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager/1.0.16</bundle>
@@ -104,11 +113,11 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.manager.openshift/1.0.16</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.article' version='1.0.13' start-level='81' >
+	<feature resolver="(obr)" name='navajo.article' version='1.0.15' start-level='81' >
 		<feature version="[1.0.4,2)">navajo.server</feature>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/1.0.15</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article/1.0.19</bundle>
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.article.jsp/1.0.11</bundle>-->
 	</feature>
 	
@@ -160,6 +169,7 @@
 	<feature resolver="(obr)" name='sportlink.libraries' version='1.0.7' start-level='81' >
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.nevobo.dps/1.0.0</bundle> -->
 		<feature version="[1.0.0,2)">navajo.function</feature> 
+		<feature version="[1.0.0,2)">navajo.adapter</feature> 
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.aaa/1.0.16</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/1.0.30</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.functions/1.0.11</bundle>
