@@ -142,7 +142,8 @@ public abstract class AbstractPropertyField extends JTextField implements
 		}
 		Object value = parseProperty(getText());
 		myProperty.setAnyValue(value);
-		presentObject(value);
+		// value can have changed as a result of the onValueChanged event triggered by setAnyValue
+		presentObject(myProperty.getTypedValue());
 		setEditing(false);
 	}
 
@@ -151,7 +152,7 @@ public abstract class AbstractPropertyField extends JTextField implements
 		if (p != myProperty) {
 			logger.info("Mysterious anomaly!");
 		}
-		presentObject(e.getNewValue());
+		presentObject(parseProperty(p.getValue()));
 	}
 
 	protected void presentObject(Object o) {

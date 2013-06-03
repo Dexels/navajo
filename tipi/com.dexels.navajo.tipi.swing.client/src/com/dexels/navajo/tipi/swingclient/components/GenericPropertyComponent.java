@@ -803,8 +803,11 @@ public class GenericPropertyComponent extends JPanel {
 	protected final void addPropertyComponent(JComponent c) {
 		addPropertyComponent(c, false);
 	}
-
 	protected final void addPropertyComponent(JComponent c,
+			boolean verticalWeight) {
+		addPropertyComponent(c, c, verticalWeight);
+	}
+	protected final void addPropertyComponent(JComponent c, JComponent dataComponent,
 			boolean verticalWeight) {
 		if (currentPropertyComponent != null) {
 			clearPropertyKeyListeners(currentPropertyComponent);
@@ -856,10 +859,16 @@ public class GenericPropertyComponent extends JPanel {
 				}
 			}
 		}
-
-		if (currentPropertyComponent != null && myProperty != null
+		// if c and dataComponent are not equal, set c to non-focusable
+		// examples: MemoField and RadioSelection
+		if (!c.equals(dataComponent))
+		{
+			c.setFocusable(false);
+		}
+		
+		if (dataComponent != null && myProperty != null
 				&& !isFocusable) {
-			currentPropertyComponent.setFocusable(myProperty.isDirIn());
+			dataComponent.setFocusable(myProperty.isDirIn());
 		}
 	}
 
@@ -1266,6 +1275,8 @@ public class GenericPropertyComponent extends JPanel {
 		}
 		myRadioButtonField.setProperty(p);
 		addPropertyComponent(myRadioButtonField, true);
+		// there is more than one "dataComponent" that should be passed along if we want to use the addPropertyComponent version for differing components
+		// hence we cannot and need to do it manually.
 		myRadioButtonField.setFocusable(false);
 	}
 
@@ -1379,14 +1390,13 @@ public class GenericPropertyComponent extends JPanel {
 				.setVerticalScrollBarPolicy(verticalScrolls ? JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
 						: JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		memoFieldScrollPane.setPreferredSize(memoFieldScrollPane.getPreferredSize());
-
 		myMemoField.setProperty(p);
 		if (toolTipText != null) {
 			myMemoField.setToolTipText(toolTipText);
 		}
 		// TODO might leak listeners! Investigate..
 		setPropertyKeyListeners(myMemoField);
-		addPropertyComponent(memoFieldScrollPane, true);
+		addPropertyComponent(memoFieldScrollPane, myMemoField, true);
 	}
 
 	public void setMemoRowCount(int row) {
