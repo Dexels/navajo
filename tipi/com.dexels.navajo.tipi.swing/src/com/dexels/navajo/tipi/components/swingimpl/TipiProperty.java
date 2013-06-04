@@ -37,6 +37,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 			.getLogger(TipiProperty.class);
 	
 	private Property myProperty = null;
+	private Boolean myPropertyIsDirty = Boolean.FALSE;
 	private Object myPropertyValue = null;
 	private List<TipiEventListener> myListeners = new ArrayList<TipiEventListener>();
 
@@ -261,9 +262,13 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 			// Thread.dumpStack();
 
 			Object typedValue = p.getTypedValue();
-			if (typedValue != null && typedValue.equals(oldValue)) {
+			if ((typedValue != null && typedValue.equals(oldValue)) || (typedValue == null && oldValue == null)) {
 				logger.debug("No real change. Beware:");
 				Thread.dumpStack();
+			}
+			else
+			{
+				setDirty(Boolean.TRUE);
 			}
 			try {
 				Map<String, Object> m = new HashMap<String, Object>();
@@ -396,6 +401,17 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 
 		});
 
+	}
+
+	@Override
+	public Boolean isDirty() {
+		return myPropertyIsDirty;
+	}
+
+	@Override
+	public void setDirty(Boolean b) {
+		this.myPropertyIsDirty = b;
+		
 	}
 
 }

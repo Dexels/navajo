@@ -466,4 +466,15 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		super.setComponentValue(name, object);
 	}
 
+	@Override
+	public Boolean isDirty() {
+		// always not dirty
+		return Boolean.FALSE;
+	}
+
+	@Override
+	public void setDirty(Boolean b) {
+		// ignore dirty
+		
+	}
 }
