@@ -1,15 +1,10 @@
 package com.dexels.navajo.tipi.actions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.PropertyComponent;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
-import com.dexels.navajo.tipi.internal.TipiMethod;
-import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
  * <p>

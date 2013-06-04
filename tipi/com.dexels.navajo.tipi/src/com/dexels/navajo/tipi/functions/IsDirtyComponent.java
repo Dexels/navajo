@@ -4,12 +4,8 @@
  */
 package com.dexels.navajo.tipi.functions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.tipi.TipiComponent;
-import com.dexels.navajo.tipi.actions.TipiClearDirty;
 import com.dexels.navajo.tipi.internal.PropertyComponent;
 
 /**
