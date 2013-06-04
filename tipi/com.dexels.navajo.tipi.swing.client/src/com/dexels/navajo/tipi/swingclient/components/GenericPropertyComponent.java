@@ -267,6 +267,14 @@ public class GenericPropertyComponent extends JPanel {
 						}
 					});
 				}
+				else if (evt.getPropertyName().equals("subType")) {
+					runSyncInEventThread(new Runnable() {
+
+						public void run() {
+							setLabel(myProperty.getDescription());
+						}
+					});
+				}
 			}
 		};
 
@@ -373,9 +381,22 @@ public class GenericPropertyComponent extends JPanel {
 	public final void setOrderListBySelected(boolean b) {
 		orderListBySelected = b;
 	}
-
+	
+	protected String getRequiredPostfix()
+	{
+		return "";
+	}
+	
 	public final void setLabel(final String s) {
-		myLabelText = s;
+		if (myProperty != null && myProperty.getSubType(Property.SUBTYPE_REQUIRED) != null && myProperty.getSubType(Property.SUBTYPE_REQUIRED).equals(Property.TRUE))
+		{
+			myLabelText = s + getRequiredPostfix();
+		}
+		else
+		{
+			myLabelText = s;
+		}
+		final String labelText = myLabelText;
 		if (getLabel().getParent() != this) {
 			add(getLabel(), new GridBagConstraints(0, 0, 1, 1, 0, 0,
 					GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
@@ -389,7 +410,7 @@ public class GenericPropertyComponent extends JPanel {
 		// myLabel.setVerticalAlignment(JLabel.CENTER_ALIGNMENT);
 		getLabel().setOpaque(false);
 		// add(myLabel, BorderLayout.WEST);
-		getLabel().setText(s);
+		getLabel().setText(labelText);
 		// }
 		if (labelWidth != 0) {
 			setLabelIndent(labelWidth);

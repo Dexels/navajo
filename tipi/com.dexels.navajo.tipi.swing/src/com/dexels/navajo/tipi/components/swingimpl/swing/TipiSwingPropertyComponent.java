@@ -47,6 +47,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 	private TipiComponent myComponent;
 	private TipiSwingPropertyDescriptionLabel myLabel;
 	private final TipiDndManager myTipiDndManager;
+	private String requiredPostfix = null;
 
 	public TipiSwingPropertyComponent(TipiComponent tc) {
 		myComponent = tc;
@@ -72,6 +73,23 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 		firePropertyChange(CAPITALIZATION, old, capitalization);
 	}
 
+	@Override
+	public String getRequiredPostfix()
+	{
+		if (myComponent != null && requiredPostfix == null)
+		{
+			try {
+				requiredPostfix = myComponent.getContext().getSystemProperty("requiredPostfix");
+			} catch (SecurityException e) {
+
+			}
+		}
+		else
+		{
+			requiredPostfix = super.getRequiredPostfix();
+		}
+		return requiredPostfix;
+	}
 	// public void setProperty(Property p) {
 	public void constructPropertyComponent(Property p) {
 
