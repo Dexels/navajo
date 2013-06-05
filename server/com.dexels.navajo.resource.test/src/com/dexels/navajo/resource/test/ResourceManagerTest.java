@@ -14,7 +14,6 @@ import javax.sql.DataSource;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +29,6 @@ import com.mongodb.DBCollection;
 
 public class ResourceManagerTest {
 	private ResourceManager resourceManager;
-	private ComponentContext componentContext;
 	private BundleContext bundleContext;
 	private static ResourceManagerTest instance;
 	private static final Logger logger = LoggerFactory.getLogger(ResourceManagerTest.class);
@@ -39,9 +37,8 @@ public class ResourceManagerTest {
 		return resourceManager;
 	}
 
-	public void activate(ComponentContext c) {
-		this.componentContext = c;
-		this.bundleContext = componentContext.getBundleContext();
+	public void activate(BundleContext bundleContext) {
+		this.bundleContext = bundleContext;
 
 	}
 	

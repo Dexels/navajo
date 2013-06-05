@@ -15,7 +15,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +42,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	private RepositoryFactory repositoryFactory;
 	protected NavajoClassLoader betaClassloader;
 	protected NavajoClassSupplier adapterClassloader;
-	private Dictionary properties;
+	private Map<String, Object> properties;
 	private BundleContext bundleContext;
 	private final Map<Class<?>,ServiceReference<?>> serviceReferences = new HashMap<Class<?>,ServiceReference<?>>();
 	private final Map<String, DescriptionProviderInterface> desciptionProviders = new HashMap<String,DescriptionProviderInterface>();
@@ -80,14 +79,14 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 		this.myConfigurationAdmin = null;
 	}
 	
-	public void activate(ComponentContext cc) {
+	public void activate(Map<String,Object> props, BundleContext bundleContext) {
 		logger.info("========>  Activating");
 		try {
-			this.properties = cc.getProperties();
-			this.bundleContext = cc.getBundleContext();
+			this.properties = props;
+			this.bundleContext = bundleContext;
 			this.persistenceManager = new PersistenceManagerImpl();
 		} catch (Throwable e) {
-			logger.error("activation error",cc);
+			logger.error("activation error",bundleContext);
 		}
 	}
 

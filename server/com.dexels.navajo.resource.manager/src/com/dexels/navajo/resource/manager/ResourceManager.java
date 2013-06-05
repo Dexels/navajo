@@ -18,7 +18,6 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +37,8 @@ public class ResourceManager {
 
 	private BundleContext bundleContext = null;
 	
-	public void activate(ComponentContext cc) {
-		this.bundleContext = cc.getBundleContext();
+	public void activate(BundleContext bundleContext) {
+		this.bundleContext = bundleContext;
 		setupResources();
 		setupTesterUser();
 
