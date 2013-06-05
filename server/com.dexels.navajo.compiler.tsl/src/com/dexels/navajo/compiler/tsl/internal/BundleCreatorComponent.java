@@ -24,7 +24,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
@@ -391,9 +390,9 @@ public class BundleCreatorComponent implements BundleCreator {
 		this.navajoIOConfig = null;
 	}
 
-	public void activate(ComponentContext cc) {
+	public void activate(BundleContext bundleContext) {
 		logger.debug("Activating Bundle creator");
-		this.bundleContext = cc.getBundleContext();
+		this.bundleContext = bundleContext;
 
 	}
 
@@ -578,9 +577,9 @@ public class BundleCreatorComponent implements BundleCreator {
 		}
 			
 		
-		ServiceReference[] sr;
+		ServiceReference<CompiledScriptFactory>[] sr;
 		try {
-			sr = bundleContext.getServiceReferences(
+			sr = (ServiceReference<CompiledScriptFactory>[]) bundleContext.getServiceReferences(
 					CompiledScriptFactory.class.getName(), filter);
 			if (sr != null && sr.length != 0) {
 				CompiledScriptFactory csf = bundleContext.getService(sr[0]);

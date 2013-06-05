@@ -7,5 +7,5 @@
    <reference bind="setIOConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoIOConfig" name="NavajoIOConfig" policy="dynamic" unbind="clearIOConfig"/>
    <reference bind="setJavaCompiler" cardinality="1..1" interface="com.dexels.navajo.compiler.JavaCompiler" name="JavaCompiler" policy="dynamic" unbind="clearJavaCompiler"/>
    <reference bind="setScriptCompiler" cardinality="1..1" interface="com.dexels.navajo.compiler.ScriptCompiler" name="ScriptCompiler" policy="dynamic" unbind="clearScriptCompiler"/>
-   <reference bind="setEventAdmin" cardinality="1..1" interface="org.osgi.service.event.EventAdmin" name="EventAdmin" policy="dynamic" unbind="clearEventAdmin"/>
+   <reference bind="setEventAdmin" cardinality="0..1" interface="org.osgi.service.event.EventAdmin" name="EventAdmin" policy="dynamic" unbind="clearEventAdmin"/>
 </scr:component>
