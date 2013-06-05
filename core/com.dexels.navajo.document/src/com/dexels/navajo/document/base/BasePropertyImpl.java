@@ -189,14 +189,20 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	
 
 	public void addSubType(String extra) {
-		if (subtypeMap == null) {
-			subtypeMap = NavajoFactory.getInstance().parseSubTypes(subType);
-		}
 		StringTokenizer st = new StringTokenizer(extra, "=");
 		String key = st.nextToken();
 		String value = st.nextToken();
+		addSubType(key, value);
+	}
+
+	public void addSubType(String key, String value) {
+		String oldSubType = subType;
+		if (subtypeMap == null) {
+			subtypeMap = NavajoFactory.getInstance().parseSubTypes(subType);
+		}
 		subtypeMap.put(key, value);
 		subType = serializeSubtypes();
+		firePropertyChanged("subType", oldSubType, subType);
 	}
 
 

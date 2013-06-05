@@ -165,6 +165,14 @@
       <param name="name" type="string" required="true" />
       <param name="rootComponent" type="component" required="false" />
    </tipiaction>
+   <tipiaction name="clearDirty" class="TipiClearDirty" package="com.dexels.navajo.tipi.actions">
+      <param name="rootComponent" type="component" required="true" />
+   </tipiaction>
+   <tipiaction name="setPropertySubType" class="TipiSetPropertySubType" package="com.dexels.navajo.tipi.actions">
+      <param name="property" type="property" required="true" />
+      <param name="key" type="string" required="true" />
+      <param name="value" type="string" required="false" />
+   </tipiaction>
    <tipiaction name="instantiate" class="TipiInstantiateTipi" package="com.dexels.navajo.tipi.actions">
       <param name="name" type="string" required="true" />
       <param name="expectType" type="string" required="false" />

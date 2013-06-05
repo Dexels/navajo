@@ -31,6 +31,7 @@ public class MoneyField extends AbstractPropertyField implements
 	@Override
 	protected String getEditingFormat(Object o) {
 		Money p = (Money) o;
+		updateColor(p);
 		if (p.isEmpty()) {
 			return "";
 		}
@@ -52,19 +53,10 @@ public class MoneyField extends AbstractPropertyField implements
 	}
 
 	@Override
-	// override setProperty to force update
-	public void setProperty(Property p) {
-		super.setProperty(p);
-
-		if (p != null) {
-			updateColor((Money) p.getTypedValue());
-		}
-	}
-
-	@Override
 	protected String getPresentationFormat(Object newValue) {
 		if (newValue instanceof Money) {
 			Money p = (Money) newValue;
+			updateColor(p);
 			return p.formattedString();
 		} else {
 			return "";
@@ -79,6 +71,7 @@ public class MoneyField extends AbstractPropertyField implements
 			super.setForeground(value.doubleValue() < 0 ? Color.RED
 					: Color.BLACK);
 		} else {
+			// Has no effect, look and feel overrides this to GRAY (both substance and metal do this!!)
 			super.setForeground(value.doubleValue() < 0 ? Color.PINK.darker()
 					: Color.GRAY);
 		}
