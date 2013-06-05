@@ -135,6 +135,13 @@ public abstract class TestContextImpl extends BaseContextImpl {
 			public boolean hasTenantScriptFile(String rpcName, String tenant) {
 				return false;
 			}
+
+			@Override
+			public InputStream getScript(String name, String tenant)
+					throws IOException {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		});
 		final ElementCommand element = new ElementCommand("element");
 		
