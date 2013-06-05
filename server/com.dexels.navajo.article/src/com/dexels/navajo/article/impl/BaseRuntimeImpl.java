@@ -81,7 +81,6 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	
 	@Override
 	public ObjectNode getGroupNode( String name) throws ArticleException {
-		System.err.println("||||||||||||||||| GETTTING>>>> "+name);
 		String[] split = name.split("/");
 		int i = 0;
 		ObjectNode current = null;
@@ -120,7 +119,6 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 					parameters.put(attributeName,
 							e.getStringAttribute(attributeName));
 				}
-				System.err.println("Calling command # " + (i++));
 				JsonNode node =ac.execute(this, context, parameters, e);
 				
 				if (node!=null) {

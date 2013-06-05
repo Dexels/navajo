@@ -54,6 +54,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String BINARY_PROPERTY = "binary";
   public static final String STOPWATCHTIME_PROPERTY = "stopwatchtime";
 
+  public static final String SUBTYPE_REQUIRED = "required";
   public static final String SUBTYPE_POSITIVE = "positive";
   public static final String SUBTYPE_NEGATIVE = "negative";
 
@@ -242,6 +243,12 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    */
   public void addSubType(String extra);
 
+  /**
+   * Adds or changes a single subtype pair. 
+   * @param key
+   * @param value
+   */
+  public void addSubType(String key, String value);
   
   /**
 	 * Gets all subtypes in a map

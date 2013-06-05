@@ -112,4 +112,15 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
 		myHandler.setProperty(p);
 	}
 
+	@Override
+	public Boolean isDirty() {
+		// always not dirty
+		return Boolean.FALSE;
+	}
+
+	@Override
+	public void setDirty(Boolean b) {
+		// ignore dirty
+		
+	}
 }

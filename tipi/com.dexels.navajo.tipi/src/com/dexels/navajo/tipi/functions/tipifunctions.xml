@@ -71,6 +71,16 @@
         <input>context,string</input>
         <result>reference</result>
     </function>
+    <function name="HasRequiredPropertyComponent" class="com.dexels.navajo.tipi.functions.HasRequiredPropertyComponent">
+        <description>Returns whether the given component or one of its children is a required property. Requiredness is determined by the subtype of the property.</description>
+        <input>component</input>
+        <result>boolean</result>
+    </function>
+    <function name="IsDirtyComponent" class="com.dexels.navajo.tipi.functions.IsDirtyComponent">
+        <description>Returns whether the given component or one of its children is dirty. Properties can be dirty if the value changed since instantiation or the last call to clearDirty.</description>
+        <input>component</input>
+        <result>boolean</result>
+    </function>
     <function name="ToBold" class="com.dexels.navajo.tipi.functions.ToBold">
         <description>Make text bold. Html-style (depending on 2nd parameter including html tag)</description>
         <input>string,boolean|empty</input>

@@ -342,5 +342,15 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
         // err.. implement?
     }
 
+	@Override
+	public Boolean isDirty() {
+		// always not dirty
+		return Boolean.FALSE;
+	}
 
+	@Override
+	public void setDirty(Boolean b) {
+		// ignore dirty
+		
+	}
 }

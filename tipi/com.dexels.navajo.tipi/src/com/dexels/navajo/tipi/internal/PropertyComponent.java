@@ -31,6 +31,10 @@ public interface PropertyComponent extends TipiComponent {
 	public Property getProperty();
 
 	public void setProperty(Property p);
+	
+	public Boolean isDirty();
+
+	public void setDirty(Boolean b);
 
 	// public void checkForConditionErrors(Message m);
 

@@ -1173,7 +1173,11 @@ private String resource;
 	      }
 
 	      if (breakOnConditionError && inDoc.getMessage("ConditionErrors") != null) {
-	    	  AuditLog.log("NavajoMap", ">>>> BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR", Level.INFO, access.accessID);
+	    	  String scriptName = "UNKNOWN";
+	    	  if (access.getMyScript() != null) {
+	    		  scriptName = access.getMyScript().getScriptName();
+	    	  }
+	    	  AuditLog.log("NavajoMap", ">>>> BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR (" + scriptName + ")", Level.INFO, access.accessID);
 	          throw new ConditionErrorException(inDoc);
 	      } else if (inDoc.getMessage("ConditionErrors") != null) {
 	    	  AuditLog.log("NavajoMap", "BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....", Level.INFO, access.accessID);

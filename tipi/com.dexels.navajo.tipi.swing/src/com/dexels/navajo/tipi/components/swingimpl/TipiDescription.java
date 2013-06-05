@@ -85,4 +85,16 @@ public class TipiDescription extends TipiSwingComponentImpl implements
 		myProperty = p;
 		myLabel.setText(p.getDescription());
 	}
+
+	@Override
+	public Boolean isDirty() {
+		// always not dirty
+		return Boolean.FALSE;
+	}
+
+	@Override
+	public void setDirty(Boolean b) {
+		// ignore dirty
+		
+	}
 }
