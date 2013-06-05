@@ -6,5 +6,7 @@
    <service>
       <provide interface="javax.servlet.Servlet"/>
    </service>
+   <property name="asyncSupported" value="true"/>
    <property name="alias" type="String" value="/Postman"/>
+   <property name="servletName" type="String" value="Postman"/>
 </scr:component>
