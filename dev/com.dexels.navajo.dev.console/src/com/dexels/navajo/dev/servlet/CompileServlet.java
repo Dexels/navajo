@@ -31,6 +31,10 @@ public class CompileServlet extends HttpServlet {
 			resp.sendError(500,"No script parameter supplied");
 			return;
 		}
+		String tenant = req.getParameter("tenant");
+		if(tenant==null) {
+			tenant = "default";
+		}
 		boolean force = true;
 		boolean keepIntermediateFiles = false;
 		
@@ -43,7 +47,7 @@ public class CompileServlet extends HttpServlet {
 			List<String> success = new ArrayList<String>();
 			List<String> failures = new ArrayList<String>();
 			List<String> skipped = new ArrayList<String>();
-			bundleCreator.createBundle(script,new Date(),"xml",failures,success,skipped, force,keepIntermediateFiles);
+			bundleCreator.createBundle(script,new Date(),"xml",failures,success,skipped, force,keepIntermediateFiles,"default");
 			long tm2 = System.currentTimeMillis() - tm;
 			logger.info("Compiling java complete. took: "+tm2+" millis.");
 			logger.info("Succeeded: "+success.size()+" failed: "+failures.size()+" skipped: "+skipped.size());
@@ -51,7 +55,7 @@ public class CompileServlet extends HttpServlet {
 			for (String failed : failures) {
 				logger.info("Failed: "+failed);
 			}
-			bundleCreator.installBundles(script, failures, success, skipped, true);
+			bundleCreator.installBundles(script,tenant, failures, success, skipped, true);
 		} catch (Throwable e) {
 			logger.error("Error compiling scripts form servlet:",e);
 		}

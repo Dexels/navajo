@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
@@ -102,7 +101,7 @@ public interface DispatcherInterface extends ResourceManager {
 	 * Associates a BundleCreator with this dispatcher object, might be called multiple times, might be null.
 	 * @param bc
 	 */
-	public void setBundleCreator(BundleCreator bc);
-	
-	public BundleCreator getBundleCreator();
+//	public void setBundleCreator(BundleCreator bc);
+//	
+//	public BundleCreator getBundleCreator();
 }

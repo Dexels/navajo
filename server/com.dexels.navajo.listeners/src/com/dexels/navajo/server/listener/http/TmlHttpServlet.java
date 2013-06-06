@@ -89,6 +89,16 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 	public TmlHttpServlet() {
 	}
 
+	public void activate(BundleContext bc) {
+		logger.debug("Activating legacy postman");
+		setBundleContext(bc);
+	}
+
+	public void deactivate() {
+		logger.debug("Dectivating legacy postman");
+	}
+
+	
 	/**
 	 * @param serviceName  
 	 */

@@ -26,7 +26,6 @@ import javax.tools.ToolProvider;
 import org.apache.commons.io.IOUtils;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,9 +53,9 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		
 	}
 	
-	public void activateCompiler(ComponentContext c) {
+	public void activateCompiler(BundleContext context) {
 		logger.info("Activating java compiler.");
-		this.context = c.getBundleContext();
+		this.context = context;
 		compiler = ToolProvider.getSystemJavaCompiler();
 		compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
 

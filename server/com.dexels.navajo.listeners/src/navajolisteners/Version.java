@@ -24,25 +24,18 @@
  */
 package navajolisteners;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-
-import javax.servlet.Servlet;
-
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.script.api.SchedulerRegistry;
-import com.dexels.navajo.server.listener.http.TmlHttpServlet;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	// Included packages.
 
 	@SuppressWarnings("rawtypes")
-	private ServiceRegistration reference;
+//	private ServiceRegistration reference;
 
-	private ServiceRegistration<?> legacyPostman;
+//	private ServiceRegistration<?> legacyPostman;
 
 	private static BundleContext bundleContext;
 
@@ -66,11 +59,11 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 //				reference = bc.registerService(TmlScheduler.class.getName(), ds, wb);
 
 				
-				 Dictionary<String, Object> listener = new Hashtable<String, Object>();
-				 listener.put("alias", "/PostmanLegacy");
-				TmlHttpServlet tmlHttpServlet = new TmlHttpServlet();
-				tmlHttpServlet.setBundleContext(bc);
-				legacyPostman = bc.registerService(Servlet.class.getName(), tmlHttpServlet, listener);
+//				 Dictionary<String, Object> listener = new Hashtable<String, Object>();
+//				 listener.put("alias", "/PostmanLegacy");
+//				TmlHttpServlet tmlHttpServlet = new TmlHttpServlet();
+//				tmlHttpServlet.setBundleContext(bc);
+//				legacyPostman = bc.registerService(Servlet.class.getName(), tmlHttpServlet, listener);
 
 			}
 			} catch (Throwable e) {
@@ -80,12 +73,12 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 
 	public void stop(BundleContext bc) throws Exception {
-		if(reference!=null) {
-			reference.unregister();
-		}
-		if(legacyPostman!=null) {
-			legacyPostman.unregister();
-		}
+//		if(reference!=null) {
+//			reference.unregister();
+//		}
+//		if(legacyPostman!=null) {
+//			legacyPostman.unregister();
+//		}
 		bundleContext = null;
 
 	}

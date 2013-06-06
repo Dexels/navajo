@@ -67,18 +67,21 @@ public final class GenericHandler extends ServiceHandler {
     
 	private final static Logger logger = LoggerFactory
 			.getLogger(GenericHandler.class);
-    public static String applicationGroup = "";
+//    public static String applicationGroup = "";
     
-    static {
-    	try {
-    		applicationGroup = DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup();
-    	} catch (Throwable t) {
-    		applicationGroup = "";
-    	}
-    }
+    private final NavajoConfigInterface tenantConfig;
     
-    public GenericHandler() {
+//    static {
+//    	try {
+//    		applicationGroup = DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup();
+//    	} catch (Throwable t) {
+//    		applicationGroup = "";
+//    	}
+//    }
+//    
+    public GenericHandler(NavajoConfigInterface tenantConfig) {
 
+    	this.tenantConfig = tenantConfig;
     	boolean finishedSync = false;
     	
     	if (loadedClasses == null)
@@ -142,7 +145,7 @@ public final class GenericHandler extends ServiceHandler {
 
     }
     
-    private static final Object[] getScriptPathServiceNameAndScriptFile(String rpcName, boolean betaUser) {
+    private final Object[] getScriptPathServiceNameAndScriptFile(String rpcName, boolean betaUser) {
     	String scriptPath = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
     	//System.err.println("Looking for script: "+rpcName);
     	int strip = rpcName.lastIndexOf("/");
@@ -152,6 +155,7 @@ public final class GenericHandler extends ServiceHandler {
           serviceName = rpcName.substring(strip+1);
           pathPrefix = rpcName.substring(0, strip) + "/";
         }
+        String applicationGroup = this.tenantConfig.getInstanceGroup();
         
     	File scriptFile = new File(scriptPath + "/" + rpcName + "_" + applicationGroup + ".xml");
     	if (scriptFile.exists()) {
@@ -298,7 +302,7 @@ public final class GenericHandler extends ServiceHandler {
      * @param a
      * @return
      */
-    public final static boolean needsRecompileForScript(Access a) {
+    public final boolean needsRecompileForScript(Access a) {
     	Object [] all = getScriptPathServiceNameAndScriptFile(a.rpcName, a.betaUser);
  		if(all==null) {
  			return false;
@@ -313,7 +317,6 @@ public final class GenericHandler extends ServiceHandler {
     	boolean nr = isCompilable && (checkScriptRecompile(scriptFile, sourceFile) || 
     	             checkJavaRecompile(sourceFile, targetFile) ||
     	             hasDirtyDepedencies(a, className));
-    	//System.err.println(">>>>>>>>>>>>>>>>>>>>>>> needsRecompile()... " + nr);
     	return nr;
     }
     
@@ -321,7 +324,7 @@ public final class GenericHandler extends ServiceHandler {
     	return needsRecompileForScript(this.access);
     }
     
-    public static CompiledScript compileScript(Access a, StringBuffer compilerErrors) throws Exception {
+    public CompiledScript compileScript(Access a, StringBuffer compilerErrors) throws Exception {
     	
     	NavajoConfigInterface properties = DispatcherFactory.getInstance().getNavajoConfig();
     	List<Dependency> deps = new ArrayList<Dependency>();
@@ -355,10 +358,11 @@ public final class GenericHandler extends ServiceHandler {
     							com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
 
     							try {
-    								tslCompiler.compileScript(serviceName, 
+    								final String tenant = tenantConfig.getInstanceGroup();
+									tslCompiler.compileScript(serviceName, 
     										scriptPath,
     										properties.getCompiledScriptPath(),
-    										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps);
+    										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps,tenant,tenantConfig.hasTenantScriptFile(serviceName, tenant));
     							} catch (SystemException ex) {
     								sourceFile.delete();
     								AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER , ex.getMessage(), Level.SEVERE, a.accessID);
@@ -422,7 +426,7 @@ public final class GenericHandler extends ServiceHandler {
 
         try {
             // Should method getCompiledNavaScript be fully synced???
-        	CompiledScript cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName, null);
+        	CompiledScript cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName);
         	//(access.rpcName);
         	if(cso==null) {
         		if(Version.osgiActive()) {
@@ -534,7 +538,7 @@ public final class GenericHandler extends ServiceHandler {
 ////		 return ss;
 //	}
 
-	private CompiledScript loadOnDemand(BundleContext bundleContext, String rpcName, String filter) throws Exception {
+	private CompiledScript loadOnDemand(BundleContext bundleContext, String rpcName) throws Exception {
 		if(bundleContext==null) {
 			logger.debug("No OSGi context found");
 			return null;
@@ -546,7 +550,7 @@ public final class GenericHandler extends ServiceHandler {
 			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
 			return null;
 		}
-		CompiledScript sc = bc.getOnDemandScriptService(rpcName);
+		CompiledScript sc = bc.getOnDemandScriptService(rpcName,tenantConfig.getInstanceGroup(),tenantConfig.hasTenantScriptFile(rpcName,tenantConfig.getInstanceGroup()));
 		// wait for it..
 		bundleContext.ungetService(ref);
 		return sc;

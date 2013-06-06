@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Set;
 
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,15 +25,13 @@ public class PushComponent {
 			.getLogger(PushComponent.class);
 	private Configuration factoryConfiguration;
 
-	private Dictionary properties;
 
 	@SuppressWarnings("rawtypes")
-	public void activate(ComponentContext cc) {
+	public void activate(Map<String,Object> properties) {
 
 		try {
 			long stamp = System.currentTimeMillis();
 			
-			properties = cc.getProperties();
 			 
 			logger.info("Push configuration component created.");
 			String contextPath = (String) properties.get("contextPath");

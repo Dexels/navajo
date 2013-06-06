@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
 
-import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
@@ -198,15 +197,6 @@ public class TestDispatcher implements DispatcherInterface {
 			AfterWebServiceEmitter emit, ClientInfo clientInfo)
 			throws FatalException {
 		
-		return null;
-	}
-
-	@Override
-	public void setBundleCreator(BundleCreator bc) {
-	}
-
-	@Override
-	public BundleCreator getBundleCreator() {
 		return null;
 	}
 

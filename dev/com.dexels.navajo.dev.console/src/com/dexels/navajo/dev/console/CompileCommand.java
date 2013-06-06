@@ -37,8 +37,7 @@ public class CompileCommand {
 			@Parameter(names = { "-f", "--force" }, presentValue = "true", absentValue = "false") boolean force, 
 			@Descriptor(value = "Keep temporary files, can be useful for debugging") 
 			@Parameter(names = { "-k", "--keep" }, presentValue = "true", absentValue = "false") boolean keepIntermediateFiles, 
-			@Descriptor(value = "The path, prefix, or '/' to compile everything") 
-			String script ) {
+			@Descriptor(value = "The path, prefix, or '/' to compile everything") String script) {
 		try {
 			long tm = System.currentTimeMillis();
 			if(script.equals("/")) {
@@ -48,7 +47,7 @@ public class CompileCommand {
 			List<String> success = new ArrayList<String>();
 			List<String> failures = new ArrayList<String>();
 			List<String> skipped = new ArrayList<String>();
-			bundleCreator.createBundle(script,new Date(),"xml",failures,success,skipped, force,keepIntermediateFiles);
+			bundleCreator.createBundle(script,new Date(),"xml",failures,success,skipped, force,keepIntermediateFiles,"default");
 			long tm2 = System.currentTimeMillis() - tm;
 			session.getConsole().println("Compiling java complete. took: "+tm2+" millis.");
 			session.getConsole().println("Succeeded: "+success.size()+" failed: "+failures.size()+" skipped: "+skipped.size());

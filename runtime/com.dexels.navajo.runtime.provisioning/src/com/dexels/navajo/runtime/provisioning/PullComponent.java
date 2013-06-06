@@ -18,7 +18,6 @@ import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 import org.osgi.service.obr.Repository;
@@ -45,14 +44,11 @@ public class PullComponent {
 	private int current;
 
 	@SuppressWarnings("rawtypes")
-	public void activate(ComponentContext cc) {
+	public void activate(Map<String,Object> properties, BundleContext bundleContext) {
 		long stamp;
-		this.bundleContext  = cc.getBundleContext();
+		this.bundleContext  = bundleContext;
 		try {
 			stamp = System.currentTimeMillis();
-
-			Dictionary properties = cc.getProperties();
-
 			logger.info("Obr Component activated.");
 			String contextPath = (String) properties.get("contextPath");
 			String deployment = (String) properties.get("deployment");

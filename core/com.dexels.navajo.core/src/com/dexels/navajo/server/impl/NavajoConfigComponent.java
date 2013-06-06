@@ -1,6 +1,7 @@
 package com.dexels.navajo.server.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -14,7 +15,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +42,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	private RepositoryFactory repositoryFactory;
 	protected NavajoClassLoader betaClassloader;
 	protected NavajoClassSupplier adapterClassloader;
-	private Dictionary properties;
+	private Map<String, Object> properties;
 	private BundleContext bundleContext;
 	private final Map<Class<?>,ServiceReference<?>> serviceReferences = new HashMap<Class<?>,ServiceReference<?>>();
 	private final Map<String, DescriptionProviderInterface> desciptionProviders = new HashMap<String,DescriptionProviderInterface>();
@@ -79,14 +79,14 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 		this.myConfigurationAdmin = null;
 	}
 	
-	public void activate(ComponentContext cc) {
+	public void activate(Map<String,Object> props, BundleContext bundleContext) {
 		logger.info("========>  Activating");
 		try {
-			this.properties = cc.getProperties();
-			this.bundleContext = cc.getBundleContext();
+			this.properties = props;
+			this.bundleContext = bundleContext;
 			this.persistenceManager = new PersistenceManagerImpl();
 		} catch (Throwable e) {
-			logger.error("activation error",cc);
+			logger.error("activation error",bundleContext);
 		}
 	}
 
@@ -168,8 +168,8 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	}
 
 	@Override
-	public Date getScriptModificationDate(String scriptPath) {
-		return navajoIOConfig.getScriptModificationDate(scriptPath);
+	public Date getScriptModificationDate(String scriptPath, String tenant) throws FileNotFoundException {
+		return navajoIOConfig.getScriptModificationDate(scriptPath, tenant);
 	}
 
 	@Override
@@ -283,7 +283,6 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 
 	@Override
 	public double getCurrentCPUload() {
-		logger.debug("getCurrentCPUload is not implemented");
 		return -1;
 	}
 
@@ -436,6 +435,27 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	public SharedStoreInterface getSharedStore() {
 		logger.warn("This method is not implemented for OSGi");
 		throw new NoSuchMethodError("Method not supported by OSGi");
+	}
+
+	@Override
+	public File getApplicableScriptFile(String rpcName, String tenant)
+			throws FileNotFoundException {
+		return navajoIOConfig.getApplicableScriptFile(rpcName, tenant);
+	}
+
+	@Override
+	public File getApplicableBundleForScript(String rpcName, String tenant) {
+		return navajoIOConfig.getApplicableBundleForScript(rpcName, tenant);
+	}
+
+	@Override
+	public boolean hasTenantScriptFile(String rpcName, String tenant) {
+		return navajoIOConfig.hasTenantScriptFile(rpcName, tenant);
+	}
+
+	@Override
+	public InputStream getScript(String name, String tenant) throws IOException {
+		return navajoIOConfig.getScript(name, tenant);
 	}
 
 	

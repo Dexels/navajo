@@ -75,7 +75,8 @@ public class ScriptIntrospection {
 		try {
 			Access a = new Access();
 			a.rpcName = script;
-			myCompiledScript = GenericHandler.compileScript(a, compilerErrors);
+			GenericHandler handler = new GenericHandler(DispatcherFactory.getInstance().getNavajoConfig());
+			myCompiledScript = handler.compileScript(a, compilerErrors);
 		} catch (Throwable t) {
 			errors = compilerErrors.toString();
 			if ( errors.equals("" )) {

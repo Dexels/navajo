@@ -1,6 +1,7 @@
 package com.dexels.navajo.server;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -14,6 +15,7 @@ public interface NavajoIOConfig {
 	public File getContextRoot();
 
 	public InputStream getScript(String name) throws IOException;
+	public InputStream getScript(String name, String tenant) throws IOException;
 	public InputStream getConfig(String name) throws IOException;
     public InputStream getResourceBundle(String name) throws IOException;
     public Writer getOutputWriter(String outputPath, String scriptPackage, String scriptName, String extension) throws IOException;
@@ -36,10 +38,14 @@ public interface NavajoIOConfig {
 	 * Modification date of a script, returns null when missing
 	 * @param scriptPath
 	 * @return
+	 * @throws FileNotFoundException 
 	 */
-	public Date getScriptModificationDate(String scriptPath);
+	public Date getScriptModificationDate(String scriptPath, String tenant) throws FileNotFoundException;
 
-//	public Date getBundleModificationDate(String scriptPath) {
+	public File getApplicableScriptFile(String rpcName, String tenant) throws FileNotFoundException;
+	public File getApplicableBundleForScript(String rpcName, String tenant) ;
+
+	//	public Date getBundleModificationDate(String scriptPath) {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
@@ -50,5 +56,8 @@ public interface NavajoIOConfig {
 
 	@Deprecated
 	public File getJarFolder();
+
+	public boolean hasTenantScriptFile(String rpcName, String tenant);
+
 
 }
