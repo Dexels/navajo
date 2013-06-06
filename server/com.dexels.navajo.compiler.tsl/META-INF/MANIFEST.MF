@@ -13,6 +13,7 @@ Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.mapping.compiler.meta,
  com.dexels.navajo.server,
  javax.tools,
+ org.apache.commons.compress.archivers.zip;version="1.5.0",
  org.apache.commons.io,
  org.osgi.framework;version="1.6.0",
  org.osgi.framework.wiring;version="1.0.0",
@@ -22,5 +23,4 @@ Import-Package: com.dexels.navajo.compiler,
  org.slf4j;version="[1.6.1,1.8.0)"
 Bundle-Activator: navajotsl.Activator
 Service-Component: OSGI-INF/navajoTslCompiler.xml, OSGI-INF/javaCompiler.xml, OSGI-INF/javaCompilerComponent.xml, OSGI-INF/bundleCreator.xml
-Bundle-ClassPath: lib/commons-compress-1.4.1.jar,
- .
+Bundle-ClassPath: .
