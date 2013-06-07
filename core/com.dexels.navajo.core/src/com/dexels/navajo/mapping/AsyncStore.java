@@ -73,7 +73,11 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
   }
 
   public void activate() {
-	  JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, id);
+	  try {
+		JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, id);
+	} catch (Throwable e) {
+		logger.error("Caught Error: ", e);
+	}
 	  instance = this;
 	  this.setSleepTime(threadWait);
 	  this.startThread(this);
@@ -202,26 +206,30 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
   }
   
   public void deactivate() {
-	  // Stop thread.
-	  this.kill();
-	  // Removed all async mappable instances.
-	  for (Iterator<AsyncMappable> iter = objectStore.values().iterator(); iter.hasNext();) {
-		  AsyncMappable element = iter.next();
-		  try {
-			  element.setKill(true);
-		  } catch (Throwable e) {
-			  logger.error("Error: ", e);
-		  }
-	  }
-	  objectStore.clear();
-	  accessStore.clear();
 	  try {
-		  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
-	  } catch (Throwable e) {
-		  logger.error("Error: ", e);
-	  }
-	  resetInstance();
-	  AuditLog.log(AuditLog.AUDIT_MESSAGE_ASYNC_RUNNER, "Killed");
+		// Stop thread.
+		  this.kill();
+		  // Removed all async mappable instances.
+		  for (Iterator<AsyncMappable> iter = objectStore.values().iterator(); iter.hasNext();) {
+			  AsyncMappable element = iter.next();
+			  try {
+				  element.setKill(true);
+			  } catch (Throwable e) {
+				  logger.error("Error: ", e);
+			  }
+		  }
+		  objectStore.clear();
+		  accessStore.clear();
+		  try {
+			  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
+		  } catch (Throwable e) {
+			  logger.error("Throwable caught: ", e);
+		  }
+		  resetInstance();
+		  AuditLog.log(AuditLog.AUDIT_MESSAGE_ASYNC_RUNNER, "Killed");
+	} catch (Throwable e) {
+		logger.error("Caught throwable: ", e);
+	}
   }
 
 }
