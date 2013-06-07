@@ -172,21 +172,24 @@ public class SOAPMap implements Mappable {
 				msg.saveChanges();
 				
 				soapReply = connection.call(msg, endpoint);
-				
-				TransformerFactory tFact=TransformerFactory.newInstance();
-				Transformer transformer = tFact.newTransformer();
-				Source src = soapReply.getSOAPPart().getContent();
-				// Fetch attachments
-				Iterator<AttachmentPart> iter = soapReply.getAttachments();
-				while ( iter.hasNext() ) {
-					AttachmentPart part = iter.next();
-					responseAttachments.add(new SoapAttachment(new Binary(part.getRawContent()), part.getContentType()));
+				if (soapReply==null) {
+					responseBody = new Binary();
+				} else {
+					TransformerFactory tFact=TransformerFactory.newInstance();
+					Transformer transformer = tFact.newTransformer();
+					Source src = soapReply.getSOAPPart().getContent();
+					// Fetch attachments
+					Iterator<AttachmentPart> iter = soapReply.getAttachments();
+					while ( iter.hasNext() ) {
+						AttachmentPart part = iter.next();
+						responseAttachments.add(new SoapAttachment(new Binary(part.getRawContent()), part.getContentType()));
+					}
+					
+					StringWriter sw = new StringWriter();
+					StreamResult result=new StreamResult( sw);
+					transformer.transform(src, result);
+					responseBody = new Binary(sw.toString().getBytes());
 				}
-				
-				StringWriter sw = new StringWriter();
-				StreamResult result=new StreamResult( sw);
-				transformer.transform(src, result);
-				responseBody = new Binary(sw.toString().getBytes());
 				
 			}
 
