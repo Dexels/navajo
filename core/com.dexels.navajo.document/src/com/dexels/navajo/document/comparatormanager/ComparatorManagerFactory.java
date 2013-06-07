@@ -1,4 +1,5 @@
-package com.dexels.navajo.comparatormanager;
+package com.dexels.navajo.document.comparatormanager;
+
 
 public class ComparatorManagerFactory {
 

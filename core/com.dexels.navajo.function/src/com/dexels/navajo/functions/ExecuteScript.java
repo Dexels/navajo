@@ -7,7 +7,9 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
+import com.dexels.navajo.server.NavajoConfig;
 
 
 /**
@@ -27,7 +29,7 @@ public class ExecuteScript extends FunctionInterface {
   }
 
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-    GenericHandler gh = new GenericHandler();
+    GenericHandler gh = new GenericHandler(DispatcherFactory.getInstance().getNavajoConfig());
     String script = (String) getOperand(0);
     Access access = new Access(1, 1, 1, "ANONYMOUS", script, "", "", "", false, null);
     access.setInDoc(inMessage);

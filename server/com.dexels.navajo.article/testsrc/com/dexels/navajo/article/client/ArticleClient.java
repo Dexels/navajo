@@ -29,6 +29,8 @@ public class ArticleClient {
 	private URL base;
 	private ObjectNode meta;
 	private ObjectMapper mapper = new ObjectMapper();
+//	private String baseurl = "http://sportlink.com/api/";
+	private String baseurl = "http://localhost:9090/article/";
 	private String username = "@BBFW06E";
 	private String token = "epPm/1NY+hygYpOpGDHB2aMEjSJ558CNywPLwd/KA4nOV4Fkh9vtuSJGQZqsEJDpMdf/MhkOcqNO6LGdYH4tWxBIZo3niZKOkK+6gD61U8g=";
 	private long started = System.currentTimeMillis();
@@ -37,7 +39,7 @@ public class ArticleClient {
 //	private ExecutorService executor = Executors.newCachedThreadPool();
 	
 	public ArticleClient() throws IOException {
-		base = new URL("http://sportlink.com/api/");
+		base = new URL(baseurl);
 		meta = (ObjectNode)getJSONFromURL("list");
 		System.err.println("# of articles: "+meta.size());
 	}

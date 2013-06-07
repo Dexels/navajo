@@ -1,14 +1,12 @@
 package com.dexels.navajo.server.enterprise.statistics;
 
-import org.osgi.service.component.ComponentContext;
-
 import com.dexels.navajo.server.NavajoConfigInterface;
 
 public class StatisticsRunnerComponent {
 	/**
 	 * @param cc  
 	 */
-	public void activate(ComponentContext cc) {
+	public void activate() {
 		
 	}
 

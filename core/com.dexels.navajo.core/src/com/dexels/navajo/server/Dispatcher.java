@@ -46,7 +46,6 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
-import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -142,7 +141,7 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
   private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>();
 
   // optional, can be null
-  private BundleCreator bundleCreator; 
+//  private BundleCreator bundleCreator; 
    
   public Dispatcher(NavajoConfigInterface nc) {
 	  navajoConfig = nc;
@@ -192,18 +191,18 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 
   }
   
-  @Override
-	public void setBundleCreator(BundleCreator bc) {
-		this.bundleCreator = bc;
-	}
-	
-	protected void clearBundleCreator(BundleCreator bc) {
-		this.bundleCreator = null;
-	}
-  @Override
-	public BundleCreator getBundleCreator() {
-		return this.bundleCreator;
-	}
+//  @Override
+//	public void setBundleCreator(BundleCreator bc) {
+//		this.bundleCreator = bc;
+//	}
+//	
+//	protected void clearBundleCreator(BundleCreator bc) {
+//		this.bundleCreator = null;
+//	}
+//  @Override
+//	public BundleCreator getBundleCreator() {
+//		return this.bundleCreator;
+//	}
 
     
   protected final void init() {

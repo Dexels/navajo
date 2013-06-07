@@ -34,7 +34,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	 * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String)
 	 */
 	@Override
-	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies) throws Exception {
+	public void compileTsl(String scriptPath, String compileDate, List<Dependency> dependencies, String tenant, boolean hasTenantSpecificFile) throws Exception {
 		String packagePath = null;
 		String script = null;
 		if(scriptPath.indexOf('/')>=0) {
@@ -60,8 +60,13 @@ public class TslCompilerComponent implements ScriptCompiler {
 //       if("".equals(packagePath)) {
 //    	   scriptPackage = "defaultPackage";
 //       }
-		String scriptString = scriptPath.replaceAll("/", "_");
-		compiler.compileToJava(script, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc, navajoIOConfig,dependencies);
+		String scriptString = scriptPath.replaceAll("_", "|");
+		String scriptSource = script;
+//		if(hasTenantSpecificFile) {
+//			scriptSource = script+"_"+tenant;
+//		}
+//		String scriptString = scriptPath.replaceAll("/", "_");
+		compiler.compileToJava(scriptSource, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc, navajoIOConfig,dependencies,tenant,hasTenantSpecificFile);
 		//		logger.info("Javafile: "+javaFile);
 //		System.err.println("Packages: "+packages);
 		Set<String> dependentResources = new HashSet<String>();
@@ -93,7 +98,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		generateFactoryClass(script, packagePath,dependentResources);
 
 		generateManifest(scriptString,"1.0.0",packagePath, script,packages,compileDate);
-		generateDs(packagePath, script,dependencies,dependentResources);
+		generateDs(packagePath, script,dependencies,dependentResources,tenant,hasTenantSpecificFile);
 	}
 	
 	private void generateFactoryClass(String script, String packagePath, Set<String> resources) throws IOException {
@@ -196,7 +201,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.close();
 	}
 	
-	private void generateDs(String packagePath, String script,List<Dependency> dependencies, Set<String> dependentResources) throws IOException {
+	private void generateDs(String packagePath, String script,List<Dependency> dependencies, Set<String> dependentResources,final String tenant, boolean hasTenantSpecificFile) throws IOException {
 		
 		String fullName;
 		if (packagePath.equals("")) {
@@ -211,7 +216,17 @@ public class TslCompilerComponent implements ScriptCompiler {
 		} else {
 			javaPackagePath = packagePath.replaceAll("/", ".");
 		}
-		String symbolicName = fullName.replaceAll("/", ".");
+		String symbolicName = null;
+//		String tenant = null;
+		
+		symbolicName = fullName.replaceAll("/", ".");
+		if(symbolicName.indexOf("_")!=-1) {
+			final String[] split = symbolicName.split("_");
+			symbolicName = split[0];
+//			tenant = split[1];
+			logger.error("Anomaly in creating bundle: shouldn't happen");
+		}
+
 		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
 		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
 		xe.setAttribute("immediate", "false");
@@ -226,12 +241,15 @@ public class TslCompilerComponent implements ScriptCompiler {
 		XMLElement provide = new CaseSensitiveXMLElement("provide");
 		service.addChild(provide);
 		provide.setAttribute("interface", "com.dexels.navajo.server.CompiledScriptFactory");
-		XMLElement property = new CaseSensitiveXMLElement("property");
-		xe.addChild(property);
-		property.setAttribute("name", "navajo.scriptName");
-		property.setAttribute("type", "String");
-		property.setAttribute("value", symbolicName);
-		
+
+		addProperty("navajo.scriptName","String",symbolicName, xe);
+		if(hasTenantSpecificFile) {
+			addProperty("navajo.tenant","String",tenant, xe);
+			addProperty("service.ranking","Integer","1000", xe);
+		} else {
+			addProperty("service.ranking","Integer","0", xe);
+			
+		}
 //		for (Dependency dependency : dependencies) {
 //			XMLElement dep = new CaseSensitiveXMLElement("reference");
 //			dep.setAttribute("bind", "setDependency");
@@ -257,6 +275,14 @@ public class TslCompilerComponent implements ScriptCompiler {
 		xe.write(w);
 		w.flush();
 		w.close();
+	}
+
+	protected void addProperty(final String key, final String type, final String value, final XMLElement xe) {
+		XMLElement property = new CaseSensitiveXMLElement("property");
+		xe.addChild(property);
+		property.setAttribute("name", key);
+		property.setAttribute("type", type);
+		property.setAttribute("value", value);
 	}
 
 	public void setClassLoader(ClassLoader cls) {

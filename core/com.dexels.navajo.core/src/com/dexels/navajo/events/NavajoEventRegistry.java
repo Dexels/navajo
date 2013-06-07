@@ -315,7 +315,11 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	
 	public void activate() {
 		instance = this;
-		JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
+		try {
+			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
+		} catch (Throwable e) {
+			logger.error("Caught Error: ", e);
+		}
 	}
 	
 	public void deactivate() {

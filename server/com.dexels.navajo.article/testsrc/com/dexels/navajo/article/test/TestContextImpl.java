@@ -1,6 +1,7 @@
 package com.dexels.navajo.article.test;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -45,7 +46,7 @@ public abstract class TestContextImpl extends BaseContextImpl {
 			}
 			
 			@Override
-			public Date getScriptModificationDate(String scriptPath) {
+			public Date getScriptModificationDate(String scriptPath, String tenant) {
 				return null;
 			}
 			
@@ -115,6 +116,30 @@ public abstract class TestContextImpl extends BaseContextImpl {
 			
 			@Override
 			public String getAdapterPath() {
+				return null;
+			}
+
+			@Override
+			public File getApplicableScriptFile(String rpcName, String tenant)
+					throws FileNotFoundException {
+				return null;
+			}
+
+			@Override
+			public File getApplicableBundleForScript(String rpcName,
+					String tenant)  {
+				return null;
+			}
+
+			@Override
+			public boolean hasTenantScriptFile(String rpcName, String tenant) {
+				return false;
+			}
+
+			@Override
+			public InputStream getScript(String name, String tenant)
+					throws IOException {
+				// TODO Auto-generated method stub
 				return null;
 			}
 		});

@@ -30,19 +30,23 @@ public class CopyMessage implements Mappable {
   }
 
   private void copy(Message from, Message to) {
-	   // Copy properties.
-	   
-	    Iterator<Property> allProperties = from.getAllProperties().iterator();
-	    while ( allProperties.hasNext() ) {
-	    	Property p = allProperties.next();
-	    	to.addProperty(p.copy(outputDoc));
-	    }
-	    // Copy messages.
-	    Iterator<Message> allMessages = from.getAllMessages().iterator();
-	    while ( allMessages.hasNext() ) {
-	    	Message m = allMessages.next();
-	    	to.addMessage(m.copy(outputDoc));
-	    }
+	  
+	  if ( from.isArrayMessage() && from.getDefinitionMessage() != null ) {
+		  to.setDefinitionMessage(from.getDefinitionMessage().copy(outputDoc));
+	  }
+	  // Copy properties.
+	  Iterator<Property> allProperties = from.getAllProperties().iterator();
+	  while ( allProperties.hasNext() ) {
+		  Property p = allProperties.next();
+		  to.addProperty(p.copy(outputDoc));
+	  }
+	  // Copy messages.
+	  Iterator<Message> allMessages = from.getAllMessages().iterator();
+	  while ( allMessages.hasNext() ) {
+		  Message m = allMessages.next();
+		  to.addMessage(m.copy(outputDoc));
+	  }
+
   }
   
   public void store() throws MappableException, UserException {

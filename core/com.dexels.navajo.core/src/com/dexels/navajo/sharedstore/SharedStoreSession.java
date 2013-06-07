@@ -48,8 +48,8 @@ public class SharedStoreSession {
 			if (!parentPath.equals(all[i])) {
 				String candidate = getLevelParent(all[i], parentPath);
 				if ( candidate != null && (filter == null || filter.equals("") || candidate.matches(filter))) {
-					candidate = ( candidate != null ? "[" + candidate + "]" : null);
-					if (  candidate != null && !objects.contains( candidate ) ){
+					candidate = "[" + candidate + "]" ;
+					if (  !objects.contains( candidate ) ){
 						objects.add(candidate);
 					}
 				}
@@ -136,7 +136,7 @@ public class SharedStoreSession {
 		if ( !parent.startsWith(path) ) {
 			return null;
 		}
-		String s = ( path == null || path.equals("") ? parent : 
+		String s = (  path.equals("") ? parent : 
 			parent.substring( ( path.equals("") ? 0 : path.length() ), parent.length()));
 		return ( s.indexOf("/") != -1 ? s.substring(0, s.indexOf("/")) : s);
 	}

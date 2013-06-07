@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.server.listener.continuations.filter">
+   <implementation class="org.eclipse.jetty.servlets.GzipFilter"/>
+   <property name="filter-name" type="String" value="compression"/>
+   <property name="servletNames" value="Postman"/>
+   <property name="urlPatterns" type="String" value="/Postman"/>
+   <reference cardinality="1..1" interface="javax.servlet.Servlet" name="servlet" policy="dynamic" target="(component.name=navajo.server.continuation)"/>
+   <service>
+      <provide interface="javax.servlet.Filter"/>
+   </service>
+</scr:component>

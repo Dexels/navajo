@@ -1,22 +1,15 @@
 package com.dexels.navajo.tipi.application;
 
 import java.io.IOException;
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import tipi.TipiApplicationInstance;
-import tipi.TipiCoreExtension;
-import tipi.TipiExtension;
-import tipi.TipiMainExtension;
 
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.TipiSwingWrapper;
@@ -30,26 +23,23 @@ public class ApplicationComponent {
 			.getLogger(ApplicationComponent.class);
 	private TipiApplicationInstance instance;
 
-	private ComponentContext componentContext;
+	private BundleContext bundleContext;
 
 
 	private boolean isRunning = false;
 	private boolean isActive = false;
-	private Dictionary properties;
 	private ConfigurationAdmin configAdmin;
 	
-	public void activate(ComponentContext c) {
-		this.componentContext = c;
+	public void activate(Map<String,Object> properties, BundleContext c) {
+		this.bundleContext = c;
 		logger.info("Tipi Application Active");
-		properties = c.getProperties();
-
 		if(instance!=null) {
 			instance.close();
 		}
 		isActive = true;
-		String contextPath = (String) c.getProperties().get("tipi.context");
-		String deployment = (String) c.getProperties().get("deployment");
-		String profile = (String) c.getProperties().get("profile");
+		String contextPath = (String) properties.get("tipi.context");
+		String deployment = (String) properties.get("deployment");
+		String profile = (String) properties.get("profile");
 
 		try {
 			Configuration boot = configAdmin.getConfiguration("tipi.boot");
@@ -60,7 +50,7 @@ public class ApplicationComponent {
 					logger.info("Found a system var, booting after all.");
 					if(contextPath!=null) {
 						boot.delete();
-						bootApplication(componentContext.getBundleContext(),contextPath,deployment,profile);
+						bootApplication(bundleContext,contextPath,deployment,profile);
 					}
 				}
 				return;
@@ -71,7 +61,7 @@ public class ApplicationComponent {
 		}
 		//		if(verifyOptionalDeps()) {
 		if(contextPath!=null) {
-			bootApplication(componentContext.getBundleContext(),contextPath,deployment,profile);
+			bootApplication(bundleContext,contextPath,deployment,profile);
 		}
 //		}
 		

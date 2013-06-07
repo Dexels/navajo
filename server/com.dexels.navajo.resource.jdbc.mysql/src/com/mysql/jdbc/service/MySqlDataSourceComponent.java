@@ -1,13 +1,11 @@
 package com.mysql.jdbc.service;
 
 import java.sql.SQLException;
-import java.util.Dictionary;
-import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.jdbc.DataSourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,23 +20,24 @@ public class MySqlDataSourceComponent extends MysqlDataSource implements DataSou
 	private final static Logger logger = LoggerFactory
 			.getLogger(MySqlDataSourceComponent.class);
 	
-	public void activate(ComponentContext cc) {
+	public void activate(Map<String,Object> props) {
 	
 		try {
 //			MySQLJDBCDataSourceService factory = new MySQLJDBCDataSourceService();
 			MySQLJDBCDataSourceService service = new MySQLJDBCDataSourceService();
 			service.start();
-			Dictionary dd = cc.getProperties();
-			Enumeration en = dd.keys();
+//			Dictionary dd = cc.getProperties();
+//			Enumeration en = dd.keys();
 			Properties pr = new Properties();
-			while (en.hasMoreElements()) {
-				String key = (String) en.nextElement();
-				pr.put(key, dd.get(key));
-				logger.debug("Adding property: "+key+" , "+dd.get(key));
-			}
+			pr.putAll(props);
+//			while (en.hasMoreElements()) {
+//				String key = (String) en.nextElement();
+//				pr.put(key, dd.get(key));
+//				logger.debug("Adding property: "+key+" , "+dd.get(key));
+//			}
 //		    prop.put(DataSourceFactory.JDBC_DATABASE_NAME, settings.get("name")); 
 
-			pr.put(DataSourceFactory.JDBC_DATABASE_NAME, dd.get("name"));
+			pr.put(DataSourceFactory.JDBC_DATABASE_NAME, props.get("name"));
 			try {
 				datasource = service.createDataSource(pr);
 			} catch (SQLException e) {

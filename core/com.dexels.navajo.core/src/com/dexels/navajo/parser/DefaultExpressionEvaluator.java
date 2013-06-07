@@ -1,7 +1,6 @@
 package com.dexels.navajo.parser;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,13 +10,9 @@ import java.util.Set;
 
 import navajocore.Version;
 
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.comparatormanager.ComparatorManager;
-import com.dexels.navajo.comparatormanager.ComparatorManagerFactory;
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
@@ -26,7 +21,8 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.comparator.ComparatorFactory;
+import com.dexels.navajo.document.comparatormanager.ComparatorManager;
+import com.dexels.navajo.document.comparatormanager.ComparatorManagerFactory;
 import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;
 

@@ -36,13 +36,24 @@ public class ResultMessage implements Mappable {
 	}
 
 	private String suppressProperties = null;
+	private Message definitionMessage = null;
 	
+	public Message getDefinitionMessage() {
+		return definitionMessage;
+	}
+
 	public void setAggregates(Map<String,PropertyAggregate> agg) {
 		this.aggregates = agg;
 	}
 	
-	private Aggregate getAggregate(String name) {
+	private Aggregate getAggregate(String name) throws UserException {
+		
+		if ( aggregates == null || aggregates.size() == 0 ) {
+			throw new UserException(-1, "No groupBy defined");
+		}
+		
 		PropertyAggregate propAg = aggregates.get(name);
+		
 		if ( propAg != null ) {
 			List<Property> properties = msg.getAllProperties();
 			Map<String,Object> group = new TreeMap<String,Object>();
@@ -55,8 +66,15 @@ public class ResultMessage implements Mappable {
 			return null;
 		}
 	}
-	
-	public int getCount(String name) {
+
+	public int getCount() throws UserException {
+		if ( aggregates == null || aggregates.size() == 0 ) {
+			throw new UserException(-1, "No groupBy defined");
+		}
+		String first = aggregates.keySet().iterator().next();
+		return getCount(first);
+	}
+	public int getCount(String name) throws UserException {
 		Aggregate agg = getAggregate(name);
 		if ( agg != null ) {
 			return agg.getCount();
@@ -65,7 +83,7 @@ public class ResultMessage implements Mappable {
 		}
 	}
 	
-	public double getAvg(String name) {
+	public double getAvg(String name) throws UserException {
 		Aggregate agg = getAggregate(name);
 		if ( agg != null ) {
 			return agg.getAvg();
@@ -74,7 +92,7 @@ public class ResultMessage implements Mappable {
 		}
 	}
 	
-	public double getSum(String name) {
+	public double getSum(String name) throws UserException {
 		Aggregate agg = getAggregate(name);
 		if ( agg != null ) {
 			return agg.getSum();
@@ -83,7 +101,7 @@ public class ResultMessage implements Mappable {
 		}
 	}
 	
-	public Object getMin(String name) {
+	public Object getMin(String name) throws UserException {
 		Aggregate agg = getAggregate(name);
 		if ( agg != null ) {
 			return agg.getMin();
@@ -92,7 +110,7 @@ public class ResultMessage implements Mappable {
 		}
 	}
 	
-	public Object getMax(String name) {
+	public Object getMax(String name) throws UserException {
 		Aggregate agg = getAggregate(name);
 		if ( agg != null ) {
 			return agg.getMax();
@@ -101,8 +119,9 @@ public class ResultMessage implements Mappable {
 		}
 	}
 	
-	public void setMessage(Message m, String suppressProperties) {
+	public void setMessage(Message definitionMessage, Message m, String suppressProperties) {
 		this.msg = m;
+		this.definitionMessage = definitionMessage;
 		this.suppressProperties = suppressProperties;
 	}
 	
@@ -125,7 +144,7 @@ public class ResultMessage implements Mappable {
 		return false;
 	}
 	
-	private final void processSuppressedProperties(Message m) {
+	public final void processSuppressedProperties(Message m) {
 		
 		if ( m.isArrayMessage() && m.getDefinitionMessage() != null ) {
 			processSuppressedProperties(m.getDefinitionMessage());
@@ -149,6 +168,11 @@ public class ResultMessage implements Mappable {
 
 	public void load(Access access) throws MappableException, UserException {
 		this.parentMsg = access.getCurrentOutMessage();
+		
+		if (  this.parentMsg.getArrayParentMessage() != null && definitionMessage != null ) {
+			processSuppressedProperties(definitionMessage);
+			this.parentMsg.getArrayParentMessage() .setDefinitionMessage(definitionMessage);
+		}
 		this.myNavajo = access.getOutputDoc();
 		Message copy = msg.copy(myNavajo);
 		processSuppressedProperties(copy);

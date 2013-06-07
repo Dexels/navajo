@@ -7,7 +7,6 @@ import java.util.Hashtable;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,8 +61,8 @@ public class CommandHandler {
 		localClient  = null;
 	}
 	
-	public void activate(ComponentContext context) {
-		this.bundleContext = context.getBundleContext();
+	public void activate(BundleContext bundleContext) {
+		this.bundleContext = bundleContext;
 		logger.info("Command handler in business");
 
 		CompileCommand c = new CompileCommand();

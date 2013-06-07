@@ -4,7 +4,6 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -43,19 +42,19 @@ public class DispatcherComponent extends Dispatcher implements
 		logger.debug("setNavajoConfig dispatcher!");
 		super.setNavajoConfig(nci);
 	}
-	public void clearNavajoConfig(NavajoConfigInterface nci) {
-		logger.debug("clearNavajoConfig dispatcher!");
-		super.clearNavajoConfig(nci);
-	}
+//	public void clearNavajoConfig(NavajoConfigInterface nci) {
+//		logger.debug("clearNavajoConfig dispatcher!");
+//		super.clearNavajoConfig(nci);
+//	}
 
-	public void setBundleCreator(BundleCreator nci) {
-		logger.debug("setBundleCreator dispatcher!");
-		super.setBundleCreator(nci);
-	}
-	public void clearBundleCreator(BundleCreator nci) {
-		logger.debug("clearBundleCreater dispatcher!");
-		super.clearBundleCreator(nci);
-	}
+//	public void setBundleCreator(BundleCreator nci) {
+//		logger.debug("setBundleCreator dispatcher!");
+//		super.setBundleCreator(nci);
+//	}
+//	public void clearBundleCreator(BundleCreator nci) {
+//		logger.debug("clearBundleCreater dispatcher!");
+//		super.clearBundleCreator(nci);
+//	}
 
 	public void setTribeManager(TribeManagerInterface tmi) {
 		tribeManager = tmi;
