@@ -62,7 +62,7 @@ public class ApplyCss extends TipiAction implements TipiComponentInstantiatedLis
 			if (forceReloadCssDefinition)
 			{
 				component.getContext().reloadCssDefinitions("main");
-				component.getContext().reloadCssDefinitions(component.getName());
+				component.getContext().reloadCssDefinitions(getHomeDefinitionName(component));
 			}
 			if (!skipMainCss)
 			{
@@ -71,7 +71,7 @@ public class ApplyCss extends TipiAction implements TipiComponentInstantiatedLis
 					applyCss(component, cssDefinition, null, event);
 				}
 			}
-			for (String cssDefinition : component.getContext().getCssDefinitions(component.getName()))
+			for (String cssDefinition : component.getContext().getCssDefinitions(getHomeDefinitionName(component)))
 			{
 				applyCss(component, cssDefinition, null, event);
 			}
@@ -146,6 +146,22 @@ public class ApplyCss extends TipiAction implements TipiComponentInstantiatedLis
 			engine.dispose();
 		}
 	}
+	
+	public static String getHomeDefinitionName(TipiComponent tc)
+	{
+		if (tc == null)
+		{
+			return null;
+		}
+		else if(tc.getHomeComponent() != null)
+		{
+			return tc.getHomeComponent().getName();
+		}
+		else
+		{
+			return tc.getName();
+		}
+	}
 
 	public void doComponentInstantiated(TipiComponent tc) {
 		if (tc.getName() != null)
@@ -154,7 +170,7 @@ public class ApplyCss extends TipiAction implements TipiComponentInstantiatedLis
 			{
 				applyCss(tc, cssDefinition, null, null);
 			}
-			for (String cssDefinition : tc.getContext().getCssDefinitions(tc.getName()))
+			for (String cssDefinition : tc.getContext().getCssDefinitions(getHomeDefinitionName(tc)))
 			{
 				applyCss(tc, cssDefinition, null, null);
 			}

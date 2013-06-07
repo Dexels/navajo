@@ -1142,7 +1142,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 		tipiCssMap.put(definition, cssResources);
 		// If the "main" definition hasn't been loaded yet, do so now (only if we're not trying to load the main definition. This prevents a possible infinite loop.
-		if (!definition.equals("main") && !tipiCssMap.containsKey("main"))
+		if (definition != null && !definition.equals("main") && !tipiCssMap.containsKey("main"))
 		{
 			loadCssDefinition("main", null);
 		}
