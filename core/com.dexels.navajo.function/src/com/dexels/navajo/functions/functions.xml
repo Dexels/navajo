@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- This file is in alphabetical order -->
 <functiondef>
+	<function name="StoreBinary" class="com.dexels.navajo.functions.StoreBinary">
+		<description>Store a binary object in Shared Store
+		</description>
+		<input>string, binary</input>
+		<result>string</result>
+	</function>
+	<function name="GetBinary" class="com.dexels.navajo.functions.GetBinary">
+		<description>Gets a binary object from Shared Store
+		</description>
+		<input>string</input>
+		<result>binary</result>
+	</function>
 	<function name="EncryptString" class="com.dexels.navajo.functions.EncryptString">
 		<description>Encrypts a string</description>
 		<input>string,string</input>
