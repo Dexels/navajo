@@ -6,8 +6,6 @@ Bundle-Version: 2.12.39.qualifier
 Bundle-Activator: navajocore.Version
 Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.navajo.server.resource",
- com.dexels.navajo.comparatormanager,
- com.dexels.navajo.comparatormanager.impl;uses:="com.dexels.navajo.comparatormanager,com.dexels.navajo.document.comparator",
  com.dexels.navajo.compiler;uses:="com.dexels.navajo.mapping",
  com.dexels.navajo.compiler.internal;uses:="com.dexels.navajo.server",
  com.dexels.navajo.enterprise.scheduler.tribe;uses:="com.dexels.navajo.server.enterprise.tribe,com.dexels.navajo.server,com.dexels.navajo.document",
@@ -112,6 +110,7 @@ Import-Package: com.dexels.navajo.authentication.api,
  com.dexels.navajo.client.context,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.comparator;version="2.2.1",
+ com.dexels.navajo.document.comparatormanager,
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.nanoimpl;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
@@ -139,6 +138,5 @@ Service-Component: OSGI-INF/simpleRepository.xml, OSGI-INF/repositoryFactory.xml
  OSGI-INF/localClient.xml,OSGI-INF/navajoIOConfig.xml,OSGI-INF/localClientContext.xml,OSGI-INF/navajoConfigEmitter.xml,
  OSGI-INF/navajoConfig.xml,OSGI-INF/dispatcher.xml, OSGI-INF/expressionEvaluator.xml,OSGI-INF/navajoEventRegistry.xml,
  OSGI-INF/sharedFileStore.xml,OSGI-INF/dummyTribeManager.xml,OSGI-INF/dummyJabberWorker.xml,OSGI-INF/asyncStoreRunner.xml,
- OSGI-INF/navajoContext.xml,OSGI-INF/dummyIntegrityWorker.xml,
- OSGI-INF/navajo.comparator.manager.xml
+ OSGI-INF/navajoContext.xml,OSGI-INF/dummyIntegrityWorker.xml
 

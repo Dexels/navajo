@@ -13,8 +13,6 @@ import navajocore.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.comparatormanager.ComparatorManager;
-import com.dexels.navajo.comparatormanager.ComparatorManagerFactory;
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.ExpressionEvaluator;
 import com.dexels.navajo.document.Message;
@@ -23,6 +21,8 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.comparatormanager.ComparatorManager;
+import com.dexels.navajo.document.comparatormanager.ComparatorManagerFactory;
 import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;
 
