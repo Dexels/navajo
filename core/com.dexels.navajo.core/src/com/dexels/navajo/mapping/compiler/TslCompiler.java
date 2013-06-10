@@ -53,6 +53,7 @@ import org.w3c.dom.NodeList;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.legacy.compiler.EclipseCompiler;
@@ -1124,7 +1125,9 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
 
     int exprCount = countNodes(children, "expression");
 
-    result.append(printIdent(ident) + "matchingConditions = false;\n");
+    if ( "".equals(value) ) {
+    	result.append(printIdent(ident) + "matchingConditions = false;\n");
+    }
     Class localContextClass = null;
     for (int i = 0; i < children.getLength(); i++) {
       hasChildren = true;
@@ -1185,9 +1188,13 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
       result.append(printIdent(ident) + "type = \"" + type + "\";\n");
     }
     else {
+      if ( !Property.EXPRESSION_LITERAL_PROPERTY.equals(type) && !Property.EXPRESSION_PROPERTY.equals(type) ) {
       result.append(printIdent(ident) +
           "type = (sValue != null) ? MappingUtils.determineNavajoType(sValue) : \"" +
                     type + "\";\n");
+      } else {
+    	  result.append(printIdent(ident) + "type = \"" + type + "\";\n");
+      }
     }
 
     result.append(printIdent(ident) + "subtype = \"" + subtype + "\";\n");

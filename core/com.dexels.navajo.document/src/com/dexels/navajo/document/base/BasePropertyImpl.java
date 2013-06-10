@@ -38,6 +38,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.NavajoExpression;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
 
@@ -539,6 +540,26 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		// return null;
 		// }
 		// logger.info("MYVALUE: "+myValue);
+		if (getType().equals(Property.STRING_PROPERTY)) {
+			return getValue();
+		}
+		
+		if (getType().equals(Property.BOOLEAN_PROPERTY)) {
+			if (getValue() != null && !getValue().equals("")) {
+				return Boolean.valueOf(getValue().equals("true"));
+			} else {
+				return null;
+			}
+		}
+		
+		if (getType().equals(EXPRESSION_LITERAL_PROPERTY)) {
+			if (getValue() != null && !getValue().equals("")) {
+				return new NavajoExpression(getValue());
+			} else {
+				return null;
+			}
+		}
+		
 		if (getType().equals(EXPRESSION_PROPERTY)) {
 				if (evaluatedValue == null) {
 					evaluatedValue = getEvaluatedValue();
@@ -549,13 +570,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			
 		}
 
-		if (getType().equals(Property.BOOLEAN_PROPERTY)) {
-			if (getValue() != null && !getValue().equals("")) {
-				return Boolean.valueOf(getValue().equals("true"));
-			} else {
-				return null;
-			}
-		}
 		if (getType().equals(Property.PERCENTAGE_PROPERTY)) {
 			if (getValue() != null) {
 				return new Percentage(getValue());
@@ -564,9 +578,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			}
 		}
 
-		else if (getType().equals(Property.STRING_PROPERTY)) {
-			return getValue();
-		} else if (getType().equals(Property.MONEY_PROPERTY)) {
+		if (getType().equals(Property.MONEY_PROPERTY)) {
 			if (getValue() == null || "".equals(getValue())) {
 				return new Money((Double) null, getSubType());
 			}
@@ -777,6 +789,13 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		firePropertyChanged(PROPERTY_VALUE, old, getTypedValue());
 	}
 
+	public final void setValue(NavajoExpression ne) {
+		setType(Property.EXPRESSION_LITERAL_PROPERTY);
+		if ( ne != null ) {
+			setCheckedValue(ne.toString());
+		}
+	}
+	
 	public final void setValue(Money value) {
 		Object old = getTypedValue();
 		setType(MONEY_PROPERTY);

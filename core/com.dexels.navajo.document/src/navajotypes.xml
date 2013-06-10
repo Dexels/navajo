@@ -22,4 +22,5 @@
     <type name="list" type="java.util.List"/>
     <type name="message" type="com.dexels.navajo.document.Message"/>
     <type name="navajo" type="com.dexels.navajo.document.Navajo"/>
+    <type name="expressionliteral" type="com.dexels.navajo.document.types.NavajoExpression"/>
 </navajotypes>

@@ -34,6 +34,7 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Memo;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.NavajoExpression;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
 import com.dexels.navajo.parser.Condition;
@@ -210,7 +211,7 @@ public final class MappingUtils {
        throws NavajoException, MappingException {
 
     Message ref = null;
-
+    
     if (parameter) {
       if ( msg == null ) { 
         msg = tmlDoc.getMessage("__parms__");
@@ -277,6 +278,11 @@ public final class MappingUtils {
     		}
     	}
     	else {
+    		if (Property.EXPRESSION_LITERAL_PROPERTY.equals(type)) {
+    			prop = ref.getRootDoc().getNavajoFactory().createProperty(tmlDoc, actualName, type, "", length, description, direction);
+    			prop.setValue(new NavajoExpression(value.toString()));
+    			prop.setType(type);
+    		} else
     		if (Property.SELECTION_PROPERTY.equals(type)) {
     			prop = ref.getRootDoc().getNavajoFactory().createProperty(tmlDoc, actualName, "1", description, direction);
     			if ( value instanceof Selection [] ) {

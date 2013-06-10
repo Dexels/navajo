@@ -8,6 +8,7 @@ import java.util.Map;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.NavajoExpression;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
 
@@ -42,6 +43,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String PERCENTAGE_PROPERTY = "percentage";
   public static final String CLOCKTIME_PROPERTY = "clocktime";
   public static final String EXPRESSION_PROPERTY = "expression";
+  public static final String EXPRESSION_LITERAL_PROPERTY = "expressionliteral";
   public static final String URL_PROPERTY = "url";
   public static final String SELECTION_PROPERTY = "selection";
   public static final String LIST_PROPERTY = "list";
@@ -350,6 +352,8 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public void setValue(Percentage value);
 
   public void setValue(ClockTime ct);
+  
+  public void setValue(NavajoExpression ne);
 
   public void setValue(StopwatchTime swt);
   
