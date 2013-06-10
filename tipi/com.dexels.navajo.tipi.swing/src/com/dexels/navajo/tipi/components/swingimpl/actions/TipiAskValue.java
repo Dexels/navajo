@@ -48,13 +48,7 @@ public class TipiAskValue extends TipiAction {
 				initVal = "" + initialValue.value;
 			}
 		}
-		String name = "messages";
-
-		if (event.getComponent() != null && event.getComponent().getHomeComponent() != null)
-		{
-			name = event.getComponent().getHomeComponent().getName();
-		}
-		TipiMessageDialog info = new TipiMessageDialog(name);
+		TipiMessageDialog info = new TipiMessageDialog(event.getComponent());
 		info.initialize(myContext);
 		info.initializeAskValue(initVal, "" + globalvalue.value);
 		info.setValue("text", text.value);
