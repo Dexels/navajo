@@ -13,9 +13,12 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.types.NavajoExpression;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 
@@ -72,9 +75,27 @@ public class MessageMap implements Mappable {
 	private Message msg1 = null;
 	private Message msg2 = null;
 
+	private NavajoExpression joinExpression = null;
+	private Message msg1pointer = null;
+	private Message msg2pointer = null;
+	
 	public void kill() {
 	}
 
+	public Object getProperty_1(String name) throws UserException {
+		if ( msg1pointer.getProperty(name) == null ) {
+			throw new UserException(-1, "Could not find property " + name + " in message1");
+		}
+		return msg1pointer.getProperty(name).getTypedValue();
+	}
+	
+	public Object getProperty_2(String name) throws UserException {
+		if ( msg2pointer.getProperty(name) == null ) {
+			throw new UserException(-1, "Could not find property " + name + " in message2");
+		}
+		return msg2pointer.getProperty(name).getTypedValue();
+	}
+	
 	private void clearPropertyValues(Message m) throws UserException {
 		ArrayList<Property> properties = m.getAllProperties();
 		for ( int i = 0; i < properties.size(); i++ ) {
@@ -148,18 +169,27 @@ public class MessageMap implements Mappable {
 		this.joinMessage2 = m;
 	}
 
-	public void setJoinCondition(String c) throws UserException {
-		String [] conditions = c.split(",");
-		for (int i = 0; i < conditions.length; i++) {
-			if ( conditions[i].split("=").length != 2 ) {
-				throw new UserException(-1, "Exception joining messages " + joinMessage1 + " and " + joinMessage2 + ": invalid join condition: " + c);
+	public void setJoinCondition(Object jco) throws UserException {
+		
+		if ( jco instanceof String ) {
+			String c = (String) jco;
+			String [] conditions = c.split(",");
+			for (int i = 0; i < conditions.length; i++) {
+				if ( conditions[i].split("=").length != 2 ) {
+					throw new UserException(-1, "Exception joining messages " + joinMessage1 + " and " + joinMessage2 + ": invalid join condition: " + c);
+				}
+				String prop1 = conditions[i].split("=")[0];
+				String prop2 = conditions[i].split("=")[1];
+				JoinCondition jc = new JoinCondition();
+				jc.property1 = prop1;
+				jc.property2 = prop2;
+				joinConditions.add(jc);
 			}
-			String prop1 = conditions[i].split("=")[0];
-			String prop2 = conditions[i].split("=")[1];
-			JoinCondition jc = new JoinCondition();
-			jc.property1 = prop1;
-			jc.property2 = prop2;
-			joinConditions.add(jc);
+		} else
+		if ( jco instanceof NavajoExpression ) {
+			joinExpression = (NavajoExpression) jco;
+		} else {
+		throw new UserException(-1, "Invalid joincondition type: " + jco);
 		}
 	}
 
@@ -180,17 +210,17 @@ public class MessageMap implements Mappable {
 		if ( groupBy == null && this.msg1.getDefinitionMessage() != null ) {
 			definitionMsg1 = this.msg1.getDefinitionMessage();
 		}
-		if (  groupBy == null && this.msg2 != null && this.msg2.getDefinitionMessage() != null ) {
+		if (  groupBy == null && definitionMsg1 != null && this.msg2 != null && this.msg2.getDefinitionMessage() != null ) {
 			definitionMsg2 = this.msg2.getDefinitionMessage();
 			definitionMsg1.merge(definitionMsg2);
 		}
 
 		for (int i = 0; i < children.size(); i++) {
-			Message c1 = children.get(i);
+			msg1pointer = children.get(i);
 			Object [] joinValues1 = new Object[joinConditions.size()];
 			for (int p = 0; p < joinConditions.size(); p++ ) {
 				JoinCondition jc = joinConditions.get(p);
-				Property prop = c1.getProperty(jc.property1);
+				Property prop = msg1pointer.getProperty(jc.property1);
 				if ( prop == null ) {
 					throw new UserException(-1, "Exception joining messages " + joinMessage1 + " and " + joinMessage2 + ": property not found: " + jc.property1);
 				}
@@ -198,19 +228,19 @@ public class MessageMap implements Mappable {
 			}
 
 			// Find c2;
-			Message c2 = null;
+			msg2pointer = null;
 			boolean foundJoinMessage = false;
 
 			if ( this.msg2 != null ) {
 				ArrayList<Message> children2 = this.msg2.getAllMessages();
 
 				for (int j = 0; j < children2.size(); j++) {
-					c2 = children2.get(j);
+					msg2pointer = children2.get(j);
 
 					Object [] joinValues2 = new Object[joinConditions.size()];
 					for (int p = 0; p < joinConditions.size(); p++ ) {
 						JoinCondition jc = joinConditions.get(p);
-						Property prop = c2.getProperty(jc.property2);
+						Property prop = msg2pointer.getProperty(jc.property2);
 						if ( prop == null ) {
 							throw new UserException(-1, "Exception joining messages " + joinMessage1 + " and " + joinMessage2 + ": property not found: " + jc.property2);
 						}
@@ -227,13 +257,23 @@ public class MessageMap implements Mappable {
 							equal = false;
 						}
 					}
+					
+					if ( joinExpression != null ) {
+						// Evaluate joinExpression.
+						try {
+							Operand ro = Expression.evaluate(joinExpression.toString(), myAccess.getInDoc(), myAccess.getCompiledScript().getCurrentMap(), myAccess.getCurrentInMessage());
+							equal = (Boolean) ro.value;
+						} catch (Exception e) {
+							throw new UserException(-1, "Exception joining messages: " + e.getMessage(), e);
+						}
+					}
 
 					if ( equal ) {
 						Message newMsg = NavajoFactory.getInstance().createMessage(myAccess.getOutputDoc(), "tmp");
 						// Check for duplicate property names. If found, rename to _1 _2 respectively
-						renameDuplicates(c1, c2);
-						newMsg.merge(c2);
-						newMsg.merge(c1);
+						renameDuplicates(msg1pointer, msg2pointer);
+						newMsg.merge(msg2pointer);
+						newMsg.merge(msg1pointer);
 						ResultMessage rm = new ResultMessage();
 						rm.setMessage(definitionMsg1, newMsg, this.suppressProperties);
 						resultingMessage.add(rm);
@@ -244,18 +284,18 @@ public class MessageMap implements Mappable {
 
 			if ( !foundJoinMessage && joinType.equals(OUTER_JOIN) ) {
 				// Append dummy message with empty property values in case no join condition match...
-				if ( c2 != null ) {
+				if ( msg2pointer != null ) {
 					Message newMsg = NavajoFactory.getInstance().createMessage(myAccess.getOutputDoc(), "tmp");
-					Message c2c = c2.copy();
+					Message c2c = msg2pointer.copy();
 					clearPropertyValues(c2c);
 					newMsg.merge(c2c);
-					newMsg.merge(c1);
+					newMsg.merge(msg1pointer);
 					ResultMessage rm = new ResultMessage();
 					rm.setMessage(definitionMsg1, newMsg, this.suppressProperties);
 					resultingMessage.add(rm);
 				} else {
 					// Assume empty second array message
-					Message c1c = c1.copy();
+					Message c1c = msg1pointer.copy();
 					ResultMessage rm = new ResultMessage();
 					rm.setMessage(definitionMsg1, c1c, this.suppressProperties);
 					resultingMessage.add(rm);

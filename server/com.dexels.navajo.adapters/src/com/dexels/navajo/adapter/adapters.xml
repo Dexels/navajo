@@ -1,6 +1,10 @@
 <adapterdef>
 
 	<map>
+		<tagname>testadapter</tagname>
+		<object>com.dexels.navajo.adapter.TestAdapter</object>
+	</map>
+	<map>
 		<tagname>asynctest</tagname>
 		<object>com.dexels.navajo.mapping.AsyncTest</object>
 	</map>
