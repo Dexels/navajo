@@ -1,4 +1,4 @@
-package com.dexels.navajo.comparatormanager;
+package com.dexels.navajo.document.comparatormanager;
 
 import java.util.Comparator;
 

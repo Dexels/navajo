@@ -65,7 +65,7 @@
 						<artifact>
 							<groupId>com.dexels.navajo</groupId>
 							<artifactId>targetplatform</artifactId>
-							<version>1.0.5-SNAPSHOT</version>
+							<version>1.5.6</version>
 							<classifier>repo.dexels.com</classifier>
 						</artifact>
 					</target>
