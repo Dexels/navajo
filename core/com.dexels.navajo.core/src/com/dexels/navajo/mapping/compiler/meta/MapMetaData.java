@@ -207,15 +207,15 @@ public class MapMetaData {
 		result.write(sw);
 	}
 	
-	public static boolean isMetaScript(String script, String scriptPath, String packagePath) {
+	public static boolean isMetaScript(String fullScriptPath) {
 		try {
-			InputStreamReader isr =  new InputStreamReader( new FileInputStream(scriptPath + "/" + packagePath + "/" + script + ".xml") );
+			InputStreamReader isr =  new InputStreamReader( new FileInputStream(fullScriptPath) );
 			XMLElement x = new CaseSensitiveXMLElement();
 			x.parseFromReader(isr);
 			isr.close();
 			return ( x.getName().equals("navascript"));
 		} catch (Exception e) {
-			AuditLog.log("", "Something went wrong while in determination of metascript status of script: " + script + "(" + e.getMessage() + ")", Level.WARNING);
+			AuditLog.log("", "Something went wrong while in determination of metascript status of script: " + fullScriptPath + "(" + e.getMessage() + ")", Level.WARNING);
 			//e.printStackTrace(System.err);
 			return false;
 		}
