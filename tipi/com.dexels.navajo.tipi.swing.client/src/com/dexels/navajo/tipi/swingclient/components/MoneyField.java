@@ -7,7 +7,6 @@ import java.text.ParseException;
 
 import javax.swing.SwingConstants;
 
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Money;
 
 public class MoneyField extends AbstractPropertyField implements
