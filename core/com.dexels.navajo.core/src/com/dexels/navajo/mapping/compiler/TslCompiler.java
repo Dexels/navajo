@@ -2706,7 +2706,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
 	    try {
 	    	
 	    	// Check for metascript.
-	    	if ( MapMetaData.isMetaScript(script, scriptPath, packagePath) ) {
+	    	if ( MapMetaData.isMetaScript(fullScriptPath) ) {
 	    		scriptType = "navascript";
 	    		MapMetaData mmd = MapMetaData.getInstance();
 	    		InputStream metais = navajoIOConfig.getScript(packagePath+"/"+script,tenant);
