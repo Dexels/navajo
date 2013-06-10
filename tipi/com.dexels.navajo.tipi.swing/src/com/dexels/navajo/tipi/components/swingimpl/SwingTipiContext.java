@@ -424,12 +424,7 @@ public class SwingTipiContext extends TipiContext {
 
 	public void showQuestion(final String text, final String title,
 			final String[] options, final TipiComponent tc) throws TipiBreakException {
-		String name = "messages";
-		if (tc != null && tc.getHomeComponent() != null)
-		{
-			name = tc.getHomeComponent().getName();
-		}
-		TipiMessageDialog info = new TipiMessageDialog(name, options);
+		TipiMessageDialog info = new TipiMessageDialog(tc, options);
 		info.initialize(this);
 		info.setValue("text", text);
 		info.setValue("title", title);
@@ -441,12 +436,7 @@ public class SwingTipiContext extends TipiContext {
 
 	private void showInfo(final String text, final String title,
 			final int messageType, final TipiComponent tc) {
-		String name = "messages";
-		if (tc != null && tc.getHomeComponent() != null)
-		{
-			name = tc.getHomeComponent().getName();
-		}
-		TipiMessageDialog info = new TipiMessageDialog(name);
+		TipiMessageDialog info = new TipiMessageDialog(tc);
 		info.initialize(this);
 		info.setValue("text", text);
 		info.setValue("title", title);

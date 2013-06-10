@@ -2,6 +2,8 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.Component;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -9,10 +11,22 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiDataComponent;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiModalInternalFrame;
+import com.dexels.navajo.tipi.internal.AttributeRef;
+import com.dexels.navajo.tipi.internal.PropertyComponent;
+import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.internal.TipiLayout;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
@@ -37,6 +51,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 public class TipiMessageDialog extends TipiSwingComponentImpl{
 
 	private static final long serialVersionUID = 8645510749158311198L;
+	private Boolean applyCss = Boolean.TRUE;
 	private String title = "";
 	private String text = "";
 	private String cssClass = "";
@@ -49,6 +64,8 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 	private String[] myOptions;
 	private String myInitialValue;
 	private String myGlobalName;
+	
+	private TipiComponent underlyingComponent;
 	
 	private static final XMLElement acceptedValues;
 	
@@ -109,13 +126,27 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiMessageDialog.class);
 	
-	public TipiMessageDialog(String name) {
-		this(name, null);
+	public TipiMessageDialog(TipiComponent underlyingComponent) {
+		this(underlyingComponent, null);
 	}
 	
-	public TipiMessageDialog(String name, String[] options) {
-		myId = name;
-		myName = name;
+	public TipiMessageDialog(TipiComponent underlyingComponent, String[] options) {
+		this.underlyingComponent = underlyingComponent;
+		if (underlyingComponent == null)
+		{
+			myId = "messages";
+			myName = "messages";
+		}
+		else if (underlyingComponent.getHomeComponent() == null)
+		{
+			myId = underlyingComponent.getId();
+			myName = underlyingComponent.getName();
+		}
+		else
+		{
+			myId = underlyingComponent.getHomeComponent().getId();
+			myName = underlyingComponent.getHomeComponent().getName();
+		}
 		myOptions = options;
 	}
 	
@@ -221,6 +252,9 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 				if (name.equals("cssStyle")) {
 					cssStyle = object.toString();
 				}
+				if (name.equals("applyCss")) {
+					applyCss = ((Boolean) object).booleanValue();
+				}
 			}
 		});
 		super.setComponentValue(name, object);
@@ -239,17 +273,198 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		if ("cssStyle".equals(name)) {
 			return cssStyle;
 		}
+		if ("applyCss".equals(name)) {
+			return applyCss;
+		}
 		if ("messageType".equals(name)) {
 			return messageType;
+		}
+		if (underlyingComponent != null)
+		{
+			logger.debug("Grabbing componentValue from the underlyingComponent. Name is " + name);
+			return underlyingComponent.getValue(name);
 		}
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	public void disposeComponent() {
 		// nothing to do
 
 	}
 
+	@Override
 	public void reUse() {
 	}
+
+	public TipiComponent getTipiComponentByPath(String path)
+	{
+		if (underlyingComponent != null)
+		{
+			logger.debug("Asking the underlyingComponent for getTipiComponentByPath with argument " + path);
+			return underlyingComponent.getTipiComponentByPath(path);
+		}
+		else
+		{
+			return super.getTipiComponentByPath(path);
+		}
+	}
+
+	public TipiComponent getTipiParent()
+	{
+		if (underlyingComponent != null)
+		{
+			logger.debug("Returning the underlyingComponent when asked for getTipiParent ");
+			return underlyingComponent;
+		}
+		else
+		{
+			return null;
+		}
+		
+	}
+
+	public Navajo getNavajo()
+	{
+		if (underlyingComponent != null)
+		{
+			logger.debug("Asking the underlyingComponent for getNavajo");
+			return underlyingComponent.getNavajo();
+		}
+		else
+		{
+			return super.getNavajo();
+		} 
+	}
+
+	public Navajo getNearestNavajo()
+	{
+		if (underlyingComponent != null)
+		{
+			logger.debug("Asking the underlyingComponent for getNearestNavajo");
+			return underlyingComponent.getNearestNavajo();
+		}
+		else
+		{
+			return super.getNearestNavajo();
+		}
+	}
+
+	public String getPath()
+	{
+		if (underlyingComponent != null)
+		{
+			logger.debug("Asking the underlyingComponent for getPath");
+			return underlyingComponent.getPath();
+		}
+		else
+		{
+			return super.getPath();
+		}
+	}
+
+	public String getPath(String typedef)
+	{
+		if (underlyingComponent != null)
+		{
+			logger.debug("Asking the underlyingComponent for getPath with argument " + typedef);
+			return underlyingComponent.getPath(typedef);
+		}
+		else
+		{
+			return super.getPath(typedef);
+		}
+	}
+
+	public AttributeRef getAttributeRef(String name)
+	{
+		if (underlyingComponent != null)
+		{
+			logger.debug("Asking the underlyingComponent for getAttributeRef with argument " + name);
+			return underlyingComponent.getAttributeRef(name);
+		}
+		else
+		{
+			return super.getAttributeRef(name);
+		}
+	}
+
+	public TipiComponent getHomeComponent()
+	{
+		if (underlyingComponent != null)
+		{
+			logger.debug("Asking the underlyingComponent for getHomeComponent");
+			return underlyingComponent.getHomeComponent();
+		}
+		else
+		{
+			return super.getHomeComponent();
+		}
+	}
+
+	public TipiComponent findTipiComponentById(String id)
+	{
+		if (underlyingComponent != null)
+		{
+			logger.debug("Asking the underlyingComponent for findTipiComponentById with argument " + id);
+			return underlyingComponent.findTipiComponentById(id);
+		}
+		else
+		{
+			return super.findTipiComponentById(id);
+		}
+	}
+
+	public XMLElement getLocalMethod(String name)
+	{
+		if (underlyingComponent != null)
+		{
+			logger.debug("Asking the underlyingComponent for getLocalMethod with argument " + name);
+			return underlyingComponent.getLocalMethod(name);
+		}
+		else
+		{
+			return super.getLocalMethod(name);
+		}
+	}
+
+	public Object getLocalValue(String expression)
+	{
+		if (underlyingComponent != null)
+		{
+			logger.debug("Asking the underlyingComponent for getLocalValue with argument " + expression);
+			return underlyingComponent.getLocalValue(expression);
+		}
+		else
+		{
+			return super.getLocalValue(expression);
+		}
+	}
+
+	public boolean containsLocalValue(String expression)
+	{
+		if (underlyingComponent != null)
+		{
+			logger.debug("Asking the underlyingComponent for containsLocalValue with argument " + expression);
+			return underlyingComponent.containsLocalValue(expression);
+		}
+		else
+		{
+			return super.containsLocalValue(expression);
+		}
+	}
+
+	public TipiComponent getScopeHomeComponent()
+	{
+		if (underlyingComponent != null)
+		{
+			logger.debug("Asking the underlyingComponent for getScopeHomeComponent");
+			return underlyingComponent.getScopeHomeComponent();
+		}
+		else
+		{
+			return super.getScopeHomeComponent();
+		}
+	}
+
 }
