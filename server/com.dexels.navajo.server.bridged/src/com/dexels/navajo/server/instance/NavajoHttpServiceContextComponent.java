@@ -14,7 +14,6 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.api.NavajoServerContext;
 
 public class NavajoHttpServiceContextComponent implements NavajoServerContext{
@@ -25,7 +24,7 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 	private ConfigurationAdmin myConfigurationAdmin = null;
 	private final Set<Configuration> monitoredFolderConfigurations = new HashSet<Configuration>();
 
-	private DispatcherInterface dispatcher;
+//	private DispatcherInterface dispatcher;
 
 	private String installationPath;
 	
@@ -114,14 +113,14 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 			return c;
 		}
 	}
-
-	public void setDispatcher(DispatcherInterface di) {
-		this.dispatcher = di;
-	}
-	
-	public void clearDispatcher(DispatcherInterface di) {
-		this.dispatcher = null;
-	}
+//
+//	public void setDispatcher(DispatcherInterface di) {
+//		this.dispatcher = di;
+//	}
+//	
+//	public void clearDispatcher(DispatcherInterface di) {
+//		this.dispatcher = null;
+//	}
 	
 
 	public void deactivate() throws IOException {

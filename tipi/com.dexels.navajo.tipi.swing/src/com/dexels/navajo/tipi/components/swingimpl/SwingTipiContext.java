@@ -49,7 +49,6 @@ import com.dexels.navajo.tipi.animation.TipiAnimationManager;
 import com.dexels.navajo.tipi.components.swingimpl.cookie.impl.JnlpCookieManager;
 import com.dexels.navajo.tipi.components.swingimpl.formatters.PropertyAnimator;
 import com.dexels.navajo.tipi.components.swingimpl.jnlp.WebStartProxy;
-import com.dexels.navajo.tipi.components.swingimpl.swing.TipiModalInternalFrame;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDesktop;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDialog;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSplash;

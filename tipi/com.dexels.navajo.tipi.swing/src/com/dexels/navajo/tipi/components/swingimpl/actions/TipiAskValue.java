@@ -1,11 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl.actions;
 
-import java.awt.Component;
-
-import javax.swing.JOptionPane;
-
 import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.components.swingimpl.TipiMessageDialog;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;

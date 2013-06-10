@@ -208,7 +208,7 @@ public final class DbConnectionBroker
 				}
 			}
 		} finally {
-			if ( gc != null && released ) {
+			if ( released ) {
 				availableConnections.release();
 			}
 		}

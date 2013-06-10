@@ -2,8 +2,6 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.Component;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -11,22 +9,13 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
-import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.TipiDataComponent;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.swingimpl.swing.TipiModalInternalFrame;
 import com.dexels.navajo.tipi.internal.AttributeRef;
-import com.dexels.navajo.tipi.internal.PropertyComponent;
-import com.dexels.navajo.tipi.internal.TipiAction;
-import com.dexels.navajo.tipi.internal.TipiEvent;
-import com.dexels.navajo.tipi.internal.TipiLayout;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**

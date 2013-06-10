@@ -73,7 +73,6 @@ import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;

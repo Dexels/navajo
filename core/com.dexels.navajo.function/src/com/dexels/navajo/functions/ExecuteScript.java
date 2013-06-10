@@ -9,7 +9,6 @@ import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
-import com.dexels.navajo.server.NavajoConfig;
 
 
 /**
