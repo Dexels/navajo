@@ -187,7 +187,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	private String navajoServer;
 	private String navajoUsername;
 	private String navajoPassword;
-	private List<TipiEventReporter> tipiEventReporterList = new ArrayList<TipiEventReporter>();
 	private Navajo stateNavajo;
 	private List<TipiExtension> coreExtensionList;
 	private List<TipiExtension> mainExtensionList;
@@ -2654,15 +2653,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	}
 
-	public void fireTipiContextEvent(TipiComponent source, String type,
-			Map<String, Object> event, boolean sync) {
-		// link to
-		for (TipiEventReporter te : tipiEventReporterList) {
-			te.tipiEventReported(source, type, event, sync);
-		}
-
-	}
-
 	public void fireTipiStructureChanged(TipiComponent tc) {
 		// do nothing
 	}
@@ -2679,14 +2669,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		for (TipiDefinitionListener tdl : tipiDefinitionListeners) {
 			tdl.definitionLoaded(name, definition);
 		}
-	}
-
-	public void addTipiEventReporter(TipiEventReporter te) {
-		tipiEventReporterList.add(te);
-	}
-
-	public void removeTipiEventReporter(TipiEventReporter te) {
-		tipiEventReporterList.remove(te);
 	}
 
 	public Navajo getStateNavajo() {

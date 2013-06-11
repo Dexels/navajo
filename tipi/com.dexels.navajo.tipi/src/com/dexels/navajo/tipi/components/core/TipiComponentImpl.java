@@ -1192,7 +1192,6 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		for (int i = 0; i < myEventList.size(); i++) {
 			TipiEvent te = myEventList.get(i);
 			if (te.isTrigger(type)) {
-				myContext.fireTipiContextEvent(this, type, event, sync);
 				hasEventType = true;
 				TipiExecutable parentEvent = null;
 

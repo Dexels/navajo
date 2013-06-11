@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.actions;
 
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -34,6 +35,15 @@ public class TipiShowQuestion extends TipiAction {
 		if (title == null) {
 			title = "Vraag";
 		}
-		myContext.showQuestion((String) o.value, title, options, event.getComponent());
+		try
+		{
+			myContext.showQuestion((String) o.value, title, options, event.getComponent());
+			performTipiEvent("onYes", null, true);
+		}
+		catch(TipiBreakException tbe)
+		{
+			performTipiEvent("onNo", null, true);
+			throw tbe;
+		}
 	}
 }

@@ -216,6 +216,18 @@
 		</description>
       <param name="text" type="string" required="true" />
       <param name="title" type="string" required="false" />
+      <events>
+         <event name="onYes">
+            <description>
+               Fired when the answer to the question is yes.
+            </description>
+         </event>
+         <event name="onNo">
+            <description>
+               Fired when the answer to the question is no.
+            </description>
+         </event>
+      </events>
    </tipiaction>
 
 

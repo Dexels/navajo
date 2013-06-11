@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.actions;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -9,10 +10,12 @@ import java.util.Map;
 import navajo.ExtensionDefinition;
 
 import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.internal.TipiAction;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.internal.TipiStackElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
@@ -38,6 +41,7 @@ public class TipiActionFactory implements Serializable {
 	protected Map<String, TipiValue> myDefinedParams = new HashMap<String, TipiValue>();
 	private Class<?> myActionClass = null;
 	private XMLElement xmlElement = null;
+	private final List<String> actionEvents = new ArrayList<String>();
 	
 	public XMLElement getXmlElement() {
 		return xmlElement;
@@ -67,10 +71,29 @@ public class TipiActionFactory implements Serializable {
 
 		List<XMLElement> children = actionDef.getChildren();
 		for (int i = 0; i < children.size(); i++) {
-			XMLElement currentParam = children.get(i);
-			TipiValue tv = new TipiValue(null);
-			tv.load(currentParam);
-			myDefinedParams.put(tv.getName(), tv);
+			XMLElement currentChild = children.get(i);
+			if ("events".equals(currentChild.getName())) {
+				loadEvents(currentChild, actionDef);
+			}
+			else
+			{
+				TipiValue tv = new TipiValue(null);
+				tv.load(currentChild);
+				myDefinedParams.put(tv.getName(), tv);
+			}
+		}
+	}
+
+	/**
+	 * Loads all the allowed event from the classdefinition
+	 * @param classdef 
+	 */
+	private final void loadEvents(XMLElement events, XMLElement actionDef) {
+		List<XMLElement> children = events.getChildren();
+		for (int i = 0; i < children.size(); i++) {
+			XMLElement xx = children.get(i);
+			String eventName = xx.getStringAttribute("name");
+			actionEvents.add(eventName);
 		}
 	}
 
@@ -100,29 +123,37 @@ public class TipiActionFactory implements Serializable {
 
 		newAction.setStackElement(new TipiStackElement(myName, instance,
 				parentExe.getStackElement()));
+		loadEventsDefinition(tc.getContext(), newAction, instance, xmlElement);
+
 		// Check presence of supplied parameters in the defined parameters
 		List<XMLElement> c = instance.getChildren();
 
 		// TODO Fix that filthy performTipiMethod action. It messes up
 		// everything,
 
+		// parse children
 		for (int i = 0; i < c.size(); i++) {
 			XMLElement x = c.get(i);
-			TipiValue instanceValue = new TipiValue(tc, x);
-			TipiValue defined = myDefinedParams.get(x.getAttribute("name"));
-			String val = (String) x.getAttribute("value");
-			if (defined != null) {
-				instanceValue.setDefaultValue(defined.getDefaultValue());
-				instanceValue.setType(defined.getType());
-
-			}
-			if (defined == null) {
+			if (!actionEvents.contains(x.getName()))
+			{
+				TipiValue instanceValue = new TipiValue(tc, x);
+				TipiValue defined = myDefinedParams.get(x.getAttribute("name"));
+				String val = (String) x.getAttribute("value");
+				if (defined != null) {
+					instanceValue.setDefaultValue(defined.getDefaultValue());
+					instanceValue.setType(defined.getType());
+					
+				}
+				if (defined == null) {
+					newAction.addParameter(instanceValue);
+					continue;
+				}
+				defined.typeCheck(val);
 				newAction.addParameter(instanceValue);
-				continue;
 			}
-			defined.typeCheck(val);
-			newAction.addParameter(instanceValue);
 		}
+
+		// parse attributes
 		for (Iterator<String> iterator = instance.enumerateAttributeNames(); iterator
 				.hasNext();) {
 			String element = iterator.next();
@@ -173,4 +204,59 @@ public class TipiActionFactory implements Serializable {
 	public TipiValue getActionParam(String name) {
 		return myDefinedParams.get(name);
 	}
+	/**
+	 * Loads an event definition from the component definition
+	 */
+
+	public void loadEventsDefinition(TipiContext context, TipiAction action,
+			XMLElement definition, XMLElement classDef) throws TipiException {
+		List<XMLElement> defChildren = definition.getChildren();
+		for (int i = 0; i < defChildren.size(); i++) {
+			XMLElement xx = defChildren.get(i);
+			// String[] s = getCustomChildTags();
+			if (!xx.getName().equals("layout")
+					&& !xx.getName().equals("tipi-instance")
+					&& !xx.getName().equals("component-instance")
+					&& !xx.getName().equals("component")
+					&& !xx.getName().startsWith("c.")) {
+				String type = xx.getStringAttribute("type");
+				if (type == null) {
+					type = xx.getName();
+				}
+				if (actionEvents.contains(type)) {
+					TipiEvent event = new TipiEvent();
+					XMLElement eventDef = getEventDefFromClassDef(classDef,
+							type);
+					event.init(eventDef);
+					event.load(action.getComponent(), xx, context);
+					action.addTipiEvent(event);
+				}
+			}
+		}
+	}
+
+	private XMLElement getEventDefFromClassDef(XMLElement def, String eventName) {
+		List<XMLElement> v = def.getChildren();
+		for (int i = 0; i < v.size(); i++) {
+			XMLElement child = v.get(i);
+			if ("events".equals(child.getName())) {
+				List<XMLElement> eventChildren = child.getChildren();
+				for (int j = 0; j < eventChildren.size(); j++) {
+					XMLElement eventChild = eventChildren.get(j);
+					String eventChildName = eventChild
+							.getStringAttribute("name");
+					if (eventChildName == null) {
+						eventChildName = eventChild.getName();
+					}
+					if (eventName.equals(eventChildName)) {
+						return eventChild;
+					}
+
+				}
+			}
+		}
+		return null;
+	}
+
+	
 }

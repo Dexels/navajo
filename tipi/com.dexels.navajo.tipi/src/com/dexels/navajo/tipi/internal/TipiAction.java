@@ -1,6 +1,8 @@
 package com.dexels.navajo.tipi.internal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -10,16 +12,19 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiEventListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.TipiSuspendException;
 import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.actions.TipiActionFactory;
+import com.dexels.navajo.tipi.tipixml.XMLElement;
 
-public abstract class TipiAction extends TipiAbstractExecutable {
+public abstract class TipiAction extends TipiAbstractExecutable{
 	// protected TipiContext myContext;
 
 	/**
@@ -34,6 +39,7 @@ public abstract class TipiAction extends TipiAbstractExecutable {
 	protected String myType;
 	protected String myTextNode;
 
+	protected final List<TipiEvent> myEventList = new ArrayList<TipiEvent>();
 	protected Map<String, TipiValue> parameterMap = new HashMap<String, TipiValue>();
 	
 	private final static Logger logger = LoggerFactory
@@ -60,6 +66,77 @@ public abstract class TipiAction extends TipiAbstractExecutable {
 		if (params != null) {
 			evaluatedMap.putAll(params);
 		}
+	}
+
+	public void addTipiEvent(TipiEvent te) {
+		myEventList.add(te);
+	}
+
+	public boolean performTipiEvent(String type, Map<String, Object> event,
+			boolean sync) throws TipiException, TipiBreakException {
+		return performTipiEvent(type, event, sync, null);
+	}
+
+	public boolean performTipiEvent(String type, Map<String, Object> event,
+			boolean sync, Runnable afterEvent) throws TipiBreakException {
+		logger.debug("Being asked to execute event with name " + type + " for action " + this + " with parent " + getParent());
+		boolean hasEventType = false;
+		for (int i = 0; i < myEventList.size(); i++) {
+			TipiEvent te = myEventList.get(i);
+			if (te.isTrigger(type)) {
+				hasEventType = true;
+				logger.debug("Found the event, running it");
+
+				if (sync) {
+					try {
+						te.performAction(this.getComponent(), getParent(), event);
+					} catch (TipiSuspendException e) {
+						// ignore, so do fire all the other events
+					} catch (TipiBreakException e) {
+						// logger.error("Error: ",e);
+						throw (e);
+					} catch (NavajoException e) {
+//						getContext().showInternalError(
+//								"Error performing event: " + te.getEventName()
+//										+ " for component: "
+//										+ te.getComponent().getPath(), e);
+//						logger.error("Error: ",e);
+						te.dumpStack(e.getMessage());
+						throw e;
+					} catch(Exception e) {
+						getContext().showInternalError(
+								"Error performing event: " + te.getEventName()
+										+ " for component: "
+										+ te.getComponent().getPath(), e);
+						logger.error("Error: ",e);
+						te.dumpStack(e.getMessage());
+					} finally {
+						if (afterEvent != null) {
+							afterEvent.run();
+						}
+					}
+				} else {
+					try {
+						if (te.checkCondition(te)) {
+							te.asyncPerformAction(this.getComponent(), getParent(), event,
+									afterEvent);
+						}
+					} catch (Throwable e) {
+						getContext().showInternalError(
+								"Error performing event: " + te.getEventName()
+										+ " for component: "
+										+ te.getComponent().getPath(), e);
+						logger.error("Error: ",e);
+					}
+				}
+			}
+		}
+		if (!hasEventType) {
+			if (afterEvent != null) {
+				afterEvent.run();
+			}
+		}
+		return hasEventType;
 	}
 
 	protected abstract void execute(TipiEvent event) throws TipiBreakException,

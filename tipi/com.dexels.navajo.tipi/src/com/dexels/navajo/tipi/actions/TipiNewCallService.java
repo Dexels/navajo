@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi.actions;
 
+import java.util.Collections;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -171,6 +173,7 @@ public class TipiNewCallService extends TipiAction {
 			myContext.loadNavajo(result, service);
 			if (myContext.hasErrors(result)) {
 				dumpStack("Server error detected: " + service);
+				performTipiEvent("onError", Collections.singletonMap("error", (Object) result), true);
 			}
 
 			if (breakOnError) {
