@@ -1,32 +1,20 @@
 package com.dexels.navajo.tester;
 
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.channels.AsynchronousCloseException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.client.ClientInterface;
-import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.client.NavajoResponseHandler;
 import com.dexels.navajo.client.async.AsyncClientFactory;
 import com.dexels.navajo.client.async.ManualAsyncClient;
-import com.dexels.navajo.document.Header;
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Property;
 
 //import javax.mail.Session;
 //import javax.mail.Transport;
@@ -35,7 +23,7 @@ import com.dexels.navajo.document.Property;
 
 public class TestHttpClient extends Thread implements NavajoResponseHandler {
 
-	private static Random rand = new Random(System.currentTimeMillis());
+//	private static Random rand = new Random(System.currentTimeMillis());
 	
 	private Object semaphore = new Object();
 	private Navajo response = null;
@@ -97,7 +85,7 @@ public class TestHttpClient extends Thread implements NavajoResponseHandler {
 	}
 	
 	public void run() {
-		double total = 0;
+//		double total = 0;
 		int failedCount = 0;
 		for (int i = 0; i < Integer.parseInt(loopCount); i++) {
 			try {
@@ -122,7 +110,7 @@ public class TestHttpClient extends Thread implements NavajoResponseHandler {
 				 Thread.sleep((long) sleepTime);
 				 end = System.currentTimeMillis();
 			 }
-			 total += ( end - start )/1000.0;
+//			 total += ( end - start )/1000.0;
 
 			} catch (Exception e) {
 				logger.error("Error: ", e);

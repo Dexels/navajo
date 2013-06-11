@@ -197,11 +197,13 @@ public abstract class AbstractKMLMap {
 				String name = folder.getProperty("Name").getValue();
 				XMLElement folderElt = createFolder(name);
 				m = folder.getMessage(messagePath);
-				ll = m.getAllMessages();
-				for (Message message : ll) {
-					XMLElement placemark = createPointPlaceMark(message);
-					if (placemark != null) {
-						folderElt.addChild(placemark);
+				if(ll!=null) {
+					ll = m.getAllMessages();
+					for (Message message : ll) {
+						XMLElement placemark = createPointPlaceMark(message);
+						if (placemark != null) {
+							folderElt.addChild(placemark);
+						}
 					}
 				}
 				if ( folderElt != null ) {
@@ -209,11 +211,13 @@ public abstract class AbstractKMLMap {
 				}
 			}
 		} else {
-			for (Message message : ll) {
-				XMLElement placemark = createPointPlaceMark(message);
-				//XMLElement placemark = createCirclePlacemark(message);
-				if (placemark != null) {
-					document.addChild(placemark);
+			if(ll!=null) {
+				for (Message message : ll) {
+					XMLElement placemark = createPointPlaceMark(message);
+					//XMLElement placemark = createCirclePlacemark(message);
+					if (placemark != null) {
+						document.addChild(placemark);
+					}
 				}
 			}
 		}

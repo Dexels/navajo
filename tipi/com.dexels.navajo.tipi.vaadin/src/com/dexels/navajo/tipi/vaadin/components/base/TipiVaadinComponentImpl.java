@@ -6,8 +6,6 @@ import org.vaadin.peter.contextmenu.ContextMenu;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
-import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;

@@ -97,7 +97,6 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 
 	public void execute(ArticleContext context) throws ArticleException, DirectOutputThrowable {
 		List<XMLElement> children = article.getChildren();
-		int i = 0;
 		try {
 			List<JsonNode> elements = new ArrayList<JsonNode>();
 			for (XMLElement e : children) {
