@@ -177,6 +177,15 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 	{
 		// shouldn't do anything
 	}
+
+	//
+	public void initContainer()
+	{
+		mySwingTipiContext = (SwingTipiContext) myContext;
+		if (getContainer() == null) {
+			setContainer(createContainer());
+		}
+	}
 	public Object createContainer() {
 		final Set<Integer> responseSet = new HashSet<Integer>();
 		runSyncInEventThread(new Runnable() {
