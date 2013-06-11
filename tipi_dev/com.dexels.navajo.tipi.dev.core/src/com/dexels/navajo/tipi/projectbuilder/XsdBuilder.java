@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
@@ -402,6 +403,28 @@ public class XsdBuilder {
 			
 					
 			XMLElement params = addTag("xs:complexType", element);
+			List<XMLElement> events = currentAction.getElementsByTagName("events");
+			if (events != null && !events.isEmpty()) {
+				if (events.size() > 1) {
+					throw new IllegalStateException("Only one events tag allowed");
+				}
+				XMLElement first = events.get(0);
+				if (first.getChildren().size() > 0)
+				{
+					// Open the choice tag
+					XMLElement eventChoice = addTag("xs:choice", params);
+					eventChoice.setAttribute("maxOccurs", "unbounded");
+					eventChoice.setAttribute("minOccurs", "0");
+					for (XMLElement currentEvent : first.getChildren()) {
+						if (currentEvent.getName().equals("event")) {
+							XMLElement eventTag = addTag("xs:element", eventChoice);
+							eventTag.setAttribute("name", currentEvent.getAttribute("name"));
+							eventTag.setAttribute("type", "allActions");
+						}
+					}
+				}
+			}
+			
 			XMLElement xxx = addTag("xs:attribute", params);
 			xxx.setAttribute("name", "condition");
 			xxx.setAttribute("type", "xs:string");
@@ -549,25 +572,25 @@ public class XsdBuilder {
 			List<XMLElement> l = xx.getElementsByTagName("values");
 			if (l != null && !l.isEmpty()) {
 				if (l.size() > 1) {
-					throw new IllegalStateException("Only one methods tag allowed");
+					throw new IllegalStateException("Only one values tag allowed");
 				}
 				XMLElement first = l.get(0);
 				List<XMLElement> valueTag = first.getElementsByTagName("value");
 
-				for (XMLElement currentMethod : valueTag) {
+				for (XMLElement currentValue : valueTag) {
 					// List<XMLElement> children = currentMethod.getChildren();
-					String direction = currentMethod.getStringAttribute("direction");
+					String direction = currentValue.getStringAttribute("direction");
 					if ("out".equals(direction)) {
 						// read only, so it can not be supplied on an
 						// instantiate
 						continue;
 					}
-					String type = currentMethod.getStringAttribute("type");
+					String type = currentValue.getStringAttribute("type");
 					XMLElement xsAttr = addTag("xs:attribute", params);
-					xsAttr.setAttribute("name", currentMethod.getStringAttribute("name"));
+					xsAttr.setAttribute("name", currentValue.getStringAttribute("name"));
 					xsAttr.setAttribute("type", "xs:string");
 					xsAttr.setAttribute("default", "[" + type + "]");
-					xsAttr.setAttribute("name", currentMethod.getStringAttribute("name"));
+					xsAttr.setAttribute("name", currentValue.getStringAttribute("name"));
 
 					// if (!children.isEmpty()) {
 					// for (int i = 0; i < children.size(); i++) {
@@ -799,5 +822,30 @@ public class XsdBuilder {
 		}
 
 	}
+	
+	public static void main(String[] args) throws IOException {
 
+		// change this to the project dir of SportlinkClub and then run this main method to regenerate the Tipi XSD
+		// the libraries on spiritus will be queried for the necessary information, so local files will be ignored. 
+		final String baseDir = "C:\\Marte\\CVS\\SportlinkClub\\";
+		
+		File settings = new File(baseDir, "settings/tipi.properties");
+		
+		InputStream is = new java.io.FileInputStream(settings);
+		PropertyResourceBundle pe = new PropertyResourceBundle(is);
+		is.close();	
+		String extensions = pe.getString("extensions").trim();
+		String repository = pe.getString("repository").trim();
+
+		String extensionRepository = repository+"Extensions/";
+
+		String buildType = pe.getString("build").trim();
+		XsdBuilder b = new XsdBuilder();
+		try { 
+			b.build(repository,extensionRepository, extensions, new File(baseDir));
+			System.out.println("XSD rebuilt!");
+		} catch (IOException e) {
+			System.out.println("XSD generator error:" + e.getStackTrace());
+		}
+	}
 }
