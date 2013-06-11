@@ -65,7 +65,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		logger.info("Global properties: #"+globalProperties.size());
 		for (File file : fd) {
 			if(file.isDirectory()) {
-				System.err.println("dir found!");
+				System.err.println("dir found: "+file.getAbsolutePath());
 				String name = file.getName();
 				try {
 					appendInstance(name, file,Collections.unmodifiableMap(globalProperties),Collections.unmodifiableMap(globalResources));
@@ -252,11 +252,14 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		String name = dataSource.getName();
 		List<Property> props = dataSource.getAllProperties();
 		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
+		System.err.println("Processing data source:");
+		dataSource.write(System.err);
 		for (Property property : props) {
 			// skip type, it is not a 'real' connection setter
-			if(property.getName().equals("type")) {
+			if(property.getName().equals("type") || property.getName().equals("alias")) {
 				continue;
 			}
+			System.err.println("Processing property with name: "+property.getName()+" and value: "+property.getTypedValue());
 			settings.put(property.getName(), property.getTypedValue());
 		}
 		Set<String> allNames = new HashSet<String>();
@@ -284,7 +287,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 //		cc.update(settings);
 		logger.debug("Data source settings for source: {} : {}",name,settings);
 		
-		addResourceGroup(name,instance,type);
+		addResourceGroup(name,instance,type,settings);
 	}
 
 	protected Configuration createOrReuse(String pid, final String filter)
@@ -318,8 +321,8 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 	
 
-	private void addResourceGroup(String name, String instance, String type) throws IOException {
-		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
+	private void addResourceGroup(String name, String instance, String type,Dictionary<String,Object> settings) throws IOException {
+//		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
 		final String filter = "(&(service.factoryPid=navajo.resourcegroup)(name="+name+"))";
 		Configuration cc = createOrReuse("navajo.resourcegroup", filter);
 		settings.put("name", name);
