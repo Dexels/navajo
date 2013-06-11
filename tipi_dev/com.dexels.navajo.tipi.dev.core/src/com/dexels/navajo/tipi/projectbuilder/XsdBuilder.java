@@ -839,7 +839,6 @@ public class XsdBuilder {
 
 		String extensionRepository = repository+"Extensions/";
 
-		String buildType = pe.getString("build").trim();
 		XsdBuilder b = new XsdBuilder();
 		try { 
 			b.build(repository,extensionRepository, extensions, new File(baseDir));
