@@ -37,7 +37,6 @@ import com.dexels.navajo.mapping.compiler.SkipCompilationException;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.server.CompiledScriptFactory;
 import com.dexels.navajo.server.NavajoIOConfig;
-import com.dexels.navajo.server.UserException;
 
 public class BundleCreatorComponent implements BundleCreator {
 
@@ -566,13 +565,13 @@ public class BundleCreatorComponent implements BundleCreator {
 			throws ClassNotFoundException {
 		String scriptName = rpcName.replaceAll("/", ".");
 		String filter = null;
-		boolean tenantQualified;
+//		boolean tenantQualified;
 		
 		if(navajoIOConfig.hasTenantScriptFile(rpcName, tenant)) {
-			tenantQualified = true;
+//			tenantQualified = true;
 			filter = "(&(navajo.scriptName=" + scriptName + ")(navajo.tenant="+tenant+"))";
 		} else {
-			tenantQualified = false;
+//			tenantQualified = false;
 			filter = "(&(navajo.scriptName=" + scriptName + ")(!(navajo.tenant=*)))";
 		}
 			
@@ -605,55 +604,27 @@ public class BundleCreatorComponent implements BundleCreator {
 		return null;
 	}
 
-	private CompiledScript waitForService(String rpcPath, String tenant) throws Exception {
-		String rpcName = rpcPath.replaceAll("/", ".");
-		// script://person/InitSearchPersons
-		File cscripts = new File(navajoIOConfig.getCompiledScriptPath());
-		File scriptFile = new File(cscripts,rpcPath+".jar");
-		System.err.println("Path: "+scriptFile.getAbsolutePath());
-		URL u = scriptFile.toURI().toURL();
-		
-		final String bundleURI = u.toString();
-//		final String bundleURI = SCRIPTPROTOCOL + rpcPath;
-		Bundle scriptBundle = bundleContext.getBundle(bundleURI);
-		if (scriptBundle == null) {
-			throw new UserException(-1, "Can not resolve bundle for service: "
-					+ rpcName + " failed to find bundle with URI: " + bundleURI);
-		}
-		if (scriptBundle.getState() != Bundle.ACTIVE) {
-			throw new UserException(-1, "Can not resolve bundle for service: "
-					+ rpcName + " bundle with URI: " + bundleURI
-					+ " is not active. State: " + scriptBundle.getState());
-		}
-		return getCompiledScript(rpcName, tenant);
-//		String filterString = "(navajo.scriptName=" + rpcName + ")";
-//		logger.debug("waiting for service...: " + rpcName);
-//		// Filter filter = bundleContext.createFilter(filterString);
-//		ServiceReference<CompiledScriptFactory>[] ss = (ServiceReference<CompiledScriptFactory>[]) bundleContext
-//				.getServiceReferences(CompiledScriptFactory.class.getName(),
-//						filterString);
-//		if (ss != null && ss.length > 0) {
-//			logger.debug("Service present: " + ss.length);
-//		} else {
-//			throw new UserException(-1,
-//					"Bundle resolved but no service available for service: "
-//							+ rpcName + " probably it is missing a dependency");
-//		}
-		// ServiceTracker tr = new ServiceTracker(bundleContext,filter,null);
-		// tr.open();
-		// CompiledScriptFactory result = (CompiledScriptFactory)
-		// tr.waitForService(12000);
-//		CompiledScriptFactory result = bundleContext.getService(ss[0]);
-//
-//		if (result == null) {
-//			logger.error("Service resolution failed!");
+//	private CompiledScript waitForService(String rpcPath, String tenant) throws Exception {
+//		String rpcName = rpcPath.replaceAll("/", ".");
+//		// script://person/InitSearchPersons
+//		File cscripts = new File(navajoIOConfig.getCompiledScriptPath());
+//		File scriptFile = new File(cscripts,rpcPath+".jar");
+//		System.err.println("Path: "+scriptFile.getAbsolutePath());
+//		URL u = scriptFile.toURI().toURL();
+//		
+//		final String bundleURI = u.toString();
+//		Bundle scriptBundle = bundleContext.getBundle(bundleURI);
+//		if (scriptBundle == null) {
 //			throw new UserException(-1, "Can not resolve bundle for service: "
-//					+ rpcName);
+//					+ rpcName + " failed to find bundle with URI: " + bundleURI);
 //		}
-//		CompiledScript cc = result.getCompiledScript();
-//		// tr.close();
-//		return cc;
-	}
+//		if (scriptBundle.getState() != Bundle.ACTIVE) {
+//			throw new UserException(-1, "Can not resolve bundle for service: "
+//					+ rpcName + " bundle with URI: " + bundleURI
+//					+ " is not active. State: " + scriptBundle.getState());
+//		}
+//		return getCompiledScript(rpcName, tenant);
+//	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void verifySingleScript(String scriptPath, List<String> failed,

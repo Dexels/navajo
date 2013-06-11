@@ -185,7 +185,7 @@ public abstract class FunctionInterface {
 		return mytypes;
 	}
        
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "unused" })
 	private final void checkReturnType(Object o) throws TMLExpressionException  {
     	
     	Class [] myreturntype = null;
@@ -217,7 +217,7 @@ public abstract class FunctionInterface {
     	}
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "unused" })
 	private final void checkTypes() throws TMLExpressionException {
     	 
     	Class [][] mytypes = null;

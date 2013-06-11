@@ -71,7 +71,7 @@ public class TestRuntime {
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode rootNode = mapper.readValue(out, JsonNode.class);
 		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-//		System.out.println(writer.writeValueAsString(rootNode));
+		System.out.println(writer.writeValueAsString(rootNode));
 		Assert.assertEquals(24, rootNode.get("data").get("verjaardagen").size());
 
 	}
@@ -88,7 +88,7 @@ public class TestRuntime {
 		  // (note: can also use more specific type, like ArrayNode or ObjectNode!)
 		  JsonNode rootNode = mapper.readValue(out, JsonNode.class); 
 		    ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-//		    System.out.println(writer.writeValueAsString(rootNode));
+		    System.out.println(writer.writeValueAsString(rootNode));
 //			  Assert.assertEquals(24, rootNode.get("data").get("verjaardagen").size());
 
 	}

@@ -1,8 +1,5 @@
 package com.dexels.navajo.client.async;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.dexels.navajo.client.async.impl.AsyncClientImpl;
 
 

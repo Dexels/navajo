@@ -36,7 +36,7 @@ public class HelloShellCommand extends OsgiCommandSupport {
 			@Descriptor(value = "The path, prefix, or '/' to compile everything") 
 			String script ) {
 		try {
-			long tm = System.currentTimeMillis();
+//			long tm = System.currentTimeMillis();
 			System.err.println("Testcompile. Force: "+force+" keep: "+keepIntermediateFiles+" path: "+script);
 //			System.err.println("Force: "+force);
 		} catch (Throwable e) {

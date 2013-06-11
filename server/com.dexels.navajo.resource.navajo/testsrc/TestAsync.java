@@ -1,16 +1,13 @@
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 
 import org.junit.Test;
 
 import com.dexels.navajo.client.async.AsyncClient;
 import com.dexels.navajo.client.async.NavajoClientResourceManager;
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.resource.navajo.impl.NavajoComponentImpl;
 
 public class TestAsync {

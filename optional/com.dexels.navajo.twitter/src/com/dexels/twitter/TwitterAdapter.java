@@ -9,10 +9,6 @@ import java.util.Date;
 import java.util.List;
 
 import oauth.signpost.basic.DefaultOAuthProvider;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import winterwell.jtwitter.Message;
 import winterwell.jtwitter.OAuthSignpostClient;
 import winterwell.jtwitter.Status;
@@ -33,8 +29,6 @@ public class TwitterAdapter {
 	private OAuthSignpostClient mySignPost = null; 
 		
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(TwitterAdapter.class);
 	final static String API_KEY = "UVyOkSE0F1i2YcqaPc0jYg";
 	private final static String API_SECRET = "7Uhm0fVFrSesY0Czamuy86ZnyetVPkYjLLgG8N3rabE";
 	
@@ -137,6 +131,7 @@ public class TwitterAdapter {
 //		return twu;
 //	}
 	
+	@Deprecated
 	public TwitterUser[] getFollowers(){
 		List<User> users;
 		if(currentUser == null){
@@ -200,6 +195,7 @@ public class TwitterAdapter {
 		return twit.getRateLimitStatus();
 	}
 	
+	@Deprecated
 	public TwitterStatus[] getReplies(){
 		List<Status> replies = twit.getReplies();		
 		TwitterStatus[] tws = new TwitterStatus[replies.size()];
@@ -261,6 +257,8 @@ public class TwitterAdapter {
 		return twit.getUntilDate();
 	}
 	
+
+	@Deprecated
 	public TwitterUser getUser(){
 		if(currentUser == null){
 			return null;
