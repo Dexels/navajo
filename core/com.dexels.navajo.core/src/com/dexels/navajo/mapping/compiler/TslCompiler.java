@@ -73,8 +73,8 @@ import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.server.NavajoIOConfig;
-import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.internal.LegacyNavajoIOConfig;
 
@@ -439,7 +439,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
         exact = false;
         //System.err.println("TMLExpressionException, COULD NOT OPTIMIZE EXPRESSION: " + clause);
       }
-      catch (com.dexels.navajo.server.SystemException se) {
+      catch (SystemException se) {
         exact = false;
         if ( !clause.startsWith("#")) {
         	throw new UserException(-1, "Could not compile script, Invalid expression: " + clause);

@@ -19,6 +19,7 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.script.api.SystemException;
 
 
 public class Parameters extends java.util.Hashtable<String,Parameter> implements java.io.Serializable {

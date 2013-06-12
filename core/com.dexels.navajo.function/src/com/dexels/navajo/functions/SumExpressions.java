@@ -16,7 +16,7 @@ import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.script.api.SystemException;
 
 /**
  * @author arjen

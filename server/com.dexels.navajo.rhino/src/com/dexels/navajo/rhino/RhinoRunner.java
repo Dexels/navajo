@@ -26,9 +26,9 @@ import com.dexels.navajo.rhino.flow.ConditionError;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SchedulerRegistry;
+import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.SystemException;
 
 public class RhinoRunner {
 	// private ScriptableObject globalScope;

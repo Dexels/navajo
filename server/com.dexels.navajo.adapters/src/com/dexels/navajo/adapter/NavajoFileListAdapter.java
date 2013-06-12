@@ -20,8 +20,8 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
 /**

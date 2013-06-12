@@ -12,6 +12,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.script.api.SystemException;
 
 public final class ASTForAllNode extends SimpleNode {
 
@@ -79,7 +80,7 @@ public final class ASTForAllNode extends SimpleNode {
                         return Boolean.TRUE;
                 }
 
-        } catch (com.dexels.navajo.server.SystemException se) {
+        } catch (SystemException se) {
         	logger.error("Error: ", se);
         	throw new TMLExpressionException("Invalid expression in FORALL construct: \n" + se.getMessage());
         } catch (NavajoException ne) {

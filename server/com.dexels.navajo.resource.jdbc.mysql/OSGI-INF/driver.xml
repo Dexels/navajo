@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.resource.factory.mysql" activate="activate" immediate="true">
+   <implementation class="com.dexels.navajo.resource.jdbc.mysql.MySqlResourceFactory"/>
+   <reference bind="registerDriver" cardinality="0..n" interface="org.osgi.service.jdbc.DataSourceFactory" name="DataSourceFactory" policy="static" unbind="unregisterDriver"/>
+   <property name="type" type="String" value="mysql"/>
+   <service>
+      <provide interface="org.osgi.service.jdbc.DataSourceFactory"/>
+   </service>
+</scr:component>

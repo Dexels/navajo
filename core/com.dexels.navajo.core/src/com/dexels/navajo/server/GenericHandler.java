@@ -27,6 +27,8 @@ import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.compiler.meta.Dependency;
+import com.dexels.navajo.script.api.AuthorizationException;
+import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.server.scriptengine.GenericScriptEngine;
 import com.dexels.navajo.util.AuditLog;
 

@@ -8,7 +8,7 @@
  * @author Arjen Schoneveld
  * @version $Id$
  */
-package com.dexels.navajo.server;
+package com.dexels.navajo.script.api;
 
 
 public class SystemException extends Exception {

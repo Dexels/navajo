@@ -29,7 +29,9 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.persistence.Constructor;
 import com.dexels.navajo.persistence.Persistable;
+import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.NavajoDoneException;
+import com.dexels.navajo.script.api.SystemException;
 
 public abstract class ServiceHandler implements Constructor {
 

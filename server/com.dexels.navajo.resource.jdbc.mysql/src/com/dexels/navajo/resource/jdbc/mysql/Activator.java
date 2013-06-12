@@ -20,9 +20,7 @@ public class Activator implements BundleActivator {
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		MySQLJDBCDataSourceService factory = new MySQLJDBCDataSourceService();
-
         factory.start();
-
         managedFactory = new JdbcManagedResourceFactory(bundleContext, factory,  "navajo.resource.mysql",  "Navajo MySQL Resource Driver");
 	}
 

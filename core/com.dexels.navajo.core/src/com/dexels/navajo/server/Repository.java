@@ -1,6 +1,8 @@
 package com.dexels.navajo.server;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.script.api.AuthorizationException;
+import com.dexels.navajo.script.api.SystemException;
 
 /**
  * Title:        Navajo Product Project

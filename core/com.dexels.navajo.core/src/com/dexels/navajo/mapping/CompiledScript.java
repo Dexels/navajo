@@ -47,11 +47,11 @@ import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.script.api.NavajoDoneException;
+import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.CompiledScriptFactory;
 import com.dexels.navajo.server.ConditionData;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
 @SuppressWarnings("unchecked")

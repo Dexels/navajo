@@ -39,9 +39,9 @@ import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.DispatcherInterface;
-import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
