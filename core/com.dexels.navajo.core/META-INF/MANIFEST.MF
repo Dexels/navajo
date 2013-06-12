@@ -97,7 +97,7 @@ Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  com.dexels.navajo.sharedstore.map;uses:="com.dexels.navajo.server.enterprise.tribe,com.dexels.navajo.server,com.dexels.navajo.mapping",
  com.dexels.navajo.test;uses:="com.dexels.navajo.document.types",
  com.dexels.navajo.tipilink,
- com.dexels.navajo.util;
+ com.dexels.navajo.util;version="1.0.0";
   uses:="com.dexels.navajo.server,
    com.dexels.navajo.mapping,
    org.w3c.dom,
