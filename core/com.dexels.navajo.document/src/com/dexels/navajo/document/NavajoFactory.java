@@ -11,7 +11,6 @@ import com.dexels.navajo.document.base.*;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
-
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -614,7 +613,82 @@ public abstract class NavajoFactory {
    */
   public abstract Point createPoint(Property p) throws NavajoException;
 
- 
+  /**
+   * Checks a message using a "definition" message.
+   * 
+   * @param message, the message to be checked
+   * @param entityMessage, the "definition" message
+   * @param ignoreUndefinedEntities, ignores properties/messages in input message that are not in entityMessage
+   * @return map with problem properties/messages.
+   */
+  public Map<String,String> checkTypes(Message message, Message entityMessage, boolean ignoreUndefinedEntities) {
+		 
+	  	Map<String,String> problems = new HashMap<String, String>();
+	  	
+		Iterator<Property> inputProperties = message.getAllProperties().iterator();
+		while ( inputProperties.hasNext() ) {
+			Property inputP = inputProperties.next();
+			Property entityP = entityMessage.getProperty(inputP.getName());
+			if ( !ignoreUndefinedEntities && entityP == null ) {
+				problems.put(inputP.getFullPropertyName(), "Unknown property: " + inputP.getName());
+			} else if ( entityP != null && entityP.getType().equals(Property.SELECTION_PROPERTY) ) {
+				if ( inputP.getValue() != null && !inputP.getValue().equals("") ) {
+					boolean found = false;
+					for (Selection entityS : entityP.getAllSelections()) {
+						if ( entityS.getValue().equals(inputP.getValue() ) ) {
+							found = true;
+						}
+					}
+					if (!found) {
+						problems.put(inputP.getFullPropertyName(), "Invalid selection option: " + inputP.getValue());
+					}
+				}
+			} else if ( entityP != null && !inputP.getType().equals(entityP.getType()) ) {
+				problems.put(inputP.getFullPropertyName(), "Invalid type: " + inputP.getType() + ", expected: " + entityP.getType());
+			}
+		}
+		
+		// Other way around: check for missing properties.
+		inputProperties = entityMessage.getAllProperties().iterator();
+		while ( inputProperties.hasNext() ) {
+			Property entityP = inputProperties.next();
+			Property inputP = message.getProperty(entityP.getName());
+			if ( inputP == null ) {
+				problems.put(message.getFullMessageName(), "Missing property: " + entityP.getName());
+			} 
+		}
+		
+		Iterator<Message> inputMessages = message.getAllMessages().iterator();
+		while ( inputMessages.hasNext() ) {
+			Message inputM = inputMessages.next();
+			Message entityM = entityMessage.getMessage(inputM.getName());
+			if ( !ignoreUndefinedEntities && entityM == null ) {
+				problems.put(inputM.getName(), "Unknown message: " + inputM.getName());
+			} else if (inputM.isArrayMessage() && entityM.isArrayMessage() && entityM.getDefinitionMessage() != null ) {
+				Iterator<Message> children = inputM.getElements().iterator();
+				while ( children.hasNext() ) {
+					problems.putAll(checkTypes(children.next(), entityM.getDefinitionMessage(), ignoreUndefinedEntities));
+				}
+			} else if ( !inputM.getType().equals(entityM.getType() ) ) {
+				problems.put(inputM.getName(), "Unknown message type: " + inputM.getType() + ". Expected: " + entityM.getType());
+			} else {
+				problems.putAll(checkTypes(inputM, entityM, ignoreUndefinedEntities));
+			}
+		}
+		
+		// Other way around: check for missing messages.
+		inputMessages = entityMessage.getAllMessages().iterator();
+		while ( inputMessages.hasNext() ) {
+			Message entityM = inputMessages.next();
+			Message inputM = message.getMessage(entityM.getName());
+			if ( inputM == null ) {
+				problems.put(message.getFullMessageName(), "Missing message: " + entityM.getName());
+			} 
+		}
+		
+		return problems;
+	}
+
 
 public void storeHandle(String name, byte[] data) {
 	binaryStorage.put(name,data);

@@ -33,6 +33,9 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String PROPERTY_DIRECTION = "direction";
   public static final String PROPERTY_MIMETYPE = "mimetype";
   public static final String PROPERTY_SUBTYPE = "subtype";
+  public static final String PROPERTY_KEY = "key";
+  public static final String PROPERTY_REFERENCE = "reference";
+  public static final String PROPERTY_EXTENDS = "extends";
 
   public static final String STRING_PROPERTY = "string";
   public static final String INTEGER_PROPERTY = "integer";
@@ -239,6 +242,49 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    */
   public String getSubType(String key);
 
+  /**
+   * Sets the key attribute for this property. Key attributes are used for entity messages.
+   * Example: key="true,auto,optional", if key has true as value the underlying property is marked as a 'key'.
+   * The auto option defines that a property is automatically created by an insert operation, i.e. it should
+   * not be passed when inserting a new entity.
+   * 
+   * @param key
+   */
+  public void setKey(String key);
+  
+  
+  /**
+   * Return the key attribute of a property.
+   * 
+   * @return
+   */
+  public String getKey();
+  
+  /**
+   * Sets the extends attribute to extend a property from another entity.
+   * 
+   * @param s
+   */
+  public void setExtends(String s);
+  
+  public String getExtends();
+  
+  /**
+   * Sets the reference attribute for a property. Reference can be used to indicate that this property value can be used
+   * to find a specific entity that is specified by the reference value.
+   * 
+   * @param ref
+   * @return
+   */
+  public void setReference(String ref);
+  
+  /**
+   * Get the reference attribute for a property.
+   * 
+   * @return
+   */
+  public String getReference();
+  
   /**
    * Adds a single subtype pair. Syntax key=value
    * @param extra

@@ -99,6 +99,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	protected String cardinality = null;
 	protected String description = null;
 	protected String direction = Property.DIR_IN;
+	protected String key = null;
+	protected String reference = null;
+	protected String myExtends = null;
 	protected int length = -1;
 	private Map<String,String> subtypeMap = null;
 
@@ -1691,6 +1694,18 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	public Map<String,String> getAttributes() {
 		Map<String,String> m = new HashMap<String,String>();
 		
+		if ( myExtends != null ) {
+			m.put(Property.PROPERTY_EXTENDS, myExtends);
+		}
+		
+		if ( key != null ) {
+			m.put(Property.PROPERTY_KEY, key);
+		}
+		
+		if ( reference != null ) {
+			m.put(Property.PROPERTY_REFERENCE, reference);
+		}
+		
 		if (cardinality != null && Property.SELECTION_PROPERTY.equals(getType())) {
 			m.put(PROPERTY_CARDINALITY, cardinality);
 		}
@@ -1744,7 +1759,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			}
 			return prop;
 		} else {
-			return new BasePropertyImpl(getRootDoc(), getName(), getType(), null, getLength(), getDescription(), getDirection());
+			Property prop = new BasePropertyImpl(getRootDoc(), getName(), getType(), null, getLength(), getDescription(), getDirection());
+			if ( getKey() != null ) {
+				prop.setKey(getKey());
+			}
+			if ( getReference() != null ) {
+				prop.setReference(getReference());
+			}
+			if ( getExtends() != null ) {
+				prop.setExtends(getExtends());
+			}
+			return prop;
 		}
 	}
 
@@ -1897,6 +1922,42 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		}
 		value = value.replace("\"", "\\\"");
 		writeElement(sw, "\"" + getName() + "\" : \"" + value + "\"");		
+	}
+
+	@Override
+	public void setKey(String key) {
+		String old = this.key;
+		this.key = key;
+		firePropertyChanged(old, key);
+	}
+
+	@Override
+	public String getKey() {
+		return key;
+	}
+
+	@Override
+	public void setReference(String ref) {
+		String old = this.reference;
+		this.reference = ref;
+		firePropertyChanged(old, reference);
+	}
+
+	@Override
+	public String getReference() {
+		return reference;
+	}
+
+	@Override
+	public void setExtends(String s) {
+		String old = myExtends;
+		this.myExtends = s;
+		firePropertyChanged(old, myExtends);
+	}
+
+	@Override
+	public String getExtends() {
+		return myExtends;
 	}
 
 }
