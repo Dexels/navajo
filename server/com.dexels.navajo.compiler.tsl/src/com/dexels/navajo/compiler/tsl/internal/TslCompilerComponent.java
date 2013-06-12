@@ -60,7 +60,13 @@ public class TslCompilerComponent implements ScriptCompiler {
 //       if("".equals(packagePath)) {
 //    	   scriptPackage = "defaultPackage";
 //       }
-		String scriptString = scriptPath.replaceAll("_", "|");
+		String scriptString = null;
+		if("".equals(scriptPackage)) {
+			scriptString = scriptPath;
+		} else {
+			scriptString = packagePath + "/"+script.replaceAll("_", "|");
+		}
+//		scriptString = scriptPath.replaceAll("_", "|");
 		String scriptSource = script;
 //		if(hasTenantSpecificFile) {
 //			scriptSource = script+"_"+tenant;
@@ -220,12 +226,12 @@ public class TslCompilerComponent implements ScriptCompiler {
 //		String tenant = null;
 		
 		symbolicName = fullName.replaceAll("/", ".");
-		if(symbolicName.indexOf("_")!=-1) {
-			final String[] split = symbolicName.split("_");
-			symbolicName = split[0];
+//		if(symbolicName.indexOf("_")!=-1) {
+//			final String[] split = symbolicName.split("_");
+//			symbolicName = split[0];
 //			tenant = split[1];
-			logger.error("Anomaly in creating bundle: shouldn't happen");
-		}
+//			logger.error("Anomaly in creating bundle: shouldn't happen");
+//		}
 
 		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
 		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
