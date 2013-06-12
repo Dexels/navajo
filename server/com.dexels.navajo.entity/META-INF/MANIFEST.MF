@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Navajo Entity model implementation
+Bundle-SymbolicName: com.dexels.navajo.entity
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Dexels
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
