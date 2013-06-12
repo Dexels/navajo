@@ -35,6 +35,7 @@
 		<module>../../com.dexels.navajo.article</module>
 		<module>../../com.dexels.navajo.article.jsp</module>
 		<module>../../com.dexels.navajo.tunnel</module>
+		<module>../../com.dexels.navajo.entity</module>
 		<module>../</module>
 
 	</modules>
