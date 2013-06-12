@@ -16,13 +16,11 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.TipiEventListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.TipiSuspendException;
 import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.actions.TipiActionFactory;
-import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public abstract class TipiAction extends TipiAbstractExecutable{
 	// protected TipiContext myContext;
@@ -73,7 +71,7 @@ public abstract class TipiAction extends TipiAbstractExecutable{
 	}
 
 	public boolean performTipiEvent(String type, Map<String, Object> event,
-			boolean sync) throws TipiException, TipiBreakException {
+			boolean sync) throws TipiBreakException {
 		return performTipiEvent(type, event, sync, null);
 	}
 
