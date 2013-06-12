@@ -5,3 +5,5 @@ Bundle-SymbolicName: com.dexels.navajo.entity
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: com.dexels.navajo.document;version="2.2.1"
+Require-Bundle: org.junit

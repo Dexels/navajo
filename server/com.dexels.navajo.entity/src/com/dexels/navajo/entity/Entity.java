@@ -1,0 +1,142 @@
+package com.dexels.navajo.entity;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Property;
+
+public class Entity {
+
+	public static final String NAVAJO_URI = "navajo://";
+
+	private final Message myMessage;
+	private Set<Key> myKeys = new HashSet<Key>();
+	private EntityManager em = null;
+	private boolean activated = false;
+
+	public Entity(Message msg, EntityManager m) {
+		myMessage = msg;
+		em = m;
+	}
+
+	protected synchronized void activate() throws Exception {
+		if ( activated ) {
+			return;
+		}
+		findKeys();
+		findSuperEntities();
+		activated = true;
+	}
+
+	private Property getExtendedProperty(String ext) throws Exception {
+		if ( ext.startsWith(NAVAJO_URI) ) {
+			String s = ext.substring(NAVAJO_URI.length());
+			String entityName = s.split("/")[0];
+			String propertyName = s.split("/")[1];
+			Message msg = em.getEntity(entityName).getMessage();
+			return msg.getProperty(propertyName);
+		} else {
+			throw new Exception("Extension type not implemented: " + ext);
+		}
+	}
+
+	private void processExtendedProperties(Message m) throws Exception {
+		for ( Property p : m.getAllProperties() ) {
+			if ( p.getExtends() != null ) {
+				Property ep = getExtendedProperty(p.getExtends());
+				m.removeProperty(m.getProperty(ep.getName()));
+				if ( p.getKey() == null && ep.getKey() != null ) {
+					p.setKey(ep.getKey());
+				}
+			}
+		}
+		if ( m.isArrayMessage() && m.getDefinitionMessage() != null ) {
+			processExtendedProperties(m.getDefinitionMessage());
+		}
+		for ( Message c : m.getAllMessages() ) {
+			processExtendedProperties(c);
+		}
+		
+	}
+	
+	private void processExtendedEntity(Message m, String extendedEntity) throws Exception {
+		if ( em.getEntity(extendedEntity) != null ) {
+			// Copy properties/messages from superEntity.
+			myMessage.merge(em.getEntity(extendedEntity).getMessage());
+			// Check extended properties.
+			processExtendedProperties(myMessage);
+		} else {
+			throw new Exception("Could not find super entity: " + extendedEntity + " for entity: " + getName());
+		}
+	}
+	
+	private void findSuperEntities() throws Exception {
+
+		if ( myMessage.getExtends() != null ) {
+			if ( !"".equals(myMessage.getExtends()) && myMessage.getExtends().startsWith(NAVAJO_URI) ) {
+				String ext = myMessage.getExtends().substring(NAVAJO_URI.length());
+				String [] superEntities = ext.split(",");
+				for ( int i = 0; i < superEntities.length; i++ ) {
+					processExtendedEntity(myMessage, superEntities[i]);
+				}
+			} else if (!"".equals(myMessage.getExtends()) ){
+				throw new Exception("Extension type not supported: " + myMessage.getExtends());
+			}
+		}
+	}
+
+	private void findKeys() {
+		HashMap<String,Key> foundKeys = new HashMap<String,Key>();
+		List<Property> allProps = myMessage.getAllProperties();
+		int keySequence = 0;
+		for ( Property p : allProps ) {
+			if ( p.getKey() != null && p.getKey().indexOf("true") != -1 ) {
+				String id = Key.getKeyId(p.getKey());
+				if ( id == null ) {
+					id = ""+(keySequence++);
+				}
+				Key key = null;
+				if ( ( key = foundKeys.get(id) ) == null ) {
+					key = new Key(id, this);
+					foundKeys.put(id, key);
+					myKeys.add(key);
+				} 
+				key.addProperty(p);
+			}
+		}
+
+	}
+
+	public Message getMessage() {
+		return myMessage;
+	}
+
+	public String getName() {
+		return myMessage.getName();
+	}
+
+	public Key getKey(Set<Property > p) {
+		for ( Key k: myKeys ) {
+			if ( k.keyMatch(p) ) {
+				return k;
+			}
+		}
+		return null;
+	}
+
+	public Key getKey(String id) {
+		for ( Key k: myKeys ) {
+			if ( k.getId().equals(id) ) {
+				return k;
+			}
+		}
+		return null;
+	}
+
+	public Set<Key> getKeys() {
+		return myKeys;
+	}
+}
