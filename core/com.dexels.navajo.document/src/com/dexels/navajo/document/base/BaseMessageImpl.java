@@ -51,6 +51,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	private String myMode = "";
 
+	private String myExtends = "";
+	
 //	private String myCondition = "";
 
 	private int myIndex = -1;
@@ -156,6 +158,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		return myMode;
 	}
 
+	public final void setExtends(String ext) {
+		myExtends = ext;
+	}
+	
+	public final String getExtends() {
+		return myExtends;
+	}
+	
 	public final void clearAllSelections() throws NavajoException {
 		if (propertyList != null) {
 
@@ -1274,6 +1284,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 		if (myMode != null && !myMode.equals("")) {
 			m.put("mode", myMode);
+		}
+		if (myExtends != null && !myExtends.equals("")) {
+			m.put(Message.MSG_EXTENDS, myExtends);
 		}
 		return m;
 	}

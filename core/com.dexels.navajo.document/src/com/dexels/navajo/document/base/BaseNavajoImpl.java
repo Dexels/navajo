@@ -25,6 +25,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 	protected final BaseMessageImpl rootMessage;
   protected BaseHeaderImpl myHeader = null;
   protected final BaseMethodsImpl myMethods = new BaseMethodsImpl(this);
+  protected final BaseOperationsImpl myOperations = new BaseOperationsImpl(this);
   protected int expiration = -1;
   protected String myLazyMessagePath = "";
   protected int myErrorNumber;
@@ -79,6 +80,11 @@ private final static Logger logger = LoggerFactory
       Method m = mm.get(i);
       Method m2 = m.copy(n);
       n.addMethod(m2);
+    }
+    List<Operation> oo = myOperations.getAllOperations();
+    for ( Operation o : oo ) {
+    	Operation o2 = o.copy(n);
+    	n.addOperation(o2);
     }
     if(getHeader()!=null) {
         ni.addHeader(getHeader().copy(ni));
@@ -501,6 +507,7 @@ public List<BaseNode> getChildren() {
 		al.add((BaseNode) m);
 	}
     al.add(myMethods);
+    al.add(myOperations);
     return al;
 }
 
@@ -643,6 +650,16 @@ public Navajo getNavajo(String key) {
 @Override
 public void removeNavajo(String key) {
 	navajoMap.remove(key);
+}
+
+@Override
+public ArrayList<Operation> getAllOperations() {
+	return myOperations.getAllOperations();
+}
+
+@Override
+public void addOperation(Operation o) throws NavajoException {
+	myOperations.addOperation(o);
 }
 
 

@@ -357,17 +357,17 @@ public class TwitterAdapter {
 		
 		TwitterAdapter ta = new TwitterAdapter();
 		
-//		ta.setToken1("120028662-XVGkW8KfPcTCf1t7P0O1ERhCkaEckPpdp4tkLRCm");
-//		ta.setToken2("Tsry73LpbdmIgCS1clJCo0npeZ5m21ocFYIZI7Ww");
+		ta.setToken1("113099301-D6zwIcti42J1YdGk3oSih4mskFSKo0noDJJI9w");
+		ta.setToken2("Bc2Cex3YYPE2sALuYiHfUKAsCzhVcRs2fOCtEcH6yI");
 	
 		
 		String url = ta.getBrowserURL();
 		Binary sign = ta.getSignPost();
 		System.err.println("URL: " + url);
 		
-		String pin = new BufferedReader(new InputStreamReader(System.in)).readLine();
-		ta.setSignPost(sign);
-		ta.setPincode(pin);
+		//String pin = new BufferedReader(new InputStreamReader(System.in)).readLine();
+		//ta.setSignPost(sign);
+		//ta.setPincode(pin);
 		
 		String token1 = ta.getToken1();
 		String token2 = ta.getToken2();

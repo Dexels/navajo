@@ -13,6 +13,7 @@ import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.ParamTag;
 import com.dexels.navajo.document.Point;
 import com.dexels.navajo.document.Property;
@@ -253,6 +254,17 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 	public Property createProperty(Object representation) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Operation createOperation(Navajo n, String method, String service,
+			String entityName, Message extra) {
+		BaseOperationImpl oi = new BaseOperationImpl(n);
+		oi.setMethod(method);
+		oi.setService(service);
+		oi.setEntityName(entityName);
+		oi.setExtraMessage(extra);
+		return oi;
 	}
 
 }

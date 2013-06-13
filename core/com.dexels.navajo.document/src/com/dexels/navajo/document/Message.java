@@ -28,6 +28,7 @@ public interface Message
   public static final String MSG_NAME = "name";
   public static final String MSG_INDEX = "index";
   public static final String MSG_TYPE = "type";
+  public static final String MSG_EXTENDS = "extends";
   public static final String MSG_CONDITION = "condition";
   public static final String MSG_PARAMETERS_BLOCK = "__parms__";
 
@@ -167,6 +168,21 @@ public interface Message
    */
   public void setMode(String mode);
 
+  /**
+   * Return the value of the extends attribute. 
+   * Extends refers to an entity message(s) that is(are) extended by this message (entity message inheritance)
+   * 
+   * @return
+   */
+  public String getExtends();
+  
+  /**
+   * Sets the extends attribute.
+   * 
+   * @param s
+   */
+  public void setExtends(String s);
+  
   /**
    * Sets the total number of lazy array element sub messages.
    * Lazy array messages represent all the array messages that are physically present.
