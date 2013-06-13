@@ -6,24 +6,24 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.server.DispatcherInterface;
 
 
 public class EntityComponent extends Entity {
 
-	LocalClient client;
+	DispatcherInterface dispatcher;
 	private String serviceName;
 	
 	public EntityComponent() {
 		super();
 	}
 	
-	public void setLocalClient(LocalClient client) {
-		this.client = client;
+	public void setDispatcher(DispatcherInterface client) {
+		this.dispatcher = client;
 	}
 
-	public void clearLocalClient(LocalClient client) {
-		this.client = null;
+	public void clearDispatcher(DispatcherInterface dispatcher) {
+		this.dispatcher = null;
 	}
 
 	
@@ -32,7 +32,7 @@ public class EntityComponent extends Entity {
 		Navajo in = NavajoFactory.getInstance().createNavajo();
 		Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
 		in.addHeader(h);
-		Navajo result = client.call(in);
+		Navajo result = dispatcher.handle(in,true);
 		Message l = result.getAllMessages().iterator().next();
 		setMessage(l);
 		activate();

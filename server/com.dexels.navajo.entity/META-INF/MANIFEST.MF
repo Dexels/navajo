@@ -8,6 +8,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.document;version="2.2.1",
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server.api,
+ com.dexels.navajo.server,
  org.osgi.framework;version="1.6.0"
 Require-Bundle: org.junit
 Service-Component: OSGI-INF/entitymanager.xml

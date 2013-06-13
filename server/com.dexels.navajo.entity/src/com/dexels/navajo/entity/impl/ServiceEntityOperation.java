@@ -7,21 +7,38 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.EntityException;
-import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.EntityOperation;
 import com.dexels.navajo.entity.Key;
 import com.dexels.navajo.script.api.FatalException;
-import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.server.DispatcherInterface;
 
 public class ServiceEntityOperation implements EntityOperation {
 
-	private EntityManager manager;
-	private LocalClient client;
+//	private EntityManager manager;
+//	private LocalClient client;
+	private Entity entity;
+	private DispatcherInterface dispatcher;
 	
+	
+	public void setDispatcher(DispatcherInterface client) {
+		this.dispatcher = client;
+	}
+
+	public void clearDispatcher(DispatcherInterface dispatcher) {
+		this.dispatcher = null;
+	}
+	
+	public void setEntity(Entity e) {
+		this.entity = e;
+	}
+
+	public void clearEntity(Entity e) {
+		this.entity = null;
+	}
 	
 	@Override
 	public Navajo perform(Navajo input, Operation o) throws EntityException {
-		Entity e = manager.getEntity(o.getEntityName());
+		Entity e = entity;
 		if(o.getMethod().equals(Operation.HEAD)) {
 			Navajo out = NavajoFactory.getInstance().createNavajo();
 			out.addMessage(e.getMessage().copy(out));
@@ -72,7 +89,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			input.addMessage(extraMessage);
 		}
 		try {
-			return client.call(input);
+			return dispatcher.handle(input,true);
 		} catch (FatalException e1) {
 			throw new EntityException("Error calling entity service: ",e1);
 		}
@@ -87,6 +104,10 @@ public class ServiceEntityOperation implements EntityOperation {
 		} else {
 			h.setRPCName(rpcName);
 		}
+	}
+	
+	public void activateOperation() {
+		
 	}
 
 }

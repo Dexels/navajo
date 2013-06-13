@@ -38,6 +38,7 @@ public class Entity  {
 			myMessage = entity;
 			activate();
 		}
+		myMessage = entity;
 	}
 	
 	private void addSubEntity(Entity sub) throws EntityException {
