@@ -22,6 +22,7 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.client;bundle-version="1.0.0"
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
  com.dexels.navajo.version,
  navajo,

@@ -2,7 +2,7 @@ package com.dexels.navajo.events.types;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.events.NavajoEvent;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 
 public class NavajoResponseEvent implements NavajoEvent {
 

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.script.api.SystemException;
 
 public final class ASTForAllNode extends SimpleNode {

@@ -16,7 +16,7 @@ import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.User;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.UserException;
 
 public class TwitterAdapter {
 	private Twitter twit;

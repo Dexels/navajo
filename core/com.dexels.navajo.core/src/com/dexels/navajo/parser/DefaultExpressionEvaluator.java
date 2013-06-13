@@ -23,7 +23,7 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.comparatormanager.ComparatorManager;
 import com.dexels.navajo.document.comparatormanager.ComparatorManagerFactory;
-import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.server.DispatcherFactory;
 
 

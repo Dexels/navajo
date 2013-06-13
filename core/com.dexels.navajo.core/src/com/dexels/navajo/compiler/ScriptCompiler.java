@@ -2,7 +2,7 @@ package com.dexels.navajo.compiler;
 
 import java.util.List;
 
-import com.dexels.navajo.mapping.compiler.meta.Dependency;
+import com.dexels.navajo.script.api.Dependency;
 
 
 /**

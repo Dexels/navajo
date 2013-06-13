@@ -6,6 +6,8 @@ package com.dexels.navajo.loader;
 
 import java.io.File;
 
+import com.dexels.navajo.script.api.NavajoClassSupplier;
+
 /**
  * @author Administrator
  *

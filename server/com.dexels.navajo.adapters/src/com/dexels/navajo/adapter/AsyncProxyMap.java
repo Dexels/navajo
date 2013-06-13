@@ -7,9 +7,10 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.mapping.AsyncMappable;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.UserException;
 
 /**
  * <p>Title: </p>
@@ -34,7 +35,7 @@ public class AsyncProxyMap extends AsyncMappable {
 		.getLogger(AsyncProxyMap.class);
 
 
-  public void load(Access access) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+  public void load(Access access) throws UserException, MappableException {
     username = access.rpcUser;
     password = access.rpcPwd;
     this.access = access;
@@ -66,11 +67,11 @@ public class AsyncProxyMap extends AsyncMappable {
     logger.debug("INDOC = " + access.getOutputDoc());
   }
 
-  public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+  public void store() throws UserException, MappableException {
     logger.debug("AsyncProxyMap: in store()");
   }
 
-  public void run() throws com.dexels.navajo.server.UserException {
+  public void run() throws UserException {
 	  
      Header h = outDoc.getHeader();
      if (h == null) {

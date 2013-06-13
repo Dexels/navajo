@@ -11,9 +11,9 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.UserException;
 
 public class DerbyManagerMap {
 	public String driver = "org.apache.derby.jdbc.EmbeddedDriver";

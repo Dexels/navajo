@@ -11,8 +11,8 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.mapping.CompiledScript;
-import com.dexels.navajo.mapping.compiler.meta.Dependency;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Dependency;
 
 /**
  * JavaPlugin can be used to write scripts directly in Java.

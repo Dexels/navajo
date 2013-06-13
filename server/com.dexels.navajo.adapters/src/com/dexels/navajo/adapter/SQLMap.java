@@ -44,14 +44,14 @@ import com.dexels.navajo.mapping.DependentResource;
 import com.dexels.navajo.mapping.GenericDependentResource;
 import com.dexels.navajo.mapping.GenericMultipleDependentResource;
 import com.dexels.navajo.mapping.HasDependentResources;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.SQLFieldDependency;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.AuditLog;
 
@@ -1081,7 +1081,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		try {
 			createConnection();
 			return this.con;
-		} catch (com.dexels.navajo.server.UserException ue) {
+		} catch (UserException ue) {
 			ue.printStackTrace(Access.getConsoleWriter(myAccess));
 			return null;
 		}

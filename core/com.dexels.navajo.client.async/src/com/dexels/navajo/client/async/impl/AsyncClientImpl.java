@@ -32,7 +32,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.script.api.NavajoResponseCallback;
 import com.dexels.navajo.script.api.SchedulerRegistry;
 import com.dexels.navajo.script.api.TmlRunnable;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 
 public class AsyncClientImpl implements ManualAsyncClient {
 

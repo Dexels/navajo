@@ -6,11 +6,10 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.loader.NavajoClassLoader;
-import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.PersistenceManagerFactory;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.server.FileNavajoConfig;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.Repository;
@@ -163,10 +162,6 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 	public void setStatisticsRunnerEnabled(boolean b) {
 	}
 
-	@Override
-	public boolean needsFullAccessLog(Access a) {
-		return false;
-	}
 
 	public void doClearCache() {
 		

@@ -27,8 +27,8 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.script.api.SystemException;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionErrorException;
-import com.dexels.navajo.server.UserException;
 
 public class VersionedNavajoMap extends NavajoMap {
 

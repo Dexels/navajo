@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.osgi.framework.BundleException;
 
-import com.dexels.navajo.mapping.CompiledScript;
+import com.dexels.navajo.script.api.CompiledScriptInterface;
 
 /**
  * Interface for TSL compiling service
@@ -57,7 +57,7 @@ public interface BundleCreator {
 	 * @return Null if not found
 	 * @throws ClassNotFoundException if something weird happened
 	 */
-	public CompiledScript getCompiledScript(String rpcName, String tenant) throws ClassNotFoundException;
+	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant) throws ClassNotFoundException;
 
 	/**
 	 * Same as getCompiledScript, only will try to install (and compile if needed) bundle if it isn't there.
@@ -65,7 +65,7 @@ public interface BundleCreator {
 	 * @return
 	 * @throws Exception
 	 */
-	public CompiledScript getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified) throws Exception;
+	public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified) throws Exception;
 
 
 }

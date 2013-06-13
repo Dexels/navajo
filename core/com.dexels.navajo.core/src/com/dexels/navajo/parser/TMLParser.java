@@ -3,7 +3,7 @@ package com.dexels.navajo.parser;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.tipilink.TipiLink;
 
 @SuppressWarnings({"unchecked","unused"})

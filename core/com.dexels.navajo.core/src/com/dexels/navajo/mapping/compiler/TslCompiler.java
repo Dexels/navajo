@@ -66,16 +66,16 @@ import com.dexels.navajo.mapping.HasDependentResources;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.bean.DomainObjectMapper;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
-import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.script.api.SystemException;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.NavajoIOConfig;
-import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.internal.LegacyNavajoIOConfig;
 
 public class TslCompiler {
@@ -2150,7 +2150,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
       try {
 		objectMappable = MappingUtils.isObjectMappable(className);
 	} catch (UserException e) {
-//		logger.debug("Trouble mapping: {} doing a fallback.",className,e);
+		logger.info("Trouble mapping: {} doing a fallback.",className,e);
 		objectMappable = MappingUtils.isObjectMappable(className,loader);
 	}
 	
@@ -2536,6 +2536,7 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
 	          "import com.dexels.navajo.mapping.*;\n" +
 	          "import com.dexels.navajo.document.*;\n" +
 	          "import com.dexels.navajo.parser.*;\n" +
+	          "import com.dexels.navajo.script.api.*;\n" +
 	          "import java.util.ArrayList;\n" +
 	          "import java.util.HashMap;\n" +
 	          "import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;\n" +
@@ -2545,7 +2546,6 @@ public String mapNode(int ident, Element n, List<Dependency> deps, String tenant
               "import com.dexels.navajo.mapping.compiler.meta.InheritDependency;\n" +
               "import com.dexels.navajo.mapping.compiler.meta.JavaDependency;\n" +
               "import com.dexels.navajo.mapping.compiler.meta.NavajoDependency;\n" +
-              "import com.dexels.navajo.mapping.compiler.meta.Dependency;\n" +
               "import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;\n" +
 	          "import java.util.Stack;\n\n\n";
 	      result.append(importDef);

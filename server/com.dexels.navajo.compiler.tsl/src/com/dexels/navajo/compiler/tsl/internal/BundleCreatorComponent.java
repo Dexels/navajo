@@ -34,8 +34,9 @@ import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.compiler.ScriptCompiler;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.compiler.SkipCompilationException;
-import com.dexels.navajo.mapping.compiler.meta.Dependency;
-import com.dexels.navajo.server.CompiledScriptFactory;
+import com.dexels.navajo.script.api.CompiledScriptFactory;
+import com.dexels.navajo.script.api.CompiledScriptInterface;
+import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class BundleCreatorComponent implements BundleCreator {
@@ -519,9 +520,9 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	@Override
-	public CompiledScript getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified)
+	public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified)
 			throws Exception {
-		CompiledScript sc = getCompiledScript(rpcName,tenant);
+		CompiledScriptInterface sc = getCompiledScript(rpcName,tenant);
 
 		if (sc != null) {
 			boolean needsRecompile = checkForRecompile(rpcName,tenant,tenantQualified);
@@ -561,7 +562,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 
 	@Override
-	public CompiledScript getCompiledScript(String rpcName, String tenant)
+	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant)
 			throws ClassNotFoundException {
 		String scriptName = rpcName.replaceAll("/", ".");
 		String filter = null;
@@ -587,7 +588,7 @@ public class BundleCreatorComponent implements BundleCreator {
 							+ " found, but could not be resolved.");
 					return null;
 				}
-				CompiledScript cs = csf.getCompiledScript();
+				CompiledScriptInterface cs = csf.getCompiledScript();
 				return cs;
 			}
 		} catch (InvalidSyntaxException e) {
@@ -659,7 +660,7 @@ public class BundleCreatorComponent implements BundleCreator {
 						+ " found, but could not be resolved.");
 				return;
 			}
-			CompiledScript cs = csf.getCompiledScript();
+			CompiledScriptInterface cs = csf.getCompiledScript();
 			logger.debug("Compiled script seems ok. " + cs.toString());
 			bundleContext.ungetService(ssr[0]);
 			success.add(scriptPath);

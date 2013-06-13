@@ -13,11 +13,11 @@ import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.parser.FunctionInterface;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 
 public class BundleManagerMap implements Mappable {
 

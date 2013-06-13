@@ -48,6 +48,13 @@ public class UserException extends Exception {
 
     }
 
+    public UserException(String message, Throwable t) {
+    	super(t);
+        this.code = -1;
+        this.message = message;
+        this.t = t;
+
+    }
 
     public UserException(int code, String message) {
 

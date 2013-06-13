@@ -3,6 +3,7 @@ package com.dexels.navajo.mapping.compiler.meta;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.script.api.Dependency;
 
 public class AdapterFieldDependency extends Dependency {
 

@@ -15,11 +15,11 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.loader.NavajoClassLoader;
-import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.loader.NavajoLegacyClassLoader;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.PersistenceManagerFactory;
+import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerFactory;
@@ -716,14 +716,6 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
 	}
 
 
-	@Override
-	public boolean needsFullAccessLog(Access a) {
-		if ( a.isDebugAll() || ( a.getCompiledScript() != null && a.getCompiledScript().isDebugAll() ) ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 
 	@Override
 	public Object getParameter(String name) {

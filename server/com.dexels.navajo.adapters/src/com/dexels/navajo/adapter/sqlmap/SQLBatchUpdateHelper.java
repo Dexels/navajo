@@ -37,7 +37,7 @@ import java.sql.SQLWarning;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class SQLBatchUpdateHelper {

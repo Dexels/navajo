@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.TmlRunnable;
-import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.AfterWebServiceEmitter;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;

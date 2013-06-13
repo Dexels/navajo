@@ -1,7 +1,7 @@
 package com.dexels.navajo.http;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.UserException;
 
 public interface HTTPMapInterface {
 

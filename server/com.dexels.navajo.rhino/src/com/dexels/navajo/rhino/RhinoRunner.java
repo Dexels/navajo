@@ -23,11 +23,11 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.rhino.flow.BreakError;
 import com.dexels.navajo.rhino.flow.ConditionError;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SchedulerRegistry;
 import com.dexels.navajo.script.api.SystemException;
-import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 
 public class RhinoRunner {

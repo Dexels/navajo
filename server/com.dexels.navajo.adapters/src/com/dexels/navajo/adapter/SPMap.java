@@ -32,11 +32,11 @@ import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
 import com.dexels.navajo.adapter.sqlmap.SQLMapHelper;
 import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.Repository;
-import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
@@ -86,7 +86,7 @@ public class SPMap extends SQLMap {
 
  
 
-  protected ResultSetMap[] getResultSet(boolean updateOnly) throws com.dexels.navajo.server.UserException {
+  protected ResultSetMap[] getResultSet(boolean updateOnly) throws UserException {
 
     if (debug) {
       System.out.print("TIMING SPMAP, start query... : " + update);
@@ -259,8 +259,7 @@ public class SPMap extends SQLMap {
     parameterTypes = new ArrayList();
   }
 
-  public void setUpdate(String newUpdate) throws com.dexels.navajo.server.
-      UserException {
+  public void setUpdate(String newUpdate) throws UserException {
     if ( (this.update != null) || (this.query != null)) {
       throw new UserException( -1,
           "SPMap does not allow for multiple queries/updates, use a new SPMap");
@@ -294,7 +293,7 @@ public class SPMap extends SQLMap {
     parameterTypes.add(new Integer(OUTPUT_PARAM));
   }
 
-  public Object getOutputParameter(Integer i) throws com.dexels.navajo.server.UserException {
+  public Object getOutputParameter(Integer i) throws UserException {
 
     int index = i.intValue();
     // logger.info("in getOutputParameter("+index+")");
@@ -385,7 +384,7 @@ public class SPMap extends SQLMap {
       }
       catch (SQLException sqle) {
     	  AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE, myAccess.accessID);
-        throw new com.dexels.navajo.server.UserException( -1, sqle.getMessage());
+        throw new UserException( -1, sqle.getMessage());
       }
       return value;
     }
@@ -394,8 +393,8 @@ public class SPMap extends SQLMap {
     }
   }
 
-  public void store() throws com.dexels.navajo.server.UserException,
-      com.dexels.navajo.mapping.MappableException {
+  public void store() throws UserException,
+      MappableException {
     try {
       if (callStatement != null) {
         callStatement.close();

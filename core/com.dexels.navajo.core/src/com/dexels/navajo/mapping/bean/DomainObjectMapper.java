@@ -14,12 +14,12 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.mapping.DependentResource;
 import com.dexels.navajo.mapping.GenericDependentResource;
 import com.dexels.navajo.mapping.HasDependentResources;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.mapping.MappingException;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.MappingException;
+import com.dexels.navajo.script.api.UserException;
 
 /**
  * This is a special proxy class to wrap/proxy simple POJOs (domain objects). 
@@ -357,7 +357,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 	 */
 	private void mapAllPropertiesToObject(Class myClass) throws Exception {
 		createObject();
-		Message mapMsg = ( myAccess.getCompiledScript() != null ? myAccess.getCompiledScript().currentInMsg :  
+		Message mapMsg = ( myAccess.getCompiledScript() != null ? myAccess.getCompiledScript().getCurrentInMsg() :  
 			myAccess.getInDoc().getMessage(currentMessageName));
 		if ( mapMsg == null ) {
 			throw new UserException(-1, "No mappable message specified.");

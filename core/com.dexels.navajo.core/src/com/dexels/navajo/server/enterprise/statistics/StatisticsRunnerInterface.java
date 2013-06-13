@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.dexels.navajo.events.NavajoListener;
 import com.dexels.navajo.mapping.AsyncMappable;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 
 public interface StatisticsRunnerInterface extends NavajoListener {
 

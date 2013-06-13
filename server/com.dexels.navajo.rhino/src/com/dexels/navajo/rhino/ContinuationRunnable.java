@@ -20,11 +20,11 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.TmlRunnable;
-import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 
 public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {

@@ -8,7 +8,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.script.api.NavajoResponseCallback;
 import com.dexels.navajo.script.api.TmlRunnable;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 
 public interface ManualAsyncClient extends AsyncClient {
 

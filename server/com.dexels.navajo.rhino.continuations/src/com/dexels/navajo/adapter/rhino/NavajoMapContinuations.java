@@ -15,7 +15,7 @@ import com.dexels.navajo.script.api.NavajoResponseCallback;
 import com.dexels.navajo.script.api.RunnableTools;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.TmlRunnable;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.UserException;
 
 public class NavajoMapContinuations extends NavajoMapUpdated {
 

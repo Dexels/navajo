@@ -2,10 +2,10 @@ package com.dexels.navajo.adapter.sqlmap;
 
 import java.util.ArrayList;
 
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 
 /**
  * <p>Title: </p>

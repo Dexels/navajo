@@ -17,7 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.UserException;
 
 public class SequencedInsertMap extends SQLMap {
 

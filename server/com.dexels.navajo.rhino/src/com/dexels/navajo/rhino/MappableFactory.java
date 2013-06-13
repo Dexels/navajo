@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
 
 @Deprecated
 public class MappableFactory {

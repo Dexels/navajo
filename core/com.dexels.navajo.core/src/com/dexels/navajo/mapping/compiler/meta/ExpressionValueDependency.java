@@ -1,5 +1,7 @@
 package com.dexels.navajo.mapping.compiler.meta;
 
+import com.dexels.navajo.script.api.Dependency;
+
 /**
  * This class is used to find dependencies within Navajo expressions.
  * Currently it only supports finding SQL dependencies (typically in expressions containing SingleValueQuery function calls).

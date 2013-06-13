@@ -19,8 +19,8 @@ import com.dexels.navajo.document.types.Memo;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.NavajoType;
 import com.dexels.navajo.document.types.Percentage;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.UserException;
 
 /**
  * Class that sets the right parametertype according to the given dbIdentifier (if necessary)

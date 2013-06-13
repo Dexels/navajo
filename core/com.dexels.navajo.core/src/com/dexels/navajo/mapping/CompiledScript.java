@@ -42,20 +42,24 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.loader.NavajoClassSupplier;
-import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.CompiledScriptFactory;
+import com.dexels.navajo.script.api.CompiledScriptInterface;
+import com.dexels.navajo.script.api.Dependency;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.MappableTreeNode;
+import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SystemException;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.CompiledScriptFactory;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionData;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.UserException;
 
 @SuppressWarnings("unchecked")
-public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  {
+public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, CompiledScriptInterface  {
 
   protected NavajoClassSupplier classLoader;
   private final HashMap functions = new HashMap();
@@ -63,47 +67,47 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   /**
    * Fields accessable by webservice via Mappable interface.
    */
-  public String stackTrace;
-  public String threadName;
-  public String accessId;
-  public long runnningTime;
-  public boolean waiting;
-  public String lockName;
-  public String lockOwner;
-  public String lockClass;
-  public boolean debugAll = false;
+  protected String stackTrace;
+  protected String threadName;
+  protected String accessId;
+  protected long runnningTime;
+  protected boolean waiting;
+  protected String lockName;
+  protected String lockOwner;
+  protected String lockClass;
+  protected boolean debugAll = false;
   
-  public MappableTreeNode currentMap = null;
-  public final Stack treeNodeStack = new Stack();
-//  public Navajo outDoc = null;
-  public Navajo inDoc = null;
-  public Message currentOutMsg = null;
-  public Access myAccess = null;
-  public final Stack outMsgStack = new Stack();
-  public final Stack paramMsgStack = new Stack();
-  public Message currentParamMsg = null;
-  public Message currentInMsg = null;
+  protected MappableTreeNode currentMap = null;
+  protected final Stack treeNodeStack = new Stack();
+//  protected Navajo outDoc = null;
+  protected Navajo inDoc = null;
+  protected Message currentOutMsg = null;
+  protected Access myAccess = null;
+  protected final Stack outMsgStack = new Stack();
+  protected final Stack paramMsgStack = new Stack();
+  protected Message currentParamMsg = null;
+  protected Message currentInMsg = null;
   
 
-  public Selection currentSelection = null;
-  public final Stack inMsgStack = new Stack();
-  public Object sValue = null;
-  public Operand op = null;
-  public String type = "";
-  public String subtype = "";
-  public Property p = null;
-  public LazyArray la = null;
-  public String fullMsgName = "";
-  public boolean matchingConditions = false;
-  public HashMap evaluatedAttributes = null;
-  public boolean inSelectionRef = false;
-  public final Stack inSelectionRefStack = new Stack();
-  public int count = 1;
+  protected Selection currentSelection = null;
+  protected final Stack inMsgStack = new Stack();
+  protected Object sValue = null;
+  protected Operand op = null;
+  protected String type = "";
+  protected String subtype = "";
+  protected Property p = null;
+  protected LazyArray la = null;
+  protected String fullMsgName = "";
+  protected boolean matchingConditions = false;
+  protected HashMap evaluatedAttributes = null;
+  protected boolean inSelectionRef = false;
+  protected final Stack inSelectionRefStack = new Stack();
+  protected int count = 1;
 
-  public String[] conditionArray = null;
-  public String[] ruleArray = null;
-  public String[] codeArray = null;
-  public String[] descriptionArray = null;
+  protected String[] conditionArray = null;
+  protected String[] ruleArray = null;
+  protected String[] codeArray = null;
+  protected String[] descriptionArray = null;
 
   private CompiledScriptFactory factory;
 
@@ -114,50 +118,100 @@ private final static Logger logger = LoggerFactory
   /**
    * This HashMap is used for user defined expressions in <definitions> section of a script.
    */
-  public HashMap userDefinedRules = new HashMap();
+  protected HashMap userDefinedRules = new HashMap();
     
   protected boolean kill = false;
 
   @SuppressWarnings("unused")
   private ThreadInfo myThread = null;
 
-  public String getScriptName() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getScriptName()
+ */
+@Override
+public String getScriptName() {
 	  return getClass().getName();
   }
   
-  public String getUser() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getUser()
+ */
+@Override
+public String getUser() {
 	  return myAccess.rpcUser;
   }
   
-  public String getAccessId() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getAccessId()
+ */
+@Override
+public String getAccessId() {
 	  return myAccess.accessID;
   }
   
-  public String getThreadName() {
+@Override
+  public Navajo getInDoc() {
+	return inDoc;
+}
+
+@Override
+public void setInDoc(Navajo inDoc) {
+	this.inDoc = inDoc;
+}
+
+/* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getThreadName()
+ */
+@Override
+public String getThreadName() {
 	  return DispatcherFactory.getInstance().getThreadName(myAccess);
   }
   
-  public boolean isWaiting() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#isWaiting()
+ */
+@Override
+public boolean isWaiting() {
 	  return getWaiting();
   }
   
-  public boolean getWaiting() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getWaiting()
+ */
+@Override
+public boolean getWaiting() {
 	  return false;
   }
   
-  public String getLockName() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getLockName()
+ */
+@Override
+public String getLockName() {
 	  return "";
   }
   
-  public String getLockOwner() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getLockOwner()
+ */
+@Override
+public String getLockOwner() {
 	  return "";
   }
   
-  public String getLockClass() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getLockClass()
+ */
+@Override
+public String getLockClass() {
 	  return "";
   }
   
-  public String getStackTrace() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getStackTrace()
+ */
+@Override
+public String getStackTrace() {
 
 	  StringBuffer stackTrace = new StringBuffer();
 	  StackTraceElement [] elt = myAccess.getThread().getStackTrace();
@@ -167,59 +221,97 @@ private final static Logger logger = LoggerFactory
 	  return stackTrace.toString();
   }
   
-  public long getRunningTime() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getRunningTime()
+ */
+@Override
+public long getRunningTime() {
 	  return System.currentTimeMillis() -  myAccess.created.getTime();
   }
   
-  public void kill() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#kill()
+ */
+@Override
+public void kill() {
 	  System.err.println("Calling kill from JMX");
 	  myAccess.getCompiledScript().setKill(true);
   }
   
-  public void setKill(boolean b) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#setKill(boolean)
+ */
+@Override
+public void setKill(boolean b) {
 	  kill = b;
 	  myAccess.getThread().interrupt();
   }
 
-  public boolean getKill() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getKill()
+ */
+@Override
+public boolean getKill() {
     return kill;
   }
 
-  public void setClassLoader(NavajoClassSupplier loader) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#setClassLoader(com.dexels.navajo.loader.NavajoClassSupplier)
+ */
+public void setClassLoader(NavajoClassSupplier loader) {
 	  this.classLoader = loader;
   }
   
-  public NavajoClassSupplier getClassLoader() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getClassLoader()
+ */
+public NavajoClassSupplier getClassLoader() {
 	  return this.classLoader;
   }
 
-  public abstract void finalBlock(Access access) throws Exception;
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#finalBlock(com.dexels.navajo.server.Access)
+ */
+@Override
+public abstract void finalBlock(Access access) throws Exception;
 
-  /**
-   * Generated code for validations.
-   */
-  public abstract void setValidations();
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#setValidations()
+ */
+  @Override
+public abstract void setValidations();
   
-  public void dumpRequest() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#dumpRequest()
+ */
+@Override
+public void dumpRequest() {
 	  
   }
   
-  public void setDependencies() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#setDependencies()
+ */
+@Override
+public void setDependencies() {
 	  // Example:
 	  // dependentObjects.add( new IncludeDependency(IncludeDependency.getScriptTimeStamp("MyScript1"), "MyScript1"));
 	  // dependentObjects.add( new IncludeDependency(IncludeDependency.getScriptTimeStamp("MyScript2"), "MyScript2"));
   }
   
-  public ArrayList<Dependency> getDependentObjects() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getDependentObjects()
+ */
+@Override
+public ArrayList<Dependency> getDependentObjects() {
 	  return new ArrayList<Dependency>();
   }
 
-  /**
-   * Special 'getter' to be used from within scripts.
-   * 
-   * @return
-   */
-  public Dependency [] getDependencies() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getDependencies()
+ */
+  @Override
+public Dependency [] getDependencies() {
 	  
 	  Dependency [] all = new Dependency[getDependentObjects().size()];
 	  all = getDependentObjects().toArray(all);
@@ -265,7 +357,11 @@ private final static Logger logger = LoggerFactory
 
   
   
-  public final void run(Access access) throws Exception {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#run(com.dexels.navajo.server.Access)
+ */
+@Override
+public final void run(Access access) throws Exception {
 
 	  myAccess = access;
 	  @SuppressWarnings("unused")
@@ -430,17 +526,18 @@ private final static Logger logger = LoggerFactory
     }
   }
 
-  public abstract void execute(Access access) throws
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#execute(com.dexels.navajo.server.Access)
+ */
+@Override
+public abstract void execute(Access access) throws
       Exception, NavajoDoneException;
 
-  /**
-   * Pool for use of Navajo functions.
-   * TODO rewrite to OSGi services
-   * TODO use generics and stronger typing
-   * @param name
-   * @return
-   */
-  public final Object getFunction(String name) throws Exception {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getFunction(java.lang.String)
+ */
+  @Override
+public final Object getFunction(String name) throws Exception {
     Object f = functions.get(name);
     if (f != null) {
       return f;
@@ -455,7 +552,11 @@ private final static Logger logger = LoggerFactory
 	  functions.clear();
   }
   
-  public final Object findMapByPath(String path) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#findMapByPath(java.lang.String)
+ */
+@Override
+public final Object findMapByPath(String path) {
 	 
 	  StringTokenizer st = new StringTokenizer(path,"/");
 	  int count = 0;
@@ -473,24 +574,34 @@ private final static Logger logger = LoggerFactory
   }
   
 
-  public void releaseCompiledScript() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#releaseCompiledScript()
+ */
+@Override
+public void releaseCompiledScript() {
 	  myAccess = null;
 	  classLoader = null;
   }
   
-  public void load(Access access) throws MappableException, UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#load(com.dexels.navajo.server.Access)
+ */
+@Override
+public void load(Access access) throws MappableException, UserException {
   }
 
-  public void store() throws MappableException, UserException {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#store()
+ */
+@Override
+public void store() throws MappableException, UserException {
   }
  
-  /**
-   * Checks whether this compiled script has any dirty dependencies (i.e. needs recompilation)
-   * 
-   * @param a
-   * @return
-   */
-  public boolean hasDirtyDependencies(Access a) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#hasDirtyDependencies(com.dexels.navajo.server.Access)
+ */
+  @Override
+public boolean hasDirtyDependencies(Access a) {
 	  
 	  if ( getDependentObjects() == null ) {
 		  return false;
@@ -504,47 +615,99 @@ private final static Logger logger = LoggerFactory
 	  return false;
   }
 
-  public String getDescription() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getDescription()
+ */
+@Override
+public String getDescription() {
 	  return "";
   }
 
-  public String getAuthor() {
+@Override
+  public Stack getTreeNodeStack() {
+	return treeNodeStack;
+}
+
+public Stack getOutMsgStack() {
+	return outMsgStack;
+}
+
+/* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getAuthor()
+ */
+@Override
+public String getAuthor() {
 	  return "";
   }
 
-  public String getScriptType() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getScriptType()
+ */
+@Override
+public String getScriptType() {
 	return "tsl";  
   }
 
-  public boolean isDebugAll() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#isDebugAll()
+ */
+@Override
+public boolean isDebugAll() {
 	  return debugAll;
   }
 
-  public void setDebugAll(boolean debugAll) {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#setDebugAll(boolean)
+ */
+@Override
+public void setDebugAll(boolean debugAll) {
 	  this.debugAll = debugAll;
   }
   
-  public MappableTreeNode getCurrentMap() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getCurrentMap()
+ */
+@Override
+public MappableTreeNode getCurrentMap() {
 	  return currentMap;
   }
 
-  public Message getCurrentOutMsg() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getCurrentOutMsg()
+ */
+@Override
+public Message getCurrentOutMsg() {
 	  return currentOutMsg;
   }
 
-  public Message getCurrentParamMsg() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getCurrentParamMsg()
+ */
+@Override
+public Message getCurrentParamMsg() {
 	  return currentParamMsg;
   }
 
-  public Message getCurrentInMsg() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getCurrentInMsg()
+ */
+@Override
+public Message getCurrentInMsg() {
 	  return currentInMsg;
   }
 
-  public Selection getCurrentSelection() {
+  /* (non-Javadoc)
+ * @see com.dexels.navajo.mapping.CompiledScriptInterface#getCurrentSelection()
+ */
+@Override
+public Selection getCurrentSelection() {
 	  return currentSelection;
   }
   
 
+	/* (non-Javadoc)
+	 * @see com.dexels.navajo.mapping.CompiledScriptInterface#setFactory(com.dexels.navajo.server.CompiledScriptFactory)
+	 */
 	public void setFactory(CompiledScriptFactory factory) {
 		this.factory = factory;
 	}

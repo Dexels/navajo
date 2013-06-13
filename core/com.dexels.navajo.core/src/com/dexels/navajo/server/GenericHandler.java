@@ -23,12 +23,15 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
 import com.dexels.navajo.loader.NavajoClassLoader;
-import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.MappingUtils;
-import com.dexels.navajo.mapping.compiler.meta.Dependency;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
+import com.dexels.navajo.script.api.CompiledScriptInterface;
+import com.dexels.navajo.script.api.Dependency;
+import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.script.api.SystemException;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.scriptengine.GenericScriptEngine;
 import com.dexels.navajo.util.AuditLog;
 
@@ -131,7 +134,7 @@ public final class GenericHandler extends ServiceHandler {
     		}
     		Class cs = loader.getCompiledNavaScript(className);
         	if ( cs != null ) {
-        		cso = (com.dexels.navajo.mapping.CompiledScript) cs.newInstance();
+        		cso = (CompiledScript) cs.newInstance();
         		cso.setClassLoader(loader);
         	}	
     	} catch (Exception e) {
@@ -428,7 +431,7 @@ public final class GenericHandler extends ServiceHandler {
 
         try {
             // Should method getCompiledNavaScript be fully synced???
-        	CompiledScript cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName);
+        	CompiledScriptInterface cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName);
         	//(access.rpcName);
         	if(cso==null) {
         		if(Version.osgiActive()) {
@@ -540,7 +543,7 @@ public final class GenericHandler extends ServiceHandler {
 ////		 return ss;
 //	}
 
-	private CompiledScript loadOnDemand(BundleContext bundleContext, String rpcName) throws Exception {
+	private CompiledScriptInterface loadOnDemand(BundleContext bundleContext, String rpcName) throws Exception {
 		if(bundleContext==null) {
 			logger.debug("No OSGi context found");
 			return null;
@@ -552,7 +555,7 @@ public final class GenericHandler extends ServiceHandler {
 			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
 			return null;
 		}
-		CompiledScript sc = bc.getOnDemandScriptService(rpcName,tenantConfig.getInstanceGroup(),tenantConfig.hasTenantScriptFile(rpcName,tenantConfig.getInstanceGroup()));
+		CompiledScriptInterface sc = bc.getOnDemandScriptService(rpcName,tenantConfig.getInstanceGroup(),tenantConfig.hasTenantScriptFile(rpcName,tenantConfig.getInstanceGroup()));
 		// wait for it..
 		bundleContext.ungetService(ref);
 		return sc;
@@ -589,7 +592,7 @@ public final class GenericHandler extends ServiceHandler {
 					if ( ( loader = loadedClasses.get(className) ) != null) {
 						// Get previous version of CompiledScript.
 						try {
-							CompiledScript prev = getCompiledScript(a, className,sourceFile,scriptName);
+							CompiledScriptInterface prev = getCompiledScript(a, className,sourceFile,scriptName);
 							prev.releaseCompiledScript();
 						} catch (Exception e) {
 						}

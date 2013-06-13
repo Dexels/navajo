@@ -6,7 +6,7 @@ import java.util.Set;
 import com.dexels.navajo.events.types.AuditLogEvent;
 import com.dexels.navajo.events.types.WorkflowEvent;
 import com.dexels.navajo.mapping.AsyncMappable;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.server.statistics.impl.TodoItem;
 
 /**
