@@ -183,4 +183,33 @@ public class TestEntity {
 		Assert.assertNotNull(k.generateRequestMessage().getProperty("OrganizingDistrictId"));
 		
 	}
+	
+	@Test
+	public void testSetMessage() throws Exception {
+		Entity a = manager.getEntity("Activity");
+		//  Create new Activity Message
+		NavajoFactory f = NavajoFactory.getInstance();
+		Navajo n = f.createNavajo();
+		Message activity = f.createMessage(n, "Activity");
+		activity.addProperty(f.createProperty(n, "ActivityType", Property.STRING_PROPERTY, "", 0, "", ""));
+		activity.addProperty(f.createProperty(n, "ActivityLocation", Property.STRING_PROPERTY, "", 0, "", ""));
+		Property keyPropAct = f.createProperty(n, "ActivityId", Property.INTEGER_PROPERTY, "", 0, "", "");
+		keyPropAct.setKey("true,auto");
+		activity.addProperty(keyPropAct);
+		
+		Property keyPropActAlt = f.createProperty(n, "AltActivityId", Property.INTEGER_PROPERTY, "", 0, "", "");
+		keyPropActAlt.setKey("true,auto");
+		activity.addProperty(keyPropActAlt);
+		
+		a.setMessage(activity);
+		
+		Entity m = manager.getEntity("MyEntity");
+		m.getMessage().write(System.err);
+		
+		for ( Key k : m.getKeys() ) {
+			System.err.println("KEY:");
+			k.generateRequestMessage().write(System.err);
+		}
+		Assert.assertEquals(4, m.getKeys().size());
+	}
 }

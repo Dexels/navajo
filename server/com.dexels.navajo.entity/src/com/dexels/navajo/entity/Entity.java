@@ -8,27 +8,74 @@ import java.util.Set;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 
-public class Entity {
+public class Entity  {
 
 	public static final String NAVAJO_URI = "navajo://";
 
-	private final Message myMessage;
+	private Message myMessage;
 	private Set<Key> myKeys = new HashSet<Key>();
 	private EntityManager em = null;
 	private boolean activated = false;
 
+	// Keep track of entities that are derived from this entity.
+	private Set<Entity> subEntities = new HashSet<Entity>();
+	private Set<Entity> superEntities = new HashSet<Entity>();
+	
 	public Entity(Message msg, EntityManager m) {
 		myMessage = msg;
 		em = m;
 	}
 
+	/**
+	 * Inject a new entity message.
+	 */
+	public void setMessage(Message entity) throws Exception {
+		if ( myMessage != null && !myMessage.isEqual(entity) ) {
+			// First deactivate.
+			deactivate();
+			myMessage = entity;
+			activate();
+		}
+	}
+	
+	protected void addSubEntity(Entity sub) throws Exception {
+		System.err.println("In addSubEntity: " + getName() + " <- " + sub.getName());
+		if ( sub.equals(this) ) {
+			Thread.dumpStack();
+			throw new Exception("Cannot add myself as subentity");
+		}
+		subEntities.add(sub);
+	}
+	
+	protected void addSuperEntity(Entity sub) throws Exception {
+		superEntities.add(sub);
+		sub.addSubEntity(this);
+	}
+	
+	/**
+	 * When entity de-activates make sure that sub entities are deactivated.
+	 * 
+	 * @throws Exception
+	 */
+	protected synchronized void deactivate() throws Exception {
+		for ( Entity sub : subEntities ) {
+			sub.deactivate();
+		}
+		activated = false;
+	}
+	
 	protected synchronized void activate() throws Exception {
 		if ( activated ) {
 			return;
 		}
-		findKeys();
-		findSuperEntities();
+		// Set activate flag immediately to prevent looping
 		activated = true;
+		findSuperEntities();
+		findKeys();
+		// Activate subEntities (if not already activated) 
+		for ( Entity sub : subEntities ) {
+			sub.activate();
+		}
 	}
 
 	private Property getExtendedProperty(String ext) throws Exception {
@@ -65,7 +112,9 @@ public class Entity {
 	private void processExtendedEntity(Message m, String extendedEntity) throws Exception {
 		if ( em.getEntity(extendedEntity) != null ) {
 			// Copy properties/messages from superEntity.
-			myMessage.merge(em.getEntity(extendedEntity).getMessage());
+			Entity superEntity = em.getEntity(extendedEntity);
+			addSuperEntity(superEntity);
+			myMessage.merge(superEntity.getMessage());
 			// Check extended properties.
 			processExtendedProperties(myMessage);
 		} else {
@@ -89,13 +138,16 @@ public class Entity {
 	}
 
 	private void findKeys() {
+		
+		myKeys.clear();
 		HashMap<String,Key> foundKeys = new HashMap<String,Key>();
 		List<Property> allProps = myMessage.getAllProperties();
 		int keySequence = 0;
+		
 		for ( Property p : allProps ) {
 			if ( p.getKey() != null && p.getKey().indexOf("true") != -1 ) {
 				String id = Key.getKeyId(p.getKey());
-				if ( id == null ) {
+								if ( id == null ) {
 					id = ""+(keySequence++);
 				}
 				Key key = null;
@@ -138,5 +190,36 @@ public class Entity {
 
 	public Set<Key> getKeys() {
 		return myKeys;
+	}
+
+	@Override
+	public int hashCode() {
+		if ( getName() != null ) {
+			return getName().hashCode();
+		} else {
+			return -1;
+		}
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if ( o == null ) {
+			return false;
+		}
+		if ( o instanceof Entity ) {
+			Entity other = (Entity) o;
+			if ( other.getName() == null && getName() == null ) {
+				return true;
+			}
+			if ( other.getName() == null || getName() == null ) {
+				return false;
+			}
+			if ( this.getName().equals(other.getName())) {
+				return true;
+			} else {
+				return false;
+			}
+		} 
+		return false;
 	}
 }
