@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.entity.manager" >
+   <implementation class="com.dexels.navajo.entity.EntityManager"/>
+   <service>
+      <provide interface="com.dexels.navajo.entity.EntityManager"/>
+   </service>
+   <reference bind="addEntity" cardinality="0..n" interface="com.dexels.navajo.entity.Entity" name="Entity" policy="dynamic" unbind="removeEntity"/>
+</scr:component>
