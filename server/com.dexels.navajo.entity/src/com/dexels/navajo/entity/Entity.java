@@ -67,7 +67,7 @@ public class Entity  {
 		activated = false;
 	}
 	
-	protected synchronized void activate() throws EntityException {
+	public synchronized void activate() throws EntityException {
 		if ( activated ) {
 			return;
 		}
