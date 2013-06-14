@@ -18,6 +18,14 @@ public class ServiceEntityOperation implements EntityOperation {
 	private EntityManager manager;
 	private LocalClient client;
 	
+	public ServiceEntityOperation() {
+		
+	}
+	
+	public ServiceEntityOperation(EntityManager m, LocalClient c) {
+		this.manager = m;
+		this.client = c;
+	}
 	
 	@Override
 	public Navajo perform(Navajo input, Operation o) throws EntityException {

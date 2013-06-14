@@ -1,3 +1,4 @@
+package com.dexels.navajo.entity;
 import java.util.HashSet;
 import java.util.Set;
 

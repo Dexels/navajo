@@ -5,4 +5,5 @@
       <provide interface="com.dexels.navajo.entity.EntityManager"/>
    </service>
    <reference bind="addEntity" cardinality="0..n" interface="com.dexels.navajo.entity.Entity" name="Entity" policy="dynamic" unbind="removeEntity"/>
+   <reference bind="addOperation" cardinality="0..n" interface="com.dexels.navajo.document.Operation" name="Operation" policy="dynamic" unbind="removeOperation"/>
 </scr:component>
