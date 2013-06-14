@@ -76,6 +76,7 @@ public class TestEntity {
 	@Test
 	public void testEntityGetKeySize() throws Exception {
 		Entity e = manager.getEntity("MyEntity");
+		e.activate();
 		Assert.assertEquals(3, e.getKeys().size());
 		System.err.println("AFTER EXTEND: ******************************************* ");
 		e.getMessage().write(System.err);
@@ -84,6 +85,7 @@ public class TestEntity {
 	@Test
 	public void testEntityGetKeyMessage() throws Exception {
 		Entity e = manager.getEntity("MyEntity");
+		e.activate();
 		Set<Key> keys = e.getKeys();
 		int found = 3;
 		for ( Key k : keys ) {
@@ -112,6 +114,7 @@ public class TestEntity {
 		HashSet<Property> matchingProperties = new HashSet<Property>();
 		matchingProperties.add(f.createProperty(p_n, "MatchId", Property.INTEGER_PROPERTY, "", 0, "", ""));
 		Entity e = manager.getEntity("MyEntity");
+		e.activate();
 		Key k = e.getKey(matchingProperties);
 		Assert.assertNotNull(k);
 		Assert.assertNotNull(k.generateRequestMessage().getProperty("MatchId"));
@@ -125,6 +128,7 @@ public class TestEntity {
 		HashSet<Property> matchingProperties = new HashSet<Property>();
 		matchingProperties.add(f.createProperty(p_n, "MatchId", Property.STRING_PROPERTY, "", 0, "", ""));
 		Entity e = manager.getEntity("MyEntity");
+		e.activate();
 		Key k = e.getKey(matchingProperties);
 		Assert.assertNull(k);
 	}
@@ -137,6 +141,7 @@ public class TestEntity {
 		matchingProperties.add(f.createProperty(p_n, "MatchId", Property.INTEGER_PROPERTY, "", 0, "", ""));
 		matchingProperties.add(f.createProperty(p_n, "Irrelevant", Property.INTEGER_PROPERTY, "", 0, "", ""));
 		Entity e = manager.getEntity("MyEntity");
+		e.activate();
 		Key k = e.getKey(matchingProperties);
 		Assert.assertNotNull(k);
 		Assert.assertNotNull(k.generateRequestMessage().getProperty("MatchId"));
@@ -149,6 +154,7 @@ public class TestEntity {
 		HashSet<Property> matchingProperties = new HashSet<Property>();
 		matchingProperties.add(f.createProperty(p_n, "_id", Property.STRING_PROPERTY, "", 0, "", ""));
 		Entity e = manager.getEntity("MyEntity");
+		e.activate();
 		Key k = e.getKey(matchingProperties);
 		Assert.assertNotNull(k);
 		Assert.assertNotNull(k.generateRequestMessage().getProperty("_id"));
@@ -164,6 +170,7 @@ public class TestEntity {
 		matchingProperties.add(f.createProperty(p_n, "ExternalMatchId", Property.STRING_PROPERTY, "", 0, "", ""));
 		matchingProperties.add(f.createProperty(p_n, "OrganizingDistrictId", Property.STRING_PROPERTY, "", 0, "", ""));
 		Entity e = manager.getEntity("MyEntity");
+		e.activate();
 		Key k = e.getKey(matchingProperties);
 		Assert.assertNotNull(k);
 		Assert.assertNotNull(k.generateRequestMessage().getProperty("SeasonId"));
@@ -176,6 +183,7 @@ public class TestEntity {
 	public void testMatchKeyById() throws Exception {
 		
 		Entity e = manager.getEntity("MyEntity");
+		e.activate();
 		Key k = e.getKey("ALT");
 		Assert.assertNotNull(k);
 		Assert.assertNotNull(k.generateRequestMessage().getProperty("SeasonId"));
@@ -187,6 +195,7 @@ public class TestEntity {
 	@Test
 	public void testSetMessage() throws Exception {
 		Entity a = manager.getEntity("Activity");
+		a.activate();
 		//  Create new Activity Message
 		NavajoFactory f = NavajoFactory.getInstance();
 		Navajo n = f.createNavajo();
@@ -204,6 +213,7 @@ public class TestEntity {
 		a.setMessage(activity);
 		
 		Entity m = manager.getEntity("MyEntity");
+		m.activate();
 		m.getMessage().write(System.err);
 		
 		for ( Key k : m.getKeys() ) {
