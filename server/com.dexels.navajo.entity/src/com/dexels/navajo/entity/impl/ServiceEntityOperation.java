@@ -12,19 +12,20 @@ import com.dexels.navajo.entity.EntityOperation;
 import com.dexels.navajo.entity.Key;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.server.DispatcherInterface;
 
 public class ServiceEntityOperation implements EntityOperation {
 
 	private EntityManager manager;
-	private LocalClient client;
+	private DispatcherInterface dispatcher;
 	
 	public ServiceEntityOperation() {
 		
 	}
 	
-	public ServiceEntityOperation(EntityManager m, LocalClient c) {
+	public ServiceEntityOperation(EntityManager m, DispatcherInterface c) {
 		this.manager = m;
-		this.client = c;
+		this.dispatcher = c;
 	}
 	
 	@Override
@@ -80,7 +81,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			input.addMessage(extraMessage);
 		}
 		try {
-			return client.call(input);
+			return dispatcher.handle(input, true);
 		} catch (FatalException e1) {
 			throw new EntityException("Error calling entity service: ",e1);
 		}

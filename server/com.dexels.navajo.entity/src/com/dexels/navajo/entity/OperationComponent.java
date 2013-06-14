@@ -16,7 +16,7 @@ public class OperationComponent implements Operation {
 	public void activateComponent(Map<String,Object> parameters) throws Exception {
 		method = (String) parameters.get("operation.method");
 		service = (String) parameters.get("operation.service");
-		entityName = (String) parameters.get("entity.name");
+		entityName = (String) parameters.get("operation.entity");
 		// How to fetch Message from this??
 		if ( parameters.get("operation.extramessage") != null ) {
 			extraMessage = (Message) parameters.get("operation.extramessage");

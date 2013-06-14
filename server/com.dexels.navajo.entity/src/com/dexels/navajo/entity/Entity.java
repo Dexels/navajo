@@ -32,12 +32,12 @@ public class Entity  {
 	 * Inject a new entity message.
 	 */
 	public void setMessage(Message entity) throws Exception {
-		if ( myMessage != null && !myMessage.isEqual(entity) ) {
+		if ( myMessage == null || ( myMessage != null && !myMessage.isEqual(entity) ) ) {
 			// First deactivate.
 			deactivate();
 			myMessage = entity;
 			activate();
-		}
+		} 
 	}
 	
 	private void addSubEntity(Entity sub) throws EntityException {

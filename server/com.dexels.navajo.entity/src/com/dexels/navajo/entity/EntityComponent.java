@@ -6,33 +6,33 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.server.DispatcherInterface;
 
 
 public class EntityComponent extends Entity {
 
-	LocalClient client;
+	DispatcherInterface dispatcher;
 	private String serviceName;
 	
 	public EntityComponent() {
 		super();
 	}
 	
-	public void setLocalClient(LocalClient client) {
-		this.client = client;
+	public void setDispatcher(DispatcherInterface dispatcher) {
+		this.dispatcher = dispatcher;
 	}
 
-	public void clearLocalClient(LocalClient client) {
-		this.client = null;
+	public void clearDispatcher(DispatcherInterface dispatcher) {
+		this.dispatcher = null;
 	}
 
 	
 	public void activateComponent(Map<String,Object> parameters) throws Exception {
-		serviceName = (String) parameters.get("entity.name");
+		serviceName = (String) parameters.get("service.name");
 		Navajo in = NavajoFactory.getInstance().createNavajo();
 		Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
 		in.addHeader(h);
-		Navajo result = client.call(in);
+		Navajo result = dispatcher.handle(in, true);
 		Message l = result.getAllMessages().iterator().next();
 		setMessage(l);
 		activate();

@@ -55,7 +55,7 @@ public class EntityManager {
 
 	public void addEntity(Entity e) {
 		entityMap.put(e.getName(), e);
-		System.err.println("In addEntity(" + e.getName() + ")");
+		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> In addEntity(" + e.getName() + ")");
 	}
 
 	public void removeEntity(Entity e) {
