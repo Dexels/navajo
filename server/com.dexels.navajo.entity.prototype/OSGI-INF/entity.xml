@@ -7,9 +7,9 @@
    <!--
    <reference bind="addDependency" cardinality="1..1" interface="com.dexels.navajo.entity.Entity" name="DependencyAap" policy="dynamic" target="(entityName=aap)"/>
 	-->
-   <property name="entity.name" type="String" value="club/InitUpdateClub"/>
-<reference bind="setLocalClient" cardinality="1..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="dynamic" unbind="clearLocalClient"/>
-<reference cardinality="1..1" interface="com.dexels.navajo.server.DispatcherInterface" name="Dispatcher" policy="dynamic"/>
-<reference cardinality="1..1" interface="com.dexels.navajo.server.Repository" name="Repo" policy="dynamic" target="(component.name=com.sportlink.repository)"/>
+   <property name="entity.name" type="String" value="entity/Aap"/>
+   <reference bind="setLocalClient" cardinality="1..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="dynamic" unbind="clearLocalClient"/>
+   <reference cardinality="1..1" interface="com.dexels.navajo.server.DispatcherInterface" name="Dispatcher" policy="dynamic"/>
+   <reference cardinality="1..1" interface="com.dexels.navajo.server.Repository" name="Repo" policy="dynamic" target="(component.name=com.sportlink.repository)"/>
    <reference cardinality="1..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfigInterface" policy="dynamic"/>
 </scr:component>
