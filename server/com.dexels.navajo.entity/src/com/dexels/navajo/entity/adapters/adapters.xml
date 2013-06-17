@@ -1,0 +1,6 @@
+<adapterdef>
+	<map>
+		<tagname>entity</tagname>
+		<object>com.dexels.navajo.entity.adapters.EntityMap</object>
+	</map>
+</adapterdef>

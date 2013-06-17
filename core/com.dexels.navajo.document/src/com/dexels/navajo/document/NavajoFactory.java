@@ -784,4 +784,8 @@ public static void main(String[] args){
 	}
 	
 }
+
+public abstract Operation createOperation(Navajo n, String method,
+		String service, String entityName, Message extra);
+
 }

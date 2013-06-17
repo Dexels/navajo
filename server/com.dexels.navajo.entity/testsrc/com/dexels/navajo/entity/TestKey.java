@@ -1,3 +1,4 @@
+package com.dexels.navajo.entity;
 import junit.framework.Assert;
 
 import org.junit.Test;

@@ -23,6 +23,7 @@ public interface Navajo
    */
 
   public static final String METHODS_DEFINITION = "methods";
+  public static final String OPERATIONS_DEFINITION = "operations";
   public static final String BODY_DEFINITION = "tml";
   public static final String SCRIPT_BODY_DEFINITION = "tsl";
   public static final String MESSAGE_SEPARATOR = "/";
@@ -59,6 +60,8 @@ public interface Navajo
    */
   public ArrayList<Method> getAllMethods();
 
+  public ArrayList<Operation> getAllOperations();
+  
   /**
    * DEBUGGING: write the current message and action buffers to
    * a file with a specified postfix filename.
@@ -184,6 +187,8 @@ public interface Navajo
    */
   public void addMethod(Method m) throws NavajoException;
 
+  public void addOperation(Operation o) throws NavajoException;
+  
   /**
    * Add a Message object tot the current Navajo
    * @param message Message

@@ -97,6 +97,10 @@ public final class SaxHandler implements DocHandler {
             parseMethods(h);
             return;
         }
+        if (tag.equals(Navajo.OPERATIONS_DEFINITION)) {
+        	parseOperations(h);
+        	return;
+        }
         if (tag.equals("client")) {
             return;
         }
@@ -178,6 +182,10 @@ public final class SaxHandler implements DocHandler {
         
     }
 
+    private final void parseOperations(Hashtable<String,String> h) {
+        // TODO Auto-generated method stub
+        
+    }
 
     /**
 	 * @param h parameter callback 
