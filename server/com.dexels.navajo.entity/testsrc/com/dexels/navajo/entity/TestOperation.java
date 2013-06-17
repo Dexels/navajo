@@ -13,6 +13,7 @@ import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.OperationComponent;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
+import com.dexels.navajo.server.DispatcherInterface;
 
 
 public class TestOperation {
@@ -98,7 +99,7 @@ public class TestOperation {
 		oc.setService("aap/ProcessGetAap");
 		manager.addOperation(oc);
 		
-		ServiceEntityOperation seo = new ServiceEntityOperation(manager, null);
+		ServiceEntityOperation seo = new ServiceEntityOperation(manager, (DispatcherInterface) null);
 		
 		Navajo result = seo.perform(null, oc);
 		

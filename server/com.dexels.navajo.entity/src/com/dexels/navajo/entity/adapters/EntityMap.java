@@ -2,6 +2,7 @@ package com.dexels.navajo.entity.adapters;
 
 import java.util.Set;
 
+import com.dexels.navajo.adapter.NavajoMap;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
@@ -13,7 +14,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;
 
-public class EntityMap implements Mappable {
+public class EntityMap extends NavajoMap {
 
 	private EntityManager myManager;
 	
@@ -22,25 +23,21 @@ public class EntityMap implements Mappable {
 	
 	@Override
 	public void load(Access access) throws MappableException, UserException {
+		super.load(access);
 		myManager = EntityManager.getInstance();
 	}
 
-	@Override
-	public void store() throws MappableException, UserException {
-		Set<String> allEntities = myManager.getRegisteredEntities();
-		for ( String e : allEntities ) {
-			System.err.println("ENTITY: " + e);
-		}
-	}
-
-	public Navajo getResult() throws Exception {
+	public void setCall(boolean v) throws Exception {
+		
+		prepareOutDoc();
 		if ( entity != null && method != null ) {
-			Operation o =myManager.getOperation(entity, method);
+			Operation o = myManager.getOperation(entity, method);
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, DispatcherFactory.getInstance());
-			Navajo result = seo.perform(NavajoFactory.getInstance().createNavajo(), o);
-			result.write(System.err);
+			inDoc = seo.perform(this.outDoc, o);
+			serviceCalled = true;
+			serviceFinished = true;
 		}
-		return null;
+		
 	}
 	
 	public String getEntity() {

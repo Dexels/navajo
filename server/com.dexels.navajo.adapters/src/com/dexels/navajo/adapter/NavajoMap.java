@@ -124,7 +124,7 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   public String inputProperties = null;
   public String outputProperties = null;
 
-  private Navajo inDoc;
+  protected Navajo inDoc;
   protected Navajo outDoc;
   //private NavajoClient nc;
   private Property currentProperty;
@@ -143,8 +143,8 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   // If block is set, the web service calls blocks until a result is received.
   // Default value is TRUE.
   public boolean block = true;
-  private boolean serviceCalled = false;
-  private boolean serviceFinished = false;
+  protected boolean serviceCalled = false;
+  protected boolean serviceFinished = false;
   private Exception myException = null;
   
   private NavajoMapResponseListener myResponseListener = null;
@@ -593,6 +593,65 @@ private String resource;
 	  return b;
   }
   
+  protected void prepareOutDoc() {
+	  // If currentOutDoc flag was set, make sure to copy outdoc.
+	  if ( this.useCurrentOutDoc ) {
+		  if ( this.outDoc != null ) {
+			  /**
+			   * NOTE: THIS MERGE OPERATION WILL CAUSE EXISTING PROPERTIES IN outDoc TO
+			   * BE OVERWRITTEN WITH THE SAME PROPERTIES IN access.getOutputDoc().
+			   * THIS IS NOT EXPECTED BEHAVIOR.
+			   */
+			  this.outDoc.merge(access.getOutputDoc().copy(), true) ;
+		  } else {
+			  this.outDoc = access.getOutputDoc().copy();
+		  }
+
+		  // Copy param messages.
+		  if ( inMessage.getMessage("__parms__") != null ) {
+			  Message params = inMessage.getMessage("__parms__").copy(outDoc);
+			  try {
+				  outDoc.addMessage(params);
+			  } catch (NavajoException e) {
+				  e.printStackTrace(Access.getConsoleWriter(access));
+			  }
+		  }
+
+		  // Check for deleted messages.
+		  if ( deletedMessages.size() > 0 ) {
+			  for (String dMn: deletedMessages ) {
+				  Message dM = outDoc.getMessage(dMn);
+				  if ( dM != null ) {
+					  Navajo rN = dM.getRootDoc();
+					  rN.removeMessage(dMn);
+				  }
+			  }
+		  }
+		  // Check for deleted properties.
+		  if ( deletedProperties.size() > 0 ) {
+			  for (String dPn: deletedProperties) {
+				  if ( dPn != null ) {
+					  Property dP = outDoc.getProperty(dPn);
+					  if ( dP != null ) {
+						  Message dm = dP.getParentMessage();
+						  dm.removeProperty(dP);
+					  }
+				  }
+			  }
+		  }
+	  }
+
+	  // Always copy globals.
+	  if ( inMessage.getMessage("__globals__") != null ) {
+		  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
+		  try {
+			  outDoc.addMessage(globals);
+		  } catch (NavajoException e) {
+			  e.printStackTrace(Access.getConsoleWriter(access));
+		  }
+	  }
+  }
+  
   /**
    * Use this method to call another Navajo webservice.
    * If server is not specified, the Navajo server that is used to handle this request is also used to handle the new request.
@@ -605,70 +664,16 @@ private String resource;
 	  // Reset current msgPointer when performing new doSend.
 	  msgPointer = null;
 	  setMethod(method);
+
+	  username = (username == null) ? this.access.rpcUser : username;
+	  password = (password == null) ? this.access.rpcPwd : password;
+
+	  if (password == null)
+		  password = "";
+
+	  prepareOutDoc();
 	  
 	  try {
-		  username = (username == null) ? this.access.rpcUser : username;
-		  password = (password == null) ? this.access.rpcPwd : password;
-
-		  if (password == null)
-			  password = "";
-
-		  // If currentOutDoc flag was set, make sure to copy outdoc.
-		  if ( this.useCurrentOutDoc ) {
-			  if ( this.outDoc != null ) {
-				  /**
-				   * NOTE: THIS MERGE OPERATION WILL CAUSE EXISTING PROPERTIES IN outDoc TO
-				   * BE OVERWRITTEN WITH THE SAME PROPERTIES IN access.getOutputDoc().
-				   * THIS IS NOT EXPECTED BEHAVIOR.
-				   */
-				 this.outDoc.merge(access.getOutputDoc().copy(), true) ;
-			  } else {
-				  this.outDoc = access.getOutputDoc().copy();
-			  }
-			  
-			  // Copy param messages.
-			  if ( inMessage.getMessage("__parms__") != null ) {
-				  Message params = inMessage.getMessage("__parms__").copy(outDoc);
-				  try {
-					outDoc.addMessage(params);
-				} catch (NavajoException e) {
-					e.printStackTrace(Access.getConsoleWriter(access));
-				}
-			  }
-			  
-			  // Check for deleted messages.
-			  if ( deletedMessages.size() > 0 ) {
-				  for (String dMn: deletedMessages ) {
-					  Message dM = outDoc.getMessage(dMn);
-					  if ( dM != null ) {
-						  Navajo rN = dM.getRootDoc();
-						  rN.removeMessage(dMn);
-					  }
-				  }
-			  }
-			  // Check for deleted properties.
-			  if ( deletedProperties.size() > 0 ) {
-				  for (String dPn: deletedProperties) {
-					  if ( dPn != null ) {
-						  Property dP = outDoc.getProperty(dPn);
-						  if ( dP != null ) {
-							  Message dm = dP.getParentMessage();
-							  dm.removeProperty(dP);
-						  }
-					  }
-				  }
-			  }
-		  }
-		  
-		  // Always copy globals.
-		  if ( inMessage.getMessage("__globals__") != null ) {
-			  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
-			  try {
-				  outDoc.addMessage(globals);
-			  } catch (NavajoException e) {
-				  e.printStackTrace(Access.getConsoleWriter(access));
-			  }
-		  }
 		  if(this.resource!=null) {
 			  serviceCalled = true;
 			  AsyncClient ac = NavajoClientResourceManager.getInstance().getAsyncClient(this.resource);
@@ -681,42 +686,42 @@ private String resource;
 				  } catch (Exception e) {
 					  throw new UserException(-1, e.getMessage(), e);
 				  }
-				  
+
 				  serviceCalled = true;
 			  } // Internal request.
-		  else {
-			  try {
-				  inDoc = null;
-				  isFinished = false;
-				  serviceFinished = false;
-				  if ( block ) {
-					  this.run();
-				  } else {
-					  SchedulerRegistry.getScheduler().submit(this, true);
-				  }
-				  serviceCalled = true;
-				  if ( getException() != null ) {
-					  if ( getException() instanceof ConditionErrorException ) {
-						  throw (ConditionErrorException) getException();
-					  } else if ( getException() instanceof UserException ) {
-						  throw (UserException) getException();
-					  } else if ( getException() instanceof SystemException ) {
-						  throw (SystemException) getException();
+			  else {
+				  try {
+					  inDoc = null;
+					  isFinished = false;
+					  serviceFinished = false;
+					  if ( block ) {
+						  this.run();
 					  } else {
-						  throw new SystemException(-1, "", getException());
+						  SchedulerRegistry.getScheduler().submit(this, true);
 					  }
-				  }
-			  } catch (IOException e) {
-				  throw new SystemException("Error submitting to remote server:",e);
+					  serviceCalled = true;
+					  if ( getException() != null ) {
+						  if ( getException() instanceof ConditionErrorException ) {
+							  throw (ConditionErrorException) getException();
+						  } else if ( getException() instanceof UserException ) {
+							  throw (UserException) getException();
+						  } else if ( getException() instanceof SystemException ) {
+							  throw (SystemException) getException();
+						  } else {
+							  throw new SystemException(-1, "", getException());
+						  }
+					  }
+				  } catch (IOException e) {
+					  throw new SystemException("Error submitting to remote server:",e);
 
+				  }
 			  }
-		  }
 
 	  } catch (NavajoException e) {
 		  throw new SystemException("Error connecting to remote server",e);
-	} catch (IOException e) {
+	  } catch (IOException e) {
 		  throw new SystemException("Error connecting to remote server",e);
-	} 
+	  } 
 
   }
 

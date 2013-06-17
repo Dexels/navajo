@@ -38,7 +38,11 @@ public class EntityComponent extends Entity {
 		activate();
 	}
 	
-	public void addDependency(Entity e) {
-		//
+	public void deactivateComponent() throws Exception {
+		deactivate();
+	}
+	
+	public void addDependency(Entity e) throws Exception {
+		addSuperEntity(e);
 	}
 }

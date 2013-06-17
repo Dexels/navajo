@@ -4,7 +4,9 @@ import java.util.Map;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
+import com.dexels.navajo.document.Property;
 
 public class OperationComponent implements Operation {
 
@@ -21,7 +23,6 @@ public class OperationComponent implements Operation {
 		if ( parameters.get("operation.extramessage") != null ) {
 			extraMessage = (Message) parameters.get("operation.extramessage");
 		}
-		System.err.println("Activated operation " + method + " for entity: " + entityName);
 	}
 	@Override
 	public void setMethod(String method) {
@@ -60,6 +61,17 @@ public class OperationComponent implements Operation {
 
 	@Override
 	public Message getExtraMessage() {
+		if ( extraMessage == null ) {
+			Navajo n = NavajoFactory.getInstance().createNavajo();
+			Message m = NavajoFactory.getInstance().createMessage(n, "__OPERATION__");
+			Property p = NavajoFactory.getInstance().createProperty(n, "Method", Property.STRING_PROPERTY, method, 0, "", "");
+			Property p2 = NavajoFactory.getInstance().createProperty(n, "Entity", Property.STRING_PROPERTY, entityName, 0, "", "");
+			m.addProperty(p);
+			m.addProperty(p2);
+			n.addMessage(m);
+			return m;
+			
+		}
 		return extraMessage;
 	}
 

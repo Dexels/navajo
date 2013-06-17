@@ -18,19 +18,29 @@ public class ServiceEntityOperation implements EntityOperation {
 
 	private EntityManager manager;
 	private DispatcherInterface dispatcher;
-	
+	private LocalClient client;
+
 	public ServiceEntityOperation() {
-		
+
 	}
-	
+
 	public ServiceEntityOperation(EntityManager m, DispatcherInterface c) {
 		this.manager = m;
 		this.dispatcher = c;
 	}
-	
+
+
+	public ServiceEntityOperation(EntityManager m, LocalClient c) {
+		this.manager = m;
+		this.client = c;
+	}
+
 	@Override
 	public Navajo perform(Navajo input, Operation o) throws EntityException {
 		Entity e = manager.getEntity(o.getEntityName());
+		if ( e == null ) {
+			throw new EntityException("Could not find entity: " + o.getEntityName());
+		}
 		if(o.getMethod().equals(Operation.HEAD)) {
 			Navajo out = NavajoFactory.getInstance().createNavajo();
 			out.addMessage(e.getMessage().copy(out));
@@ -52,7 +62,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			}
 			return callEntityService(input, o);
 		}
-		
+
 		if(o.getMethod().equals(Operation.PUT)) {
 			boolean isOk = e.isInsertable(input);
 			if(isOk) {
@@ -81,7 +91,14 @@ public class ServiceEntityOperation implements EntityOperation {
 			input.addMessage(extraMessage);
 		}
 		try {
-			return dispatcher.handle(input, true);
+			if ( dispatcher != null ) {
+				return dispatcher.handle(input, true);
+			} else
+				if ( client != null ) {
+					return client.call(input);
+				} else {
+					throw new EntityException("No Dispatcher or LocalClient present");
+				}
 		} catch (FatalException e1) {
 			throw new EntityException("Error calling entity service: ",e1);
 		}

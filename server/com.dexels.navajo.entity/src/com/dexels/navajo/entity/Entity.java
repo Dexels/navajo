@@ -28,10 +28,27 @@ public class Entity  {
 	}
 	public Entity() {
 	}
+	
+	public void setEntityManager(EntityManager em) {
+		this.em = em;
+	}
+	
+	public void clearEntityManager(EntityManager em) {
+		this.em = null;
+	}
+	
+	public void printKeys() {
+		System.err.println(this +  ": In PRINTKEYS: " + myKeys.size());
+		for ( Key k : myKeys ) {
+			System.err.println("==================");
+			k.generateRequestMessage().write(System.err);
+		}
+	}
 	/**
 	 * Inject a new entity message.
 	 */
 	public void setMessage(Message entity) throws Exception {
+		
 		if ( myMessage == null || ( myMessage != null && !myMessage.isEqual(entity) ) ) {
 			// First deactivate.
 			deactivate();
@@ -41,7 +58,6 @@ public class Entity  {
 	}
 	
 	private void addSubEntity(Entity sub) throws EntityException {
-		System.err.println("In addSubEntity: " + getName() + " <- " + sub.getName());
 		if ( sub.equals(this) ) {
 			Thread.dumpStack();
 			throw new EntityException("Cannot add myself as subentity");
@@ -49,9 +65,9 @@ public class Entity  {
 		subEntities.add(sub);
 	}
 	
-	public void addSuperEntity(Entity sub) throws EntityException {
-		superEntities.add(sub);
-		sub.addSubEntity(this);
+	public void addSuperEntity(Entity sup) throws EntityException {
+		superEntities.add(sup);
+		sup.addSubEntity(this);
 	}
 	
 	
@@ -64,6 +80,8 @@ public class Entity  {
 		for ( Entity sub : subEntities ) {
 			sub.deactivate();
 		}
+		subEntities.clear();
+		superEntities.clear();
 		activated = false;
 	}
 	
@@ -75,10 +93,6 @@ public class Entity  {
 		activated = true;
 		findSuperEntities();
 		findKeys();
-		// Activate subEntities (if not already activated) 
-		for ( Entity sub : subEntities ) {
-			sub.activate();
-		}
 	}
 
 	private Property getExtendedProperty(String ext) throws EntityException {
@@ -116,8 +130,7 @@ public class Entity  {
 		if ( em.getEntity(extendedEntity) != null ) {
 			// Copy properties/messages from superEntity.
 			Entity superEntity = em.getEntity(extendedEntity);
-			addSuperEntity(superEntity);
-			myMessage.merge(superEntity.getMessage());
+			myMessage.merge(superEntity.getMessage().copy(myMessage.getRootDoc()));
 			// Check extended properties.
 			processExtendedProperties(myMessage);
 		} else {
@@ -127,7 +140,8 @@ public class Entity  {
 	
 	private void findSuperEntities() throws EntityException {
 
-		if ( myMessage.getExtends() != null ) {
+		if ( myMessage.getExtends() != null ) {	
+			
 			if ( !"".equals(myMessage.getExtends()) && myMessage.getExtends().startsWith(NAVAJO_URI) ) {
 				String ext = myMessage.getExtends().substring(NAVAJO_URI.length());
 				String [] superEntities = ext.split(",");
@@ -141,6 +155,9 @@ public class Entity  {
 	}
 
 	private void findKeys() {
+		
+		System.err.println("IN FINDKEYS:");
+		myMessage.write(System.err);
 		
 		myKeys.clear();
 		HashMap<String,Key> foundKeys = new HashMap<String,Key>();
@@ -200,37 +217,6 @@ public class Entity  {
 
 	public Set<Key> getKeys() {
 		return myKeys;
-	}
-
-	@Override
-	public int hashCode() {
-		if ( getName() != null ) {
-			return getName().hashCode();
-		} else {
-			return -1;
-		}
-	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if ( o == null ) {
-			return false;
-		}
-		if ( o instanceof Entity ) {
-			Entity other = (Entity) o;
-			if ( other.getName() == null && getName() == null ) {
-				return true;
-			}
-			if ( other.getName() == null || getName() == null ) {
-				return false;
-			}
-			if ( this.getName().equals(other.getName())) {
-				return true;
-			} else {
-				return false;
-			}
-		} 
-		return false;
 	}
 
 	public boolean isInsertable(Navajo input) {
