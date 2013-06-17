@@ -17,8 +17,6 @@ import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,17 +33,18 @@ public class Tools {
     private static javax.xml.parsers.DocumentBuilderFactory builderFactory = null;
     private static javax.xml.parsers.DocumentBuilder builder = null;
    // private static javax.xml.transform.TransformerFactory transformerFactory = null;
-    
-	private final static Logger logger = LoggerFactory.getLogger(Tools.class);
-	
+
     static {
 
         if (builderFactory == null) {
             try {
                 builderFactory = DocumentBuilderFactory.newInstance(); //new org.apache.crimson.jaxp.DocumentBuilderFactoryImpl();
+                //System.out.println("factory instance: " + builderFactory);
                 builder = builderFactory.newDocumentBuilder();
+                //System.out.println("builder instance: " + builder);
             } catch (Exception e) {
-                logger.warn("Could not find XML parser, using system default",e);
+                System.out.println("Could not find XML parser, using system default");
+                // builderFactory = DocumentBuilderFactory.newInstance();
             }
         }
 

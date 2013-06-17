@@ -154,7 +154,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.client.async.AsyncClient#callService(com.dexels.navajo.server.Access, com.dexels.navajo.document.Navajo, java.lang.String, com.dexels.navajo.script.api.TmlRunnable, com.dexels.navajo.script.api.TmlRunnable, com.dexels.navajo.script.api.NavajoResponseCallback)
+	 * @see com.dexels.navajo.client.async.AsyncClient#callService(com.dexels.navajo.api.Access, com.dexels.navajo.document.Navajo, java.lang.String, com.dexels.navajo.script.api.TmlRunnable, com.dexels.navajo.script.api.TmlRunnable, com.dexels.navajo.script.api.NavajoResponseCallback)
 	 */
 	@Override
 	// Only used from Rhino

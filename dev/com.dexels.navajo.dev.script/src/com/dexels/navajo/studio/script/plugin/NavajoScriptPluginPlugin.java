@@ -77,7 +77,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     public static final String NAVAJO_REPOSITORY_BASECLASS = "com.dexels.navajo.server.SimpleRepository";
 
-    public static final String NAVAJO_ADAPTER_INTERFACE = "com.dexels.navajo.mapping.Mappable";
+    public static final String NAVAJO_ADAPTER_INTERFACE = "com.dexels.navajo.script.api.Mappable";
 
     public static final String NAVAJO_FUNCTION_CLASS = "com.dexels.navajo.parser.FunctionInterface";
 

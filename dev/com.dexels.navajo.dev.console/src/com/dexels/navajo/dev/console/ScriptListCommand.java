@@ -24,7 +24,7 @@ public class ScriptListCommand {
 				 serviceFilter="(navajo.scriptName=*)";
 			}
 			 try {
-				ServiceReference<?>[] result = bundleContext.getServiceReferences("com.dexels.navajo.server.CompiledScriptFactory", serviceFilter);
+				ServiceReference<?>[] result = bundleContext.getServiceReferences("com.dexels.navajo.script.api.CompiledScriptFactory", serviceFilter);
 				for (ServiceReference<?> serviceReference : result) {
 					String name = (String) serviceReference.getProperty("symbolicName");
 //					String adapterClass = (String) serviceReference.getProperty("adapterClass");

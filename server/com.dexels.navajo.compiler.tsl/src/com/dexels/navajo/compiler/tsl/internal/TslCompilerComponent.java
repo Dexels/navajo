@@ -22,6 +22,7 @@ import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
+import com.dexels.navajo.script.api.CompiledScriptFactory;
 import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
@@ -261,7 +262,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		xe.addChild(service);
 		XMLElement provide = new CaseSensitiveXMLElement("provide");
 		service.addChild(provide);
-		provide.setAttribute("interface", "com.dexels.navajo.server.CompiledScriptFactory");
+		provide.setAttribute("interface", CompiledScriptFactory.class.getName());
 
 		addProperty("navajo.scriptName","String",symbolicName, xe);
 		if(hasTenantSpecificFile) {

@@ -68,7 +68,7 @@ public class DirMap implements Mappable {
 
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.mapping.Mappable#load(com.dexels.navajo.server.Parameters, com.dexels.navajo.document.Navajo, com.dexels.navajo.server.Access, com.dexels.navajo.server.NavajoConfig)
+	 * @see com.dexels.navajo.script.api.Mappable#load(com.dexels.navajo.server.Parameters, com.dexels.navajo.document.Navajo, com.dexels.navajo.api.Access, com.dexels.navajo.server.NavajoConfig)
 	 */
 	public void load(Access access) throws MappableException, UserException {
 	}
@@ -76,13 +76,13 @@ public class DirMap implements Mappable {
 
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.mapping.Mappable#store()
+	 * @see com.dexels.navajo.script.api.Mappable#store()
 	 */
 	public void store() throws MappableException, UserException {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.mapping.Mappable#kill()
+	 * @see com.dexels.navajo.script.api.Mappable#kill()
 	 */
 	public void kill() {
 	}

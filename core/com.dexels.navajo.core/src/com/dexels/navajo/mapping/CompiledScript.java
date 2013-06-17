@@ -126,7 +126,7 @@ private final static Logger logger = LoggerFactory
   private ThreadInfo myThread = null;
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getScriptName()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getScriptName()
  */
 @Override
 public String getScriptName() {
@@ -134,7 +134,7 @@ public String getScriptName() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getUser()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getUser()
  */
 @Override
 public String getUser() {
@@ -142,7 +142,7 @@ public String getUser() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getAccessId()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getAccessId()
  */
 @Override
 public String getAccessId() {
@@ -160,7 +160,7 @@ public void setInDoc(Navajo inDoc) {
 }
 
 /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getThreadName()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getThreadName()
  */
 @Override
 public String getThreadName() {
@@ -168,7 +168,7 @@ public String getThreadName() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#isWaiting()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#isWaiting()
  */
 @Override
 public boolean isWaiting() {
@@ -176,7 +176,7 @@ public boolean isWaiting() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getWaiting()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getWaiting()
  */
 @Override
 public boolean getWaiting() {
@@ -184,7 +184,7 @@ public boolean getWaiting() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getLockName()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getLockName()
  */
 @Override
 public String getLockName() {
@@ -192,7 +192,7 @@ public String getLockName() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getLockOwner()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getLockOwner()
  */
 @Override
 public String getLockOwner() {
@@ -200,7 +200,7 @@ public String getLockOwner() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getLockClass()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getLockClass()
  */
 @Override
 public String getLockClass() {
@@ -208,7 +208,7 @@ public String getLockClass() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getStackTrace()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getStackTrace()
  */
 @Override
 public String getStackTrace() {
@@ -222,7 +222,7 @@ public String getStackTrace() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getRunningTime()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getRunningTime()
  */
 @Override
 public long getRunningTime() {
@@ -230,7 +230,7 @@ public long getRunningTime() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#kill()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#kill()
  */
 @Override
 public void kill() {
@@ -239,7 +239,7 @@ public void kill() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#setKill(boolean)
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#setKill(boolean)
  */
 @Override
 public void setKill(boolean b) {
@@ -248,7 +248,7 @@ public void setKill(boolean b) {
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getKill()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getKill()
  */
 @Override
 public boolean getKill() {
@@ -256,33 +256,33 @@ public boolean getKill() {
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#setClassLoader(com.dexels.navajo.loader.NavajoClassSupplier)
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#setClassLoader(com.dexels.navajo.script.api.NavajoClassSupplier)
  */
 public void setClassLoader(NavajoClassSupplier loader) {
 	  this.classLoader = loader;
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getClassLoader()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getClassLoader()
  */
 public NavajoClassSupplier getClassLoader() {
 	  return this.classLoader;
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#finalBlock(com.dexels.navajo.server.Access)
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#finalBlock(com.dexels.navajo.api.Access)
  */
 @Override
 public abstract void finalBlock(Access access) throws Exception;
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#setValidations()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#setValidations()
  */
   @Override
 public abstract void setValidations();
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#dumpRequest()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#dumpRequest()
  */
 @Override
 public void dumpRequest() {
@@ -290,7 +290,7 @@ public void dumpRequest() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#setDependencies()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#setDependencies()
  */
 @Override
 public void setDependencies() {
@@ -300,7 +300,7 @@ public void setDependencies() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getDependentObjects()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getDependentObjects()
  */
 @Override
 public ArrayList<Dependency> getDependentObjects() {
@@ -308,7 +308,7 @@ public ArrayList<Dependency> getDependentObjects() {
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getDependencies()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getDependencies()
  */
   @Override
 public Dependency [] getDependencies() {
@@ -358,7 +358,7 @@ public Dependency [] getDependencies() {
   
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#run(com.dexels.navajo.server.Access)
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#run(com.dexels.navajo.api.Access)
  */
 @Override
 public final void run(Access access) throws Exception {
@@ -527,14 +527,14 @@ public final void run(Access access) throws Exception {
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#execute(com.dexels.navajo.server.Access)
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#execute(com.dexels.navajo.api.Access)
  */
 @Override
 public abstract void execute(Access access) throws
       Exception, NavajoDoneException;
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getFunction(java.lang.String)
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getFunction(java.lang.String)
  */
   @Override
 public final Object getFunction(String name) throws Exception {
@@ -553,7 +553,7 @@ public final Object getFunction(String name) throws Exception {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#findMapByPath(java.lang.String)
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#findMapByPath(java.lang.String)
  */
 @Override
 public final Object findMapByPath(String path) {
@@ -575,7 +575,7 @@ public final Object findMapByPath(String path) {
   
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#releaseCompiledScript()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#releaseCompiledScript()
  */
 @Override
 public void releaseCompiledScript() {
@@ -584,21 +584,21 @@ public void releaseCompiledScript() {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#load(com.dexels.navajo.server.Access)
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#load(com.dexels.navajo.api.Access)
  */
 @Override
 public void load(Access access) throws MappableException, UserException {
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#store()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#store()
  */
 @Override
 public void store() throws MappableException, UserException {
   }
  
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#hasDirtyDependencies(com.dexels.navajo.server.Access)
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#hasDirtyDependencies(com.dexels.navajo.api.Access)
  */
   @Override
 public boolean hasDirtyDependencies(Access a) {
@@ -616,7 +616,7 @@ public boolean hasDirtyDependencies(Access a) {
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getDescription()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getDescription()
  */
 @Override
 public String getDescription() {
@@ -633,7 +633,7 @@ public Stack getOutMsgStack() {
 }
 
 /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getAuthor()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getAuthor()
  */
 @Override
 public String getAuthor() {
@@ -641,7 +641,7 @@ public String getAuthor() {
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getScriptType()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getScriptType()
  */
 @Override
 public String getScriptType() {
@@ -649,7 +649,7 @@ public String getScriptType() {
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#isDebugAll()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#isDebugAll()
  */
 @Override
 public boolean isDebugAll() {
@@ -657,7 +657,7 @@ public boolean isDebugAll() {
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#setDebugAll(boolean)
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#setDebugAll(boolean)
  */
 @Override
 public void setDebugAll(boolean debugAll) {
@@ -665,7 +665,7 @@ public void setDebugAll(boolean debugAll) {
   }
   
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getCurrentMap()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getCurrentMap()
  */
 @Override
 public MappableTreeNode getCurrentMap() {
@@ -673,7 +673,7 @@ public MappableTreeNode getCurrentMap() {
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getCurrentOutMsg()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getCurrentOutMsg()
  */
 @Override
 public Message getCurrentOutMsg() {
@@ -681,7 +681,7 @@ public Message getCurrentOutMsg() {
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getCurrentParamMsg()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getCurrentParamMsg()
  */
 @Override
 public Message getCurrentParamMsg() {
@@ -689,7 +689,7 @@ public Message getCurrentParamMsg() {
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getCurrentInMsg()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getCurrentInMsg()
  */
 @Override
 public Message getCurrentInMsg() {
@@ -697,7 +697,7 @@ public Message getCurrentInMsg() {
   }
 
   /* (non-Javadoc)
- * @see com.dexels.navajo.mapping.CompiledScriptInterface#getCurrentSelection()
+ * @see com.dexels.navajo.script.api.CompiledScriptInterface#getCurrentSelection()
  */
 @Override
 public Selection getCurrentSelection() {
@@ -706,7 +706,7 @@ public Selection getCurrentSelection() {
   
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.mapping.CompiledScriptInterface#setFactory(com.dexels.navajo.server.CompiledScriptFactory)
+	 * @see com.dexels.navajo.script.api.CompiledScriptInterface#setFactory(com.dexels.navajo.script.api.CompiledScriptFactory)
 	 */
 	public void setFactory(CompiledScriptFactory factory) {
 		this.factory = factory;

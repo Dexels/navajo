@@ -241,7 +241,7 @@ public class BIRTXmlMap implements Mappable {
 	 *            NavajoConfig
 	 * @throws MappableException
 	 * @throws UserException
-	 * @todo Implement this com.dexels.navajo.mapping.Mappable method
+	 * @todo Implement this com.dexels.navajo.script.api.Mappable method
 	 */
 	public void load(Access access) throws MappableException, UserException {
 		// paths
@@ -309,7 +309,7 @@ public class BIRTXmlMap implements Mappable {
 	 * 
 	 * @throws MappableException
 	 * @throws UserException
-	 * @todo Implement this com.dexels.navajo.mapping.Mappable method
+	 * @todo Implement this com.dexels.navajo.script.api.Mappable method
 	 */
 	public void store() throws MappableException, UserException {
 	}
@@ -317,7 +317,7 @@ public class BIRTXmlMap implements Mappable {
 	/**
 	 * kill
 	 * 
-	 * @todo Implement this com.dexels.navajo.mapping.Mappable method
+	 * @todo Implement this com.dexels.navajo.script.api.Mappable method
 	 */
 	public void kill() {
 	}
