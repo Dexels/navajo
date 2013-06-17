@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activateComponent" enabled="true" immediate="false" name="navajo.operation.match.get">
+   <implementation class="com.dexels.navajo.entity.OperationComponent"/>
+   <service>
+      <provide interface="com.dexels.navajo.document.Operation"/>
+   </service>
+   <property name="operation.entity" type="String" value="Match"/>
+   <property name="operation.method" type="String" value="GET"/>
+   <property name="operation.service" type="String" value="match/ProcessQueryMatch"/>
+</scr:component>

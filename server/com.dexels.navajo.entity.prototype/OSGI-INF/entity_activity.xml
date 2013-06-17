@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activateComponent" deactivate="deactivateComponent" enabled="true" immediate="false" name="navajo.entity.activity">
+   <implementation class="com.dexels.navajo.entity.EntityComponent"/>
+   <service>
+      <provide interface="com.dexels.navajo.entity.Entity"/>
+   </service>
+   <property name="entity.name" type="String" value="Activity"/>
+   <property name="service.name" type="String" value="entity/Activity"/>
+   <reference bind="setDispatcher" unbind="clearDispatcher" cardinality="1..1" interface="com.dexels.navajo.server.DispatcherInterface" name="Dispatcher" policy="dynamic"/>
+   <reference bind="setEntityManager" unbind="clearEntityManager" cardinality="1..1" interface="com.dexels.navajo.entity.EntityManager" name="EntityManager" policy="dynamic"/>
+</scr:component>
