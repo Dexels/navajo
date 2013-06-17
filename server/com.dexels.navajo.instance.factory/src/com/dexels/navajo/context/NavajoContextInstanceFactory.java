@@ -168,10 +168,19 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		File instanceResource = new File(config,"resources.xml");
 		Map<String,Set<String>> aliases = new HashMap<String, Set<String>>();
 		Map<String,Message> resources = readResources(instanceResource,aliases);
-//		copyOfResources.putAll(resources);
+
+		registerAuthorization(name, instanceFolder);
+		//		copyOfResources.putAll(resources);
 //		registerInstance(name);
 		registerInstanceProperties(name,copyOfProperties);
 		registerInstanceResources(name,resources,aliases);
+	}
+
+	private void registerAuthorization(String instance, File instanceFolder) throws IOException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("instanceFolder", instanceFolder.getAbsolutePath());
+		registerConfiguration(instance, map, "navajo.authorization.properties");
+		
 	}
 
 	private void registerInstanceResources(String name,Map<String, Message> resources, Map<String, Set<String>> aliases) throws IOException {
@@ -179,10 +188,15 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			addDatasource(name,dataSource, aliases);
 		}
 	}
-
+	
+//	navajo.instance.properties
 	private void registerInstanceProperties(String instance, Map<String, Object> map) throws IOException {
+		registerConfiguration(instance, map, "navajo.instance.properties");
+	}
+	
+	private void registerConfiguration(String instance, Map<String, Object> map, String pid) throws IOException {
 		logger.info("# of properties in {}: "+map.size(),instance);
-		final String totalFilter = "(service.factoryPid=navajo.instance.properties)";
+		final String totalFilter = "(service.factoryPid=)";
 		Configuration[] list;
 //		Constants.SERVICE_PID
 		try {
@@ -192,7 +206,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			logger.error("Error: ", e1);
 		}
 		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
-		final String filter = "(&(instance="+instance+")(factoryPid=navajo.instance.properties))";
+		final String filter = "(&(instance="+instance+")(factoryPid="+pid+"))";
 		Configuration cc = null;
 		try {
 			Configuration[] c = configAdmin.listConfigurations(filter);
@@ -206,7 +220,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			logger.error("Error in filter: {}",filter,e);
 		}
 		if(cc==null) {
-			cc = configAdmin.createFactoryConfiguration("navajo.instance.properties",null);
+			cc = configAdmin.createFactoryConfiguration(pid,null);
 			resourcePids.add(cc.getPid());
 		}
 		settings.put("instance", instance);
