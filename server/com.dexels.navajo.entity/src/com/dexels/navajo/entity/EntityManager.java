@@ -9,7 +9,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.mapping.MappingUtils;
 
 /**
  * TODO: NAVAJO CLUSTER ENABLING

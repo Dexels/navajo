@@ -54,12 +54,7 @@ public class Entity  {
 			deactivate();
 			myMessage = entity;
 			activate();
-<<<<<<< HEAD
-		}
-		myMessage = entity;
-=======
 		} 
->>>>>>> 3e705e20d7ee1896358b84c328a2291d05cdad86
 	}
 	
 	private void addSubEntity(Entity sub) throws EntityException {
