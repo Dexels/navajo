@@ -18,8 +18,13 @@ public class EntityComponent extends Entity {
 		super();
 	}
 	
+<<<<<<< HEAD
 	public void setDispatcher(DispatcherInterface client) {
 		this.dispatcher = client;
+=======
+	public void setDispatcher(DispatcherInterface dispatcher) {
+		this.dispatcher = dispatcher;
+>>>>>>> 3e705e20d7ee1896358b84c328a2291d05cdad86
 	}
 
 	public void clearDispatcher(DispatcherInterface dispatcher) {
@@ -28,17 +33,25 @@ public class EntityComponent extends Entity {
 
 	
 	public void activateComponent(Map<String,Object> parameters) throws Exception {
-		serviceName = (String) parameters.get("entity.name");
+		serviceName = (String) parameters.get("service.name");
 		Navajo in = NavajoFactory.getInstance().createNavajo();
 		Header h = NavajoFactory.getInstance().createHeader(in, serviceName, "", "", -1);
 		in.addHeader(h);
+<<<<<<< HEAD
 		Navajo result = dispatcher.handle(in,true);
+=======
+		Navajo result = dispatcher.handle(in, true);
+>>>>>>> 3e705e20d7ee1896358b84c328a2291d05cdad86
 		Message l = result.getAllMessages().iterator().next();
 		setMessage(l);
 		activate();
 	}
 	
-	public void addDependency(Entity e) {
-		//
+	public void deactivateComponent() throws Exception {
+		deactivate();
+	}
+	
+	public void addDependency(Entity e) throws Exception {
+		addSuperEntity(e);
 	}
 }

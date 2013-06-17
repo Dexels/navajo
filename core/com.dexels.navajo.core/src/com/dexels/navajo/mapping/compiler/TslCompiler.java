@@ -653,6 +653,7 @@ public String messageNode(int ident, Element n, String className, String objectN
     String count = n.getAttribute("count");
     String start_index = n.getAttribute("start_index");
     String orderby = n.getAttribute("orderby");
+    String extendsMsg = n.getAttribute("extends"); 
     
     ////System.out.println("COUNT = " + count);
     type = (type == null) ? "" : type;
@@ -784,6 +785,9 @@ public String messageNode(int ident, Element n, String className, String objectN
 	    result.append(printIdent(ident + 2) + "outMsgStack.push(currentOutMsg);\n");
 	    result.append(printIdent(ident + 2) + "currentOutMsg = " + messageList +
 	                  "[messageCount" + (ident) + "];\n");
+	    if ( extendsMsg != null ) {
+	    	result.append(printIdent(ident + 2) + "currentOutMsg.setExtends(\"" + extendsMsg + "\");\n");
+	    }
     } else { // must be parammessage.
     	result.append(printIdent(ident + 2) + "paramMsgStack.push(currentParamMsg);\n");
 	    result.append(printIdent(ident + 2) + "currentParamMsg = " + messageList + "[messageCount" + (ident) + "];\n");
@@ -1095,6 +1099,9 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     String description = n.getAttribute("description");
     String cardinality = n.getAttribute("cardinality");
     String condition = n.getAttribute("condition");
+    String key = n.getAttribute("key");
+    String reference = n.getAttribute("reference");
+    String extendsProp = n.getAttribute("extends");
 
     value = (value == null) || (value.equals("")) ? "" : value;
     type = (type == null) ? "" : type;
@@ -1205,6 +1212,15 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
                     "\", \"" + description + "\", " +
                     length +
                     ", access.getOutputDoc(), access.getInDoc(), !matchingConditions);\n");
+      if (! "".equals(key) ) {
+    	  result.append(printIdent(ident) + "p.setKey(\"" + key + "\");\n");
+      }
+      if (! "".equals(reference) ) {
+    	  result.append(printIdent(ident) + "p.setReference(\"" + reference + "\");\n");
+      }
+      if (! "".equals(extendsProp) ) {
+    	  result.append(printIdent(ident) + "p.setExtends(\"" + extendsProp + "\");\n");
+      }
     }
     else { // parameter
       result.append(printIdent(ident) +

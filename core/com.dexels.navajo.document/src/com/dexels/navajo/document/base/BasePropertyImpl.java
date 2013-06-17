@@ -1318,6 +1318,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 			cp = (BasePropertyImpl) NavajoFactory.getInstance().createProperty(n, getName(), getType(), null, getLength(),
 					getDescription(), getDirection(), getSubType());
+			
 			if(EXPRESSION_PROPERTY.equals(getType())) {
 				cp.setType(EXPRESSION_PROPERTY);
 			} else {
@@ -1325,6 +1326,15 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				cp.setAnyValue(value);
 			}
 			cp.setType(getType());
+		}
+		if ( getKey() != null ) {
+			cp.setKey(getKey());
+		}
+		if ( getExtends() != null ) {
+			cp.setExtends(getExtends());
+		}
+		if ( getReference() != null ) {
+			cp.setReference(getReference());
 		}
 		cp.setRootDoc(n);
 		ArrayList<Selection> mySel = getAllSelections();
