@@ -1008,7 +1008,7 @@ private ServiceHandler createHandler(String handler, Access access) {
 			
 			if (useAuthorisation) {
     			if ( useProxy == null ) {
-    				outMessage = dispatch(navajoConfig.getRepository().getServlet(access), access);
+    				outMessage = dispatch(getServlet(access), access);
     			} else {
     				rpcName = access.rpcName;
     				outMessage = useProxy;
@@ -1073,6 +1073,16 @@ private ServiceHandler createHandler(String handler, Access access) {
     
     return access.getOutputDoc();
   }
+  
+  
+	public String getServlet(Access access) throws SystemException {
+		String compLanguage = DispatcherFactory.getInstance().getNavajoConfig().getCompilationLanguage();
+		if("javascript".equals(compLanguage)) {
+			return "com.dexels.navajo.rhino.RhinoHandler";
+		}
+			return "com.dexels.navajo.server.GenericHandler";
+	}
+
 
 
 public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, String rpcName, String rpcUser,

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 
 public class Entity  {
@@ -25,7 +26,8 @@ public class Entity  {
 		myMessage = msg;
 		em = m;
 	}
-
+	public Entity() {
+	}
 	/**
 	 * Inject a new entity message.
 	 */
@@ -36,35 +38,37 @@ public class Entity  {
 			myMessage = entity;
 			activate();
 		}
+		myMessage = entity;
 	}
 	
-	protected void addSubEntity(Entity sub) throws Exception {
+	private void addSubEntity(Entity sub) throws EntityException {
 		System.err.println("In addSubEntity: " + getName() + " <- " + sub.getName());
 		if ( sub.equals(this) ) {
 			Thread.dumpStack();
-			throw new Exception("Cannot add myself as subentity");
+			throw new EntityException("Cannot add myself as subentity");
 		}
 		subEntities.add(sub);
 	}
 	
-	protected void addSuperEntity(Entity sub) throws Exception {
+	public void addSuperEntity(Entity sub) throws EntityException {
 		superEntities.add(sub);
 		sub.addSubEntity(this);
 	}
+	
 	
 	/**
 	 * When entity de-activates make sure that sub entities are deactivated.
 	 * 
 	 * @throws Exception
 	 */
-	protected synchronized void deactivate() throws Exception {
+	protected synchronized void deactivate() throws EntityException {
 		for ( Entity sub : subEntities ) {
 			sub.deactivate();
 		}
 		activated = false;
 	}
 	
-	protected synchronized void activate() throws Exception {
+	protected synchronized void activate() throws EntityException {
 		if ( activated ) {
 			return;
 		}
@@ -78,7 +82,7 @@ public class Entity  {
 		}
 	}
 
-	private Property getExtendedProperty(String ext) throws Exception {
+	private Property getExtendedProperty(String ext) throws EntityException {
 		if ( ext.startsWith(NAVAJO_URI) ) {
 			String s = ext.substring(NAVAJO_URI.length());
 			String entityName = s.split("/")[0];
@@ -86,11 +90,11 @@ public class Entity  {
 			Message msg = em.getEntity(entityName).getMessage();
 			return msg.getProperty(propertyName);
 		} else {
-			throw new Exception("Extension type not implemented: " + ext);
+			throw new EntityException("Extension type not implemented: " + ext);
 		}
 	}
 
-	private void processExtendedProperties(Message m) throws Exception {
+	private void processExtendedProperties(Message m) throws EntityException {
 		for ( Property p : m.getAllProperties() ) {
 			if ( p.getExtends() != null ) {
 				Property ep = getExtendedProperty(p.getExtends());
@@ -109,7 +113,7 @@ public class Entity  {
 		
 	}
 	
-	private void processExtendedEntity(Message m, String extendedEntity) throws Exception {
+	private void processExtendedEntity(Message m, String extendedEntity) throws EntityException {
 		if ( em.getEntity(extendedEntity) != null ) {
 			// Copy properties/messages from superEntity.
 			Entity superEntity = em.getEntity(extendedEntity);
@@ -118,11 +122,11 @@ public class Entity  {
 			// Check extended properties.
 			processExtendedProperties(myMessage);
 		} else {
-			throw new Exception("Could not find super entity: " + extendedEntity + " for entity: " + getName());
+			throw new EntityException("Could not find super entity: " + extendedEntity + " for entity: " + getName());
 		}
 	}
 	
-	private void findSuperEntities() throws Exception {
+	private void findSuperEntities() throws EntityException {
 
 		if ( myMessage.getExtends() != null ) {
 			if ( !"".equals(myMessage.getExtends()) && myMessage.getExtends().startsWith(NAVAJO_URI) ) {
@@ -132,7 +136,7 @@ public class Entity  {
 					processExtendedEntity(myMessage, superEntities[i]);
 				}
 			} else if (!"".equals(myMessage.getExtends()) ){
-				throw new Exception("Extension type not supported: " + myMessage.getExtends());
+				throw new EntityException("Extension type not supported: " + myMessage.getExtends());
 			}
 		}
 	}
@@ -167,6 +171,9 @@ public class Entity  {
 	}
 
 	public String getName() {
+		if(myMessage==null) {
+			return "bullshit";
+		}
 		return myMessage.getName();
 	}
 
@@ -177,6 +184,10 @@ public class Entity  {
 			}
 		}
 		return null;
+	}
+	
+	public Key getKey(List<Property > p) {
+		return getKey(new HashSet<Property>(p));
 	}
 
 	public Key getKey(String id) {
@@ -221,5 +232,13 @@ public class Entity  {
 			}
 		} 
 		return false;
+	}
+
+	public boolean isInsertable(Navajo input) {
+		return true;
+	}
+
+	public boolean isUpdateable(Navajo input) {
+		return true;
 	}
 }

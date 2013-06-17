@@ -14,7 +14,10 @@ import com.dexels.navajo.compiler.ScriptCompiler;
 import com.dexels.navajo.compiler.tsl.custom.PackageListener;
 import com.dexels.navajo.compiler.tsl.custom.PackageReportingClassLoader;
 import com.dexels.navajo.document.ExpressionEvaluator;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
+import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
@@ -68,7 +71,14 @@ public class TslCompilerComponent implements ScriptCompiler {
 		}
 //		scriptString = scriptPath.replaceAll("_", "|");
 		String scriptSource = script;
-//		if(hasTenantSpecificFile) {
+
+//		Navajo n = NavajoFactory.getInstance().createNavajo(navajoIOConfig.getScript(scriptPath));
+//		List<Operation> all =  n.getAllOperations();
+//		if(!all.isEmpty()) {
+//			parseEntity(n);
+//		}
+//		
+		//		if(hasTenantSpecificFile) {
 //			scriptSource = script+"_"+tenant;
 //		}
 //		String scriptString = scriptPath.replaceAll("/", "_");
@@ -107,6 +117,10 @@ public class TslCompilerComponent implements ScriptCompiler {
 		generateDs(packagePath, script,dependencies,dependentResources,tenant,hasTenantSpecificFile);
 	}
 	
+	private void parseEntity(Navajo n) {
+		
+	}
+
 	private void generateFactoryClass(String script, String packagePath, Set<String> resources) throws IOException {
 		
 		String javaPackagePath = packagePath.replaceAll("/", ".");
