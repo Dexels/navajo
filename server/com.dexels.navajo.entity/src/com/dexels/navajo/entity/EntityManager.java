@@ -24,7 +24,7 @@ public class EntityManager {
 
 	private static EntityManager instance;
 	
-	public void EntityManager() {
+	public EntityManager() {
 	}
 
 	public void activate() {

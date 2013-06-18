@@ -1,14 +1,9 @@
 package com.dexels.navajo.entity.adapters;
 
-import java.util.Set;
-
 import com.dexels.navajo.adapter.NavajoMap;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
-import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
@@ -29,13 +24,11 @@ public class EntityMap extends NavajoMap {
 
 	public void setCall(boolean v) throws Exception {
 		
-		prepareOutDoc();
 		if ( entity != null && method != null ) {
 			Operation o = myManager.getOperation(entity, method);
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, DispatcherFactory.getInstance());
-			inDoc = seo.perform(this.outDoc, o);
-			serviceCalled = true;
-			serviceFinished = true;
+			seo.setMyEntityMap(this);
+			seo.perform(this.outDoc, o);
 		}
 		
 	}
