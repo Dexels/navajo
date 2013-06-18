@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.camel.consumer.NavajoCamelConsumer;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.TmlRunnable;
-import com.dexels.navajo.server.listener.http.continuation.TmlContinuationServlet;
+import com.dexels.navajo.server.listener.http.continuation.TmlRunnableBuilder;
 
 public class CamelContinuationServlet extends HttpServlet {
 
@@ -30,7 +30,7 @@ public class CamelContinuationServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		TmlRunnable tr = TmlContinuationServlet.prepareRunnable(req, resp, localClient);
+		TmlRunnable tr = TmlRunnableBuilder.prepareRunnable(req, resp, localClient);
 		if(active) {
 			try {
 				consumer.process(tr);
