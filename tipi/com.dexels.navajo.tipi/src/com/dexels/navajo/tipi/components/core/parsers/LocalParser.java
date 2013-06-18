@@ -33,9 +33,9 @@ public class LocalParser extends TipiTypeParser {
 
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		TipiComponent localValueComponent = null;
-		if (source != null && source.getScopeHomeComponent() != null)
+		if (source != null && source.getHomeComponent() != null)
 		{
-			localValueComponent =  source.getScopeHomeComponent();
+			localValueComponent =  source.getHomeComponent();
 			return localValueComponent.getLocalValue(expression);
 		}
 		else
