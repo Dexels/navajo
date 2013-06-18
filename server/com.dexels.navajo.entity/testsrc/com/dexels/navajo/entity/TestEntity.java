@@ -4,6 +4,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -21,8 +22,8 @@ public class TestEntity {
 	//static Message entity;
 	static EntityManager manager;
 	
-	@BeforeClass
-	public static void setup() {
+	@Before
+	public void setup() throws Exception {
 		
 		manager = new EntityManager();
 		
@@ -69,8 +70,11 @@ public class TestEntity {
 		
 		activity.write(System.err);
 		
-		manager.addEntity(new Entity(entity, manager));
-		manager.addEntity(new Entity(activity, manager));
+		Entity e1 = manager.addEntity(new Entity(entity, manager));
+		Entity e2 = manager.addEntity(new Entity(activity, manager));
+		e1.addSuperEntity(e2);
+		e1.activate();
+		e2.activate();
 		
 	}
 	
@@ -195,6 +199,8 @@ public class TestEntity {
 	
 	@Test
 	public void testSetMessage() throws Exception {
+		
+		System.err.println("=================================================================================");
 		Entity a = manager.getEntity("Activity");
 		a.activate();
 		//  Create new Activity Message
@@ -221,6 +227,8 @@ public class TestEntity {
 			System.err.println("KEY:");
 			k.generateRequestMessage().write(System.err);
 		}
+		System.err.println("=================================================================================");
+		
 		Assert.assertEquals(4, m.getKeys().size());
 	}
 }
