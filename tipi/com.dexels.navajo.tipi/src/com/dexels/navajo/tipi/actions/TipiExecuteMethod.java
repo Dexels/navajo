@@ -69,9 +69,9 @@ public final class TipiExecuteMethod extends TipiAction {
 		// find the method, is it local or global? Local first
 		TipiComponent localMethodDefaultRootComponent = null;
 		XMLElement localMethodXML = null;
-		if (tc != null && tc.getScopeHomeComponent() != null)
+		if (tc != null && tc.getHomeComponent() != null)
 		{
-			localMethodDefaultRootComponent =  tc.getScopeHomeComponent();
+			localMethodDefaultRootComponent =  tc.getHomeComponent();
 			localMethodXML  = localMethodDefaultRootComponent.getLocalMethod(name);
 		}
 		// else global

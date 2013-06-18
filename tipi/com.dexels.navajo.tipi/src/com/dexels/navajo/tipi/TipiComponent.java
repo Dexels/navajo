@@ -287,9 +287,5 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 
 	public boolean containsLocalValue(String expression);
 
-	public boolean isScopeLimit();
-	
-	public TipiComponent getScopeHomeComponent();
-
 	public int generateChildId();
 }

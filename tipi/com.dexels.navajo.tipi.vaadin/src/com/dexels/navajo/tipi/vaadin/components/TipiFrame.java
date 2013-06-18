@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.vaadin.components;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.Application;
@@ -11,7 +10,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class TipiFrame extends TipiVaadinComponentImpl implements ScopeLimit{
+public class TipiFrame extends TipiVaadinComponentImpl{
 
 	private static final long serialVersionUID = -8797775838239790407L;
 	private Window mainWindow;
