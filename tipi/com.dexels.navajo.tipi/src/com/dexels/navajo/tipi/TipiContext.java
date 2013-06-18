@@ -1696,6 +1696,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		componentDefinition.setAttribute("id", "init");
 		TipiComponent tc = instantiateComponent(componentDefinition, null,
 				null, null);
+		//top of the tree cannot not be a home component
+		tc.setHomeComponent(Boolean.TRUE);
 		tc.commitToUi();
 
 		try {
