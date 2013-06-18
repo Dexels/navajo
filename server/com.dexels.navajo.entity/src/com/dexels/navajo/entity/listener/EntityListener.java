@@ -17,6 +17,7 @@ import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
 import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.server.DispatcherInterface;
 
 public class EntityListener extends HttpServlet {
 
