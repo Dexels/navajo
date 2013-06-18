@@ -1,6 +1,7 @@
 package com.dexels.navajo.context;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -177,9 +178,24 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 
 	private void registerAuthorization(String instance, File instanceFolder) throws IOException {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("instanceFolder", instanceFolder.getAbsolutePath());
-		registerConfiguration(instance, map, "navajo.authorization.properties");
+		
+		File authFolder = new File(instanceFolder,"authorization");
+		if(!authFolder.exists()) {
+			return;
+		}
+		File[] impls = authFolder.listFiles(new FileFilter(){
+
+			@Override
+			public boolean accept(File f) {
+				return f.isDirectory();
+			}});
+		for (File file : impls) {
+			String name = file.getName();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("authorizationFolder", file.getAbsolutePath());
+			map.put("multitenant", true);
+			registerConfiguration(instance, map, "navajo.authorization."+name);
+		}
 		
 	}
 
