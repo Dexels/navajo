@@ -1,6 +1,7 @@
 package com.dexels.navajo.authentication.impl;
 
 import java.util.Comparator;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -65,9 +66,13 @@ public final class AAAFactory implements AuthenticationFactory {
   }
 
 
-  public void addAuthenticationModule(AAAInterface a) {
+  @Override
+  public void addAuthenticationModule(AAAInterface a, Map<String,Object> settings) {
 	  moduleList.add(a);
 	  logger.info("# of auth. modules now: "+moduleList.size());
+	  if(settings!=null) {
+		  logger.info("Multitenant found: "+settings.get("instance"));
+	  }
   }
   
   public void removeAuthenticationModule(AAAInterface a) {
