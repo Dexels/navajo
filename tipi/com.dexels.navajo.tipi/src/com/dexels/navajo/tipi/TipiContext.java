@@ -1287,7 +1287,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 		if (!clas.equals("")) {
 			TipiComponent tc = (TipiComponent) instantiateClass(clas, name,
-					instance, parent);
+					instance, parent, Boolean.TRUE);
 			XMLElement classDef = getClassManager().getAssembledClassDef(clas);
 
 			/**
@@ -1435,6 +1435,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	private Object instantiateClass(String className, String defname,
 			XMLElement instance, TipiComponent parent) throws TipiException {
+		return instantiateClass(className, defname, instance, parent, Boolean.FALSE);
+	}
+
+	private Object instantiateClass(String className, String defname,
+			XMLElement instance, TipiComponent parent, Boolean isHomeComponent) throws TipiException {
 
 		XMLElement tipiDefinition = null;
 		XMLElement classDef = getClassManager().getAssembledClassDef(className);
@@ -1469,6 +1474,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			tc.setContext(this);
 			tc.setParent(parent);
 			tc.setClassName(defname);
+			tc.setHomeComponent(isHomeComponent);
 			if(parent!=null) {
 				tc.setParentContainer(parent.getContainer());
 			}
@@ -1696,6 +1702,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		componentDefinition.setAttribute("id", "init");
 		TipiComponent tc = instantiateComponent(componentDefinition, null,
 				null, null);
+		//top of the tree cannot not be a home component
+		tc.setHomeComponent(Boolean.TRUE);
 		tc.commitToUi();
 
 		try {

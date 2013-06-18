@@ -30,7 +30,6 @@ import com.dexels.navajo.document.notifier.SerializablePropertyChangeListener;
 import com.dexels.navajo.tipi.PropertyHandler;
 import com.dexels.navajo.tipi.PropertyLinkRequest;
 import com.dexels.navajo.tipi.PropertyValidatable;
-import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiComponentMethod;
@@ -472,7 +471,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 				myContext.addGlobalMethod(child);
 			} else if (child.getName().equals("localmethod"))
 			{
-				this.getScopeHomeComponent().addLocalMethod(child);
+				this.getHomeComponent().addLocalMethod(child);
 			} else {
 				if (child.getName().equals("tipi-instance")
 						|| child.getName().equals("component-instance")
@@ -1573,51 +1572,35 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	}
 
 	public XMLElement getLocalMethod(String name) {
-		if(!isScopeLimit())
+		if(!isHomeComponent())
 		{
-			logger.warn("Local method is being retrieved from a non-ScopeLimit implementing component! " + this.myId);
+			logger.warn("Local method is being retrieved from a non-home component! " + this.myId);
 		}
 		return localMethodsMap.get(name);
 	}
 
 	public void setLocalValue(String expression, Object value){
-		if(!isScopeLimit())
+		if(!isHomeComponent())
 		{
-			logger.warn("Local method is being stored in a non-ScopeLimit implementing component! " + this.myId);
+			logger.warn("Local method is being stored in a non-home component! " + this.myId);
 		}
 		localValuesMap.put(expression, value);
 		
 	}
 
 	public Object getLocalValue(String expression) {
-		if(!isScopeLimit())
+		if(!isHomeComponent())
 		{
-			logger.warn("Local value is being retrieved from a non-ScopeLimit implementing component! " + this.myId);
+			logger.warn("Local value is being retrieved from a non-home component! " + this.myId);
 		}
 		return localValuesMap.get(expression);
 	}
 	
 	public boolean containsLocalValue(String expression){
-		if(!isScopeLimit())
+		if(!isHomeComponent())
 		{
-			logger.warn("Local value is being stored in a non-ScopeLimit implementing component! " + this.myId);
+			logger.warn("Local value is being stored in a non-home component! " + this.myId);
 		}
 		return localValuesMap.containsKey(expression);
 	}
-	
-	public boolean isScopeLimit()
-	{
-		return this instanceof ScopeLimit;
-	}
-
-	public TipiComponent getScopeHomeComponent() {
-		if (isScopeLimit()) {
-			return this;
-		}
-		if (getTipiParent() == null) {
-			return null;
-		}
-		return getTipiParent().getScopeHomeComponent();
-	}
-
 }

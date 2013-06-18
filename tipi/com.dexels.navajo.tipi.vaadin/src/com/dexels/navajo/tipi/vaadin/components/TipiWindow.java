@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.vaadin.components;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
@@ -13,7 +12,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 
-public class TipiWindow extends TipiVaadinComponentImpl implements ScopeLimit{
+public class TipiWindow extends TipiVaadinComponentImpl{
 
 	private static final Logger logger = LoggerFactory.getLogger(TipiWindow.class);
 	private static final long serialVersionUID = -4874496951046547933L;

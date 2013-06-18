@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.entity.sample" immediate="true" activate="activateOperation">
+   <implementation class="com.dexels.navajo.entity.impl.ServiceEntityOperation"/>
+   <service>
+      <provide interface="com.dexels.navajo.entity.EntityOperation"/>
+   </service>
+   <!--
+   <reference bind="addDependency" cardinality="1..1" interface="com.dexels.navajo.entity.Entity" name="DependencyAap" policy="dynamic" target="(entityName=aap)"/>
+	-->
+   <property name="entity.name" type="String" value="entity/Aap"/>
+   <property name="operation.type" type="String" value="HEAD"/>
+   <property name="operation.service" type="String" value="aap/ProcessGetAap"/>
+	<reference cardinality="1..1" interface="com.dexels.navajo.server.DispatcherInterface" name="Dispatcher" policy="dynamic" bind="setDispatcher" unbind="clearDispatcher"/>
+	<reference cardinality="1..1" interface="com.dexels.navajo.entity.Entity" name="Entity" policy="dynamic" bind="setEntity" unbind="clearEntity" target="(entity.name=entity/Aap)"/>
+</scr:component>

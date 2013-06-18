@@ -33,7 +33,7 @@ public class LocalRefParser extends TipiTypeParser {
 	}
 
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		return new LocalRef(expression, source.getScopeHomeComponent());
+		return new LocalRef(expression, source.getHomeComponent());
 	}
 
 }

@@ -15,12 +15,11 @@ import nextapp.echo2.app.Window;
 import nextapp.echo2.app.WindowPane;
 import nextapp.echo2.extras.app.MenuBarPane;
 
-import com.dexels.navajo.tipi.ScopeLimit;
 import com.dexels.navajo.tipi.components.echoimpl.impl.GradientContentPane;
 
 
 
-public class TipiFrame extends TipiEchoDataComponentImpl implements ScopeLimit{
+public class TipiFrame extends TipiEchoDataComponentImpl{
 
 	private static final long serialVersionUID = 6160466201795861752L;
 	

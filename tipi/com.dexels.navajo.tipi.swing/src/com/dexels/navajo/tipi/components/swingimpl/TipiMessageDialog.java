@@ -451,18 +451,4 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 			return super.containsLocalValue(expression);
 		}
 	}
-
-	public TipiComponent getScopeHomeComponent()
-	{
-		if (underlyingComponent != null)
-		{
-			logger.debug("Asking the underlyingComponent for getScopeHomeComponent");
-			return underlyingComponent.getScopeHomeComponent();
-		}
-		else
-		{
-			return super.getScopeHomeComponent();
-		}
-	}
-
 }
