@@ -43,9 +43,11 @@ public class TipiMethod extends TipiAbstractExecutable {
 
 	public void performAction(TipiEvent te, TipiExecutable parent, int index)
 			throws TipiBreakException, TipiException {
-		setEvent(te);
+		TipiEvent localInstance = (TipiEvent) te.clone();
+		localInstance.setComponent(getComponent());
+		setEvent(localInstance);
 		try {
-				getContext().doActions(te, getComponent(), this,
+				getContext().doActions(localInstance, getComponent(), this,
 						getExecutables());
 			// not sure if this is wise
 			setEvent(null);
