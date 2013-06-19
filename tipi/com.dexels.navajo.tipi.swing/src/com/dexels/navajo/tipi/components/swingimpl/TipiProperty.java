@@ -14,6 +14,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.DocumentPropertyChangeEvent;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
@@ -279,10 +280,13 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 				m.put("old", oldValue);
 				m.put("propertyLength", new Integer(p.getLength()));
 				// PropertyImpl p = (PropertyImpl)myProperty;
-				for (int i = 0; i < myListeners.size(); i++) {
-					TipiEventListener current = myListeners.get(i);
-					current.performTipiEvent(eventType, m, true);
-
+				if (!internal)
+				{
+					for (int i = 0; i < myListeners.size(); i++) {
+						TipiEventListener current = myListeners.get(i);
+						current.performTipiEvent(eventType, m, true);
+						
+					}
 				}
 				// performTipiEvent(eventType, m, false);
 			} catch (Exception ex) {
@@ -368,8 +372,13 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 					// Thread.dumpStack();
 					((GenericPropertyComponent) getContainer())
 							.updatePropertyValue(e);
+					Boolean internal = Boolean.FALSE;
+					if (e instanceof DocumentPropertyChangeEvent)
+					{
+						internal = ((DocumentPropertyChangeEvent) e).getInternal();
+					}
 					propertyEventFired((Property) e.getSource(),
-							"onValueChanged", e.getOldValue(), false);
+							"onValueChanged", e.getOldValue(), internal);
 					myPropertyValue = ((Property) e.getSource())
 							.getTypedValue();
 				} else {

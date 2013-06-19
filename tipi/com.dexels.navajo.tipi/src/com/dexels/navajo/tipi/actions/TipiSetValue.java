@@ -44,12 +44,18 @@ public final class TipiSetValue extends TipiAction {
 					"Error in setValue: to evaluation failed. Expression: "
 							+ path + " (from: " + value + ")");
 		}
+		Object q = getEvaluatedParameterValue("internal", event);
+		if (q != null && !(q instanceof Boolean)) {
+			throw new TipiException(
+					"TipiSetValue: internal wrong type");
+		}
+		Boolean internal = q == null ? Boolean.FALSE : (Boolean) q;
 		if (evaluatedValue == null) {
 			evaluatedValue = new Operand(null, "string", null);
 		} else {
 			if (evaluated.value instanceof Property) {
 				Property p = (Property) evaluated.value;
-				p.setAnyValue(evaluatedValue.value);
+				p.setAnyValue(evaluatedValue.value, internal);
 			} else if (evaluated.value instanceof TipiReference) {
 				TipiReference p = (TipiReference) evaluated.value;
 				p.setValue(evaluatedValue.value);
