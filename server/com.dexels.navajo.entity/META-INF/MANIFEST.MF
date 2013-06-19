@@ -13,14 +13,10 @@ Import-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
  com.dexels.navajo.server.api,
-<<<<<<< HEAD
- com.dexels.navajo.server,
-=======
  javax.servlet;version="3.0.0",
  javax.servlet.http;version="3.0.0",
  navajo;version="1.1.0",
  navajoextension,
->>>>>>> 3e705e20d7ee1896358b84c328a2291d05cdad86
  org.osgi.framework;version="1.6.0"
 Require-Bundle: org.junit
 Service-Component: OSGI-INF/*.xml
