@@ -12,6 +12,7 @@ package com.dexels.navajo.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -117,7 +118,19 @@ public class SimpleRepository implements Repository, GlobalManager {
 		}
 	}
 
-	private void parseBundle(String method, String username, Navajo inMessage, Map<String, String> extraParams, ResourceBundle rb)
+	private static void parseBundle(String method, String username,
+			Navajo inMessage, Map<String, String> extraParams, ResourceBundle rb) {
+		Map<String, String> map = new HashMap<String, String>();
+		Enumeration<String> all = rb.getKeys();
+		while (all.hasMoreElements()) {
+			String key = all.nextElement();
+			String value = rb.getString(key);
+			map.put(key, value);
+		}
+		parseBundle(method, username, inMessage, extraParams, map);
+	}
+
+	public static void parseBundle(String method, String username, Navajo inMessage, Map<String, String> extraParams, Map<String,String> m)
 			throws NavajoException {
 		Message msg = inMessage.getMessage(GLOBALSMSGNAME);
 
@@ -135,11 +148,9 @@ public class SimpleRepository implements Repository, GlobalManager {
 
 		// Add application instance, i.e. "Bond" specific parameters from
 		// application.properties file.
-		Enumeration<String> all = rb.getKeys();
-		while (all.hasMoreElements()) {
-			String key = all.nextElement();
-			Property p2 = NavajoFactory.getInstance().createProperty(inMessage, key, Property.STRING_PROPERTY,
-					rb.getString(key), 10, "",
+		for (Entry<String,String> e : m.entrySet()) {
+			Property p2 = NavajoFactory.getInstance().createProperty(inMessage, e.getKey(), Property.STRING_PROPERTY,
+					e.getValue(), 10, "",
 					Property.DIR_OUT);
 			paramMsg.addProperty(p2);
 		}

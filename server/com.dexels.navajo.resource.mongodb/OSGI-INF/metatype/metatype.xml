@@ -5,6 +5,7 @@
     <AD name="user"  id="user" required="false" type="String" default="demo"/>
     <AD name="password"  id="password" required="false" type="String" default="demo"/>
     <AD name="name"  id="name" required="false" type="String" default="navajo.resource.mongodatasource"/>
+    <AD name="instance"  id="instance" required="false" type="String" default="*"/>
   </OCD>
   <Designate factoryPid="navajo.resource.mongodb" pid="navajo.resource.mongodb">
      <Object ocdref="navajo.resource.mongodb"/>

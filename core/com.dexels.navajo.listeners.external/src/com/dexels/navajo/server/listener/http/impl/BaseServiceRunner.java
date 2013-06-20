@@ -117,7 +117,7 @@ public abstract class BaseServiceRunner  implements
 				String callback = in.getHeader().getHeaderAttribute("callback");
 
 				try {
-					Navajo callbackNavajo = getLocalClient().handleCallback(in, callback);
+					Navajo callbackNavajo = getLocalClient().handleCallback(getNavajoInstance(), in, callback);
 					writeOutput(in, callbackNavajo);
 
 				} finally {
@@ -133,7 +133,7 @@ public abstract class BaseServiceRunner  implements
 
 					ClientInfo clientInfo = getRequest().createClientInfo(
 							scheduledAt, startedAt, queueLength, queueId);
-					Navajo outDoc = getLocalClient().handleInternal(in, getRequest().getCert(), clientInfo);
+					Navajo outDoc = getLocalClient().handleInternal(getNavajoInstance(), in, getRequest().getCert(), clientInfo);
 					// Do do: Support async services in a more elegant way.
 					if (!isAborted()) {
 						writeOutput(in, outDoc);
@@ -241,4 +241,10 @@ public abstract class BaseServiceRunner  implements
 	public Navajo getResponseNavajo() {
 		return responseNavajo;
 	}
+	
+	@Override
+	public String getNavajoInstance() {
+		return this.myRequest.getInstance();
+	}
+
 }

@@ -49,7 +49,7 @@ public class TestDispatcher implements DispatcherInterface {
 	}
 
 	@Override
-	public Navajo handle(Navajo inMessage, Object userCertificate,
+	public Navajo handle(Navajo inMessage, String instance, Object userCertificate,
 			ClientInfo clientInfo) throws FatalException {
 		
 		return null;

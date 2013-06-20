@@ -30,7 +30,7 @@ public class CamelContinuationServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		TmlRunnable tr = TmlRunnableBuilder.prepareRunnable(req, resp, localClient);
+		TmlRunnable tr = TmlRunnableBuilder.prepareRunnable(req, resp, localClient,"default");
 		if(active) {
 			try {
 				consumer.process(tr);

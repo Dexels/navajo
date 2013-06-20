@@ -4,6 +4,7 @@
     <AD name="username"  id="username" required="true" type="String" />
     <AD name="password"  id="password" required="true" type="String" />
     <AD name="name"  id="name" required="true" type="String" />
+    <AD name="instance"  id="instance" required="false" type="String" default="*"/>
   </OCD>
   <Designate factoryPid="navajo.resource.navajo">
      <Object ocdref="navajo.resource.navajo"/>

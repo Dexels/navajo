@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -46,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.dexels.navajo.adapter.navajomap.manager.NavajoMapManager;
+import com.dexels.navajo.authentication.api.AAAInterface;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -100,7 +102,9 @@ public class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterfa
   public static final String vendor  = "Dexels BV";
   public static final String product = "Navajo Service Delivery Platform";
   public volatile static String edition;
-  
+  private final Map<String,GlobalManager> globalManagers = new HashMap<String, GlobalManager>();
+  private final Map<String,AAAInterface> authenticators = new HashMap<String, AAAInterface>();
+
 
 private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
   
@@ -538,6 +542,9 @@ private ServiceHandler createHandler(String handler, Access access) {
       catch (NavajoException tbe) {
         throw new FatalException(tbe.getMessage());
       }
+    } else {
+    	// if no access was created, use the throwable message to be able to say *anything*
+    	message += e.getMessage();
     }
 
     try {
@@ -721,7 +728,7 @@ private ServiceHandler createHandler(String handler, Access access) {
    */
   public final Navajo handle(Navajo inMessage,  TmlRunnable origRunnable, Object userCertificate, ClientInfo clientInfo) throws
       FatalException {
-    return processNavajo(inMessage, userCertificate,clientInfo,  false,  origRunnable,null);
+    return processNavajo(inMessage, "default", userCertificate,clientInfo,  false,  origRunnable,null);
   }
 
   /**
@@ -732,22 +739,22 @@ private ServiceHandler createHandler(String handler, Access access) {
    * @throws FatalException
    */
   public final Navajo handle(Navajo inMessage,boolean skipAuth,AfterWebServiceEmitter emit) throws FatalException {
-    return processNavajo(inMessage, null, null, skipAuth,null,emit);
+    return processNavajo(inMessage, "default" ,null, null, skipAuth,null,emit);
    
   }
   
   public final Navajo handle(Navajo inMessage,boolean skipAuth,AfterWebServiceEmitter emit, ClientInfo clientInfo) throws FatalException {
-	    return processNavajo(inMessage, null, clientInfo, skipAuth,null,emit);
+	    return processNavajo(inMessage, "default", null, clientInfo, skipAuth,null,emit);
 	   
 	  }
   
   public final Navajo handle(Navajo inMessage,boolean skipAuth) throws FatalException {
-	    return processNavajo(inMessage, null, null, skipAuth,null,null);
+	    return processNavajo(inMessage, "default", null, null, skipAuth,null,null);
 	   
 	  }
   
   public final Navajo handle(Navajo inMessage) throws FatalException {
-	  return processNavajo(inMessage, null, null, false,null,null);
+	  return processNavajo(inMessage, "default", null, null, false,null,null);
   }
 
   public String getThreadName(Access a) {
@@ -790,10 +797,10 @@ private ServiceHandler createHandler(String handler, Access access) {
    * @return
    * @throws FatalException
    */
-  public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo) throws FatalException {
+  public final Navajo handle(Navajo inMessage,String instance, Object userCertificate, ClientInfo clientInfo) throws FatalException {
 	  // Maybe use event to trigger handle event.... such that NavajoRequest events can be proxied/intercepted by
 	  // other classes.
-	  return processNavajo(inMessage, userCertificate, clientInfo, false,null,null);
+	  return processNavajo(inMessage, instance, userCertificate, clientInfo, false,null,null);
   }
   
   /**
@@ -807,7 +814,7 @@ private ServiceHandler createHandler(String handler, Access access) {
    * @return
    * @throws FatalException
    */
-  private final Navajo processNavajo(Navajo inMessage, Object userCertificate, ClientInfo clientInfo, boolean skipAuth, TmlRunnable origRunnable, AfterWebServiceEmitter emit) throws
+  private final Navajo processNavajo(Navajo inMessage, String instance,  Object userCertificate, ClientInfo clientInfo, boolean skipAuth, TmlRunnable origRunnable, AfterWebServiceEmitter emit) throws
       FatalException {
 	
     Access access = null;
@@ -824,25 +831,9 @@ private ServiceHandler createHandler(String handler, Access access) {
     int accessSetSize = accessSet.size();
     setRequestRate(clientInfo, accessSetSize);
      	             
-    // Check whether unkown callbackpointers are present that need to be handled by another instance.
-    if ( inMessage.getHeader().hasCallBackPointers() ) {
-    	String [] allRefs = inMessage.getHeader().getCallBackPointers();
-    	if ( AsyncStore.getInstance().getInstance(allRefs[0]) == null ) {
-    		RemoteAsyncRequest rasr = new RemoteAsyncRequest(allRefs[0]);
-    		RemoteAsyncAnswer rasa = (RemoteAsyncAnswer) TribeManagerFactory.getInstance().askAnybody(rasr);
-    		if ( rasa != null ) {
-    			System.err.println("ASYNC OWNER: " + rasa.getOwnerOfRef() + "(" + rasa.getHostNameOwnerOfRef() + ")" + " FOR REF " + allRefs[0]);
-    			try {
-    				Navajo result = TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef());
-    				return result;
-    			} catch (Exception e) {
-    				logger.error("Error: ", e);
-    			}
-
-    		} else {
-    			System.err.println("DID NOT FIND ANY OWNERS OF ASYNCREF...");
-    		}
-    	} 
+    Navajo result	= handleCallbackPointers(inMessage);
+    if(result!=null) {
+    	return result;
     }
       Header header = inMessage.getHeader();
       rpcName = header.getRPCName();
@@ -860,7 +851,9 @@ private ServiceHandler createHandler(String handler, Access access) {
        */
 
       long startAuth = System.currentTimeMillis();
-
+      if(rpcName==null) {
+    	  throw new FatalException("No script defined");
+      }
       // If web service is ping webservice, skip authentication.
       if ( useAuthorisation && !skipAuth && !rpcName.equals("navajo_ping") ) {
         try {
@@ -874,7 +867,8 @@ private ServiceHandler createHandler(String handler, Access access) {
         	  logger.error ("Bad initialization or missing repository");
         	  throw new FatalException("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
           }
-          access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+          access = authenticateUser(inMessage, instance, userCertificate,
+				rpcName, rpcUser, rpcPassword);
         }
         catch (AuthorizationException ex) {
           outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
@@ -1073,9 +1067,48 @@ private ServiceHandler createHandler(String handler, Access access) {
     
     return access.getOutputDoc();
   }
+
+private Access authenticateUser(Navajo inMessage, String instance,
+		Object userCertificate, String rpcName, String rpcUser,
+		String rpcPassword) throws SystemException, AuthorizationException {
+	Access access;
+	if(instance!=null && !"default".equals(instance)) {
+		  logger.info("using multitenant: "+instance);
+		  AAAInterface aaai = getAuthorizator(instance);
+		  if(aaai!=null) {
+			  access = aaai.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+		  }
+	  }
+	  access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+	return access;
+}
+
+private Navajo handleCallbackPointers(Navajo inMessage) {
+	// Check whether unkown callbackpointers are present that need to be handled by another instance.
+    if ( inMessage.getHeader().hasCallBackPointers() ) {
+    	String [] allRefs = inMessage.getHeader().getCallBackPointers();
+    	if ( AsyncStore.getInstance().getInstance(allRefs[0]) == null ) {
+    		RemoteAsyncRequest rasr = new RemoteAsyncRequest(allRefs[0]);
+    		RemoteAsyncAnswer rasa = (RemoteAsyncAnswer) TribeManagerFactory.getInstance().askAnybody(rasr);
+    		if ( rasa != null ) {
+    			System.err.println("ASYNC OWNER: " + rasa.getOwnerOfRef() + "(" + rasa.getHostNameOwnerOfRef() + ")" + " FOR REF " + allRefs[0]);
+    			try {
+    				Navajo result = TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef());
+    				return result;
+    			} catch (Exception e) {
+    				logger.error("Error: ", e);
+    			}
+
+    		} else {
+    			System.err.println("DID NOT FIND ANY OWNERS OF ASYNCREF...");
+    		}
+    	} 
+    }
+    return null;
+}
   
   
-	public String getServlet(Access access) throws SystemException {
+	public String getServlet(Access access) {
 		String compLanguage = DispatcherFactory.getInstance().getNavajoConfig().getCompilationLanguage();
 		if("javascript".equals(compLanguage)) {
 			return "com.dexels.navajo.rhino.RhinoHandler";
@@ -1440,71 +1473,27 @@ public String getServerId() {
 	  return true;
   }
   
-//	private CompiledScript getOSGiService(String scriptName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-//		final BundleContext bundleContext = Version.getDefaultBundleContext();
-//		if(bundleContext==null) {
-//			logger.debug("No OSGi context found");
-//			return null;
-//		}
-//		String rpcName = scriptName.replaceAll("/", ".");
-//		String filter = "(navajo.scriptName="+rpcName+")";
-//		ServiceReference<?>[] sr;
-//		try {
-//			sr = bundleContext.getServiceReferences(CompiledScriptFactory.class.getName(), filter);
-//		} catch (InvalidSyntaxException e) {
-//			logger.error("Filter syntax problem for: "+filter,e);
-//			return null;
-//		}
-//		if(sr==null || sr.length==0) {
-//			logger.error("No service reference found for "+filter);
-//			try {
-//				CompiledScript ss = loadOnDemand(bundleContext, rpcName, filter);
-//				return ss;
-//			} catch (Exception e) {
-//				logger.error("Service  "+filter,e);
-//			}
-//		}
-//		
-//		if(sr!=null && sr.length>1) {
-//			logger.warn("Multiple references ({}) found for {}",sr.length,filter);
-//		}
-//		
-//		if(sr==null) {
-//			logger.error("BundleContext is null. Why?!");
-//		}
-//		CompiledScriptFactory csf = null;
-//		if(sr!=null) {
-//			 csf = (CompiledScriptFactory) bundleContext.getService(sr[0]);
-//			 if(csf!=null ) {
-//				 return csf.getCompiledScript();
-//			 }			
-//		}
-//		 logger.error("CompiledScriptFactory did not resolve properly for service: "+filter);
-//		 BundleCreator bc = DispatcherFactory.getInstance().getBundleCreator();
-//		 if(bc!=null) {
-//			 
-//			 try {
-//				CompiledScript ss = bc.getOnDemandScriptService(rpcName);
-//				return ss;
-//			} catch (Exception e) {
-//				logger.error("on demand script resolution failed.",e);
-//			}
-//		 }
-//		return null;
-//	}
-//
-//	private CompiledScript loadOnDemand(BundleContext bundleContext, String rpcName, String filter) throws Exception {
-//		ServiceReference<BundleCreator> ref = bundleContext.getServiceReference(BundleCreator.class);
-//		BundleCreator bc = bundleContext.getService(ref);
-//		if(bc==null) {
-//			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
-//			return null;
-//		}
-//		CompiledScript sc = bc.getOnDemandScriptService(rpcName);
-//		// wait for it..
-//		bundleContext.ungetService(ref);
-//		return sc;
-//	}
+  
+  public void addGlobalManager(GlobalManager gm, Map<String,Object> settings) {
+	  globalManagers.put((String) settings.get("instance"), gm);
+  }
+  
+  public GlobalManager getGlobalManager(String instance) {
+	  return globalManagers.get(instance);
+  }
 
+  public AAAInterface getAuthorizator(String instance) {
+	  return authenticators.get(instance);
+  }
+
+  public void removeGlobalManager(GlobalManager gm, Map<String,Object> settings) {
+	  globalManagers.remove(settings.get("instance"));
+  }
+  public void addAuthenticator(AAAInterface aa, Map<String,Object> settings) {
+	  authenticators.put((String) settings.get("instance"), aa);
+  }
+  public void removeAuthenticator(GlobalManager gm, Map<String,Object> settings) {
+	  authenticators.remove(settings.get("instance"));
+  }
   
 }

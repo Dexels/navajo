@@ -48,4 +48,6 @@ public interface AsyncRequest {
 
 	public String getUrl();
 
+	public String getInstance();
+
 }

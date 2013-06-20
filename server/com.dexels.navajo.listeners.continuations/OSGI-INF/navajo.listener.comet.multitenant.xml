@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="navajo.server.continuation.multitenant">
+   <implementation class="com.dexels.navajo.server.listener.http.continuation.TmlContinuationMultitenantServlet"/>
+   <reference bind="setLocalClient" cardinality="1..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="dynamic" unbind="clearLocalClient"/>
+   <reference bind="setTmlScheduler" cardinality="1..1" interface="com.dexels.navajo.script.api.TmlScheduler" name="TmlScheduler" policy="dynamic" unbind="clearTmlScheduler"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="asyncSupported" value="true"/>
+   <property name="alias" type="String" value="/navajo"/>
+   <property name="servletName" type="String" value="Multi"/>
+</scr:component>

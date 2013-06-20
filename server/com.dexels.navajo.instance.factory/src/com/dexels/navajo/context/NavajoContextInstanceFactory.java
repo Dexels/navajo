@@ -207,7 +207,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	
 //	navajo.instance.properties
 	private void registerInstanceProperties(String instance, Map<String, Object> map) throws IOException {
-		registerConfiguration(instance, map, "navajo.instance.properties");
+		registerConfiguration(instance, map, "navajo.global.manager");
 	}
 	
 	private void registerConfiguration(String instance, Map<String, Object> map, String pid) throws IOException {
@@ -290,7 +290,28 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 				continue;
 			}
 			System.err.println("Processing property with name: "+property.getName()+" and value: "+property.getTypedValue());
-			settings.put(property.getName(), property.getTypedValue());
+			// Conversion 
+			if(property.getName().equals("username")) {
+				settings.put("user", property.getTypedValue());
+			} else {
+				settings.put(property.getName(), property.getTypedValue());
+			}
+//		    <AD name="url"    id="url"   required="true"  type="String" default="jdbc:oracle:thin:@//myhost:1521/orcl"/>   
+//		    <AD name="user"  id="user" required="false" type="String" default="demo"/>
+//		    <AD name="password"  id="password" required="false" type="String" default="demo"/>
+//		    <AD name="name"  id="name" required="false" type="String" default="navajo.resource.myjdbc"/>
+//		    <AD name="instance"  id="instance" required="false" type="String" default="*"/>
+			
+//	        <message name="default">
+//            <property name="type" value="oracle" />
+//            <property name="url" value="jdbc:oracle:thin:@odysseus:1521:SLTEST02"/>
+//            <property name="username" value="bbnkern"/>
+//            <property name="password" value="bbn"/>
+//            <property name="refresh" type="float" value="0.01"/>
+//            <property name="min_connections" type="integer" value="1"/>
+//            <property name="max_connections" type="integer" value="100"/>
+//            </message>			
+			
 		}
 		Set<String> allNames = new HashSet<String>();
 		allNames.add("navajo.resource."+name);
@@ -353,8 +374,9 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 
 	private void addResourceGroup(String name, String instance, String type,Dictionary<String,Object> settings) throws IOException {
 //		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
-		final String filter = "(&(service.factoryPid=navajo.resourcegroup)(name="+name+"))";
-		Configuration cc = createOrReuse("navajo.resourcegroup", filter);
+		String pid = "navajo.resource."+type;
+		final String filter = "(&(service.factoryPid="+pid+")(name="+name+")(instance="+instance+"))";
+		Configuration cc = createOrReuse(pid, filter);
 		settings.put("name", name);
 		settings.put("type", type);
 		cc.update(settings);

@@ -4,6 +4,10 @@
     <AD name="user"  id="user" required="false" type="String" default="demo"/>
     <AD name="password"  id="password" required="false" type="String" default="demo"/>
     <AD name="name"  id="name" required="false" type="String" default="navajo.resource.myjdbc"/>
+    <AD name="instance"  id="instance" required="false" type="String" default="*"/>
+    <AD name="refresh"  id="refresh" required="false" type="double"/>
+    <AD name="max_connections"  id="max_connections" required="false" type="int"/>
+    <AD name="min_connections"  id="min_connections" required="false" type="int" />
   </OCD>
   <Designate pid="navajo.resource.oracle" factoryPid="navajo.resource.oracle">
      <Object ocdref="navajo.resource.oracle"/>

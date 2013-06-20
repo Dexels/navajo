@@ -2,6 +2,7 @@
   <OCD description="Navajo HTTP driver" name="Navajo HTTP driver" id="navajo.resource.http">
     <AD name="url"   id="url"   required="true"  type="String" default="localhost"/>   
     <AD name="name"  id="name" required="true" type="String" default="http://localhost:8080"/>
+    <AD name="instance"  id="instance" required="false" type="String" default="*"/>
   </OCD>
   <Designate factoryPid="navajo.resource.http">
      <Object ocdref="navajo.resource.http"/>

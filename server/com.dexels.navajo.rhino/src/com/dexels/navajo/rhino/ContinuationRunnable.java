@@ -240,4 +240,9 @@ public AsyncRequest getRequest() {
 	return null;
 }
 
+@Override
+public String getNavajoInstance() {
+	return "default";
+}
+
 }

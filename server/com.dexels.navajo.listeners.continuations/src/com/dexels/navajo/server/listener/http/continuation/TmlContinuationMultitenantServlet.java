@@ -15,13 +15,13 @@ import com.dexels.navajo.script.api.SchedulableServlet;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.script.api.TmlScheduler;
 
-public class TmlContinuationServlet extends HttpServlet implements
+public class TmlContinuationMultitenantServlet extends HttpServlet implements
 		SchedulableServlet {
 
 	private static final long serialVersionUID = -8645365233991777113L;
 
 	private final static Logger logger = LoggerFactory
-			.getLogger(TmlContinuationServlet.class);
+			.getLogger(TmlContinuationMultitenantServlet.class);
 
 	public static final String COMPRESS_GZIP = "gzip";
 	public static final String COMPRESS_JZLIB = "jzlib";
@@ -69,7 +69,19 @@ public class TmlContinuationServlet extends HttpServlet implements
 				localClient = getLocalClient(req);
 			} 
 			logger.debug("Servlet path info: "+req.getPathInfo());
-			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,"default");
+			String pathinfo = req.getPathInfo();
+			if(pathinfo.startsWith("/")) {
+				pathinfo = pathinfo.substring(1);
+			}
+			String instance = null;
+			if(pathinfo.indexOf('/')!=-1) {
+				instance = pathinfo.substring(0, pathinfo.indexOf('/'));
+			} else {
+				instance = pathinfo;
+			}
+			
+			
+			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,instance);
 			if(instantiateRunnable!=null) {
 				getTmlScheduler().submit(instantiateRunnable, false);
 			}

@@ -6,6 +6,7 @@
     <AD name="name"  id="name" required="false" type="String" default="myjdbc"/>
     <AD name="navajo.resource.name"  id="navajo.resource.name" required="false" type="String" default="navajo.resource.myjdbc"/>
     <AD name="databaseName"  id="databaseName" required="false" type="String" default="navajo.resource.myjdbc"/>
+    <AD name="instance"  id="instance" required="false" type="String" default="*"/>
   </OCD>
   <Designate pid="navajo.resource.mysql" factoryPid="navajo.resource.mysql">
      <Object ocdref="navajo.resource.mysql"/>

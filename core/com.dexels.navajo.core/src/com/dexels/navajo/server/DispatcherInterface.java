@@ -16,7 +16,7 @@ public interface DispatcherInterface extends ResourceManager {
 	/*
 	 * Methods to handle Navajo services.
 	 */
-	public Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo) throws FatalException;
+	public Navajo handle(Navajo inMessage, String instance, Object userCertificate, ClientInfo clientInfo) throws FatalException;
 	public Navajo handle(Navajo inMessage, TmlRunnable initialRunnable, Object userCertificate, ClientInfo clientInfo) throws FatalException;
 //	public Navajo handle(Navajo inMessage, boolean skipAuth) throws FatalException;
 	public Navajo handle(Navajo inMessage, boolean skipAuth, AfterWebServiceEmitter emit) throws FatalException;

@@ -24,5 +24,4 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Require-Bundle: com.dexels.navajo.listeners.external;bundle-version="1.0.0"
-Service-Component: OSGI-INF/cometListener.xml, 
- OSGI-INF/navajo.server.listener.continuations.filter.xml
+Service-Component: OSGI-INF/*.xml

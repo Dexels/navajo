@@ -18,7 +18,7 @@ public class TmlRunnableBuilder {
 
 	// Made static to indicate independence of fields
 	public static TmlRunnable prepareRunnable(
-			final HttpServletRequest req, HttpServletResponse resp, LocalClient localClient2)
+			final HttpServletRequest req, HttpServletResponse resp, LocalClient localClient, String instance)
 			throws UnsupportedEncodingException, IOException {
 		TmlContinuationRunner tmlRunner = (TmlContinuationRunner) req
 				.getAttribute("tmlRunner");
@@ -26,8 +26,8 @@ public class TmlRunnableBuilder {
 			return null;
 		}
 
-		AsyncRequest request = constructRequest(req, resp, localClient2);
-		TmlContinuationRunner instantiateRunnable = new TmlContinuationRunner(request,localClient2);
+		AsyncRequest request = constructRequest(req, resp, instance);
+		TmlContinuationRunner instantiateRunnable = new TmlContinuationRunner(request,localClient);
 		req.setAttribute("tmlRunner", instantiateRunnable);
 		instantiateRunnable.suspendContinuation();
 		return instantiateRunnable;
@@ -36,17 +36,17 @@ public class TmlRunnableBuilder {
 	
 	// Made static to indicate independence of fields
 	private static AsyncRequest constructRequest(final HttpServletRequest req,
-			HttpServletResponse resp, final LocalClient lc)
+			HttpServletResponse resp, String instance)
 			throws UnsupportedEncodingException, IOException {
 		Object certObject = req.getAttribute("javax.servlet.request.X509Certificate");
 		String contentEncoding = req.getHeader("Content-Encoding");
 		String acceptEncoding = req.getHeader("Accept-Encoding");
 		AsyncRequest request = null;
 		if("POST".equals( req.getMethod())) {
-			request = new BaseRequestImpl(lc, req, resp,acceptEncoding, contentEncoding, certObject);
+			request = new BaseRequestImpl(req, resp,acceptEncoding, contentEncoding, certObject,instance);
 		} else {
 			Navajo in = TmlHttpServlet.constructFromRequest(req);
-			request = new BaseRequestImpl(lc, in, req,resp);
+			request = new BaseRequestImpl(in, req,resp,instance);
 		}
 		return request;
 	}

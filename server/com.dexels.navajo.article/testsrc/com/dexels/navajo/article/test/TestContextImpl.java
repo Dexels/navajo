@@ -159,13 +159,13 @@ public abstract class TestContextImpl extends BaseContextImpl {
 			}
 			
 			@Override
-			public Navajo handleInternal(Navajo in, Object cert, ClientInfo clientInfo)
+			public Navajo handleInternal(String instance, Navajo in, Object cert, ClientInfo clientInfo)
 					throws FatalException {
 				return null;
 			}
 			
 			@Override
-			public Navajo handleCallback(Navajo n, String callback) {
+			public Navajo handleCallback(String instance, Navajo n, String callback) {
 				return null;
 			}
 			

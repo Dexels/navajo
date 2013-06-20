@@ -37,7 +37,7 @@ public class TmlStandardServlet extends HttpServlet {
 				.getAttribute("javax.servlet.request.X509Certificate");
 		String recvEncoding = req.getHeader("Content-Encoding");
 		String sendEncoding = req.getHeader("Accept-Encoding");
-		AsyncRequest request = new BaseRequestImpl(lc,req, resp, sendEncoding, recvEncoding, certObject);
+		AsyncRequest request = new BaseRequestImpl(req, resp, sendEncoding, recvEncoding, certObject,"default");
 		
 
 		TmlStandardRunner tr = new TmlStandardRunner(request, lc);

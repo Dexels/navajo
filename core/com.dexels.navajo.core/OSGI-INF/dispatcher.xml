@@ -8,4 +8,6 @@
    <reference bind="setEventRegistry" unbind="clearEventRegistry" cardinality="1..1" interface="com.dexels.navajo.events.NavajoEventRegistry" name="NavajoEventRegistry" policy="dynamic"/>
    <reference bind="setTribeManager" unbind="clearTribeManager" cardinality="1..1" interface="com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface" name="TribeManagerInterface" policy="dynamic"/>
    <reference cardinality="1..1" interface="com.dexels.navajo.compiler.BundleCreator" name="BundleCreator" policy="dynamic"/>
+   <reference bind="addGlobalManager" cardinality="0..n" interface="com.dexels.navajo.server.GlobalManager" name="GlobalManager" policy="dynamic" unbind="removeGlobalManager"/>
+   <reference bind="addAuthenticator" cardinality="0..n" interface="com.dexels.navajo.authentication.api.AAAInterface" name="AAAInterface" policy="dynamic" unbind="removeAuthenticator"/>
 </scr:component>

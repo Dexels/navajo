@@ -28,6 +28,7 @@ public interface TmlRunnable extends Runnable {
 	public AsyncRequest getRequest();
 
 	public String getUrl();
+	public String getNavajoInstance();
 
 //	public Access getAccess();
 //	public void setAccess(Access access);

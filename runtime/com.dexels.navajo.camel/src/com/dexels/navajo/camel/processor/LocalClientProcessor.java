@@ -21,7 +21,7 @@ public class LocalClientProcessor implements Processor {
 	      AsyncRequest ar = (AsyncRequest) ex.getProperty("asyncRequest");
 	      
 		  ClientInfo clientInfo = ar.createClientInfo(scheduledAt, System.currentTimeMillis(), queueSize, queueId);
-		  Navajo outDoc = getLocalClient().handleInternal(in, ar.getCert(), clientInfo);
+		  Navajo outDoc = getLocalClient().handleInternal("default",in, ar.getCert(), clientInfo);
 		  ex.getOut().setBody(outDoc);
 	}
 
