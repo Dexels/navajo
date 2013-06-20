@@ -1322,6 +1322,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public TipiComponent instantiateComponent(XMLElement instance,
 			TipiEvent event, TipiInstantiateTipi t, TipiComponent parent)
 			throws TipiException {
+		return instantiateComponent(instance, event, t, parent, Boolean.FALSE);
+	}
+		public TipiComponent instantiateComponent(XMLElement instance,
+				TipiEvent event, TipiInstantiateTipi t, TipiComponent parent, Boolean isHomeComponent)
+				throws TipiException {
 		String name = (String) instance.getAttribute("name");
 		String tagName = instance.getName();
 		String clas = instance.getStringAttribute("class");
@@ -1345,11 +1350,12 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 						"Definition based instance, but no definition found. Definition: "
 								+ name);
 			}
+			// not passing isHomeComponent since this call automatically decides to set homeComponent
 			tc = instantiateComponentByDefinition(xx, instance, event, parent);
 		} else {
 			// Class provided. Not instantiating from a definition, name is
 			// irrelevant.
-			tc = (TipiComponent) instantiateClass(clas, null, instance, parent);
+			tc = (TipiComponent) instantiateClass(clas, null, instance, parent, isHomeComponent);
 		}
 		tc.setClassName(clas);
 		// tc.setParent(parent);
@@ -1700,10 +1706,9 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 							+ name);
 		}
 		componentDefinition.setAttribute("id", "init");
-		TipiComponent tc = instantiateComponent(componentDefinition, null,
-				null, null);
 		//top of the tree cannot not be a home component
-		tc.setHomeComponent(Boolean.TRUE);
+		TipiComponent tc = instantiateComponent(componentDefinition, null,
+				null, null, Boolean.TRUE);
 		tc.commitToUi();
 
 		try {
