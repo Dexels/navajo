@@ -70,7 +70,7 @@ public class ZipMap implements Mappable {
 	public void setContent(Binary b) {
 		this.content = b;
 		try {
-			content.write( zo );
+			content.write( zo, false );
 			zo.closeEntry();
 		} catch (IOException e) {
 			logger.error("Zip problem: ", e);
