@@ -1412,4 +1412,10 @@ public AsyncRequest getRequest() {
 	return null;
 }
 
+@Override
+public String getNavajoInstance() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
 }

@@ -1603,4 +1603,10 @@ public void setResource(String resourceName) {
 	this.resource = resourceName;
 }
 
+@Override
+public String getNavajoInstance() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
 }
