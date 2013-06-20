@@ -117,6 +117,7 @@
    <tipiaction name="setValue" class="TipiSetValue" package="com.dexels.navajo.tipi.actions">
       <param name="to" type="reference" required="true" />
       <param name="from" type="string" required="true" />
+      <param name="internal" type="boolean" required="false" default="false"/>
    </tipiaction>
 
    <tipiaction name="set" class="TipiSet" package="com.dexels.navajo.tipi.actions">

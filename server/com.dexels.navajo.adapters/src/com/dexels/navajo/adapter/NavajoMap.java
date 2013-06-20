@@ -197,6 +197,10 @@ private String resource;
 	  }
   }
 
+  public void setOutDoc(Navajo n) {
+	  this.outDoc = n;
+  }
+  
   /**
    * Set this to the message path to which the result of the called service needs to be appended.
    * Always used in conjunction with setAppend().
@@ -665,9 +669,10 @@ private String resource;
 	  msgPointer = null;
 	  setMethod(method);
 
-	  username = (username == null) ? this.access.rpcUser : username;
-	  password = (password == null) ? this.access.rpcPwd : password;
-
+	  this.username = (username == null) ? this.access.rpcUser : username;
+	  this.password = (password == null) ? this.access.rpcPwd : password;
+	  this.method = method;
+	  
 	  if (password == null)
 		  password = "";
 

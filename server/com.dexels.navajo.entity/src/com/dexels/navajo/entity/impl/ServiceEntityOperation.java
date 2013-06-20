@@ -10,16 +10,21 @@ import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.EntityOperation;
 import com.dexels.navajo.entity.Key;
+import com.dexels.navajo.entity.adapters.EntityMap;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.navajo.server.DispatcherInterface;
+import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.server.UserException;
 
 public class ServiceEntityOperation implements EntityOperation {
 
 	private EntityManager manager;
 	private DispatcherInterface dispatcher;
 	private LocalClient client;
-
+	private EntityMap myEntityMap;
+	
 	public ServiceEntityOperation() {
 
 	}
@@ -33,6 +38,14 @@ public class ServiceEntityOperation implements EntityOperation {
 	public ServiceEntityOperation(EntityManager m, LocalClient c) {
 		this.manager = m;
 		this.client = c;
+	}
+
+	public EntityMap getMyEntityMap() {
+		return myEntityMap;
+	}
+
+	public void setMyEntityMap(EntityMap myEntityMap) {
+		this.myEntityMap = myEntityMap;
 	}
 
 	@Override
@@ -91,6 +104,15 @@ public class ServiceEntityOperation implements EntityOperation {
 			input.addMessage(extraMessage);
 		}
 		try {
+			if ( myEntityMap != null ) {
+				myEntityMap.setOutDoc(input);
+				try {
+					myEntityMap.setDoSend(o.getService());
+				} catch (Exception e) {
+					throw new EntityException(e.getMessage(), e);
+				} 
+				return null;
+			}
 			if ( dispatcher != null ) {
 				return dispatcher.handle(input, true);
 			} else

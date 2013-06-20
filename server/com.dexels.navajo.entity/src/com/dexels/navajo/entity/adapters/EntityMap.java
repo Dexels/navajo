@@ -25,13 +25,11 @@ public class EntityMap extends NavajoMap {
 
 	public void setCall(boolean v) throws Exception {
 		
-		prepareOutDoc();
 		if ( entity != null && method != null ) {
 			Operation o = myManager.getOperation(entity, method);
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, DispatcherFactory.getInstance());
-			inDoc = seo.perform(this.outDoc, o);
-			serviceCalled = true;
-			serviceFinished = true;
+			seo.setMyEntityMap(this);
+			seo.perform(this.outDoc, o);
 		}
 		
 	}

@@ -48,13 +48,14 @@ public class Entity  {
 	 * Inject a new entity message.
 	 */
 	public void setMessage(Message entity) throws Exception {
-		
-		if ( myMessage == null || ( myMessage != null && !myMessage.isEqual(entity) ) ) {
+
+		if ( myMessage == null || ( entity != null && !myMessage.equals(entity)) ) {
 			// First deactivate.
 			deactivate();
 			myMessage = entity;
 			activate();
-		} 
+		}
+
 	}
 	
 	private void addSubEntity(Entity sub) throws EntityException {
@@ -77,15 +78,19 @@ public class Entity  {
 	 * @throws Exception
 	 */
 	protected synchronized void deactivate() throws EntityException {
+		
+		System.err.println("In deactivate(): " + getName());
 		for ( Entity sub : subEntities ) {
 			sub.deactivate();
 		}
-		subEntities.clear();
-		superEntities.clear();
+		//subEntities.clear();
+		//superEntities.clear();
 		activated = false;
 	}
 	
 	public synchronized void activate() throws EntityException {
+		
+		System.err.println("In activate(): " + getName() + "-> " + activated);
 		if ( activated ) {
 			return;
 		}

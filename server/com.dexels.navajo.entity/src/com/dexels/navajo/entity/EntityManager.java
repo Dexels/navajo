@@ -3,6 +3,7 @@ package com.dexels.navajo.entity;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -18,12 +19,12 @@ import com.dexels.navajo.document.Property;
  */
 public class EntityManager {
 
-	private Map<String,Entity> entityMap = new HashMap<String,Entity>();
-	private Map<String,Map<String,Operation>> operationsMap = new HashMap<String,Map<String,Operation>>();
+	private Map<String,Entity> entityMap = new ConcurrentHashMap<String,Entity>();
+	private Map<String,Map<String,Operation>> operationsMap = new ConcurrentHashMap<String,Map<String,Operation>>();
 
 	private static EntityManager instance;
 	
-	public void EntityManager() {
+	public EntityManager() {
 	}
 
 	public void activate() {
@@ -76,8 +77,9 @@ public class EntityManager {
 		}
 	}
 
-	public void addEntity(Entity e) {
+	public Entity addEntity(Entity e) {
 		entityMap.put(e.getName(), e);
+		return e;
 	}
 
 	public void removeEntity(Entity e) {

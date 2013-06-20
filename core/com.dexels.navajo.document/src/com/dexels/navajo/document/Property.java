@@ -582,6 +582,16 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    */
   public void setAnyValue(Object o);
   
+  /**
+   * Looks for the appropriate setter for this object, and sets it.
+   *  From now on, I think this is the safest accessor, if you are unsure about the type
+   * (for example, the result from an operand)
+   *  what type you are dealing with. Nano and jaxp are identical.
+   * @param Object value
+   * @param Boolean internal if the setValue is internal, no tipi event will be fired for "onValueChanged"
+   */
+  public void setAnyValue(Object o, Boolean internal);
+  
   public void setUnCheckedStringAsValue(String s);
   
 /**
