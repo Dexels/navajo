@@ -1492,7 +1492,7 @@ public String getServerId() {
   public void addAuthenticator(AAAInterface aa, Map<String,Object> settings) {
 	  authenticators.put((String) settings.get("instance"), aa);
   }
-  public void removeAuthenticator(GlobalManager gm, Map<String,Object> settings) {
+  public void removeAuthenticator(AAAInterface gm, Map<String,Object> settings) {
 	  authenticators.remove(settings.get("instance"));
   }
   
