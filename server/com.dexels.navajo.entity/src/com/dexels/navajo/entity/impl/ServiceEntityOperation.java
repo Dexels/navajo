@@ -13,10 +13,7 @@ import com.dexels.navajo.entity.Key;
 import com.dexels.navajo.entity.adapters.EntityMap;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
-import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.navajo.server.DispatcherInterface;
-import com.dexels.navajo.server.SystemException;
-import com.dexels.navajo.server.UserException;
 
 public class ServiceEntityOperation implements EntityOperation {
 
