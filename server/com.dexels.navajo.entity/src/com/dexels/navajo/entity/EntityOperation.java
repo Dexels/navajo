@@ -4,5 +4,5 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Operation;
 
 public interface EntityOperation {
-	public Navajo perform(Navajo input, Operation o) throws EntityException;
+	public Navajo perform(Navajo input) throws EntityException;
 }

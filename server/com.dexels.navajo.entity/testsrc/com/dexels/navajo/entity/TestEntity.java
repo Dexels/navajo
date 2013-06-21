@@ -94,18 +94,20 @@ public class TestEntity {
 		Set<Key> keys = e.getKeys();
 		int found = 3;
 		for ( Key k : keys ) {
-			Message m = k.generateRequestMessage();
-			Assert.assertNotNull(m);
-			Assert.assertEquals("MyEntity", m.getName());
-			if ( m.getProperty("MatchId") != null ) {
+			Navajo m = k.generateRequestMessage();
+			m.write(System.err);
+			
+			Assert.assertNotNull(m.getMessage("MyEntity"));
+			
+			if ( m.getMessage("MyEntity").getProperty("MatchId") != null ) {
 				found--;
-				Assert.assertEquals(1, m.getAllProperties().size());
-			} else if ( m.getProperty("_id") != null ) {
+				Assert.assertEquals(1, m.getMessage("MyEntity").getAllProperties().size());
+			} else if ( m.getProperty("/MyEntity/_id") != null ) {
 				found--;
-				Assert.assertEquals(1, m.getAllProperties().size());
-			} else if ( m.getProperty("ExternalMatchId") != null ) {
-				Assert.assertNotNull(m.getProperty("SeasonId"));
-				Assert.assertNotNull(m.getProperty("OrganizingDistrictId"));
+				Assert.assertEquals(1, m.getMessage("MyEntity").getAllProperties().size());
+			} else if ( m.getProperty("/MyEntity/ExternalMatchId") != null ) {
+				Assert.assertNotNull(m.getProperty("/MyEntity/SeasonId"));
+				Assert.assertNotNull(m.getProperty("/MyEntity/OrganizingDistrictId"));
 				found--;
 			}
 		}
@@ -122,7 +124,7 @@ public class TestEntity {
 		e.activate();
 		Key k = e.getKey(matchingProperties);
 		Assert.assertNotNull(k);
-		Assert.assertNotNull(k.generateRequestMessage().getProperty("MatchId"));
+		Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/MatchId"));
 		
 	}
 	
@@ -149,7 +151,7 @@ public class TestEntity {
 		e.activate();
 		Key k = e.getKey(matchingProperties);
 		Assert.assertNotNull(k);
-		Assert.assertNotNull(k.generateRequestMessage().getProperty("MatchId"));
+		Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/MatchId"));
 	}
 	
 	@Test 
@@ -162,7 +164,7 @@ public class TestEntity {
 		e.activate();
 		Key k = e.getKey(matchingProperties);
 		Assert.assertNotNull(k);
-		Assert.assertNotNull(k.generateRequestMessage().getProperty("_id"));
+		Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/_id"));
 		
 	}
 	
@@ -178,9 +180,9 @@ public class TestEntity {
 		e.activate();
 		Key k = e.getKey(matchingProperties);
 		Assert.assertNotNull(k);
-		Assert.assertNotNull(k.generateRequestMessage().getProperty("SeasonId"));
-		Assert.assertNotNull(k.generateRequestMessage().getProperty("ExternalMatchId"));
-		Assert.assertNotNull(k.generateRequestMessage().getProperty("OrganizingDistrictId"));
+		Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/SeasonId"));
+		Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/ExternalMatchId"));
+		Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/OrganizingDistrictId"));
 		
 	}
 	
@@ -191,9 +193,29 @@ public class TestEntity {
 		e.activate();
 		Key k = e.getKey("ALT");
 		Assert.assertNotNull(k);
-		Assert.assertNotNull(k.generateRequestMessage().getProperty("SeasonId"));
-		Assert.assertNotNull(k.generateRequestMessage().getProperty("ExternalMatchId"));
-		Assert.assertNotNull(k.generateRequestMessage().getProperty("OrganizingDistrictId"));
+		Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/SeasonId"));
+		Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/ExternalMatchId"));
+		Assert.assertNotNull(k.generateRequestMessage().getProperty("/MyEntity/OrganizingDistrictId"));
+		
+	}
+	
+	@Test
+	public void testSetMessageChangedSuperEntity() throws Exception {
+		
+		Entity m = manager.getEntity("MyEntity");
+		m.activate();
+		Assert.assertEquals(1, m.getSuperEntities().size());
+		
+		m.getMessage().setExtends("");
+		m.getMessage().getProperty("MatchId").setExtends("");
+		
+		System.err.println("**************************************************");
+		m.getMessage().write(System.err);
+		System.err.println("**************************************************");
+		
+		m.setMessage(m.getMessage());
+		
+		Assert.assertEquals(0, m.getSuperEntities().size());
 		
 	}
 	
@@ -203,6 +225,10 @@ public class TestEntity {
 		System.err.println("=================================================================================");
 		Entity a = manager.getEntity("Activity");
 		a.activate();
+		Entity m = manager.getEntity("MyEntity");
+		m.activate();
+		Assert.assertEquals(1, m.getSuperEntities().size());
+		
 		//  Create new Activity Message
 		NavajoFactory f = NavajoFactory.getInstance();
 		Navajo n = f.createNavajo();
@@ -217,18 +243,20 @@ public class TestEntity {
 		keyPropActAlt.setKey("true,auto");
 		activity.addProperty(keyPropActAlt);
 		
+		System.err.println("INJECTING NEW MESSAGE!!!!!!!");
 		a.setMessage(activity);
 		
-		Entity m = manager.getEntity("MyEntity");
-		m.activate();
+//		m = manager.getEntity("MyEntity");
+//		m.activate();
 		m.getMessage().write(System.err);
 		
-		for ( Key k : m.getKeys() ) {
-			System.err.println("KEY:");
-			k.generateRequestMessage().write(System.err);
-		}
-		System.err.println("=================================================================================");
+//		for ( Key k : m.getKeys() ) {
+//			System.err.println("KEY:");
+//			k.generateRequestMessage().write(System.err);
+//		}
+//		System.err.println("=================================================================================");
 		
+		Assert.assertEquals(1, m.getSuperEntities().size());
 		Assert.assertEquals(4, m.getKeys().size());
 	}
 }

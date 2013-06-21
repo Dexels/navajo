@@ -99,9 +99,9 @@ public class TestOperation {
 		oc.setService("aap/ProcessGetAap");
 		manager.addOperation(oc);
 		
-		ServiceEntityOperation seo = new ServiceEntityOperation(manager, (DispatcherInterface) null);
+		ServiceEntityOperation seo = new ServiceEntityOperation(manager, (DispatcherInterface) null, oc);
 		
-		Navajo result = seo.perform(null, oc);
+		Navajo result = seo.perform(null);
 		
 		Assert.assertNotNull(result);
 		

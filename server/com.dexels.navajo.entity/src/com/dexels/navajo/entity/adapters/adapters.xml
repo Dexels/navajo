@@ -117,6 +117,81 @@
 					required="false" />
 				<param name="append" field="append" type="string" required="false" />
 			</method>
+			<method name="update">
+				<param name="method" field="method" type="string" required="automatic"
+					value="'POST'" />
+				<param name="call" field="call" type="boolean" required="automatic"
+					value="true" />
+				<param name="breakOnException" field="breakOnException" type="boolean"
+					required="false" />
+				<param name="server" field="server" type="string" required="false" />
+				<param name="username" field="username" type="string"
+					required="false" />
+				<param name="password" field="password" type="string"
+					required="false" />
+				<param name="showProperties" field="suppressProperties" type="string"
+					required="false" />
+				<param name="suppressProperties" field="suppressProperties"
+					type="string" required="false" />
+				<param name="inputProperties" field="inputProperties" type="string"
+					required="false" />
+				<param name="outputProperties" field="outputProperties" type="string"
+					required="false" />
+				<param name="block" field="block" type="boolean" required="false" />
+				<param name="appendTo" field="appendTo" type="string"
+					required="false" />
+				<param name="append" field="append" type="string" required="false" />
+			</method>
+			<method name="insert">
+				<param name="method" field="method" type="string" required="automatic"
+					value="'PUT'" />
+				<param name="call" field="call" type="boolean" required="automatic"
+					value="true" />
+				<param name="breakOnException" field="breakOnException" type="boolean"
+					required="false" />
+				<param name="server" field="server" type="string" required="false" />
+				<param name="username" field="username" type="string"
+					required="false" />
+				<param name="password" field="password" type="string"
+					required="false" />
+				<param name="showProperties" field="suppressProperties" type="string"
+					required="false" />
+				<param name="suppressProperties" field="suppressProperties"
+					type="string" required="false" />
+				<param name="inputProperties" field="inputProperties" type="string"
+					required="false" />
+				<param name="outputProperties" field="outputProperties" type="string"
+					required="false" />
+				<param name="block" field="block" type="boolean" required="false" />
+				<param name="appendTo" field="appendTo" type="string"
+					required="false" />
+				<param name="append" field="append" type="string" required="false" />
+			</method>
+			<method name="delete">
+				<param name="method" field="method" type="string" required="automatic"
+					value="'DELETE'" />
+				<param name="call" field="call" type="boolean" required="automatic"
+					value="true" />
+				<param name="breakOnException" field="breakOnException" type="boolean"
+					required="false" />
+				<param name="server" field="server" type="string" required="false" />
+				<param name="username" field="username" type="string"
+					required="false" />
+				<param name="password" field="password" type="string"
+					required="false" />
+				<param name="showProperties" field="suppressProperties" type="string"
+					required="false" />
+				<param name="suppressProperties" field="suppressProperties"
+					type="string" required="false" />
+				<param name="inputProperties" field="inputProperties" type="string"
+					required="false" />
+				<param name="outputProperties" field="outputProperties" type="string"
+					required="false" />
+				<param name="block" field="block" type="boolean" required="false" />
+				<param name="appendTo" field="appendTo" type="string"
+					required="false" />
+				<param name="append" field="append" type="string" required="false" />
+			</method>
 		</methods>
 	</map>
 </adapterdef>

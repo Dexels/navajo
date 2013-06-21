@@ -27,15 +27,35 @@ public class Key {
 		return id;
 	}
 	
-	public Message generateRequestMessage() {
+	public Navajo generateRequestMessage() {
+		return generateRequestMessage(null);
+	}
+	
+	/**
+	 * Generate a request message based upon a Navajo input.
+	 * The request message will only containing the defined properties in the Key with filled in values from the input Navajo.
+	 * 
+	 * @param input
+	 * @return
+	 */
+	public Navajo generateRequestMessage(Navajo input) {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message m = NavajoFactory.getInstance().createMessage(n, myEntity.getName());
 		n.addMessage(m);
 		// Copy properties.
 		for ( Property p : myKey ) {
-			m.addProperty(p.copy(n));
+			Property copy = p.copy(n);
+			m.addProperty(copy);
+			if ( input != null ) {
+				Property ip = input.getProperty(p.getFullPropertyName());
+				if ( ip != null ) {
+					copy.setUnCheckedStringAsValue(ip.getValue());
+				}
+			}
 		}
-		return m;
+		System.err.println("In generateRequestMessage()...");
+		n.write(System.err);
+		return n;
 	}
 	
 	private boolean propertyMatch(Property p1, Property p2) {
