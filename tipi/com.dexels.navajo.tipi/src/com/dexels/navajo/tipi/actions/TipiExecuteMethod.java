@@ -98,11 +98,11 @@ public final class TipiExecuteMethod extends TipiAction {
 		}
 		if (tc != null)
 		{
-			logger.info("Executing method " + name + " using as rootComponent " + tc.getName() + "/" + tc.getPath());
+			logger.debug("Executing method " + name + " using as rootComponent " + tc.getName() + "/" + tc.getPath());
 		}
 		else
 		{
-			logger.info("Executing method " + name + " using as rootComponent null");
+			logger.debug("Executing method " + name + " using as rootComponent null");
 		}
 		XMLElement methodXML = localMethodXML == null ? globalMethodXML : localMethodXML;
 		TipiMethod tipiMethod = new TipiMethod(event.getContext());

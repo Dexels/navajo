@@ -538,16 +538,20 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 		}
     }
 
-    public final void write(OutputStream to) throws IOException {
+    public final void write(OutputStream to, boolean close) throws IOException {
         InputStream in = getDataAsStream();
         if (in != null) {
-            copyResource(to, in,true);
+            copyResource(to, in, close);
             try {
                 in.close();
             } catch (Exception e) {
                 // Don't care
             }
         }
+    }
+
+    public final void write(OutputStream to) throws IOException {
+        write( to, true );
     }
 
     public File getFile() {
