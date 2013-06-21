@@ -37,15 +37,7 @@ public final class DbConnectionBroker
 	// The cardinality of this semaphore equals the maximum number of connections that this data source allows.
 	private final Semaphore availableConnections;
 
-	
-	public DbConnectionBroker(String dbDriver,
-			String dbServer,
-			String dbLogin,
-			String dbPassword)
-	throws ClassNotFoundException
-	{
-		this(dbDriver, dbServer, dbLogin, dbPassword, 8, 8, 0.1);
-	}
+
 	public DbConnectionBroker(String dbDriver,
 			String dbServer,
 			String dbLogin,
