@@ -22,3 +22,5 @@ Import-Package: com.dexels.navajo.resource,
  org.slf4j;version="[1.6.1,1.8.0)"
 Bundle-ClassPath: .
 Service-Component: OSGI-INF/navajo.resource.oracle.xml
+Export-Package: com.dexels.navajo.resource.jdbc.oracle;uses:="javax.sql,org.osgi.framework,org.osgi.service.jdbc",
+ com.oracle.jdbc.service.impl;uses:="javax.sql,oracle.jdbc.pool,org.osgi.service.jdbc"
