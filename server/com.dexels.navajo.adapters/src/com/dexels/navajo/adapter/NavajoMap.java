@@ -212,7 +212,7 @@ private String resource;
 	  appendTo = messageOffset;
   }
   
-  private final synchronized void waitForResult() throws UserException {
+  protected synchronized void waitForResult() throws UserException {
 	  if (!serviceCalled) {
 		  throw new UserException(-1, "Call webservice before retrieving result.");
 	  }
@@ -420,7 +420,7 @@ private String resource;
 	  }
   }
 
-  public final void setPropertyName(String fullName) throws UserException {
+  public void setPropertyName(String fullName) throws UserException {
     currentFullName = ((messagePointer == null || messagePointer.equals("")) ? fullName : messagePointer + "/" + ((fullName.startsWith("/") ? fullName.substring(1) : fullName)));
     String propName = MappingUtils.getStrippedPropertyName(fullName);
     try {
@@ -597,7 +597,7 @@ private String resource;
 	  return b;
   }
   
-  protected void prepareOutDoc() {
+  protected Navajo prepareOutDoc() {
 	  // If currentOutDoc flag was set, make sure to copy outdoc.
 	  if ( this.useCurrentOutDoc ) {
 		  if ( this.outDoc != null ) {
@@ -654,6 +654,12 @@ private String resource;
 			  e.printStackTrace(Access.getConsoleWriter(access));
 		  }
 	  }
+	  
+	  return outDoc;
+  }
+  
+  public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException {
+	  setDoSend(method, prepareOutDoc());
   }
   
   /**
@@ -663,12 +669,13 @@ private String resource;
    * @param method
    * @throws UserException
    */
-  public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException {
+  public void setDoSend(String method, Navajo od) throws UserException, ConditionErrorException, SystemException {
   
 	  // Reset current msgPointer when performing new doSend.
 	  msgPointer = null;
 	  setMethod(method);
-
+	  this.outDoc = od;
+	  
 	  this.username = (username == null) ? this.access.rpcUser : username;
 	  this.password = (password == null) ? this.access.rpcPwd : password;
 	  this.method = method;
@@ -676,8 +683,6 @@ private String resource;
 	  if (password == null)
 		  password = "";
 
-	  prepareOutDoc();
-	  
 	  try {
 		  if(this.resource!=null) {
 			  serviceCalled = true;
