@@ -75,8 +75,29 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 				}
 			}
 		}
+		addWatchedFolder(config,".*\\.cfg","config");
+
+		File adapters = new File(rootPath,"adapters");
+		
+		addWatchedFolder(adapters,".*\\.jar","adapters");
 	}
 	
+	private void addWatchedFolder(File folder,String fileFilter, String configName) {
+		final String factoryPid = "org.apache.felix.fileinstall";
+		final String filter = "(&(service.factoryPid="+factoryPid+")(name="+configName+"))";
+		try {
+			Configuration cc = createOrReuse(factoryPid, filter);
+			Dictionary<String, Object> d = new Hashtable<String, Object>();
+			d.put("felix.fileinstall.dir", folder.getAbsolutePath());
+			d.put("felix.fileinstall.filter", fileFilter);
+			d.put("configName", configName);
+			cc.update(d);
+		} catch (IOException e) {
+			logger.error("Error: ", e);
+		}
+		
+	}
+
 	private Map<String,Message> readResources(File resource, Map<String, Set<String>> aliases) {
 		Map<String,Message> result = new HashMap<String, Message>();
 		FileReader fr = null;
@@ -332,7 +353,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		}
 //		configAdmin.getConfiguration(arg0)
 //		Configuration cc = configAdmin.getConfiguration("navajo.resource."+instance+"."+name,null);
-		final String filter = "(&(instance="+instance+")(name=navajo.resource."+name+"))";
+		final String filter = "(&(instance="+instance+")(name=navajo.resource."+name+")(service.factoryPid=navajo.resource"+type+"))";
 		Configuration cc = createOrReuse("navajo.resource."+type, filter);
 		updateIfChanged(cc, settings);
 //		cc.update(settings);
