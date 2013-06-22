@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.dexels.navajo.adapter.NavajoMap;
 import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
@@ -104,7 +105,12 @@ public class EntityMap extends NavajoMap {
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, DispatcherFactory.getInstance(), o);
 			myEntity = seo.getMyEntity();
 			seo.setMyEntityMap(this);
-			seo.perform(prepareOutDoc());
+			Navajo result = seo.perform(prepareOutDoc());
+			if ( result != null ) {
+				this.serviceCalled = true;
+				this.serviceFinished = true;
+				this.inDoc = result;
+			}
 		}
 		
 	}

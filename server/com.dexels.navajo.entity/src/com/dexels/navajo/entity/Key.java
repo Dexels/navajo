@@ -53,8 +53,6 @@ public class Key {
 				}
 			}
 		}
-		System.err.println("In generateRequestMessage()...");
-		n.write(System.err);
 		return n;
 	}
 	

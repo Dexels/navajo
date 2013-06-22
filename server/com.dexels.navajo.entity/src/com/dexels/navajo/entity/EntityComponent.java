@@ -48,6 +48,9 @@ public class EntityComponent extends Entity {
 		// Add operations defined in entity.
 		List<Operation> allOps = result.getAllOperations();
 		for ( Operation o : allOps ) {
+			if ( o.getEntityName() == null || o.getEntityName().equals("") ) {
+				o.setEntityName(getName());
+			}
 			em.addOperation(o);
 		}
 	}
