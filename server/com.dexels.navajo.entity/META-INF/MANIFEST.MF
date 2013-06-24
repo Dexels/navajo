@@ -15,6 +15,7 @@ Import-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.server.api,
  javax.servlet;version="3.0.0",
  javax.servlet.http;version="3.0.0",
+ javax.transaction,
  navajo;version="1.1.0",
  navajoextension,
  org.osgi.framework;version="1.6.0"

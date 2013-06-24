@@ -18,6 +18,8 @@ import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.EntityOperation;
 import com.dexels.navajo.entity.Key;
 import com.dexels.navajo.entity.adapters.EntityMap;
+import com.dexels.navajo.entity.transactions.NavajoTransaction;
+import com.dexels.navajo.entity.transactions.NavajoTransactionManager;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.DispatcherInterface;
@@ -29,8 +31,9 @@ public class ServiceEntityOperation implements EntityOperation {
 	private DispatcherInterface dispatcher;
 	private LocalClient client;
 	private EntityMap myEntityMap;
-	private final Operation myOperation;
+	private Operation myOperation;
 	private final Entity myEntity;
+	private Key myKey;
 	
 	public ServiceEntityOperation(EntityManager m, DispatcherInterface c, Operation o) throws EntityException {
 		this.manager = m;
@@ -42,6 +45,15 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 	}
 
+	public ServiceEntityOperation(EntityManager m, EntityMap c, Operation o) throws EntityException {
+		this.manager = m;
+		this.myEntityMap = c;
+		this.myOperation = o;
+		this.myEntity = manager.getEntity(myOperation.getEntityName());
+		if ( myEntity == null ) {
+			throw new EntityException("Could not find entity: " + myOperation.getEntityName());
+		}
+	}
 
 	public ServiceEntityOperation(EntityManager m, LocalClient c, Operation o)  throws EntityException {
 		this.manager = m;
@@ -53,16 +65,46 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 	}
 
+	public ServiceEntityOperation cloneServiceEntityOperation(Operation o) throws EntityException {
+		if ( myEntityMap != null ) {
+			return new ServiceEntityOperation(manager, myEntityMap, o);
+		} else if ( dispatcher != null ) {
+			return new ServiceEntityOperation(manager, dispatcher, o);
+		} else if ( client != null ) {
+			return new ServiceEntityOperation(manager, client, o);
+		} else {
+			return null;
+		}
+	}
+	
+	public Key getMyKey() {
+		return myKey;
+	}
+
+	public DispatcherInterface getDispatcher() {
+		return dispatcher;
+	}
+
+
+	public LocalClient getClient() {
+		return client;
+	}
+
+
+	public Operation getMyOperation() {
+		return myOperation;
+	}
+
+	public void setMyOperation(Operation o) {
+		this.myOperation = o;
+	}
+	
 	public Entity getMyEntity() {
 		return myEntity;
 	}
 
 	public EntityMap getMyEntityMap() {
 		return myEntityMap;
-	}
-
-	public void setMyEntityMap(EntityMap myEntityMap) {
-		this.myEntityMap = myEntityMap;
 	}
 
 	private List<String> checkRequired(Message message, Message entityMessage) throws EntityException {
@@ -175,6 +217,10 @@ public class ServiceEntityOperation implements EntityOperation {
 		return sb.toString();
 	}
 	
+	/**
+	 * TODO: SUPPORT FOR TRANSACTIONS
+	 * 
+	 */
 	@Override
 	public Navajo perform(Navajo input) throws EntityException {
 		
@@ -187,44 +233,50 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 		
 		Message inputEntity = input.getMessage(myEntity.getName());
-		Key k = myEntity.getKey(inputEntity.getAllProperties());
-		if(k==null) {
+		myKey = myEntity.getKey(inputEntity.getAllProperties());
+		if(myKey==null) {
 			// Check for _id property. If _id is present it is good as a key.
 			if ( inputEntity.getProperty("_id") == null ) {
 				throw new EntityException("Input is invalid: no valid entity key found.");
+			} else {
+				myKey = new Key("", myEntity);
 			}
 		}
 		cleanInput(input, validMessages);
 		
 		if( myOperation.getMethod().equals(Operation.GET) || myOperation.getMethod().equals(Operation.DELETE) ) {
-			Navajo request = k.generateRequestMessage(input);
+			Navajo request = myKey.generateRequestMessage(input);
 			if ( myOperation.getMethod().equals(Operation.DELETE) ) {
 				try {
-					checkForMongo(request.getMessage(myEntity.getName()), k);
+					checkForMongo(request.getMessage(myEntity.getName()));
 				} catch (Exception e) {
 					StringWriter sw = new StringWriter();
 					request.write(sw);
 					throw new EntityException("Could not peform delete, entity not found:\n" + sw);
 				}
 			}
-			return callEntityService(request, myOperation.getService());
+			return callEntityService(request);
 		}
 	
 		if(myOperation.getMethod().equals(Operation.PUT) || myOperation.getMethod().equals(Operation.POST)) {
 			
-			// Check for Mongo entity, if Mongo make sure that _id is added if it does not exist.
-			try {
-				if ( myOperation.getMethod().equals(Operation.POST) && checkForMongo(inputEntity, k) ) {
-					addIdToArrayMessageDefinitions(myEntity.getMessage());
+			// Check for (Mongo) entity, if Mongo make sure that _id is added if it does not exist.
+			if ( myOperation.getMethod().equals(Operation.POST) ) {
+				try {
+					if ( checkForMongo(inputEntity) ) {
+						addIdToArrayMessageDefinitions(myEntity.getMessage());
+					} 
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+					StringWriter sw = new StringWriter();
+					inputEntity.write(sw);
+					throw new EntityException("Could not perform update, entity not found:\n" + sw);
 				}
-			} catch (Exception e) {
-				StringWriter sw = new StringWriter();
-				inputEntity.write(sw);
-				throw new EntityException("Could not perform update, entity not found:\n" + sw);
 			}
 			
 			if ( myOperation.getMethod().equals(Operation.PUT) ) {
 				List<String> missing = checkRequired(inputEntity, myEntity.getMessage());
+				// TODO: Check for unique keys..
 				if ( missing.size() > 0  ) {
 					throw new EntityException("Could not perform insert, missing properties:\n" + listToString(missing));
 				}
@@ -235,7 +287,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			if ( invalidProperties.size() > 0 ) {
 				throw new EntityException("Could not perform operation, invalid property types:\n" + listToString(invalidProperties));
 			}
-			return callEntityService(input, myOperation.getService());
+			return callEntityService(input);
 			
 		}
 		return null;
@@ -250,14 +302,15 @@ public class ServiceEntityOperation implements EntityOperation {
 	 * @param k
 	 * @throws EntityException
 	 */
-	private boolean checkForMongo(Message inputEntity, Key k) throws EntityException {
+	private boolean checkForMongo(Message inputEntity) throws EntityException {
 		if ( myOperation.getExtraMessage() != null && myOperation.getExtraMessage().getName().equals("__Mongo__") && inputEntity.getProperty("_id") == null ) {
 			// Fetch _id
 			Operation get = manager.getOperation(inputEntity.getName(), Operation.GET);
 			
+			ServiceEntityOperation seo_get = cloneServiceEntityOperation(get);
 			// Construct request from key and input.
-			Navajo request = k.generateRequestMessage(inputEntity.getRootDoc());
-			Navajo result = callEntityService(request, get.getService());
+			Navajo request = myKey.generateRequestMessage(inputEntity.getRootDoc());
+			Navajo result = seo_get.perform(request);
 			Property id = null;
 			if ( result != null ) {
 				id = result.getProperty(inputEntity.getName() + "/_id");
@@ -280,16 +333,68 @@ public class ServiceEntityOperation implements EntityOperation {
 	}
 
 
-	protected Navajo callEntityService(Navajo input, String service) throws EntityException {
-		appendServiceName(input, service);
+	private Navajo getCurrentEntity(Navajo input) throws EntityException {
+		Operation getop = EntityManager.getInstance().getOperation(myEntity.getName(), Operation.GET);
+		ServiceEntityOperation get = this.cloneServiceEntityOperation(getop);
+		Navajo r = myKey.generateRequestMessage(input);
+		if ( getop.getExtraMessage() != null ) {
+			r.addMessage(getop.getExtraMessage().copy(r));
+		}
+		appendServiceName(r, getop.getService());
+		Navajo original = get.commitOperation(r, true);
+		return original;
+	}
+	
+	/**
+	 * TODO: Implement support for Transactions.
+	 * If This method is called in the context of a Transaction, depending on the isolation level
+	 * use real or proxy service calls.
+	 * 
+	 * @param input
+	 * @param service
+	 * @return
+	 * @throws EntityException
+	 */
+	private Navajo callEntityService(Navajo input) throws EntityException {
+		appendServiceName(input, myOperation.getService());
+		System.err.println("In callEntityService: " + myOperation.getService());
 		final Message extraMessage = myOperation.getExtraMessage();
 		if(extraMessage!=null) {
 			input.addMessage(extraMessage);
 		}
+
+		// Check for transaction.
+		try {
+			NavajoTransaction nt = (NavajoTransaction) NavajoTransactionManager.getInstance().getTransaction();
+			if ( nt != null && !myOperation.getMethod().equals(Operation.GET) ) {
+				Navajo original = null;
+				// fetch original Navajo (before POST or DELETE).
+				if ( myOperation.getMethod().equals(Operation.POST) || myOperation.getMethod().equals(Operation.DELETE)) {
+					original = getCurrentEntity(input);
+				}
+				// Perform operation (blocking!)
+				Navajo result = commitOperation(input, true);
+				// Log when successful.
+				nt.logEntityService(input, original, this);
+				return result;
+			} else {
+				return commitOperation(input, false);
+			}
+		} catch (Exception se) {
+			throw new EntityException(se.getMessage(), se);
+		}
+
+	}
+
+	public Navajo commitOperation(Navajo input, boolean block) throws EntityException {
 		try {
 			if ( myEntityMap != null ) {
 				try {
-					myEntityMap.setDoSend(service, input);
+					myEntityMap.setDoSend(myOperation.getService(), input);
+					if ( block ) {
+						myEntityMap.waitForResult();
+						return myEntityMap.getResponseNavajo();
+					}
 				} catch (Exception e) {
 					throw new EntityException(e.getMessage(), e);
 				} 
@@ -306,8 +411,9 @@ public class ServiceEntityOperation implements EntityOperation {
 		} catch (FatalException e1) {
 			throw new EntityException("Error calling entity service: ",e1);
 		}
-	}
 
+	}
+	
 
 	protected void appendServiceName(Navajo input, String rpcName) {
 		Header h = input.getHeader();

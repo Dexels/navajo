@@ -13,7 +13,6 @@ import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;
 
 public class EntityMap extends NavajoMap {
@@ -102,9 +101,8 @@ public class EntityMap extends NavajoMap {
 		
 		if ( entity != null && method != null ) {
 			Operation o = myManager.getOperation(entity, method);
-			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, DispatcherFactory.getInstance(), o);
+			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, this, o);
 			myEntity = seo.getMyEntity();
-			seo.setMyEntityMap(this);
 			Navajo result = seo.perform(prepareOutDoc());
 			if ( result != null ) {
 				this.serviceCalled = true;

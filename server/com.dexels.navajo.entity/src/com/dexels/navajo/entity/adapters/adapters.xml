@@ -1,5 +1,9 @@
 <adapterdef>
 	<map>
+		<tagname>transaction</tagname>
+		<object>com.dexels.navajo.entity.adapters.TransactionMap</object>
+	</map>
+	<map>
 		<tagname>entity</tagname>
 		<object>com.dexels.navajo.entity.adapters.EntityMap</object>
 		<values>
