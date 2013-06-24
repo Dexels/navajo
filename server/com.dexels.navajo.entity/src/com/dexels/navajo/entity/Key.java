@@ -53,6 +53,9 @@ public class Key {
 				}
 			}
 		}
+		if ( input.getProperty("_id") != null ) {
+			m.addProperty(input.getProperty("_id").copy(n));
+		}
 		return n;
 	}
 	
