@@ -20,6 +20,7 @@ import java.util.logging.Level;
 
 import org.dexels.grus.DbConnectionBroker;
 import org.dexels.grus.GrusConnection;
+import org.dexels.grus.LegacyGrusConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -323,27 +324,6 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		return parameters.get(index);
 	}
 
-	public int getInstances() {
-		return ConnectionBrokerManager.getInstances();
-	}
-
-	public synchronized void setDeleteDatasource(String datasourceName)
-			throws MappableException, UserException {
-
-		if (fixedBroker != null) {
-			fixedBroker.destroy(datasourceName);
-		}
-		fixedBroker = null;
-	}
-
-	public static void terminateFixedBroker() {
-		if (fixedBroker != null) {
-			fixedBroker.terminate();
-		}
-		fixedBroker = null;
-
-	}
-  
 	/**
 	 * 
 	 * @param reload

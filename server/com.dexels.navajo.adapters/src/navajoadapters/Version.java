@@ -103,7 +103,6 @@ public class Version extends AbstractCoreExtension {
 	@Override
 	public void shutdown() {
 		GrusManager.getInstance().shutdown();
-		SQLMap.terminateFixedBroker();
 	}
 
 
