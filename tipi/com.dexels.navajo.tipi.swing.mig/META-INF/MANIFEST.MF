@@ -2,7 +2,7 @@ Bundle-Name: Navajo Swing Tipi MigLayout
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.mig
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.11
+Bundle-Version: 1.0.12.qualifier
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  com.dexels.navajo.tipi.swing;bundle-version="[1.0.41,2.0.0)"
