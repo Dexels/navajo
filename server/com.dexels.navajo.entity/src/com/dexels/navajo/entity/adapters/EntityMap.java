@@ -11,6 +11,9 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.entity.Entity;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 
 
 public class EntityMap extends NavajoMap {
