@@ -125,27 +125,6 @@ private void saveConfigFile(boolean copy) throws MappableException {
         }
   }
 
-  public synchronized void setDeleteDatasources(SQLMapDatasourceMap [] datasources) throws MappableException, UserException {
-
-	  if (noAccess)
-	        throw new MappableException("Cannot enter maintenance object in write mode, already in use");
-	  
-      saveConfigFile(true);
-
-      SQLMap sqlMap = new SQLMap();
-      dirty = false;
-      for (int i = 0; i < datasources.length; i++) {
-          Message msg = sqlMapConfigFile.getMessage("datasources").getMessage(datasources[i].getDatasourceName());
-          if (msg != null) {
-            dirty = true;
-            sqlMapConfigFile.getMessage("datasources").removeMessage(msg);
-          }
-          sqlMap.setDeleteDatasource(datasources[i].datasourceName);
-      }
-      if (dirty) {  // rewrite sqlmap.xml property file!
-        saveConfigFile(false);
-      }
-  }
 
   public synchronized void setDatasources(SQLMapDatasourceMap [] datasources) throws UserException, NavajoException, MappableException {
 
