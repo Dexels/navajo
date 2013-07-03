@@ -39,6 +39,14 @@ import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import navajocore.Version;
 
 import org.osgi.framework.BundleContext;
@@ -46,6 +54,7 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -605,6 +614,89 @@ public class TslCompiler {
 		if (leftOver > 0) {
 			result.append(printIdent(ident) + " else \n");
 
+		}
+
+		return result.toString();
+
+	}
+
+	public String operationsNode(int ident, Element n) throws Exception {
+
+		StringBuffer result = new StringBuffer();
+
+		NodeList children = n.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			if (children.item(i).getNodeName().equals("operation")) {
+				Element e = (Element) children.item(i);
+				String entity = e.getAttribute("entity");
+				String service = e.getAttribute("service");
+				String method = e.getAttribute("method");
+
+				result.append(printIdent(ident) + "if (true) {\n");
+
+				String operationString = "com.dexels.navajo.document.Operation o = "
+						+ "NavajoFactory.getInstance().createOperation(access.getOutputDoc(), "
+						+ "\""
+						+ method
+						+ "\", \""
+						+ service
+						+ "\", \""
+						+ entity + "\", null);\n";
+
+				result.append(printIdent(ident + 2) + operationString);
+				// Find extra message definition.
+				NodeList extraMessages = e.getChildNodes();
+				DocumentBuilderFactory factory = DocumentBuilderFactory
+						.newInstance();
+				DocumentBuilder builder = factory.newDocumentBuilder();
+				DOMImplementation impl = builder.getDOMImplementation();
+				Document doc = impl.createDocument(null, null, null);
+
+				String extraMessageName = null;
+				Element extraMessageElement = null;
+
+				for (int j = 0; j < extraMessages.getLength(); j++) {
+					if (extraMessages.item(j).getNodeName().equals("message")) {
+						extraMessageElement = (Element) extraMessages.item(j);
+						extraMessageName = extraMessageElement
+								.getAttribute("name");
+						break;
+					}
+				}
+
+				if (extraMessageName != null) {
+					DOMSource domSource = new DOMSource(extraMessageElement);
+					Transformer transformer = TransformerFactory.newInstance()
+							.newTransformer();
+					transformer.setOutputProperty(
+							OutputKeys.OMIT_XML_DECLARATION, "yes");
+					transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+					transformer.setOutputProperty(OutputKeys.ENCODING,
+							"ISO-8859-1");
+					transformer.setOutputProperty(
+							"{http://xml.apache.org/xslt}indent-amount", "4");
+					transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+					StringWriter sw = new StringWriter();
+					StreamResult sr = new StreamResult(sw);
+					transformer.transform(domSource, sr);
+
+					String extraNavajo = removeNewLines("<tml>"
+							+ sw.toString().replace('\"', '\'') + "</tml>");
+
+					String extraNavajoOperation = "Navajo extra = NavajoFactory.getInstance().createNavajo(new java.io.StringReader(\""
+							+ extraNavajo
+							+ "\"));\n"
+							+ "o.setExtraMessage(extra.getMessage(\""
+							+ extraMessageName + "\"));\n";
+
+					result.append(printIdent(ident + 2) + extraNavajoOperation);
+
+				}
+
+				result.append(printIdent(ident + 2)
+						+ "access.getOutputDoc().addOperation(o);\n");
+				result.append(printIdent(ident) + "}\n");
+			}
 		}
 
 		return result.toString();
@@ -2492,8 +2584,7 @@ public class TslCompiler {
 			try {
 				objectMappable = MappingUtils.isObjectMappable(className);
 			} catch (UserException e) {
-				logger.info("Trouble mapping: {} doing a fallback.", className,
-						e);
+				// logger.debug("Trouble mapping: {} doing a fallback.",className,e);
 				objectMappable = MappingUtils.isObjectMappable(className,
 						loader);
 			}
@@ -2702,6 +2793,8 @@ public class TslCompiler {
 			result.append(printIdent(ident) + "}\n");
 		} else if (n.getNodeName().equals("methods")) {
 			result.append(methodsNode(ident, (Element) n));
+		} else if (n.getNodeName().equals("operations")) {
+			result.append(operationsNode(ident, (Element) n));
 		} else if (n.getNodeName().equals("debug")) {
 			result.append(debugNode(ident, (Element) n));
 		} else if (n.getNodeName().equals("break")) {

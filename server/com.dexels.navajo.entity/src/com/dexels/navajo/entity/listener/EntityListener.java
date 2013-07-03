@@ -61,8 +61,8 @@ public class EntityListener extends HttpServlet {
 		input.addHeader(header);
 		try {
 			Operation o = myManager.getOperation(entityName, method);
-			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, myClient);
-			seo.perform(input, o).write(response.getOutputStream());
+			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, myClient, o);
+			seo.perform(input).write(response.getOutputStream());
 			 
 		} catch (EntityException e1) {
 			throw new ServletException(e1.getMessage(), e1);

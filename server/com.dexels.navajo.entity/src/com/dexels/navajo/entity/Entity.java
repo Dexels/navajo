@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 
 public class Entity  {
@@ -15,7 +14,7 @@ public class Entity  {
 
 	private Message myMessage;
 	private Set<Key> myKeys = new HashSet<Key>();
-	private EntityManager em = null;
+	protected EntityManager em = null;
 	private boolean activated = false;
 
 	// Keep track of entities that are derived from this entity.
@@ -37,6 +36,13 @@ public class Entity  {
 		this.em = null;
 	}
 	
+	public Set<Entity> getSubEntities() {
+		return subEntities;
+	}
+	public Set<Entity> getSuperEntities() {
+		return superEntities;
+	}
+	
 	public void printKeys() {
 		System.err.println(this +  ": In PRINTKEYS: " + myKeys.size());
 		for ( Key k : myKeys ) {
@@ -44,17 +50,16 @@ public class Entity  {
 			k.generateRequestMessage().write(System.err);
 		}
 	}
+	
 	/**
 	 * Inject a new entity message.
 	 */
 	public void setMessage(Message entity) throws Exception {
 
-		if ( myMessage == null || ( entity != null && !myMessage.equals(entity)) ) {
-			// First deactivate.
-			deactivate();
-			myMessage = entity;
-			activate();
-		}
+		// First deactivate.
+		deactivate();
+		myMessage = entity;
+		activate();
 
 	}
 	
@@ -67,10 +72,20 @@ public class Entity  {
 	}
 	
 	public void addSuperEntity(Entity sup) throws EntityException {
-		superEntities.add(sup);
-		sup.addSubEntity(this);
+		if ( !containsSuperEntity(sup) ) {
+			superEntities.add(sup);
+			sup.addSubEntity(this);
+		}
 	}
 	
+	private boolean containsSuperEntity(Entity sup) {
+		for ( Entity e : superEntities ) {
+			if ( sup.getName().equals(e.getName() ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	/**
 	 * When entity de-activates make sure that sub entities are deactivated.
@@ -83,14 +98,13 @@ public class Entity  {
 		for ( Entity sub : subEntities ) {
 			sub.deactivate();
 		}
-		//subEntities.clear();
-		//superEntities.clear();
 		activated = false;
+		// Clear all superentities since extends may have changed.
+		superEntities.clear();
 	}
 	
 	public synchronized void activate() throws EntityException {
 		
-		System.err.println("In activate(): " + getName() + "-> " + activated);
 		if ( activated ) {
 			return;
 		}
@@ -98,6 +112,9 @@ public class Entity  {
 		activated = true;
 		findSuperEntities();
 		findKeys();
+		for ( Entity sub : subEntities ) {
+			sub.activate();
+		}
 	}
 
 	private Property getExtendedProperty(String ext) throws EntityException {
@@ -138,6 +155,7 @@ public class Entity  {
 			myMessage.merge(superEntity.getMessage().copy(myMessage.getRootDoc()));
 			// Check extended properties.
 			processExtendedProperties(myMessage);
+			addSuperEntity(superEntity);
 		} else {
 			throw new EntityException("Could not find super entity: " + extendedEntity + " for entity: " + getName());
 		}
@@ -224,11 +242,4 @@ public class Entity  {
 		return myKeys;
 	}
 
-	public boolean isInsertable(Navajo input) {
-		return true;
-	}
-
-	public boolean isUpdateable(Navajo input) {
-		return true;
-	}
 }
