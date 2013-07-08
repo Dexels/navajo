@@ -15,6 +15,7 @@
 		<value direction="in" name="defaultButton" type="boolean" />
 		<value direction="in" name="visible" type="boolean" />
 		<value direction="in" name="enabled" type="boolean" />
+		<value direction="in" name="widthPercentage" type="integer"/>
 	</values>
 	<methods>
 		<method name="fireAction" />
