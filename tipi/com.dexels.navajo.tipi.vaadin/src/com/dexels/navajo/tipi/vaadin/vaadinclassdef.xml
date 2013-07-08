@@ -511,6 +511,7 @@
 			<value direction="inout" name="use_checkbox" type="boolean" />
 			<value direction="in" name="visibleRowCount" type="integer" />
 			<value direction="in" name="width" type="integer" />
+			<value direction="in" name="widthPercentage" type="integer" />
 			<value direction="in" name="selectiontype" type="selection">
 				<option description="radio" value="radio" />
 				<option description="combo" value="combo" />

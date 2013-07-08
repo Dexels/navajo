@@ -64,7 +64,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 	private int memoRowCount = 5;
 	private ValuePropertyBridge currentDataSource;
     private final List<TipiEventListener> myListeners = new ArrayList<TipiEventListener>();
-    
+    private int sizeUnit = Sizeable.UNITS_PIXELS;
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiProperty.class);
     
@@ -105,7 +105,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		this.property = p;
 		this.refreshPropertyValue();
 		if(this.width!=null) {
-			value.setWidth(this.width, Sizeable.UNITS_PIXELS);
+			value.setWidth(this.width, this.sizeUnit);
 		}
 		value.addStyleName("tipi-property-direction-"+p.getDirection());
 		value.addStyleName("tipi-property-type-"+p.getType());
@@ -439,26 +439,34 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		if(name.toLowerCase().equals("propertyname")) {
 			this.propertyName = (String) object;
 		}
-		if(name.toLowerCase().equals("label_indent")) {
+		if(name.equals("label_indent")) {
 			this.label_indent = (Integer) object;
 			description.setWidth(this.label_indent, Sizeable.UNITS_PIXELS);
 		}
-		if(name.toLowerCase().equals("memoColumnCount")) {
+		if(name.equals("memoColumnCount")) {
 			this.memoColumnCount = (Integer) object;
 		}
-		if(name.toLowerCase().equals("memoRowCount")) {
+		if(name.equals("memoRowCount")) {
 			this.memoRowCount = (Integer) object;
 		}
 
-		if(name.toLowerCase().equals("width")) {
+		if(name.equals("width")) {
 			this.width = (Integer) object;
+			this.sizeUnit = Sizeable.UNITS_PIXELS;
 			if(value!=null) {
-				value.setWidth(this.width, Sizeable.UNITS_PIXELS);
+				value.setWidth(this.width, this.sizeUnit);
 				
 			}
 		}
-
 		
+		if(name.equals("widthPercentage")){
+			this.width = (Integer) object;
+			this.sizeUnit = Sizeable.UNITS_PERCENTAGE;
+			if(value!=null) {
+				value.setWidth(this.width, this.sizeUnit);				
+			}
+		}
+
 		if(name.equals("visible")) {
 			this.container.setVisible((Boolean)object);
 		}
