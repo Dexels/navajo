@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Authentication API
 Bundle-SymbolicName: com.dexels.navajo.authentication.api
-Bundle-Version: 1.0.7
+Bundle-Version: 1.0.8.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.document;version="2.2.0",
