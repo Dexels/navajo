@@ -49,7 +49,11 @@ public class EntityManager {
 		
 		for ( String key : parameters.keySet() ) {
 			
-			Property prop = entity.getMessage().getProperty(key);
+			String propertyName = key;
+			if ( !propertyName.startsWith("/" + entity.getName() + "/" ) ) {
+				propertyName = "/" + entity.getName() + "/" + propertyName;
+			}
+			Property prop = entity.getMessage().getProperty(propertyName);
 			if ( prop != null ) {
 				Property prop_copy = prop.copy(n);
 				prop_copy.setUnCheckedStringAsValue(parameters.get(key)[0]);

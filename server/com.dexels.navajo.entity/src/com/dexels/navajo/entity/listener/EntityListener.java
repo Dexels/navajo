@@ -17,10 +17,14 @@ import com.dexels.navajo.entity.EntityException;
 import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
 import com.dexels.navajo.script.api.LocalClient;
-import com.dexels.navajo.server.DispatcherInterface;
 
 public class EntityListener extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6681359881499760460L;
+	
 	EntityManager myManager;
 	LocalClient myClient;
 	
@@ -54,11 +58,14 @@ public class EntityListener extends HttpServlet {
 		String entityName = path.substring(1);
 		Entity e = myManager.getEntity(entityName);
 		Navajo input = myManager.deriveNavajoFromParameterMap(e, requestParameters);
+		
+		
 		// Fetch username/password.
 		String username = requestParameters.get("username")[0];
 		String password = requestParameters.get("password")[0];
 		Header header = NavajoFactory.getInstance().createHeader(input, "", username, password, -1);
 		input.addHeader(header);
+		
 		try {
 			Operation o = myManager.getOperation(entityName, method);
 			ServiceEntityOperation seo = new ServiceEntityOperation(myManager, myClient, o);
