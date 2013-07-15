@@ -56,6 +56,7 @@ public class LegacyGrusConnection implements GrusConnection {
 			throw new InstantiationError("Could not create GrusConnection: " + e.getMessage());
 		}
 		myBroker = broker;
+
 		id = connectionCounter.getAndIncrement();
 		this.maxAge = (int) ( maxAge * 86400000L);
 		created = System.currentTimeMillis();
