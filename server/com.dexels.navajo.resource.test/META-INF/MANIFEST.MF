@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Resource Testing Environment
 Bundle-SymbolicName: com.dexels.navajo.resource.test
-Bundle-Version: 1.0.13.qualifier
+Bundle-Version: 1.0.14
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.adapter,
