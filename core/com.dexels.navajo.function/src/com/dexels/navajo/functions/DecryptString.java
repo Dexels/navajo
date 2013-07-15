@@ -33,10 +33,10 @@ public class DecryptString extends FunctionInterface {
 	public static void main(String [] args) throws Exception {
 		
 //		String s = "6jyZodUTXHmq5vR36F3Sf8AQw5Eil4Hubn0sEdAas4nOV4Fkh9vtuSJGQZqsEJDpIV+XnvNoaL7EPjhzy/AlLn9ZLmyFTxbLcC79a/quGHo=";
-		String s = "6jyZodUTXHmq5vR36F3Sf8AQw5Eil4Hubn0sEdAas4nOV4Fkh9vtuSJGQZqsEJDppB0weKZaARsFO20Hao2hddkGGrytYNudj7zI0C581fM=";
+		String s = "ur55FV4kHktFWLSWlZWD2Q==";
 		DecryptString e = new DecryptString();
 		e.reset();
-		e.insertOperand("Secret");
+		e.insertOperand("d3X3lS!");
 		e.insertOperand(s);
 		String result = (String) e.evaluate();
 		System.err.println("result: " + result);
