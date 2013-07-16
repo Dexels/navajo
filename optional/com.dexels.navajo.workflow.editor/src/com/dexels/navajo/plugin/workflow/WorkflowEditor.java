@@ -150,7 +150,7 @@ public class WorkflowEditor extends GraphicalEditorWithFlyoutPalette {
 		};
 	}
 
-	@SuppressWarnings({  "rawtypes" })
+	@SuppressWarnings({  "rawtypes", "unchecked" })
 	@Override
 	public Object getAdapter(Class type) {
 		if (type.isAssignableFrom(ContentOutlinePage.class)) {
