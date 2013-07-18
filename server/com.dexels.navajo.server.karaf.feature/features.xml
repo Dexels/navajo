@@ -86,10 +86,10 @@
 		<!-- <feature version="[1.0.0,2)">navajo.function</feature> -->
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi/1.1.89</bundle>
 	</feature>
-	<feature resolver="(obr)" name='tipi.vaadin' version='1.0.8' start-level='81' >
+	<feature resolver="(obr)" name='tipi.vaadin' version='1.0.9' start-level='81' >
 		<feature version="[1.0.9,2)">tipi.core</feature>
 		<bundle dependency='true'>mvn:com.vaadin/vaadin/6.8.5</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.1.28</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.vaadin/1.1.32</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='tipi.mail' version='1.0.0' start-level='81' >
