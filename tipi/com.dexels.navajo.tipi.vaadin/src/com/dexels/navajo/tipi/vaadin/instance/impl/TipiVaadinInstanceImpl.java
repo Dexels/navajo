@@ -56,6 +56,8 @@ public class TipiVaadinInstanceImpl {
 			final String alias, Servlet s) {
 		Dictionary<String, Object> vaadinRegistrationSettings = new Hashtable<String, Object>();
 		 vaadinRegistrationSettings.put("alias", alias);
+		 vaadinRegistrationSettings.put("init.disable-xsrf-protection", "true");
+		 
 			return bundleContext.registerService(Servlet.class, s, vaadinRegistrationSettings);
 	}
 
