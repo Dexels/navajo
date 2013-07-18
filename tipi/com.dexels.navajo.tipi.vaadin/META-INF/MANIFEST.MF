@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tipi Vaadin
 Bundle-SymbolicName: com.dexels.navajo.tipi.vaadin
-Bundle-Version: 1.1.29.qualifier
+Bundle-Version: 1.1.30
 Bundle-Activator: tipivaadin.TipiVaadinExtension
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
