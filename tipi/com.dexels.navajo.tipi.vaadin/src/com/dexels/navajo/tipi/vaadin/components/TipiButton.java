@@ -9,6 +9,7 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -64,6 +65,9 @@ public class TipiButton extends TipiVaadinComponentImpl {
 					}
 
 	                
+		        }
+		        if("widthPercentage".equals(name)){
+		        	v.setWidth((Integer) object, Sizeable.UNITS_PERCENTAGE);
 		        }
 	  }
 

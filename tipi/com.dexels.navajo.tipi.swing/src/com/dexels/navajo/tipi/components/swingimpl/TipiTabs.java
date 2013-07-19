@@ -392,7 +392,14 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					for (Component c : childList) {
 						boolean isVisible = visibilityMap.get(c);
 						if (isVisible) {
-							jt.addTab(constraintMap.get(c), c);
+							if (c instanceof TipiTabbable)
+							{
+								jt.addTab(((TipiTabbable)c).getTabText(), c);
+							}
+							else
+							{
+								jt.addTab(constraintMap.get(c), c);
+							}
 						}
 					}
 					if (lastSelectedTab != null) {

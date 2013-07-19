@@ -53,7 +53,7 @@ public class Key {
 				}
 			}
 		}
-		if ( input.getProperty("_id") != null ) {
+		if ( input != null && input.getProperty("_id") != null ) {
 			m.addProperty(input.getProperty("_id").copy(n));
 		}
 		return n;
@@ -94,12 +94,20 @@ public class Key {
 		return myKey;
 	}
 	
+	public static boolean isKey(String key) {
+		return ( key != null && key.indexOf("true") != -1 );
+	}
+	
 	public static boolean isAutoKey(String key) {
 		return ( key != null && key.indexOf("auto") != -1 );
 	}
 	
 	public static boolean isOptionalKey(String key) {
 		return ( key != null && key.indexOf("optional") != -1 );
+	}
+	
+	public static boolean isRequiredKey(String key) {
+		return ( key != null && key.indexOf("required") != -1 );
 	}
 	
 	public static String getKeyId(String key) {

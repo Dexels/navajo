@@ -107,17 +107,57 @@ public class ServiceEntityOperation implements EntityOperation {
 		return myEntityMap;
 	}
 
-	private List<String> checkRequired(Message message, Message entityMessage) throws EntityException {
+	/**
+	 * Checks whether input message contains a certain property.
+	 * If ignoreNonExistent is set it only checks for null valued properties, else it checks both for existence
+	 * and null values.
+	 * 
+	 * @param input
+	 * @param propertyName
+	 * @param ignoreNonExistent
+	 * @return
+	 */
+	private boolean missingProperty(Message input, String propertyName, boolean ignoreNonExistent) {
+		if ( ignoreNonExistent ) {
+			return ( input.getProperty(propertyName) != null && input.getProperty(propertyName).getValue() == null );
+		} else {
+			return ( input.getProperty(propertyName) == null || input.getProperty(propertyName).getValue() == null );
+		}
+	}
+	
+	/**
+	 * Following method checks for required properties. It checks the existence of the properties and non-null values.
+	 * 
+	 * @param message
+	 * @param entityMessage
+	 * @param ignoreNonExistent, set to true for checking updates, set to false for inserts, set to true for updates (modifications)
+	 * @return
+	 * @throws EntityException
+	 */
+	private List<String> checkRequired(Message message, Message entityMessage, boolean ignoreNonExistent) throws EntityException {
 		List<Property> entityProperties = entityMessage.getAllProperties();
 		List<String> missingProperties = new ArrayList<String>();
 		for ( Property ep : entityProperties ) {
-			if ( ep.getKey() != null  && ep.getKey().contains("required") && message.getProperty(ep.getFullPropertyName()) == null ) {
+			// Check non-auto, non-optional key properties.
+			if ( Key.isKey(ep.getKey()) && !Key.isAutoKey(ep.getKey()) && !Key.isOptionalKey(ep.getKey()) && missingProperty(message, ep.getFullPropertyName(), ignoreNonExistent) ) {
+				missingProperties.add(ep.getFullPropertyName() + ":key");
+			}// Check required non-key properties.
+			else if ( Key.isRequiredKey(ep.getKey()) && missingProperty(message, ep.getFullPropertyName(), ignoreNonExistent) ) {
 				missingProperties.add(ep.getFullPropertyName());
-			}
+			} 
 		}
 		return missingProperties;
 	}
 	
+	/**
+	 * Following method checks whether the types in the input message match the types in the entity message
+	 * 
+	 * @param message
+	 * @param entityMessage
+	 * @param method
+	 * @param invalidProperties
+	 * @throws EntityException
+	 */
 	private void checkTypes(Message message, Message entityMessage, String method, List<String> invalidProperties) throws EntityException {
 		 
 		Iterator<Property> inputProperties = message.getAllProperties().iterator();
@@ -165,6 +205,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 		return false;
 	}
+	
 	/**
 	 * Clean a Navajo input: only valid messages are kept.
 	 * 
@@ -217,10 +258,6 @@ public class ServiceEntityOperation implements EntityOperation {
 		return sb.toString();
 	}
 	
-	/**
-	 * TODO: SUPPORT FOR TRANSACTIONS
-	 * 
-	 */
 	@Override
 	public Navajo perform(Navajo input) throws EntityException {
 		
@@ -262,6 +299,10 @@ public class ServiceEntityOperation implements EntityOperation {
 			
 			// Check for (Mongo) entity, if Mongo make sure that _id is added if it does not exist.
 			if ( myOperation.getMethod().equals(Operation.POST) ) {
+				List<String> missing = checkRequired(inputEntity, myEntity.getMessage(), true);
+				if ( missing.size() > 0  ) {
+					throw new EntityException("Could not perform update, missing required properties:\n" + listToString(missing));
+				}
 				try {
 					if ( checkForMongo(inputEntity) ) {
 						addIdToArrayMessageDefinitions(myEntity.getMessage());
@@ -275,13 +316,20 @@ public class ServiceEntityOperation implements EntityOperation {
 			}
 			
 			if ( myOperation.getMethod().equals(Operation.PUT) ) {
-				List<String> missing = checkRequired(inputEntity, myEntity.getMessage());
-				// TODO: Check for unique keys..
+				// Required properties check.
+				List<String> missing = checkRequired(inputEntity, myEntity.getMessage(), false);
 				if ( missing.size() > 0  ) {
-					throw new EntityException("Could not perform insert, missing properties:\n" + listToString(missing));
+					throw new EntityException("Could not perform insert, missing required properties:\n" + listToString(missing));
+				}
+				// Duplicate entry check.
+				if ( getCurrentEntity(input) != null ) {
+					throw new EntityException("Could not perform insert, duplicate entry");
 				}
 			}
+			
+			// Mask message, i.e. populate selection properties and add missing properties.
 			inputEntity.maskMessage(myEntity.getMessage());
+			// Check property types.
 			List<String> invalidProperties = new ArrayList<String>();
 			checkTypes(inputEntity, myEntity.getMessage(), myOperation.getMethod(), invalidProperties);
 			if ( invalidProperties.size() > 0 ) {
@@ -305,12 +353,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	private boolean checkForMongo(Message inputEntity) throws EntityException {
 		if ( myOperation.getExtraMessage() != null && myOperation.getExtraMessage().getName().equals("__Mongo__") && inputEntity.getProperty("_id") == null ) {
 			// Fetch _id
-			Operation get = manager.getOperation(inputEntity.getName(), Operation.GET);
-			
-			ServiceEntityOperation seo_get = cloneServiceEntityOperation(get);
-			// Construct request from key and input.
-			Navajo request = myKey.generateRequestMessage(inputEntity.getRootDoc());
-			Navajo result = seo_get.perform(request);
+			Navajo result = getCurrentEntity(inputEntity.getRootDoc());
 			Property id = null;
 			if ( result != null ) {
 				id = result.getProperty(inputEntity.getName() + "/_id");
@@ -333,6 +376,13 @@ public class ServiceEntityOperation implements EntityOperation {
 	}
 
 
+	/**
+	 * Get an entity instance based on the input Navajo
+	 * 
+	 * @param input
+	 * @return
+	 * @throws EntityException
+	 */
 	private Navajo getCurrentEntity(Navajo input) throws EntityException {
 		Operation getop = EntityManager.getInstance().getOperation(myEntity.getName(), Operation.GET);
 		ServiceEntityOperation get = this.cloneServiceEntityOperation(getop);
@@ -342,11 +392,14 @@ public class ServiceEntityOperation implements EntityOperation {
 		}
 		appendServiceName(r, getop.getService());
 		Navajo original = get.commitOperation(r, true);
-		return original;
+		if ( original.getMessage(myEntity.getName()) == null ) {
+			return null;
+		} else {
+			return original;
+		}
 	}
 	
 	/**
-	 * TODO: Implement support for Transactions.
 	 * If This method is called in the context of a Transaction, depending on the isolation level
 	 * use real or proxy service calls.
 	 * 
@@ -357,7 +410,6 @@ public class ServiceEntityOperation implements EntityOperation {
 	 */
 	private Navajo callEntityService(Navajo input) throws EntityException {
 		appendServiceName(input, myOperation.getService());
-		System.err.println("In callEntityService: " + myOperation.getService());
 		final Message extraMessage = myOperation.getExtraMessage();
 		if(extraMessage!=null) {
 			input.addMessage(extraMessage);
@@ -375,7 +427,7 @@ public class ServiceEntityOperation implements EntityOperation {
 				// Perform operation (blocking!)
 				Navajo result = commitOperation(input, true);
 				// Log when successful.
-				nt.logEntityService(input, original, this);
+				nt.addNonTransactionalEntityResource(input, original, this);
 				return result;
 			} else {
 				return commitOperation(input, false);
@@ -386,7 +438,19 @@ public class ServiceEntityOperation implements EntityOperation {
 
 	}
 
-	public Navajo commitOperation(Navajo input, boolean block) throws EntityException {
+	/**
+	 * Actually performs a Navajo service call.
+	 * Either of the three following methods is used:
+	 * (1) Use an EntityMap (derived from NavajoMap) if set
+	 * (2) Use Dispatcher if set
+	 * (3) Use NavajoClient if set
+	 * 
+	 * @param input, the request Navajo
+	 * @param block, for EntityMap only: perform service call blocking (true) or non-blocking (false)
+	 * @return
+	 * @throws EntityException
+	 */
+	private Navajo commitOperation(Navajo input, boolean block) throws EntityException {
 		try {
 			if ( myEntityMap != null ) {
 				try {

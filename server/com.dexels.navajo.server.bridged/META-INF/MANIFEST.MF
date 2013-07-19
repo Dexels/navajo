@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Bridged Server
 Bundle-SymbolicName: com.dexels.navajo.server.bridged
-Bundle-Version: 1.0.14.qualifier
+Bundle-Version: 1.0.16.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.document;version="2.2.0",

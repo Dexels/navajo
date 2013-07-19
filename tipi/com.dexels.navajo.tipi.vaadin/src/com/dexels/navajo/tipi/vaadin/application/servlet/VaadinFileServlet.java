@@ -6,7 +6,12 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.context.ContextInstance;
 import com.dexels.navajo.tipi.vaadin.application.VaadinInstallationPathResolver;
@@ -26,7 +30,7 @@ import com.dexels.navajo.tipi.vaadin.application.VaadinInstallationPathResolver;
  * @author BalusC
  * @link http://balusc.blogspot.com/2007/07/fileservlet.html
  */
-public class VaadinFileServlet extends HttpServlet {
+public class VaadinFileServlet extends HttpServlet{
 
 	private static final long serialVersionUID = -4298683043064936546L;
 
@@ -107,28 +111,75 @@ public class VaadinFileServlet extends HttpServlet {
 		// Init servlet response.
 		response.reset();
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);
-		response.setContentType(contentType);
-		response.setHeader("Content-Length", String.valueOf(file.length()));
+		
 //		response.setHeader("Content-Disposition", "attachment; filename=\""
 //				+ file.getName() + "\"");
-
+		
 		// Prepare streams.
-		BufferedInputStream input = null;
-		BufferedOutputStream output = null;
+		InputStream input = null;
+		OutputStream output = null;
 
 		try {
-			// Open streams.
-			input = new BufferedInputStream(new FileInputStream(file),
-					DEFAULT_BUFFER_SIZE);
-			output = new BufferedOutputStream(response.getOutputStream(),
-					DEFAULT_BUFFER_SIZE);
+			input = new BufferedInputStream(new FileInputStream(file),DEFAULT_BUFFER_SIZE);
+			String acceptEncoding = request.getHeader("Accept-Encoding");
+			String ae = acceptEncoding.toLowerCase();
+			String ct = contentType.toLowerCase();
+			
+			//CACHE
+			if(ct.contains("text/html") || ct.contains("image/gif") || ct.contains("image/gif") || ct.contains("image/png") || ct.contains("text/css") || ct.contains("application/x-javascript") || ct.contains("application/json")){
+				String ETag = request.getHeader("If-None-Match");
+				MessageDigest md = MessageDigest.getInstance("MD5");
+		        FileInputStream fis = new FileInputStream(file);
+		        byte[] dataBytes = new byte[1024];
+		        int nread = 0; 
+		        while ((nread = fis.read(dataBytes)) != -1) {
+		          md.update(dataBytes, 0, nread);
+		        }
+		        byte[] mdbytes = md.digest();
+		        fis.close();
+		        StringBuffer sb = new StringBuffer();
+		        for (int i = 0; i < mdbytes.length; i++) {
+		        	sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
+		        }
+		        
+				if(ETag == null){
+					response.setHeader("ETag", sb.toString());
+				}else{
+			        if(ETag.equals(sb.toString())){
+						response.setStatus(304);
+						return;
+			        }else{
+			        	response.setHeader("ETag", sb.toString());
+			        }
+				}
+			}
+			
+			//favicon
+			if(ct.contains("image/x-icon")){
+				response.setHeader("Cache-Control", "max-age=31536000, public"); //1 year
+			}
 
-			// Write file contents to response.
+			response.setContentType(contentType);
+			//CACHE
+			if(acceptEncoding != null && ae.contains("gzip") && (ct.contains("text/css") 
+					|| ct.contains("application/x-javascript") || ct.contains("text/html") || ct.contains("application/json"))){
+				response.setHeader("Content-Encoding", "gzip");
+				output = new GZIPOutputStream(response.getOutputStream(), DEFAULT_BUFFER_SIZE);	
+			}else{//Normal flow
+				response.setHeader("Content-Length", String.valueOf(file.length()));
+				output = new BufferedOutputStream(response.getOutputStream(),DEFAULT_BUFFER_SIZE);
+			}
+			
+			//Write to output
 			byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 			int length;
 			while ((length = input.read(buffer)) > 0) {
 				output.write(buffer, 0, length);
-			}
+			}	
+
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			// Gently close streams.
 			close(output);

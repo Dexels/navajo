@@ -128,6 +128,7 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		for (Application  a: applications) {
 			a.close();
 		}
+		applications.clear();
 	}
 
 	
