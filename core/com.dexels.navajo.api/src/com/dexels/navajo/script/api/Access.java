@@ -41,7 +41,6 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 
@@ -138,6 +137,8 @@ public final class Access implements java.io.Serializable, Mappable {
 	// This service (and it's Access object) may be used by many different threads during its execution, but only
 	// the original knows how to commit the data and finalize the network connection.
 	protected transient TmlRunnable originalRunnable;
+
+	private String instance;
 
 
 	
@@ -808,6 +809,16 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	public String getAgentId() {
 		return "[unknown]";
+	}
+
+
+
+	public void setInstance(String instance) {
+		this.instance = instance;
+	}
+
+	public String getInstance() {
+		return this.instance;
 	}
 
 }
