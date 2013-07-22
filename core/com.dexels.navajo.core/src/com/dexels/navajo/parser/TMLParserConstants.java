@@ -11,75 +11,75 @@ public interface TMLParserConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int AND = 5;
+  int AND = 6;
   /** RegularExpression Id. */
-  int OR = 6;
+  int OR = 7;
   /** RegularExpression Id. */
-  int NOT = 7;
+  int NOT = 8;
   /** RegularExpression Id. */
-  int EQUALS = 8;
+  int EQUALS = 9;
   /** RegularExpression Id. */
-  int NOT_EQUALS = 9;
+  int NOT_EQUALS = 10;
   /** RegularExpression Id. */
-  int TRUE = 10;
+  int TRUE = 11;
   /** RegularExpression Id. */
-  int FALSE = 11;
+  int FALSE = 12;
   /** RegularExpression Id. */
-  int TODAY = 12;
+  int TODAY = 13;
   /** RegularExpression Id. */
-  int NAME_OPTION = 13;
+  int NAME_OPTION = 14;
   /** RegularExpression Id. */
-  int VALUE_OPTION = 14;
+  int VALUE_OPTION = 15;
   /** RegularExpression Id. */
-  int BEGIN_LIST = 15;
+  int BEGIN_LIST = 16;
   /** RegularExpression Id. */
-  int END_LIST = 16;
+  int END_LIST = 17;
   /** RegularExpression Id. */
-  int LIST_SEPARATOR = 17;
+  int LIST_SEPARATOR = 18;
   /** RegularExpression Id. */
-  int ADD = 18;
+  int ADD = 19;
   /** RegularExpression Id. */
-  int MUL = 19;
+  int MUL = 20;
   /** RegularExpression Id. */
-  int MIN = 20;
+  int MIN = 21;
   /** RegularExpression Id. */
-  int DIV = 21;
+  int DIV = 22;
   /** RegularExpression Id. */
-  int MOD = 22;
+  int MOD = 23;
   /** RegularExpression Id. */
-  int NULL = 23;
+  int NULL = 24;
   /** RegularExpression Id. */
-  int SARTRE = 24;
+  int SARTRE = 25;
   /** RegularExpression Id. */
-  int INTEGER_LITERAL = 25;
+  int INTEGER_LITERAL = 26;
   /** RegularExpression Id. */
-  int FLOAT_LITERAL = 26;
+  int FLOAT_LITERAL = 27;
   /** RegularExpression Id. */
-  int TML_IDENTIFIER = 27;
+  int TML_IDENTIFIER = 28;
   /** RegularExpression Id. */
-  int EXISTS_TML_IDENTIFIER = 28;
+  int EXISTS_TML_IDENTIFIER = 29;
   /** RegularExpression Id. */
-  int REGULAREXPRESSION = 29;
+  int REGULAREXPRESSION = 30;
   /** RegularExpression Id. */
-  int PARENT_MSG = 30;
+  int PARENT_MSG = 31;
   /** RegularExpression Id. */
-  int REGULAR1 = 31;
+  int REGULAR1 = 32;
   /** RegularExpression Id. */
-  int REGULAR2 = 32;
+  int REGULAR2 = 33;
   /** RegularExpression Id. */
-  int IDENTIFIER = 33;
+  int IDENTIFIER = 34;
   /** RegularExpression Id. */
-  int LETTER = 34;
+  int LETTER = 35;
   /** RegularExpression Id. */
-  int DIGIT = 35;
+  int DIGIT = 36;
   /** RegularExpression Id. */
-  int NORMAL_IDENTIFIER = 36;
+  int NORMAL_IDENTIFIER = 37;
   /** RegularExpression Id. */
-  int STRING_LITERAL = 37;
+  int STRING_LITERAL = 38;
   /** RegularExpression Id. */
-  int EXPRESSION_LITERAL = 38;
+  int EXPRESSION_LITERAL = 39;
   /** RegularExpression Id. */
-  int TIPI_IDENTIFIER = 39;
+  int TIPI_IDENTIFIER = 40;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -90,6 +90,7 @@ public interface TMLParserConstants {
     "\" \"",
     "\"\\t\"",
     "\"\\r\"",
+    "\"\\n\"",
     "\"\\f\"",
     "\"AND\"",
     "\"OR\"",

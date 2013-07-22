@@ -65,13 +65,35 @@ public class ExpressionTest {
 	}
 
 	@Test
+	public void testUnicode() throws Exception {
+		NavajoFactory.getInstance().setExpressionEvaluator(
+				new DefaultExpressionEvaluator());
+		ExpressionEvaluator ee = NavajoFactory.getInstance()
+				.getExpressionEvaluator();
+
+		Operand o = ee.evaluate("'ø'", null);
+		assertEquals("ø", o.value);
+	}
+
+	@Test
+	public void testExpressionNewlineOutside() throws Exception {
+		NavajoFactory.getInstance().setExpressionEvaluator(
+				new DefaultExpressionEvaluator());
+		ExpressionEvaluator ee = NavajoFactory.getInstance()
+				.getExpressionEvaluator();
+
+		Operand o = ee.evaluate("1\n+\n1", null);
+		assertEquals(2, o.value);
+	}
+
+	@Test
 	public void testExpressionNewline() throws Exception {
 		NavajoFactory.getInstance().setExpressionEvaluator(
 				new DefaultExpressionEvaluator());
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
-		Operand o = ee.evaluate("\"aap\nnoot\"", null);
+		Operand o = ee.evaluate("'aap\nnoot'", null);
 		assertEquals("aap\nnoot", o.value);
 	}
 

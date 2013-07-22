@@ -72,10 +72,15 @@ public class Token {
    */
   public static final Token newToken(int ofKind, String tokenImage)
   {
-     switch(ofKind)
-     {
-       default : return new Token();
-     }
+//     switch(ofKind)
+//     {
+//       default : return new Token();
+//     }
+
+     Token t = new Token();
+     t.kind = ofKind;
+     t.image = tokenImage;
+     return t;
   }
 
 }

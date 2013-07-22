@@ -32,7 +32,7 @@
               <sourceDirectory>javacc</sourceDirectory>
               <outputDirectory>src</outputDirectory>
               <interimDirectory>src</interimDirectory>	
-              <!-- <unicodeInput>true</unicodeInput>-->
+              <unicodeInput>true</unicodeInput>
 						</configuration>
 					</execution>
 				</executions>
