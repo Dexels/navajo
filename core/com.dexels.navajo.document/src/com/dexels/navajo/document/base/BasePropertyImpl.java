@@ -1906,8 +1906,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 //		Thread.dumpStack();
 
 		if (myPropertyDataListeners.size() > 5) {
-			logger.debug("Multiple property listeners detected!" + myPropertyDataListeners.size()+" path: "+getFullPropertyName());
-			logger.debug(">>> "+myPropertyDataListeners);
+			logger.trace("Multiple property listeners detected!" + myPropertyDataListeners.size()+" path: "+getFullPropertyName());
+			logger.trace(">>> "+myPropertyDataListeners);
 		}
 		if (myPropertyDataListeners.size() > 5) {
 //			for (PropertyChangeListener xxp : myPropertyDataListeners) {

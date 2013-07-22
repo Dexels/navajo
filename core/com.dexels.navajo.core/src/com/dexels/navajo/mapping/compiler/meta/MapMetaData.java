@@ -80,7 +80,7 @@ public class MapMetaData {
 				while(iter.hasNext()) {
 					logger.info("Looping");
 					ExtensionDefinition ed = (ExtensionDefinition) iter.next();
-					logger.info("ExtendionDef: "+ed.toString());
+					logger.info("ExtensionDef: "+ed.toString());
 					//System.err.println("FOUND POSSIBLE ADAPTER EXTENSION: " + ed);
 					
 					BufferedReader br = new BufferedReader(new InputStreamReader(ed.getDefinitionAsStream()));

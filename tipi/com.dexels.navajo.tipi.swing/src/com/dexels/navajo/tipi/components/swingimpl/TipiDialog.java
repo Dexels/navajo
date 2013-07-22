@@ -68,6 +68,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 	private Object iconUrl = null;
 	private JMenuBar myBar = null;
 	private Rectangle myBounds = new Rectangle(-1, -1, -1, -1);
+	private Rectangle myBoundsByDefinition = new Rectangle(-1, -1, -1, -1);
 	private boolean ignoreClose = false;
 	private Point myOffset;
 	private RootPaneContainer myRootPaneContainer;
@@ -217,6 +218,12 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 			}
 
 		});
+	}
+
+	@Override
+	public void loadStartValues(XMLElement element, TipiEvent event) {
+		super.loadStartValues(element, event);
+		myBoundsByDefinition = new Rectangle(myBounds.x, myBounds.y, myBounds.width, myBounds.height);
 	}
 
 	// public void removeFromContainer(Object c) {
@@ -567,6 +574,10 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 			// logger.debug("ENTERING SHOW\n=================");
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
+					setValue("x", myBoundsByDefinition.x);
+					setValue("y", myBoundsByDefinition.y);
+					setValue("w", myBoundsByDefinition.width);
+					setValue("h", myBoundsByDefinition.height);
 					if (getDialogContainer() == null) {
 						constructDialog();
 					}
@@ -726,6 +737,25 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 				}
 			});
 		}
+/* 
+// Doesn't seem to work if called directly after dialog.show was called. Doesn't give the expected size on TipiTables (probably should be fixed there).
+		if (name.equals("resize")) {
+			runSyncInEventThread(new Runnable() {
+
+				public void run() {
+					if (getDialogContainer() != null && getDialogContainer() instanceof JDialog)
+					{
+						JDialog dlg = (JDialog) getDialogContainer();
+						logger.debug("Resizing dialog " + this + " to size " + dlg.getPreferredSize());
+						setDialogSize(dlg, dlg.getPreferredSize());
+					}
+					else
+					{
+						logger.warn("Trying to resize a dialog before it is shown!");
+					}
+				}
+			});
+		} */
 	}
 
 	private void resetDialogBounds() {
@@ -753,19 +783,9 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 	// }
 
 	public void showDialogAt(JDialog dlg, int x, int y) {
-		Dimension dlgSize = dlg.getPreferredSize();
+		Dimension dlgSize = dlg.getBounds().getSize();
 		dlg.setLocation(x, y);
-
-		if (dlgSize.height > (Toolkit.getDefaultToolkit().getScreenSize().height)) {
-			dlgSize.height = Toolkit.getDefaultToolkit().getScreenSize().height;
-			dlg.setSize(dlgSize);
-		}
-
-		if (dlgSize.width > Toolkit.getDefaultToolkit().getScreenSize().width) {
-			dlgSize.width = Toolkit.getDefaultToolkit().getScreenSize().width;
-			dlg.setSize(dlgSize);
-		}
-
+		setDialogSize(dlg, dlgSize);
 		dlg.setModal(true);
 		dlg.setVisible(true);
 
@@ -784,19 +804,24 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 		int y = Math
 				.max(0, (frmSize.height - dlgSize.height) / 2 + loc.y + r.y);
 		dlg.setLocation(x, y);
-
-		if (dlgSize.height > (Toolkit.getDefaultToolkit().getScreenSize().height)) {
-			dlgSize.height = Toolkit.getDefaultToolkit().getScreenSize().height;
-			dlg.setSize(dlgSize);
-		}
-
-		if (dlgSize.width > Toolkit.getDefaultToolkit().getScreenSize().width) {
-			dlgSize.width = Toolkit.getDefaultToolkit().getScreenSize().width;
-			dlg.setSize(dlgSize);
-		}
-
+		setDialogSize(dlg, dlgSize);
 		dlg.setModal(true);
 		dlg.setVisible(true);
+	}
+	
+	private void setDialogSize(JDialog dlg, Dimension dlgSize)
+	{
+		Rectangle r = getRootPaneContainer().getRootPane().getBounds();
+		Dimension frmSize = new Dimension(r.width, r.height);
+
+		if (dlgSize.height > frmSize.height) {
+			dlgSize.height = frmSize.height;
+		}
+
+		if (dlgSize.width > frmSize.width) {
+			dlgSize.width = frmSize.width;
+		}
+		dlg.setSize(dlgSize);
 	}
 
 	// public boolean showQuestionDialog(String s) {
