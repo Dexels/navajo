@@ -517,7 +517,7 @@
 		<result>string</result>
 	</function>
 	<function name="Max" class="com.dexels.navajo.functions.Max">
-		<description>Return the maximum of to given numbers.</description>
+		<description>Return the maximum of two given numbers.</description>
 		<input>integer|float,integer|float</input>
 		<result>integer|float</result>
 	</function>
@@ -532,7 +532,7 @@
 		<result>navajo</result>
 	</function>
 	<function name="Min" class="com.dexels.navajo.functions.Min">
-		<description>Return the minimum of to given numbers.</description>
+		<description>Return the minimum of two given numbers.</description>
 		<input>integer|float,integer|float</input>
 		<result>integer|float</result>
 	</function>
