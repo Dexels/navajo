@@ -12,4 +12,31 @@
 		<version>1.0.0</version>
 		<relativePath>../../setup/com.dexels.repository</relativePath>
 	</parent>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javacc-maven-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>jjtree-javacc</id>
+						<goals>
+							<goal>jjtree-javacc</goal>
+						</goals>
+						<configuration>
+              <includes>
+                <include>**/*.jjt</include>
+              </includes>
+              <sourceDirectory>javacc</sourceDirectory>
+              <outputDirectory>src</outputDirectory>
+              <interimDirectory>src</interimDirectory>	
+              <!-- <unicodeInput>true</unicodeInput>-->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

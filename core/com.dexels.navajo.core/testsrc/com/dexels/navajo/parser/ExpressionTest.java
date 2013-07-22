@@ -64,4 +64,15 @@ public class ExpressionTest {
 		assertTrue(eq);
 	}
 
+	@Test
+	public void testExpressionNewline() throws Exception {
+		NavajoFactory.getInstance().setExpressionEvaluator(
+				new DefaultExpressionEvaluator());
+		ExpressionEvaluator ee = NavajoFactory.getInstance()
+				.getExpressionEvaluator();
+
+		Operand o = ee.evaluate("\"aap\nnoot\"", null);
+		assertEquals("aap\nnoot", o.value);
+	}
+
 }
