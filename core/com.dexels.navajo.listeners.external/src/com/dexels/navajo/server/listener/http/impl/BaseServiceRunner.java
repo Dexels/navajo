@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -103,6 +104,12 @@ public abstract class BaseServiceRunner  implements
 	private final void execute() throws IOException, ServletException {
 
 		// BufferedReader r = null;
+		String instance = myRequest.getInstance();
+		if(instance!=null) {
+			MDC.put("instance",instance);
+			myRequest.getInputDocument().getHeader().setHeaderAttribute("instance", instance);
+		}
+	
 		try {
 			Navajo in = getInputNavajo();
 			in.getHeader().setHeaderAttribute("useComet", "true");
@@ -164,6 +171,8 @@ public abstract class BaseServiceRunner  implements
 				}
 			}
 			throw new ServletException(e);
+		} finally {
+			MDC.remove("instance");
 		}
 	}
 
