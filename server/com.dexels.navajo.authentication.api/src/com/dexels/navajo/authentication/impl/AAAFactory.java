@@ -1,6 +1,7 @@
 package com.dexels.navajo.authentication.impl;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -45,7 +46,8 @@ import com.dexels.navajo.authentication.api.AuthenticationFactory;
 public final class AAAFactory implements AuthenticationFactory {
 
   private final SortedSet<AAAInterface> moduleList;
-
+  private final Map<String,AAAInterface> moduleMap = new HashMap<String, AAAInterface>();
+  
   private final static Logger logger = LoggerFactory.getLogger(AAAFactory.class);
   private static AuthenticationFactory instance = null;
   
@@ -69,14 +71,30 @@ public final class AAAFactory implements AuthenticationFactory {
   @Override
   public void addAuthenticationModule(AAAInterface a, Map<String,Object> settings) {
 	  moduleList.add(a);
+	  
 	  logger.info("# of auth. modules now: "+moduleList.size());
 	  if(settings!=null) {
 		  logger.info("Multitenant found: "+settings.get("instance"));
+		  String instance = (String) settings.get("instance");
+		  if(instance!=null) {
+			  moduleMap.put(instance,a);
+		  } else {
+			  logger.warn("Possible problem: AAAInterface found, probably in multitenant mode, but no instance associated.");
+		  }
 	  }
   }
   
-  public void removeAuthenticationModule(AAAInterface a) {
+  public void removeAuthenticationModule(AAAInterface a, Map<String,Object> settings) {
 	  moduleList.remove(a);
+	  if(settings!=null) {
+		  logger.info("Multitenant found: "+settings.get("instance"));
+		  String instance = (String) settings.get("instance");
+		  if(instance!=null) {
+			  moduleMap.remove(instance);
+		  } else {
+			  logger.warn("Possible problem: Removing AAAInterface, probably in multitenant mode, but no instance associated.");
+		  }
+	  }
 	  logger.info("# of auth. modules now: "+moduleList.size());
   }
 
@@ -100,6 +118,20 @@ public final class AAAFactory implements AuthenticationFactory {
 	  }
   }
 
+  @Override
+  public AAAInterface getAuthenticationModule(String instance) {
+	  if(instance==null) {
+		  return getAuthenticationModule();
+	  }
+	  try {
+		  return moduleMap.get(instance);
+	  } catch (Exception  e) {
+		  logger.warn("No AuthenticationModule found. No OSGi?", e);
+		  return null;
+	  }
+  }
+
+  
   public static AuthenticationFactory getInstance() {
 	  if ( instance == null ) {
 		  logger.warn("No AuthenticatonFactory found. No OSGi?");
@@ -110,15 +142,17 @@ public final class AAAFactory implements AuthenticationFactory {
   
   
   // hmpf. ugly.
-  public final static void resetUserCredential(String username) {
-	  if ( getInstance().getAuthenticationModule() != null ) {
-		  getInstance().getAuthenticationModule().resetUserCredential(username);
+  public final static void resetUserCredential(String instance, String username) {
+	  AAAInterface authenticationModule = getInstance().getAuthenticationModule(instance);
+	if ( authenticationModule != null ) {
+		  authenticationModule.resetUserCredential(username);
 	  }
   }
 
-  public final static void clearActionObjects() {
-	  if ( getInstance().getAuthenticationModule() != null ) {
-		  getInstance().getAuthenticationModule().clearActionObjects();
+  public final static void clearActionObjects(String instance) {
+	  AAAInterface authenticationModule = getInstance().getAuthenticationModule(instance);
+	if ( authenticationModule != null ) {
+		  authenticationModule.clearActionObjects();
 	  }
   }
 
