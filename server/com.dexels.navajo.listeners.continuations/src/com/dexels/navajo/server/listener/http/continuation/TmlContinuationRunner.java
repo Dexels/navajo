@@ -17,6 +17,8 @@ import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.TmlScheduler;
+import com.dexels.navajo.server.GlobalManager;
+import com.dexels.navajo.server.GlobalManagerRepositoryFactory;
 import com.dexels.navajo.server.listener.http.standard.TmlStandardRunner;
 
 public class TmlContinuationRunner extends TmlStandardRunner {
@@ -141,6 +143,18 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	@Override
 	public void run() {
 		try {
+			String instance = getRequest().getInstance();
+			if(instance!=null) {
+				GlobalManager gm = GlobalManagerRepositoryFactory.getGlobalManagerInstance().getGlobalManager(instance);
+				if(gm!=null) {
+					gm.initGlobals(getRequest().getInputDocument());
+				} else {
+					logger.warn("No global manager found for instance: " + instance);
+				}
+				
+			} else {
+				logger.debug("Not using instance based GlobalManager: No instance found in request");
+			}
 			execute();
 		} catch(NavajoDoneException e) {
 			logger.debug("NavajoDoneException caught. This thread fired a continuation. Another thread will finish it in the future.");

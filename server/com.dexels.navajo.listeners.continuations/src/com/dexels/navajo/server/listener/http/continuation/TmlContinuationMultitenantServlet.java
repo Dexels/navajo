@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.SchedulableServlet;
@@ -79,7 +80,6 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 			} else {
 				instance = pathinfo;
 			}
-			
 			
 			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,instance);
 			if(instantiateRunnable!=null) {
