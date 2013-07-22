@@ -56,7 +56,8 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 
 	@Override
 	public Navajo handleCallback(String instance, Navajo n, String callback) {
-		return null;
+	    Navajo result	= dispatcherInterface.handleCallbackPointers(n);
+	    return result;
 	}
 
 	@Override

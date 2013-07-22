@@ -62,7 +62,7 @@ public final class ASTMappableNode extends SimpleNode {
         		if ( mapObject.myObject instanceof DomainObjectMapper ) {
         			oValue = ((DomainObjectMapper) mapObject.myObject).getDomainObjectAttribute(val, parameterArray);
         		} else {
-        			throw new TMLExpressionException(e2.getMessage());
+        			throw new TMLExpressionException("Can not resolve attribute value",e2);
         		}
         	}
             if (oValue == null)

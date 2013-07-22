@@ -852,7 +852,7 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 			  throw (UserException) t;
 		  }
 		  else {
-			  throw new MappingException("Error getting attribute: "+name+" of object: "+o,t);
+			  throw new MappingException("Error getting attribute: "+name+" of object: "+o,ite);
 		  }
 	  }
 	  return result;

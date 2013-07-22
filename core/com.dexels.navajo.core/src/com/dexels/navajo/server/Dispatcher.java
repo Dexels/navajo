@@ -1080,10 +1080,12 @@ private Access authenticateUser(Navajo inMessage, String instance,
 		  }
 	  }
 	  access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
-	return access;
+	  access.setInstance(instance);
+	  return access;
 }
 
-private Navajo handleCallbackPointers(Navajo inMessage) {
+@Override
+public Navajo handleCallbackPointers(Navajo inMessage) {
 	// Check whether unkown callbackpointers are present that need to be handled by another instance.
     if ( inMessage.getHeader().hasCallBackPointers() ) {
     	String [] allRefs = inMessage.getHeader().getCallBackPointers();

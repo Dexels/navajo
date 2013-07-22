@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -174,6 +175,18 @@ public class SimpleRepository implements Repository, GlobalManager {
 			return "com.dexels.navajo.rhino.RhinoHandler";
 		}
 			return "com.dexels.navajo.server.GenericHandler";
+	}
+
+	@Override
+	public void initGlobals(Navajo inMessage) throws NavajoException {
+		Header h = inMessage.getHeader();
+		if(h==null) {
+			logger.warn("Can not append globals to input message: No header found.");
+			return;
+		}
+		String rpcName = h.getRPCName();
+		String username = h.getRPCUser();
+		initGlobals(rpcName, username, inMessage, null);
 	}
 
 }

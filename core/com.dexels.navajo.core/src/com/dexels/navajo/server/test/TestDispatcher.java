@@ -200,4 +200,9 @@ public class TestDispatcher implements DispatcherInterface {
 		return null;
 	}
 
+	@Override
+	public Navajo handleCallbackPointers(Navajo inMessage) {
+		return null;
+	}
+
 }
