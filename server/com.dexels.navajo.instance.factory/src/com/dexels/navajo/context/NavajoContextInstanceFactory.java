@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.Vector;
 
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
@@ -334,16 +335,31 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 //            </message>			
 			
 		}
-		Set<String> allNames = new HashSet<String>();
-		allNames.add("navajo.resource."+name);
-		Set<String> aliased = aliases.get(name);
-		if(aliased!=null) {
-			for (String alias : aliased) {
-				allNames.add("navajo.resource."+alias);
+//		Set<String> allNames = new HashSet<String>();
+		//allNames.add("navajo.resource."+name);
+		Set<String> aliaseSet = aliases.get(name);
+//
+//		if(aliaseSet!=null) {
+//			for (String alias : aliaseSet) {
+//				allNames.add("navajo.resource."+alias);
+//			}
+//			allNames.addAll(aliaseSet);
+//		}
+//		String[] allNamesArray = new String[allNames.size()];
+//		int i = 0;
+//		for (String string : allNames) {
+//			allNamesArray[i] = string;
+//			i++;
+//		}
+		if(aliaseSet!=null) {
+			for (String alias : aliaseSet) {
+				settings.put(alias, "alias");
 			}
-			allNames.addAll(aliased);
+			Vector<String> aliasVector = new Vector<String>(aliaseSet);
+			aliasVector.add(name);
+			settings.put("aliases", aliasVector);
 		}
-		settings.put("name", allNames.toArray(new String[0]));
+		settings.put("name", name);
 		settings.put("instance", instance);
 		String type = (String)dataSource.getProperty("type").getTypedValue();
 		
@@ -389,6 +405,8 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			if(!old.equals(settings)) {
 				c.update(settings);
 			}
+		} else {
+			c.update(settings);
 		}
 	}
 	

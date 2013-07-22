@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" configuration-policy="ignore" name="navajo.path.listener">
+   <implementation class="com.dexels.navajo.context.system.SystemPropertyListener"/>
+   <reference bind="setConfigAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="static" unbind="clearConfigAdmin"/>
+</scr:component>
