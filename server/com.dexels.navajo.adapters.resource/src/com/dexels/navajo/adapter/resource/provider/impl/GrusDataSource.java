@@ -2,13 +2,15 @@ package com.dexels.navajo.adapter.resource.provider.impl;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.dexels.grus.DbConnectionBroker;
 import org.dexels.grus.GrusConnection;
+import org.dexels.grus.GrusProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GrusDataSource implements GrusConnection {
 
@@ -16,11 +18,17 @@ public class GrusDataSource implements GrusConnection {
 	private final Map<String, Object> settings;
 	private DbConnectionBroker dbConnectionBroker;
 	private final int id;
+	private Connection connection;
 
-	public GrusDataSource(int id, DataSource dataSourceInstance,Map<String, Object> settings) {
+	private final GrusProvider grusProvider;
+	
+	private final static Logger logger = LoggerFactory.getLogger(GrusDataSource.class);
+	
+	
+	public GrusDataSource(int id, DataSource dataSourceInstance,Map<String, Object> settings, GrusProvider provider) {
 		this.datasource = dataSourceInstance;
 		this.id = id;
-
+		this.grusProvider = provider;
 //		component.id = 115
 //		component.name = navajo.resource.oracle
 //		instance = tbn
@@ -57,7 +65,8 @@ public class GrusDataSource implements GrusConnection {
 
 	@Override
 	public Connection getConnection() throws SQLException {
-		return this.datasource.getConnection();
+		connection = this.datasource.getConnection();
+		return connection;
 	}
 
 	@Override
@@ -81,7 +90,16 @@ public class GrusDataSource implements GrusConnection {
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
-
+		if(connection!=null) {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				logger.error("Error closing connection: ", e);
+			}
+			connection = null;
+		}
+		logger.info("Destroying datasource. Removing from provider");
+		grusProvider.release(this);
 	}
 
 	@Override
@@ -96,8 +114,20 @@ public class GrusDataSource implements GrusConnection {
 	
 	@Override
 	public long setInstanceId(long l) {
-		// TODO Auto-generated method stub
+		logger.debug("Ignoring set instanceId: "+l);
 		return 0;
 	}
+
+	@Override
+	public void autocommit(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void rollback(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}	
 
 }

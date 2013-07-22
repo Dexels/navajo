@@ -23,4 +23,8 @@ public interface GrusConnection {
 
 	public long setInstanceId(long l);
 
+	public void autocommit(boolean b);
+
+	public void rollback(boolean b);
+
 }

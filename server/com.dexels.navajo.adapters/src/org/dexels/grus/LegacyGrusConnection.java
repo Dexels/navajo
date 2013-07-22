@@ -147,4 +147,16 @@ public class LegacyGrusConnection implements GrusConnection {
 	public DbConnectionBroker getMyBroker() {
 		return  myBroker;
 	}
+
+	@Override
+	public void autocommit(boolean b) {
+		if(myConnection!=null) {
+		}
+	}
+
+	@Override
+	public void rollback(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
 }
