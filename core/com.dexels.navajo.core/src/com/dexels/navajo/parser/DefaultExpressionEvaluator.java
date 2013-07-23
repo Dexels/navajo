@@ -60,7 +60,7 @@ public final class DefaultExpressionEvaluator
 
     }
     try {
-      return Expression.evaluate(clause, inMessage,(MappableTreeNode) mappableTreeNode,parent,currentParam);
+      return Expression.evaluate(clause, inMessage,(MappableTreeNode) mappableTreeNode,parent,currentParam,null,null);
     }
     catch (Throwable ex) {
     	

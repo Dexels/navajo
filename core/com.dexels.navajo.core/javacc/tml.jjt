@@ -17,6 +17,8 @@ package com.dexels.navajo.parser;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.navajo.server.Access;
+import java.util.Map;
 
 public class TMLParser {
 
@@ -26,7 +28,9 @@ public class TMLParser {
   protected Message parentParamMsg;
   protected Selection parentSel;
   protected TipiLink tipiLink;
-
+  protected Access access;
+  protected Map<String,Object> params;
+  
   public void setNavajoDocument(Navajo doc) {
     this.inputDoc = doc;
   }
@@ -42,6 +46,10 @@ public class TMLParser {
   public void setParentParamMsg(Message m) {
     parentParamMsg = m;
   }
+  
+  public void setParams(Map<String,Object> params) {
+    this.params = params;
+  }
 
   public void setParentSel(Selection s) {
     this.parentSel = s;
@@ -50,6 +58,12 @@ public class TMLParser {
   public void setTipiLink(TipiLink tl) {
     this.tipiLink = tl;
   }
+  
+  
+  public void setAccess(Access a) {
+	    this.access = a;
+   }
+  
 
 }
 
@@ -297,7 +311,11 @@ void FunctionLiteral() #void:
 {
   (t = <NORMAL_IDENTIFIER>
      "(" [ Expression() {jjtThis.args++;} ("," Expression() {jjtThis.args++;}) * ] ")"
-    {jjtThis.functionName = t.image;jjtThis.doc = inputDoc;jjtThis.parentMsg = parentMsg;jjtThis.parentParamMsg = parentParamMsg;}
+    {jjtThis.functionName = t.image;jjtThis.doc = inputDoc;jjtThis.parentMsg = parentMsg;
+    	jjtThis.parentParamMsg = parentParamMsg;
+    	jjtThis.setAccess(access);
+    	jjtThis.setParams(params);
+    	}
   ) #FunctionNode
 }
 

@@ -54,7 +54,7 @@ public class CallService extends FunctionInterface {
 				getNavajo().addNavajo(serviceName, response);
 			}
 			
-			result = Expression.evaluate(expression, response, null, null);
+			result = Expression.evaluate(expression, response);
 			
 		}
 		catch (Exception ex) {

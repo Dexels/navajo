@@ -3,6 +3,8 @@ package com.dexels.navajo.parser;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.navajo.server.Access;
+import java.util.Map;
 
 /** Token Manager. */
 public class TMLParserTokenManager implements TMLParserConstants

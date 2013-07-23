@@ -116,6 +116,8 @@ package com.dexels.navajo.parser;
  *
  */
 
+import java.util.Map;
+
 import navajocore.Version;
 
 import com.dexels.navajo.document.Message;
@@ -124,6 +126,7 @@ import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 import com.dexels.navajo.functions.util.FunctionFactoryInterface;
 import com.dexels.navajo.functions.util.OSGiFunctionFactoryFactory;
+import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 
 
@@ -135,12 +138,26 @@ public final class ASTFunctionNode extends SimpleNode {
 	Message parentMsg;
 	Message parentParamMsg;
 	Selection parentSel;
-	//Access access;
-
+	Access access;
+	private Map<String,Object> params;
+	
 	public ASTFunctionNode(int id) {
 		super(id);
 	}
 
+
+	public Access getAccess() {
+		return access;
+	}
+
+	public void setAccess(Access access) {
+		this.access = access;
+	}
+
+	public void setParams(Map<String,Object> params) {
+		this.params = params;
+	}
+	
 	public final Object interpret() throws TMLExpressionException {
 
 		ClassLoader cl = null;
@@ -160,6 +177,8 @@ public final class ASTFunctionNode extends SimpleNode {
 		}
 		f.inMessage = doc;
 		f.currentMessage = parentMsg;
+		f.setAccess(access);
+		f.setParams(params);
 		f.reset();
 
 		for (int i = 0; i < args; i++) {

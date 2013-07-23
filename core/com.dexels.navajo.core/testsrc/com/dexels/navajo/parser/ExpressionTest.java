@@ -71,8 +71,8 @@ public class ExpressionTest {
 		ExpressionEvaluator ee = NavajoFactory.getInstance()
 				.getExpressionEvaluator();
 
-		Operand o = ee.evaluate("'ø'", null);
-		assertEquals("ø", o.value);
+		Operand o = ee.evaluate("'ø'+'æ'", null);
+		assertEquals("øæ", o.value);
 	}
 
 	@Test

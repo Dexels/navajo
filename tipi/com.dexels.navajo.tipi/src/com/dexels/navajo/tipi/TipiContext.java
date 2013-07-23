@@ -2035,7 +2035,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			}
 			// synchronized (sync) {
 			tc.setCurrentEvent(event);
-			o = Expression.evaluate(expr, n, null, currentMessage, null, tc);
+			o = Expression.evaluate(expr, n, null, currentMessage,null, null, tc);
 			if (o == null) {
 				logger.debug("Expression evaluated to null operand!");
 				return null;

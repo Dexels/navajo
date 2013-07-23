@@ -3,6 +3,8 @@ package com.dexels.navajo.parser;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.tipilink.TipiLink;
+import com.dexels.navajo.server.Access;
+import java.util.Map;
 
 public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLParserConstants {/*@bgen(jjtree)*/
   protected JJTTMLParserState jjtree = new JJTTMLParserState();
@@ -12,6 +14,8 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
   protected Message parentParamMsg;
   protected Selection parentSel;
   protected TipiLink tipiLink;
+  protected Access access;
+  protected Map<String,Object> params;
 
   public void setNavajoDocument(Navajo doc) {
     this.inputDoc = doc;
@@ -29,6 +33,10 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     parentParamMsg = m;
   }
 
+  public void setParams(Map<String,Object> params) {
+    this.params = params;
+  }
+
   public void setParentSel(Selection s) {
     this.parentSel = s;
   }
@@ -36,6 +44,11 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
   public void setTipiLink(TipiLink tl) {
     this.tipiLink = tl;
   }
+
+
+  public void setAccess(Access a) {
+            this.access = a;
+   }
 
   final public void ListExpression() throws ParseException {
      ASTListNode jjtn001 = new ASTListNode(JJTLISTNODE);
@@ -909,7 +922,10 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       jj_consume_token(47);
       jjtree.closeNodeScope(jjtn001, true);
       jjtc001 = false;
-     jjtn001.functionName = t.image;jjtn001.doc = inputDoc;jjtn001.parentMsg = parentMsg;jjtn001.parentParamMsg = parentParamMsg;
+     jjtn001.functionName = t.image;jjtn001.doc = inputDoc;jjtn001.parentMsg = parentMsg;
+        jjtn001.parentParamMsg = parentParamMsg;
+        jjtn001.setAccess(access);
+        jjtn001.setParams(params);
     } catch (Throwable jjte001) {
     if (jjtc001) {
       jjtree.clearNodeScope(jjtn001);
@@ -1202,68 +1218,6 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     finally { jj_save(0, xla); }
   }
 
-  private boolean jj_3R_49() {
-    if (jj_scan_token(NAME_OPTION)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_40() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_49()) {
-    jj_scanpos = xsp;
-    if (jj_3R_50()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_47() {
-    if (jj_scan_token(NAME_OPTION)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_38() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_47()) {
-    jj_scanpos = xsp;
-    if (jj_3R_48()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_51() {
-    if (jj_3R_44()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_53()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_16() {
-    if (jj_scan_token(TODAY)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_42() {
-    if (jj_scan_token(46)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_51()) jj_scanpos = xsp;
-    if (jj_scan_token(47)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_34() {
-    if (jj_scan_token(NORMAL_IDENTIFIER)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_42()) jj_scanpos = xsp;
-    return false;
-  }
-
   private boolean jj_3R_33() {
     if (jj_scan_token(TIPI_IDENTIFIER)) return true;
     return false;
@@ -1323,13 +1277,13 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     return false;
   }
 
-  private boolean jj_3R_23() {
-    if (jj_3R_33()) return true;
+  private boolean jj_3R_28() {
+    if (jj_scan_token(INTEGER_LITERAL)) return true;
     return false;
   }
 
-  private boolean jj_3R_28() {
-    if (jj_scan_token(INTEGER_LITERAL)) return true;
+  private boolean jj_3R_23() {
+    if (jj_3R_33()) return true;
     return false;
   }
 
@@ -1345,6 +1299,11 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     return false;
   }
 
+  private boolean jj_3R_27() {
+    if (jj_scan_token(FLOAT_LITERAL)) return true;
+    return false;
+  }
+
   private boolean jj_3R_37() {
     if (jj_3R_44()) return true;
     Token xsp;
@@ -1355,8 +1314,9 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     return false;
   }
 
-  private boolean jj_3R_27() {
-    if (jj_scan_token(FLOAT_LITERAL)) return true;
+  private boolean jj_3R_41() {
+    if (jj_scan_token(50)) return true;
+    if (jj_scan_token(NORMAL_IDENTIFIER)) return true;
     return false;
   }
 
@@ -1367,14 +1327,14 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     return false;
   }
 
-  private boolean jj_3R_41() {
-    if (jj_scan_token(50)) return true;
-    if (jj_scan_token(NORMAL_IDENTIFIER)) return true;
+  private boolean jj_3R_22() {
+    if (jj_3R_32()) return true;
     return false;
   }
 
-  private boolean jj_3R_22() {
-    if (jj_3R_32()) return true;
+  private boolean jj_3R_39() {
+    if (jj_scan_token(50)) return true;
+    if (jj_scan_token(NORMAL_IDENTIFIER)) return true;
     return false;
   }
 
@@ -1395,12 +1355,6 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
 
   private boolean jj_3R_12() {
     if (jj_3R_26()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_39() {
-    if (jj_scan_token(50)) return true;
-    if (jj_scan_token(NORMAL_IDENTIFIER)) return true;
     return false;
   }
 
@@ -1604,6 +1558,11 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     return false;
   }
 
+  private boolean jj_3R_50() {
+    if (jj_scan_token(VALUE_OPTION)) return true;
+    return false;
+  }
+
   private boolean jj_3R_81() {
     if (jj_3R_84()) return true;
     return false;
@@ -1628,7 +1587,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     return false;
   }
 
-  private boolean jj_3R_50() {
+  private boolean jj_3R_48() {
     if (jj_scan_token(VALUE_OPTION)) return true;
     return false;
   }
@@ -1636,11 +1595,6 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
   private boolean jj_3R_69() {
     if (jj_scan_token(44)) return true;
     if (jj_3R_60()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_48() {
-    if (jj_scan_token(VALUE_OPTION)) return true;
     return false;
   }
 
@@ -1725,15 +1679,15 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     return false;
   }
 
-  private boolean jj_3R_57() {
-    if (jj_scan_token(AND)) return true;
-    if (jj_3R_56()) return true;
-    return false;
-  }
-
   private boolean jj_3R_53() {
     if (jj_scan_token(LIST_SEPARATOR)) return true;
     if (jj_3R_44()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_57() {
+    if (jj_scan_token(AND)) return true;
+    if (jj_3R_56()) return true;
     return false;
   }
 
@@ -1789,6 +1743,68 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
     xsp = jj_scanpos;
     if (jj_3R_36()) jj_scanpos = xsp;
     if (jj_scan_token(END_LIST)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_49() {
+    if (jj_scan_token(NAME_OPTION)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_40() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_49()) {
+    jj_scanpos = xsp;
+    if (jj_3R_50()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_47() {
+    if (jj_scan_token(NAME_OPTION)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_38() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_47()) {
+    jj_scanpos = xsp;
+    if (jj_3R_48()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_51() {
+    if (jj_3R_44()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_53()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_42() {
+    if (jj_scan_token(46)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_51()) jj_scanpos = xsp;
+    if (jj_scan_token(47)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_34() {
+    if (jj_scan_token(NORMAL_IDENTIFIER)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_42()) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3R_16() {
+    if (jj_scan_token(TODAY)) return true;
     return false;
   }
 
