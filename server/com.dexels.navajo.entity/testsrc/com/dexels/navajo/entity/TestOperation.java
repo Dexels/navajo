@@ -1,6 +1,6 @@
 package com.dexels.navajo.entity;
-import junit.framework.Assert;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -9,9 +9,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operation;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.entity.Entity;
-import com.dexels.navajo.entity.EntityManager;
-import com.dexels.navajo.entity.OperationComponent;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
 import com.dexels.navajo.server.DispatcherInterface;
 
