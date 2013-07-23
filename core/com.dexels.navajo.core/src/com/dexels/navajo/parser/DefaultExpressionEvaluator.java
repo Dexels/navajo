@@ -60,7 +60,7 @@ public final class DefaultExpressionEvaluator
 
     }
     try {
-      return Expression.evaluate(clause, inMessage,(MappableTreeNode) mappableTreeNode,parent,currentParam);
+      return Expression.evaluate(clause, inMessage,(MappableTreeNode) mappableTreeNode,parent,currentParam,null,null);
     }
     catch (Throwable ex) {
     	
@@ -77,7 +77,7 @@ public final class DefaultExpressionEvaluator
     catch (Throwable ex) {
 
       throw NavajoFactory.getInstance().createNavajoException("Parse error: " +
-          ex.getMessage() + "\n while parsing: " + clause);
+          ex.getMessage() + "\n while parsing: " + clause,ex);
     }
   }
 

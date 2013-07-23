@@ -12,13 +12,16 @@ package com.dexels.navajo.parser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.functions.util.FunctionDefinition;
+import com.dexels.navajo.script.api.Access;
 
+@SuppressWarnings("rawtypes")
 public abstract class FunctionInterface {
 
     private ArrayList<Object> operandList = null;
@@ -34,14 +37,15 @@ public abstract class FunctionInterface {
     private static Object semahore = new Object();
     private final static HashSet<Class<? extends FunctionInterface>> initialized = new HashSet<Class<? extends FunctionInterface>>();
 
-    @SuppressWarnings("rawtypes")
 	private final static HashMap<Class<? extends FunctionInterface>, Class [][]> types = new HashMap<Class<? extends FunctionInterface>, Class[][]>();
-	@SuppressWarnings("rawtypes")
 	private final static HashMap<Class<? extends FunctionInterface>, Class []> returnType = new HashMap<Class<? extends FunctionInterface>, Class[]>();
 	private Class[][] myinputtypes;
 	private Class[] myreturntypes;
     
     public abstract String remarks();
+    
+    private Access access;
+	private Map<String, Object> params;
     
     private final Class [] getMyReturnType() {
     	return returnType.get(this.getClass());
@@ -321,6 +325,16 @@ public abstract class FunctionInterface {
 	public void setInMessage(Navajo inMessage) {
 		this.inMessage = inMessage;
 	}
+
+	public void setAccess(Access access) {
+		this.access = access;
+	}
+
+	public void setParams(Map<String, Object> params) {
+		this.params = params;
+	}
 	
-	
+	public Access getAccess() {
+		return this.access;
+	}
 }

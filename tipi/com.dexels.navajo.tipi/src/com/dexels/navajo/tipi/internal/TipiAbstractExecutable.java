@@ -198,7 +198,7 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 					tc.setCurrentEvent(te);
 					o = Expression.evaluate(getExpression(),
 							((TipiComponent) source).getNearestNavajo(), null,
-							null, null, (TipiComponent) source);
+							null, null,null, (TipiComponent) source);
 					if (o.value == null) {
 						getContext().showInternalError(
 								"Block expression failed: " + getExpression());
@@ -210,7 +210,7 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 				}
 			} else {
 				o = Expression.evaluate(getExpression(), null, null, null,
-						null, (TipiComponent) source);
+						null, null,(TipiComponent) source);
 				if (o.value.toString().equals("true")) {
 					return true;
 				}
