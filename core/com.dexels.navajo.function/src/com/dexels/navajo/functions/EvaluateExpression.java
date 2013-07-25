@@ -63,7 +63,7 @@ public final class EvaluateExpression extends FunctionInterface {
        String exp2 = (String) getOperand(2);
 
       try {
-        if (Condition.evaluate(condition, currentNavajo, null, currentMessage)) {
+        if (Condition.evaluate(condition, currentNavajo, null, currentMessage,getAccess())) {
           result =  Expression.evaluate(exp1, currentNavajo, null, currentMessage,null,null,null);
         } else {
           result =  Expression.evaluate(exp2, currentNavajo, null, currentMessage,null,null,null);

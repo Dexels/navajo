@@ -303,7 +303,7 @@ void DatePatternLiteral() #void:
 void ForAllLiteral() #void:
 {Token t;}
 {
-  (t = <SARTRE> "(" [ StringLiteral() "," ExpressionLiteral() ] ")" {jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg;jjtThis.mapObject = mapObject;jjtThis.functionName = t.image;} ) #ForAllNode
+  (t = <SARTRE> "(" [ StringLiteral() "," ExpressionLiteral() ] ")" {jjtThis.doc = inputDoc; jjtThis.parentMsg = parentMsg;jjtThis.mapObject = mapObject;jjtThis.functionName = t.image; jjtThis.setAccess(access);} ) #ForAllNode
 }
 
 void FunctionLiteral() #void:

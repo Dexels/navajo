@@ -871,6 +871,7 @@ private ServiceHandler createHandler(String handler, Access access) {
 				rpcName, rpcUser, rpcPassword);
         }
         catch (AuthorizationException ex) {
+          logger.error("AuthorizationException: ", ex);
           outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
           AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + ex.getMessage(), Level.WARNING);
           return outMessage;
@@ -1077,7 +1078,9 @@ private Access authenticateUser(Navajo inMessage, String instance,
 		  AAAInterface aaai = getAuthorizator(instance);
 		  if(aaai!=null) {
 			  access = aaai.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+			  return access;
 		  }
+		  logger.warn("No access returned from multitenant, instance specific authorization");
 	  }
 	  access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
 	  access.setInstance(instance);

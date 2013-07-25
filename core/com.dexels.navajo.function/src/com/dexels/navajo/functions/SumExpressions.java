@@ -81,7 +81,7 @@ public class SumExpressions extends FunctionInterface {
 		        Message m = arrayMsg.get(i);
 		      
 		        boolean evaluate = (filter != null ?
-		                            Condition.evaluate(filter, doc, null, m) : true);
+		                            Condition.evaluate(filter, doc, null, m,getAccess()) : true);
 		        if (evaluate) {
 		        	Operand o = Expression.evaluate(expression, m.getRootDoc(), null, m);
 		        	if (o.value == null) {

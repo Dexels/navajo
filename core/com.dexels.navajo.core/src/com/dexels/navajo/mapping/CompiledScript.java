@@ -377,11 +377,11 @@ public final void run(Access access) throws Exception {
 
 		  currentParamMsg = access.getInDoc().getMessage("__parms__");
 
-		  ConditionData[] conditions = getValidationRules(access.getInDoc());
+		  ConditionData[] conditions = getValidationRules(access);
 		  boolean conditionsFailed = false;
 		  if (conditions != null && conditions.length > 0) {
 			  Navajo outMessage = access.getOutputDoc();
-			  Message[] failed = checkValidationRules(conditions, access.getInDoc(), outMessage);
+			  Message[] failed = checkValidationRules(conditions, access.getInDoc(), outMessage,access);
 			  if (failed != null) {
 				  conditionsFailed = true;
 				  Message msg = NavajoFactory.getInstance().createMessage(outMessage,
@@ -430,7 +430,7 @@ public final void run(Access access) throws Exception {
    */
   private final Message[] checkValidationRules(ConditionData[] conditions,
                                                 Navajo inMessage,
-                                                Navajo outMessage) throws
+                                                Navajo outMessage, Access a) throws
       NavajoException, SystemException, UserException {
 
     if (conditions == null) {
@@ -446,7 +446,7 @@ public final void run(Access access) throws Exception {
 
       try {
     	  valid = com.dexels.navajo.parser.Condition.evaluate(condition.condition,
-    			  inMessage);
+    			  inMessage,a);
       }
       catch (com.dexels.navajo.parser.TMLExpressionException ee) {
     	  throw new UserException( -1, "Invalid condition: " + ee.getMessage(),ee);
@@ -500,14 +500,15 @@ public final void run(Access access) throws Exception {
   }
 
   
-  private final ConditionData[] getValidationRules(Navajo inMessage) throws
+  private final ConditionData[] getValidationRules(Access access) throws
       Exception {
-    if (conditionArray != null) {
+	  Navajo inMessage = access.getInDoc();
+	  if (conditionArray != null) {
       //System.err.println("CHECKING CONDITIONS......, conditionArray = " + conditionArray.length);
       List<ConditionData> conditions = new ArrayList<ConditionData>();
       for (int i = 0; i < conditionArray.length; i++) {
         boolean check = (conditionArray[i].equals("") ? true :
-                         Condition.evaluate(conditionArray[i], inMessage));
+                         Condition.evaluate(conditionArray[i], inMessage,access));
         //System.err.println("check = " + check);
         if (check) {
           ConditionData cd = new ConditionData();

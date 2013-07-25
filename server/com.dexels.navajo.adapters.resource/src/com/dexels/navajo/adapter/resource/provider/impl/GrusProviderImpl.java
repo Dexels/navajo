@@ -59,7 +59,7 @@ public class GrusProviderImpl implements GrusProvider {
 	@Override
 	public GrusConnection requestConnection(String instance, String name) {
 		if(instance==null) {
-			throw new IllegalArgumentException("instance can not me null");
+			throw new IllegalArgumentException("instance can not be null");
 		}
 		
 //		jdbc:oracle:thin:@odysseus:1521:SLTEST02

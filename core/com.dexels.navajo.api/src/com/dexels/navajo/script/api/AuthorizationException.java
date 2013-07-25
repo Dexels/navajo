@@ -24,6 +24,14 @@ public class AuthorizationException extends Exception {
 	private boolean authenticationError;
 	private boolean authorizationError;
 
+	public AuthorizationException(boolean authenticationError,boolean authorizationError, String user, String message, Throwable rootCause) {
+		super(rootCause);
+		this.message = message;
+		this.user = user;
+		this.authenticationError = authenticationError;
+		this.authorizationError = authorizationError;
+	}
+
   public AuthorizationException(boolean authenticationError, boolean authorizationError, String user, String message) {
     this.message = message;
     this.user = user;

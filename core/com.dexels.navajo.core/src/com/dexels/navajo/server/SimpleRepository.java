@@ -142,18 +142,37 @@ public class SimpleRepository implements Repository, GlobalManager {
 			paramMsg = NavajoFactory.getInstance().createMessage(inMessage, GLOBALSMSGNAME);
 			inMessage.addMessage(paramMsg);
 		}
+
 		Property nu = NavajoFactory.getInstance().createProperty(inMessage, "NavajoUser", Property.STRING_PROPERTY, username, 50, "", Property.DIR_OUT);
 		paramMsg.addProperty(nu);
 		Property nm = NavajoFactory.getInstance().createProperty(inMessage, "NavajoMethod", Property.STRING_PROPERTY, method, 50, "", Property.DIR_OUT);
 		paramMsg.addProperty(nm);
+		
+		appendMapToInput(inMessage, extraParams, m);
+	}
 
+	public static void appendMapToInput(Navajo inMessage, Map<String, String> extraParams,
+			Map<String, String> m) {
+		
+		Message msg = inMessage.getMessage(GLOBALSMSGNAME);
+
+		Message paramMsg = null;
+		if (msg!=null) {
+			paramMsg = msg;
+		} else {
+			paramMsg = NavajoFactory.getInstance().createMessage(inMessage, GLOBALSMSGNAME);
+			inMessage.addMessage(paramMsg);
+		}
+		
 		// Add application instance, i.e. "Bond" specific parameters from
 		// application.properties file.
-		for (Entry<String,String> e : m.entrySet()) {
-			Property p2 = NavajoFactory.getInstance().createProperty(inMessage, e.getKey(), Property.STRING_PROPERTY,
-					e.getValue(), 10, "",
-					Property.DIR_OUT);
-			paramMsg.addProperty(p2);
+		if(m!=null) {
+			for (Entry<String,String> e : m.entrySet()) {
+				Property p2 = NavajoFactory.getInstance().createProperty(inMessage, e.getKey(), Property.STRING_PROPERTY,
+						e.getValue(), 10, "",
+						Property.DIR_OUT);
+				paramMsg.addProperty(p2);
+			}
 		}
 		if (extraParams!=null) {
 			for (Iterator<Entry<String,String>> iter = extraParams.entrySet().iterator(); iter.hasNext();) {

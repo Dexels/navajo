@@ -35,6 +35,10 @@ public class SingleValueQuery extends FunctionInterface {
       this.dbIdentifier = dbIdentifier;
   }
 
+  public SingleValueQuery() {
+	  super();
+	  Thread.dumpStack();
+  }
   
   protected final JDBCMappable evaluateQuery() throws com.dexels.navajo.parser.TMLExpressionException {
 	  String query = "";

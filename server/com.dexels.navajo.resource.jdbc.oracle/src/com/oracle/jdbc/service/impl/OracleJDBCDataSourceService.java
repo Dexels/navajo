@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2011, Christoph Läubrich. All rights reserved.
+  Copyright (c) 2011, Christoph L��ubrich. All rights reserved.
 
   The MySQLJDBCDataSourceService is licensed under the same terms as the MySQL Connector/J
   which are the terms of the GPLv2  <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
@@ -141,7 +141,7 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
         if (props.containsKey(JDBC_USER)) {
         	base.setUser(props.getProperty(JDBC_USER));
         }
-        DataSource source = createPooledConnection(base, (String)props.get(JDBC_URL),(String) props.get(JDBC_USER), (String)props.get(JDBC_PASSWORD),  (Integer)props.get(JDBC_MIN_POOL_SIZE),  (Integer)props.get(JDBC_MAX_POOL_SIZE));
+        DataSource source = createPooledConnection(base, (String)props.get(JDBC_URL),(String) props.get(JDBC_USER), (String)props.get(JDBC_PASSWORD),  (Integer)props.get("min_connections"),  (Integer)props.get("max_connections"));
 
     	return source;
 
@@ -187,7 +187,7 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
        if(minIdle!=null) {
            connectionPool.setMinIdle( minIdle );
        } else {
-           connectionPool.setMinIdle( 2 );
+           connectionPool.setMinIdle( 5 );
     	   
        }
        if(maxActive!=null) {
@@ -199,7 +199,7 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
      this.pool = connectionPool; 
 
        
-       ConnectionFactory connectionFactory = new ConnectionFactory() {
+     ConnectionFactory connectionFactory = new ConnectionFactory() {
 		
 		@Override
 		public Connection createConnection() throws SQLException {

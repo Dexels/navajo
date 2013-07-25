@@ -65,7 +65,9 @@ public class GrusDataSource implements GrusConnection {
 
 	@Override
 	public Connection getConnection() throws SQLException {
-		connection = this.datasource.getConnection();
+		if(connection==null) {
+			connection = this.datasource.getConnection();
+		}
 		return connection;
 	}
 
@@ -103,7 +105,7 @@ public class GrusDataSource implements GrusConnection {
 
 	@Override
 	public long getId() {
-		return 0;
+		return this.id;
 	}
 
 	@Override

@@ -39,6 +39,7 @@ import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.MappableTreeNode;
@@ -534,7 +535,7 @@ public static final Message[] addMessage(Navajo doc, Message parent, String mess
 
   
 public static final ArrayList getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o, 
-  		Message currentParamMsg) throws
+  		Message currentParamMsg, Access access) throws
       NavajoException, SystemException, TMLExpressionException {
     //try {
       ArrayList result = new ArrayList();
@@ -567,7 +568,7 @@ public static final ArrayList getMessageList(Message msg, Navajo doc, String str
           ArrayList dummy = new ArrayList();
           for (int i = 0; i < result.size(); i++) {
             Message parent = (Message) result.get(i);
-            boolean match = Condition.evaluate(filter, doc, o, parent, currentParamMsg);
+            boolean match = Condition.evaluate(filter, doc, o, parent, currentParamMsg,access);
             //System.err.println("getMessageList(), filter = " + filter + ", match = " + match);
             if (match) {
               dummy.add(parent);

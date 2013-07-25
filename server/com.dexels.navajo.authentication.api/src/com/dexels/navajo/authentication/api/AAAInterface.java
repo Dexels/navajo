@@ -1,5 +1,7 @@
 package com.dexels.navajo.authentication.api;
 
+import java.util.Map;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
@@ -94,7 +96,7 @@ public interface AAAInterface {
      * @return
      * @throws AAAException
      */
-    public boolean isAuthorizedAccess(String region, String username, String actionObject, Navajo inputData) throws AAAException;
+    public boolean isAuthorizedAccess(String region, String username, String actionObject, Navajo inputData, Map<String,String> extraParams, Access access) throws AAAException;
 
     
 	  public Access authorizeUser(String username, String password, String service, Navajo inMessage, Object certificate) throws SystemException, AuthorizationException;

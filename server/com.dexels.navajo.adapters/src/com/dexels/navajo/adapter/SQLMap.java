@@ -823,7 +823,12 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 		if (transactionContext != -1) {
 
-			GrusConnection gc = DbConnectionBroker.getGrusConnection(transactionContext);
+			GrusConnection gc = null;
+			if (GrusProviderFactory.getInstance()!=null) {
+				gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
+			} else {
+				gc = DbConnectionBroker.getGrusConnection(transactionContext);
+			}
 			if (gc == null) {
 				throw new UserException(-1, "Invalid transaction context set: " + transactionContext);
 			}
@@ -844,7 +849,12 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			}
 			if (GrusProviderFactory.getInstance()!=null) {
 				// in multitenant
-				gc = GrusProviderFactory.getInstance().requestConnection(myAccess.getInstance(), datasource);
+				if(transactionContext!=-1) {
+					gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
+				} else {
+					gc = GrusProviderFactory.getInstance().requestConnection(myAccess.getInstance(), datasource);
+					setTransactionContext((int) gc.getId());
+				}
 				multiTenantGrusConnection = gc;
 			} else {
 				myConnectionBroker = null;

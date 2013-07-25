@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.script.api.SystemException;
 
@@ -20,6 +21,7 @@ public final class ASTForAllNode extends SimpleNode {
     Navajo doc;
     Message parentMsg;
     MappableTreeNode mapObject;
+	private Access access;
     
 	private final static Logger logger = LoggerFactory
 			.getLogger(ASTForAllNode.class);
@@ -27,6 +29,15 @@ public final class ASTForAllNode extends SimpleNode {
     public ASTForAllNode(int id) {
         super(id);
     }
+
+
+	public Access getAccess() {
+		return access;
+	}
+
+	public void setAccess(Access access) {
+		this.access = access;
+	}
 
    
     /**
@@ -72,7 +83,7 @@ public final class ASTForAllNode extends SimpleNode {
 
                     String expr = (String) b;
 
-                    boolean result = Condition.evaluate(expr, doc, mapObject, parentMsg);
+                    boolean result = Condition.evaluate(expr, doc, mapObject, parentMsg,access);
 
                     if ((result == false) && matchAll)
                         return Boolean.FALSE;

@@ -851,7 +851,7 @@ public class TMLParser/*@bgen(jjtree)*/implements TMLParserTreeConstants, TMLPar
       jj_consume_token(47);
                                                                       jjtree.closeNodeScope(jjtn001, true);
                                                                       jjtc001 = false;
-                                                                     jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg;jjtn001.mapObject = mapObject;jjtn001.functionName = t.image;
+                                                                     jjtn001.doc = inputDoc; jjtn001.parentMsg = parentMsg;jjtn001.mapObject = mapObject;jjtn001.functionName = t.image; jjtn001.setAccess(access);
     } catch (Throwable jjte001) {
     if (jjtc001) {
       jjtree.clearNodeScope(jjtn001);

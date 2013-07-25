@@ -15,13 +15,14 @@ package com.dexels.navajo.parser;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.MappableTreeNode;
 import com.dexels.navajo.script.api.SystemException;
 
 public final class Condition {
 
     public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, 
-    		Message paramParent
+    		Message paramParent, Access access
     		) throws TMLExpressionException, SystemException {
 
       //if (inMessage == null)
@@ -40,6 +41,7 @@ public final class Condition {
             parser.setMappableObject(o);
             parser.setParentMsg(parent);
             parser.setParentParamMsg(paramParent);
+            parser.setAccess(access);
             parser.Expression();
             Object aap = parser.jjtree.rootNode().interpret();
 
@@ -54,11 +56,11 @@ public final class Condition {
         }
     }
 
-    public final static boolean evaluate(String clause, Navajo inMessage) throws TMLExpressionException, SystemException {
-        return evaluate(clause, inMessage, null, null, null);
+    public final static boolean evaluate(String clause, Navajo inMessage,Access a) throws TMLExpressionException, SystemException {
+        return evaluate(clause, inMessage, null, null, null,a);
     }
 
-    public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
+    public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,Access a) throws TMLExpressionException, SystemException {
     			return evaluate(clause, inMessage, o, parent, null);
     }
 }

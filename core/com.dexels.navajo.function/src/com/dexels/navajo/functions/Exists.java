@@ -72,7 +72,7 @@ public class Exists extends FunctionInterface {
 				Message current = arrayMsg.get(i);
 				try {
 					boolean evaluate = (filter != null ?
-							Condition.evaluate(filter, doc, null, current) : true);
+							Condition.evaluate(filter, doc, null, current,getAccess()) : true);
 					if (evaluate) {
 						
 						Operand result = Expression.evaluate(expression, doc, null, current);

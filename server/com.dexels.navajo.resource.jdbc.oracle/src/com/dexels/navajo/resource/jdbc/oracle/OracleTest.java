@@ -3,8 +3,15 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import javax.sql.DataSource;
 import javax.sql.PooledConnection;
+
+import org.osgi.service.jdbc.DataSourceFactory;
 
 import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 
@@ -15,17 +22,47 @@ import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 	  {
 
 	    // Create a OracleConnectionPoolDataSource instance
-	    OracleConnectionPoolDataSource ocpds =
-	                               new OracleConnectionPoolDataSource();
+//	    final OracleConnectionPoolDataSource ocpds =
+//	                               new OracleConnectionPoolDataSource();
 
+	    final OracleWrapped ow = new OracleWrapped();
+	    Map<String,Object> settings = new HashMap<String,Object>();
+	    settings.put("url", "jdbc:oracle:thin:@odysseus:1521:SLTEST01");
+	    settings.put("user", "knvbkern");
+	    settings.put("password", "knvb");
+	    settings.put(DataSourceFactory.JDBC_MAX_POOL_SIZE, 10);
+	    ow.activate(settings);
 	    // Set connection parameters
-	    ocpds.setURL("jdbc:oracle:thin:@10.0.0.1:1521:aardnoot");
-//	    ocpds.setDriverType("thin");
-	    ocpds.setUser("knvbkern");
-	    ocpds.setPassword("knvb");
+//	    ocpds.setURL("jdbc:oracle:thin:@10.0.0.1:1521:aardnoot");
+//	    ocpds.setUser("knvbkern");
+//	    ocpds.setPassword("knvb");
+	    long start = System.currentTimeMillis();
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+	    for (int i=0; i<10; i++) {
+	        Runnable worker = new Runnable(){
 
-	    // Create a pooled connection
-	    PooledConnection pc  = ocpds.getPooledConnection();
+				@Override
+				public void run() {
+				    for (int i=0; i<10; i++) {
+				    	try {
+							testConnection(ow);
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+				    }
+				}};
+	        executor.execute(worker);
+		}
+        executor.shutdown();
+    while (!executor.isTerminated()) {
+    }
+    System.out.println("Finished all threads");
+    System.err.println("Took: "+(System.currentTimeMillis()-start));
+	}
+
+	private static void testConnection(DataSource pc)
+			throws SQLException {
+		// Create a pooled connection
 
 	    // Get a Logical connection
 	    Connection conn = pc.getConnection();
@@ -51,10 +88,9 @@ import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 
 	    // Close the logical connection
 	    conn.close();
-	    conn = null;
+//	    conn = null;
 
 	    // Close the pooled connection
-	    pc.close();
-	    pc = null;
-	  }
+//	    pc = null;
+	}
 	}

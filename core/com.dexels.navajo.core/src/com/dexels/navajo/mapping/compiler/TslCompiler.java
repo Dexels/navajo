@@ -582,7 +582,7 @@ public class TslCompiler {
 			result.append(printIdent(ident)
 					+ "if (Condition.evaluate("
 					+ replaceQuotes(condition)
-					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg))");
+					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access))");
 		}
 
 		result.append(printIdent(ident) + "{\n");
@@ -723,7 +723,7 @@ public class TslCompiler {
 					condition = condition.replace('\n', ' ');
 					result.append(printIdent(ident) + "if (Condition.evaluate("
 							+ replaceQuotes(condition)
-							+ ", access.getInDoc(), null, null, null)) {\n");
+							+ ", access.getInDoc(), null, null, null,access)) {\n");
 				} else {
 					result.append(printIdent(ident) + "if (true) {\n");
 					// Get required messages.
@@ -785,7 +785,7 @@ public class TslCompiler {
 			result.append(printIdent(ident)
 					+ "if (Condition.evaluate("
 					+ replaceQuotes(condition)
-					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
+					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
 			ident += 2;
 		}
 
@@ -881,7 +881,7 @@ public class TslCompiler {
 				+ (count.equals("1") ? "1"
 						: "((Integer) Expression.evaluate(\""
 								+ count
-								+ "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg).value).intValue()")
+								+ "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,null,null,getEvaluationParams()).value).intValue()")
 				+ ";\n");
 		String messageList = "messageList" + (messageListCounter++);
 		result.append(printIdent(ident) + "Message [] " + messageList
@@ -890,7 +890,7 @@ public class TslCompiler {
 		String orderbyExpression = ("".equals(orderby) ? "\"\""
 				: "(String) Expression.evaluate("
 						+ replaceQuotes(orderby)
-						+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg).value");
+						+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,null,null,getEvaluationParams()).value");
 
 		if (n.getNodeName().equals("message")) {
 			result.append(printIdent(ident)
@@ -1053,7 +1053,7 @@ public class TslCompiler {
 					+ (startElement.equals("") ? "0"
 							: "((Integer) Expression.evaluate(\""
 									+ startElement
-									+ "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg).value).intValue()")
+									+ "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,null,null,getEvaluationParams()).value).intValue()")
 					+ ";\n");
 			result.append(printIdent(ident + 2)
 					+ "int "
@@ -1062,7 +1062,7 @@ public class TslCompiler {
 					+ (elementOffset.equals("") ? "1"
 							: "((Integer) Expression.evaluate(\""
 									+ elementOffset
-									+ "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg).value).intValue()")
+									+ "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,null,null,getEvaluationParams()).value).intValue()")
 					+ ";\n");
 
 			if (!isIterator) {
@@ -1096,7 +1096,7 @@ public class TslCompiler {
 				result.append(printIdent(ident + 4)
 						+ "if (Condition.evaluate("
 						+ replaceQuotes(filter)
-						+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) {\n");
+						+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) {\n");
 				ident += 2;
 			}
 
@@ -1323,7 +1323,7 @@ public class TslCompiler {
 			result.append(printIdent(ident)
 					+ "if (Condition.evaluate("
 					+ replaceQuotes(condition)
-					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
+					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
 			ident += 2;
 		}
 
@@ -1365,14 +1365,14 @@ public class TslCompiler {
 				if (!(selected.equals("0") || selected.equals("1"))) {
 					selected = "Expression.evaluate("
 							+ replaceQuotes(selectedValue)
-							+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null).value";
+							+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams()).value";
 				}
 
 				// Created condition statement if condition is given!
 				String conditional = (optionCondition != null && !optionCondition
 						.equals("")) ? "if (Condition.evaluate("
 						+ replaceQuotes(optionCondition)
-						+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg))\n"
+						+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access))\n"
 						: "";
 				optionItems
 						.append(conditional
@@ -1503,7 +1503,7 @@ public class TslCompiler {
 				result.append(printIdent(ident + 4)
 						+ "if (Condition.evaluate("
 						+ replaceQuotes(filter)
-						+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) {\n");
+						+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) {\n");
 				ident += 2;
 			}
 
@@ -1741,7 +1741,7 @@ public class TslCompiler {
 			result.append(printIdent(ident)
 					+ "if (Condition.evaluate("
 					+ replaceQuotes(condition)
-					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
+					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
 		} else {
 			result.append(printIdent(ident) + "if (true) {\n");
 		}
@@ -1929,7 +1929,7 @@ public class TslCompiler {
 					+ messageListName
 					+ " = MappingUtils.getMessageList(currentInMsg, access.getInDoc(), \""
 					+ ref + "\", \"" + ""
-					+ "\", currentMap, currentParamMsg);\n");
+					+ "\", currentMap, currentParamMsg,access);\n");
 			result.append(printIdent(ident + 2) + "else\n");
 			result.append(printIdent(ident + 4)
 					+ messageListName
@@ -2038,7 +2038,7 @@ public class TslCompiler {
 					result.append(printIdent(ident + 4)
 							+ "if (inSelectionRef || Condition.evaluate("
 							+ replaceQuotes(filter)
-							+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) {\n");
+							+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) {\n");
 					ident += 2;
 				}
 
@@ -2270,7 +2270,7 @@ public class TslCompiler {
 			result.append(printIdent(ident)
 					+ "if (Condition.evaluate("
 					+ replaceQuotes(condition)
-					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
+					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
 
 		}
 		result.append(printIdent(ident + 2) + "throw new BreakEvent();\n");
@@ -2285,7 +2285,7 @@ public class TslCompiler {
 		result.append(printIdent(ident)
 				+ "op = Expression.evaluate("
 				+ replaceQuotes(value)
-				+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
+				+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null,getEvaluationParams());\n");
 		result.append(printIdent(ident)
 				+ "Access.writeToConsole(access, \"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value + \"\\n\");\n");
 		return result.toString();
@@ -2324,7 +2324,7 @@ public class TslCompiler {
 			result.append(printIdent(ident)
 					+ "if (Condition.evaluate("
 					+ replaceQuotes(condition)
-					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
+					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
 			ident += 2;
 		}
 

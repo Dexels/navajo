@@ -67,7 +67,7 @@ public class CheckUniqueness extends FunctionInterface {
       for (int i = 0; i < arrayMsg.size(); i++) {
         Message m = arrayMsg.get(i);
         Property p = m.getProperty(propertyName);
-        boolean evaluate = (filter != null ? Condition.evaluate(filter, doc, null, m) : true);
+        boolean evaluate = (filter != null ? Condition.evaluate(filter, doc, null, m,getAccess()) : true);
         if (evaluate) {
           if (p != null) {
             Object o = null;

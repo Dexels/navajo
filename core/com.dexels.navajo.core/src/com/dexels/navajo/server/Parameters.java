@@ -51,7 +51,8 @@ public class Parameters extends java.util.Hashtable<String,Parameter> implements
             if (condition.trim().equals(""))
                 eval = true;
             else
-                eval = Condition.evaluate(condition, doc);
+            	// TODO don't like passing null here, but have no idea what this whole thing does
+                eval = Condition.evaluate(condition, doc,null);
         } catch (TMLExpressionException ce) {
             // ce.printStackTrace();
             eval = false;
