@@ -479,7 +479,7 @@ public class TslCompiler {
 			result.append(printIdent(ident)
 					+ "op = Expression.evaluate("
 					+ replaceQuotes(clause)
-					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
+					+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null, getEvaluationParams());\n");
 			result.append(printIdent(ident) + "sValue = op.value;\n");
 		} else { // USE OUR OPTIMIZATION SCHEME.
 			// //System.out.println("CALL = " + call);

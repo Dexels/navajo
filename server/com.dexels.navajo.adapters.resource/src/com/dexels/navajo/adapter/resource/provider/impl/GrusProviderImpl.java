@@ -80,6 +80,7 @@ public class GrusProviderImpl implements GrusProvider {
 	@Override
 	public void release(GrusConnection grusDataSource) {
 		grusIds.remove( grusDataSource.getId());
+		grusDataSource.destroy();
 	}
 	
 	public void activate() {

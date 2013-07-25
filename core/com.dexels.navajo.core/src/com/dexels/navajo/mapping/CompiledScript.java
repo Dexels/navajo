@@ -29,6 +29,7 @@ import java.lang.management.ThreadInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -550,6 +551,12 @@ public final Object getFunction(String name) throws Exception {
 
   protected void finalize() {
 	  functions.clear();
+  }
+  
+  protected Map<String,Object> getEvaluationParams() {
+	  Map<String,Object> params = new HashMap<String, Object>();
+	  params.put(Expression.ACCESS, myAccess);
+	  return params;
   }
   
   /* (non-Javadoc)

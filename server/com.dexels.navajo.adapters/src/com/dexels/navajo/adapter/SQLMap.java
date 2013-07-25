@@ -230,6 +230,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	private boolean updateOnly;
 	private boolean isLegacyMode;
 	private String dbIdentifier = null;
+	private GrusConnection multiTenantGrusConnection;
 
 	private static Object semaphore = new Object();
 	private static boolean initialized = false;
@@ -518,6 +519,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 						}
 						con.setAutoCommit(true);
 					}
+					if(multiTenantGrusConnection!=null) {
+						GrusProviderFactory.getInstance().release(multiTenantGrusConnection);
+						multiTenantGrusConnection = null;
+					}
+
 				}
 			} catch (SQLException sqle) {
 				logger.warn("COULD NOT RESET SCHEMA. session: "+resetSession);
@@ -839,6 +845,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			if (GrusProviderFactory.getInstance()!=null) {
 				// in multitenant
 				gc = GrusProviderFactory.getInstance().requestConnection(myAccess.getInstance(), datasource);
+				multiTenantGrusConnection = gc;
 			} else {
 				myConnectionBroker = null;
 				if (fixedBroker != null) {

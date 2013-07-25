@@ -99,7 +99,6 @@ public class GrusDataSource implements GrusConnection {
 			connection = null;
 		}
 		logger.info("Destroying datasource. Removing from provider");
-		grusProvider.release(this);
 	}
 
 	@Override
