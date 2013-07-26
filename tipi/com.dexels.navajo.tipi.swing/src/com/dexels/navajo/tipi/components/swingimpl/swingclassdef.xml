@@ -1270,6 +1270,7 @@
          <method name="show" />
          <method name="hide" />
          <method name="dispose" />
+<!--          <method name="resize" /> -->
       </methods>
    </tipiclass>
    <tipiclass addtocontainer="true" childcount="1" implements="basecomponent,swingcomponent,datacomponent" class="TipiScroller" layoutmanager="false" module="container" name="scroll" package="com.dexels.navajo.tipi.components.swingimpl"

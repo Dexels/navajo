@@ -33,8 +33,8 @@ public class EncryptString extends FunctionInterface {
 		
 		EncryptString e = new EncryptString();
 		e.reset();
-		e.insertOperand("BBFW06E");
-		e.insertOperand("mypassword");
+		e.insertOperand("d3X3lS!");
+		e.insertOperand("testtest");
 		String result = (String) e.evaluate();
 		System.err.println("result: " + result);
 	}

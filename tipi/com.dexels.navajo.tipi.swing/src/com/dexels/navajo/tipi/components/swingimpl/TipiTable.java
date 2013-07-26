@@ -330,14 +330,15 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 					Property defProp = singleEntry.getProperty(name);
 					if (defProp != null)
 					{
-						label = defProp.getDescription();
+						// it will be evaluated in a bit so it needs to be formatted as a string literal in Navajo terms.
+						label = "'" + defProp.getDescription() + "'";
 					}
 				}
 			}
 		}
 		if (label == null)
 		{
-			label = "";
+			label = "''";
 		}
 		
 		Message columnMessage = NavajoFactory.getInstance().createMessage(

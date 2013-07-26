@@ -157,8 +157,6 @@
 					type="string" required="false" />
 				<param name="removeDuplicates" field="removeDuplicates" type="boolean"
 					required="false" />
-				<param name="copyProperties" field="autoCopyProperties"
-					type="boolean" required="false" />
 				<param name="groupBy" field="groupBy" type="string" required="false" />
 			</method>
 		</methods>

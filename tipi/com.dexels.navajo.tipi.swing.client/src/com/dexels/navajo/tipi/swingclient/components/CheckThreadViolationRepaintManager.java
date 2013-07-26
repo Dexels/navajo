@@ -4,7 +4,12 @@ import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CheckThreadViolationRepaintManager extends RepaintManager {
+	private final static Logger logger = LoggerFactory.getLogger(CheckThreadViolationRepaintManager.class);
+	
 	// it is recommended to pass the complete check
 	private boolean completeCheck = true;
 
@@ -49,7 +54,14 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
 				// no problems here, since repaint() is thread safe
 				return;
 			}
-			exception.printStackTrace();
+			if (logger.isTraceEnabled())
+			{
+				exception.printStackTrace();
+			}
+			else
+			{
+				logger.warn(exception.getMessage());
+			}
 		}
 	}
 }

@@ -504,7 +504,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 
 	public void setId(String id) {
 		if(myId!=null) {
-			logger.debug("Not resetting id. Value: "+myId+" requested id: "+id);
+			logger.trace("Not resetting id. Value: "+myId+" requested id: "+id);
 			return;
 		}
 		myId = id;
