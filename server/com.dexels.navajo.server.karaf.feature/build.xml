@@ -6,7 +6,7 @@
 		uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
 
 	<property name="output" value="output" />
-	<property name="version" value="1.0.83" />
+	<property name="version" value="1.0.91" />
 
 	
 	<target name="prepare">
@@ -21,6 +21,6 @@
 		<artifact:deploy file="${output}/features.xml" pomrefid="mypom" ></artifact:deploy>
 	</target>
 	<!-- 
-	mvn:com.dexels.navajo/com.dexels.navajo.karaf.feature/1.0.35/features.xml
+	mvn:com.dexels.navajo/com.dexels.nava	jo.karaf.feature/1.0.35/features.xml
 	 -->
 </project>	
