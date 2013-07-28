@@ -1,6 +1,9 @@
 package com.dexels.navajo.entity.impl;
 
 import java.io.StringWriter;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +37,9 @@ public class ServiceEntityOperation implements EntityOperation {
 	private Operation myOperation;
 	private final Entity myEntity;
 	private Key myKey;
+	private static final String ENTITY_META_MSG = "__Entity__";
+	private static final String ETAG = "ETag";
+	private static final String STATUS = "Status";
 	
 	public ServiceEntityOperation(EntityManager m, DispatcherInterface c, Operation o) throws EntityException {
 		this.manager = m;
@@ -41,7 +47,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		this.myOperation = o;
 		this.myEntity = manager.getEntity(myOperation.getEntityName());
 		if ( myEntity == null ) {
-			throw new EntityException("Could not find entity: " + myOperation.getEntityName());
+			throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not find entity: " + myOperation.getEntityName());
 		}
 	}
 
@@ -51,7 +57,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		this.myOperation = o;
 		this.myEntity = manager.getEntity(myOperation.getEntityName());
 		if ( myEntity == null ) {
-			throw new EntityException("Could not find entity: " + myOperation.getEntityName());
+			throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not find entity: " + myOperation.getEntityName());
 		}
 	}
 
@@ -61,7 +67,7 @@ public class ServiceEntityOperation implements EntityOperation {
 		this.myOperation = o;
 		this.myEntity = manager.getEntity(myOperation.getEntityName());
 		if ( myEntity == null ) {
-			throw new EntityException("Could not find entity: " + myOperation.getEntityName());
+			throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not find entity: " + myOperation.getEntityName());
 		}
 	}
 
@@ -229,12 +235,13 @@ public class ServiceEntityOperation implements EntityOperation {
 	private void addIdToArrayMessageDefinitions(Message m) {
 		if ( !m.isArrayMessage() ) {
 			if ( m.getProperty("_id") == null ) {
-				Property p = NavajoFactory.getInstance().createProperty(m.getRootDoc(), "_id", Property.STRING_PROPERTY, "", 0, "", "out");
+				// NOT use direction="in" for _id, since direction="in" is also default in Mongo/Navajo driver.
+				Property p = NavajoFactory.getInstance().createProperty(m.getRootDoc(), "_id", Property.STRING_PROPERTY, "", 0, "", Property.DIR_IN);
 				m.addProperty(p);
 			}
 		} else {
 			if ( m.isArrayMessage() && m.getDefinitionMessage() != null && m.getDefinitionMessage().getProperty("__id") == null ) {
-				Property p = NavajoFactory.getInstance().createProperty(m.getRootDoc(), "__id", Property.STRING_PROPERTY, "", 0, "", "out");
+				Property p = NavajoFactory.getInstance().createProperty(m.getRootDoc(), "__id", Property.STRING_PROPERTY, "", 0, "", Property.DIR_IN);
 				m.getDefinitionMessage().addProperty(p);
 			}
 			List<Message> children = m.getAllMessages();
@@ -258,10 +265,45 @@ public class ServiceEntityOperation implements EntityOperation {
 		return sb.toString();
 	}
 	
+	private String getMetaProperty(Navajo n, String name) {
+		Message em = null;
+		if ( ( em = n.getMessage(ServiceEntityOperation.ENTITY_META_MSG) ) != null ) {
+			Property p = em.getProperty(name);
+			if ( p != null ) {
+				return p.getValue();
+			}
+		}
+		return null;
+	}
+	
+	private void setMetaProperty(Navajo n, String name, String value) {
+		Message em = null;
+		if ( ( em = n.getMessage(ServiceEntityOperation.ENTITY_META_MSG) ) == null ) {
+			em = NavajoFactory.getInstance().createMessage(n, ServiceEntityOperation.ENTITY_META_MSG);
+			n.addMessage(em);
+		}
+		Property et = em.getProperty(name);
+		if ( et == null ) {
+			et = NavajoFactory.getInstance().createProperty(n, name, Property.STRING_PROPERTY, value, 0, "", Property.DIR_OUT, null);
+			em.addProperty(et);
+		} else {
+			et.setValue(value);
+		}
+	}
+	
+	private void setEtag(Navajo n) {
+	
+		Message m = n.getMessage(myEntity.getName());
+		//m.write(System.err);
+		String etag = m.generateEtag();
+		setMetaProperty(n, ETAG, etag);
+		
+	}
+	
 	@Override
 	public Navajo perform(Navajo input) throws EntityException {
 		
-		String [] validMessages = {"__parms__", "__globals__", myOperation.getEntityName(), ( myOperation.getExtraMessage() != null ? myOperation.getExtraMessage().getName() : "")};
+		String [] validMessages = {"__parms__", "__globals__", ServiceEntityOperation.ENTITY_META_MSG, myOperation.getEntityName(), ( myOperation.getExtraMessage() != null ? myOperation.getExtraMessage().getName() : "")};
 		
 		if(myOperation.getMethod().equals(Operation.HEAD)) {
 			Navajo out = NavajoFactory.getInstance().createNavajo();
@@ -274,23 +316,31 @@ public class ServiceEntityOperation implements EntityOperation {
 		if(myKey==null) {
 			// Check for _id property. If _id is present it is good as a key.
 			if ( inputEntity.getProperty("_id") == null ) {
-				throw new EntityException("Input is invalid: no valid entity key found.");
+				throw new EntityException(EntityException.MISSING_ID, "Input is invalid: no valid entity key found.");
 			} else {
 				myKey = new Key("", myEntity);
 			}
 		}
 		cleanInput(input, validMessages);
 		
-		if( myOperation.getMethod().equals(Operation.GET) || myOperation.getMethod().equals(Operation.DELETE) ) {
+		if( myOperation.getMethod().equals(Operation.GET) ) {
+			Navajo result = getCurrentEntity(input);
+			if ( result == null ) {
+				throw new EntityException(EntityException.ENTITY_NOT_FOUND, myEntity.getName());
+			}
+			setEtag(result);
+			setMetaProperty(result, STATUS, EntityException.OK+"");
+			return result;
+		}
+		
+		if (myOperation.getMethod().equals(Operation.DELETE)) {
 			Navajo request = myKey.generateRequestMessage(input);
-			if ( myOperation.getMethod().equals(Operation.DELETE) ) {
-				try {
-					checkForMongo(request.getMessage(myEntity.getName()));
-				} catch (Exception e) {
-					StringWriter sw = new StringWriter();
-					request.write(sw);
-					throw new EntityException("Could not peform delete, entity not found:\n" + sw);
-				}
+			try {
+				checkForMongo(request.getMessage(myEntity.getName()));
+			} catch (Exception e) {
+				StringWriter sw = new StringWriter();
+				request.write(sw);
+				throw new EntityException(EntityException.ENTITY_NOT_FOUND,"Could not peform delete, entity not found:\n" + sw);
 			}
 			return callEntityService(request);
 		}
@@ -301,7 +351,7 @@ public class ServiceEntityOperation implements EntityOperation {
 			if ( myOperation.getMethod().equals(Operation.POST) ) {
 				List<String> missing = checkRequired(inputEntity, myEntity.getMessage(), true);
 				if ( missing.size() > 0  ) {
-					throw new EntityException("Could not perform update, missing required properties:\n" + listToString(missing));
+					throw new EntityException(EntityException.BAD_REQUEST, "Could not perform update, missing required properties:\n" + listToString(missing));
 				}
 				try {
 					if ( checkForMongo(inputEntity) ) {
@@ -311,7 +361,18 @@ public class ServiceEntityOperation implements EntityOperation {
 					e.printStackTrace(System.err);
 					StringWriter sw = new StringWriter();
 					inputEntity.write(sw);
-					throw new EntityException("Could not perform update, entity not found:\n" + sw);
+					throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Could not perform update, entity not found:\n" + sw);
+					// Try INSERT instead....
+				}
+				
+				// Check Etag.
+				String postedEtag = null;
+				if ( ( postedEtag = getMetaProperty(input, ETAG) ) != null ) {
+					Message currentEntity = getCurrentEntity(input).getMessage(myEntity.getName());
+					String currentEtag = currentEntity.generateEtag();
+					if ( !postedEtag.equals(currentEtag) ) {
+						throw new EntityException(EntityException.CONFLICT);
+					}
 				}
 			}
 			
@@ -319,11 +380,12 @@ public class ServiceEntityOperation implements EntityOperation {
 				// Required properties check.
 				List<String> missing = checkRequired(inputEntity, myEntity.getMessage(), false);
 				if ( missing.size() > 0  ) {
-					throw new EntityException("Could not perform insert, missing required properties:\n" + listToString(missing));
+					throw new EntityException(EntityException.BAD_REQUEST, "Could not perform insert, missing required properties:\n" + listToString(missing));
 				}
 				// Duplicate entry check.
 				if ( getCurrentEntity(input) != null ) {
-					throw new EntityException("Could not perform insert, duplicate entry");
+					// Do NOT throw error message, since PUT must be idem-potent anyway...
+					throw new EntityException(EntityException.CONFLICT, "Could not perform insert, duplicate entry");
 				}
 			}
 			
@@ -333,8 +395,9 @@ public class ServiceEntityOperation implements EntityOperation {
 			List<String> invalidProperties = new ArrayList<String>();
 			checkTypes(inputEntity, myEntity.getMessage(), myOperation.getMethod(), invalidProperties);
 			if ( invalidProperties.size() > 0 ) {
-				throw new EntityException("Could not perform operation, invalid property types:\n" + listToString(invalidProperties));
+				throw new EntityException(EntityException.BAD_REQUEST, "Could not perform operation, invalid property types:\n" + listToString(invalidProperties));
 			}
+			
 			return callEntityService(input);
 			
 		}
@@ -361,15 +424,15 @@ public class ServiceEntityOperation implements EntityOperation {
 				try {
 					id = myEntityMap.getPropertyObject(inputEntity.getName() + "/_id");
 				} catch (UserException e) {
-					throw new EntityException(e.getMessage(), e);
+					throw new EntityException(EntityException.ERROR, e.getMessage());
 				}
 			} else {
-				throw new EntityException("Problem while trying to update Mongo backed entity: empty result from get.");
+				throw new EntityException(EntityException.ERROR, "Problem while trying to update Mongo backed entity: empty result from get.");
 			}
 			if ( id != null ) {
 				inputEntity.addProperty(id.copy(inputEntity.getRootDoc()));
 			} else {
-				throw new EntityException("Could not fetch _id for Mongo backed entity.");
+				throw new EntityException(EntityException.ERROR, "Could not fetch _id for Mongo backed entity.");
 			}
 		}
 		return ( inputEntity.getProperty("_id") != null );
@@ -390,8 +453,8 @@ public class ServiceEntityOperation implements EntityOperation {
 		if ( getop.getExtraMessage() != null ) {
 			r.addMessage(getop.getExtraMessage().copy(r));
 		}
-		appendServiceName(r, getop.getService());
-		Navajo original = get.commitOperation(r, true);
+		appendServiceName(r, getop);
+		Navajo original = get.commitOperation(r, getop, true);
 		if ( original.getMessage(myEntity.getName()) == null ) {
 			return null;
 		} else {
@@ -409,7 +472,7 @@ public class ServiceEntityOperation implements EntityOperation {
 	 * @throws EntityException
 	 */
 	private Navajo callEntityService(Navajo input) throws EntityException {
-		appendServiceName(input, myOperation.getService());
+		appendServiceName(input, myOperation);
 		final Message extraMessage = myOperation.getExtraMessage();
 		if(extraMessage!=null) {
 			input.addMessage(extraMessage);
@@ -425,15 +488,15 @@ public class ServiceEntityOperation implements EntityOperation {
 					original = getCurrentEntity(input);
 				}
 				// Perform operation (blocking!)
-				Navajo result = commitOperation(input, true);
+				Navajo result = commitOperation(input, myOperation, true);
 				// Log when successful.
 				nt.addNonTransactionalEntityResource(input, original, this);
 				return result;
 			} else {
-				return commitOperation(input, false);
+				return commitOperation(input, myOperation, false);
 			}
 		} catch (Exception se) {
-			throw new EntityException(se.getMessage(), se);
+			throw new EntityException(EntityException.ERROR, se.getMessage(), se);
 		}
 
 	}
@@ -450,17 +513,18 @@ public class ServiceEntityOperation implements EntityOperation {
 	 * @return
 	 * @throws EntityException
 	 */
-	private Navajo commitOperation(Navajo input, boolean block) throws EntityException {
+	private Navajo commitOperation(Navajo input, Operation o, boolean block) throws EntityException {
 		try {
 			if ( myEntityMap != null ) {
 				try {
-					myEntityMap.setDoSend(myOperation.getService(), input);
+					myEntityMap.setDoSend(o.getService(), input);
 					if ( block ) {
 						myEntityMap.waitForResult();
-						return myEntityMap.getResponseNavajo();
+						Navajo n = myEntityMap.getResponseNavajo();
+						return n;
 					}
 				} catch (Exception e) {
-					throw new EntityException(e.getMessage(), e);
+					throw new EntityException(EntityException.ERROR, e.getMessage(), e);
 				} 
 				return null;
 			}
@@ -470,27 +534,27 @@ public class ServiceEntityOperation implements EntityOperation {
 				if ( client != null ) {
 					return client.call(input);
 				} else {
-					throw new EntityException("No Dispatcher or LocalClient present");
+					throw new EntityException(EntityException.ERROR, "No Dispatcher or LocalClient present");
 				}
 		} catch (FatalException e1) {
-			throw new EntityException("Error calling entity service: ",e1);
+			throw new EntityException(EntityException.ERROR, "Error calling entity service: ", e1);
 		}
 
 	}
 	
 
-	protected void appendServiceName(Navajo input, String rpcName) {
+	protected void appendServiceName(Navajo input, Operation o) {
 		Header h = input.getHeader();
 		if(h==null) {
-			h = NavajoFactory.getInstance().createHeader(input, rpcName, "", "", -1);
+			h = NavajoFactory.getInstance().createHeader(input, o.getService(), "", "", -1);
 			input.addHeader(h);
 		} else {
-			h.setRPCName(rpcName);
+			h.setRPCName(o.getService());
 		}
 		// Append additional entity meta data.
-		h.setHeaderAttribute("entity_name", myOperation.getEntityName());
-		h.setHeaderAttribute("entity_operation", myOperation.getMethod());
-		h.setHeaderAttribute("entity_service", myOperation.getService());
+		h.setHeaderAttribute("entity_name", myEntity.getName());
+		h.setHeaderAttribute("entity_operation", o.getMethod());
+		h.setHeaderAttribute("entity_service", o.getService());
 	}
 
 }

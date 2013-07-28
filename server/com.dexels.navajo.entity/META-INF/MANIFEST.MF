@@ -24,5 +24,6 @@ Import-Package: com.dexels.navajo.adapter,
 Service-Component: OSGI-INF/*.xml
 Export-Package: com.dexels.navajo.entity,
  com.dexels.navajo.entity.adapters,
- com.dexels.navajo.entity.impl
+ com.dexels.navajo.entity.impl,
+ com.dexels.navajo.entity.transactions
 Bundle-Activator: navajoentity.Version
