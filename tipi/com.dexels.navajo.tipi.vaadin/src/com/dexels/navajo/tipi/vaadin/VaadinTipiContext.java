@@ -148,7 +148,7 @@ public class VaadinTipiContext extends TipiContext {
 	public void showInfo(String text, String title, TipiComponent tc) {
 		Notification not = new Notification(title, text);
 		not.setPosition(7);
-		not.setStyleName("info");
+		not.setDelayMsec(1500);
 		mainWindow.showNotification(not);
 	}
 
