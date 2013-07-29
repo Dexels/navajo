@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -62,7 +63,7 @@ import com.dexels.navajo.util.AuditLog;
  * ====================================================================
  */
 
-public final class GenericHandler extends ServiceHandler {
+public class GenericHandler extends ServiceHandler {
 
     private static ConcurrentHashMap<String,NavajoClassSupplier> loadedClasses = null;
 
@@ -74,7 +75,9 @@ public final class GenericHandler extends ServiceHandler {
 			.getLogger(GenericHandler.class);
 //    public static String applicationGroup = "";
     
-    private final NavajoConfigInterface tenantConfig;
+    private NavajoConfigInterface tenantConfig;
+
+	protected NavajoConfigInterface navajoConfig;
     
 //    static {
 //    	try {
@@ -84,8 +87,16 @@ public final class GenericHandler extends ServiceHandler {
 //    	}
 //    }
 //    
+    public GenericHandler() {
+    	if(!Version.osgiActive()) {
+    		logger.warn("Warning: using OSGi constructor for GenericHandler");
+    	}
+    }
+    
     public GenericHandler(NavajoConfigInterface tenantConfig) {
-
+    	if(Version.osgiActive()) {
+    		logger.warn("Warning: using non-OSGi constructor for GenericHandler");
+    	}
     	this.tenantConfig = tenantConfig;
     	boolean finishedSync = false;
     	

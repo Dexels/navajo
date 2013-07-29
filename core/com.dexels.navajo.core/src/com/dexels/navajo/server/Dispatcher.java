@@ -487,11 +487,9 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  }
   }
 
-private ServiceHandler createHandler(String handler, Access access) {
-	
-	
+// Overridden for OSGi  
+protected ServiceHandler createHandler(String handler, Access access) {
 	return HandlerFactory.createHandler(handler,navajoConfig,access);
-
 }
 
   public  final boolean doMatchCN() {

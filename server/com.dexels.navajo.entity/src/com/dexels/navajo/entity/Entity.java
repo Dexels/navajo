@@ -66,7 +66,7 @@ public class Entity  {
 	private void addSubEntity(Entity sub) throws EntityException {
 		if ( sub.equals(this) ) {
 			Thread.dumpStack();
-			throw new EntityException("Cannot add myself as subentity");
+			throw new EntityException(EntityException.ENTITY_LOOP);
 		}
 		subEntities.add(sub);
 	}
@@ -93,8 +93,6 @@ public class Entity  {
 	 * @throws Exception
 	 */
 	protected synchronized void deactivate() throws EntityException {
-		
-		System.err.println("In deactivate(): " + getName());
 		for ( Entity sub : subEntities ) {
 			sub.deactivate();
 		}
@@ -125,7 +123,7 @@ public class Entity  {
 			Message msg = em.getEntity(entityName).getMessage();
 			return msg.getProperty(propertyName);
 		} else {
-			throw new EntityException("Extension type not implemented: " + ext);
+			throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE);
 		}
 	}
 
@@ -157,7 +155,7 @@ public class Entity  {
 			processExtendedProperties(myMessage);
 			addSuperEntity(superEntity);
 		} else {
-			throw new EntityException("Could not find super entity: " + extendedEntity + " for entity: " + getName());
+			throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE, "Could not find super entity: " + extendedEntity + " for entity: " + getName());
 		}
 	}
 	
@@ -172,15 +170,12 @@ public class Entity  {
 					processExtendedEntity(myMessage, superEntities[i]);
 				}
 			} else if (!"".equals(myMessage.getExtends()) ){
-				throw new EntityException("Extension type not supported: " + myMessage.getExtends());
+				throw new EntityException(EntityException.UNKNOWN_PARENT_TYPE, "Extension type not supported: " + myMessage.getExtends());
 			}
 		}
 	}
 
 	private void findKeys() {
-		
-		System.err.println("IN FINDKEYS:");
-		myMessage.write(System.err);
 		
 		myKeys.clear();
 		HashMap<String,Key> foundKeys = new HashMap<String,Key>();
