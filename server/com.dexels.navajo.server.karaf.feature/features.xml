@@ -163,7 +163,7 @@
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/1.0.28</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='sportlink.libraries' version='1.0.10' start-level='81' >
+	<feature resolver="(obr)" name='sportlink.libraries' version='1.0.10' start-level='82' >
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.nevobo.dps/1.0.0</bundle> -->
 		<feature version="[1.0.0,2)">navajo.function</feature> 
 		<feature version="[1.0.0,2)">navajo.adapter</feature> 
@@ -173,11 +173,12 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.functions/1.0.15</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.comp/1.0.12</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.tensing/1.0.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.optimizepool/1.0.1</bundle>
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.crystal/1.0.5</bundle> -->
 
 	</feature>
 	
-	<feature resolver="(obr)" name='sportlink' version='1.0.0' start-level='81' >
+	<feature resolver="(obr)" name='sportlink' version='1.0.1' start-level='81' >
 		<feature version="[1.0.8,2)">sportlink.libraries</feature>
 		<feature version="[1.0.0,2)">navajo.enterprise</feature>
 		<!-- Somehow necessary for listeners.continuations: -->
