@@ -3,9 +3,9 @@ package com.dexels.navajo.global.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.dexels.navajo.server.GlobalManager;
-import com.dexels.navajo.server.GlobalManagerRepository;
-import com.dexels.navajo.server.GlobalManagerRepositoryFactory;
+import com.dexels.navajo.server.global.GlobalManager;
+import com.dexels.navajo.server.global.GlobalManagerRepository;
+import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
 
 public class GlobalManagerRepositoryImpl implements GlobalManagerRepository {
 	private final Map<String,GlobalManager> globalManagers = new HashMap<String, GlobalManager>();

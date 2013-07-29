@@ -17,8 +17,8 @@ import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.TmlScheduler;
-import com.dexels.navajo.server.GlobalManager;
-import com.dexels.navajo.server.GlobalManagerRepositoryFactory;
+import com.dexels.navajo.server.global.GlobalManager;
+import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
 import com.dexels.navajo.server.listener.http.standard.TmlStandardRunner;
 
 public class TmlContinuationRunner extends TmlStandardRunner {

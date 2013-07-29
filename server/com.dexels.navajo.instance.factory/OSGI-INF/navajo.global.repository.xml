@@ -2,7 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="navajo.global.repository">
    <implementation class="com.dexels.navajo.global.impl.GlobalManagerRepositoryImpl"/>
    <service>
-      <provide interface="com.dexels.navajo.server.GlobalManagerRepository"/>
+      <provide interface="com.dexels.navajo.server.global.GlobalManagerRepository"/>
    </service>
-   <reference bind="addGlobalManager" cardinality="0..n" interface="com.dexels.navajo.server.GlobalManager" name="GlobalManager" policy="dynamic" unbind="removeGlobalManager"/>
+   <reference bind="addGlobalManager" cardinality="0..n" interface="com.dexels.navajo.server.global.GlobalManager" name="GlobalManager" policy="dynamic" unbind="removeGlobalManager"/>
 </scr:component>
