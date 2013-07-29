@@ -12,4 +12,4 @@ Import-Package: javax.sql,
 Require-Bundle: com.mysql.jdbc;bundle-version="5.1.18",
  com.dexels.navajo.resource;bundle-version="1.0.0"
 Bundle-Activator: com.dexels.navajo.resource.jdbc.mysql.Activator
-Service-Component: OSGI-INF/driver.xml
+Service-Component: OSGI-INF/*.xml

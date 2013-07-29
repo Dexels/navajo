@@ -1,5 +1,7 @@
 package com.mysql.jdbc.service;
 
+import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Properties;
@@ -10,10 +12,7 @@ import org.osgi.service.jdbc.DataSourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-
-public class MySqlDataSourceComponent extends MysqlDataSource implements DataSource {
-	private static final long serialVersionUID = 2471245090084063117L;
+public class MySqlDataSourceComponent implements DataSource {
 //	private ConnectionPoolDataSource connectionPoolDataSource;
 	private DataSource datasource;
 	
@@ -56,5 +55,36 @@ public class MySqlDataSourceComponent extends MysqlDataSource implements DataSou
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		return datasource.unwrap(iface);
+	}
+
+	@Override
+	public PrintWriter getLogWriter() throws SQLException {
+		return datasource.getLogWriter();
+	}
+
+	@Override
+	public int getLoginTimeout() throws SQLException {
+		return datasource.getLoginTimeout();
+	}
+
+	@Override
+	public void setLogWriter(PrintWriter p) throws SQLException {
+		datasource.setLogWriter(p);
+	}
+
+	@Override
+	public void setLoginTimeout(int t) throws SQLException {
+		datasource.setLoginTimeout(t);
+	}
+
+	@Override
+	public Connection getConnection() throws SQLException {
+		return datasource.getConnection();
+	}
+
+	@Override
+	public Connection getConnection(String username, String password)
+			throws SQLException {
+		return datasource.getConnection(username, password);
 	}
 }
