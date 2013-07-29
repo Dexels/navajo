@@ -23,6 +23,7 @@ public interface DispatcherInterface extends ResourceManager {
 	public Navajo handle(Navajo inMessage, boolean skipAuth, AfterWebServiceEmitter emit, ClientInfo clientInfo) throws FatalException;
 	public Navajo handle(Navajo inMessage, boolean skipAuth) throws FatalException;
 	public Navajo handle(Navajo inMessage) throws FatalException;
+	public Navajo handle(Navajo inMessage, String instance, boolean skipAuth) throws FatalException;
 	
 	public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, String rpcName, String rpcUser,		Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated, AfterWebServiceEmitter emit);
 

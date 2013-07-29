@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.server.GlobalManager;
 import com.dexels.navajo.server.SimpleRepository;
+import com.dexels.navajo.server.global.GlobalManager;
 
 public class GlobalManagerImpl implements GlobalManager {
 
@@ -31,7 +31,6 @@ public class GlobalManagerImpl implements GlobalManager {
 		for (Entry<String,Object> e : settings.entrySet()) {
 			this.settings.put(e.getKey(), ""+e.getValue());
 		}
-		
 	}
 
 	public void deactivate() {

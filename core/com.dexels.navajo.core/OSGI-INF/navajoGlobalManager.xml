@@ -2,6 +2,6 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" deactivate="deactivate" name="navajo.global.manager">
    <implementation class="com.dexels.navajo.server.impl.GlobalManagerImpl"/>
    <service>
-      <provide interface="com.dexels.navajo.server.GlobalManager"/>
+      <provide interface="com.dexels.navajo.server.global.GlobalManager"/>
    </service>
 </scr:component>

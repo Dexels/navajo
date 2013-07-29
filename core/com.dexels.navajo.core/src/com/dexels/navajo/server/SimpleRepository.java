@@ -32,6 +32,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.SystemException;
+import com.dexels.navajo.server.global.GlobalManager;
 
 public class SimpleRepository implements Repository, GlobalManager {
 
