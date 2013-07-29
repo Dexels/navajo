@@ -29,13 +29,21 @@ public class EncryptString extends FunctionInterface {
 		return result;
 	}
 
-	public static void main(String [] args) throws Exception {
-		
+	static String encrypt(String key, String message) throws TMLExpressionException {
 		EncryptString e = new EncryptString();
 		e.reset();
-		e.insertOperand("d3X3lS!");
-		e.insertOperand("testtest");
+		e.insertOperand(key);
+		e.insertOperand(message);
 		String result = (String) e.evaluate();
-		System.err.println("result: " + result);
+		return result;
+	}
+	public static void main(String [] args) throws Exception {
+		
+		final String key = "d3X3lS!";
+		final String message = "testtest";
+		String encrypted = encrypt(key, message);
+		System.err.println("encrypted: "+encrypted);
+		String res = DecryptString.decrypt(key, encrypted);
+		System.err.println("decrypted: "+res);
 	}
 }
