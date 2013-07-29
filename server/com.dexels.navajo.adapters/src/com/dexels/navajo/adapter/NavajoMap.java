@@ -1251,7 +1251,7 @@ private String resource;
 		  h.setRequestId(null);
 		  h.setHeaderAttribute("parentaccessid", access.accessID);
 
-		  inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
+		  inDoc = DispatcherFactory.getInstance().handle(outDoc,access.getInstance(), true);
 		  serviceFinished = true;
 		  serviceCalled = true;
 		  continueAfterRun();
