@@ -231,6 +231,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	private boolean isLegacyMode;
 	private String dbIdentifier = null;
 	private GrusConnection multiTenantGrusConnection;
+	private boolean ownConnection;
 
 	private static Object semaphore = new Object();
 	private static boolean initialized = false;
@@ -491,6 +492,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 		cleanupBinaryStreams();
 
+		if (ownConnection && GrusProviderFactory.getInstance()!=null && gc!=null) {
+			GrusProviderFactory.getInstance().release(gc);
+			return;
+		} 
+		
 		if (transactionContext == -1) {
 
 			String resetSession = null;
@@ -851,9 +857,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				// in multitenant
 				if(transactionContext!=-1) {
 					gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
+					this.ownConnection = false;
 				} else {
 					gc = GrusProviderFactory.getInstance().requestConnection(myAccess.getInstance(), datasource);
 					setTransactionContext((int) gc.getId());
+					this.ownConnection = true;
 				}
 				multiTenantGrusConnection = gc;
 			} else {
