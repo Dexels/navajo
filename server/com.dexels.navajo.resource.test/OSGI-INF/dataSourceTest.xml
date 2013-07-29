@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="com.dexels.navajo.resource.test.command">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="com.dexels.navajo.resource.test.command">
    <implementation class="com.dexels.navajo.resource.test.TestDataSource"/>
    <service>
       <provide interface="com.dexels.navajo.resource.test.TestDataSource"/>
    </service>
-   <property name="osgi.command.function" type="String" value="testresource"/>
-   <property name="osgi.command.scope" type="String" value="navajo"/>
+   <property name="osgi.command.function" type="String" value="test"/>
+   <property name="osgi.command.scope" type="String" value="resource"/>
 </scr:component>

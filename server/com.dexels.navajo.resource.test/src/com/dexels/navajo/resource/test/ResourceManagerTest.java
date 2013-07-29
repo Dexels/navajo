@@ -1,6 +1,5 @@
 package com.dexels.navajo.resource.test;
 
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,62 +10,50 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.dexels.grus.GrusConnection;
+import org.dexels.grus.GrusProviderFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.adapter.resource.JDBCMap;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.resource.manager.ResourceManager;
-import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 
 public class ResourceManagerTest {
-	private ResourceManager resourceManager;
 	private BundleContext bundleContext;
 	private static ResourceManagerTest instance;
 	private static final Logger logger = LoggerFactory.getLogger(ResourceManagerTest.class);
 	
-	public ResourceManager getResourceManager() {
-		return resourceManager;
-	}
-
 	public void activate(BundleContext bundleContext) {
 		this.bundleContext = bundleContext;
-
+		setInstance(this);
+	}
+	
+	public void deactivate() {
+		setInstance(null);
 	}
 	
 	public static ResourceManagerTest getInstance() {
 		return instance;
 	}
 
-	public void setResourceManager(ResourceManager resourceManager) {
-		this.resourceManager = resourceManager;
-		try {
-			testResourceManager();
-		} catch (Exception e) {
-			logger.error("Error: ", e);
-		}
-		setInstance(this);
-	}
 
 	private static void setInstance(ResourceManagerTest managerTest) {
 		instance = managerTest;
 	}
 
 
-	/**
-	 * @param resourceManager the resourceManager to remove 
-	 */
-	public void clearResourceManager(ResourceManager resourceManager) {
-		this.resourceManager = null;
-	}
 
 	private void testResourceManager() throws Exception {
 //		logger.info("Starting test");
@@ -252,10 +239,6 @@ public void testOracle() throws Exception, SQLException {
 		}
 	}
 	
-	public void loadResources() {
-		InputStream is = getClass().getClassLoader().getResourceAsStream("datasources.xml");
-		resourceManager.loadResourceTml(is);
-	}
 	public void testAAA() throws InvalidSyntaxException, SQLException {
 		String regionFetch = "SELECT DISTINCT district_cd, district_name FROM sportlink_user_districts WHERE user_id = 3723 ORDER BY district_name";
 		DataSource d = getDataSource("sportlinkkernel");
@@ -286,7 +269,33 @@ public void testOracle() throws Exception, SQLException {
 				logger.error("Error: ", e);
 			}
 		}
-		
-		//		xx.
+	}
+
+	public void testSqlMap() throws SQLException, MappableException, UserException {
+		Access a = new Access();
+		a.setInstance("knvb");
+		SQLMap sq = new SQLMap();
+		sq.load(a);
+		String regionFetch = "SELECT DISTINCT district_cd, district_name FROM sportlink_user_districts WHERE user_id = 3723 ORDER BY district_name";
+		sq.setDatasource("sportlinkkernel");
+		sq.setQuery(regionFetch);
+		int rowCount = sq.getRowCount();
+		System.err.println("rowcount: "+rowCount);
+		sq.store();
+	}
+	
+	public void testGrus() throws SQLException {
+		GrusConnection gc = GrusProviderFactory.getInstance().requestConnection("knvb","sportlinkkernel");
+		Connection connection = gc.getConnection();
+		String regionFetch = "SELECT DISTINCT district_cd, district_name FROM sportlink_user_districts WHERE user_id = 3723 ORDER BY district_name";
+		PreparedStatement s2 = connection.prepareStatement(regionFetch);
+		ResultSet ts = s2.executeQuery();
+		  while (ts.next()) {
+
+	            String title = ts.getString("district_cd");
+	            logger.info("title: "+title);
+		  }
+		connection.close();
+
 	}
 }

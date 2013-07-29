@@ -1,5 +1,6 @@
 package com.dexels.navajo.resource.test;
 
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 import org.apache.felix.service.command.CommandSession;
@@ -55,10 +56,7 @@ public class TestDataSource  {
 		ResourceManagerTest.getInstance().testJDBCMap2();
 	}
 
-	@Descriptor(value = "test resource")
-	protected void loadresourcetest() {
-		ResourceManagerTest.getInstance().loadResources();
-	}
+
 
 	@Descriptor(value = "test mongodb connectivity")
 	protected void mongotest() throws Exception {
@@ -74,10 +72,21 @@ public class TestDataSource  {
 	protected void mysqltest(CommandSession cc) throws SQLException, InvalidSyntaxException  {
 		ResourceManagerTest.getInstance().testMysqlService();
 	}
+//	public void check(CommandSession session, @Descriptor(value = "The path of the script") String script,@Descriptor(value = "The current tenant")  String tenant) throws FileNotFoundException {
 
 	@Descriptor(value = "test h2 connectivity") 
 	public void h2test(CommandSession cc) throws Exception, SQLException {
 		ResourceManagerTest.getInstance().testH2();
+	} 
+
+	@Descriptor(value = "test grus connectivity")  
+	public void test(CommandSession cc, int iterations) throws Exception, SQLException {
+		long stamp = System.currentTimeMillis();
+		for (int i = 0; i < iterations; i++) {
+			ResourceManagerTest.getInstance().testSqlMap(); //testGrus();
+			System.err.println("Iteration:"+i);
+		}
+		System.err.println("elapsed: "+(System.currentTimeMillis() - stamp));
 	} 
 
 }
