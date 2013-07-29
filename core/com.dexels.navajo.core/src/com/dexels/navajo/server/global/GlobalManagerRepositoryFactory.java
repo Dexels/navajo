@@ -1,4 +1,4 @@
-package com.dexels.navajo.server;
+package com.dexels.navajo.server.global;
 
 public class GlobalManagerRepositoryFactory {
 	public static GlobalManagerRepository instance;
