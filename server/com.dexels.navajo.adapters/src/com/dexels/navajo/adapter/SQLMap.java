@@ -572,7 +572,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			createConnection();
 			if (con != null
 					&& (myConnectionBroker == null || myConnectionBroker.supportsAutocommit)) {
-				if (!autoCommit) {
+				if (!con.getAutoCommit()) {
 					con.commit(); // Commit previous actions.
 				}
 				this.autoCommit = b;
@@ -859,7 +859,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
 					this.ownConnection = false;
 				} else {
-					gc = GrusProviderFactory.getInstance().requestConnection(myAccess.getInstance(), datasource);
+					gc = GrusProviderFactory.getInstance().requestConnection(myAccess.getInstance(), datasource,alternativeUsername);
 					setTransactionContext((int) gc.getId());
 					this.ownConnection = true;
 				}
@@ -927,10 +927,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 			if (con != null && (myConnectionBroker == null || myConnectionBroker.supportsAutocommit)) {
 				boolean ac = (this.overideAutoCommit) ? autoCommit : supportsAutoCommit(datasource);
-				if (!ac) {
+				con.setAutoCommit(ac);
+				if (!con.getAutoCommit()) {
 					con.commit();
 				}
-				con.setAutoCommit(ac);
+
 				// con.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
 				if (transactionIsolation != -1) {
 					con.setTransactionIsolation(transactionIsolation);
@@ -1328,7 +1329,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 								+ this.datasource + ", using username "
 								+ this.username);
 			} else {
-				logger.warn("Metadata not yet implemented in multi tenant");
+//				logger.warn("Metadata not yet implemented in multi tenant");
 			}
 		}
 		return fixedBroker.getMetaData(this.datasource, null, null);

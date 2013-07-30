@@ -159,4 +159,11 @@ public class LegacyGrusConnection implements GrusConnection {
 		// TODO Auto-generated method stub
 		
 	}
+
+	// TODO deal with the 'conversion'
+	@Override
+	public Connection getConnection(String username, String password)
+			throws SQLException {
+		return myConnection;
+	}
 }

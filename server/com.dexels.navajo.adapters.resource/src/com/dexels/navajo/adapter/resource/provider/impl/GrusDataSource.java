@@ -100,7 +100,6 @@ public class GrusDataSource implements GrusConnection {
 			}
 			connection = null;
 		}
-		logger.info("Destroying datasource. Removing from provider");
 	}
 
 	@Override
@@ -129,6 +128,11 @@ public class GrusDataSource implements GrusConnection {
 	public void rollback(boolean b) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Connection getConnection(String username, String password) throws SQLException {
+		return this.datasource.getConnection(username, password);
 	}	
 
 }

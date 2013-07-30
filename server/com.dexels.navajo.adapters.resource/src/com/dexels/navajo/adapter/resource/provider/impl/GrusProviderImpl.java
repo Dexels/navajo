@@ -10,14 +10,21 @@ import javax.sql.DataSource;
 import org.dexels.grus.GrusConnection;
 import org.dexels.grus.GrusProvider;
 import org.dexels.grus.GrusProviderFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.script.api.UserException;
 
 public class GrusProviderImpl implements GrusProvider {
 
 	private final Map<String, Map<String,DataSource>> instances = new HashMap<String, Map<String,DataSource>>();
 	private final Map<DataSource,Map<String,Object>> settingsMap = new HashMap<DataSource, Map<String,Object>>();
 	private final AtomicInteger connectionCounter = new AtomicInteger();
-	
 	private final Map<Long,GrusConnection> grusIds = new HashMap<Long, GrusConnection>();
+
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(GrusProviderImpl.class);
 	
 	public void addDataSource(DataSource source, Map<String,Object> settings) {
 		settingsMap.put(source, settings);
@@ -44,8 +51,16 @@ public class GrusProviderImpl implements GrusProvider {
 		return instanceDataSources;
 	}
 	
-	private DataSource getInstanceDataSource(String instance, String name) {
-		return getInstanceDataSources(instance).get(name);
+	private DataSource getInstanceDataSource(String instance, String name,String username) {
+		DataSource dataSource = getInstanceDataSources(instance).get(name);
+		if(dataSource != null) {
+			return dataSource;
+		}
+		dataSource = getInstanceDataSources("*").get(name);
+		if(dataSource==null) {
+			logger.warn("No datasource found for instance: "+instance+" and name: "+name);
+		}
+		return dataSource;
 	}
 
 	public void removeDataSource(DataSource source, Map<String,Object> settings) {
@@ -57,15 +72,19 @@ public class GrusProviderImpl implements GrusProvider {
 	} 
 
 	@Override
-	public GrusConnection requestConnection(String instance, String name) {
+	public GrusConnection requestConnection(String instance, String name, String username) throws UserException {
 		if(instance==null) {
 			throw new IllegalArgumentException("instance can not be null");
 		}
 		
 //		jdbc:oracle:thin:@odysseus:1521:SLTEST02
 		
-		DataSource dataSourceInstance = getInstanceDataSource(instance, name);
+		DataSource dataSourceInstance = getInstanceDataSource(instance, name,username);
 		Map<String,Object> settings = settingsMap.get(dataSourceInstance);
+		if(settings==null) {
+			logger.error("Error resolving datasource for instance: "+instance+" and name: "+name);
+			throw new UserException(-1,"Error resolving datasource for instance: "+instance+" and name: "+name);
+		}
 		int id = connectionCounter.getAndIncrement();
 		GrusConnection gc = new GrusDataSource(id, dataSourceInstance,settings,this);
 		grusIds.put((long) id,gc);

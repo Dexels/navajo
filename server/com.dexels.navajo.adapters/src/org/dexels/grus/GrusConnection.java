@@ -9,6 +9,9 @@ public interface GrusConnection {
 
 	public Connection getConnection() throws SQLException;
 
+	public Connection getConnection(String username, String password)
+			throws SQLException;
+
 	public void setAged();
 
 	public boolean isAged();
@@ -26,5 +29,6 @@ public interface GrusConnection {
 	public void autocommit(boolean b);
 
 	public void rollback(boolean b);
+
 
 }
