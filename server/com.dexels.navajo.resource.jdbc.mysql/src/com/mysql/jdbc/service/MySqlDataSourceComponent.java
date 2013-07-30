@@ -87,4 +87,9 @@ public class MySqlDataSourceComponent implements DataSource {
 			throws SQLException {
 		return datasource.getConnection(username, password);
 	}
+
+	// or something. Needed by 1.7, not adding Override, as it would break 1.6
+	public java.util.logging.Logger getParentLogger() {
+		return null;
+	}
 }
