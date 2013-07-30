@@ -26,7 +26,9 @@ public class TipiFrame extends TipiVaadinComponentImpl{
 		this.mainWindow = app.getMainWindow();
 		this.layout = new VerticalLayout();
 		this.layout.setMargin(false);
-		this.layout.setSizeFull();
+		this.layout.setSizeUndefined();
+		this.layout.setWidth("100%");
+//		this.layout.setSizeFull();
 		this.mainWindow.setContent(layout);
 		logger.debug("Size: "+mainWindow.getWidth()+" ; "+mainWindow.getHeight());
 		return this.mainWindow;
