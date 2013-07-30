@@ -72,9 +72,9 @@ public final class AAAFactory implements AuthenticationFactory {
   public void addAuthenticationModule(AAAInterface a, Map<String,Object> settings) {
 	  moduleList.add(a);
 	  
-	  logger.info("# of auth. modules now: "+moduleList.size());
+//	  logger.info("# of auth. modules now: "+moduleList.size());
 	  if(settings!=null) {
-		  logger.info("Multitenant found: "+settings.get("instance"));
+//		  logger.info("Multitenant found: "+settings.get("instance"));
 		  String instance = (String) settings.get("instance");
 		  if(instance!=null) {
 			  moduleMap.put(instance,a);
@@ -87,7 +87,7 @@ public final class AAAFactory implements AuthenticationFactory {
   public void removeAuthenticationModule(AAAInterface a, Map<String,Object> settings) {
 	  moduleList.remove(a);
 	  if(settings!=null) {
-		  logger.info("Multitenant found: "+settings.get("instance"));
+//		  logger.info("Multitenant found: "+settings.get("instance"));
 		  String instance = (String) settings.get("instance");
 		  if(instance!=null) {
 			  moduleMap.remove(instance);
@@ -95,7 +95,7 @@ public final class AAAFactory implements AuthenticationFactory {
 			  logger.warn("Possible problem: Removing AAAInterface, probably in multitenant mode, but no instance associated.");
 		  }
 	  }
-	  logger.info("# of auth. modules now: "+moduleList.size());
+//	  logger.info("# of auth. modules now: "+moduleList.size());
   }
 
   public void activate() {

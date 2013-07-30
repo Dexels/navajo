@@ -54,15 +54,6 @@ public class ResourceManagerTest {
 	}
 
 
-
-	private void testResourceManager() throws Exception {
-//		logger.info("Starting test");
-//		testNonExisting();
-//		testH2();
-//		testMysql();
-		
-	}
-
 public void testH2() throws Exception, SQLException {
 //		ResourceReference rr;
 //		Map<String, Object> settings = new HashMap<String, Object>(); 
@@ -284,8 +275,8 @@ public void testOracle() throws Exception, SQLException {
 		sq.store();
 	}
 	
-	public void testGrus() throws SQLException {
-		GrusConnection gc = GrusProviderFactory.getInstance().requestConnection("knvb","sportlinkkernel");
+	public void testGrus() throws SQLException, UserException {
+		GrusConnection gc = GrusProviderFactory.getInstance().requestConnection("knvb","sportlinkkernel",null);
 		Connection connection = gc.getConnection();
 		String regionFetch = "SELECT DISTINCT district_cd, district_name FROM sportlink_user_districts WHERE user_id = 3723 ORDER BY district_name";
 		PreparedStatement s2 = connection.prepareStatement(regionFetch);

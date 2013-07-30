@@ -1,6 +1,5 @@
 package com.dexels.navajo.resource.test;
 
-import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 import org.apache.felix.service.command.CommandSession;

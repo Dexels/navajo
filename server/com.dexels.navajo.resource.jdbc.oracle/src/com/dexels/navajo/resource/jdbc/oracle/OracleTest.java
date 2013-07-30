@@ -9,11 +9,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.sql.DataSource;
-import javax.sql.PooledConnection;
 
 import org.osgi.service.jdbc.DataSourceFactory;
-
-import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 
 	class PooledConnection1
 	{
