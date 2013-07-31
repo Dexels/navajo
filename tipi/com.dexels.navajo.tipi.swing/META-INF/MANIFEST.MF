@@ -2,7 +2,7 @@ Bundle-Name: Navajo Swing Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.2.45.qualifier
+Bundle-Version: 1.2.47.qualifier
 Bundle-Activator: tipiswing.TipiSwingExtension
 Export-Package: com.dexels.navajo.tipi.components.swingimpl;version="1.0.0",
  com.dexels.navajo.tipi.components.swingimpl.parsers;version="1.0.0",
