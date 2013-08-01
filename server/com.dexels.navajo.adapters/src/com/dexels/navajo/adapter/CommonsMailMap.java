@@ -98,10 +98,10 @@ public class CommonsMailMap implements Mappable, Queuable {
 			email.addTo(this.getToArray(this.to));
 		}
 		if (this.cc != null) {
-			email.addTo(this.getCcArray(this.cc));
+			email.addCc(this.getCcArray(this.cc));
 		}
 		if (this.bcc != null) {
-			email.addTo(this.getBccArray(this.bcc));
+			email.addBcc(this.getBccArray(this.bcc));
 		}
 		
 	    // Subject
