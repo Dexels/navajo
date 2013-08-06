@@ -14,24 +14,10 @@
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	<!-- 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>tycho_spiritus</id>
-			<url>https://repo.dexels.com/nexus/content/repositories/tycho/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>tycho</id>
-			<url>http://repository.sonatype.org/content/groups/sonatype-public-grid</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
- -->
+	<!-- <pluginRepositories> <pluginRepository> <id>tycho_spiritus</id> <url>https://repo.dexels.com/nexus/content/repositories/tycho/</url> 
+		<snapshots> <enabled>true</enabled> </snapshots> </pluginRepository> <pluginRepository> 
+		<id>tycho</id> <url>http://repository.sonatype.org/content/groups/sonatype-public-grid</url> 
+		<snapshots> <enabled>true</enabled> </snapshots> </pluginRepository> </pluginRepositories> -->
 
 	<repositories>
 		<repository>
@@ -60,7 +46,7 @@
 				<version>${tycho-version}</version>
 				<configuration>
 					<resolver>p2</resolver>
-                    <pomDependencies>consider</pomDependencies>
+					<pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
 							<groupId>com.dexels.navajo</groupId>
@@ -141,7 +127,8 @@
 
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -175,6 +162,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
 	<profiles>
 		<profile>
 			<id>dexels</id>
@@ -212,42 +200,79 @@
 							</dependency>
 						</dependencies>
 					</plugin>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>2.5</version>
-                <executions>
-                    <execution>
-                        <id>auto-clean</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>                    
+					<plugin>
+						<artifactId>maven-clean-plugin</artifactId>
+						<version>2.5</version>
+						<executions>
+							<execution>
+								<id>auto-clean</id>
+								<phase>initialize</phase>
+								<goals>
+									<goal>clean</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
+
+		<profile>
+			<id>release</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+
+			<distributionManagement>
+				<repository>
+					<uniqueVersion>false</uniqueVersion>
+					<id>dexels</id>
+					<name>Dexels Repository</name>
+					<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
+					<url>https://repo.dexels.com/nexus/content/repositories/navajo/</url>
+					<layout>default</layout>
+				</repository>
+				<snapshotRepository>
+					<uniqueVersion>true</uniqueVersion>
+					<id>dexels_snap</id>
+					<name>Dexels Snapshots</name>
+					<url>https://repo.dexels.com/nexus/content/repositories/navajo_snapshot</url>
+					<layout>default</layout>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+		<profile>
+			<id>test</id>
+			<activation>
+				<property>
+					<name>environment</name>
+					<value>test</value>
+				</property>
+			</activation>
+			<distributionManagement>
+				<repository>
+					<uniqueVersion>false</uniqueVersion>
+					<id>dexels_test</id>
+					<name>Dexels Repository</name>
+					<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
+					<url>https://repo.dexels.com/nexus/content/repositories/navajo_test/</url>
+
+					<layout>default</layout>
+				</repository>
+				<snapshotRepository>
+					<uniqueVersion>true</uniqueVersion>
+					<id>dexels_snap_test</id>
+					<name>Dexels Snapshots</name>
+					<url>https://repo.dexels.com/nexus/content/repositories/navajo_test_snapshot/</url>
+					<layout>default</layout>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
 	</profiles>
 
-	<distributionManagement>
-		<repository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>dexels</id>
-			<name>Dexels Repository</name>
-			<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
-			<url>https://repo.dexels.com/nexus/content/repositories/navajo/</url>
 
-			<layout>default</layout>
-		</repository>
-		<snapshotRepository>
-			<uniqueVersion>true</uniqueVersion>
-			<id>dexels_snap</id>
-			<name>Dexels Snapshots</name>
-			<url>https://repo.dexels.com/nexus/content/repositories/navajo_snapshot</url>
-			<layout>default</layout>
-		</snapshotRepository>
-	</distributionManagement>
+
+
 	<organization>
 		<name>Dexels</name>
 		<url>http://www.dexels.com</url>
