@@ -162,6 +162,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
 	<profiles>
 		<profile>
 			<id>dexels</id>
@@ -251,7 +252,7 @@
 			<distributionManagement>
 				<repository>
 					<uniqueVersion>false</uniqueVersion>
-					<id>dexels</id>
+					<id>dexels_test</id>
 					<name>Dexels Repository</name>
 					<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
 					<url>https://repo.dexels.com/nexus/content/repositories/navajo_test/</url>
@@ -260,7 +261,7 @@
 				</repository>
 				<snapshotRepository>
 					<uniqueVersion>true</uniqueVersion>
-					<id>dexels_snap</id>
+					<id>dexels_snap_test</id>
 					<name>Dexels Snapshots</name>
 					<url>https://repo.dexels.com/nexus/content/repositories/navajo_test_snapshot/</url>
 					<layout>default</layout>

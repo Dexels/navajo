@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -98,10 +99,10 @@ public class CommonsMailMap implements Mappable, Queuable {
 			email.addTo(this.getToArray(this.to));
 		}
 		if (this.cc != null) {
-			email.addTo(this.getCcArray(this.cc));
+			email.addCc(this.getCcArray(this.cc));
 		}
 		if (this.bcc != null) {
-			email.addTo(this.getBccArray(this.bcc));
+			email.addBcc(this.getBccArray(this.bcc));
 		}
 		
 	    // Subject
@@ -144,7 +145,8 @@ public class CommonsMailMap implements Mappable, Queuable {
 					} else {
 						fileName = file;
 					}
-				    URL url = new URL("file:/" + fileName);
+					File fl = new File(fileName);
+					URL url = fl.toURI().toURL();
 					
 					if (contentDisposition != null && contentDisposition.equalsIgnoreCase("Inline")) {
 					    // embed the image and get the content id

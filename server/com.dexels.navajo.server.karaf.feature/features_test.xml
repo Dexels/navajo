@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-[[VERSION]]">
+	<!-- scr, http, webconsole -->
+    <feature resolver="(obr)" name='navajo.core' version='1.0.15' start-level='80'  >
+	    <details>Navajo Core Components</details>
+		<feature version="[2.3.0,3.1.0)">scr</feature>
+
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/LATEST</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/LATEST</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/LATEST</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/LATEST</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/LATEST</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/LATEST</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/LATEST</bundle>
+		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
+		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
+		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/1.0.27</bundle>
+		<bundle dependency='true'>mvn:org.apache.commons/commons-compress/1.5</bundle>
+	</feature>
+
+</features>
