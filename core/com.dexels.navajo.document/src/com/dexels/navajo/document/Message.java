@@ -30,6 +30,7 @@ public interface Message
   public static final String MSG_TYPE = "type";
   public static final String MSG_EXTENDS = "extends";
   public static final String MSG_CONDITION = "condition";
+  public static final String MSG_ETAG = "etag";
   public static final String MSG_PARAMETERS_BLOCK = "__parms__";
 
   public static final String MSG_TYPE_SIMPLE = "simple";
@@ -486,6 +487,27 @@ public interface Message
   
   public void setDefinitionMessage(Message m);
 
+  /**
+   * Generates, sets and returns an etag attribute for a message.
+   * 
+   * @return
+   */
+  public String generateEtag();
+  
+  /**
+   * Clears the etag attribute
+   */
+  public void clearEtag();
+  
+  /**
+   * Set etag to specified value.
+   */
+  public void setEtag(String value);
+  
+  /**
+   * Get current value of etag attribute.
+   */
+  public String getEtag();
   
   public void addPropertyChangeListener(PropertyChangeListener p);
   public void removePropertyChangeListener(PropertyChangeListener p);

@@ -13,7 +13,11 @@ package com.dexels.navajo.document.base;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,6 +78,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	private int endIndex = -1;
 
 	private String orderBy = "";
+	
+	private String eTag = null;
 
 	private List<PropertyChangeListener> myPropertyDataListeners;
 
@@ -202,6 +208,37 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 	}
 
+	public String generateEtag() {
+		MessageDigest md5;
+		try {
+			StringWriter sw = new StringWriter();
+			this.write(sw);
+			md5 = MessageDigest.getInstance("MD5");
+			md5.update(sw.toString().getBytes());
+			byte[] array = md5.digest();
+			BigInteger bigInt = new BigInteger(1, array);
+			String output = bigInt.toString(16);
+			eTag = output;
+			return output;
+		} catch (NoSuchAlgorithmException ex) {
+			ex.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	public void clearEtag() {
+		eTag = null;
+	}
+	
+	public void setEtag(String value) {
+		eTag = value;
+	}
+	
+	public String getEtag() {
+		return eTag;
+	}
+	
 	public final Message addMessage(Message m, boolean overwrite) {
 		if (messageList == null) {
 			messageList = new ArrayList<Message>();
@@ -867,7 +904,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		cp.setIndex(getIndex());
 		cp.setMode(getMode());
 		cp.setType(getType());
-
+		cp.setEtag(getEtag());
+		cp.setExtends(getExtends());
+		
 		// If definition message is available, copy it as well.
 		if ( isArrayMessage() && getDefinitionMessage() != null ) {
 			cp.setDefinitionMessage(getDefinitionMessage());
@@ -1275,6 +1314,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		m.put("name", myName);
 		if (!"".equals(orderBy)) {
 			m.put("orderby", orderBy);
+		}
+		if ( eTag != null ) {
+			m.put(Message.MSG_ETAG, eTag);
 		}
 		if (myType != null) {
 			m.put("type", myType);
