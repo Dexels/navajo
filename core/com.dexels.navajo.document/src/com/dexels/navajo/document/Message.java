@@ -518,6 +518,8 @@ public interface Message
 
 	public List<Message> getElements();
 
+	public String generateEtag();
+
 
 
 }

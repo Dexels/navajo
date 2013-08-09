@@ -1845,4 +1845,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			}
 		  
 	}
+
+	@Override
+	public String generateEtag() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
