@@ -280,16 +280,44 @@
 
     <build>
         <finalName>navajodeploy_nonosgi</finalName>
+   <resources>
+   <resource>
+       <directory>sample/Server</directory>
+     </resource>
+   </resources>
         <plugins>
-            <plugin>
+       <plugin>
+           <groupId>com.google.code.maven-replacer-plugin</groupId>
+           <artifactId>replacer</artifactId>
+           <version>1.5.2</version>
+           <executions>
+               <execution>
+                   <phase>prepare-package</phase>
+                   <goals>
+                       <goal>replace</goal>
+                   </goals>                   
+               </execution>
+           </executions>
+           <configuration>
+               <file>target/classes/tml/writeversion.jsp</file>
+               <replacements>
+                   <replacement>
+                       <token>[[NAVAJO-VERSION]]</token>
+                       <value>${project.version}</value>
+                   </replacement>         
+               </replacements>
+           </configuration>
+       </plugin> 
+          <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <warSourceDirectory>sample/Server</warSourceDirectory>
+                    <warSourceDirectory>target/classes</warSourceDirectory>
                 </configuration>
             </plugin>
-           
+          
         </plugins>
     </build>
 </project>
+
