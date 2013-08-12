@@ -70,6 +70,9 @@
 		<method name="removeStyle">
 			<param name="style" type="string" required="true"/>
 		</method>
+		<method name="addStyle">
+			<param name="style" type="string" required="true"/>
+		</method>
 		<method name="setVisibility">
 			<param name="visible" type="boolean" required="true"/>
 		</method>
@@ -799,7 +802,7 @@
    </tipiclass>
    
       <!-- Identical to tipi -->
-   <tipiclass addtocontainer="true" implements="basecomponent,datacomponent,panel" deprecated="false" childcount="*" class="TipiMessagePanel" layoutmanager="true" module="container" name="messagepanel"
+   <tipiclass addtocontainer="true" implements="basecomponent,datacomponent,vaadincomponent,panel" deprecated="false" childcount="*" class="TipiMessagePanel" layoutmanager="true" module="container" name="messagepanel"
       package="com.dexels.navajo.tipi.vaadin.components" studio-icon="tipi.gif" type="tipi">
       <description>
       Based on the panel
