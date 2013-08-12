@@ -6,7 +6,7 @@
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
 	<property name="artifact" value="com.dexels.navajo.karaf.feature" />
-	<property name="version" value="1.1.5" />
+	<property name="version" value="1.1.8-SNAPSHOT" />
 	<condition property="test">
 		<matches pattern=".*SNAPSHOT" string="${version}"/>
 	</condition>
@@ -61,6 +61,7 @@
 		</if>
 	</target>
 	<!-- 
+    mvn:com/dexels/navajo/com.dexels.navajo.karaf.feature/1.1.6-SNAPSHOT/features.xml
 	mvn:com.dexels.navajo/com.dexels.navajo.karaf.feature/1.0.35/features.xml
 	 -->
 </project>
