@@ -302,7 +302,7 @@
                <file>target/classes/tml/writeversion.jsp</file>
                <replacements>
                    <replacement>
-                       <token>[[NAVAJO-VERSION]]</token>
+                       <token>NAVAJO-VERSION</token>
                        <value>${project.version}</value>
                    </replacement>         
                </replacements>
