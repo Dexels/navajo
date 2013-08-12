@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import javax.sql.DataSource;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.resource.jdbcbroker.JdbcResourceComponent;
 import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
+import com.dexels.navajo.adapter.sqlmap.ResultSetIterator;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.adapter.sqlmap.SQLBatchUpdateHelper;
 import com.dexels.navajo.adapter.sqlmap.SQLMapConstants;
@@ -60,6 +62,7 @@ public class JDBCMap implements Mappable, HasDependentResources, Debugable, JDBC
 	private int rowCount = 0;
 	private int updateCount = 0;
 	private ResultSetMap[] resultSet = null;
+	private ResultSetIterator myResultSetIterator = null;
 	private int transactionContext = -1;
 	private String separator = ";";
 	private boolean showHeader = true;
@@ -1044,4 +1047,43 @@ public final Object getColumnName(final Integer index) throws UserException {
     public String getDbIdentifier() {
         return dbIdentifier;
     }
+
+
+	@Override
+	public Iterator<ResultSetMap> getStreamingResultSet() throws UserException {
+		ResultSet rs = null;
+
+		try {
+			if (resultSet == null) {
+				rs = getDBResultSet(false);
+			}
+
+			if (debug) {
+				Access.writeToConsole(myAccess, "SQLMAP, QUERY HAS BEEN EXECUTED, RETRIEVING RESULTSET\n");
+			}
+
+			if (rs != null) {
+				int columns = 0;
+				ResultSetMetaData meta = null;
+				try {
+					meta = rs.getMetaData();
+					columns = meta.getColumnCount();
+				} catch (Exception e) {
+					throw new UserException(-1, "Error getting metadata / columns", e);
+				}
+				// Check if previous version exists, if so, close it.
+				if ( myResultSetIterator != null ) {
+					myResultSetIterator.close();
+				}
+				myResultSetIterator = new ResultSetIterator(rs, meta, columns);
+				return myResultSetIterator;
+			} else {
+				return null;
+			}
+		} catch (SQLException sqle) {
+			logger.error("SQL Problem: " + sqle.getMessage(), sqle);
+			AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, (myAccess != null ? (myAccess != null ? myAccess.accessID : "unknown access") : "unknown access"));
+			throw new UserException(-1, sqle.getMessage(), sqle);
+		} 
+	}
 }
