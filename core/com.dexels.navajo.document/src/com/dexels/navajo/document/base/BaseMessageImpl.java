@@ -57,6 +57,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	private String myExtends = "";
 	
+	private String myScope = "";
+	
 //	private String myCondition = "";
 
 	private int myIndex = -1;
@@ -170,6 +172,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	
 	public final String getExtends() {
 		return myExtends;
+	}
+	
+	public final void setScope(String s) {
+		myScope = s;
+	}
+	
+	public final String getScope() {
+		return myScope;
 	}
 	
 	public final void clearAllSelections() throws NavajoException {
@@ -1329,6 +1339,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 		if (myExtends != null && !myExtends.equals("")) {
 			m.put(Message.MSG_EXTENDS, myExtends);
+		}
+		if (myScope != null && !myScope.equals("")) {
+			m.put(Message.MSG_SCOPE, myScope);
 		}
 		return m;
 	}

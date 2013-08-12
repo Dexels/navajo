@@ -29,6 +29,7 @@ public interface Message
   public static final String MSG_INDEX = "index";
   public static final String MSG_TYPE = "type";
   public static final String MSG_EXTENDS = "extends";
+  public static final String MSG_SCOPE = "scope";
   public static final String MSG_CONDITION = "condition";
   public static final String MSG_ETAG = "etag";
   public static final String MSG_PARAMETERS_BLOCK = "__parms__";
@@ -37,6 +38,9 @@ public interface Message
   public static final String MSG_TYPE_ARRAY = "array";
   public static final String MSG_TYPE_TABLE = "table";
 
+  public static final String MSG_SCOPE_LOCAL = "local";
+  public static final String MSG_SCOPE_GLOBAL = "global";
+  
   public static final String MSG_MODE = "mode";
   public static final String MSG_MODE_LAZY = "lazy";
   public static final String MSG_MODE_IGNORE = "ignore";
@@ -169,6 +173,21 @@ public interface Message
    */
   public void setMode(String mode);
 
+  /**
+   * Sets the scope of the message. Scope can be used by e.g. NavajoMap adapter to determine whether this message should
+   * be passed by default (global) or never (local).
+   * 
+   * @param scope
+   */
+  public void setScope(String scope);
+  
+  /**
+   * Gets the message scope.
+   * 
+   * @return
+   */
+  public String getScope();
+  
   /**
    * Return the value of the extends attribute. 
    * Extends refers to an entity message(s) that is(are) extended by this message (entity message inheritance)
