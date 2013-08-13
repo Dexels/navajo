@@ -1687,8 +1687,15 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 	}
 
+	/**
+	 * TODO: Can we deprecate this method or the other merge method such that we have only one merge method?
+	 */
 	public void merge(Message incoming) {
 
+		if ( incoming.getScope() != null && ( this.getScope() == null || this.getScope().equals("") ) ) {
+			this.setScope(incoming.getScope());
+		}
+		
 		// Check if message with incoming name exists.
 		if (!getName().equals(incoming.getName())) {
 			// addMessage(incoming, true);
