@@ -1,8 +1,8 @@
 package com.dexels.navajo.adapter.resource.provider.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
@@ -26,12 +26,13 @@ public class GrusProviderImpl implements GrusProvider {
 	private final static Logger logger = LoggerFactory
 			.getLogger(GrusProviderImpl.class);
 	
+	@SuppressWarnings("unchecked")
 	public void addDataSource(DataSource source, Map<String,Object> settings) {
 		settingsMap.put(source, settings);
 
 		String instance = (String) settings.get("instance");
 		String name = (String) settings.get("name");
-		Vector<String> aliases = (Vector<String>) settings.get("aliases");
+		List<String> aliases = (List<String>) settings.get("aliases");
 		
 		Map<String, DataSource> instanceDataSources = getInstanceDataSources(instance);
 		instanceDataSources.put(name,source);
