@@ -42,6 +42,7 @@
 
 	<target name="deploy" depends="prepare">
 		<artifact:pom id="mypom" file="${output}/pom.xml" />
+		<artifact:install pomrefid="mypom" file="${output}/features.xml" />
 		<if>
 			<equals arg1="${test}" arg2="true" />
 			<then>

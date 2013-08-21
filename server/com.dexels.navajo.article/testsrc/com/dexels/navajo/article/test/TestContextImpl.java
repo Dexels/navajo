@@ -183,9 +183,17 @@ public abstract class TestContextImpl extends BaseContextImpl {
 			public Navajo call(Navajo n) throws FatalException {
 				return TestContextImpl.this.call(n);
 			}
+		
+			@Override
+			public Navajo call(String instance,Navajo n) throws FatalException {
+				return TestContextImpl.this.call(instance, n);
+			}
+
 		});
 		addCommand(service);
 	}
 	
+	public abstract Navajo call(String instance, Navajo n) throws FatalException;
+
 	public abstract Navajo call(Navajo n) throws FatalException;
 }

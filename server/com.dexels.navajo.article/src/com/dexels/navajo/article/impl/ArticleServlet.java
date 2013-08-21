@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
@@ -21,7 +23,9 @@ import com.dexels.navajo.article.DirectOutputThrowable;
 public class ArticleServlet extends HttpServlet implements Servlet {
 
 	private static final long serialVersionUID = -6895324256139435015L;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ArticleServlet.class);
 
 	private ArticleContext context;
 	
@@ -52,19 +56,21 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-//		BZ2kTR4xD1Yqrkr0PlHP+3VOpTuzQzF3vzikqTjBLFioMmoofvpE0ykd1UT2tYPtayqzbWHrDdJA289Y1/IZGKa3h5/d9RMXzi65OsEP7W4=
+		
 		String token = req.getParameter("token");
 		if(token==null) {
 			throw new ServletException("Please supply a token");
 		}
 		
 		String pathInfo = req.getPathInfo();
+		String instance = determineInstanceFromRequest(req);
+		logger.info("Instance determined: "+instance);
 		if(pathInfo==null) {
 			throw new ServletException("No article found, please specify after article");
 		}
 		File article = context.resolveArticle(pathInfo);
 		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article,pathInfo,req.getParameterMap());
+			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article,pathInfo,req.getParameterMap(),instance);
 			try {
 				runtime.execute(context);
 				resp.setContentType("text/json");
@@ -79,6 +85,20 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		} else {
 			throw new FileNotFoundException("Unknown article: "+article.getAbsolutePath());
 		}
+	}
+	
+	private String determineInstanceFromRequest(final HttpServletRequest req) {
+		String pathinfo = req.getPathInfo();
+		if(pathinfo.startsWith("/")) {
+			pathinfo = pathinfo.substring(1);
+		}
+		String instance = null;
+		if(pathinfo.indexOf('/')!=-1) {
+			instance = pathinfo.substring(0, pathinfo.indexOf('/'));
+		} else {
+			instance = pathinfo;
+		}
+		return instance;
 	}
 
 	@Override

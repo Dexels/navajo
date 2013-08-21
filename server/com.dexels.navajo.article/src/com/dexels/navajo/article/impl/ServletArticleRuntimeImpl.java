@@ -30,12 +30,13 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	private String token = null;
 	private String username;
 	private final StringWriter writer = new StringWriter();
-	private Map<String, String[]> parameterMap; 
+	private Map<String, String[]> parameterMap;
+	private String instance; 
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(ServletArticleRuntimeImpl.class);
 	
-	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, File article,String articleName, Map<String, String[]> parameterMap) throws IOException {
+	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, File article,String articleName, Map<String, String[]> parameterMap, String instance) throws IOException {
 		super(articleName,article);
 		this.request = req;
 		this.parameterMap = parameterMap;
@@ -43,6 +44,7 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 		this.token = URLDecoder.decode(req.getParameter("token"),"UTF-8");
 		token=token.replaceAll(" ", "+");
 		this.username = req.getParameter("username");
+		this.instance = instance;
 	}
 	@Override
 	public String resolveArgument(String name) throws ArticleException {

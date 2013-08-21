@@ -43,6 +43,9 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 //	private final Map<String,Set<String>> aliasesForDataSource = new HashMap<String, Set<String>>();
 	private final Set<String> resourcePids = new HashSet<String>();
 
+	public NavajoContextInstanceFactory() {
+		System.err.println("constructed!");
+	}
 
 	public void activate(Map<String,Object> properties) {
 //		this.bundleContext = context;
@@ -422,6 +425,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 
 	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
+		System.err.println("setting configadmin");
 		this.configAdmin = configAdmin;
 	}
 

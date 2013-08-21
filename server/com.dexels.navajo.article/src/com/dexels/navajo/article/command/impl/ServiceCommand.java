@@ -95,6 +95,7 @@ public class ServiceCommand implements ArticleCommand {
 
 	public void setLocalClient(LocalClient localClient) {
 		this.localClient = localClient;
+//		localClient.handleInternal(instance, in, cert, clientInfo)
 	}
 
 	@Override

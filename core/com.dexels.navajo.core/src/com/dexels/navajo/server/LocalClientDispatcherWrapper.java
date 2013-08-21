@@ -42,6 +42,14 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 		}
 		return dispatcherInterface.handle(n);
 	}
+	
+
+	@Override
+	public Navajo call(String instance, Navajo n) throws FatalException {
+		return dispatcherInterface.handle(n,instance,null,null);
+	}
+
+
 
 	public Navajo callWithoutAuth(Navajo n) throws FatalException {
 		return dispatcherInterface.handle(n,true);
@@ -105,6 +113,5 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 		}
 
 	}
-
 
 }

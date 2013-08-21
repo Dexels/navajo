@@ -64,22 +64,12 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 	protected void service(final HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
+			String instance = determineInstanceFromRequest(req);
 			LocalClient localClient = getLocalClient();
 			if ( localClient == null ) {
 				localClient = getLocalClient(req);
 			} 
-			logger.debug("Servlet path info: "+req.getPathInfo());
-			String pathinfo = req.getPathInfo();
-			if(pathinfo.startsWith("/")) {
-				pathinfo = pathinfo.substring(1);
-			}
-			String instance = null;
-			if(pathinfo.indexOf('/')!=-1) {
-				instance = pathinfo.substring(0, pathinfo.indexOf('/'));
-			} else {
-				instance = pathinfo;
-			}
-			
+			logger.info("Instance determined from request: "+instance);
 			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,instance);
 			if(instantiateRunnable!=null) {
 				getTmlScheduler().submit(instantiateRunnable, false);
@@ -90,6 +80,20 @@ public class TmlContinuationMultitenantServlet extends HttpServlet implements
 			}
 			logger.error("Servlet call failed dramatically", e);
 		}
+	}
+
+	private String determineInstanceFromRequest(final HttpServletRequest req) {
+		String pathinfo = req.getPathInfo();
+		if(pathinfo.startsWith("/")) {
+			pathinfo = pathinfo.substring(1);
+		}
+		String instance = null;
+		if(pathinfo.indexOf('/')!=-1) {
+			instance = pathinfo.substring(0, pathinfo.indexOf('/'));
+		} else {
+			instance = pathinfo;
+		}
+		return instance;
 	}
 
 

@@ -116,7 +116,10 @@ public abstract class BaseContextImpl implements ArticleContext {
 	public File resolveArticle(String pathInfo) {
 		String sub;
 		if(pathInfo.startsWith("/")) {
-			sub = pathInfo.substring(1);
+			pathInfo = pathInfo.substring(1);
+		}
+		if(pathInfo.indexOf("/")!=-1) {
+			sub = pathInfo.substring(pathInfo.lastIndexOf("/"), pathInfo.length());
 		} else {
 			sub = pathInfo;
 		}
@@ -125,6 +128,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 		File rootFolder = new File(root);
 		File articles = new File(rootFolder,"article");
 		File article = new File(articles,sub+".xml");
+		logger.info("Article resolved to: "+article.getAbsolutePath());
 		return article;
 	}
 
@@ -244,5 +248,10 @@ public abstract class BaseContextImpl implements ArticleContext {
 
 	public void clearConfig(NavajoIOConfig ioConfig) {
 		this.config = null;
+	}
+
+	public static void main(String[] args) {
+		
+		
 	}
 }
