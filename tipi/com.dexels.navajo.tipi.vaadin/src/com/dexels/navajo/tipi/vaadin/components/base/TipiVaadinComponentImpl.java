@@ -197,6 +197,15 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
     			throw new TipiBreakException(TipiBreakException.BREAK_BLOCK);
     		}
     	}
+    	if(name.equals("addStyle")){
+    		Object o = compMeth.getEvaluatedParameterValue("style", event);
+    		if(o != null && o.toString() != null){
+    			getActualVaadinComponent().addStyleName(o.toString());
+    		}else{
+    			logger.error("At addStyle, style is a required parameter.");
+    			throw new TipiBreakException(TipiBreakException.BREAK_BLOCK);
+    		}
+    	}
     	if(name.equals("setVisibility")){
     		Object o = compMeth.getEvaluatedParameterValue("visible", event);
     		if (o != null){

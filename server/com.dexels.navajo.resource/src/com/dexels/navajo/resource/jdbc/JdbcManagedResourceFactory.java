@@ -101,7 +101,8 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 
 	public void close() {
 		for (Entry<String,ServiceRegistration<DataSource>> s: registryMap.entrySet()) {
-			s.getValue().unregister();
+//			s.getValue().unregister();
+//			I think this thows exceptions
 		}
 		registryMap.clear();
 		factoryRegistration.unregister();

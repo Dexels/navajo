@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class SharedStoreSession {
@@ -30,27 +31,29 @@ public class SharedStoreSession {
 	
 	public void rm(String file) throws Exception {
 
-		List<String> matches = ls(file);
+		List<SharedStoreSessionEntry> matches = ls(file);
 		if ( matches.size() == 0 ) {
 			throw new Exception("File " + file + " does not exist.");
 		}
-		for ( String s: matches ) {
-			mySharedStore.remove(parentPath, s);
+		for ( SharedStoreSessionEntry s: matches ) {
+			mySharedStore.remove(parentPath, s.getObjectName());
 		}
 	}
 	
-	public List<String> ls(String filter) {
+	public List<SharedStoreSessionEntry> ls(String filter) {
 
-		List<String> objects = new ArrayList<String>();
+		HashSet<String> unique = new HashSet<String>();
+		List<SharedStoreSessionEntry> objects = new ArrayList<SharedStoreSessionEntry>();
 		String [] all = mySharedStore.getParentObjects(null);
 
 		for ( int i = 0; i < all.length; i++ ) {
 			if (!parentPath.equals(all[i])) {
 				String candidate = getLevelParent(all[i], parentPath);
 				if ( candidate != null && (filter == null || filter.equals("") || candidate.matches(filter))) {
-					candidate = "[" + candidate + "]" ;
-					if (  !objects.contains( candidate ) ){
-						objects.add(candidate);
+					String formatted =  "[" + candidate + "]" ;
+					if (  !unique.contains( candidate ) ){
+						objects.add(new SharedStoreSessionEntry(candidate, formatted));
+						unique.add(candidate);
 					}
 				}
 			}
@@ -60,7 +63,7 @@ public class SharedStoreSession {
 		for ( int i = 0; i < files.length; i++ ) {
 			if ( filter == null || filter.equals("") || files[i].getName().matches(filter) ) {
 				// Show lastupdate + contenttype...
-				objects.add(files[i].getLength() + "\t" + new java.util.Date(files[i].getLastModified()) + "\t" + files[i].getContentType() + "\t" +  files[i].getName());
+				objects.add(new SharedStoreSessionEntry(files[i].getName(), files[i].getLength() + "\t" + new java.util.Date(files[i].getLastModified()) + "\t" + files[i].getContentType() + "\t" +  files[i].getName()));
 			}
 		}
 

@@ -13,7 +13,11 @@ package com.dexels.navajo.document.base;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -53,6 +57,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 
 	private String myExtends = "";
 	
+	private String myScope = "";
+	
 //	private String myCondition = "";
 
 	private int myIndex = -1;
@@ -74,6 +80,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	private int endIndex = -1;
 
 	private String orderBy = "";
+	
+	private String eTag = null;
 
 	private List<PropertyChangeListener> myPropertyDataListeners;
 
@@ -166,6 +174,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		return myExtends;
 	}
 	
+	public final void setScope(String s) {
+		myScope = s;
+	}
+	
+	public final String getScope() {
+		return myScope;
+	}
+	
 	public final void clearAllSelections() throws NavajoException {
 		if (propertyList != null) {
 
@@ -202,6 +218,37 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 	}
 
+	public String generateEtag() {
+		MessageDigest md5;
+		try {
+			StringWriter sw = new StringWriter();
+			this.write(sw);
+			md5 = MessageDigest.getInstance("MD5");
+			md5.update(sw.toString().getBytes());
+			byte[] array = md5.digest();
+			BigInteger bigInt = new BigInteger(1, array);
+			String output = bigInt.toString(16);
+			eTag = output;
+			return output;
+		} catch (NoSuchAlgorithmException ex) {
+			ex.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	public void clearEtag() {
+		eTag = null;
+	}
+	
+	public void setEtag(String value) {
+		eTag = value;
+	}
+	
+	public String getEtag() {
+		return eTag;
+	}
+	
 	public final Message addMessage(Message m, boolean overwrite) {
 		if (messageList == null) {
 			messageList = new ArrayList<Message>();
@@ -788,6 +835,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		// Add all properties of new message.
 		addProperties(origMsg, mergeThisMsg.getAllProperties(), preferOrigMessage);
 		
+		// Find scope, extends properties in mergeThisMsg...
+		if ( mergeThisMsg.getScope() != null && ( origMsg.getScope() == null || origMsg.getScope().equals("") ) ) {
+			origMsg.setScope(mergeThisMsg.getScope());
+		}
+		if ( mergeThisMsg.getExtends() != null && ( origMsg.getExtends() == null || origMsg.getExtends().equals("") ) ) {
+			origMsg.setExtends(mergeThisMsg.getExtends());
+		}
+		
 		// Find overlapping children.
 		ArrayList<Message> childrenPrev = origMsg.getAllMessages();
 		ArrayList<Message> childrenNew = mergeThisMsg.getAllMessages();
@@ -867,7 +922,10 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		cp.setIndex(getIndex());
 		cp.setMode(getMode());
 		cp.setType(getType());
-
+		cp.setEtag(getEtag());
+		cp.setExtends(getExtends());
+		cp.setScope(getScope());
+		
 		// If definition message is available, copy it as well.
 		if ( isArrayMessage() && getDefinitionMessage() != null ) {
 			cp.setDefinitionMessage(getDefinitionMessage());
@@ -1276,6 +1334,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		if (!"".equals(orderBy)) {
 			m.put("orderby", orderBy);
 		}
+		if ( eTag != null ) {
+			m.put(Message.MSG_ETAG, eTag);
+		}
 		if (myType != null) {
 			m.put("type", myType);
 			if (Message.MSG_TYPE_ARRAY_ELEMENT.equals(myType)) {
@@ -1287,6 +1348,9 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 		if (myExtends != null && !myExtends.equals("")) {
 			m.put(Message.MSG_EXTENDS, myExtends);
+		}
+		if (myScope != null && !myScope.equals("")) {
+			m.put(Message.MSG_SCOPE, myScope);
 		}
 		return m;
 	}
@@ -1623,8 +1687,15 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 	}
 
+	/**
+	 * TODO: Can we deprecate this method or the other merge method such that we have only one merge method?
+	 */
 	public void merge(Message incoming) {
 
+		if ( incoming.getScope() != null && ( this.getScope() == null || this.getScope().equals("") ) ) {
+			this.setScope(incoming.getScope());
+		}
+		
 		// Check if message with incoming name exists.
 		if (!getName().equals(incoming.getName())) {
 			// addMessage(incoming, true);
@@ -1803,4 +1874,5 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			}
 		  
 	}
+
 }

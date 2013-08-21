@@ -95,9 +95,9 @@ public class EntityManager {
 			return operationsMap.get(entity).get(method);
 		}
 		if ( getEntity(entity) == null ) {
-			throw new EntityException("Unknown entity: " + entity);
+			throw new EntityException(EntityException.ENTITY_NOT_FOUND, "Unknown entity: " + entity);
 		}
-		throw new EntityException("Operation " + method + " not supported for entity: " + entity);
+		throw new EntityException(EntityException.OPERATION_NOT_SUPPORTED, "Operation " + method + " not supported for entity: " + entity);
 	}
 
 	public Entity getEntity(String name) {

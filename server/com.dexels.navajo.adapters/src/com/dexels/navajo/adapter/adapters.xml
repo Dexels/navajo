@@ -371,6 +371,7 @@
 			<value name="resource" type="string" required="false" direction="in" />
 			<value name="useCurrentOutDoc" type="boolean" required="false"
 				direction="in" />
+			<value name="useCurrentMessages" type="string" required="false" direction="in"/>
 			<value name="messagePointer" type="string" required="false"
 				direction="in" />
 			<value name="selectionPointer" type="string" required="false"

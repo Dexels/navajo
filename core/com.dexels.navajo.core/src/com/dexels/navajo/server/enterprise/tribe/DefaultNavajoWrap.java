@@ -35,11 +35,12 @@ class Wrapper implements Serializable {
 	private static final long serialVersionUID = 1776008626104972375L;
 	private final String reference;
 	private final long created;
+	private long lastuse;
 	public int count;
 	
 	public Wrapper(String reference, long created) {
 		this.reference = reference;
-		this.created = created;
+		this.created = this.lastuse = created;
 		count = 1;
 	}
 
@@ -56,6 +57,7 @@ class Wrapper implements Serializable {
 	}
 	
 	public void increaseReference() {
+		this.lastuse = System.currentTimeMillis();
 		count++;
 	}
 	
@@ -64,9 +66,9 @@ class Wrapper implements Serializable {
 			count--;
 		}
 	}
-
-	public long getCreated() {
-		return created;
+	
+	public long getLastUse() {
+		return lastuse;
 	}
 	
 }
@@ -76,6 +78,8 @@ class ReferenceCounter implements Runnable {
 	private final ConcurrentMap<String, Wrapper> referenceCount;
 	private final DefaultNavajoWrap wrap;
 	private final boolean increase;
+	
+	private final static Logger logger = LoggerFactory.getLogger(ReferenceCounter.class);
 	
 	public ReferenceCounter(ConcurrentMap<String, Wrapper> referenceMap, DefaultNavajoWrap wrap, boolean increase) {
 		this.referenceCount = referenceMap;
@@ -94,8 +98,14 @@ class ReferenceCounter implements Runnable {
 
 			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 
-			Wrapper w = referenceCount.get(wrap.reference);
-
+			Wrapper w = null;
+			
+			try {
+				w = referenceCount.get(wrap.reference);
+			} catch (Throwable t ) {
+				logger.warn(t.getMessage(), t);
+			}
+			
 			if ( w == null && increase ) {
 				w = new Wrapper(wrap.reference, wrap.getCreated());
 			} else if ( w != null ) {
@@ -110,7 +120,7 @@ class ReferenceCounter implements Runnable {
 			}
 			referenceCount.put(wrap.reference, w);
 		} catch (Throwable t) {
-			t.printStackTrace(System.err);
+			logger.error(t.getMessage(), t);
 		} finally {
 			Thread.currentThread().setContextClassLoader(originalClassLoader);
 			l.unlock();
@@ -153,7 +163,7 @@ class WrapCollector extends GenericThread {
 			for ( String reference : referenceCount.keySet() ) {
 				Wrapper key = referenceCount.get(reference);
 				
-				long age = ( System.currentTimeMillis() - key.getCreated() );
+				long age = ( System.currentTimeMillis() - key.getLastUse() );
 				if ( age > MAX_AGE ) {
 					Integer count = key.getCount();
 					if ( count == null || count.intValue() == 0 ) {
@@ -167,7 +177,7 @@ class WrapCollector extends GenericThread {
 				}
 			}
 		} catch (Throwable t) {
-			t.printStackTrace(System.err);
+			logger.error(t.getMessage(), t);
 		}
 	}
 	
@@ -236,7 +246,7 @@ public class DefaultNavajoWrap implements NavajoRug {
 
 	public void finalize() {
 		try {
-		wrapCollector.updateReferenceCount(false, this);
+			wrapCollector.updateReferenceCount(false, this);
 		} catch (Throwable t) {}
 	}
 	

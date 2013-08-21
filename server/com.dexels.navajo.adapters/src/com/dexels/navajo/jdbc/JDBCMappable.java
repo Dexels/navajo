@@ -2,6 +2,7 @@ package com.dexels.navajo.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.document.types.Binary;
@@ -87,6 +88,8 @@ public interface JDBCMappable {
 
 	public ResultSetMap[] getResultSet() throws UserException;
 
+	public Iterator<ResultSetMap> getStreamingResultSet() throws UserException;
+	
 	public void setReplaceQueryDoubleQuotes(boolean b);
 
 	public String getQuery();

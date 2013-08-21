@@ -1,26 +1,66 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="feature deploy" default="deploy" basedir="." 
-	xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+<project name="feature deploy" default="deploy" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<path id="maven-ant-tasks.classpath" path="lib/maven-ant-tasks-2.1.3.jar" />
-	<typedef resource="org/apache/maven/artifact/ant/antlib.xml"
-		uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" />
+	<taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" onerror="ignore" />
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
+	<property name="artifact" value="com.dexels.navajo.karaf.feature" />
+	<property name="version" value="1.1.5" />
+	<condition property="test">
+		<matches pattern=".*SNAPSHOT" string="${version}"/>
+	</condition>
 	<property name="output" value="output" />
-	<property name="version" value="1.0.83" />
 
-	
+	<property name="file" value="features.xml" />
+	<if>
+		<equals arg1="${test}" arg2="true" />
+		<then>
+			<echo message="Test modus" />
+			<property name="suffix" value="_test" />
+			<property name="profile" value="test" />
+		</then>
+		<else>
+			<echo message="Release modus" />
+			<property name="suffix" value="" />
+			<property name="profile" value="release" />
+		</else>
+	</if>
+
 	<target name="prepare">
-		<delete dir="${output}"/>
+		<delete dir="${output}" />
 		<mkdir dir="${output}" />
-		<copy todir="${output}" verbose="true" file="pom.xml" overwrite="true"/>
-		<copy todir="${output}" verbose="true" file="features.xml" overwrite="true"/>
-		<replace dir="${output}" token="[[VERSION]]" value="${version}"></replace>
+		<copy todir="${output}" verbose="true" file="pom.xml" overwrite="true" />
+		<copy verbose="true" file="features_test.xml" overwrite="true" tofile="${output}/features.xml" />
+		<replace dir="${output}" token="[[VERSION]]" value="${version}">
+		</replace>
+		<replace dir="${output}" token="[[ARTIFACTID]]" value="${artifact}">
+		</replace>
+		<replace dir="${output}" token="[[FILE]]" value="${file}">
+		</replace>
 	</target>
+
 	<target name="deploy" depends="prepare">
 		<artifact:pom id="mypom" file="${output}/pom.xml" />
-		<artifact:deploy file="${output}/features.xml" pomrefid="mypom" ></artifact:deploy>
+		<if>
+			<equals arg1="${test}" arg2="true" />
+			<then>
+				<echo message="Deploying to test maven repository"/>
+				<artifact:deploy file="${output}/features.xml" pomrefid="mypom">
+					<remotesnapshotrepository url="https://repo.dexels.com/nexus/content/repositories/navajo_test_snapshot" id="dexels_snap_test" />
+					<remoterepository url="https://somethingillegal/nexus/content/repositories/navajo_snapshot" id="dexels_test_snap" />
+				</artifact:deploy>
+			</then>
+			<else>
+				<echo message="Deploying to release maven repository"/>
+				<artifact:deploy  file="${output}/features${suffix}.xml" pomrefid="mypom">
+					<remoterepository url="https://repo.dexels.com/nexus/content/repositories/navajo" id="dexels" />
+					<remotesnapshotrepository url="https://somethingillegal/nexus/content/repositories/navajo_test_snapshot" id="dexels_snap_test" />
+				</artifact:deploy>
+			</else>
+		</if>
 	</target>
 	<!-- 
 	mvn:com.dexels.navajo/com.dexels.navajo.karaf.feature/1.0.35/features.xml
 	 -->
-</project>	
+</project>

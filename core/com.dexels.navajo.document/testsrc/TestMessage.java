@@ -444,6 +444,16 @@ public class TestMessage {
 	  assertNull(testDoc.getMessage("MyTop"));
 	  assertNotNull(testDoc.getMessage("MyOtherTop"));
   }
+  
+  @Test
+  public void testSetScope() throws Exception {
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  testDoc.addMessage(m);
+	  m.setScope(Message.MSG_SCOPE_GLOBAL);
+	  assertNotNull(m.getScope());
+	  assertEquals(Message.MSG_SCOPE_GLOBAL, m.getScope());
+	  testDoc.write(System.err);
+  }
 
   @Test
   public void testAddIgnoreMessage() throws Exception {

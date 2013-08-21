@@ -13,6 +13,8 @@ import com.dexels.navajo.entity.EntityManager;
 import com.dexels.navajo.entity.impl.ServiceEntityOperation;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.ConditionErrorException;
+import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
 public class EntityMap extends NavajoMap {
@@ -21,6 +23,8 @@ public class EntityMap extends NavajoMap {
 	private String entity;
 	private String method;
 	private Entity myEntity;
+	
+	private boolean templateMerged = false;
 	
 	@Override
 	public void load(Access access) throws MappableException, UserException {
@@ -97,6 +101,14 @@ public class EntityMap extends NavajoMap {
 		}
 	}
 	
+	@Override
+	public void setDoSend(String s, Navajo n) throws UserException, ConditionErrorException, SystemException {
+		templateMerged = false;
+		serviceCalled = false;
+		serviceFinished = false;
+		super.setDoSend(s, n);
+	}
+	
 	public void setCall(boolean v) throws Exception {
 		
 		if ( entity != null && method != null ) {
@@ -124,9 +136,12 @@ public class EntityMap extends NavajoMap {
 	
 	@Override 
 	public synchronized void waitForResult() throws UserException {
-		super.waitForResult();
-		if ( inDoc.getMessage(myEntity.getName()) != null ) {
-			mergeWithEntityTemplate(inDoc.getMessage(myEntity.getName()), myEntity.getMessage());
+		if (! templateMerged ) {
+			super.waitForResult();
+			if ( inDoc.getMessage(myEntity.getName()) != null ) {
+				mergeWithEntityTemplate(inDoc.getMessage(myEntity.getName()), myEntity.getMessage());
+				templateMerged = true;
+			}
 		}
 	}
 	
