@@ -163,10 +163,11 @@
 	
 	
 	<target name="compile" depends="init,resolveDependencies, precompile,resource">
-		<javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="lines,vars,source" target="1.6" compiler="javac1.6">
+		<javac  srcdir="${src}" destdir="${build}" debug="true" debuglevel="lines,vars,source" target="1.6" source="1.6" compiler="javac1.6">
 			<classpath refid="projectlibs" />
 			<classpath refid="dependencylibs" />
 			<classpath path="${dependencyclasses}"/>
+			<compilerarg line="-encoding utf-8"/>
 		</javac>
 	</target>
 
