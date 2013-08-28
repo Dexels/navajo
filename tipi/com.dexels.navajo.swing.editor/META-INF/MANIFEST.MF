@@ -14,8 +14,10 @@ Export-Package: com.dexels.navajo.swingeditor,
  de.xeinfach.kafenio.urlfetch,
  de.xeinfach.kafenio.util,
  gnu.regexp
-Bundle-ClassPath: lib/gnu-regexp-1.1.4.jar,
- .
+Bundle-ClassPath: .,
+ lib/gnu-regexp-1.1.4.jar,
+ lib/kafenio-config.jar,
+ lib/kafenio-icons.jar
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.version,
