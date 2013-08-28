@@ -9,6 +9,7 @@ import org.junit.runners.Suite;
 	TestMessage.class,
 	TestNavajo.class,
 	TestBinary.class,
+	TestCheckTypes.class,
 	TestXmlParser.class})  
 public class NavajoDocument  {
 

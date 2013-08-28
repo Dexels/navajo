@@ -42,6 +42,18 @@ public interface SharedStoreInterface {
 	public static final int WRITE_LOCK = 1;
 	
 	/**
+	 * Listener stuff
+	 */
+	public void addSharedStoreListener(SharedStoreListener ssl);
+	public void removeSharedStoreListener(SharedStoreListener ssl);
+	
+	/**
+	 * save methods are methods without event side-effects. Each save method as a corresponding non-safe method.
+	 * the non-safe method implements the eventing part.
+	 */
+	public void saveRemove(String parent, String name);
+	
+	/**
 	 * Remove an object with the specified name of the specified parent
 	 * 
 	 * @param parent

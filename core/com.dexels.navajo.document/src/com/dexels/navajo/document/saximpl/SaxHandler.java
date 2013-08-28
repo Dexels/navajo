@@ -290,6 +290,11 @@ public final class SaxHandler implements DocHandler {
         String type = h.get(Property.PROPERTY_TYPE);
         sLength = h.get(Property.PROPERTY_LENGTH);
         String cardinality = h.get(Property.PROPERTY_CARDINALITY);
+        
+        String extendsProp = h.get(Property.PROPERTY_EXTENDS);
+        String reference = h.get(Property.PROPERTY_REFERENCE);
+        String key = h.get(Property.PROPERTY_KEY);
+        
          Integer plength = null;
         Property definitionProperty = null;
         String subtype = null;
@@ -398,6 +403,9 @@ public final class SaxHandler implements DocHandler {
               currentProperty.setDirection(direction);
               currentProperty.setCardinality(cardinality);
               currentProperty.setLength(length);
+              currentProperty.setExtends(extendsProp);
+              currentProperty.setKey(key);
+              currentProperty.setReference(reference);
 //              createProperty(currentDocument,myName,cardinality,description,direction);
 
 
@@ -408,6 +416,10 @@ public final class SaxHandler implements DocHandler {
         String name = h.get("name");
         String type = h.get("type");
         String orderby = h.get("orderby");
+        String scope = h.get(Message.MSG_SCOPE);
+        String extendsMsg = h.get(Message.MSG_EXTENDS);
+        String eTag = h.get(Message.MSG_ETAG);
+        
         Message m = null;
         if (type!=null) {
             m = NavajoFactory.getInstance().createMessage(currentDocument, name,type);
@@ -416,6 +428,15 @@ public final class SaxHandler implements DocHandler {
         }
         if(orderby != null && !"".equals(orderby)){
           m.setOrderBy(orderby);
+        }
+        if (scope != null && !"".equals(scope) ) {
+        	m.setScope(scope);
+        }
+        if (extendsMsg != null && !"".equals(extendsMsg) ) {
+        	m.setExtends(extendsMsg);
+        }
+        if (eTag != null && !"".equals(eTag) ) {
+        	m.setEtag(eTag);
         }
         if (messageStack.isEmpty()) {
 //            logger.info("Adding to root!");

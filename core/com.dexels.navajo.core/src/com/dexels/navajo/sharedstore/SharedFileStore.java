@@ -108,7 +108,7 @@ class FileComparator implements Comparator<File>{
  * @author arjen
  *
  */
-public class SharedFileStore implements SharedStoreInterface {
+public class SharedFileStore extends AbstractSharedStore {
 
 	
 	private final static Logger logger = LoggerFactory
@@ -503,7 +503,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	 * @name the name of the object
 	 * 
 	 */
-	public void remove(String parent, String name) {
+	public void saveRemove(String parent, String name) {
 		File f = new File(sharedStore, parent + "/" + name);
 		f.delete();
 	}

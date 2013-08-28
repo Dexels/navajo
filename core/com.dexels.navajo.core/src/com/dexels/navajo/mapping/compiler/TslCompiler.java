@@ -768,7 +768,8 @@ public class TslCompiler {
 		String start_index = n.getAttribute("start_index");
 		String orderby = n.getAttribute("orderby");
 		String extendsMsg = n.getAttribute("extends");
-
+		String scopeMsg = n.getAttribute("scope");
+		
 		// //System.out.println("COUNT = " + count);
 		type = (type == null) ? "" : type;
 		mode = (mode == null) ? "" : mode;
@@ -920,6 +921,10 @@ public class TslCompiler {
 			if (extendsMsg != null) {
 				result.append(printIdent(ident + 2)
 						+ "currentOutMsg.setExtends(\"" + extendsMsg + "\");\n");
+			}
+			if (scopeMsg != null) {
+				result.append(printIdent(ident + 2)
+						+ "currentOutMsg.setScope(\"" + scopeMsg + "\");\n");
 			}
 		} else { // must be parammessage.
 			result.append(printIdent(ident + 2)

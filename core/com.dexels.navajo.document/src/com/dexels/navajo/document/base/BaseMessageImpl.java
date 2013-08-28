@@ -835,6 +835,14 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		// Add all properties of new message.
 		addProperties(origMsg, mergeThisMsg.getAllProperties(), preferOrigMessage);
 		
+		// Find scope, extends properties in mergeThisMsg...
+		if ( mergeThisMsg.getScope() != null && ( origMsg.getScope() == null || origMsg.getScope().equals("") ) ) {
+			origMsg.setScope(mergeThisMsg.getScope());
+		}
+		if ( mergeThisMsg.getExtends() != null && ( origMsg.getExtends() == null || origMsg.getExtends().equals("") ) ) {
+			origMsg.setExtends(mergeThisMsg.getExtends());
+		}
+		
 		// Find overlapping children.
 		ArrayList<Message> childrenPrev = origMsg.getAllMessages();
 		ArrayList<Message> childrenNew = mergeThisMsg.getAllMessages();
@@ -916,6 +924,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		cp.setType(getType());
 		cp.setEtag(getEtag());
 		cp.setExtends(getExtends());
+		cp.setScope(getScope());
 		
 		// If definition message is available, copy it as well.
 		if ( isArrayMessage() && getDefinitionMessage() != null ) {
@@ -1678,8 +1687,15 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 	}
 
+	/**
+	 * TODO: Can we deprecate this method or the other merge method such that we have only one merge method?
+	 */
 	public void merge(Message incoming) {
 
+		if ( incoming.getScope() != null && ( this.getScope() == null || this.getScope().equals("") ) ) {
+			this.setScope(incoming.getScope());
+		}
+		
 		// Check if message with incoming name exists.
 		if (!getName().equals(incoming.getName())) {
 			// addMessage(incoming, true);

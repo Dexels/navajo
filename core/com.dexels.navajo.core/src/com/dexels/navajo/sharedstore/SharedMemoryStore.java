@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SharedMemoryStore implements SharedStoreInterface {
+public class SharedMemoryStore extends AbstractSharedStore {
 
 	Map<String, SharedStoreEntry> store = null;
 	SharedStoreEntryFactory ssf = null;
@@ -37,7 +37,7 @@ public class SharedMemoryStore implements SharedStoreInterface {
 	}
 	
 	@Override
-	public void remove(String parent, String name) {
+	public void saveRemove(String parent, String name) {
 		removeEntry(parent, name);
 	}
 	
