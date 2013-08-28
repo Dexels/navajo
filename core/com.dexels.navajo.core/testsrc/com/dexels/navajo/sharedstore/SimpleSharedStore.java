@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-public class SimpleSharedStore implements SharedStoreInterface {
+public class SimpleSharedStore extends AbstractSharedStore {
 
 	File storeRoot;
 	
@@ -21,7 +21,7 @@ public class SimpleSharedStore implements SharedStoreInterface {
 	}
 	
 	@Override
-	public void remove(String parent, String name) {
+	public void saveRemove(String parent, String name) {
 		new File(storeRoot, parent + "/" + name).delete();
 	}
 
