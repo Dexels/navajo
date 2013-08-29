@@ -2566,7 +2566,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			if (resourceCodeBase.indexOf("http:/") != -1
 					|| resourceCodeBase.indexOf("file:/") != -1) {
 				setGenericResourceLoader(new HttpResourceLoader(
-						resourceCodeBase));
+						resourceCodeBase,"generic"));
 			} else {
 				File res = new File(resourceCodeBase);
 				setGenericResourceLoader(new FileResourceLoader(res));
@@ -2583,7 +2583,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		if (tipiCodeBase != null) {
 			if (tipiCodeBase.indexOf("http:/") != -1
 					|| tipiCodeBase.indexOf("file:/") != -1) {
-				setTipiResourceLoader(new HttpResourceLoader(tipiCodeBase));
+				setTipiResourceLoader(new HttpResourceLoader(tipiCodeBase,"tipi"));
 			} else {
 				setTipiResourceLoader(new FileResourceLoader(new File(
 						tipiCodeBase)));
