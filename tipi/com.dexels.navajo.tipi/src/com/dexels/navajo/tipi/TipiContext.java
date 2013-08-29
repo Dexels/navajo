@@ -66,6 +66,7 @@ import com.dexels.navajo.tipi.components.core.TipiThreadPool;
 import com.dexels.navajo.tipi.connectors.HttpNavajoConnector;
 import com.dexels.navajo.tipi.connectors.TipiConnector;
 import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
+import com.dexels.navajo.tipi.internal.CachedHttpResourceLoader;
 import com.dexels.navajo.tipi.internal.ClassPathResourceLoader;
 import com.dexels.navajo.tipi.internal.DescriptionProvider;
 import com.dexels.navajo.tipi.internal.FileResourceLoader;
@@ -108,7 +109,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	
 	private static final Logger logger = LoggerFactory.getLogger(TipiContext.class);
 	private static final long serialVersionUID = 2077449402941300665L;
-
+	public static final long contextStartup = System.currentTimeMillis();
+	
 	public abstract void runSyncInEventThread(Runnable r);
 
 	public abstract void runAsyncInEventThread(Runnable r);
@@ -814,14 +816,23 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		if (tipiResourceLoader != null) {
 			return tipiResourceLoader.getResourceStream(location);
 		} else {
-			URL u = getTipiResourceURL(location);
-			if (u == null) {
-				throw new IOException("Location not found: " + location);
-			}
-			return u.openStream();
+			logger.warn("No tipi resource loader.");
+			return null;
 		}
 	}
 
+	public InputStream getGenericResourceStream(String location)
+			throws IOException {
+		logger.debug("Getting tipi file: "+location+" loader: "+tipiResourceLoader);
+		if (genericResourceLoader != null) {
+			return genericResourceLoader.getResourceStream(location);
+		} else {
+			logger.warn("No generic resource loader.");
+			return null;
+		}
+	}
+
+	
 	public URL getResourceURL(String location) {
 		// Try the classloader first, the
 		URL u = getClass().getClassLoader().getResource(location);
@@ -841,45 +852,20 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				logger.error("Error: ",e);
 			}
 		}
-
+		logger.warn("Resource not found: {}\n\n",location);
 		if (tipiResourceLoader != null) {
 			try {
-				return tipiResourceLoader.getResourceURL(location);
+				final URL resourceURL = tipiResourceLoader.getResourceURL(location);
+				if(resourceURL!=null) {
+					logger.warn("Fallback succeeded for: {}\n\n",location);
+				}
+				return resourceURL;
 			} catch (IOException e) {
 				logger.error("Error: ",e);
 			}
 		}
 		return null;
 	}
-
-
-	private URL getTipiResourceURL(String location) {
-		ClassLoader cl = getClass().getClassLoader();
-		URL u = cl.getResource(location);
-		if (u == null) {
-		} else {
-			return u;
-		}
-		// Now, it was not found in the classpath. if there is a
-		// tipiResourceLoader, then it means
-		// we are looking for a resource we are not certain where we can find
-		// it.
-		// If we supply a tipiResourceLoader, this means that we will NEVER look
-		// in the local file
-		// system.
-		if (tipiResourceLoader != null) {
-			try {
-				return tipiResourceLoader.getResourceURL(location);
-			} catch (IOException e) {
-				logger.error("Error: ",e);
-			}
-		}
-		return null;
-	}
-
-	// public final void parseLibraryFromClassPath(String location) {
-	// parseLibrary(location, false, null, false);
-	// }
 
 	private final void parseLibrary(XMLElement lib,
 			ExtensionDefinition tipiExtension) throws TipiException {
@@ -1058,16 +1044,27 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		return null;
 	}
 	
-	private String resolveCssResource(String location)
+	private String resolveCssResource(String location) 
 	{
-		InputStream iss = resolveLocation(location);
+//		URL resource = getResourceURL(location);
+//		InputStream iss = resource.openStream();
+		InputStream iss;
+		try {
+			iss = getGenericResourceStream(location);
+		} catch (IOException e1) {
+			logger.debug("CSS location not found: "+location);
+			return null;
+		}
+
 		if (iss != null)
 		{
-			java.util.Scanner s = new Scanner(iss).useDelimiter("\\A");
+			final Scanner scanner = new Scanner(iss);
+			java.util.Scanner s = scanner.useDelimiter("\\A");
 			String result = s.hasNext() ? s.next() : "" ;
 			try {
 				iss.close();
 				s.close();
+				scanner.close();
 			} catch (IOException e) {
 				logger.error("Error closing resource, ", e);
 			}
@@ -1894,7 +1891,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			if (eHandler == null) {
 				eHandler = new BaseTipiErrorHandler();
 				eHandler.setContext(this);
-				eHandler.initResource();
 
 			}
 			String errorMessage = eHandler.hasErrors(reply);
@@ -2563,14 +2559,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public void setGenericResourceLoader(String resourceCodeBase)
 			throws MalformedURLException {
 		if (resourceCodeBase != null) {
-			if (resourceCodeBase.indexOf("http:/") != -1
-					|| resourceCodeBase.indexOf("file:/") != -1) {
-				setGenericResourceLoader(new HttpResourceLoader(
-						resourceCodeBase,"generic"));
-			} else {
-				File res = new File(resourceCodeBase);
-				setGenericResourceLoader(new FileResourceLoader(res));
-			}
+			setGenericResourceLoader(createResourceLoader(resourceCodeBase, "generic"));
 		} else {
 			// BEWARE: The trailing slash is important!
 			setGenericResourceLoader(createDefaultResourceLoader("resource/",
@@ -2581,13 +2570,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public void setTipiResourceLoader(String tipiCodeBase)
 			throws MalformedURLException {
 		if (tipiCodeBase != null) {
-			if (tipiCodeBase.indexOf("http:/") != -1
-					|| tipiCodeBase.indexOf("file:/") != -1) {
-				setTipiResourceLoader(new HttpResourceLoader(tipiCodeBase,"tipi"));
-			} else {
-				setTipiResourceLoader(new FileResourceLoader(new File(
-						tipiCodeBase)));
-			}
+			setTipiResourceLoader(createResourceLoader(tipiCodeBase, "tipi"));
 		} else {
 			// nothing supplied. Use a file loader with fallback to classloader.
 			// BEWARE: The trailing slash is important!
@@ -2595,6 +2578,21 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			setTipiResourceLoader(createDefaultResourceLoader("tipi/",
 					useCache()));
 		}
+	}
+	
+	private TipiResourceLoader createResourceLoader(String codebase, String label) throws MalformedURLException {
+		if (codebase.indexOf("http:/") != -1
+				|| codebase.indexOf("file:/") != -1) {
+			if(useCache()) {
+				return new CachedHttpResourceLoader(new File("/Users/frank/tipicache"), new URL(codebase));
+			} else {
+				return new HttpResourceLoader(codebase,label);
+			}
+		} else {
+			return new FileResourceLoader(new File(
+					codebase));
+		}
+		
 	}
 
 	public boolean useCache() {
@@ -2658,7 +2656,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 		eHandler = new BaseTipiErrorHandler();
 		eHandler.setContext(this);
-		eHandler.initResource();
 
 //		try {
 //			Class<?> c = Class

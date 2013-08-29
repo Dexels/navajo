@@ -70,8 +70,6 @@ public class EchoTipiContext extends TipiContext {
     	}
 		eHandler = new BaseTipiErrorHandler();
 		eHandler.setContext(this);
-		eHandler.initResource();
-
     	
     	setCookieManager(new BrowserCookieManager());
     }

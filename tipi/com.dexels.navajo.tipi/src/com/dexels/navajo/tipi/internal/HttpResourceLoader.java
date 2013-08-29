@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.internal;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -46,6 +47,8 @@ public class HttpResourceLoader extends ClassPathResourceLoader implements Seria
 		uc.addRequestProperty("Accept-Encoding", "gzip");
 		try {
 			is = uc.getInputStream();
+		} catch (FileNotFoundException e) {
+			logger.debug("Resource: {} missing but trying super.",location);
 		} catch (IOException e) {
 			logger.debug("Error but trying super method: ",e);
 		}
@@ -53,11 +56,9 @@ public class HttpResourceLoader extends ClassPathResourceLoader implements Seria
 		if (is != null) {
 			return openStream(location, is, contentEncoding);
 		}
-		logger.info(">>>>>>> NOT zipped: "+location);
 		long started = System.currentTimeMillis();
 		InputStream classLoaderInputStream = super.getResourceStream(location);
 		if(classLoaderInputStream==null) {
-			logger.info("Not available");
 			transferFailed(location,(System.currentTimeMillis() - started));
 		}
 		return classLoaderInputStream;
@@ -91,10 +92,11 @@ public class HttpResourceLoader extends ClassPathResourceLoader implements Seria
 		this.connections++;
 		this.failed ++;
 		this.duration+= duration;
+		logger.warn("Failed load: "+label,new Exception());
 		report();
 	}
 	
 	private void report() {
-		logger.info("Loader: "+ description+" network: "+total+" connections: "+connections+" failed: "+failed+" duration: "+duration);
+		logger.info("Loader: "+ description+" network: "+total+" connections: "+connections+" failed: "+failed+" duration: "+duration+" millis since start: "+(System.currentTimeMillis() - com.dexels.navajo.tipi.TipiContext.contextStartup));
 	}
 }
