@@ -1,9 +1,10 @@
-package com.dexels.navajo.tipi.appmanager;
+package com.dexels.navajo.tipi.dev.server.appmanager;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -13,12 +14,13 @@ import org.slf4j.LoggerFactory;
 public class ApplicationManager {
 	
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(ApplicationManager.class);
 	private File appsFolder;
 	List<ApplicationStatus> applications;
 	private String currentApplication;
 	private String documentationRepository;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ApplicationManager.class);
 	
 
 	public String getDocumentationRepository() {
@@ -33,6 +35,11 @@ public class ApplicationManager {
 		return currentApplication;
 	}
 
+	public void activate(Map<String,Object> configuration) throws IOException {
+		String path = (String) configuration.get("tipi.store.path");
+		setAppsFolder(new File(path));
+	}
+	
 	public ApplicationStatus getApplication() {
 		for (ApplicationStatus a : applications) {
 			if(a.getApplicationName().equals(currentApplication)) {
@@ -41,42 +48,13 @@ public class ApplicationManager {
 		}
 		return null;
 	}
-private ServletContext context = null;
-	
-	public ServletContext getContext() {
-		return context;
-	}
-
-	public void setContext(ServletContext context) throws IOException {
-		this.context = context;
-		documentationRepository = context.getInitParameter("documentationRepository");
-		String appFolder = context.getInitParameter("appFolder"); 
-		File ff = null;
-		if(appFolder==null) {
-			File contextFolder = new File(context.getRealPath("."));
-			ff = new File(contextFolder, "DefaultApps");
-		} else {
-			File suppliedFolder = new File(appFolder);
-			if(suppliedFolder.isAbsolute()) {
-				ff = suppliedFolder;
-			} else {
-				ff = new File(context.getRealPath(appFolder));
-			}
-		}
-		setAppsFolder(ff);
-
-	}
-	
-	public void setApplications(List<ApplicationStatus> applications) {
-		this.applications = applications;
-	}
 
 	public File getAppsFolder() {
 		return appsFolder;
 	}
 
 	public void setAppsFolder(File appsFolder) throws IOException {
-		
+		logger.info("Using application folder: "+appsFolder.getAbsolutePath());
 		this.appsFolder = appsFolder;
 		File[] apps = appsFolder.listFiles();
 		List<ApplicationStatus> appStats = new LinkedList<ApplicationStatus>();
@@ -97,6 +75,7 @@ private ServletContext context = null;
 			if(!isTipiAppDir(file)) {
 				continue;
 			}
+			logger.info("Application found: "+file.getName());
 			ApplicationStatus appStatus = new ApplicationStatus();
 			appStatus.setManager(this);
 			appStatus.load(file);
@@ -108,18 +87,11 @@ private ServletContext context = null;
 		File tipiDir = new File(tipiRoot,"tipi");
 		File settingsProp = new File(tipiRoot,"settings/tipi.properties");
 		return tipiDir.exists() && settingsProp.exists();
-//		return false;
 	}
 
 	public  List<ApplicationStatus> getApplications()  {
 //		logger.info("Getting applications: "+applications);
 		return applications;
 	}
-	
-	public static void main(String[] args) throws IOException {
-		ApplicationManager m = new ApplicationManager();
-		m.setAppsFolder(new File("WebContent"));
-		List<ApplicationStatus> apps = m.getApplications();
-		logger.info("Appcount: "+apps.size());
-	}
+
 }

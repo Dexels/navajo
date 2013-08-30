@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.appmanager;
+package com.dexels.navajo.tipi.dev.server.appmanager;
 
 public class ExtensionEntry {
 

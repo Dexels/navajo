@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SwingTipi depenencies
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.deps
-Bundle-Version: 1.2.1.qualifier
+Bundle-Version: 1.2.2
 Bundle-ClassPath: classes/
 Bundle-Vendor: Dexels
 Export-Package: javax.jnlp;version="2.0.0",

@@ -1,13 +1,19 @@
-package com.dexels.navajo.tipi.appmanager;
+package com.dexels.navajo.tipi.dev.server.appmanager;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URL;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -31,16 +37,13 @@ public class ApplicationStatus {
 
 	private ApplicationManager manager;
 	private List<String> profiles;
-	private List<String> deployments;
 
 
 	private List<ExtensionEntry> extensions;
 	private String applicationName;
 	private File appFolder;
 	private String extensionRepository;
-	private boolean localSign;
 	private String buildType = null;
-	private String liveUrl = null;
 	private String currentDeploy = null;
 	
 	private final Map<String,Map<String,String>> deploymentData = new HashMap<String,Map<String,String>>();
@@ -52,13 +55,6 @@ public class ApplicationStatus {
 
 	public String getRealPath() {
 		return appFolder.getAbsolutePath();
-	}
-	public String getLiveUrl() {
-		return liveUrl;
-	}
-
-	public void setLiveUrl(String liveUrl) {
-		this.liveUrl = liveUrl;
 	}
 
 	public String getBuildType() {
@@ -82,38 +78,11 @@ public class ApplicationStatus {
 		return rawValue.replaceAll("\\[\\[profile\\]\\]", profile);
 	}
 
-	public void setBuildType(String buildType) {
-		this.buildType = buildType;
-	}
 
-	public String getCvsModule() {
-		return cvsModule;
-	}
 
-	public void setCvsModule(String cvsModule) {
-		this.cvsModule = cvsModule;
-	}
+	private Map<String,Boolean> profileNeedsRebuild = new HashMap<String, Boolean>();
 
-	public String getCvsRevision() {
-		return cvsRevision;
-	}
-
-	public void setCvsRevision(String cvsRevision) {
-		this.cvsRevision = cvsRevision;
-	}
-
-	private String cvsModule;
-	private String cvsRevision;
-	
-	public boolean isLocalSign() {
-		return localSign;
-	}
-
-	public void setLocalSign(boolean localSign) {
-		this.localSign = localSign;
-	}
-
-	private Map<String,Boolean> profileNeedsRebuild = new HashMap<String, Boolean>();	
+	private PropertyResourceBundle settings;	
 	public String getRepository() {
 		return extensionRepository;
 	}
@@ -172,26 +141,8 @@ public class ApplicationStatus {
 		return applicationName;
 	}
 
-	public void setApplicationName(String applicationName) {
+	private void setApplicationName(String applicationName) {
 		this.applicationName = applicationName;
-	}
-
-//	public List<String> getApplicationLink() {
-//		return getApplicationName()+"/Application.jnlp";
-//	}
-	
-	private void setCurrentDeploy(String deploy) {
-		currentDeploy = deploy;
-		
-	}
-	
-	public List<String> getDeployments() {
-		return deployments;
-	}
-
-
-	public void setDeployments(List<String> deployments) {
-		this.deployments = deployments;
 	}
 
 	
@@ -203,7 +154,7 @@ public class ApplicationStatus {
 			return;
 		}
 		FileInputStream fis = new FileInputStream(tipiSettings);
-		PropertyResourceBundle settings = new PropertyResourceBundle(fis);
+		settings = new PropertyResourceBundle(fis);
 		fis.close();
 		extensionRepository = settings.getString("repository");
 		extensions = new LinkedList<ExtensionEntry>();
@@ -213,80 +164,36 @@ public class ApplicationStatus {
 			extensions.add(new ExtensionEntry(element));
 				
 			}
-	    if(settings.containsKey("keystore")) {
-	   	 setLocalSign(true);
-	    }
-	    if(settings.containsKey("build")) {
-	   	 setBuildType(settings.getString("build"));
-	    }
-	    if(settings.containsKey("liveUrl")) {
-	   	 setLiveUrl(settings.getString("liveUrl"));
-	    }
-	    
-	    if(settings.containsKey("deploy")) {
-	   	 setCurrentDeploy(settings.getString("deploy"));
-	    }
-	    
+
+
 	    setExists(true);
 	    applicationName = appDir.getName();
 	    processProfiles(appDir);
-	    processDeploys(appDir);
-	    
-	    File cvsDir = new File(appDir,"CVS");
-	    if(cvsDir.exists()) {
-	   	 File repository = new File(cvsDir,"Repository");
-	   	 BufferedReader fr = new BufferedReader(new FileReader(repository));
-	   	 setCvsModule(fr.readLine());
-	   	 fr.close();
-	   	 File tag = new File(cvsDir,"Tag");
-	   	 if (tag.exists()) {
-		   	 fr = new BufferedReader(new FileReader(tag));
-		   	 String line = fr.readLine();
-		   	 if(line!=null ) {
-			   	 setCvsRevision(line.substring(1));
-		   	 }
-		   	 fr.close();
-			} else {
-				 setCvsRevision("HEAD");
-			}
-
-	    }
-	    
+	    build();
 	}
 	
-
-
-//	private long getYoungestFile(File folder) {
-//		long youngest = 0;
-//		for (File file : folder.listFiles()) {
-//			long lastModified = 0;
-//			if(file.isDirectory()) {
-//				lastModified = getYoungestFile(file);
-//			} else {
-//				lastModified = file.lastModified();
-//
-//			}
-//			if(lastModified > youngest) {
-//				youngest = lastModified;
-//			}
-//		}
-//		return youngest;
-//	}
+	public void build() throws IOException {
+		String deps = settings.getString("dependencies");
+		File lib = new File(this.appFolder,"lib");
+		if(!lib.exists()) {
+			lib.mkdirs();
+		}
+		String[] d = deps.split(",");
+		for (String dependency : d) {
+			logger.info("Dependency: "+dependency);
+			downloadDepencency(dependency, lib);
+		}
+		
+	}
 
 	private void processProfiles(File appDir) {
 		List<String> pro = new LinkedList<String>();
 		File profilesDir = new File(appDir,"settings/profiles");
-//		if(!profilesDir.exists() || profilesDir.listFiles().length ==0) {
-//			pro.add("Default");
-//			setProfiles(pro);
-	//		return;
-//		}
+
 		if(profilesDir.exists()) {
 			for (File file : profilesDir.listFiles()) {
-				//pro.add(file.getName());
 				if(file.canRead() && file.isFile() && file.getName().endsWith(".properties")) {
 					String profileName = file.getName().substring(0,file.getName().length()-".properties".length());
-//					logger.info("Profilename: "+profileName);
 					boolean b = profileNeedsRebuild(file,profileName, appDir);
 					pro.add(profileName);
 					profileNeedsRebuild.put (profileName,b);
@@ -302,51 +209,9 @@ public class ApplicationStatus {
 		setProfiles(pro);
 	}
 
-	
-	private void processDeploys(File appDir) throws IOException {
-		List<String> deplo = new LinkedList<String>();
-		File deploymentsDir = new File(appDir,"settings/deploy");
-//		if(!profilesDir.exists() || profilesDir.listFiles().length ==0) {
-//			pro.add("Default");
-//			setProfiles(pro);
-	//		return;
-//		}
-		deploymentData.clear();
-		if(deploymentsDir.exists()) {
-			for (File file : deploymentsDir.listFiles()) {
-				//pro.add(file.getName());
-				if(file.canRead() && file.isFile() && file.getName().endsWith(".properties")) {
-					String deployName = file.getName().substring(0,file.getName().length()-".properties".length());
-					deplo.add(deployName);
-					addDeployData(deployName,file);
-				}
-			}
-		}
-		setDeployments(deplo);
-	}
-	
-	private void addDeployData(String deployName, File file) throws IOException {
-		FileInputStream fis = new FileInputStream(file);
-		PropertyResourceBundle settings = new PropertyResourceBundle(fis);
-		Enumeration<String> keys = settings.getKeys();
-		Map<String,String> element = new HashMap<String, String>();
-		while(keys.hasMoreElements()) {
-			String key = keys.nextElement();
-			String value = settings.getString(key);
-			element.put(key, value);
-			logger.info("Adding data: "+deployName+" : "+key+" : "+value);
-		}
-		deploymentData.put(deployName, element);
-	}
 
-	public String getManagerUrl(String deploy) {
-		Map<String,String> element = deploymentData.get(deploy);
-		if(element==null) {
-			return null;
-		}
-		return element.get("managerUrl");
-	}
 	
+
 	private boolean profileNeedsRebuild(File profileProperties, String profileName, File appDir) {
 		File jnlpFile = new File(appDir, profileName+".jnlp");
 		if(!jnlpFile.exists()) {
@@ -415,6 +280,31 @@ public class ApplicationStatus {
 			}
 		}
 		bout.flush();
-	
 	}
+
+
+	private final void copyResource(OutputStream out, InputStream in)
+			throws IOException {
+		BufferedInputStream bin = new BufferedInputStream(in);
+		BufferedOutputStream bout = new BufferedOutputStream(out);
+		byte[] buffer = new byte[1024];
+		int read;
+		while ((read = bin.read(buffer)) > -1) {
+			bout.write(buffer, 0, read);
+		}
+		bin.close();
+		bout.flush();
+		bout.close();
+	}
+	
+	private void downloadDepencency(String url, File destinationFolder) throws IOException {
+		logger.info("Downloading: "+url+" to "+destinationFolder.getAbsolutePath());
+		URL u = new URL(url);
+		String[] parts = url.split("/");
+		String assembledName = parts[1]+"_"+parts[2]+".jar";
+		File dest = new File(destinationFolder,assembledName);
+		FileOutputStream fos = new FileOutputStream(dest);
+		copyResource(fos, u.openStream());
+	}
+	
 }
