@@ -52,10 +52,8 @@ public class ReferenceCounter implements Runnable {
 			} else if ( w != null ) {
 				if ( increase ) {
 					if ( count > 0 ) {
-						System.err.println("increasecount with " + count);
 						w.increaseReference(count);
 					} else {
-						System.err.println("increase count.");
 						w.increaseReference();
 					}
 				} else {
@@ -65,7 +63,6 @@ public class ReferenceCounter implements Runnable {
 				w = new Wrapper(wrap.reference, wrap.getCreated());
 				w.resetCount();
 			}
-			System.err.println(wrap.reference + " has count " + w.getCount() );
 			referenceCount.put(wrap.reference, w);
 		} catch (Throwable t) {
 			logger.error(t.getMessage(), t);
