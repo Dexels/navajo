@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Jabber related part of client
 Bundle-SymbolicName: com.dexels.navajo.client.jabber
-Bundle-Version: 1.0.9
+Bundle-Version: 1.0.10.qualifier
 Bundle-Activator: navajoclientjabber.Version
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
