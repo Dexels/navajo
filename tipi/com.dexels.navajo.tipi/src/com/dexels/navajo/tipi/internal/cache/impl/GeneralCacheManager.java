@@ -25,6 +25,7 @@ public class GeneralCacheManager implements CacheManager {
 		this.remote = r;
 	}
 
+	@Override
 	public InputStream getContents(String location) throws IOException {
 		if (isUpToDate(location)) {
 			return local.getLocalData(location);
@@ -38,10 +39,12 @@ public class GeneralCacheManager implements CacheManager {
 		return local.getLocalData(location);
 	}
 
+	@Override
 	public boolean hasLocal(String location) throws IOException {
 		return local.hasLocal(location);
 	}
 
+	@Override
 	public boolean isUpToDate(String location) throws IOException {
 		if (!hasLocal(location)) {
 			return false;
@@ -54,6 +57,7 @@ public class GeneralCacheManager implements CacheManager {
 		return false;
 	}
 
+	@Override
 	public URL getLocalURL(String location) throws IOException {
 		if (isUpToDate(location)) {
 			return local.getURL(location);
@@ -64,10 +68,12 @@ public class GeneralCacheManager implements CacheManager {
 		return local.getURL(location);
 	}
 
+	@Override
 	public URL getRemoteURL(String location) throws IOException {
 		return remote.getURL(location);
 	}
 
+	@Override
 	public void flushCache() {
 		try {
 			local.flushAll();

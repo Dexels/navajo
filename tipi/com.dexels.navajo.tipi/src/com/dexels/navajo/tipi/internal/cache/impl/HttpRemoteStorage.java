@@ -23,12 +23,13 @@ public class HttpRemoteStorage implements RemoteStorage {
 		baseUrl = base;
 	}
 
+	@Override
 	public InputStream getContents(String location, Map<String, Object> metadata)
 			throws IOException {
 		URL u = new URL(baseUrl, location);
 		InputStream is = null;
 		try {
-			logger.info("Opening location: " + u);
+			logger.info("DOWNLOADING location: " + u);
 			URLConnection uc = u.openConnection();
 			uc.addRequestProperty("Accept-Encoding", "gzip");
 			metadata.put("length", uc.getContentLength());
@@ -44,7 +45,12 @@ public class HttpRemoteStorage implements RemoteStorage {
 		return is;
 	}
 
+	@Override
 	public long getRemoteModificationDate(String location) throws IOException {
+		if(true) {
+			return 0;
+		}
+		logger.info("Checking modification date of location: "+location);
 		URL u = new URL(baseUrl, location);
 		URLConnection connection = u.openConnection();
 		if (connection instanceof HttpURLConnection) {
@@ -55,6 +61,7 @@ public class HttpRemoteStorage implements RemoteStorage {
 
 	}
 
+	@Override
 	public URL getURL(String location) throws IOException {
 		return new URL(baseUrl, location);
 	}

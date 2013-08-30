@@ -20,4 +20,6 @@ public interface LocalStorage {
 	public void flushAll() throws IOException;
 
 	public URL getURL(String location) throws IOException;
+	
+	public boolean hasLocalWithDigest(String location, byte[] digest);
 }
