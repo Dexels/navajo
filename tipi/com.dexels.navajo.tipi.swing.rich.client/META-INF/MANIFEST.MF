@@ -5,17 +5,15 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.15.qualifier
 Export-Package: com.dexels.navajo.rich.components
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.client;bundle-version="1.0.0",
- com.dexels.navajo.core;bundle-version="2.9.2",
- com.dexels.navajo.function;bundle-version="2.0.1",
- com.dexels.navajo.tipi.swing;bundle-version="[1.0.43,2.0.0)",
- com.dexels.navajo.tipi.swing.deps;bundle-version="1.0.0",
- com.dexels.navajo.tipi.swing.client;bundle-version="1.0.3"
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.tipi.swingclient.components,
  com.dexels.navajo.version,
  javax.imageio,
  javax.swing,
  javax.swing.table,
+ org.jdesktop.animation.timing;version="1.1.0",
+ org.jdesktop.animation.timing.interpolation;version="1.1.0",
+ org.jdesktop.animation.transitions;version="1.1.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 DynamicImport-Package: org.pushingpixels.*
