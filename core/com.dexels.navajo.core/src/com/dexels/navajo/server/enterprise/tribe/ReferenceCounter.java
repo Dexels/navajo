@@ -11,6 +11,7 @@ public class ReferenceCounter implements Runnable {
 	private final ConcurrentMap<String, Wrapper> referenceCount;
 	private final DefaultNavajoWrap wrap;
 	private final boolean increase;
+	private int count = -1;
 	
 	private final static Logger logger = LoggerFactory.getLogger(ReferenceCounter.class);
 	
@@ -18,6 +19,13 @@ public class ReferenceCounter implements Runnable {
 		this.referenceCount = referenceMap;
 		this.wrap = wrap;
 		this.increase = increase;
+	}
+	
+	public ReferenceCounter(ConcurrentMap<String, Wrapper> referenceMap, DefaultNavajoWrap wrap, int count) {
+		this.referenceCount = referenceMap;
+		this.wrap = wrap;
+		this.count = count;
+		this.increase = true;
 	}
 	
 	@Override
@@ -40,10 +48,16 @@ public class ReferenceCounter implements Runnable {
 			}
 			
 			if ( w == null && increase ) {
-				w = new Wrapper(wrap.reference, wrap.getCreated());
+				w = new Wrapper(wrap.reference, wrap.getCreated(), count);
 			} else if ( w != null ) {
 				if ( increase ) {
-					w.increaseReference();
+					if ( count > 0 ) {
+						System.err.println("increasecount with " + count);
+						w.increaseReference(count);
+					} else {
+						System.err.println("increase count.");
+						w.increaseReference();
+					}
 				} else {
 					w.decreaseReference();
 				}
@@ -51,6 +65,7 @@ public class ReferenceCounter implements Runnable {
 				w = new Wrapper(wrap.reference, wrap.getCreated());
 				w.resetCount();
 			}
+			System.err.println(wrap.reference + " has count " + w.getCount() );
 			referenceCount.put(wrap.reference, w);
 		} catch (Throwable t) {
 			logger.error(t.getMessage(), t);
