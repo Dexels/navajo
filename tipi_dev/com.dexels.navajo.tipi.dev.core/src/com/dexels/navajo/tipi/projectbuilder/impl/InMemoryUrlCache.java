@@ -15,6 +15,7 @@ import com.dexels.navajo.tipi.projectbuilder.URLCache;
 
 public class InMemoryUrlCache implements URLCache {
 	private final Map<URL,byte[]> cacheMap = new HashMap<URL, byte[]>();
+	@Override
 	public InputStream getStream(URL u) throws IOException {
 		byte[] b = cacheMap.get(u);
 		if(b!=null) {
@@ -28,6 +29,7 @@ public class InMemoryUrlCache implements URLCache {
 		return new ByteArrayInputStream(b);
 	}
 	
+	@Override
 	public void flush() {
 		cacheMap.clear();
 	}

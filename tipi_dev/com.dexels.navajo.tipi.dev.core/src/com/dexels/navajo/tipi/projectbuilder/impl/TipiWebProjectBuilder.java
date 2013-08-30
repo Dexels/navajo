@@ -19,6 +19,7 @@ public class TipiWebProjectBuilder extends TipiProjectBuilder {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiWebProjectBuilder.class);
 	
+	@Override
 	public void downloadExtensionJars(String projectName, String version, URL remoteExtensionUrl, XMLElement extensionElement,
 			File baseDir, boolean clean, boolean localSign) throws MalformedURLException, IOException {
 		URL unsigned = new URL(remoteExtensionUrl, "lib/");

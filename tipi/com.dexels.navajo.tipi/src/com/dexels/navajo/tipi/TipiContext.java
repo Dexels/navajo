@@ -335,6 +335,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 
 	
+	@Override
 	public void addOptionalInclude(TipiExtension te) {
 		optionalExtensionList.add(te);
 		processRequiredIncludes(te);
@@ -529,6 +530,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public abstract void clearTopScreen();
 
 
+	@Override
 	public void setSystemProperty(String name, String value) {
 		systemPropertyMap.put(name, value);
 	}
@@ -1402,6 +1404,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 		Runnable r = new Runnable() {
 
+			@Override
 			public void run() {
 				try {
 					unlink(getStateNavajo(), stateMessage);
@@ -2326,6 +2329,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	{
 		final TipiContext thisContext = this;
 		Thread shutdownThread = new Thread("TipiDoExit") {
+			@Override
 			public void run() {
 				thisContext.doExit();
 
@@ -2370,6 +2374,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		contextShutdown = true;
 		if(getPoolSize()>0) {
 			Thread shutdownThread = new Thread("TipiShutdown") {
+				@Override
 				public void run() {
 					myThreadPool.waitForAllThreads();
 					logger.info("done.");
@@ -2580,13 +2585,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 	}
 	
-	private TipiResourceLoader createResourceLoader(String codebase, String label) throws MalformedURLException {
+	private TipiResourceLoader createResourceLoader(String codebase, String id) throws MalformedURLException {
 		if (codebase.indexOf("http:/") != -1
 				|| codebase.indexOf("file:/") != -1) {
 			if(useCache()) {
-				return new CachedHttpResourceLoader(new File("/Users/frank/tipicache"), new URL(codebase));
+				return new CachedHttpResourceLoader(new File("/Users/frank/tipicache/"+id), new URL(codebase));
 			} else {
-				return new HttpResourceLoader(codebase,label);
+				return new HttpResourceLoader(codebase,id);
 			}
 		} else {
 			return new FileResourceLoader(new File(
@@ -2815,11 +2820,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		PropertyChangeListener propertyChangeListener = new SerializablePropertyChangeListener() {
 			private static final long serialVersionUID = -43753977302262498L;
 
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				Property masterSource = (Property) e.getSource();
 				copyPropertyValue(masterSource, slave);
 			}
 
+			@Override
 			public String toString() {
 				try {
 					Navajo rootDoc = slave.getRootDoc();
@@ -2833,6 +2840,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				}
 			}
 
+			@Override
 			public boolean equals(Object a) {
 				// TODO THis is maybe a bit... too short through the bend
 				// Properties with the same path may be still different

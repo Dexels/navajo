@@ -249,9 +249,5 @@ public class ProjectBuilder {
 		return postProcessAnt;
 	}
 
-	
-	public static void main(String[] args) throws IOException {
-		ProjectBuilder.buildTipiProject(new File("/Users/frank/Documents/Spiritus/SportlinkOfficialPortal"), "aap","somedeploy");
-	}
 
 }

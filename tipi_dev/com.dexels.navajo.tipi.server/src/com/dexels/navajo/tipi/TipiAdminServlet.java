@@ -181,36 +181,11 @@ public class TipiAdminServlet extends HttpServlet {
 		if (commando.equals("create")) {
 			return create(application, appDir);
 		}
-		if (commando.equals("upload")) {
-			return uploadMultipart(application,request);
-		}
+
 		if (commando.equals("saveConfig")) {
 			return saveConfig(application, appDir,request,request.getParameter("deploy"));
 		}
-		if (commando.equals("cvsupdate")) {
-			try {
-				return updateApp(application);
-			} catch (IOException e) {
-				logger.error("Error: ",e);
-				throw new ServletException("Error updating CVS: ",e);
-			}
-		}
-		if (commando.equals("cvscheckout")) {
-			try {
-				return checkoutApp(application,request.getParameter("branch"),request.getParameter("module"));
-			} catch (IOException e) {
-				logger.error("Error: ",e);
-				throw new ServletException("Error updating CVS: ",e);
-			}
-		}
-		if (commando.equals("tag")) {
-			try {
-				return tagApp(application,request.getParameter("tag"));
-			} catch (IOException e) {
-				logger.error("Error: ",e);
-				throw new ServletException("Error updating CVS: ",e);
-			}
-		}
+
 		return "Unknown commando!";
 	}
 
@@ -250,80 +225,7 @@ public class TipiAdminServlet extends HttpServlet {
 			logger.error("Error: ",e);
 			return "ERROR -  "+e.getMessage();
 		}}
-	private String uploadMultipart(String application, HttpServletRequest request) {
-//		logger.info(">>" +request.getParameterMap());
-		try {
-			InputStream is =  request.getInputStream();
-//			File apppp = new File(applicationFolder);
-			MultipartRequest mr = new MultipartRequest(request, System.getProperty("java.io.tmpdir"),20000000);
-			Enumeration<String> e =  mr.getFileNames();
-	
-			while (e.hasMoreElements()) {
-				String object = e.nextElement();
-				File f = mr.getFile(object);
-//				logger.info("Filename returned: "+f.getAbsolutePath());
-				createApp(f,application);
-				f.delete();
-//				logger.info("File detected: "+object);
-			}
-			File tmp = File.createTempFile("testUpload",".zip");
-			FileOutputStream fos = new FileOutputStream(tmp);
-			copyResource(fos, is);
-			tmp.deleteOnExit();	
-			createApp(tmp,application);
-			
-			return "File dumped @"+ tmp.getAbsolutePath();
-		} catch (IOException e) {
-			logger.error("Error: ",e);
-			return "Problem: "+e.getMessage();
-		}
-	}
-	
-	private String updateApp( String appName) throws IOException {
-//		public static String callAnt(File buildFile, File baseDir, Map<String,String> userProperties) throws IOException {
-		File currentAppFolder = new File(getAppFolder(),appName);
-		String path = getServletContext().getRealPath("WEB-INF/ant/cvsupdateproject.xml");
-		Map<String,String> userProperties = new HashMap<String, String>();
-		userProperties.put("appDir", currentAppFolder.getAbsolutePath());
-		return AntRun.callAnt(new File(path), currentAppFolder, userProperties,null);
-	}
-	
-	
-	private String tagApp(String application,String tag) throws IOException {
-		File currentAppFolder = new File(getAppFolder(),application);
 
-		String path = getServletContext().getRealPath("WEB-INF/ant/cvstagproject.xml");
-		Map<String,String> userProperties = new HashMap<String, String>();
-		userProperties.put("appDir",currentAppFolder.getAbsolutePath());
-		userProperties.put("tag", tag);
-		return AntRun.callAnt(new File(path), currentAppFolder, userProperties,null);
-
-	}
-	
-
-	private String checkoutApp(String application, String branch, String module) throws IOException {
-		String path = getServletContext().getRealPath("WEB-INF/ant/cvscheckoutproject.xml");
-		Map<String,String> userProperties = new HashMap<String, String>();
-		userProperties.put("appDir",getAppFolder().getAbsolutePath());
-		if(application==null || "".equals(application)) {
-			application = module;
-		}
-		userProperties.put("application", application);
-		userProperties.put("module", module);
-		userProperties.put("cvsRoot", ":pserver:frank@spiritus.dexels.nl:/home/cvs");
-
-		
-		if(branch!=null) {
-			userProperties.put("branch", branch);
-			
-		}
-		if(branch==null || branch.equals("")) {
-			return AntRun.callAnt(new File(path), getAppFolder(), userProperties,"checkout");
-		} else {
-			return AntRun.callAnt(new File(path), getAppFolder(), userProperties,"checkoutbranch");
-			
-		}
-	}
 	private void createApp(File tmp , String appName) {
 		File dest = new File(getAppFolder(),appName);
 		dest.mkdirs();

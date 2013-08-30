@@ -19,6 +19,7 @@ public class TipiLocalJnlpProjectBuilder extends TipiProjectBuilder{
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiLocalJnlpProjectBuilder.class);
 	
+	@Override
 	public void downloadExtensionJars(String extensionName, String version, URL remoteExtensionUrl, XMLElement extensionElement,
 			File baseDir, boolean clean, boolean localSign) throws MalformedURLException, IOException {
 		
