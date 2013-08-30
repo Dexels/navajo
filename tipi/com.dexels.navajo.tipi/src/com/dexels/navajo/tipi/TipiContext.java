@@ -446,7 +446,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public Object getGlobalValue(String name) {
 		return globalMap.get(name);
 	}
-
+	
 	public void setGlobalValue(String name, Object value) {
 		globalMap.put(name, value);
 	}
@@ -2646,7 +2646,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			setSystemProperty(element, value);
 		}
 		String tipiCodeBase = properties.get("tipiCodeBase");
+		if(tipiCodeBase==null) {
+			tipiCodeBase = System.getProperty("tipiCodeBase");
+		}
 		String resourceCodeBase = properties.get("resourceCodeBase");
+		if(resourceCodeBase==null) {
+			resourceCodeBase = System.getProperty("resourceCodeBase");
+		}
 		setTipiResourceLoader(tipiCodeBase);
 		setGenericResourceLoader(resourceCodeBase);
 
