@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE project>
+<project default="signall">
+	<fail unless="tipiAppstore" message="This script will only run from the app store."/>
+
+	<target name="signall" >
+		<!---->		
+		<delete dir="temp"/>
+		<mkdir dir="temp"/>
+		<echo message="Keystore ${keystore} alias: ${alias} pass: ${storepass}"/>
+		
+		<copy todir="temp" failonerror="no">
+			<fileset dir="unsigned">
+				<include name="*.jar"/>
+				<include name="*.gz"/>
+			</fileset>
+		</copy>
+		<p200ant  singleSegment="true" repack="true">
+			<fileset dir=".">
+				<include name="temp/*.jar" />
+			</fileset>
+	    </p200ant>
+		<signjar verbose="true"  keystore="${keystore}" storepass="${storepass}"  alias="${alias}">
+			
+			<fileset dir=".">
+				<include name="temp/*.jar" />
+			</fileset>
+		</signjar>
+		<copy todir="lib">
+			<fileset dir="temp">
+				<include name="**" />
+			</fileset>
+		</copy>
+		<delete dir="temp"/>
+		<delete dir="unsigned"/>
+	</target>
+	
+</project>

@@ -30,19 +30,16 @@ import org.slf4j.LoggerFactory;
 
 import tipiplugin.views.TipiHelpView;
 
-import com.dexels.navajo.tipi.projectbuilder.ClasspathBuilder;
-import com.dexels.navajo.tipi.projectbuilder.ClientActions;
-import com.dexels.navajo.tipi.projectbuilder.LocalJnlpBuilder;
-import com.dexels.navajo.tipi.projectbuilder.ProjectBuilder;
-import com.dexels.navajo.tipi.projectbuilder.RemoteJnlpBuilder;
-import com.dexels.navajo.tipi.projectbuilder.TipiProjectBuilder;
-import com.dexels.navajo.tipi.projectbuilder.VersionResolver;
-import com.dexels.navajo.tipi.projectbuilder.WebDescriptorBuilder;
-import com.dexels.navajo.tipi.projectbuilder.XsdBuilder;
-import com.dexels.navajo.tipi.projectbuilder.impl.TipiLocalJnlpProjectBuilder;
-import com.dexels.navajo.tipi.projectbuilder.impl.TipiRemoteJnlpProjectBuilder;
-import com.dexels.navajo.tipi.projectbuilder.impl.TipiWebProjectBuilder;
-import com.dexels.navajo.tipi.util.XMLElement;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.ClasspathBuilder;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.ClientActions;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.LocalJnlpBuilder;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.ProjectBuilder;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.TipiProjectBuilder;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.VersionResolver;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.XsdBuilder;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.impl.TipiLocalJnlpProjectBuilder;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.impl.TipiRemoteJnlpProjectBuilder;
+import com.dexels.navajo.tipi.dev.core.util.XMLElement;
 
 public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 
@@ -185,27 +182,12 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 			boolean useVersioning = false;
 			
 
-			String buildType = pe.getString("build").trim();
-		
 			rebuildXsd(repository, extensionRepository,extensions,projectPath,m);
-			if(buildType==null) {
-				buildType = "remote";
-			}
-			
+
 		
 			m.worked(5);
-			if("remote".equals(buildType) || "both".equals(buildType)) {
-				downloadExtensionJars(projectPath, extensions, extensionRepository,true,clean,buildType,useVersioning);
+				downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,useVersioning);
 				m.worked(10);
-			}
-			if("local".equals(buildType) || "both".equals(buildType)) {
-				downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,buildType,useVersioning);
-				m.worked(10);
-			}
-			if("web".equals(buildType)) {
-				downloadExtensionJars(projectPath, extensions, extensionRepository,false,clean,buildType,useVersioning);
-				m.worked(10);
-			}
 
 
 			File[] cc = projectPath.listFiles();
@@ -215,34 +197,18 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 				}
 			}
 			
-			if("web".equals(buildType)) {
-				// -- I dunno.
-				// TODO Add support for profiles
-				//buildWebXml
+
 				if(profiles==null || profiles.isEmpty()) {
-					buildWebXml(deployment,profiles, m, projectPath,  extensions, extensionRepository, developmentRepository);
+					buildProfileJnlp(deployment,profiles,clean, m, projectPath, projectUrl, extensions, extensionRepository,developmentRepository,useVersioning);
 
 				} else {
 					for (String profile : profiles) {
 						logger.info("Building profile: "+profile);
-						buildWebXml(deployment,profiles,m, projectPath,extensions, extensionRepository, developmentRepository);
+						buildProfileJnlp(deployment,profiles,clean, m, projectPath, projectUrl, extensions, extensionRepository,developmentRepository,useVersioning);
 						
 					}
 				}
 			
-			} else {
-				if(profiles==null || profiles.isEmpty()) {
-					buildProfileJnlp(deployment,profiles,clean, m, projectPath, projectUrl, extensions, extensionRepository,developmentRepository, buildType,useVersioning);
-
-				} else {
-					for (String profile : profiles) {
-						logger.info("Building profile: "+profile);
-						buildProfileJnlp(deployment,profiles,clean, m, projectPath, projectUrl, extensions, extensionRepository,developmentRepository, buildType,useVersioning);
-						
-					}
-				}
-			
-			}
 
 			
 			m.worked(10);
@@ -270,19 +236,12 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 		
 		
 	}
-	private void buildWebXml(String deployment,List<String> profiles, IProgressMonitor m, File projectPath,String extensions,String repository,  String developmentRepository) throws IOException {
-		m.worked(10);
-		WebDescriptorBuilder wdb = new WebDescriptorBuilder();
-		Map<String,String> tipiArgs = ProjectBuilder.assembleTipi(projectPath);
-		wdb.build(repository, developmentRepository,extensions,tipiArgs, deployment,projectPath, null, profiles,false);
 
-	}
-	
 //	public String build(String repository, String developmentRepository, String extensions, Map<String,String> tipiProperties, String deployment, File baseDir, String codebase, List<String> profiles, boolean useVersioning)
 
 
 	private void buildProfileJnlp( String deployment,List<String> profiles,  boolean clean, IProgressMonitor m, File projectPath, String projectUrl, String extensions,
-			String repository,String developmentRepository, String buildType, boolean useVersioning) throws IOException {
+			String repository,String developmentRepository, boolean useVersioning) throws IOException {
 		
 		Map<String,String> tipiArgs = ProjectBuilder.assembleTipi(projectPath);
 		
@@ -294,18 +253,11 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 //			deleteRemoteTipiBuild(projectPath,profile);
 //		}
 		m.worked(5);
-		if("remote".equals(buildType) || "both".equals(buildType)) {
-			RemoteJnlpBuilder r = new RemoteJnlpBuilder();
-			downloadExtensionJars(projectPath, extensions, repository,true,clean,buildType,useVersioning);
-			m.worked(10);
-			r.build(repository,developmentRepository, extensions  ,tipiArgs,deployment, projectPath, projectUrl,profiles,useVersioning);
-		}
-		if("local".equals(buildType) || "both".equals(buildType)) {
-			downloadExtensionJars(projectPath, extensions, repository,false,clean,buildType,useVersioning);
-			LocalJnlpBuilder l = new LocalJnlpBuilder();
-			m.worked(10);
-			l.build(repository,developmentRepository, extensions,tipiArgs,deployment,projectPath, projectUrl,profiles,useVersioning);
-		}
+
+		downloadExtensionJars(projectPath, extensions, repository,false,clean,useVersioning);
+		LocalJnlpBuilder l = new LocalJnlpBuilder();
+		m.worked(10);
+		l.build(repository,developmentRepository, extensions,tipiArgs,deployment,projectPath, projectUrl,profiles,useVersioning);
 	}
 
 	private void switchTiProject(final IProject project) {
@@ -338,7 +290,7 @@ private void buildClassPath(IProject project, String repository, String extensio
 	}
 }
 
-	private void downloadExtensionJars(File projectPath, String extensions,String repository, boolean onlyProxy, boolean clean, String buildType, boolean useVersioning)  {
+	private void downloadExtensionJars(File projectPath, String extensions,String repository, boolean onlyProxy, boolean clean, boolean useVersioning)  {
 		StringTokenizer st = new StringTokenizer(extensions, ",");
 //		Map<String,List<String>> repDefinition= ClientActions.getExtensions(repository);
 		while (st.hasMoreTokens()) {
@@ -351,16 +303,12 @@ private void buildClassPath(IProject project, String repository, String extensio
 				String version = versionMap.get("version");
 				XMLElement extensionXml = ClientActions.getExtensionXml(ext, version, repository);
 				TipiProjectBuilder tpb = null;
-				if("web".equals(buildType)) {
-					tpb = new TipiWebProjectBuilder();
-				} else {
 					if (onlyProxy) {
 						tpb = new TipiRemoteJnlpProjectBuilder();
 					} else {
 						tpb = new TipiLocalJnlpProjectBuilder();
 					}
 					
-				}
 				tpb.setUseVersioning(useVersioning);
 				tpb.downloadExtensionJars(ext, version, new URL(repository+vr.resultVersionPath(token)+"/"), extensionXml, projectPath, clean,false);
 			} catch (IOException e) {

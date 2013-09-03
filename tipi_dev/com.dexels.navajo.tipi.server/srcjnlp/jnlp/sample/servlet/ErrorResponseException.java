@@ -36,21 +36,26 @@
 
 package jnlp.sample.servlet;
 
-/** An exception that holds a DownloadResponse object.
- *  This exception can be thrown with the content describing
- *  the message that should be returned in the HTTP respond
+/**
+ * An exception that holds a DownloadResponse object. This exception can be
+ * thrown with the content describing the message that should be returned in the
+ * HTTP respond
  */
 public class ErrorResponseException extends Exception {
-    
+
 	private static final long serialVersionUID = -2901864463591877732L;
 	private DownloadResponse _downloadResponse;
-    
-    public ErrorResponseException(DownloadResponse downloadResponse) {
-	_downloadResponse = downloadResponse;
-    }
-    
-    public DownloadResponse getDownloadResponse() { return _downloadResponse; }        
-    
-    public String toString() { return _downloadResponse.toString(); }
-}
 
+	public ErrorResponseException(DownloadResponse downloadResponse) {
+		_downloadResponse = downloadResponse;
+	}
+
+	public DownloadResponse getDownloadResponse() {
+		return _downloadResponse;
+	}
+
+	@Override
+	public String toString() {
+		return _downloadResponse.toString();
+	}
+}

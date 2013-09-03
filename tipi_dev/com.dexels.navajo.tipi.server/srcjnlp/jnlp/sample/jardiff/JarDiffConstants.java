@@ -36,15 +36,14 @@
 
 package jnlp.sample.jardiff;
 
-
 /**
  * Constants used by creating patch and applying patch for JarDiff.
- *
+ * 
  * @version 1.8, 06/26/03
  */
 public interface JarDiffConstants {
-    public final String VERSION_HEADER = "version 1.0";
-    public final String INDEX_NAME = "META-INF/INDEX.JD";
-    public final String REMOVE_COMMAND = "remove";
-    public final String MOVE_COMMAND = "move";
+	public final String VERSION_HEADER = "version 1.0";
+	public final String INDEX_NAME = "META-INF/INDEX.JD";
+	public final String REMOVE_COMMAND = "remove";
+	public final String MOVE_COMMAND = "move";
 }

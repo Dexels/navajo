@@ -47,7 +47,8 @@ public class Unpack200Task extends Unpack {
     }
 
     // Needed by the super class
-    protected String getDefaultExtension() {
+    @Override
+	protected String getDefaultExtension() {
 	return ".jar";
     }
 
@@ -70,7 +71,8 @@ public class Unpack200Task extends Unpack {
 	}
     }
 	
-    protected void extract() {
+    @Override
+	protected void extract() {
 	logger.info("Unpacking with Unpack200");
 	logger.info("Source File :" + source);
 	logger.info("Dest.  File :" + dest);

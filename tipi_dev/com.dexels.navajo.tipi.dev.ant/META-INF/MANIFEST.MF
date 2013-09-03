@@ -4,9 +4,17 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.1.1.qualifier
 Bundle-Vendor: Dexels
-Import-Package: org.osgi.framework;version="1.5.0",
+Import-Package: com.dexels.navajo.tipi.dev.core.extensionmanager;version="1.0.0",
+ com.dexels.navajo.tipi.dev.core.projectbuilder;version="1.0.0",
+ com.dexels.navajo.tipi.dev.core.util;version="1.0.0",
+ com.dexels.navajo.tipi.dev.core.util.zip;version="1.0.0",
+ org.apache.commons.io;version="2.0.1",
+ org.apache.tools.ant,
+ org.apache.tools.ant.taskdefs,
+ org.apache.tools.ant.types,
+ org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)"
-Require-Bundle: org.apache.ant;bundle-version="1.7.1",
- com.dexels.navajo.tipi.dev.core;bundle-version="1.0.2"
-Export-Package: com.dexels.navajo.tipi.ant,
- com.dexels.navajo.tipi.ant.projectbuilder
+Export-Package: com.dexels.navajo.tipi.dev.ant;version="1.0.0",
+ com.dexels.navajo.tipi.dev.ant.extensionbuilder;version="1.0.0",
+ com.dexels.navajo.tipi.dev.ant.projectbuilder;version="1.0.0",
+ de.matthiasmann.p200ant

@@ -35,8 +35,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
-import com.dexels.navajo.tipi.util.XMLElement;
+import com.dexels.navajo.tipi.dev.core.util.CaseSensitiveXMLElement;
+import com.dexels.navajo.tipi.dev.core.util.XMLElement;
 import com.dexels.tipi.plugin.TipiNature;
 
 public class TipiHelpView extends ViewPart {

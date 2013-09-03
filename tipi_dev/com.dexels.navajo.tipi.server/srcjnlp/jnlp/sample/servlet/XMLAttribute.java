@@ -72,6 +72,7 @@ public class XMLAttribute {
 		_next = next;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o == null || !(o instanceof XMLAttribute))
 			return false;
@@ -86,6 +87,7 @@ public class XMLAttribute {
 		return o1.equals(o2);
 	}
 
+	@Override
 	public String toString() {
 		if (_next != null) {
 			return _name + "=\"" + _value + "\" " + _next.toString();

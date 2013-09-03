@@ -1,6 +1,7 @@
 package com.dexels.tipi.plugin;
 
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,7 +19,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.ant.AntRun;
+import com.dexels.navajo.tipi.dev.ant.AntRun;
+import com.dexels.navajo.tipi.dev.ant.LoggingOutputStream;
 
 public class DeployAppStoreAction implements IObjectActionDelegate {
 
@@ -48,8 +50,9 @@ public class DeployAppStoreAction implements IObjectActionDelegate {
 				preferenceSettings.put("tipiServerApplication", project.getName());
 				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Deploying", "Server: "+preferenceSettings.get("tipiServerUrl")+" app: "+preferenceSettings.get("tipiServerApplication"));
 				InputStream antStream = getClass().getClassLoader().getResourceAsStream("com/dexels/tipi/plugin/tipiProjectBuild.xml");
-				String result = AntRun.callAnt(antStream, rProject.getLocation().toFile(), preferenceSettings);
-				logger.info("Result: "+result);
+				Logger antlogger = LoggerFactory.getLogger("tipi.plugin.ant");
+				PrintStream los = new PrintStream( new LoggingOutputStream(antlogger));
+				AntRun.callAnt(antStream, rProject.getLocation().toFile(), preferenceSettings,null,null,los);
 			}
 		}
 		}catch (Throwable e) {

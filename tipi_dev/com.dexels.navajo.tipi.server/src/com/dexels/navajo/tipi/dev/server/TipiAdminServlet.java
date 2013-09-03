@@ -12,12 +12,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -32,10 +32,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.projectbuilder.ClientActions;
-import com.dexels.navajo.tipi.projectbuilder.ProjectBuilder;
-import com.dexels.navajo.tipi.projectbuilder.XsdBuilder;
-import com.oreilly.servlet.MultipartRequest;
+import com.dexels.navajo.tipi.dev.ant.AntRun;
+import com.dexels.navajo.tipi.dev.ant.LoggingOutputStream;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.ClientActions;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.ProjectBuilder;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.XsdBuilder;
+import com.dexels.navajo.tipi.dev.core.util.zip.ZipUtils;
 
 public class TipiAdminServlet extends HttpServlet {
 
@@ -48,9 +50,11 @@ public class TipiAdminServlet extends HttpServlet {
 			.getLogger(TipiAdminServlet.class);
 
 	//	private File applicationFolder = null;
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
 	}
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String appStoreUrl = getServletContext().getInitParameter("appUrl");
 		if(appStoreUrl==null) {
@@ -127,36 +131,6 @@ public class TipiAdminServlet extends HttpServlet {
 		return ff;
 	}
 
-	
-//	private XMLElement doCreateJnlp(HttpServletRequest request, boolean build, boolean clean) throws IOException {
-//		String servletPath = request.getServletPath();
-//		String appStoreUrl = getServletContext().getInitParameter("appUrl");
-//		String appFolder = getServletContext().getInitParameter("appFolder");
-//		String applicationPath = servletPath.substring(1,servletPath.lastIndexOf('/'));
-//		String myAppPath = appFolder+applicationPath;
-//		String myAppUrl = appStoreUrl+applicationPath;
-//		File applicationDir = new File(myAppPath);
-//		String profile = servletPath.substring(servletPath.lastIndexOf('/')+1,servletPath.lastIndexOf('.'));
-//		File prop = new File(myAppPath+"/settings/tipi.properties");
-//		FileInputStream fis = new FileInputStream(prop);
-//		PropertyResourceBundle prb = new PropertyResourceBundle(fis);
-//		fis.close();
-//		BaseJnlpBuilder l = new LocalJnlpBuilder();
-//		String repository = prb.getString("repository");
-//		File profileSettings = new File(myAppPath+"/settings/profiles/"+profile+".properties");
-//		if(profileSettings.exists()) {
-//			logger.info("Profile actually found!");
-//		} else {
-//			profile = null;
-//		}
-//		boolean useVersioning = false;
-//		try {
-//			useVersioning = prb.getString("useJnlpVersioning").equals("true");
-//		} catch (MissingResourceException e) {
-//		}
-//		XMLElement jnlp = l.buildElement(repository, prb.getString("extensions"),applicationDir, "$$codebase",myAppUrl, profile+".jnlp",profile,useVersioning);
-//		return jnlp;
-//	}
 	/**
 	 * Throws interupted to prevent redirections
 	 * @param commando
@@ -308,7 +282,7 @@ public class TipiAdminServlet extends HttpServlet {
 				userProperties.put("application", application);
 				File actualAppFolder = new File(appDir, application);
 				userProperties.put("zipDir", actualAppFolder.getAbsolutePath());
-				AntRun.callAnt(new File(path), actualAppFolder, userProperties,null);
+				AntRun.callAnt(new File(path), actualAppFolder, userProperties,null,null,null);
 //				logger.info("Result: "+result);
 				File output = new File(actualAppFolder,application+".zip");
 				FileInputStream fis = new FileInputStream(output);
@@ -406,34 +380,6 @@ public class TipiAdminServlet extends HttpServlet {
 		
 		logger.info("Post process ant: "+postProcessAnt);
 		
-		if(postProcessAnt!=null) {
-
-			String path = context.getRealPath(postProcessAnt);
-			
-			String result;
-			try {
-				
-				Map<String,String> tipiProps = ProjectBuilder.assembleTipi(appDir); 
-				Map<String,String> props = new HashMap<String, String>(); 
-				if(skipBuild) {
-					props.put("skipdeploy", "true");
-				}
-				props.put("managerUrl", tipiProps.get("managerUrl"));
-				props.put("managerUsername", tipiProps.get("managerUsername"));
-				props.put("managerPassword", tipiProps.get("managerPassword"));
-				props.put("tipiAppstore", "true");
-				props.put("applicationContext", processProfileData(tipiProps.get("applicationContext"),profile));
-				// 
-				
-				extraMessage.append("Deployed to: "+tipiProps.get("managerUrl")+" with context: "+tipiProps.get("applicationContext"));
-				props.put("application", application);
-				result = AntRun.callAnt(new File(path), appDir, props,null);
-				logger.info("Result: "+result);
-			} catch (IOException e) {
-				logger.error("Error: ",e);
-			}
-			
-		}
 		
 		PropertyResourceBundle pe;
 		Map<String,String> userProperties = new HashMap<String,String>();
@@ -449,9 +395,9 @@ public class TipiAdminServlet extends HttpServlet {
 				String path = context.getRealPath("WEB-INF/ant/localsign.xml");
 				try {
 					logger.info("Calling ant with: "+userProperties+" in folder: "+appDir);
-					String result = AntRun.callAnt(new File(path), appDir, userProperties,null);
-					logger.info("Result: "+result);
-					writeBuildResult(appDir,pe.getString("extensions"));
+					Logger antlogger = LoggerFactory.getLogger("tipi.appstore.ant");
+					PrintStream los = new PrintStream( new LoggingOutputStream(antlogger));
+					AntRun.callAnt(new File(path), appDir, userProperties,null,null,los);
 
 					return "OK - Local signing succeeded. I think.";
 				} catch (IOException e) {
@@ -470,12 +416,6 @@ public class TipiAdminServlet extends HttpServlet {
 	}
 
 	
-	private static String processProfileData(String rawValue, String profile) {
-		if(rawValue==null) {
-			return null;
-		}
-		return rawValue.replaceAll("\\[\\[profile\\]\\]", profile);
-	}
 	public boolean deleteDirectory(File path) {
 		if (path.exists()) {
 			File[] files = path.listFiles();

@@ -164,7 +164,8 @@ public class Pack200Task extends Pack {
 	propMap.put(COM_PREFIX + "verbose",value);
     }
 
-    protected void pack() {
+    @Override
+	protected void pack() {
 	String statusStr = doRepack 
 	    ? "Repack with Pack200" 
 	    : "Packing with Pack200";

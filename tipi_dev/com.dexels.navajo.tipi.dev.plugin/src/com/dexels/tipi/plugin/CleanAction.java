@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.projectbuilder.ClientActions;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.ClientActions;
 
 public class CleanAction implements IObjectActionDelegate {
 

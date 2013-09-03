@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" activationxmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="tipi.dev.downloadservlet">
+   <implementation class="jnlp.sample.servlet.JnlpDownloadServlet"/>
+   <reference bind="setApplicationManager" cardinality="1..1" interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager" name="ApplicationManager" policy="dynamic" unbind="clearApplicationManager"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="alias" type="String" value="/application"/>
+   <property name="servlet-name" type="String" value="tipi.dev.download"/>
+</scr:component>
