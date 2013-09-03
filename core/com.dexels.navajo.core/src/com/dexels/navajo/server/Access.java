@@ -89,14 +89,22 @@ public final class Access implements java.io.Serializable, Mappable {
 	public String hostName;
 	public boolean betaUser = false;
 	public transient CompiledScript myScript = null;
+	public int queueSize;
+	public String queueId;
+	
+	/**
+	 * Response time breakdown
+	 */
 	private int totaltime;
 	public int parseTime;
 	public int queueTime;
-	public int queueSize;
-	public String queueId;
 	public int authorisationTime;
 	public int clientTime;
 	public int processingTime;
+	public int beforeServiceTime;
+	public int afterServiceTime;
+	
+	
 	public String requestEncoding;
 	public boolean compressedReceive = false;
 	public boolean compressedSend = false;
@@ -426,6 +434,8 @@ public final class Access implements java.io.Serializable, Mappable {
 		a.queueSize = this.queueSize;
 		a.queueId = this.queueId;
 		a.processingTime = this.processingTime;
+		a.beforeServiceTime = this.beforeServiceTime;
+		a.afterServiceTime = this.afterServiceTime;
 		a.requestEncoding = this.requestEncoding;
 		a.compressedReceive = this.compressedReceive;
 		a.compressedSend = this.compressedSend;
@@ -501,6 +511,22 @@ public final class Access implements java.io.Serializable, Mappable {
 		return queueTime;
 	}
 
+	public int getBeforeServiceTime() {
+		return beforeServiceTime;
+	}
+
+	public void setBeforeServiceTime(int beforeServiceTime) {
+		this.beforeServiceTime = beforeServiceTime;
+	}
+
+	public int getAfterServiceTime() {
+		return afterServiceTime;
+	}
+
+	public void setAfterServiceTime(int afterServiceTime) {
+		this.afterServiceTime = afterServiceTime;
+	}
+	
 	public Navajo getInDoc() {
 		return inDoc;
 	}
@@ -548,6 +574,8 @@ public final class Access implements java.io.Serializable, Mappable {
 			h.setHeaderAttribute("queueId",""+queueId);
 			h.setHeaderAttribute("queueSize",""+queueSize);
 			h.setHeaderAttribute("processingTime",""+processingTime);
+			h.setHeaderAttribute("beforeServiceTime",""+beforeServiceTime);
+			h.setHeaderAttribute("afterServiceTime",""+afterServiceTime);
 			h.setHeaderAttribute("threadCount", this.threadCount+"");
 			h.setHeaderAttribute("cpuload", cpuload+"");
 		}

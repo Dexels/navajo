@@ -998,7 +998,9 @@ protected ServiceHandler createHandler(String handler, Access access) {
 
             // Create beforeWebservice event.
         	access.setInDoc(inMessage);
+        	long b_start = System.currentTimeMillis();
 			Navajo useProxy = WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
+			access.setBeforeServiceTime((int) (System.currentTimeMillis() - b_start));
 			
 			if (useAuthorisation) {
     			if ( useProxy == null ) {
@@ -1103,9 +1105,10 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 			}
 
 			// Call after web service event...
-
+			long a_start = System.currentTimeMillis();
 			afterWebServiceActivated = WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
-
+			access.setAfterServiceTime((int) (System.currentTimeMillis() - a_start));
+			
 			// Set access to finished state.
 			access.setFinished();
 
