@@ -564,6 +564,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				.getStringAttribute("locale", "'en'"));
 		setSystemProperty("tipi.client.locale", cfg);
 
+
+		
 		String sublocale = (String) attemptGenericEvaluate(config
 				.getStringAttribute("sublocale", "''"));
 		setSystemProperty("tipi.client.sublocale", cfg);
@@ -586,6 +588,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			getClient().setServerUrl(navajoServer);
 			getClient().setUsername(navajoUsername);
 			getClient().setPassword(navajoPassword);
+			Integer retryCount = (Integer) attemptGenericEvaluate(config
+					.getStringAttribute("retryCount", "-1"));
+			if(retryCount!=null) {
+				getClient().setRetryAttempts(retryCount);
+			}
 
 		} else {
 			throw new UnsupportedOperationException(

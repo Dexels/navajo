@@ -3,6 +3,7 @@ package com.dexels.navajo.sharedstore;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -47,7 +48,7 @@ public class SharedMemoryStoreTest {
 
 	@Before
 	public void setUp() throws Exception {
-		si = new SharedMemoryStore();
+		si = new SharedMemoryStore(new ConcurrentHashMap<String, SharedStoreEntry>(), new DefaultSharedStoreEntryFactoryImplementation());
 	}
 
 
@@ -295,6 +296,26 @@ public class SharedMemoryStoreTest {
 		
 		Assert.assertEquals(0, si.getObjects("myparent").length);
 
+	}
+	
+	@Test
+	public void testPerformance() throws Exception {
+		int count = 10000;
+		long start = System.currentTimeMillis();
+		for ( int i = 0; i < count; i++ ) {
+			si.store("PARENT", "Key"+i, Integer.valueOf(i), false, false);
+		}
+		long end = System.currentTimeMillis();
+		//Assert.assertEquals(count, si.getSize());
+		System.err.println("STORED " + count + " values in " +  + (double) count / ( (end - start) ) + " millis");
+		
+		start = System.currentTimeMillis();
+		for ( int i = 0; i < count; i++ ) {
+			Serializable s = si.get("PARENT", "Key"+i);
+		}
+		end = System.currentTimeMillis();
+		System.err.println("GOT " + count + " values in " +  + (double) count / ( (end - start) ) + " millis");
+		//Assert.assertEquals(true, ( end - start ) < 200 );
 	}
 	
 	public static void main(String [] args) throws Exception {

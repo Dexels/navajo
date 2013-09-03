@@ -37,4 +37,12 @@ public interface TribalTopic {
 	 * @return
 	 */
 	public String getName();
+	
+	/**
+	 * Return number of listeners interested in this Topic
+	 * 
+	 * @return
+	 */
+	public long getInterestCount();
+	
 }

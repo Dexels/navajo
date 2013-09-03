@@ -246,7 +246,11 @@ public class SharedFileStore extends AbstractSharedStore {
 			tribeManagerInterface = TribeManagerFactory.getInstance();
 			activate();
 		} 
-		
+	}
+	
+	public SharedFileStore(File store, NavajoConfigInterface c) {
+		sharedStore = store;
+		navajoConfig = c;
 	}
 	
 	/**
