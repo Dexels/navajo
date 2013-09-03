@@ -1687,11 +1687,7 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 		}
 	}
 
-	/**
-	 * TODO: Can we deprecate this method or the other merge method such that we have only one merge method?
-	 */
-	public void merge(Message incoming) {
-
+	public void merge(Message incoming, boolean preferThis) {
 		if ( incoming.getScope() != null && ( this.getScope() == null || this.getScope().equals("") ) ) {
 			this.setScope(incoming.getScope());
 		}
@@ -1710,20 +1706,39 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 			if (existing == null) {
 				try {
 					Message newMsg = subMessages.get(i).copy();
-					this.addMessage(newMsg);
+					Message o_m = null;
+					if ( preferThis ) {
+						o_m = getMessage(newMsg.getName());
+					}
+					if ( !preferThis || o_m == null ) {
+						this.addMessage(newMsg);
+					}
 				} catch (NavajoException e) {
 				}
 			} else {
-				existing.merge(subMessages.get(i));
+				existing.merge(subMessages.get(i), preferThis);
 			}
 		}
 
 		ArrayList<Property> properties = incoming.getAllProperties();
 		for (int i = 0; i < properties.size(); i++) {
 			Property p = (Property) properties.get(i).clone();
-			addProperty(p);
+			Property o_p = null;
+			if ( preferThis ) {
+			   o_p = getProperty(p.getName());
+			} 
+			if ( !preferThis || o_p == null ) {
+				addProperty(p);
+			}
 		}
 
+	}
+	
+	/**
+	 * TODO: Can we deprecate this method or the other merge method such that we have only one merge method?
+	 */
+	public void merge(Message incoming) {
+		merge(incoming, false);
 	}
 	
 	public void maskMessage(Message mask) {
