@@ -688,7 +688,9 @@ private String resource;
 		  for ( Message m : access.getInDoc().getAllMessages() ) {
 			  if ( m.getScope() != null && m.getScope().equals(Message.MSG_SCOPE_GLOBAL) ) {
 				  if ( outDoc.getMessage(m.getName()) != null ) {
-					  outDoc.getMessage(m.getName()).merge(m.copy(outDoc));
+					  // Set preferthis flag to true to make sure that changes made in script are preferred over properties/messages
+					  // already in global message.
+					  outDoc.getMessage(m.getName()).merge(m.copy(outDoc), true);
 				  } else {
 					  outDoc.addMessage(m.copy(outDoc));
 				  }
@@ -702,7 +704,9 @@ private String resource;
 		  for ( Message m : access.getOutputDoc().getAllMessages() ) {
 			  if ( m.getScope() != null && m.getScope().equals(Message.MSG_SCOPE_GLOBAL) ) {
 				  if ( outDoc.getMessage(m.getName()) != null ) {
-					  outDoc.getMessage(m.getName()).merge(m.copy(outDoc));
+					  // Set preferthis flag to true to make sure that changes made in script are preferred over properties/messages
+					  // already in global message.
+					  outDoc.getMessage(m.getName()).merge(m.copy(outDoc), true);
 				  } else {
 					  outDoc.addMessage(m.copy(outDoc));
 				  }
