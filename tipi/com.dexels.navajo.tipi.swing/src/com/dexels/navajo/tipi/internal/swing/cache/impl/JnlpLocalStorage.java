@@ -258,4 +258,10 @@ public class JnlpLocalStorage implements LocalStorage {
 		bout.close();
 	}
 
+	@Override
+	public boolean hasLocalWithDigest(String location, byte[] digest) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
