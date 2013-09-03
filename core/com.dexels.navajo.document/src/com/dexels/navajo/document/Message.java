@@ -485,6 +485,8 @@ public interface Message
    */
   public void merge(Message incoming);
   
+  public void merge(Message incoming, boolean preferThis);
+  
   /**
    * Add empty message at index
    * @return Inserted message

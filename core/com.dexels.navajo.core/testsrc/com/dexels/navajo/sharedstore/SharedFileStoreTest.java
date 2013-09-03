@@ -39,7 +39,7 @@ public class SharedFileStoreTest {
 	
 	@Test
 	public void testPerformance() throws Exception {
-		int count = 20000;
+		int count = 1000;
 		long start = System.currentTimeMillis();
 		for ( int i = 0; i < count; i++ ) {
 			si.store("PARENT", "Key"+i, Integer.valueOf(i), false, false);

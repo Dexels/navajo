@@ -40,8 +40,8 @@ public class SerializationUtilTest {
 		Assert.assertNotNull(n2);
 		Assert.assertNotNull(n2.getMessage("TestMessage"));
 		
-		// Should be cleaned up after deserialization.
-		Assert.assertEquals(false, SerializationUtil.existsNavajo("TestNavajo"));
+		// Should be cleaned up after deserialization (not true anymore).
+		// Assert.assertEquals(false, SerializationUtil.existsNavajo("TestNavajo"));
 		
 	}
 	
