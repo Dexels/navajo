@@ -241,14 +241,30 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 	    			inMemory = toByteArray();
     			}
     		};
-    		OutputStream dos = new DigestOutputStream(baos, messageDigest);
+    		OutputStream dos = new DigestOutputStream(baos, messageDigest) {
+
+				@Override
+				public void close() throws IOException {
+					setDigest(messageDigest.digest());
+					super.close();
+				}
+    			
+    		};
     		
     		return dos;
     	} else {
             dataFile = File.createTempFile("binary_object", "navajo", NavajoFactory.getInstance().getTempDir());
             
             FileOutputStream fos = new FileOutputStream(dataFile);
-            OutputStream dos = new DigestOutputStream(fos, messageDigest);
+            OutputStream dos = new DigestOutputStream(fos, messageDigest) {
+
+				@Override
+				public void close() throws IOException {
+					super.close();
+					setDigest(messageDigest.digest());
+				}
+            	
+            };
             return dos;
     	}
     }
@@ -301,6 +317,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
             } catch (IOException e) {
             	logger.error("Error: ", e);
             }
+            
             this.mimetype = guessContentType();
          }
     }
@@ -664,6 +681,14 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	dataAsStream.close();
     	fos.close();
     	return new Binary(f,true);
+    }
+    
+    @Override
+	public String toString() {
+    	if(digest!=null) {
+    		return bytesToHex(digest);
+    	}
+    	return super.toString();
     }
     
     protected void finalize() {
