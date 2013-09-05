@@ -10,12 +10,10 @@ import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 
 public class ApplicationStatusImpl implements ApplicationStatus {
 
-	private ApplicationManager manager;
 	private List<String> profiles;
 
 	private String applicationName;
@@ -33,15 +31,6 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 	@Override
 	public List<String> getProfiles() {
 		return profiles;
-	}
-
-	
-	/* (non-Javadoc)
-	 * @see com.dexels.navajo.tipi.dev.server.appmanager.impl.ApplicationStatus#setManager(com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager)
-	 */
-	@Override
-	public void setManager(ApplicationManager manager) {
-		this.manager = manager;
 	}
 
 	/* (non-Javadoc)

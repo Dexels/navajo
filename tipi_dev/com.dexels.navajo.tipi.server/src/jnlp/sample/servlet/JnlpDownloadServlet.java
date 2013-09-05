@@ -91,10 +91,10 @@ public class JnlpDownloadServlet extends HttpServlet {
 			.getLogger(JnlpDownloadServlet.class);
 	
 	private JnlpFileHandler _jnlpFileHandler = null;
-	private JarDiffHandler _jarDiffHandler = null;
+//	private JarDiffHandler _jarDiffHandler = null;
 	private ResourceCatalog _resourceCatalog = null;
 	private ApplicationManager applicationManager;
-	private String appFolder;
+	//private String appFolder;
 
 	private String basePath;
 
@@ -123,11 +123,10 @@ public class JnlpDownloadServlet extends HttpServlet {
 					config.getInitParameter(PARAM_JAR_EXTENSION));
 
 			_jnlpFileHandler = new JnlpFileHandler(config.getServletContext(), logger);
-			_jarDiffHandler = new JarDiffHandler(config.getServletContext(), logger);
+//			_jarDiffHandler = new JarDiffHandler(config.getServletContext(), logger);
 			_resourceCatalog = new ResourceCatalog(config.getServletContext(), logger);
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
@@ -187,18 +186,18 @@ public class JnlpDownloadServlet extends HttpServlet {
 		// logger.info("Request: "+request.getRequestURI()+" query: "+request.getQueryString());
 
 		// TipiAdminServlet.buildIfNecessary(request,getAppFolder(),getServletContext());
-		Map en = request.getParameterMap();
-		for (Object key : en.keySet()) {
-			Object value = en.get(key);
-			if (value instanceof Object[]) {
-				Object[] vals = (Object[]) value;
+//		Map en = request.getParameterMap();
+//		for (Object key : en.keySet()) {
+//			Object value = en.get(key);
+//			if (value instanceof Object[]) {
+//				Object[] vals = (Object[]) value;
 				// for (Object object : vals) {
 				// logger.info("Value element: "+object);
 				// }
-			} else {
-				logger.debug("Param: " + key + " value: " + en.get(key));
-			}
-		}
+//			} else {
+//				logger.debug("Param: " + key + " value: " + en.get(key));
+//			}
+//		}
 		if (request.getQueryString() != null)
 			requestStr += "?" + request.getQueryString().trim();
 
@@ -324,7 +323,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 	 */
 	private DownloadResponse constructResponse(JnlpResource jnlpres,
 			DownloadRequest dreq) throws IOException {
-		String path = jnlpres.getPath();
+//		String path = jnlpres.getPath();
 		if (jnlpres.isJnlpFile()) {
 			// It is a JNLP file. It need to be macro-expanded, so it is handled
 			// differently

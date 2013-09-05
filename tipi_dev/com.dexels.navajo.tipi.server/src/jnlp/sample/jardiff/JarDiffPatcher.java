@@ -83,6 +83,7 @@ public class JarDiffPatcher implements JarDiffConstants, Patcher {
 		return JarDiff.getResources();
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void applyPatch(Patcher.PatchDelegate delegate, String oldJarPath,
 			String jarDiffPath, OutputStream result) throws IOException {
