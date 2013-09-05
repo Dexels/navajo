@@ -51,6 +51,8 @@ import javax.servlet.ServletContext;
 import jnlp.sample.jardiff.JarDiff;
 import jnlp.sample.util.VersionString;
 
+import org.slf4j.Logger;
+
 /*
  * A class that generates and caches information about JarDiff files
  *
@@ -180,14 +182,12 @@ public class JarDiffHandler {
 		JarDiffEntry entry = (JarDiffEntry) _jarDiffEntries.get(key);
 		// If entry is not found, then the querty has not been made.
 		if (entry == null) {
-			if (_log.isInformationalLevel()) {
-				_log.addInformational("servlet.log.info.jardiff.gen",
+				_log.info("servlet.log.info.jardiff.gen",
 						res.getName(), dreq.getCurrentVersionId(),
 						res.getReturnVersionId());
-			}
 			File f = generateJarDiff(catalog, dreq, res, doJarDiffWorkAround);
 			if (f == null) {
-				_log.addWarning("servlet.log.warning.jardiff.failed",
+				_log.warn("servlet.log.warning.jardiff.failed",
 						res.getName(), dreq.getCurrentVersionId(),
 						res.getReturnVersionId());
 			}
@@ -250,7 +250,7 @@ public class JarDiffHandler {
 	/** Download resource to the given file */
 	private boolean download(URL target, File file) {
 
-		_log.addDebug("JarDiffHandler:  Doing download");
+		_log.debug("JarDiffHandler:  Doing download");
 
 		boolean ret = true;
 		boolean delete = false;
@@ -268,12 +268,12 @@ public class JarDiffHandler {
 				totalRead += read;
 			}
 
-			_log.addDebug("total read: " + totalRead);
-			_log.addDebug("Wrote URL " + target.toString() + " to file " + file);
+			_log.debug("total read: " + totalRead);
+			_log.debug("Wrote URL " + target.toString() + " to file " + file);
 
 		} catch (IOException ioe) {
 
-			_log.addDebug("Got exception while downloading resource: " + ioe);
+			_log.debug("Got exception while downloading resource: " + ioe);
 
 			ret = false;
 
@@ -288,7 +288,7 @@ public class JarDiffHandler {
 				}
 				in = null;
 			} catch (IOException ioe) {
-				_log.addDebug("Got exception while downloading resource: "
+				_log.debug("Got exception while downloading resource: "
 						+ ioe);
 			}
 
@@ -298,7 +298,7 @@ public class JarDiffHandler {
 				}
 				out = null;
 			} catch (IOException ioe) {
-				_log.addDebug("Got exception while downloading resource: "
+				_log.debug("Got exception while downloading resource: "
 						+ ioe);
 			}
 
@@ -342,19 +342,19 @@ public class JarDiffHandler {
 		// Lookup up file for request version
 		DownloadRequest fromDreq = dreq.getFromDownloadRequest();
 		try {
-			_log.addDebug("Request::: " + fromDreq.toString());
+			_log.debug("Request::: " + fromDreq.toString());
 
 			JnlpResource fromRes = catalog.lookupResource(fromDreq);
 
 			/* Get file locations */
-			_log.addDebug("Old skool: " + fromRes.getPath());
-			_log.addDebug("New skool: " + res.getPath());
+			_log.debug("Old skool: " + fromRes.getPath());
+			_log.debug("New skool: " + res.getPath());
 			File resolvedOld = ((ResourceResolver) _servletContext
 					.getAttribute("resourceResolver"))
 					.getDir(fromRes.getPath());
 			File resolvedNew = ((ResourceResolver) _servletContext
 					.getAttribute("resourceResolver")).getDir(res.getPath());
-			_log.addDebug("New situation: " + resolvedOld.getAbsolutePath()
+			_log.debug("New situation: " + resolvedOld.getAbsolutePath()
 					+ " to new: " + resolvedNew.getAbsolutePath());
 			String newFilePath = resolvedNew.getAbsolutePath(); // _servletContext.getRealPath(res.getPath());
 			String oldFilePath = resolvedOld.getAbsolutePath(); // _servletContext.getRealPath(fromRes.getPath());
@@ -384,7 +384,7 @@ public class JarDiffHandler {
 			// javax.servlet.context.tempdir to store the jardiff
 			File outputFile = File.createTempFile("jnlp", ".jardiff", tempDir);
 
-			_log.addDebug("Generating Jardiff between " + oldFilePath + " and "
+			_log.debug("Generating Jardiff between " + oldFilePath + " and "
 					+ newFilePath + " Store in " + outputFile);
 
 			// Generate JarDiff
@@ -398,7 +398,7 @@ public class JarDiffHandler {
 
 				// Check that Jardiff is smaller, or return null
 				if (outputFile.length() >= (new File(newFilePath).length())) {
-					_log.addDebug("JarDiff discarded - since it is bigger");
+					_log.debug("JarDiff discarded - since it is bigger");
 					return null;
 				}
 
@@ -406,17 +406,17 @@ public class JarDiffHandler {
 				// the new file, if the file exists at all
 				File newFilePacked = new File(newFilePath + ".pack.gz");
 				if (newFilePacked.exists()) {
-					_log.addDebug("generated jardiff size: "
+					_log.debug("generated jardiff size: "
 							+ outputFile.length());
-					_log.addDebug("packed requesting file size: "
+					_log.debug("packed requesting file size: "
 							+ newFilePacked.length());
 					if (outputFile.length() >= newFilePacked.length()) {
-						_log.addDebug("JarDiff discarded - packed version of requesting file is smaller");
+						_log.debug("JarDiff discarded - packed version of requesting file is smaller");
 						return null;
 					}
 				}
 
-				_log.addDebug("JarDiff generation succeeded");
+				_log.debug("JarDiff generation succeeded");
 				return outputFile;
 
 			} finally {
@@ -431,11 +431,11 @@ public class JarDiffHandler {
 			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			_log.addDebug("(IOException) Failed to genereate jardiff", ioe);
+			_log.debug("(IOException) Failed to genereate jardiff", ioe);
 			return null;
 		} catch (ErrorResponseException ere) {
 			ere.printStackTrace();
-			_log.addDebug(
+			_log.debug(
 					"(ErrorResponseException) Failed to genereate jardiff", ere);
 			return null;
 		}

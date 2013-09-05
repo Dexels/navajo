@@ -58,6 +58,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.slf4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -111,10 +112,10 @@ public class JnlpFileHandler {
 		URL resource = jnlpres.getResource();
 		long lastModified = jnlpres.getLastModified();
 
-		_log.addDebug("lastModified: " + lastModified + " "
+		_log.debug("lastModified: " + lastModified + " "
 				+ new Date(lastModified));
 		if (lastModified == 0) {
-			_log.addWarning("servlet.log.warning.nolastmodified", path);
+			_log.warn("servlet.log.warning.nolastmodified", path);
 		}
 
 		// fix for 4474854: use the request URL as key to look up jnlp file
@@ -144,9 +145,9 @@ public class JnlpFileHandler {
 		String line = br.readLine();
 		if (line != null && line.startsWith("TS:")) {
 			timeStamp = parseTimeStamp(line.substring(3));
-			_log.addDebug("Timestamp: " + timeStamp + " " + new Date(timeStamp));
+			_log.debug("Timestamp: " + timeStamp + " " + new Date(timeStamp));
 			if (timeStamp == 0) {
-				_log.addWarning("servlet.log.warning.notimestamp", path);
+				_log.warn("servlet.log.warning.notimestamp", path);
 				timeStamp = lastModified;
 			}
 			line = br.readLine();
@@ -178,10 +179,10 @@ public class JnlpFileHandler {
 		URL resource = jnlpres.getResource();
 		long lastModified = jnlpres.getLastModified();
 
-		_log.addDebug("lastModified: " + lastModified + " "
+		_log.debug("lastModified: " + lastModified + " "
 				+ new Date(lastModified));
 		if (lastModified == 0) {
-			_log.addWarning("servlet.log.warning.nolastmodified", path);
+			_log.warn("servlet.log.warning.nolastmodified", path);
 		}
 
 		// fix for 4474854: use the request URL as key to look up jnlp file
@@ -215,9 +216,9 @@ public class JnlpFileHandler {
 		String line = br.readLine();
 		if (line != null && line.startsWith("TS:")) {
 			timeStamp = parseTimeStamp(line.substring(3));
-			_log.addDebug("Timestamp: " + timeStamp + " " + new Date(timeStamp));
+			_log.debug("Timestamp: " + timeStamp + " " + new Date(timeStamp));
 			if (timeStamp == 0) {
-				_log.addWarning("servlet.log.warning.notimestamp", path);
+				_log.warn("servlet.log.warning.notimestamp", path);
 				timeStamp = lastModified;
 			}
 			line = br.readLine();
@@ -237,7 +238,7 @@ public class JnlpFileHandler {
 		 */
 		String query = dreq.getQuery();
 		String testJRE = dreq.getTestJRE();
-		_log.addDebug("Double check query string: " + query);
+		_log.debug("Double check query string: " + query);
 		// For backward compatibility: Always check if the href value exists.
 		// Bug 4939273: We will retain the jnlp template structure and will NOT
 		// add href value. Above old
@@ -280,17 +281,17 @@ public class JnlpFileHandler {
 					StreamResult result = new StreamResult(sw);
 					transformer.transform(source, result);
 					jnlpFileContent = sw.toString();
-					_log.addDebug("Converted jnlpFileContent: "
+					_log.debug("Converted jnlpFileContent: "
 							+ jnlpFileContent);
 					// Since we modified the file on the fly, we always update
 					// the timestamp value with current time
 					if (modified) {
 						timeStamp = new java.util.Date().getTime();
-						_log.addDebug("Last modified on the fly:  " + timeStamp);
+						_log.debug("Last modified on the fly:  " + timeStamp);
 					}
 				}
 			} catch (Exception e) {
-				_log.addDebug(e.toString(), e);
+				_log.debug(e.toString(), e);
 			}
 		}
 

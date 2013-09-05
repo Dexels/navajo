@@ -4,7 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
+
+import jnlp.sample.servlet.JnlpDownloadServlet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +22,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	List<ApplicationStatus> applications;
 	private String currentApplication;
 	private String documentationRepository;
+	private String codebase;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(ApplicationManagerImpl.class);
@@ -36,6 +41,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	}
 
 	public void activate(Map<String,Object> configuration) throws IOException {
+		String codebase = (String) configuration.get("tipi.store.codebase");
+		this.codebase = codebase;
 		String path = (String) configuration.get("tipi.store.path");
 		setAppsFolder(new File(path));
 	}
@@ -96,6 +103,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	public  List<ApplicationStatus> getApplications()  {
 //		logger.info("Getting applications: "+applications);
 		return applications;
+	}
+
+	@Override
+	public String getCodebase() {
+		return codebase;
 	}
 
 }

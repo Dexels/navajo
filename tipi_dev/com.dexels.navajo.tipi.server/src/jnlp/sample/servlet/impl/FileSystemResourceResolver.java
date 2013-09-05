@@ -16,9 +16,11 @@ public class FileSystemResourceResolver implements ResourceResolver {
 	private static final String JNLP_EXTENSION = ".jnlp";
 	private static final String JAR_EXTENSION = ".jar";
 	final File baseDir;
+	private String basePath;
 
-	public FileSystemResourceResolver(File baseDir) {
+	public FileSystemResourceResolver(File baseDir, String basePath) {
 		this.baseDir = baseDir;
+		this.basePath = basePath;
 	}
 
 	@Override
@@ -34,8 +36,10 @@ public class FileSystemResourceResolver implements ResourceResolver {
 
 	@Override
 	public URL getResource(String path) throws IOException {
-		String realPath = path.substring("Apps/".length(), path.length());
+//		String realPath = path.substring("Apps/".length(), path.length());
 		// Thread.dumpStack();
+
+		String realPath = path.substring(basePath.length(), path.length());
 		File result = new File(baseDir, realPath);
 		return result.toURI().toURL();
 		// return null;
@@ -43,13 +47,13 @@ public class FileSystemResourceResolver implements ResourceResolver {
 
 	@Override
 	public File getDir(String dirPath) {
-		String realPath = dirPath.substring("Apps/".length(), dirPath.length());
+		String realPath = dirPath.substring(basePath.length(), dirPath.length());
 		return new File(baseDir, realPath);
 	}
 
 	@Override
 	public long getLastModified(String path) {
-		String realPath = path.substring("Apps/".length(), path.length());
+		String realPath = path.substring(basePath.length(), path.length());
 		File result = new File(baseDir, realPath);
 		if (!result.exists()) {
 			// logger.info("File with path: "+path+" resolved to: "+result.getAbsolutePath()+" does not seem to exist!");

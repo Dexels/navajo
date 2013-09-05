@@ -153,7 +153,7 @@ public class ApplicationStatus {
 
 		setExists(true);
 		applicationName = appDir.getName();
-		processProfiles(appDir);
+//		processProfiles(appDir);
 		build();
 	}
 
@@ -184,14 +184,17 @@ public class ApplicationStatus {
 		}
 		LocalJnlpBuilder jj = new LocalJnlpBuilder();
 //		jj.parseArguments(baseDir, profile, deployment)
-		List<String> profiles = new ArrayList<String>();
-		profiles.add("knvb");
+//		List<String> profiles = new ArrayList<String>();
+//		profiles.add("knvb");
+		
+		processProfiles();
 		Map<String,String> tipiProperties = new HashMap<String, String>();
 		for (String key : settings.keySet()) {
 			tipiProperties.put(key,settings.getString(key));
 			
 		}
-		jj.buildFromMaven(settings,dependencyList,appFolder,profiles,appFolder.toURI().toURL().toString(),"");
+		
+		jj.buildFromMaven(settings,dependencyList,appFolder,profiles,manager.getCodebase()+getApplicationName()+"/","");
 		signall();
 	}
 
@@ -218,9 +221,9 @@ public class ApplicationStatus {
 		}
 	}
 
-	private void processProfiles(File appDir) {
+	private void processProfiles() {
 		List<String> pro = new LinkedList<String>();
-		File profilesDir = new File(appDir, "settings/profiles");
+		File profilesDir = new File(appFolder, "settings/profiles");
 
 		if (profilesDir.exists()) {
 			for (File file : profilesDir.listFiles()) {
@@ -228,7 +231,7 @@ public class ApplicationStatus {
 						&& file.getName().endsWith(".properties")) {
 					String profileName = file.getName().substring(0,
 							file.getName().length() - ".properties".length());
-					boolean b = profileNeedsRebuild(file, profileName, appDir);
+					boolean b = profileNeedsRebuild(file, profileName, appFolder);
 					pro.add(profileName);
 					profileNeedsRebuild.put(profileName, b);
 				}
@@ -236,7 +239,7 @@ public class ApplicationStatus {
 		}
 		if (pro.isEmpty()) {
 			String profileName = "Default";
-			boolean b = profileNeedsRebuild(null, profileName, appDir);
+			boolean b = profileNeedsRebuild(null, profileName, appFolder);
 			pro.add(profileName);
 			profileNeedsRebuild.put(profileName, b);
 		}

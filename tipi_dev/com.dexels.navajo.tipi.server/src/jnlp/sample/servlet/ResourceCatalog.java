@@ -49,6 +49,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import jnlp.sample.util.VersionID;
 import jnlp.sample.util.VersionString;
 
+import org.slf4j.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXParseException;
 
@@ -111,7 +112,7 @@ public class ResourceCatalog {
 			throws ErrorResponseException {
 		// Split request up into path and name
 		String path = dreq.getPath();
-		_log.addDebug("Looking up: " + dreq.getPath());
+		_log.debug("Looking up: " + dreq.getPath());
 		String name = null;
 		String dir = null;
 		int idx = path.lastIndexOf('/');
@@ -130,7 +131,7 @@ public class ResourceCatalog {
 		if (pentries == null
 				|| (xmlVersionResPath.exists() && xmlVersionResPath
 						.getLastModified() > pentries.getLastModified())) {
-			_log.addInformational("servlet.log.scandir", dir);
+			_log.info("servlet.log.scandir", dir);
 			List dirList = scanDirectory(dir, dreq);
 			// Scan XML file
 			List versionList = new ArrayList();
@@ -155,7 +156,7 @@ public class ResourceCatalog {
 					result);
 			if (sts1 != DownloadResponse.STS_00_OK) {
 				// Then lookup in directory
-				_log.addDebug("Looking up directoryList...");
+				_log.debug("Looking up directoryList...");
 				int sts2 = findMatch(pentries.getDirectoryList(), name, dreq,
 						result);
 				if (sts2 != DownloadResponse.STS_00_OK) {
@@ -343,13 +344,13 @@ public class ResourceCatalog {
 		// fix for 4474021
 		File dir = ((ResourceResolver) _servletContext
 				.getAttribute("resourceResolver")).getDir(dirPath);
-		_log.addDebug("Dir resolved to: " + dir);
+		_log.debug("Dir resolved to: " + dir);
 		if (!dir.exists()) {
 			String path = jnlpGetPath(dreq);
-			_log.addDebug("Dir PATH: " + path);
+			_log.debug("Dir PATH: " + path);
 
 			String name = dreq.getPath().substring(path.lastIndexOf("/") + 1);
-			_log.addDebug("Dir NAME: " + name);
+			_log.debug("Dir NAME: " + name);
 
 			JnlpResource jnlpres = new JnlpResource(_servletContext, name,
 					dreq.getVersion(), dreq.getOS(), dreq.getArch(),
@@ -363,28 +364,26 @@ public class ResourceCatalog {
 			return list;
 		}
 		// File dir = new File(_servletContext.getRealPath(dirPath));
-		_log.addDebug("File directory: " + dir);
+		_log.debug("File directory: " + dir);
 		if (dir.exists() && dir.isDirectory()) {
 			File[] entries = dir.listFiles();
 			for (int i = 0; i < entries.length; i++) {
 				JnlpResource jnlpres = parseFileEntry(dirPath,
 						entries[i].getName());
 				if (jnlpres != null) {
-					if (_log.isDebugLevel()) {
-						_log.addDebug("Read file resource: " + jnlpres);
-					}
+						_log.debug("Read file resource: " + jnlpres);
 					list.add(jnlpres);
 				}
 			}
 		} else {
-			_log.addDebug("WTF? NOT File directory: " + dir);
+			_log.debug("WTF? NOT File directory: " + dir);
 
 		}
 		return list;
 	}
 
 	private JnlpResource parseFileEntry(String dir, String filename) {
-		_log.addDebug("Cheching dir: " + dir + " with file: " + filename);
+		_log.debug("Cheching dir: " + dir + " with file: " + filename);
 		int idx = filename.indexOf("__");
 		if (idx == -1)
 			return null;
@@ -400,7 +399,7 @@ public class ResourceCatalog {
 			extension = rest.substring(idx);
 			rest = rest.substring(0, idx);
 		}
-		_log.addDebug("name " + name + " == " + rest + " == " + extension);
+		_log.debug("name " + name + " == " + rest + " == " + extension);
 		// Parse options
 		String versionId = null;
 		ArrayList osList = new ArrayList();
@@ -485,19 +484,19 @@ public class ResourceCatalog {
 			//
 			root = XMLParsing.convert(doc.getDocumentElement());
 		} catch (SAXParseException err) {
-			_log.addWarning("servlet.log.warning.xml.parsing",
+			_log.warn("servlet.log.warning.xml.parsing",
 					versionRes.getPath(),
 					Integer.toString(err.getLineNumber()), err.getMessage());
 			return;
 		} catch (Throwable t) {
-			_log.addWarning("servlet.log.warning.xml.reading",
+			_log.warn("servlet.log.warning.xml.reading",
 					versionRes.getPath(), t);
 			return;
 		}
 
 		// Check that root element is a <jnlp> tag
 		if (!root.getName().equals("jnlp-versions")) {
-			_log.addWarning("servlet.log.warning.xml.missing-jnlp",
+			_log.warn("servlet.log.warning.xml.missing-jnlp",
 					versionRes.getPath());
 			return;
 		}
@@ -510,7 +509,7 @@ public class ResourceCatalog {
 						XMLNode pattern = XMLParsing.findElementPath(node,
 								"<pattern>");
 						if (pattern == null) {
-							_log.addWarning(
+							_log.warn(
 									"servlet.log.warning.xml.missing-pattern",
 									versionRes.getPath());
 						} else {
@@ -529,7 +528,7 @@ public class ResourceCatalog {
 							String file = XMLParsing.getElementContent(node,
 									"<file>");
 							if (versionId == null || file == null) {
-								_log.addWarning(
+								_log.warn(
 										"servlet.log.warning.xml.missing-elems",
 										versionRes.getPath());
 							} else {
@@ -538,11 +537,9 @@ public class ResourceCatalog {
 										arch, locale, dir + file, versionId);
 								if (res.exists()) {
 									versionList.add(res);
-									if (_log.isDebugLevel()) {
-										_log.addDebug("Read resource: " + res);
-									}
+										_log.debug("Read resource: " + res);
 								} else {
-									_log.addWarning(
+									_log.warn(
 											"servlet.log.warning.missing-file",
 											file, versionRes.getPath());
 								}
@@ -559,7 +556,7 @@ public class ResourceCatalog {
 						XMLNode pattern = XMLParsing.findElementPath(node,
 								"<pattern>");
 						if (pattern == null) {
-							_log.addWarning(
+							_log.warn(
 									"servlet.log.warning.xml.missing-pattern",
 									versionRes.getPath());
 						} else {
@@ -582,7 +579,7 @@ public class ResourceCatalog {
 
 							if (versionId == null || file == null
 									|| productId == null) {
-								_log.addWarning(
+								_log.warn(
 										"servlet.log.warning.xml.missing-elems2",
 										versionRes.getPath());
 							} else {
@@ -591,12 +588,10 @@ public class ResourceCatalog {
 										arch, locale, dir + file, productId);
 								if (res.exists()) {
 									platformList.add(res);
-									if (_log.isDebugLevel()) {
-										_log.addDebug("Read platform resource: "
+										_log.debug("Read platform resource: "
 												+ res);
-									}
 								} else {
-									_log.addWarning(
+									_log.warn(
 											"servlet.log.warning.missing-file",
 											file, versionRes.getPath());
 								}

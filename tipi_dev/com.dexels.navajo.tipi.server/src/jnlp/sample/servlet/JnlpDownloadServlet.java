@@ -39,6 +39,7 @@ package jnlp.sample.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -48,9 +49,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
-
 import jnlp.sample.servlet.impl.FileSystemResourceResolver;
+
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
+import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
 
 /**
  * This Servlet class is an implementation of JNLP Specification's Download
@@ -70,7 +74,6 @@ import jnlp.sample.servlet.impl.FileSystemResourceResolver;
  * 
  * @version 1.8 01/23/03
  */
-@SuppressWarnings({ "unused", "rawtypes" })
 public class JnlpDownloadServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -351516869579920417L;
@@ -83,44 +86,55 @@ public class JnlpDownloadServlet extends HttpServlet {
 	private static final String PARAM_JAR_EXTENSION = "jar-extension";
 
 	// Servlet configuration
-	private Logger _log = null;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JnlpDownloadServlet.class);
+	
 	private JnlpFileHandler _jnlpFileHandler = null;
 	private JarDiffHandler _jarDiffHandler = null;
 	private ResourceCatalog _resourceCatalog = null;
 	private ApplicationManager applicationManager;
 	private String appFolder;
 
+	private String basePath;
+
+	
+	public JnlpDownloadServlet() {
+	}
 	/** Initialize servlet */
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		// Setup logging
-		Enumeration<String> en = config.getInitParameterNames();
-		while (en.hasMoreElements()) {
-			String pp = (String) en.nextElement();
-			System.err.println("pp: "+pp+" value: "+config.getInitParameter(pp));
-		}
-		_log = new Logger(config, getResourceBundle());
-		_log.addDebug("Initializing");
-		// String appFolder = (String)
-		// config.getServletContext().getInitParameter("appFolder");
-		File baseDir = getAppFolder();
-		config.getServletContext().setAttribute("resourceResolver",new FileSystemResourceResolver(baseDir));
-		// Get extension from Servlet configuration, or use default
-		JnlpResource.setDefaultExtensions(
-				config.getInitParameter(PARAM_JNLP_EXTENSION),
-				config.getInitParameter(PARAM_JAR_EXTENSION));
+		try {
+			super.init(config);
+			// Setup logging
+			Enumeration<String> en = config.getInitParameterNames();
+			while (en.hasMoreElements()) {
+				String pp = (String) en.nextElement();
+				System.err.println("pp: "+pp+" value: "+config.getInitParameter(pp));
+			}
+			logger.debug("Initializing");
+			// String appFolder = (String)
+			// config.getServletContext().getInitParameter("appFolder");
+			File baseDir = getAppFolder();
+			config.getServletContext().setAttribute("resourceResolver",new FileSystemResourceResolver(baseDir,basePath));
+			// Get extension from Servlet configuration, or use default
+			JnlpResource.setDefaultExtensions(
+					config.getInitParameter(PARAM_JNLP_EXTENSION),
+					config.getInitParameter(PARAM_JAR_EXTENSION));
 
-		_jnlpFileHandler = new JnlpFileHandler(config.getServletContext(), _log);
-		_jarDiffHandler = new JarDiffHandler(config.getServletContext(), _log);
-		_resourceCatalog = new ResourceCatalog(config.getServletContext(), _log);
+			_jnlpFileHandler = new JnlpFileHandler(config.getServletContext(), logger);
+			_jarDiffHandler = new JarDiffHandler(config.getServletContext(), logger);
+			_resourceCatalog = new ResourceCatalog(config.getServletContext(), logger);
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static synchronized ResourceBundle getResourceBundle() {
 		if (_resourceBundle == null) {
 			_resourceBundle = ResourceBundle
-					.getBundle("jnlp/sample/servlet/resources/strings");
+					.getBundle("jnlp/sample/servlet/resources/strings", Locale.getDefault(),JnlpDownloadServlet.class.getClassLoader());
 		}
 		return _resourceBundle;
 	}
@@ -141,9 +155,12 @@ public class JnlpDownloadServlet extends HttpServlet {
 		this.applicationManager = null;
 	}
 
-	public void activate(Map<String, Object> settings) {
+	public void activate(Map<String,Object> settings) {
+		this.basePath = (String) settings.get("tipi.base.path");
 	}
-
+	public void deactivate() {
+		
+	}
 	@Override
 	public void doHead(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -157,13 +174,15 @@ public class JnlpDownloadServlet extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		logger.info("GET!");
 		handleRequest(request, response, false);
+		
 	}
 
 	private void handleRequest(HttpServletRequest request,
 			HttpServletResponse response, boolean isHead) throws IOException {
 		String requestStr = request.getRequestURI();
-		_log.addDebug("Reqeuest: " + request.getRequestURI() + " query: "
+		logger.info("Reqeuest: " + request.getRequestURI() + " query: "
 				+ request.getQueryString());
 		// logger.info("Request: "+request.getRequestURI()+" query: "+request.getQueryString());
 
@@ -177,7 +196,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 				// logger.info("Value element: "+object);
 				// }
 			} else {
-				_log.addDebug("Param: " + key + " value: " + en.get(key));
+				logger.debug("Param: " + key + " value: " + en.get(key));
 			}
 		}
 		if (request.getQueryString() != null)
@@ -185,14 +204,10 @@ public class JnlpDownloadServlet extends HttpServlet {
 
 		// Parse HTTP request
 		DownloadRequest dreq = new DownloadRequest(getServletContext(), request);
-		if (_log.isInformationalLevel()) {
-			_log.addInformational("servlet.log.info.request", requestStr);
-			_log.addInformational("servlet.log.info.useragent",
+			logger.info("servlet.log.info.request", requestStr);
+			logger.info("servlet.log.info.useragent",
 					request.getHeader("User-Agent"));
-		}
-		if (_log.isDebugLevel()) {
-			_log.addDebug(dreq.toString());
-		}
+			logger.debug(dreq.toString());
 
 		long ifModifiedSince = request.getDateHeader("If-Modified-Since");
 
@@ -203,12 +218,10 @@ public class JnlpDownloadServlet extends HttpServlet {
 
 			// Decide what resource to return
 			JnlpResource jnlpres = locateResource(dreq);
-			_log.addDebug("JnlpResource: " + jnlpres);
+			logger.debug("JnlpResource: " + jnlpres);
 
-			if (_log.isInformationalLevel()) {
-				_log.addInformational("servlet.log.info.goodrequest",
+				logger.info("servlet.log.info.goodrequest",
 						jnlpres.getPath());
-			}
 
 			DownloadResponse dres = null;
 
@@ -231,7 +244,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 				// before comparison
 
 				// return 304 not modified if possible
-				_log.addDebug("return 304 Not modified");
+				logger.debug("return 304 Not modified");
 				dres = DownloadResponse.getNotModifiedResponse();
 
 			} else {
@@ -244,16 +257,12 @@ public class JnlpDownloadServlet extends HttpServlet {
 			dres.sendRespond(response);
 
 		} catch (ErrorResponseException ere) {
-			if (_log.isInformationalLevel()) {
-				_log.addInformational("servlet.log.info.badrequest", requestStr);
-			}
-			if (_log.isDebugLevel()) {
-				_log.addDebug("Response: " + ere.toString());
-			}
+				logger.info("servlet.log.info.badrequest:"+ requestStr,ere);
+				logger.debug("Response: " + ere.toString());
 			// Return response from exception
 			ere.getDownloadResponse().sendRespond(response);
 		} catch (Throwable e) {
-			_log.addFatal("servlet.log.fatal.internalerror", e);
+			logger.error("servlet.log.fatal.internalerror", e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -287,7 +296,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 
 	private JnlpResource handleBasicDownload(DownloadRequest dreq)
 			throws ErrorResponseException, IOException {
-		_log.addDebug("Basic Protocol lookup");
+		logger.debug("Basic Protocol lookup");
 		// Do not return directory names for basic protocol
 		if (dreq.getPath() == null || dreq.getPath().endsWith("/")) {
 			throw new ErrorResponseException(
@@ -305,7 +314,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 
 	private JnlpResource handleVersionRequest(DownloadRequest dreq)
 			throws IOException, ErrorResponseException {
-		_log.addDebug("Version-based/Extension based lookup");
+		logger.debug("Version-based/Extension based lookup");
 		return _resourceCatalog.lookupResource(dreq);
 	}
 
@@ -320,7 +329,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 			// It is a JNLP file. It need to be macro-expanded, so it is handled
 			// differently
 			boolean supportQuery = JarDiffHandler.isJavawsVersion(dreq, "1.5+");
-			_log.addDebug("SupportQuery in Href: " + supportQuery);
+			logger.debug("SupportQuery in Href: " + supportQuery);
 
 			// only support query string in href for 1.5 and above
 			if (supportQuery) {
@@ -335,7 +344,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 		// DownloadResponse response =
 		// _jarDiffHandler.getJarDiffEntry(_resourceCatalog, dreq, jnlpres);
 		// if (response != null) {
-		// _log.addInformational("servlet.log.info.jardiff.response");
+		// logger.info("servlet.log.info.jardiff.response");
 		// return response;
 		// }
 		// }
@@ -347,7 +356,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 				jnlpres.getPath(), jnlpres.getReturnVersionId(),
 				dreq.getEncoding());
 
-		_log.addDebug("Real resource returned: " + jr);
+		logger.debug("Real resource returned: " + jr);
 
 		// Return WAR file resource
 		return DownloadResponse
