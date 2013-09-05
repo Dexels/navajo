@@ -1882,6 +1882,7 @@ public class XMLElement implements java.io.Serializable {
 	 * 
 	 * @see nanoxml.XMLElement#write(java.io.Writer) write(Writer)
 	 */
+	@Override
 	public String toString() {
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();

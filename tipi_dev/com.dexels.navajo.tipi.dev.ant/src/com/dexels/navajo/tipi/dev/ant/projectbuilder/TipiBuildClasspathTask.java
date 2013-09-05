@@ -12,6 +12,7 @@ public class TipiBuildClasspathTask extends BaseTipiClientTask {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiBuildClasspathTask.class);
+	@Override
 	public void execute() throws BuildException {
 		try {
 			ClasspathBuilder cb = new ClasspathBuilder();

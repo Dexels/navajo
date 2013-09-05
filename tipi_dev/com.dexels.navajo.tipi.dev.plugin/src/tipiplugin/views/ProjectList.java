@@ -21,21 +21,26 @@ public class ProjectList implements IContentProvider, IStructuredContentProvider
 		projects = p;
 	}
 	
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		logger.info("Getting elements");
 		return projects.toArray();
 	}
 
+	@Override
 	public Image getImage(Object element) {
 		return null;
 	}
 
+	@Override
 	public String getText(Object element) {
 		if(element instanceof IProject) {
 			IProject ip = (IProject)element;
@@ -44,16 +49,19 @@ public class ProjectList implements IContentProvider, IStructuredContentProvider
 		return null;
 	}
 
+	@Override
 	public void addListener(ILabelProviderListener listener) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public void removeListener(ILabelProviderListener listener) {
 		// TODO Auto-generated method stub
 		

@@ -13,8 +13,6 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.dev.core.util.XMLElement;
-
 public abstract class BaseDeploymentBuilder {
 //	protected final VersionResolver myVersionResolver = new VersionResolver();
 	

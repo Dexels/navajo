@@ -52,14 +52,16 @@ public class BufferStream extends OutputStream {
         this.cur = this.head;
     }
     
-    public void write(int value) {
+    @Override
+	public void write(int value) {
         if(curPos == PAGE_SIZE) {
             newPage();
         }
         cur.buffer[curPos++] = (byte)value;
     }
     
-    public void write(byte[] b, int off, int len) {
+    @Override
+	public void write(byte[] b, int off, int len) {
         while(len > 0) {
             int copyCnt = PAGE_SIZE - curPos;
             if(copyCnt == 0) {
@@ -104,14 +106,16 @@ public class BufferStream extends OutputStream {
             this.lastPageSize = lastPageSize;
         }
 
-        public int read() throws IOException {
+        @Override
+		public int read() throws IOException {
             if(!nextPage()) {
                 return -1;
             }
             return cur.buffer[offset++] & 255;
         }
 
-        public int available() throws IOException {
+        @Override
+		public int available() throws IOException {
             if(!nextPage()) {
                 return 0;
             }
@@ -121,7 +125,8 @@ public class BufferStream extends OutputStream {
             return PAGE_SIZE - offset;
         }
 
-        public int read(byte[] b, int off, int len) throws IOException {
+        @Override
+		public int read(byte[] b, int off, int len) throws IOException {
             if(len <= 0) {
                 return 0;
             }
@@ -137,7 +142,8 @@ public class BufferStream extends OutputStream {
             return len;
         }
 
-        public long skip(long n) throws IOException {
+        @Override
+		public long skip(long n) throws IOException {
             int skip = (int)Math.min(n, available());
             if(skip > 0) {
                 offset += skip;

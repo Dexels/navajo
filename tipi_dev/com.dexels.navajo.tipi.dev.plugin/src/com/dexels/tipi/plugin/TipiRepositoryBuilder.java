@@ -60,6 +60,7 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 			myMonitor = prm; 
 		}
 
+		@Override
 		public boolean visit(IResourceDelta delta) throws CoreException {
 			IResource resource = delta.getResource();
 			switch (delta.getKind()) {
@@ -87,6 +88,7 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 		public TipiResourceVisitor(IProgressMonitor prm) {
 			myMonitor = prm; 
 		}
+		@Override
 		public boolean visit(IResource resource) {
 			checkTipiProperties(resource,myMonitor);
 			//return true to continue visiting children.
@@ -98,6 +100,7 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 
 //	private static final String MARKER_TYPE = "TipiPlugin.xmlProblem";
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
@@ -262,6 +265,7 @@ public class TipiRepositoryBuilder extends IncrementalProjectBuilder {
 
 	private void switchTiProject(final IProject project) {
 		Display.getDefault().asyncExec(new Runnable(){
+				@Override
 				public void run() {
 		
 		 IWorkbench wb = PlatformUI.getWorkbench();

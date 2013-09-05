@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,73 +12,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.tipi.dev.core.projectbuilder.impl.TipiLocalJnlpProjectBuilder;
-import com.dexels.navajo.tipi.dev.core.projectbuilder.impl.TipiRemoteJnlpProjectBuilder;
-import com.dexels.navajo.tipi.dev.core.projectbuilder.impl.TipiWebProjectBuilder;
-import com.dexels.navajo.tipi.dev.core.util.XMLElement;
 
 public class ProjectBuilder {
 	
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(ProjectBuilder.class);
-	
-	
-	private static void downloadExtensionJars(File projectPath, String extensions,String extensionRepository, boolean onlyProxy, boolean clean, String buildType, boolean useVersioning, boolean localSign) throws IOException {
-		if(!extensionRepository.endsWith("Extensions/")) {
-			extensionRepository = extensionRepository+ "Extensions/";
-		}
-		StringTokenizer st = new StringTokenizer(extensions, ",");
-		// Probably dead code, but I'm not completely convinced.
-		ClientActions.getExtensions(extensionRepository);
-		while (st.hasMoreTokens()) {
-				String token = st.nextToken();
-				VersionResolver vr = new VersionResolver();
-				vr.load(extensionRepository);
-				Map<String,String> versionMap = vr.resolveVersion(token);
-				String ext = versionMap.get("extension");
-				String version = versionMap.get("version");
-				XMLElement extensionXml = ClientActions.getExtensionXml(ext, version, extensionRepository);
-				TipiProjectBuilder tpb = null;
-				if("web".equals(buildType)) {
-					tpb = new TipiWebProjectBuilder();
-				} else {
-					if (onlyProxy) {
-						tpb = new TipiRemoteJnlpProjectBuilder();
-					} else {
-						tpb = new TipiLocalJnlpProjectBuilder();
-					}
-					
-				}
-				tpb.setUseVersioning(useVersioning);
-				tpb.downloadExtensionJars(ext, version, new URL(extensionRepository+vr.resultVersionPath(token)+"/"), extensionXml, projectPath, clean, localSign);
-			
-		}
-	}
-	
-//	public static void deleteLocalTipiBuild(File baseDir) {
-//		File lib = new File(baseDir,"lib");
-//
-//		if(lib.exists()) {
-//			File[] cc = lib.listFiles();
-//			for (int i = 0; i < cc.length; i++) {
-//				cc[i].delete();
-//			}
-//			lib.delete();
-//		}
-//	}
-//	// to be refactored:
-//	public static void deleteRemoteTipiBuild(File baseDir, String profile) {
-//
-//	}
-
-	// Used for server side appstore building
-
 
 	public static String getCurrentDeploy(File projectPath) throws IOException {
 		File path = new File(projectPath, "settings/tipi.properties");
@@ -143,9 +84,9 @@ public class ProjectBuilder {
 			codebase = "$$codebase";
 		}
 		logger.info("PRofiles: "+profiles);
-		String keystore = null;
-		keystore = tipiPropertyMap.get("keystore");
-		boolean resign = keystore!=null;
+//		String keystore = null;
+//		keystore = tipiPropertyMap.get("keystore");
+//		boolean resign = keystore!=null;
 		
 		if(deployment==null) {
 			deployment = tipiPropertyMap.get("deploy");			
@@ -158,20 +99,9 @@ public class ProjectBuilder {
 			postProcessAnt = buildProfileDescriptor(null,clean,  tipiPropertyMap,deployment,projectPath, codebase, extensions, extensionRepository,developmentRepository, true);
 		} else {
 			postProcessAnt = buildProfileDescriptor(profiles,clean,tipiPropertyMap,deployment, projectPath, codebase, extensions , extensionRepository, developmentRepository,true);
-//			for (String profile : profiles) {
-//				// TODO: Beware, multiple profiles in Echo / Web will not work
-//				logger.info("Building profile: "+profile);
-//			}
 		}
 
 		return postProcessAnt;
-//		try {
-//			String cp = pe.getString("buildClasspath");
-//			if("true".equals(cp)) {
-//				buildClassPath(projectPath, repository, extensions);
-//			}
-//		} catch (MissingResourceException e) {
-//		}
 	}
 
 	public static List<String> getProfiles(File projectPath) {

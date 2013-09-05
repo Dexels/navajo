@@ -14,6 +14,7 @@ public class TipiBuildLocalJnlp extends BaseTipiClientTask {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiBuildLocalJnlp.class);
+	@Override
 	public void execute() throws BuildException {
 		try {
 			LocalJnlpBuilder l = new LocalJnlpBuilder();

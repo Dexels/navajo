@@ -22,7 +22,8 @@ public class CaseSensitiveXMLElement extends XMLElement {
 	    super(new Hashtable<String,char[]>(), skipLeadingWhiteSpace, false);
 	  }
 	
-  protected XMLElement createAnotherElement()
+  @Override
+protected XMLElement createAnotherElement()
   {
       return new CaseSensitiveXMLElement();
                             

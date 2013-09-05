@@ -15,7 +15,8 @@ public class TipiPluginActivator extends AbstractUIPlugin {
    	plugin = this;
    }
 
-   public void start(BundleContext context) throws Exception {
+   @Override
+public void start(BundleContext context) throws Exception {
       super.start(context);
       logger.info("Tipi plugin loaded with context");
 		super.getPreferenceStore().setDefault("tipiServerUrl", "http://localhost:8080/TipiServer/TipiAdminServlet");

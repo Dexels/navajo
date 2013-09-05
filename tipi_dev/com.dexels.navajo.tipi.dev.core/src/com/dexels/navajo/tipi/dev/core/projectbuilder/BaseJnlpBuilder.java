@@ -3,19 +3,14 @@ package com.dexels.navajo.tipi.dev.core.projectbuilder;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
-import java.util.StringTokenizer;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.dev.core.extensionmanager.ExtensionManager;
 import com.dexels.navajo.tipi.dev.core.util.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.dev.core.util.XMLElement;
 
@@ -39,59 +34,6 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 
 
 	protected abstract void appendProxyResource(XMLElement resources, String repository, String mainExtension, boolean useVersioning) throws IOException;
-
-
-	private String appendResources(XMLElement resources, List<Dependency> dependencies) throws IOException {
-		String mainExtension = null;
-		for (Dependency dependency : dependencies) {
-			appendResourceForExtension(resources, dependency);
-		}
-
-		return "aap";
-	}
-
-//	private void buildVersionFile(File baseDir,String repository, List<String> extensions) throws IOException {
-//		XMLElement jnlpVersions = new CaseSensitiveXMLElement("jnlp-versions");
-//		for (String ext : extensions) {
-//			Map<String, String> versionMap = myVersionResolver.resolveVersion(ext);
-//			String version = versionMap.get("version");
-//			List<String> jars = ExtensionManager.getJars(repository, versionMap.get("extension"),version,new HashMap<String,String>(),new HashMap<String,String>());
-//			appendExtensionToVersions(jnlpVersions, ext,version,jars);
-//		}
-//		logger.info("Versions: "+jnlpVersions.toString());
-//		FileWriter fw = new FileWriter(new File(baseDir,"versions.xml"));
-//		fw.write("<?xml version=\"1.0\"?>\n");
-//		jnlpVersions.write(fw);
-//		fw.flush();
-//		fw.close();
-//	}
-
-//	<?xml version="1.0"?>
-//	<jnlp-versions>
-//	<resource>
-//	<pattern>
-//	<name>lib.jar</name>
-//	<version-id>1.1</version-id>
-//	</pattern>
-//	<file>lib.jar</file>
-//	</resource>
-//	</jnlp-versions>
-	
-	
-	private void appendExtensionToVersions(XMLElement jnlpVersions, String ext, String version, List<String> jars) {
-		for (String currentResource : jars) {
-			XMLElement resource = new CaseSensitiveXMLElement("resource");
-			jnlpVersions.addChild(resource);
-			XMLElement pattern = new CaseSensitiveXMLElement("pattern");
-			resource.addChild(pattern);
-			pattern.addTagKeyValue("name", currentResource);
-			pattern.addTagKeyValue("version-id", version);
-//			resource.addTagKeyValue("file", currentResource.substring(0,currentResource.length()-4)+"__V"+version+".jar");
-			resource.addTagKeyValue("file", "lib/"+currentResource);
-		}
-		
-	}
-
 	public abstract String getJnlpName();
 
 	public String build(String repository, String developRepository, String extensions, Map<String,String> tipiProperties, String deployment,  File baseDir, String codebase, List<String> profiles, boolean useVersioning) {
@@ -196,20 +138,11 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			splash.setAttribute("kind", "splash");
 		}
 
-//		StringTokenizer st = new StringTokenizer(extensions, ",");
-//		List<String> exts = new ArrayList<String>();
-//		while (st.hasMoreTokens()) {
-//			exts.add(st.nextToken());
-//		}
-
-//		XMLElement update = output.addTagKeyValue("update", "");
-//		update.setAttribute("check", "always");
-//		update.setAttribute("policy", "prompt-update");
 		XMLElement resources = output.addTagKeyValue("resources", "");
 		XMLElement java = resources.addTagKeyValue("j2se", "");
 		java.setAttribute("version", "1.6+");
 		appendSecurity(output, params.getString("permissions"));
-		String mainExtension = appendResources(resources,dependencies);
+//		String mainExtension = appendResources(resources,dependencies);
 
 		XMLElement app = output.addTagKeyValue("application-desc", "");
 		app.setAttribute("main-class", "tipi.MainApplication");

@@ -72,6 +72,7 @@ public class TipiBuildWikiSource  extends org.apache.tools.ant.Task {
 		this.sourceDir = sourceDir;
 	}
 
+	@Override
 	public void execute() throws BuildException {
 		try {
 			TipiSourceDeployer jd = new TipiSourceDeployer();

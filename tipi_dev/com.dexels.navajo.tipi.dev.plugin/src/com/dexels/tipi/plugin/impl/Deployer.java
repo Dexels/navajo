@@ -41,7 +41,8 @@ public class Deployer {
 	public void deployProject(final IProject project,final String deployName, final String username, final String password, final boolean includeJars) {
 		logger.info("Deploying: "+deployName);
 		Job job = new Job("Deploy task") {
-		     protected IStatus run(IProgressMonitor monitor) {
+		     @Override
+			protected IStatus run(IProgressMonitor monitor) {
 		  		try {
 					if(project.hasNature(TipiNature.NATURE_ID)) {
 							runDeployScript(project,deployName,username,password, includeJars,monitor);
@@ -141,6 +142,7 @@ public class Deployer {
    			
 //      		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Thank you for deploying using the TipiPlugin!", properties.get("codebase")+"Application.jnlp");
       		Display.getDefault().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
 					IWebBrowser browser;
@@ -161,7 +163,8 @@ public class Deployer {
 				e.printStackTrace(new PrintWriter(sw));
    			logger.info("Showing error");
        		Display.getDefault().asyncExec(new Runnable(){
-   				public void run() {
+   				@Override
+				public void run() {
    					
    			     // ErrorDialog.openError(Display.getCurrent().getActiveShell(),"Tipi Deployment problem",sw.toString(), Status.CANCEL_STATUS);
 

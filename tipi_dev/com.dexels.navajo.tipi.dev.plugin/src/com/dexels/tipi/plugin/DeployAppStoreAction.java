@@ -30,10 +30,12 @@ public class DeployAppStoreAction implements IObjectActionDelegate {
 	
 	private ISelection selection;
 
+	@SuppressWarnings("rawtypes")
+	@Override
 	public void run(IAction action) {
 		try {
 		if (selection instanceof IStructuredSelection) {
-			for (Iterator<IStructuredSelection> it = ((IStructuredSelection) selection).iterator(); it.hasNext();) {
+			for (Iterator it = ((IStructuredSelection) selection).iterator(); it.hasNext();) {
 				Object element = it.next();
 				IProject project = null;
 				if (element instanceof IProject) {
@@ -80,6 +82,7 @@ public class DeployAppStoreAction implements IObjectActionDelegate {
 	 * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
 	 * .IAction, org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}
@@ -91,6 +94,7 @@ public class DeployAppStoreAction implements IObjectActionDelegate {
 	 * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action
 	 * .IAction, org.eclipse.ui.IWorkbenchPart)
 	 */
+	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 

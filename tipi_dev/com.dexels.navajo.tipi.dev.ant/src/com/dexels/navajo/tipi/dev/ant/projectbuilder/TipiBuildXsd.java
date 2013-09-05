@@ -12,6 +12,7 @@ public class TipiBuildXsd extends BaseTipiClientTask {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiBuildXsd.class);
 
+	@Override
 	public void execute() throws BuildException {
 		try {
 			XsdBuilder xsd = new XsdBuilder();

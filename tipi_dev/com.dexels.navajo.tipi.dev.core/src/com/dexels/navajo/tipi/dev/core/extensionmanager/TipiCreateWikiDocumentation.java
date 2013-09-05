@@ -78,6 +78,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 	}
 
 
+	@Override
 	protected void processTipiContext(URL repository, String originalExtension, String version, List<String> extensions, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions,
 			Map<String, XMLElement> allEvents, Map<String, XMLElement> allValues, Map<String, XMLElement> allTypes,
 			Map<String, XMLElement> allFunctions) {
@@ -133,6 +134,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		Collections.sort(list, new Comparator<XMLElement>() {
 
+			@Override
 			public int compare(XMLElement o1, XMLElement o2) {
 				String s1 = o1.getStringAttribute("name");
 				String s2 = o2.getStringAttribute("name");
@@ -150,6 +152,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 
 	private void processFunctions(String extension, List<XMLElement> list) throws IOException {
 		Collections.sort(list, new Comparator<XMLElement>() {
+			@Override
 			public int compare(XMLElement o1, XMLElement o2) {
 				String s1 = o1.getStringAttribute("name");
 				String s2 = o2.getStringAttribute("name");
@@ -217,6 +220,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		List<XMLElement> zz = exten.getChildren();
 		
 		 Collections.sort(zz, new Comparator<XMLElement>(){
+			@Override
 			public int compare(XMLElement o1, XMLElement o2) {
 				return o1.getStringAttribute("name").compareTo(o2.getStringAttribute("name"));
 			}});
@@ -352,6 +356,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		Collections.sort(list, new Comparator<XMLElement>() {
 
+			@Override
 			public int compare(XMLElement o1, XMLElement o2) {
 				String s1 = o1.getStringAttribute("name");
 				String s2 = o2.getStringAttribute("name");
@@ -397,6 +402,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		OutputStreamWriter osw = new OutputStreamWriter(os);
 		Collections.sort(componentsOfThisExtension, new Comparator<XMLElement>() {
 
+			@Override
 			public int compare(XMLElement o1, XMLElement o2) {
 				String s1 = o1.getStringAttribute("name");
 				String s2 = o2.getStringAttribute("name");
@@ -405,6 +411,7 @@ public class TipiCreateWikiDocumentation extends ExtensionClassdefProcessor {
 		});
 		Collections.sort(allActions, new Comparator<XMLElement>() {
 
+			@Override
 			public int compare(XMLElement o1, XMLElement o2) {
 				String s1 = o1.getStringAttribute("name");
 				String s2 = o2.getStringAttribute("name");
