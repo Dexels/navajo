@@ -16,10 +16,12 @@ Import-Package: com.dexels.navajo.tipi.dev.ant;version="1.0.0",
  org.apache.tools.ant.taskdefs,
  org.eclipse.jetty.servlets;version="[8.0.0,9.0.0)",
  org.osgi.framework;version="1.5.0",
+ org.osgi.service.cm;version="1.4.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Bundle-ClassPath: lib/cos.jar,.
 Export-Package: com.dexels.navajo.tipi.dev.server,
  com.dexels.navajo.tipi.dev.server.appmanager.impl
 Service-Component: OSGI-INF/tipi.dev.applicationManager.xml,
  OSGI-INF/tipi.dev.downloadservlet.xml,
+ OSGI-INF/tipi.store.application.xml,
  OSGI-INF/tipi.dev.filter.xml

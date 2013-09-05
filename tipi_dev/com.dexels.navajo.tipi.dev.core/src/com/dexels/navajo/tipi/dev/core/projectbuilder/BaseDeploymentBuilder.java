@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,8 @@ public abstract class BaseDeploymentBuilder {
 			.getLogger(BaseDeploymentBuilder.class);
 	
 //	public abstract String build(String repository, String developmentRepository, String extensions, Map<String,String> tipiProperties, String deployment, File baseDir, String codebase, List<String> profiles, boolean useVersioning) throws IOException;
-	public abstract void buildFromMaven(PropertyResourceBundle settings,List<Dependency> dependencyList, File appFolder,
-			List<String> profiles, String codebase, String resourceBase);
+	public abstract void buildFromMaven(ResourceBundle settings,List<Dependency> dependencyList, File appFolder,
+			List<String> profiles,String resourceBase);
 
 	
 

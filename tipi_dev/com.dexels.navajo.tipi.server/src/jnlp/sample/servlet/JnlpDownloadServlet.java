@@ -51,8 +51,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import jnlp.sample.servlet.impl.FileSystemResourceResolver;
 
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
 

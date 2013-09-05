@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.dev.server.appmanager;
 
-import com.dexels.navajo.tipi.dev.server.appmanager.impl.ApplicationStatus;
+import java.io.IOException;
 
 public interface AppStoreOperation {
-	public boolean build(ApplicationStatus a);
+	public void build(ApplicationStatus a) throws IOException;
 }

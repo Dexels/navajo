@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.Map.Entry;
 
@@ -140,16 +141,16 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 	}
 	
 	@Override
-	public void buildFromMaven(PropertyResourceBundle settings,
+	public void buildFromMaven(ResourceBundle settings,
 			List<Dependency> dependencyList, File appFolder,
-			List<String> profiles, String codebase, String resourceBase) {
+			List<String> profiles, String resourceBase) {
 		for (String fileName : profiles) {
 			File jnlpFile = new File(appFolder, fileName+".jnlp");
 			logger.info("Writing jnlp: "+jnlpFile.getAbsolutePath());
 			try {
 				FileWriter fw1 = new FileWriter(jnlpFile);
 				fw1.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-				XMLElement output = buildElementFromMaven(dependencyList,settings,"deployment",appFolder, codebase,resourceBase,fileName+".jnlp", fileName);
+				XMLElement output = buildElementFromMaven(dependencyList,settings,"deployment",appFolder, resourceBase,fileName+".jnlp", fileName);
 				output.write(fw1);
 				fw1.flush();
 				fw1.close();
@@ -160,7 +161,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 	}
 
 
-	private XMLElement buildElementFromMaven(List<Dependency> dependencies, PropertyResourceBundle params,String deployment, File baseDir, String codebase, String resourceBase, String fileName, String profile) throws IOException {
+	private XMLElement buildElementFromMaven(List<Dependency> dependencies, ResourceBundle params,String deployment, File baseDir, String resourceBase, String fileName, String profile) throws IOException {
 		//String repository = generalRepository+"Extensions/";
 //		PropertyResourceBundle settings,
 //		List<Dependency> dependencyList, File appFolder
@@ -169,15 +170,15 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 
 		
 		XMLElement output = new CaseSensitiveXMLElement();
-		if (!codebase.endsWith("/")) {
-			codebase = codebase + "/";
-		}
+//		if (!codebase.endsWith("/")) {
+//			codebase = codebase + "/";
+//		}
 
 		output.setName("jnlp");
 		output.setAttribute("version", "1");
 		output.setAttribute("spec", "1.0+");
-		output.setAttribute("codebase", codebase);
-		output.setAttribute("href", fileName);
+		output.setAttribute("codebase", "$$codebase");
+		output.setAttribute("href", "$$name");
 
 		XMLElement information = output.addTagKeyValue("information", "");
 		information.addTagKeyValue("title", params. getString("title"));
