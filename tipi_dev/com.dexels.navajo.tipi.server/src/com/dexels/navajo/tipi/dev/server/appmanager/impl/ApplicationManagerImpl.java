@@ -2,11 +2,14 @@ package com.dexels.navajo.tipi.dev.server.appmanager.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
@@ -23,7 +26,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	private ConfigurationAdmin configurationAdmin;
 	private boolean running = false;
 	private Thread scanThread;
-	
+	private final Set<String> applications = new HashSet<String>();
 	public void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
 		this.configurationAdmin = configurationAdmin;
 	}
@@ -70,7 +73,6 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	}
 
 	public synchronized void  scan() throws IOException {
-		logger.info("scanning...");
 		Map<String, Configuration> configs = new HashMap<String, Configuration>();
 		try {
 			Configuration[] l =  configurationAdmin.listConfigurations("(service.factoryPid="+TIPI_STORE_APPLICATION+")");
@@ -83,8 +85,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		} catch (InvalidSyntaxException e) {
 			logger.error("Error: ", e);
 		}
-		System.err.println(">> "+configs.keySet());
 		File[] apps = appsFolder.listFiles();
+		applications.clear();
 		for (File file : apps) {
 
 			if(!file.isDirectory()) {
@@ -94,7 +96,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 				continue;
 			}
 			final String name = file.getName();
-			logger.info("Application found: "+name);
+			applications.add(name);
 			Configuration c = createOrReuse(TIPI_STORE_APPLICATION, "(name="+name+")");
 			Dictionary<String,Object> settings = new Hashtable<String,Object>();
 			settings.put("name", name);
@@ -108,7 +110,6 @@ public class ApplicationManagerImpl implements ApplicationManager {
 //			appStats.add(appStatus);
 		}
 		if(!configs.isEmpty()) {
-			logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+configs);
 			for (Entry<String,Configuration> e : configs.entrySet()) {
 				Configuration c = e.getValue();
 				if(c!=null) {
@@ -177,6 +178,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		File tipiDir = new File(tipiRoot,"tipi");
 		File settingsProp = new File(tipiRoot,"settings/tipi.properties");
 		return tipiDir.exists() && settingsProp.exists();
+	}
+
+
+	@Override
+	public Set<String> listApplications() {
+		return Collections.unmodifiableSet(applications);
 	}
 
 }

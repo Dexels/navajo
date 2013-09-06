@@ -112,7 +112,6 @@ public class JnlpDownloadServlet extends HttpServlet {
 				String pp = (String) en.nextElement();
 				System.err.println("pp: "+pp+" value: "+config.getInitParameter(pp));
 			}
-			logger.debug("Initializing");
 			// String appFolder = (String)
 			// config.getServletContext().getInitParameter("appFolder");
 			File baseDir = getAppFolder();
@@ -203,8 +202,8 @@ public class JnlpDownloadServlet extends HttpServlet {
 
 		// Parse HTTP request
 		DownloadRequest dreq = new DownloadRequest(getServletContext(), request);
-			logger.info("servlet.log.info.request", requestStr);
-			logger.info("servlet.log.info.useragent",
+			logger.debug("servlet.log.info.request", requestStr);
+			logger.debug("servlet.log.info.useragent",
 					request.getHeader("User-Agent"));
 			logger.debug(dreq.toString());
 
@@ -328,7 +327,6 @@ public class JnlpDownloadServlet extends HttpServlet {
 			// It is a JNLP file. It need to be macro-expanded, so it is handled
 			// differently
 			boolean supportQuery = JarDiffHandler.isJavawsVersion(dreq, "1.5+");
-			logger.debug("SupportQuery in Href: " + supportQuery);
 
 			// only support query string in href for 1.5 and above
 			if (supportQuery) {
@@ -338,15 +336,6 @@ public class JnlpDownloadServlet extends HttpServlet {
 			}
 		}
 
-		// Check if a JARDiff can be returned
-		// if (dreq.getCurrentVersionId() != null && jnlpres.isJarFile()) {
-		// DownloadResponse response =
-		// _jarDiffHandler.getJarDiffEntry(_resourceCatalog, dreq, jnlpres);
-		// if (response != null) {
-		// logger.info("servlet.log.info.jardiff.response");
-		// return response;
-		// }
-		// }
 
 		// check and see if we can use pack resource
 		JnlpResource jr = new JnlpResource(getServletContext(),
@@ -355,7 +344,6 @@ public class JnlpDownloadServlet extends HttpServlet {
 				jnlpres.getPath(), jnlpres.getReturnVersionId(),
 				dreq.getEncoding());
 
-		logger.debug("Real resource returned: " + jr);
 
 		// Return WAR file resource
 		return DownloadResponse

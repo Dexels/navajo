@@ -226,9 +226,17 @@ public class UnsignJarTask extends org.apache.tools.ant.Task {
 		if(line.trim().startsWith("SHA-")) {
 			return false;
 		}
+		if(line.trim().startsWith("MD5-Digest")) {
+			return false;
+		}
+		
 		if(line.startsWith("Name: ")) {
 			return false;
 		}
+		if(line.startsWith("Java-Bean:")) {
+			return false;
+		}
+		
 		return true;
 	}
 	

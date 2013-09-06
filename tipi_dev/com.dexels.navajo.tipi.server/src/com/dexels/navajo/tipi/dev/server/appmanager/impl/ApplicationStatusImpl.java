@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.dev.server.appmanager.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +11,12 @@ import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 public class ApplicationStatusImpl implements ApplicationStatus {
 
@@ -18,9 +24,12 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 
 	private String applicationName;
 	private File appFolder;
-	
+	private final List<Dependency> dependencies = new ArrayList<Dependency>();
 	private Map<String, Boolean> profileNeedsRebuild = new HashMap<String, Boolean>();
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ApplicationStatusImpl.class);
+	
 	private PropertyResourceBundle settings;
 
 	@Override
@@ -58,7 +67,21 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 		settings = new PropertyResourceBundle(fis);
 		fis.close();
 		processProfiles();
+		
+		String deps = getSettingString("dependencies");
+		String[] d = deps.split(",");
+		for (String dependency : d) {
+			
+			Dependency dd = new Dependency(dependency);
+			dependencies.add(dd);
+		}
+
 //		build();
+	}
+	
+	@Override
+	public List<Dependency> getDependencies() {
+		return dependencies;
 	}
 
 	/* (non-Javadoc)

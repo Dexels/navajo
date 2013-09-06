@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
+
 public interface ApplicationStatus {
 
 	public File getAppFolder();
@@ -15,5 +17,7 @@ public interface ApplicationStatus {
 	public String getSettingString(String key);
 
 	public ResourceBundle getSettingsBundle();
+
+	public List<Dependency> getDependencies();
 
 }

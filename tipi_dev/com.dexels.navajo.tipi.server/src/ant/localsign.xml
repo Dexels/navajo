@@ -15,12 +15,12 @@
 				<include name="*.gz"/>
 			</fileset>
 		</copy>
-		<p200ant  singleSegment="true" repack="true">
+	<!-- <p200ant singleSegment="true" repack="true">
 			<fileset dir=".">
 				<include name="temp/*.jar" />
 			</fileset>
-	    </p200ant>
-		<signjar verbose="true"  keystore="${keystore}" storepass="${storepass}"  alias="${alias}">
+	    </p200ant> -->	
+		<signjar keystore="${keystore}" storepass="${storepass}"  alias="${alias}">
 			
 			<fileset dir=".">
 				<include name="temp/*.jar" />

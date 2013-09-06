@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="tipi.dev.operation.cachebuild">
+   <implementation class="com.dexels.navajo.tipi.dev.server.appmanager.operations.impl.CacheBuild"/>
+   <reference bind="addApplicationStatus" cardinality="1..1" interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus" name="ApplicationStatus" policy="dynamic" unbind="removeApplicationStatus"/>
+   <service>
+      <provide interface="com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation"/>
+   </service>
+   <property name="osgi.command.scope" type="String" value="tipi"/>
+   <property name="osgi.command.function" type="String">
+		cachebuild
+   </property>
+</scr:component>
