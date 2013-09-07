@@ -6,7 +6,10 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.zip.GZIPInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +38,19 @@ public class HttpRemoteStorage implements RemoteStorage {
 			metadata.put("length", uc.getContentLength());
 			metadata.put("encoding", uc.getContentEncoding());
 			metadata.put("type", uc.getContentType());
-			// Should't I check the encoding and gunzip if necessary?
-			// Or is that taken care of further downstream?
+			uc.connect();
+			Map<String, List<String>> fields = uc.getHeaderFields();
+			for (Entry<String,List<String>> e : fields.entrySet()) {
+				System.err.println("e: "+e.getKey()+" value: "+e.getClass());
+			}
 			is = uc.getInputStream();
-
+			String enc = uc.getHeaderField("Content-Encoding");
+			System.err.println("enc: "+enc);
+			if("gzip".equals(enc)) {
+				GZIPInputStream gzi = new GZIPInputStream(is);
+				return gzi;
+			}
+			
 		} catch (FileNotFoundException e) {
 			logger.error("Remote location: " + location + " not found",e);
 		}
