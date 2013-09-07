@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.dev.core.projectbuilder;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -8,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
@@ -15,9 +17,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.PropertyResourceBundle;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,8 +77,8 @@ public class XsdBuilder {
 		}
 		processMap();
 		try {
-			createXSD(baseDir, allComponents, allActions);
-			createMetadata(repository,baseDir, allComponents, allActions, allTypes);
+			createXSD(baseDir);
+			createMetadata(repository,baseDir);
 			
 		} catch (IOException e) {
 			logger.error("Error: ",e);
@@ -83,6 +86,83 @@ public class XsdBuilder {
 	}
 
 
+	public void addJar(File jar)  {
+		if(!jar.exists()) {
+			logger.info("Jar: "+jar.getAbsolutePath()+" not found.");
+		}
+		BufferedReader br = null; 
+		JarFile jf = null;
+		try {
+			jf = new JarFile(jar);
+			ZipEntry e =jf.getEntry("META-INF/services/tipi.TipiExtension");
+			if(e==null) {
+				logger.info("No tipi extension here");
+				return;
+			}
+			br = new BufferedReader(new InputStreamReader(jf.getInputStream(e)));
+			String extension = br.readLine();
+			System.err.println("extension: "+extension);
+			String ex = extension.replaceAll("\\.", "/");
+			ZipEntry ee = jf.getEntry(ex+".xml");
+			XMLElement extensionDefinition = readXML(jf,ee);
+			String extensionid = extensionDefinition.getStringAttribute("id");
+			XMLElement includes = extensionDefinition.getElementByTagName("includes");
+			if(includes==null) {
+				logger.info("Nothing to include");
+				return;
+			}
+			List<XMLElement> incl = includes.getChildren();
+			for (XMLElement xmlElement : incl) {
+				String path = xmlElement.getStringAttribute("path");
+				System.err.println(">> "+path);
+				XMLElement include = readXML(jf, jf.getEntry(path));
+//				System.err.println("including: \n"+include);
+//				private void appendClassDefElement(String extension, XMLElement xx) {
+				appendClassDefElement(extensionid, include);
+			}
+			System.err.println(""+tipiParts.keySet());
+			for (String parts : tipiParts.keySet()) {
+				System.err.println("T: "+tipiParts.get(parts).size());
+			}
+//			System.err.println(""+extensionDefinition);
+		} catch (IOException e1) {
+			logger.error("Error: ", e1);
+		} finally {
+			if(br!=null) {
+				try {
+					br.close();
+				} catch (IOException e1) {
+				}
+			}
+			if(jf!=null) {
+				try {
+					jf.close();
+				} catch (IOException e1) {
+				}
+
+			}
+		}
+	}
+
+	private XMLElement readXML(JarFile jf, ZipEntry ee) {
+		Reader r = null;
+		try {
+			r = new InputStreamReader(jf.getInputStream(ee));
+			XMLElement xx = new CaseSensitiveXMLElement();
+			xx.parseFromReader(r);
+			return xx;
+		} catch (IOException e) {
+			logger.error("Error: ", e);
+		} finally {
+			try {
+				if(r!=null) {
+					r.close();
+				}
+			} catch (IOException e) {
+			}
+		}
+		return null;
+	}
 
 
 	public  XMLElement appendExtension(String project,String version, String repository) throws IOException {
@@ -103,9 +183,14 @@ public class XsdBuilder {
 		return null;
 
 	}
-	private void createXSD(File baseDir, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions) throws IOException {
+	private void createXSD(File baseDir) throws IOException {
 		// logger.info("# of components: "+allComponents.size());
+		File xsdDir = new File(baseDir,"xsd");
+		if(!xsdDir.exists()) {
+			xsdDir.mkdirs();
+		}
 		XMLElement root = new CaseSensitiveXMLElement();
+		
 		root.setName("xs:schema");
 		root.setAttribute("xmlns:xs", "http://www.w3.org/2001/XMLSchema");
 		root.setAttribute("elementFormDefault", "qualified");
@@ -157,7 +242,7 @@ public class XsdBuilder {
 		XMLElement tt = addTag("xs:attribute", cmpl);
 		tt.setAttribute("name", "errorhandler");
 
-		File xsd = new File(baseDir, "tipi/tipi.xsd");
+		File xsd = new File(xsdDir, "application.xsd");
 		
 		OutputStream os =new FileOutputStream(xsd);
 		OutputStreamWriter fw = new OutputStreamWriter(os);
@@ -170,8 +255,7 @@ public class XsdBuilder {
 	}
 
 	
-	private void createMetadata(String repository, File baseDir, Map<String, XMLElement> allComponents2, Map<String, XMLElement> allActions2,
-			Map<String, XMLElement> allTypes) throws IOException {
+	private void createMetadata(String repository, File baseDir) throws IOException {
 		XMLElement metadata = new CaseSensitiveXMLElement("metadata");
 		XMLElement components = new CaseSensitiveXMLElement("components");
 		XMLElement actions = new CaseSensitiveXMLElement("actions");
@@ -179,13 +263,11 @@ public class XsdBuilder {
 		metadata.addChild(components);
 		metadata.addChild(actions);
 		metadata.addChild(types);
-//		VersionResolver vr = new VersionResolver(extensionRepository);
 		String docPrefix = repository+"wiki/doku.php?id=tipidoc:";
 
-		for (Entry<String,XMLElement> elt : allComponents2.entrySet()) {
+		for (Entry<String,XMLElement> elt : allComponents.entrySet()) {
 			XMLElement c = new CaseSensitiveXMLElement("element");
 			// skip abstract classes
-		
 			if(elt.getValue().getAttribute("class")!=null) {
 				XMLElement entry = elt.getValue();
 				c.setAttribute("name",elt.getKey());
@@ -194,7 +276,7 @@ public class XsdBuilder {
 				
 			}
 		}
-		for (Entry<String,XMLElement> elt : allActions2.entrySet()) {
+		for (Entry<String,XMLElement> elt : allActions.entrySet()) {
 			XMLElement c = new CaseSensitiveXMLElement("element");
 			XMLElement entry = elt.getValue();
 			c.setAttribute("name",elt.getKey());
@@ -208,7 +290,7 @@ public class XsdBuilder {
 			c.setAttribute("href",createDocLink(docPrefix,entry.getStringAttribute("extension"),elt.getKey(),"type"));
 			types.addChild(c);
 		}
-		File settings = new File(baseDir,".tipiproject");
+		File settings = new File(baseDir,"tipiproject");
 		settings.mkdirs();
 		File metada = new File(settings,"tipi.metadata");
 		FileWriter fw = new FileWriter(metada);
@@ -820,31 +902,19 @@ public class XsdBuilder {
 		} catch (IOException e) {
 			logger.error("Error: ",e);
 		}
+	}
 
+	public void writeXsd(File baseDir) throws IOException {
+		processMap();
+		createXSD(baseDir);
 	}
 	
 	public static void main(String[] args) throws IOException {
 
-		// change this to the project dir of SportlinkClub and then run this main method to regenerate the Tipi XSD
-		// the libraries on spiritus will be queried for the necessary information, so local files will be ignored. 
-		final String baseDir = "C:\\Marte\\CVS\\SportlinkClub\\";
-		
-		File settings = new File(baseDir, "settings/tipi.properties");
-		
-		InputStream is = new java.io.FileInputStream(settings);
-		PropertyResourceBundle pe = new PropertyResourceBundle(is);
-		is.close();	
-		String extensions = pe.getString("extensions").trim();
-		String repository = pe.getString("repository").trim();
-
-		String extensionRepository = repository+"Extensions/";
-
 		XsdBuilder b = new XsdBuilder();
-		try { 
-			b.build(repository,extensionRepository, extensions, new File(baseDir));
-			System.out.println("XSD rebuilt!");
-		} catch (IOException e) {
-			System.out.println("XSD generator error:" + e.getStackTrace());
-		}
+		b.addJar(new File("/Users/frank/git/navajo/tipi_dev/com.dexels.navajo.tipi.dev.store/applications/testapp/lib/com.dexels.navajo.tipi_1.1.89__V1.1.89.jar"));
+		b.processMap();
+		b.createMetadata("http://aap", new File("/Users/frank/tipicache/doc"));
+		b.createXSD(new File("/Users/frank/tipicache/xsd"));
 	}
 }
