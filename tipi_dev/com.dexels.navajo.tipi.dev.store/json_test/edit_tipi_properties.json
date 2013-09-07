@@ -1,0 +1,92 @@
+{
+  "ref": "refs/heads/master",
+  "after": "68a29ad724aebbaecace63c638a057ca99890708",
+  "before": "60419149899c68f24441623515bbd79a0c3f7d24",
+  "created": false,
+  "deleted": false,
+  "forced": false,
+  "compare": "https://github.com/Dexels/com.sportlink.club/compare/60419149899c...68a29ad724ae",
+  "commits": [
+    {
+      "id": "68a29ad724aebbaecace63c638a057ca99890708",
+      "distinct": true,
+      "message": "just modified tipi properties",
+      "timestamp": "2013-09-07T02:52:32-07:00",
+      "url": "https://github.com/Dexels/com.sportlink.club/commit/68a29ad724aebbaecace63c638a057ca99890708",
+      "author": {
+        "name": "Frank Lyaruu",
+        "email": "flyaruu@gmail.com",
+        "username": "flyaruu"
+      },
+      "committer": {
+        "name": "Frank Lyaruu",
+        "email": "flyaruu@gmail.com",
+        "username": "flyaruu"
+      },
+      "added": [
+        
+      ],
+      "removed": [
+        
+      ],
+      "modified": [
+        "settings/tipi.properties"
+      ]
+    }
+  ],
+  "head_commit": {
+    "id": "68a29ad724aebbaecace63c638a057ca99890708",
+    "distinct": true,
+    "message": "just modified tipi properties",
+    "timestamp": "2013-09-07T02:52:32-07:00",
+    "url": "https://github.com/Dexels/com.sportlink.club/commit/68a29ad724aebbaecace63c638a057ca99890708",
+    "author": {
+      "name": "Frank Lyaruu",
+      "email": "flyaruu@gmail.com",
+      "username": "flyaruu"
+    },
+    "committer": {
+      "name": "Frank Lyaruu",
+      "email": "flyaruu@gmail.com",
+      "username": "flyaruu"
+    },
+    "added": [
+      
+    ],
+    "removed": [
+      
+    ],
+    "modified": [
+      "settings/tipi.properties"
+    ]
+  },
+  "repository": {
+    "id": 7542929,
+    "name": "com.sportlink.club",
+    "url": "https://github.com/Dexels/com.sportlink.club",
+    "description": "Tipi application club",
+    "watchers": 0,
+    "stargazers": 0,
+    "forks": 0,
+    "fork": false,
+    "size": 7580,
+    "owner": {
+      "name": "Dexels",
+      "email": "info@dexels.com"
+    },
+    "private": true,
+    "open_issues": 0,
+    "has_issues": true,
+    "has_downloads": true,
+    "has_wiki": true,
+    "language": "CSS",
+    "created_at": 1357830320,
+    "pushed_at": 1378547583,
+    "master_branch": "master",
+    "organization": "Dexels"
+  },
+  "pusher": {
+    "name": "flyaruu",
+    "email": "flyaruu@gmail.com"
+  }
+}
