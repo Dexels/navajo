@@ -322,7 +322,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		allExtensions.addAll(mainExtensionList);
 		allExtensions.addAll(coreExtensionList);
 		allExtensions.addAll(optionalExtensionList);
+		long now = System.currentTimeMillis();
 		appendIncludes(allExtensions);
+		long passed = System.currentTimeMillis()-now;
+		logger.info("Parsing includes took: "+passed);
 	}
 
 	public void setTipiInstallationFolder(File install) {
@@ -338,13 +341,15 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	@Override
 	public void addOptionalInclude(TipiExtension te) {
 		optionalExtensionList.add(te);
-		processRequiredIncludes(te);
+		final Set<String> processed = new HashSet<String>(); 
+		processRequiredIncludes(te,processed);
 
 	}
 
 	private void appendIncludes(List<TipiExtension> extensionList) {
+		final Set<String> processed = new HashSet<String>(); 
 		for (TipiExtension tipiExtension : extensionList) {
-			processRequiredIncludes(tipiExtension);
+			processRequiredIncludes(tipiExtension,processed);
 		}
 	}
 
@@ -896,8 +901,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		parseLibrary(location, true, componentName, isLazy, tipiExtension);
 	}
 
-	public void processRequiredIncludes(TipiExtension tipiExtension) {
-//		logger.info("Adding extension: "+tipiExtension.getId());
+	public void processRequiredIncludes(TipiExtension tipiExtension, Set<String> processed) {
 		List<String> includes = new LinkedList<String>();
 		String[] ss = tipiExtension.getIncludes();
 		if (ss == null || ss.length == 0) {
@@ -906,15 +910,18 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					+ " has no includes!");
 			return;
 		}
-//		Thread.dumpStack();
 		for (int i = 0; i < ss.length; i++) {
-//			logger.info("Adding include: " + ss[i]);
 			includes.add(ss[i]);
 		}
 
 		for (String element : includes) {
 			try {
-				parseLibrary(element, false, element, false, tipiExtension);
+				if(!processed.contains(element)) {
+					parseLibrary(element, false, element, false, tipiExtension);
+					processed.add(element);
+				} else {
+					logger.info("Skipping duplicate: "+element);
+				}
 			} catch (UnsupportedClassVersionError e) {
 				throw new UnsupportedClassVersionError(
 						"Error parsing extension: " + element
