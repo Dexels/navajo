@@ -19,6 +19,4 @@ public interface BinaryOpener {
 	public boolean open(String s);
 	
 	public boolean exportCsv(String fileName, Message m, String delimiter);
-	
-//	public void mail(S)
 }
