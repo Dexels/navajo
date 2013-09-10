@@ -1804,7 +1804,76 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	}
 
 	 
-	public static void main(String [] args) {
+	public void writeAsCSV(Writer writer, String delimiter) throws IOException
+	{ // copied from original MergeUtils, can use a rewrite
+		if (getType().equals(Message.MSG_TYPE_ARRAY)) {
+			if (getArraySize() > 0) {
+				String header = "";
+				Message h = getMessage(0);
+				List<Property> props = h.getAllProperties();
+				for (int i = 0; i < props.size(); i++) {
+					Property p = props.get(i);
+					String head = p.getDescription();
+					if ("null".equals(head) || head == null) {
+						head = "";
+					}
+					header = header + head + delimiter;
+				}
+				writer.write(header + "\n");
+
+				for (int i = 0; i < getArraySize(); i++) {
+					String line = "";
+					Message current = getMessage(i);
+					List<Property> prop = current.getAllProperties();
+					for (int j = 0; j < prop.size(); j++) {
+						Property p = prop.get(j);
+						if (p.getType().equals(Property.SELECTION_PROPERTY)) {
+							String value = p.getSelected().getName();
+							if ("null".equals(value) || value == null) {
+								value = "";
+							}
+							line = line + value + delimiter;
+						} else if (p.getType().equals(
+								Property.DATE_PROPERTY)) {
+							String value = p.toString();
+							if ("null".equals(value) || value == null) {
+								value = "";
+							}
+							line = line + value + delimiter;
+						} else {
+							String value = p.getValue();
+							if ("null".equals(value) || value == null) {
+								value = "";
+							}
+							line = line + value + delimiter;
+						}
+					}
+					if (i < getArraySize() - 1) {
+						writer.write(line + "\n");
+					} else {
+						writer.write(line);
+					}
+				}
+			}
+		} else {
+			String header = "";
+			String line = "";
+			List<Property> props = getAllProperties();
+			for (int i = 0; i < props.size(); i++) {
+				Property p = props.get(i);
+				header = header + p.getDescription() + delimiter;
+				String value = p.getValue();
+				if ("null".equals(value) || value == null) {
+					value = "";
+				}
+				line = line + value + delimiter;
+			}
+			writer.write(header + "\n");
+			writer.write(line);
+		}
+	}
+
+	  public static void main(String [] args) {
 		
 		Navajo testDoc = null;
 		try {

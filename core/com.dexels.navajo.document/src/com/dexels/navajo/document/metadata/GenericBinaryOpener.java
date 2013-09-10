@@ -2,18 +2,17 @@ package com.dexels.navajo.document.metadata;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 import com.dexels.navajo.document.BinaryOpener;
-import com.dexels.navajo.document.metadata.FormatDescription;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.types.Binary;
 
 
@@ -86,6 +85,20 @@ public class GenericBinaryOpener implements BinaryOpener {
 		} catch (URISyntaxException e) {
 			logger.info("Could not open browser, uri= " + url);
 			logger.error("Error: ", e);
+		}
+		return false;
+	}
+	
+	public boolean exportCsv(String fileName, Message m, String delimiter)
+	{
+		try {
+			File f = new File(fileName);
+			FileWriter fw = new FileWriter(f);
+			m.writeAsCSV(fw, delimiter);
+			fw.close();
+			return open(f);
+		} catch (Exception e) {
+			logger.error("Error: ",e);
 		}
 		return false;
 	}
