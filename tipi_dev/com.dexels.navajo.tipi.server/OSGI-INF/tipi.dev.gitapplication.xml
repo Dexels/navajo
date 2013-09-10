@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" immediate="true" name="tipi.dev.gitapplication">
+   <implementation class="com.dexels.navajo.tipi.dev.server.appmanager.impl.GitApplicationStatusImpl"/>
+   <reference bind="setApplicationManager" cardinality="1..1" interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager" name="ApplicationManager" policy="dynamic" unbind="clearApplicationManager"/>
+   <service>
+      <provide interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus"/>
+   </service>
+</scr:component>
