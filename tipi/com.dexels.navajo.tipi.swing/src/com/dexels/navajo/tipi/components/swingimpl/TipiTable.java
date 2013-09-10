@@ -943,9 +943,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 				if ("doEmail".equals(name)) {
 					mm.doEmail();
 				}
-				if ("doWord".equals(name)) {
-					mm.doWord();
-				}
 				if ("doExcel".equals(name)) {
 					mm.doExcel();
 					// doExportAll();
@@ -1183,10 +1180,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 
 	public void doEmail() {
 		mm.doEmail();
-	}
-
-	public void doWord() {
-		mm.doWord();
 	}
 
 	public void doExcel() {
