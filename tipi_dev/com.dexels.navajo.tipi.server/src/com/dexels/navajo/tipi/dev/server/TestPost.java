@@ -12,7 +12,7 @@ public class TestPost {
     URLConnection uc = u.openConnection();
     uc.setDoInput(true);
     uc.setDoOutput(true);
-    FileInputStream fis = new FileInputStream("/Users/frank/git/navajo/tipi_dev/com.dexels.navajo.tipi.dev.store/json_test/single_tipi_edit.json");
+    FileInputStream fis = new FileInputStream("/Users/frank/git/navajo/tipi_dev/com.dexels.navajo.tipi.dev.store/json_test/acceptance_settings_edit.json");
     final OutputStream outputStream = uc.getOutputStream();
 	copyResource(outputStream,fis);
     fis.close();

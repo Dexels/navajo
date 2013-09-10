@@ -7,8 +7,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
@@ -16,7 +20,10 @@ import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 public class ApplicationStatusImpl implements ApplicationStatus {
 
 	private List<String> profiles;
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ApplicationStatusImpl.class);
+	
 	private String applicationName;
 	private File appFolder;
 	private final List<Dependency> dependencies = new ArrayList<Dependency>();
@@ -59,13 +66,19 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 		fis.close();
 		processProfiles();
 		
-		String deps = getSettingString("dependencies");
-		String[] d = deps.split(",");
-		for (String dependency : d) {
-			
-			Dependency dd = new Dependency(dependency);
-			dependencies.add(dd);
+		String deps;
+		try {
+			deps = getSettingString("dependencies");
+			String[] d = deps.split(",");
+			for (String dependency : d) {
+				
+				Dependency dd = new Dependency(dependency);
+				dependencies.add(dd);
+			}
+		} catch (MissingResourceException e) {
+			logger.error("No 'dependencies' setting found in application: "+getApplicationName(), e);
 		}
+
 	}
 	
 	@Override
@@ -91,7 +104,7 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 
 	private void processProfiles() {
 		List<String> pro = new LinkedList<String>();
-		File profilesDir = new File(appFolder, "settings/profiles");
+		File profilesDir = new File(getAppFolder(), "settings/profiles");
 
 		if (profilesDir.exists()) {
 			for (File file : profilesDir.listFiles()) {

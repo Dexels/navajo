@@ -25,6 +25,10 @@ import com.dexels.navajo.tipi.dev.server.appmanager.impl.UnsignJarTask;
 
 public class XsdBuild extends BaseOperation implements AppStoreOperation {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(XsdBuild.class);
+	
 	public void xsd(String name) throws IOException {
 		ApplicationStatus as = applications.get(name);
 		build(as);
@@ -41,6 +45,10 @@ public class XsdBuild extends BaseOperation implements AppStoreOperation {
 				return name.endsWith(".jar");
 			}
 		});
+		if(jars==null || jars.length==0) {
+			logger.warn("Can not write xsd: No jar files built.");
+			return;
+		}
 		for (File file : jars) {
 			xsd.addJar(file);
 		}

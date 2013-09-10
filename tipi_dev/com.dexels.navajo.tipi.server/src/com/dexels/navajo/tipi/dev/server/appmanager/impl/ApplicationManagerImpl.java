@@ -98,6 +98,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
 			if(!isTipiAppDir(file)) {
 				continue;
 			}
+			if(isGitRepo(file)) {
+				continue;
+			}
 			final String name = file.getName();
 			applications.add(name);
 			Configuration c = createOrReuse(TIPI_STORE_APPLICATION, "(name="+name+")");
@@ -121,6 +124,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 			}
 		}
 	}
+
+
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.tipi.dev.server.appmanager.impl.ApplicationManager#getAppsFolder()
 	 */
@@ -187,6 +192,10 @@ private void setAppsFolder(File appsFolder) throws IOException {
 		return tipiDir.exists() && settingsProp.exists();
 	}
 
+	private boolean isGitRepo(File file) {
+		File gitRepo = new File(file,".git");
+		return gitRepo.exists();
+	}
 
 	@Override
 	public Set<String> listApplications() {

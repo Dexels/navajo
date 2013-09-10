@@ -13,17 +13,23 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.CredentialsProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Logger;
 
 public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		ApplicationStatus {
 
+	
+	private final static Logger logger = LoggerFactory.getLogger(GitApplicationStatusImpl.class);
+	
+	
 	private ApplicationManager applicationManager;
+	private File applicationFolder;
 
 	public ApplicationManager getApplicationManager() {
 		return applicationManager;
@@ -38,20 +44,25 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	}
 
 	
+
+	
 	@Override
 	public void activate(Map<String,Object> settings) throws IOException {
 //		url=git@github.com:Dexels/com.sportlink.club.git
 //		key=id_rsa
 //		name=club
 //		branch=origin/master
-		File gitRepoFolder = new File(applicationManager.getStoreFolder(),"gitrepositories");
+		File gitRepoFolder = new File(applicationManager.getStoreFolder(),"applications");
 		String gitUrl = (String) settings.get("url");
 		String name = (String) settings.get("name");
+		String reponame = (String) settings.get("repositoryname");
 		String key = (String) settings.get("key");
-		File applicationFolder = new File(gitRepoFolder,name);
 		String branch = (String) settings.get("branch");
+		String combinedname = reponame + "-"+branch;
+		applicationFolder = new File(gitRepoFolder,combinedname);
 		File keyFolder = new File(applicationManager.getStoreFolder(),"gitssh");
 		
+		super.load(applicationFolder);
 		File privateKey = null;
 		File publicKey = null;
 		
@@ -72,11 +83,11 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 				ga.callClone(gitUrl, branch, applicationFolder,publicKey,privateKey);
 			}
 		} catch (InvalidRemoteException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (TransportException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		} catch (GitAPIException e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 
 	}
@@ -85,6 +96,10 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 
 	private void callPull(File dir, File publicKey, File privateKey, String branch) throws GitAPIException,
 			IOException {
+		File gitSubfolder = new File(dir,".git");
+		if(!gitSubfolder.exists()) {
+			logger.info("Folder: "+dir.getAbsolutePath()+" is not a git repo. Not pulling.");
+		}
 		Repository repository = getRepository(dir);
 		Git git = new Git(repository);
 		git.fetch().setRemote("origin").setProgressMonitor(new NavajoProgress()).call();
@@ -106,7 +121,7 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 //		    }
 //		};
 	    JSch jsch = new JSch();
-	    JSch.setLogger(new Logger() {
+	    JSch.setLogger(new com.jcraft.jsch.Logger() {
 			
 			@Override
 			public void log(int arg0, String txt) {
