@@ -53,9 +53,6 @@ public class AntRun {
 
 	public static void callAnt(File buildFile, File baseDir, Map<String,String> userProperties, Map<String,Class<?>> taskDefinitions, String target, PrintStream errorStream) throws IOException {
 		userProperties.put("tipiAppstore", "true");
-//		
-//		ByteArrayOutputStream output = new ByteArrayOutputStream();
-//		PrintStream ps = new PrintStream(output);
 		
 		Project p = new Project();
 		p.setBaseDir(baseDir);
@@ -97,8 +94,6 @@ public class AntRun {
 			p.fireBuildFinished(e);
 			e.printStackTrace();
 		}
-//		Map<String,Object> m =  p.getProperties();
-	//	logger.info("Map: "+m);
 	}
 
 

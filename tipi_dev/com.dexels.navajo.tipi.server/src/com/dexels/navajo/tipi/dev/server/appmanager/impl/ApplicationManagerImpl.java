@@ -39,11 +39,14 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(ApplicationManagerImpl.class);
+	private File storeFolder;
 	
 
 	public void activate(Map<String,Object> configuration) throws IOException {
 		final String path = (String) configuration.get("tipi.store.path");
-		setAppsFolder(new File(path));
+		storeFolder = new File(path);
+		File applicationFolder = new File(storeFolder,"applications");
+		setAppsFolder(applicationFolder);
 		running = true;
 		this.scanThread = new Thread() {
 
@@ -72,7 +75,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		}
 	}
 
-	public synchronized void  scan() throws IOException {
+	private synchronized void  scan() throws IOException {
 		Map<String, Configuration> configs = new HashMap<String, Configuration>();
 		try {
 			Configuration[] l =  configurationAdmin.listConfigurations("(service.factoryPid="+TIPI_STORE_APPLICATION+")");
@@ -126,14 +129,18 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		return appsFolder;
 	}
 
-	public void setAppsFolder(File appsFolder) throws IOException {
+	
+	@Override
+	public File getStoreFolder() {
+		return storeFolder;
+	}
+private void setAppsFolder(File appsFolder) throws IOException {
 		logger.info("Using application folder: "+appsFolder.getAbsolutePath());
 		this.appsFolder = appsFolder;
 	}
 
 	
 	protected void deleteConfigurations(String filter) throws IOException, InvalidSyntaxException {
-//		"(service.factoryPid="+TIPI_STORE_APPLICATION+")"
 		Configuration[] l =  configurationAdmin.listConfigurations(filter);
 		if(l!=null) {
 			for (Configuration configuration : l) {

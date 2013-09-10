@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.tools.ant.BuildException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,75 +39,41 @@ import com.dexels.navajo.tipi.dev.core.util.zip.ZipUtils;
 
 
 
-public class UnsignJarTask extends org.apache.tools.ant.Task {
-
-	private String url;
-	private String path;
-	private String destination;
+public class UnsignJarTask  {
 
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(UnsignJarTask.class);
 	
-	public String getUrl() {
-		return url;
-	}
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getDestination() {
-		return destination;
-	}
-
-	public void setDestination(String destination) {
-		this.destination = destination;
-	}
-
-    public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	@Override
-	public void execute() throws BuildException {
-    	try {
-    		List<String> extraHeaders = new ArrayList<String>();
-    		extraHeaders.add("Permissions: all-permissions");
-    		extraHeaders.add("Codebase: *");
-    		Dependency d = new Dependency(url);
-    		downloadDepencency(d, new File(destination),extraHeaders);
-		} catch (IOException e) {
-			throw new BuildException("Error downloading and unsigning ", e);
-		}
-
-    }
+//	public void execute() throws BuildException {
+//    	try {
+//    		List<String> extraHeaders = new ArrayList<String>();
+//    		extraHeaders.add("Permissions: all-permissions");
+//    		extraHeaders.add("Codebase: *");
+//    		Dependency d = new Dependency(url);
+//    		downloadDepencency(d, new File(destination),extraHeaders);
+//		} catch (IOException e) {
+//			throw new BuildException("Error downloading and unsigning ", e);
+//		}
+//
+//    }
 
 	public static void downloadDepencency(Dependency d, File destinationFolder, List<String> extraHeaders) throws IOException {
-		logger.info("Downloading: "+d.getUrl()+" to "+destinationFolder.getAbsolutePath());
 		String assembledName = d.getFileNameWithVersion();
 		String tmpAssembledFile = "tmp_"+assembledName;
 		String tmpAssembled = d.getArtifactId()+"_"+d.getVersion();
 		File dest = new File(destinationFolder,tmpAssembledFile);
-		logger.info("Wrote to temp file: "+dest);
 		FileOutputStream fos = new FileOutputStream(dest);
 		
 		ZipUtils.copyResource(fos, d.getUrl().openStream());
 		File tmpDir = new File(destinationFolder,tmpAssembled);
 		tmpDir.mkdirs();
 		ZipUtils.unzip(dest, tmpDir);
-		logger.info("Unzipped "+dest.getAbsolutePath()+" to: "+tmpDir.getAbsolutePath());
 		cleanSigningData(tmpDir,extraHeaders);
 		File destinationZip = new File(destinationFolder,assembledName);
-		logger.info("Zipping: "+tmpDir.getAbsolutePath()+" to zip: "+destinationZip.getAbsolutePath());
 		ZipUtils.zipAll(tmpDir,destinationZip);
-		logger.info("Deleting tmpDir: "+tmpDir.getAbsolutePath());
 		FileUtils.deleteDirectory(tmpDir);
-		logger.info("Deleting temp jar: "+dest.getAbsolutePath());
 		dest.delete();
 	}
 
@@ -137,19 +102,12 @@ public class UnsignJarTask extends org.apache.tools.ant.Task {
 		if(manifest!=null) {
 			cleanManifest(tmpManifest,manifest,extraHeaders);
 		}
-//		File aap = new File(metainf,"aap.txt");
-//		FileWriter aapwr = new FileWriter(aap);
-//		aapwr.write("ohaapje\n");
-//		aapwr.write("ohnootje\n");
-//		aapwr.close();
 		tmpManifest.delete();
-//		logger.info("Deleting file: "+tmpManifest);
 	}
 
 	private static void cleanManifest(File manifest, File outputManifest, List<String> extraHeaders) throws IOException {
 		
 		BufferedReader fr = null;
-		logger.info("Cleaning manifest. From: "+manifest.getAbsolutePath()+" to: "+outputManifest.getAbsolutePath());
 		List<StringBuffer> manifestheaders;
 		try {
 			fr = new BufferedReader(new FileReader(manifest));
@@ -240,11 +198,5 @@ public class UnsignJarTask extends org.apache.tools.ant.Task {
 		return true;
 	}
 	
-    
-    public static void main(String[] args) {
-   	 UnsignJarTask d = new UnsignJarTask();
-//   	 d.setUrl(url);
-   	 d.execute();
-    }
 
 }

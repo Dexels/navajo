@@ -12,4 +12,6 @@ public interface ApplicationManager {
 
 	public Set<String> listApplications();
 
+	File getStoreFolder();
+
 }

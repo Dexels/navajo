@@ -4,19 +4,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 public class ApplicationStatusImpl implements ApplicationStatus {
 
@@ -25,10 +20,6 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 	private String applicationName;
 	private File appFolder;
 	private final List<Dependency> dependencies = new ArrayList<Dependency>();
-	private Map<String, Boolean> profileNeedsRebuild = new HashMap<String, Boolean>();
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(ApplicationStatusImpl.class);
 	
 	private PropertyResourceBundle settings;
 
@@ -56,7 +47,7 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 		load(appDir);
 	}
 
-	void load(File appDir) throws IOException {
+	protected void load(File appDir) throws IOException {
 		this.appFolder = appDir;
 		applicationName = appDir.getName();
 		File tipiSettings = new File(appDir, "settings/tipi.properties");
@@ -75,8 +66,6 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 			Dependency dd = new Dependency(dependency);
 			dependencies.add(dd);
 		}
-
-//		build();
 	}
 	
 	@Override
@@ -100,40 +89,6 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 		return settings;
 	}
 
-	public boolean profileNeedsRebuild(File profileProperties,
-			String profileName, File appDir) {
-		File jnlpFile = new File(appDir, profileName + ".jnlp");
-		if (!jnlpFile.exists()) {
-			return false;
-		}
-		if (profileProperties != null) {
-			if (profileProperties.lastModified() > jnlpFile.lastModified()) {
-				return true;
-			}
-		}
-		File args = new File(appDir, "settings/arguments.properties");
-		if (args.lastModified() > jnlpFile.lastModified()) {
-			return true;
-		}
-		File tipiprops = new File(appDir, "settings/arguments.properties");
-		if (tipiprops.lastModified() > jnlpFile.lastModified()) {
-			return true;
-		}
-
-		return false;
-	}
-
-	public boolean isValid() {
-		File libDir = new File(appFolder, "lib");
-		if (!libDir.exists()) {
-			return false;
-		}
-		if (libDir.list().length == 0) {
-			return false;
-		}
-		return true;
-	}
-
 	private void processProfiles() {
 		List<String> pro = new LinkedList<String>();
 		File profilesDir = new File(appFolder, "settings/profiles");
@@ -144,17 +99,9 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 						&& file.getName().endsWith(".properties")) {
 					String profileName = file.getName().substring(0,
 							file.getName().length() - ".properties".length());
-					boolean b = profileNeedsRebuild(file, profileName, appFolder);
 					pro.add(profileName);
-					profileNeedsRebuild.put(profileName, b);
 				}
 			}
-		}
-		if (pro.isEmpty()) {
-			String profileName = "Default";
-			boolean b = profileNeedsRebuild(null, profileName, appFolder);
-			pro.add(profileName);
-			profileNeedsRebuild.put(profileName, b);
 		}
 		this.profiles = pro;
 	}

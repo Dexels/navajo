@@ -462,8 +462,6 @@ public class TipiAdminServlet extends HttpServlet {
 		} catch (IOException e) {
 
 		}
-	
-	
 	}
 
 

@@ -14,7 +14,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
-import org.dexels.utils.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,7 +113,7 @@ public class CacheBuild extends BaseOperation implements AppStoreOperation {
 		}
 		
 		final byte[] bytes = digest.digest();
-		return Base64.encode(bytes);
+		return new String(Base64.encodeBase64(bytes));
 	}
 	private String relativePath(File base, File path) {
 		return base.toURI().relativize(path.toURI()).getPath();
