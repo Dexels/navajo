@@ -10,10 +10,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.BinaryOpenerFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.tipi.swingclient.SwingClient;
 
 public class MergeUtils {
 	private static String filename = "c:/merge.dat";
@@ -173,9 +173,9 @@ public class MergeUtils {
 
 			String separator = ",";
 
-			if (SwingClient.getUserInterface().showQuestionDialog("Outlook?")) {
+/*			if (SwingClient.getUserInterface().showQuestionDialog("Outlook?")) {
 				separator = ";";
-			}
+			} */
 
 			logger.info("Sending mail: " + columnName);
 			List<String> recepients = new ArrayList<String>();
@@ -189,14 +189,15 @@ public class MergeUtils {
 				}
 			}
 
-			String mailString = "mailto:?bcc=";
+			// mailto: is added by the BinaryOpener.
+			String mailString = "?bcc=";
 
 			for (int j = 0; j < recepients.size(); j++) {
 				mailString = mailString + recepients.get(j) + separator;
 			}
 			mailString = mailString.substring(0, mailString.length() - 1);
 			logger.info("Calling openDoc: " + mailString);
-			openDocument(mailString);
+			BinaryOpenerFactory.getInstance().mail(mailString);
 		} catch (Exception e) {
 			logger.info("Could not send email: " + e.getMessage());
 		}
@@ -219,7 +220,7 @@ public class MergeUtils {
 			b.write(fos);
 			fos.flush();
 			fos.close();
-			openDocument(f.getAbsolutePath());
+			BinaryOpenerFactory.getInstance().open(f);
 		} catch (IOException e) {
 			logger.error("Error: ",e);
 		}
@@ -230,52 +231,7 @@ public class MergeUtils {
 	}
 
 	public static void openDocument(String docFile) {
-		try {
-			// Process p = null;
-			if (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0) {
-				Runtime.getRuntime().exec(
-						"rundll32 url.dll,FileProtocolHandler " + docFile);
-			} else {
-				if (System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
-					Runtime.getRuntime().exec("open " + docFile);
-				} else {
-					// non-Windows platform, assume Linux/Unix
-					String[] cmd = new String[2];
-
-					if (docFile.toLowerCase().endsWith(".doc")
-							|| docFile.toLowerCase().endsWith(".rtf")
-							|| docFile.toLowerCase().endsWith(".xls")
-							|| docFile.toLowerCase().endsWith(".csv")
-							|| docFile.toLowerCase().endsWith(".ppt")) {
-						cmd[0] = "ooffice";
-					} else if (docFile.toLowerCase().endsWith(".txt")) {
-						cmd = new String[4]; // resize
-						cmd[0] = "xterm";
-						cmd[1] = "-e";
-						cmd[2] = "vi";
-					} else if (docFile.toLowerCase().endsWith(".jpg")
-							|| docFile.toLowerCase().endsWith(".gif")
-							|| docFile.toLowerCase().endsWith(".png")
-							|| docFile.toLowerCase().endsWith(".tif")
-							|| docFile.toLowerCase().endsWith(".tiff")) {
-						cmd[0] = "display";
-					} else if (docFile.toLowerCase().endsWith(".pdf")) {
-						cmd[0] = "xpdf";
-					} else { // we don't have a clue, try a plain web browser
-						cmd[0] = "mozilla";
-					}
-
-					cmd[(docFile.toLowerCase().endsWith(".txt")) ? 3 : 1] = docFile;
-
-					if (cmd[0] != null) {
-						Runtime.getRuntime().exec(cmd);
-					}
-				}
-			}
-		} catch (Exception e) {
-			logger.error("Error: ",e);
-		}
-
+		BinaryOpenerFactory.getInstance().open(docFile);
 	}
 
 }

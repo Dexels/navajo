@@ -20,7 +20,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.components.swingimpl.swing.DefaultBrowser;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -57,13 +56,13 @@ public class TipiBrowseBinary extends TipiAction {
 		}
 		if (!(value.value instanceof Property)) {
 			throw new TipiException(
-					"TipiOpenBinary: Type of value is not Property, but: "
+					"TipiBrowseBinary: Type of value is not Property, but: "
 							+ value.value.getClass());
 		}
 		final Property pp = (Property) value.value;
 		if (!pp.getType().equals(Property.BINARY_PROPERTY)) {
 			throw new TipiException(
-					"TipiOpenBinary: Property is not type binary , but: "
+					"TipiBrowseBinary: Property is not type binary , but: "
 							+ pp.getType());
 		}
 		getComponent().runSyncInEventThread(new Runnable() {
@@ -101,9 +100,6 @@ public class TipiBrowseBinary extends TipiAction {
 	}
 
 	public static void main(String[] args) throws Exception {
-		File f = File.createTempFile("tipi_", "" + ".pdf");
-		// URL u = f.toURL();
-		DefaultBrowser.displayURL(f.getAbsolutePath());
-
+		logger.warn("No test implemented");
 	}
 }

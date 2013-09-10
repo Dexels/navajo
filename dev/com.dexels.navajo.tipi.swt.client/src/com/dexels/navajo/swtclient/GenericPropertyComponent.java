@@ -42,10 +42,10 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.BinaryOpenerFactory;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.document.metadata.BinaryOpener;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.gface.date.DatePickerCombo;
@@ -643,7 +643,7 @@ public class GenericPropertyComponent {
 
     public static void openBinary(Binary b)  {
     	
-    	BinaryOpener.openBinary(b);
+    	BinaryOpenerFactory.getInstance().open(b);
     	
     }
 

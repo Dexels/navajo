@@ -12,12 +12,12 @@ import java.net.URL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.BinaryOpenerFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
-import com.dexels.navajo.tipi.components.swingimpl.swing.DefaultBrowser;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -47,7 +47,7 @@ public class TipiOpenBrowser extends TipiAction {
 				logger.error("Error detected",e);
 			}
 		} else {
-			DefaultBrowser.displayURL(urlVal);
+			BinaryOpenerFactory.getInstance().browse(urlVal);
 		}
 	}
 
