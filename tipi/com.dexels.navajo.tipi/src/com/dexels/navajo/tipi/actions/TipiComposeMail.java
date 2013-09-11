@@ -3,8 +3,8 @@ package com.dexels.navajo.tipi.actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.BinaryOpenerFactory;
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.metadata.BinaryOpener;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -45,7 +45,8 @@ public class TipiComposeMail extends TipiAction {
 	private void createEmail(Message recipient, String propertyName, String subject, String body) {
 
 		String emailAddress;
-		String emailString = "mailto:";
+		// "mailto:" is added by BinaryOpener
+		String emailString = "";
 		boolean recipientsFound = false;
 
 		try {
@@ -64,7 +65,7 @@ public class TipiComposeMail extends TipiAction {
 				emailString = emailString + "?subject=" + subject + "&body="
 						+ body;
 				logger.info("Generated email string: " + emailString);
-				BinaryOpener.displayURL(emailString);
+				BinaryOpenerFactory.getInstance().mail(emailString);
 			} else {
 				logger.info("No recipients found that have an email address");
 			}

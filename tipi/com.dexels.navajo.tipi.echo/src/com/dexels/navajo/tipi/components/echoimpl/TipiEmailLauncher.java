@@ -36,7 +36,7 @@ public class TipiEmailLauncher extends TipiEchoDataComponentImpl {
                 propertyName = (String) compMeth.getEvaluatedParameter("propertyname", event).value;
                 clubName = (String) compMeth.getEvaluatedParameter("clubname", event).value;
                 if (recipient == null) {
-                    logger.info("TipiPersonEmail does not recieve a message as input! Aborting...");
+                    logger.info("TipiEmailLauncher does not recieve a message as input! Aborting...");
                     return;
                 }
             } catch (Exception ex) {
@@ -49,27 +49,27 @@ public class TipiEmailLauncher extends TipiEchoDataComponentImpl {
 
     private void createEmail(String propertyName, String clubName) {
 
-        String EmailAddress;
-        String Subject = "[" + clubName + "]";
-        String EmailString = "mailto:";
+        String emailAddress;
+        String subject = "[" + clubName + "]";
+        String emailString = "mailto:";
         boolean recipientsFound = false;
 
         try {
 
             for (int i = 0; i < recipient.getArraySize(); i++) {
                 Message current = recipient.getMessage(i);
-                EmailAddress = current.getProperty(propertyName).getValue();
-                if ((EmailAddress != null) && !EmailAddress.trim().equals( "")) {
+                emailAddress = current.getProperty(propertyName).getValue();
+                if ((emailAddress != null) && !emailAddress.trim().equals( "")) {
                     recipientsFound = true;
-                    EmailString = EmailString + EmailAddress + ",";
+                    emailString = emailString + emailAddress + ",";
                 }
             }
             // In echo, this is kinda ridiculous, right?
             if (recipientsFound) {
-                EmailString = EmailString.substring(0, (EmailString.length() - 1));
-                EmailString = EmailString + "?subject=" + Subject;
-                logger.info("Generated email string: " + EmailString);
-                String cmd = "rundll32 url.dll,FileProtocolHandler " + EmailString;
+                emailString = emailString.substring(0, (emailString.length() - 1));
+                emailString = emailString + "?subject=" + subject;
+                logger.info("Generated email string: " + emailString);
+                String cmd = "rundll32 url.dll,FileProtocolHandler " + emailString;
                 try {
                     Runtime.getRuntime().exec(cmd);
                 } catch (IOException ex) {

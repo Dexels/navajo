@@ -569,7 +569,6 @@
             <param name="value" type="object" required="true" />
          </method>
          <method name="doEmail" deprecated="true" />
-         <method name="doWord" deprecated="true" />
          <method name="doExcel" deprecated="true" />
          <method name="doSaveColumns">
             <description>
@@ -1860,20 +1859,6 @@
          <value direction="in" name="opaque" type="boolean" property="opaque" />
       </values>
       <methods />
-   </tipiclass>
-
-   <tipiclass studio-icon="tipitableprinter.gif" module="extensions" implements="basecomponent,datacomponent" class="TipiEmailLauncher" name="emaillauncher" childcount="0"
-      package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" addtocontainer="false" layoutmanager="false">
-      <events>
-      </events>
-      <values />
-      <methods>
-         <method name="setEmailParameters">
-            <param name="messagepath" type="message" />
-            <param name="propertyname" type="string" />
-            <param name="clubname" type="string" />
-         </method>
-      </methods>
    </tipiclass>
 
    <tipiclass studio-icon="tipitableprinter.gif" implements="basecomponent,swingcomponent,datacomponent" module="extensions" class="TipiWindowEmbedComponent" name="windowembed" childcount="0"
