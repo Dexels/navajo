@@ -324,7 +324,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	public String [] getParentObjects(String parent) {
 		
 		ArrayList<String> names = new ArrayList<String>();
-		File p = new File(sharedStore, parent);
+		File p = ( parent != null ? new File(sharedStore, parent) : sharedStore );
 		File [] fs = p.listFiles(); 
 		// Sort files on last modification date
 		if ( fs != null) {
