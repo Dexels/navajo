@@ -110,7 +110,7 @@ public class SharedMemoryStore implements SharedStoreInterface {
 
 	@Override
 	public boolean exists(String parent, String name) {
-		return getEntry(parent, name) != null;
+		return store.containsKey(constructName(parent, name));
 	}
 
 	@Override
