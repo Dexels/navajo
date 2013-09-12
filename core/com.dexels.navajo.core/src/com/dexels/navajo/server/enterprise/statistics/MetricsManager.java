@@ -1,6 +1,8 @@
 package com.dexels.navajo.server.enterprise.statistics;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -44,9 +46,19 @@ public class MetricsManager implements Mappable {
 		Set<String> allModules = registeredModules.keySet();
 		for ( String mod : allModules) {
 			sb.append("\t Module : " + mod + "\n");
+			List<String> keys = new ArrayList<String>();
 			Set<String> metrics = registeredModules.get(mod).getMetrics().keySet();
+			keys.add("_implementation");
 			for ( String metric : metrics ) {
-				sb.append("\t\t" + metric + " : " + registeredModules.get(mod).getMetrics().get(metric) + "\n");
+				keys.add(metric);
+			}
+			Collections.sort(keys);
+			for ( String key : keys ) {
+				if ( key.equals("_implementation")) {
+					sb.append("\t\t" + key + " : " + registeredModules.get(mod).getClass().getName() + "\n");
+				} else {
+					sb.append("\t\t" + key + " : " + registeredModules.get(mod).getMetrics().get(key) + "\n");
+				}
 			}
 		}
 		sb.append("\n");

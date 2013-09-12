@@ -30,6 +30,8 @@ public interface Listener extends Serializable {
 	 */
 	public String getOwnerHost();
 	
+	public void setOwnerHost(String s);
+	
 	/**
 	 * Defines whether this listener is only used in 'local', i.e. in-memory, mode. 
 	 * 
