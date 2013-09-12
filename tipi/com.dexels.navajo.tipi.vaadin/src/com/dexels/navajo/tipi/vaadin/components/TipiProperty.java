@@ -109,6 +109,9 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		}
 		value.addStyleName("tipi-property-direction-"+p.getDirection());
 		value.addStyleName("tipi-property-type-"+p.getType());
+		if(style!=null) {
+			value.addStyleName(style);
+		}
 	}
 	
     public void propertyEventFired(com.dexels.navajo.document.Property p, String eventType) {
