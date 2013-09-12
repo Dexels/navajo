@@ -124,6 +124,9 @@ public class CommandHandler {
 		SharedStore_sharedstore sharedstore = new SharedStore_sharedstore();
 		registerCommand(sharedstore, "sharedstore");
 		
+		NavajoStatusCommand navajoStatus = new NavajoStatusCommand();
+		registerCommand(navajoStatus, "status");
+		
 
 	}
 
