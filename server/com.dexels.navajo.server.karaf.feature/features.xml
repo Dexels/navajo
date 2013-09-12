@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
-    <feature resolver="(obr)" name='navajo.core' version='1.0.15' start-level='80'  >
+    <feature resolver="(obr)" name='navajo.core' version='1.0.16' start-level='80'  >
 	    <details>Navajo Core Components</details>
 		<feature version="[2.3.0,3.1.0)">scr</feature>
 		<feature version="[2.3.0,3.1.0)">eventadmin</feature>
 
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.50</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.56</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/1.0.26</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.4.32</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.1.22</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.7</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.12.44</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.12.54</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
@@ -23,7 +23,7 @@
      <feature resolver="(obr)" name='pax-http' version='3.0.0.M3' start-level='80'/> 
     <feature resolver="(obr)" name='navajo.function' version='1.0.8' start-level='80'  >
 		<feature version="[1.0.5,2)">navajo.core</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.26</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.30</bundle>
 	</feature>
 
 	<feature resolver="(obr)" name='navajo.server' version='1.0.8' start-level='81' >
@@ -46,7 +46,7 @@
 
     <feature resolver="(obr)" name='navajo.adapter' version='1.0.3' start-level='81'  >
 		<feature version="[1.0.5,2)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/1.1.56</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/1.1.60</bundle>
 	</feature>
 	
 	<feature resolver="(obr)" name='navajo.core.jabber' version='1.0.2' start-level='81' >
