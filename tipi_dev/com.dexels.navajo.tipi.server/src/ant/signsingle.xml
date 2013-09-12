@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE project>
+<project default="signsingle">
+	<fail unless="tipiAppstore" message="This script will only run from the app store."/>
+
+	<target name="signsingle" >
+		<signjar keystore="${keystore}" storepass="${storepass}"  alias="${alias}" >
+			<fileset dir="${workdir}">
+				<include name="${jarfile}" />
+			</fileset>
+		</signjar>
+	</target>
+	
+</project>

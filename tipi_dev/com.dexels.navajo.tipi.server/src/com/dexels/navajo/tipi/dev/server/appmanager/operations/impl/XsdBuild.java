@@ -3,25 +3,13 @@ package com.dexels.navajo.tipi.dev.server.appmanager.operations.impl;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.dev.ant.AntRun;
-import com.dexels.navajo.tipi.dev.ant.LoggingOutputStream;
-import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
-import com.dexels.navajo.tipi.dev.core.projectbuilder.LocalJnlpBuilder;
 import com.dexels.navajo.tipi.dev.core.projectbuilder.XsdBuilder;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
-import com.dexels.navajo.tipi.dev.server.appmanager.impl.ApplicationStatusImpl;
-import com.dexels.navajo.tipi.dev.server.appmanager.impl.UnsignJarTask;
 
 public class XsdBuild extends BaseOperation implements AppStoreOperation {
 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,12 +24,14 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
+import com.dexels.navajo.tipi.dev.server.appmanager.GitApplicationStatus;
 
 
 
@@ -53,14 +56,20 @@ private final static Logger logger = LoggerFactory
 		if(!checkGitHubIpRange(req)) {
 			resp.sendError(400);
 		}
+		String p = req.getParameter("payload");
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		copyResource(baos, p.getInputStream()); 
+//		final byte[] byteArray = baos.toByteArray();
+//		application/x-www-form-urlencoded
+		String decoded = URLDecoder.decode(p,"UTF-8");
+		System.err.println("Received: \n"+p);
 		ObjectMapper mapper = new ObjectMapper();
 		JsonFactory factory = mapper.getJsonFactory(); // since 2.1 use mapper.getFactory() instead
-		JsonParser jp = factory.createJsonParser(req.getReader());
+		JsonParser jp = factory.createJsonParser(decoded);
 		JsonNode node = mapper.readTree(jp);		
-
+		
 		process(mapper, node);
 	}
-
 
 	public void addApplicationStatus(ApplicationStatus a,Map<String,Object> settings) {
 		applications.put(a.getApplicationName(), a);
@@ -76,7 +85,7 @@ private final static Logger logger = LoggerFactory
 		operations.put((String) settings.get("component.name"), a);
 	}
 	
-	public void removeOperation(ApplicationStatus a,Map<String,Object> settings) {
+	public void removeOperation(AppStoreOperation a,Map<String,Object> settings) {
 		operations.remove((String) settings.get("component.name"));
 	}
 	
@@ -124,12 +133,7 @@ private final static Logger logger = LoggerFactory
 //			writer.writeValue(System.err, commit);
 			
 		}
-//		for (JsonNode commit : commits) {
-//			paths.addAll(commit.findValuesAsText("added"));
-//			paths.addAll(commit.findValuesAsText("removed"));
-//			paths.addAll(commit.findValuesAsText("modified"));
-////			System.err.println(">>>>>>>>>>>>>>>>>>><<>>"+commit.findValues("modified"));
-//		}
+
 		System.err.println("nodes: "+paths);
 		boolean tipiChanged = tipiResourcesChanged(paths);
 		boolean settingsChanged = settingsChanged(paths);
@@ -146,20 +150,19 @@ private final static Logger logger = LoggerFactory
 			logger.info("Found application folder");
 		}
 		AppStoreOperation buildJnlp = operations.get("tipi.dev.operation.build");
-		if(buildJnlp!=null) {
-			logger.info("jnlp build found");
-		}
 		AppStoreOperation buildxsd = operations.get("tipi.dev.operation.xsdbuild");
-		if(buildxsd!=null) {
-			logger.info("buildxsd build found");
-		}
 		AppStoreOperation cachebuild = operations.get("tipi.dev.operation.cachebuild");
-		if(cachebuild!=null) {
-			logger.info("cachebuild build found");
-		}
+
 
 		final ApplicationStatus application = findApplication(name,branch);
-
+		if(application instanceof GitApplicationStatus) {
+			GitApplicationStatus ga = (GitApplicationStatus)application;
+			try {
+				ga.callPull();
+			} catch (GitAPIException e) {
+				e.printStackTrace();
+			}
+		}
 		if(settingsChanged) {
 			buildJnlp.build(application);
 			buildxsd.build(application);

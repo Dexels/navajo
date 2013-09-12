@@ -2,6 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" immediate="true" name="tipi.dev.gitapplication">
    <implementation class="com.dexels.navajo.tipi.dev.server.appmanager.impl.GitApplicationStatusImpl"/>
    <reference bind="setApplicationManager" cardinality="1..1" interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager" name="ApplicationManager" policy="dynamic" unbind="clearApplicationManager"/>
+   <reference bind="addOperation" cardinality="0..n" interface="com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation" name="AppStoreOperation" policy="dynamic" unbind="removeOperation"/>
    <service>
       <provide interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus"/>
    </service>

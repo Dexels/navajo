@@ -46,8 +46,11 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 			unsigned.mkdirs();
 		}
 		
+		File repo = new File(applicationManager.getStoreFolder(), "repo");
+		
+		
 		for (Dependency dd : a.getDependencies()) {
-			UnsignJarTask.downloadDepencency(dd, new File(unsigned.getAbsolutePath()),extraHeaders);
+			UnsignJarTask.downloadDepencency(dd,repo, new File(unsigned.getAbsolutePath()),extraHeaders);
 		}
 		LocalJnlpBuilder jj = new LocalJnlpBuilder();
 		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),a.getAppFolder(),a.getProfiles(),"");
@@ -66,6 +69,22 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 			Logger antlogger = LoggerFactory.getLogger("tipi.appstore.ant");
 			PrintStream los = new PrintStream( new LoggingOutputStream(antlogger));
 			AntRun.callAnt(JnlpBuild.class.getClassLoader().getResourceAsStream("ant/localsign.xml"), a.getAppFolder(), props,tasks,null,los);
+		} catch (IOException e) {
+			logger.error("Error: ", e);
+		}
+	}
+	
+	private void signdependency(Dependency d, String alias, String storepass, File keystore, File repo) {
+		Map<String,String> props = new HashMap<String, String>();
+		try {
+			Map<String,Class<?>> tasks = new HashMap<String,Class<?>>();
+			tasks.put("signjar", org.apache.tools.ant.taskdefs.SignJar.class);
+			props.put("storepass",storepass);
+			props.put("alias", alias);
+			props.put("keystore",keystore.getAbsolutePath());
+			Logger antlogger = LoggerFactory.getLogger("tipi.appstore.ant");
+			PrintStream los = new PrintStream( new LoggingOutputStream(antlogger));
+			AntRun.callAnt(JnlpBuild.class.getClassLoader().getResourceAsStream("ant/signsingle.xml"), repo, props,tasks,null,los);
 		} catch (IOException e) {
 			logger.error("Error: ", e);
 		}

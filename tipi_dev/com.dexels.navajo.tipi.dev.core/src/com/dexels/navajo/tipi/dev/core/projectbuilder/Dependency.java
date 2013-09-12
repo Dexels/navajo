@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.dev.core.projectbuilder;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -23,7 +24,6 @@ public class Dependency {
 		}
 		// TODO support repository (using '!')
 		String rest = p1[1];
-//		StringTokenizer st = new StringTokenizer(rest,"/");
 		String[] parts = rest.split("/");
 		groupId = parts[0];
 		artifactId = parts[1];
@@ -71,6 +71,14 @@ public class Dependency {
 		return url;
 	}
 	
+	public File getFilePathForDependency(File base) {
+		String group = groupId.replaceAll("\\.", "/");
+		File groupFile  = new File(base,group);
+		File articleFile = new File(groupFile,artifactId);
+		File versionFile = new File(articleFile,version);
+		File f = new File(versionFile,getFileName());
+		return f;
+	}
 	public String getFileName() {
 		String ttype = type==null|"".equals(type)?"jar":type;
 		String classifier_suffix = classifier==null?"":("-"+classifier);

@@ -46,26 +46,18 @@ public class UnsignJarTask  {
 			.getLogger(UnsignJarTask.class);
 	
 
-//	public void execute() throws BuildException {
-//    	try {
-//    		List<String> extraHeaders = new ArrayList<String>();
-//    		extraHeaders.add("Permissions: all-permissions");
-//    		extraHeaders.add("Codebase: *");
-//    		Dependency d = new Dependency(url);
-//    		downloadDepencency(d, new File(destination),extraHeaders);
-//		} catch (IOException e) {
-//			throw new BuildException("Error downloading and unsigning ", e);
-//		}
-//
-//    }
-
-	public static void downloadDepencency(Dependency d, File destinationFolder, List<String> extraHeaders) throws IOException {
+	public static void downloadDepencency(Dependency d, File repoDir, File destinationFolder, List<String> extraHeaders) throws IOException {
 		String assembledName = d.getFileNameWithVersion();
 		String tmpAssembledFile = "tmp_"+assembledName;
 		String tmpAssembled = d.getArtifactId()+"_"+d.getVersion();
 		File dest = new File(destinationFolder,tmpAssembledFile);
 		FileOutputStream fos = new FileOutputStream(dest);
-		
+		File ff = d.getFilePathForDependency(repoDir);
+		File parent = ff.getParentFile();
+		if(!parent.exists()) {
+			parent.mkdirs();
+		}
+		System.err.println("ff: "+ff.getAbsolutePath());
 		ZipUtils.copyResource(fos, d.getUrl().openStream());
 		File tmpDir = new File(destinationFolder,tmpAssembled);
 		tmpDir.mkdirs();
@@ -73,6 +65,7 @@ public class UnsignJarTask  {
 		cleanSigningData(tmpDir,extraHeaders);
 		File destinationZip = new File(destinationFolder,assembledName);
 		ZipUtils.zipAll(tmpDir,destinationZip);
+		FileUtils.copyFileToDirectory(destinationZip,parent);
 		FileUtils.deleteDirectory(tmpDir);
 		dest.delete();
 	}

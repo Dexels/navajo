@@ -94,6 +94,8 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 	public void buildFromMaven(ResourceBundle settings,
 			List<Dependency> dependencyList, File appFolder,
 			List<String> profiles, String resourceBase) {
+		
+		logger.info("Building in folder: "+appFolder);
 		for (String fileName : profiles) {
 			File jnlpFile = new File(appFolder, fileName+".jnlp");
 			logger.info("Writing jnlp: "+jnlpFile.getAbsolutePath());

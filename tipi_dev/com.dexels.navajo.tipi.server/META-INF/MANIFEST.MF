@@ -27,7 +27,7 @@ Import-Package: com.dexels.navajo.tipi.dev.ant;version="1.0.0",
  org.osgi.framework;version="1.5.0",
  org.osgi.service.cm;version="1.4.0",
  org.slf4j;version="[1.6.1,1.8.0)"
-Bundle-ClassPath: lib/cos.jar,.
+Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.tipi.dev.server,
  com.dexels.navajo.tipi.dev.server.appmanager.impl
 Service-Component: OSGI-INF/tipi.dev.applicationManager.xml,

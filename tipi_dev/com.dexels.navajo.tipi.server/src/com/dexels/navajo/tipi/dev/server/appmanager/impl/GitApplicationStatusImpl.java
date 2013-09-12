@@ -2,13 +2,17 @@ package com.dexels.navajo.tipi.dev.server.appmanager.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jgit.api.CloneCommand;
+import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -16,25 +20,51 @@ import org.eclipse.jgit.transport.CredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
+import com.dexels.navajo.tipi.dev.server.appmanager.GitApplicationStatus;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 
 public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
-		ApplicationStatus {
+		ApplicationStatus, GitApplicationStatus {
 
 	
 	private final static Logger logger = LoggerFactory.getLogger(GitApplicationStatusImpl.class);
-	
+
+	private final Map<String,AppStoreOperation> operations = new HashMap<String,AppStoreOperation>();
+
 	
 	private ApplicationManager applicationManager;
 	private File applicationFolder;
+
+
+	private File privateKey;
+
+
+	private File publicKey;
+
+
+	private String branch;
+
+
+	private String gitUrl;
 
 	public ApplicationManager getApplicationManager() {
 		return applicationManager;
 	}
 
+	
+	public void addOperation(AppStoreOperation a,Map<String,Object> settings) {
+		operations.put((String) settings.get("component.name"), a);
+	}
+	
+	public void removeOperation(AppStoreOperation a,Map<String,Object> settings) {
+		operations.remove((String) settings.get("component.name"));
+	}
+	
+	
 	public void setApplicationManager(ApplicationManager applicationManager) {
 		this.applicationManager = applicationManager;
 	}
@@ -53,18 +83,18 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 //		name=club
 //		branch=origin/master
 		File gitRepoFolder = new File(applicationManager.getStoreFolder(),"applications");
-		String gitUrl = (String) settings.get("url");
-		String name = (String) settings.get("name");
+		gitUrl = (String) settings.get("url");
+//		String name = (String) settings.get("name");
 		String reponame = (String) settings.get("repositoryname");
 		String key = (String) settings.get("key");
-		String branch = (String) settings.get("branch");
+		branch = (String) settings.get("branch");
 		String combinedname = reponame + "-"+branch;
 		applicationFolder = new File(gitRepoFolder,combinedname);
 		File keyFolder = new File(applicationManager.getStoreFolder(),"gitssh");
 		
 		super.load(applicationFolder);
-		File privateKey = null;
-		File publicKey = null;
+		privateKey = null;
+		publicKey = null;
 		
 		privateKey = new File(keyFolder,key);
 		publicKey = new File(keyFolder,key+".pub");
@@ -77,10 +107,10 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 //			String gitUrl = "git@github.com:Dexels/com.sportlink.club.git";
 //			File dir = new File("/Users/frank/git/navajo/tipi_dev/com.dexels.navajo.tipi.dev.store/applications/bom");
 			if(applicationFolder.exists()) {
-				callPull(applicationFolder,publicKey,privateKey,branch);
+				callPull();
 			} else {
-				GitApplicationStatusImpl ga = new GitApplicationStatusImpl();
-				ga.callClone(gitUrl, branch, applicationFolder,publicKey,privateKey);
+//				GitApplicationStatusImpl ga = new GitApplicationStatusImpl();
+				callClone();
 			}
 		} catch (InvalidRemoteException e) {
 			logger.error("Error: ", e);
@@ -93,23 +123,31 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	}
 
     
-
-	private void callPull(File dir, File publicKey, File privateKey, String branch) throws GitAPIException,
+	@Override
+	public void callPull() throws GitAPIException,
 			IOException {
-		File gitSubfolder = new File(dir,".git");
+		File gitSubfolder = new File(applicationFolder,".git");
 		if(!gitSubfolder.exists()) {
-			logger.info("Folder: "+dir.getAbsolutePath()+" is not a git repo. Not pulling.");
+			logger.info("Folder: "+applicationFolder.getAbsolutePath()+" is not a git repo. Not pulling.");
 		}
-		Repository repository = getRepository(dir);
+		Repository repository = getRepository(applicationFolder);
 		Git git = new Git(repository);
-		git.fetch().setRemote("origin").setProgressMonitor(new NavajoProgress()).call();
-		if(!repository.getBranch().equals(branch)) {
-			git.checkout().setName(branch).call();
-		}
+		git.pull().setProgressMonitor(new NavajoProgress()).call();
+		logger.info("Current branch: "+repository.getBranch());
+//		if(!repository.getBranch().equals(branch)) {
+//			git.checkout().setName(branch).call();
+//		}
 		git.clean().call();
+		git.reset().setMode(ResetType.HARD).call();
+//		AppStoreOperation buildJnlp = operations.get("tipi.dev.operation.build");
+		AppStoreOperation buildxsd = operations.get("tipi.dev.operation.xsdbuild");
+		AppStoreOperation cachebuild = operations.get("tipi.dev.operation.cachebuild");
+		buildxsd.build(this);
+		cachebuild.build(this);
 	}
 
-	private void callClone(String url, String branch, File path, File publicKey, File privateKey) throws GitAPIException,
+	@Override
+	public void callClone() throws GitAPIException,
 			InvalidRemoteException, TransportException, IOException {
 
 
@@ -141,20 +179,41 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	    }
 //	    SshSessionFactory.setInstance(jc);
 		
-		CloneCommand clone = Git.cloneRepository().setProgressMonitor(new NavajoProgress()).setBare(false).setCloneAllBranches(true);
+	    CredentialsProvider user = CredentialsProvider.getDefault(); // new
+	
+	    Git git = Git.cloneRepository().setProgressMonitor(new NavajoProgress()).
+				setBare(false).setCloneAllBranches(true).setDirectory(applicationFolder).
+				setURI(gitUrl).setCredentialsProvider(user).call();
 //		if(branch!=null) {
 //			clone.setBranch(branch);
 //		}
-		clone.setDirectory(path).setURI(url);
-		CredentialsProvider user = CredentialsProvider.getDefault(); // new
-		clone.setCredentialsProvider(user);
-		
-		
-		Git git = clone.call();
+	    
+	    git.branchCreate() 
+	       .setName(branch)
+	       .setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
+	       .setStartPoint("origin/"+branch)
+	       .setForce(true)
+	       .call(); 	    
+//		git.branchCreate().setName(branch).call();
+//		git.checkout().setName("Acceptance").call();
+
+		git.checkout().setName(branch).call();
 		StoredConfig config = git.getRepository().getConfig();
 		config.setString("remote", "origin", "fetch", "+refs/*:refs/*");
+//		[branch "Production"]
+//				remote = origin
+//				merge = refs/heads/Production
+		config.setString("branch",branch,"merge","refs/heads/"+branch);
+		config.setString("branch",branch,"remote","origin");
 		config.save();
-		callPull(path,publicKey,privateKey,branch);
+		callPull();
+		AppStoreOperation buildJnlp = operations.get("tipi.dev.operation.build");
+		buildJnlp.build(this);
+		AppStoreOperation buildxsd = operations.get("tipi.dev.operation.xsdbuild");
+		buildxsd.build(this);
+		AppStoreOperation cachebuild = operations.get("tipi.dev.operation.cachebuild");
+		cachebuild.build(this);
+
 	}
 
 	private Repository getRepository(File basePath) throws IOException {
@@ -162,5 +221,14 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		Repository repository = builder.setGitDir(new File(basePath,".git"))
 				.readEnvironment().findGitDir().build();
 		return repository;
+	}
+
+	public static void main(String[] args) throws IOException, GitAPIException {
+//		FileRepositoryBuilder builder = new FileRepositoryBuilder();
+		Git git = Git.open(new File("/Users/frank/git/navajo/tipi_dev/com.dexels.navajo.tipi.dev.store/applications/com.sportlink.club-Acceptance"));
+		List<Ref> aa = git.branchList().call();
+		System.err.println("aa: "+aa+" size: "+aa.size());
+//		git.branchCreate().setName("Acceptance").call();
+		git.checkout().setName("Acceptance").call();
 	}
 }

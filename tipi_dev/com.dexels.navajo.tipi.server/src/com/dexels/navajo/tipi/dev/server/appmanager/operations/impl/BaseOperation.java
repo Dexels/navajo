@@ -1,12 +1,8 @@
 package com.dexels.navajo.tipi.dev.server.appmanager.operations.impl;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
@@ -17,9 +13,7 @@ public abstract class BaseOperation implements AppStoreOperation {
 
 	protected final Map<String,ApplicationStatus> applications = new HashMap<String, ApplicationStatus>();
 	protected ApplicationManager applicationManager = null;
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(BaseOperation.class);
+
 	
 	public void setApplicationManager(ApplicationManager am) {
 		this.applicationManager = am;
