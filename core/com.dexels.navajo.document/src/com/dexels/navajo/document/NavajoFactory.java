@@ -132,7 +132,7 @@ public abstract class NavajoFactory {
 				impl.readTypes();
 			} catch (Exception e) {
 				logger.error("Error reading types ",e);
-				throw new RuntimeException("Could not instantiate NavajoDocument Factory, problem reading navajotypes.xml: " + e.getMessage());
+				throw new RuntimeException("Could not instantiate NavajoDocument Factory, problem reading navajotypes.xml: " + e.getMessage(),e);
 			}
 		  }
 	  }
