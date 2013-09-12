@@ -6,7 +6,7 @@
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
 	<property name="artifact" value="com.dexels.navajo.karaf.feature" />
-	<property name="version" value="1.1.5" />
+	<property name="version" value="1.1.7" />
 	<condition property="test">
 		<matches pattern=".*SNAPSHOT" string="${version}"/>
 	</condition>
@@ -31,7 +31,7 @@
 		<delete dir="${output}" />
 		<mkdir dir="${output}" />
 		<copy todir="${output}" verbose="true" file="pom.xml" overwrite="true" />
-		<copy verbose="true" file="features_test.xml" overwrite="true" tofile="${output}/features.xml" />
+		<copy verbose="true" file="features${suffix}.xml" overwrite="true" tofile="${output}/features.xml" />
 		<replace dir="${output}" token="[[VERSION]]" value="${version}">
 		</replace>
 		<replace dir="${output}" token="[[ARTIFACTID]]" value="${artifact}">
@@ -53,7 +53,7 @@
 			</then>
 			<else>
 				<echo message="Deploying to release maven repository"/>
-				<artifact:deploy  file="${output}/features${suffix}.xml" pomrefid="mypom">
+				<artifact:deploy  file="${output}/features.xml" pomrefid="mypom">
 					<remoterepository url="https://repo.dexels.com/nexus/content/repositories/navajo" id="dexels" />
 					<remotesnapshotrepository url="https://somethingillegal/nexus/content/repositories/navajo_test_snapshot" id="dexels_snap_test" />
 				</artifact:deploy>

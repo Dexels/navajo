@@ -154,6 +154,14 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 			for (int i = 0; i < question.getArraySize(); i++) {
 				Message current = question.getMessage(i);
 				String id = current.getProperty("Id").getValue();
+
+				String questionDefinitionName = this.questionDefinitionName;
+				Property questionLayoutProperty = current.getProperty("QuestionLayout");
+				if(questionLayoutProperty!=null) {
+					if(questionLayoutProperty.getValue()!=null) {
+						questionDefinitionName = questionLayoutProperty.getValue();
+					}
+				}
 				TipiBaseQuestion tc = (TipiBaseQuestion) TipiInstantiateTipi
 						.instantiateByDefinition(currentComponent, false, id,
 								questionDefinitionName, subConstraint, null);
