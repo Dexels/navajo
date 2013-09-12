@@ -313,6 +313,22 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 				for (int i = 0; i < m.getArraySize(); i++) {
 					Message current = m.getMessage(i);
 					String id = current.getProperty("Id").getValue();
+					String questionGroupDefinitionName = TipiBaseQuestionList.this.questionGroupDefinitionName;
+					Property questionGroupProperty = current.getProperty("QuestionGroup");
+					if(questionGroupProperty!=null) {
+						if(questionGroupProperty.getValue()!=null) {
+							questionGroupDefinitionName = questionGroupProperty.getValue();
+						}
+					}
+					
+					String questionDefinitionName = TipiBaseQuestionList.this.questionDefinitionName;
+					Property questionLayoutProperty = current.getProperty("QuestionLayout");
+					if(questionLayoutProperty!=null) {
+						if(questionLayoutProperty.getValue()!=null) {
+							questionDefinitionName = questionLayoutProperty.getValue();
+						}
+					}
+					
 					TipiDataComponent tc = null;
 					try {
 						tc = (TipiDataComponent) TipiInstantiateTipi
