@@ -19,6 +19,12 @@ public class Wrapper implements Serializable {
 		this.created = this.lastuse = created;
 		count = 1;
 	}
+	
+	public Wrapper(String reference, long created, int c) {
+		this.reference = reference;
+		this.created = this.lastuse = created;
+		count = c;
+	}
 
 	public int getCount() {
 		return count;
@@ -32,6 +38,10 @@ public class Wrapper implements Serializable {
 		count = 0;
 	}
 	
+	public void increaseReference(int c) {
+		this.lastuse = System.currentTimeMillis();
+		count = count + c;
+	}
 	public void increaseReference() {
 		this.lastuse = System.currentTimeMillis();
 		count++;

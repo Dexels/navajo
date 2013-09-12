@@ -44,4 +44,8 @@
     	<tagname>persistencemanager</tagname>
 		<object>com.dexels.navajo.persistence.impl.PersistenceManagerImpl</object>
     </map>
+    <map>
+    	<tagname>navajostatus</tagname>
+    	<object>com.dexels.navajo.server.enterprise.statistics.MetricsManager</object>
+    </map>
 </adapterdef>

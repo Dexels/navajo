@@ -108,7 +108,7 @@ class FileComparator implements Comparator<File>{
  * @author arjen
  *
  */
-public class SharedFileStore extends AbstractSharedStore {
+public class SharedFileStore implements SharedStoreInterface {
 
 	
 	private final static Logger logger = LoggerFactory
@@ -246,7 +246,11 @@ public class SharedFileStore extends AbstractSharedStore {
 			tribeManagerInterface = TribeManagerFactory.getInstance();
 			activate();
 		} 
-		
+	}
+	
+	public SharedFileStore(File store, NavajoConfigInterface c) {
+		sharedStore = store;
+		navajoConfig = c;
 	}
 	
 	/**
@@ -320,7 +324,7 @@ public class SharedFileStore extends AbstractSharedStore {
 	public String [] getParentObjects(String parent) {
 		
 		ArrayList<String> names = new ArrayList<String>();
-		File p = new File(sharedStore, parent);
+		File p = ( parent != null ? new File(sharedStore, parent) : sharedStore );
 		File [] fs = p.listFiles(); 
 		// Sort files on last modification date
 		if ( fs != null) {
@@ -503,7 +507,7 @@ public class SharedFileStore extends AbstractSharedStore {
 	 * @name the name of the object
 	 * 
 	 */
-	public void saveRemove(String parent, String name) {
+	public void remove(String parent, String name) {
 		File f = new File(sharedStore, parent + "/" + name);
 		f.delete();
 	}

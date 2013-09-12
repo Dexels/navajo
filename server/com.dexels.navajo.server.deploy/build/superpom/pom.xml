@@ -141,12 +141,33 @@
             <version>3.2.2</version>
         </dependency>
 
+<<<<<<< HEAD
 	<!-- Hacked version, removed jzlib packages, as they'll clash with the Eclipse-signed one. -->
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.smackx</artifactId>
             <version>3.2.3</version>
         </dependency>
+=======
+		<!-- Omitted because of JCRAFT.JZLIB conflict! <dependency> <groupId>org.igniterealtime.smack</groupId> 
+			<artifactId>smackx</artifactId> <version>3.2.2</version> </dependency> -->
+		<!-- <dependency> <groupId>ch.qos.logback</groupId> <artifactId>logback-core</artifactId> 
+			<version>1.0.0</version> <scope>runtime</scope> </dependency> <dependency> 
+			<groupId>ch.qos.logback</groupId> <artifactId>logback-classic</artifactId> 
+			<version>1.0.0</version> <scope>runtime</scope> </dependency> -->
+		<dependency>
+			<groupId>com.dexels.navajo</groupId>
+			<artifactId>com.dexels.navajo.adapters</artifactId>
+			<version>1.1.58</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.dexels.navajo</groupId>
+			<artifactId>com.dexels.navajo.authentication.api</artifactId>
+			<version>1.0.7</version>
+			<scope>runtime</scope>
+		</dependency>
+>>>>>>> master
 
 <!-- Omitted because of JCRAFT.JZLIB conflict!
         <dependency>
@@ -173,6 +194,7 @@
         </dependency>
 
 
+<<<<<<< HEAD
 
         <dependency>
             <groupId>com.dexels.navajo</groupId>
@@ -187,6 +209,28 @@
             <version>1.1.23-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>
+=======
+		<dependency>
+			<groupId>com.dexels.navajo</groupId>
+			<artifactId>com.dexels.navajo.core</artifactId>
+			<version>2.12.48</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dexels.navajo</groupId>
+			<artifactId>com.dexels.navajo.client.async</artifactId>
+			<version>1.1.22</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dexels.navajo</groupId>
+			<artifactId>com.dexels.navajo.function</artifactId>
+			<version>3.1.30</version>
+			<scope>runtime</scope>
+		</dependency>
+>>>>>>> master
 
         <dependency>
             <groupId>com.dexels.navajo</groupId>

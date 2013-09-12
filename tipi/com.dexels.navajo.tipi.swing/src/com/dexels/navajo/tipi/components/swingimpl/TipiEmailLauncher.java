@@ -4,11 +4,10 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.BinaryOpenerFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -62,7 +61,8 @@ public class TipiEmailLauncher extends TipiSwingDataComponentImpl {
 	private void createEmail(String propertyName, String subject, String body) {
 
 		String emailAddress;
-		String emailString = "mailto:";
+		// mailto: is added by the BinaryOpener
+		String emailString = "";
 		boolean recipientsFound = false;
 
 		try {
@@ -81,13 +81,7 @@ public class TipiEmailLauncher extends TipiSwingDataComponentImpl {
 				emailString = emailString + "?subject=" + subject + "&body="
 						+ body;
 				logger.debug("Generated email string: " + emailString);
-				String cmd = "rundll32 url.dll,FileProtocolHandler "
-						+ emailString;
-				try {
-					Runtime.getRuntime().exec(cmd);
-				} catch (IOException ex) {
-					logger.debug("Could not launch email (rundll32)");
-				}
+				BinaryOpenerFactory.getInstance().mail(emailString);
 			} else {
 				logger.warn("No recipients found that have an email address");
 			}

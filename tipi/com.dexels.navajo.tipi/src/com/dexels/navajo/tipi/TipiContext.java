@@ -446,7 +446,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public Object getGlobalValue(String name) {
 		return globalMap.get(name);
 	}
-
+	
 	public void setGlobalValue(String name, Object value) {
 		globalMap.put(name, value);
 	}
@@ -560,6 +560,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				.getStringAttribute("locale", "'en'"));
 		setSystemProperty("tipi.client.locale", cfg);
 
+
+		
 		String sublocale = (String) attemptGenericEvaluate(config
 				.getStringAttribute("sublocale", "''"));
 		setSystemProperty("tipi.client.sublocale", cfg);
@@ -582,6 +584,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			getClient().setServerUrl(navajoServer);
 			getClient().setUsername(navajoUsername);
 			getClient().setPassword(navajoPassword);
+			Integer retryCount = (Integer) attemptGenericEvaluate(config
+					.getStringAttribute("retryCount", "-1"));
+			if(retryCount!=null) {
+				getClient().setRetryAttempts(retryCount);
+			}
 
 		} else {
 			throw new UnsupportedOperationException(
@@ -2646,7 +2653,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			setSystemProperty(element, value);
 		}
 		String tipiCodeBase = properties.get("tipiCodeBase");
+		if(tipiCodeBase==null) {
+			tipiCodeBase = System.getProperty("tipiCodeBase");
+		}
 		String resourceCodeBase = properties.get("resourceCodeBase");
+		if(resourceCodeBase==null) {
+			resourceCodeBase = System.getProperty("resourceCodeBase");
+		}
 		setTipiResourceLoader(tipiCodeBase);
 		setGenericResourceLoader(resourceCodeBase);
 

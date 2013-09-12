@@ -13,8 +13,9 @@ import com.dexels.navajo.sharedstore.SerializationUtil;
 
 public class WrapCollector extends GenericThread {
 
-	private final static int MAX_AGE = 2000;
-
+	private final static int MAX_AGE = 10000;
+	private final static int TOO_OLD = 24 * 60 * 60 * 1000; // 24 hours is too old, remove it.
+	
 	// Use Cluster wide Map to store reference count.
 	private final ConcurrentMap<String,Wrapper> referenceCount;
 	private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
@@ -31,13 +32,16 @@ public class WrapCollector extends GenericThread {
 			logger.warn("Using non-tribal referencecount map");
 			referenceCount = new ConcurrentHashMap<String,Wrapper>();
 		}
-		//Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 	}
 		
 	protected void updateReferenceCount(final boolean increase, final DefaultNavajoWrap wrap) {
 		executor.submit(new ReferenceCounter(referenceCount, wrap, increase));
 	}
 
+	protected void updateReferenceCount(final int total, final DefaultNavajoWrap wrap) {
+		executor.submit(new ReferenceCounter(referenceCount, wrap, total));
+	}
+	
 	@Override
 	public synchronized void worker() {
 		
@@ -50,7 +54,7 @@ public class WrapCollector extends GenericThread {
 				long age = ( System.currentTimeMillis() - key.getLastUse() );
 				if ( age > MAX_AGE ) {
 					Integer count = key.getCount();
-					if ( count == null || count.intValue() == 0 ) {
+					if ( count == null || count.intValue() == 0 || age > TOO_OLD ) {
 						try {
 							SerializationUtil.removeNavajo(key.getReference());
 							logger.debug("Removing " + key.getReference());

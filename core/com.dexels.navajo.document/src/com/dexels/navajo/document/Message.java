@@ -408,6 +408,8 @@ public interface Message
 
   public void writeSimpleJSON(String name, Writer writer, String[] properties)
 			throws IOException;
+  
+  public void writeAsCSV(Writer writer, String delimiter) throws IOException;
 
   /**
    * Set the message map for retreiving the right values for 'toString()'
@@ -484,6 +486,8 @@ public interface Message
    * @param incoming
    */
   public void merge(Message incoming);
+  
+  public void merge(Message incoming, boolean preferThis);
   
   /**
    * Add empty message at index

@@ -29,4 +29,10 @@ public class DummyTopic implements TribalTopic {
 		return null;
 	}
 
+	@Override
+	public long getInterestCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

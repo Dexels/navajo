@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -98,8 +99,7 @@ public class SharedStoreInterfaceTest {
 	public void testStoreWithoutLock() throws Exception {
 		si.store("myparent", "mystoredobject", new SerializableObject(), false,
 				false);
-		Assert.assertTrue(new File("/tmp/sharedstore/myparent/mystoredobject")
-				.exists());
+		Assert.assertTrue(si.exists("myparent", "mystoredobject"));
 	}
 
 	@Test
@@ -212,11 +212,9 @@ public class SharedStoreInterfaceTest {
 	public void testRemove() throws Exception {
 		si.store("myparent", "mystoredobject", new SerializableObject(), false,
 				false);
-		Assert.assertTrue(new File("/tmp/sharedstore/myparent/mystoredobject")
-				.exists());
+		Assert.assertTrue(si.exists("myparent", "mystoredobject"));
 		si.remove("myparent", "mystoredobject");
-		Assert.assertFalse(new File("/tmp/sharedstore/myparent/mystoredobject")
-				.exists());
+		Assert.assertFalse(si.exists("myparent", "mystoredobject"));
 	}
 
 	@Test
@@ -227,19 +225,13 @@ public class SharedStoreInterfaceTest {
 				false, false);
 		si.store("myparent", "mystoredobject3", new SerializableObject(),
 				false, false);
-		Assert.assertTrue(new File("/tmp/sharedstore/myparent/mystoredobject1")
-				.exists());
-		Assert.assertTrue(new File("/tmp/sharedstore/myparent/mystoredobject2")
-				.exists());
-		Assert.assertTrue(new File("/tmp/sharedstore/myparent/mystoredobject3")
-				.exists());
+		Assert.assertTrue(si.exists("myparent", "mystoredobject1"));
+		Assert.assertTrue(si.exists("myparent", "mystoredobject2"));
+		Assert.assertTrue(si.exists("myparent", "mystoredobject3"));
 		si.removeAll("myparent");
-		Assert.assertFalse(new File("/tmp/sharedstore/myparent/mystoredobject1")
-				.exists());
-		Assert.assertFalse(new File("/tmp/sharedstore/myparent/mystoredobject2")
-				.exists());
-		Assert.assertFalse(new File("/tmp/sharedstore/myparent/mystoredobject3")
-				.exists());
+		Assert.assertFalse(si.exists("myparent", "mystoredobject1"));
+		Assert.assertFalse(si.exists("myparent", "mystoredobject2"));
+		Assert.assertFalse(si.exists("myparent", "mystoredobject3"));
 	}
 
 	@Test
@@ -250,26 +242,19 @@ public class SharedStoreInterfaceTest {
 				new SerializableObject(), false, false);
 		si.store("myparent/child3", "mystoredobject3",
 				new SerializableObject(), false, false);
-		Assert.assertTrue(new File(
-				"/tmp/sharedstore/myparent/child1/mystoredobject1").exists());
-		Assert.assertTrue(new File(
-				"/tmp/sharedstore/myparent/child2/mystoredobject2").exists());
-		Assert.assertTrue(new File(
-				"/tmp/sharedstore/myparent/child3/mystoredobject3").exists());
+		Assert.assertTrue(si.exists("myparent/child1", "mystoredobject1"));
+		Assert.assertTrue(si.exists("myparent/child2", "mystoredobject2"));
+		Assert.assertTrue(si.exists("myparent/child3", "mystoredobject3"));
 		si.removeAll("myparent");
-		Assert.assertFalse(new File(
-				"/tmp/sharedstore/myparent/child1/mystoredobject1").exists());
-		Assert.assertFalse(new File(
-				"/tmp/sharedstore/myparent/child2/mystoredobject2").exists());
-		Assert.assertFalse(new File(
-				"/tmp/sharedstore/myparent/child3/mystoredobject3").exists());
+		Assert.assertFalse(si.exists("myparent/child1", "mystoredobject1"));
+		Assert.assertFalse(si.exists("myparent/child2", "mystoredobject2"));
+		Assert.assertFalse(si.exists("myparent/child3", "mystoredobject3"));
 	}
 
 	@Test
 	public void testStoreText() throws Exception {
 		si.storeText("myparent", "mytextobject", "text", false, false);
-		BufferedReader r = new BufferedReader(new FileReader(
-				"/tmp/sharedstore/myparent/mytextobject"));
+		BufferedReader r = new BufferedReader(new InputStreamReader(si.getStream("myparent", "mytextobject")));
 		String l = r.readLine();
 		r.close();
 		Assert.assertEquals("text", l);
@@ -278,15 +263,14 @@ public class SharedStoreInterfaceTest {
 	@Test
 	public void testCreateParent() throws Exception {
 		si.createParent("myparent");
-		Assert.assertTrue(new File("/tmp/sharedstore/myparent").exists());
+		//Assert.assertTrue(si.);
 	}
 
 	@Test
 	public void testLockStringStringStringIntBoolean() throws Exception {
 		si.lock("myparent", "mylockfile", "owner1",
 				SharedFileStore.READ_WRITE_LOCK, false);
-		Assert.assertTrue(new File(
-				"/tmp/sharedstore/owner1_myparent_mylockfile.lock").exists());
+		Assert.assertNotNull(si.getLock("myparent", "mylockfile", "owner1"));
 	}
 
 	@Test
@@ -297,8 +281,7 @@ public class SharedStoreInterfaceTest {
 		SharedStoreLock ssl2 = si.lock("myparent", "mylockfile", "owner2",
 				SharedFileStore.READ_WRITE_LOCK, false);
 		Assert.assertNull(ssl2);
-		Assert.assertTrue(new File(
-				"/tmp/sharedstore/owner1_myparent_mylockfile.lock").exists());
+		Assert.assertNull(si.getLock("myparent", "mylockfile", "owner2"));
 	}
 
 	@Test
@@ -453,7 +436,7 @@ public class SharedStoreInterfaceTest {
 		t2.join(2000);
 		t3.join(2000);
 
-		System.err.println(myssl.toString());
+		//System.err.println(myssl.toString());
 		Assert.assertEquals(3, locks);
 		Assert.assertTrue(locked);
 	}
