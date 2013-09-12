@@ -76,7 +76,7 @@ public class Dependency {
 		File groupFile  = new File(base,group);
 		File articleFile = new File(groupFile,artifactId);
 		File versionFile = new File(articleFile,version);
-		File f = new File(versionFile,getFileName());
+		File f = new File(versionFile,getFileNameWithVersion());
 		return f;
 	}
 	public String getFileName() {

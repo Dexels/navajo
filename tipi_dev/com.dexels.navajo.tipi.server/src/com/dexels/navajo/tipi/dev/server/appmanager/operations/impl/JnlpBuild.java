@@ -51,6 +51,7 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 		
 		for (Dependency dd : a.getDependencies()) {
 			UnsignJarTask.downloadDepencency(dd,repo, new File(unsigned.getAbsolutePath()),extraHeaders);
+			signdependency(dd, a.getSettingString("sign_alias"),  a.getSettingString("sign_storepass"),  new File(a.getAppFolder(),a.getSettingString("sign_keystore")), repo);
 		}
 		LocalJnlpBuilder jj = new LocalJnlpBuilder();
 		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),a.getAppFolder(),a.getProfiles(),"");
@@ -82,6 +83,8 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 			props.put("storepass",storepass);
 			props.put("alias", alias);
 			props.put("keystore",keystore.getAbsolutePath());
+			File cachedFile = d.getFilePathForDependency(repo);
+			props.put("jarfile", cachedFile.getAbsolutePath());
 			Logger antlogger = LoggerFactory.getLogger("tipi.appstore.ant");
 			PrintStream los = new PrintStream( new LoggingOutputStream(antlogger));
 			AntRun.callAnt(JnlpBuild.class.getClassLoader().getResourceAsStream("ant/signsingle.xml"), repo, props,tasks,null,los);
