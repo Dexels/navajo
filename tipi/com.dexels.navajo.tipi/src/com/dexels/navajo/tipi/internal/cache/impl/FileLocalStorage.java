@@ -177,19 +177,27 @@ public class FileLocalStorage implements LocalStorage {
 	}
 
 
+//	public boolean hasLocalWithDigest(String location, byte[] digest) {
+//		String digestString = (String) localDigestProperties.get(location);
+//		if(digestString==null) {
+//			logger.debug("No digest found. Not using local digest");
+//		}
+//		try {
+//			byte[] found = Base64.decode(digestString);
+//			return Arrays.equals(found, digest);
+//		} catch (DecodingException e) {
+//			logger.error("Error: ", e);
+//		}
+//		return false;
+//	}
+
+
 	@Override
-	public boolean hasLocalWithDigest(String location, byte[] digest) {
-		String digestString = (String) localDigestProperties.get(location);
-		if(digestString==null) {
-			logger.debug("No digest found. Not using local digest");
+	public void delete(String location) {
+		File f = new File(baseFile, convertPath(location));
+		if(f.exists()) {
+			f.delete();
 		}
-		try {
-			byte[] found = Base64.decode(digestString);
-			return Arrays.equals(found, digest);
-		} catch (DecodingException e) {
-			logger.error("Error: ", e);
-		}
-		return false;
 	}
 
 }

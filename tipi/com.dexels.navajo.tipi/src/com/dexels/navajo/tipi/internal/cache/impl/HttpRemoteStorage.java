@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,6 +32,9 @@ public class HttpRemoteStorage implements RemoteStorage {
 			throws IOException {
 		URL u = new URL(baseUrl, location);
 		InputStream is = null;
+		if(metadata==null) {
+			metadata = new HashMap<String, Object>();
+		}
 		try {
 			logger.info("DOWNLOADING location: " + u);
 			URLConnection uc = u.openConnection();
@@ -46,6 +50,9 @@ public class HttpRemoteStorage implements RemoteStorage {
 			is = uc.getInputStream();
 			String enc = uc.getHeaderField("Content-Encoding");
 			System.err.println("enc: "+enc);
+			if(enc!=null) {
+				metadata.put("Content-Encoding", enc);
+			}
 			if("gzip".equals(enc)) {
 				GZIPInputStream gzi = new GZIPInputStream(is);
 				return gzi;

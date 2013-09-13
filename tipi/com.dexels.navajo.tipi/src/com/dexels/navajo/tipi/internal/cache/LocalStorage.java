@@ -21,5 +21,7 @@ public interface LocalStorage {
 
 	public URL getURL(String location) throws IOException;
 	
-	public boolean hasLocalWithDigest(String location, byte[] digest);
+//	public boolean hasLocalWithDigest(String location, byte[] digest);
+
+	public void delete(String location);
 }
