@@ -34,6 +34,17 @@ public class CacheBuild extends BaseOperation implements AppStoreOperation {
 		build(as);
 	}
 	
+	public void cachebuild() throws IOException {
+		for (ApplicationStatus a: applications.values()) {
+			build(a);
+		}
+	}
+	public void build() throws IOException {
+		for (ApplicationStatus a: applications.values()) {
+			build(a);
+		}
+	}
+	
 	@Override
 	public void build(ApplicationStatus a) throws IOException {
 		File digest = new File(a.getAppFolder(),"digest");

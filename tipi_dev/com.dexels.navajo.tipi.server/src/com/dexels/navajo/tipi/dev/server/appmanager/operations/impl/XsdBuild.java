@@ -22,6 +22,12 @@ public class XsdBuild extends BaseOperation implements AppStoreOperation {
 		build(as);
 	}
 	
+	public void xsd() throws IOException {
+		for (ApplicationStatus a: applications.values()) {
+			build(a);
+		}
+	}
+	
 	@Override
 	public void build(ApplicationStatus a) throws IOException {
 		XsdBuilder xsd = new XsdBuilder();

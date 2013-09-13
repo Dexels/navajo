@@ -28,8 +28,21 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 	
 	public void build(String name) throws IOException {
 		ApplicationStatus as = applications.get(name);
-		build(as);
+		if(as==null) {
+			for (ApplicationStatus a: applications.values()) {
+				build(a);
+			}
+			
+		} else {
+			build(as);
+		}
 	}
+	
+	public void build() throws IOException {
+		for (ApplicationStatus a: applications.values()) {
+			build(a);
+		}
+	}	
 	
 	@Override
 	public void build(ApplicationStatus a) throws IOException {
@@ -47,15 +60,25 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 		}
 		
 		File repo = new File(applicationManager.getStoreFolder(), "repo");
-		
+		File lib = new File(a.getAppFolder(),"lib");
+		if(lib.exists()) {
+			FileUtils.deleteDirectory(lib);
+		}
+		if(!lib.exists()) {
+			lib.mkdirs();
+		}
 		
 		for (Dependency dd : a.getDependencies()) {
-			UnsignJarTask.downloadDepencency(dd,repo, new File(unsigned.getAbsolutePath()),extraHeaders);
-			signdependency(dd, a.getSettingString("sign_alias"),  a.getSettingString("sign_storepass"),  new File(a.getAppFolder(),a.getSettingString("sign_keystore")), repo);
+			File localSigned = dd.getFilePathForDependency(repo);
+			if(!localSigned.exists()) {
+				UnsignJarTask.downloadDepencency(dd,repo, new File(unsigned.getAbsolutePath()),extraHeaders);
+				signdependency(dd, a.getSettingString("sign_alias"),  a.getSettingString("sign_storepass"),  new File(a.getAppFolder(),a.getSettingString("sign_keystore")), repo);
+			}
+			FileUtils.copyFileToDirectory(localSigned, lib );
 		}
 		LocalJnlpBuilder jj = new LocalJnlpBuilder();
 		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),a.getAppFolder(),a.getProfiles(),"");
-		signall(a);
+//		signall(a);
 	}
 
 	private void signall(ApplicationStatus a) {
