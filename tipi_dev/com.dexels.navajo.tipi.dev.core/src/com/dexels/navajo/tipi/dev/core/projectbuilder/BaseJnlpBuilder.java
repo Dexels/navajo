@@ -32,17 +32,8 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 
 
 	protected abstract void appendProxyResource(XMLElement resources, String repository, String mainExtension, boolean useVersioning) throws IOException;
-	private String appendResources(XMLElement resources, List<Dependency> dependencies) throws IOException {
-		String mainExtension = null;
-		for (Dependency dependency : dependencies) {
-			appendResourceForExtension(resources, dependency);
-		}
-
-		return "aap";
-	}
-
-	
 	public abstract String getJnlpName();
+
 
 	public String build(String repository, String developRepository, String extensions, Map<String,String> tipiProperties, String deployment,  File baseDir, String codebase, List<String> profiles, boolean useVersioning) {
 		for (String fileName : profiles) {
@@ -152,7 +143,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		XMLElement java = resources.addTagKeyValue("j2se", "");
 		java.setAttribute("version", "1.6+");
 		appendSecurity(output, params.getString("permissions"));
-		String mainExtension = appendResources(resources,dependencies);
+//		String mainExtension = appendResources(resources,dependencies);
 
 		XMLElement app = output.addTagKeyValue("application-desc", "");
 		app.setAttribute("main-class", "tipi.MainApplication");
