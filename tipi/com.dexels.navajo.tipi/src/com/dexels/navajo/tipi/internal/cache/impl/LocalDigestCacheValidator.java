@@ -1,17 +1,16 @@
 package com.dexels.navajo.tipi.internal.cache.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sun.security.action.LoadLibraryAction;
 
 import com.dexels.navajo.tipi.internal.cache.CacheValidator;
 import com.dexels.navajo.tipi.internal.cache.LocalStorage;
@@ -31,6 +30,10 @@ public class LocalDigestCacheValidator implements CacheValidator {
 	private LocalStorage localStorage;
 	private RemoteStorage remoteStorage;
 	
+	public LocalDigestCacheValidator()  {
+
+	}
+
 	@Override
 	public boolean isLocalValid(String location) throws IOException {
 		String localDigest = (String) localDigestProperties.get(location);
@@ -46,11 +49,27 @@ public class LocalDigestCacheValidator implements CacheValidator {
 		loadRemoteDigestFile(REMOTE_DIGEST_PROPERTIES);
 		
 	}
+	
+	private final void copyResource(OutputStream out, InputStream in)
+			throws IOException {
+		BufferedInputStream bin = new BufferedInputStream(in);
+		BufferedOutputStream bout = new BufferedOutputStream(out);
+		byte[] buffer = new byte[1024];
+		int read;
+		while ((read = bin.read(buffer)) > -1) {
+			bout.write(buffer, 0, read);
+		}
+		bin.close();
+		bout.flush();
+		bout.close();
+	}
 
+	@Override
 	public void setLocalStorage(LocalStorage localStorage) {
 		this.localStorage = localStorage;
 	}
 
+	@Override
 	public void setRemoteStorage(RemoteStorage remoteStorage) {
 		this.remoteStorage = remoteStorage;
 	}

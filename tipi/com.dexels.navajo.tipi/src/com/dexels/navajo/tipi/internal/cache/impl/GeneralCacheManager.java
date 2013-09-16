@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.internal.cache.CacheManager;
+import com.dexels.navajo.tipi.internal.cache.CacheValidator;
 import com.dexels.navajo.tipi.internal.cache.LocalStorage;
 import com.dexels.navajo.tipi.internal.cache.RemoteStorage;
 
@@ -17,12 +18,15 @@ public class GeneralCacheManager implements CacheManager {
 
 	private final LocalStorage local;
 	private final RemoteStorage remote;
+	private final CacheValidator cacheValidator;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(GeneralCacheManager.class);
-	public GeneralCacheManager(LocalStorage l, RemoteStorage r) {
+	public GeneralCacheManager(LocalStorage l, RemoteStorage r, CacheValidator vc) {
 		this.local = l;
 		this.remote = r;
+		this.cacheValidator = vc;
+		
 	}
 
 	@Override
@@ -49,9 +53,7 @@ public class GeneralCacheManager implements CacheManager {
 		if (!hasLocal(location)) {
 			return false;
 		}
-		long localMod = local.getLocalModificationDate(location);
-		long remoteMod = remote.getRemoteModificationDate(location);
-		if (localMod >= remoteMod) {
+		if(cacheValidator.isLocalValid(location)) {
 			return true;
 		}
 		return false;

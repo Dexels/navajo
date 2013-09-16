@@ -259,9 +259,9 @@ public class JnlpLocalStorage implements LocalStorage {
 	}
 
 	@Override
-	public boolean hasLocalWithDigest(String location, byte[] digest) {
+	public void delete(String location) {
 		// TODO Auto-generated method stub
-		return false;
+		
 	}
 
 }

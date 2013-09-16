@@ -35,11 +35,13 @@ public class HttpResourceLoader extends ClassPathResourceLoader implements Seria
 		this.description = description;
 	}
 
+	@Override
 	public URL getResourceURL(String location) throws MalformedURLException {
 		URL u = new URL(baseURL, location);
 		return u;
 	}
 
+	@Override
 	public InputStream getResourceStream(String location) throws IOException {
 		URL u = getResourceURL(location);
 		InputStream is = null;
@@ -67,13 +69,13 @@ public class HttpResourceLoader extends ClassPathResourceLoader implements Seria
 	private InputStream openStream(String location,InputStream is, final String contentEncoding)
 			throws IOException {
 		if ("gzip".equals(contentEncoding)) {
-			logger.info(">>>>>>> zipped");
 			return new GZIPInputStream(new MeasuredInputStream(this,description+ " : "+ location, is));
 		}
 
 		return new MeasuredInputStream(this,description+ " : "+ location, is);
 	}
 
+	@Override
 	public List<File> getAllResources() throws IOException {
 		throw new UnsupportedOperationException(
 				"The http resource loader is unable to enumerate resources");

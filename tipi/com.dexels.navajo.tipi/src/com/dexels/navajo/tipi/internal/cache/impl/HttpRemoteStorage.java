@@ -36,7 +36,6 @@ public class HttpRemoteStorage implements RemoteStorage {
 			metadata = new HashMap<String, Object>();
 		}
 		try {
-			logger.info("DOWNLOADING location: " + u);
 			URLConnection uc = u.openConnection();
 			uc.addRequestProperty("Accept-Encoding", "gzip");
 			metadata.put("length", uc.getContentLength());
