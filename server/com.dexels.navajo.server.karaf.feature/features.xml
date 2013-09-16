@@ -189,6 +189,6 @@
 	<feature resolver="(obr)" name='tipi.appstore' version='1.0.0' start-level='81' >
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.1.28</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.core/1.1.2</bundle>
 	</feature>
 </features>
