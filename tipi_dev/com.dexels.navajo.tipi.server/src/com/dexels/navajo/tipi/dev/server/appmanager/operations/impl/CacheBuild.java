@@ -47,24 +47,20 @@ public class CacheBuild extends BaseOperation implements AppStoreOperation {
 	
 	@Override
 	public void build(ApplicationStatus a) throws IOException {
-		File digest = new File(a.getAppFolder(),"digest");
-		if(!digest.exists()) {
-			digest.mkdirs();
-		}
 		MessageDigest messageDigest;
 		try {
 			messageDigest = MessageDigest.getInstance("MD5");
-			createDigestFor(messageDigest, "tipi",digest,a.getAppFolder());
-			createDigestFor(messageDigest, "resource",digest,a.getAppFolder());
+			createDigestFor(messageDigest, "tipi",a.getAppFolder());
+			createDigestFor(messageDigest, "resource",a.getAppFolder());
 		} catch (NoSuchAlgorithmException e) {
 			logger.error("Error: ", e);
 		}
 
 	}
 
-	private void createDigestFor(MessageDigest digest,String resourceName, File digestFile,File appFolder) throws IOException {
-		File digestOutput = new File(digestFile,resourceName+".properties");
+	private void createDigestFor(MessageDigest digest,String resourceName, File appFolder) throws IOException {
 		File inputFolder = new File(appFolder,resourceName);
+		File digestOutput = new File(inputFolder,"remotedigest.properties");
 		Properties properties = new Properties();
 		scan(digest,inputFolder,inputFolder,properties);
 		FileOutputStream fos = null;

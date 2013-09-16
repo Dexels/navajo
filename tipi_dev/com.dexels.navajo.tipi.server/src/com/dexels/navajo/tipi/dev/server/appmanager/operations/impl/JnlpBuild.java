@@ -80,23 +80,23 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),a.getAppFolder(),a.getProfiles(),"");
 //		signall(a);
 	}
-
-	private void signall(ApplicationStatus a) {
-		Map<String,String> props = new HashMap<String, String>();
-		try {
-			Map<String,Class<?>> tasks = new HashMap<String,Class<?>>();
-			tasks.put("signjar", org.apache.tools.ant.taskdefs.SignJar.class);
-			tasks.put("p200ant", de.matthiasmann.p200ant.P200AntTask.class);
-			props.put("storepass", a.getSettingString("sign_storepass"));
-			props.put("alias", a.getSettingString("sign_alias"));
-			props.put("keystore", new File(a.getAppFolder(),a.getSettingString("sign_keystore")).getAbsolutePath());
-			Logger antlogger = LoggerFactory.getLogger("tipi.appstore.ant");
-			PrintStream los = new PrintStream( new LoggingOutputStream(antlogger));
-			AntRun.callAnt(JnlpBuild.class.getClassLoader().getResourceAsStream("ant/localsign.xml"), a.getAppFolder(), props,tasks,null,los);
-		} catch (IOException e) {
-			logger.error("Error: ", e);
-		}
-	}
+//
+//	private void signall(ApplicationStatus a) {
+//		Map<String,String> props = new HashMap<String, String>();
+//		try {
+//			Map<String,Class<?>> tasks = new HashMap<String,Class<?>>();
+//			tasks.put("signjar", org.apache.tools.ant.taskdefs.SignJar.class);
+//			tasks.put("p200ant", de.matthiasmann.p200ant.P200AntTask.class);
+//			props.put("storepass", a.getSettingString("sign_storepass"));
+//			props.put("alias", a.getSettingString("sign_alias"));
+//			props.put("keystore", new File(a.getAppFolder(),a.getSettingString("sign_keystore")).getAbsolutePath());
+//			Logger antlogger = LoggerFactory.getLogger("tipi.appstore.ant");
+//			PrintStream los = new PrintStream( new LoggingOutputStream(antlogger));
+//			AntRun.callAnt(JnlpBuild.class.getClassLoader().getResourceAsStream("ant/localsign.xml"), a.getAppFolder(), props,tasks,null,los);
+//		} catch (IOException e) {
+//			logger.error("Error: ", e);
+//		}
+//	}
 	
 	private void signdependency(Dependency d, String alias, String storepass, File keystore, File repo) {
 		Map<String,String> props = new HashMap<String, String>();
