@@ -30,7 +30,7 @@ Import-Package: com.dexels.navajo.tipi.dev.ant;version="1.0.0",
 Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.tipi.dev.server,
  com.dexels.navajo.tipi.dev.server.appmanager.impl
-Service-Component: OSGI-INF/tipi.dev.applicationManager.xml,
+Service-Component: OSGI-INF/tipi.dev.applicationmanager.xml,
  OSGI-INF/tipi.dev.downloadservlet.xml,
  OSGI-INF/tipi.dev.gitapplication.xml,
  OSGI-INF/tipi.store.application.xml,
