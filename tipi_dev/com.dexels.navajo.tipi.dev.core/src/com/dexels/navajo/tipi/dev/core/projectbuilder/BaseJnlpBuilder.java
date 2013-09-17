@@ -105,18 +105,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 
 
 	private XMLElement buildElementFromMaven(List<Dependency> dependencies, ResourceBundle params,String deployment, File baseDir, String resourceBase, String fileName, String profile) throws IOException {
-		//String repository = generalRepository+"Extensions/";
-//		PropertyResourceBundle settings,
-//		List<Dependency> dependencyList, File appFolder
-		
-		
-
-		
 		XMLElement output = new CaseSensitiveXMLElement();
-//		if (!codebase.endsWith("/")) {
-//			codebase = codebase + "/";
-//		}
-
 		output.setName("jnlp");
 		output.setAttribute("version", "1");
 		output.setAttribute("spec", "1.0+");
@@ -143,8 +132,9 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		XMLElement java = resources.addTagKeyValue("j2se", "");
 		java.setAttribute("version", "1.6+");
 		appendSecurity(output, params.getString("permissions"));
-//		String mainExtension = appendResources(resources,dependencies);
-
+		for (Dependency dependency : dependencies) {
+			appendResourceForExtension(resources, dependency);
+		}
 		XMLElement app = output.addTagKeyValue("application-desc", "");
 		app.setAttribute("main-class", "tipi.MainApplication");
 
