@@ -90,31 +90,35 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		}
 		File[] apps = appsFolder.listFiles();
 		applications.clear();
-		for (File file : apps) {
-
-			if(!file.isDirectory()) {
-				continue;
-			}
-			if(!isTipiAppDir(file)) {
-				continue;
-			}
-			if(isGitRepo(file)) {
-				continue;
-			}
-			final String name = file.getName();
-			applications.add(name);
-			Configuration c = createOrReuse(TIPI_STORE_APPLICATION, "(name="+name+")");
-			Dictionary<String,Object> settings = new Hashtable<String,Object>();
-			settings.put("name", name);
-			settings.put("path", file.getAbsolutePath());
-			updateIfChanged(c, settings);
-			configs.remove(name);
+		if(apps!=null) {
 			
-//			ApplicationStatusImpl appStatus = new ApplicationStatusImpl();
-//			appStatus.setManager(this);
-//			appStatus.load(file);
-//			appStats.add(appStatus);
+			for (File file : apps) {
+	
+				if(!file.isDirectory()) {
+					continue;
+				}
+				if(!isTipiAppDir(file)) {
+					continue;
+				}
+				if(isGitRepo(file)) {
+					continue;
+				}
+				final String name = file.getName();
+				applications.add(name);
+				Configuration c = createOrReuse(TIPI_STORE_APPLICATION, "(name="+name+")");
+				Dictionary<String,Object> settings = new Hashtable<String,Object>();
+				settings.put("name", name);
+				settings.put("path", file.getAbsolutePath());
+				updateIfChanged(c, settings);
+				configs.remove(name);
+				
+	//			ApplicationStatusImpl appStatus = new ApplicationStatusImpl();
+	//			appStatus.setManager(this);
+	//			appStatus.load(file);
+	//			appStats.add(appStatus);
+			}
 		}
+
 		if(!configs.isEmpty()) {
 			for (Entry<String,Configuration> e : configs.entrySet()) {
 				Configuration c = e.getValue();
