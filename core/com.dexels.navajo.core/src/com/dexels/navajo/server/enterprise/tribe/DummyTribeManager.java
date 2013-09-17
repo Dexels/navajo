@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -187,6 +188,12 @@ public class DummyTribeManager implements TribeManagerInterface {
 	@Override
 	public Set getDistributedSet(String name) {
 		return Collections.newSetFromMap(new ConcurrentHashMap());
+	}
+
+	@Override
+	public List<TribalNumber> getDistributedCounters() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
