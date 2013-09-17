@@ -57,7 +57,7 @@ public class UnsignJarTask  {
 		if(!parent.exists()) {
 			parent.mkdirs();
 		}
-		System.err.println("ff: "+ff.getAbsolutePath());
+		logger.info("Downloading: "+ff.getAbsolutePath());
 		ZipUtils.copyResource(fos, d.getUrl().openStream());
 		File tmpDir = new File(destinationFolder,tmpAssembled);
 		tmpDir.mkdirs();
