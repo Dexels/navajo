@@ -67,7 +67,8 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 		if(!lib.exists()) {
 			lib.mkdirs();
 		}
-		
+		logger.info("Loading application");
+		a.load();
 		for (Dependency dd : a.getDependencies()) {
 			File localSigned = dd.getFilePathForDependency(repo);
 			if(!localSigned.exists()) {

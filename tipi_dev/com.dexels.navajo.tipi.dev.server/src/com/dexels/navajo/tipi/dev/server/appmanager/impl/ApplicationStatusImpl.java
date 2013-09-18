@@ -25,14 +25,14 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 			.getLogger(ApplicationStatusImpl.class);
 	
 	private String applicationName;
-	private File appFolder;
+	protected File applicationFolder;
 	private final List<Dependency> dependencies = new ArrayList<Dependency>();
 	
 	private PropertyResourceBundle settings;
 
 	@Override
 	public File getAppFolder() {
-		return this.appFolder;
+		return this.applicationFolder;
 	}
 
 	@Override
@@ -48,6 +48,12 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 		return applicationName;
 	}
 
+	@Override
+	public void load() throws IOException {
+		load(applicationFolder);
+	}
+
+	
 	public void activate(Map<String,Object> settings) throws IOException {
 		String appFolder = (String) settings.get("path");
 		File appDir = new File(appFolder);
@@ -55,7 +61,7 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 	}
 
 	protected void load(File appDir) throws IOException {
-		this.appFolder = appDir;
+		this.applicationFolder = appDir;
 		applicationName = appDir.getName();
 		File tipiSettings = new File(appDir, "settings/tipi.properties");
 		if (!tipiSettings.exists()) {

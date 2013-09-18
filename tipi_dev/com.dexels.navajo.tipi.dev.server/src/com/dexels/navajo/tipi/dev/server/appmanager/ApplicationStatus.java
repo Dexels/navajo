@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.dev.server.appmanager;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -19,5 +20,7 @@ public interface ApplicationStatus {
 	public ResourceBundle getSettingsBundle();
 
 	public List<Dependency> getDependencies();
+
+	public void load() throws IOException;
 
 }

@@ -33,7 +33,6 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	private final static Logger logger = LoggerFactory.getLogger(GitApplicationStatusImpl.class);
 
 	private ApplicationManager applicationManager;
-	private File applicationFolder;
 
 
 	private File privateKey;
@@ -56,6 +55,8 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	public ApplicationManager getApplicationManager() {
 		return applicationManager;
 	}
+	
+	
 
 	public void setXsdBuild(AppStoreOperation xsdBuild) {
 		this.xsdBuild = xsdBuild;
@@ -86,7 +87,6 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		this.applicationManager = null;
 	}
 
-	
 
 	
 	@Override
