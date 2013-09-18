@@ -186,7 +186,11 @@ public class JnlpDownloadServlet extends HttpServlet {
 		logger.info("Reqeuest: " + request.getRequestURI() + " query: "
 				+ request.getQueryString());
 		// logger.info("Request: "+request.getRequestURI()+" query: "+request.getQueryString());
-
+		Enumeration<String> en = request.getHeaderNames();
+		while (en.hasMoreElements()) {
+			String key = (String) en.nextElement();
+			logger.info("HTTP Key: "+key+" header: "+request.getHeader(key));
+		}
 		// TipiAdminServlet.buildIfNecessary(request,getAppFolder(),getServletContext());
 //		Map en = request.getParameterMap();
 //		for (Object key : en.keySet()) {
