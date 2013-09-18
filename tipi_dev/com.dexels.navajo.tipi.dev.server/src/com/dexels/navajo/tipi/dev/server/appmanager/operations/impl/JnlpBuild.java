@@ -68,6 +68,7 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 			lib.mkdirs();
 		}
 		logger.info("Loading application");
+		Thread.dumpStack();
 		a.load();
 		for (Dependency dd : a.getDependencies()) {
 			File localSigned = dd.getFilePathForDependency(repo);
@@ -77,6 +78,7 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 			}
 			FileUtils.copyFileToDirectory(localSigned, lib );
 		}
+		logger.info("Detected dependencies: "+a.getDependencies());
 		LocalJnlpBuilder jj = new LocalJnlpBuilder();
 		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),a.getAppFolder(),a.getProfiles(),"");
 //		signall(a);

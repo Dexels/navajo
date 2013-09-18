@@ -92,7 +92,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		}
 		for (String fileName : profiles) {
 			File jnlpFile = new File(appFolder, fileName+".jnlp");
-			logger.info("Writing jnlp: "+jnlpFile.getAbsolutePath());
+			logger.info("Writing jnlp: "+jnlpFile.getAbsolutePath()+" with # of dependencies: "+dependencyList.size());
 			try {
 				FileWriter fw1 = new FileWriter(jnlpFile);
 				fw1.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
