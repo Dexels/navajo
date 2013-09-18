@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.dev.server.appmanager.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,9 +32,6 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	
 	private final static Logger logger = LoggerFactory.getLogger(GitApplicationStatusImpl.class);
 
-	private final Map<String,AppStoreOperation> operations = new HashMap<String,AppStoreOperation>();
-
-	
 	private ApplicationManager applicationManager;
 	private File applicationFolder;
 
@@ -51,19 +47,36 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 
 	private String gitUrl;
 
+	private AppStoreOperation xsdBuild;
+
+	private AppStoreOperation jnlpBuild;
+
+	private AppStoreOperation cacheBuild;
+
 	public ApplicationManager getApplicationManager() {
 		return applicationManager;
 	}
 
-	
-	public void addOperation(AppStoreOperation a,Map<String,Object> settings) {
-		operations.put((String) settings.get("component.name"), a);
+	public void setXsdBuild(AppStoreOperation xsdBuild) {
+		this.xsdBuild = xsdBuild;
 	}
-	
-	public void removeOperation(AppStoreOperation a,Map<String,Object> settings) {
-		operations.remove((String) settings.get("component.name"));
+
+	public void clearXsdBuild(AppStoreOperation xsdBuild) {
+		this.xsdBuild = null;
 	}
-	
+	public void setJnlpBuild(AppStoreOperation jnlpBuild) {
+		this.jnlpBuild = jnlpBuild;
+	}
+
+	public void clearJnlpBuild(AppStoreOperation jnlpBuild) {
+		this.jnlpBuild = null;
+	}
+	public void setCacheBuild(AppStoreOperation cacheBuild) {
+		this.cacheBuild = cacheBuild;
+	}
+	public void clearCacheBuild(AppStoreOperation cacheBuild) {
+		this.cacheBuild = null;
+	}
 	
 	public void setApplicationManager(ApplicationManager applicationManager) {
 		this.applicationManager = applicationManager;
@@ -139,11 +152,8 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 //		}
 		git.clean().call();
 		git.reset().setMode(ResetType.HARD).call();
-//		AppStoreOperation buildJnlp = operations.get("tipi.dev.operation.build");
-		AppStoreOperation buildxsd = operations.get("tipi.dev.operation.xsdbuild");
-		AppStoreOperation cachebuild = operations.get("tipi.dev.operation.cachebuild");
-		buildxsd.build(this);
-		cachebuild.build(this);
+		xsdBuild.build(this);
+		cacheBuild.build(this);
 	}
 
 	@Override
@@ -207,12 +217,9 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		config.setString("branch",branch,"remote","origin");
 		config.save();
 		callPull();
-		AppStoreOperation buildJnlp = operations.get("tipi.dev.operation.build");
-		buildJnlp.build(this);
-		AppStoreOperation buildxsd = operations.get("tipi.dev.operation.xsdbuild");
-		buildxsd.build(this);
-		AppStoreOperation cachebuild = operations.get("tipi.dev.operation.cachebuild");
-		cachebuild.build(this);
+		jnlpBuild.build(this);
+		xsdBuild.build(this);
+		cacheBuild.build(this);
 
 	}
 

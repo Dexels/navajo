@@ -44,6 +44,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
 	public void activate(Map<String,Object> configuration) throws IOException {
 		final String path = (String) configuration.get("tipi.store.path");
+		if(path==null) {
+			throw new IOException("No tipi.store.path set in configuration!");
+		}
 		storeFolder = new File(path);
 		File applicationFolder = new File(storeFolder,"applications");
 		setAppsFolder(applicationFolder);

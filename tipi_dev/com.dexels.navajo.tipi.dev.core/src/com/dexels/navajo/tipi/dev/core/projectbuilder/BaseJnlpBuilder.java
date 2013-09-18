@@ -87,6 +87,9 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			List<String> profiles, String resourceBase) {
 		
 		logger.info("Building in folder: "+appFolder);
+		if(profiles==null) {
+			logger.warn("No profiles loaded, not building jnlp");
+		}
 		for (String fileName : profiles) {
 			File jnlpFile = new File(appFolder, fileName+".jnlp");
 			logger.info("Writing jnlp: "+jnlpFile.getAbsolutePath());

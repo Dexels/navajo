@@ -155,6 +155,9 @@ public class JnlpDownloadServlet extends HttpServlet {
 
 	public void activate(Map<String,Object> settings) {
 		this.basePath = (String) settings.get("tipi.base.path");
+		if(basePath==null) {
+			basePath = "/apps";
+		}
 	}
 	public void deactivate() {
 		
