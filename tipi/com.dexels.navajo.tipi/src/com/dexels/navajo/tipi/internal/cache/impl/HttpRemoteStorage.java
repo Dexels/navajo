@@ -9,7 +9,6 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 
 import org.slf4j.Logger;
@@ -43,12 +42,11 @@ public class HttpRemoteStorage implements RemoteStorage {
 			metadata.put("type", uc.getContentType());
 			uc.connect();
 			Map<String, List<String>> fields = uc.getHeaderFields();
-			for (Entry<String,List<String>> e : fields.entrySet()) {
-				System.err.println("e: "+e.getKey()+" value: "+e.getClass());
-			}
+//			for (Entry<String,List<String>> e : fields.entrySet()) {
+//				System.err.println("e: "+e.getKey()+" value: "+e.getClass());
+//			}
 			is = uc.getInputStream();
 			String enc = uc.getHeaderField("Content-Encoding");
-			System.err.println("enc: "+enc);
 			if(enc!=null) {
 				metadata.put("Content-Encoding", enc);
 			}

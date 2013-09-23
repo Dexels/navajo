@@ -131,6 +131,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	 */
 	private final Map<String, List<String>> tipiCssMap = new HashMap<String, List<String>>();
 
+	private final Map<String, TipiComponentTransformer> tipiTransformerMap = new HashMap<String, TipiComponentTransformer>();
+
 	/**
 	 * Maps component types to their actual class. Could be refactored to be
 	 * done on demand
@@ -826,7 +828,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public InputStream getTipiResourceStream(String location)
 			throws IOException {
-		logger.debug("Getting tipi file: "+location+" loader: "+tipiResourceLoader);
+		logger.warn("Getting tipi file: "+location+" loader: "+tipiResourceLoader);
 		if (tipiResourceLoader != null) {
 			return tipiResourceLoader.getResourceStream(location);
 		} else {
@@ -1188,6 +1190,14 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 	}
 	
+	public TipiComponentTransformer getTipiComponentTransformer(String name) {
+		return tipiTransformerMap.get(name);
+	}
+	
+	public void addTipiComponentTransformer(String name, TipiComponentTransformer tct) {
+		tipiTransformerMap.put(name, tct);
+	}
+	
 	public void reapplyCss(TipiComponent tc)
 	{
 		if (tc.isHomeComponent())
@@ -1206,7 +1216,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		// perhaps not yet cached? Turn this off for now because it is probably a big performance drain. Do return an empty list though (prevent NPE further on)
 		if (!tipiCssMap.containsKey(definition))
 		{
-			
 			try
 			{
 				loadCssDefinition(definition, locationMap.get(definition));
@@ -2600,10 +2609,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 	
 	private TipiResourceLoader createResourceLoader(String codebase, String id) throws MalformedURLException {
-		if (codebase.indexOf("http:/") != -1
+		if (codebase.indexOf("http:/") != -1 || codebase.indexOf("https:/") != -1
 				|| codebase.indexOf("file:/") != -1) {
 			if(useCache()) {
-				return new CachedHttpResourceLoader(new File("/Users/frank/tipicache/"+id), new URL(codebase));
+				return new CachedHttpResourceLoader(id,new File("/Users/frank/tipicache/"+id), new URL(codebase));
 			} else {
 				return new HttpResourceLoader(codebase,id);
 			}

@@ -22,7 +22,7 @@ public class CachedHttpResourceLoader extends CachedResourceLoader {
 	private static final long serialVersionUID = 3322463272837679890L;
 	protected final CacheManager cache;
 
-	public CachedHttpResourceLoader(File baseDir, URL baseUrl) {
+	public CachedHttpResourceLoader(String id, File baseDir, URL baseUrl) {
 		final LocalDigestCacheValidator cacheValidator = new LocalDigestCacheValidator();
 		final FileLocalStorage localStore = new FileLocalStorage(baseDir);
 		final HttpRemoteStorage remoteStore = new HttpRemoteStorage(baseUrl);
@@ -30,6 +30,7 @@ public class CachedHttpResourceLoader extends CachedResourceLoader {
 				remoteStore, cacheValidator);
 		cacheValidator.setLocalStorage(localStore);
 		cacheValidator.setRemoteStorage(remoteStore);
+		cacheValidator.setId(id);
 		try {
 			cacheValidator.activate();
 		} catch (IOException e) {

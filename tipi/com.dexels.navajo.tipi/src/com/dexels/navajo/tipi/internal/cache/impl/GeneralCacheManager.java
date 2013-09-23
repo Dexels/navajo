@@ -31,7 +31,8 @@ public class GeneralCacheManager implements CacheManager {
 
 	@Override
 	public InputStream getContents(String location) throws IOException {
-		if (isUpToDate(location)) {
+		final boolean isUpToDate = isUpToDate(location);
+		if (isUpToDate) {
 			return local.getLocalData(location);
 		}
 		Map<String, Object> metadata = new HashMap<String, Object>();
@@ -50,10 +51,13 @@ public class GeneralCacheManager implements CacheManager {
 
 	@Override
 	public boolean isUpToDate(String location) throws IOException {
-		if (!hasLocal(location)) {
-			return false;
+		if("css/club/clubDetailsWindow_nl.css".equals(location)) {
+			System.err.println(">>>");
 		}
 		if(cacheValidator.isLocalValid(location)) {
+			if (!hasLocal(location)) {
+				return false;
+			}
 			return true;
 		}
 		return false;

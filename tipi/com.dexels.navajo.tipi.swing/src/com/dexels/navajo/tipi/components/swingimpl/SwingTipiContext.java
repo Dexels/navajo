@@ -523,6 +523,7 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
+	@Override
 	public boolean useCache() {
 		return "true".equals(getSystemProperty("cache"));
 	}

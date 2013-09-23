@@ -29,6 +29,7 @@ public class LocalDigestCacheValidator implements CacheValidator {
 	
 	private LocalStorage localStorage;
 	private RemoteStorage remoteStorage;
+	private String id;
 	
 	public LocalDigestCacheValidator()  {
 
@@ -38,10 +39,18 @@ public class LocalDigestCacheValidator implements CacheValidator {
 	public boolean isLocalValid(String location) throws IOException {
 		String localDigest = (String) localDigestProperties.get(location);
 		String remoteDigest = (String) remoteDigestProperties.get(location);
+		if(remoteDigest==null) {
+			logger.info("No remote found for: "+location+" assuming absent in loader: "+id);
+			throw new IOException("Resource absent");
+		}
 		if(localDigest==null || remoteDigest == null) {
 			return false;
 		}
-		return localDigest.equals(remoteDigest);
+		final boolean equals = localDigest.equals(remoteDigest);
+		if(!equals) {
+			System.err.println("\n>>\n>>\n>> Changed to : "+location +" in loader: "+id);
+		}
+		return equals;
 	}
 
 	public void activate() throws IOException {
@@ -103,6 +112,10 @@ public class LocalDigestCacheValidator implements CacheValidator {
 				}
 			}
 		}
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

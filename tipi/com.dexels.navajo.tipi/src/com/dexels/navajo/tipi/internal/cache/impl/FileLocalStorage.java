@@ -128,7 +128,6 @@ public class FileLocalStorage implements LocalStorage {
 
 	private void storeDigest(String location, byte[] digest) {
 		String digestString = Base64.encode(digest);
-		System.err.println("DIGEST location: "+location+" "+digestString);
 		localDigestProperties.put(location, digestString.trim());
 		storeDigestProperties();
 	}
