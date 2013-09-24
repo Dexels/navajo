@@ -52,17 +52,17 @@ public class ApplyCss extends TipiAction {
 			}
 			if (forceReloadCssDefinition)
 			{
-				component.getContext().reloadCssDefinitions("main");
-				component.getContext().reloadCssDefinitions(getHomeDefinitionName(component));
+				CssFactory.getInstance().reloadCssDefinitions("main");
+				CssFactory.getInstance().reloadCssDefinitions(getHomeDefinitionName(component));
 			}
 			if (!skipMainCss)
 			{
-				for (String cssDefinition : component.getContext().getCssDefinitions("main"))
+				for (String cssDefinition : CssFactory.getInstance().getCssDefinitions("main"))
 				{
 					CssFactory.getInstance().applyCss(component, cssDefinition, null, event);
 				}
 			}
-			for (String cssDefinition : component.getContext().getCssDefinitions(getHomeDefinitionName(component)))
+			for (String cssDefinition : CssFactory.getInstance().getCssDefinitions(getHomeDefinitionName(component)))
 			{
 				CssFactory.getInstance().applyCss(component, cssDefinition, null, event);
 			}

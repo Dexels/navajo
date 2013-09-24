@@ -37,7 +37,7 @@ public abstract class TipiAbstractOSGiExtension extends AbstractCoreExtension im
 	protected void registerTipiExtension(BundleContext context)
 			throws Exception {
 		this.context = context;
-		logger.info("Registering tipi extension: "+getClass().getName());
+		logger.debug("Registering tipi extension: "+getClass().getName());
 		loadDescriptor();
 		ITipiExtensionRegistry reg = null;
 		

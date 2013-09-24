@@ -922,7 +922,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					parseLibrary(element, false, element, false, tipiExtension);
 					processed.add(element);
 				} else {
-					logger.info("Skipping duplicate: "+element);
+					logger.debug("Skipping duplicate: "+element);
 				}
 			} catch (UnsupportedClassVersionError e) {
 				throw new UnsupportedClassVersionError(
@@ -934,6 +934,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	}
 
+	public String resolveInclude(String definition) {
+		return locationMap.get(definition);
+	}
+
+	
 	private final void parseLibrary(String location, boolean addToInclude,
 			String definition, boolean isLazy, ExtensionDefinition tipiExtension) {
 		String extension = null;
@@ -1062,133 +1067,15 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		return null;
 	}
 	
-	private String resolveCssResource(String location) 
-	{
-//		URL resource = getResourceURL(location);
-//		InputStream iss = resource.openStream();
-		InputStream iss;
-		try {
-			iss = getGenericResourceStream(location);
-		} catch (IOException e1) {
-			logger.debug("CSS location not found: "+location);
-			return null;
-		}
 
-		if (iss != null)
-		{
-			final Scanner scanner = new Scanner(iss);
-			java.util.Scanner s = scanner.useDelimiter("\\A");
-			String result = s.hasNext() ? s.next() : "" ;
-			try {
-				iss.close();
-				s.close();
-				scanner.close();
-			} catch (IOException e) {
-				logger.error("Error closing resource, ", e);
-			}
-		    return result;
-		}
-		return null;
-	}
-	
-	private List<String> loadCssResources(String baseLocation)
-	{
-		List<String> cssResources = new ArrayList<String>();
 
-		String result = resolveCssResource(baseLocation + ".css");
-		if (result != null && !result.isEmpty())
-		{
-			cssResources.add(result);
-		}
-		result = resolveCssResource(baseLocation + "_" + getClient().getLocaleCode() + ".css");
-		if (result != null && !result.isEmpty())
-		{
-			cssResources.add(result);
-		}
-		if (getClient().getSubLocaleCode() != null && !getClient().getSubLocaleCode().isEmpty())
-		{
-			result = resolveCssResource(baseLocation + "_" + getClient().getLocaleCode() + "_" + getClient().getSubLocaleCode().toLowerCase() + ".css");
-			if (result != null && !result.isEmpty())
-			{
-				cssResources.add(result);
-			}
-		}
-		return cssResources;
-	}
 	
 	/**
 	 * 
 	 * @param definition The name of the definition for which to load the CSS
 	 * @param location Can be null. The path at which the definition file can be found.
 	 */
-	private void loadCssDefinition(String definition, String location) throws IOException
-	{
-		logger.info("Finding CSS files for definition: " + definition + " with location " + location);
-		logger.debug("Current locale is " + getClient().getLocaleCode() + " and current subLocale is " + getClient().getSubLocaleCode());
-		// first try in the same dir as the definition file (ie location)
-		String strippedLocation = null;
-		if (location != null && location.lastIndexOf("/") != -1)
-		{
-			strippedLocation = location.substring(0, location.lastIndexOf("/") + 1) + definition;
-		}
 
-		List<String> cssResources = null; 
-		if (strippedLocation != null)
-		{
-			cssResources = loadCssResources(strippedLocation);
-
-			// then try in the dir we create by replacing tipi by resource/css. Eg, definition is tipi/committee/committeeCommitteeWindow.xml, then we look for resource/css/committee/committeeCommitteeWindow*.css
-			// actually location already assumes we start from tipi/ so it is not a replace.
-			if (cssResources.isEmpty())
-			{
-				cssResources = loadCssResources("css/" + strippedLocation);
-			}
-		}
-		// finally try in the base resource/css dir
-		if (cssResources == null || cssResources.isEmpty())
-		{
-			cssResources = loadCssResources("css/" + definition);
-			if (cssResources.isEmpty())
-			{
-				logger.info("Didn't find any CSS resources for definition: " + definition);
-			}
-		}
-
-		tipiCssMap.put(definition, cssResources);
-		// If the "main" definition hasn't been loaded yet, do so now (only if we're not trying to load the main definition. This prevents a possible infinite loop.
-		if (definition != null && !definition.equals("main") && !tipiCssMap.containsKey("main"))
-		{
-			loadCssDefinition("main", null);
-		}
-	}
-	
-	/**
-	 * Reloads all current Css definitions. This should happen only when locale and/or sublocale have changed.
-	 */
-	public void reloadCssDefinitions()
-	{
-		// it is possible that reloadCssDefinitions results in the addition of "main" to the keySet. This situation results in an NPE without the following precaution
-		String[] defKeys = tipiCssMap.keySet().toArray(new String[tipiCssMap.keySet().size()]);
-		for (String definition : defKeys)
-		{
-			reloadCssDefinitions(definition);
-		}
-		reapplyCss(getDefaultTopLevel());
-	}
-	/**
-	 * Reloads all current Css definitions. This should happen only when locale and/or sublocale have changed.
-	 */
-	public void reloadCssDefinitions(String definition)
-	{
-		try
-		{
-			loadCssDefinition(definition, locationMap.get(definition));
-		}
-		catch(IOException ioe)
-		{
-			logger.error("Something going wrong reloading CSS definitions for definition " + definition);
-		}
-	}
 	
 	public TipiComponentTransformer getTipiComponentTransformer(String name) {
 		return tipiTransformerMap.get(name);
@@ -1198,36 +1085,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		tipiTransformerMap.put(name, tct);
 	}
 	
-	public void reapplyCss(TipiComponent tc)
-	{
-		if (tc.isHomeComponent())
-		{
-			// slight hack, will result in CSS reapplying. 
-			// If we are going to use componentInstantiated for something else, perhaps a differentiation mechanism should be made.
-			fireComponentInstantiated(tc);
-		}
-		for (TipiComponent child : tc.getChildren())
-		{
-			reapplyCss(child);
-		}
-	}
-	public List<String> getCssDefinitions(String definition)
-	{
-		// perhaps not yet cached? Turn this off for now because it is probably a big performance drain. Do return an empty list though (prevent NPE further on)
-		if (!tipiCssMap.containsKey(definition))
-		{
-			try
-			{
-				loadCssDefinition(definition, locationMap.get(definition));
-			}
-			catch(IOException ioe)
-			{
-				logger.error("Something going wrong loading CSS definitions for component " + definition);
-				tipiCssMap.put(definition, new ArrayList<String>());
-			}
-		}
-		return tipiCssMap.get(definition);
-	}
+
+
 
 	public TipiActionBlock instantiateTipiActionBlock(XMLElement definition,
 			TipiComponent parent, TipiExecutable parentExe)
@@ -1653,22 +1512,22 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		tipiComponentMap.put(defname, elm);
 		
 		Object applyCss = elm.getAttribute("applyCss", "false");
-		if (applyCss != null && applyCss.toString().equals("true"))
-		{
-			try
-			{
-				loadCssDefinition(defname, locationMap.get(defname));
-			}
-			catch(IOException ioe)
-			{
-				logger.debug("Something going wrong loading css definitions for " + defname, ioe);
-			}
-		}
-		else
-		{
-			tipiCssMap.put(defname, new ArrayList<String>());  
-			
-		}
+//		if (applyCss != null && applyCss.toString().equals("true"))
+//		{
+//			try
+//			{
+//				loadCssDefinition(defname, locationMap.get(defname));
+//			}
+//			catch(IOException ioe)
+//			{
+//				logger.debug("Something going wrong loading css definitions for " + defname, ioe);
+//			}
+//		}
+//		else
+//		{
+//			tipiCssMap.put(defname, new ArrayList<String>());  
+//			
+//		}
 
 		if (!hasDebugger) {
 			// debug mode, don't cache at all
