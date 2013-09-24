@@ -280,7 +280,8 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	private Session createSession() {
-		Properties props = System.getProperties();
+		Properties props = new Properties();
+		props.putAll( System.getProperties());
 		props.put("mail.smtp.host", mailServer);
 
 		if (smtpUser != null && !"".equals(smtpUser)) {
