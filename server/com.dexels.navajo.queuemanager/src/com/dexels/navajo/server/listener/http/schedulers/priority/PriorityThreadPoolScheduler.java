@@ -311,15 +311,14 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 			return;
 		}
 		// Calculate moving average inter-arrival time.
-		synchronized (interArrivalTime) {
-			long arrivalTime = System.currentTimeMillis();
-			if ( previousArrivalTime != 0 ) { 
-				int diff = (int) ( arrivalTime - previousArrivalTime );
-				interArrivalTime[(int) ( ( arrivals - 1 ) % WINDOW_SIZE )  ] = diff;
-			} 
-			previousArrivalTime = arrivalTime;
-			arrivals++;
-		}
+		long arrivalTime = System.currentTimeMillis();
+		if ( previousArrivalTime != 0 ) { 
+			int diff = (int) ( arrivalTime - previousArrivalTime );
+			interArrivalTime[(int) ( ( arrivals - 1 ) % WINDOW_SIZE )  ] = diff;
+		} 
+		previousArrivalTime = arrivalTime;
+		arrivals++;
+		
 		
 		long before = System.currentTimeMillis();
 		run.setScheduledAt(before);
