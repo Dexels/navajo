@@ -36,6 +36,7 @@ public class ClientTag extends BaseNavajoTag {
 	}
 
 	
+	@Override
 	public int doStartTag() throws JspException {
 		NavajoContext context = (NavajoContext) getPageContext().findAttribute("navajoContext");
 		NavajoRemoteContext nc = null;

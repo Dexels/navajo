@@ -26,6 +26,7 @@ public class ValueTag extends BaseNavajoTag {
 		myProperty = property;
 	}
 
+	@Override
 	public int doStartTag() throws JspException {
 		try {
 			Navajo n = getNavajoContext().getNavajo();
