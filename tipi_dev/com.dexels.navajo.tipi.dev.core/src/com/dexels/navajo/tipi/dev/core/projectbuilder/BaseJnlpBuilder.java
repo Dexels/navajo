@@ -38,7 +38,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 	public String build(String repository, String developRepository, String extensions, Map<String,String> tipiProperties, String deployment,  File baseDir, String codebase, List<String> profiles, boolean useVersioning) {
 		for (String fileName : profiles) {
 			File jnlpFile = new File(baseDir, fileName+".jnlp");
-			logger.info("Writing jnlp: "+jnlpFile.getAbsolutePath());
+			logger.debug("Writing jnlp: "+jnlpFile.getAbsolutePath());
 			try {
 				FileWriter fw1 = new FileWriter(jnlpFile);
 				fw1.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -86,7 +86,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			List<Dependency> dependencyList, File appFolder,
 			List<String> profiles, String resourceBase) {
 		
-		logger.info("Building in folder: "+appFolder);
+		logger.debug("Building in folder: "+appFolder);
 		if(profiles==null) {
 			logger.warn("No profiles loaded, not building jnlp");
 		}
@@ -121,7 +121,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		information.addTagKeyValue("homepage", params.getString("homepage"));
 		information.addTagKeyValue("icon", "").setAttribute("href", resourceBase+"/"+params.getString("icon"));
 
-		logger.info("Parsing: " + fileName);
+		logger.debug("Parsing: " + fileName);
 
 		if (params.getString("splash") != null) {
 			XMLElement splash = new CaseSensitiveXMLElement();
