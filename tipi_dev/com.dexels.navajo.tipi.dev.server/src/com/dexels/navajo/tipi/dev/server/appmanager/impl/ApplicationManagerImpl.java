@@ -47,28 +47,35 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		if(path==null) {
 			throw new IOException("No tipi.store.path set in configuration!");
 		}
+		Boolean scan = (Boolean) configuration.get("scan");
+		boolean enableScan = false;
+		if(scan!=null) {
+			enableScan = scan.booleanValue();
+		}
 		storeFolder = new File(path);
 		File applicationFolder = new File(storeFolder,"applications");
 		setAppsFolder(applicationFolder);
 		running = true;
-		this.scanThread = new Thread() {
-
-			@Override
-			public void run() {
-				while(running) {
-					try {
-						scan();
-						Thread.sleep(SLEEP_TIME);
-					} catch (IOException e) {
-						logger.error("Error: ", path);
-					} catch (InterruptedException e) {
-						logger.error("Error: ", path);
+		if(enableScan) {
+			this.scanThread = new Thread() {
+	
+				@Override
+				public void run() {
+					while(running) {
+						try {
+							Thread.sleep(SLEEP_TIME);
+							scan();
+						} catch (IOException e) {
+							logger.error("Error: ", path);
+						} catch (InterruptedException e) {
+							logger.error("Error: ", path);
+						}
 					}
 				}
-			}
-			
-		};
-		scanThread.start();
+				
+			};
+			scanThread.start();
+		}
 	}
 	
 	public void deactivate() {

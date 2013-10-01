@@ -5,9 +5,11 @@
    <reference bind="setApplicationManager" cardinality="1..1" interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager" name="ApplicationManager" policy="dynamic" unbind="clearApplicationManager"/>
    <service>
       <provide interface="com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation"/>
+      <provide interface="javax.servlet.Servlet"/>
    </service>
    <property name="osgi.command.scope" type="String" value="tipi"/>
    <property name="osgi.command.function" type="String">
 		build
    </property>
+   <property name="alias" type="String" value="/build"/>
 </scr:component>

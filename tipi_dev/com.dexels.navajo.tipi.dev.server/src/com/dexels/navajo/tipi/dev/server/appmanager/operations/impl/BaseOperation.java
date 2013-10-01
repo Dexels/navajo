@@ -4,13 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServlet;
+
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 
-public abstract class BaseOperation implements AppStoreOperation {
+public abstract class BaseOperation extends HttpServlet  implements AppStoreOperation {
 
-
+	private static final long serialVersionUID = 7744618301328519140L;
 	protected final Map<String,ApplicationStatus> applications = new HashMap<String, ApplicationStatus>();
 	protected ApplicationManager applicationManager = null;
 

@@ -8,60 +8,70 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.dev.core.projectbuilder.XsdBuilder;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 
-public class XsdBuild extends BaseOperation implements AppStoreOperation {
+public class Clean extends BaseOperation implements AppStoreOperation {
 
 	
-	private static final long serialVersionUID = -7219236999229829020L;
+	private static final long serialVersionUID = 8640712571228602628L;
 	private final static Logger logger = LoggerFactory
-			.getLogger(XsdBuild.class);
+			.getLogger(Clean.class);
 	
-	public void xsd(String name) throws IOException {
+	public void clean(String name) throws IOException {
+		logger.info("Cleaning application: {}",name);
 		ApplicationStatus as = applications.get(name);
 		build(as);
 	}
 	
-	public void xsd() throws IOException {
+	public void clean() throws IOException {
+		logger.info("Cleaning all applications");
 		for (ApplicationStatus a: applications.values()) {
 			build(a);
 		}
 	}
+	
+	
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String val = req.getParameter("app");
 		if(val!=null) {
-			xsd(val);
+			clean(val);
 		} else {
-			xsd();
+			clean();
 		}
 	}
-	
+
 	@Override
 	public void build(ApplicationStatus a) throws IOException {
-		XsdBuilder xsd = new XsdBuilder();
 		File lib = new File(a.getAppFolder(),"lib");
-		File[] jars = lib.listFiles(new FilenameFilter() {
+		if(lib.exists()) {
+			FileUtils.deleteQuietly(lib);
+		}
+		File xsd = new File(a.getAppFolder(),"xsd");
+		if(xsd.exists()) {
+			FileUtils.deleteQuietly(xsd);
+		}
+		File digest = new File(a.getAppFolder(),"resource/remotedigest.properties");
+		if(digest.exists()) {
+			FileUtils.deleteQuietly(digest);
+		}
+		
+		File[] jnlps = a.getAppFolder().listFiles(new FilenameFilter() {
 			
 			@Override
 			public boolean accept(File dir, String name) {
-				return name.endsWith(".jar");
+				return name.endsWith(".jnlp");
 			}
-		});
-		if(jars==null || jars.length==0) {
-			logger.warn("Can not write xsd: No jar files built.");
-			return;
+		});		
+		for (File file : jnlps) {
+			FileUtils.deleteQuietly(file);
 		}
-		for (File file : jars) {
-			xsd.addJar(file);
-		}
-		xsd.writeXsd(a.getAppFolder());
 	}
 }

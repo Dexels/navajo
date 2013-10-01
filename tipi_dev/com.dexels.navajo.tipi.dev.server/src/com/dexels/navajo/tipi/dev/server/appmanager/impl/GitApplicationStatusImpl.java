@@ -33,30 +33,17 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	private final static Logger logger = LoggerFactory.getLogger(GitApplicationStatusImpl.class);
 
 	private ApplicationManager applicationManager;
-
-
 	private File privateKey;
-
-
 	private File publicKey;
-
-
 	private String branch;
-
-
 	private String gitUrl;
-
 	private AppStoreOperation xsdBuild;
-
 	private AppStoreOperation jnlpBuild;
-
 	private AppStoreOperation cacheBuild;
 
 	public ApplicationManager getApplicationManager() {
 		return applicationManager;
 	}
-	
-	
 
 	public void setXsdBuild(AppStoreOperation xsdBuild) {
 		this.xsdBuild = xsdBuild;
@@ -91,13 +78,8 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	
 	@Override
 	public void activate(Map<String,Object> settings) throws IOException {
-//		url=git@github.com:Dexels/com.sportlink.club.git
-//		key=id_rsa
-//		name=club
-//		branch=origin/master
 		File gitRepoFolder = new File(applicationManager.getStoreFolder(),"applications");
 		gitUrl = (String) settings.get("url");
-//		String name = (String) settings.get("name");
 		String reponame = (String) settings.get("repositoryname");
 		String key = (String) settings.get("key");
 		branch = (String) settings.get("branch");
@@ -108,21 +90,13 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		super.load(applicationFolder);
 		privateKey = null;
 		publicKey = null;
-		
 		privateKey = new File(keyFolder,key);
 		publicKey = new File(keyFolder,key+".pub");
-		
-		//		String appFolder = (String) settings.get("path");
-//		File appDir = new File(appFolder);
-//		load(appDir);
 		try {
 			
-//			String gitUrl = "git@github.com:Dexels/com.sportlink.club.git";
-//			File dir = new File("/Users/frank/git/navajo/tipi_dev/com.dexels.navajo.tipi.dev.store/applications/bom");
 			if(applicationFolder.exists()) {
 				callPull();
 			} else {
-//				GitApplicationStatusImpl ga = new GitApplicationStatusImpl();
 				callClone();
 			}
 		} catch (InvalidRemoteException e) {
@@ -131,6 +105,9 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 			logger.error("Error: ", e);
 		} catch (GitAPIException e) {
 			logger.error("Error: ", e);
+		} catch(Throwable t) {
+			logger.error("Error: ", t);
+			
 		}
 
 	}
@@ -218,8 +195,6 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		config.save();
 		callPull();
 		jnlpBuild.build(this);
-		xsdBuild.build(this);
-		cacheBuild.build(this);
 
 	}
 

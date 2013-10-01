@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE project>
 <project default="signsingle">
 	<target name="signsingle" >
 		<echo message="File ${jarfile}"/>
 		<signjar keystore="${keystore}" storepass="${storepass}"  alias="${alias}" jar="${jarfile}">
 		</signjar>
 	</target>
-	
 </project>

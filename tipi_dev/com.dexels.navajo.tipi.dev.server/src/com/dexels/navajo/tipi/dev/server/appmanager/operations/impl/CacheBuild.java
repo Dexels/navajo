@@ -14,6 +14,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +27,7 @@ import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 
 public class CacheBuild extends BaseOperation implements AppStoreOperation {
 
-
-	
+	private static final long serialVersionUID = 4675519591066489420L;
 	private final static Logger logger = LoggerFactory
 			.getLogger(CacheBuild.class);
 	
@@ -39,6 +42,18 @@ public class CacheBuild extends BaseOperation implements AppStoreOperation {
 			build(a);
 		}
 	}
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		String val = req.getParameter("app");
+		if(val!=null) {
+			cachebuild(val);
+		} else {
+			cachebuild();
+		}
+	}
+	
 	public void build() throws IOException {
 		for (ApplicationStatus a: applications.values()) {
 			build(a);

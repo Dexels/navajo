@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +27,7 @@ import com.dexels.navajo.tipi.dev.server.appmanager.impl.UnsignJarTask;
 public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 
 	
+	private static final long serialVersionUID = -325075211700621696L;
 	private final static Logger logger = LoggerFactory
 			.getLogger(JnlpBuild.class);
 	
@@ -35,6 +40,17 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 			
 		} else {
 			build(as);
+		}
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		String val = req.getParameter("app");
+		if(val!=null) {
+			build(val);
+		} else {
+			build();
 		}
 	}
 	
@@ -68,7 +84,6 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 			lib.mkdirs();
 		}
 		logger.info("Loading application");
-		Thread.dumpStack();
 		a.load();
 		for (Dependency dd : a.getDependencies()) {
 			File localSigned = dd.getFilePathForDependency(repo);

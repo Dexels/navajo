@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
 
+@JsonIgnoreProperties({"settingsBundle"})
 public interface ApplicationStatus {
 
 	public File getAppFolder();

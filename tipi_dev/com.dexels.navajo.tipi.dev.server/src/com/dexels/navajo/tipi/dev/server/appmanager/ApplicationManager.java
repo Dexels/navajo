@@ -6,12 +6,12 @@ import java.util.Set;
 public interface ApplicationManager {
 
 	public static final String TIPI_STORE_APPLICATION = "tipi.store.application";
-	public static final int SLEEP_TIME = 5000;
+	public static final int SLEEP_TIME = 25000;
 
 	public File getAppsFolder();
 
 	public Set<String> listApplications();
 
-	File getStoreFolder();
+	public File getStoreFolder();
 
 }
