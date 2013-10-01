@@ -219,8 +219,8 @@ private String resource;
   }
   
   protected synchronized void waitForResult() throws UserException {
-	
-	  // Blocking internal request is ALWAYS synchronous, return immediately.
+	  
+          // Blocking internal request is ALWAYS synchronous, return immediately.
 	  if ( block && server == null ) {
 		  return;
 	  }
