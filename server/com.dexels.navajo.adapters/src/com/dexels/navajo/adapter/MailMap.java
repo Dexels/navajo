@@ -297,7 +297,7 @@ public class MailMap implements MailMapInterface, Mappable,
 				props.put("mail.smtp.socketFactory.fallback", "false");
 			}
 			Authenticator auth = new SMTPAuthenticator();
-			Session session = Session.getDefaultInstance(props, auth);
+			Session session = Session.getInstance(props, auth);
 			return session;
 		} else {
 			props.put("mail.smtp.port", "25");
