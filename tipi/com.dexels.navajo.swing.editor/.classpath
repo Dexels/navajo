@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="lib/gnu-regexp-1.1.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry exported="true" kind="lib" path="lib/gnu-regexp-1.1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/kafenio-config.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/kafenio-icons.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

@@ -474,6 +474,9 @@ public class GenericHandler extends ServiceHandler {
             else if (e instanceof com.dexels.navajo.server.ConditionErrorException) {
               return ( (com.dexels.navajo.server.ConditionErrorException) e).getNavajo();
             }
+            else if ( e instanceof UserException ) {
+            	throw (UserException) e;
+            }
             else if (e instanceof AuthorizationException) {
               System.err.println("CAUGHT AUTHORIZATION ERROR IN GENERICHANDLER!");
               throw (AuthorizationException) e;

@@ -36,9 +36,8 @@ public class SharedMemoryStore implements SharedStoreInterface {
 		this.store = storeImpl;
 	}
 	
-	@Override
-	public void remove(String parent, String name) {
-		removeEntry(parent, name);
+	public Map<String, SharedStoreEntry> getStoreImplementation() {
+		return this.store;
 	}
 	
 	@Override
@@ -71,7 +70,11 @@ public class SharedMemoryStore implements SharedStoreInterface {
 		// Do nothing.
 	}
 
-	private void removeEntry(String parent, String name) {
+	public void remove(String parent, String name) {
+		removeEntry(parent, name);
+	}
+	
+	protected void removeEntry(String parent, String name) {
 		SharedStoreEntry e = store.get(constructName(parent, name));
 		if ( e != null ) {
 			store.remove(constructName(parent, name));
@@ -107,7 +110,7 @@ public class SharedMemoryStore implements SharedStoreInterface {
 
 	@Override
 	public boolean exists(String parent, String name) {
-		return getEntry(parent, name) != null;
+		return store.containsKey(constructName(parent, name));
 	}
 
 	@Override

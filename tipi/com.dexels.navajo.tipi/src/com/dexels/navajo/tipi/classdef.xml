@@ -100,7 +100,8 @@
          <value direction="in" name="password" type="string" />
          <value direction="in" name="keystore" type="string" />
          <value direction="in" name="storepass" type="string" />
-      </values>
+         <value direction="in" name="retryCount" type="integer" />
+         </values>
       <methods />
        <entrypoints>
          <entry name="Init" />

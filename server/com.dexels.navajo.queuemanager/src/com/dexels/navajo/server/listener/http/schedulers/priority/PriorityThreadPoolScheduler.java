@@ -32,7 +32,7 @@ import com.dexels.navajo.server.resource.ServiceAvailability;
 public final class PriorityThreadPoolScheduler implements TmlScheduler, PriorityThreadPoolSchedulerMBean, QueueContext {
 	
 	private static final int DEFAULT_POOL_SIZE = 15;
-	private static final int DEFAULT_MAXBACKLOG = 100;
+	private static final int DEFAULT_MAXBACKLOG = 500;
 	private static final Logger logger = LoggerFactory.getLogger(PriorityThreadPoolScheduler.class);
 //	private RequestQueue normalPool;
 //	private RequestQueue priorityPool;
@@ -171,10 +171,10 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	private void createPools(int normalPoolSize, int priorityPoolSize,
 			int systemPoolSize) {
 		RequestQueue normalPool = createThreadPool(this, "normalPool", 3, normalPoolSize);
-		createThreadPool(this, "priorityPool", 8, priorityPoolSize);
+		createThreadPool(this, "priorityPool", 8, normalPool.getMaximumActiveRequestCount() * 5);
 		createThreadPool(this, "systemPool", 10, systemPoolSize);
 		createThreadPool(this, "slowPool", 3, 1);
-		createThreadPool(this, "fastPool", 7, normalPool.getMaximumActiveRequestCount() * 2);
+		createThreadPool(this, "fastPool", 7, normalPool.getMaximumActiveRequestCount() * 4);
 	}
 	
 	private RequestQueue createThreadPool(Scheduler scheduler, String name, int priority, int size) {

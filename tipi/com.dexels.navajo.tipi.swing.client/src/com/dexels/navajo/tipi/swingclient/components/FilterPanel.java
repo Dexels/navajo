@@ -10,12 +10,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -25,13 +25,13 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.BinaryOpenerFactory;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
@@ -73,13 +73,12 @@ public class FilterPanel extends JPanel {
 	private JButton clearButton = new JButton();
 	private String[] ignoreList;
 	private int filterCount = 0;
-	private String templateDir, mergedataDir, emailColumn;
+	private String emailColumn;
 	JLabel filteredRowCountLabel = new JLabel();
 	private MessageTable myTable;
 	private JButton columnsButton = new JButton();
 	private JButton columnsSaveButton = new JButton();
 	private JButton excelButton = new JButton();
-	private JButton wordButton = new JButton();
 	private JButton emailButton = new JButton();
 
 	private HashMap<String, String> nameIdMap = new HashMap<String, String>();
@@ -145,8 +144,7 @@ public class FilterPanel extends JPanel {
 					data = myTable.getMessageAsPresentedOnTheScreen(false);
 				}
 				if (data != null) {
-					MergeUtils.exportMergeData(getMergedataFile(), data, ";");
-					MergeUtils.openDocument(getMergedataFile());
+					BinaryOpenerFactory.getInstance().exportCsv(getMergedataFile(), data, ";");
 				}
 			}
 		});
@@ -154,17 +152,6 @@ public class FilterPanel extends JPanel {
 		emailButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				sendEmails();
-			}
-		});
-
-		wordButton.setIcon(new ImageIcon(FilterPanel.class
-				.getResource("word.png")));
-		wordButton.setToolTipText(res.getString("wordToolTip"));
-		wordButton.setMargin(new Insets(0, 0, 0, 0));
-		wordButton.setVisible(false);
-		wordButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				openLetter();
 			}
 		});
 
@@ -222,43 +209,13 @@ public class FilterPanel extends JPanel {
 				new Insets(1, 1, 1, 1), 0, 0));
 		columnPanel.add(columnsSaveButton);
 		columnPanel.add(excelButton);
-		columnPanel.add(wordButton);
 		columnPanel.add(emailButton);
 		columnPanel.add(columnsButton);
 		// setVisible(false);
 	}
 
-	public void openLetter() {
-		templateDir = null;// SwingClient.getUserInterface().getPreference(10,
-							// null);
-		mergedataDir = null;// SwingClient.getUserInterface().getPreference(11,
-							// null);
-		JFileChooser fc = new JFileChooser();
-		fc.setDialogTitle("Open merge-template");
-		if (templateDir != null) {
-			fc.setCurrentDirectory(new File(templateDir));
-		}
-		fc.showOpenDialog(this);
-		if (fc.getSelectedFile() != null) {
-			if (mergedataDir != null) {
-				Message data = null;
-				if (myTable != null) {
-					data = myTable.getMessageAsPresentedOnTheScreen(true);
-				}
-				if (data != null) {
-					MergeUtils.openDocument(mergedataDir + "/merge.dat", data,
-							fc.getSelectedFile().getPath());
-				}
-			}
-		}
-	}
-
 	public void doEmail() {
 		sendEmails();
-	}
-
-	public void doWord() {
-		openLetter();
 	}
 
 	public void doExcel() {
@@ -267,8 +224,7 @@ public class FilterPanel extends JPanel {
 			data = myTable.getMessageAsPresentedOnTheScreen(false);
 		}
 		if (data != null) {
-			MergeUtils.exportMergeData(getMergedataFile(), data, ";");
-			MergeUtils.openDocument(getMergedataFile());
+			BinaryOpenerFactory.getInstance().exportCsv(getMergedataFile(), data, ";");
 		}
 
 	}
@@ -283,7 +239,39 @@ public class FilterPanel extends JPanel {
 	}
 
 	private void sendEmails() {
-		MergeUtils.sendEmail(emailColumn, myTable.getMessage());
+		Message data = myTable.getMessage();
+		try {
+
+			String separator = ",";
+
+/*			if (SwingClient.getUserInterface().showQuestionDialog("Outlook?")) {
+				separator = ";";
+			} */
+
+			logger.info("Sending mail: " + emailColumn);
+			List<String> recepients = new ArrayList<String>();
+			for (int i = 0; i < data.getArraySize(); i++) {
+				String address = data.getMessage(i).getProperty(emailColumn)
+						.getValue();
+				logger.info("Got: " + address);
+				if (address != null && address.indexOf("@") > 0) {
+					logger.info("Adding: " + address);
+					recepients.add(address);
+				}
+			}
+
+			// mailto: is added by the BinaryOpener.
+			String mailString = "?bcc=";
+
+			for (int j = 0; j < recepients.size(); j++) {
+				mailString = mailString + recepients.get(j) + separator;
+			}
+			mailString = mailString.substring(0, mailString.length() - 1);
+			logger.info("Calling openDoc: " + mailString);
+			BinaryOpenerFactory.getInstance().mail(mailString);
+		} catch (Exception e) {
+			logger.info("Could not send email: " + e.getMessage());
+		}
 	}
 
 	public void setMessageTable(MessageTable mt) {
@@ -444,16 +432,11 @@ public class FilterPanel extends JPanel {
 
 	public void setExcelColumnButtonVisible(boolean visible) {
 		excelButton.setVisible(visible);
-		wordButton.setVisible(visible); // easy way out :P
 	}
 
 	public void setEmailButtonVisible(boolean visible, String columnName) {
 		emailColumn = columnName;
 		emailButton.setVisible(visible);
-	}
-
-	public void setWordColumnButtonVisible(boolean visible) {
-		wordButton.setVisible(visible);
 	}
 
 	void columnSelectBox_actionPerformed(ActionEvent e) {

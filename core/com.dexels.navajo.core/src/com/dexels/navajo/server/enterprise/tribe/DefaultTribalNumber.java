@@ -5,9 +5,11 @@ import java.util.concurrent.atomic.AtomicLong;
 public class DefaultTribalNumber implements TribalNumber {
 
 	private final AtomicLong myAtomic;
+	private final String myName;
 	
 	public DefaultTribalNumber() {
 		myAtomic = new AtomicLong();
+		myName = myAtomic.toString();
 	}
 	
 	public long addAddGet(long delta) {
@@ -47,5 +49,10 @@ public class DefaultTribalNumber implements TribalNumber {
 	@Override
 	public void set(long value) {
 		myAtomic.set(value);
+	}
+
+	@Override
+	public String getName() {
+		return myName;
 	}
 }

@@ -271,7 +271,7 @@ public class MessageMap implements Mappable {
 					if ( equal ) {
 						Message newMsg = NavajoFactory.getInstance().createMessage(myAccess.getOutputDoc(), "tmp");
 						// Check for duplicate property names. If found, rename to _1 _2 respectively
-						renameDuplicates(msg1pointer, msg2pointer);
+						// DO NOT, CAN LEAD TO STRANGE BEHAVIOR: renameDuplicates(msg1pointer, msg2pointer);
 						newMsg.merge(msg2pointer);
 						newMsg.merge(msg1pointer);
 						ResultMessage rm = new ResultMessage();
@@ -381,7 +381,8 @@ public class MessageMap implements Mappable {
 	private void renameDuplicates(Message c1, Message c2) {
 		for ( Property p1 : c1.getAllProperties() ) {
 			for ( Property p2 : c2.getAllProperties() ) {
-				if ( p1.getName().equals(p2.getName()) ) {
+				if ( p1.getName().equals(p2.getName()) && ( ( p1.getValue() == null && p2.getValue() == null ) || 
+						( p1.getValue() != null && p2.getValue() != null && p1.getValue().equals(p2.getValue()) ) ) ) {
 					p2.setName(p2.getName()+"_2");
 				}
 			}

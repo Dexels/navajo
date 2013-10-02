@@ -40,6 +40,7 @@ public interface SharedStoreInterface {
 
 	public static final int READ_WRITE_LOCK = 0;
 	public static final int WRITE_LOCK = 1;
+
 	
 	/**
 	 * Remove an object with the specified name of the specified parent

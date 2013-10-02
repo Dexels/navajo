@@ -111,6 +111,12 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
    * if useCurrentOutDoc is set, the NavajoMap will use the outDoc from the access object instead of creating a new one.
    */
   public boolean useCurrentOutDoc;
+  
+  /*
+   * If useCurrentMessages is set, the NavajoMap will copy the comma-seperated message names to the request of the called webservice.
+   */
+  public String useCurrentMessages = null;
+  
   public boolean breakOnConditionError = true;
   public boolean breakOnException = true;
   public String keyStore;
@@ -213,6 +219,12 @@ private String resource;
   }
   
   protected synchronized void waitForResult() throws UserException {
+	  
+          // Blocking internal request is ALWAYS synchronous, return immediately.
+	  if ( block && server == null ) {
+		  return;
+	  }
+	  
 	  if (!serviceCalled) {
 		  throw new UserException(-1, "Call webservice before retrieving result.");
 	  }
@@ -597,30 +609,40 @@ private String resource;
 	  return b;
   }
   
-  protected Navajo prepareOutDoc() {
+  protected Navajo prepareOutDoc() throws UserException {
 	  // If currentOutDoc flag was set, make sure to copy outdoc.
-	  if ( this.useCurrentOutDoc ) {
-		  if ( this.outDoc != null ) {
-			  /**
-			   * NOTE: THIS MERGE OPERATION WILL CAUSE EXISTING PROPERTIES IN outDoc TO
-			   * BE OVERWRITTEN WITH THE SAME PROPERTIES IN access.getOutputDoc().
-			   * THIS IS NOT EXPECTED BEHAVIOR.
-			   */
-			  this.outDoc.merge(access.getOutputDoc().copy(), true) ;
+	  
+	  if ( this.useCurrentOutDoc || this.useCurrentMessages != null ) {
+		  if ( this.useCurrentOutDoc ) {
+			  if ( this.outDoc != null ) {
+				  /**
+				   * NOTE: THIS MERGE OPERATION WILL CAUSE EXISTING PROPERTIES IN outDoc TO
+				   * BE OVERWRITTEN WITH THE SAME PROPERTIES IN access.getOutputDoc().
+				   * THIS IS NOT EXPECTED BEHAVIOR.
+				   */
+				  this.outDoc.merge(access.getOutputDoc().copy(), true) ;
+			  } else {
+				  this.outDoc = access.getOutputDoc().copy();
+			  }
 		  } else {
-			  this.outDoc = access.getOutputDoc().copy();
-		  }
-
-		  // Copy param messages.
-		  if ( inMessage.getMessage("__parms__") != null ) {
-			  Message params = inMessage.getMessage("__parms__").copy(outDoc);
-			  try {
-				  outDoc.addMessage(params);
-			  } catch (NavajoException e) {
-				  e.printStackTrace(Access.getConsoleWriter(access));
+			  String [] copy = useCurrentMessages.split(",");
+			  for (String msgName : copy) {
+				  Message msg = null;
+				  if ( (msg = access.getOutputDoc().getMessage(msgName) ) != null  ) {
+					  if ( this.outDoc.getMessage(msgName) != null ) {
+						  this.outDoc.getMessage(msgName).merge(msg);
+					  } else {
+						  this.outDoc.addMessage(msg);
+					  }
+				  }  else {
+					  throw new UserException(-1, "Could not find message specified in useCurrentMessages: " + msgName);
+				  }
 			  }
 		  }
-
+	  }
+	  
+	  if ( this.useCurrentOutDoc ) {
+	
 		  // Check for deleted messages.
 		  if ( deletedMessages.size() > 0 ) {
 			  for (String dMn: deletedMessages ) {
@@ -645,6 +667,64 @@ private String resource;
 		  }
 	  }
 
+	  if ( this.sendThrough ) {
+		  // Check for request messages with scope "local": remove those.
+		  for ( Message m : access.getInDoc().getAllMessages() ) {
+			  if ( m.getScope() != null && m.getScope().equals(Message.MSG_SCOPE_LOCAL) ) {
+				  if ( outDoc.getMessage(m.getName()) != null ) {
+					  outDoc.removeMessage(m.getName());
+				  }
+			  }
+		  }
+	  }
+	  
+	  if ( this.useCurrentOutDoc ) {
+		  // Check for request messages with scope "local": remove those.
+		  for ( Message m : access.getOutputDoc().getAllMessages() ) {
+			  if ( m.getScope() != null && m.getScope().equals(Message.MSG_SCOPE_LOCAL) ) {
+				  if ( outDoc.getMessage(m.getName()) != null ) {
+					  outDoc.removeMessage(m.getName());
+				  }
+			  }
+		  }
+	  }
+	  
+	  if ( !this.sendThrough ) {
+		  // Check for request messages with scope "global": add those.
+		  for ( Message m : access.getInDoc().getAllMessages() ) {
+			  if ( m.getScope() != null && m.getScope().equals(Message.MSG_SCOPE_GLOBAL) ) {
+				  if ( outDoc.getMessage(m.getName()) != null ) {
+					  // Set preferthis flag to true to make sure that changes made in script are preferred over properties/messages
+					  // already in global message.
+					  outDoc.getMessage(m.getName()).merge(m.copy(outDoc), true);
+				  } else {
+					  outDoc.addMessage(m.copy(outDoc));
+				  }
+			  } 
+		  }
+	  }
+	  
+	  if ( !this.useCurrentOutDoc ) {
+		  // Check for response messages with scope "global": add those.
+		  // Check for response messages with scope "local": remove those.
+		  for ( Message m : access.getOutputDoc().getAllMessages() ) {
+			  if ( m.getScope() != null && m.getScope().equals(Message.MSG_SCOPE_GLOBAL) ) {
+				  if ( outDoc.getMessage(m.getName()) != null ) {
+					  // Set preferthis flag to true to make sure that changes made in script are preferred over properties/messages
+					  // already in global message.
+					  outDoc.getMessage(m.getName()).merge(m.copy(outDoc), true);
+				  } else {
+					  outDoc.addMessage(m.copy(outDoc));
+				  }
+			  } 
+			  if ( m.getScope() != null && m.getScope().equals(Message.MSG_SCOPE_LOCAL) ) {
+				  if ( outDoc.getMessage(m.getName()) != null ) {
+					  outDoc.removeMessage(m.getName());
+				  }
+			  }
+		  }
+	  }
+	  
 	  // Always copy globals.
 	  if ( inMessage.getMessage("__globals__") != null ) {
 		  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
@@ -1067,6 +1147,10 @@ private String resource;
 
   }
 
+  public void setUseCurrentMessages(String m) throws UserException {
+	  this.useCurrentMessages = m;
+  }
+  
   public boolean isExists() {
     return false;
   }
@@ -1250,15 +1334,14 @@ private String resource;
 		  // Clear request id.
 		  h.setRequestId(null);
 		  h.setHeaderAttribute("parentaccessid", access.accessID);
-
-		  inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
-		  serviceFinished = true;
-		  serviceCalled = true;
-		  continueAfterRun();
 		  
+		  inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
+		  continueAfterRun();
 	 } catch (Exception e) {
 		 setException(e);
 	  } finally {
+		  serviceFinished = true;
+		  serviceCalled = true;
 		  setIsFinished();
 	  }
 

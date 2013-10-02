@@ -6,6 +6,7 @@ import com.dexels.navajo.server.enterprise.tribe.TribeMemberInterface;
 
 /**
  * This event is used to communicate internally that a specific tribe member has passed away.
+ * NOTE: THIS EVENT IS ONLY AVAILABLE FOR THE CHIEF OF THE TRIBE, NON-CHIEF MEMBERS DO NOT RECEIVE THIS EVENT!
  * 
  * @author arjen
  *

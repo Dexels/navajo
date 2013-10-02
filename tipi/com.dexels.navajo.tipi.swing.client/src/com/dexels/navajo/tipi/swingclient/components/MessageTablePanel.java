@@ -34,6 +34,7 @@ import javax.swing.table.TableCellRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.BinaryOpenerFactory;
 import com.dexels.navajo.document.ExpressionChangedException;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -260,7 +261,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 					public final void actionPerformed(ActionEvent e) {
 						try {
 							Binary b = getTableReport(null, null, null);
-							MergeUtils.openDocument(b, "pdf");
+							BinaryOpenerFactory.getInstance().open(b);
 
 						} catch (Exception ex) {
 							ex.printStackTrace();
@@ -1145,12 +1146,6 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 	public void doEmail() {
 		if (filterPanel != null) {
 			filterPanel.doEmail();
-		}
-	}
-
-	public void doWord() {
-		if (filterPanel != null) {
-			filterPanel.doWord();
 		}
 	}
 

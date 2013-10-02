@@ -10,5 +10,6 @@ public interface TribalNumber {
 	public long getAndSet(long value);
 	public long incrementAndGet();
 	public void set(long value);
+	public String getName();
 	
 }

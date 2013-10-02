@@ -15,12 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import com.dexels.navajo.document.BinaryOpenerFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.metadata.FormatDescription;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.components.swingimpl.swing.DefaultBrowser;
 import com.dexels.navajo.tipi.internal.TipiAction;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -103,7 +103,7 @@ public class TipiOpenBinary extends TipiAction {
 			}
 			File f = File.createTempFile(fileNameEval, "." + extString);
 			TipiSaveValue.saveFile(b, f);
-			DefaultBrowser.displayURL(f.getAbsolutePath());
+			BinaryOpenerFactory.getInstance().open(f);
 		} catch (IOException e) {
 			logger.error("Error detected",e);
 		}
@@ -113,7 +113,6 @@ public class TipiOpenBinary extends TipiAction {
 	public static void main(String[] args) throws Exception {
 		File f = File.createTempFile("tipi_", "" + ".pdf");
 		// URL u = f.toURL();
-		DefaultBrowser.displayURL(f.getAbsolutePath());
-
+		BinaryOpenerFactory.getInstance().open(f);
 	}
 }

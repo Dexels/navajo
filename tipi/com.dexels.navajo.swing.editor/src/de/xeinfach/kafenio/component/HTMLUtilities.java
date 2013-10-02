@@ -195,7 +195,7 @@ public class HTMLUtilities {
 
 	/**
 	 * Diese Methode gibt jeweils den Start- und Endoffset des Elements sowie
-	 * dem entsprechenden schließenden Tag zurück
+	 * dem entsprechenden schliessenden Tag zuruck
 	 */
 	private int[] getPositions(Element element, String source,
 			boolean closingTag, String idString) {
@@ -286,8 +286,8 @@ public class HTMLUtilities {
 	}
 
 	/**
-	 * @return Diese Methoden geben das erste gefundende dem übergebenen tags
-	 *         entsprechende Element zurück
+	 * @return Diese Methoden geben das erste gefundende dem ubergebenen tags
+	 *         entsprechende Element zuruck
 	 */
 	public Element getListItemParent() {
 		String listItemTag = HTML.Tag.LI.toString();
@@ -308,8 +308,8 @@ public class HTMLUtilities {
 	 * @param removeKey
 	 *            remove key from attributeset
 	 * @return Diese Methode entfernt Attribute aus dem SimpleAttributeSet,
-	 *         gemäß den übergebenen Werten, und gibt das Ergebnis als
-	 *         SimpleAttributeSet zurück
+	 *         gemass den ubergebenen Werten, und gibt das Ergebnis als
+	 *         SimpleAttributeSet zuruck
 	 */
 
 	public SimpleAttributeSet removeAttributeByKey(SimpleAttributeSet sourceAS,
@@ -326,8 +326,8 @@ public class HTMLUtilities {
 	 * @param removeAS
 	 *            AttributeSet to remove
 	 * @return Diese Methode entfernt Attribute aus dem SimpleAttributeSet,
-	 *         gemäß den übergebenen Werten, und gibt das Ergebnis als
-	 *         SimpleAttributeSet zurück
+	 *         gemï¿½ï¿½ den ï¿½bergebenen Werten, und gibt das Ergebnis als
+	 *         SimpleAttributeSet zurï¿½ck
 	 */
 	public SimpleAttributeSet removeAttribute(SimpleAttributeSet sourceAS,
 			SimpleAttributeSet removeAS) {
@@ -399,7 +399,7 @@ public class HTMLUtilities {
 	}
 
 	/**
-	 * liefert den entsprechenden HTML.Tag zum Element zurück
+	 * liefert den entsprechenden HTML.Tag zum Element zuruck
 	 * 
 	 * @param elem
 	 *            element to get html tag for

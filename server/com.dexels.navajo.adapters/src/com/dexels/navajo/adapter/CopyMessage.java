@@ -31,6 +31,16 @@ public class CopyMessage implements Mappable {
 
   private void copy(Message from, Message to) {
 	  
+	  // Copy scope.
+	  if ( from.getScope() != null && !from.getScope().equals("") ) {
+		  to.setScope(from.getScope());
+	  }
+	  
+	  // Copy extends.
+	  if ( from.getExtends() != null && !from.getExtends().equals("") ) {
+		  to.setExtends(from.getExtends());
+	  }
+	  
 	  if ( from.isArrayMessage() && from.getDefinitionMessage() != null ) {
 		  to.setDefinitionMessage(from.getDefinitionMessage().copy(outputDoc));
 	  }
@@ -71,7 +81,7 @@ public class CopyMessage implements Mappable {
     if (from == null)
       throw new UserException( -1,
                               "Could not find message " + this.copyMessageFrom +
-                              " in output document");
+                              " in " + (this.useOutputDoc ? "out" : "in") + "put document");
     
     Message to = null;
     

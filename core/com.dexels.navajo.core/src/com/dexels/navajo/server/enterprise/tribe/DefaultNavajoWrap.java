@@ -2,18 +2,12 @@ package com.dexels.navajo.server.enterprise.tribe;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.locks.Lock;
+import java.io.ObjectOutputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.sharedstore.SerializationUtil;
 
 /**
@@ -26,153 +20,6 @@ import com.dexels.navajo.sharedstore.SerializationUtil;
  *
  */
 
-class Wrapper implements Serializable {
-
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1776008626104972375L;
-	private final String reference;
-	private final long created;
-	public int count;
-	
-	public Wrapper(String reference, long created) {
-		this.reference = reference;
-		this.created = created;
-		count = 1;
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public String getReference() {
-		return reference;
-	}
-	
-	public void resetCount() {
-		count = 0;
-	}
-	
-	public void increaseReference() {
-		count++;
-	}
-	
-	public void decreaseReference() {
-		if ( count > 0 ) {
-			count--;
-		}
-	}
-
-	public long getCreated() {
-		return created;
-	}
-	
-}
-
-class ReferenceCounter implements Runnable {
-
-	private final ConcurrentMap<String, Wrapper> referenceCount;
-	private final DefaultNavajoWrap wrap;
-	private final boolean increase;
-	
-	public ReferenceCounter(ConcurrentMap<String, Wrapper> referenceMap, DefaultNavajoWrap wrap, boolean increase) {
-		this.referenceCount = referenceMap;
-		this.wrap = wrap;
-		this.increase = increase;
-	}
-	
-	@Override
-	public void run() {
-
-		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-		final Lock l = TribeManagerFactory.getInstance().getLock("DefaultNavajoWrapReferenceCounter");
-		l.lock();
-
-		try {
-
-			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-
-			Wrapper w = referenceCount.get(wrap.reference);
-
-			if ( w == null && increase ) {
-				w = new Wrapper(wrap.reference, wrap.getCreated());
-			} else if ( w != null ) {
-				if ( increase ) {
-					w.increaseReference();
-				} else {
-					w.decreaseReference();
-				}
-			} else {
-				w = new Wrapper(wrap.reference, wrap.getCreated());
-				w.resetCount();
-			}
-			referenceCount.put(wrap.reference, w);
-		} catch (Throwable t) {
-			t.printStackTrace(System.err);
-		} finally {
-			Thread.currentThread().setContextClassLoader(originalClassLoader);
-			l.unlock();
-		}
-	}
-	
-}
-
-class WrapCollector extends GenericThread {
-
-	private final static int MAX_AGE = 2000;
-
-	// Use Cluster wide Map to store reference count.
-	private final ConcurrentMap<String,Wrapper> referenceCount;
-	private final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
-	
-	private final static Logger logger = LoggerFactory.getLogger(WrapCollector.class);
-	
-	public WrapCollector() {
-		threadId = "Navajo Wrap Collector";
-		if ( TribeManagerFactory.getInstance() != null ) {
-			logger.info("Using Tribal NavajoWrap Reference Count Map");
-			referenceCount = (ConcurrentMap) TribeManagerFactory.getInstance().getDistributedMap("NavajoWrapReferenceCount");
-			//referenceCount = new ConcurrentHashMap<String,Wrapper>();
-		} else {
-			logger.warn("Using non-tribal referencecount map");
-			referenceCount = new ConcurrentHashMap<String,Wrapper>();
-		}
-		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-	}
-		
-	protected void updateReferenceCount(final boolean increase, final DefaultNavajoWrap wrap) {
-		executor.submit(new ReferenceCounter(referenceCount, wrap, increase));
-	}
-
-	@Override
-	public synchronized void worker() {
-		
-		try {
-			for ( String reference : referenceCount.keySet() ) {
-				Wrapper key = referenceCount.get(reference);
-				
-				long age = ( System.currentTimeMillis() - key.getCreated() );
-				if ( age > MAX_AGE ) {
-					Integer count = key.getCount();
-					if ( count == null || count.intValue() == 0 ) {
-						try {
-							SerializationUtil.removeNavajo(key.getReference());
-							logger.debug("Removing " + key.getReference());
-						} finally {
-							referenceCount.remove(reference);
-						}
-					}
-				}
-			}
-		} catch (Throwable t) {
-			t.printStackTrace(System.err);
-		}
-	}
-	
-}
-
 public class DefaultNavajoWrap implements NavajoRug {
 
 	/**
@@ -183,7 +30,14 @@ public class DefaultNavajoWrap implements NavajoRug {
 	private final static TribalNumber uniqueId = TribeManagerFactory.getInstance().getDistributedCounter("DefaultNavajoWrap");
 	private final static WrapCollector wrapCollector;
 	private final long created;
+	/**
+	 * interestCount can be used to indicate how many 'clients' will read the Navajo enclosed in this Wrap.
+	 */
+	private int interestCount = -1;
 	
+	/**
+	 * Start the collector for cleaning up persisted Navajo objects.
+	 */
 	static {
 		wrapCollector = new WrapCollector();
 		wrapCollector.setSleepTime(2000);
@@ -194,15 +48,40 @@ public class DefaultNavajoWrap implements NavajoRug {
 	
 	private final static Logger logger = LoggerFactory.getLogger(DefaultNavajoWrap.class);
 	
+	/**
+	 * Create a DefaultNavajoWrap with auto id and unknown interestCount. Interest will be derived from number of
+	 * readObject (deserialization) requests.
+	 * 
+	 * 
+	 * @param n
+	 */
 	public DefaultNavajoWrap(Navajo n) {
 		if ( n == null ) {
 			logger.error("Cannot wrap null Navajo");
 		}
 		created = System.currentTimeMillis();
 		reference = SerializationUtil.serializeNavajo(n, created + "-" + uniqueId.incrementAndGet() + ".xml");
-		wrapCollector.updateReferenceCount(true, this);
 	}
 	
+	/**
+	 * Create a DefaultNavajoWrap with auto id a specific interestCount. 
+	 * 
+	 * @param n
+	 */
+	public DefaultNavajoWrap(Navajo n, int interestCount) {
+		this.interestCount = interestCount;
+		if ( n == null ) {
+			logger.error("Cannot wrap null Navajo");
+		}
+		created = System.currentTimeMillis();
+		reference = SerializationUtil.serializeNavajo(n, created + "-" + uniqueId.incrementAndGet() + ".xml");
+	}
+	
+	/**
+	 * Create a DefaultNavajoWrap with a given id and unknown interestCount.
+	 * 
+	 * @param n
+	 */
 	public DefaultNavajoWrap(Navajo n, String id) {
 		if ( n == null ) {
 			logger.error("Cannot wrap null Navajo: " + id);
@@ -212,7 +91,6 @@ public class DefaultNavajoWrap implements NavajoRug {
 		}
 		created = System.currentTimeMillis();
 		reference = SerializationUtil.serializeNavajo(n, id + ".xml");
-		wrapCollector.updateReferenceCount(true, this);
 	}
 	
 	public long getCreated() {
@@ -229,15 +107,34 @@ public class DefaultNavajoWrap implements NavajoRug {
 		return myNavajo;
 	}
 	
+	/**
+	 * NOTE: MAKE SURE THAT WRITE/READ STREAM IS NOT BLOCKED BY THREAD DOING HEAVY COMPUTATIONS!
+	 * READ/WRITE SHOULD BE DONE QUICKLY ELSE THE PERSISTED NAVAJO OBJECT WILL BE COLLECTED DUE TO 0 REFERENCE COUNT!
+	 * 
+	 */
 	private void readObject(ObjectInputStream aStream) throws IOException, ClassNotFoundException {
 		aStream.defaultReadObject();
-		wrapCollector.updateReferenceCount(true, this);
+		if ( interestCount < 0 ) {
+			wrapCollector.updateReferenceCount(true, this);
+		} 
 	}
 
+	private void writeObject(ObjectOutputStream out) throws IOException {
+		out.defaultWriteObject();
+		// If interestCount is set, use interestCount (number of clients) and writer as total reference count.
+		if ( interestCount > 0 ) {
+			wrapCollector.updateReferenceCount(interestCount + 1, this);
+		} else {
+			wrapCollector.updateReferenceCount(true, this);
+		}
+	}
+	
 	public void finalize() {
 		try {
-		wrapCollector.updateReferenceCount(false, this);
+			// decrease reference count if object is garbage collected.
+			wrapCollector.updateReferenceCount(false, this);
 		} catch (Throwable t) {}
 	}
+
 	
 }

@@ -444,6 +444,16 @@ public class TestMessage {
 	  assertNull(testDoc.getMessage("MyTop"));
 	  assertNotNull(testDoc.getMessage("MyOtherTop"));
   }
+  
+  @Test
+  public void testSetScope() throws Exception {
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  testDoc.addMessage(m);
+	  m.setScope(Message.MSG_SCOPE_GLOBAL);
+	  assertNotNull(m.getScope());
+	  assertEquals(Message.MSG_SCOPE_GLOBAL, m.getScope());
+	  testDoc.write(System.err);
+  }
 
   @Test
   public void testAddIgnoreMessage() throws Exception {
@@ -620,6 +630,48 @@ public class TestMessage {
 	  
 	  assertNotNull(m.getProperty("MyProp3"));
 	  assertEquals(m.getProperty("MyProp3").getValue(), "AAPJES(3)");
+	  
+  }
+  
+  @Test
+  public void testMergeMessageWithPreferThis() throws Exception {
+	  
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  Property p1 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp1", "string", "AAPJES(1)", 0, "", "in", "");
+	  m.addProperty(p1);
+	  testDoc.addMessage(m);
+	  
+	  Message m3 =  NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  Property p2 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp1", "string", "AAPJES(2)", 0, "", "in", "");
+	  m3.addProperty(p2);
+	  Property p3 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp2", "string", "AAPJES(3)", 0, "", "in", "");
+	  m3.addProperty(p3);
+	  
+	  m.merge(m3, true);
+	  
+	  assertNotNull(m.getProperty("MyProp1"));
+	  assertEquals(m.getProperty("MyProp1").getValue(), "AAPJES(1)");
+	  
+  }
+  
+  @Test
+  public void testMergeMessageWithPreferThisFalse() throws Exception {
+	  
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  Property p1 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp1", "string", "AAPJES(1)", 0, "", "in", "");
+	  m.addProperty(p1);
+	  testDoc.addMessage(m);
+	  
+	  Message m3 =  NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  Property p2 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp1", "string", "AAPJES(2)", 0, "", "in", "");
+	  m3.addProperty(p2);
+	  Property p3 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp2", "string", "AAPJES(3)", 0, "", "in", "");
+	  m3.addProperty(p3);
+	  
+	  m.merge(m3, false);
+	  
+	  assertNotNull(m.getProperty("MyProp1"));
+	  assertEquals(m.getProperty("MyProp1").getValue(), "AAPJES(2)");
 	  
   }
   

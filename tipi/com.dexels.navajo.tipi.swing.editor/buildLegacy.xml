@@ -9,7 +9,7 @@
 	
 	<!-- Use tipi extension post processing. -->
 	<property name="tipiExtension" value="true" />
-	<property name="deployedDependencyJars" value="NavajoSwingEditor,jar,gnu-regexp-1.1.4.jar,kafenio-config.jar,kafenio-icons.jar" />
+	<property name="deployedDependencyJars" value="NavajoSwingEditor.jar,gnu-regexp-1.1.4.jar,kafenio-config.jar,kafenio-icons.jar" />
 
 	<!-- Skip all unit tests. -->
 	<property name="notests" value="false" />

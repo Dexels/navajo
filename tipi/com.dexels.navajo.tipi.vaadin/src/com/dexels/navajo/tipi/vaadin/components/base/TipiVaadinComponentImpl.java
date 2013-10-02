@@ -27,6 +27,8 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 			.getLogger(TipiVaadinComponentImpl.class);
 	
 	protected ComponentContainer layoutComponent;
+
+	protected String style;
 	
 	@Override
 	public void setContainer(Object c) {
@@ -130,6 +132,7 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 	protected void setComponentValue(String name, Object object) {
 		if(name.equals("style")) {
 			getActualVaadinComponent().addStyleName(""+object);
+			this.style = ""+object;
 		}
 		if(name.equals("visible")) {
 			Boolean b = (Boolean) object;
@@ -194,6 +197,15 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
     		}
     		else{
     			logger.error("At removeStyle, style is a required parameter.");
+    			throw new TipiBreakException(TipiBreakException.BREAK_BLOCK);
+    		}
+    	}
+    	if(name.equals("addStyle")){
+    		Object o = compMeth.getEvaluatedParameterValue("style", event);
+    		if(o != null && o.toString() != null){
+    			getActualVaadinComponent().addStyleName(o.toString());
+    		}else{
+    			logger.error("At addStyle, style is a required parameter.");
     			throw new TipiBreakException(TipiBreakException.BREAK_BLOCK);
     		}
     	}

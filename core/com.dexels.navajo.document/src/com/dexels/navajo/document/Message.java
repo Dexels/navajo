@@ -29,13 +29,18 @@ public interface Message
   public static final String MSG_INDEX = "index";
   public static final String MSG_TYPE = "type";
   public static final String MSG_EXTENDS = "extends";
+  public static final String MSG_SCOPE = "scope";
   public static final String MSG_CONDITION = "condition";
+  public static final String MSG_ETAG = "etag";
   public static final String MSG_PARAMETERS_BLOCK = "__parms__";
 
   public static final String MSG_TYPE_SIMPLE = "simple";
   public static final String MSG_TYPE_ARRAY = "array";
   public static final String MSG_TYPE_TABLE = "table";
 
+  public static final String MSG_SCOPE_LOCAL = "local";
+  public static final String MSG_SCOPE_GLOBAL = "global";
+  
   public static final String MSG_MODE = "mode";
   public static final String MSG_MODE_LAZY = "lazy";
   public static final String MSG_MODE_IGNORE = "ignore";
@@ -168,6 +173,21 @@ public interface Message
    */
   public void setMode(String mode);
 
+  /**
+   * Sets the scope of the message. Scope can be used by e.g. NavajoMap adapter to determine whether this message should
+   * be passed by default (global) or never (local).
+   * 
+   * @param scope
+   */
+  public void setScope(String scope);
+  
+  /**
+   * Gets the message scope.
+   * 
+   * @return
+   */
+  public String getScope();
+  
   /**
    * Return the value of the extends attribute. 
    * Extends refers to an entity message(s) that is(are) extended by this message (entity message inheritance)
@@ -388,6 +408,8 @@ public interface Message
 
   public void writeSimpleJSON(String name, Writer writer, String[] properties)
 			throws IOException;
+  
+  public void writeAsCSV(Writer writer, String delimiter) throws IOException;
 
   /**
    * Set the message map for retreiving the right values for 'toString()'
@@ -465,6 +487,8 @@ public interface Message
    */
   public void merge(Message incoming);
   
+  public void merge(Message incoming, boolean preferThis);
+  
   /**
    * Add empty message at index
    * @return Inserted message
@@ -486,6 +510,27 @@ public interface Message
   
   public void setDefinitionMessage(Message m);
 
+  /**
+   * Generates, sets and returns an etag attribute for a message.
+   * 
+   * @return
+   */
+  public String generateEtag();
+  
+  /**
+   * Clears the etag attribute
+   */
+  public void clearEtag();
+  
+  /**
+   * Set etag to specified value.
+   */
+  public void setEtag(String value);
+  
+  /**
+   * Get current value of etag attribute.
+   */
+  public String getEtag();
   
   public void addPropertyChangeListener(PropertyChangeListener p);
   public void removePropertyChangeListener(PropertyChangeListener p);
@@ -495,9 +540,6 @@ public interface Message
 	public Map<String, Message> getMessages();
 
 	public List<Message> getElements();
-
-	public String generateEtag();
-
 
 
 }

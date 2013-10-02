@@ -16,6 +16,9 @@ public class EntityException extends UserException {
 	public final static int ENTITY_NOT_FOUND = 404;
 	public final static int OPERATION_NOT_SUPPORTED = 405;
 	public final static int CONFLICT = 409;
+	public final static int NOT_MODIFIED = 304;
+	// 304: Not yet implemented: could be used for GET operations. Instead of returning entire result
+	// return 304 to indicate the "client" that data has not changed. It can use its current data.
 	
 	// SPECIFIC
 	public final static int ENTITY_LOOP = 600;
