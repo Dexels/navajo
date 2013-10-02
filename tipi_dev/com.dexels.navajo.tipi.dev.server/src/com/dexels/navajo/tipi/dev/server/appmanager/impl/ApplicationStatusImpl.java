@@ -11,8 +11,6 @@ import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import org.osgi.service.cm.ManagedService;
-import org.osgi.service.url.URLStreamHandlerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

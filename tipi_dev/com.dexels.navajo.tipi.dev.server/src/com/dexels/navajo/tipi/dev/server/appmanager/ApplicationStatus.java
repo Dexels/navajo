@@ -9,7 +9,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
 
-@JsonIgnoreProperties({"settingsBundle"})
+@JsonIgnoreProperties({"settingsBundle","dependencies"})
 public interface ApplicationStatus {
 
 	public File getAppFolder();

@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.dev.server.appmanager.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -10,10 +11,13 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.slf4j.Logger;
@@ -40,6 +44,12 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	private AppStoreOperation xsdBuild;
 	private AppStoreOperation jnlpBuild;
 	private AppStoreOperation cacheBuild;
+
+	private Repository repository;
+
+	private Git git;
+
+	private RevCommit lastCommit;
 
 	public ApplicationManager getApplicationManager() {
 		return applicationManager;
@@ -74,7 +84,45 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		this.applicationManager = null;
 	}
 
+	public String getLastCommitVersion() {
+		if(lastCommit!=null) {
+			return lastCommit.getId().toObjectId().toString();
+		}
+		return null;
+	}
 
+	public String getLastCommitMessage() {
+		if(lastCommit!=null) {
+			return lastCommit.getFullMessage();
+		}
+		return null;
+	}
+
+	public Date getLastCommitDate() {
+		if(lastCommit!=null) {
+			PersonIdent authorIdent = lastCommit.getAuthorIdent();
+			if(authorIdent!=null) {
+				return authorIdent.getWhen();
+			}
+		}
+		return null;
+	}
+	public String getLastCommitAuthor() throws NoHeadException, GitAPIException {
+		if(lastCommit!=null) {
+			PersonIdent authorIdent = lastCommit.getAuthorIdent();
+			if(authorIdent!=null) {
+				return authorIdent.toString();
+			}
+		}
+		return null;
+	}
+
+	
+	public void deactivate() {
+		if(repository!=null) {
+			repository.close();
+		}
+	}
 	
 	@Override
 	public void activate(Map<String,Object> settings) throws IOException {
@@ -99,6 +147,7 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 			} else {
 				callClone();
 			}
+			
 		} catch (InvalidRemoteException e) {
 			logger.error("Error: ", e);
 		} catch (TransportException e) {
@@ -120,8 +169,8 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		if(!gitSubfolder.exists()) {
 			logger.info("Folder: "+applicationFolder.getAbsolutePath()+" is not a git repo. Not pulling.");
 		}
-		Repository repository = getRepository(applicationFolder);
-		Git git = new Git(repository);
+		repository = getRepository(applicationFolder);
+		git = new Git(repository);
 		git.pull().setProgressMonitor(new NavajoProgress()).call();
 		logger.info("Current branch: "+repository.getBranch());
 //		if(!repository.getBranch().equals(branch)) {
@@ -131,6 +180,9 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		git.reset().setMode(ResetType.HARD).call();
 		xsdBuild.build(this);
 		cacheBuild.build(this);
+		Iterable<RevCommit> log = git.log().call();
+		lastCommit = log.iterator().next();
+		
 	}
 
 	@Override
@@ -167,10 +219,11 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 //	    SshSessionFactory.setInstance(jc);
 		
 	    CredentialsProvider user = CredentialsProvider.getDefault(); // new
-	
-	    Git git = Git.cloneRepository().setProgressMonitor(new NavajoProgress()).
+	    
+	    git = Git.cloneRepository().setProgressMonitor(new NavajoProgress()).
 				setBare(false).setCloneAllBranches(true).setDirectory(applicationFolder).
 				setURI(gitUrl).setCredentialsProvider(user).call();
+	    repository = git.getRepository();
 //		if(branch!=null) {
 //			clone.setBranch(branch);
 //		}
