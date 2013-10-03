@@ -102,9 +102,6 @@ private final static Logger logger = LoggerFactory
 		String name = node.get("repository").get("name").asText();
 		String ref = node.get("ref").asText();
 		String branch = ref.substring(ref.lastIndexOf("/")+1,ref.length());
-		System.err.println("branch: "+branch);
-
-		System.err.println(">>>>> "+name);
 		Iterator<JsonNode> commits = node.get("commits").getElements();
 
 //		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
