@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+	<link href="css/docs.css" rel="stylesheet" media="screen">
+</head>
+<body>
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/purl.js"></script>
+	<script type="text/javascript">
+		var data = [ "foo", "bar" ];
+		console.log('aap');
+		$.getJSON('../list', function(data) {
+			var items = [];
+			console.log('noot');
+			console.log(data);
+			$.each(data, function(key, val) {
+				items.push( "<div><h3>"+val.applicationName+"</h3>");
+				var length = val.profiles.length,
+				element = null;
+				items.push('<div>');
+				items.push('-');
+				for (var i = 0; i < length; i++) {
+					element = val.profiles[i];
+					items.push( '<a href="../apps/'+val.applicationName+'/'+element+'.jnlp" class="btn btn-small"><i class="icon-play"></i>'+element+"</a>");
+				}
+				items.push('</div>');
+				items.push('<form action="../checkout" method="get">');
+				items.push('Branch: <input type="text" name="branchName">');
+				items.push('ObjectId: <input type="text" name="commitId">');
+				items.push('<input type="hidden" name="app" value="'+val.applicationName+'">');
+				items.push('<button type="submit" class="btn btn-default">Checkout</button>');
+				items.push('</form>	');
+
+
+
+			
+				items.push('<a href="../pull?app='+val.applicationName+'" class="btn btn-success">Pull<i class="icon-white icon-arrow-down"></i></a>');
+				items.push('<a id="'+val.applicationName+'_build" class="btn btn-success">Build<i class="icon-white icon-wrench"></i></a>');
+				items.push('<a href="../clean?app='+val.applicationName+'" class="btn btn-success">Clean<i class="icon-white icon-refresh"></i></a>');
+				items.push('<a href="../xsd?app='+val.applicationName+'" class="btn btn-success">Xsd<i class="icon-white icon-eye-open"></i></a>');
+				
+//				items.push('<div>'+val.lastCommitMessage+'<button type="submit" class="btn btn-success">Pull</button></td><td><button type="submit" class="btn btn-danger">Delete</button></td></tr>');
+				items.push('</div>');
+				$("#"+val.applicationName+"_build").click(function() {
+					console.log('aaaaapje');
+					alert("Request completed");
+        			$.get('../build?app='+val.applicationName);
+				});
+			});
+			$('#main').append(items.join(''));
+		});
+	</script>
+	<h1>Tipi Application Store</h1>
+	<div id="main">
+	
+	</div>
+</body>
+</html>
