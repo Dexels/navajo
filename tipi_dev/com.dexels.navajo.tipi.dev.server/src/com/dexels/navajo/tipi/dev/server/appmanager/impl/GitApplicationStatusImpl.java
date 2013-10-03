@@ -2,19 +2,22 @@ package com.dexels.navajo.tipi.dev.server.appmanager.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
+import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -45,11 +48,13 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	private AppStoreOperation jnlpBuild;
 	private AppStoreOperation cacheBuild;
 
-	private Repository repository;
-
 	private Git git;
 
 	private RevCommit lastCommit;
+
+	private String reponame;
+
+	private String name;
 
 	public ApplicationManager getApplicationManager() {
 		return applicationManager;
@@ -98,41 +103,62 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		return null;
 	}
 
-	public Date getLastCommitDate() {
+	public String getLastCommitDate() {
 		if(lastCommit!=null) {
 			PersonIdent authorIdent = lastCommit.getAuthorIdent();
 			if(authorIdent!=null) {
-				return authorIdent.getWhen();
+				final Date when = authorIdent.getWhen();
+
+				if(when!=null) {
+					return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").format(when);
+				}
+				return null;
 			}
 		}
 		return null;
 	}
-	public String getLastCommitAuthor() throws NoHeadException, GitAPIException {
+	public String getLastCommitAuthor() {
 		if(lastCommit!=null) {
 			PersonIdent authorIdent = lastCommit.getAuthorIdent();
 			if(authorIdent!=null) {
-				return authorIdent.toString();
+				return authorIdent.getName();
 			}
 		}
 		return null;
 	}
 
+	public String getLastCommitEmail() {
+		if(lastCommit!=null) {
+			PersonIdent authorIdent = lastCommit.getAuthorIdent();
+			if(authorIdent!=null) {
+				return authorIdent.getEmailAddress();
+			}
+		}
+		return null;
+	}
+
+	public String getBranch() {
+		return branch;
+	}
+	
+	public String getRepositoryName() {
+		return reponame;
+	}
 	
 	public void deactivate() {
-		if(repository!=null) {
-			repository.close();
-		}
+
 	}
 	
 	@Override
 	public void activate(Map<String,Object> settings) throws IOException {
 		File gitRepoFolder = new File(applicationManager.getStoreFolder(),"applications");
 		gitUrl = (String) settings.get("url");
-		String reponame = (String) settings.get("repositoryname");
+		reponame = (String) settings.get("repositoryname");
 		String key = (String) settings.get("key");
 		branch = (String) settings.get("branch");
-		String combinedname = reponame + "-"+branch;
-		applicationFolder = new File(gitRepoFolder,combinedname);
+		name = (String) settings.get("name");
+//		String combinedname = reponame + "-"+branch;
+		applicationFolder = new File(gitRepoFolder,name);
 		File keyFolder = new File(applicationManager.getStoreFolder(),"gitssh");
 		
 		super.load(applicationFolder);
@@ -143,7 +169,7 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		try {
 			
 			if(applicationFolder.exists()) {
-				callPull();
+//				callPull();
 			} else {
 				callClone();
 			}
@@ -163,43 +189,58 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 
     
 	@Override
-	public void callPull() throws GitAPIException,
-			IOException {
-		File gitSubfolder = new File(applicationFolder,".git");
-		if(!gitSubfolder.exists()) {
-			logger.info("Folder: "+applicationFolder.getAbsolutePath()+" is not a git repo. Not pulling.");
+	public void callPull() throws GitAPIException, IOException {
+		File gitSubfolder = new File(applicationFolder, ".git");
+		if (!gitSubfolder.exists()) {
+			logger.info("Folder: " + applicationFolder.getAbsolutePath()
+					+ " is not a git repo. Not pulling.");
 		}
-		repository = getRepository(applicationFolder);
-		git = new Git(repository);
-		git.pull().setProgressMonitor(new NavajoProgress()).call();
-		logger.info("Current branch: "+repository.getBranch());
-//		if(!repository.getBranch().equals(branch)) {
-//			git.checkout().setName(branch).call();
-//		}
-		git.clean().call();
-		git.reset().setMode(ResetType.HARD).call();
-		xsdBuild.build(this);
-		cacheBuild.build(this);
-		Iterable<RevCommit> log = git.log().call();
-		lastCommit = log.iterator().next();
-		
+		Repository repository = null;
+		try {
+			repository = getRepository(applicationFolder);
+			git = new Git(repository);
+			
+			git.checkout().setName(branch).call();
+			git.reset().setMode(ResetType.HARD).call();
+			git.pull().setProgressMonitor(new NavajoProgress()).call();
+			logger.info("Current branch: " + repository.getBranch());
+			git.clean().call();
+			Iterable<RevCommit> log = git.log().call();
+			lastCommit = log.iterator().next();
+
+			xsdBuild.build(this);
+			cacheBuild.build(this);
+		} finally {
+			repository.close();
+		}
 	}
 
 	@Override
+	public void callCheckout(String objectId, String branchname) throws IOException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
+		Repository repository = null;
+		try {
+			repository = getRepository(applicationFolder);
+			git = new Git(repository);
+//			git.checkout().setName("Production").setForce(true).call();
+			git.checkout().setCreateBranch(true).setName(branchname).setStartPoint(objectId).setForce(true).setUpstreamMode(SetupUpstreamMode.NOTRACK).call();
+			logger.info("Current branch: " + repository.getBranch());
+			git.clean().call();
+			git.reset().setMode(ResetType.HARD).call();
+			Iterable<RevCommit> log = git.log().call();
+			lastCommit = log.iterator().next();
+
+			xsdBuild.build(this);
+			cacheBuild.build(this);
+		} finally {
+			repository.close();
+		}
+	}
+	
+	@Override
 	public void callClone() throws GitAPIException,
 			InvalidRemoteException, TransportException, IOException {
-
-
-//		JschConfigSessionFactory jc = new JschConfigSessionFactory() {
-			
-//		    @Override
-//		    protected void configure(OpenSshConfig.Host host, Session session) {
-//		        session.setConfig("StrictHostKeyChecking", "yes");
-//		    }
-//		};
 	    JSch jsch = new JSch();
 	    JSch.setLogger(new com.jcraft.jsch.Logger() {
-			
 			@Override
 			public void log(int arg0, String txt) {
 //				System.err.println(">>>"+txt);
@@ -212,41 +253,44 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		});
 	    try {
 	        jsch.addIdentity(privateKey.getAbsolutePath(),publicKey.getAbsolutePath());
-//	        jsch.setKnownHosts("/Users/frank/.ssh/known_hosts");
 	    } catch (JSchException e) {
 	        e.printStackTrace();  
 	    }
-//	    SshSessionFactory.setInstance(jc);
 		
 	    CredentialsProvider user = CredentialsProvider.getDefault(); // new
-	    
-	    git = Git.cloneRepository().setProgressMonitor(new NavajoProgress()).
-				setBare(false).setCloneAllBranches(true).setDirectory(applicationFolder).
-				setURI(gitUrl).setCredentialsProvider(user).call();
-	    repository = git.getRepository();
+	    Repository repository = null;
+	    try {
+			repository = getRepository(applicationFolder);
+			git = Git.cloneRepository().setProgressMonitor(new NavajoProgress()).
+					setBare(false).setCloneAllBranches(true).setDirectory(applicationFolder).
+					setURI(gitUrl).setCredentialsProvider(user).call();
+			repository = git.getRepository();
 //		if(branch!=null) {
 //			clone.setBranch(branch);
 //		}
-	    
-	    git.branchCreate() 
-	       .setName(branch)
-	       .setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
-	       .setStartPoint("origin/"+branch)
-	       .setForce(true)
-	       .call(); 	    
+			
+			git.branchCreate() 
+			   .setName(branch)
+			   .setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
+			   .setStartPoint("origin/"+branch)
+			   .setForce(true)
+			   .call();
 //		git.branchCreate().setName(branch).call();
 //		git.checkout().setName("Acceptance").call();
 
-		git.checkout().setName(branch).call();
-		StoredConfig config = git.getRepository().getConfig();
-		config.setString("remote", "origin", "fetch", "+refs/*:refs/*");
+			git.checkout().setName(branch).call();
+			StoredConfig config = git.getRepository().getConfig();
+			config.setString("remote", "origin", "fetch", "+refs/*:refs/*");
 //		[branch "Production"]
 //				remote = origin
 //				merge = refs/heads/Production
-		config.setString("branch",branch,"merge","refs/heads/"+branch);
-		config.setString("branch",branch,"remote","origin");
-		config.save();
-		callPull();
+			config.setString("branch",branch,"merge","refs/heads/"+branch);
+			config.setString("branch",branch,"remote","origin");
+			config.save();
+			callPull();
+		} finally {
+			repository.close();
+		}
 		jnlpBuild.build(this);
 
 	}
@@ -260,10 +304,13 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 
 	public static void main(String[] args) throws IOException, GitAPIException {
 //		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		Git git = Git.open(new File("/Users/frank/git/navajo/tipi_dev/com.dexels.navajo.tipi.dev.store/applications/com.sportlink.club-Acceptance"));
-		List<Ref> aa = git.branchList().call();
-		System.err.println("aa: "+aa+" size: "+aa.size());
+		Git git = Git.open(new File("/Users/frank/git/tipi.appstore/appstore/applications/com.sportlink.club-Production"));
+//		List<Ref> aa = git.branchList().call();
+//		System.err.println("aa: "+aa+" size: "+aa.size());
 //		git.branchCreate().setName("Acceptance").call();
-		git.checkout().setName("Acceptance").call();
+//		git.reset().setMode(ResetType.HARD).call();
+		
+		git.checkout().setName("Production").setForce(true).call();
+//		git.checkout().setStartPoint("25f17284bc94236a9f921e08aebf36b3c143f2e0").setName("Production").setCreateBranch(true).setForce(true).call();
 	}
 }
