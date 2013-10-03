@@ -11,6 +11,10 @@ import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
 
 @JsonIgnoreProperties({"settingsBundle","dependencies"})
 public interface ApplicationStatus {
+	
+	public final static String STATUS_MISSING = "MISSING";
+	public final static String STATUS_OK = "OK";
+	public final static String STATUS_OUTDATED = "OUTDATED";
 
 	public File getAppFolder();
 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,15 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 	public List<String> getProfiles() {
 		return profiles;
 	}
+	
+	public Map<String,String> getProfileStatus() {
+		Map<String,String> result = new HashMap<String, String>();
+		for (String profile: profiles) {
+			result.put(profile, profileStatus(profile));
+		}
+		return result;
+		
+	}
 
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.tipi.dev.server.appmanager.impl.ApplicationStatus#getApplicationName()
@@ -54,10 +64,32 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 	}
 
 	
+	
 	public void activate(Map<String,Object> settings) throws IOException {
 		String appFolder = (String) settings.get("path");
 		File appDir = new File(appFolder);
 		load(appDir);
+	}
+	
+	private String profileStatus(String name) {
+		File jnlp = new File(applicationFolder,name+".jnlp");
+		if(!jnlp.exists()) {
+			return STATUS_MISSING;
+		}
+		File applicationProperties = new File(applicationFolder, "settings/tipi.properties");
+		File tipiSettings = new File(applicationFolder, "settings/tipi.properties");
+		File profileFile = new File(applicationFolder,"settings/profiles/"+name+".properties");
+		long jnlpModified = jnlp.lastModified();
+		if(applicationProperties.lastModified()>=jnlpModified) {
+			return STATUS_OUTDATED;
+		}
+		if(tipiSettings.lastModified()>=jnlpModified) {
+			return STATUS_OUTDATED;
+		}
+		if(profileFile.lastModified()>=jnlpModified) {
+			return STATUS_OUTDATED;
+		}
+		return STATUS_OK;
 	}
 
 	protected void load(File appDir) throws IOException {

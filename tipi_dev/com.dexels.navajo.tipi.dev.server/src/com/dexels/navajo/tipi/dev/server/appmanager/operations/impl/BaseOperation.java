@@ -1,10 +1,14 @@
 package com.dexels.navajo.tipi.dev.server.appmanager.operations.impl;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServlet;
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
@@ -35,5 +39,10 @@ public abstract class BaseOperation extends HttpServlet  implements AppStoreOper
 
 	protected Set<String> listApplications() {
 		 return applicationManager.listApplications();
+	}
+	
+	protected void writeValueToJsonArray(OutputStream os, Object value) throws IOException {  
+		final ObjectMapper mapper = new ObjectMapper();
+		mapper.writerWithDefaultPrettyPrinter().writeValue(os,value);
 	}
 }
