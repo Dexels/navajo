@@ -5,10 +5,11 @@
     </OCD>
   <OCD description="Git Application Instance" name="Git Application Instance" id="tipi.dev.gitapplication">
     <AD name="Remote Git URL"    id="url"   required="true"  type="String"/>   
+    <AD name="Https Git URL"    id="httpUrl"   required="false"  type="String"/>   
     <AD name="Repository name"    id="repositoryname"   required="true"  type="String"/>   
     <AD name="SSH Key"    id="key"   required="false"  type="String"/>   
     <AD name="Git Branch"    id="branch"   required="true"  type="String" default="master"/>   
-    </OCD>
+  </OCD>
   
   <Designate factoryPid="tipi.dev.gitapplication" pid="tipi.dev.gitapplication">
      <Object ocdref="tipi.dev.gitapplication"/>

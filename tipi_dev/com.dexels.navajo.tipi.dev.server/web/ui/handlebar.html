@@ -13,64 +13,86 @@
 	<script src="js/handlebars.js"></script>
 
 <script id="some-template" type="text/x-handlebars-template">
-<table>
-    <thead> 
-        <th>Name</th> 
-        <th>Job Title</th> 
-        <th>Twitter</th> 
-    </thead> 
-    <tbody> 
-        {{#users}} 
-        <tr> 
-            <td>{{fullName person}}</td> 
-            <td>{{jobTitle}}</td> 
-            <td><a href="https://twitter.com/{{twitter}}">@{{twitter}}</a></td> 
-        </tr> 
-        {{/users}} 
-    </tbody> 
-</table> 
+	<div style="margin:10px 10px;">
+<div class="page-header">
+  <h1>Tipi Application Store <small>(handle with care)</small></h1>
+</div>
+        {{#each applications}} 
+		<div class="panel panel-primary" style="margin:30px 0px;">
+			<div class="panel-heading">
+				<h2 class="panel-title"><a href="{{httpUrl}}/tree/{{branch}}">{{@key}} - {{branch}}</a></h2>
+		 	</div>
+		  <div class="panel-body">
+
+			<p>Current version: <a href="{{httpUrl}}/commit/{{lastCommitVersion}}">{{lastCommitVersion}}</a> </p>
+			<p>Message: {{lastCommitMessage}}</p>
+			<p>Date: {{lastCommitDate}}</p>
+			<p>Author: <a href="https://github.com/{{lastCommitAuthor}}">{{lastCommitAuthor}}</a></p>
+			<form>
+			{{#each profileStatus}}
+		    	<a href="../apps/{{../applicationName}}/{{@key}}.jnlp" class="{{classForStatus this}}">{{@key}}</a>
+			{{/each}}
+			<p>Checkout: <input type="text" class="form-control"> branch: <input type="text" class="form-control"> </p>
+			<button type="submit" class="btn btn-default">Checkout</button>
+			</form>
+		  </div>
+		  
+		  
+		  
+<div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+           Dependencies
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+      <div class="panel-body">
+		<ul>
+			{{#each dependencies}}
+				<li><a href="#">{{fileName}}</a></li>
+			{{/each}}
+		</ul>
+      </div>
+    </div>
+  </div>
+  <div>		  
+		  <div class="panel-footer">
+				<div class="btn-group">
+				  <button type="button" class="btn btn-default">Pull</button>
+				  <button type="button" class="btn btn-default">Clean</button>
+				  <button type="button" class="btn btn-default">Build JNLP</button>
+				  <button type="button" class="btn btn-default">Build cache</button>
+				  <button type="button" class="btn btn-default">Build xsd</button>
+				</div>
+		  </div>
+		</div>
+        {{/each}} 
+	</div>
 </script>
 
 <script type="text/javascript">
-	var source = $("#some-template").html(); 
-	var template = Handlebars.compile(source); 
-	var data = { 
-    	users: [ { 
-        person: {
-            firstName: "Garry", 
-            lastName: "Finch"
-        },
-        jobTitle: "Front End Technical Lead",
-        twitter: "gazraa" 
-    }, {
-        person: {
-            firstName: "Garry", 
-            lastName: "Finch"
-        }, 
-        jobTitle: "Photographer",
-        twitter: "photobasics"
-    }, {
-        person: {
-            firstName: "Garry", 
-            lastName: "Finch"
-        }, 
-        jobTitle: "LEGO Geek",
-        twitter: "minifigures"
-    } ]
-}; 
 
-Handlebars.registerHelper('fullName', function(person) {
-  return person.firstName + " " + person.lastName;
-});
+	Handlebars.registerHelper('classForStatus', function (status, options) {
+		if(status=='OK') {
+			return "btn btn-success";
+		}
+		if(status=='OUTDATED') {
+			return "btn btn-warning";
+		}
+		return "btn btn-danger";
+	});
 
-
-$('body').append(template(data));
-
-		var data = [ "foo", "bar" ];
 		$.getJSON('../list', function(data) {
+			var source = $("#some-template").html(); 
+			var template = Handlebars.compile(source); 
+			$('body').append(template(data));
+			console.log(template(data));
 		});
 	</script>
-	<h1>Tipi Application</h1>
+	
 	<div id="main">
 	
 	</div>

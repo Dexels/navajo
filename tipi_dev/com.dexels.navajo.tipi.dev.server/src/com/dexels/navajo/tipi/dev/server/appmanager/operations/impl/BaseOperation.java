@@ -43,6 +43,7 @@ public abstract class BaseOperation extends HttpServlet  implements AppStoreOper
 	
 	protected void writeValueToJsonArray(OutputStream os, Object value) throws IOException {  
 		final ObjectMapper mapper = new ObjectMapper();
+		
 		mapper.writerWithDefaultPrettyPrinter().writeValue(os,value);
 	}
 }

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +24,11 @@ public class List extends BaseOperation implements AppStoreOperation {
 
 	
 	private static final long serialVersionUID = 8640712571228602628L;
-	private final static Logger logger = LoggerFactory
-			.getLogger(List.class);
 	
 	public void list(CommandSession session ) throws IOException {
-		writeValueToJsonArray(session.getConsole(),applications);
+		Map<String,Map<String,ApplicationStatus>> wrap = new HashMap<String, Map<String,ApplicationStatus>>();
+		wrap.put("applications", applications);
+		writeValueToJsonArray(session.getConsole(),wrap);
 	}
 	
 
@@ -36,33 +38,13 @@ public class List extends BaseOperation implements AppStoreOperation {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		resp.setContentType("application/json");
-		writeValueToJsonArray(resp.getOutputStream(),applications);
+		Map<String,Map<String,ApplicationStatus>> wrap = new HashMap<String, Map<String,ApplicationStatus>>();
+		wrap.put("applications", applications);
+		writeValueToJsonArray(resp.getOutputStream(),wrap);
 	}
 
 	@Override
 	public void build(ApplicationStatus a) throws IOException {
-		File lib = new File(a.getAppFolder(),"lib");
-		if(lib.exists()) {
-			FileUtils.deleteQuietly(lib);
-		}
-		File xsd = new File(a.getAppFolder(),"xsd");
-		if(xsd.exists()) {
-			FileUtils.deleteQuietly(xsd);
-		}
-		File digest = new File(a.getAppFolder(),"resource/remotedigest.properties");
-		if(digest.exists()) {
-			FileUtils.deleteQuietly(digest);
-		}
-		
-		File[] jnlps = a.getAppFolder().listFiles(new FilenameFilter() {
-			
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.endsWith(".jnlp");
-			}
-		});		
-		for (File file : jnlps) {
-			FileUtils.deleteQuietly(file);
-		}
+
 	}
 }

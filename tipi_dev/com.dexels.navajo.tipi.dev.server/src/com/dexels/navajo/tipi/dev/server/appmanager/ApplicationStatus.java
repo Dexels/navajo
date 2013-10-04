@@ -9,7 +9,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
 
-@JsonIgnoreProperties({"settingsBundle","dependencies"})
+@JsonIgnoreProperties({"settingsBundle","applicationManager"})
 public interface ApplicationStatus {
 	
 	public final static String STATUS_MISSING = "MISSING";

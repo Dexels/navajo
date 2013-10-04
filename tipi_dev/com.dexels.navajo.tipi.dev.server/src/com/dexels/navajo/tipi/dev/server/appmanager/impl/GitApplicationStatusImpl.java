@@ -16,7 +16,6 @@ import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
-import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
@@ -56,6 +55,8 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 
 	private String name;
 
+	private String httpUrl;
+
 	public ApplicationManager getApplicationManager() {
 		return applicationManager;
 	}
@@ -89,9 +90,17 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		this.applicationManager = null;
 	}
 
+	public String getGitUrl() {
+		return gitUrl;
+	}
+	public String getHttpUrl() {
+		return httpUrl;
+	}
+
+	
 	public String getLastCommitVersion() {
 		if(lastCommit!=null) {
-			return lastCommit.getId().toObjectId().toString();
+			return lastCommit.getId().name();
 		}
 		return null;
 	}
@@ -153,6 +162,7 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	public void activate(Map<String,Object> settings) throws IOException {
 		File gitRepoFolder = new File(applicationManager.getStoreFolder(),"applications");
 		gitUrl = (String) settings.get("url");
+		httpUrl = (String) settings.get("httpUrl");
 		reponame = (String) settings.get("repositoryname");
 		String key = (String) settings.get("key");
 		branch = (String) settings.get("branch");
@@ -170,6 +180,11 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 			
 			if(applicationFolder.exists()) {
 //				callPull();
+				Repository repository = getRepository(applicationFolder);
+				git = new Git(repository);
+				Iterable<RevCommit> log = git.log().call();
+				lastCommit = log.iterator().next();
+				repository.close();
 			} else {
 				callClone();
 			}
