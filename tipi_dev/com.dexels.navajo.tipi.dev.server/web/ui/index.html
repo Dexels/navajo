@@ -15,18 +15,29 @@
 		console.log('aap');
 		$.getJSON('../list', function(data) {
 			var items = [];
-			console.log('noot');
 			console.log(data);
 			$.each(data, function(key, val) {
 				items.push( "<div><h3>"+val.applicationName+"</h3>");
-				var length = val.profiles.length,
+				var length = val.profileStatus.length,
 				element = null;
 				items.push('<div>');
 				items.push('-');
-				for (var i = 0; i < length; i++) {
-					element = val.profiles[i];
-					items.push( '<a href="../apps/'+val.applicationName+'/'+element+'.jnlp" class="btn btn-small"><i class="icon-play"></i>'+element+"</a>");
+				for (var key in val.profileStatus) {
+				  if (val.profileStatus.hasOwnProperty(key)) {
+				    //alert(key + " -> " + val.profileStatus[key]);
+				    var status = val.profileStatus[key];
+				    if(status=='OK') {
+						items.push( '<a href="../apps/'+val.applicationName+'/'+key+'.jnlp" class="btn btn-small"><i class="icon-play"></i>'+key+"</a>");
+				    }
+				    if(status=='OUTDATED') {
+						items.push( '<a href="../apps/'+val.applicationName+'/'+key+'.jnlp" class="btn btn-small btn-warning"><i class="icon-play"></i>'+key+"</a>");
+				    }
+				  }
 				}
+//				for (var i = 0; i < length; i++) {
+//					element = val.profiles[i];
+//					
+//				}
 				items.push('</div>');
 				items.push('<form action="../checkout" method="get">');
 				items.push('Branch: <input type="text" name="branchName">');
