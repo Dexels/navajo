@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+	<link href="css/docs.css" rel="stylesheet" media="screen">
+</head>
+<body>
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/purl.js"></script>
+	<script src="js/handlebars.js"></script>
+
+<script id="some-template" type="text/x-handlebars-template">
+<table>
+    <thead> 
+        <th>Name</th> 
+        <th>Job Title</th> 
+        <th>Twitter</th> 
+    </thead> 
+    <tbody> 
+        {{#users}} 
+        <tr> 
+            <td>{{fullName person}}</td> 
+            <td>{{jobTitle}}</td> 
+            <td><a href="https://twitter.com/{{twitter}}">@{{twitter}}</a></td> 
+        </tr> 
+        {{/users}} 
+    </tbody> 
+</table> 
+</script>
+
+<script type="text/javascript">
+	var source = $("#some-template").html(); 
+	var template = Handlebars.compile(source); 
+	var data = { 
+    	users: [ { 
+        person: {
+            firstName: "Garry", 
+            lastName: "Finch"
+        },
+        jobTitle: "Front End Technical Lead",
+        twitter: "gazraa" 
+    }, {
+        person: {
+            firstName: "Garry", 
+            lastName: "Finch"
+        }, 
+        jobTitle: "Photographer",
+        twitter: "photobasics"
+    }, {
+        person: {
+            firstName: "Garry", 
+            lastName: "Finch"
+        }, 
+        jobTitle: "LEGO Geek",
+        twitter: "minifigures"
+    } ]
+}; 
+
+Handlebars.registerHelper('fullName', function(person) {
+  return person.firstName + " " + person.lastName;
+});
+
+
+$('body').append(template(data));
+
+		var data = [ "foo", "bar" ];
+		$.getJSON('../list', function(data) {
+		});
+	</script>
+	<h1>Tipi Application</h1>
+	<div id="main">
+	
+	</div>
+</body>
+</html>
