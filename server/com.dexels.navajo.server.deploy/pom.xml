@@ -4,7 +4,7 @@
     <artifactId>com.dexels.navajo.server.deploy</artifactId>
     <groupId>com.dexels.navajo</groupId>
     <packaging>war</packaging>
-    <version>2.10.10.HOTFIX4</version>
+    <version>2.10.10.HOTFIX6</version>
     <name>com.dexels.navajo.war Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <parent>
@@ -162,7 +162,7 @@
         <dependency>
             <groupId>com.dexels.navajo</groupId>
             <artifactId>com.dexels.navajo.adapters</artifactId>
-            <version>1.1.51.heisenberg</version>
+            <version>1.1.51.pauli</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -295,3 +295,4 @@
         </plugins>
     </build>
 </project>
+
