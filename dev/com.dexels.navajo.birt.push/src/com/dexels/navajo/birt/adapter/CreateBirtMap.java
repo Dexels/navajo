@@ -14,18 +14,19 @@ public class CreateBirtMap implements Mappable {
 	public Binary reportTemplate = null;
 	public Binary emptyReport = null;
 	
+	@Override
 	public void kill() {
-		// TODO Auto-generated method stub
 
 	}
 	//Property marginProperty = inNavajo.getProperty("/__ReportDefinition/Margin");
 	
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		myNavajo = access.getInDoc();
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
 
 	}
 
