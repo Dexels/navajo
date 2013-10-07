@@ -1,6 +1,7 @@
 package com.dexels.navajo.server.enterprise.tribe;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
@@ -159,5 +160,7 @@ public interface TribeManagerInterface {
 	public String getChiefName();
 
 	String getMyUniqueId();
+
+	List<TribalNumber> getDistributedCounters();
     
 }

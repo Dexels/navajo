@@ -41,13 +41,6 @@ public class LaszloRequestWrapper implements NavajoRequestWrapper {
 			is = new BufferedInputStream(request.getInputStream());
 			in = NavajoLaszloConverter.createNavajoFromLaszlo(is);
 		}
-		logger.info("=============== NAVAJO REQUEST ===============");
-		try {
-			in.write(System.err);
-		} catch (NavajoException e) {
-			logger.error("Error: ", e);
-		}
-		logger.info("===========END  NAVAJO REQUEST ===============");
 
 		return in;
 	}

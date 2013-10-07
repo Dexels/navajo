@@ -105,7 +105,6 @@ public class NavajoLaszloConverter {
 	public static Document createLaszloFromNavajo(Navajo in, boolean includeSelections,  String serviceName) {
 		Document doc = XMLDocumentUtils.createDocument();
 		try {
-			in.write(System.err);
 			String nodeName = serviceName.replaceAll("/", "_");
 			Element root = doc.createElement(nodeName);
 			doc.appendChild(root);

@@ -81,7 +81,7 @@ public class CopyMessage implements Mappable {
     if (from == null)
       throw new UserException( -1,
                               "Could not find message " + this.copyMessageFrom +
-                              " in output document");
+                              " in " + (this.useOutputDoc ? "out" : "in") + "put document");
     
     Message to = null;
     

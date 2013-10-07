@@ -27,6 +27,8 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 			.getLogger(TipiVaadinComponentImpl.class);
 	
 	protected ComponentContainer layoutComponent;
+
+	protected String style;
 	
 	@Override
 	public void setContainer(Object c) {
@@ -130,6 +132,7 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 	protected void setComponentValue(String name, Object object) {
 		if(name.equals("style")) {
 			getActualVaadinComponent().addStyleName(""+object);
+			this.style = ""+object;
 		}
 		if(name.equals("visible")) {
 			Boolean b = (Boolean) object;

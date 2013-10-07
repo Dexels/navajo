@@ -10,6 +10,7 @@
 		<jar path="kafenio-config.jar"/>
 		<jar path="kafenio-icons.jar"/>
 		<jar path="TipiSwingEditor.jar"/>
+		<jar path="NavajoSwingEditor.jar"/>
 	</jars>
 	<requires>
 		<require path="TipiSwing" id="TipiSwing"/>

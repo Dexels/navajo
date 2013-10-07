@@ -219,6 +219,12 @@ private String resource;
   }
   
   protected synchronized void waitForResult() throws UserException {
+	  
+          // Blocking internal request is ALWAYS synchronous, return immediately.
+	  if ( block && server == null ) {
+		  return;
+	  }
+	  
 	  if (!serviceCalled) {
 		  throw new UserException(-1, "Call webservice before retrieving result.");
 	  }
@@ -1332,11 +1338,13 @@ private String resource;
 		  inDoc = DispatcherFactory.getInstance().handle(outDoc,access.getInstance(), true);
 		  serviceFinished = true;
 		  serviceCalled = true;
-		  continueAfterRun();
 		  
+		  continueAfterRun();
 	 } catch (Exception e) {
 		 setException(e);
 	  } finally {
+		  serviceFinished = true;
+		  serviceCalled = true;
 		  setIsFinished();
 	  }
 

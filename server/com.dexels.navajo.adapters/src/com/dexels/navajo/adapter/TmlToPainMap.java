@@ -1,7 +1,10 @@
 package com.dexels.navajo.adapter;
 
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,8 @@ public class TmlToPainMap implements Mappable {
 	final String TYPE_PROPERTY = "Property";
 	final String TYPE_MESSAGE = "Message";
 	final String TYPE_ARRAYMESSAGE = "ArrayMessage";
+	
+	private final static Pattern removeAccentsPattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+"); 
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(TmlToPainMap.class);
@@ -173,7 +178,7 @@ public class TmlToPainMap implements Mappable {
 			TagMap property = new TagMap();
 			property.setCompact(true);
 			property.setName(p.getName());
-			property.setText(propertyValue);
+			property.setText(replaceDiacriticChars(propertyValue));
 			if (structureElement.getAttributeName() != null) {
 				property.setAttributeName(structureElement.getAttributeName());
 				property.setAttributeText(structureElement.getAttributeValue());
@@ -187,6 +192,17 @@ public class TmlToPainMap implements Mappable {
 			setBuildContent(true);
 		}
 		return content.getContent();
+	}
+
+	private static String replaceDiacriticChars(String propertyValue) {
+		if (!Normalizer.isNormalized(propertyValue, Form.NFD)){
+			String result = Normalizer.normalize(propertyValue, Form.NFD);
+			return removeAccentsPattern.matcher(result).replaceAll("");
+		}
+		else
+		{
+			return propertyValue;
+		}
 	}
 
 	private void generatePainStructure() throws UserException {
@@ -524,4 +540,10 @@ public class TmlToPainMap implements Mappable {
 					+ "";
 		}
 	}
+
+	public static void main(String[] args) {
+		String query = "[àáâãäåāăąæ] [ÀÁÂÃÄÅĀĂĄÆ] [ß] [ẞ] [çćĉċč] [ÇĆĈĊČ] [ďđ] [ĎĐ] [èéêëēĕėęě] [ÈÉÊËĒĔĖĘĚ] [ĝğġģ] [ĜĞĠĢ] [ĥħ] [ĤĦ] [ìíîïĩīĭıįĳ] [ÌÍÎÏĨĪĬİĮĲ] [ĵ] [Ĵ] [ķĸ] [Ķ] [ĺļľŀł] [ĹĻĽĿŁ] [ñńņňŋ] [ÑŃŅŇŊ] [òóôöõøōŏőœ] [ÒÓÔÖÕØŌŎŐŒ] [ŕŗř] [ŔŖŘ] [śŝşš] [ŚŜŞŠ] [ţťŧ] [ŢŤŦ] [ùúûüũůūŭűų] [ÙÚÛÜŨŮŪŬŰŲ] [ŵ] [Ŵ] [ýÿŷ] [ÝŸŶ] [źżž] [ŹŻŽ]";
+		System.err.println(">" + TmlToPainMap.replaceDiacriticChars(query) +  "<");
+}
+
 }

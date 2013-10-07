@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: External parts of Listener
 Bundle-SymbolicName: com.dexels.navajo.listeners.external
-Bundle-Version: 1.0.28.qualifier
+Bundle-Version: 1.0.30.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.dexels.navajo.listener.http.queuemanager.api,

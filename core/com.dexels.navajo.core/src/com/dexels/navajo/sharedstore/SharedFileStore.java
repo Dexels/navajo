@@ -38,7 +38,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import navajocore.Version;
 
@@ -49,6 +51,8 @@ import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.NavajoObjectInputStream;
+import com.dexels.navajo.server.enterprise.statistics.HasMetrics;
+import com.dexels.navajo.server.enterprise.statistics.MetricsManager;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 import com.dexels.navajo.util.AuditLog;
@@ -108,7 +112,7 @@ class FileComparator implements Comparator<File>{
  * @author arjen
  *
  */
-public class SharedFileStore implements SharedStoreInterface {
+public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 
 	
 	private final static Logger logger = LoggerFactory
@@ -124,6 +128,34 @@ public class SharedFileStore implements SharedStoreInterface {
 	private TribeManagerInterface tribeManagerInterface;
 	private final static Object lockSemaphore = new Object();
 	
+	/**
+	 * Metrics
+	 */
+	private long storeCount = 0;
+	private long deleteCount = 0;
+	private long getCount = 0;
+	private long storeLatency = 0;
+	private long deleteLatency = 0;
+	private long getLatency;
+	
+	@Override
+	public Map<String, String> getMetrics() {
+		Map<String,String> metrics = new HashMap<String, String>();
+		metrics.put("storeCount", storeCount + "");
+		metrics.put("deleteCount", deleteCount + "");
+		metrics.put("getCount", getCount + "");
+		metrics.put("totalStoreLatency", storeLatency + "");
+		metrics.put("totalGetLatency", getLatency + "");
+		if ( storeCount > 0 )
+			metrics.put("averageStoreLatency", (storeLatency / storeCount) + "");
+		metrics.put("totalDeleteLatency", deleteLatency + "");
+		if ( deleteCount > 0 ) 
+			metrics.put("averageDeleteLatency", ( deleteLatency  / deleteCount ) + "");
+		if ( getCount > 0 ) 
+			metrics.put("averageGetLatency", ( getLatency  / getCount ) + "");
+		return metrics;
+	}
+	
 	public void activate() {
 		if ( navajoConfig != null ) {
 			sharedStore = new File(navajoConfig.getRootPath() + "/" + sharedStoreName);
@@ -134,6 +166,7 @@ public class SharedFileStore implements SharedStoreInterface {
 			}
 		}
 		SharedStoreFactory.setInstance(this);
+		MetricsManager.addModule("SharedFileStore", this);
 		
 		logger.info("Started SharedFileStore");
 	}
@@ -278,6 +311,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	 * Returns the Object that was serialized in the file identified by its parent (path) and its name.
 	 */
 	public Serializable get(String parent, String name) throws SharedStoreException {
+		long start = System.currentTimeMillis();
 		File f = new File(sharedStore, parent + "/" + name);
 		NavajoObjectInputStream ois = null;
 		FileInputStream fis = null;
@@ -285,6 +319,8 @@ public class SharedFileStore implements SharedStoreInterface {
 			fis = new FileInputStream(f);
 			ois = new NavajoObjectInputStream(fis, navajoConfig.getClassloader());
 			Serializable o = (Serializable) ois.readObject();
+			getCount++;
+			getLatency += ( System.currentTimeMillis() - start );
 			return o;
 		} catch (Exception e) {
 			throw new SharedStoreException(e.getMessage(), e);
@@ -462,6 +498,8 @@ public class SharedFileStore implements SharedStoreInterface {
 //				System.err.println("Waiting for lock....");
 				ssl = lock(parent, name, SharedFileStore.READ_WRITE_LOCK, true);
 			}
+			long start = System.currentTimeMillis();
+			
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
 				p.mkdirs();
@@ -474,6 +512,8 @@ public class SharedFileStore implements SharedStoreInterface {
 				oos = new ObjectOutputStream(fos);
 				oos.writeObject(o);
 				oos.reset();
+				storeCount++;
+				storeLatency += ( System.currentTimeMillis() - start );
 			} catch (Exception e) {
 				logger.error("Error: ", e);
 				f.delete();
@@ -508,8 +548,11 @@ public class SharedFileStore implements SharedStoreInterface {
 	 * 
 	 */
 	public void remove(String parent, String name) {
+		long start = System.currentTimeMillis();
 		File f = new File(sharedStore, parent + "/" + name);
 		f.delete();
+		deleteCount++;
+		deleteLatency += ( System.currentTimeMillis() - start );
 	}
 
 	/**
@@ -552,6 +595,8 @@ public class SharedFileStore implements SharedStoreInterface {
 				ssl = lock(parent, name, SharedFileStore.READ_WRITE_LOCK, true);
 			}
 
+			long start = System.currentTimeMillis();
+			
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
 				p.mkdirs();
@@ -563,6 +608,8 @@ public class SharedFileStore implements SharedStoreInterface {
 				fos = new FileOutputStream(f, append);
 				sw = new OutputStreamWriter(fos);
 				sw.write(str);
+				storeCount++;
+				storeLatency += ( System.currentTimeMillis() - start );
 			} catch (Exception e) {
 				logger.error("Error: ", e);
 					f.delete();
@@ -593,22 +640,31 @@ public class SharedFileStore implements SharedStoreInterface {
 	 */
 	public OutputStream getOutputStream(String parent, String name, boolean requireLock) throws SharedStoreException {
 
+		boolean success = false;
 		SharedStoreLock ssl = null;
+		long start = 0;
 		try {
 			if ( requireLock) {	
 				ssl = lock(parent, name, SharedFileStore.READ_WRITE_LOCK, true);
 			}
+			start = System.currentTimeMillis();
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
 				p.mkdirs();
 			}
 			File f = new File(p, name);
 			try {
+				success = true;
 				return new FileOutputStream(f);
 			} catch (FileNotFoundException e) {
+				success = false;
 				throw new SharedStoreException(e.getMessage());
 			}
 		} finally {
+			if ( success ) {
+				getCount++;
+				getLatency += ( System.currentTimeMillis() - start );
+			}
 			if ( ssl != null ) {
 				release(ssl);
 			}
