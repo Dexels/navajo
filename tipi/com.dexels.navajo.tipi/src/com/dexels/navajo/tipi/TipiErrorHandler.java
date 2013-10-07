@@ -23,7 +23,6 @@ import com.dexels.navajo.document.Navajo;
 public interface TipiErrorHandler {
 	public String hasErrors(Navajo n);
 
-	public void initResource();
 
 	// public Object createContainer();
 	public void setContext(TipiContext c);

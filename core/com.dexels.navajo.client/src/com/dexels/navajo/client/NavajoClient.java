@@ -47,8 +47,12 @@ import javax.net.ssl.SSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sun.net.www.MeteredStream;
+
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
+import com.dexels.navajo.client.stream.ClientTransferListener;
+import com.dexels.navajo.client.stream.MeasuredInputStream;
 import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
 import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
 import com.dexels.navajo.document.Guid;
@@ -380,22 +384,24 @@ private Navajo doTransaction(String name, Navajo d, boolean useCompression, bool
     InputStream in = null;
     Navajo n = null;
     try {
+    	in = new MeasuredInputStream(ClientTransferListener.getInstance(), name, con.getInputStream());
+    	InputStream inraw = null;
     	if ( con.getResponseCode() >= 400 ) {
     		throw new IOException(readErrorStream(con));
     	} else {
     		if ( useCompression ) {
     			if (forceGzip) {
-        			in = new GZIPInputStream(con.getInputStream());
+    				inraw = new GZIPInputStream(in);
 				} else {
-	    			in = new InflaterInputStream(con.getInputStream());
+					inraw = new InflaterInputStream(in);
 				}
     			
     		} else {
-    			in = con.getInputStream();
+    			inraw = in;
     		}
     	}
-    	if ( in != null ) {
-    		n = NavajoFactory.getInstance().createNavajo(in);
+    	if ( inraw != null ) {
+    		n = NavajoFactory.getInstance().createNavajo(inraw);
     	}
     } finally {
     	if ( in != null ) {

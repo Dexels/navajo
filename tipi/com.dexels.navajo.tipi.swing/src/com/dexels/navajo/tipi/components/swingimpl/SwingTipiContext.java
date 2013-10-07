@@ -223,7 +223,7 @@ public class SwingTipiContext extends TipiContext {
 
 	public void setSplashInfo(final String info) {
 		// logger.debug("Splash: "+info);
-		logger.info("Splash: "+info);
+		logger.debug("Splash: "+info);
 		if (getAppletRoot() != null) {
 			getAppletRoot().showStatus(info);
 		} else {
@@ -523,6 +523,7 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
+	@Override
 	public boolean useCache() {
 		return "true".equals(getSystemProperty("cache"));
 	}

@@ -19,6 +19,7 @@ public class LocalClientTag extends BaseNavajoTag {
 	private final static Logger logger = LoggerFactory
 			.getLogger(LocalClientTag.class);
 	
+	@Override
 	public int doStartTag() throws JspException {
 		NavajoServerContext nc = (NavajoServerContext) getPageContext().findAttribute("serverContext");
 		try {

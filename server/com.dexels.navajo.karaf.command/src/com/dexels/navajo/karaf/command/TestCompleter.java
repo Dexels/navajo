@@ -21,7 +21,8 @@ public class TestCompleter implements Completer {
   * @param cursor the position of the cursor
   * @param candidates the list of completions proposed to the user
   */
- public int complete(String buffer, int cursor, List<String> candidates) {
+ @Override
+public int complete(String buffer, int cursor, List<String> candidates) {
     StringsCompleter delegate = new StringsCompleter();
     delegate.getStrings().add("one");
     delegate.getStrings().add("two");
@@ -49,7 +50,6 @@ class StringsCompleter
     }
 
     public StringsCompleter(final Collection<String> strings) {
-//        checkNotNull(strings);
         getStrings().addAll(strings);
     }
 
@@ -61,7 +61,8 @@ class StringsCompleter
         return strings;
     }
 
-    public int complete(final String buffer, final int cursor, final List<String> candidates) {
+    @Override
+	public int complete(final String buffer, final int cursor, final List<String> candidates) {
         // buffer could be null
 //        checkNotNull(candidates);
 

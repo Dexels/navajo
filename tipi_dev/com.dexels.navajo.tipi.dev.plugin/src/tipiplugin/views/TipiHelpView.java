@@ -35,8 +35,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.util.CaseSensitiveXMLElement;
-import com.dexels.navajo.tipi.util.XMLElement;
+import com.dexels.navajo.tipi.dev.core.util.CaseSensitiveXMLElement;
+import com.dexels.navajo.tipi.dev.core.util.XMLElement;
 import com.dexels.tipi.plugin.TipiNature;
 
 public class TipiHelpView extends ViewPart {
@@ -104,6 +104,7 @@ public class TipiHelpView extends ViewPart {
 
 	}
 	
+	@Override
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(2,false));
 		GridData data = new GridData();
@@ -116,7 +117,8 @@ public class TipiHelpView extends ViewPart {
 		comboBox.addSelectionListener(
 				  new SelectionAdapter()
 				  {
-				    public void widgetSelected(SelectionEvent e)
+				    @Override
+					public void widgetSelected(SelectionEvent e)
 				    {
 				      switchToProject(comboBox.getText());
 				    }
@@ -145,6 +147,7 @@ public class TipiHelpView extends ViewPart {
 		browser = new Browser(parent, SWT.NONE);
 		
 		tv.addSelectionChangedListener(new ISelectionChangedListener(){
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection is = (IStructuredSelection) event.getSelection();
 				XMLElement xe = (XMLElement) is.getFirstElement();
@@ -184,6 +187,7 @@ protected void checkupdate() {
 /**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		logger.info("Focus reseived");
 	}
@@ -191,13 +195,16 @@ protected void checkupdate() {
 	class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 		private XMLElement invisibleRoot;
 
+		@Override
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 //				logger.info("AAAAAP");
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public Object[] getElements(Object parent) {
 			if (parent.equals(getViewSite())) {
 				if (invisibleRoot == null)
@@ -207,6 +214,7 @@ protected void checkupdate() {
 			return getChildren(parent);
 		}
 
+		@Override
 		public Object getParent(Object child) {
 			
 			if (child instanceof XMLElement) {
@@ -215,6 +223,7 @@ protected void checkupdate() {
 			return null;
 		}
 
+		@Override
 		public Object[] getChildren(Object parent) {
 			if (parent instanceof XMLElement) {
 				Vector<XMLElement>xx = ((XMLElement) parent).getChildren();
@@ -223,6 +232,7 @@ protected void checkupdate() {
 			return new Object[0];
 		}
 
+		@Override
 		public boolean hasChildren(Object parent) {
 			if (parent instanceof XMLElement)
 				return ((XMLElement) parent).getChildren().size()>0;
@@ -266,6 +276,7 @@ protected void checkupdate() {
 
 	class ViewLabelProvider extends LabelProvider {
 
+		@Override
 		public String getText(Object obj) {
 			if(obj instanceof XMLElement) {
 				XMLElement x = (XMLElement)obj;
@@ -283,6 +294,7 @@ protected void checkupdate() {
 			return obj.toString();
 		}
 
+		@Override
 		public Image getImage(Object obj) {
 			String imageKey = ISharedImages.IMG_OBJ_ELEMENT;
 			if (obj instanceof XMLElement) {

@@ -31,6 +31,7 @@ public class PropertyTag extends BaseNavajoTag {
 		this.propertyName = propertyName;
 	}
 
+	@Override
 	public int doStartTag() throws JspException {
 		
 			Navajo n;

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="tipi.dev.filter" immediate="true" enabled="true">
+   <implementation class="com.dexels.navajo.tipi.dev.server.CompressionFilter"/>
+   <property name="filter-name" type="String" value="compression"/>
+    <property name="urlPatterns" type="String" value="/*"/>
+   <!--<property name="servletNames" value="tipi.dev.downloadservlet"/>-->
+   <service>
+      <provide interface="javax.servlet.Filter"/>
+   </service>
+</scr:component>

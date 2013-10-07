@@ -66,6 +66,7 @@ import com.dexels.navajo.tipi.components.core.TipiThreadPool;
 import com.dexels.navajo.tipi.connectors.HttpNavajoConnector;
 import com.dexels.navajo.tipi.connectors.TipiConnector;
 import com.dexels.navajo.tipi.internal.BaseTipiErrorHandler;
+import com.dexels.navajo.tipi.internal.CachedHttpResourceLoader;
 import com.dexels.navajo.tipi.internal.ClassPathResourceLoader;
 import com.dexels.navajo.tipi.internal.DescriptionProvider;
 import com.dexels.navajo.tipi.internal.FileResourceLoader;
@@ -108,7 +109,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	
 	private static final Logger logger = LoggerFactory.getLogger(TipiContext.class);
 	private static final long serialVersionUID = 2077449402941300665L;
-
+	public static final long contextStartup = System.currentTimeMillis();
+	
 	public abstract void runSyncInEventThread(Runnable r);
 
 	public abstract void runAsyncInEventThread(Runnable r);
@@ -128,6 +130,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	 * Contains the cache of CSS definitions per tipi component.
 	 */
 	private final Map<String, List<String>> tipiCssMap = new HashMap<String, List<String>>();
+
+	private final Map<String, TipiComponentTransformer> tipiTransformerMap = new HashMap<String, TipiComponentTransformer>();
 
 	/**
 	 * Maps component types to their actual class. Could be refactored to be
@@ -320,7 +324,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		allExtensions.addAll(mainExtensionList);
 		allExtensions.addAll(coreExtensionList);
 		allExtensions.addAll(optionalExtensionList);
+		long now = System.currentTimeMillis();
 		appendIncludes(allExtensions);
+		long passed = System.currentTimeMillis()-now;
+		logger.info("Parsing includes took: "+passed);
 	}
 
 	public void setTipiInstallationFolder(File install) {
@@ -333,15 +340,18 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 
 	
+	@Override
 	public void addOptionalInclude(TipiExtension te) {
 		optionalExtensionList.add(te);
-		processRequiredIncludes(te);
+		final Set<String> processed = new HashSet<String>(); 
+		processRequiredIncludes(te,processed);
 
 	}
 
 	private void appendIncludes(List<TipiExtension> extensionList) {
+		final Set<String> processed = new HashSet<String>(); 
 		for (TipiExtension tipiExtension : extensionList) {
-			processRequiredIncludes(tipiExtension);
+			processRequiredIncludes(tipiExtension,processed);
 		}
 	}
 
@@ -527,6 +537,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public abstract void clearTopScreen();
 
 
+	@Override
 	public void setSystemProperty(String name, String value) {
 		systemPropertyMap.put(name, value);
 	}
@@ -817,18 +828,27 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public InputStream getTipiResourceStream(String location)
 			throws IOException {
-		logger.debug("Getting tipi file: "+location+" loader: "+tipiResourceLoader);
+		logger.warn("Getting tipi file: "+location+" loader: "+tipiResourceLoader);
 		if (tipiResourceLoader != null) {
 			return tipiResourceLoader.getResourceStream(location);
 		} else {
-			URL u = getTipiResourceURL(location);
-			if (u == null) {
-				throw new IOException("Location not found: " + location);
-			}
-			return u.openStream();
+			logger.warn("No tipi resource loader.");
+			return null;
 		}
 	}
 
+	public InputStream getGenericResourceStream(String location)
+			throws IOException {
+		logger.debug("Getting tipi file: "+location+" loader: "+tipiResourceLoader);
+		if (genericResourceLoader != null) {
+			return genericResourceLoader.getResourceStream(location);
+		} else {
+			logger.warn("No generic resource loader.");
+			return null;
+		}
+	}
+
+	
 	public URL getResourceURL(String location) {
 		// Try the classloader first, the
 		URL u = getClass().getClassLoader().getResource(location);
@@ -848,45 +868,20 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				logger.error("Error: ",e);
 			}
 		}
-
+		logger.warn("Resource not found: {}\n\n",location);
 		if (tipiResourceLoader != null) {
 			try {
-				return tipiResourceLoader.getResourceURL(location);
+				final URL resourceURL = tipiResourceLoader.getResourceURL(location);
+				if(resourceURL!=null) {
+					logger.warn("Fallback succeeded for: {}\n\n",location);
+				}
+				return resourceURL;
 			} catch (IOException e) {
 				logger.error("Error: ",e);
 			}
 		}
 		return null;
 	}
-
-
-	private URL getTipiResourceURL(String location) {
-		ClassLoader cl = getClass().getClassLoader();
-		URL u = cl.getResource(location);
-		if (u == null) {
-		} else {
-			return u;
-		}
-		// Now, it was not found in the classpath. if there is a
-		// tipiResourceLoader, then it means
-		// we are looking for a resource we are not certain where we can find
-		// it.
-		// If we supply a tipiResourceLoader, this means that we will NEVER look
-		// in the local file
-		// system.
-		if (tipiResourceLoader != null) {
-			try {
-				return tipiResourceLoader.getResourceURL(location);
-			} catch (IOException e) {
-				logger.error("Error: ",e);
-			}
-		}
-		return null;
-	}
-
-	// public final void parseLibraryFromClassPath(String location) {
-	// parseLibrary(location, false, null, false);
-	// }
 
 	private final void parseLibrary(XMLElement lib,
 			ExtensionDefinition tipiExtension) throws TipiException {
@@ -908,8 +903,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		parseLibrary(location, true, componentName, isLazy, tipiExtension);
 	}
 
-	public void processRequiredIncludes(TipiExtension tipiExtension) {
-//		logger.info("Adding extension: "+tipiExtension.getId());
+	public void processRequiredIncludes(TipiExtension tipiExtension, Set<String> processed) {
 		List<String> includes = new LinkedList<String>();
 		String[] ss = tipiExtension.getIncludes();
 		if (ss == null || ss.length == 0) {
@@ -918,15 +912,18 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					+ " has no includes!");
 			return;
 		}
-//		Thread.dumpStack();
 		for (int i = 0; i < ss.length; i++) {
-//			logger.info("Adding include: " + ss[i]);
 			includes.add(ss[i]);
 		}
 
 		for (String element : includes) {
 			try {
-				parseLibrary(element, false, element, false, tipiExtension);
+				if(!processed.contains(element)) {
+					parseLibrary(element, false, element, false, tipiExtension);
+					processed.add(element);
+				} else {
+					logger.debug("Skipping duplicate: "+element);
+				}
 			} catch (UnsupportedClassVersionError e) {
 				throw new UnsupportedClassVersionError(
 						"Error parsing extension: " + element
@@ -937,6 +934,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	}
 
+	public String resolveInclude(String definition) {
+		return locationMap.get(definition);
+	}
+
+	
 	private final void parseLibrary(String location, boolean addToInclude,
 			String definition, boolean isLazy, ExtensionDefinition tipiExtension) {
 		String extension = null;
@@ -1065,154 +1067,26 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		return null;
 	}
 	
-	private String resolveCssResource(String location)
-	{
-		InputStream iss = resolveLocation(location);
-		if (iss != null)
-		{
-			java.util.Scanner s = new Scanner(iss).useDelimiter("\\A");
-			String result = s.hasNext() ? s.next() : "" ;
-			try {
-				iss.close();
-				s.close();
-			} catch (IOException e) {
-				logger.error("Error closing resource, ", e);
-			}
-		    return result;
-		}
-		return null;
-	}
-	
-	private List<String> loadCssResources(String baseLocation)
-	{
-		List<String> cssResources = new ArrayList<String>();
 
-		String result = resolveCssResource(baseLocation + ".css");
-		if (result != null && !result.isEmpty())
-		{
-			cssResources.add(result);
-		}
-		result = resolveCssResource(baseLocation + "_" + getClient().getLocaleCode() + ".css");
-		if (result != null && !result.isEmpty())
-		{
-			cssResources.add(result);
-		}
-		if (getClient().getSubLocaleCode() != null && !getClient().getSubLocaleCode().isEmpty())
-		{
-			result = resolveCssResource(baseLocation + "_" + getClient().getLocaleCode() + "_" + getClient().getSubLocaleCode().toLowerCase() + ".css");
-			if (result != null && !result.isEmpty())
-			{
-				cssResources.add(result);
-			}
-		}
-		return cssResources;
-	}
+
 	
 	/**
 	 * 
 	 * @param definition The name of the definition for which to load the CSS
 	 * @param location Can be null. The path at which the definition file can be found.
 	 */
-	private void loadCssDefinition(String definition, String location) throws IOException
-	{
-		logger.info("Finding CSS files for definition: " + definition + " with location " + location);
-		logger.debug("Current locale is " + getClient().getLocaleCode() + " and current subLocale is " + getClient().getSubLocaleCode());
-		// first try in the same dir as the definition file (ie location)
-		String strippedLocation = null;
-		if (location != null && location.lastIndexOf("/") != -1)
-		{
-			strippedLocation = location.substring(0, location.lastIndexOf("/") + 1) + definition;
-		}
 
-		List<String> cssResources = null; 
-		if (strippedLocation != null)
-		{
-			cssResources = loadCssResources(strippedLocation);
-
-			// then try in the dir we create by replacing tipi by resource/css. Eg, definition is tipi/committee/committeeCommitteeWindow.xml, then we look for resource/css/committee/committeeCommitteeWindow*.css
-			// actually location already assumes we start from tipi/ so it is not a replace.
-			if (cssResources.isEmpty())
-			{
-				cssResources = loadCssResources("css/" + strippedLocation);
-			}
-		}
-		// finally try in the base resource/css dir
-		if (cssResources == null || cssResources.isEmpty())
-		{
-			cssResources = loadCssResources("css/" + definition);
-			if (cssResources.isEmpty())
-			{
-				logger.info("Didn't find any CSS resources for definition: " + definition);
-			}
-		}
-
-		tipiCssMap.put(definition, cssResources);
-		// If the "main" definition hasn't been loaded yet, do so now (only if we're not trying to load the main definition. This prevents a possible infinite loop.
-		if (definition != null && !definition.equals("main") && !tipiCssMap.containsKey("main"))
-		{
-			loadCssDefinition("main", null);
-		}
+	
+	public TipiComponentTransformer getTipiComponentTransformer(String name) {
+		return tipiTransformerMap.get(name);
 	}
 	
-	/**
-	 * Reloads all current Css definitions. This should happen only when locale and/or sublocale have changed.
-	 */
-	public void reloadCssDefinitions()
-	{
-		// it is possible that reloadCssDefinitions results in the addition of "main" to the keySet. This situation results in an NPE without the following precaution
-		String[] defKeys = tipiCssMap.keySet().toArray(new String[tipiCssMap.keySet().size()]);
-		for (String definition : defKeys)
-		{
-			reloadCssDefinitions(definition);
-		}
-		reapplyCss(getDefaultTopLevel());
-	}
-	/**
-	 * Reloads all current Css definitions. This should happen only when locale and/or sublocale have changed.
-	 */
-	public void reloadCssDefinitions(String definition)
-	{
-		try
-		{
-			loadCssDefinition(definition, locationMap.get(definition));
-		}
-		catch(IOException ioe)
-		{
-			logger.error("Something going wrong reloading CSS definitions for definition " + definition);
-		}
+	public void addTipiComponentTransformer(String name, TipiComponentTransformer tct) {
+		tipiTransformerMap.put(name, tct);
 	}
 	
-	public void reapplyCss(TipiComponent tc)
-	{
-		if (tc.isHomeComponent())
-		{
-			// slight hack, will result in CSS reapplying. 
-			// If we are going to use componentInstantiated for something else, perhaps a differentiation mechanism should be made.
-			fireComponentInstantiated(tc);
-		}
-		for (TipiComponent child : tc.getChildren())
-		{
-			reapplyCss(child);
-		}
-	}
-	public List<String> getCssDefinitions(String definition)
-	{
-		// perhaps not yet cached? Turn this off for now because it is probably a big performance drain. Do return an empty list though (prevent NPE further on)
-		if (!tipiCssMap.containsKey(definition))
-		{
-			
-			try
-			{
-				loadCssDefinition(definition, locationMap.get(definition));
-			}
-			catch(IOException ioe)
-			{
-				logger.error("Something going wrong loading CSS definitions for component " + definition);
-				tipiCssMap.put(definition, new ArrayList<String>());
-			}
-		}
-		return tipiCssMap.get(definition);
-	}
+
+
 
 	public TipiActionBlock instantiateTipiActionBlock(XMLElement definition,
 			TipiComponent parent, TipiExecutable parentExe)
@@ -1412,6 +1286,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 		Runnable r = new Runnable() {
 
+			@Override
 			public void run() {
 				try {
 					unlink(getStateNavajo(), stateMessage);
@@ -1637,22 +1512,22 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		tipiComponentMap.put(defname, elm);
 		
 		Object applyCss = elm.getAttribute("applyCss", "false");
-		if (applyCss != null && applyCss.toString().equals("true"))
-		{
-			try
-			{
-				loadCssDefinition(defname, locationMap.get(defname));
-			}
-			catch(IOException ioe)
-			{
-				logger.debug("Something going wrong loading css definitions for " + defname, ioe);
-			}
-		}
-		else
-		{
-			tipiCssMap.put(defname, new ArrayList<String>());  
-			
-		}
+//		if (applyCss != null && applyCss.toString().equals("true"))
+//		{
+//			try
+//			{
+//				loadCssDefinition(defname, locationMap.get(defname));
+//			}
+//			catch(IOException ioe)
+//			{
+//				logger.debug("Something going wrong loading css definitions for " + defname, ioe);
+//			}
+//		}
+//		else
+//		{
+//			tipiCssMap.put(defname, new ArrayList<String>());  
+//			
+//		}
 
 		if (!hasDebugger) {
 			// debug mode, don't cache at all
@@ -1901,7 +1776,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			if (eHandler == null) {
 				eHandler = new BaseTipiErrorHandler();
 				eHandler.setContext(this);
-				eHandler.initResource();
 
 			}
 			String errorMessage = eHandler.hasErrors(reply);
@@ -2337,6 +2211,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	{
 		final TipiContext thisContext = this;
 		Thread shutdownThread = new Thread("TipiDoExit") {
+			@Override
 			public void run() {
 				thisContext.doExit();
 
@@ -2381,6 +2256,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		contextShutdown = true;
 		if(getPoolSize()>0) {
 			Thread shutdownThread = new Thread("TipiShutdown") {
+				@Override
 				public void run() {
 					myThreadPool.waitForAllThreads();
 					logger.info("done.");
@@ -2570,14 +2446,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public void setGenericResourceLoader(String resourceCodeBase)
 			throws MalformedURLException {
 		if (resourceCodeBase != null) {
-			if (resourceCodeBase.indexOf("http:/") != -1
-					|| resourceCodeBase.indexOf("file:/") != -1) {
-				setGenericResourceLoader(new HttpResourceLoader(
-						resourceCodeBase));
-			} else {
-				File res = new File(resourceCodeBase);
-				setGenericResourceLoader(new FileResourceLoader(res));
-			}
+			setGenericResourceLoader(createResourceLoader(resourceCodeBase, "generic"));
 		} else {
 			// BEWARE: The trailing slash is important!
 			setGenericResourceLoader(createDefaultResourceLoader("resource/",
@@ -2588,13 +2457,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public void setTipiResourceLoader(String tipiCodeBase)
 			throws MalformedURLException {
 		if (tipiCodeBase != null) {
-			if (tipiCodeBase.indexOf("http:/") != -1
-					|| tipiCodeBase.indexOf("file:/") != -1) {
-				setTipiResourceLoader(new HttpResourceLoader(tipiCodeBase));
-			} else {
-				setTipiResourceLoader(new FileResourceLoader(new File(
-						tipiCodeBase)));
-			}
+			setTipiResourceLoader(createResourceLoader(tipiCodeBase, "tipi"));
 		} else {
 			// nothing supplied. Use a file loader with fallback to classloader.
 			// BEWARE: The trailing slash is important!
@@ -2602,6 +2465,21 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			setTipiResourceLoader(createDefaultResourceLoader("tipi/",
 					useCache()));
 		}
+	}
+	
+	private TipiResourceLoader createResourceLoader(String codebase, String id) throws MalformedURLException {
+		if (codebase.indexOf("http:/") != -1 || codebase.indexOf("https:/") != -1
+				|| codebase.indexOf("file:/") != -1) {
+			if(useCache()) {
+				return new CachedHttpResourceLoader(id,new File("/Users/frank/tipicache/"+id), new URL(codebase));
+			} else {
+				return new HttpResourceLoader(codebase,id);
+			}
+		} else {
+			return new FileResourceLoader(new File(
+					codebase));
+		}
+		
 	}
 
 	public boolean useCache() {
@@ -2665,7 +2543,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 		eHandler = new BaseTipiErrorHandler();
 		eHandler.setContext(this);
-		eHandler.initResource();
 
 //		try {
 //			Class<?> c = Class
@@ -2825,11 +2702,13 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		PropertyChangeListener propertyChangeListener = new SerializablePropertyChangeListener() {
 			private static final long serialVersionUID = -43753977302262498L;
 
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				Property masterSource = (Property) e.getSource();
 				copyPropertyValue(masterSource, slave);
 			}
 
+			@Override
 			public String toString() {
 				try {
 					Navajo rootDoc = slave.getRootDoc();
@@ -2843,6 +2722,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 				}
 			}
 
+			@Override
 			public boolean equals(Object a) {
 				// TODO THis is maybe a bit... too short through the bend
 				// Properties with the same path may be still different

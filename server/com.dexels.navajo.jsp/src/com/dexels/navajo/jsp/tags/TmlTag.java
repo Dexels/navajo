@@ -10,6 +10,7 @@ import com.dexels.navajo.document.NavajoFactory;
 public class TmlTag extends BaseNavajoTag {
 
 	private Object content;
+	@Override
 	public int doEndTag() throws JspException {
 		getNavajoContext().popNavajo();
 		return EVAL_PAGE;
@@ -19,6 +20,7 @@ public class TmlTag extends BaseNavajoTag {
 		this.content = content;
 	}
 
+	@Override
 	public int doStartTag() throws JspException {
 		Navajo m= null;
  			String ss = content.toString();

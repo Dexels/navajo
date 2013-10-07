@@ -27,6 +27,7 @@ public class TipiSetLocale extends TipiAction {
 	 */
 	private static final long serialVersionUID = 979757447437751360L;
 
+	@Override
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -48,7 +49,8 @@ public class TipiSetLocale extends TipiAction {
 		
 		if (localeChanged)
 		{
-			myContext.reloadCssDefinitions();
+			// TODO re-enable
+//			myContext.reloadCssDefinitions();
 		}
 	}
 }

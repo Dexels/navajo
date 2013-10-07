@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.projectbuilder.ClientActions;
+import com.dexels.navajo.tipi.dev.core.projectbuilder.ClientActions;
 
 public class ToggleNatureAction implements IObjectActionDelegate {
 
@@ -37,9 +37,11 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
+	@SuppressWarnings("rawtypes")
+	@Override
 	public void run(IAction action) {
 		if (selection instanceof IStructuredSelection) {
-			for (Iterator<IStructuredSelection> it = ((IStructuredSelection) selection).iterator(); it
+			for (Iterator it = ((IStructuredSelection) selection).iterator(); it
 					.hasNext();) {
 				Object element = it.next();
 				IProject project = null;
@@ -62,6 +64,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}
@@ -72,6 +75,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
 	 *      org.eclipse.ui.IWorkbenchPart)
 	 */
+	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 

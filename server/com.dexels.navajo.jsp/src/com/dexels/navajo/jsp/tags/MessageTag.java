@@ -39,6 +39,7 @@ public class MessageTag extends BaseNavajoTag {
 		this.messageName = messageName;
 	}
 
+	@Override
 	public int doStartTag() throws JspException {
 		Navajo n = null;
 		Message parent = null;

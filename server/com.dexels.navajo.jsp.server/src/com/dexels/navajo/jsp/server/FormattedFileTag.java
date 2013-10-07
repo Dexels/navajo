@@ -75,6 +75,7 @@ public class FormattedFileTag  extends BaseNavajoTag {
 		this.filePath = filePath;
 	}
 
+	@Override
 	public int doEndTag() throws JspException {
 		return 0;
 	}
@@ -86,6 +87,7 @@ public class FormattedFileTag  extends BaseNavajoTag {
 		renderer.highlight(name, in,out, encoding, false);
 	}
 
+	@Override
 	public int doStartTag() throws JspException {
 		try {
 			String realPath = null;

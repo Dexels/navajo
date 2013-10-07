@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="tipi.dev.operation.xsdbuild">
+   <implementation class="com.dexels.navajo.tipi.dev.server.appmanager.operations.impl.XsdBuild"/>
+   <reference bind="addApplicationStatus" cardinality="0..n" interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus" name="ApplicationStatus" policy="dynamic" unbind="removeApplicationStatus"/>
+   <service>
+      <provide interface="com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation"/>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="osgi.command.scope" type="String" value="tipi"/>
+   <property name="osgi.command.function" type="String">
+		xsd
+   </property>
+   <property name="alias" type="String" value="/xsd"/>
+</scr:component>

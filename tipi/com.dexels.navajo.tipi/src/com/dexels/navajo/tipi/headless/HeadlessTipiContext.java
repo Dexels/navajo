@@ -43,8 +43,6 @@ public class HeadlessTipiContext extends TipiContext {
 		}
 		eHandler = new BaseTipiErrorHandler();
 		eHandler.setContext(this);
-		eHandler.initResource();
-
 	}
 
 	public void doExit() {

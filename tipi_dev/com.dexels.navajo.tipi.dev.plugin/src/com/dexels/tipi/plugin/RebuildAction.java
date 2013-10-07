@@ -30,9 +30,11 @@ public class RebuildAction implements IObjectActionDelegate {
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
+	@SuppressWarnings("rawtypes")
+	@Override
 	public void run(IAction action) {
 		if (selection instanceof IStructuredSelection) {
-			for (Iterator<IStructuredSelection> it = ((IStructuredSelection) selection).iterator(); it
+			for (Iterator it = ((IStructuredSelection) selection).iterator(); it
 					.hasNext();) {
 				Object element = it.next();
 				IProject project = null;
@@ -45,7 +47,8 @@ public class RebuildAction implements IObjectActionDelegate {
 				if (project != null) {
 					final IFile settings = project.getFile("settings/tipi.properties");
 					Job job = new Job("Manual Rebuild task") {
-					     protected IStatus run(IProgressMonitor monitor) {
+					     @Override
+						protected IStatus run(IProgressMonitor monitor) {
 					   	  try {
 									settings.touch(monitor);
 								} catch (CoreException e) {
@@ -62,11 +65,13 @@ public class RebuildAction implements IObjectActionDelegate {
 	}
 
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}
 
 
+	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 

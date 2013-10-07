@@ -14,7 +14,8 @@ public class FileCopierWithCamel {
 
         // add our route to the CamelContext
         context.addRoutes(new RouteBuilder() {
-            public void configure() {
+            @Override
+			public void configure() {
                 RouteDefinition td = from("file:OSGI-INF?noop=true");
                 td.to("file:out");
             }

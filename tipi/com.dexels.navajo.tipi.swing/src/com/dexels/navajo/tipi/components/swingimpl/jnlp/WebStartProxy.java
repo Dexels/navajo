@@ -62,10 +62,10 @@ public class WebStartProxy {
 							codeURL, manager);
 				} catch (javax.jnlp.UnavailableServiceException e) {
 					logger.info("Cached HTTP/JNLP cacheloader failed. Returning uncached loader.");
-					return new HttpResourceLoader(codeURL.toString());
+					return new HttpResourceLoader(codeURL.toString(),"cachedwebstart");
 				}
 			} else {
-				return new HttpResourceLoader(codeURL.toString());
+				return new HttpResourceLoader(codeURL.toString(),"webstart");
 
 			}
 		} catch (javax.jnlp.UnavailableServiceException e) {

@@ -6,7 +6,10 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,28 +26,47 @@ public class HttpRemoteStorage implements RemoteStorage {
 		baseUrl = base;
 	}
 
+	@Override
 	public InputStream getContents(String location, Map<String, Object> metadata)
 			throws IOException {
 		URL u = new URL(baseUrl, location);
 		InputStream is = null;
+		if(metadata==null) {
+			metadata = new HashMap<String, Object>();
+		}
 		try {
-			logger.info("Opening location: " + u);
 			URLConnection uc = u.openConnection();
 			uc.addRequestProperty("Accept-Encoding", "gzip");
 			metadata.put("length", uc.getContentLength());
 			metadata.put("encoding", uc.getContentEncoding());
 			metadata.put("type", uc.getContentType());
-			// Should't I check the encoding and gunzip if necessary?
-			// Or is that taken care of further downstream?
+			uc.connect();
+			Map<String, List<String>> fields = uc.getHeaderFields();
+//			for (Entry<String,List<String>> e : fields.entrySet()) {
+//				System.err.println("e: "+e.getKey()+" value: "+e.getClass());
+//			}
 			is = uc.getInputStream();
-
+			String enc = uc.getHeaderField("Content-Encoding");
+			if(enc!=null) {
+				metadata.put("Content-Encoding", enc);
+			}
+			if("gzip".equals(enc)) {
+				GZIPInputStream gzi = new GZIPInputStream(is);
+				return gzi;
+			}
+			
 		} catch (FileNotFoundException e) {
 			logger.error("Remote location: " + location + " not found",e);
 		}
 		return is;
 	}
 
+	@Override
 	public long getRemoteModificationDate(String location) throws IOException {
+		if(true) {
+			return 0;
+		}
+		logger.info("Checking modification date of location: "+location);
 		URL u = new URL(baseUrl, location);
 		URLConnection connection = u.openConnection();
 		if (connection instanceof HttpURLConnection) {
@@ -55,6 +77,7 @@ public class HttpRemoteStorage implements RemoteStorage {
 
 	}
 
+	@Override
 	public URL getURL(String location) throws IOException {
 		return new URL(baseUrl, location);
 	}
