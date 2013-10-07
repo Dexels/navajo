@@ -47,8 +47,6 @@ import javax.net.ssl.SSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sun.net.www.MeteredStream;
-
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
 import com.dexels.navajo.client.stream.ClientTransferListener;
