@@ -24,12 +24,12 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.document</artifactId>
-			<version>2.2.60</version>
+			<version>2.2.62</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.api</artifactId>
-			<version>1.0.26</version>
+			<version>1.0.28</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mozilla</groupId>
@@ -164,7 +164,7 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.core</artifactId>
-			<version>2.12.56</version>
+			<version>2.12.58</version>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -178,7 +178,7 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.function</artifactId>
-			<version>3.1.30</version>
+			<version>3.1.32</version>
 			<scope>runtime</scope>
 		</dependency>
 
