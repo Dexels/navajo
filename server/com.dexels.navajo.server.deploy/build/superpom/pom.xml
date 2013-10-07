@@ -59,7 +59,7 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.listeners.external</artifactId>
-			<version>1.0.27</version>
+			<version>1.0.29</version>
 		</dependency>
 		<dependency>
 			<groupId>jstl</groupId>
