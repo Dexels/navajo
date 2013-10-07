@@ -280,7 +280,8 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	private Session createSession() {
-		Properties props = System.getProperties();
+		Properties props = new Properties();
+		props.putAll( System.getProperties());
 		props.put("mail.smtp.host", mailServer);
 
 		if (smtpUser != null && !"".equals(smtpUser)) {
@@ -296,7 +297,7 @@ public class MailMap implements MailMapInterface, Mappable,
 				props.put("mail.smtp.socketFactory.fallback", "false");
 			}
 			Authenticator auth = new SMTPAuthenticator();
-			Session session = Session.getDefaultInstance(props, auth);
+			Session session = Session.getInstance(props, auth);
 			return session;
 		} else {
 			props.put("mail.smtp.port", "25");
