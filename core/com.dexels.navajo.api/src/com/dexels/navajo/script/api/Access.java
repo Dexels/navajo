@@ -81,17 +81,13 @@ public final class Access implements java.io.Serializable, Mappable {
 	public String ipAddress;
 	public String hostName;
 	public boolean betaUser = false;
-<<<<<<< HEAD
 	public transient CompiledScriptInterface myScript = null;
-=======
-	public transient CompiledScript myScript = null;
 	public int queueSize;
 	public String queueId;
 	
 	/**
 	 * Response time breakdown
 	 */
->>>>>>> master
 	private int totaltime;
 	public int parseTime;
 	public int queueTime;
