@@ -37,6 +37,8 @@ public class SimpleRepository implements Repository, GlobalManager {
 
 	private static final Logger logger = LoggerFactory.getLogger(SimpleRepository.class);
 	
+	private static transient Message globalMessage = null;
+	
 	public SimpleRepository() {
 	}
 	
@@ -116,6 +118,12 @@ public class SimpleRepository implements Repository, GlobalManager {
 
 	private void parseBundle(String method, String username, Navajo inMessage, Map<String, String> extraParams, ResourceBundle rb)
 			throws NavajoException {
+		
+		if ( globalMessage != null ) {
+			inMessage.addMessage(globalMessage);
+			return;
+		}
+		
 		Message msg = inMessage.getMessage(GLOBALSMSGNAME);
 
 		Message paramMsg = null;
@@ -152,6 +160,11 @@ public class SimpleRepository implements Repository, GlobalManager {
 			}
 
 		}
+		
+		synchronized (GLOBALSMSGNAME) {
+			globalMessage = paramMsg;
+		}
+		
 	}
 
 	public String getServlet(Access access) throws SystemException {
