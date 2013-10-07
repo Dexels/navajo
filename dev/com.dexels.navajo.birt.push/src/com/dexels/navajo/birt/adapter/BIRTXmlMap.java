@@ -146,7 +146,6 @@ public class BIRTXmlMap implements Mappable {
 	/*
 	 * For 'defined' reports, so the master page is left alone
 	 */
-	@SuppressWarnings("resource")
 	private Binary executeReport(String reportName,Navajo input) throws NavajoException,
 			IOException {
 		Binary result = new Binary();
@@ -243,6 +242,7 @@ public class BIRTXmlMap implements Mappable {
 	 * @throws UserException
 	 * @todo Implement this com.dexels.navajo.mapping.Mappable method
 	 */
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		// paths
 		inNavajo = access.getInDoc();
@@ -311,6 +311,7 @@ public class BIRTXmlMap implements Mappable {
 	 * @throws UserException
 	 * @todo Implement this com.dexels.navajo.mapping.Mappable method
 	 */
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 
@@ -319,6 +320,7 @@ public class BIRTXmlMap implements Mappable {
 	 * 
 	 * @todo Implement this com.dexels.navajo.mapping.Mappable method
 	 */
+	@Override
 	public void kill() {
 	}
 
