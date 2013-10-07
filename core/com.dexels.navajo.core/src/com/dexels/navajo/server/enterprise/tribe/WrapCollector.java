@@ -44,29 +44,34 @@ public class WrapCollector extends GenericThread {
 	
 	@Override
 	public synchronized void worker() {
-		
+
 		Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-		
+
 		try {
 			for ( String reference : referenceCount.keySet() ) {
-				Wrapper key = referenceCount.get(reference);
-				
-				long age = ( System.currentTimeMillis() - key.getLastUse() );
-				if ( age > MAX_AGE ) {
-					Integer count = key.getCount();
-					if ( count == null || count.intValue() == 0 || age > TOO_OLD ) {
-						try {
-							SerializationUtil.removeNavajo(key.getReference());
-							logger.debug("Removing " + key.getReference());
-						} finally {
-							referenceCount.remove(reference);
+				try {
+					Wrapper key = referenceCount.get(reference);
+
+					long age = ( System.currentTimeMillis() - key.getLastUse() );
+					if ( age > MAX_AGE ) {
+						Integer count = key.getCount();
+						if ( count == null || count.intValue() == 0 || age > TOO_OLD ) {
+							try {
+								SerializationUtil.removeNavajo(key.getReference());
+								logger.debug("Removing " + key.getReference());
+							} finally {
+								referenceCount.remove(reference);
+							}
 						}
 					}
+				} catch (Throwable t) {
+					logger.error(t.getMessage(), t);
 				}
 			}
 		} catch (Throwable t) {
 			logger.error(t.getMessage(), t);
 		}
+
 	}
 	
 }
