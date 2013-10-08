@@ -119,7 +119,11 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		information.addTagKeyValue("title", params. getString("title"));
 		information.addTagKeyValue("vendor", params.getString("vendor"));
 		information.addTagKeyValue("homepage", params.getString("homepage"));
-		information.addTagKeyValue("icon", "").setAttribute("href", resourceBase+"/"+params.getString("icon"));
+		if (resourceBase!=null && !"".equals(resourceBase)) {
+			information.addTagKeyValue("icon", "").setAttribute("href", resourceBase+"/"+params.getString("icon"));
+		} else {
+			information.addTagKeyValue("icon", "").setAttribute("href", params.getString("icon"));
+		}
 
 		logger.debug("Parsing: " + fileName);
 
@@ -127,7 +131,11 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			XMLElement splash = new CaseSensitiveXMLElement();
 			splash.setName("icon");
 			information.addChild(splash);
-			splash.setAttribute("href", resourceBase+"/" + params.getString("splash"));
+			if (resourceBase!=null && !"".equals(resourceBase)) {
+				splash.setAttribute("href", resourceBase+"/" + params.getString("splash"));
+			} else {
+				splash.setAttribute("href",params.getString("splash"));
+			}
 			splash.setAttribute("kind", "splash");
 		}
 

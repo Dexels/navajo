@@ -95,6 +95,7 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 	protected void load(File appDir) throws IOException {
 		this.applicationFolder = appDir;
 		applicationName = appDir.getName();
+		dependencies.clear();
 		File tipiSettings = new File(appDir, "settings/tipi.properties");
 		if (!tipiSettings.exists()) {
 			return;
