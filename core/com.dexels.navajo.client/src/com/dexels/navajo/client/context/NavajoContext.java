@@ -354,10 +354,12 @@ public abstract class NavajoContext implements ClientContext {
 		
 	}
 
+	@Override
 	public void setUsername(String username) {
 		this.username = username;
 	}
 
+	@Override
 	public void setPassword(String password) {
 		this.password = password;
 	}

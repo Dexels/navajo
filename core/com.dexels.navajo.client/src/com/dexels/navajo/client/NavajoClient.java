@@ -150,7 +150,8 @@ public static final int DIRECT_PROTOCOL = 0;
    * Sets the number of retries the NavajoClient should perform before giving up
    * @param attempts int
    */
-  public final void setRetryAttempts(int attempts) {
+  @Override
+public final void setRetryAttempts(int attempts) {
     retryAttempts = attempts;
   }
 
@@ -271,7 +272,6 @@ public static final int DIRECT_PROTOCOL = 0;
    * @param useCompression boolean
    */
   
-  @SuppressWarnings("resource")
 private Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, NavajoException {
     URL url;
     //useCompression = false;
@@ -412,17 +412,18 @@ private Navajo doTransaction(String name, Navajo d, boolean useCompression, bool
 	return n;
   }
 
-  public boolean useHttps() {
+@Override
+public boolean useHttps() {
 	return useHttps;
 }
 
+@Override
 public void setHttps(boolean useHttps) {
 	this.useHttps = useHttps;
 }
 
 private void appendHeaderToHttp(HttpURLConnection con, Header header) {
 	  con.setRequestProperty("rpcName",header.getRPCName());
-	  con.setRequestProperty("rpcPass",header.getRPCPassword());
 	  con.setRequestProperty("rpcUser",header.getRPCUser());
 	  Map<String,String> attrs = header.getHeaderAttributes();
 	  for (Entry<String,String> element : attrs.entrySet()) {
@@ -859,6 +860,7 @@ private final void switchServer(boolean force) {
 	 * @schedule defines a timestamp of the format: HH:mm:ss dd-MM-yyyy. If null assume immediate execution.
 	 * 
 	 */
+	@Override
 	public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException {
 		
 		String triggerURL = null;

@@ -19,6 +19,7 @@ public class DefaultSystemInfo implements SystemInfoProvider {
 		
 	}
 	
+	@Override
 	public final void init () {
 		Runtime rt = java.lang.Runtime.getRuntime();
 		cpuCount = rt.availableProcessors();
