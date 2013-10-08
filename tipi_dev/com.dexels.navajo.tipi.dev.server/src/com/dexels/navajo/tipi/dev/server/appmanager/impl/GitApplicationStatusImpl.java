@@ -222,7 +222,7 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 			git.clean().call();
 			Iterable<RevCommit> log = git.log().call();
 			lastCommit = log.iterator().next();
-
+			// only will work when built:
 			xsdBuild.build(this);
 			cacheBuild.build(this);
 		} finally {
