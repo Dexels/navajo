@@ -1,5 +1,5 @@
 Bundle-Name: Navajo Tipi Charting
-Bundle-SymbolicName: com.dexels.navajo.tipi.charting
+Bundle-SymbolicName: com.dexels.navajo.tipi.swing.charting
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.18.qualifier
