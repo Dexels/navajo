@@ -16,6 +16,7 @@ public class TipiChartingExtension extends TipiAbstractXMLExtension implements T
 // NO		loadDescriptor();
 	}
 
+	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
 		

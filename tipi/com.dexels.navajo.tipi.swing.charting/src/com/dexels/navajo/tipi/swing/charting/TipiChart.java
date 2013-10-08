@@ -23,6 +23,7 @@ public abstract class TipiChart extends TipiDataComponentImpl {
 	protected String label_y;
 	protected String title;
 	
+	@Override
 	public Object createContainer() {		 
 		myChart = new ChartPanel(null);
 		myChart.setMaximumDrawHeight(10000);
@@ -30,6 +31,7 @@ public abstract class TipiChart extends TipiDataComponentImpl {
 		return myChart;
 	}
 
+	@Override
 	protected void setComponentValue(String name, Object object) {
 		super.setComponentValue(name, object);
 		
