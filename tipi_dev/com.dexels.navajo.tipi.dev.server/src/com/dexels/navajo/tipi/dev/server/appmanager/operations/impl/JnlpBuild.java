@@ -52,6 +52,8 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 		} else {
 			build();
 		}
+		writeValueToJsonArray(resp.getOutputStream(),"build ok");
+		
 	}
 	
 	public void build() {

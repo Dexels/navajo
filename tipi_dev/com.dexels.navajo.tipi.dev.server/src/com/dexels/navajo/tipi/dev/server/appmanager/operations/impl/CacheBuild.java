@@ -52,6 +52,8 @@ public class CacheBuild extends BaseOperation implements AppStoreOperation {
 		} else {
 			cachebuild();
 		}
+		writeValueToJsonArray(resp.getOutputStream(),"cache build ok");
+
 	}
 	
 	public void build() throws IOException {

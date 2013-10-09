@@ -32,5 +32,7 @@ public class CleanRepo extends BaseOperation implements AppStoreOperation {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		cleanrepo();
+		writeValueToJsonArray(resp.getOutputStream(),"cleanrepo  ok");
+
 	}
 }

@@ -51,6 +51,7 @@ public class Checkout extends BaseOperation implements AppStoreOperation {
 		if(app!=null) {
 			checkout(app,commitId,branchname);
 		}
+		writeValueToJsonArray(resp.getOutputStream(),"checkout ok");
 	}
 
 	@Override

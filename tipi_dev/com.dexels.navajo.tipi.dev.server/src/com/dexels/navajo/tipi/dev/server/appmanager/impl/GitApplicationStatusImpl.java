@@ -223,8 +223,12 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 			Iterable<RevCommit> log = git.log().call();
 			lastCommit = log.iterator().next();
 			// only will work when built:
-			xsdBuild.build(this);
-			cacheBuild.build(this);
+
+			if(!isBuilt()) {
+				jnlpBuild.build(this);
+			}
+//			xsdBuild.build(this);
+//			cacheBuild.build(this);
 		} finally {
 			repository.close();
 		}

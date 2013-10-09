@@ -46,6 +46,8 @@ public class Clean extends BaseOperation implements AppStoreOperation {
 		} else {
 			clean();
 		}
+		writeValueToJsonArray(resp.getOutputStream(),"clean ok");
+		
 	}
 
 	@Override

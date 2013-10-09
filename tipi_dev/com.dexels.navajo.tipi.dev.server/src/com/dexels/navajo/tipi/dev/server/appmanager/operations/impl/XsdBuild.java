@@ -42,6 +42,8 @@ public class XsdBuild extends BaseOperation implements AppStoreOperation {
 		} else {
 			xsd();
 		}
+		writeValueToJsonArray(resp.getOutputStream(),"xsd build ok");
+
 	}
 	
 	@Override

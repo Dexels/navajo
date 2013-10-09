@@ -45,6 +45,8 @@ public class Pull extends BaseOperation implements AppStoreOperation {
 		} else {
 			pull();
 		}
+		writeValueToJsonArray(resp.getOutputStream(),"pull ok");
+
 	}
 
 	@Override

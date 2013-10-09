@@ -1,7 +1,10 @@
 package com.dexels.navajo.tipi.dev.server.appmanager.operations.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -31,8 +34,15 @@ public class List extends BaseOperation implements AppStoreOperation {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		resp.setContentType("application/json");
-		Map<String,Map<String,ApplicationStatus>> wrap = new HashMap<String, Map<String,ApplicationStatus>>();
-		wrap.put("applications", applications);
+		java.util.List<ApplicationStatus> ll = new ArrayList<ApplicationStatus>(applications.values());
+		Collections.sort(ll);
+		Map<String,Map<String,ApplicationStatus>> wrap = new LinkedHashMap<String, Map<String,ApplicationStatus>>();
+		final Map<String,ApplicationStatus> extwrap = new HashMap<String, ApplicationStatus>();
+		
+		for (ApplicationStatus applicationStatus : ll) {
+			extwrap.put(applicationStatus.getApplicationName(), applicationStatus);
+		}
+		wrap.put("applications", extwrap);
 		writeValueToJsonArray(resp.getOutputStream(),wrap);
 	}
 
