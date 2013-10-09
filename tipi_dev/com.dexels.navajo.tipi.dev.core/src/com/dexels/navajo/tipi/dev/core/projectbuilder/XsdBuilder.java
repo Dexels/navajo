@@ -104,6 +104,7 @@ public class XsdBuilder {
 			System.err.println("extension: "+extension);
 			String ex = extension.replaceAll("\\.", "/");
 			ZipEntry ee = jf.getEntry(ex+".xml");
+			logger.info("Processing jarFile: "+jar.getAbsolutePath());
 			XMLElement extensionDefinition = readXML(jf,ee);
 			String extensionid = extensionDefinition.getStringAttribute("id");
 			XMLElement includes = extensionDefinition.getElementByTagName("includes");
