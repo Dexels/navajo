@@ -176,7 +176,6 @@ public class JnlpDownloadServlet extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		logger.info("GET!");
 		handleRequest(request, response, false);
 		
 	}
@@ -184,14 +183,12 @@ public class JnlpDownloadServlet extends HttpServlet {
 	private void handleRequest(HttpServletRequest request,
 			HttpServletResponse response, boolean isHead) throws IOException {
 		String requestStr = request.getRequestURI();
-		logger.info("Reqeuest: " + request.getRequestURI() + " query: "
-				+ request.getQueryString());
 		// logger.info("Request: "+request.getRequestURI()+" query: "+request.getQueryString());
-		Enumeration<String> en = request.getHeaderNames();
-		while (en.hasMoreElements()) {
-			String key = (String) en.nextElement();
-			logger.info("HTTP Key: "+key+" header: "+request.getHeader(key));
-		}
+//		Enumeration<String> en = request.getHeaderNames();
+//		while (en.hasMoreElements()) {
+//			String key = (String) en.nextElement();
+//			logger.info("HTTP Key: "+key+" header: "+request.getHeader(key));
+//		}
 		// TipiAdminServlet.buildIfNecessary(request,getAppFolder(),getServletContext());
 //		Map en = request.getParameterMap();
 //		for (Object key : en.keySet()) {
@@ -226,7 +223,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 			JnlpResource jnlpres = locateResource(dreq);
 			logger.debug("JnlpResource: " + jnlpres);
 
-				logger.info("servlet.log.info.goodrequest",
+				logger.debug("servlet.log.info.goodrequest",
 						jnlpres.getPath());
 
 			DownloadResponse dres = null;
