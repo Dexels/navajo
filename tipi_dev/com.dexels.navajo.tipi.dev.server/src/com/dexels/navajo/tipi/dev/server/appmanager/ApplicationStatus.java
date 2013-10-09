@@ -10,7 +10,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
 
 @JsonIgnoreProperties({"settingsBundle","applicationManager"})
-public interface ApplicationStatus {
+public interface ApplicationStatus extends Comparable<ApplicationStatus> {
 	
 	public final static String STATUS_MISSING = "MISSING";
 	public final static String STATUS_OK = "OK";
@@ -29,5 +29,7 @@ public interface ApplicationStatus {
 	public List<Dependency> getDependencies();
 
 	public void load() throws IOException;
+
+	boolean isBuilt();
 
 }

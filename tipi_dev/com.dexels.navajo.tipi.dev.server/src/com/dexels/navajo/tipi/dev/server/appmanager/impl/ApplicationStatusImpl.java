@@ -43,13 +43,30 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 	
 	public Map<String,String> getProfileStatus() {
 		Map<String,String> result = new HashMap<String, String>();
+		if(profiles == null) {
+			return result;
+		}
 		for (String profile: profiles) {
 			result.put(profile, profileStatus(profile));
 		}
 		return result;
-		
 	}
 
+	@Override
+	public boolean isBuilt() {
+		Map<String,String> result = getProfileStatus();
+		if(result.isEmpty()) {
+			return false;
+		}
+		if(result.values().contains(STATUS_OUTDATED)) {
+			return false;
+		}
+		if(result.values().contains(STATUS_MISSING)) {
+			return false;
+		}
+		return true;
+		
+	}
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.tipi.dev.server.appmanager.impl.ApplicationStatus#getApplicationName()
 	 */
@@ -156,6 +173,11 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 			}
 		}
 		this.profiles = pro;
+	}
+
+	@Override
+	public int compareTo(ApplicationStatus o) {
+		return getApplicationName().compareTo(o.getApplicationName());
 	}
 
 }
