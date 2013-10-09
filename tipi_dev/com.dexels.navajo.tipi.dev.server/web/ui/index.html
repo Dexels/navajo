@@ -11,64 +11,119 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/purl.js"></script>
 	<script src="js/handlebars.js"></script>
-	<script type="text/javascript">
-		var data = [ "foo", "bar" ];
-		console.log('aap');
-		$.getJSON('../list', function(data) {
-			var items = [];
-			console.log(data);
-			$.each(data, function(key, val) {
-				items.push( "<div><h3>"+val.applicationName+"</h3>");
-				var length = val.profileStatus.length,
-				element = null;
-				items.push('<div>');
-				items.push('-');
-				for (var key in val.profileStatus) {
-				  if (val.profileStatus.hasOwnProperty(key)) {
-				    //alert(key + " -> " + val.profileStatus[key]);
-				    var status = val.profileStatus[key];
-				    if(status=='OK') {
-						items.push( '<a href="../apps/'+val.applicationName+'/'+key+'.jnlp" class="btn btn-small"><i class="icon-play"></i>'+key+"</a>");
-				    }
-				    if(status=='OUTDATED') {
-						items.push( '<a href="../apps/'+val.applicationName+'/'+key+'.jnlp" class="btn btn-small btn-warning"><i class="icon-play"></i>'+key+"</a>");
-				    }
-				  }
-				}
-//				for (var i = 0; i < length; i++) {
-//					element = val.profiles[i];
-//					
-//				}
-				items.push('</div>');
-				items.push('<form action="../checkout" method="get">');
-				items.push('Branch: <input type="text" name="branchName">');
-				items.push('ObjectId: <input type="text" name="commitId">');
-				items.push('<input type="hidden" name="app" value="'+val.applicationName+'">');
-				items.push('<button type="submit" class="btn btn-default">Checkout</button>');
-				items.push('</form>	');
 
+	<div id="main" style="margin:10px 10px;">
+		<div class="page-header">
+			<h1>Tipi Application Store <small>(handle with care)</small></h1>
+		</div>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="alert alert-info resultmsg"></div>
+</nav>
 
-
-			
-				items.push('<a href="../pull?app='+val.applicationName+'" class="btn btn-success">Pull<i class="icon-white icon-arrow-down"></i></a>');
-				items.push('<a id="'+val.applicationName+'_build" class="btn btn-success">Build<i class="icon-white icon-wrench"></i></a>');
-				items.push('<a href="../clean?app='+val.applicationName+'" class="btn btn-success">Clean<i class="icon-white icon-refresh"></i></a>');
-				items.push('<a href="../xsd?app='+val.applicationName+'" class="btn btn-success">Xsd<i class="icon-white icon-eye-open"></i></a>');
-				
-//				items.push('<div>'+val.lastCommitMessage+'<button type="submit" class="btn btn-success">Pull</button></td><td><button type="submit" class="btn btn-danger">Delete</button></td></tr>');
-				items.push('</div>');
-				$("#"+val.applicationName+"_build").click(function() {
-					console.log('aaaaapje');
-					alert("Request completed");
-        			$.get('../build?app='+val.applicationName);
-				});
-			});
-			$('#main').append(items.join(''));
-		});
-	</script>
-	<h1>Tipi Application Store</h1>
-	<div id="main">
-	
+	<script id="some-template" type="text/x-handlebars-template">
+        {{#each applications}} 
+		<div class="panel panel-primary application" style="margin:30px 0px;">
+			<div class="panel-heading">
+				<h2 class="panel-title"><a href="{{httpUrl}}/tree/{{branch}}">{{@key}} - {{branch}}</a></h2>
+			</div>
+			<div class="panel-body">
+				<p>Current version: <a href="{{httpUrl}}/commit/{{lastCommitVersion}}">{{lastCommitVersion}}</a> </p>
+				<p>Message: {{lastCommitMessage}}</p>
+				<p>Date: {{lastCommitDate}}</p>
+				<p>Author: <a href="https://github.com/{{lastCommitAuthor}}">{{lastCommitAuthor}}</a></p>
+				<form>
+					{{#each profileStatus}}
+						<a href="../apps/{{../applicationName}}/{{@key}}.jnlp" class="{{classForStatus this}}">{{@key}}</a>
+					{{/each}}
+					<p>Checkout: <input type="text" class="form-control"> branch: <input type="text" class="form-control">
+					</p>
+					<button type="submit" class="btn btn-default">Checkout</button>
+				</form>
+			</div>
+			<div class="panel-group" id="accordion">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+								Dependencies
+							</a>
+						</h4>
+					</div>
+					<div id="collapseOne" class="panel-collapse collapse">
+						<div class="panel-body">
+							<ul>
+								{{#each dependencies}}
+									<li><a href="#">{{fileName}}</a></li>
+								{{/each}}
+							</ul>
+						</div>
+					</div>
+				</div>
+			<div>
+			<div class="panel-footer">
+				<div class="btn-group">
+					<button id="{{@key}}_pull" type="button" name="pull" value="{{@key}}" class="btn btn-default pullbutton {{@key}}">Pull</button>
+					<button id="{{@key}}_clean" type="button" name="clean" value="{{@key}}" class="btn btn-default">Clean</button>
+					<button id="{{@key}}_buildjnlp" type="button" name="build" value="{{@key}}" class="btn btn-default">Build JNLP</button>
+					<button id="{{@key}}_cache" type="button" name="cachebuild" value="{{@key}}" class="btn btn-default">Build cache</button>
+					<button id="{{@key}}_xsd" type="button" name="xsd" value="{{@key}}" class="btn btn-default">Build xsd</button>
+				</div>
+			</div>
+		</div>
+		</div>
+		</div>
+        {{/each}} 
 	</div>
-</body>
+
+	</script>
+	</div>
+
+		<script type="text/javascript">
+		
+			Handlebars.registerHelper('classForStatus', function (status, options) {
+				if(status=='OK') {
+					return "btn btn-success";
+				}
+				if(status=='OUTDATED') {
+					return "btn btn-warning";
+				}
+				return "btn btn-danger";
+			});
+			function loadApplicationData() {
+
+				$.getJSON('../list', function(data) {
+					$( ".application" ).remove();
+					var source = $("#some-template").html(); 
+					var template = Handlebars.compile(source); 
+					$('#main').append(template(data));
+					console.log(template(data));
+				});
+			}
+
+	loadApplicationData();
+	$(document).on("click", ".btn-default", function(a ){
+	var url = "../"+this.name+"?app="+this.value;
+/* 	$.get(url,function( data ) {
+		$( ".resultmsg" ).html( data );
+		loadApplicationData();
+
+	}); */
+	  $.ajax({
+		    type: 'GET',
+		    dataType: 'json',
+		    url: url,
+		    timeout: 15000,
+		    success: function(data, textStatus ){
+				$( ".resultmsg" ).html( data );
+				loadApplicationData();
+		    },
+		    error: function(xhr, textStatus, errorThrown){
+				$( ".resultmsg" ).html( errorThrown );
+		       alert('request failed');
+		    }
+		  });
+});
+		</script>
+
+	</body>
 </html>
