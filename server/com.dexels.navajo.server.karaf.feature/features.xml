@@ -196,7 +196,7 @@
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.ant/1.9.2_1</bundle>
 		<bundle dependency='true'>mvn:com.jcraft/jsch-bundle/0.1.46</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/1.3_5</bundle>
-		<bundle dependency='true'>mvn:org.eclipse.jgit/org.eclipse.jgit/3.0.0.201306101825-r</bundle>
+		<bundle dependency='true'>mvn:org.eclipse.jgit/org.eclipse.jgit/3.0.3.201309161630-r</bundle>
 		<bundle dependency='true'>mvn:com.dexels.thirdparty/javaewah/0.5.6</bundle>
 		
 			</feature>
