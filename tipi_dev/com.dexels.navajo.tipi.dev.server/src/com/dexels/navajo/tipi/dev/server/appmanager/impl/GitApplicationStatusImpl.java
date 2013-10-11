@@ -273,7 +273,7 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	    try {
 	        jsch.addIdentity(privateKey.getAbsolutePath(),publicKey.getAbsolutePath());
 	    } catch (JSchException e) {
-	        e.printStackTrace();  
+	    	logger.error("Error: ", e);
 	    }
 		
 	    CredentialsProvider user = CredentialsProvider.getDefault(); // new

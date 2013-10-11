@@ -99,9 +99,9 @@ private final static Logger logger = LoggerFactory
 	private void process(ObjectMapper mapper,
 			JsonNode node) throws IOException, JsonGenerationException,
 			JsonMappingException {
-		String name = node.get("repository").get("name").asText();
+		final String name = node.get("repository").get("name").asText();
 		String ref = node.get("ref").asText();
-		String branch = ref.substring(ref.lastIndexOf("/")+1,ref.length());
+		final String branch = ref.substring(ref.lastIndexOf("/")+1,ref.length());
 		Iterator<JsonNode> commits = node.get("commits").getElements();
 
 //		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
@@ -129,8 +129,8 @@ private final static Logger logger = LoggerFactory
 		}
 
 		logger.info("nodes: "+paths);
-		boolean tipiChanged = tipiResourcesChanged(paths);
-		boolean settingsChanged = settingsChanged(paths);
+		final boolean tipiChanged = tipiResourcesChanged(paths);
+		final boolean settingsChanged = settingsChanged(paths);
 		if(settingsChanged) {
 			logger.info("Settings changed for application: "+name);
 		}
@@ -143,30 +143,47 @@ private final static Logger logger = LoggerFactory
 		if(applicationFolder.exists()) {
 			logger.info("Found application folder");
 		}
-		AppStoreOperation buildJnlp = operations.get("tipi.dev.operation.build");
-		AppStoreOperation buildxsd = operations.get("tipi.dev.operation.xsdbuild");
-		AppStoreOperation cachebuild = operations.get("tipi.dev.operation.cachebuild");
+		final AppStoreOperation buildJnlp = operations.get("tipi.dev.operation.build");
+		final AppStoreOperation buildxsd = operations.get("tipi.dev.operation.xsdbuild");
+		final AppStoreOperation cachebuild = operations.get("tipi.dev.operation.cachebuild");
 
+		Runnable r = new Runnable() {
 
-		final ApplicationStatus application = findApplication(name,branch);
-		if(application instanceof GitApplicationStatus) {
-			GitApplicationStatus ga = (GitApplicationStatus)application;
-			try {
-				ga.callPull();
-			} catch (GitAPIException e) {
-				logger.error("Error: ", e);
+			@Override
+			public void run() {
+				final ApplicationStatus application = findApplication(name,
+						branch);
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e1) {
+					logger.error("Error: ", e1);
+				}
+				try {
+					if (application instanceof GitApplicationStatus) {
+						GitApplicationStatus ga = (GitApplicationStatus) application;
+						try {
+							ga.callPull();
+						} catch (GitAPIException e) {
+							logger.error("Error: ", e);
+						}
+					}
+					logger.info("pull complete");
+					if (settingsChanged) {
+						logger.info("settings changed. building jnlp");
+						buildJnlp.build(application);
+						buildxsd.build(application);
+					}
+					if (tipiChanged) {
+						logger.info("tii changed, rebuilding cache");
+						cachebuild.build(application);
+					}
+				} catch (IOException e) {
+					logger.error("Error: ", e);
+				}
 			}
-		}
-		logger.info("pull complete");
-		if(settingsChanged) {
-			logger.info("settings changed. building jnlp");
-			buildJnlp.build(application);
-			buildxsd.build(application);
-		}
-		if(tipiChanged) {
-			logger.info("tii changed, rebuilding cache");
-			cachebuild.build(application);
-		}
+		};
+		Thread t = new Thread(r);
+		t.start();
 	}
 	
 	private ApplicationStatus findApplication(String repo, String branch) {
