@@ -62,7 +62,7 @@ private final static Logger logger = LoggerFactory
 //		final byte[] byteArray = baos.toByteArray();
 //		application/x-www-form-urlencoded
 		String decoded = URLDecoder.decode(p,"UTF-8");
-		System.err.println("Received: \n"+p);
+		logger.info("Received: \n"+p);
 		ObjectMapper mapper = new ObjectMapper();
 		JsonFactory factory = mapper.getJsonFactory(); // since 2.1 use mapper.getFactory() instead
 		JsonParser jp = factory.createJsonParser(decoded);
@@ -111,19 +111,16 @@ private final static Logger logger = LoggerFactory
 			final Iterator<JsonNode> modified = commit.get("modified").getElements();
 			while(modified.hasNext()) {
 				final String text = modified.next().asText();
-				System.err.println("it: "+text);
 				paths.add(text);
 			}
 			final Iterator<JsonNode> added = commit.get("added").getElements();
 			while(added.hasNext()) {
 				final String text = added.next().asText();
-				System.err.println("added: "+text);
 				paths.add(text);
 			}
 			final Iterator<JsonNode> removed = commit.get("removed").getElements();
 			while(removed.hasNext()) {
 				final String text = removed.next().asText();
-				System.err.println("removed: "+text);
 				paths.add(text);
 			}
 
@@ -131,7 +128,7 @@ private final static Logger logger = LoggerFactory
 			
 		}
 
-		System.err.println("nodes: "+paths);
+		logger.info("nodes: "+paths);
 		boolean tipiChanged = tipiResourcesChanged(paths);
 		boolean settingsChanged = settingsChanged(paths);
 		if(settingsChanged) {
@@ -157,14 +154,17 @@ private final static Logger logger = LoggerFactory
 			try {
 				ga.callPull();
 			} catch (GitAPIException e) {
-				e.printStackTrace();
+				logger.error("Error: ", e);
 			}
 		}
+		logger.info("pull complete");
 		if(settingsChanged) {
+			logger.info("settings changed. building jnlp");
 			buildJnlp.build(application);
 			buildxsd.build(application);
 		}
 		if(tipiChanged) {
+			logger.info("tii changed, rebuilding cache");
 			cachebuild.build(application);
 		}
 	}
@@ -175,11 +175,14 @@ private final static Logger logger = LoggerFactory
 			if(s!=null) {
 				if(repo.equals(s.get("repositoryname"))) {
 					if(branch.equals(s.get("branch"))) {
-						return e.getKey();
+						final ApplicationStatus key = e.getKey();
+						logger.info("Found application for repo: "+repo+" and branch: "+branch);
+						return key;
 					}
 				}
  			}
 		}
+		logger.info("Did not find application for repo: "+repo+" branch: "+branch);
 		return null;
 	}
 	

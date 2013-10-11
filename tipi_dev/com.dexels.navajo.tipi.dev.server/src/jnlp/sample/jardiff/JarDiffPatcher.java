@@ -273,9 +273,8 @@ public class JarDiffPatcher implements JarDiffConstants, Patcher {
 			throw new IOException(getResources().getString(errorMsg) + " "
 					+ line);
 		} catch (MissingResourceException mre) {
-			logger.info("Fatal error: " + errorMsg);
-			new Throwable().printStackTrace(System.err);
-			System.exit(-1);
+			logger.info("Fatal error: " + errorMsg,mre);
+
 		}
 	}
 

@@ -110,7 +110,6 @@ public class JnlpDownloadServlet extends HttpServlet {
 			Enumeration<String> en = config.getInitParameterNames();
 			while (en.hasMoreElements()) {
 				String pp = (String) en.nextElement();
-				System.err.println("pp: "+pp+" value: "+config.getInitParameter(pp));
 			}
 			// String appFolder = (String)
 			// config.getServletContext().getInitParameter("appFolder");

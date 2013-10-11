@@ -132,16 +132,12 @@ public class UnsignJarTask  {
 				}
 			}
 		}
-//		if(checkLine(line)) {
-//			System.err.println("line: >"+line+"<");
-//		}
 		BufferedWriter fw = null;
 		try {
 			fw = new BufferedWriter(new FileWriter(outputManifest));
 			List<StringBuffer> output = new ArrayList<StringBuffer>();
 			
 			for (StringBuffer header : manifestheaders) {
-//				System.err.println(">>"+header.toString()+"<<");
 				if(checkLine(header.toString())) {
 					output.add(header);
 					fw.write(header.toString());

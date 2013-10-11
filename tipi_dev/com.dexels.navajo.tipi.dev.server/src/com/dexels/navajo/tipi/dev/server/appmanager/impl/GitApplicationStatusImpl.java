@@ -229,6 +229,7 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 			}
 //			xsdBuild.build(this);
 //			cacheBuild.build(this);
+			logger.info("Git pull complete.");
 		} finally {
 			repository.close();
 		}
@@ -262,7 +263,6 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	    JSch.setLogger(new com.jcraft.jsch.Logger() {
 			@Override
 			public void log(int arg0, String txt) {
-//				System.err.println(">>>"+txt);
 			}
 			
 			@Override
