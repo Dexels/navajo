@@ -154,7 +154,7 @@ private final static Logger logger = LoggerFactory
 				final ApplicationStatus application = findApplication(name,
 						branch);
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(12000);
 				} catch (InterruptedException e1) {
 					logger.error("Error: ", e1);
 				}
