@@ -46,7 +46,6 @@ public abstract class BaseDeploymentBuilder {
 			if(path.exists()) {
 				fr = new FileInputStream(path);
 				p = new PropertyResourceBundle(fr);
-				logger.info("Appending profile: "+profile);
 				fr.close();
 				eb = p.getKeys();
 				while (eb.hasMoreElements()) {
@@ -55,13 +54,12 @@ public abstract class BaseDeploymentBuilder {
 				}
 			}
 		}
-		logger.info("params: " + params);
 		if(deployment==null) {
 			logger.info("No deployment supplied, so not postprocessing");
 			return params;
 		}
-		logger.info("Processing: "+params);
-		logger.info("Ok, now gonna post process the params!");
+		logger.debug("Processing: "+params);
+		logger.debug("Ok, now gonna post process the params!");
 		Map<String,String> result = new HashMap<String, String>();
 		for (Map.Entry<String, String> element : params.entrySet()) {
 			if(element.getKey().indexOf("/")==-1) {
@@ -73,13 +71,13 @@ public abstract class BaseDeploymentBuilder {
 				throw new IllegalArgumentException("Strange key in args: "+element.getKey()+" with value: "+element.getValue());
 			}
 			if(elts[0].equals(deployment)) {
-				logger.info("Adding: "+elts[1]+" "+ element.getValue());
+				logger.debug("Adding: "+elts[1]+" "+ element.getValue());
 				result.put(elts[1], element.getValue());
 			} else {
 				// ignore this setting, it's for another deployment
 			}
 		}
-		logger.info("Result: "+result);
+		logger.debug("Result: "+result);
 		return result;
 	}
 }
