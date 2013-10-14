@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -17,6 +19,7 @@ import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -214,7 +217,6 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		try {
 			repository = getRepository(applicationFolder);
 			git = new Git(repository);
-			
 			git.checkout().setName(branch).call();
 			git.reset().setMode(ResetType.HARD).call();
 			git.pull().setProgressMonitor(new NavajoProgress()).call();
@@ -300,7 +302,9 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 			git.checkout().setName(branch).call();
 			StoredConfig config = git.getRepository().getConfig();
 			config.setString("remote", "origin", "fetch", "+refs/*:refs/*");
-//		[branch "Production"]
+			config.setString("remote", "origin", "fetch", "+refs/heads/*:refs/remotes/origin/*");
+			
+			//		[branch "Production"]
 //				remote = origin
 //				merge = refs/heads/Production
 			config.setString("branch",branch,"merge","refs/heads/"+branch);
@@ -323,13 +327,18 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 
 	public static void main(String[] args) throws IOException, GitAPIException {
 //		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		Git git = Git.open(new File("/Users/frank/git/tipi.appstore/appstore/applications/com.sportlink.club-Production"));
-//		List<Ref> aa = git.branchList().call();
-//		System.err.println("aa: "+aa+" size: "+aa.size());
+		Git git = Git.open(new File("/Users/frank/git/tipi.appstore/appstore/applications/club"));
+		List<Ref> aa = git.branchList().call();
+		System.err.println("aa: "+aa+" size: "+aa.size());
 //		git.branchCreate().setName("Acceptance").call();
 //		git.reset().setMode(ResetType.HARD).call();
-		
-		git.checkout().setName("Production").setForce(true).call();
+		PullResult pr = git.pull().call();
+		System.err.println("From: "+pr.getFetchedFrom());
+		System.err.println("Success: "+pr.isSuccessful());
+		System.err.println("C/O conf: "+pr.getMergeResult().getCheckoutConflicts());
+		System.err.println("Fetch: "+pr.getFetchResult().getMessages());
+		System.err.println("failed: "+pr.getMergeResult().getFailingPaths());
+//		git.checkout().setName("Production").setForce(true).call();
 //		git.checkout().setStartPoint("25f17284bc94236a9f921e08aebf36b3c143f2e0").setName("Production").setCreateBranch(true).setForce(true).call();
 	}
 }
