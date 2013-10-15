@@ -80,6 +80,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 		
 		HtmlEmail email = new HtmlEmail();
 		email.setMailSession(session);
+		email.setCharset(org.apache.commons.mail.EmailConstants.UTF_8);
 		if (from == null || "".equals(from)) {
 			throw new UserException(-1, "Error: Required sender address not set!");
 		}
@@ -252,7 +253,8 @@ public class CommonsMailMap implements Mappable, Queuable {
 	}
 
 	private Session createSession() {
-		Properties props = System.getProperties();
+		Properties props = new Properties();
+		props.putAll( System.getProperties());
 		props.put("mail.smtp.host", mailServer);
 
 		if (smtpUser != null && !"".equals(smtpUser)) {
@@ -267,7 +269,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 				props.put("mail.smtp.socketFactory.fallback", "false");
 			}
 			Authenticator auth = new SMTPAuthenticator();
-			Session session = Session.getDefaultInstance(props, auth);
+			Session session = Session.getInstance(props, auth);
 			return session;
 		} else {
 			props.put("mail.smtp.port", "25");
