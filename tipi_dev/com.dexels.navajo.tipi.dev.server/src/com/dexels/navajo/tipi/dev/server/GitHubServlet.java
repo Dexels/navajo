@@ -251,6 +251,11 @@ private final static Logger logger = LoggerFactory
 			public File getAppsFolder() {
 				return new File("/Users/frank/git/navajo/tipi_dev/com.dexels.navajo.tipi.dev.store/applications");
 			}
+
+			@Override
+			public String getCodeBase() {
+				return null;
+			}
 		});
 		ghs.process(mapper, node);
 		fis.close();

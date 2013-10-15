@@ -21,7 +21,7 @@ public abstract class BaseDeploymentBuilder {
 	
 //	public abstract String build(String repository, String developmentRepository, String extensions, Map<String,String> tipiProperties, String deployment, File baseDir, String codebase, List<String> profiles, boolean useVersioning) throws IOException;
 	public abstract void buildFromMaven(ResourceBundle settings,List<Dependency> dependencyList, File appFolder,
-			List<String> profiles,String resourceBase);
+			List<String> profiles,String resourceBase, String suppliedCodebase, String applicationName);
 
 	
 

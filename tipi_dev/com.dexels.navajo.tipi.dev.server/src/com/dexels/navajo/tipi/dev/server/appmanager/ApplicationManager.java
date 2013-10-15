@@ -14,4 +14,6 @@ public interface ApplicationManager {
 
 	public File getStoreFolder();
 
+	public String getCodeBase();
+
 }

@@ -40,6 +40,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	private final static Logger logger = LoggerFactory
 			.getLogger(ApplicationManagerImpl.class);
 	private File storeFolder;
+	private String codebase;
 	
 
 	public void activate(Map<String,Object> configuration) throws IOException {
@@ -53,6 +54,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 			enableScan = scan.booleanValue();
 		}
 		storeFolder = new File(path);
+		
+		this.codebase = (String)configuration.get("codebase");
 		File applicationFolder = new File(storeFolder,"applications");
 		setAppsFolder(applicationFolder);
 		running = true;
@@ -148,6 +151,10 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		return appsFolder;
 	}
 
+	@Override
+	public String getCodeBase() {
+		return codebase;
+	}
 	
 	@Override
 	public File getStoreFolder() {

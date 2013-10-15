@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.net.URL;
 
 import jnlp.sample.servlet.ResourceResolver;
+import jnlp.sample.servlet.ResourceVerifier;
 
-public class FileSystemResourceResolver implements ResourceResolver {
+public class FileSystemResourceResolver implements ResourceResolver, ResourceVerifier {
 	private static final String JNLP_MIME_TYPE = "application/x-java-jnlp-file";
 	// private static final String JAR_MIME_TYPE = "application/x-java-archive";
 
@@ -41,6 +42,7 @@ public class FileSystemResourceResolver implements ResourceResolver {
 
 		String realPath = path.substring(basePath.length(), path.length());
 		File result = new File(baseDir, realPath);
+		verifyResource( realPath,result);
 		return result.toURI().toURL();
 		// return null;
 	}
@@ -60,6 +62,12 @@ public class FileSystemResourceResolver implements ResourceResolver {
 		}
 		return result.lastModified();
 		// return 0;
+	}
+
+	@Override
+	public void verifyResource(String path, File f) throws SecurityException, IOException {
+		String[] parts = path.split("/");
+		f.getCanonicalFile();
 	}
 
 }

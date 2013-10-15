@@ -107,10 +107,10 @@ public class JnlpDownloadServlet extends HttpServlet {
 		try {
 			super.init(config);
 			// Setup logging
-			Enumeration<String> en = config.getInitParameterNames();
-			while (en.hasMoreElements()) {
-				String pp = (String) en.nextElement();
-			}
+//			Enumeration<String> en = config.getInitParameterNames();
+//			while (en.hasMoreElements()) {
+//				String pp = (String) en.nextElement();
+//			}
 			// String appFolder = (String)
 			// config.getServletContext().getInitParameter("appFolder");
 			File baseDir = getAppFolder();
@@ -120,7 +120,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 					config.getInitParameter(PARAM_JNLP_EXTENSION),
 					config.getInitParameter(PARAM_JAR_EXTENSION));
 
-			_jnlpFileHandler = new JnlpFileHandler(config.getServletContext(), logger);
+			_jnlpFileHandler = new JnlpFileHandler(config.getServletContext(), logger,applicationManager);
 //			_jarDiffHandler = new JarDiffHandler(config.getServletContext(), logger);
 			_resourceCatalog = new ResourceCatalog(config.getServletContext(), logger);
 		} catch (Throwable e) {
@@ -183,11 +183,11 @@ public class JnlpDownloadServlet extends HttpServlet {
 			HttpServletResponse response, boolean isHead) throws IOException {
 		String requestStr = request.getRequestURI();
 		// logger.info("Request: "+request.getRequestURI()+" query: "+request.getQueryString());
-//		Enumeration<String> en = request.getHeaderNames();
-//		while (en.hasMoreElements()) {
-//			String key = (String) en.nextElement();
-//			logger.info("HTTP Key: "+key+" header: "+request.getHeader(key));
-//		}
+		Enumeration<String> en = request.getHeaderNames();
+		while (en.hasMoreElements()) {
+			String key = (String) en.nextElement();
+			logger.info("HTTP Key: "+key+" header: "+request.getHeader(key));
+		}
 		// TipiAdminServlet.buildIfNecessary(request,getAppFolder(),getServletContext());
 //		Map en = request.getParameterMap();
 //		for (Object key : en.keySet()) {

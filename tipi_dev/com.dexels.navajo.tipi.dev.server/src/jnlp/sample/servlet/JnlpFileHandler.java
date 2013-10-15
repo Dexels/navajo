@@ -64,6 +64,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
+
 /* The JNLP file handler implements a class that keeps
  * track of JNLP files and their specializations
  */
@@ -76,12 +78,15 @@ public class JnlpFileHandler {
 	private ServletContext _servletContext;
 	private Logger _log = null;
 	private HashMap _jnlpFiles = null;
+	private final ApplicationManager applicationManager;
 
-	/** Initialize JnlpFileHandler for the specific ServletContext */
-	public JnlpFileHandler(ServletContext servletContext, Logger log) {
+	/** Initialize JnlpFileHandler for the specific ServletContext 
+	 * @param applicationManager */
+	public JnlpFileHandler(ServletContext servletContext, Logger log, ApplicationManager applicationManager) {
 		_servletContext = servletContext;
 		_log = log;
 		_jnlpFiles = new HashMap();
+		this.applicationManager = applicationManager;
 	}
 
 	private static class JnlpFileEntry {

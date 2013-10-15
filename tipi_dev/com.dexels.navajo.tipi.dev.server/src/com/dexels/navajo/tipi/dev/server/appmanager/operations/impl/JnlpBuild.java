@@ -101,7 +101,7 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 		}
 		logger.info("Detected dependencies: "+a.getDependencies());
 		LocalJnlpBuilder jj = new LocalJnlpBuilder();
-		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),a.getAppFolder(),a.getProfiles(),"");
+		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),a.getAppFolder(),a.getProfiles(),"",applicationManager.getCodeBase(),a.getApplicationName());
 //		signall(a);
 	}
 
