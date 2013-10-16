@@ -54,4 +54,6 @@ Service-Component: OSGI-INF/tipi.dev.applicationmanager.xml,
  OSGI-INF/tipi.dev.operation.cleanrepo.xml,
  OSGI-INF/tipi.dev.operation.cachebuild.xml,
  OSGI-INF/tipi.dev.operation.list.xml,
+ OSGI-INF/tipi.dev.operation.authorize.xml,
+ OSGI-INF/tipi.dev.operation.authorized.xml,
  OSGI-INF/tipi.dev.operation.xsdbuild.xml

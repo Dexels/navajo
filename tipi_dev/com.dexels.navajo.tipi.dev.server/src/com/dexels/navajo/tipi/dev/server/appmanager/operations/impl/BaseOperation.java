@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -25,6 +28,19 @@ public abstract class BaseOperation extends HttpServlet  implements AppStoreOper
 		this.applicationManager = am;
 	}
 
+	protected void verifyAuthorization(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		if(!isAuthorized(req)) {
+			resp.sendError(400,"Not authorized for operation");
+		}
+	}
+	protected boolean isAuthorized(HttpServletRequest req) {
+		HttpSession hs = req.getSession();
+		Boolean b = (Boolean)hs.getAttribute("authorized");
+		if(b==null) {
+			return false;
+		}
+		return b;
+	}
 	public void clearApplicationManager(ApplicationManager am) {
 		this.applicationManager = null;
 	}

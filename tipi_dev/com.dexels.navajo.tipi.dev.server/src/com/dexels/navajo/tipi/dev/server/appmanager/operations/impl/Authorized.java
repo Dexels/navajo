@@ -1,6 +1,8 @@
 package com.dexels.navajo.tipi.dev.server.appmanager.operations.impl;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,13 +12,14 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.felix.service.command.CommandSession;
 
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 
-public class List extends BaseOperation implements AppStoreOperation {
+public class Authorized extends BaseOperation implements AppStoreOperation {
 
 	
 	private static final long serialVersionUID = 8640712571228602628L;
@@ -33,20 +36,31 @@ public class List extends BaseOperation implements AppStoreOperation {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		HttpSession session = req.getSession();
 		
-		verifyAuthorization(req,resp);
 		resp.setContentType("application/json");
-		
-		java.util.List<ApplicationStatus> ll = new ArrayList<ApplicationStatus>(applications.values());
-		Collections.sort(ll);
-		Map<String,Map<String,ApplicationStatus>> wrap = new LinkedHashMap<String, Map<String,ApplicationStatus>>();
-		final Map<String,ApplicationStatus> extwrap = new HashMap<String, ApplicationStatus>();
-		
-		for (ApplicationStatus applicationStatus : ll) {
-			extwrap.put(applicationStatus.getApplicationName(), applicationStatus);
+		Boolean authorized = (Boolean) session.getAttribute("authorized");
+		String username = (String) session.getAttribute("username");
+		Map<String,Object> result = new HashMap<String, Object>();
+		if(authorized==null) {
+			authorized = false;
 		}
-		wrap.put("applications", extwrap);
-		writeValueToJsonArray(resp.getOutputStream(),wrap);
+
+		result.put("username", username);
+		result.put("authorized", authorized);
+		result.put("clientid", "4ae668d5ac2c803e23a8");
+		final String state = generateRandom();
+		result.put("state", state);
+		session.setAttribute("state", state);
+//		https://github.com/login/oauth/authorize
+ 		writeValueToJsonArray(resp.getOutputStream(),result);
+			
+	}
+	
+	// TODO Re-use random, it's expensive to initialize
+	private String generateRandom() {
+		 SecureRandom random = new SecureRandom();
+		return new BigInteger(130, random).toString(32);
 	}
 
 	@Override

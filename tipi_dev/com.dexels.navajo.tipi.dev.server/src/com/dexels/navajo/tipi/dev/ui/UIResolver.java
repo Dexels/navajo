@@ -10,7 +10,7 @@ public class UIResolver implements ResourceMapping {
 	
 	public void activate() {
 		resourceMapping.setAlias("/ui");
-		resourceMapping.setPath("/ui");
+		resourceMapping.setPath("ui");
 	}
 
 	@Override
