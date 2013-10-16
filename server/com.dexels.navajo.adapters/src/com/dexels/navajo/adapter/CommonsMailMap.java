@@ -50,6 +50,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 	// Mail stuff
 	public String nonHtmlText = "Your email client does not support HTML messages";
 	public String mailServer = "";
+	public String mailPort = "";
 	public String smtpUser = "";
 	public String smtpPass = "";
 	public String from = null;
@@ -80,6 +81,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 		
 		HtmlEmail email = new HtmlEmail();
 		email.setMailSession(session);
+		email.setCharset(org.apache.commons.mail.EmailConstants.UTF_8);
 		if (from == null || "".equals(from)) {
 			throw new UserException(-1, "Error: Required sender address not set!");
 		}
@@ -252,8 +254,14 @@ public class CommonsMailMap implements Mappable, Queuable {
 	}
 
 	private Session createSession() {
-		Properties props = System.getProperties();
+		Properties props = new Properties();
+		props.putAll( System.getProperties());
 		props.put("mail.smtp.host", mailServer);
+		
+		String port = "";
+		if (mailPort != null) {
+			port = mailPort;
+		}
 
 		if (smtpUser != null && !"".equals(smtpUser)) {
 			// Use auth
@@ -261,16 +269,27 @@ public class CommonsMailMap implements Mappable, Queuable {
 			props.put("mail.debug", "true");
 			if (useEncryption) {
 				logger.info("Using encrypt + auth. ");
-				props.put("mail.smtp.port", "465");
-				props.put("mail.smtp.socketFactory.port", "465");
+				if (port == null) {
+					port = "465";
+				}
+				props.put("mail.smtp.port", port);
+				props.put("mail.smtp.socketFactory.port", port);
 				props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 				props.put("mail.smtp.socketFactory.fallback", "false");
+			} else {
+				if (port == null) {
+					port = "25";
+				}
+				props.put("mail.smtp.port", port);
 			}
 			Authenticator auth = new SMTPAuthenticator();
-			Session session = Session.getDefaultInstance(props, auth);
+			Session session = Session.getInstance(props, auth);
 			return session;
 		} else {
-			props.put("mail.smtp.port", "25");
+			if (port == null) {
+				port = "25";
+			}
+			props.put("mail.smtp.port", port);
 			Session session = Session.getInstance(props);
 			return session;
 		}
@@ -335,6 +354,14 @@ public class CommonsMailMap implements Mappable, Queuable {
 	
 	public void setMailServer(String s) {
 		this.mailServer = s;
+	}
+
+	public String getMailPort() {
+		return this.mailPort;
+	}
+	
+	public void setMailPort(String s) {
+		this.mailPort = s;
 	}
 
 	public String getSmtpUser() {
