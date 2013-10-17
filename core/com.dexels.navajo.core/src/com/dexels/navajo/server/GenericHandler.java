@@ -90,7 +90,7 @@ public class GenericHandler extends ServiceHandler {
     
     public GenericHandler(NavajoConfigInterface tenantConfig) {
     	if(Version.osgiActive()) {
-    		logger.warn("Warning: using non-OSGi constructor for GenericHandler");
+    		//logger.warn("Warning: using non-OSGi constructor for GenericHandler");
     	}
     	this.tenantConfig = tenantConfig;
     	boolean finishedSync = false;
