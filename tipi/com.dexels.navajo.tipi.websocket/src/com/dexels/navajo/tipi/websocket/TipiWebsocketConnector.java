@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.websocket;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -14,64 +13,44 @@ import org.eclipse.jetty.websocket.WebSocketClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.tipi.TipiBreakException;
-import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.connectors.TipiBaseConnector;
-import com.dexels.navajo.tipi.connectors.TipiConnector;
+import com.dexels.navajo.tipi.TipiContext;
 
-public class TipiWebsocketConnector extends TipiBaseConnector implements TipiConnector {
+public class TipiWebsocketConnector {
 
 	private static final long serialVersionUID = 1969154253419166142L;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiWebsocketConnector.class);
+
+	private TipiContext context;
+
+	private final WebSocketClientFactory factory;
+
+	private WebSocket.Connection connection;
 	
 
 
-	public TipiWebsocketConnector() {
-
+	public TipiWebsocketConnector(TipiContext context) throws Exception {
+		this.context = context;
+		factory = new WebSocketClientFactory();
+		factory.start();
 	}
-
-	@Override
-	public Set<String> getEntryPoints() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public void sendMessage(String message) throws IOException {
+		connection.sendMessage(message);
 	}
-
-	@Override
-	public String getDefaultEntryPoint() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void doTransaction(Navajo n, String service, String destination)
-			throws TipiBreakException, TipiException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String getConnectorId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public static void main(String[] args) throws InterruptedException, ExecutionException, TimeoutException, IOException, URISyntaxException, Exception {
-		   WebSocketClientFactory factory = new WebSocketClientFactory();
-		   factory.start();
-
+	
+	public void startup(URI uri) throws Exception {
 		   WebSocketClient client = factory.newWebSocketClient();
-		   // Configure the client
-
-		   WebSocket.Connection connection = client.open(new URI("ws://localhost:8080/websocket"), new WebSocket.OnTextMessage()
+		   connection = client.open(uri, new WebSocket.OnTextMessage()
 		   {
+			private Connection connection = null;
+			
 		     @Override
 			public void onOpen(Connection connection)
 		     {
-		       // open notification
 		    	 System.err.println("open!");
+		    	 this.connection = connection;
 		     }
 
 		     @Override
@@ -87,8 +66,8 @@ public class TipiWebsocketConnector extends TipiBaseConnector implements TipiCon
 		     }
 		   }).get(5, TimeUnit.SECONDS);
 
-		   connection.sendMessage("Hello World");
-		   Thread.sleep(100000);
-		 
 	}
+
+
+
 }
