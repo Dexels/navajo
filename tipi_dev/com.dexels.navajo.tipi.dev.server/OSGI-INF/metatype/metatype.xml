@@ -2,7 +2,7 @@
   <OCD description="Tipi Application Manager" name="Tipi Application Manager" id="tipi.dev.applicationmanager">
     <AD name="Application Folder"    id="tipi.store.path"   required="true"  type="String"/>   
     <AD name="Scan application folder"    id="scan"   required="false"  type="Boolean" default="false"/>   
-    <AD name="Codebase"    id="codebase"   required="false"  type="String"/>   
+    <AD name="Codebase"    id="tipi.store.codebase"   required="false"  type="String"/>   
     </OCD>
   <OCD description="Git Application Instance" name="Git Application Instance" id="tipi.dev.gitapplication">
     <AD name="Remote Git URL"    id="url"   required="true"  type="String"/>   

@@ -44,7 +44,10 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	
 
 	public void activate(Map<String,Object> configuration) throws IOException {
-		final String path = (String) configuration.get("tipi.store.path");
+		String path = (String) configuration.get("tipi.store.path");
+		if(path==null) {
+			path = System.getProperty("tipi.store.path");
+		}
 		if(path==null) {
 			throw new IOException("No tipi.store.path set in configuration!");
 		}
@@ -55,10 +58,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		}
 		storeFolder = new File(path);
 		
-		this.codebase = (String)configuration.get("codebase");
-		File applicationFolder = new File(storeFolder,"applications");
+		this.codebase = (String)configuration.get("tipi.store.codebase");
+		final File applicationFolder = new File(storeFolder,"applications");
 		setAppsFolder(applicationFolder);
 		running = true;
+		
 		if(enableScan) {
 			this.scanThread = new Thread() {
 	
@@ -69,9 +73,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
 							Thread.sleep(SLEEP_TIME);
 							scan();
 						} catch (IOException e) {
-							logger.error("Error: ", path);
+							logger.error("Error: ", applicationFolder.getAbsolutePath());
 						} catch (InterruptedException e) {
-							logger.error("Error: ", path);
+							logger.error("Error: ", applicationFolder.getAbsolutePath());
 						}
 					}
 				}
