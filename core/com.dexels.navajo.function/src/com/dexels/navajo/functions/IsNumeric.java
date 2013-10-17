@@ -24,7 +24,7 @@ public class IsNumeric extends FunctionInterface {
                 if (o instanceof String) {
                     double nr = Double.parseDouble((String)o);
                     return Boolean.TRUE;
-                } else if (o instanceof Integer || o instanceof Double || o instanceof Float) {
+                } else if (o instanceof Long || o instanceof Integer || o instanceof Double || o instanceof Float) {
                     return Boolean.TRUE;
                 } else {
                     // Implementation please
