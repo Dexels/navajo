@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="tipi.dev.websocket">
+   <implementation class="com.dexels.navajo.tipi.dev.server.websocket.CallbackServlet"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+
+   <property name="alias" type="String" value="/websocket"/>
+</scr:component>
