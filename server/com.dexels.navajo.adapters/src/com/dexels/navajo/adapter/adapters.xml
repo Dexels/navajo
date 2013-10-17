@@ -719,19 +719,6 @@
 		</methods>
 	</map>
 
-	<!-- TmlToPain adapter -->
-	<!-- necessary because Pain requires a very specific order of elements. --> 
-	<!-- The adapter imposes the order and ignores elements outside this order but otherwise behaves as tml2xml map -->
-	<map>
-		<tagname>tml2pain</tagname>
-		<object>com.dexels.navajo.adapter.TmlToPainMap</object>
-		<values>
-			<value name="rootPath" type="string" required="true" direction="in" />
-			<value name="separator" type="string" required="false" direction="in" />
-			<value name="content" type="binary" required="false" direction="out" />
-		</values>
-	</map>
-
 	<map>
 		<tagname>com.dexels.navajo.adapter.AdminMap</tagname>
 		<object>com.dexels.navajo.adapter.AdminMap</object>
