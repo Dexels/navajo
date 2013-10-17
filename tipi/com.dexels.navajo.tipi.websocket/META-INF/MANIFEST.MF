@@ -1,5 +1,5 @@
 Bundle-Name: Navajo Tipi Jabber extension
-Bundle-SymbolicName: com.dexels.navajo.tipi.jabber
+Bundle-SymbolicName: com.dexels.navajo.tipi.websocket
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.0.qualifier
