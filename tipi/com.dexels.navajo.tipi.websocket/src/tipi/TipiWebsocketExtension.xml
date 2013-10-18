@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extension id="jabber" requiresMain="" project="TipiWebsocketExtension" version="0.9" title="Tipi Websocket Library" vendor="Dexels" homepage="http://www.dexels.com">
+	<description>
+		Websocket extensions
+	</description>
+	<includes>
+		<include path="com/dexels/navajo/tipi/websocket/websocketclassdef.xml"/>
+	</includes>
+	<jars>
+	</jars>
+	<other>
+	</other>
+</extension>

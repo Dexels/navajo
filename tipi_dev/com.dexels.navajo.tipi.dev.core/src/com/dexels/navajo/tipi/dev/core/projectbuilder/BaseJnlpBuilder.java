@@ -112,7 +112,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		output.setName("jnlp");
 		output.setAttribute("version", "1");
 		output.setAttribute("spec", "1.0+");
-		output.setAttribute("codebase", assembleCodebase(suppliedCodebase,applicationName));
+		output.setAttribute("codebase", assembleCodebase(suppliedCodebase,applicationName,"apps"));
 		output.setAttribute("href", "$$name");
 
 		XMLElement information = output.addTagKeyValue("information", "");
@@ -164,7 +164,11 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			arguments.put("tipiCodeBase", resourceBase+"/tipi/");
 			arguments.put("resourceCodeBase", resourceBase+"/resource/");
 		}
-
+		arguments.put("tipi.appstore.application", applicationName);
+		arguments.put("tipi.appstore.websocketurl", createWebsocketUrl(suppliedCodebase, applicationName));
+		arguments.put("tipi.appstore.tenant", profile);
+		arguments.put("tipi.appstore.session", "notused");
+		
 		appendArguments(app, java, arguments);
 		
 //		appendArguments(app, java, params);
@@ -178,14 +182,23 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		return output;
 	}
 
+	private String createWebsocketUrl(String codebase, String applicationName) {
+		String url = assembleCodebase(codebase, applicationName,null);
+		String websock = url.replaceAll("http", "ws");
+		return websock+"/websocket";
+	}
 
-	private String assembleCodebase(String codebase, String applicationName) {
+	private String assembleCodebase(String codebase, String applicationName,String context) {
 		if(codebase==null) {
 			return "$$codebase";
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append(codebase);
-		if(codebase.endsWith("/")) {
+		if(!codebase.endsWith("/")) {
+			sb.append("/");
+		}
+		if(context!=null && !"".equals(context)) {
+			sb.append(context);
 			sb.append("/");
 		}
 		sb.append(applicationName);

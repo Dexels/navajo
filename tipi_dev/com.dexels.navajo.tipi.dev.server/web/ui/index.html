@@ -67,16 +67,36 @@
 	</div>
 
 	</script>
-	<div id="main" style="margin:10px 10px;">
+	<div id="main" style="margin:150px 10px;">
 		<div class="page-header">
-			<h1>Tipi Application Store <small>(handle with care)</small></h1>
-		</div>
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="alert alert-info resultmsg"></div>
-</nav>
-	<a href="#" class="btn btn-success hidden authorizebutton">Login</a>
-	<div class="btn btn-success hidden authorizedlabel" disabled="true">Welcome, Mr. X</a>
+			<h1>Tipi Application Store <small>(handle with care)</small>
+			</h1>
+				
 
+		</div>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin:10px 10px;">
+		<div class="panel  panel-info" style="margin:30px 0px;">
+			<div class="panel-heading">
+				User data
+			</div>
+			<div class="panel-body">
+				<a href="#" class="btn btn-success hidden authorizebutton pull-left">Login</a>
+				<a href="../logout" class="btn btn-success hidden logoutbutton pull-left">Logout</a>
+			<a class="pull-right pull-up" href="#">
+			
+			<img class="userimage"/>
+			</a>
+				<div class="pull-right pull-up" style="width: 180px;">
+					<h4 class="usernamelabel  pull-up"></h4>
+					<a class="emaillabel" href="mailto:flyaruu@gmail.com"></a>
+					<div class="companylabel"></div>
+				</div>
+
+			</div>
+		</div>
+	<div class="alert alert-info resultmsg"></div>
+
+</nav>
 
 	</div>
 
@@ -128,13 +148,24 @@
 	
 	$.getJSON( "../authorized", function( data ) {
 			if(data.authorized) {
-				$(".authorizedlabel" ).html( data.username );
-				$(".authorizedlabel").removeClass('hidden');
+				$(".usernamelabel" ).html( data.username );
+				$(".usernamelabel").removeClass('hidden');
+				$(".companylabel" ).html( data.company );
+				$(".companylabel").removeClass('hidden');
+				$(".emaillabel" ).html( data.email );
+				$(".emaillabel").removeClass('hidden');
+				$(".userimage").attr('src',data.image);
+				$(".userimage").removeClass('hidden');
 				$(".authorizebutton").addClass('hidden');
+				$(".logoutbutton").removeClass('hidden');
 			} else {
 				$(".authorizebutton").removeClass('hidden');
+				$(".logoutbutton").addClass('hidden');
 				$(".authorizebutton").attr('href',"https://github.com/login/oauth/authorize?client_id="+data.clientid+"&state="+data.state);
-				$(".authorizedlabel").addClass('hidden');
+				$(".usernamelabel").addClass('hidden');
+				$(".companylabel").addClass('hidden');
+				$(".userimage").addClass('hidden');
+				$(".emaillabel").addClass('hidden');
 			}
 		
 	});

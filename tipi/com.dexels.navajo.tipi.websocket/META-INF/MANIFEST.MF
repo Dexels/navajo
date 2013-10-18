@@ -1,0 +1,18 @@
+Bundle-Name: Navajo Tipi Jabber extension
+Bundle-SymbolicName: com.dexels.navajo.tipi.websocket
+Bundle-Description: A Hello World bundle
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.2.qualifier
+Bundle-Vendor: Dexels
+Require-Bundle: com.dexels.navajo.tipi
+Bundle-Activator: tipi.TipiWebsocketExtension
+Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.tipilink,
+ com.dexels.navajo.version,
+ javax.net,
+ javax.net.ssl,
+ org.eclipse.jetty.util.component;version="8.1.9.v20130131",
+ org.eclipse.jetty.websocket;version="[8.1.0,9.0.0)",
+ org.osgi.framework;version="1.5.0",
+ org.slf4j;version="[1.6.1,1.8.0)"
+Export-Package: com.dexels.navajo.tipi.websocket

@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -24,6 +23,7 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
 
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
@@ -58,11 +58,26 @@ public class Authorize extends BaseOperation implements AppStoreOperation {
 		final String access_token = (String) session.getAttribute("access_token");
 		System.err.println("::: https://api.github.com/user?access_token="+access_token);
 		JsonNode user = callGithub("/user", access_token);
-		System.err.println("username: "+user.get("login").asText());
+		final String login = user.get("login").asText();
+		System.err.println("username: "+login);
 		System.err.println("Name: "+user.get("name").asText());
 		String username = user.get("name").asText();
-		session.setAttribute("username", username);
-		session.setAttribute("authorized", true);
+		
+		boolean found = false;
+		ArrayNode members = (ArrayNode) callGithub("/orgs/Dexels/members", access_token);
+		for (JsonNode member : members) {
+			String currentLogin = member.get("login").asText();
+			if(currentLogin.equals(login)) {
+				found = true;
+			}
+		}
+		if(found) {
+			session.setAttribute("username", username);
+			session.setAttribute("authorized", true);
+			session.setAttribute("image", user.get("avatar_url").asText());
+			session.setAttribute("company", user.get("company").asText());
+			session.setAttribute("email", user.get("email").asText());
+		}
 		resp.sendRedirect("ui/index.html");
 	}
 	
@@ -74,6 +89,7 @@ public class Authorize extends BaseOperation implements AppStoreOperation {
 		JsonFactory factory = mapper.getJsonFactory(); // since 2.1 use mapper.getFactory() instead
 		JsonParser jp = factory.createJsonParser(u.openStream());
 		JsonNode node = mapper.readTree(jp);		
+		mapper.writerWithDefaultPrettyPrinter().writeValue(System.err,node);
 		return node;
 		
 		

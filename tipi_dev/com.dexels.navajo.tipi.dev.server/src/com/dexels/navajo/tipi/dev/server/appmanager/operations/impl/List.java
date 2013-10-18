@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.felix.service.command.CommandSession;
 
@@ -22,8 +23,9 @@ public class List extends BaseOperation implements AppStoreOperation {
 	private static final long serialVersionUID = 8640712571228602628L;
 	
 	public void list(CommandSession session ) throws IOException {
-		Map<String,Map<String,ApplicationStatus>> wrap = new HashMap<String, Map<String,ApplicationStatus>>();
+		Map<String,Map<String,?>> wrap = new HashMap<String, Map<String,?>>();
 		wrap.put("applications", applications);
+		
 		writeValueToJsonArray(session.getConsole(),wrap);
 	}
 	
@@ -39,9 +41,15 @@ public class List extends BaseOperation implements AppStoreOperation {
 		
 		java.util.List<ApplicationStatus> ll = new ArrayList<ApplicationStatus>(applications.values());
 		Collections.sort(ll);
-		Map<String,Map<String,ApplicationStatus>> wrap = new LinkedHashMap<String, Map<String,ApplicationStatus>>();
+		Map<String,Map<String,?>> wrap = new LinkedHashMap<String, Map<String,?>>();
 		final Map<String,ApplicationStatus> extwrap = new HashMap<String, ApplicationStatus>();
+		Map<String,String> user = new HashMap<String, String>();
+		wrap.put("user", user);
+		HttpSession session = req.getSession();
+		user.put("login", (String)session.getAttribute("username"));
+		user.put("image", (String)session.getAttribute("image"));
 		
+
 		for (ApplicationStatus applicationStatus : ll) {
 			extwrap.put(applicationStatus.getApplicationName(), applicationStatus);
 		}

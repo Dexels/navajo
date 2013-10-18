@@ -3,10 +3,7 @@ package com.dexels.navajo.tipi.dev.server.appmanager.operations.impl;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -41,12 +38,18 @@ public class Authorized extends BaseOperation implements AppStoreOperation {
 		resp.setContentType("application/json");
 		Boolean authorized = (Boolean) session.getAttribute("authorized");
 		String username = (String) session.getAttribute("username");
+		String image = (String) session.getAttribute("image");
+		String company = (String) session.getAttribute("company");
+		String email = (String) session.getAttribute("email");
 		Map<String,Object> result = new HashMap<String, Object>();
 		if(authorized==null) {
 			authorized = false;
 		}
 
 		result.put("username", username);
+		result.put("company", company);
+		result.put("image", image);
+		result.put("email", email);
 		result.put("authorized", authorized);
 		result.put("clientid", "4ae668d5ac2c803e23a8");
 		final String state = generateRandom();
