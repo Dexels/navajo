@@ -2,10 +2,7 @@ package com.dexels.navajo.tipi.websocket;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketClient;
@@ -62,10 +59,11 @@ public class TipiWebsocketConnector {
 		     @Override
 			public void onMessage(String data)
 		     {
+		    	 System.err.println("max text: "+ connection.getMaxTextMessageSize());
+		    	 
 		    	 System.err.println("Message: "+data);
 		     }
 		   }).get(5, TimeUnit.SECONDS);
-
 	}
 
 
