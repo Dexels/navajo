@@ -236,7 +236,7 @@ private String resource;
 			  try {
 				  waitForResult.wait(MAX_WAITTIME);
 			  } catch (InterruptedException e) {
-				  logger.error("Error: ", e);
+				  logger.error("WaitForResult has timed out: Error: ", e);
 			  }
 		  }
 	  }
@@ -763,6 +763,9 @@ private String resource;
 	  if (password == null)
 		  password = "";
 
+	  if ( true ) {
+		  System.err.println(access.accessID + "|" + access.rpcName + "|" + access.rpcUser + ": Navajomap call to " + method + " as user " + username);
+	  }
 	  try {
 		  if(this.resource!=null) {
 			  serviceCalled = true;
