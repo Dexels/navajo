@@ -44,7 +44,7 @@ public class SwingEmbeddedContext extends SwingTipiContext {
 
 	public SwingEmbeddedContext(SwingTipiApplicationInstance instance,
 			SwingTipiContext parentContext) {
-		super(instance,null, parentContext);
+		super(instance,null, parentContext,parentContext.systemPropertyMap);
 		if (SwingClient.getUserInterface() == null) {
 			SwingTipiUserInterface stui = new SwingTipiUserInterface(this);
 			SwingClient.setUserInterface(stui);

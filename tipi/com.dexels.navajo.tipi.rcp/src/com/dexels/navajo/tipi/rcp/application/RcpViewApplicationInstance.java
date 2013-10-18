@@ -32,7 +32,7 @@ public class RcpViewApplicationInstance extends BaseTipiApplicationInstance impl
 
 	@Override
 	public TipiContext createContext() throws IOException {
-		return new TipiRcpContext(this,compositeParent, new ArrayList<TipiExtension>(), null);
+		return new TipiRcpContext(this,compositeParent, new ArrayList<TipiExtension>(), null,null);
 	}
 
 	@Override

@@ -101,8 +101,8 @@ public class SwingTipiContext extends TipiContext {
 	private static final Logger logger = LoggerFactory.getLogger(SwingTipiContext.class);
 	
 	public SwingTipiContext(SwingTipiApplicationInstance instance,List<TipiExtension> extensionList,
-			SwingTipiContext parentContext) {
-		super(instance,extensionList, parentContext);
+			SwingTipiContext parentContext, Map<String,String> properties) {
+		super(instance,extensionList, parentContext,properties);
 		// Don't think it is right here
 		try {
 			Locale.setDefault(new Locale("nl", "NL"));
@@ -464,6 +464,7 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	// TODO refactor into more 
+	@Override
 	public void processProperties(Map<String, String> properties)
 			throws MalformedURLException {
 		appendJnlpCodeBase(properties);

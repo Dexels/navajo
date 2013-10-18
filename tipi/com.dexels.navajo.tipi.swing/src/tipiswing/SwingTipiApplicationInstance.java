@@ -89,9 +89,9 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 // in non-osgi land:
 		if(bundleContext==null) {
 			List<TipiExtension> ll = TipiSwingExtension.getInstance().getTipiExtensionRegistry().getExtensionList();
-			context = new SwingTipiContext(this,ll, null);
+			context = new SwingTipiContext(this,ll, null,properties);
 		} else {
-			context = new SwingTipiContext(this,new ArrayList<TipiExtension>(), null);
+			context = new SwingTipiContext(this,new ArrayList<TipiExtension>(), null,properties);
 		}
 		
 //		context.setBundleContext(this.bundleContext);
@@ -182,7 +182,7 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 
 	@Override
 	public void setSystemProperty(String key, String value) {
-//		logger.debug("Adding system property (FAKE!): "+key+" value: "+value);
+		logger.info("Adding system property (FAKE!): "+key+" value: "+value);
 		systemProperties.put(key, value);
 	}
 
