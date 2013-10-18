@@ -4,7 +4,8 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.38.qualifier
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.navajo.tipi.dev.ant;version="1.0.0",
+Import-Package: com.dexels.navajo.document;version="2.2.1",
+ com.dexels.navajo.tipi.dev.ant;version="1.0.0",
  com.dexels.navajo.tipi.dev.core.projectbuilder,
  com.dexels.navajo.tipi.dev.core.util.zip;version="1.0.0",
  com.jcraft.jsch;version="0.1.46",
