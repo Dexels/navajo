@@ -14,8 +14,6 @@ import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiWebsocketConnector {
 
-	private static final long serialVersionUID = 1969154253419166142L;
-	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiWebsocketConnector.class);
 
@@ -39,31 +37,7 @@ public class TipiWebsocketConnector {
 	
 	public void startup(URI uri) throws Exception {
 		   WebSocketClient client = factory.newWebSocketClient();
-		   connection = client.open(uri, new WebSocket.OnTextMessage()
-		   {
-			private Connection connection = null;
-			
-		     @Override
-			public void onOpen(Connection connection)
-		     {
-		    	 System.err.println("open!");
-		    	 this.connection = connection;
-		     }
-
-		     @Override
-			public void onClose(int closeCode, String message)
-		     {
-		    	 System.err.println("close!");
-		     }
-
-		     @Override
-			public void onMessage(String data)
-		     {
-		    	 System.err.println("max text: "+ connection.getMaxTextMessageSize());
-		    	 
-		    	 System.err.println("Message: "+data);
-		     }
-		   }).get(5, TimeUnit.SECONDS);
+		   connection = client.open(uri, new WebsocketSession(context)).get(5, TimeUnit.SECONDS);
 	}
 
 
