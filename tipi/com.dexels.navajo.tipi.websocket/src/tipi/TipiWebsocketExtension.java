@@ -1,14 +1,13 @@
 package tipi;
 
-import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.security.SecureRandom;
 
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
@@ -28,14 +27,11 @@ public class TipiWebsocketExtension extends TipiAbstractXMLExtension implements 
 	public void initialize(TipiContext tc) {
 		// Do nothing
 		String appstoreUrl = tc.getSystemProperty("tipi.appstore.websocketurl");
-//		String appstoreSession = tc.getSystemProperty("tipi.appstore.session");
+		String appstoreSession =  SessionTokenFactory.getSessionTokenProvider().getSessionToken(); // tc.getSystemProperty("tipi.appstore.session");
 		String appstoreApplication =  tc.getSystemProperty("tipi.appstore.application");
 		String appstoreTenant =  tc.getSystemProperty("tipi.appstore.tenant");
 		
 
-		SecureRandom random = new SecureRandom();
-
-		    String sessionRandom = new BigInteger(130, random).toString(32);
 		try {
 			URI uri = new URI(appstoreUrl);
 			TipiWebsocketConnector twt = new TipiWebsocketConnector(tc);
@@ -45,7 +41,7 @@ public class TipiWebsocketExtension extends TipiAbstractXMLExtension implements 
 //			twt.sendMessage("tipi.appstore.tenant="+appstoreTenant+"\n");
 			XMLElement xe = new CaseSensitiveXMLElement();
 			xe.setName("session");
-			xe.setAttribute("session", sessionRandom);
+			xe.setAttribute("session", appstoreSession);
 			xe.setAttribute("application", appstoreApplication);
 			xe.setAttribute("tenant", appstoreTenant);
 			twt.sendMessage(xe.toString());
