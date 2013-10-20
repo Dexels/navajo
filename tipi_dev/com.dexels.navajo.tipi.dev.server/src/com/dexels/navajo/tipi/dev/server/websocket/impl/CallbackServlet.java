@@ -1,6 +1,7 @@
-package com.dexels.navajo.tipi.dev.server.websocket;
+package com.dexels.navajo.tipi.dev.server.websocket.impl;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketServlet;
+import org.osgi.framework.BundleContext;
 
 /**
  * Jetty WebSocketServlet implementation class ChatWebSocketServlet
@@ -22,6 +24,8 @@ public class CallbackServlet extends WebSocketServlet implements Runnable {
 	
 	private final Set<SCSocket> members = new CopyOnWriteArraySet<SCSocket>();
 	private final Thread heartbeatThread = new Thread(this);
+
+	private BundleContext bundleContext;
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -36,6 +40,17 @@ public class CallbackServlet extends WebSocketServlet implements Runnable {
 	public void init() throws ServletException {
 		super.init();
 		heartbeatThread.start();
+	}
+
+	public void activate(Map<String,Object> settings, BundleContext bundleContext) {
+		this.bundleContext = bundleContext;
+	}
+
+	public void deactivate() {
+		this.bundleContext = null;
+	}
+	public BundleContext getBundleContext() {
+		return bundleContext;
 	}
 
 

@@ -1,14 +1,17 @@
-package com.dexels.navajo.tipi.dev.server.websocket;
+package com.dexels.navajo.tipi.dev.server.websocket.impl;
 
 import java.io.IOException;
 
 import org.eclipse.jetty.websocket.WebSocket;
 
-public class SCSocket implements WebSocket.OnTextMessage {
+import com.dexels.navajo.tipi.dev.server.websocket.TipiCallbackSession;
+
+public class SCSocket implements WebSocket.OnTextMessage, TipiCallbackSession {
 	/**
 	 * 
 	 */
 	private final CallbackServlet callbackServlet;
+	private Connection connection;
 
 	/**
 	 * @param callbackServlet
@@ -17,7 +20,6 @@ public class SCSocket implements WebSocket.OnTextMessage {
 		this.callbackServlet = callbackServlet;
 	}
 
-	Connection connection;
 	
 	@Override
 	public void onClose(int code, String message) {
@@ -35,6 +37,7 @@ public class SCSocket implements WebSocket.OnTextMessage {
 		}
 	}
 	
+	@Override
 	public void sendMessage(String data) throws IOException {
 		connection.sendMessage(data);
 	}
