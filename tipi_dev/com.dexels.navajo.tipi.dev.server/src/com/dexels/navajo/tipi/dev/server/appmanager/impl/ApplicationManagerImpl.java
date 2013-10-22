@@ -2,11 +2,13 @@ package com.dexels.navajo.tipi.dev.server.appmanager.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -18,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
+import com.dexels.navajo.tipi.dev.server.websocket.TipiCallbackSession;
 
 public class ApplicationManagerImpl implements ApplicationManager {
 	
@@ -27,6 +30,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	private boolean running = false;
 	private Thread scanThread;
 	private final Set<String> applications = new HashSet<String>();
+	private final static Logger logger = LoggerFactory
+			.getLogger(ApplicationManagerImpl.class);
+	private File storeFolder;
+	private String codebase;
+	private final Set<TipiCallbackSession> sessionSet = new HashSet<TipiCallbackSession>();
+	
 	public void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
 		this.configurationAdmin = configurationAdmin;
 	}
@@ -36,13 +45,27 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		this.configurationAdmin = null;
 	}
 
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(ApplicationManagerImpl.class);
-	private File storeFolder;
-	private String codebase;
-	
+	public void addTipiSession(TipiCallbackSession tcs) {
+		sessionSet.add(tcs);
+	}
 
+	public void removeTipiSession(TipiCallbackSession tcs) {
+		sessionSet.remove(tcs);
+	}
+	
+	@Override
+	public List<TipiCallbackSession> getSessionsForApplication(String application) {
+		List<TipiCallbackSession> result = new ArrayList<TipiCallbackSession>();
+		for (TipiCallbackSession tipiCallbackSession : sessionSet) {
+			if(application.equals(tipiCallbackSession.getApplication())) {
+				result.add(tipiCallbackSession);
+			}
+		}
+		return result;
+	}
+
+
+	
 	public void activate(Map<String,Object> configuration) throws IOException {
 		String path = (String) configuration.get("tipi.store.path");
 		if(path==null) {

@@ -5,4 +5,5 @@
    <service>
       <provide interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager"/>
    </service>
+   <reference bind="addTipiSession" cardinality="0..n" interface="com.dexels.navajo.tipi.dev.server.websocket.TipiCallbackSession" name="TipiCallbackSession" policy="dynamic" unbind="removeTipiSession"/>
 </scr:component>

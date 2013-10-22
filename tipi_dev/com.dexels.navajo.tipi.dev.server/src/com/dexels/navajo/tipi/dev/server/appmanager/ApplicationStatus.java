@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
+import com.dexels.navajo.tipi.dev.server.websocket.TipiCallbackSession;
 
 @JsonIgnoreProperties({"settingsBundle","applicationManager"})
 public interface ApplicationStatus extends Comparable<ApplicationStatus> {
@@ -30,6 +31,10 @@ public interface ApplicationStatus extends Comparable<ApplicationStatus> {
 
 	public void load() throws IOException;
 
-	boolean isBuilt();
+	public boolean isBuilt();
+
+	public List<TipiCallbackSession> getSessions();
+	
+	public int getSessionCount();
 
 }

@@ -60,4 +60,5 @@ Service-Component: OSGI-INF/tipi.dev.applicationmanager.xml,
  OSGI-INF/tipi.dev.operation.authorize.xml,
  OSGI-INF/tipi.dev.operation.authorized.xml,
  OSGI-INF/tipi.dev.operation.logout.xml,
+ OSGI-INF/tipi.dev.operation.sendmessage.xml,
  OSGI-INF/tipi.dev.operation.xsdbuild.xml

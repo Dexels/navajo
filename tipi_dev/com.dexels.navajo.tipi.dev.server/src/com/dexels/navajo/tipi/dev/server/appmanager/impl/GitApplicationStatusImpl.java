@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
@@ -32,6 +33,7 @@ import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 import com.dexels.navajo.tipi.dev.server.appmanager.GitApplicationStatus;
+import com.dexels.navajo.tipi.dev.server.websocket.TipiCallbackSession;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 
@@ -41,7 +43,6 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	
 	private final static Logger logger = LoggerFactory.getLogger(GitApplicationStatusImpl.class);
 
-	private ApplicationManager applicationManager;
 	private File privateKey;
 	private File publicKey;
 	private String branch;
@@ -60,9 +61,7 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 
 	private String httpUrl;
 
-	public ApplicationManager getApplicationManager() {
-		return applicationManager;
-	}
+
 
 	public void setXsdBuild(AppStoreOperation xsdBuild) {
 		this.xsdBuild = xsdBuild;
@@ -83,14 +82,6 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	}
 	public void clearCacheBuild(AppStoreOperation cacheBuild) {
 		this.cacheBuild = null;
-	}
-	
-	public void setApplicationManager(ApplicationManager applicationManager) {
-		this.applicationManager = applicationManager;
-	}
-
-	public void clearApplicationManager(ApplicationManager applicationManager) {
-		this.applicationManager = null;
 	}
 
 	public String getGitUrl() {
@@ -160,6 +151,7 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 	public void deactivate() {
 
 	}
+	
 	
 	@Override
 	public void activate(Map<String,Object> settings) throws IOException {

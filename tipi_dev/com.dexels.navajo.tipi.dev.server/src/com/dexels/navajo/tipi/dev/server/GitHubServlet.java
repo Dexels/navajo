@@ -32,6 +32,7 @@ import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 import com.dexels.navajo.tipi.dev.server.appmanager.GitApplicationStatus;
+import com.dexels.navajo.tipi.dev.server.websocket.TipiCallbackSession;
 
 
 
@@ -254,6 +255,12 @@ private final static Logger logger = LoggerFactory
 
 			@Override
 			public String getCodeBase() {
+				return null;
+			}
+
+			@Override
+			public List<TipiCallbackSession> getSessionsForApplication(
+					String application) {
 				return null;
 			}
 		});

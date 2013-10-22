@@ -11,12 +11,15 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
+import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
+import com.dexels.navajo.tipi.dev.server.websocket.TipiCallbackSession;
 
 public class ApplicationStatusImpl implements ApplicationStatus {
 
@@ -28,7 +31,8 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 	private String applicationName;
 	protected File applicationFolder;
 	private final List<Dependency> dependencies = new ArrayList<Dependency>();
-	
+	protected ApplicationManager applicationManager;
+
 	private PropertyResourceBundle settings;
 
 	@Override
@@ -40,6 +44,20 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 	public List<String> getProfiles() {
 		return profiles;
 	}
+	
+	
+	public void setApplicationManager(ApplicationManager applicationManager) {
+		this.applicationManager = applicationManager;
+	}
+
+	public void clearApplicationManager(ApplicationManager applicationManager) {
+		this.applicationManager = null;
+	}
+
+	public ApplicationManager getApplicationManager() {
+		return applicationManager;
+	}
+	
 	
 	public Map<String,String> getProfileStatus() {
 		Map<String,String> result = new HashMap<String, String>();
@@ -78,6 +96,11 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 	@Override
 	public void load() throws IOException {
 		load(applicationFolder);
+	}
+
+	@Override
+	public List<TipiCallbackSession> getSessions() {
+		return applicationManager.getSessionsForApplication(getApplicationName());
 	}
 
 	
@@ -178,6 +201,12 @@ public class ApplicationStatusImpl implements ApplicationStatus {
 	@Override
 	public int compareTo(ApplicationStatus o) {
 		return getApplicationName().compareTo(o.getApplicationName());
+	}
+
+	@Override
+	// TODO Not horribly efficient
+	public int getSessionCount() {
+		return applicationManager.getSessionsForApplication(getApplicationName()).size();
 	}
 
 }
