@@ -21,4 +21,9 @@ public interface ApplicationManager {
 
 	public List<TipiCallbackSession> getSessionsForApplication(String application);
 
+	public String getClientId();
+	
+	public String getClientSecret();
+	
+	public String getOrganization();
 }

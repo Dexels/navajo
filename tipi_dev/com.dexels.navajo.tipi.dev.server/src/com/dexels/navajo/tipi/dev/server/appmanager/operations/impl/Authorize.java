@@ -50,9 +50,9 @@ public class Authorize extends BaseOperation implements AppStoreOperation {
 		String code = req.getParameter("code");
 		resp.setContentType("application/json");
 		Map<String,String> params = new HashMap<String, String>();
-		params.put("client_id", "4ae668d5ac2c803e23a8");
+		params.put("client_id", applicationManager.getClientId());
 		params.put("code", code);
-		params.put("client_secret", "7a7eae8ce97d77a6124111f35a37633ace1ccc6c");
+		params.put("client_secret", applicationManager.getClientSecret());
 
 		post("https://github.com/login/oauth/access_token",params,session);
 		final String access_token = (String) session.getAttribute("access_token");
@@ -64,7 +64,8 @@ public class Authorize extends BaseOperation implements AppStoreOperation {
 		String username = user.get("name").asText();
 		
 		boolean found = false;
-		ArrayNode members = (ArrayNode) callGithub("/orgs/Dexels/members", access_token);
+		String organization = applicationManager.getOrganization();
+		ArrayNode members = (ArrayNode) callGithub("/orgs/"+organization+"/members", access_token);
 		for (JsonNode member : members) {
 			String currentLogin = member.get("login").asText();
 			if(currentLogin.equals(login)) {

@@ -162,7 +162,8 @@ public class GitApplicationStatusImpl extends ApplicationStatusImpl implements
 		String key = (String) settings.get("key");
 		branch = (String) settings.get("branch");
 		name = (String) settings.get("name");
-//		String combinedname = reponame + "-"+branch;
+
+		//		String combinedname = reponame + "-"+branch;
 		applicationFolder = new File(gitRepoFolder,name);
 		File keyFolder = new File(applicationManager.getStoreFolder(),"gitssh");
 		

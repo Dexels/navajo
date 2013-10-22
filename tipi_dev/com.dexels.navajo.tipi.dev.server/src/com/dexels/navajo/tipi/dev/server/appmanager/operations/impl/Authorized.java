@@ -51,7 +51,7 @@ public class Authorized extends BaseOperation implements AppStoreOperation {
 		result.put("image", image);
 		result.put("email", email);
 		result.put("authorized", authorized);
-		result.put("clientid", "4ae668d5ac2c803e23a8");
+		result.put("clientid", applicationManager.getClientId());
 		final String state = generateRandom();
 		result.put("state", state);
 		session.setAttribute("state", state);

@@ -35,6 +35,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	private File storeFolder;
 	private String codebase;
 	private final Set<TipiCallbackSession> sessionSet = new HashSet<TipiCallbackSession>();
+	protected String clientid;
+	protected String clientsecret;
+	protected String organization;
 	
 	public void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
 		this.configurationAdmin = configurationAdmin;
@@ -68,6 +71,10 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	
 	public void activate(Map<String,Object> configuration) throws IOException {
 		String path = (String) configuration.get("tipi.store.path");
+		
+		clientid = (String) configuration.get("tipi.store.clientid");
+		clientsecret = (String) configuration.get("tipi.store.clientsecret");
+		organization = (String) configuration.get("tipi.store.organization");
 		if(path==null) {
 			path = System.getProperty("tipi.store.path");
 		}
@@ -248,6 +255,24 @@ private void setAppsFolder(File appsFolder) throws IOException {
 	@Override
 	public Set<String> listApplications() {
 		return Collections.unmodifiableSet(applications);
+	}
+
+
+	@Override
+	public String getClientId() {
+		return this.clientid;
+	}
+
+
+	@Override
+	public String getClientSecret() {
+		return this.clientsecret;
+	}
+
+
+	@Override
+	public String getOrganization() {
+		return this.organization;
 	}
 
 }

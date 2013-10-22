@@ -263,6 +263,24 @@ private final static Logger logger = LoggerFactory
 					String application) {
 				return null;
 			}
+
+			@Override
+			public String getClientId() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public String getClientSecret() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public String getOrganization() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		});
 		ghs.process(mapper, node);
 		fis.close();
