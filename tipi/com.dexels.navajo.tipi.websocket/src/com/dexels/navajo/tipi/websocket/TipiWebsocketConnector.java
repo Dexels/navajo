@@ -7,21 +7,20 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketClient;
 import org.eclipse.jetty.websocket.WebSocketClientFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiWebsocketConnector {
-
-	private final static Logger logger = LoggerFactory
-			.getLogger(TipiWebsocketConnector.class);
 
 	private TipiContext context;
 
 	private final WebSocketClientFactory factory;
 
 	private WebSocket.Connection connection;
+
+	private URI uri;
+
+	private String sessionString;
 	
 
 
@@ -35,9 +34,17 @@ public class TipiWebsocketConnector {
 		connection.sendMessage(message);
 	}
 	
-	public void startup(URI uri) throws Exception {
+	public void startup(URI uri, String sessionString) throws Exception {
+			this.uri = uri;
+			this.sessionString = sessionString;
+			restart();
+	}
+
+	public void restart() throws Exception {
 		   WebSocketClient client = factory.newWebSocketClient();
-		   connection = client.open(uri, new WebsocketSession(context)).get(5, TimeUnit.SECONDS);
+		   connection = client.open(uri, new WebsocketSession(context,this)).get(5, TimeUnit.SECONDS);
+		   connection.sendMessage(sessionString);
+
 	}
 
 

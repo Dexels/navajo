@@ -35,7 +35,8 @@ public class TipiWebsocketExtension extends TipiAbstractXMLExtension implements 
 		try {
 			URI uri = new URI(appstoreUrl);
 			TipiWebsocketConnector twt = new TipiWebsocketConnector(tc);
-			twt.startup(uri);
+			final String sessionString = appstoreApplication+";"+appstoreTenant+";"+appstoreSession;
+			twt.startup(uri,sessionString);
 //			twt.sendMessage("tipi.appstore.session="+sessionRandom+"\n");
 //			twt.sendMessage("tipi.appstore.application="+appstoreApplication+"\n");
 //			twt.sendMessage("tipi.appstore.tenant="+appstoreTenant+"\n");
@@ -44,7 +45,7 @@ public class TipiWebsocketExtension extends TipiAbstractXMLExtension implements 
 			xe.setAttribute("session", appstoreSession);
 			xe.setAttribute("application", appstoreApplication);
 			xe.setAttribute("tenant", appstoreTenant);
-			twt.sendMessage(xe.toString());
+//			twt.sendMessage(xe.toString());
 		} catch (MalformedURLException e) {
 			logger.error("Error: ", e);
 		} catch (Exception e) {
