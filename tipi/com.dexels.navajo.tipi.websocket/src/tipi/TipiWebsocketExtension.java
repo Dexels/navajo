@@ -2,7 +2,13 @@ package tipi;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
 
+import org.eclipse.jetty.websocket.WebSocket;
+import org.eclipse.jetty.websocket.WebSocket.Connection;
+import org.eclipse.jetty.websocket.WebSocketClient;
+import org.eclipse.jetty.websocket.WebSocketClientFactory;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +18,7 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.tipixml.CaseSensitiveXMLElement;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.websocket.TipiWebsocketConnector;
+import com.dexels.navajo.tipi.websocket.WebsocketSession;
 
 public class TipiWebsocketExtension extends TipiAbstractXMLExtension implements TipiExtension {
 
@@ -54,6 +61,31 @@ public class TipiWebsocketExtension extends TipiAbstractXMLExtension implements 
 		
 	}
 
+	
+	public static void main(String[] args) throws Exception {
+		URI uri = new URI("wss://club.sportlink.com/websocket");
+		WebSocketClientFactory factory = new WebSocketClientFactory();
+		factory.start();
+		 WebSocketClient client = factory.newWebSocketClient();
+		  Connection connection = client.open(uri, new WebSocket.OnTextMessage(){
+
+			@Override
+			public void onClose(int arg0, String arg1) {
+				System.err.println("clooose");
+			}
+
+			@Override
+			public void onOpen(Connection arg0) {
+				System.err.println("oooopen!");
+				
+			}
+
+			@Override
+			public void onMessage(String s) {
+				System.err.println("message received: "+s);
+			}}).get(5, TimeUnit.SECONDS);
+		   connection.sendMessage("club;knvb;braaap");
+	}
 	@Override
 	public void start(BundleContext context) throws Exception {
 		registerTipiExtension(context);
