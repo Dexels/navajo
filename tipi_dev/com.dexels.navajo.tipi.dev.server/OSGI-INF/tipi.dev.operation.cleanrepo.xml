@@ -2,6 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="tipi.dev.operation.cleanrepo">
    <implementation class="com.dexels.navajo.tipi.dev.server.appmanager.operations.impl.CleanRepo"/>
    <reference bind="addApplicationStatus" cardinality="0..n" interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus" name="ApplicationStatus" policy="dynamic" unbind="removeApplicationStatus"/>
+   <reference bind="setApplicationManager" cardinality="1..1" interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager" name="ApplicationManager" policy="dynamic" unbind="clearApplicationManager"/>
    <service>
       <provide interface="com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation"/>
       <provide interface="javax.servlet.Servlet"/>
