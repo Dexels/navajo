@@ -72,6 +72,7 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 		extraHeaders.add("Permissions: all-permissions");
 		String applicationName = applicationManager.getApplicationName();
 		if(applicationName!=null) {
+			extraHeaders.add("Application-Name: "+applicationName);
 		}
 		String manifestCodebase = applicationManager.getManifestCodebase();
 		if(manifestCodebase!=null) {

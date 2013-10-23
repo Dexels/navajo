@@ -4,6 +4,7 @@
    <reference bind="addApplicationStatus" cardinality="0..n" interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus" name="ApplicationStatus" policy="dynamic" unbind="removeApplicationStatus"/>
    <service>
       <provide interface="com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation"/>
+      <provide interface="javax.servlet.Servlet"/>
    </service>
    <property name="osgi.command.scope" type="String" value="tipi"/>
    <property name="osgi.command.function" type="String">
