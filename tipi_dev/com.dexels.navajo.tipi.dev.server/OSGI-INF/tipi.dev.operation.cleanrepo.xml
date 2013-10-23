@@ -9,4 +9,5 @@
    <property name="osgi.command.function" type="String">
 		cleanrepo
    </property>
+   <property name="alias" type="String" value="/cleanrepo"/>
 </scr:component>

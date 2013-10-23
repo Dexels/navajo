@@ -26,4 +26,8 @@ public interface ApplicationManager {
 	public String getClientSecret();
 	
 	public String getOrganization();
+
+	public String getApplicationName();
+
+	public String getManifestCodebase();
 }

@@ -41,6 +41,7 @@ public class TipiWebsocketExtension extends TipiAbstractXMLExtension implements 
 
 		try {
 			URI uri = new URI(appstoreUrl);
+			logger.info("Connecting to: "+appstoreUrl);
 			TipiWebsocketConnector twt = new TipiWebsocketConnector(tc);
 			final String sessionString = appstoreApplication+";"+appstoreTenant+";"+appstoreSession;
 			twt.startup(uri,sessionString);

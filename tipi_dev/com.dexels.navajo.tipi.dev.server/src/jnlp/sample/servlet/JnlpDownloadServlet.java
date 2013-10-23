@@ -186,7 +186,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 		Enumeration<String> en = request.getHeaderNames();
 		while (en.hasMoreElements()) {
 			String key = (String) en.nextElement();
-			logger.info("HTTP Key: "+key+" header: "+request.getHeader(key));
+//			logger.info("HTTP Key: "+key+" header: "+request.getHeader(key));
 		}
 		// TipiAdminServlet.buildIfNecessary(request,getAppFolder(),getServletContext());
 //		Map en = request.getParameterMap();

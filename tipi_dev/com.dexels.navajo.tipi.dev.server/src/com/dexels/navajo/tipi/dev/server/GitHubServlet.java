@@ -155,11 +155,6 @@ private final static Logger logger = LoggerFactory
 				final ApplicationStatus application = findApplication(name,
 						branch);
 				try {
-					Thread.sleep(12000);
-				} catch (InterruptedException e1) {
-					logger.error("Error: ", e1);
-				}
-				try {
 					if (application instanceof GitApplicationStatus) {
 						GitApplicationStatus ga = (GitApplicationStatus) application;
 						try {
@@ -278,6 +273,18 @@ private final static Logger logger = LoggerFactory
 
 			@Override
 			public String getOrganization() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public String getApplicationName() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public String getManifestCodebase() {
 				// TODO Auto-generated method stub
 				return null;
 			}

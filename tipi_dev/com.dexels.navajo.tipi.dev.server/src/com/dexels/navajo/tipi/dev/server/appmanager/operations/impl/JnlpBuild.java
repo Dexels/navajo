@@ -70,7 +70,16 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 	public void build(ApplicationStatus a) throws IOException {
 		List<String> extraHeaders = new ArrayList<String>();
 		extraHeaders.add("Permissions: all-permissions");
-		extraHeaders.add("Codebase: *");
+		String applicationName = applicationManager.getApplicationName();
+		if(applicationName!=null) {
+		}
+		String manifestCodebase = applicationManager.getManifestCodebase();
+		if(manifestCodebase!=null) {
+			extraHeaders.add("Codebase: "+manifestCodebase);
+		} else {
+			extraHeaders.add("Codebase: *");
+		}
+		
 		
 		File unsigned = new File(a.getAppFolder(), "unsigned");
 

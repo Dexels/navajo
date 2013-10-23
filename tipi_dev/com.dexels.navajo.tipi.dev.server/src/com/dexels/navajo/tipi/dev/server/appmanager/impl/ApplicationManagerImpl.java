@@ -38,6 +38,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	protected String clientid;
 	protected String clientsecret;
 	protected String organization;
+	private String applicationName;
+	private String manifestCodebase;
 	
 	public void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
 		this.configurationAdmin = configurationAdmin;
@@ -75,6 +77,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		clientid = (String) configuration.get("tipi.store.clientid");
 		clientsecret = (String) configuration.get("tipi.store.clientsecret");
 		organization = (String) configuration.get("tipi.store.organization");
+		applicationName = (String) configuration.get("tipi.store.applicationname");
+		manifestCodebase = (String) configuration.get("tipi.store.manifestcodebase");
 		if(path==null) {
 			path = System.getProperty("tipi.store.path");
 		}
@@ -274,5 +278,16 @@ private void setAppsFolder(File appsFolder) throws IOException {
 	public String getOrganization() {
 		return this.organization;
 	}
+	
+	@Override
+	public String getApplicationName() {
+		return this.applicationName;
+	}
+	
+	@Override
+	public String getManifestCodebase() {
+		return this.manifestCodebase;
+	}
+
 
 }

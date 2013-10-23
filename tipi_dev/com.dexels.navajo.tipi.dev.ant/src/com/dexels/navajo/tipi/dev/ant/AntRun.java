@@ -60,7 +60,7 @@ public class AntRun {
 		p.setUserProperty("baseDir", baseDir.getAbsolutePath());		
 		if(userProperties!=null) {
 			for (Entry<String,String> w : userProperties.entrySet()) {
-				logger.info("Adding property: "+w.getKey()+" value: "+w.getValue());
+//				logger.info("Adding property: "+w.getKey()+" value: "+w.getValue());
 				p.setUserProperty(w.getKey(), w.getValue());		
 			}
 		}

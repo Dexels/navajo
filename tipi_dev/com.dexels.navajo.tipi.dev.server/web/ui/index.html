@@ -161,7 +161,7 @@
 				type : 'GET',
 				dataType : 'json',
 				url : url,
-				timeout : 15000,
+				timeout : 120000,
 				success : function(data, textStatus) {
 					$(".resultmsg").html(data);
 					btn.button('reset')
@@ -189,7 +189,7 @@
 				type : 'GET',
 				dataType : 'json',
 				url : url,
-				timeout : 15000,
+				timeout : 120000,
 				success : function(data, textStatus) {
 					$(".resultmsg").html(data);
 					loadApplicationData();
