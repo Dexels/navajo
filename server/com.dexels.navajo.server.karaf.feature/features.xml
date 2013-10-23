@@ -186,11 +186,11 @@
 		
 	</feature>	
 
-	<feature resolver="(obr)" name='tipi.appstore' version='1.0.16' start-level='81' >
+	<feature resolver="(obr)" name='tipi.appstore' version='1.0.17' start-level='81' >
 		<feature version="[1.0.5,2)">navajo.core</feature>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.core/1.1.12</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.core/1.1.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.ant/1.1.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.server/1.0.41</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
