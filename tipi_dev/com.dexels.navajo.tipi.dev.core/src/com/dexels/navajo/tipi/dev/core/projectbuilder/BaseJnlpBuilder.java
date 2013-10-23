@@ -183,7 +183,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 	}
 
 	private String createWebsocketUrl(String codebase, String applicationName) {
-		String url = assembleCodebase(codebase, applicationName,null);
+		String url = assembleCodebase(codebase, null,null);
 		String websock = url.replaceAll("http", "ws");
 		return websock+"/websocket";
 	}
@@ -201,7 +201,9 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			sb.append(context);
 			sb.append("/");
 		}
-		sb.append(applicationName);
+		if(applicationName!=null && !"".equals(applicationName)) {
+			sb.append(applicationName);
+		}
 		return sb.toString();
 	}
 
