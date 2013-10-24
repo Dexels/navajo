@@ -65,9 +65,10 @@ public class FileSystemResourceResolver implements ResourceResolver, ResourceVer
 	}
 
 	@Override
+	// TODO fix security
 	public void verifyResource(String path, File f) throws SecurityException, IOException {
-		String[] parts = path.split("/");
-		f.getCanonicalFile();
+//		String[] parts = path.split("/");
+//		f.getCanonicalFile();
 	}
 
 }

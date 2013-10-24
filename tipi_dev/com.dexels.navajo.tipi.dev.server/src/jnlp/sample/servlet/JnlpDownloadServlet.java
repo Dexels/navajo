@@ -38,7 +38,6 @@ package jnlp.sample.servlet;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -183,11 +182,11 @@ public class JnlpDownloadServlet extends HttpServlet {
 			HttpServletResponse response, boolean isHead) throws IOException {
 		String requestStr = request.getRequestURI();
 		// logger.info("Request: "+request.getRequestURI()+" query: "+request.getQueryString());
-		Enumeration<String> en = request.getHeaderNames();
-		while (en.hasMoreElements()) {
-			String key = (String) en.nextElement();
+//		Enumeration<String> en = request.getHeaderNames();
+//		while (en.hasMoreElements()) {
+//			String key = (String) en.nextElement();
 //			logger.info("HTTP Key: "+key+" header: "+request.getHeader(key));
-		}
+//		}
 		// TipiAdminServlet.buildIfNecessary(request,getAppFolder(),getServletContext());
 //		Map en = request.getParameterMap();
 //		for (Object key : en.keySet()) {

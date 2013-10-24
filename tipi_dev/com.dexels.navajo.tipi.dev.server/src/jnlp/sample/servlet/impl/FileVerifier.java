@@ -1,12 +1,12 @@
 package jnlp.sample.servlet.impl;
 
 import java.io.File;
-import java.nio.file.FileSystem;
 
 import jnlp.sample.servlet.ResourceVerifier;
 
 public class FileVerifier implements ResourceVerifier {
 
+	@SuppressWarnings("unused")
 	private File basePath;
 
 	public FileVerifier(File basePath) {

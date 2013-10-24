@@ -72,19 +72,18 @@ public class CallbackServlet extends WebSocketServlet implements Runnable {
 	}
 
 	
-	private void notifyMembers(String message) {
-
-		for(SCSocket member: members){
-			if(member.isOpen()){
-				try{
-					member.sendMessage(message);
-				} catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-		}
-	
-	}
+//	private void notifyMembers(String message) {
+//
+//		for(SCSocket member: members){
+//			if(member.isOpen()){
+//				try{
+//					member.sendMessage(message);
+//				} catch(Exception e){
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//	}
 
 	@Override
 	public void run() {

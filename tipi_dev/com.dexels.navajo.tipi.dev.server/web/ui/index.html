@@ -159,7 +159,7 @@
 		     btn.button('loading')
 			 $.ajax({
 				type : 'GET',
-				dataType : 'json',
+				dataType : 'text',
 				url : url,
 				timeout : 500000,
 				success : function(data, textStatus) {
@@ -168,7 +168,7 @@
 					},
 				error : function(xhr, textStatus, errorThrown) {
 					$(".resultmsg").html(errorThrown);
-					alert('send message failed');
+					alert('send message failed: '+textStatus+' error: '+errorThrown);
 					btn.button('reset')
 				}
 			});

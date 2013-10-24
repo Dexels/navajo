@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
@@ -30,10 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
 import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 import com.dexels.navajo.tipi.dev.server.appmanager.GitApplicationStatus;
-import com.dexels.navajo.tipi.dev.server.websocket.TipiCallbackSession;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 
