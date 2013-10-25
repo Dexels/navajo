@@ -32,42 +32,38 @@ public class ContextPathManager {
 
 	public void activate() throws IOException {
 		// TODO skip pull config for now
-		injectAll(new String[] { "com.dexels.navajo.runtime.provisioning.push" });
-
+		injectDirect();
+		injectAll("com.dexels.navajo.runtime.provisioning.push" );
+		
 		
 		// injectAll(new
 		// String[]{"com.dexels.navajo.runtime.provisioning.push","com.dexels.navajo.runtime.provisioning.pull"});
 
 	}
-
-	private void injectAll(String[] resourceTypes) throws IOException {
-		for (String resourceType : resourceTypes) {
-			Map<String, String> systemContexts = loadSystemContexts(resourceType);
-			inject(systemContexts, resourceType);
+	private void injectDirect() throws IOException {
+		String path = System.getProperty("navajo.path");
+		if(path!=null) {
+			logger.info("Injecting toplevel context resolved to: "+path);
+			createDefaultContext("/",path);
+		}
+	}
+	private void injectAll(String resourceType) throws IOException {
 //			navajo.context
 	
 			// bit odd to do it here, we need some refactoring.
 			String forcedNavajoPath = System.getProperty("navajo.context");
 			if(forcedNavajoPath!=null) {
+				Map<String, String> systemContexts = loadSystemContexts(resourceType);
+				inject(systemContexts, resourceType);
 				String resolved = systemContexts.get(forcedNavajoPath);
 				if(resolved!=null) {
 					logger.info("Injecting default context: "+forcedNavajoPath+" resolved to: "+resolved);
 					createDefaultContext(forcedNavajoPath,resolved);
 				}
 			}
-		}
 	}
 
-	// private Set<String> getContexts() {
-	// Set<String> result = new HashSet<String>();
-	// for (ContextIdentifier ci : contextIdentifiers) {
-	// String path = ci.getContextPath();
-	// if(path!=null) {
-	// result.add(path);
-	// }
-	// }
-	// return result;
-	// }
+
 
 	private void createDefaultContext(String forcedNavajoPath, String resolved) throws IOException {
 		Configuration cc = configurationAdmin.getConfiguration("navajo.server.http.osgi");
