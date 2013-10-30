@@ -31,6 +31,7 @@ public class RichTable extends JTable {
 		setBorder(null);
 
 		this.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
 			public void mouseMoved(MouseEvent e) {
 				highlightRowAt(e.getPoint());
 			}

@@ -23,6 +23,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public interface TipiDataComponent extends TipiComponent {
+	@Override
 	public Navajo getNavajo();
 
 	public void loadData(Navajo n, String method) throws TipiException,

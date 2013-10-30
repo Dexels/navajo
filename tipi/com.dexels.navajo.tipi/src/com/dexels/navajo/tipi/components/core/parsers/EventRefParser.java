@@ -30,6 +30,7 @@ public class EventRefParser extends BaseTipiParser {
 	public EventRefParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		if (event != null) {
 			EventRef er = new EventRef(expression, event);

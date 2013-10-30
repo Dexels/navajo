@@ -14,10 +14,12 @@ import com.dexels.navajo.document.*;
 public class TypeCheckInteger extends TypeChecker {
   public TypeCheckInteger() {
   }
-  public String getType() {
+  @Override
+public String getType() {
     return Property.INTEGER_PROPERTY;
   }
-  public String verify(Property p, String value) throws com.dexels.navajo.document.PropertyTypeException {
+  @Override
+public String verify(Property p, String value) throws com.dexels.navajo.document.PropertyTypeException {
    if (value==null) {
       return null;
     }

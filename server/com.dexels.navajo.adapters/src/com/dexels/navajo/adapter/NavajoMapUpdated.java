@@ -160,7 +160,8 @@ public boolean isBlock() {
   }
 
   
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
     this.access = access;
     this.config = DispatcherFactory.getInstance().getNavajoConfig();
     this.inMessage = access.getInDoc();
@@ -172,7 +173,8 @@ public boolean isBlock() {
     }
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
 
   }
 
@@ -850,7 +852,8 @@ protected void prepareSend(String method) {
     return new java.util.Date();
    }
 
-  public void kill() {
+  @Override
+public void kill() {
 
   }
 
@@ -937,20 +940,24 @@ protected void prepareSend(String method) {
 	  performOrderBy = b;
   }
 
-  public void afterRequest() throws UserException {
+  @Override
+public void afterRequest() throws UserException {
 	  if (method == null)
 		  throw new UserException(-1, "AsyncProxyMap: specify a method");
   }
 
-  public void afterResponse() {
+  @Override
+public void afterResponse() {
 	  access.setOutputDoc(inDoc);
   }
 
-  public int getPercReady() {
+  @Override
+public int getPercReady() {
 	  return 0;
   }
 
-  public void beforeResponse(Access access) {
+  @Override
+public void beforeResponse(Access access) {
 	  access.setOutputDoc(inDoc);
   }
 
@@ -966,7 +973,8 @@ protected void prepareSend(String method) {
 	      // Why? Don't think this is the place.
 	      if ( performOrderBy ) {
 	    	  OutputStream os = new OutputStream(){
-	    		  public void write(int b) throws IOException {
+	    		  @Override
+				public void write(int b) throws IOException {
 	    			  // do nothing
 	    		  } 
 	    	  };
@@ -1058,7 +1066,8 @@ protected void prepareSend(String method) {
 	 
   }
   
-  public void run()  {
+  @Override
+public void run()  {
 	  logger.debug("Entering run...");
 	  Header h = outDoc.getHeader();
 	  if (h == null) {
@@ -1226,7 +1235,8 @@ public void setTaskId(String t) {
 	  return false;
   }
   
-  public DependentResource[] getDependentResourceFields() {
+  @Override
+public DependentResource[] getDependentResourceFields() {
 	  return new DependentResource[]{new GenericDependentResource(GenericDependentResource.SERVICE_DEPENDENCY, "doSend", AdapterFieldDependency.class), 
 			                         new GenericDependentResource("navajoserver", "server", AdapterFieldDependency.class)};
   }
@@ -1305,15 +1315,18 @@ public void onResponse(Navajo response) {
 
   }
 
-  public void abort(String reason) {
+  @Override
+public void abort(String reason) {
 	  logger.warn("Aborting navajomap: "+reason);
   }
 
-  public void endTransaction() throws IOException {
+  @Override
+public void endTransaction() throws IOException {
 
   }
 
-  public Navajo getInputNavajo() throws IOException {
+  @Override
+public Navajo getInputNavajo() throws IOException {
 	  return null;
   }
 
@@ -1321,15 +1334,18 @@ public void onResponse(Navajo response) {
 	  return null;
   }
 
-  public boolean isAborted() {
+  @Override
+public boolean isAborted() {
 	  return false;
   }
 
-  public boolean isCommitted() {
+  @Override
+public boolean isCommitted() {
 	  return false;
   }
 
-  public void setCommitted(boolean b) {
+  @Override
+public void setCommitted(boolean b) {
 
   }
 
@@ -1340,7 +1356,8 @@ public void setException(Exception e) {
 
   }
 
-  public void setScheduledAt(long currentTimeMillis) {
+  @Override
+public void setScheduledAt(long currentTimeMillis) {
 
   }
 
@@ -1358,6 +1375,7 @@ public String getUrl() {
 
 
 
+@Override
 public void setResponseNavajo(Navajo n)  {
 	logger.debug("Result of calling navajo map:");	
 	n.write(System.err);

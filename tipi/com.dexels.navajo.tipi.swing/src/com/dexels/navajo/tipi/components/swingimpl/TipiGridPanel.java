@@ -48,6 +48,7 @@ public class TipiGridPanel extends TipiPanel {
 	public TipiGridPanel() {
 	}
 
+	@Override
 	public Object createContainer() {
 		gridComponent = (JPanel) super.createContainer();
 		gridBagLayout = new GridBagLayout();
@@ -59,10 +60,12 @@ public class TipiGridPanel extends TipiPanel {
 		return gridComponent;
 	}
 
+	@Override
 	public void setContainerLayout(Object layout) {
 		// ignore
 	}
 
+	@Override
 	public void addToContainer(Object o, Object constraints) {
 		String constr = (String) constraints;
 		Component c = (Component) o;
@@ -74,6 +77,7 @@ public class TipiGridPanel extends TipiPanel {
 		gridComponent.add(c, gc);
 	}
 
+	@Override
 	public void initBeforeBuildingChildren(XMLElement instance,
 			XMLElement classdef, XMLElement def) {
 		String ss = instance.getStringAttribute("columnWidth");
@@ -96,6 +100,7 @@ public class TipiGridPanel extends TipiPanel {
 			 */
 			private static final long serialVersionUID = 7226730727439155711L;
 
+			@Override
 			public String toString() {
 				return this.ipadx + " - " + ipady + " " + txt;
 			}
@@ -285,6 +290,7 @@ public class TipiGridPanel extends TipiPanel {
 	//
 	// }
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 
 		if ("columnWidth".equals(name)) {
@@ -292,6 +298,7 @@ public class TipiGridPanel extends TipiPanel {
 
 		}
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				if ("visible".equals(name)) {
 					boolean v = ((Boolean) object).booleanValue();
@@ -379,6 +386,7 @@ public class TipiGridPanel extends TipiPanel {
 			this.y = y;
 		}
 
+		@Override
 		public boolean equals(Object o) {
 			if (o == null) {
 				return false;
@@ -400,6 +408,7 @@ public class TipiGridPanel extends TipiPanel {
 		}
 
         
+		@Override
 		public String toString() {
 			return "{" + x + "," + y + "}";
 		}

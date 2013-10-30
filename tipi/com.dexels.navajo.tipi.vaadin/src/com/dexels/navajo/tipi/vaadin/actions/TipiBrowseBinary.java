@@ -47,6 +47,7 @@ public class TipiBrowseBinary extends TipiVaadinActionImpl {
 	
 	private Binary outputBinary = null;
 
+	@Override
 	protected void execute(TipiEvent event) throws TipiBreakException,
 			TipiException {
 		Operand value = getEvaluatedParameter("property", event);

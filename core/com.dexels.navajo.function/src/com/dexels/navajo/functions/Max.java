@@ -19,15 +19,18 @@ import com.dexels.navajo.parser.Utils;
 
 public final class Max extends FunctionInterface {
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Return the maximum of to given numbers.";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "Max(number, number), where number can be of type integer or double.";
     }
 
-    @SuppressWarnings("rawtypes")
+    @Override
+	@SuppressWarnings("rawtypes")
 	public final Object evaluate() throws TMLExpressionException {
 
         List<?> operands = this.getOperands();

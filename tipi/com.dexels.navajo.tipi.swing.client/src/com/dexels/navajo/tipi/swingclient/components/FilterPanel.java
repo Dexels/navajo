@@ -67,7 +67,7 @@ public class FilterPanel extends JPanel {
 			.getBundle("com.dexels.navajo.tipi.swingclient.components.filterpanelstrings");
 	private JPanel flipPanel = new JPanel();
 	private JPanel columnPanel = new JPanel();
-	private JComboBox columnSelectBox = new JComboBox();
+	private JComboBox<String> columnSelectBox = new JComboBox<String>();
 	private GenericPropertyComponent valueField = new GenericPropertyComponent();
 	private JButton addButton = new JButton();
 	private JButton clearButton = new JButton();
@@ -82,7 +82,7 @@ public class FilterPanel extends JPanel {
 	private JButton emailButton = new JButton();
 
 	private HashMap<String, String> nameIdMap = new HashMap<String, String>();
-	JComboBox operatorBox = new JComboBox();
+	JComboBox<OperatorItem> operatorBox = new JComboBox<OperatorItem>();
 
 	private boolean babyMode = false;
 
@@ -127,6 +127,7 @@ public class FilterPanel extends JPanel {
 		columnsSaveButton.setVisible(false);
 		columnsSaveButton
 				.addActionListener(new java.awt.event.ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						columnsSaveButton_actionPerformed(e);
 					}
@@ -138,6 +139,7 @@ public class FilterPanel extends JPanel {
 		excelButton.setMargin(new Insets(0, 0, 0, 0));
 		excelButton.setVisible(false);
 		excelButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				Message data = null;
 				if (myTable != null) {
@@ -150,12 +152,14 @@ public class FilterPanel extends JPanel {
 		});
 
 		emailButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				sendEmails();
 			}
 		});
 
 		columnSelectBox.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				columnSelectBox_actionPerformed(e);
 			}
@@ -172,6 +176,7 @@ public class FilterPanel extends JPanel {
 		addButton.setIcon(new ImageIcon(FilterPanel.class
 				.getResource("add-filter.gif")));
 		addButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				addButton_actionPerformed(e);
 			}
@@ -180,11 +185,13 @@ public class FilterPanel extends JPanel {
 		clearButton.setIcon(new ImageIcon(FilterPanel.class
 				.getResource("clear-filter.gif")));
 		clearButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				clearButton_actionPerformed(e);
 			}
 		});
 		columnsButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				columnsButton_actionPerformed(e);
 			}
@@ -504,8 +511,8 @@ public class FilterPanel extends JPanel {
 
 	private final void setupBabyFilter() {
 		operatorBox
-				.setModel(new DefaultComboBoxModel(
-						new Object[] {
+				.setModel(new DefaultComboBoxModel<OperatorItem>(
+						new OperatorItem[] {
 								new OperatorItem(res
 										.getString("operatorEquals"), "=="),
 
@@ -525,8 +532,8 @@ public class FilterPanel extends JPanel {
 
 	private final void setupAdvancedFilter() {
 		operatorBox
-				.setModel(new DefaultComboBoxModel(
-						new Object[] {
+				.setModel(new DefaultComboBoxModel<OperatorItem>(
+						new OperatorItem[] {
 								new OperatorItem(res
 										.getString("operatorEquals"), "=="),
 								new OperatorItem(res

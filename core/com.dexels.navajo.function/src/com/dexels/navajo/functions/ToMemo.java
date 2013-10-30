@@ -17,11 +17,13 @@ public class ToMemo extends FunctionInterface {
   public ToMemo() {
   }
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Cast a string to a memo object";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object o = getOperand(0);
    if (o == null) {
      return new Memo("");
@@ -31,7 +33,8 @@ public class ToMemo extends FunctionInterface {
    }
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "ToMemo(String): Memo";
   }
 

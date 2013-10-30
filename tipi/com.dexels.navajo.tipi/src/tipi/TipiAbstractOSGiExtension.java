@@ -91,6 +91,7 @@ public abstract class TipiAbstractOSGiExtension extends AbstractCoreExtension im
 	}
 
 
+	@Override
 	public BundleContext getBundleContext() {
 		return context;
 	}

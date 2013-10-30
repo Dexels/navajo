@@ -32,6 +32,7 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 
 	private String tabText;
 
+	@Override
 	public String getTabTooltip() {
 		return tabTooltip;
 	}
@@ -42,6 +43,7 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 		firePropertyChange("tabToolTip", old, tabToolTip);
 	}
 
+	@Override
 	public Icon getTabIcon() {
 		return tabIcon;
 	}
@@ -59,10 +61,12 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 		return index;
 	}
 
+	@Override
 	public void setIndex(int index) {
 		this.index = index;
 	}
 
+	@Override
 	public Color getTabForegroundColor() {
 		return tabForegroundColor;
 	}
@@ -73,6 +77,7 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 		firePropertyChange("tabForegroundColor", old, tabBackgroundColor);
 	}
 
+	@Override
 	public Color getTabBackgroundColor() {
 		return tabBackgroundColor;
 	}

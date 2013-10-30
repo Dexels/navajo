@@ -58,21 +58,26 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 	public float max_radius = 400f;
 	public Animator anim;
 
+	@Override
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 
 				canvas = new GLCanvas() {
 					private static final long serialVersionUID = 1L;
 
+					@Override
 					public Dimension getMaximumSize() {
 						return new Dimension(0, 0);
 					}
 
+					@Override
 					public Dimension getMinimumSize() {
 						return new Dimension(0, 0);
 					}
 
+					@Override
 					public Dimension getPreferredSize() {
 						return new Dimension(0, 0);
 					}
@@ -89,6 +94,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 		canvas.addGLEventListener(this);
 
 		canvas.addMouseListener(new MouseListener() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				mouseLocation = e.getPoint();
 				pickPoint = e.getPoint();
@@ -102,15 +108,19 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 
 			}
 
+			@Override
 			public void mouseClicked(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseEntered(MouseEvent arg0) {
 			}
 
+			@Override
 			public void mouseExited(MouseEvent arg0) {
 			}
 
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				if (e.isAltDown()) {
 					previousPanPoint = new Point(panPoint.x, panPoint.y);
@@ -119,6 +129,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 		});
 
 		canvas.addMouseMotionListener(new MouseMotionListener() {
+			@Override
 			public void mouseDragged(MouseEvent e) {
 				mouseLocation = e.getPoint();
 				pickPoint = e.getPoint();
@@ -127,6 +138,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 				}
 			}
 
+			@Override
 			public void mouseMoved(MouseEvent e) {
 				pickPoint = e.getPoint();
 				repaintCanvas();
@@ -134,6 +146,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 		});
 
 		canvas.addMouseWheelListener(new MouseWheelListener() {
+			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				if (e.isControlDown()) {
 					int amt = e.getWheelRotation();
@@ -213,12 +226,14 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 
 	public void repaintCanvas() {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				canvas.repaint();
 			}
 		});
 	}
 
+	@Override
 	public void display(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glMatrixMode(GL2.GL_PROJECTION);
@@ -330,6 +345,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
 	}
 
+	@Override
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 		float values[] = new float[2];
@@ -390,6 +406,7 @@ public class RDFGraph extends TipiDataComponentImpl implements GLEventListener {
 		repaintCanvas();
 	}
 
+	@Override
 	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
 		super.loadData(n, method);
 		if ("rdf/InitGetConnections".equals(method)) {

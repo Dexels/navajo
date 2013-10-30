@@ -19,6 +19,7 @@ public class TipiMailExtension extends TipiAbstractXMLExtension implements TipiE
 	
 	public TipiMailExtension() {
 	}
+	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
 		

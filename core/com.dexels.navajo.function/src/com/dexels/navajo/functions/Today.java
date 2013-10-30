@@ -7,17 +7,20 @@ import com.dexels.navajo.parser.FunctionInterface;
 
 public final class Today extends FunctionInterface {
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Today() returns the current date, with time at 00:00";
   }
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Calendar c = Calendar.getInstance();
     c.set(Calendar.HOUR_OF_DAY, 0);
     c.set(Calendar.MINUTE, 0);
     c.set(Calendar.SECOND, 0);
     return c.getTime();
   }
-  public String usage() {
+  @Override
+public String usage() {
     return "Today()";
   }
 

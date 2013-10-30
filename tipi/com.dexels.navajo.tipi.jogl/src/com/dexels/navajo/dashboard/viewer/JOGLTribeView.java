@@ -112,21 +112,26 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 	private ArrayList<String> tribeMessages = new ArrayList<String>();
 	private String conferenceName = "";
 
+	@Override
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 
 				canvas = new GLCanvas() {
 					private static final long serialVersionUID = 1L;
 
+					@Override
 					public Dimension getMaximumSize() {
 						return new Dimension(0, 0);
 					}
 
+					@Override
 					public Dimension getMinimumSize() {
 						return new Dimension(0, 0);
 					}
 
+					@Override
 					public Dimension getPreferredSize() {
 						return new Dimension(0, 0);
 					}
@@ -143,6 +148,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		canvas.addGLEventListener(this);
 
 		canvas.addMouseListener(new MouseListener() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				logger.info("Clicked tribe: " + mouseOverTribe + ", child: " + mouseOverChild);
 
@@ -238,24 +244,30 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 				}
 			}
 
+			@Override
 			public void mouseClicked(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseEntered(MouseEvent arg0) {
 			}
 
+			@Override
 			public void mouseExited(MouseEvent arg0) {
 			}
 
+			@Override
 			public void mouseReleased(MouseEvent e) {
 			}
 		});
 
 		canvas.addMouseMotionListener(new MouseMotionListener() {
+			@Override
 			public void mouseDragged(MouseEvent e) {
 
 			}
 
+			@Override
 			public void mouseMoved(MouseEvent e) {
 				if (mouseOverTribe > -1) {
 					canvas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -268,6 +280,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		});
 
 		canvas.addMouseWheelListener(new MouseWheelListener() {
+			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				int amt = e.getWheelRotation();
 				if ((maxTribeRadius - 10 * amt) > 0) {
@@ -399,6 +412,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		conferenceAnimator.setAcceleration(.4f);
 		conferenceAnimator.setDeceleration(.2f);
 		conferenceAnimator.addTarget(new TimingTargetAdapter() {
+			@Override
 			public void end() {
 				// startOrbiter();
 				selectConference = false;
@@ -424,6 +438,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		conferenceAnimator.setAcceleration(.4f);
 		conferenceAnimator.setDeceleration(.2f);
 		conferenceAnimator.addTarget(new TimingTargetAdapter() {
+			@Override
 			public void end() {
 				selectedConference = -1;
 			}
@@ -546,6 +561,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 				radiusAnim.setAcceleration(.8f);
 				radiusAnim.setDeceleration(.1f);
 				radiusAnim.addTarget(new TimingTargetAdapter() {
+					@Override
 					public void end() {
 						applyTribeFocus(tribe_id, sub_tribe);
 					}
@@ -650,6 +666,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	public void display(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glMatrixMode(GL2.GL_PROJECTION);
@@ -691,6 +708,7 @@ public class JOGLTribeView extends TipiDataComponentImpl implements GLEventListe
 
 	public void repaintCanvas() {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				canvas.repaint();
 			}

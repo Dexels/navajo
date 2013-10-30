@@ -135,7 +135,8 @@ private Double value;
    * Get the default String representation of this Percentage object
    * @return String
    */
-  public final String toString() {
+  @Override
+public final String toString() {
     if (value == null) {
       return "";
     }
@@ -153,7 +154,8 @@ private Double value;
     return value.doubleValue();
   }
 
-  public final int compareTo(Percentage o) {
+  @Override
+public final int compareTo(Percentage o) {
     if (o ==null) {
       return 0;
     }
@@ -167,14 +169,16 @@ private Double value;
     return -1;
   }
 
-  public int hashCode() {
+  @Override
+public int hashCode() {
 	if ( value == null ) {
 		return 434343;
 	}
 	return value.hashCode();
   }
   
-  public boolean equals(Object obj) {
+  @Override
+public boolean equals(Object obj) {
 
     if (value == null && obj == null) {
       return true;
@@ -196,6 +200,7 @@ private Double value;
     }
   }
 
+@Override
 public boolean isEmpty() {
     return value==null;
 }

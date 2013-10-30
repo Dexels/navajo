@@ -49,7 +49,8 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      * 
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public Object[] getElements(Object inputElement) {
+    @Override
+	public Object[] getElements(Object inputElement) {
         Object[] oo = null;
         if (inputElement instanceof Message) {
             Message m = (Message) inputElement;
@@ -73,7 +74,8 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      * 
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
     /*
@@ -82,7 +84,8 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
      *      java.lang.Object, java.lang.Object)
      */
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    @Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
     }
 
     /*
@@ -91,7 +94,8 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object,
      *      int)
      */
-    public Image getColumnImage(Object element, int columnIndex) {
+    @Override
+	public Image getColumnImage(Object element, int columnIndex) {
         return null;
     }
 
@@ -101,7 +105,8 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object,
      *      int)
      */
-    public String getColumnText(Object element, int columnIndex) {
+    @Override
+	public String getColumnText(Object element, int columnIndex) {
         if (!(element instanceof Message)) {
             logger.info("Class cast ex: " + element.getClass());
         }
@@ -142,18 +147,21 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object,
      *      java.lang.String)
      */
-    public boolean isLabelProperty(Object element, String property) {
+    @Override
+	public boolean isLabelProperty(Object element, String property) {
 
         return false;
     }
 
-    public Color getForeground(Object element) {
+    @Override
+	public Color getForeground(Object element) {
         // Always use default.
         return null;
     }
 
     /** @see IColorProvider#getBackground(Object) */
-    public Color getBackground(Object element) {
+    @Override
+	public Color getBackground(Object element) {
         Message m = (Message) element;
         int ii = m.getIndex();
 //        logger.info("Checking index: " + ii);
@@ -176,7 +184,8 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      * 
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
-    public Object[] getChildren(Object parentElement) {
+    @Override
+	public Object[] getChildren(Object parentElement) {
         Message m = (Message) parentElement;
         Object[] oo = m.getAllMessages().toArray();
 //        logger.info("MessageContentProvider returning: " + oo.length);
@@ -189,7 +198,8 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      * 
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
-    public Object getParent(Object element) {
+    @Override
+	public Object getParent(Object element) {
         Message m = (Message) element;
         return m.getParentMessage();
         //       return null;
@@ -200,7 +210,8 @@ public class MessageContentProvider extends LabelProvider implements IStructured
      * 
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
-    public boolean hasChildren(Object element) {
+    @Override
+	public boolean hasChildren(Object element) {
         Message m = (Message) element;
         return m.getArraySize() > 0;
         //        return false;

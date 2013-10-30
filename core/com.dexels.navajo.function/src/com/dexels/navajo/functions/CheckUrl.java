@@ -17,15 +17,18 @@ public final class CheckUrl extends FunctionInterface {
 	private final static Logger logger = LoggerFactory
 			.getLogger(CheckUrl.class);
 	
+	@Override
 	public String remarks() {
 		return "This function will check whether it returns a valid stream. It will throw an exception when the the URL is malformed, it returns false when the string is null";
 	}
 
+	@Override
 	public String usage() {
 		
 		return "Used to check if an URL is responding.";
 	}
 
+	@Override
 	public final Object evaluate() throws TMLExpressionException {
 	      // input (ArrayList, Object).
         if (this.getOperands().size() != 1)

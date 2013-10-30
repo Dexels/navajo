@@ -32,7 +32,8 @@ public class NewScriptWizardPage extends WizardPage {
     /**
      * @see IDialogPage#createControl(Composite)
      */
-    public void createControl(Composite parent) {
+    @Override
+	public void createControl(Composite parent) {
         Composite container = new Composite(parent, SWT.NULL);
         GridLayout layout = new GridLayout();
         container.setLayout(layout);
@@ -51,7 +52,8 @@ public class NewScriptWizardPage extends WizardPage {
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         containerText.setLayoutData(gd);
         containerText.addModifyListener(new ModifyListener() {
-            public void modifyText(ModifyEvent e) {
+            @Override
+			public void modifyText(ModifyEvent e) {
                 dialogChanged();
             }
         });
@@ -82,7 +84,8 @@ public class NewScriptWizardPage extends WizardPage {
         //		fileText.setLayoutData(gd);
 
         containerText.addModifyListener(new ModifyListener() {
-            public void modifyText(ModifyEvent e) {
+            @Override
+			public void modifyText(ModifyEvent e) {
                 dialogChanged();
             }
         });

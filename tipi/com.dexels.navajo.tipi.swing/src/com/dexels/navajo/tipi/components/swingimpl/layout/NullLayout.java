@@ -47,18 +47,22 @@ public class NullLayout implements LayoutManager2 {
 		mySize = new Dimension(mySize.width, h);
 	}
 
+	@Override
 	public void addLayoutComponent(Component arg0, Object arg1) {
 		components.put(arg0, (Rectangle) arg1);
 	}
 
+	@Override
 	public float getLayoutAlignmentX(Container arg0) {
 		return 0;
 	}
 
+	@Override
 	public float getLayoutAlignmentY(Container arg0) {
 		return 0;
 	}
 
+	@Override
 	public void invalidateLayout(Container arg0) {
 
 	}
@@ -67,10 +71,12 @@ public class NullLayout implements LayoutManager2 {
 		return parent;
 	}
 
+	@Override
 	public Dimension maximumLayoutSize(Container parent) {
 		return new Dimension(Integer.MAX_VALUE,Integer.MAX_VALUE);
 	}
 
+	@Override
 	public void layoutContainer(Container parent) {
 		this.parent = parent;
 		for (Component c : components.keySet()) {
@@ -95,10 +101,12 @@ public class NullLayout implements LayoutManager2 {
 		
 	}
 	
+	@Override
 	public Dimension minimumLayoutSize(Container parent) {
 		return new Dimension(0,0);
 	}
 
+	@Override
 	public Dimension preferredLayoutSize(Container parent) {
 		Dimension d = calculateLayoutSize();
 		return d;
@@ -121,10 +129,12 @@ public class NullLayout implements LayoutManager2 {
 		return d;
 	}
 
+	@Override
 	public void removeLayoutComponent(Component comp) {
 		components.remove(comp);
 	}
 
+	@Override
 	public void addLayoutComponent(String name, Component comp) {
 		// logger.debug("que?");
 	}

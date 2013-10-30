@@ -31,9 +31,11 @@ public class Exists extends FunctionInterface {
 	
 	public Exists() {
 	}
+	@Override
 	public String remarks() {
 		return "Evaluates a condition (expression evaluating to a boolean) under any the messages of an array message. It will return a 'OR' of all the results";
 	}
+	@Override
 	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		/**@todo Implement this com.dexels.navajo.parser.FunctionInterface abstract method*/
         Message arrayMessage = null;
@@ -111,6 +113,7 @@ public class Exists extends FunctionInterface {
 		
 		return Boolean.FALSE;
 	}
+	@Override
 	public String usage() {
 		return "Exists('ArrayMessage','Expression'[, 'Filter']) *ArrayMessage can be both a path and a message";
 	}

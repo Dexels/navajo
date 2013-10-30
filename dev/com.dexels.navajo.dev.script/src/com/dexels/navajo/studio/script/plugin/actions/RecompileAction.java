@@ -38,15 +38,16 @@ public class RecompileAction extends BaseNavajoAction {
      * 
      * @see IWorkbenchWindowActionDelegate#run
      */
-    public void run(IAction action) {
+    @Override
+	public void run(IAction action) {
             new WorkspaceJob("Recompiling..."){
 
                @Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
                    try {
                        
-                       for (Iterator iter = selectionList.iterator(); iter.hasNext();) {
-                           IResource element = (IResource) iter.next();
+                       for (Iterator<IResource> iter = selectionList.iterator(); iter.hasNext();) {
+                           IResource element = iter.next();
                            element.touch(null);
                            if (element instanceof IFolder) {
                                IFolder ff = (IFolder)element;

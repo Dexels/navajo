@@ -39,6 +39,7 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 	public TipiAbstractXMLExtension() {
 	}
 
+	@Override
 	public final void loadDescriptor() {
 		String xmlName =  getClass().getSimpleName() + ".xml";
 		loadXMLClass(xmlName);
@@ -118,27 +119,33 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 		}
 	}
 
+	@Override
 	@Deprecated
 	public final String getConnectorId() {
 		return null;
 	}
 
+	@Override
 	public final List<String> getDependingProjectUrls() {
 		return thirdPartyList;
 	}
 
+	@Override
 	public final String getDescription() {
 		return description;
 	}
 
+	@Override
 	public final String getId() {
 		return id;
 	}
 
+	@Override
 	public final boolean isMainImplementation() {
 		return isMain;
 	}
 
+	@Override
 	public final String[] getIncludes() {
 		String[] in = new String[includes.size()];
 		for (int i = 0; i < in.length; i++) {
@@ -157,14 +164,17 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 		return null;
 	}
 
+	@Override
 	public final String getProjectName() {
 		return project;
 	}
 
+	@Override
 	public final List<String> getRequiredExtensions() {
 		return requires;
 	}
 
+	@Override
 	public final String requiresMainImplementation() {
 		return requiresMain;
 	}
@@ -174,6 +184,7 @@ public abstract class TipiAbstractXMLExtension extends AbstractTipiExtension
 		return getClass().getClassLoader();
 	}
 
+	@Override
 	public void setExtensionClassloader(ClassLoader extensionClassLoader) {
 //		logger.info("Ignoring setExtensionClassLoader");
 	}

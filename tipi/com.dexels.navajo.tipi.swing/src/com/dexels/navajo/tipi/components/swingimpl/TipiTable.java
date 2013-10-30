@@ -90,11 +90,13 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 	private int selectedMessageIndex = -1;
 	private List<XMLElement> columnList = new ArrayList<XMLElement>();
 
+	@Override
 	public Object createContainer() {
 		mm = new TipiMessageTablePanel(myContext, this);
 		mm.setShowRowHeaders(false);
 		// Don't register actionPerformed, that is done elsewhere.
 		mm.addListSelectionListener(new ListSelectionListener() {
+			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if (!e.getValueIsAdjusting()) {
 					
@@ -110,11 +112,13 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		mm.setFocusable(false);
 		mm.addFocusListener(new FocusListener() {
 
+			@Override
 			public void focusGained(FocusEvent e) {
 				if (e.getOppositeComponent() != null) {
 				}
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				if (e.getOppositeComponent() != null) {
 
@@ -129,12 +133,14 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 
 		mm.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				messageTableActionPerformed(e);
 			}
 		});
 
 		mm.getTable().addKeyListener(new KeyListener() {
+			@Override
 			public void keyTyped(KeyEvent e) {
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "typed");
@@ -146,6 +152,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 				}
 			}
 
+			@Override
 			public void keyPressed(KeyEvent e) {
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "pressed");
@@ -167,6 +174,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "released");
@@ -208,6 +216,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		super.showPopup(e);
 	}
 
+	@Override
 	public final void load(XMLElement elm, XMLElement instance,
 			TipiContext context) throws com.dexels.navajo.tipi.TipiException {
 		// mm = (MessageTablePanel) getContainer();
@@ -277,6 +286,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		}
 		mm.setColumnAttributes(columnAttributes);
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				mm.setFooterRenderer(myFooterRenderer);
 			}
@@ -417,6 +427,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		columnCondition.add(condition);
 	}
 
+	@Override
 	public String[] getCustomChildTags() {
 		return new String[] { "column", "column-attribute", "remarks",
 				"columndivider" };
@@ -445,6 +456,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		tempMap.put("selectedMessage", mm.getSelectedMessage());
 		setWaitCursor(true);
 		performTipiEvent("onActionPerformed", tempMap, false, new Runnable() {
+			@Override
 			public void run() {
 				setWaitCursor(false);
 			}
@@ -458,6 +470,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 
 		super.loadData(n, method);
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				flushAggregateValues();
 				updateConditionalRemarks();
@@ -470,6 +483,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 			// logger.debug("MEssage: "+myMessage);
 			if (m != null) {
 				runSyncInEventThread(new Runnable() {
+					@Override
 					public void run() {
 						// first reload the columns using the message found
 						try {
@@ -569,8 +583,10 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 	protected void doPerformOnLoad(String method, Navajo n, boolean sync) {
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			@SuppressWarnings("unchecked")
 			public void run() {
 				if (name.equals("filtersvisible")) {
@@ -725,6 +741,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		mtp.setColumnsVisible(b);
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if (name != null) {
 			if (name.equals("selectedMessage")) {
@@ -783,6 +800,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 				return m;
 			} else if (name.equals("selectedIndex")) {
 				runSyncInEventThread(new Runnable() {
+					@Override
 					public void run() {
 						if (mm != null) {
 							selectedMessageIndex = mm.getSelectedRow();
@@ -803,10 +821,12 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		}
 	}
 
+	@Override
 	protected void performComponentMethod(final String name,
 			final TipiComponentMethod compMeth, final TipiEvent event) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				int count = mm.getRowCount();
 				if (count != 0) {
@@ -1021,6 +1041,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 	protected void editCell(final Property value) {
 		SwingUtilities.invokeLater(new Runnable() {
 
+			@Override
 			public void run() {
 				mm.editCell(value);
 			}
@@ -1031,6 +1052,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 		mm.setColumnDefinitionSavePath(path);
 	}
 
+	@Override
 	public void stateChanged(ChangeEvent e) {
 		Map<String, Object> m = (Map<String, Object>) e.getSource();
 		Object old = m.get("old");
@@ -1058,6 +1080,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 	public void addAggregate(int columnIndex, String expression) {
 		if (myFooterRenderer == null) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					myFooterRenderer = new MessageTableFooterRenderer(
 							TipiTable.this);

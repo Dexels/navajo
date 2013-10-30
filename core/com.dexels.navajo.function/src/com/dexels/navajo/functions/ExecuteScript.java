@@ -23,11 +23,13 @@ import com.dexels.navajo.server.GenericHandler;
 
 public class ExecuteScript extends FunctionInterface {
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "ExecuteScript is used execute a Navajo script, the result is a Binary (xml) object";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     GenericHandler gh = new GenericHandler(DispatcherFactory.getInstance().getNavajoConfig());
     String script = (String) getOperand(0);
     Access access = new Access(1, 1, 1, "ANONYMOUS", script, "", "", "", false, null);
@@ -57,7 +59,8 @@ public class ExecuteScript extends FunctionInterface {
     }
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "ExecuteScript(<script>)";
   }
 

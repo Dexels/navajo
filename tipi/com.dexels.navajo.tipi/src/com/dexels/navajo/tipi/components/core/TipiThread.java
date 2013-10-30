@@ -55,6 +55,7 @@ public class TipiThread extends Thread implements Comparable<TipiThread>, Serial
 		myPool.setThreadState(state);
 	}
 
+	@Override
 	public void run() {
 		while (true) {
 			try {
@@ -124,6 +125,7 @@ public class TipiThread extends Thread implements Comparable<TipiThread>, Serial
 		}
 	}
 
+	@Override
 	public int compareTo(TipiThread o) {
 		return getName().compareTo(o.getName());
 	}

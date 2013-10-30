@@ -23,9 +23,11 @@ public class TipiUndecoratedWindow extends TipiSwingDataComponentImpl {
 	TipiSwingPanel myPanel = null;
 	private Rectangle myBounds = new Rectangle();
 
+	@Override
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				myPanel = new TipiSwingPanel(TipiUndecoratedWindow.this);
 				TipiHelper th = new TipiSwingHelper();
@@ -38,8 +40,10 @@ public class TipiUndecoratedWindow extends TipiSwingDataComponentImpl {
 		return myPanel;
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				if (name.equals("x")) {
 					myBounds.x = (Integer) object;
@@ -59,11 +63,13 @@ public class TipiUndecoratedWindow extends TipiSwingDataComponentImpl {
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public void loadData(final Navajo n, final String method)
 			throws TipiException {
 		myNavajo = n;
 		myMethod = method;
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					TipiUndecoratedWindow.super.loadData(n, method);

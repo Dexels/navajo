@@ -272,7 +272,8 @@ public final class DatePattern {
       }
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
       return this.year + "-" + this.month + "-" + this.day + " " +
              this.hour + ":" + this.minute + ":" + this.second +
              " (" + this.isOffset + ")";

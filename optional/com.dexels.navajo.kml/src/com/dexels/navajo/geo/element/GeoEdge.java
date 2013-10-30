@@ -18,10 +18,12 @@ public class GeoEdge extends GeoElement {
 		this.b = b;
 	}
 
+	@Override
 	public String toString() {
 		return a+" "+b;
 	}
 	
+	@Override
 	public XMLElement createElement() {
 		XMLElement c = new CaseSensitiveXMLElement("LineString");
 		c.addTagKeyValue("extrude", "0");
@@ -31,6 +33,7 @@ public class GeoEdge extends GeoElement {
 		
 		return c;
 	}
+	@Override
 	public XMLElement createPlaceMark() {
 		XMLElement c = new CaseSensitiveXMLElement("Placemark");
 		c.setAttribute("id", id);
@@ -45,6 +48,7 @@ public class GeoEdge extends GeoElement {
 		return super.hashCode();
 	}
 	
+	@Override
 	public boolean equals(Object o) {
 		if(!(o instanceof GeoEdge)) {
 			return false;

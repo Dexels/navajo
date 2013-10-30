@@ -84,14 +84,17 @@ public class FloatPropertyField extends PropertyField implements
 	protected void jbInit(Boolean addFocusLostListener) throws Exception {
 		myDocument
 				.addDocumentListener(new javax.swing.event.DocumentListener() {
+					@Override
 					public void changedUpdate(DocumentEvent e) {
 						myDocument_changedUpdate(e);
 					}
 
+					@Override
 					public void insertUpdate(DocumentEvent e) {
 						myDocument_insertUpdate(e);
 					}
 
+					@Override
 					public void removeUpdate(DocumentEvent e) {
 						myDocument_removeUpdate(e);
 					}

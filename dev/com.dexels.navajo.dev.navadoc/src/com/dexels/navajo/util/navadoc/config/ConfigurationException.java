@@ -33,7 +33,8 @@ public class ConfigurationException extends Exception {
     return ( this.configUri );
   }
 
-  public String toString() {
+  @Override
+public String toString() {
 
     StringBuffer s = new StringBuffer( this.getClass() + ": " );
 

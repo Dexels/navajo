@@ -15,6 +15,7 @@ abstract class AbstractTipiExtension extends TipiAbstractOSGiExtension
 		return getId().compareTo(o.getId());
 	}
 
+	@Override
 	public final InputStream getDefinitionAsStream() {
 		String[] includes = getIncludes();
 		if (includes.length == 0) {

@@ -19,6 +19,7 @@ public class TipiJXDatePicker extends TipiSwingDataComponentImpl {
 	public Object createContainer() {
 		JXDatePicker p = new JXDatePicker();
 		p.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				logger.info("Monkey: " + evt.getPropertyName());
 			}

@@ -49,6 +49,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#prepare(java.lang.String)
 	 */
+	@Override
 	public void prepare( String queryText ) throws OdaException
 	{
         m_preparedText = queryText;
@@ -58,6 +59,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setAppContext(java.lang.Object)
 	 */
+	@Override
 	public void setAppContext( Object context ) throws OdaException
 	{
 	    // do nothing; assumes no support for pass-through context
@@ -66,6 +68,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#close()
 	 */
+	@Override
 	public void close() throws OdaException
 	{
         m_preparedText = null;
@@ -74,6 +77,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#getMetaData()
 	 */
+	@Override
 	public IResultSetMetaData getMetaData() throws OdaException
 	{
 		try {
@@ -88,6 +92,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#executeQuery()
 	 */
+	@Override
 	public IResultSet executeQuery() throws OdaException
 	{
      
@@ -106,6 +111,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setProperty(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void setProperty( String name, String value ) throws OdaException
 	{
 		// do nothing; assumes no data set query property
@@ -114,6 +120,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setMaxRows(int)
 	 */
+	@Override
 	public void setMaxRows( int max ) throws OdaException
 	{
 	    m_maxRows = max;
@@ -122,6 +129,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#getMaxRows()
 	 */
+	@Override
 	public int getMaxRows() throws OdaException
 	{
 		return m_maxRows;
@@ -130,6 +138,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#clearInParameters()
 	 */
+	@Override
 	public void clearInParameters() throws OdaException
 	{
 		// only applies to input parameter
@@ -138,6 +147,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setInt(java.lang.String, int)
 	 */
+	@Override
 	public void setInt( String parameterName, int value ) throws OdaException
 	{
 		// only applies to named input parameter
@@ -146,6 +156,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setInt(int, int)
 	 */
+	@Override
 	public void setInt( int parameterId, int value ) throws OdaException
 	{
 		// only applies to input parameter
@@ -154,6 +165,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setDouble(java.lang.String, double)
 	 */
+	@Override
 	public void setDouble( String parameterName, double value ) throws OdaException
 	{
 		// only applies to named input parameter
@@ -162,6 +174,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setDouble(int, double)
 	 */
+	@Override
 	public void setDouble( int parameterId, double value ) throws OdaException
 	{
 		// only applies to input parameter
@@ -170,6 +183,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setBigDecimal(java.lang.String, java.math.BigDecimal)
 	 */
+	@Override
 	public void setBigDecimal( String parameterName, BigDecimal value ) throws OdaException
 	{
 		// only applies to named input parameter
@@ -178,6 +192,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setBigDecimal(int, java.math.BigDecimal)
 	 */
+	@Override
 	public void setBigDecimal( int parameterId, BigDecimal value ) throws OdaException
 	{
 		// only applies to input parameter
@@ -186,6 +201,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setString(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void setString( String parameterName, String value ) throws OdaException
 	{
 		// only applies to named input parameter
@@ -194,6 +210,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setString(int, java.lang.String)
 	 */
+	@Override
 	public void setString( int parameterId, String value ) throws OdaException
 	{
 		// only applies to input parameter
@@ -202,6 +219,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setDate(java.lang.String, java.sql.Date)
 	 */
+	@Override
 	public void setDate( String parameterName, Date value ) throws OdaException
 	{
 		// only applies to named input parameter
@@ -210,6 +228,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setDate(int, java.sql.Date)
 	 */
+	@Override
 	public void setDate( int parameterId, Date value ) throws OdaException
 	{
 		// only applies to input parameter
@@ -218,6 +237,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setTime(java.lang.String, java.sql.Time)
 	 */
+	@Override
 	public void setTime( String parameterName, Time value ) throws OdaException
 	{
 		// only applies to named input parameter
@@ -226,6 +246,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setTime(int, java.sql.Time)
 	 */
+	@Override
 	public void setTime( int parameterId, Time value ) throws OdaException
 	{
 		// only applies to input parameter
@@ -234,6 +255,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setTimestamp(java.lang.String, java.sql.Timestamp)
 	 */
+	@Override
 	public void setTimestamp( String parameterName, Timestamp value ) throws OdaException
 	{
 		// only applies to named input parameter
@@ -242,6 +264,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setTimestamp(int, java.sql.Timestamp)
 	 */
+	@Override
 	public void setTimestamp( int parameterId, Timestamp value ) throws OdaException
 	{
 		// only applies to input parameter
@@ -250,7 +273,8 @@ public class NqlQuery implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#setBoolean(java.lang.String, boolean)
      */
-    public void setBoolean( String parameterName, boolean value )
+    @Override
+	public void setBoolean( String parameterName, boolean value )
             throws OdaException
     {
         // only applies to named input parameter
@@ -259,7 +283,8 @@ public class NqlQuery implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#setBoolean(int, boolean)
      */
-    public void setBoolean( int parameterId, boolean value )
+    @Override
+	public void setBoolean( int parameterId, boolean value )
             throws OdaException
     {
         // only applies to input parameter
@@ -268,7 +293,8 @@ public class NqlQuery implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#setObject(java.lang.String, java.lang.Object)
      */
-    public void setObject( String parameterName, Object value )
+    @Override
+	public void setObject( String parameterName, Object value )
             throws OdaException
     {
         // only applies to named input parameter
@@ -277,7 +303,8 @@ public class NqlQuery implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#setObject(int, java.lang.Object)
      */
-    public void setObject( int parameterId, Object value ) throws OdaException
+    @Override
+	public void setObject( int parameterId, Object value ) throws OdaException
     {
         // only applies to input parameter
     }
@@ -285,7 +312,8 @@ public class NqlQuery implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#setNull(java.lang.String)
      */
-    public void setNull( String parameterName ) throws OdaException
+    @Override
+	public void setNull( String parameterName ) throws OdaException
     {
         // only applies to named input parameter
     }
@@ -293,7 +321,8 @@ public class NqlQuery implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#setNull(int)
      */
-    public void setNull( int parameterId ) throws OdaException
+    @Override
+	public void setNull( int parameterId ) throws OdaException
     {
         // only applies to input parameter
     }
@@ -301,6 +330,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#findInParameter(java.lang.String)
 	 */
+	@Override
 	public int findInParameter( String parameterName ) throws OdaException
 	{
 		// only applies to named input parameter
@@ -310,6 +340,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#getParameterMetaData()
 	 */
+	@Override
 	public IParameterMetaData getParameterMetaData() throws OdaException
 	{
      
@@ -319,6 +350,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setSortSpec(org.eclipse.datatools.connectivity.oda.SortSpec)
 	 */
+	@Override
 	public void setSortSpec( SortSpec sortBy ) throws OdaException
 	{
 		// only applies to sorting, assumes not supported
@@ -328,6 +360,7 @@ public class NqlQuery implements IQuery
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#getSortSpec()
 	 */
+	@Override
 	public SortSpec getSortSpec() throws OdaException
 	{
 		// only applies to sorting
@@ -337,7 +370,8 @@ public class NqlQuery implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#setSpecification(org.eclipse.datatools.connectivity.oda.spec.QuerySpecification)
      */
-    public void setSpecification( QuerySpecification querySpec )
+    @Override
+	public void setSpecification( QuerySpecification querySpec )
             throws OdaException, UnsupportedOperationException
     {
         // assumes no support
@@ -347,7 +381,8 @@ public class NqlQuery implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getSpecification()
      */
-    public QuerySpecification getSpecification()
+    @Override
+	public QuerySpecification getSpecification()
     {
         // assumes no support
         return null;
@@ -356,7 +391,8 @@ public class NqlQuery implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getEffectiveQueryText()
      */
-    public String getEffectiveQueryText()
+    @Override
+	public String getEffectiveQueryText()
     {
         return m_preparedText;
     }
@@ -364,7 +400,8 @@ public class NqlQuery implements IQuery
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#cancel()
      */
-    public void cancel() throws OdaException, UnsupportedOperationException
+    @Override
+	public void cancel() throws OdaException, UnsupportedOperationException
     {
         // assumes unable to cancel while executing a query
         throw new UnsupportedOperationException();

@@ -21,6 +21,7 @@ public class Switch extends AbstractFunction {
 	protected FunctionFactoryInterface fff;
 	protected ClassLoader cl;
 	
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
@@ -32,6 +33,7 @@ public class Switch extends AbstractFunction {
 	public void tearDown() throws Exception {
 	}
 	
+	@Override
 	protected Navajo createTestNavajo() throws Exception {
 		Navajo doc = NavajoFactory.getInstance().createNavajo();
 		Message array = NavajoFactory.getInstance().createMessage(doc, "Aap");

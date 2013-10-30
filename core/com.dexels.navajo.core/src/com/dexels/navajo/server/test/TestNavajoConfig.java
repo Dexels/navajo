@@ -168,6 +168,7 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 		return false;
 	}
 
+	@Override
 	public void doClearCache() {
 		
 		

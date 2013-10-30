@@ -27,14 +27,17 @@ public class TipiMessagePanel extends TipiVaadinComponentImpl implements
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiMessagePanel.class);
 	
+	@Override
 	public Message getMessage() {
 		return myMessage;
 	}
 
+	@Override
 	public String getMessageName() {
 		return myMessageName;
 	}
 
+	@Override
 	public void loadData(Navajo n, String method) throws TipiException,
 			TipiBreakException {
 		myMethod = method;
@@ -66,6 +69,7 @@ public class TipiMessagePanel extends TipiVaadinComponentImpl implements
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public void setMessage(Message m) {
 		myMessage = m;
 		loadProperties(m);
@@ -93,6 +97,7 @@ public class TipiMessagePanel extends TipiVaadinComponentImpl implements
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	public Object createContainer() {
 		VerticalLayout myPanel = new VerticalLayout();		
 		myPanel.addListener(new LayoutClickListener() {
@@ -111,6 +116,7 @@ public class TipiMessagePanel extends TipiVaadinComponentImpl implements
 		return myPanel;
 	}
 
+	@Override
 	public int getMessageIndex() {
 		return Integer.parseInt(getId());
 		// return 0;

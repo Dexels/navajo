@@ -82,6 +82,7 @@ public class CustomDataSetWizardPage extends DataSetWizardPage
 	/* (non-Javadoc)
 	 * @see org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSetWizardPage#createPageCustomControl(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	public void createPageCustomControl( Composite parent )
 	{
         setControl( createPageControl( parent ) );
@@ -110,7 +111,8 @@ public class CustomDataSetWizardPage extends DataSetWizardPage
         m_queryTextField.setLayoutData( data );
         m_queryTextField.addModifyListener( new ModifyListener( ) 
         {
-            public void modifyText( ModifyEvent e )
+            @Override
+			public void modifyText( ModifyEvent e )
             {
                 validateData();
             }
@@ -164,6 +166,7 @@ public class CustomDataSetWizardPage extends DataSetWizardPage
 	 * (non-Javadoc)
 	 * @see org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSetWizardPage#collectDataSetDesign(org.eclipse.datatools.connectivity.oda.design.DataSetDesign)
 	 */
+	@Override
 	protected DataSetDesign collectDataSetDesign( DataSetDesign design )
 	{
         if( getControl() == null )     // page control was never created
@@ -178,6 +181,7 @@ public class CustomDataSetWizardPage extends DataSetWizardPage
      * (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSetWizardPage#collectResponseState()
      */
+	@Override
 	protected void collectResponseState( )
 	{
 		super.collectResponseState( );
@@ -193,6 +197,7 @@ public class CustomDataSetWizardPage extends DataSetWizardPage
 	 * (non-Javadoc)
 	 * @see org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSetWizardPage#canLeave()
 	 */
+	@Override
 	protected boolean canLeave( )
 	{
         return isPageComplete();

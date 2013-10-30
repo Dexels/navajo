@@ -21,6 +21,7 @@ public class MD5Sum extends FunctionInterface {
 	public MD5Sum() {
 	}
 
+	@Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		String output = "unknown";
 		if (getOperand(0) == null) {
@@ -58,6 +59,7 @@ public class MD5Sum extends FunctionInterface {
 
 	}
 
+	@Override
 	public String remarks() {
 		return "Get the MD5Sum of supplied Binary object.";
 	}

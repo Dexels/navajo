@@ -16,6 +16,7 @@ public class TipiRcpExtension extends TipiAbstractXMLExtension implements TipiEx
 // NO		loadDescriptor();
 	}
 
+	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
 		

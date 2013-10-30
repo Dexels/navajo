@@ -70,6 +70,7 @@ public class ApplicationUtils {
 				return -1;
 			}
 			
+			@Override
 			public String toString() {
 				return wb.getBrowserApplication();
 				

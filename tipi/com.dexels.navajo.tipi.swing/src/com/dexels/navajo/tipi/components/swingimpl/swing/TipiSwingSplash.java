@@ -47,6 +47,7 @@ public class TipiSwingSplash extends JWindow implements Runnable {
 		}
 	}
 
+	@Override
 	public void run() {
 		try {
 		} catch (Exception e) {
@@ -106,6 +107,7 @@ class DefaultTipiSplash_this_windowStateAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void windowStateChanged(WindowEvent e) {
 		adaptee.this_windowStateChanged(e);
 	}
@@ -119,6 +121,7 @@ class DefaultTipiSplash_imageLabel_componentAdapter extends
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void componentHidden(ComponentEvent e) {
 		adaptee.imageLabel_componentHidden(e);
 	}

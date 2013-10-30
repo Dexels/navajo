@@ -46,22 +46,27 @@ public class VerticalFlowLayout implements LayoutManager {
 		}
 	}
 
+	@Override
 	public void addLayoutComponent(String id, Component obj) {
 		components.add(obj);
 	}
 
+	@Override
 	public void removeLayoutComponent(Component obj) {
 		components.remove(obj);
 	}
 
+	@Override
 	public Dimension preferredLayoutSize(Container obj) {
 		return obj.getPreferredSize();
 	}
 
+	@Override
 	public Dimension minimumLayoutSize(Container obj) {
 		return obj.getMinimumSize();
 	}
 
+	@Override
 	public void layoutContainer(Container obj) {
 		int bar_height = obj.getHeight();
 		int columns = determineRequiredColumns(bar_height);

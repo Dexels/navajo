@@ -29,6 +29,7 @@ public class TipiLog extends TipiAction {
 	private final static Logger logger = LoggerFactory.getLogger(TipiLog.class);
 	
 	
+	@Override
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

@@ -42,6 +42,7 @@ public class TipiModalInternalFrame extends JExtendedInternalFrame {
 			Integer ZERO = new Integer(0);
 			Integer ONE = new Integer(1);
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				// Manually construct an input popup

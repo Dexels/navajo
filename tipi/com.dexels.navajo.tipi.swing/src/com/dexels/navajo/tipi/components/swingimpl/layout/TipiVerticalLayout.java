@@ -45,23 +45,27 @@ public class TipiVerticalLayout extends TipiLayoutImpl {
 		 */
 	}
 
+	@Override
 	public Object parseConstraint(String text, int index) {
 		// TipiSwingGridBagConstraints gt = new
 		// TipiSwingGridBagConstraints(text);
 		return createDefaultConstraint(index);
 	}
 
+	@Override
 	public void createLayout() {
 		GridBagLayout lay = new GridBagLayout();
 		setLayout(lay);
 
 	}
 
+	@Override
 	public void loadLayout(XMLElement def, final TipiComponent t)
 			throws TipiException {
 		super.loadLayout(def, t);
 		myContext.runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				Container c = ((Container) t.getContainer());
 				c.add(new JLabel(""), new TipiSwingGridBagConstraints(0, 999,
@@ -73,6 +77,7 @@ public class TipiVerticalLayout extends TipiLayoutImpl {
 
 	}
 
+	@Override
 	public Object createDefaultConstraint(int index) {
 
 		return new TipiSwingGridBagConstraints(0, index, 1, 1, 0, 0,

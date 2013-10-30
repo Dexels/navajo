@@ -18,15 +18,18 @@ public final class StringDistance
 
   public StringDistance() {}
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Returns an Integer representing how much the two strings differ, 0 is equal";
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "Usage: StringDistance([String1], [String2])";
   }
 
-  public final Object evaluate() throws com.dexels.navajo.parser.
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.
       TMLExpressionException {
     String s1 = (String)this.getOperands().get(0);
     String s2 = (String)this.getOperands().get(1);

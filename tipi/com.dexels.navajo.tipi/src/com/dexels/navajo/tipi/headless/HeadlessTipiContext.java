@@ -30,6 +30,7 @@ public class HeadlessTipiContext extends TipiContext {
 		// myInvokingThread = Thread.currentThread();
 	}
 
+	@Override
 	public void processProperties(Map<String, String> properties)
 			throws MalformedURLException {
 		for (Iterator<String> iter = properties.keySet().iterator(); iter
@@ -45,6 +46,7 @@ public class HeadlessTipiContext extends TipiContext {
 		eHandler.setContext(this);
 	}
 
+	@Override
 	public void doExit() {
 		shutdown();
 		// myInvokingThread.interrupt();

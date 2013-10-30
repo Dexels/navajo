@@ -21,7 +21,8 @@ public class LogMap implements Mappable {
   public String message;
 
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
   }
 
   /**
@@ -31,10 +32,12 @@ public void setMessage(String msg) {
 	  AuditLog.log("LogMap", message);
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
   }
 
-  public void kill() {
+  @Override
+public void kill() {
 
   }
 }

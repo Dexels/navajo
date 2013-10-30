@@ -279,22 +279,26 @@ public class StandardWindow extends BaseWindow implements DialogConstants {
 		am.put("QReleased", new KeyEventHandler(this, "QReleased"));
 
 		closeButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				closeButton_actionPerformed(e);
 			}
 		});
 		insertButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				insertButton_actionPerformed(e);
 			}
 		});
 		saveButton.setEnabled(false);
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				saveButton_actionPerformed(e);
 			}
 		});
 		clearButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				clearButton_actionPerformed(e);
 			}
@@ -316,6 +320,7 @@ public class StandardWindow extends BaseWindow implements DialogConstants {
 		save();
 	}
 
+	@Override
 	public void update(Graphics g) {
 		paint(g);
 	}
@@ -332,6 +337,7 @@ public class StandardWindow extends BaseWindow implements DialogConstants {
 		insert();
 	}
 
+	@Override
 	public void setMaximum(boolean value) throws PropertyVetoException {
 		if (isSticky()) {
 			return;

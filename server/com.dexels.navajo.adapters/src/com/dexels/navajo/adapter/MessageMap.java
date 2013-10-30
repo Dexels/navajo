@@ -79,6 +79,7 @@ public class MessageMap implements Mappable {
 	private Message msg1pointer = null;
 	private Message msg2pointer = null;
 	
+	@Override
 	public void kill() {
 	}
 
@@ -401,10 +402,12 @@ public class MessageMap implements Mappable {
 		return hashCode;
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		this.myAccess = access;
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 

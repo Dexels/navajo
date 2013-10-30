@@ -26,7 +26,8 @@ public final class ASTMappableNode extends SimpleNode {
         super(id);
     }
 
-    public final Object interpret() throws TMLExpressionException {
+    @Override
+	public final Object interpret() throws TMLExpressionException {
 
         if (mapObject == null) {
             throw new TMLExpressionException("No known mapobject");

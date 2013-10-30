@@ -157,6 +157,7 @@ public class EntityMap extends NavajoMap {
 		return method;
 	}
 
+	@Override
 	public void setMethod(String method) {
 		this.method = method;
 	}

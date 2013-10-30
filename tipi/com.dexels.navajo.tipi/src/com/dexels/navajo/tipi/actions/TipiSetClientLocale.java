@@ -28,6 +28,7 @@ public class TipiSetClientLocale extends TipiAction {
 	 */
 	private static final long serialVersionUID = -1795544701359126734L;
 
+	@Override
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

@@ -45,10 +45,12 @@ public class ExistsSelectionValue extends FunctionInterface {
 	public ExistsSelectionValue() {
 	}
 
+	@Override
 	public String remarks() {
 		return "Checks if the given value is available as one of the options in the given selection property";
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object evaluate()
 			throws com.dexels.navajo.parser.TMLExpressionException {
@@ -100,6 +102,7 @@ public class ExistsSelectionValue extends FunctionInterface {
 		return false;
 	}
 
+	@Override
 	public String usage() {
 		return "ExistsSelectionValue(<selection property>, <string>) -> will return true if and only if the string is a value for one of the selections";
 	}

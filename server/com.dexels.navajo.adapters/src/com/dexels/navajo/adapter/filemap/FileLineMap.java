@@ -39,6 +39,7 @@ public class FileLineMap implements Mappable {
 	 *      com.dexels.navajo.document.Navajo, com.dexels.navajo.server.Access,
 	 *      com.dexels.navajo.server.NavajoConfig)
 	 */
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 	}
 
@@ -47,6 +48,7 @@ public class FileLineMap implements Mappable {
 	 * 
 	 * @see com.dexels.navajo.mapping.Mappable#store()
 	 */
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 
@@ -55,6 +57,7 @@ public class FileLineMap implements Mappable {
 	 * 
 	 * @see com.dexels.navajo.mapping.Mappable#kill()
 	 */
+	@Override
 	public void kill() {
 	}
 

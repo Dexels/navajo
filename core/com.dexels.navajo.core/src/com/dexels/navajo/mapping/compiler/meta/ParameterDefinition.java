@@ -39,6 +39,7 @@ public class ParameterDefinition extends ValueDefinition {
 		return order;
 	}
 
+	@Override
 	public String getValue() {
 		return value;
 	}

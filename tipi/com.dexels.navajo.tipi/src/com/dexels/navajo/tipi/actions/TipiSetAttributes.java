@@ -31,6 +31,7 @@ public final class TipiSetAttributes extends TipiAction {
 	 */
 	private static final long serialVersionUID = 472131866710083014L;
 
+	@Override
 	public final void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

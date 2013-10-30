@@ -70,14 +70,17 @@ public class ResourceGroupImpl implements ResourceGroup {
 		}
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public String getType() {
 		return type;
 	}
 
+	@Override
 	public Object getResource(String instance) {
 		return serviceObjects.get(instance);
 	}

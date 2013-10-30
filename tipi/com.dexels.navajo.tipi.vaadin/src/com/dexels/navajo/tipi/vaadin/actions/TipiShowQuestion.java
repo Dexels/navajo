@@ -35,7 +35,8 @@ public class TipiShowQuestion extends TipiVaadinActionImpl {
      * 
      * @see com.dexels.navajo.tipi.internal.TipiAction#execute(com.dexels.navajo.tipi.internal.TipiEvent)
      */
-    protected void execute(TipiEvent event) throws TipiBreakException, TipiException, TipiSuspendException {
+    @Override
+	protected void execute(TipiEvent event) throws TipiBreakException, TipiException, TipiSuspendException {
         String text  = (String) getEvaluatedParameterValue("text", event);
         ConfirmDialog.show(getApplication().getMainWindow(),"",text,"Bevestigen","Annuleren",new ConfirmDialog.Listener(){
 

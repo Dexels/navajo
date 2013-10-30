@@ -19,7 +19,8 @@ public class StartSocketRunner extends BaseNavajoAction {
     /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
-    public void run(IAction action) {
+    @Override
+	public void run(IAction action) {
 //        try {
 //            IProject p = getProject();
 //            if (p==null) {

@@ -42,10 +42,12 @@ public class GetProperty extends FunctionInterface {
 	public GetProperty() {
 	}
 
+	@Override
 	public String remarks() {
 		return "Gets a property from a string";
 	}
 
+	@Override
 	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		if (getOperands().size() != 2) {
 			throw new TMLExpressionException(this, "Invalid function call");
@@ -75,6 +77,7 @@ public class GetProperty extends FunctionInterface {
 		return null;
 	}
 
+	@Override
 	public String usage() {
 		return "GetProperty(Message,propertyname). Returns a property (not its value.) Built for tipi";
 	}

@@ -15,6 +15,7 @@ public class ScaleImageCropped extends FunctionInterface {
 	 * (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Scales an image to the specified dimensions (with transparency if needed). Keeps aspect ratio, and crops the image to the new size if necessary";
 	}
@@ -23,6 +24,7 @@ public class ScaleImageCropped extends FunctionInterface {
 	 * (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "ScaleImageCropped(Binary,int width,int height)";
 	}
@@ -31,6 +33,7 @@ public class ScaleImageCropped extends FunctionInterface {
 	 * (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() != 3) {
 			throw new TMLExpressionException(this, "Three operands expected. ");

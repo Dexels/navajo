@@ -37,6 +37,7 @@ public class TipiOpenBinary extends TipiVaadinActionImpl {
 	 * com.dexels.navajo.tipi.internal.TipiAction#execute(com.dexels.navajo.
 	 * tipi.internal.TipiEvent)
 	 */
+	@Override
 	protected void execute(TipiEvent event) throws TipiBreakException,
 			TipiException {
 		Object evaluatedParameterValue = getEvaluatedParameterValue("binary",

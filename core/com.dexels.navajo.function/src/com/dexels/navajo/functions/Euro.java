@@ -16,15 +16,18 @@ public final class Euro  extends FunctionInterface{
   public Euro() {
   }
 
-      public String remarks() {
+      @Override
+	public String remarks() {
           return "Will return a euro sign.";
       }
 
-      public String usage() {
+      @Override
+	public String usage() {
           return "Utility to allow euro signs in expressions, until the expression language fully supports it.";
       }
 
-      public final Object evaluate() throws TMLExpressionException {
+      @Override
+	public final Object evaluate() throws TMLExpressionException {
         return "\u20ac";
       }
   }

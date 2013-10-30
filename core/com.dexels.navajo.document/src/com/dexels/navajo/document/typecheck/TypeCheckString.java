@@ -23,13 +23,15 @@ public class TypeCheckString extends TypeChecker {
 		.getLogger(TypeCheckString.class);
   public TypeCheckString() {
   }
-  public String getType() {
+  @Override
+public String getType() {
     return Property.STRING_PROPERTY;
   }
 
   /** @todo check number of invokations... Still seems to be called too often */
 
-  public String verify(Property p, String value) throws com.dexels.navajo.document.PropertyTypeException {
+  @Override
+public String verify(Property p, String value) throws com.dexels.navajo.document.PropertyTypeException {
 //    logger.info("Entering string checker: "+value);
     if (value==null || "".equals(value)) {
       return value;

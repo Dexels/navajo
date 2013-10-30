@@ -35,16 +35,19 @@ public class TipiHorizontalBoxLayout extends TipiLayoutImpl {
 	public TipiHorizontalBoxLayout() {
 	}
 
+	@Override
 	protected void setValue(String name, TipiValue tv) {
 		/**
 		 * Not necessaru
 		 */
 	}
 
+	@Override
 	public Object parseConstraint(String text, int index) {
 		return createDefaultConstraint(index);
 	}
 
+	@Override
 	public void createLayout() throws com.dexels.navajo.tipi.TipiException {
 		// Container c = (Container)super.myComponent.getContainer();
 		// BoxLayout layout = new BoxLayout(c,BoxLayout.X_AXIS);
@@ -57,6 +60,7 @@ public class TipiHorizontalBoxLayout extends TipiLayoutImpl {
 		 */
 	}
 
+	@Override
 	public Object createDefaultConstraint(int index) {
 		return new TipiSwingGridBagConstraints(index, 0, 1, 1, 1, 1,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,

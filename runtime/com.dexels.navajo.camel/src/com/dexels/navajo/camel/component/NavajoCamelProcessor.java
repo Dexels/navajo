@@ -19,7 +19,8 @@ public class NavajoCamelProcessor extends DefaultProducer {
 //        this.endpoint = endpoint;
     }
 
-    public void process(Exchange exchange) throws Exception {
+    @Override
+	public void process(Exchange exchange) throws Exception {
     	TmlRunnable tr = (TmlRunnable) exchange.getProperty("tmlRunnable");
     	Navajo indoc = (Navajo) exchange.getIn().getBody();
     	tr.setResponseNavajo(indoc);

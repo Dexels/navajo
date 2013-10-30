@@ -26,7 +26,6 @@ public class PushComponent {
 	private Configuration factoryConfiguration;
 
 
-	@SuppressWarnings("rawtypes")
 	public void activate(Map<String,Object> properties) {
 
 		try {

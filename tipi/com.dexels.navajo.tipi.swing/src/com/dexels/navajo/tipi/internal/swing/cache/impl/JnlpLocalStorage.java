@@ -104,10 +104,12 @@ public class JnlpLocalStorage implements LocalStorage {
 		}
 	}
 
+	@Override
 	public void flush(String location) throws IOException {
 		ps.delete(createMuffinUrl(location));
 	}
 
+	@Override
 	public void flushAll() throws IOException {
 		String[] cacheMuffins = ps.getNames(getCacheBaseURL());
 		for (int i = 0; i < cacheMuffins.length; i++) {
@@ -115,6 +117,7 @@ public class JnlpLocalStorage implements LocalStorage {
 		}
 	}
 
+	@Override
 	public InputStream getLocalData(String location) {
 		FileContents fc;
 		try {
@@ -135,6 +138,7 @@ public class JnlpLocalStorage implements LocalStorage {
 		return null;
 	}
 
+	@Override
 	public long getLocalModificationDate(String location) throws IOException {
 		Long mod = localModificationMap.get(location);
 		if (mod == null) {
@@ -144,6 +148,7 @@ public class JnlpLocalStorage implements LocalStorage {
 		// return 0;
 	}
 
+	@Override
 	public URL getURL(String location) throws IOException {
 		File f = File.createTempFile("tipiCache", "");
 		InputStream is = getLocalData(location);
@@ -155,6 +160,7 @@ public class JnlpLocalStorage implements LocalStorage {
 		// IOException("URL GETTING NOT SUPPORTED IN JNLPLOCALSTORAGE!");
 	}
 
+	@Override
 	public boolean hasLocal(String location) {
 		FileContents fc = null;
 		try {
@@ -184,6 +190,7 @@ public class JnlpLocalStorage implements LocalStorage {
 		}
 	}
 
+	@Override
 	public void storeData(String location, InputStream data,
 			Map<String, Object> metadata) throws IOException {
 		FileContents fc = null;

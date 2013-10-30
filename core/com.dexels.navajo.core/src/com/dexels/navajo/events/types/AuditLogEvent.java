@@ -67,10 +67,12 @@ public class AuditLogEvent implements NavajoEvent, LevelEvent {
 		return subSystem;
 	}
 
+	@Override
 	public Level getLevel() {
 		return level;
 	}
 	
+	@Override
 	public String toString() {
 		return (instanceName + ":" + subSystem + "-> " + message + " (" + level + ")");
 	}
@@ -91,6 +93,7 @@ public class AuditLogEvent implements NavajoEvent, LevelEvent {
 		this.accessId = accessId;
 	}
 
+	@Override
 	public Navajo getEventNavajo() {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
 		Message event = NavajoFactory.getInstance().createMessage(input, "__event__");

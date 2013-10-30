@@ -7,10 +7,12 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class Trunc extends FunctionInterface {
 
+	@Override
 	public String remarks() {
 		return "Given a date, a date object without time is returned";
 	}
 
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		java.util.Date date = (java.util.Date)this.getOperand(0);
 		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");
@@ -22,6 +24,7 @@ public final class Trunc extends FunctionInterface {
 		return date;
 	}
 	
+	@Override
 	public String usage() {
 	    return "Trunc(Date)";
 	}

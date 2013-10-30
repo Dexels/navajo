@@ -14,7 +14,6 @@ import java.util.StringTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import com.dexels.navajo.document.BinaryOpenerFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.metadata.FormatDescription;
@@ -45,6 +44,7 @@ public class TipiOpenBinary extends TipiAction {
 	 * com.dexels.navajo.tipi.internal.TipiAction#execute(com.dexels.navajo.
 	 * tipi.internal.TipiEvent)
 	 */
+	@Override
 	protected void execute(TipiEvent event) throws TipiBreakException,
 			TipiException {
 		Operand value = getEvaluatedParameter("value", event);

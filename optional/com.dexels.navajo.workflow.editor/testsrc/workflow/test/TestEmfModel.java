@@ -12,6 +12,7 @@ import junit.framework.TestCase;
 
 public class TestEmfModel extends TestCase {
 
+	@Override
 	@Before
 	public void setUp() throws Exception {
 	}

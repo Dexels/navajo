@@ -71,16 +71,19 @@ public class PropertyDescription implements Mappable {
 		this.description = description;
 	}
 
+	@Override
 	public void kill() {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 		// TODO Auto-generated method stub
 		

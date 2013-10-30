@@ -9,6 +9,7 @@ public class TipiDesktopButton extends TipiButton {
 	private static final long serialVersionUID = 7153858395461227871L;
 	private DesktopButton myButton;
 
+	@Override
 	public Object createContainer() {
 		myButton = new DesktopButton();
 		TipiHelper th = new TipiSwingHelper();

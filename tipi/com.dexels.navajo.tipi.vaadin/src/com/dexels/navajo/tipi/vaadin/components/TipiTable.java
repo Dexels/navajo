@@ -88,6 +88,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		table.addListener(new ItemClickEvent.ItemClickListener() {
 			private static final long serialVersionUID = 2068314108919135281L;
 
+			@Override
 			public void itemClick(ItemClickEvent event) {
 				if (event.isDoubleClick()) {
 					selectedId = table.getValue();
@@ -142,6 +143,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		}
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		super.setComponentValue(name, object);
 		if (name.equals("messagepath")) {
@@ -153,6 +155,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if ("selectedMessage".equals(name)) {
 			return getSelectedMessage();
@@ -201,11 +204,13 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		return amb;
 	}
 
+	@Override
 	public void load(final XMLElement elm, final XMLElement instance, final TipiContext context)
 			throws com.dexels.navajo.tipi.TipiException {
 		super.load(elm, instance, context);
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				try {
 					TipiTable.super.load(elm, instance, context);
@@ -249,6 +254,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 		});
 	}
 
+	@Override
 	protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
 		int count = this.table.getContainerDataSource().size();
 		if (count != 0) {

@@ -29,8 +29,8 @@ public final class MultipleSelectionPropertyList extends JPanel implements
 			.getLogger(MultipleSelectionPropertyList.class);
 	private static final long serialVersionUID = 2207572420028970359L;
 	private Property myProperty;
-	private final DefaultListModel myModel = new DefaultListModel();
-	private final JList myList = new JList(myModel);
+	private final DefaultListModel<Selection> myModel = new DefaultListModel<Selection>();
+	private final JList<Selection> myList = new JList<Selection>(myModel);
 
 	private JScrollPane jScrollPane1; // = new JScrollPane();
 	private boolean orderBySelected = false;
@@ -86,6 +86,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements
 						: ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 	}
 
+	@Override
 	public final Property getProperty() {
 		return myProperty;
 	}
@@ -93,6 +94,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements
 	private final void jbInit() throws Exception {
 		this.setLayout(new BorderLayout());
 		myList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				this_valueChanged(e);
 			}
@@ -110,6 +112,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements
 		myList.setVisibleRowCount(i);
 	}
 
+	@Override
 	public final void setProperty(Property p) {
 		isReloading = true;
 		myProperty = p;
@@ -152,6 +155,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements
 
 	}
 
+	@Override
 	public final void update() {
 		// dummy
 	}
@@ -164,7 +168,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements
 		ArrayList<String> selected = new ArrayList<String>();
 		for (int i = 0; i < myModel.size(); i++) {
 			if (myList.isSelectedIndex(i)) {
-				Selection current = (Selection) myModel.get(i);
+				Selection current = myModel.get(i);
 				selected.add(current.getValue());
 			}
 		}

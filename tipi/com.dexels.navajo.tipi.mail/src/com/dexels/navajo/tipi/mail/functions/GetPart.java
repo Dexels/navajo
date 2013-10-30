@@ -28,6 +28,7 @@ public class GetPart extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Returns absolute value of a number";
 	}
@@ -35,6 +36,7 @@ public class GetPart extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Binary b = (Binary) getOperand(0);
 		int index = (Integer) getOperand(1);

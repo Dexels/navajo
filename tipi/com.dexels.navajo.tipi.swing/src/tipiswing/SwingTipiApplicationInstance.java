@@ -41,6 +41,7 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 
 	private String definition;
 
+	@Override
 	public String getDefinition() {
 		return definition;
 	}
@@ -75,11 +76,13 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 		setBundleContext(bc);
 	}
 	
+	@Override
 	public void dispose(TipiContext t) {
 		super.dispose(t);
 		System.exit(0);
 	}
 
+	@Override
 	public TipiContext createContext() throws IOException {
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JDialog.setDefaultLookAndFeelDecorated(true);

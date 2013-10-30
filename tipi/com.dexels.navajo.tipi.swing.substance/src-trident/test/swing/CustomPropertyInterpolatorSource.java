@@ -12,14 +12,13 @@ import org.pushingpixels.trident.ease.Sine;
 import org.pushingpixels.trident.interpolator.PropertyInterpolator;
 import org.pushingpixels.trident.swing.SwingRepaintTimeline;
 
-@SuppressWarnings("rawtypes")
-
 public class CustomPropertyInterpolatorSource extends JFrame {
 	private static final long serialVersionUID = 297700999649792189L;
 	private Ellipse2D ellipse;
 
 	private static class Ellipse2DPropertyInterpolator implements
 			PropertyInterpolator<Ellipse2D> {
+		@Override
 		public Class getBasePropertyClass() {
 			return Ellipse2D.class;
 		}

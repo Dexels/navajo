@@ -29,7 +29,8 @@ public class NavajoRemoteAction extends BaseNavajoAction {
      * 
      * @see IWorkbenchWindowActionDelegate#run
      */
-    public void run(IAction action) {
+    @Override
+	public void run(IAction action) {
         try {
         	throw new UnsupportedOperationException("Not implemented");
 

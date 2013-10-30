@@ -18,15 +18,18 @@ public final class Date extends FunctionInterface {
 
     public Date() {}
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Create a date object from a given string. String is expected to be of format: yyyy-MM-dd.";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "Date(String s)";
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         String arg = (String) this.getOperands().get(0);
         java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
         java.util.Date date = null;

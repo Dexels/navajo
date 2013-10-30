@@ -35,7 +35,9 @@ public interface ManualAsyncClient extends AsyncClient {
 
 	public void close();
 	
+	@Override
 	public boolean useHttps();
+	@Override
 	public void setHttps(boolean useHttps);
 
 	/**
@@ -46,6 +48,7 @@ public interface ManualAsyncClient extends AsyncClient {
 	 * @param password the keystore password
 	 */
 
+	@Override
 	public void setClientCertificate(String algorithm, String type, InputStream is, char[] password) throws IOException;
 
 

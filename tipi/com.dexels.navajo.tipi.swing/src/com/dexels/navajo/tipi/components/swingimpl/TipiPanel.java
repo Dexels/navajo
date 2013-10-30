@@ -30,6 +30,7 @@ public class TipiPanel extends TipiSwingDataComponentImpl {
 	 */
 	private static final long serialVersionUID = 6190251046684031410L;
 
+	@Override
 	public Object createContainer() {
 		JPanel myPanel = new TipiSwingPanel(TipiPanel.this);
 		TipiHelper th = new TipiSwingHelper();

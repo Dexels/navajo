@@ -9,6 +9,7 @@ public abstract class TipiSwtComponentImpl extends TipiDataComponentImpl {
 
 	private static final long serialVersionUID = -2552659907512739573L;
 
+	@Override
 	public Object createContainer() {
 		return createComponent((Composite) getParentContainer());
 	}

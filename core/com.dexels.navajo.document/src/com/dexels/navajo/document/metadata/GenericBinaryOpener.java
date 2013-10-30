@@ -27,6 +27,7 @@ public class GenericBinaryOpener implements BinaryOpener {
 		super();
 	}
 	
+	@Override
 	public boolean mail(String url)
 	{
 		try {
@@ -44,14 +45,17 @@ public class GenericBinaryOpener implements BinaryOpener {
 		return false;
 	}
 	
+	@Override
 	public boolean open(String s)
 	{
 		return open(new File(s));
 	}
+	@Override
 	public boolean open(Binary b)
 	{
 		return open(b.getFile());
 	}
+	@Override
 	public boolean open(File f)
 	{
 		try {
@@ -63,6 +67,7 @@ public class GenericBinaryOpener implements BinaryOpener {
 		}
 	}
 
+	@Override
 	public boolean browse(String url)
 	{
 		if (url.contains(":"))
@@ -74,6 +79,7 @@ public class GenericBinaryOpener implements BinaryOpener {
 			return browse("http", url);
 		}
 	}
+	@Override
 	public boolean browse(String scheme, String url)
 	{
 		try {
@@ -89,6 +95,7 @@ public class GenericBinaryOpener implements BinaryOpener {
 		return false;
 	}
 	
+	@Override
 	public boolean exportCsv(String fileName, Message m, String delimiter)
 	{
 		try {

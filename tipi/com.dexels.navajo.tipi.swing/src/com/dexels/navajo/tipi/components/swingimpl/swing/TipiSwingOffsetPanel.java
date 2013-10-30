@@ -19,10 +19,12 @@ public class TipiSwingOffsetPanel extends JPanel {
 	private int y;
 	private JPanel myClient = new JPanel();
 
+	@Override
 	public int getX() {
 		return x;
 	}
 
+	@Override
 	public int getY() {
 		return y;
 	}
@@ -49,12 +51,14 @@ public class TipiSwingOffsetPanel extends JPanel {
 		// setLayout(null);
 		add(myClient);
 		addComponentListener(new ComponentAdapter() {
+			@Override
 			public void componentResized(ComponentEvent e) {
 				logger.debug("Bounds: " + getBounds());
 				logger.debug("clBounds: " + myClient.getBounds());
 				layoutOffsetPanel();
 			}
 
+			@Override
 			public void componentShown(ComponentEvent e) {
 				layoutOffsetPanel();
 			}

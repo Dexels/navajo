@@ -38,6 +38,7 @@ public class CachedHttpResourceLoader extends CachedResourceLoader {
 		}
 	}
 
+	@Override
 	public CacheManager getCacheManager() {
 		return cache;
 	}

@@ -38,29 +38,36 @@ protected String name ="";
     super(n);
   }
 
-  public final String getName() {
+  @Override
+public final String getName() {
     return ( this.name );
   }
-  public final void setName( String newName ) {
+  @Override
+public final void setName( String newName ) {
     this.name = newName;
   }
 
-  public final String getValue() {
+  @Override
+public final String getValue() {
     return ( this.value );
   }
-  public final void setValue( String newVal ) {
+  @Override
+public final void setValue( String newVal ) {
     this.value = newVal;
   }
 
-  public final boolean isSelected() {
+  @Override
+public final boolean isSelected() {
     return ( this.isSelected );
   }
   
-  public final void setSelected( boolean selected ) {
+  @Override
+public final void setSelected( boolean selected ) {
 	  isSelected = selected;
   }
 
-  public final String toString() {
+  @Override
+public final String toString() {
     //logger.info("toString(): " + getName().trim());
     if (getName() != null)
       return getName().trim();
@@ -96,15 +103,18 @@ protected String name ="";
   }
 
 
-  public int hashCode() {
+  @Override
+public int hashCode() {
   	return super.hashCode();
   }
   
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
   	return super.equals(o);
   }
   
-  public final int compareTo(Selection o) {
+  @Override
+public final int compareTo(Selection o) {
  
     if (o.getValue() == null && getValue() == null) {
       return 0;
@@ -121,6 +131,7 @@ protected String name ="";
     return (getValue().compareTo(o.getValue()));
 
   }
+@Override
 public Map<String,String> getAttributes() {
     Map<String,String> m = new HashMap<String,String>();
     m.put("name", name);
@@ -128,12 +139,15 @@ public Map<String,String> getAttributes() {
     m.put("selected", isSelected?"1":"0");
     return m;
 }
+@Override
 public List<? extends BaseNode> getChildren() {
     return null;
 }
+@Override
 public final String getTagName() {
     return Selection.SELECTION_DEFINITION;
 }
+@Override
 public Object getRef() {
     throw new UnsupportedOperationException("getRef not possible on base type. Override it if you need it");
 }

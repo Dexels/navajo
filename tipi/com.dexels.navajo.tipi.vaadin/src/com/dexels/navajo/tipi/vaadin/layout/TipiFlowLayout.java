@@ -21,15 +21,18 @@ public class TipiFlowLayout
   public TipiFlowLayout() {
   }
 
-  public void createLayout() {
+  @Override
+public void createLayout() {
 	 layout =  new HorizontalLayout();
 	  setLayout(layout);
   }
 
-  protected void setValue(String name, TipiValue tv) {
+  @Override
+protected void setValue(String name, TipiValue tv) {
     throw new UnsupportedOperationException("Not implemented.");
   }
   
+	@Override
 	public void addToLayout(Object component, Object constraints) {
 		layout.addComponent((Component) component);
 	}

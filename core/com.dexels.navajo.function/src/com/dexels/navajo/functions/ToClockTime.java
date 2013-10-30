@@ -36,11 +36,13 @@ public final class ToClockTime extends FunctionInterface {
   public ToClockTime() {
   }
 
-  public String remarks() {
+  @Override
+public String remarks() {
    return "Cast an object to a clocktime object";
   }
 
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object o = getOperand(0);
     if (o instanceof java.util.Date) {
       return new ClockTime((java.util.Date) o);
@@ -56,7 +58,8 @@ public final class ToClockTime extends FunctionInterface {
       throw new TMLExpressionException("Invalid clocktime: " + o);
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "ToClockTime(Date/String/ClockTime): ClockTime";
   }
 

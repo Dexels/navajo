@@ -9,7 +9,8 @@ public final class ASTIntegerConstantNode extends SimpleNode {
         super(id);
     }
 
-    public final  Object interpret() {
+    @Override
+	public final  Object interpret() {
         return new Integer(val);
     }
 }

@@ -16,7 +16,8 @@ import com.dexels.navajo.parser.FunctionInterface;
 
 public final class FormatZipCode extends FunctionInterface {
 
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object o = getOperand(0);
     // reverse?
     Boolean b = (getOperands().size() > 1) ? (Boolean) getOperand(1) : null;
@@ -50,10 +51,12 @@ public final class FormatZipCode extends FunctionInterface {
     }
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "FormatZipCode(ZipCode)";
   }
-  public String remarks() {
+  @Override
+public String remarks() {
    return "Formats a zipcode: 1621AB -> 1621 AB";
   }
 

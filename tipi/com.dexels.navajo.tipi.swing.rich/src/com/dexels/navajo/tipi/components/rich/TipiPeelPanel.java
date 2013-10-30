@@ -18,6 +18,7 @@ public class TipiPeelPanel extends TipiPanel {
 
 	}
 
+	@Override
 	public Object createContainer() {
 		myPanel = new PeelPanel();
 		myPanel.setOpaque(false);
@@ -28,6 +29,7 @@ public class TipiPeelPanel extends TipiPanel {
 	public void addToContainer(final Object c, Object constraints) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				myPanel.addComponent((JComponent) c);
 			}

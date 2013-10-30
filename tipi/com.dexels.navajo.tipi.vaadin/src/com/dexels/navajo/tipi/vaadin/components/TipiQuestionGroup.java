@@ -28,7 +28,8 @@ public class TipiQuestionGroup extends TipiBaseQuestionGroup {
 	private static final long serialVersionUID = -2453065163545438139L;
 	private Panel myColumn;
 
-    public Object createContainer() {
+    @Override
+	public Object createContainer() {
         myColumn = new Panel();
 //        com.vaadin.ui.
         myColumn.setScrollable(true);
@@ -36,12 +37,14 @@ public class TipiQuestionGroup extends TipiBaseQuestionGroup {
         return myColumn;
     }
 
-    public void setComponentValue(String name, Object object) {
+    @Override
+	public void setComponentValue(String name, Object object) {
 
         super.setComponentValue(name, object);
     }
 
-    public void addToContainer(Object c, Object constraints) {
+    @Override
+	public void addToContainer(Object c, Object constraints) {
         Component comp = (Component) c;
         myColumn.addComponent(comp);
     }

@@ -239,6 +239,7 @@ public String editingString() {
 	}
 
   
+	@Override
 	public String toTmlString() {
 		if (value == null) {
 			return "";
@@ -252,7 +253,8 @@ public String editingString() {
    * Get the String representation of this Money object
    * @return String
    */
-  public String toString() {
+  @Override
+public String toString() {
 //	  throw new IllegalStateException("KABLAM!");
     if (value == null) {
       return "";
@@ -274,7 +276,8 @@ public String editingString() {
     return doubleValue;
   }
 
-  public final int compareTo(Money o) {
+  @Override
+public final int compareTo(Money o) {
     if (o==null) {
       return 0;
     }
@@ -298,7 +301,8 @@ public String editingString() {
   /**
    * TODO WTF?
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
 	  if (value == null) {
 		  return 312321;
 	  }
@@ -307,7 +311,8 @@ public String editingString() {
   
 
   
-  public boolean equals(Object obj) {
+  @Override
+public boolean equals(Object obj) {
 
     if (value == null && obj == null) {
       return true;
@@ -338,6 +343,7 @@ public String editingString() {
     }
   }
 
+@Override
 public boolean isEmpty() {
     return value==null;
 }

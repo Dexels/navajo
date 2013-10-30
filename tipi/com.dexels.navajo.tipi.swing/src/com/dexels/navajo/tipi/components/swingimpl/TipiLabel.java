@@ -23,6 +23,7 @@ public class TipiLabel extends TipiSwingComponentImpl {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiLabel.class);
 	
+	@Override
 	public Object createContainer() {
 		TipiSwingLabel myLabel = new TipiSwingLabel(this);
 		TipiHelper th = new TipiSwingHelper();
@@ -52,9 +53,11 @@ public class TipiLabel extends TipiSwingComponentImpl {
 		return null;
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		if (name.equals("text")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					((TipiSwingLabel) getContainer()).setText("" + object);
 				}
@@ -64,6 +67,7 @@ public class TipiLabel extends TipiSwingComponentImpl {
 		}
 		if (name.equals("icon")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					((TipiSwingLabel) getContainer()).setIcon(getIcon(object));
 					((TipiSwingLabel) getContainer()).revalidate();
@@ -75,6 +79,7 @@ public class TipiLabel extends TipiSwingComponentImpl {
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if (name.equals("text")) {
 			return ((TipiSwingLabel) getContainer()).getText();

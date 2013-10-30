@@ -31,6 +31,7 @@ public class FloatParser extends TipiTypeParser {
 	public FloatParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return new Float(Float.parseFloat(expression));
 	}

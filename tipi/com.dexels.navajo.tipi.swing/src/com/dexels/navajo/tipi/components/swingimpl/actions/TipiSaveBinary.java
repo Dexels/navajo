@@ -19,7 +19,6 @@ import javax.swing.JFileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.metadata.FormatDescription;
 import com.dexels.navajo.document.types.Binary;
@@ -51,6 +50,7 @@ public class TipiSaveBinary extends TipiAction {
 	private File f = null;
 	private int result;
 
+	@Override
 	protected void execute(TipiEvent event) throws TipiBreakException,
 			TipiException {
 
@@ -112,6 +112,7 @@ public class TipiSaveBinary extends TipiAction {
 		}
 		myContext.runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				Container c = null;
 				doShowSaveDialog(c, fname + "." + e);

@@ -15,14 +15,17 @@ import com.dexels.navajo.tipi.internal.TipiReference;
  */
 public class ToValue extends FunctionInterface {
 
+	@Override
 	public String remarks() {
 		return "Dereferences a TipiReference, which is basically a pointer. cool";
 	}
 
+	@Override
 	public String usage() {
 		return "Dereference(Reference)";
 	}
 
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
 		if (getOperands().size() != 1) {

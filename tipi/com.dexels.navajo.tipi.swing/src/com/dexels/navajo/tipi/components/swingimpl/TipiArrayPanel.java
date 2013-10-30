@@ -33,6 +33,7 @@ public class TipiArrayPanel extends TipiSwingDataComponentImpl {
 	private static final long serialVersionUID = -6607929021126521895L;
 	private String messagePath = null;
 
+	@Override
 	public Object createContainer() {
 		JPanel myPanel = new JPanel();
 		TipiHelper th = new TipiSwingHelper();
@@ -66,6 +67,7 @@ public class TipiArrayPanel extends TipiSwingDataComponentImpl {
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	protected void cascadeLoad(Navajo n, String method) throws TipiException {
 		// logger.debug("ArrayPanell: Not cascading: "+method);
 	}

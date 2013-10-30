@@ -46,6 +46,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 	// horrible, but necessary.
 	private boolean isRebuilding = false;
 
+	@Override
 	public Object createContainer() {
 		// final TipiComponent me = this;
 
@@ -80,6 +81,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 				return checkMin(checkMax(d));
 			}
 
+			@Override
 			public Dimension getPreferredSize() {
 				return checkMaxMin(super.getPreferredSize());
 			}
@@ -90,6 +92,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		addHelper(th);
 
 		jt.addChangeListener(new ChangeListener() {
+			@Override
 			public void stateChanged(ChangeEvent ce) {
 				if (isRebuilding) {
 					return;
@@ -98,6 +101,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 				TipiTabs.this.performTipiEvent("onTabChanged", null, false,
 						new Runnable() {
 
+							@Override
 							public void run() {
 								setWaitCursor(false);
 
@@ -128,6 +132,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		return jt;
 	}
 
+	@Override
 	protected void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event) {
 		if (name.equals("enableTab")) {
@@ -139,6 +144,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 			final TipiComponent t = getTipiComponent(tabName);
 			if (t != null) {
 				runSyncInEventThread(new Runnable() {
+					@Override
 					public void run() {
 						Container c = (Container) t.getContainer();
 						JTabbedPane p = (JTabbedPane) getContainer();
@@ -164,6 +170,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 			final TipiComponent t = (TipiComponent) component.value;
 			if (t != null) {
 				runSyncInEventThread(new Runnable() {
+					@Override
 					public void run() {
 						// Container c = (Container) t.getContainer();
 						// JTabbedPane p = (JTabbedPane) getContainer();
@@ -196,9 +203,11 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		}
 	}
 
+	@Override
 	public void addToContainer(final Object c, final Object constraints) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				String stringConstraints = (String) constraints;
 				if (stringConstraints == null) {
@@ -242,9 +251,11 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					tb.setIndex(nextIndex);
 					tb.addPropertyChangeListener(new PropertyChangeListener() {
 
+						@Override
 						public void propertyChange(final PropertyChangeEvent evt) {
 							if (evt.getPropertyName().equals("tabIcon")) {
 								runSyncInEventThread(new Runnable() {
+									@Override
 									public void run() {
 										pane.setIconAt(nextIndex,
 												(Icon) evt.getNewValue());
@@ -253,6 +264,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 							}
 							else if (evt.getPropertyName().equals("tabText")) {
 								runSyncInEventThread(new Runnable() {
+									@Override
 									public void run() {
 										pane.setTitleAt(nextIndex, evt.getNewValue().toString());
 									}
@@ -260,6 +272,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 							}
 							else if (evt.getPropertyName().equals("tabToolTip")) {
 								runSyncInEventThread(new Runnable() {
+									@Override
 									public void run() {
 										pane.setToolTipTextAt(nextIndex, evt.getNewValue().toString());
 									}
@@ -282,12 +295,14 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 
 	}
 
+	@Override
 	public void setComponentValue(String name, Object object) {
 		super.setComponentValue(name, object);
 		if (name.equals("selected")) {
 			String sel = (String) object;
 			final TipiComponent tc = getTipiComponent(sel);
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					((JTabbedPane) getContainer())
 							.setSelectedComponent((Component) (tc
@@ -298,6 +313,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		if (name.equals("selectedindex")) {
 			final Integer sel = (Integer) object;
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					((JTabbedPane) getContainer()).setSelectedIndex(sel
 							.intValue());
@@ -307,6 +323,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		if (name.equals("placement")) {
 			final String sel = (String) object;
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					setTabPlacement(sel);
 				}
@@ -334,6 +351,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		((JTabbedPane) getContainer()).setTabPlacement(placement);
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		/** @todo Override this com.dexels.navajo.tipi.TipiComponent method */
 		if (name.equals("selected")) {
@@ -383,6 +401,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 	public void rebuildTabs() {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				isRebuilding = true;
 				try {

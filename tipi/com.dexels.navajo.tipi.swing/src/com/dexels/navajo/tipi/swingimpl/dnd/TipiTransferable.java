@@ -25,12 +25,14 @@ public class TipiTransferable implements Transferable {
 		this.source = source;
 	}
 
+	@Override
 	public Object getTransferData(DataFlavor flavor)
 			throws UnsupportedFlavorException, IOException {
 
 		return source;
 	}
 
+	@Override
 	public DataFlavor[] getTransferDataFlavors() {
 //		DataFlavor[] parentFla = null;
 		if (myHandler.getParentHandler() != null) {
@@ -39,6 +41,7 @@ public class TipiTransferable implements Transferable {
 		return new DataFlavor[] { myFlavor };
 	}
 
+	@Override
 	public boolean isDataFlavorSupported(DataFlavor flavor) {
 		logger.debug("Chickin!");
 		if (flavor.equals(myFlavor)) {

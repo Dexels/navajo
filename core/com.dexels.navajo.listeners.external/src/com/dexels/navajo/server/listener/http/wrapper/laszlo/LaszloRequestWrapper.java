@@ -6,20 +6,12 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoLaszloConverter;
 import com.dexels.navajo.server.listener.http.wrapper.NavajoRequestWrapper;
 
 public class LaszloRequestWrapper implements NavajoRequestWrapper {
 
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(LaszloRequestWrapper.class);
-	
 	@Override
 	public Navajo processRequestFilter(HttpServletRequest request)
 			throws IOException, ServletException {

@@ -31,6 +31,7 @@ public class EventRef implements TipiReference {
 		this.myKey = key;
 	}
 
+	@Override
 	public void setValue(Object val) {
 		TipiValue tv = new TipiValue(null);
 		tv.setValue(val);
@@ -38,6 +39,7 @@ public class EventRef implements TipiReference {
 		myEvent.addEventParameter(myKey, tv);
 	}
 
+	@Override
 	public Object getValue() {
 		return myEvent.getEventParameter(myKey);
 	}

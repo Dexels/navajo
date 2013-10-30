@@ -68,6 +68,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	private transient Timer disconnectTimer = new Timer("DisconnectTimer",true);
 	
 
+@Override
 	public Navajo doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		try {
 			ensureOpenConnection();
@@ -161,6 +162,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		logger.info("Send message not implemented");
 	}
 
+	@Override
 	public String getDefaultEntryPoint() {
 		return "InitMail";
 	}
@@ -341,6 +343,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		return myNavajo;
 	}
 
+	@Override
 	protected void setComponentValue(String name, Object object) {
 		if (name.equals("server")) {
 			host = (String) object;
@@ -398,6 +401,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		}
 	}
 
+	@Override
 	public String getConnectorId() {
 		return "mail";
 	}
@@ -474,6 +478,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		session = Session.getDefaultInstance(props, null);
 		store = session.getStore(mailMode);
 		myConnectionListener = new ConnectionListener() {
+			@Override
 			public void closed(ConnectionEvent e) {
 				try {
 					performTipiEvent("onConnectionClosed", null, false);
@@ -483,6 +488,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 				}
 			}
 
+			@Override
 			public void disconnected(ConnectionEvent arg0) {
 				try {
 					performTipiEvent("onConnectionLost", null, false);
@@ -492,6 +498,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 				}
 			}
 
+			@Override
 			public void opened(ConnectionEvent arg0) {
 				try {
 					Map<String, Object> params = new HashMap<String, Object>();
@@ -507,14 +514,17 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		store.addConnectionListener(myConnectionListener);
 		myFolderListener = new FolderListener() {
 
+			@Override
 			public void folderCreated(FolderEvent arg0) {
 				logger.info("Folder created");
 			}
 
+			@Override
 			public void folderDeleted(FolderEvent arg0) {
 				logger.info("Folder deleted");
 			}
 
+			@Override
 			public void folderRenamed(FolderEvent arg0) {
 				logger.info("Folder renamed");
 			}
@@ -522,6 +532,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		};
 		store.addFolderListener(myFolderListener);
 		myStoreListener = new StoreListener() {
+			@Override
 			public void notification(StoreEvent ee) {
 				logger.info("Store notification: " + ee.getMessage() + " " + ee.getMessageType());
 			}
@@ -772,6 +783,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	}
 
 
+	@Override
 	public Set<String> getEntryPoints() {
 		Set<String> s = new HashSet<String>();
 		s.add("InitMail");

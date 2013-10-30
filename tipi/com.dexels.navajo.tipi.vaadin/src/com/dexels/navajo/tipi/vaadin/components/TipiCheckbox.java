@@ -23,6 +23,7 @@ public class TipiCheckbox extends TipiVaadinComponentImpl {
 
 	  private boolean iAmEnabled = true;
 
+	@Override
 	public Object createContainer() {
 	    myButton = new CheckBox();
 	    myButton.addListener(new ClickListener() {
@@ -47,7 +48,8 @@ public class TipiCheckbox extends TipiVaadinComponentImpl {
 	    return myButton;
 	  }
 
-	  public void setComponentValue(final String name, final Object object) {
+	  @Override
+	public void setComponentValue(final String name, final Object object) {
 	    super.setComponentValue(name, object);
 	        if (name.equals("text")) {
 	          myButton.setCaption( (String) object);
@@ -63,7 +65,8 @@ public class TipiCheckbox extends TipiVaadinComponentImpl {
 	  }
 
 	 
-	  public Object getComponentValue(String name) {
+	  @Override
+	public Object getComponentValue(String name) {
 	    if (name.equals("text")) {
 	      return myButton.getCaption();
 	    }

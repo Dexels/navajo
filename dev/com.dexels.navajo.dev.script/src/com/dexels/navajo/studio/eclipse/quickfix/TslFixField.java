@@ -31,26 +31,30 @@ public class TslFixField implements IMarkerResolution2 {
 //        this.value = value;
     }
     
-    public String getLabel() {
+    @Override
+	public String getLabel() {
         return name;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.IMarkerResolution#run(org.eclipse.core.resources.IMarker)
      */
-    public void run(IMarker marker) {
+    @Override
+	public void run(IMarker marker) {
 //        IResource r = marker.getResource();
 //        System.err.println("AAP: "+r.getFullPath()+(" code: "+name+" val: "+value));
 //        int start = marker.getAttribute(IMarker.CHAR_START, 0);
 //        int end = marker.getAttribute(IMarker.CHAR_END, 0);
     }
 
-    public String getDescription() {
+    @Override
+	public String getDescription() {
        
         return "Compile problem:";
     }
 
-    public Image getImage() {
+    @Override
+	public Image getImage() {
         return null;
     }
 

@@ -1,7 +1,5 @@
 package com.dexels.twitter;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
@@ -191,6 +189,7 @@ public class TwitterAdapter {
 //		return tws;
 //	}
 	
+	@SuppressWarnings("deprecation")
 	public int getRateLimitStatus(){
 		return twit.getRateLimitStatus();
 	}
@@ -362,7 +361,7 @@ public class TwitterAdapter {
 	
 		
 		String url = ta.getBrowserURL();
-		Binary sign = ta.getSignPost();
+//		Binary sign = ta.getSignPost();
 		System.err.println("URL: " + url);
 		
 		//String pin = new BufferedReader(new InputStreamReader(System.in)).readLine();

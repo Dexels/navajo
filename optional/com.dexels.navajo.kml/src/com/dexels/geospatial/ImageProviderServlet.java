@@ -26,6 +26,7 @@ public class ImageProviderServlet extends HttpServlet {
 	public ImageProviderServlet(){		
 	}
 	
+	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		int width = 500;
 		int height = 250;

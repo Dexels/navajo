@@ -21,6 +21,7 @@ public class NavajoResponseEvent implements NavajoEvent {
 		return myAccess;
 	}
 
+	@Override
 	public Navajo getEventNavajo() {
 		// TODO Auto-generated method stub
 		return null;

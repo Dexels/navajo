@@ -28,11 +28,13 @@ public final class EvaluateExpression extends FunctionInterface {
 	private final static Logger logger = LoggerFactory
 			.getLogger(EvaluateExpression.class);
 	
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Evaluate a Navajo expression";
   }
 
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
     if (getOperands().size() != 1 && getOperands().size() != 3) {
       throw new TMLExpressionException("Wrong number of arguments");
@@ -86,7 +88,8 @@ public final class EvaluateExpression extends FunctionInterface {
     }
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "EvaluateExpression(expression);EvaluateExpression(condition, expression1, expression2)";
   }
 

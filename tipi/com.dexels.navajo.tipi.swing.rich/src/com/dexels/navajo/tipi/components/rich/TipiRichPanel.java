@@ -19,6 +19,7 @@ public class TipiRichPanel extends TipiPanel {
 	private GridBagLayout gridBagLayout;
 	private Insets insets = new Insets(10, 10, 10, 10);
 
+	@Override
 	public Object createContainer() {
 		myPanel = new LushContainer();
 		myPanel.setOpaque(false);
@@ -37,9 +38,11 @@ public class TipiRichPanel extends TipiPanel {
 
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		if (name.equals("indentx")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					int ii = ((Integer) object).intValue();
 					insets = new Insets(ii, ii, ii, ii);
@@ -56,6 +59,7 @@ public class TipiRichPanel extends TipiPanel {
 		try {
 			runSyncInEventThread(new Runnable() {
 
+				@Override
 				public void run() {
 					actualPanel.add((Component) c, constraints);
 				}
@@ -69,6 +73,7 @@ public class TipiRichPanel extends TipiPanel {
 	@Override
 	public void setContainerLayout(final Object layout) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				actualPanel.setLayout((LayoutManager) layout);
 			}

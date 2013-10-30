@@ -33,6 +33,7 @@ public class TipiSubstanceExtension extends TipiAbstractXMLExtension implements
 
 	}
 
+	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
 	}

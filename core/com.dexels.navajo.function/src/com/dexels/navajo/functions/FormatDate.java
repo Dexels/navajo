@@ -26,7 +26,8 @@ public final class FormatDate extends FunctionInterface {
     	//setReturnType(new String[]{"string"});
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
         if (this.getOperands().size() < 2 || this.getOperands().size() > 3)
           throw new TMLExpressionException(this.usage());
@@ -66,7 +67,8 @@ public final class FormatDate extends FunctionInterface {
         return formatter.format(date);
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "formats a date according to a format string plus an optional locale";
     }
 

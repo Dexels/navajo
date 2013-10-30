@@ -24,6 +24,7 @@ public class CacheExpiryEvent implements NavajoEvent {
 		this.key = key;
 	}
 	
+	@Override
 	public Navajo getEventNavajo() {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
 		Message event = NavajoFactory.getInstance().createMessage(input, "__event__");

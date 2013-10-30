@@ -24,11 +24,13 @@ public class TipiMenuSeparator extends TipiVaadinComponentImpl {
     public TipiMenuSeparator() {
     }
 
+	@Override
 	public void setContainer(Object c) {
 		super.replaceContainer(c);
 	}
     
     
+	@Override
 	public Object createContainer() {
     	TipiComponent parent = getTipiParent();
 		Object parentMenu = parent.getContainer();
@@ -42,6 +44,7 @@ public class TipiMenuSeparator extends TipiVaadinComponentImpl {
 
     	return menuItem;
     }
+	@Override
 	public void disposeComponent() {
     	menuItem.getParent().removeChild(menuItem);
     	super.disposeComponent();

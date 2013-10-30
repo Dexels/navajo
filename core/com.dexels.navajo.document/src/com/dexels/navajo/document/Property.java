@@ -343,7 +343,8 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
    * Return the String representation of this Property
    * @return String
    */
-  public String toString();
+  @Override
+public String toString();
 
   /**
    * Reset the value

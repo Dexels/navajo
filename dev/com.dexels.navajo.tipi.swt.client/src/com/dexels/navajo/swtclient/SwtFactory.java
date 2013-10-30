@@ -74,13 +74,16 @@ public class SwtFactory {
                 final ComboBoxCellEditor cb = new ComboBoxCellEditor(tv, ss);
                 cb.addListener(new ICellEditorListener(){
 
-                    public void applyEditorValue() {
+                    @Override
+					public void applyEditorValue() {
                     }
 
-                    public void cancelEditor() {
+                    @Override
+					public void cancelEditor() {
                     }
 
-                    public void editorValueChanged(boolean oldValidState, boolean newValidState) {
+                    @Override
+					public void editorValueChanged(boolean oldValidState, boolean newValidState) {
                        
                     }});
                return cb;
@@ -96,7 +99,8 @@ public class SwtFactory {
                 ((Text) textEditor.getControl()).addVerifyListener(
 
                 new VerifyListener() {
-                    public void verifyText(VerifyEvent e) {
+                    @Override
+					public void verifyText(VerifyEvent e) {
                         e.doit = "-0123456789".indexOf(e.text) >= 0;
                     }
                 });
@@ -107,7 +111,8 @@ public class SwtFactory {
                 ((Text) textEditor.getControl()).addVerifyListener(
 
                 new VerifyListener() {
-                    public void verifyText(VerifyEvent e) {
+                    @Override
+					public void verifyText(VerifyEvent e) {
                         e.doit = "-0123456789.+eE".indexOf(e.text) >= 0;
                     }
                 });
@@ -165,7 +170,8 @@ public class SwtFactory {
             colNames[count] = elt.getName();
             editors[count] = SwtFactory.getInstance().createTableEditor(tv.getTable(), elt);
             tc.addSelectionListener(new SelectionAdapter() {
-                public void widgetSelected(SelectionEvent e) {
+                @Override
+				public void widgetSelected(SelectionEvent e) {
                     ((PropertySorter) tv.getSorter()).setPropertyName(elt.getName());
                     
                     tv.getSorter().sort(tv, mc.getElements(element));

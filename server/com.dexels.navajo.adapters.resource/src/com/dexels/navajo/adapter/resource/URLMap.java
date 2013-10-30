@@ -49,6 +49,7 @@ public class URLMap extends HTTPMap implements HTTPMapInterface, Mappable {
 		super.kill();
 	}
 	
+	@Override
 	public void setDoSend(boolean b) throws UserException {
 		url = httpResource.getURL();
 		super.setDoSend(b);
@@ -59,7 +60,7 @@ public class URLMap extends HTTPMap implements HTTPMapInterface, Mappable {
 	}
 
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	public <T> T getComponent( final String name, String serviceKey, Class<T> interfaceClass)  {
 		BundleContext context = Version.getDefaultBundleContext();
 		try {

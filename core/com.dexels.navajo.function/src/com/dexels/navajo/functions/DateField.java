@@ -19,7 +19,8 @@ public final class DateField extends FunctionInterface {
 
     public DateField() {}
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         java.util.Date date = (java.util.Date) this.getOperands().get(0);
         String field = (String) this.getOperands().get(1);
         Calendar cal = Calendar.getInstance();
@@ -42,11 +43,13 @@ public final class DateField extends FunctionInterface {
             return new Integer(-1);
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "DateField(date, field)";
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Get a specific part of the given date, options are WEEK, YEAR and DAY.";
     }
 

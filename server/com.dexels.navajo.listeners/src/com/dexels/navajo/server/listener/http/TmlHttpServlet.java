@@ -322,6 +322,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
+	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
@@ -354,6 +355,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
+	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 

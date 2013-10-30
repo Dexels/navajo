@@ -39,17 +39,21 @@ public class TipiSwingHelper implements TipiHelper {
 
 	private java.util.List<EventListener> myListeners = new ArrayList<EventListener>();
 
+	@Override
 	public void initHelper(TipiComponent tc) {
 		myComponent = (TipiSwingComponent) tc;
 	}
 
+	@Override
 	public void setComponentValue(String name, Object object) {
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		return null;
 	}
 
+	@Override
 	public void deregisterEvent(TipiEvent e) {
 		Component c = (Component) myComponent.getContainer();
 		if (c == null) {
@@ -97,6 +101,7 @@ public class TipiSwingHelper implements TipiHelper {
 	 * able to fix it using regular inheritance
 	 * 
 	 */
+	@Override
 	public void registerEvent(final TipiEvent te) {
 		Component c = (Component) myComponent.getContainer();
 		if (c == null) {
@@ -109,6 +114,7 @@ public class TipiSwingHelper implements TipiHelper {
 						"addActionListener",
 						new Class[] { ActionListener.class });
 				ActionListener bert = new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						try {
 							myComponent.performTipiEvent("onActionPerformed",
@@ -136,6 +142,7 @@ public class TipiSwingHelper implements TipiHelper {
 				{
 					JFrame jj = (JFrame) c;
 					jj.addWindowListener(new WindowAdapter() {
+						@Override
 						public void windowClosed(WindowEvent e) {
 							try {
 								myComponent.performTipiEvent("onWindowClosed",
@@ -157,6 +164,7 @@ public class TipiSwingHelper implements TipiHelper {
 		}
 		if (te.isTrigger("onMouseEntered")) {
 			c.addMouseListener(new MouseAdapter() {
+				@Override
 				public void mouseEntered(MouseEvent e) {
 					Map<String, Object> m = new HashMap<String, Object>();
 					m.put("x", new Integer(e.getX()));
@@ -174,6 +182,7 @@ public class TipiSwingHelper implements TipiHelper {
 		}
 		if (te.isTrigger("onMouseExited")) {
 			c.addMouseListener(new MouseAdapter() {
+				@Override
 				public void mouseExited(MouseEvent e) {
 					try {
 						Map<String, Object> m = new HashMap<String, Object>();
@@ -189,6 +198,7 @@ public class TipiSwingHelper implements TipiHelper {
 		}
 		if (te.isTrigger("onMouseClicked")) {
 			c.addMouseListener(new MouseAdapter() {
+				@Override
 				public void mouseClicked(MouseEvent e) {
 					try {
 						Map<String, Object> m = new HashMap<String, Object>();
@@ -206,6 +216,7 @@ public class TipiSwingHelper implements TipiHelper {
 		}
 		if (te.isTrigger("onMousePressed")) {
 			c.addMouseListener(new MouseAdapter() {
+				@Override
 				public void mouseReleased(MouseEvent e) {
 					try {
 						Map<String, Object> m = new HashMap<String, Object>();
@@ -222,6 +233,7 @@ public class TipiSwingHelper implements TipiHelper {
 		}
 		if (te.isTrigger("onMouseReleased")) {
 			c.addMouseListener(new MouseAdapter() {
+				@Override
 				public void mouseReleased(MouseEvent e) {
 					try {
 						Map<String, Object> m = new HashMap<String, Object>();

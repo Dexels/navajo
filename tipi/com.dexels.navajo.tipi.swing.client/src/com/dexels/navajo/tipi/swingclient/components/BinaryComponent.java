@@ -50,10 +50,12 @@ public class BinaryComponent extends JPanel implements PropertyControlled,
 		setLayout(new BorderLayout());
 	}
 
+	@Override
 	public Property getProperty() {
 		return null;
 	}
 
+	@Override
 	public void setProperty(Property p) {
 		if (p != myProperty) {
 			if (myProperty != null) {
@@ -79,6 +81,7 @@ public class BinaryComponent extends JPanel implements PropertyControlled,
 			} else {
 				SwingUtilities.invokeAndWait(new Runnable() {
 
+					@Override
 					public void run() {
 
 						setSyncBinary(b);
@@ -147,9 +150,11 @@ public class BinaryComponent extends JPanel implements PropertyControlled,
 
 	}
 
+	@Override
 	public void update() {
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 		if ("value".equals(e.getPropertyName())) {
 			Binary old = (Binary) e.getOldValue();
@@ -187,6 +192,7 @@ public class BinaryComponent extends JPanel implements PropertyControlled,
 		}
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		try {
 			JFileChooser jf = new JFileChooser();
@@ -263,6 +269,7 @@ public class BinaryComponent extends JPanel implements PropertyControlled,
 		myBinaryLabel = new JButton();
 		((JButton) myBinaryLabel).setText(new String(b.getMimeType()));
 		((JButton) myBinaryLabel).addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 			}

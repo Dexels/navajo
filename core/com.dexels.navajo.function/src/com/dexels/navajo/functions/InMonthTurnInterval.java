@@ -9,6 +9,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class InMonthTurnInterval extends FunctionInterface {
 
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		int size = this.getOperands().size();
 		if(size != 3){
@@ -58,11 +59,13 @@ public class InMonthTurnInterval extends FunctionInterface {
 	}
 
 
+	@Override
 	public String remarks() {
 		return "Returns true when a given date is either in the first or last n days of the month";
 	}
 
 
+	@Override
 	public String usage() {
 		return "Usage: InMonthTurnInterval([(Date)date], [(Integer)days], [(Boolean)first]) ";
 	}

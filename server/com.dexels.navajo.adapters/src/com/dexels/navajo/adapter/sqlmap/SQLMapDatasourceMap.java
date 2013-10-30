@@ -45,11 +45,13 @@ public class SQLMapDatasourceMap implements Mappable {
   public int max_connections;
   public String driver;
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
 
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
 
   }
 
@@ -61,7 +63,8 @@ public class SQLMapDatasourceMap implements Mappable {
     this.datasourceName = s;
   }
 
-  public void kill() {
+  @Override
+public void kill() {
 
   }
   public String getLogfile() {

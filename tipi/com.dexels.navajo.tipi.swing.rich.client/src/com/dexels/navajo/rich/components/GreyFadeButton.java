@@ -45,6 +45,7 @@ public class GreyFadeButton extends JButton {
 		setOpaque(false);
 
 		this.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseEntered(MouseEvent e) {
 				mouseover = true;
 				if (!animating) {
@@ -52,6 +53,7 @@ public class GreyFadeButton extends JButton {
 				}
 			}
 
+			@Override
 			public void mouseExited(MouseEvent e) {
 				mouseover = false;
 				if (!animating) {
@@ -77,6 +79,7 @@ public class GreyFadeButton extends JButton {
 		return factor;
 	}
 
+	@Override
 	public Dimension getPreferredSize() {
 		int width = myIcon.getIconWidth();
 		int height = myIcon.getIconHeight() + reflectionSize;
@@ -103,6 +106,7 @@ public class GreyFadeButton extends JButton {
 		bounds.setLocation(location);
 		cc.showHint(this, hint);
 		cc.getAnimator().addTarget(new TimingTargetAdapter() {
+			@Override
 			public void end() {
 				// animating = false;
 			}
@@ -113,6 +117,7 @@ public class GreyFadeButton extends JButton {
 		if (in) {
 			Animator animator = PropertySetter.createAnimator(500, this, "factor", start_factor, 0.0f);
 			animator.addTarget(new TimingTargetAdapter() {
+				@Override
 				public void end() {
 					animating = false;
 					if (!mouseover) {
@@ -130,6 +135,7 @@ public class GreyFadeButton extends JButton {
 		} else {
 			Animator animator = PropertySetter.createAnimator(500, this, "factor", factor, start_factor);
 			animator.addTarget(new TimingTargetAdapter() {
+				@Override
 				public void end() {
 					animating = false;
 					if (mouseover) {
@@ -145,6 +151,7 @@ public class GreyFadeButton extends JButton {
 		repaint();
 	}
 
+	@Override
 	public void paintComponent(Graphics g) {
 		if (myIcon != null) {
 			// System.err.printl

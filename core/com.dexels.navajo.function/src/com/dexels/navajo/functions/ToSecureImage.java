@@ -42,7 +42,8 @@ public class ToSecureImage extends FunctionInterface{
   public ToSecureImage() {
   }
 
-  public Object evaluate() throws TMLExpressionException {
+  @Override
+public Object evaluate() throws TMLExpressionException {
     Object o = getOperand(0);
 
     try{
@@ -64,11 +65,13 @@ public class ToSecureImage extends FunctionInterface{
    }
   }
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Creates a Binary containing a PNG image representation of specified objects string representation\n max. inputlength is 6 chars";
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "ToSecureImage(Object value, <int width>, <int height>)";
   }
 

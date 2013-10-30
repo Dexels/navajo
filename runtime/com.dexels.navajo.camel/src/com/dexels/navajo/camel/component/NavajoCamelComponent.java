@@ -57,6 +57,7 @@ public class NavajoCamelComponent extends DefaultComponent implements Component 
 		this.localClient = null;
 	}
 
+	@Override
 	protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
     	System.err.println("uri: "+uri);
     	System.err.println("remaining: "+remaining);

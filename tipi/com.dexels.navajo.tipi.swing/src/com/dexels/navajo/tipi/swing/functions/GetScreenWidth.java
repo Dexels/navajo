@@ -16,6 +16,7 @@ public class GetScreenWidth extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Returns the width of the screen (using Toolkit)";
 	}
@@ -25,6 +26,7 @@ public class GetScreenWidth extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "GetScreenWidth()";
 	}
@@ -35,6 +37,7 @@ public class GetScreenWidth extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		return Toolkit.getDefaultToolkit().getScreenSize().width;
 	}

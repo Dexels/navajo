@@ -11,6 +11,7 @@ public class ClasspathInputLocator implements ScriptInputLocator {
 	public ClasspathInputLocator() {
 	}
 
+	@Override
 	public Navajo getInput(String scriptName) throws IOException {
 
 		System.err.println("Getting: "+scriptName+".xml");

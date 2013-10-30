@@ -23,7 +23,7 @@ public class TipiRegionSelectComponent extends TipiSvgComponent {
 	
 	String regionString = "Groningen,Friesland,Drenthe,Overijssel,Gelderland,NoordHolland,ZuidHolland,Utrecht,NoordBrabant,Zeeland,Flevoland,Limburg";
 	
-	private JComboBox comboBox;
+	private JComboBox<String> comboBox;
 
 	private SvgBatikComponent svgPanel;
 	
@@ -31,7 +31,7 @@ public class TipiRegionSelectComponent extends TipiSvgComponent {
 	public Object createContainer() {
 		JPanel lp = new JPanel();
 		lp.setLayout(new BorderLayout());
-		comboBox = new JComboBox(regions);
+		comboBox = new JComboBox<String>(regions);
 		lp.add(comboBox,BorderLayout.SOUTH);
 		comboBox.addItemListener(new ItemListener(){
 			@Override

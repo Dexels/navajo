@@ -50,6 +50,7 @@ public class NavajoMapManager implements NavajoMapManagerMBean {
 	 * Returns the health of a Navajo instance.
 	 * resourceId is [hostidentifier]/[applicationidentifier].
 	 */
+	@Override
 	public int getHealth(String resourceId) {
 		
 		String id = constructProperResourceId(resourceId);
@@ -64,15 +65,18 @@ public class NavajoMapManager implements NavajoMapManagerMBean {
 		
 	}
 
+	@Override
 	public int getWaitingTime(String resourceId) {
 		return 0;
 	}
 
+	@Override
 	public boolean isAvailable(String resourceId) {
 		int health = getHealth(resourceId);
 		return ( health != ServiceAvailability.STATUS_DEAD );
 	}
 
+	@Override
 	public void setHealth(String resourceId, int h) {
 		String id = constructProperResourceId(resourceId);
 		resourceHealthMap.put(id, h);

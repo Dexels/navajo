@@ -89,6 +89,7 @@ public class TipiMap extends TipiMessagePanel  {
 //		 &lt;script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"&gt;&lt;/script&gt;
 	}
 
+	@Override
 	public void addToContainer(Object c, Object constraints) {
 	}
 	
@@ -175,6 +176,7 @@ public class TipiMap extends TipiMessagePanel  {
 		marker.addClickListener(new ClickListener() {
 			private static final long serialVersionUID = -6806907718826334805L;
 
+			@Override
 			public void click(ClickEvent event) {
 				showPopup(caption, marker);
 			}
@@ -210,6 +212,7 @@ public class TipiMap extends TipiMessagePanel  {
 		super.setComponentValue(name, object);
 	}
 	
+	@Override
 	public Object getComponentValue(String name) {
 		return super.getComponentValue(name);
 	}
@@ -220,6 +223,7 @@ public class TipiMap extends TipiMessagePanel  {
 		popup.setAnchor(m);
 		popup.setPopupStyle(PopupStyle.FRAMED_CLOUD);
 		popup.addListener(new CloseListener() {
+			@Override
 			public void onClose(CloseEvent event) {
 				map.removeComponent(popup);
 			}

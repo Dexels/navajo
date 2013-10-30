@@ -28,10 +28,12 @@ public class AttributeRef implements TipiReference {
 		setName(name);
 	}
 
+	@Override
 	public Object getValue() {
 		return myComponent.getValue(myName);
 	}
 
+	@Override
 	public void setValue(Object val) {
 		myComponent.setValue(myName, val);
 	}
@@ -52,6 +54,7 @@ public class AttributeRef implements TipiReference {
 		myName = n;
 	}
 
+	@Override
 	public String toString() {
 		return "attributeref.[component:" + myComponent.getPath()
 				+ ",attribute:" + myName + "]";

@@ -32,6 +32,7 @@ public class BinaryParser extends TipiTypeParser {
 	public BinaryParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return new Binary(expression.getBytes());
 	}

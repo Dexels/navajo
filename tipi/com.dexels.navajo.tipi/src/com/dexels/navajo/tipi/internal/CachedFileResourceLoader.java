@@ -21,6 +21,7 @@ public class CachedFileResourceLoader extends CachedResourceLoader {
 				new FileRemoteStorage(baseRemoteFile), new LocalDigestCacheValidator());
 	}
 
+	@Override
 	public CacheManager getCacheManager() {
 		return cache;
 	}

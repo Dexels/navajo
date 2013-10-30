@@ -40,7 +40,8 @@ public final class ASTGENode extends SimpleNode {
             throw new TMLExpressionException("Illegal comparison for ge; " + a.getClass().getName() + " " + b.getClass().getName());
     }
 
-    public final Object interpret() throws TMLExpressionException {
+    @Override
+	public final Object interpret() throws TMLExpressionException {
 
         Object a = jjtGetChild(0).interpret();
 

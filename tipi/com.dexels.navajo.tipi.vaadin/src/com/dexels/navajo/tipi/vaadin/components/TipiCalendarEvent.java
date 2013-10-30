@@ -27,6 +27,7 @@ public class TipiCalendarEvent extends TipiComponentImpl {
 		return event;
 	}
 
+	@Override
 	public Object getComponentValue(final String name) {
 //		super.setComponentValue(name, object);
 		if (name.equals("startTime")) {
@@ -53,6 +54,7 @@ public class TipiCalendarEvent extends TipiComponentImpl {
 		return super.getComponentValue(name);
 		
 	}
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		super.setComponentValue(name, object);
 		if (name.equals("startTime")) {

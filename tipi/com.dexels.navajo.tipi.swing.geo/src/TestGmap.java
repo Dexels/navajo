@@ -22,6 +22,7 @@ public class TestGmap {
 		JFrame jf = new JFrame("Google map");
 		j.addPropertyChangeListener(new PropertyChangeListener(){
 
+			@Override
 			public void propertyChange(PropertyChangeEvent pce) {
 				logger.info("Property: "+pce.getPropertyName());
 			}});

@@ -35,7 +35,8 @@ public class ScriptContentAssist implements IContentAssistProcessor {
         contextInfoValidator = new ContextInformationValidator(this);
     }
 
-    public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
+    @Override
+	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
         IDocument document = viewer.getDocument();
 //        int currOffset = offset - 1;
         try {
@@ -53,24 +54,29 @@ public class ScriptContentAssist implements IContentAssistProcessor {
         }
     }
 
-    public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
+    @Override
+	public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
         return null;
     }
 
-    public char[] getCompletionProposalAutoActivationCharacters() {
+    @Override
+	public char[] getCompletionProposalAutoActivationCharacters() {
         return null;
     }
 
-    public char[] getContextInformationAutoActivationCharacters() {
+    @Override
+	public char[] getContextInformationAutoActivationCharacters() {
         return null;
     }
 
-    public String getErrorMessage() {
+    @Override
+	public String getErrorMessage() {
 
         return error;
     }
 
-    public IContextInformationValidator getContextInformationValidator() {
+    @Override
+	public IContextInformationValidator getContextInformationValidator() {
         return contextInfoValidator;
     }
 

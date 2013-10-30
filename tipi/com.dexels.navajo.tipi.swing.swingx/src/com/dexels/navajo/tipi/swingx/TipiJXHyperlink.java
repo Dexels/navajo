@@ -29,6 +29,7 @@ public class TipiJXHyperlink extends TipiSwingDataComponentImpl {
 		JXHyperlink p = new JXHyperlink();
 		p.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					performTipiEvent("onActionPerformed", null, false);
@@ -40,9 +41,11 @@ public class TipiJXHyperlink extends TipiSwingDataComponentImpl {
 		return p;
 	}
 
+	@Override
 	public final void setComponentValue(final String name, final Object object) {
 		super.setComponentValue(name, object);
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 
 				if (name.equals("icon")) {

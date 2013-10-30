@@ -20,6 +20,7 @@ public class ColumnSorter implements Comparator<Vector<?>> {
 		this.ascending = ascending;
 	}
 
+	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public int compare(Vector<?> v1, Vector<?> v2) {
 		Object o1 = v1.get(colIndex);

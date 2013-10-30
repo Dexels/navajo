@@ -33,6 +33,7 @@ public class TipiMenu extends TipiSwingComponentImpl {
 	private static final long serialVersionUID = -918633606782923037L;
 	private TipiSwingMenu myMenu = null;
 
+	@Override
 	public Object createContainer() {
 		myMenu = new TipiSwingMenu();
 		TipiHelper th = new TipiSwingHelper();
@@ -41,9 +42,11 @@ public class TipiMenu extends TipiSwingComponentImpl {
 		return myMenu;
 	}
 
+	@Override
 	public void addToContainer(final Object menu, final Object item) {
 		if (TipiSwingMenuItem.class.isInstance(menu)) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					myMenu.add((TipiSwingMenuItem) menu);
 				}
@@ -51,6 +54,7 @@ public class TipiMenu extends TipiSwingComponentImpl {
 		}
 		if (TipiSwingMenu.class.isInstance(menu)) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					myMenu.add((TipiSwingMenu) menu);
 				}
@@ -58,6 +62,7 @@ public class TipiMenu extends TipiSwingComponentImpl {
 		}
 		if (JSeparator.class.isInstance(menu)) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					myMenu.add((JSeparator) menu);
 				}
@@ -66,8 +71,10 @@ public class TipiMenu extends TipiSwingComponentImpl {
 
 	}
 
+	@Override
 	public void removeFromContainer(final Object c) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				myMenu.remove((Component) c);
 			}

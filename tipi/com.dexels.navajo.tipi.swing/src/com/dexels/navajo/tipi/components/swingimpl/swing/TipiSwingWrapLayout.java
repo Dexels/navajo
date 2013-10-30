@@ -81,6 +81,7 @@ public class TipiSwingWrapLayout extends FlowLayout {
 	 * 
 	 *         subcomponents of the specified container
 	 */
+	@Override
 	public Dimension preferredLayoutSize(Container target) {
 		return layoutSize(target, true);
 	}
@@ -97,6 +98,7 @@ public class TipiSwingWrapLayout extends FlowLayout {
 	 * 
 	 *         subcomponents of the specified container
 	 */
+	@Override
 	public Dimension minimumLayoutSize(Container target) {
 		return layoutSize(target, false);
 	}
@@ -183,12 +185,14 @@ public class TipiSwingWrapLayout extends FlowLayout {
 	 * @param target
 	 *            the specified component being laid out
 	 */
+	@Override
 	public void layoutContainer(final Container target) {
 		super.layoutContainer(target);
 		Dimension size = preferredLayoutSize(target);
 		if (!size.equals(preferredLayoutSize)) {
 			preferredLayoutSize = size;
 			SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 					target.invalidate();
 					target.getParent().validate();

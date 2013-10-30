@@ -61,6 +61,7 @@ public class PingAnswer extends Answer implements Mappable {
 //		postmanURL = JabberWorkerFactory.getInstance().getPostmanURL();
 	}
 	
+	@Override
 	public boolean acknowledged() {
 		return true;
 	}
@@ -81,12 +82,15 @@ public class PingAnswer extends Answer implements Mappable {
 		return uptime;
 	}
 
+	@Override
 	public void kill() {
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 

@@ -522,6 +522,7 @@ class TimelineEngine {
 				if (shouldRunOnUIThread && (timeline.uiToolkitHandler != null)) {
 					timeline.uiToolkitHandler.runOnUIThread(
 							timeline.mainObject, new Runnable() {
+								@Override
 								public void run() {
 									timeline.callback.onTimelineStateChanged(
 											oldState, newState,
@@ -553,6 +554,7 @@ class TimelineEngine {
 				if (shouldRunOnUIThread && (timeline.uiToolkitHandler != null)) {
 					timeline.uiToolkitHandler.runOnUIThread(
 							timeline.mainObject, new Runnable() {
+								@Override
 								public void run() {
 									// logger.info("Timeline @"
 									// + timeline.hashCode());

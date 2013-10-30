@@ -16,6 +16,7 @@ public class TestFunctionFactory extends FunctionFactoryInterface {
 
 
 
+	@Override
 	public void init() {
 		
 		// Read config file.

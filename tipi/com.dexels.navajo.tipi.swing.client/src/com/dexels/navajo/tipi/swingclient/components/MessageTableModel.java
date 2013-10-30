@@ -111,6 +111,7 @@ public class MessageTableModel extends AbstractTableModel {
 		if (myMessage != null) {
 			myMessage.addPropertyChangeListener(new PropertyChangeListener() {
 
+				@Override
 				public void propertyChange(final PropertyChangeEvent e) {
 					final Property p = (Property) e.getSource();
 					Message m = p.getParentMessage();
@@ -121,6 +122,7 @@ public class MessageTableModel extends AbstractTableModel {
 							if (!SwingUtilities.isEventDispatchThread()) {
 								SwingUtilities.invokeAndWait(new Runnable() {
 
+									@Override
 									public void run() {
 										if (row >= 0 && column >= 0) {
 											fireTableCellUpdated(row, column);
@@ -218,10 +220,12 @@ public class MessageTableModel extends AbstractTableModel {
 
 	}
 
+	@Override
 	public int getColumnCount() {
 		return myColumnIds.size() + subsractColumnCount;
 	}
 
+	@Override
 	public Object getValueAt(int row, int column) {
 		if (column == 0 && rowHeadersVisible) {
 			return new Integer(row);
@@ -260,6 +264,7 @@ public class MessageTableModel extends AbstractTableModel {
 		}
 	}
 
+	@Override
 	public int getRowCount() {
 		if (myMessage == null) {
 			return 0;
@@ -455,6 +460,7 @@ public class MessageTableModel extends AbstractTableModel {
 				try {
 					SwingUtilities.invokeAndWait(new Runnable() {
 
+						@Override
 						public void run() {
 							fireTableCellUpdated(row, column);
 

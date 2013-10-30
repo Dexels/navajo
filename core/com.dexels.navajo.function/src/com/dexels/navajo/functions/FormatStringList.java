@@ -23,7 +23,8 @@ public final class FormatStringList extends FunctionInterface {
 
     public FormatStringList() {}
 
-    @SuppressWarnings("rawtypes")
+    @Override
+	@SuppressWarnings("rawtypes")
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object a = this.getOperands().get(0);
         Object b = this.getOperands().get(1);
@@ -48,11 +49,13 @@ public final class FormatStringList extends FunctionInterface {
         return result.toString();
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "FormatStringList(list of Strings, separator). Example FormatStringList(\"{\"Navajo\", \"Dexels\"}\", \";\") returns \"Navajo;Dexels\"";
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Turns a list of strings in a single string using supplied delimiter.";
     }
 

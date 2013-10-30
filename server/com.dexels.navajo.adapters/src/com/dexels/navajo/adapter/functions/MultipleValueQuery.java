@@ -9,6 +9,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public final class MultipleValueQuery extends SingleValueQuery {
 
+	@Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
 
@@ -39,10 +40,12 @@ public final class MultipleValueQuery extends SingleValueQuery {
 
 	}
 
+	@Override
 	public String remarks() {
 		return "A query can be supplied to this function that executes a SQL parameter with a given number of parameters, result is an ArrayList";
 	}
 
+	@Override
 	public String usage() {
 		return "MultipleValueQuery('query', ?, ?, ...)";
 	}

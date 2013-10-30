@@ -29,6 +29,7 @@ private final static Logger logger = LoggerFactory
       filePath = System.getProperty("user.dir");
   }
     
+@Override
 public InputStream getResource(String name) {
     try {
     	File f = new File(name);

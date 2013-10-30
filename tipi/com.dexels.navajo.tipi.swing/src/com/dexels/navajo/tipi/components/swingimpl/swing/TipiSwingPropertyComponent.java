@@ -59,14 +59,17 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 		return alwaysUseLabel;
 	}
 
+	@Override
 	public void setAlwaysUseLabel(boolean alwaysUseLabel) {
 		this.alwaysUseLabel = alwaysUseLabel;
 	}
 
+	@Override
 	public String getCapitalization() {
 		return super.getCapitalization();
 	}
 
+	@Override
 	public void setCapitalization(String capitalization) {
 		String old = super.getCapitalization();
 		super.setCapitalization(capitalization);
@@ -91,6 +94,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 		return requiredPostfix;
 	}
 	// public void setProperty(Property p) {
+	@Override
 	public void constructPropertyComponent(Property p) {
 
 		String subtype = p.getSubType("tipitype");
@@ -130,6 +134,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 
 	}
 
+	@Override
 	public void setCheckboxGroupColumnCount(int checkboxGroupColumnCount) {
 		int old = getCheckboxGroupColumnCount();
 		super.setCheckboxGroupColumnCount(checkboxGroupColumnCount);
@@ -141,6 +146,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 		return super.hasHorizontalScrolls();
 	}
 
+	@Override
 	public void setHorizontalScrolls(boolean horizontalScrolls) {
 		boolean old = super.hasHorizontalScrolls();
 		super.setHorizontalScrolls(horizontalScrolls);
@@ -157,10 +163,12 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 		firePropertyChange(LABELHALIGN, old, labelHAlign);
 	}
 
+	@Override
 	public int getLabelIndent() {
 		return super.getLabelIndent();
 	}
 
+	@Override
 	public void setLabelIndent(int labelIndent) {
 		int old = getLabelIndent();
 		super.setLabelIndent(labelIndent);
@@ -186,40 +194,48 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 		firePropertyChange(LABELVALIGN, old, labelVAlign);
 	}
 
+	@Override
 	public int getMaxImageHeight() {
 		return super.getMaxImageHeight();
 	}
 
+	@Override
 	public void setMaxImageHeight(int maxImageHeight) {
 		int old = getMaxImageHeight();
 		super.setMaxImageHeight(maxImageHeight);
 		firePropertyChange(MAXIMAGEHEIGHT, old, maxImageHeight);
 	}
 
+	@Override
 	public int getMaxImageWidth() {
 		return super.getMaxImageWidth();
 	}
 
+	@Override
 	public void setMaxImageWidth(int maxImageWidth) {
 		int old = getMaxImageWidth();
 		super.setMaxImageWidth(maxImageWidth);
 		firePropertyChange(MAXIMAGEWIDTH, old, maxImageWidth);
 	}
 
+	@Override
 	public int getMaxWidth() {
 		return super.getMaxWidth();
 	}
 
+	@Override
 	public void setMaxWidth(int maxWidth) {
 		int old = getMaxWidth();
 		super.setMaxWidth(maxWidth);
 		firePropertyChange(MAXWIDTH, old, maxWidth);
 	}
 
+	@Override
 	public int getMemoColumnCount() {
 		return super.getMemoColumnCount();
 	}
 
+	@Override
 	public void setMemoColumnCount(int memoColumnCount) {
 		int old = getMemoColumnCount();
 		super.setMemoColumnCount(memoColumnCount);
@@ -230,6 +246,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 		return super.getMemoColumnCount();
 	}
 
+	@Override
 	public void setMemoRowCount(int memoRowCount) {
 		int old = getMemoRowCount();
 		super.setMemoRowCount(memoRowCount);
@@ -246,10 +263,12 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 		firePropertyChange(PROPERTYNAME, old, propertyname);
 	}
 
+	@Override
 	public String getSelectionType() {
 		return super.getSelectionType();
 	}
 
+	@Override
 	public void setSelectionType(String selectionType) {
 		String old = getSelectionType();
 		super.setSelectionType(selectionType);
@@ -260,6 +279,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 		return super.hasShowDatePicker();
 	}
 
+	@Override
 	public void setShowDatePicker(boolean showDatePicker) {
 		boolean old = isShowDatePicker();
 		super.setShowDatePicker(showDatePicker);
@@ -272,6 +292,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 		firePropertyChange(SHOWLABEL, old, showLabel);
 	}
 
+	@Override
 	public void setVerticalScrolls(boolean verticalScrolls) {
 		boolean old = hasVerticalScrolls();
 		super.setVerticalScrolls(verticalScrolls);
@@ -284,18 +305,21 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 		firePropertyChange(VISIBLEROWCOUNT, old, visibleRowCount);
 	}
 
+	@Override
 	public void setFocusable(boolean b) {
 		boolean old = isFocusable();
 		super.setFocusable(b);
 		firePropertyChange(FOCUSABLE, old, b);
 	}
 
+	@Override
 	public void setEnabled(boolean b) {
 		// super.setEnabled(b);
 		// logger.debug("IN SETENABLED. IGNORING");
 		// Thread.dumpStack();
 	}
 
+	@Override
 	protected JLabel getLabel() {
 		if (myLabel == null) {
 			myLabel = new TipiSwingPropertyDescriptionLabel(this, myComponent);
@@ -303,6 +327,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent
 		return myLabel;
 	}
 
+	@Override
 	public TipiDndManager getDndManager() {
 		return myTipiDndManager;
 	}

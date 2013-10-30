@@ -21,11 +21,13 @@ public class TipiSetTheme extends TipiAction {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiSetTheme.class);
 	
+	@Override
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		final Operand valueOp = getEvaluatedParameter("value", event);
 
 		SwingUtilities.invokeLater(new Runnable() {
 
+			@Override
 			public void run() {
 				try {
 					UIManager.getLookAndFeelDefaults().put("ClassLoader", SubstanceBusinessBlackSteelLookAndFeel.class.getClassLoader());

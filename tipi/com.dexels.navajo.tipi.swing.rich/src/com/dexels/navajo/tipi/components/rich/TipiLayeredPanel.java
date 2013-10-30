@@ -22,11 +22,13 @@ public class TipiLayeredPanel extends TipiPanel {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiLayeredPanel.class);
 	// private int totalResize = 0;
+	@Override
 	public Object createContainer() {
 		final JLayeredPane myPanel = new JLayeredPane();
 
 		myPanel.addComponentListener(new ComponentAdapter() {
 
+			@Override
 			public void componentResized(ComponentEvent e) {
 				for (int i = 0; i < myPanel.getComponentCount(); i++) {
 					Component c = myPanel.getComponent(i);
@@ -37,6 +39,7 @@ public class TipiLayeredPanel extends TipiPanel {
 				}
 			}
 
+			@Override
 			public void componentShown(ComponentEvent e) {
 				for (int i = 0; i < myPanel.getComponentCount(); i++) {
 					Component c = myPanel.getComponent(i);
@@ -46,25 +49,30 @@ public class TipiLayeredPanel extends TipiPanel {
 		});
 		myPanel.addMouseListener(new MouseListener() {
 
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				logger.info("bliep");
 			}
 
+			@Override
 			public void mouseEntered(MouseEvent e) {
 				logger.info("oop");
 
 			}
 
+			@Override
 			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
 
 			}
 
+			@Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
 
 			}
 
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				// TODO Auto-generated method stub
 
@@ -73,12 +81,14 @@ public class TipiLayeredPanel extends TipiPanel {
 		return myPanel;
 	}
 
+	@Override
 	public void addToContainer(final Object c, final Object constraints) {
 		if (constraints == null) {
 			myContext.showInternalError("Error adding element to layerpanel: " + getPath() + " you need to add an Integer constraint");
 			return;
 		}
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				JLayeredPane myPanel = (JLayeredPane) getContainer();
 				Component comp = (Component) c;

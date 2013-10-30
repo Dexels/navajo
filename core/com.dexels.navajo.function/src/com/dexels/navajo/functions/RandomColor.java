@@ -43,6 +43,7 @@ public class RandomColor extends FunctionInterface {
 	public RandomColor() {
 	}
 	
+	@Override
 	public String remarks() {
 		return "Returns a random color given some seed";
 	}
@@ -80,6 +81,7 @@ public class RandomColor extends FunctionInterface {
 		return google.toString();
 	}
 	
+	@Override
 	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
 		int rnd = 0;
@@ -94,6 +96,7 @@ public class RandomColor extends FunctionInterface {
 
 	}
 	
+	@Override
 	public String usage() {
 		return "RandomColor(seed), returns a color string ffffff";
 	}

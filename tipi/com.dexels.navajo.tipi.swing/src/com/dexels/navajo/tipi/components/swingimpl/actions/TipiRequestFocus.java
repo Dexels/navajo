@@ -39,6 +39,7 @@ public final class TipiRequestFocus extends TipiAction {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiRequestFocus.class);
 	
+	@Override
 	public final void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
@@ -60,6 +61,7 @@ public final class TipiRequestFocus extends TipiAction {
 			try {
 				SwingUtilities.invokeAndWait(new Runnable() {
 
+					@Override
 					public void run() {
 						cc.requestFocusInWindow();
 

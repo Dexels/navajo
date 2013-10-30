@@ -24,6 +24,7 @@ public class TipiDesktop extends TipiSwingDataComponentImpl {
 	 */
 	private static final long serialVersionUID = -2373703878682125710L;
 
+	@Override
 	public Object createContainer() {
 		TipiSwingDesktop jp = new TipiSwingDesktop();
 		SwingTipiContext c = (SwingTipiContext) myContext;
@@ -47,8 +48,10 @@ public class TipiDesktop extends TipiSwingDataComponentImpl {
 		return getSwingContainer().getWidth();
 	}
 
+	@Override
 	public void addToContainer(final Object c, final Object constraints) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 
 				getSwingContainer().add((Component) c, constraints);
@@ -65,11 +68,13 @@ public class TipiDesktop extends TipiSwingDataComponentImpl {
 		});
 	}
 
+	@Override
 	public void removeFromContainer(final Object c) {
 		if (c == null) {
 			return;
 		}
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				// logger.debug("Removing from desktop: "+c);
 				if (c instanceof JInternalFrame) {
@@ -81,8 +86,10 @@ public class TipiDesktop extends TipiSwingDataComponentImpl {
 		});
 	}
 
+	@Override
 	protected void addedToParent() {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				((TipiSwingDesktop) getContainer()).revalidate();
 			}

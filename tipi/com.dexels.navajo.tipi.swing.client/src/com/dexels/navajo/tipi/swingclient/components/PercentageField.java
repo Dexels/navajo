@@ -62,6 +62,7 @@ public class PercentageField extends AbstractPropertyField implements
 		return p.formattedString();
 	}
 
+	@Override
 	public void update() {
 		updateProperty();
 	}

@@ -34,6 +34,7 @@ public class NavajoNotification  extends javax.management.Notification {
 		this.severeness = severeness;
 	}
 	
+	@Override
 	public String getMessage() {
 		return this.message;
 	}

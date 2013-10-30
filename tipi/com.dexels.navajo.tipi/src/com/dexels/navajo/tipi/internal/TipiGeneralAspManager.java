@@ -43,6 +43,7 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 		this.scriptPrefix = scriptPrefix;
 	}
 
+	@Override
 	public Navajo getStorageDocument(String id) throws TipiException {
 		Navajo reply = null;
 		try {
@@ -90,6 +91,7 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 		return response;
 	}
 
+	@Override
 	public void setStorageDocument(String id, Navajo n) throws TipiException {
 		try {
 			Navajo request = constructUpdateRequest(id, n);
@@ -180,11 +182,13 @@ public class TipiGeneralAspManager implements TipiStorageManager, Serializable {
 		return n;
 	}
 
+	@Override
 	public void setInstanceId(String id) {
 		logger.info("Setting instanceid to: " + id);
 		instanceId = id;
 	}
 
+	@Override
 	public void setContext(TipiContext tc) {
 		this.myContext = tc;
 

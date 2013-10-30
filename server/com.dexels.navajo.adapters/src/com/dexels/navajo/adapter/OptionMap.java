@@ -48,11 +48,14 @@ public class OptionMap implements Mappable {
 
     public OptionMap() {}
 
-    public void load(Access parm4) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}
+    @Override
+	public void load(Access parm4) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}
 
-    public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}
+    @Override
+	public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}
 
-    public void kill() {}
+    @Override
+	public void kill() {}
 
     public String getOptionName() {
         return optionName;

@@ -37,6 +37,7 @@ public abstract class TipiTableBaseLayer {
 		myTable = tmt;
 	}
 
+	@Override
 	public String toString() {
 		return "Class: " + getClass().getName() + " Title: " + titleProperty
 				+ " msgpath: " + messagePath;

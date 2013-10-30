@@ -33,11 +33,13 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 	private TipiNavajoTreeModel navajoTreeModel;
 	private int lastSelectedRow = -1;
 
+	@Override
 	public Object createContainer() {
 		final TipiSwingNavajoTree tipiSwingNavajoTree = new TipiSwingNavajoTree();
 		tipiSwingNavajoTree
 				.addTreeSelectionListener(new TreeSelectionListener() {
 
+					@Override
 					public void valueChanged(TreeSelectionEvent tse) {
 						TreePath newLeadSelectionPath = tse
 								.getNewLeadSelectionPath();
@@ -76,6 +78,7 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 		tipiSwingNavajoTree
 				.addTreeExpansionListener(new TreeExpansionListener() {
 
+					@Override
 					public void treeCollapsed(TreeExpansionEvent te) {
 						MessageTreeNode mm = (MessageTreeNode) te.getPath()
 								.getLastPathComponent();
@@ -86,6 +89,7 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 						logger.debug("Exp: " + expansionMap);
 					}
 
+					@Override
 					public void treeExpanded(TreeExpansionEvent te) {
 						MessageTreeNode mm = (MessageTreeNode) te.getPath()
 								.getLastPathComponent();
@@ -105,6 +109,7 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 		super.loadData(n, method);
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				NavajoTreeNode tn;
 				try {

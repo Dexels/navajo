@@ -29,6 +29,7 @@ public final class GetCents extends FunctionInterface {
 	public GetCents() {
 	}
 
+	@Override
 	public final Object evaluate()
 			throws com.dexels.navajo.parser.TMLExpressionException {
 
@@ -67,10 +68,12 @@ public final class GetCents extends FunctionInterface {
 
 	}
 
+	@Override
 	public String usage() {
 		return "GetCents(Money)";
 	}
 
+	@Override
 	public String remarks() {
 		return "GetCents takes an amount of money and returns the cents";
 	}

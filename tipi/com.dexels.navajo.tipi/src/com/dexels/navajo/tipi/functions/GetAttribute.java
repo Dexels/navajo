@@ -19,6 +19,7 @@ public class GetAttribute extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Gets the attribute ref of a component";
 	}
@@ -28,6 +29,7 @@ public class GetAttribute extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "GetAttribute(TipiComponent source, String attribute)";
 	}
@@ -38,6 +40,7 @@ public class GetAttribute extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
 		if (pp == null) {

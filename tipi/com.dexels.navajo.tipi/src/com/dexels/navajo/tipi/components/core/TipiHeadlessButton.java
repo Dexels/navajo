@@ -51,10 +51,12 @@ public class TipiHeadlessButton extends TipiComponentImpl {
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public Object createContainer() {
 		return null;
 	}
 
+	@Override
 	protected void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event) {
 		if ("fireAction".equals(name)) {

@@ -27,7 +27,8 @@ public class NavajoAction extends BaseNavajoAction {
      * 
      * @see IWorkbenchWindowActionDelegate#run
      */
-    public void run(IAction action) {
+    @Override
+	public void run(IAction action) {
         
     	System.err.println("Removed.. Will not do anything");
     }

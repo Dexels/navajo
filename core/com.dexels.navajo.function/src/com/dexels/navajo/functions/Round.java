@@ -46,14 +46,17 @@ public final class Round extends FunctionInterface {
 
     public Round() {}
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "With this function a floating point value can be rounded to a given number of digits. Round(2.372, 2) = 2.37";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "Round(float, integer).";
     }
 
+	@Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		Object a = this.getOperands().get( 0 );
 		Object b = this.getOperands().get( 1 );

@@ -2,9 +2,6 @@ package com.dexels.navajo.tipi.css.actions;
 
 import java.net.URL;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiException;
@@ -16,8 +13,6 @@ public class ApplyCss extends TipiAction {
 
 	private static final long serialVersionUID = 5481600392557969470L;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(ApplyCss.class);
 	public org.akrogen.tkui.css.tipi.engine.CSSTipiEngineImpl aap;
 	
 	@Override

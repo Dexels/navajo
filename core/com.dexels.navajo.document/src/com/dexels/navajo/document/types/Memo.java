@@ -30,10 +30,12 @@ public final class Memo extends NavajoType implements Comparable<Memo> {
 		contents = s;
 	}
 
+	@Override
 	public String toString() {
 		return contents;
 	}
 
+	@Override
 	public int hashCode() {
 		if (contents == null) {
 			return 334234;
@@ -41,6 +43,7 @@ public final class Memo extends NavajoType implements Comparable<Memo> {
 		return contents.hashCode();
 	}
 
+	@Override
 	public int compareTo(Memo s) {
 		if (s == null) {
 			return 0;
@@ -48,6 +51,7 @@ public final class Memo extends NavajoType implements Comparable<Memo> {
 		return contents.compareTo(s.toString());
 	}
 
+	@Override
 	public boolean equals(Object s) {
 		if (s == null && contents != null) {
 			return false;
@@ -64,6 +68,7 @@ public final class Memo extends NavajoType implements Comparable<Memo> {
 		return contents.equals(s.toString());
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return contents == null || "".equals(contents);
 	}

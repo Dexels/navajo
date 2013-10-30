@@ -28,6 +28,7 @@ public class MembershipSmokeSignal extends SmokeSignal implements Serializable {
 		super(key, value);
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public void processMessage() {
 

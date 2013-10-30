@@ -44,6 +44,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 	public TipiFrame() {
 	}
 
+	@Override
 	public Object createContainer() {
 		boolean internal = (getContext() instanceof SwingEmbeddedContext)
 				|| ((SwingTipiContext) getContext()).getAppletRoot() != null;
@@ -99,6 +100,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 		}
 	}
 
+	@Override
 	public void addToContainer(final Object c, final Object constraints) {
 		if (this.getClass().getName().contains("Embed")) {
 
@@ -107,6 +109,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 		// final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
 		if (JMenuBar.class.isInstance(c)) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					if (myToplevel instanceof JFrame) {
 						((JFrame) myToplevel).getRootPane().setJMenuBar(
@@ -128,9 +131,11 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 		} else {
 			// FIXME WTF?!!!
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 
 					runSyncInEventThread(new Runnable() {
+						@Override
 						public void run() {
 							mySuperPanel.add((Component) c, constraints);
 							// mySuperPanel.doLayout();
@@ -143,9 +148,11 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 		}
 	}
 
+	@Override
 	public void disposeComponent() {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				JFrame jj = (JFrame) getContainer();
 				if (jj != null) {
@@ -165,9 +172,11 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 
 	}
 
+	@Override
 	public void removeFromContainer(final Object c) {
 		// final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				// logger.debug("Beware! not working well");
 				myToplevel.getContentPane().remove((Component) c);
@@ -204,6 +213,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 		}
 	}
 
+	@Override
 	public void setContainerLayout(Object layout) {
 		mySuperPanel.setLayout((LayoutManager) layout);
 	}
@@ -212,10 +222,12 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 		return new ImageIcon(u);
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				if (name.equals("fullscreen")) {
 					fullscreen = ((Boolean) object).booleanValue();
@@ -244,6 +256,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 		if (name.equals("x")) {
 			runAsyncInEventThread(new Runnable() {
 
+				@Override
 				public void run() {
 					Rectangle bounds = getBounds();
 					x = ((Integer) object).intValue();
@@ -256,6 +269,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 		if (name.equals("y")) {
 			runAsyncInEventThread(new Runnable() {
 
+				@Override
 				public void run() {
 					Rectangle bounds = getBounds();
 					y = ((Integer) object).intValue();
@@ -269,6 +283,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 		if (name.equals("h")) {
 			runAsyncInEventThread(new Runnable() {
 
+				@Override
 				public void run() {
 					Rectangle bounds = getBounds();
 					h = ((Integer) object).intValue();
@@ -281,6 +296,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 		if (name.equals("w")) {
 			runAsyncInEventThread(new Runnable() {
 
+				@Override
 				public void run() {
 					Rectangle bounds = getBounds();
 					w = ((Integer) object).intValue();
@@ -311,6 +327,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 		}
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if ("visible".equals(name)) {
 			if (myToplevel instanceof JFrame) {
@@ -367,10 +384,12 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 	 * 
 	 * @todo Implement this com.dexels.navajo.tipi.TipiComponent method
 	 */
+	@Override
 	public void componentInstantiated() {
 		super.componentInstantiated();
 		if (getContainer() instanceof TipiSwingFrame) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					setBounds(new Rectangle(x, y, w, h));
 					if (fullscreen) {
@@ -388,6 +407,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl{
 			TipiComponentMethod compMeth) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				if (name.equals("iconify")) {
 					if (getContainer() instanceof TipiSwingFrameImpl) {

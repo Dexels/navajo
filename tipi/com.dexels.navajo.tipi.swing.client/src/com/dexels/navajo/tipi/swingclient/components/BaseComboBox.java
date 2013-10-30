@@ -11,12 +11,12 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 
-public abstract class BaseComboBox extends JComboBox {
+public abstract class BaseComboBox extends JComboBox<Selection> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2894805109531627299L;
-	DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel();
+	DefaultComboBoxModel<Selection> defaultComboBoxModel = new DefaultComboBoxModel<Selection>();
 
 	public BaseComboBox() {
 		// this.setPreferredSize(new Dimension(125,
@@ -28,7 +28,7 @@ public abstract class BaseComboBox extends JComboBox {
 
 	public void loadCombobox(Property p) {
 		try {
-			defaultComboBoxModel = new DefaultComboBoxModel();
+			defaultComboBoxModel = new DefaultComboBoxModel<Selection>();
 			ArrayList<Selection> a = p.getAllSelections();
 			Selection selectedSelection = null;
 			for (int i = 0; i < a.size(); i++) {
@@ -58,7 +58,7 @@ public abstract class BaseComboBox extends JComboBox {
 
 	public void setToKey(String key) {
 		for (int i = 0; i < defaultComboBoxModel.getSize(); i++) {
-			Selection s = (Selection) defaultComboBoxModel.getElementAt(i);
+			Selection s = defaultComboBoxModel.getElementAt(i);
 			if (s.getValue().equals(key)) {
 				setSelectedItem(s);
 			}
@@ -79,6 +79,7 @@ public abstract class BaseComboBox extends JComboBox {
 		long lastKeyTime = 0;
 		String pattern = "";
 
+		@Override
 		public int selectionForKey(char aKey, ComboBoxModel model) {
 			int selIx = 01;
 			Object sel = model.getSelectedItem();

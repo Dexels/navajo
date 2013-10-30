@@ -242,6 +242,7 @@ public class GenericHandler extends ServiceHandler {
 		File currentScriptDir = new File(DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() + "/" + pathPrefix);
 		final String servName = serviceName;
 		File[] scripts = currentScriptDir.listFiles(new FilenameFilter() {
+			@Override
 			public boolean accept(File dir, String name) {
 				return name.startsWith(servName);
 			}
@@ -331,7 +332,8 @@ public class GenericHandler extends ServiceHandler {
     	return nr;
     }
     
-    public boolean needsRecompile() {
+    @Override
+	public boolean needsRecompile() {
     	return needsRecompileForScript(this.access);
     }
     
@@ -418,6 +420,7 @@ public class GenericHandler extends ServiceHandler {
      * @throws SystemException
      * @throws AuthorizationException
      */
+	@Override
 	public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
 
     	// Check whether break-was-set for access from 'the-outside'. If so, do NOT perform service and return

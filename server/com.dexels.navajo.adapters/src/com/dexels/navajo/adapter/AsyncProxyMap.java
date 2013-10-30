@@ -34,7 +34,8 @@ public class AsyncProxyMap extends AsyncMappable {
 		.getLogger(AsyncProxyMap.class);
 
 
-  public void load(Access access) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+  @Override
+public void load(Access access) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
     username = access.rpcUser;
     password = access.rpcPwd;
     this.access = access;
@@ -47,30 +48,36 @@ public class AsyncProxyMap extends AsyncMappable {
     this.method = name;
   }
 
-  public void kill() {
+  @Override
+public void kill() {
   }
 
-  public void afterResponse() {
+  @Override
+public void afterResponse() {
     logger.debug("AsyncProxyMap: in afterResponse()");
     access.setOutputDoc(inDoc);
   }
 
-  public int getPercReady() {
+  @Override
+public int getPercReady() {
     logger.debug("AsyncProxyMap: in getPercReady()");
     return 0;
   }
 
-  public void beforeResponse(Access access) {
+  @Override
+public void beforeResponse(Access access) {
     access.setOutputDoc(inDoc);
     logger.debug("AsyncProxyMap: in beforeResponse()");
     logger.debug("INDOC = " + access.getOutputDoc());
   }
 
-  public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+  @Override
+public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
     logger.debug("AsyncProxyMap: in store()");
   }
 
-  public void run() throws com.dexels.navajo.server.UserException {
+  @Override
+public void run() throws com.dexels.navajo.server.UserException {
 	  
      Header h = outDoc.getHeader();
      if (h == null) {
@@ -94,7 +101,8 @@ public class AsyncProxyMap extends AsyncMappable {
     
   }
 
-  public void afterRequest() throws UserException {
+  @Override
+public void afterRequest() throws UserException {
     logger.debug("AsyncProxyMap: in afterRequest()");
     if (method == null)
       throw new UserException(-1, "AsyncProxyMap: specify a method");

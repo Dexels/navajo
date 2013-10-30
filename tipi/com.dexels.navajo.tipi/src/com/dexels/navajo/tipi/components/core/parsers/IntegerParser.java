@@ -31,6 +31,7 @@ public class IntegerParser extends TipiTypeParser {
 	public IntegerParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return new Integer(Integer.parseInt(expression));
 	}

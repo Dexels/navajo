@@ -38,6 +38,7 @@ public class DispatcherComponent extends Dispatcher implements
 //		auditLogSr.unregister();
 	}
 
+	@Override
 	public void setNavajoConfig(NavajoConfigInterface nci) {
 		logger.debug("setNavajoConfig dispatcher!");
 		super.setNavajoConfig(nci);

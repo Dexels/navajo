@@ -45,6 +45,7 @@ public class TipiBrowseBinary extends TipiAction {
 	private File f = null;
 	private int result = 0;
 
+	@Override
 	protected void execute(TipiEvent event) throws TipiBreakException,
 			TipiException {
 		Operand value = getEvaluatedParameter("property", event);
@@ -67,6 +68,7 @@ public class TipiBrowseBinary extends TipiAction {
 		}
 		getComponent().runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				JFileChooser jf = new JFileChooser(System
 						.getProperty("user.home"));

@@ -42,6 +42,7 @@ public class LockAnswer extends Answer {
 		mySsl = ssl;
 	}
 	
+	@Override
 	public boolean acknowledged() {
 		return ( mySsl != null );
 	}

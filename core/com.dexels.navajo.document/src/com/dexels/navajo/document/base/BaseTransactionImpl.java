@@ -21,7 +21,8 @@ protected String myRequestId;
   }
 
  
-  public Map<String,String> getAttributes() {
+  @Override
+public Map<String,String> getAttributes() {
       Map<String,String> m = new HashMap<String,String>();
       if (rpc_name!=null) {
           m.put("rpc_name", rpc_name);
@@ -42,9 +43,11 @@ protected String myRequestId;
   }
 
 
- public List<? extends BaseNode> getChildren() {
+ @Override
+public List<? extends BaseNode> getChildren() {
      return null;
   }
+@Override
 public String getTagName() {
     return "transaction";
 }

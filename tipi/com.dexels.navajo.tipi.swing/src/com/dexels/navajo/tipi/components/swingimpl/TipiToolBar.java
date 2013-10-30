@@ -31,6 +31,7 @@ public class TipiToolBar extends TipiSwingDataComponentImpl {
 	 */
 	private static final long serialVersionUID = 135588077316182824L;
 
+	@Override
 	public Object createContainer() {
 		TipiSwingToolBar ts = new TipiSwingToolBar();
 		TipiHelper th = new TipiSwingHelper();
@@ -47,6 +48,7 @@ public class TipiToolBar extends TipiSwingDataComponentImpl {
 	private final void setOrientation(String o) {
 		if ("horizontal".equals(o)) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					((TipiSwingToolBar) getContainer())
 							.setOrientation(SwingConstants.HORIZONTAL);
@@ -55,6 +57,7 @@ public class TipiToolBar extends TipiSwingDataComponentImpl {
 		}
 		if ("vertical".equals(o)) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					((TipiSwingToolBar) getContainer())
 							.setOrientation(SwingConstants.VERTICAL);
@@ -67,9 +70,11 @@ public class TipiToolBar extends TipiSwingDataComponentImpl {
 		((TipiSwingToolBar) getContainer()).setFloatable(b.booleanValue());
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		super.setComponentValue(name, object);
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				if ("orientation".equals(name)) {
 					setOrientation((String) object);

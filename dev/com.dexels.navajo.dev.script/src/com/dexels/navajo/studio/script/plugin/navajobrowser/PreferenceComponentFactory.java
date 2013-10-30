@@ -53,13 +53,16 @@ class ProjectViewContentProvider implements IStructuredContentProvider {
         myNature = nature;
     }
 
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    @Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
     }
 
-    public Object[] getElements(Object inputElement) {
+    @Override
+	public Object[] getElements(Object inputElement) {
         List<IProject> l;
         try {
             l = NavajoScriptPluginPlugin.getProjectsByNature(myNature);

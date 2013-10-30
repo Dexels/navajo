@@ -81,6 +81,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 	
 	private HashMap<String, String> headers = new HashMap<String, String>();
 	
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		myNavajo = access.getInDoc();
 		myAccess = access;
@@ -289,6 +290,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		return result;
 	}
 	
+	@Override
 	public void store() throws MappableException, UserException {
 		if (queuedSend) {
 			try {
@@ -299,13 +301,16 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		}
 	}
 
+	@Override
 	public void kill() {
 	}
 	
+	@Override
 	public Binary getResponse() {
 		return null;
 	}
 
+	@Override
 	public boolean send() {
 		retries++;
 		try {
@@ -328,11 +333,13 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		setContent(b);
 	}
 
+	@Override
 	public void setQueuedSend(boolean b) {
 		queuedSend = b;
 	}
 	
 
+	@Override
 	public Binary getRequest() {
 		if ( textContent != null ) {
 			return new Binary(textContent.getBytes());
@@ -341,26 +348,32 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		}
 	}
 
+	@Override
 	public void setWaitUntil(long w) {
 		waitUntil = w;
 	}
 	
+	@Override
 	public long getWaitUntil() {
 		return waitUntil;
 	}
 
+	@Override
 	public int getRetries() {
 		return retries;
 	}
 
+	@Override
 	public int getMaxRetries() {
 		return maxRetries;
 	}
 
+	@Override
 	public void setMaxRetries(int r) {
 		maxRetries = r;
 	}
 
+	@Override
 	public void resetRetries() {
 		retries = 0;
 	}
@@ -373,18 +386,22 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		
 	}
 
+	@Override
 	public Access getAccess() {
 		return myAccess;
 	}
 
+	@Override
 	public Navajo getNavajo() {
 		return myNavajo;
 	}
 	
+	@Override
 	public int getMaxRunningInstances() {
 		return maxRunningInstances;
 	}
 
+	@Override
 	public void setMaxRunningInstances(int maxRunningInstances) {
 		setStaticMaxRunningInstances(maxRunningInstances);
 	}

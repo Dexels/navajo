@@ -31,6 +31,7 @@ public class ContextParser extends TipiTypeParser {
 	public ContextParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return source.getContext();
 	}

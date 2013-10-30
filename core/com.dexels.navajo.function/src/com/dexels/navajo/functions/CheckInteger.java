@@ -31,11 +31,13 @@ import com.dexels.navajo.parser.FunctionInterface;
 
 public class CheckInteger extends FunctionInterface {
 
-  public String remarks() {
+  @Override
+public String remarks() {
    return "CheckInteger checks whether argument is valid integer";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
 //    boolean force = false;
     Object o = getOperand(0);
@@ -61,7 +63,8 @@ public class CheckInteger extends FunctionInterface {
     }
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "CheckInteger(argument)";
   }
 

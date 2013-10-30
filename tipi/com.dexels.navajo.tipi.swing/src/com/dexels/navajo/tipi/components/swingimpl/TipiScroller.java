@@ -36,6 +36,7 @@ public class TipiScroller extends TipiPanel {
 	private JScrollPane jp;
 	private JPanel pp = null;
 
+	@Override
 	public Object createContainer() {
 		jp = new TipiSwingScrollPane();
 		pp = new JPanel();
@@ -49,11 +50,13 @@ public class TipiScroller extends TipiPanel {
 		return jp;
 	}
 
+	@Override
 	public void addToContainer(Object c, Object constraints) {
 		// jp.getViewport().add((Component)c);
 		pp.add((Component) c, BorderLayout.CENTER);
 	}
 
+	@Override
 	public void removeFromContainer(Object c) {
 		// jp.getViewport().remove((Component)c);
 		pp.remove((Component) c);
@@ -76,6 +79,7 @@ public class TipiScroller extends TipiPanel {
 	 * @todo Implement this
 	 *       com.dexels.navajo.tipi.components.core.TipiComponentImpl method
 	 */
+	@Override
 	protected Object getComponentValue(String name) {
 		JScrollPane jp = (JScrollPane) getContainer();
 		if (name.equals("horizontal_policy")) {
@@ -122,6 +126,7 @@ public class TipiScroller extends TipiPanel {
 	 *       description="Always" value="always"/> <option description="Never"
 	 *       value="never"/> </value>
 	 */
+	@Override
 	public void setComponentValue(String name, Object object) {
 		JScrollPane jp = (JScrollPane) getContainer();
 		if (name.equals("horizontal_policy")) {

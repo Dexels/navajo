@@ -16,6 +16,7 @@ public final class PropertyCheckBox extends JCheckBox implements
 	public PropertyCheckBox() {
 		this.setOpaque(false);
 		this.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (myProperty != null) {
 					myProperty.setValue(isSelected());
@@ -24,16 +25,19 @@ public final class PropertyCheckBox extends JCheckBox implements
 		});
 	}
 
+	@Override
 	public final Property getProperty() {
 		return myProperty;
 	}
 
+	@Override
 	public final void update() {
 		if (myProperty != null) {
 			myProperty.setAnyValue(isSelected());
 		}
 	}
 
+	@Override
 	public final void setProperty(Property p) {
 		myProperty = p;
 		if (p == null) {

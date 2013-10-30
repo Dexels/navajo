@@ -17,15 +17,18 @@ import com.dexels.navajo.server.UserException;
 
 public class EmptyMap implements Mappable {
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
 
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
 
   }
 
-  public void kill() {
+  @Override
+public void kill() {
 
   }
 }

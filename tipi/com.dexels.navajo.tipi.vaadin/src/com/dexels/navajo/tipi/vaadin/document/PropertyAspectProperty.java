@@ -22,6 +22,7 @@ public class PropertyAspectProperty implements Property, Property.ValueChangeNot
 		this.propertyAspect = aspect;
 	}
 	
+	@Override
 	public String toString() {
 		return ""+getValue();
 	}
@@ -99,6 +100,7 @@ public class PropertyAspectProperty implements Property, Property.ValueChangeNot
 		// ignore
 	}
 
+	@Override
 	public void addListener(final ValueChangeListener listener) {
 		PropertyChangeListener pcl = new SerializablePropertyChangeListener() {
 			private static final long serialVersionUID = 8111170361221092581L;

@@ -8,14 +8,17 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class AppendArray extends FunctionInterface {
 
+	@Override
 	public String remarks() {
 		return "Appends the first array message to the second array message. Returns the second message. Note: Call by reference function";
 	}
 
+	@Override
 	public String usage() {
 		return "AppendArray(ArrayMessage, ArrayMessage)";
 	}
 
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		// input (ArrayList, Object).
 		if (this.getOperands().size() != 2)

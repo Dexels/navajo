@@ -17,7 +17,8 @@ public final class DecimalChar extends FunctionInterface {
     public DecimalChar() {// Hallo
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object a = this.getOperands().get(0);
         String result = "";
         try{
@@ -29,11 +30,13 @@ public final class DecimalChar extends FunctionInterface {
         return result;
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "DecimalChar(int)";
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "This function returns a string representation of the desired decimal character";
     }
 }

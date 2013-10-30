@@ -25,6 +25,7 @@ public class PropertyTextArea extends JTextArea implements PropertyControlled {
 
 	private BoundedLengthDocument myDocument = new BoundedLengthDocument();
 
+	@Override
 	public void setProperty(Property p) {
 		myDocument.setMaxLength(p.getLength());
 		initProperty = p;
@@ -41,6 +42,7 @@ public class PropertyTextArea extends JTextArea implements PropertyControlled {
 		}
 	}
 
+	@Override
 	public Property getProperty() {
 		return initProperty;
 	}
@@ -76,6 +78,7 @@ public class PropertyTextArea extends JTextArea implements PropertyControlled {
 				new KeyEventHandler(this, "ShiftTabReleased"));
 	}
 
+	@Override
 	public void update() {
 		if (initProperty == null) {
 			return;

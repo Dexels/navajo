@@ -17,7 +17,8 @@ public final class ToLong extends FunctionInterface {
 
     public ToLong() {}
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object o = this.getOperands().get(0);
 
         if (o == null || "".equals(o))
@@ -37,11 +38,13 @@ public final class ToLong extends FunctionInterface {
 
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "ToLong(Object)";
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Get an long representation of given object.";
     }
 

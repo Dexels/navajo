@@ -222,13 +222,16 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		return myObject;
 	}
 	
+	@Override
 	public void kill() {
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		myAccess = access;
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 		
 		if ( !isAutomaticMapping() ) {
@@ -476,6 +479,7 @@ public class DomainObjectMapper implements Mappable, HasDependentResources {
 		this.inputProperties = inputProperties;
 	}
 
+	@Override
 	public DependentResource[] getDependentResourceFields() {
 		return new DependentResource[]{new GenericDependentResource("javaobject", "objectName", AdapterFieldDependency.class)};
 	}

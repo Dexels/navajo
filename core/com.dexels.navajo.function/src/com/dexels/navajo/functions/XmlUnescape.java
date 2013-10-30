@@ -18,6 +18,7 @@ public class XmlUnescape extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Unescapes the following characters in the characters: &'<>\", using xml escape codes";
 	}
@@ -25,6 +26,7 @@ public class XmlUnescape extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object o = getOperand(0);
 		if (o == null) {

@@ -13,6 +13,7 @@ import com.dexels.navajo.tipi.TipiContext;
 //			loadDescriptor();
 		}
 
+		@Override
 		public void initialize(TipiContext tc) {
 			// Do nothing
 
