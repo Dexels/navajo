@@ -46,14 +46,17 @@ public final class BinaryHttpServlet extends HttpServlet {
 	public BinaryHttpServlet() {
 	}
 
+	@Override
 	public void destroy() {
 	}
 
+	@Override
 	protected void finalize() {
 		 logger.info("In BinaryHttpServlet finalize(), thread = "
 					+ Thread.currentThread().hashCode());
 	}
 
+	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		String b = config.getInitParameter("binaryPath");
@@ -74,6 +77,7 @@ public final class BinaryHttpServlet extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
+	@Override
 	public final void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException {
 		String handle = request.getParameter("handle");

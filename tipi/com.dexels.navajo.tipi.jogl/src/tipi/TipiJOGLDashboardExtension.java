@@ -11,6 +11,7 @@ public class TipiJOGLDashboardExtension extends TipiAbstractXMLExtension impleme
 
 	private static final long serialVersionUID = -4582043184984881475L;
 
+	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
 		

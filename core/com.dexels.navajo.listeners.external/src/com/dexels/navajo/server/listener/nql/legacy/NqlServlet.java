@@ -65,16 +65,19 @@ public class NqlServlet extends com.dexels.navajo.server.listener.nql.NqlServlet
 		try {
 			nc.executeCommand(query,new OutputCallback() {
 
+				@Override
 				public void setOutputType(String mime) {
 					resp.setContentType(mime);
 				}
 
+				@Override
 				public void setContentLength(long l) {
 					resp.setContentLength((int) l);
 					resp.setHeader("Accept-Ranges", "none");
 					resp.setHeader("Connection", "close");
 				}
 
+				@Override
 				public OutputStream getOutputStream() {
 					try {
 						return resp.getOutputStream();

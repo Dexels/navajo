@@ -29,6 +29,7 @@ public class InsertDocumentServlet extends HttpServlet {
 	private final static Logger logger = LoggerFactory
 			.getLogger(InsertDocumentServlet.class);
 	
+	@Override
 	public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		PrintWriter pw = new PrintWriter(response.getWriter());
 		
@@ -41,6 +42,7 @@ public class InsertDocumentServlet extends HttpServlet {
 		pw.close();
 	}
 
+	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 //		PrintWriter pw = new PrintWriter(response.getWriter());

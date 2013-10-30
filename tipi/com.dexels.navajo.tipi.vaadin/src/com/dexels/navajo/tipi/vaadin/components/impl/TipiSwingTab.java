@@ -36,6 +36,7 @@ public class TipiSwingTab extends VerticalLayout implements TipiTabbable {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiSwingTab.class);
 
+	@Override
 	public Resource getTabIcon() {
 		return tabIcon;
 	}

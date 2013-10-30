@@ -33,22 +33,22 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-@SuppressWarnings("unchecked")
 public class TslMetaDataHandler implements MetaDataListener {
 
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TslMetaDataHandler.class);
-    private final TreeMap callsScriptMap = new TreeMap();
-    private final Map calledByScriptMap = new TreeMap();
-    private final Map includesScriptMap = new TreeMap();
-    private final Map includedByScriptMap = new TreeMap();
+    private final Map<String,TreeSet<String>> callsScriptMap = new TreeMap<String,TreeSet<String>>();
+    private final Map<String,TreeSet<String>> calledByScriptMap = new TreeMap<String,TreeSet<String>>();
+    private final Map<String,TreeSet<String>> includesScriptMap = new TreeMap<String,TreeSet<String>>();
+    private final Map<String,TreeSet<String>> includedByScriptMap = new TreeMap<String,TreeSet<String>>();
 
-    private final Map usesAdapter = new HashMap();
-    private final Map adapterIsUsedByScript = new HashMap();
-    private final Set scriptList = new TreeSet();
+    private final Map<String, TreeSet<String>> usesAdapter = new HashMap<String, TreeSet<String>>();
+    private final Map<String, TreeSet<String>> adapterIsUsedByScript = new HashMap<String, TreeSet<String>>();
+    private final Set<String> scriptList = new TreeSet<String>();
     
-    public void scriptCalls(String source, String dest, String[] requires) {
+    @Override
+	public void scriptCalls(String source, String dest, String[] requires) {
 //        System.err.println("Script: "+source +" calls scriptL "+dest);
 //        for (int i = 0; i < requires.length; i++) {
 //            System.err.println("Required: "+requires[i]);
@@ -58,38 +58,42 @@ public class TslMetaDataHandler implements MetaDataListener {
         addToMap(calledByScriptMap, dest, source);
     }
 
-    public void scriptIncludes(String source, String dest) {
+    @Override
+	public void scriptIncludes(String source, String dest) {
 //        System.err.println("Script: "+source+" includes: "+dest);
         scriptList.add(source);
         addToMap(includesScriptMap,source, dest);
         addToMap(includedByScriptMap, dest, source);
     }
 
-    public void scriptUsesAdapter(String source, String adapterName) {
+    @Override
+	public void scriptUsesAdapter(String source, String adapterName) {
 //        System.err.println("Script: "+source +" uses adapter: "+adapterName);
         scriptList.add(source);
         addToMap(usesAdapter,source, adapterName);
         addToMap(adapterIsUsedByScript, adapterName, source);
    }
 
-    public void scriptUsesField(String source, String adapterName, String fieldName) {
+    @Override
+	public void scriptUsesField(String source, String adapterName, String fieldName) {
 //        System.err.println("Script: "+source +" with adapter: "+adapterName+" uses field: "+fieldName);
     }
 
-    public void resetMetaData() {
+    @Override
+	public void resetMetaData() {
         System.err.println("reset");
     }
     
-    private void addToMap(Map m, String key, String value) {
-        TreeSet current = (TreeSet)m.get(key);
+    private void addToMap(Map<String,TreeSet<String>> m, String key, String value) {
+        TreeSet<String> current = m.get(key);
         if (current==null) {
-            current = new TreeSet();
+            current = new TreeSet<String>();
             m.put(key, current);
         }
         current.add(value);
     }
 
-    private void removeFromMap(Map m, String key) {
+    private void removeFromMap(Map<String,TreeSet<String>> m, String key) {
         m.remove(key);
     }
 
@@ -114,24 +118,24 @@ public class TslMetaDataHandler implements MetaDataListener {
         return toXml(adapterIsUsedByScript, "calls", "adapter", "script", "name");
     }
     
-    public Set getScriptCallsSet(String name) {
-        return (Set)callsScriptMap.get(name);
+    public TreeSet<String> getScriptCallsSet(String name) {
+        return callsScriptMap.get(name);
     }
-    public Set getScriptCalledBySet(String name) {
-        return (Set)calledByScriptMap.get(name);
+    public TreeSet<String> getScriptCalledBySet(String name) {
+        return calledByScriptMap.get(name);
     }
-    public Set getScriptIncludesSet(String name) {
-        return (Set)includesScriptMap.get(name);
+    public TreeSet<String> getScriptIncludesSet(String name) {
+        return includesScriptMap.get(name);
     }
-    public Set getScriptIncludedBySet(String name) {
-        return (Set)includedByScriptMap.get(name);
+    public TreeSet<String> getScriptIncludedBySet(String name) {
+        return includedByScriptMap.get(name);
     }
 
-    public Set getScriptUsesAdaptersSet(String name) {
-        return (Set)usesAdapter.get(name);
+    public Set<String> getScriptUsesAdaptersSet(String name) {
+        return usesAdapter.get(name);
     }
-    public Set getAdaptersUsedByScriptSet(String name) {
-        return (Set)adapterIsUsedByScript.get(name);
+    public TreeSet<String> getAdaptersUsedByScriptSet(String name) {
+        return adapterIsUsedByScript.get(name);
     }
     
     public void loadScriptData(InputStream in) {
@@ -163,9 +167,9 @@ public class TslMetaDataHandler implements MetaDataListener {
            System.err.println("Unknown root tag in metadata: "+e.getName());
            return;
         }
-        Vector v = e.getChildren();
-        for (Iterator iter = v.iterator(); iter.hasNext();) {
-            XMLElement element = (XMLElement) iter.next();
+        Vector<XMLElement> v = e.getChildren();
+        for (Iterator<XMLElement> iter = v.iterator(); iter.hasNext();) {
+            XMLElement element = iter.next();
             if (!"script".equals(element.getName())) {
                 System.err.println("Unknown tag within metadata: "+element.getName());
                 return;
@@ -182,9 +186,9 @@ public class TslMetaDataHandler implements MetaDataListener {
      * @param element
      */
     private void parseScriptData(String scriptName, XMLElement e) {
-        Vector v = e.getChildren();
-        for (Iterator iter = v.iterator(); iter.hasNext();) {
-            XMLElement element = (XMLElement) iter.next();
+        Vector<XMLElement> v = e.getChildren();
+        for (Iterator<XMLElement> iter = v.iterator(); iter.hasNext();) {
+            XMLElement element =  iter.next();
             if ("adapters".equals(element.getName())) {
                 String adapterValue = element.getStringAttribute("name");
                 addToMap(usesAdapter,scriptName, adapterValue);
@@ -245,8 +249,8 @@ public class TslMetaDataHandler implements MetaDataListener {
     public XMLElement createTotalXML() {
         XMLElement x = new CaseSensitiveXMLElement();
         x.setName("metadata");
-        for (Iterator iter = scriptList.iterator(); iter.hasNext();) {
-            String element = (String) iter.next();
+        for (Iterator<String> iter = scriptList.iterator(); iter.hasNext();) {
+            String element =  iter.next();
             addScriptElement(x,element);
         }
         return x;
@@ -280,12 +284,12 @@ public class TslMetaDataHandler implements MetaDataListener {
      * @param element
      */
     private void addAdapters(XMLElement xn, String element) {
-            Set s = (Set)usesAdapter.get(element);
+            Set<String> s = usesAdapter.get(element);
             if (s==null) {
                 return;
             }
-            for (Iterator iter = s.iterator(); iter.hasNext();) {
-                String adapter = (String) iter.next();
+            for (Iterator<String> iter = s.iterator(); iter.hasNext();) {
+                String adapter = iter.next();
                 XMLElement xnincl = new CaseSensitiveXMLElement();
                 xnincl.setName("adapters");
                 xnincl.setAttribute("name",adapter);
@@ -299,12 +303,12 @@ public class TslMetaDataHandler implements MetaDataListener {
      * @param element
      */
     private void addCalledBy(XMLElement xn, String element) {
-        Set s = (Set)calledByScriptMap.get(element);
+        TreeSet<String> s = calledByScriptMap.get(element);
         if (s==null) {
             return;
         }
-        for (Iterator iter = s.iterator(); iter.hasNext();) {
-            String include = (String) iter.next();
+        for (Iterator<String> iter = s.iterator(); iter.hasNext();) {
+            String include = iter.next();
             XMLElement xnincl = new CaseSensitiveXMLElement();
             xnincl.setName("calledby");
             xnincl.setAttribute("name",include);
@@ -313,12 +317,12 @@ public class TslMetaDataHandler implements MetaDataListener {
     }
 
     private void addCalls(XMLElement xn, String element) {
-        Set s = (Set)callsScriptMap.get(element);
+    	TreeSet<String> s = callsScriptMap.get(element);
         if (s==null) {
             return;
         }
-        for (Iterator iter = s.iterator(); iter.hasNext();) {
-            String include = (String) iter.next();
+        for (Iterator<String> iter = s.iterator(); iter.hasNext();) {
+            String include = iter.next();
             XMLElement xnincl = new CaseSensitiveXMLElement();
             xnincl.setName("calls");
             xnincl.setAttribute("name",include);
@@ -332,13 +336,12 @@ public class TslMetaDataHandler implements MetaDataListener {
      * @param element
      */
     private void addIncludes(XMLElement xn, String element) {
-        // TODO Auto-generated method stub
-        Set s = (Set)includesScriptMap.get(element);
+        TreeSet<String> s = includesScriptMap.get(element);
         if (s==null) {
             return;
         }
-        for (Iterator iter = s.iterator(); iter.hasNext();) {
-            String include = (String) iter.next();
+        for (Iterator<String> iter = s.iterator(); iter.hasNext();) {
+            String include = iter.next();
             XMLElement xnincl = new CaseSensitiveXMLElement();
             xnincl.setName("include");
             xnincl.setAttribute("name",include);
@@ -352,12 +355,12 @@ public class TslMetaDataHandler implements MetaDataListener {
      * @param element
      */
     private void addIncomingIncludes(XMLElement xn, String element) {
-        Set s = (Set)includedByScriptMap.get(element);
+        TreeSet<String> s = includedByScriptMap.get(element);
         if (s==null) {
             return;
         }
-        for (Iterator iter = s.iterator(); iter.hasNext();) {
-            String include = (String) iter.next();
+        for (Iterator<String> iter = s.iterator(); iter.hasNext();) {
+            String include = iter.next();
             XMLElement xnincl = new CaseSensitiveXMLElement();
             xnincl.setName("includedby");
             xnincl.setAttribute("name",include);
@@ -368,20 +371,20 @@ public class TslMetaDataHandler implements MetaDataListener {
     }
 
     
-    private XMLElement toXml(Map m,String topTagName, String tagname, String elementName, String attribute) {
+    private XMLElement toXml(Map<String,TreeSet<String>> m,String topTagName, String tagname, String elementName, String attribute) {
         XMLElement x = new CaseSensitiveXMLElement();
         x.setName(topTagName);
-        Set s = m.entrySet();
-        for (Iterator iter = s.iterator(); iter.hasNext();) {
-        	Entry e = (Entry) iter.next();
-            String element = (String) e.getKey();
-            TreeSet value = (TreeSet) e.getValue();
+        Set<Entry<String,TreeSet<String>>> s = m.entrySet();
+        for (Iterator<Entry<String,TreeSet<String>>> iter = s.iterator(); iter.hasNext();) {
+        	Entry<String,TreeSet<String>> e = iter.next();
+            String element = e.getKey();
+            TreeSet<String> value = e.getValue();
             XMLElement xc = new CaseSensitiveXMLElement();
             xc.setName(tagname);
             xc.setAttribute("name", element);
             x.addChild(xc);
-            for (Iterator iterator = value.iterator(); iterator.hasNext();) {
-                String ee = (String) iterator.next();
+            for (Iterator<String> iterator = value.iterator(); iterator.hasNext();) {
+                String ee = iterator.next();
                 XMLElement xce = new CaseSensitiveXMLElement();
                 xce.setName(elementName);
                 xce.setAttribute(attribute, ee);
@@ -391,7 +394,8 @@ public class TslMetaDataHandler implements MetaDataListener {
         return x;
     }
 
-    public void removeScriptMetadata(String script) {
+    @Override
+	public void removeScriptMetadata(String script) {
         removeFromMap(callsScriptMap, script);
         removeFromMap(includedByScriptMap, script);
         removeFromMap(includesScriptMap, script);

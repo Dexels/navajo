@@ -80,7 +80,8 @@ public class TipiCalendar extends TipiMessagePanel  {
         Button next = new Button("next", new Button.ClickListener() {
             private static final long serialVersionUID = 1L;
 
-            public void buttonClick(Button.ClickEvent event) {
+            @Override
+			public void buttonClick(Button.ClickEvent event) {
                 calendar.setTime(currentMonthsFirstDate);
                 calendar.add(GregorianCalendar.MONTH, 1);
                 currentMonthsFirstDate = calendar.getTime();
@@ -144,6 +145,7 @@ public class TipiCalendar extends TipiMessagePanel  {
 		return vl;
 	}
 
+	@Override
 	public void addToContainer(Object c, Object constraints) {
 	}
 	
@@ -196,6 +198,7 @@ public class TipiCalendar extends TipiMessagePanel  {
 		super.setComponentValue(name, object);
 	}
 	
+	@Override
 	public Object getComponentValue(String name) {
 		return super.getComponentValue(name);
 	}

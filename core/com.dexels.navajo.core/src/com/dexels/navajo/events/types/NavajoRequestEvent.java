@@ -30,6 +30,7 @@ public class NavajoRequestEvent implements NavajoEvent {
 		return navajo;
 	}
 
+	@Override
 	public Navajo getEventNavajo() {
 		// TODO Auto-generated method stub
 		return null;

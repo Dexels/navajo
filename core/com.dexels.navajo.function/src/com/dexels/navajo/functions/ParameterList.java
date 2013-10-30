@@ -17,7 +17,8 @@ public final class ParameterList extends FunctionInterface {
 
     public ParameterList() {}
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Integer count = (Integer) this.getOperands().get(0);
         StringBuffer result = new StringBuffer(count.intValue() * 2);
 
@@ -28,11 +29,13 @@ public final class ParameterList extends FunctionInterface {
         return result.toString();
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "ParameterList(count)";
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Create a list of comma separate ? values for use in SQL queries";
     }
 }

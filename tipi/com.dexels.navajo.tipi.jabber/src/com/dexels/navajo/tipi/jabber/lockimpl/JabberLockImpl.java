@@ -34,10 +34,12 @@ public class JabberLockImpl extends BaseLockImpl {
 		nick = join(muc,preferredNick);
 		muc.addParticipantStatusListener(new DefaultParticipantStatusListener() {
 
+			@Override
 			public void joined(String participant) {
 				// doesn't matter, I think
 			}
 
+			@Override
 			public void left(String participant) {
 				if(participant.equals(resource)) {
 					// my resource!
@@ -48,6 +50,7 @@ public class JabberLockImpl extends BaseLockImpl {
 			
 			
 
+			@Override
 			public void nicknameChanged(String participant, String name) {
 				if (nick.equals(participant)) {
 					// me
@@ -93,6 +96,7 @@ public class JabberLockImpl extends BaseLockImpl {
 		}
 	}
 	
+	@Override
 	public boolean isLocked() {
 		if(resource==null) {
 			// no lock requested.
@@ -101,6 +105,7 @@ public class JabberLockImpl extends BaseLockImpl {
 		return muc.getNickname().equals(resource);
 	}
 
+	@Override
 	public boolean setLockRequest(String resource) {
 		try {
 //			logger.info("Changing nick from: "+muc.getNickname()+" to "+resource);
@@ -118,6 +123,7 @@ public class JabberLockImpl extends BaseLockImpl {
 		}
 	}
 
+	@Override
 	public void unlock() {
 		resource = null;
 		reset(muc);

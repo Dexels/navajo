@@ -55,6 +55,7 @@ public class GrusManager implements Runnable {
 		registeredBrokers.remove(broker);
 	}
 
+	@Override
 	public void run() {
 		
 		while (!shutdown) {	

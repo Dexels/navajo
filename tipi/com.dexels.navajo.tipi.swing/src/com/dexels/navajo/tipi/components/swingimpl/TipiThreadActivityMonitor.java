@@ -34,10 +34,12 @@ public class TipiThreadActivityMonitor extends TipiSwingComponentImpl {
 			 */
 			private static final long serialVersionUID = -5062528423592250484L;
 
+			@Override
 			public void threadActivity(
 					final Map<TipiThread, String> threadStateMap,
 					TipiThread tt, String state, final int queueSize) {
 				runSyncInEventThread(new Runnable() {
+					@Override
 					public void run() {
 						if (threadMap == null) {
 							initialize(threadStateMap);

@@ -22,6 +22,7 @@ public class DummyTribeManager implements TribeManagerInterface {
 	private Map<String,Lock> mLocks = new HashMap<String,Lock>();
 	private Map<String,TribalTopic> topics = new HashMap<String,TribalTopic>();
 	
+	@Override
 	public void terminate() {
 	}
 
@@ -31,14 +32,17 @@ public class DummyTribeManager implements TribeManagerInterface {
 //		}
 	}
 	
+	@Override
 	public Navajo forward(Navajo in) throws Exception {
 		return null;
 	}
 
+	@Override
 	public void broadcast(Navajo in) throws Exception {
 		
 	}
 
+	@Override
 	public void broadcast(SmokeSignal m) {
 
 	}
@@ -46,21 +50,25 @@ public class DummyTribeManager implements TribeManagerInterface {
 	/**
 	 * Without a Tribe I am ALWAYS the chief!
 	 */
+	@Override
 	public boolean getIsChief() {
 		return true; //!!
 	}
 
+	@Override
 	public Answer askChief(Request q) {
 		return q.getAnswer();
 	}
 
+	@Override
 	public Set<TribeMemberInterface> getAllMembers() {
 		Set<TribeMemberInterface> s =  new HashSet<TribeMemberInterface>();
 		s.add(new DummyTribeMemberImpl());
 		return s;
 	}
 	
-	 public Answer askSomebody(Request q, Object address) {
+	 @Override
+	public Answer askSomebody(Request q, Object address) {
 			
 			// If it's myself.
 			if ( !q.isIgnoreRequestOnSender()) {
@@ -70,30 +78,37 @@ public class DummyTribeManager implements TribeManagerInterface {
 			}
 	 }
 
+	@Override
 	public TribeMemberInterface getMyMembership() {
 		return new DummyTribeMemberImpl();
 	}
 
+	@Override
 	public void multicast(Object[] recipients, SmokeSignal m) {
 		
 	}
 
+	@Override
 	public Answer askAnybody(Request q) {
 		return null;
 	}
 
+	@Override
 	public Navajo forward(Navajo in, Object address) throws Exception {
 		return null;
 	}
 
+	@Override
 	public void addTribeMember(TribeMemberInterface tm) {
 		
 	}
 
+	@Override
 	public String getMyName() {
 		return "dummytribemember";
 	}
 
+	@Override
 	public String getStatistics() {
 		return null;
 	}

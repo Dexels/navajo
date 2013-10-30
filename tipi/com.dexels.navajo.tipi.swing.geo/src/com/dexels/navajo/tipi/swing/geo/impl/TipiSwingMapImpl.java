@@ -22,6 +22,7 @@ public class TipiSwingMapImpl extends JXMapKit {
 		myCenter = new GeoPosition(lat,lon);
 		setCenterPosition(myCenter);
 		getMainMap().addPropertyChangeListener(new PropertyChangeListener(){
+			@Override
 			public void propertyChange(PropertyChangeEvent p) {
 				if(p.getPropertyName().equals("zoom")) {
 					Integer newZoom = (Integer) p.getNewValue();

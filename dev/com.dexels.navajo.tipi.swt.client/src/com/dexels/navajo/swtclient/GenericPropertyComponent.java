@@ -218,7 +218,8 @@ public class GenericPropertyComponent {
         updateButton.setText("Load..");
         updateButton.setEnabled(myProperty.isDirIn());
         updateButton.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                 FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell());
                 fd.setText("Select a file for the binary");
                 String res = fd.open();
@@ -262,7 +263,8 @@ public class GenericPropertyComponent {
         saveButton.setText("Save..");
         saveButton.setEnabled(bin != null);
         saveButton.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                 FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell());
                 fd.setText("Select a file for the binary");
                 String res = fd.open();
@@ -294,7 +296,8 @@ public class GenericPropertyComponent {
         openButton.setText("Open..");
         openButton.setEnabled(bin != null);
         openButton.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                openBinary(bin);
             }
         });
@@ -304,7 +307,8 @@ public class GenericPropertyComponent {
         clearButton.setText("Clear..");
         clearButton.setEnabled(bin != null);
         clearButton.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                 myProperty.setValue(new Binary());
                 setBinaryLabel(null, fileImageLabel);
             }
@@ -386,10 +390,12 @@ public class GenericPropertyComponent {
         ttt.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
         ttt.addFocusListener(new FocusListener() {
 
-            public void focusGained(FocusEvent e) {
+            @Override
+			public void focusGained(FocusEvent e) {
             }
 
-            public void focusLost(FocusEvent e) {
+            @Override
+			public void focusLost(FocusEvent e) {
                 String oldVal = myProperty.getValue();
                 // logger.info("OldVal: "+oldVal);
                 myProperty.setValue(ttt.getText());
@@ -431,10 +437,12 @@ public class GenericPropertyComponent {
         dp.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
         
         ttt.addFocusListener(new FocusListener() {
-            public void focusGained(FocusEvent e) {
+            @Override
+			public void focusGained(FocusEvent e) {
             }
 
-            public void focusLost(FocusEvent e) {
+            @Override
+			public void focusLost(FocusEvent e) {
                 String oldVal = myProperty.getValue();
                 try {
                     Date d = getDate(ttt.getText());
@@ -454,7 +462,8 @@ public class GenericPropertyComponent {
         });
         dp.addDateSelectionListener(new DateSelectionListener() {
 
-            public void dateSelected(DateSelectedEvent d) {
+            @Override
+			public void dateSelected(DateSelectedEvent d) {
                 String st = navajoDateFormat.format(d.date);
                 myProperty.setValue(st);
                 ttt.setText(st);
@@ -504,6 +513,7 @@ public class GenericPropertyComponent {
         logger.info("Adding listener to component: "+hsc.hashCode());
         hsc.addDateSelectionListener(new DateSelectionListener(){
 
+			@Override
 			public void dateSelected(DateSelectedEvent d) {
 				logger.info("Source: "+d.getSource());
 				logger.info("Date selected: "+d);
@@ -521,11 +531,13 @@ public class GenericPropertyComponent {
         b.setToolTipText(myProperty.getDescription());
 
         b.addSelectionListener(new SelectionListener() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                 myProperty.setAnyValue(new Boolean(b.getSelection()));
             }
 
-            public void widgetDefaultSelected(SelectionEvent e) {
+            @Override
+			public void widgetDefaultSelected(SelectionEvent e) {
 
             }
         });
@@ -571,7 +583,8 @@ public class GenericPropertyComponent {
             }
             ttt.setEnabled(myProperty.isDirIn());
             ttt.addSelectionListener(new SelectionListener() {
-                public void widgetSelected(SelectionEvent e) {
+                @Override
+				public void widgetSelected(SelectionEvent e) {
 
                     for (int i = 0; i < al.size(); i++) {
                         Selection element = al.get(i);
@@ -583,7 +596,8 @@ public class GenericPropertyComponent {
 
                 }
 
-                public void widgetDefaultSelected(SelectionEvent e) {
+                @Override
+				public void widgetDefaultSelected(SelectionEvent e) {
 
                 }
             });
@@ -610,11 +624,13 @@ public class GenericPropertyComponent {
                 b.setText(element.getName());
                 b.setToolTipText(element.getValue());
                 b.addSelectionListener(new SelectionListener() {
-                    public void widgetSelected(SelectionEvent e) {
+                    @Override
+					public void widgetSelected(SelectionEvent e) {
                         element.setSelected(b.getSelection());
                     }
 
-                    public void widgetDefaultSelected(SelectionEvent e) {
+                    @Override
+					public void widgetDefaultSelected(SelectionEvent e) {
                     }
                 });
             }

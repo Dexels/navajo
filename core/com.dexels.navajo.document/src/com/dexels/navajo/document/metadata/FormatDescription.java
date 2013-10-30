@@ -101,6 +101,7 @@ public class FormatDescription implements Comparable<FormatDescription>, Seriali
 		}
 	}
 
+	@Override
 	public int compareTo(FormatDescription obj)
 	{
 		FormatDescription desc = obj;
@@ -282,6 +283,7 @@ public class FormatDescription implements Comparable<FormatDescription>, Seriali
 		shortName = newValue;
 	}
 
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(80);

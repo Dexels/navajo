@@ -12,12 +12,10 @@ import java.net.URL;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 
 import org.dexels.utils.Base64;
-import org.dexels.utils.Base64.DecodingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

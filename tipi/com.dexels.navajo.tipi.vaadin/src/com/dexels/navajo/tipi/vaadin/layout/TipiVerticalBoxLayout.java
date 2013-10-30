@@ -21,16 +21,19 @@ public class TipiVerticalBoxLayout
   public TipiVerticalBoxLayout() {
   }
 
-  public void createLayout() {
+  @Override
+public void createLayout() {
 	 layout =  new VerticalLayout();
 	 layout.setSizeFull();
 	 setLayout(layout);
   }
 
-  protected void setValue(String name, TipiValue tv) {
+  @Override
+protected void setValue(String name, TipiValue tv) {
     throw new UnsupportedOperationException("Not implemented.");
   }
   
+	@Override
 	public void addToLayout(Object component, Object constraints) {
 		layout.addComponent((Component) component);
 		layout.setExpandRatio((Component) component, 0);

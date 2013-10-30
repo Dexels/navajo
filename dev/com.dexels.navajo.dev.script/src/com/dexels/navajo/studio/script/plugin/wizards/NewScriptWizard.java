@@ -78,7 +78,8 @@ public class NewScriptWizard extends Wizard implements INewWizard {
         final String scriptName = page.getScriptName();
         //		final String fileName = page.getFileName();
         IRunnableWithProgress op = new IRunnableWithProgress() {
-            public void run(IProgressMonitor monitor) throws InvocationTargetException {
+            @Override
+			public void run(IProgressMonitor monitor) throws InvocationTargetException {
                 try {
                     doFinish(scriptName, monitor);
                 } catch (Exception e) {
@@ -117,7 +118,8 @@ public class NewScriptWizard extends Wizard implements INewWizard {
         if (selectedFile == null) {
             NavajoScriptPluginPlugin.getDefaultWorkbench().getDisplay().syncExec(new Runnable() {
 
-                public void run() {
+                @Override
+				public void run() {
                     IEditorPart ipp = NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
                     if (ipp != null) {
                         selectedFile = (IResource) ipp.getEditorInput().getAdapter(IResource.class);
@@ -161,7 +163,8 @@ public class NewScriptWizard extends Wizard implements INewWizard {
         monitor.worked(1);
         monitor.setTaskName("Opening file for editing...");
         getShell().getDisplay().asyncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                 try {
                     IDE.openEditor(page, file, true);
@@ -214,7 +217,8 @@ public class NewScriptWizard extends Wizard implements INewWizard {
      * 
      * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
      */
-    public void init(IWorkbench workbench, IStructuredSelection selection) {
+    @Override
+	public void init(IWorkbench workbench, IStructuredSelection selection) {
         if (selection == null) {
             return;
         }

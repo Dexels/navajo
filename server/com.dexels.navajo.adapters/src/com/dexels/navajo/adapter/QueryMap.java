@@ -26,12 +26,14 @@ public class QueryMap extends SQLMap {
 
   Navajo outputDoc;
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
     super.load(access);
     outputDoc = access.getOutputDoc();
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
 
     // Construct Navajo message.
     try {

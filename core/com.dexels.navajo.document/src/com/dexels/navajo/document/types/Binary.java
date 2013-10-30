@@ -197,7 +197,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         
     }
     
-    public int hashCode() {
+    @Override
+	public int hashCode() {
     	if(getDigest()!=null) {
     		return getHexDigest().hashCode();
     	}
@@ -232,7 +233,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 		}
     	if(NavajoFactory.getInstance().isSandboxMode()) {
     		ByteArrayOutputStream baos = new ByteArrayOutputStream() {
-    			public void close() {
+    			@Override
+				public void close() {
     				try {
 						super.close();
 					} catch (IOException e) {
@@ -629,7 +631,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
 
     
-    public final boolean equals(Object o) {
+    @Override
+	public final boolean equals(Object o) {
     	if(!(o instanceof Binary)) {
         	return false;
     	} 
@@ -660,7 +663,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     
     
     // for sorting. Not really much to sort
-    public final int compareTo(Binary o) {
+    @Override
+	public final int compareTo(Binary o) {
     	int h = hashCode();
     	int i = o.hashCode();
     	if(h>i) {
@@ -691,7 +695,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	return super.toString();
     }
     
-    protected void finalize() {
+    @Override
+	protected void finalize() {
     
     	if (NavajoFactory.getInstance().isSandboxMode()) {
     		if(dataFile!=null) {
@@ -802,7 +807,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	}
     }
 
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         if (dataFile==null && lazySourceFile==null) {
             return true;
         }

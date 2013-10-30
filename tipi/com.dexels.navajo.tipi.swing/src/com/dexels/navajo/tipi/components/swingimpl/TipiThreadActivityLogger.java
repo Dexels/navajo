@@ -25,6 +25,7 @@ public class TipiThreadActivityLogger extends TipiSwingComponentImpl {
 
 			private static final long serialVersionUID = 2927003989608693460L;
 
+			@Override
 			public void threadActivity(Map<TipiThread, String> threadStateMap,
 					TipiThread tt, String state, int queueSize) {
 				logger.debug("Thread activity: " + threadStateMap);

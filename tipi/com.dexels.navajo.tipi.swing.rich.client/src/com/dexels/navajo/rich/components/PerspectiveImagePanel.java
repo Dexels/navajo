@@ -71,12 +71,14 @@ public class PerspectiveImagePanel extends JPanel {
 			a = PropertySetter.createAnimator(speed, this, "angle", 0, 84);
 			a.setAcceleration(0.5f);
 			a.addTarget(new TimingTargetAdapter() {
+				@Override
 				public void end() {
 					flipImage();
 					setDirection(getOppositeDirection());
 					Animator b = PropertySetter.createAnimator(speed, PerspectiveImagePanel.this, "angle", 84, 0);
 					b.setDeceleration(0.5f);
 					b.addTarget(new TimingTargetAdapter() {
+						@Override
 						public void end() {
 							setAngle(0);
 							setDirection(getOppositeDirection());
@@ -89,6 +91,7 @@ public class PerspectiveImagePanel extends JPanel {
 			});
 
 			addComponentListener(new ComponentAdapter() {
+				@Override
 				public void componentResized(ComponentEvent e) {
 
 				}
@@ -117,6 +120,7 @@ public class PerspectiveImagePanel extends JPanel {
 		repaint();
 	}
 
+	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D graf = (Graphics2D) g;
 		Graphics2D g2 = (Graphics2D) graf.create();

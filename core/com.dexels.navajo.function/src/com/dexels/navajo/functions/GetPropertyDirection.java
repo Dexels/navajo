@@ -33,10 +33,12 @@ public class GetPropertyDirection extends GetPropertyAttribute {
 	public GetPropertyDirection() {
 	}
 
+	@Override
 	public String remarks() {
 		return "Gets the type of property as a string";
 	}
 
+	@Override
 	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		if (getOperands().size() != 1) {
 			throw new TMLExpressionException(this, "Invalid function call");
@@ -50,6 +52,7 @@ public class GetPropertyDirection extends GetPropertyAttribute {
 		return getAttribute(propertyName, "direction");
 	}
 
+	@Override
 	public String usage() {
 		return "GetPropertyDirection(property name)";
 	}

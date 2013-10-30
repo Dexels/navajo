@@ -58,20 +58,24 @@ public class TipiSwingFrameImpl extends JFrame implements TopLevel,
 		setVisible(false);
 		getContentPane().setLayout(borderLayout1);
 		addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				tipiComponent.getContext().exit();
 			}
 		});
 	}
 
+	@Override
 	public void setIconImage(ImageIcon i) {
 		super.setIconImage(i.getImage());
 	}
 
+	@Override
 	public void setTipiMenubar(final TipiMenubar tm) {
 		setJMenuBar((JMenuBar) tm.getContainer());
 	}
 
+	@Override
 	public void setModal(boolean b) {
 		// ignored for frames
 	}
@@ -87,6 +91,7 @@ public class TipiSwingFrameImpl extends JFrame implements TopLevel,
 		ScreenTransition transition = new ScreenTransition(jjj,
 				new TransitionTarget() {
 
+					@Override
 					public void setupNextScreen() {
 						try {
 							// TODO I think this isn't correct, no conditions are checked, right?
@@ -103,18 +108,22 @@ public class TipiSwingFrameImpl extends JFrame implements TopLevel,
 				}, animator);
 		animator.addTarget(new TimingTarget() {
 
+			@Override
 			public void begin() {
 
 			}
 
+			@Override
 			public void end() {
 
 			}
 
+			@Override
 			public void repeat() {
 
 			}
 
+			@Override
 			public void timingEvent(float arg0) {
 				logger.debug("Running: " + arg0);
 

@@ -33,6 +33,7 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 	public TipiFlickrConnector() {
 		logger.info("FLICKR INSTANTIATED!");
 	}
+	@Override
 	public Set<String> getEntryPoints() {
 		Set<String> s = new HashSet<String>();
 		s.add("InitFlickr");
@@ -41,6 +42,7 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 		return s;
 	}
 
+	@Override
 	public String getDefaultEntryPoint() {
 		return "InitFlickr";
 	}
@@ -75,6 +77,7 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 		xx.write(System.err);
 	}
 
+	@Override
 	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		if(service.equals("InitListFlickr")) {
 			try {
@@ -287,6 +290,7 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 	
 	}
 
+	@Override
 	public String getConnectorId() {
 		return "flickr";
 	}

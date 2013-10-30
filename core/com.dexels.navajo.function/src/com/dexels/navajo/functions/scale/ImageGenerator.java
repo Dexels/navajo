@@ -70,7 +70,8 @@ public class ImageGenerator implements ImageConsumer
      *
      * Consuming of a single jpg image returns for example SINGLEFRAMEDONE.
      */
-    public void imageComplete(int status)
+    @Override
+	public void imageComplete(int status)
     {
         // if(status == STATICIMAGEDONE ||
         //    status == IMAGEABORTED ||
@@ -92,7 +93,8 @@ public class ImageGenerator implements ImageConsumer
      *
      * @param model The model to use
      */
-    public void setColorModel(ColorModel model)
+    @Override
+	public void setColorModel(ColorModel model)
     {
         colorModel = model;
         createImage();
@@ -104,7 +106,8 @@ public class ImageGenerator implements ImageConsumer
      * @param w The width of the source image
      * @param h The height of the source image
      */
-    public void setDimensions(int w, int h)
+    @Override
+	public void setDimensions(int w, int h)
     {
         width = w;
         height = h;
@@ -117,7 +120,8 @@ public class ImageGenerator implements ImageConsumer
      *
      * @param flags The hints
      */
-    public void setHints(int flags)
+    @Override
+	public void setHints(int flags)
     {
     }
 
@@ -133,7 +137,8 @@ public class ImageGenerator implements ImageConsumer
      * @param offset The offset into the source array to copy from
      * @param scansize The number of pixel values between rows
      */
-    public void setPixels(int x,
+    @Override
+	public void setPixels(int x,
                           int y,
                           int w,
                           int h,
@@ -163,7 +168,8 @@ public class ImageGenerator implements ImageConsumer
      * @param offset The offset into the source array to copy from
      * @param scansize The number of pixel values between rows
      */
-    public void setPixels(int x,
+    @Override
+	public void setPixels(int x,
                           int y,
                           int w,
                           int h,
@@ -180,7 +186,8 @@ public class ImageGenerator implements ImageConsumer
      *
      * @param props The map of properties for this image
      */
-    public void setProperties(Hashtable<?,?> props)
+    @Override
+	public void setProperties(Hashtable<?,?> props)
     {
         createImage();
     }

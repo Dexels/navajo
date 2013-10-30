@@ -68,6 +68,7 @@ public class ValuePropertyBridge implements Property, Property.ValueChangeNotifi
 		return src.isDirOut() || !valueEditable;
 	}
 
+	@Override
 	public String toString() {
 		Object o = getValue();
 		if(o==null) {

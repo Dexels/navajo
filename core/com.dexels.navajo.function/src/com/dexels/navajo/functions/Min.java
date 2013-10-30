@@ -19,15 +19,18 @@ import com.dexels.navajo.parser.Utils;
 
 public final class Min extends FunctionInterface {
 
+	@Override
 	public String remarks() {
     return "Return the minimum of to given numbers.";
 }
 
+@Override
 public String usage() {
     return "Min(number, number), where number can be of type integer or double.";
 }
 
-    public final Object evaluate() throws TMLExpressionException {
+    @Override
+	public final Object evaluate() throws TMLExpressionException {
 
         List<?> operands = this.getOperands();
 

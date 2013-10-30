@@ -43,6 +43,7 @@ public class SimpleRepository implements Repository, GlobalManager {
 	public void activate() {
 	}
 
+	@Override
 	public void setNavajoConfig(NavajoConfigInterface config) {
 		this.config = config;
 	}
@@ -59,10 +60,12 @@ public class SimpleRepository implements Repository, GlobalManager {
 	 * @see Repository
 	 */
 	
+	@Override
 	public boolean useLegacyDateMode() {
 		return false;
 	}
 	
+	@Override
 	public Access authorizeUser(String username, String password,
 			String service, Navajo inMessage, Object certificate)
 			throws SystemException, AuthorizationException {
@@ -81,6 +84,7 @@ public class SimpleRepository implements Repository, GlobalManager {
 	 * @param userRoleString
 	 * @throws NavajoException
 	 */
+	@Override
 	public void initGlobals(String method, String username, Navajo inMessage, Map<String,String> extraParams) throws NavajoException {
 //		config.getRootPath();
 		// TODO I think this is pretty inefficient. Redo this.
@@ -154,6 +158,7 @@ public class SimpleRepository implements Repository, GlobalManager {
 		}
 	}
 
+	@Override
 	public String getServlet(Access access) throws SystemException {
 		String compLanguage = DispatcherFactory.getInstance().getNavajoConfig().getCompilationLanguage();
 		if("javascript".equals(compLanguage)) {

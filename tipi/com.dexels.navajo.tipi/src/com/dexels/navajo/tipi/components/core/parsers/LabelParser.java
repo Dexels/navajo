@@ -32,6 +32,7 @@ public class LabelParser extends TipiTypeParser {
 	public LabelParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		DescriptionProvider dp = source.getContext().getDescriptionProvider();
 

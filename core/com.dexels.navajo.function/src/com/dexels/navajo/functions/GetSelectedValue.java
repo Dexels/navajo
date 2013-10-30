@@ -44,10 +44,12 @@ public class GetSelectedValue extends FunctionInterface {
 	public GetSelectedValue() {
 	}
 
+	@Override
 	public String remarks() {
 		return "Gets the value of a selected property";
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object evaluate()
 			throws com.dexels.navajo.parser.TMLExpressionException {
@@ -84,6 +86,7 @@ public class GetSelectedValue extends FunctionInterface {
 		return null;
 	}
 
+	@Override
 	public String usage() {
 		return "GetSelectedValue(<value of selection property>) -> will return the first VALUE of a selected selection";
 	}

@@ -29,6 +29,7 @@ public class TipiMenuSeparator extends TipiSwingComponentImpl {
 	private static final long serialVersionUID = 7684025385194079500L;
 	private JSeparator mySeparator = null;
 
+	@Override
 	public Object createContainer() {
 		mySeparator = new JSeparator();
 		TipiHelper th = new TipiSwingHelper();

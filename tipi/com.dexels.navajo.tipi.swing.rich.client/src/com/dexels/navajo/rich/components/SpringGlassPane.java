@@ -111,6 +111,7 @@ public class SpringGlassPane extends JComponent {
 		animator.setDeceleration(0.4f);
 		animator.start();
 		animator.addTarget(new TimingTargetAdapter() {
+			@Override
 			public void end() {
 				setVisible(false);
 				// getRootPane().setGlassPane(null);
@@ -130,6 +131,7 @@ public class SpringGlassPane extends JComponent {
 		animator.setDeceleration(0.4f);
 		animator.start();
 		animator.addTarget(new TimingTargetAdapter() {
+			@Override
 			public void end() {
 				setVisible(false);
 				hintOpacity = 0.0f;

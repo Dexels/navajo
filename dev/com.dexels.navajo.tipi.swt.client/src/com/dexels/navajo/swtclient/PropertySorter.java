@@ -47,7 +47,8 @@ public class PropertySorter extends ViewerSorter {
         myPropertyName = propertyName;
     }
 
-    public int compare(Viewer viewer, Object o1, Object o2) {
+    @Override
+	public int compare(Viewer viewer, Object o1, Object o2) {
         //		Property task1 = (Property) o1;
         //		Property task2 = (Property) o2;
 
@@ -64,7 +65,8 @@ public class PropertySorter extends ViewerSorter {
         //	    return super.compare(viewer, o1, o2);
     }
 
-    public boolean isSorterProperty(Object element, String property) {
+    @Override
+	public boolean isSorterProperty(Object element, String property) {
         return true;
     }
 

@@ -31,6 +31,7 @@ public class ListParser extends TipiTypeParser {
 	public ListParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		throw new IllegalArgumentException("ListParser not actually used");
 	}

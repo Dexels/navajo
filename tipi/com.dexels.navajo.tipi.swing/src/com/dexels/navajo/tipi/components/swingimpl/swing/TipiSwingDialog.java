@@ -52,15 +52,18 @@ public class TipiSwingDialog extends JDialog {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		componentListener = new ComponentAdapter() {
 
+			@Override
 			public void componentHidden(ComponentEvent e) {
 			}
 
+			@Override
 			public void componentMoved(ComponentEvent e) {
 				Rectangle r = getBounds();
 				comp.getAttributeProperty("x").setAnyValue(r.x);
 				comp.getAttributeProperty("y").setAnyValue(r.y);
 			}
 
+			@Override
 			public void componentResized(ComponentEvent e) {
 				Rectangle r = getBounds();
 				// logger.debug("Dialog resize: "+r);
@@ -71,6 +74,7 @@ public class TipiSwingDialog extends JDialog {
 
 			}
 
+			@Override
 			public void componentShown(ComponentEvent e) {
 			}
 		};

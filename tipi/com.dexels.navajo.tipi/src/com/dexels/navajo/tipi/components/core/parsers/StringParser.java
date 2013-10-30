@@ -31,6 +31,7 @@ public class StringParser extends TipiTypeParser {
 	public StringParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return expression;
 	}

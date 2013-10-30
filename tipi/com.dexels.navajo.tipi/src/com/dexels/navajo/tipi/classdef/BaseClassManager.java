@@ -37,6 +37,7 @@ public abstract class BaseClassManager implements IClassManager {
 		this.parentClassLoader = parentClassLoader;
 	}
 
+	@Override
 	public Class<?> getTipiClass(XMLElement xe) {
 		Class<?> cc = null;
 		String pack = (String) xe.getAttribute("package");
@@ -139,6 +140,7 @@ public abstract class BaseClassManager implements IClassManager {
 		return null;
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String name, String expression,
 			TipiEvent te) {
 		TipiTypeParser ttp = getParser(name);
@@ -201,6 +203,7 @@ public abstract class BaseClassManager implements IClassManager {
 		return ttp;
 	}
 
+	@Override
 	public boolean isValidType(String name) {
 		return parserInstanceMap.containsKey(name);
 	}

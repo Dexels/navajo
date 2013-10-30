@@ -19,7 +19,8 @@ public class IsDirtyComponent extends AbstractQueryAllComponentsFunction {
      * 
      * @see com.dexels.navajo.parser.FunctionInterface#remarks()
      */
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Returns whether the given component or one of its children is dirty. Properties can be dirty if the value changed since instantiation or the last call to clearDirty.";
     }
 
@@ -28,7 +29,8 @@ public class IsDirtyComponent extends AbstractQueryAllComponentsFunction {
      * 
      * @see com.dexels.navajo.parser.FunctionInterface#usage()
      */
-    public String usage() {
+    @Override
+	public String usage() {
         return "IsDirtyComponent(TipiComponent source)";
     }
 
@@ -37,7 +39,8 @@ public class IsDirtyComponent extends AbstractQueryAllComponentsFunction {
      * 
      * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
      */
-    public Object evaluate() throws TMLExpressionException {
+    @Override
+	public Object evaluate() throws TMLExpressionException {
         Object pp = getOperand(0);
         if (pp == null) {
             return null;

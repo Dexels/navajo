@@ -32,12 +32,14 @@ public class PropertyListRef implements TipiReference {
 		propertyList.addAll(in);
 	}
 
+	@Override
 	public void setValue(Object val) {
 		for (Property p : propertyList) {
 			p.setAnyValue(val);
 		}
 	}
 
+	@Override
 	public Object getValue() {
 		return null;
 	}

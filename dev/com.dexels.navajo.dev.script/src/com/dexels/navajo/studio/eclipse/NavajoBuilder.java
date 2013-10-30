@@ -65,7 +65,8 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
      * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int,
      *      java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
      */
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
 	protected IProject[] build(final int kind, Map args, IProgressMonitor monitor) throws CoreException {
 //                ClassProvider provider = NavajoScriptPluginPlugin.getDefault().getClassProvider(getProject(),false);
                 buildScripts(kind, monitor);
@@ -152,7 +153,8 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
         final IFolder adapterFolder = NavajoScriptPluginPlugin.getDefault().getAdaptersFolder(getProject());
                 
         IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
-            public boolean visit(IResourceDelta delta) {
+            @Override
+			public boolean visit(IResourceDelta delta) {
                 // only interested in changed resources (not added or removed)
                 IResource resource = delta.getResource();
                 monitor.setTaskName("Checking navajo script resource : " + resource.getFullPath());
@@ -256,7 +258,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 monitor.beginTask("Compiling TSL", changed.size());
                 List<NavajoScriptCompilation> compilation = new ArrayList<NavajoScriptCompilation>();
                 Set<IPath> compilationSet = new HashSet<IPath>();
-                for (Iterator iter = changed.iterator(); iter.hasNext();) {
+                for (Iterator<IResource> iter = changed.iterator(); iter.hasNext();) {
                     if (monitor.isCanceled()) {
                         System.err.println("CANCELLED!");
                         break;
@@ -319,7 +321,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 if (compilation.size() > 0) {
                      compileScript(compilation);
                 }
-                for (Iterator it = removed.iterator(); it.hasNext();) {
+                for (Iterator<IResource> it = removed.iterator(); it.hasNext();) {
                     IFile element = (IFile) it.next();
                     if (element==null) {
                         continue;
@@ -338,7 +340,8 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
         if (compilationList.size() > VERY_LARGE_COMPILE_THRESHOLD) {
             NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().syncExec(new Runnable() {
 
-                public void run() {
+                @Override
+				public void run() {
                     isOkToCompile = MessageDialog.openQuestion(NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().getActiveShell(), "Oh dear", "About to build: "
                             + compilationList.size() + " scripts. You are a very, very, VERY brave Navajo.");
                 }
@@ -347,7 +350,8 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
         } else if (compilationList.size() > LARGE_COMPILE_THRESHOLD) {
             NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().syncExec(new Runnable() {
 
-                public void run() {
+                @Override
+				public void run() {
                     isOkToCompile = MessageDialog.openQuestion(NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().getActiveShell(), "Oh dear", "About to build: "
                             + compilationList.size() + " scripts. You are a brave Navajo.");
                 }

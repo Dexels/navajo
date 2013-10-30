@@ -31,10 +31,12 @@ public class CookieRef implements TipiReference {
 		this.myKey = key;
 	}
 
+	@Override
 	public void setValue(Object val) {
 		myContext.setCookie(myKey, (String) val);
 	}
 
+	@Override
 	public Object getValue() {
 		return myContext.getCookie(myKey);
 	}

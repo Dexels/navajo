@@ -1,9 +1,6 @@
 package com.dexels.navajo.entity.impl;
 
 import java.io.StringWriter;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

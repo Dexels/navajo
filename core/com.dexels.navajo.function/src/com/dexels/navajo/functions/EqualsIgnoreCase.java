@@ -18,15 +18,18 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class EqualsIgnoreCase  extends FunctionInterface {
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "";
     }
 
-    public final Object evaluate() throws TMLExpressionException {
+    @Override
+	public final Object evaluate() throws TMLExpressionException {
 
         List<?> operands = this.getOperands();
 

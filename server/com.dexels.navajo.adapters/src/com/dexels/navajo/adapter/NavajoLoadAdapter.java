@@ -55,17 +55,20 @@ public class NavajoLoadAdapter
     return fileName;
   }
 
-  public void kill() {
+  @Override
+public void kill() {
   }
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
 
 //    Property nameProperty = inMessage.getProperty(namePropertyPath);
 //    String name = nameProperty.getValue();
     this.access = access;
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
     String totalPath = fileName;
     logger.info("Total: "+totalPath);
     File f = new File(totalPath);

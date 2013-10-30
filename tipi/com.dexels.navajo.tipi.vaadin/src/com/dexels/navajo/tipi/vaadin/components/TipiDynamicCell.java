@@ -21,6 +21,7 @@ public class TipiDynamicCell extends TipiVaadinComponentImpl {
 		tablePartner.layoutClick(index);
 	}
 	
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		super.setComponentValue(name, object);
 		if (name.equals("h1")) {

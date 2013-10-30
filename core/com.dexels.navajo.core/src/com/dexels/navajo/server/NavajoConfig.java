@@ -375,7 +375,8 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     /*
      * Startup the Navajo TaskRunner instance. If no instance exists, it is started.
      */
-    public void startTaskRunner() {
+    @Override
+	public void startTaskRunner() {
     	// Bootstrap task scheduler
     	try {
 			TaskRunnerFactory.getInstance();
@@ -387,14 +388,16 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     /*
      * Check whether the integrity module is operational.
      */
-    public boolean isIntegrityWorkerEnabled() {
+    @Override
+	public boolean isIntegrityWorkerEnabled() {
     	return enableIntegrityWorker;
     }
     
     /*
      * Check whether the service lock module is operational.
      */
-    public boolean isLockManagerEnabled() {
+    @Override
+	public boolean isLockManagerEnabled() {
     	return enableLockManager;
     }
     
@@ -403,7 +406,8 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
      * 
      * @param b
      */
-    public synchronized void setStatisticsRunnerEnabled(boolean b) {
+    @Override
+	public synchronized void setStatisticsRunnerEnabled(boolean b) {
     	
     	if ( getStatisticsRunner() != null ) {
     		getStatisticsRunner().setEnabled(b);
@@ -414,7 +418,8 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     /*
      * Check whether the statistics runner is enabled.
      */
-    public boolean isStatisticsRunnerEnabled() {
+    @Override
+	public boolean isStatisticsRunnerEnabled() {
     	if ( getStatisticsRunner() != null ) {
     		return getStatisticsRunner().isEnabled();
     	} else {
@@ -426,7 +431,8 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
      * Gets the Integrity Worker instance (if enabled).
      * If it does not exist, the Integrity Worker is started.
      */
-    public WorkerInterface getIntegrityWorker() {
+    @Override
+	public WorkerInterface getIntegrityWorker() {
     	
     	if ( !enableIntegrityWorker ) {
     		return null;
@@ -446,7 +452,8 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     /*
      * Gets the class path to be used for the compiling scripts.
      */
-    @Deprecated
+    @Override
+	@Deprecated
     public final String getClassPath() {
       return this.classPath;
     }
@@ -454,25 +461,29 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     /*
      * Gets the path where the compiled scripts are stored.
      */
-    public final String getCompiledScriptPath() {
+    @Override
+	public final String getCompiledScriptPath() {
         return compiledScriptPath;
     }
 
     /*
      * Gets the path to the user adapter library.
      */
-    public final String getAdapterPath() {
+    @Override
+	public final String getAdapterPath() {
         return adapterPath;
     }
 
     /*
      * Gets the path where the scripts are located.
      */
-    public final String getScriptPath() {
+    @Override
+	public final String getScriptPath() {
         return scriptPath;
     }
 
-    public final String getResourcePath() {
+    @Override
+	public final String getResourcePath() {
         return resourcePath;
     }
     
@@ -484,7 +495,8 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     /*
      * Gets the configuration path to the Navajo Instance.
      */
-    public final String getConfigPath() {
+    @Override
+	public final String getConfigPath() {
         return configPath;
     }
 
@@ -493,7 +505,8 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     }
 
     // Added a cast, because I changed the type of classloader to generic class loader, so I can just use the system class loader as well...
-    public final NavajoClassSupplier getClassloader() {
+    @Override
+	public final NavajoClassSupplier getClassloader() {
     	return adapterClassloader;
     }
 
@@ -514,7 +527,8 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     /*
      * Gets the Authentication/Authorization module that will be used by the Navajo Instance.
      */
-    public final com.dexels.navajo.server.Repository getRepository() {
+    @Override
+	public final com.dexels.navajo.server.Repository getRepository() {
 
     	if ( repository != null ) {
     		return repository;
@@ -535,7 +549,8 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     	return repository;
     }
 
-    public final SharedStoreInterface getSharedStore() {
+    @Override
+	public final SharedStoreInterface getSharedStore() {
     	try {
     		if ( sharedStoreClass != null ) {
     			Class c = Class.forName(sharedStoreClass);
@@ -554,21 +569,24 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     /*
      * Returns the instance of the Persistence Manager.
      */
-    public final PersistenceManager getPersistenceManager() {
+    @Override
+	public final PersistenceManager getPersistenceManager() {
       return persistenceManager;
     }
     
     /*
      * Get the root path for the Navajo Installation.
      */
-    public final String getRootPath() {
+    @Override
+	public final String getRootPath() {
         return this.rootPath;
     }
     
     /*
      * Gets the asynchronous service store instance.
      */
-    public final com.dexels.navajo.mapping.AsyncStore getAsyncStore() {
+    @Override
+	public final com.dexels.navajo.mapping.AsyncStore getAsyncStore() {
     	if ( isEnableAsync() ) {
     		return com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
     	} else {
@@ -579,7 +597,8 @@ public final class NavajoConfig extends FileNavajoConfig implements NavajoConfig
     /*
      * Start statistics runner.
      */
-    public void startStatisticsRunner() {
+    @Override
+	public void startStatisticsRunner() {
     	if ( !statisticsRunnerStarted ) {
     		StatisticsRunnerInterface statisticsRunner = getStatisticsRunner();
     		if ( statisticsRunner != null ) {

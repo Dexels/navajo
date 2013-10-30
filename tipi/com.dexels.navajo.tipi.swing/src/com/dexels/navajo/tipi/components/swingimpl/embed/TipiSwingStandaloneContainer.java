@@ -77,19 +77,23 @@ public class TipiSwingStandaloneContainer implements
 		return null;
 	}
 
+	@Override
 	public void loadClassPathLib(String location) {
 		libraries.add(location);
 	}
 
+	@Override
 	public void loadNavajo(Navajo nav, String method) throws TipiException,
 			TipiBreakException {
 		embeddedContext.loadNavajo(nav, method);
 	}
 
+	@Override
 	public TipiContext getContext() {
 		return embeddedContext;
 	}
 
+	@Override
 	public void shutDownTipi() {
 		embeddedContext.shutdown();
 	}

@@ -20,11 +20,13 @@ public class GetReportFile extends FunctionInterface {
   public GetReportFile() {
   }
 
-  public String remarks() {
+  @Override
+public String remarks() {
    return "Reads a report file from the script folder to a binary";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 	 String script = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
     String reportName = (String) getOperand(0);
 	 java.io.File scriptDir = new java.io.File(script); 
@@ -37,7 +39,8 @@ public class GetReportFile extends FunctionInterface {
     }
   }
 
-  public String usage() {
+  @Override
+public String usage() {
      return "GetReportFile(reportname)";
   }
 

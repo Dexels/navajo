@@ -52,6 +52,7 @@ public class TipiFileChooser extends TipiSwingComponentImpl {
 	// selectButton.setCursor(Cursor.getPredefinedCursor(b?Cursor.WAIT_CURSOR:Cursor.DEFAULT_CURSOR));
 	// }
 
+	@Override
 	public Object createContainer() {
 		final JPanel p = new JPanel();
 		TipiHelper th = new TipiSwingHelper();
@@ -67,6 +68,7 @@ public class TipiFileChooser extends TipiSwingComponentImpl {
 				GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
 				new Insets(0, 0, 0, 0), 0, 0));
 		selectButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				// if (defaultDir==null) {
 				// defaultDir = System.getProperties("user.dir");
@@ -91,6 +93,7 @@ public class TipiFileChooser extends TipiSwingComponentImpl {
 		return p;
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if ("file".equals(name)) {
 			return fileNameField.getText();
@@ -98,9 +101,11 @@ public class TipiFileChooser extends TipiSwingComponentImpl {
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		if ("file".equals(name)) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					fileNameField.setText((String) object);
 					return;

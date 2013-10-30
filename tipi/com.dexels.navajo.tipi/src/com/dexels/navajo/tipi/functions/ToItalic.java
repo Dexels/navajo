@@ -18,7 +18,8 @@ public class ToItalic extends FunctionInterface {
      * 
      * @see com.dexels.navajo.parser.FunctionInterface#remarks()
      */
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Make text italic. Html-style (depending on 2nd parameter including html tag)";
     }
 
@@ -27,7 +28,8 @@ public class ToItalic extends FunctionInterface {
      * 
      * @see com.dexels.navajo.parser.FunctionInterface#usage()
      */
-    public String usage() {
+    @Override
+	public String usage() {
         return "ToItalic(string, boolean|empty)";
     }
 
@@ -36,7 +38,8 @@ public class ToItalic extends FunctionInterface {
      * 
      * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
      */
-    public Object evaluate() throws TMLExpressionException {
+    @Override
+	public Object evaluate() throws TMLExpressionException {
         Object pp = getOperand(0);
         String result = null;
 

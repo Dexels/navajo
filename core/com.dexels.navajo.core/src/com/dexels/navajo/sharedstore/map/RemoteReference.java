@@ -132,6 +132,7 @@ public class RemoteReference implements Serializable {
 	 * object is garbage collected.
 	 * 
 	 */
+	@Override
 	public void finalize() {
 		if ( myObject != null) {
 			myObjectRegistry.remove(guid);

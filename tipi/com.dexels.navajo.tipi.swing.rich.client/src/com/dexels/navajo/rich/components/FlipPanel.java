@@ -34,6 +34,7 @@ public class FlipPanel extends JPanel {
 		c.setVisible(true);
 	}
 
+	@Override
 	public void setBounds(int x, int y, int width, int height) {
 		super.setBounds(x, y, width, height);
 		for (int i = 0; i < components.size(); i++) {

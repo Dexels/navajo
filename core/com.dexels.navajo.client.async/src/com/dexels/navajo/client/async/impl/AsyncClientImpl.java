@@ -425,10 +425,12 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	}
 
 
+	@Override
 	public boolean useHttps() {
 		return useHttps;
 	}
 
+	@Override
 	public void setHttps(boolean useHttps) {
 		this.useHttps = useHttps;
 	}

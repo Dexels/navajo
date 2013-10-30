@@ -44,17 +44,20 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 	}
 	//
 
+	@Override
 	public  Property createProperty(Navajo n,String name, String type, String value, int i, String desc, String direction) {
 		BasePropertyImpl pi = new BasePropertyImpl(n,name,type,value,i,desc,direction);
 		return pi;
 	}
 
 
+	@Override
 	public  Property createProperty(Navajo n,String name, String type, String value, int i, String desc, String direction, String subtype) {
 		BasePropertyImpl pi = new BasePropertyImpl(n,name,type,value,i,desc,direction, subtype);
 		return pi;
 	}
 
+	@Override
 	public  Property createProperty(Navajo n, String name, String cardinality, String desc, String direction) {
 		return new BasePropertyImpl(n,name,cardinality,desc,direction);
 	}
@@ -63,6 +66,7 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 		return new BasePropertyImpl(n,name);
 	}
 
+	@Override
 	public  Message createMessage(Navajo n, String name) {
 		return new BaseMessageImpl(n,name);
 	}
@@ -101,11 +105,13 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 	public  Header createHeader(BaseNavajoImpl n) {
 		return new BaseHeaderImpl(n);
 	}
+	@Override
 	public Point createPoint(Property p) throws com.dexels.navajo.document.NavajoException {
 		throw new java.lang.UnsupportedOperationException("Method createPoint() not yet implemented.");
 	}
 
 
+	@Override
 	public Header createHeader(Navajo n, String rpcName, String rpcUser, String rpcPassword, long expiration_interval) {
 		BaseHeaderImpl hi = new BaseHeaderImpl(n,rpcUser,rpcPassword,rpcName);
 		hi.setExpiration(expiration_interval);
@@ -113,31 +119,38 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 		//    throw new java.lang.UnsupportedOperationException("Method createHeader() not yet implemented.");
 	}
 
+	@Override
 	public NavajoException createNavajoException(Throwable e) {
 		return new NavajoExceptionImpl(e);
 	}
 
+	@Override
 	public Selection createDummySelection() {
 		return new BaseSelectionImpl(null,Selection.DUMMY_SELECTION,Selection.DUMMY_ELEMENT,true);
 	}
 
+	@Override
 	public Message createMessage(Navajo tb, String name, String type) {
 		BaseMessageImpl mi =  new BaseMessageImpl(tb,name);
 		mi.setType(type);
 		return mi;
 	}
+	@Override
 	public Navajo createNavajo() {
 		return new BaseNavajoImpl(this);
 	}
+	@Override
 	public Selection createSelection(Navajo tb, String name, String value, boolean selected) {
 		BaseSelectionImpl si = new BaseSelectionImpl(tb,name,value,selected);
 		return si;
 	}
+	@Override
 	public Selection createSelection(Navajo tb, String name, String value, int selected) {
 		BaseSelectionImpl si = new BaseSelectionImpl(tb,name,value, ( selected > 0 ) );
 		return si;
 	}
 
+	@Override
 	public Selection createSelection(Navajo tb, String name, String value, Object selected) {
 
 		BaseSelectionImpl si = null;
@@ -154,61 +167,73 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 		return si;
 	}
 
+	@Override
 	public Method createMethod(Navajo tb, String name, String server) {
 		BaseMethodImpl mi = new BaseMethodImpl(tb,name);
 		mi.setServer(server);
 		return mi;
 	}
+	@Override
 	public NavajoException createNavajoException(String message) {
 		return new NavajoExceptionImpl(message);
 		//    throw new java.lang.UnsupportedOperationException("Method createNavajoException() not yet implemented.");
 	}
+	@Override
 	public NavajoException createNavajoException(String message, Throwable t) {
 		return new NavajoExceptionImpl(message,t);
 		//    throw new java.lang.UnsupportedOperationException("Method createNavajoException() not yet implemented.");
 	}
 
+	@Override
 	public  Navajo createNavaScript(java.io.InputStream stream) {
 		throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
 	}
 
+	@Override
 	public  Navajo createNavaScript(Object representation) {
 		throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
 	}
 
+	@Override
 	public  Navajo createNavaScript() {
 		throw new java.lang.UnsupportedOperationException("Method createNavaScript() not yet implemented.");
 	}
 
+	@Override
 	public ExpressionTag createExpression(Navajo tb, String condition, String value) throws
 	NavajoException {
 		throw new java.lang.UnsupportedOperationException(
 		"Method createExpression() not yet implemented.");
 	}
 
+	@Override
 	public FieldTag createField(Navajo tb, String condition, String name) throws
 	NavajoException {
 		throw new java.lang.UnsupportedOperationException(
 		"Method createExpression() not yet implemented.");
 	}
 
+	@Override
 	public MapTag createMapObject(Navajo tb, String object, String condition) throws
 	NavajoException {
 		throw new java.lang.UnsupportedOperationException(
 		"Method createMapObject() not yet implemented.");
 	}
 
+	@Override
 	public MapTag createMapRef(Navajo tb, String ref, String condition,
 			String filter) throws NavajoException {
 		throw new java.lang.UnsupportedOperationException(
 		"Method createMapRef() not yet implemented.");
 	}
 
+	@Override
 	public  ParamTag createParam(Navajo tb, String condition, String name) throws NavajoException {
 		throw new java.lang.UnsupportedOperationException(
 		"Method createParam() not yet implemented.");
 	}
 
+	@Override
 	public Navajo createNavajo(InputStream stream) {
 		try {
 			SaxHandler sax = new SaxHandler();
@@ -221,6 +246,7 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 		}  
 	}
 
+	@Override
 	public Navajo createNavajo(Reader r) {
 		try {
 			SaxHandler sax = new SaxHandler();
@@ -231,6 +257,7 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 		}  
 	}
 
+	@Override
 	public Navajo createNavajoJSON(Reader r){
 		try{
 			JSONParser jsoParser = new JSONParser();
@@ -241,16 +268,19 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 		}
 	}
 
+	@Override
 	public Navajo createNavajo(Object representation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public Message createMessage(Object representation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public Property createProperty(Object representation) {
 		// TODO Auto-generated method stub
 		return null;

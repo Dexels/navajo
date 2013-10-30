@@ -108,7 +108,8 @@ public class SingleValueQuery extends FunctionInterface {
 	  return sql;
   }
   
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 	  JDBCMappable sql = evaluateQuery();
 	  setDbIdentifier(sql.getDbIdentifier());
 	  sql.setDebug(false);
@@ -135,10 +136,12 @@ public class SingleValueQuery extends FunctionInterface {
 
   }
   
-  public String usage() {
+  @Override
+public String usage() {
     return "SingleValueQuery('query', ?, ?, ...)";
   }
-  public String remarks() {
+  @Override
+public String remarks() {
     return "A query can be supplied to this function that executes a SQL parameter with a given number of parameters";
   }
   

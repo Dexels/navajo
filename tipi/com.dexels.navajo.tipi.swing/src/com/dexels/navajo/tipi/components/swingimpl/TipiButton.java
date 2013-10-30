@@ -55,18 +55,21 @@ public class TipiButton extends TipiSwingComponentImpl {
 
 	private AbstractAction buttonAction;
 
+	@Override
 	public Object createContainer() {
 		final TipiSwingButton myButton = new TipiSwingButton(this);
 		buttonAction = new AbstractAction("onActionPerformed") {
 
 			private static final long serialVersionUID = 706723341030407319L;
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				doFireAction(myButton);
 			}
 		};
 		myButton.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				buttonAction.actionPerformed(e);
 			}
@@ -75,9 +78,11 @@ public class TipiButton extends TipiSwingComponentImpl {
 		return myButton;
 	}
 
+	@Override
 	public final void setComponentValue(final String name, final Object object) {
 		super.setComponentValue(name, object);
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				if (name.equals("text")) {
 					((JButton) getContainer()).setText((String) object);
@@ -131,6 +136,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 		return null;
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if (name.equals("text")) {
 			return ((JButton) getContainer()).getText();
@@ -138,6 +144,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	protected void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event) {
 		if ("fireAction".equals(name)) {
@@ -152,9 +159,11 @@ public class TipiButton extends TipiSwingComponentImpl {
 	}
 
 	// private boolean enabled = false;
+	@Override
 	public void eventStarted(TipiExecutable te, Object event) {
 		if (Container.class.isInstance(getContainer())) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					// enabled = ( (Container) getContainer()).isEnabled();
 					getSwingContainer().setEnabled(false);
@@ -164,9 +173,11 @@ public class TipiButton extends TipiSwingComponentImpl {
 		}
 	}
 
+	@Override
 	public void eventFinished(TipiExecutable te, Object event) {
 		if (Container.class.isInstance(getContainer())) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					((Container) getContainer()).setEnabled(iAmEnabled);
 					// setCursor(Cursor.DEFAULT_CURSOR);
@@ -180,6 +191,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 		setWaitCursor(true, root);
 
 		performTipiEvent("onActionPerformed", null, false, new Runnable() {
+			@Override
 			public void run() {
 				setWaitCursor(false, root);
 			}

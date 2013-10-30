@@ -11,7 +11,8 @@ public class TipiMenuBar extends TipiVaadinComponentImpl {
 	public TipiMenuBar() {
     }
 
-    public Object createContainer() {
+    @Override
+	public Object createContainer() {
     	menuBar = new MenuBar();
     	menuBar.setImmediate(true);
     	getVaadinApplication().getMainWindow().addComponent(menuBar);
@@ -27,12 +28,14 @@ public class TipiMenuBar extends TipiVaadinComponentImpl {
 		super.disposeComponent();
     }
 
+	@Override
 	protected void setComponentValue(String name, Object object) {
 //    	MenuBarPane b = (MenuBarPane) getContainer();
 //    	DefaultMenuModel menuModel = new DefaultMenuModel();
         super.setComponentValue(name, object);
     }
 
+	@Override
 	public void addToContainer(Object c, Object constraints) {
 //		menuBar.add
 		

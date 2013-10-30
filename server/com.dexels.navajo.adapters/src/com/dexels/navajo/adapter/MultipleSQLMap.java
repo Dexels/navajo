@@ -24,10 +24,12 @@ public class MultipleSQLMap implements Mappable {
 
     public MultipleSQLMap() {}
 
-    public void load(Access access) throws MappableException, UserException {
+    @Override
+	public void load(Access access) throws MappableException, UserException {
     }
 
-    public void store() throws MappableException, UserException {
+    @Override
+	public void store() throws MappableException, UserException {
     }
 
     public void setSqlMap(SQLMap[] sql) {
@@ -49,7 +51,8 @@ public class MultipleSQLMap implements Mappable {
             this.spMap = sp;
     }
 
-    public void kill() {}
+    @Override
+	public void kill() {}
 
     public static void main(String args[]) {
         MultipleSQLMap ms = new MultipleSQLMap();

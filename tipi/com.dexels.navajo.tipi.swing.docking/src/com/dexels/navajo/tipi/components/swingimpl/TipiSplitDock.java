@@ -9,8 +9,10 @@ public class TipiSplitDock extends TipiDataComponentImpl {
 	private static final long serialVersionUID = -5637640238588319570L;
 	TipiSwingSplitDock mySplitDock;
 
+	@Override
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				mySplitDock = new TipiSwingSplitDock(TipiSplitDock.this);
 			}
@@ -36,6 +38,7 @@ public class TipiSplitDock extends TipiDataComponentImpl {
 		final int position = pos;
 		
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				mySplitDock.addChildDock((Dock)c, new Position(position));
 			}

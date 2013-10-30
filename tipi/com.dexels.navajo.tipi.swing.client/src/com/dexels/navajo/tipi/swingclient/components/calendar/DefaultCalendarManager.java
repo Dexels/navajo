@@ -30,13 +30,16 @@ public class DefaultCalendarManager implements CalendarManager {
 	public DefaultCalendarManager() {
 	}
 
+	@Override
 	public void load(Date d) {
 	}
 
+	@Override
 	public void setSource(CalendarTable t) {
 		mySource = t;
 	}
 
+	@Override
 	public void fireCalendarEvent(CalendarEvent e) {
 		if (mySource == null) {
 			mySource = e.getSource();

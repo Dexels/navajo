@@ -19,7 +19,8 @@ public class BaseMethodImpl extends BaseNode implements Method {
     myName = name;
   }
 
-  public final ArrayList<String> getRequiredMessages() {
+  @Override
+public final ArrayList<String> getRequiredMessages() {
 	  ArrayList<String> result = new ArrayList<String>();
 	  for (Required required : myRequiredMessages) {
 		result.add(required.getMessage());
@@ -31,15 +32,18 @@ public class BaseMethodImpl extends BaseNode implements Method {
 	  myRequiredMessages.addAll(al);
   }
 
-  public final String getName() {
+  @Override
+public final String getName() {
     return myName;
   }
 
-  public final String getDescription() {
+  @Override
+public final String getDescription() {
     return myDescription;
   }
 
-  public final void setDescription(String s) {
+  @Override
+public final void setDescription(String s) {
     myDescription = s;
   }
 
@@ -52,15 +56,18 @@ public class BaseMethodImpl extends BaseNode implements Method {
     return myParent;
   }
 
-  public final void setServer(String s) {
+  @Override
+public final void setServer(String s) {
     myServer = s;
   }
 
-  public final String getServer() {
+  @Override
+public final String getServer() {
     return myServer;
   }
 
-  public final Method copy(Navajo n) {
+  @Override
+public final Method copy(Navajo n) {
 
     BaseMethodImpl m = (BaseMethodImpl)NavajoFactory.getInstance().createMethod(n,getName(),getServer());
 //    ArrayList<BaseRequiredImpl> al = new ArrayList<BaseRequiredImpl>();
@@ -77,19 +84,23 @@ public class BaseMethodImpl extends BaseNode implements Method {
     return "/"+getName();
   }
 
-  public final void setName(String name) {
+  @Override
+public final void setName(String name) {
     myName = name;
   }
 
-  public final void addRequired(String message) {
+  @Override
+public final void addRequired(String message) {
   	addRequired(message, null);
   }
   
-  public final void addRequired(String message, String filter) {
+  @Override
+public final void addRequired(String message, String filter) {
 
   }
 
-  public final void addRequired(Message message) {
+  @Override
+public final void addRequired(Message message) {
 	  BaseRequiredImpl bri = new BaseRequiredImpl();
 	  bri.setMessage(message.getFullMessageName());
     myRequiredMessages.add(bri);
@@ -122,20 +133,24 @@ public class BaseMethodImpl extends BaseNode implements Method {
   	return true;
   }
   
-  public Map<String,String> getAttributes() {
+  @Override
+public Map<String,String> getAttributes() {
       Map<String,String> m = new HashMap<String,String>();
       m.put("name", myName);
       return m;
   }
 
 
- public List<BaseNode> getChildren() {
+ @Override
+public List<BaseNode> getChildren() {
      // does not serialize required parts of methods. don't know why, but it really couldn't work
      return null;
   }
+@Override
 public String getTagName() {
     return "method";
 }
+@Override
 public Object getRef() {
     throw new UnsupportedOperationException("getRef not possible on base type. Override it if you need it");
 }

@@ -8,6 +8,7 @@ public class StringLiteral {
 		myString = s;
 	}
 	
+	@Override
 	public String toString() {
 		return myString;
 	}

@@ -31,6 +31,7 @@ public class GlobalParser extends TipiTypeParser {
 	public GlobalParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return source.getContext().getGlobalValue(expression);
 	}

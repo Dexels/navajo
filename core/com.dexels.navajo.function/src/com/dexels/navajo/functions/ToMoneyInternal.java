@@ -17,11 +17,13 @@ public final class ToMoneyInternal extends FunctionInterface {
   public ToMoneyInternal() {
   }
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Cast a money to period separated double (as a string)";
   }
 
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object o = getOperand(0);
    if (o == null) {
      return null;
@@ -31,7 +33,8 @@ public final class ToMoneyInternal extends FunctionInterface {
    }
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "ToMoneyInternal(money): String";
   }
 

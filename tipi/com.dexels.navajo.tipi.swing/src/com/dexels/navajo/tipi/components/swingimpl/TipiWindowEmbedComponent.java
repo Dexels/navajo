@@ -33,9 +33,11 @@ public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 			.getLogger(TipiWindowEmbedComponent.class);
 	private JInternalFrame panel = null;
 
+	@Override
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				panel = new EmbeddedTipiFrame();
 				panel.setClosable(true);
@@ -52,6 +54,7 @@ public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 				((SwingTipiContext) stc.getContext()).setOtherRoot(panel);
 				// stc.getContext().setDefaultTopLevel(TipiWindowEmbedComponent.this);
 				panel.addInternalFrameListener(new InternalFrameAdapter() {
+					@Override
 					public void internalFrameClosing(InternalFrameEvent arg0) {
 						disposeComponent();
 						stc.shutDownTipi();
@@ -62,9 +65,11 @@ public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 				});
 				stc.getContext().addShutdownListener(new ShutdownListener() {
 
+					@Override
 					public void contextShutdown() {
 						runSyncInEventThread(new Runnable() {
 
+							@Override
 							public void run() {
 								panel.setVisible(false);
 								panel.dispose();
@@ -101,6 +106,7 @@ public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 		return panel;
 	}
 
+	@Override
 	public void runAsyncInEventThread(Runnable runnable) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			runnable.run();
@@ -109,6 +115,7 @@ public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 		}
 	}
 
+	@Override
 	public void runSyncInEventThread(Runnable runnable) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			runnable.run();

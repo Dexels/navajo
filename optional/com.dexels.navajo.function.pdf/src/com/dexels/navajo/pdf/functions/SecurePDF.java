@@ -21,15 +21,18 @@ public final class SecurePDF extends FunctionInterface{
 	private final static Logger logger = LoggerFactory
 			.getLogger(SecurePDF.class);
 	
+	@Override
 	public String remarks() {
         return "Returns a pdf where all text has been replaced by images";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "SecurePDF(<Binary pdf>)";
     }
     
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Binary b = (Binary)getOperand(0);
         if(b!=null){
         	try{

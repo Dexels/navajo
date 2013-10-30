@@ -1,11 +1,6 @@
 package com.dexels.navajo.studio.eclipse.prefs;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 
 public class ProjectListElement {
 
@@ -29,19 +24,6 @@ public class ProjectListElement {
         return project.getName();
     }
 
-    static public List stringsToProjectsList(List projectIdList) {
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        IProject[] projects = root.getProjects();
-
-        List<ProjectListElement> selectedProjects = new ArrayList<ProjectListElement>();
-        for (int i = 0; i < projects.length; i++) {
-            if (projectIdList.contains(getID(projects[i]))) {
-                selectedProjects.add(new ProjectListElement(projects[i]));
-            }
-        }
-
-        return selectedProjects;
-    }
 
     /*
      * @see Object#equals(Object)

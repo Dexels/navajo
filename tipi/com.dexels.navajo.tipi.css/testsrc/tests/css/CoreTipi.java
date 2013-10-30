@@ -22,6 +22,7 @@ public class CoreTipi extends AbstractTipiTest {
 		super("testTipi");
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		List<TipiExtension> elist = new ArrayList<TipiExtension>();

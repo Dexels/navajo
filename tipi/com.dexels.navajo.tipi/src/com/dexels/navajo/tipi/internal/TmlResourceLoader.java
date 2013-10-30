@@ -24,12 +24,14 @@ public class TmlResourceLoader extends ClassPathResourceLoader {
 		myZipResourceLoader = z;
 	}
 
+	@Override
 	public URL getResourceURL(String loc) throws IOException {
 		String location = myPrefix + loc;
 		logger.info("Trying to locate in zip: " + location);
 		return myZipResourceLoader.getResourceURL(location);
 	}
 
+	@Override
 	public InputStream getResourceStream(String loc) throws IOException {
 		String location = myPrefix + loc;
 		logger.info("Trying to locate in zip: " + location);

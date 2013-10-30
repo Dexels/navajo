@@ -33,10 +33,12 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class GetDescription extends FunctionInterface {
   public GetDescription() {
   }
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Gets the description of property as a string";
   }
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     if (getOperands().size() != 1) {
       throw new TMLExpressionException(this, "Invalid function call");
     }
@@ -47,7 +49,8 @@ public class GetDescription extends FunctionInterface {
    Property p = (Property) o ;
    return p.getDescription();
   }
-  public String usage() {
+  @Override
+public String usage() {
    return "GetDescription(property)";
   }
 

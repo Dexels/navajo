@@ -29,10 +29,12 @@ public class GetMailNavajo extends FunctionInterface {
 	public GetMailNavajo() {	
 	}
 	
+	@Override
 	public String remarks() {
 		return "Returns a navajo, depicting the message along with its parts. It does not do any link replacements";
 	}
 
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Binary b = (Binary) getOperand(0);
 		DataSource ds = new BinaryDataSource(b);

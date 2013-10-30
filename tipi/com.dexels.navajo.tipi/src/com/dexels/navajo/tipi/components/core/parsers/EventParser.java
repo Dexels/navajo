@@ -31,6 +31,7 @@ public class EventParser extends BaseTipiParser {
 	public EventParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		if (event != null) {
 			TipiValue o = event.getEventParameter(expression);

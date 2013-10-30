@@ -23,6 +23,7 @@ public class TestDragTable extends JTable implements Runnable {
 	private static final long serialVersionUID = -8822849623440273745L;
 	JTable jt;
 
+	@Override
 	public void run() {
 		JTextField jtf = new JTextField("Drag This!");
 		jtf.setDragEnabled(true);
@@ -60,6 +61,7 @@ public class TestDragTable extends JTable implements Runnable {
 			super();
 		}
 
+		@Override
 		public boolean canImport(TransferHandler.TransferSupport support) {
 			return true;
 		}

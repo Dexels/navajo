@@ -24,11 +24,13 @@ import com.dexels.navajo.server.SystemException;
 
 public class CheckUniqueness extends FunctionInterface {
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Checks whether properties in an array message have unique values";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     if (getOperands().size() < 2) {
       for (int i = 0; i < getOperands().size(); i++) {
         Object o = getOperands().get(i);
@@ -96,7 +98,8 @@ public class CheckUniqueness extends FunctionInterface {
    return (isUnique ? Boolean.TRUE : Boolean.FALSE);
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "CheckUniqueness(<Array message name>,<Property name>[,<filter>])";
   }
 

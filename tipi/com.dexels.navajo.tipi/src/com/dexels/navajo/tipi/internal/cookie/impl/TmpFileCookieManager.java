@@ -27,11 +27,13 @@ public class TmpFileCookieManager implements CookieManager {
 	
 	private File cookieFile = null;
 
+	@Override
 	public String getCookie(String key) {
 		String cookieValue = cookieMap.get(key);
 		return cookieValue;
 	}
 
+	@Override
 	public void setCookie(String key, String value) {
 		cookieMap.put(key, value);
 		try {
@@ -41,6 +43,7 @@ public class TmpFileCookieManager implements CookieManager {
 		}
 	}
 
+	@Override
 	public void saveCookies() throws IOException {
 		FileOutputStream fis = new FileOutputStream(cookieFile);
 		saveCookieWithStream(fis);
@@ -57,6 +60,7 @@ public class TmpFileCookieManager implements CookieManager {
 		// fw.close();
 	}
 
+	@Override
 	public void loadCookies() throws IOException {
 		cookieFile = new File(new File(System.getProperty("java.io.tmpdir")),
 				"tipi.cookie");
@@ -96,6 +100,7 @@ public class TmpFileCookieManager implements CookieManager {
 		}
 	}
 
+	@Override
 	public void deleteCookies() throws IOException {
 		cookieFile.delete();
 		cookieMap.clear();

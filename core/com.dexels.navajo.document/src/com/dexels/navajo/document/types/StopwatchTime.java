@@ -166,7 +166,8 @@ public final class StopwatchTime
    * Clone this Clocktime object
    * @return Object
    */
-  public final Object clone() {
+  @Override
+public final Object clone() {
     return new StopwatchTime(myMillis);
   }
 
@@ -174,7 +175,8 @@ public final class StopwatchTime
    * Get the String representation of this StopwatchTime object
    * @return String
    */
-  public final String toString() {
+  @Override
+public final String toString() {
     long millis = myMillis;
     long hours = millis / HOURS_MILLIS;
     millis = millis % HOURS_MILLIS;
@@ -372,7 +374,8 @@ public final class StopwatchTime
     return new StopwatchTime(Math.abs(myMillis - otherMillis));
   }
 
-  public final int compareTo(StopwatchTime o) {
+  @Override
+public final int compareTo(StopwatchTime o) {
 
     if (o==null) {
       return 0;
@@ -383,11 +386,13 @@ public final class StopwatchTime
     return ( (int) (this.getMillis() - other.getMillis()));
   }
 
-  public int hashCode() {
+  @Override
+public int hashCode() {
 	  return (this.getMillis() + "").hashCode();
   }
   
-  public boolean equals(Object obj) {
+  @Override
+public boolean equals(Object obj) {
 
 	  if ( obj instanceof StopwatchTime ) {
 		  StopwatchTime other = (StopwatchTime) obj;
@@ -427,6 +432,7 @@ logger.info("Hoea: "+ck);
     logger.info("result = " + result);
   }
 
+@Override
 public boolean isEmpty() {
     
     return myMillis!=0;

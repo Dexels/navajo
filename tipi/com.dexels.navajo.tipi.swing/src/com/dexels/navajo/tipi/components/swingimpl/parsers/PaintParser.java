@@ -33,6 +33,7 @@ public class PaintParser extends TipiTypeParser {
 	private ColorParser cp = new ColorParser();
 	
 	private final static Logger logger = LoggerFactory.getLogger(PaintParser.class);
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return parsePaint(expression);
 	}

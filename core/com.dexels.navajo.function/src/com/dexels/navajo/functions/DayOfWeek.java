@@ -25,7 +25,8 @@ import java.util.Calendar;
 
 public final class DayOfWeek extends FunctionInterface {
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "This function return a calendar date of the first given weekday in the past";
     }
 
@@ -44,7 +45,8 @@ public final class DayOfWeek extends FunctionInterface {
         return c.getTime();
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object o = this.getOperand(0);
         Object f = this.getOperand(1);
         if (!(o instanceof Integer)) throw new TMLExpressionException(
@@ -71,7 +73,8 @@ public final class DayOfWeek extends FunctionInterface {
         return null;
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "FirstDayOfWeek(Integer weekday, Boolean past): Date";
     }
 

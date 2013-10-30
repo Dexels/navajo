@@ -41,6 +41,7 @@ public class LushContainer extends JPanel {
 		borderWidth = (float) width;
 	}
 
+	@Override
 	public void paint(Graphics g) {
 		Graphics2D graf = (Graphics2D) g;
 		Rectangle bounds = getBounds();

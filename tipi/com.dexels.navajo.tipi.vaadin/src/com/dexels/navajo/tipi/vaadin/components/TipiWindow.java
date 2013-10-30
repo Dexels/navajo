@@ -90,6 +90,7 @@ public class TipiWindow extends TipiVaadinComponentImpl{
 
 
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		    super.setComponentValue(name, object);
 		        if (name.equals("title")) {

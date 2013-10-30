@@ -46,6 +46,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 	public TipiEmbedComponent() {
 	}
 
+	@Override
 	public void loadData(Navajo n, String method) throws TipiException {
 //		try {
 //			Binary b = (Binary) n.getProperty(TIPLET_PROPERTY_PATH)
@@ -121,9 +122,11 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		super.setComponentValue(name, value);
 	}
 
+	@Override
 	public void addToContainer(Object c, Object constraints) {
 	}
 
+	@Override
 	protected Object getComponentValue(String name) {
 		if (name.equals("context")) {
 			return myContext;
@@ -131,6 +134,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	protected void performComponentMethod(final String name,
 			final TipiComponentMethod compMeth, TipiEvent event) {
 		if ("loadDefinition".equals(name)) {
@@ -223,6 +227,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 
 	protected void switchToDefinition(final String nameVal) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				stc.getContext().setTopLevelContainer(getContainer());
 				try {
@@ -250,6 +255,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		}
 	}
 
+	@Override
 	public void disposeComponent() {
 		super.disposeComponent();
 		stc.shutDownTipi();

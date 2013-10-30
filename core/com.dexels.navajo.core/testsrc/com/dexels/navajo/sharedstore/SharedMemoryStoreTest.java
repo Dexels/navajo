@@ -245,6 +245,7 @@ public class SharedMemoryStoreTest {
 		for (int i = 0; i < MAXTHREADS; i++) {
 			final int index = i;
 			threads[i] = new Thread() {
+				@Override
 				public void run() {
 					try {
 						si.store("myparent", "mystoredobject" + index, objects[index], false, false);
@@ -278,6 +279,7 @@ public class SharedMemoryStoreTest {
 		for (int i = 0; i < MAXTHREADS; i++) {
 			final int index = i;
 			threads[i] = new Thread() {
+				@Override
 				public void run() {
 					si.remove("myparent", "mystoredobject" + index);
 				}

@@ -150,7 +150,8 @@ private final static Logger logger = LoggerFactory
     	this.parent = parent;
     }
 
-    public void run() {
+    @Override
+	public void run() {
     	try {
     		parent.run();
     	} catch (Throwable e) {
@@ -173,7 +174,8 @@ private final static Logger logger = LoggerFactory
    * Note that the store() method is ONLY called upon thread finalization and after the final request by the client has been handled.
    *
    */
-  public abstract void kill();
+  @Override
+public abstract void kill();
 
   public void setKill(boolean b) { 
 	  if ( myRequest != null ) {
@@ -185,8 +187,10 @@ private final static Logger logger = LoggerFactory
 	  }
   }
 
-  public abstract void store() throws MappableException, UserException;
-  public abstract void load(Access access) throws MappableException, UserException;
+  @Override
+public abstract void store() throws MappableException, UserException;
+  @Override
+public abstract void load(Access access) throws MappableException, UserException;
   public abstract int getPercReady()  throws UserException;
   /**
    * The method afterRequest() is executed right after the </request> tag.
@@ -201,22 +205,26 @@ private final static Logger logger = LoggerFactory
    */
   public abstract void afterResponse()  throws UserException;
 
-  public String getAccessId() {
+  @Override
+public String getAccessId() {
 	  Access a = AsyncStore.getInstance().getAccessObject(this.pointer);  
 	  return a.accessID;
   }
   
-  public String getWebservice() {
+  @Override
+public String getWebservice() {
 	  Access a = AsyncStore.getInstance().getAccessObject(this.pointer);  
 	  return a.rpcName;
   }
   
-  public String getUser() {
+  @Override
+public String getUser() {
 	  Access a = AsyncStore.getInstance().getAccessObject(this.pointer);  
 	  return a.rpcUser;
   }
   
-  public String getVERSION() {
+  @Override
+public String getVERSION() {
 	  return VERSION;
   }
   
@@ -237,7 +245,8 @@ private final static Logger logger = LoggerFactory
       }
   }
 
-  public String getClassName() {
+  @Override
+public String getClassName() {
 	  return this.getClass().getName();
   }
   
@@ -245,16 +254,19 @@ private final static Logger logger = LoggerFactory
     return interrupt;
   }
 
-  public void interrupt() {
+  @Override
+public void interrupt() {
     interrupt = true;
     resume = false;
   }
 
-  public final boolean isResumed() {
+  @Override
+public final boolean isResumed() {
     return resume;
   }
 
-  public void resume() {
+  @Override
+public void resume() {
     resume = true;
     interrupt = false;
     // Send interrupt!
@@ -263,11 +275,13 @@ private final static Logger logger = LoggerFactory
     }
   }
 
-  public final boolean isStopped() {
+  @Override
+public final boolean isStopped() {
     return stop;
   }
 
-  public void stop() {
+  @Override
+public void stop() {
     System.out.println("stop() called...waiting for thread to terminate...");
     stop = true;
     kill = true;
@@ -282,7 +296,8 @@ private final static Logger logger = LoggerFactory
     kill();
   }
 
-  protected void finalize() {
+  @Override
+protected void finalize() {
 	  if (killOnFinnish) {
 		  kill = true;
 		  //disconnectJMX();
@@ -434,34 +449,41 @@ private final static Logger logger = LoggerFactory
   /**
    * @return the start time of the object (in millis)
    */
-  public long getStartTime() {
+  @Override
+public long getStartTime() {
     return startTime;
   }
 
-  public java.util.Date getStartDate() {
+  @Override
+public java.util.Date getStartDate() {
     return new java.util.Date(startTime);
   }
 
-  public String  getName() {
+  @Override
+public String  getName() {
     return this.name;
   }
 
-  public boolean getRunning() {
+  @Override
+public boolean getRunning() {
     return this.running;
   }
 
-  public boolean getIsFinished() {
+  @Override
+public boolean getIsFinished() {
     return this.isFinished;
   }
 
-  public boolean getInterrupt() {
+  @Override
+public boolean getInterrupt() {
     return this.interrupt;
   }
   /**
    *
    * @return the last time the object has been accessed (in millis)
    */
-  public long getLastAccess() {
+  @Override
+public long getLastAccess() {
     return this.lastAccess;
   }
   public void setLastAccess() {
@@ -478,7 +500,8 @@ private final static Logger logger = LoggerFactory
    * MXBean interface follows.
    */
   
-  public final boolean isWaiting() {
+  @Override
+public final boolean isWaiting() {
 	  return getWaiting();
   }
   
@@ -486,19 +509,23 @@ private final static Logger logger = LoggerFactory
 	  return false;
   }
 
-  public final String getLockName() {
+  @Override
+public final String getLockName() {
 	  return "";
   }
   
-  public final String getLockOwner() {
+  @Override
+public final String getLockOwner() {
 	  return "";
   }
   
-  public final String getLockClass() {
+  @Override
+public final String getLockClass() {
 	  return "";
   }
   
-  public final String getStackTrace() {
+  @Override
+public final String getStackTrace() {
 	  return "";
   }
 }

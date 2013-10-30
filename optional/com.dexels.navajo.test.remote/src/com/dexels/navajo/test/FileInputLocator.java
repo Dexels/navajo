@@ -14,6 +14,7 @@ public class FileInputLocator implements ScriptInputLocator {
 		this.baseDir = baseDir;
 	}
 
+	@Override
 	public Navajo getInput(String scriptName) throws IOException {
 		System.err.println("Getting: "+scriptName);
 		File inputFile = new File(baseDir,scriptName+".xml");

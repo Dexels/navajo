@@ -33,10 +33,12 @@ public class GetPropertyType extends GetPropertyAttribute {
 	public GetPropertyType() {
 	}
 	
+	@Override
 	public String remarks() {
 		return "Gets the type of property as a string";
 	}
 	
+	@Override
 	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		if (getOperands().size() != 1) {
 			throw new TMLExpressionException(this, "Invalid function call");
@@ -50,6 +52,7 @@ public class GetPropertyType extends GetPropertyAttribute {
 		return getAttribute(propertyName, "type");
 	}
 	
+	@Override
 	public String usage() {
 		return "GetPropertyType(property name)";
 	}

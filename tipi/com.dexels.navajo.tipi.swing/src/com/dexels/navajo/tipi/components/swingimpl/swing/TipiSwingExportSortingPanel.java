@@ -39,8 +39,8 @@ public class TipiSwingExportSortingPanel extends JPanel {
 	JButton sortDownButton = new JButton();
 	JScrollPane jScrollPane1 = new JScrollPane();
 	JScrollPane jScrollPane2 = new JScrollPane();
-	JList availableColumnsList = new JList();
-	JList exportedColumnsList = new JList();
+	JList<String> availableColumnsList = new JList<String>();
+	JList<String> exportedColumnsList = new JList<String>();
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 	private Map<String, String> descIdMap = new HashMap<String, String>();
 	private Map<String, Property> descPropMap = new HashMap<String, Property>();
@@ -75,7 +75,7 @@ public class TipiSwingExportSortingPanel extends JPanel {
 			String description = p.getDescription();
 			descIdMap.put(description, name);
 			descPropMap.put(description, p);
-			DefaultListModel am = (DefaultListModel) availableColumnsList
+			DefaultListModel<String> am =  (DefaultListModel<String>) availableColumnsList
 					.getModel();
 			am.addElement(description);
 		}
@@ -87,8 +87,8 @@ public class TipiSwingExportSortingPanel extends JPanel {
 	}
 
 	private final void jbInit() throws Exception {
-		availableColumnsList.setModel(new DefaultListModel());
-		exportedColumnsList.setModel(new DefaultListModel());
+		availableColumnsList.setModel(new DefaultListModel<String>());
+		exportedColumnsList.setModel(new DefaultListModel<String>());
 		availableColumnsLabel.setText("Beschikbare kolommen");
 		this.setLayout(gridBagLayout1);
 		exportedColumnsLabel.setText("Te exporteren kolommen");
@@ -149,32 +149,34 @@ public class TipiSwingExportSortingPanel extends JPanel {
 	}
 
 	void addButton_actionPerformed(ActionEvent e) {
-		Object[] items = availableColumnsList.getSelectedValues();
-		DefaultListModel em = (DefaultListModel) exportedColumnsList.getModel();
-		DefaultListModel am = (DefaultListModel) availableColumnsList
+		List<String> items = availableColumnsList.getSelectedValuesList();
+		DefaultListModel<String> em = (DefaultListModel<String>) exportedColumnsList.getModel();
+		DefaultListModel<String> am = (DefaultListModel<String>) availableColumnsList
 				.getModel();
-		for (int i = 0; i < items.length; i++) {
-			am.removeElement(items[i]);
-			em.addElement(items[i]);
+
+		for (String element : items) {
+			em.removeElement(element);
+			am.addElement(element);
 		}
 	}
 
 	void removeButton_actionPerformed(ActionEvent e) {
-		Object[] items = exportedColumnsList.getSelectedValues();
-		DefaultListModel em = (DefaultListModel) exportedColumnsList.getModel();
-		DefaultListModel am = (DefaultListModel) availableColumnsList
+		List<String> items = exportedColumnsList.getSelectedValuesList();
+		DefaultListModel<String> em = (DefaultListModel<String>) exportedColumnsList.getModel();
+		DefaultListModel<String> am = (DefaultListModel<String>) availableColumnsList
 				.getModel();
-		for (int i = 0; i < items.length; i++) {
-			em.removeElement(items[i]);
-			am.addElement(items[i]);
+		for (String element : items) {
+			em.removeElement(element);
+			am.addElement(element);
 		}
+
 	}
 
 	void sortUpButton_actionPerformed(ActionEvent e) {
 		int index = exportedColumnsList.getSelectedIndex();
-		DefaultListModel vm = (DefaultListModel) exportedColumnsList.getModel();
+		DefaultListModel<String> vm = (DefaultListModel<String>) exportedColumnsList.getModel();
 		if (index > 0) {
-			String value = (String) exportedColumnsList.getSelectedValue();
+			String value = exportedColumnsList.getSelectedValue();
 			vm.removeElement(value);
 			vm.insertElementAt(value, index - 1);
 			exportedColumnsList.setSelectedIndex(index - 1);
@@ -183,9 +185,9 @@ public class TipiSwingExportSortingPanel extends JPanel {
 
 	void sortDownButton_actionPerformed(ActionEvent e) {
 		int index = exportedColumnsList.getSelectedIndex();
-		DefaultListModel vm = (DefaultListModel) exportedColumnsList.getModel();
+		DefaultListModel<String> vm = (DefaultListModel<String>) exportedColumnsList.getModel();
 		if (index < vm.indexOf(vm.lastElement())) {
-			String value = (String) exportedColumnsList.getSelectedValue();
+			String value = exportedColumnsList.getSelectedValue();
 			vm.removeElement(value);
 			vm.insertElementAt(value, index + 1);
 			exportedColumnsList.setSelectedIndex(index + 1);
@@ -207,7 +209,7 @@ public class TipiSwingExportSortingPanel extends JPanel {
 	public List<String> getExportedPropertyNames() {
 		List<String> v = new ArrayList<String>();
 		for (int i = 0; i < exportedColumnsList.getModel().getSize(); i++) {
-			String current = (String) exportedColumnsList.getModel()
+			String current = exportedColumnsList.getModel()
 					.getElementAt(i);
 			v.add(descIdMap.get(current));
 		}
@@ -224,6 +226,7 @@ class TipiExportSortingPanel_addButton_actionAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.addButton_actionPerformed(e);
 	}
@@ -238,6 +241,7 @@ class TipiExportSortingPanel_removeButton_actionAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.removeButton_actionPerformed(e);
 	}
@@ -252,6 +256,7 @@ class TipiExportSortingPanel_sortUpButton_actionAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.sortUpButton_actionPerformed(e);
 	}
@@ -266,6 +271,7 @@ class TipiExportSortingPanel_sortDownButton_actionAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.sortDownButton_actionPerformed(e);
 	}

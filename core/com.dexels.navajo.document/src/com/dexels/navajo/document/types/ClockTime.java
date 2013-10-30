@@ -188,7 +188,8 @@ public final static String VERSION = "$Id$";
    * Clone this Clocktime object
    * @return Object
    */
-  public final Object clone() {
+  @Override
+public final Object clone() {
     return new ClockTime(dateValue());
   }
 
@@ -219,7 +220,8 @@ public final static String VERSION = "$Id$";
    * Get the String representation of this ClockTime object
    * @return String
    */
-  public final String toString() {
+  @Override
+public final String toString() {
 	  if(shortFormat) {
 		  return toShortString();
 	  }
@@ -241,7 +243,8 @@ public final static String VERSION = "$Id$";
   
   
 
-  public final int compareTo(ClockTime o) {
+  @Override
+public final int compareTo(ClockTime o) {
 
     if (o == null) {
       return 0;
@@ -262,14 +265,16 @@ public final static String VERSION = "$Id$";
     return (int) (calValue.getTimeInMillis() - o.dateValue().getTime());
   }
 
-  public int hashCode() {
+  @Override
+public int hashCode() {
 	  if ( calValue == null ) {
 		  return 434343;
 	  }
 	  return calValue.toString().hashCode();
   }
   
-  public boolean equals(Object obj) {
+  @Override
+public boolean equals(Object obj) {
 
     if (calValue == null && obj == null) {
       return true;
@@ -303,6 +308,7 @@ public final static String VERSION = "$Id$";
   }
 
 
+@Override
 public boolean isEmpty() {
     return calValue==null;
 

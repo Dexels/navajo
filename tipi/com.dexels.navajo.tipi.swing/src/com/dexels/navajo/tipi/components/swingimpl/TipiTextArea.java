@@ -37,6 +37,7 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 		return myTextArea;
 	}
 
+	@Override
 	public Object createContainer() {
 		myTextArea = new TipiSwingTextArea();
 		TipiHelper th = new TipiSwingHelper();
@@ -44,6 +45,7 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 		JScrollPane jsp = new JScrollPane(myTextArea);
 		addHelper(th);
 		myTextArea.addKeyListener(new KeyListener() {
+			@Override
 			public void keyTyped(KeyEvent e) {
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "typed");
@@ -61,6 +63,7 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 				}
 			}
 
+			@Override
 			public void keyPressed(KeyEvent e) {
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "typed");
@@ -71,6 +74,7 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "released");
@@ -93,10 +97,12 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 		return jsp;
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		logger.debug("Settting: " + name + " to " + object);
 		if (name.equals("text")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					myTextArea.setText((String) object);
 				}
@@ -109,6 +115,7 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if (name.equals("text")) {
 			return myTextArea.getText();
@@ -116,6 +123,7 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	protected void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event)
 			throws TipiBreakException {
@@ -126,6 +134,7 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 			if (o != null) {
 				runSyncInEventThread(new Runnable() {
 
+					@Override
 					public void run() {
 						String result = (String) o.value;
 						myTextArea.append(result);
@@ -139,6 +148,7 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 			if (o != null) {
 				runSyncInEventThread(new Runnable() {
 
+					@Override
 					public void run() {
 						String result = (String) o.value;
 						myTextArea

@@ -16,13 +16,11 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.TipiEventListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiExecutable;
 import com.dexels.navajo.tipi.TipiSuspendException;
 import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.actions.TipiActionFactory;
-import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 public abstract class TipiAction extends TipiAbstractExecutable{
 	// protected TipiContext myContext;
@@ -57,6 +55,7 @@ public abstract class TipiAction extends TipiAbstractExecutable{
 	 * Not 'really' supported, gets a bit difficult in the xml to distinguish
 	 * from other params
 	 */
+	@Override
 	public String getBlockParam(String key) {
 		return null;
 	}
@@ -153,6 +152,7 @@ public abstract class TipiAction extends TipiAbstractExecutable{
 		myContext.setThreadState(state);
 	}
 
+	@Override
 	public void performAction(TipiEvent te, TipiExecutable parent, int index)
 			throws TipiBreakException, TipiException, TipiSuspendException {
 		myContext.debugLog("action", myType);
@@ -261,6 +261,7 @@ public abstract class TipiAction extends TipiAbstractExecutable{
 		return null;
 	}
 
+	@Override
 	public void setContext(TipiContext tc) {
 		myContext = tc;
 	}

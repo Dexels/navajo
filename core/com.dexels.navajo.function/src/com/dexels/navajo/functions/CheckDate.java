@@ -34,17 +34,20 @@ public final class CheckDate extends FunctionInterface {
   public CheckDate() {
   }
 
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object o = this.getOperand(0);
     if (!(o instanceof java.util.Date))
       return Boolean.FALSE;
     else
       return Boolean.TRUE;
   }
-  public String usage() {
+  @Override
+public String usage() {
    return "";
   }
-  public String remarks() {
+  @Override
+public String remarks() {
     return "";
   }
 }

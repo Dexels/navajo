@@ -76,6 +76,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 
 	}
 
+	@Override
 	public String getDefaultEntryPoint() {
 		return "PostRoster";
 	}
@@ -110,6 +111,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		// logger.info("onConnect ok");
 		
 		connection.addPacketListener(new PacketListener() {
+			@Override
 			public void processPacket(Packet p) {
 				if ( p instanceof Message ) {
 					Message m = (Message) p;
@@ -255,6 +257,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 
 		myContext.addShutdownListener(new ShutdownListener() {
 
+			@Override
 			public void contextShutdown() {
 				if (connection != null) {
 					connection.disconnect();
@@ -449,6 +452,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		}
 	}
 
+	@Override
 	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
 		super.performComponentMethod(name, compMeth, event);
 		if (name.equals("connect")) {
@@ -547,6 +551,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 
 			try {
 				myContext.execute(new Runnable() {
+					@Override
 					public void run() {
 						try {
 							Thread.sleep(1000);
@@ -565,6 +570,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		}
 
 		myMultiUserChat.addParticipantListener(new PacketListener() {
+			@Override
 			public void processPacket(Packet p) {
 				logger.info("Participant event...");
 				if (p instanceof Message) {
@@ -615,6 +621,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		}
 	}
 
+	@Override
 	public void doTransaction(Navajo n, String service) throws TipiBreakException, TipiException {
 		if (service.equals("JabberRoster")) {
 			postRoster(connection.getRoster());
@@ -622,6 +629,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		throw new UnsupportedOperationException("umm, need destination for jabber!");
 	}
 
+	@Override
 	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		if (destination == null) {
 			// try {
@@ -657,10 +665,12 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		}
 	}
 
+	@Override
 	public String getConnectorId() {
 		return "jabber";
 	}
 
+	@Override
 	public Set<String> getEntryPoints() {
 		Set<String> s = new HashSet<String>();
 		s.add("*");

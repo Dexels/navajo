@@ -18,13 +18,15 @@ public class TipiQuestion extends TipiBaseQuestion {
     public TipiQuestion() {
     }
 
-    public Object createContainer() {
+    @Override
+	public Object createContainer() {
         myColumn = new VerticalLayout();
         return myColumn;
     }
 
     
-  public void setComponentValue(final String name, final Object object) {
+  @Override
+public void setComponentValue(final String name, final Object object) {
 	  if("showErrorMessage".equals(name)) {
 		  Boolean b = (Boolean)object;
 		  questionErrorMessageVisible = b;
@@ -32,24 +34,28 @@ public class TipiQuestion extends TipiBaseQuestion {
       super.setComponentValue(name, object);
 
   }
-    public void addToContainer(Object c, Object constraints) {
+    @Override
+	public void addToContainer(Object c, Object constraints) {
         Component comp = (Component) c;
         myColumn.addComponent(comp);
         comp.setSizeFull();
     }
 
-    protected void setQuestionBorder(String val) {
+    @Override
+	protected void setQuestionBorder(String val) {
 //        myGroupBox.setTitle(val);
 
     }
 
-    public void setQuestionVisible(boolean b) {
+    @Override
+	public void setQuestionVisible(boolean b) {
         myColumn.setVisible(b);
 
     }
 
 
-    public void setValid(boolean b, String msg) {
+    @Override
+	public void setValid(boolean b, String msg) {
     	if(b || !questionErrorMessageVisible) {
     		myColumn.setCaption("");
     	} else {

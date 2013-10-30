@@ -22,7 +22,8 @@ public final class StringField extends FunctionInterface {
     public StringField() {// Hallo
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		Object a = this.getOperands().get(0);
 		Object b = this.getOperands().get(1);
 		Object c = this.getOperands().get(2);
@@ -45,7 +46,8 @@ public final class StringField extends FunctionInterface {
 		return result.trim();
 	}
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "This function returns a specified string field given a seperator and an initial string. Eg. StringField('aap, noot, mies', ',', 2) = 'noot'.";
     }
 }

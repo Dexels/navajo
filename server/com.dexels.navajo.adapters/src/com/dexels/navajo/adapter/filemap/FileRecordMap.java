@@ -19,6 +19,7 @@ public class FileRecordMap implements Mappable {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.mapping.Mappable#load(com.dexels.navajo.server.Parameters, com.dexels.navajo.document.Navajo, com.dexels.navajo.server.Access, com.dexels.navajo.server.NavajoConfig)
 	 */
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 	
 
@@ -27,6 +28,7 @@ public class FileRecordMap implements Mappable {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.mapping.Mappable#store()
 	 */
+	@Override
 	public void store() throws MappableException, UserException {
 
 
@@ -35,6 +37,7 @@ public class FileRecordMap implements Mappable {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.mapping.Mappable#kill()
 	 */
+	@Override
 	public void kill() {
 	
 

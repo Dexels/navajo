@@ -32,6 +32,7 @@ public class MetaCompileException extends Exception {
 		this.offendingTag = offendingTag;
 	}
 	
+	@Override
 	public String getMessage() {
 		return message + " (" + fileName + ":" + (offendingTag.getStartLineNr()+1) + ")";
 	}

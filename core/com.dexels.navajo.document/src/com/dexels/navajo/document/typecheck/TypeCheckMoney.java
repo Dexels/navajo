@@ -21,10 +21,12 @@ public class TypeCheckMoney extends TypeChecker {
 	
   public TypeCheckMoney() {
   }
-  public String getType() {
+  @Override
+public String getType() {
     return Property.MONEY_PROPERTY;
   }
-  public String verify(Property p, String value) throws com.dexels.navajo.document.PropertyTypeException {
+  @Override
+public String verify(Property p, String value) throws com.dexels.navajo.document.PropertyTypeException {
     if (value==null) {
          return null;
        }

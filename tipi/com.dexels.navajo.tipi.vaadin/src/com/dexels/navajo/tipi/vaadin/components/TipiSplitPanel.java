@@ -21,7 +21,8 @@ public class TipiSplitPanel extends TipiVaadinComponentImpl {
 //	}
 
 
-	  protected void setComponentValue(final String name, final Object object) {
+	  @Override
+	protected void setComponentValue(final String name, final Object object) {
 		    super.setComponentValue(name, object);
 		    HorizontalSplitPanel v = (HorizontalSplitPanel) getVaadinContainer();
 				v.setWidth(getMainWindow().getWidth(), getMainWindow().getWidthUnits());

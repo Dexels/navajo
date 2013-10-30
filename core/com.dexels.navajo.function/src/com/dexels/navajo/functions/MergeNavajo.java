@@ -12,15 +12,18 @@ public final class MergeNavajo extends FunctionInterface {
 
     public MergeNavajo() {}
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Merges two navajo objects";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "MergeNavajo(slave, master).";
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object a = this.getOperands().get(0);
         Object b = this.getOperands().get(1);
 

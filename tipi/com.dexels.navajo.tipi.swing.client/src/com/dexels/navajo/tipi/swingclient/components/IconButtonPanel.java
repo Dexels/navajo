@@ -70,6 +70,7 @@ public class IconButtonPanel extends JPanel {
 		newButton.setIcon(new ImageIcon(UserInterface.class
 				.getResource("add-v2.png")));
 		newButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				newButton_actionPerformed(e);
 			}
@@ -78,6 +79,7 @@ public class IconButtonPanel extends JPanel {
 		saveButton.setIcon(new ImageIcon(UserInterface.class
 				.getResource("save-v2.png")));
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				saveButton_actionPerformed(e);
 			}
@@ -86,6 +88,7 @@ public class IconButtonPanel extends JPanel {
 		deleteButton.setIcon(new ImageIcon(UserInterface.class
 				.getResource("delete-v2.png")));
 		deleteButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				deleteButton_actionPerformed(e);
 			}
@@ -94,6 +97,7 @@ public class IconButtonPanel extends JPanel {
 		insertButton.setIcon(new ImageIcon(UserInterface.class
 				.getResource("add-v2.png")));
 		insertButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				insertButton_actionPerformed(e);
 			}
@@ -102,6 +106,7 @@ public class IconButtonPanel extends JPanel {
 		cancelButton.setIcon(new ImageIcon(UserInterface.class
 				.getResource("publish_x.png")));
 		cancelButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				cancelButton_actionPerformed(e);
 			}
@@ -110,6 +115,7 @@ public class IconButtonPanel extends JPanel {
 				.getResource("tick.png")));
 		okButton.setActionCommand(OK_BUTTON);
 		okButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				okButton_actionPerformed(e);
 			}

@@ -39,35 +39,42 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 	
 	private KafenioPanel myEditor = null;
 
+	@Override
 	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
 		super.performComponentMethod(name, compMeth, event);
 	}
 	
 
 
+	@Override
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable(){
 
+			@Override
 			public void run() {
 			//	LeanLogger.setCurrentLogLevel(4);
 				KafenioPanelConfiguration gpc = new KafenioPanelConfiguration();
 				myEditor = new KafenioPanel(gpc);
 				myEditor.addPropertyChangeListener(new PropertyChangeListener(){
 
+					@Override
 					public void propertyChange(PropertyChangeEvent evt) {
 							logger.info("Log: "+evt.getPropertyName()+" val: "+evt.getNewValue());
 					
 					}});
 				myEditor.getSourcePane().getDocument().addDocumentListener(new DocumentListener(){
 
+					@Override
 					public void changedUpdate(DocumentEvent e) {
 						fireChange("change", e);
 					}
 
+					@Override
 					public void insertUpdate(DocumentEvent e) {
 						fireChange("insert", e);
 					}
 
+					@Override
 					public void removeUpdate(DocumentEvent e) {
 						fireChange("remove", e);
 					}
@@ -82,6 +89,7 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 	}
 
 	
+	@Override
 	protected Object getComponentValue(String name) {
 		if(name.equals("text")) {
 			return myEditor.getDocumentText();
@@ -91,11 +99,13 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 	}
 
 
+	@Override
 	protected void setComponentValue(String name, final Object object) {
 		super.setComponentValue(name, object);
 		if(name.equals("text")) {
 			runSyncInEventThread(new Runnable(){
 
+				@Override
 				public void run() {
 					myEditor.setDocumentText((String)object);
 					
@@ -116,6 +126,7 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 		jf.setVisible(true);
 		JButton jb = new JButton("Teext");
 		jb.addActionListener(new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				ExtendedHTMLDocument extendedHtmlDoc = kp.getExtendedHtmlDoc();
 				try {
@@ -127,6 +138,7 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 			}});
 		kp.addPropertyChangeListener(new PropertyChangeListener(){
 
+			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 					logger.info("Log: "+evt.getPropertyName()+" val: "+evt.getNewValue());
 			

@@ -29,16 +29,20 @@ public class PropertyAnimator {
 		myTarget = target;
 		myAnimator.addTarget(new TimingTarget() {
 
+			@Override
 			public void begin() {
 			}
 
+			@Override
 			public void end() {
 				interpolate(initial, myTarget, 1, animationClass);
 			}
 
+			@Override
 			public void repeat() {
 			}
 
+			@Override
 			public void timingEvent(float e) {
 				interpolate(initial, myTarget, e, animationClass);
 			}

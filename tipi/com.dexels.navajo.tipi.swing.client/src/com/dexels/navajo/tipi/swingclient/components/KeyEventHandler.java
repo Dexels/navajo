@@ -27,6 +27,7 @@ public class KeyEventHandler extends AbstractAction {
 		myComp = c;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (StandardWindow.class.isInstance(myComp)) {
 			final StandardWindow sw = (StandardWindow) myComp;
@@ -50,6 +51,7 @@ public class KeyEventHandler extends AbstractAction {
 			if ("Fetch".equals(myMod)) {
 				sw.transferFocus();
 				SwingUtilities.invokeLater(new Runnable() {
+					@Override
 					public void run() {
 						sw.reloadWindow();
 					}

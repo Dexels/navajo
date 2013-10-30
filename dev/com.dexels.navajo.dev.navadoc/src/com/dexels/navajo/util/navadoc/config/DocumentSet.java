@@ -59,7 +59,8 @@ public class DocumentSet {
   /**
    * @return an interesting String representation of this object
    */
-  public String toString() {
+  @Override
+public String toString() {
     final StringBuffer s = new StringBuffer
         ("<document-set> name = '" + this.name + "', description = '" +
          this.description + "'");

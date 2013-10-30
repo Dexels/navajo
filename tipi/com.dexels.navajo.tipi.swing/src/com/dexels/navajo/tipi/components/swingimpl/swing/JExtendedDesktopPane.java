@@ -33,6 +33,7 @@ public class JExtendedDesktopPane extends JDesktopPane {
 		setDesktopManager(manager);
 	}
 
+	@Override
 	public void setBounds(int x, int y, int w, int h) {
 		super.setBounds(x, y, w, h);
 		checkDesktopSize();
@@ -130,6 +131,7 @@ public class JExtendedDesktopPane extends JDesktopPane {
 		return retval;
 	}
 
+	@Override
 	public void remove(Component c) {
 		super.remove(c);
 		checkDesktopSize();
@@ -215,11 +217,13 @@ class JExtendedDesktopManager extends DefaultDesktopManager {
 		this.desktop = desktop;
 	}
 
+	@Override
 	public void endResizingFrame(JComponent f) {
 		super.endResizingFrame(f);
 		resizeDesktop();
 	}
 
+	@Override
 	public void endDraggingFrame(JComponent f) {
 		super.endDraggingFrame(f);
 		resizeDesktop();

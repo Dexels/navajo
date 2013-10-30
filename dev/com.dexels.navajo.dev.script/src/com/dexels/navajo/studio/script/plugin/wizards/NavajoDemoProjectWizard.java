@@ -65,6 +65,7 @@ public class NavajoDemoProjectWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		IRunnableWithProgress op = new IRunnableWithProgress() {
+			@Override
 			public void run(IProgressMonitor monitor)
 					throws InvocationTargetException {
 				try {
@@ -249,6 +250,7 @@ public class NavajoDemoProjectWizard extends Wizard implements INewWizard {
 	 * 
 	 * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
 	 */
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		if (selection == null) {
 			return;

@@ -32,6 +32,7 @@ public class TableMap extends AbstractTableModel implements TableModelListener {
 
 	// By default, implement TableModel by forwarding all messages
 	// to the model.
+	@Override
 	public Object getValueAt(int aRow, int aColumn) {
 		return model.getValueAt(aRow, aColumn);
 	}
@@ -41,10 +42,12 @@ public class TableMap extends AbstractTableModel implements TableModelListener {
 		model.setValueAt(aValue, aRow, aColumn);
 	}
 
+	@Override
 	public int getRowCount() {
 		return (model == null) ? 0 : model.getRowCount();
 	}
 
+	@Override
 	public int getColumnCount() {
 		int columncount = (model == null) ? 0 : model.getColumnCount();
 		return columncount;
@@ -69,6 +72,7 @@ public class TableMap extends AbstractTableModel implements TableModelListener {
 	// Implementation of the TableModelListener interface,
 	//
 	// By default forward all events to all the listeners.
+	@Override
 	public void tableChanged(TableModelEvent e) {
 		fireTableChanged(e);
 	}

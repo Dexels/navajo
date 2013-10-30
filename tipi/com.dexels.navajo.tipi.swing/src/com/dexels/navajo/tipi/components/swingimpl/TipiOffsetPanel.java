@@ -49,11 +49,13 @@ public class TipiOffsetPanel extends TipiSwingDataComponentImpl {
 	}
 
 	// @Override
+	@Override
 	public Object getContainerLayout() {
 		return myPanel.getClient().getLayout();
 	}
 
 	// @Override
+	@Override
 	public void removeFromContainer(Object c) {
 		myPanel.getClient().remove((Component) c);
 		myPanel.doLayout();
@@ -65,6 +67,7 @@ public class TipiOffsetPanel extends TipiSwingDataComponentImpl {
 		myPanel.doLayout();
 	}
 
+	@Override
 	public Object createContainer() {
 		myPanel = new TipiSwingOffsetPanel();
 		myPanel.setOpaque(false);

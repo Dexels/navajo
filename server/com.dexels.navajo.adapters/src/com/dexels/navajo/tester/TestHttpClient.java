@@ -84,6 +84,7 @@ public class TestHttpClient extends Thread implements NavajoResponseHandler {
 
 	}
 	
+	@Override
 	public void run() {
 //		double total = 0;
 		int failedCount = 0;

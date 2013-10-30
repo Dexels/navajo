@@ -17,6 +17,7 @@ public class TipiBrowser extends TipiSwingComponentImpl {
 			.getLogger(TipiBrowser.class);
 	private TipiEditorPane myItem;
 
+	@Override
 	public Object createContainer() {
 		myItem = new TipiEditorPane();
 		myItem.setEditable(false);

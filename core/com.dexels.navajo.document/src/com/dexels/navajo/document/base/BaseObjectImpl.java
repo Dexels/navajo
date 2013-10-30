@@ -23,15 +23,18 @@ public class BaseObjectImpl extends BaseNode {
     super(n);
   }
 
-    public Map<String,String> getAttributes() {
+    @Override
+	public Map<String,String> getAttributes() {
         return myAttributes;
     }
 
-    public List<BaseNode> getChildren() {
+    @Override
+	public List<BaseNode> getChildren() {
         return null;
     }
 
-    public String getTagName() {
+    @Override
+	public String getTagName() {
         return "object";
     }
 

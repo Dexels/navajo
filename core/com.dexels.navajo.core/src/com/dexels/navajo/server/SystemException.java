@@ -60,7 +60,8 @@ public class SystemException extends Exception {
       this.t = t;
     }
 
-    public String getMessage() {
+    @Override
+	public String getMessage() {
       return message;
     }
 }

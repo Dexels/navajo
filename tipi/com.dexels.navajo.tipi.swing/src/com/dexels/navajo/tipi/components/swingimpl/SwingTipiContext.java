@@ -159,6 +159,7 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
+	@Override
 	public void runSyncInEventThread(Runnable r) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			r.run();
@@ -172,6 +173,7 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
+	@Override
 	public void runAsyncInEventThread(Runnable r) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			r.run();
@@ -188,6 +190,7 @@ public class SwingTipiContext extends TipiContext {
 		return myUserInterface;
 	}
 
+	@Override
 	public synchronized void setWaiting(boolean b) {
 
 		// if (dialogShowing) {
@@ -217,10 +220,12 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
+	@Override
 	public void clearTopScreen() {
 		((TipiScreen) getDefaultTopLevel()).clearTopScreen();
 	}
 
+	@Override
 	public void setSplashInfo(final String info) {
 		// logger.debug("Splash: "+info);
 		logger.debug("Splash: "+info);
@@ -229,6 +234,7 @@ public class SwingTipiContext extends TipiContext {
 		} else {
 			if (splash != null) {
 				SwingUtilities.invokeLater(new Runnable() {
+					@Override
 					public void run() {
 						splash.setInfoText(info);
 					}
@@ -239,16 +245,19 @@ public class SwingTipiContext extends TipiContext {
 
 	}
 
+	@Override
 	public void setSplashVisible(boolean b) {
 		if (splash != null) {
 			splash.setVisible(b);
 		}
 	}
 
+	@Override
 	public void setSplash(Object s) {
 		splash = (TipiSwingSplash) s;
 	}
 
+	@Override
 	public void threadStarted(Thread workThread) {
 		if (threadSet == null) {
 			return;
@@ -258,6 +267,7 @@ public class SwingTipiContext extends TipiContext {
 		setActiveThreads(threadSet.size());
 		if (!threadSet.isEmpty()) {
 			runAsyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					setWaiting(true);
 				}
@@ -265,6 +275,7 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
+	@Override
 	public final void threadEnded(Thread workThread) {
 		super.threadEnded(workThread);
 
@@ -275,6 +286,7 @@ public class SwingTipiContext extends TipiContext {
 		setActiveThreads(threadSet.size());
 		if (threadSet.isEmpty()) {
 			runAsyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					setWaiting(false);
 				}
@@ -311,6 +323,7 @@ public class SwingTipiContext extends TipiContext {
 		// rootPaneList.remove(toplevel);
 	}
 
+	@Override
 	protected void clearLogFile() {
 		try {
 			File f = new File(System.getProperty("user.home") + "/.tipidebug");
@@ -321,6 +334,7 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
+	@Override
 	public void debugLog(String category, String event) {
 		if (!debugMode) {
 			return;
@@ -400,6 +414,7 @@ public class SwingTipiContext extends TipiContext {
 		return myOtherRoot;
 	}
 
+	@Override
 	public void doExit() {
 		if (myAppletRoot != null) {
 			myAppletRoot.reload();
@@ -421,6 +436,7 @@ public class SwingTipiContext extends TipiContext {
 		return defaultDesktop;
 	}
 
+	@Override
 	public void showQuestion(final String text, final String title,
 			final String[] options, final TipiComponent tc) throws TipiBreakException {
 		TipiMessageDialog info = new TipiMessageDialog(tc, options);
@@ -529,6 +545,7 @@ public class SwingTipiContext extends TipiContext {
 		return "true".equals(getSystemProperty("cache"));
 	}
 
+	@Override
 	protected TipiResourceLoader createDefaultResourceLoader(String loaderType,
 			boolean useCache) {
 		if (hasJnlpContext()) {
@@ -552,6 +569,7 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
+	@Override
 	public void animateProperty(Property p, int duration, Object target) {
 		Class<?> animatableClass = TipiAnimationManager.isAnimatable(
 				p.getTypedValue(), target);
@@ -609,6 +627,7 @@ public class SwingTipiContext extends TipiContext {
 		final ScreenTransition transition = new ScreenTransition(jjj,
 				new TransitionTarget() {
 
+					@Override
 					public void setupNextScreen() {
 						try {
 							int i = 0;
@@ -625,6 +644,7 @@ public class SwingTipiContext extends TipiContext {
 					}
 				}, animator);
 		animator.addTarget(new TimingTargetAdapter() {
+			@Override
 			public void end() {
 				transition.dispose();
 			}
@@ -653,6 +673,7 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
+	@Override
 	public void showInternalError(String errorString, Throwable t) {
 		super.showInternalError(errorString, t);
 		if (fakeJars) {

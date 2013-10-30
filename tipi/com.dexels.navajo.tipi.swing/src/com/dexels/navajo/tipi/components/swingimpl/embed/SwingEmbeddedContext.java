@@ -3,10 +3,11 @@ package com.dexels.navajo.tipi.components.swingimpl.embed;
 import java.io.IOException;
 import java.util.List;
 
+import navajo.ExtensionDefinition;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import navajo.ExtensionDefinition;
 import tipiswing.SwingTipiApplicationInstance;
 
 import com.dexels.navajo.tipi.TipiException;
@@ -78,10 +79,12 @@ public class SwingEmbeddedContext extends SwingTipiContext {
 		switchToDefinition(name);
 	}
 
+	@Override
 	public void clearTopScreen() {
 		top.removeAllChildren();
 	}
 
+	@Override
 	public void doExit() {
 		logger.debug("Exit in embedded");
 		shutdown();

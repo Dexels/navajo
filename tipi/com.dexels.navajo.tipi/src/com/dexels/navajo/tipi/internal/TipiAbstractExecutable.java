@@ -79,6 +79,7 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 		myExecutables.add(tp);
 	}
 
+	@Override
 	public List<TipiExecutable> getExecutables() {
 		return myExecutables;
 	}
@@ -88,10 +89,12 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 		myExecutables.addAll(executables);
 	}
 
+	@Override
 	public TipiComponent getComponent() {
 		return myComponent;
 	}
 
+	@Override
 	public void setComponent(TipiComponent c) {
 		myComponent = c;
 	}
@@ -102,6 +105,7 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 	 * 
 	 * @see com.dexels.navajo.tipi.TipiExecutable#getEvent()
 	 */
+	@Override
 	public TipiEvent getEvent() {
 		return myEvent;
 	}
@@ -113,24 +117,29 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 	 * com.dexels.navajo.tipi.TipiExecutable#setEvent(com.dexels.navajo.tipi
 	 * .internal.TipiEvent)
 	 */
+	@Override
 	public void setEvent(TipiEvent e) {
 		myEvent = e;
 	}
 
+	@Override
 	public TipiStackElement getStackElement() {
 		return stackElement;
 	}
 
+	@Override
 	public void setStackElement(TipiStackElement s) {
 		stackElement = s;
 	}
 
+	@Override
 	public void dumpStack(String message) {
 		if (getStackElement() != null) {
 			getStackElement().dumpStack(message);
 		}
 	}
 
+	@Override
 	public String getBlockParam(String key) {
 		return eventPropertyMap.get(key);
 	}
@@ -260,10 +269,12 @@ public abstract class TipiAbstractExecutable implements TipiExecutable, Serializ
 	}
 
 	
+	@Override
 	public void setParent(TipiExecutable tipiAbstractExecutable) {
 		this.myParent = tipiAbstractExecutable;
 	}
 	
+	@Override
 	public TipiExecutable getParent() {
 		return this.myParent;
 	}

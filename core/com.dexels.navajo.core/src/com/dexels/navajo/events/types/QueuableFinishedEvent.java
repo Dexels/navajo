@@ -17,6 +17,7 @@ public class QueuableFinishedEvent implements NavajoEvent {
 		myQueable = q;
 	}
 	
+	@Override
 	public Navajo getEventNavajo() {
 		// TODO Auto-generated method stub
 		return null;

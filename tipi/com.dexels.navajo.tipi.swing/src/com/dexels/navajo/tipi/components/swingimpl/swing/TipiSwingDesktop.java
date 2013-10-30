@@ -54,10 +54,12 @@ public class TipiSwingDesktop extends JDesktopPane {
 		}
 	}
 
+	@Override
 	public int getHeight() {
 		return super.getHeight();
 	}
 
+	@Override
 	public int getWidth() {
 		return super.getWidth();
 	}
@@ -82,6 +84,7 @@ public class TipiSwingDesktop extends JDesktopPane {
 		return null;
 	}
 
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (paint != null) {

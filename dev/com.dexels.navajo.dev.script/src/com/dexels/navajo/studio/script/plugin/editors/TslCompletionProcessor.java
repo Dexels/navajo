@@ -30,7 +30,8 @@ public class TslCompletionProcessor implements IContentAssistProcessor {
      private ICompletionProposal[] NO_COMPLETIONS = 
         new ICompletionProposal[0];
 
-     public ICompletionProposal[] computeCompletionProposals(
+     @Override
+	public ICompletionProposal[] computeCompletionProposals(
         ITextViewer viewer, int offset) {
         try {
 //           IDocument document = viewer.getDocument();
@@ -74,29 +75,34 @@ public class TslCompletionProcessor implements IContentAssistProcessor {
 //        }
 //        return "";
 //     }
-     public IContextInformation[] computeContextInformation(
+     @Override
+	public IContextInformation[] computeContextInformation(
         ITextViewer viewer, int offset) { 
         return NO_CONTEXTS;
      }
-     public char[] getCompletionProposalAutoActivationCharacters() {
+     @Override
+	public char[] getCompletionProposalAutoActivationCharacters() {
         return PROPOSAL_ACTIVATION_CHARS;
      }
     /* (non-Javadoc)
      * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getContextInformationAutoActivationCharacters()
      */
-    public char[] getContextInformationAutoActivationCharacters() {
+    @Override
+	public char[] getContextInformationAutoActivationCharacters() {
         return null;
     }
     /* (non-Javadoc)
      * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getErrorMessage()
      */
-    public String getErrorMessage() {
+    @Override
+	public String getErrorMessage() {
         return null;
     }
     /* (non-Javadoc)
      * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getContextInformationValidator()
      */
-    public IContextInformationValidator getContextInformationValidator() {
+    @Override
+	public IContextInformationValidator getContextInformationValidator() {
         return null;
     }
 

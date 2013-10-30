@@ -17,7 +17,8 @@ public final class ToUpper extends FunctionInterface {
 
     public ToUpper() {}
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         String s = (String) this.getOperands().get(0);
 
         if (s == null)
@@ -26,11 +27,13 @@ public final class ToUpper extends FunctionInterface {
         return s.toUpperCase();
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "ToUpper(String s)";
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Get an uppercase representation of given string.";
     }
 }

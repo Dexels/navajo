@@ -73,6 +73,7 @@ class LockFiles implements FilenameFilter {
 		this.basename = name;
 	}
 
+	@Override
 	public boolean accept(File dir, String name) {
 		return name.endsWith(parent + "_" + basename + ".lock");
 	}
@@ -87,6 +88,7 @@ class LockFiles implements FilenameFilter {
  */
 class FileComparator implements Comparator<File>{
 
+	@Override
 	public int compare(File f1, File f2){
 		
 		if(f1 == f2) {
@@ -290,6 +292,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	 * Check whether file exists, given its parent (path) and its name.
 	 * 
 	 */
+	@Override
 	public boolean exists(String parent, String name) {
 		File f = new File(sharedStore, parent + "/" + name);
 		return f.exists();
@@ -298,6 +301,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	/**
 	 * Return inputstream for a file,  given its parent (path) and its name.
 	 */
+	@Override
 	public InputStream getStream(String parent, String name) throws SharedStoreException {
 		File f = new File(sharedStore, parent + "/" + name);
 		try {
@@ -310,6 +314,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	/**
 	 * Returns the Object that was serialized in the file identified by its parent (path) and its name.
 	 */
+	@Override
 	public Serializable get(String parent, String name) throws SharedStoreException {
 		long start = System.currentTimeMillis();
 		File f = new File(sharedStore, parent + "/" + name);
@@ -342,6 +347,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	 * Gets a SharedStoreLock if it exists for a file identified by its parent (path) and its name.
 	 * If it does not exist, null is returned.
 	 */
+	@Override
 	public SharedStoreLock getLock(String parent, String name, String owner) {
 		try {
 			SharedStoreLock ssl = readLock(parent, name, owner);
@@ -357,6 +363,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	 * @param parent
 	 * @return
 	 */
+	@Override
 	public String [] getParentObjects(String parent) {
 		
 		ArrayList<String> names = new ArrayList<String>();
@@ -379,6 +386,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	/**
 	 * Gets the names of all non-parent (files) objects in the shared file store sorted by 'oldest' object first.
 	 */
+	@Override
 	public String [] getObjects(String parent) {
 		ArrayList<String> names = new ArrayList<String>();
 		File p = new File(sharedStore, parent);
@@ -398,6 +406,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 		return result;
 	}
 
+	@Override
 	public SharedStoreLock lock(String parent, String name, int lockType, boolean block) {
 		return lock(parent, name, navajoConfig.getInstanceName(), lockType, block);
 	}
@@ -413,6 +422,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	 * @block (see above) 
 	 * 
 	 */
+	@Override
 	public SharedStoreLock lock(String parent, String name, String owner, int lockType, boolean block) {
 		
 		if ( !tribeManagerInterface.getIsChief() ) {
@@ -455,6 +465,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	 * 
 	 * @lock
 	 */
+	@Override
 	public void release(SharedStoreLock lock) {
 
 		if ( !tribeManagerInterface.getIsChief() ) {
@@ -490,6 +501,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	 * the object is always stored.
 	 * 
 	 */
+	@Override
 	public void store(String parent, String name, Serializable o, boolean append, boolean requireLock) throws SharedStoreException {
 
 		SharedStoreLock ssl = null;
@@ -547,6 +559,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	 * @name the name of the object
 	 * 
 	 */
+	@Override
 	public void remove(String parent, String name) {
 		long start = System.currentTimeMillis();
 		File f = new File(sharedStore, parent + "/" + name);
@@ -560,6 +573,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	 * 
 	 * @parent name of the path
 	 */
+	@Override
 	public void createParent(String parent) throws SharedStoreException {
 		SharedStoreLock ssl =  lock(parent, "", SharedFileStore.READ_WRITE_LOCK, true);
 		try {
@@ -579,6 +593,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	 * @parent name of the path
 	 * @name name of the object
 	 */
+	@Override
 	public long lastModified(String parent, String name) {
 		File f = new File(sharedStore, ( name != null ? parent + "/" + name : parent ) );
 		return f.lastModified();
@@ -588,6 +603,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	 * Stores a special 'text' object (e.g. String) 
 	 * (see store())
 	 */
+	@Override
 	public void storeText(String parent, String name, String str, boolean append, boolean requireLock) throws SharedStoreException {
 		SharedStoreLock ssl = null;
 		try {
@@ -638,6 +654,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 	 * returned if a lock could be acquired. The lock is released after returning the outputstream.
 	 * 
 	 */
+	@Override
 	public OutputStream getOutputStream(String parent, String name, boolean requireLock) throws SharedStoreException {
 
 		boolean success = false;
@@ -697,6 +714,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 		System.err.println("result = " + s);
 	}
 
+	@Override
 	public void removeAll(String parent) {
 		AuditLog.log("SharedFileStore", "in removeAll("  + parent + ")");
 		String [] s  = getObjects(parent);
@@ -710,6 +728,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 		}
 	}
 
+	@Override
 	public void setLastModified(String parent, String name, long l) throws IOException {
 		File f = new File(sharedStore, ( name != null ? parent + "/" + name : parent ) );
 		if ( !f.exists() ) {

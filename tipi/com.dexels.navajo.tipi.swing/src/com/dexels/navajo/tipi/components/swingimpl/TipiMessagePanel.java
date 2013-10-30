@@ -27,14 +27,17 @@ public class TipiMessagePanel extends TipiSwingDataComponentImpl implements
 	private String myMessageName = null;
 	private Message myMessage;
 
+	@Override
 	public Message getMessage() {
 		return myMessage;
 	}
 
+	@Override
 	public String getMessageName() {
 		return myMessageName;
 	}
 
+	@Override
 	public void loadData(Navajo n, String method) throws TipiException,
 			TipiBreakException {
 		myMethod = method;
@@ -63,6 +66,7 @@ public class TipiMessagePanel extends TipiSwingDataComponentImpl implements
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public void setMessage(Message m) {
 		myMessage = m;
 		loadProperties(m);
@@ -124,6 +128,7 @@ public class TipiMessagePanel extends TipiSwingDataComponentImpl implements
 	// }
 	// }
 
+	@Override
 	public Object createContainer() {
 		JPanel myPanel = new JPanel();
 		TipiHelper th = new TipiSwingHelper();
@@ -132,6 +137,7 @@ public class TipiMessagePanel extends TipiSwingDataComponentImpl implements
 		return myPanel;
 	}
 
+	@Override
 	public int getMessageIndex() {
 		return Integer.parseInt(getId());
 		// return 0;

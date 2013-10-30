@@ -31,6 +31,7 @@ public class PropertyRefParser extends BaseTipiParser {
 	private final static Logger logger = LoggerFactory
 			.getLogger(PropertyRefParser.class);
 	
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		// return new PropertyRef(getPropertyByPath(source, expression));
 		if (expression.startsWith("!")) {

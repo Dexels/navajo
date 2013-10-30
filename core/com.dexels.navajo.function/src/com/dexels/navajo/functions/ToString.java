@@ -36,6 +36,7 @@ import com.dexels.navajo.parser.FunctionInterface;
 
 public final class ToString extends FunctionInterface {
 
+@Override
 public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object s = this.getOperands().get(0);
 
@@ -59,11 +60,13 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
        return s.toString();
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "ToString(Object)";
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Returns a string representation of the supplied object.";
     }
 }

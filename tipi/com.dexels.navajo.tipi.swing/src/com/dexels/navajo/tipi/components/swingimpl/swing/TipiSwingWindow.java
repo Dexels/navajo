@@ -31,9 +31,11 @@ public class TipiSwingWindow extends JInternalFrame {
 	public TipiSwingWindow() {
 		addComponentListener(new ComponentListener() {
 
+			@Override
 			public void componentHidden(ComponentEvent c) {
 			}
 
+			@Override
 			public void componentMoved(ComponentEvent c) {
 				int oldX = position != null ? position.x : -1;
 				int x = getLocation().x;
@@ -48,6 +50,7 @@ public class TipiSwingWindow extends JInternalFrame {
 				position = getLocation();
 			}
 
+			@Override
 			public void componentResized(ComponentEvent c) {
 				int oldWidth = oldSize != null ? oldSize.width : -1;
 				int w = getSize().width;
@@ -63,12 +66,14 @@ public class TipiSwingWindow extends JInternalFrame {
 
 			}
 
+			@Override
 			public void componentShown(ComponentEvent c) {
 			}
 		});
 
 	}
 
+	@Override
 	public void setTitle(String title) {
 		String old = getTitle();
 		super.setTitle(title);

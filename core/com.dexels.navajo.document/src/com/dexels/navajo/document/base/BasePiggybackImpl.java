@@ -10,14 +10,17 @@ public class BasePiggybackImpl extends BaseNode {
 	public BasePiggybackImpl(Map<String,String> init) {
 		piggyData = init;
 	}
+	@Override
 	public Map<String,String> getAttributes() {
 		return piggyData;
 	}
 
+	@Override
 	public List<BaseNode> getChildren() {
 		return null;
 	}
 
+	@Override
 	public String getTagName() {
 		return "piggyback";
 	}

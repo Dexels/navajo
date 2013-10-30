@@ -32,8 +32,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	// Included packages.
 
-	@SuppressWarnings("rawtypes")
-//	private ServiceRegistration reference;
+	
 
 //	private ServiceRegistration<?> legacyPostman;
 
@@ -72,6 +71,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	}
 
 
+	@Override
 	public void stop(BundleContext bc) throws Exception {
 //		if(reference!=null) {
 //			reference.unregister();

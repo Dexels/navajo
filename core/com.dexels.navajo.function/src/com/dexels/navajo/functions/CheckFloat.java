@@ -30,10 +30,12 @@ import com.dexels.navajo.parser.FunctionInterface;
 
 public class CheckFloat extends FunctionInterface {
 
+	@Override
 	public String remarks() {
 		return "CheckFloat checks whether argument is valid double";
 	}
 
+	@Override
 	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
 		Object o = getOperand(0);
@@ -62,6 +64,7 @@ public class CheckFloat extends FunctionInterface {
 		}
 	}
 
+	@Override
 	public String usage() {
 		return "CheckFloat( <argument> )";
 	}

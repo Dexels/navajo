@@ -10,6 +10,7 @@ public class TipiMacBar extends TipiPanel {
 	private static final long serialVersionUID = 4021914601392479783L;
 	private MacBar myPanel;
 
+	@Override
 	public Object createContainer() {
 		myPanel = new MacBar();
 		return myPanel;

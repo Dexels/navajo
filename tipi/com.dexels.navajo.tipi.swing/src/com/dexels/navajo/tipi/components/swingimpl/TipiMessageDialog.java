@@ -168,6 +168,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 	}
 
 	//
+	@Override
 	public void initContainer()
 	{
 		mySwingTipiContext = (SwingTipiContext) myContext;
@@ -175,10 +176,12 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 			setContainer(createContainer());
 		}
 	}
+	@Override
 	public Object createContainer() {
 		final Set<Integer> responseSet = new HashSet<Integer>();
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 
 				if (messageType == -1)
@@ -226,14 +229,17 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		return null;
 	}
 
+	@Override
 	public void instantiateComponent(XMLElement instance, XMLElement classdef)
 			throws TipiException {
 		super.instantiateComponent(instance, classdef);
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				if (name.equals("title")) {
 					title = object.toString();
@@ -258,6 +264,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if ("title".equals(name)) {
 			return title;
@@ -295,6 +302,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 	public void reUse() {
 	}
 
+	@Override
 	public TipiComponent getTipiComponentByPath(String path)
 	{
 		if (underlyingComponent != null)
@@ -308,6 +316,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		}
 	}
 
+	@Override
 	public TipiComponent getTipiParent()
 	{
 		if (underlyingComponent != null)
@@ -322,6 +331,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		
 	}
 
+	@Override
 	public Navajo getNavajo()
 	{
 		if (underlyingComponent != null)
@@ -335,6 +345,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		} 
 	}
 
+	@Override
 	public Navajo getNearestNavajo()
 	{
 		if (underlyingComponent != null)
@@ -348,6 +359,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		}
 	}
 
+	@Override
 	public String getPath()
 	{
 		if (underlyingComponent != null)
@@ -361,6 +373,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		}
 	}
 
+	@Override
 	public String getPath(String typedef)
 	{
 		if (underlyingComponent != null)
@@ -374,6 +387,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		}
 	}
 
+	@Override
 	public AttributeRef getAttributeRef(String name)
 	{
 		if (underlyingComponent != null)
@@ -387,6 +401,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		}
 	}
 
+	@Override
 	public TipiComponent getHomeComponent()
 	{
 		if (underlyingComponent != null)
@@ -400,6 +415,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		}
 	}
 
+	@Override
 	public TipiComponent findTipiComponentById(String id)
 	{
 		if (underlyingComponent != null)
@@ -413,6 +429,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		}
 	}
 
+	@Override
 	public XMLElement getLocalMethod(String name)
 	{
 		if (underlyingComponent != null)
@@ -426,6 +443,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		}
 	}
 
+	@Override
 	public Object getLocalValue(String expression)
 	{
 		if (underlyingComponent != null)
@@ -439,6 +457,7 @@ public class TipiMessageDialog extends TipiSwingComponentImpl{
 		}
 	}
 
+	@Override
 	public boolean containsLocalValue(String expression)
 	{
 		if (underlyingComponent != null)

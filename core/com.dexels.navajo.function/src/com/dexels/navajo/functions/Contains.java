@@ -20,7 +20,8 @@ import com.dexels.navajo.parser.Utils;
 
 public final class Contains extends FunctionInterface {
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Checks whether an arraylist contains a certain object";
     }
 
@@ -41,7 +42,8 @@ public final class Contains extends FunctionInterface {
         return result;
     }
 
-    public final Object evaluate() throws TMLExpressionException {
+    @Override
+	public final Object evaluate() throws TMLExpressionException {
         // input (ArrayList, Object).
         if (this.getOperands().size() != 2)
             throw new TMLExpressionException("Contains(ArrayList, Object) expected");

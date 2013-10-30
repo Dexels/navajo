@@ -137,7 +137,8 @@ public class NavajoSocketPreferencePage extends PreferencePage implements IWorkb
         
         return super.performOk();
     }
-    public void init(IWorkbench workbench) {
+    @Override
+	public void init(IWorkbench workbench) {
         
     }
 }

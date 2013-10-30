@@ -21,6 +21,7 @@ public class RunnableTools {
 	public static TmlRunnable mergeRunnable(final TmlRunnable target, final Runnable runn, final boolean before) {
 		TmlRunnable t = new TmlRunnable() {
 
+			@Override
 			public void run() {
 				if(before) {
 					runn.run();					
@@ -31,47 +32,58 @@ public class RunnableTools {
 				}
 			}
 
+			@Override
 			public boolean isCommitted() {
 				return target.isCommitted();
 			}
 
+			@Override
 			public void setCommitted(boolean b) {
 				target.setCommitted(b);
 			}
 
+			@Override
 			public void setScheduledAt(long currentTimeMillis) {
 				target.setScheduledAt(currentTimeMillis);
 			}
 
+			@Override
 			public void endTransaction() throws IOException {
 				target.endTransaction();
 			}
 
+			@Override
 			public Navajo getInputNavajo() throws IOException {
 				return target.getInputNavajo();
 			}
 
+			@Override
 			public RequestQueue getRequestQueue() {
 				return target.getRequestQueue();
 			}
 
+			@Override
 			public boolean isAborted() {
 				return target.isAborted();
 			}
 
+			@Override
 			public void abort(String reason) {
 				target.abort(reason);
 			}
 
+			@Override
 			public String getUrl() {
 				return target.getUrl();
 			}
 
+			@Override
 			public void setResponseNavajo(Navajo n) {
 				target.setResponseNavajo(n);
 
 			}
 
+			@Override
 			public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException,
 					UnsupportedEncodingException, NavajoException {
 				throw new UnsupportedOperationException();

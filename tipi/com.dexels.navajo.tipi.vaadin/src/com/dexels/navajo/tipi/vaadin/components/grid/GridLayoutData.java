@@ -29,6 +29,7 @@ public class GridLayoutData {
 		return rowSpan;
 	}
 
+	@Override
 	public String toString() {
 		return "GRID: "+columnSpan+":"+rowSpan+":"+insets;
 	}

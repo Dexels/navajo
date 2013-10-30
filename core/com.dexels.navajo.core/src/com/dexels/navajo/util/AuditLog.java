@@ -183,16 +183,19 @@ public final class AuditLog implements Mappable {
 		this.level = level;
 	}
 
+	@Override
 	public void kill() {
 		
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		if ( access != null ) {
 			accessId = access.accessID;
 		}
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 		AuditLogEvent ale = new AuditLogEvent(AUDIT_MESSAGE_USER, getMessage(), getLevel());
 		ale.setAccessId(accessId);

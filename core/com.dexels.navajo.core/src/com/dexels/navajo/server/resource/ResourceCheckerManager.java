@@ -66,6 +66,7 @@ public class ResourceCheckerManager implements NavajoListener {
 	/**
  	 * Make sure that when compile script events comes along, corresponding script is removed from the checkedService cache.
 	 */
+	@Override
 	public void onNavajoEvent(NavajoEvent ne) {
 		if ( ne instanceof NavajoCompileScriptEvent ) {
 			NavajoCompileScriptEvent ncse = (NavajoCompileScriptEvent) ne;

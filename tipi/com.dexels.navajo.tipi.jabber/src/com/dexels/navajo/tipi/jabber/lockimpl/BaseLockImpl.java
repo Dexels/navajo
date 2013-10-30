@@ -15,6 +15,7 @@ public abstract  class BaseLockImpl implements Lock {
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseLockImpl.class);
 	
+	@Override
 	public void addLockingListener(PropertyChangeListener p) {
 		logger.info("Added locklistener");
 		myPropertyListeners.add(p);
@@ -22,6 +23,7 @@ public abstract  class BaseLockImpl implements Lock {
 
 
 
+	@Override
 	public void removeLockingListener(PropertyChangeListener p) {
 		myPropertyListeners.remove(p);
 	}

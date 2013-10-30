@@ -41,16 +41,19 @@ public class TipiNavajoView extends TipiPanel {
 	
 	public Navajo myNavajo = null;
 
+	@Override
 	public Object createContainer() {
 		Container container = (Container) super.createContainer();
 		container.setLayout(new GridBagLayout());
 		return container;
 	}
 
+	@Override
 	public void addToContainer(final Object c, Object constraints) {
 		final int currentCount = getChildCount();
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				TipiNavajoView.super.addToContainer(c,
 						new TipiSwingGridBagConstraints(0, currentCount, 1, 1,
@@ -62,6 +65,7 @@ public class TipiNavajoView extends TipiPanel {
 		});
 	}
 
+	@Override
 	protected void setComponentValue(String name, Object object) {
 		super.setComponentValue(name, object);
 		if (name.equals("navajo")) {

@@ -112,6 +112,7 @@ public class CssComponentResponderImpl implements
 		return tipiCssMap.get(definition);
 	}
 
+	@SuppressWarnings("unused")
 	private CSSEngine getCssDefinitionEngine(List<String> definitions)
 	{
 //		CSSEngine cached = engineCache.get(definitions.toString());
@@ -265,6 +266,7 @@ public class CssComponentResponderImpl implements
 	/**
 	 * Reloads all current Css definitions. This should happen only when locale and/or sublocale have changed.
 	 */
+	@Override
 	public void reloadCssDefinitions(String definition)
 	{
 		try
@@ -332,7 +334,6 @@ public class CssComponentResponderImpl implements
 					return null;
 				}
 
-				@SuppressWarnings("rawtypes")
 				@Override
 				public Collection getCSSPropertyHandlers(String property)
 						throws Exception {
@@ -378,6 +379,7 @@ public class CssComponentResponderImpl implements
 		return null;
 	}
 
+	@SuppressWarnings("unused")
 	private void applyStyleToPreparedEngine(CSSTipiEngineImpl engine, TipiComponent component,final TipiEvent event) {
 		final ICSSPropertyHandlerProvider handlerProvider = new ICSSPropertyHandlerProvider() {
 
@@ -389,7 +391,6 @@ public class CssComponentResponderImpl implements
 				return null;
 			}
 
-			@SuppressWarnings("rawtypes")
 			@Override
 			public Collection getCSSPropertyHandlers(String property)
 					throws Exception {

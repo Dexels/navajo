@@ -67,21 +67,26 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
     private GLU glu = new GLU();
     GLCanvas canvas;
     
+	@Override
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 
 				canvas = new GLCanvas() {
 					private static final long serialVersionUID = -7213660598225377157L;
 
+					@Override
 					public Dimension getMaximumSize() {
 						return new Dimension(0, 0);
 					}
 
+					@Override
 					public Dimension getMinimumSize() {
 						return new Dimension(0, 0);
 					}
 
+					@Override
 					public Dimension getPreferredSize() {
 						return new Dimension(0, 0);
 					}
@@ -168,7 +173,8 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 
     
 
-    public void init(GLAutoDrawable glDrawable) {
+    @Override
+	public void init(GLAutoDrawable glDrawable) {
 
         GL2 gl = glDrawable.getGL().getGL2();
   			
@@ -197,7 +203,8 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 
 
 
-    public void display(GLAutoDrawable glDrawable) {
+    @Override
+	public void display(GLAutoDrawable glDrawable) {
         GL2 gl = glDrawable.getGL().getGL2();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);       //Clear The Screen And The Depth Buffer
         gl.glLoadIdentity();                                         //Reset The View
@@ -272,7 +279,8 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
 		}
 	}
 
-    public void reshape(GLAutoDrawable glDrawable, int x, int y, int w, int h) {
+    @Override
+	public void reshape(GLAutoDrawable glDrawable, int x, int y, int w, int h) {
         final GL2 gl = glDrawable.getGL().getGL2();
 
         if (h <= 0) // avoid a divide by zero error!
@@ -296,6 +304,7 @@ public class JOGL3DTribeView extends TipiDataComponentImpl implements GLEventLis
     
 	public void repaintCanvas() {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				canvas.repaint();
 			}

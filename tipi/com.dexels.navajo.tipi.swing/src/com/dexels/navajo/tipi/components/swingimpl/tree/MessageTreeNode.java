@@ -29,34 +29,42 @@ public class MessageTreeNode implements TreeNode {
 		return myMessage;
 	}
 
+	@Override
 	public String toString() {
 		return myMessage.getName();
 	}
 
+	@Override
 	public Enumeration<TreeNode> children() {
 		return childList.elements();
 	}
 
+	@Override
 	public boolean getAllowsChildren() {
 		return childList.size() > 0;
 	}
 
+	@Override
 	public TreeNode getChildAt(int i) {
 		return childList.get(i);
 	}
 
+	@Override
 	public int getChildCount() {
 		return childList.size();
 	}
 
+	@Override
 	public int getIndex(TreeNode tn) {
 		return childList.indexOf(tn);
 	}
 
+	@Override
 	public TreeNode getParent() {
 		return myParent;
 	}
 
+	@Override
 	public boolean isLeaf() {
 		return !getAllowsChildren();
 	}

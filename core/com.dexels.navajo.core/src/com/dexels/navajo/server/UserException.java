@@ -64,7 +64,8 @@ public class UserException extends Exception {
 
     }
 
-    public String getMessage() {
+    @Override
+	public String getMessage() {
         return message;
     }
 }

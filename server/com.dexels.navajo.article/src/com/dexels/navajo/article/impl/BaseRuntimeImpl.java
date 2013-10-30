@@ -95,6 +95,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 		return current;
 	}
 
+	@Override
 	public void execute(ArticleContext context) throws ArticleException, DirectOutputThrowable {
 		List<XMLElement> children = article.getChildren();
 		try {

@@ -16,20 +16,25 @@ public class DummyUserInterface implements UserInterface {
 	public DummyUserInterface() {
 	}
 
+	@Override
 	public void addDialog(JDialog d) {
 	}
 
+	@Override
 	public Locale getLocale() {
 		return Locale.getDefault();
 	}
 
+	@Override
 	public Object pasteFromClipBoard(PasteCompatible pc) {
 		return null;
 	}
 
+	@Override
 	public void copyToClipBoard(CopyCompatible cc) {
 	}
 
+	@Override
 	public void clearClipboard() {
 	}
 
@@ -39,18 +44,22 @@ public class DummyUserInterface implements UserInterface {
 	// throw new
 	// java.lang.UnsupportedOperationException("Method getPreferences() not yet implemented.");
 	// }
+	@Override
 	public boolean showQuestionDialog(String s) {
 		return true;
 	}
 
+	@Override
 	public JFrame getMainFrame() {
 		return null;
 	}
 
+	@Override
 	public JDialog getTopDialog() {
 		return null;
 	}
 
+	@Override
 	public void closeWindow(BaseWindow d) {
 
 	}

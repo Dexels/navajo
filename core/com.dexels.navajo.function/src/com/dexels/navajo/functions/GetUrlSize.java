@@ -7,14 +7,17 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class GetUrlSize extends GetUrlBase {
 
+	@Override
 	public String remarks() {
 		return "Get the length of URL content";
 	}
 
+	@Override
 	public String usage() {		
 		return "Get the length of URL content";
 	}
 
+	@Override
 	public final Object evaluate() throws TMLExpressionException {
 	      // input (ArrayList, Object).
         if (this.getOperands().size() != 1)

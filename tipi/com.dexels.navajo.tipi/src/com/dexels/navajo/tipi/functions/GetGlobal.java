@@ -21,14 +21,17 @@ public class GetGlobal extends FunctionInterface {
 	private final static Logger logger = LoggerFactory
 			.getLogger(GetGlobal.class);
 	
+	@Override
 	public String remarks() {
 		return "Gets a certain global value";
 	}
 
+	@Override
 	public String usage() {
 		return "GetGlobal(context,'name')";
 	}
 
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() != 2) {
 			throw new TMLExpressionException(this,

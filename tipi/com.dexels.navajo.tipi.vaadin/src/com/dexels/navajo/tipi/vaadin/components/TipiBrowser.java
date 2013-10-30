@@ -46,6 +46,7 @@ public class TipiBrowser extends TipiVaadinComponentImpl {
 	public TipiBrowser() {
 	}
 
+	@Override
 	public Object createContainer() {
 
 		browser = new Embedded();
@@ -57,6 +58,7 @@ public class TipiBrowser extends TipiVaadinComponentImpl {
 		return browser;
 	}
 
+	@Override
 	protected void setComponentValue(String name, Object object) {
         if ("url".equals(name)) {
         	String bare = ""+object;

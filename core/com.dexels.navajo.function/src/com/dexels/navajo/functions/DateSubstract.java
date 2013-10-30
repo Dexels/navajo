@@ -20,14 +20,17 @@ public final class DateSubstract extends FunctionInterface {
 
 	public DateSubstract() {}
 
+	@Override
 	public String remarks() {
 		return "Substracts two date object";
 	}
 
+	@Override
 	public String usage() {
 		return "DateSubstract(Date1, Date2)";
 	}
 
+	@Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		if (this.getOperands().size() != 2)
 			throw new TMLExpressionException("DateSubstract(Date1, Date2) expected. Wrong no. of args.");

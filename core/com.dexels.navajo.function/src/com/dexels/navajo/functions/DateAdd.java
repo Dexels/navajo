@@ -20,15 +20,18 @@ public final class DateAdd extends FunctionInterface {
 
     public DateAdd() {}
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Get a new Date object where the given field is increased by a given amount. Possible fields are YEAR, MONTH, WEEK and DAY.";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "DateAdd(Date date, Integer amount, String field)";
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		if (getOperands().size() > 2) {
 			java.util.Date datum = (java.util.Date) this.getOperands().get(0);
 			Integer arg = (Integer) this.getOperands().get(1);

@@ -40,8 +40,8 @@ public class TipiSwingExportFilterPanel extends JPanel {
 	JLabel filterOn = new JLabel();
 	JLabel filterType = new JLabel();
 	JLabel filterValue = new JLabel();
-	JComboBox filterOnBox = new JComboBox();
-	JComboBox filterTypeBox = new JComboBox();
+	JComboBox<String> filterOnBox = new JComboBox<String>();
+	JComboBox<String> filterTypeBox = new JComboBox<String>();
 	JTextField filterValueField = new JTextField();
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 	private Map<String, Property> descriptionPropertyMap;
@@ -72,7 +72,7 @@ public class TipiSwingExportFilterPanel extends JPanel {
 		Vector<String> filterTypes = new Vector<String>();
 		filterTypes.add("Exact");
 		filterTypes.add("Begint met");
-		filterTypeBox = new JComboBox(filterTypes);
+		filterTypeBox = new JComboBox<String>(filterTypes);
 		titledBorder1 = new TitledBorder(BorderFactory.createEtchedBorder(
 				Color.white, new Color(171, 171, 171)), "Filter");
 		this.setLayout(gridBagLayout2);
@@ -187,6 +187,7 @@ class TipiExportFilterPanel_filterOnBox_focusAdapter extends
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void focusLost(FocusEvent e) {
 		adaptee.filterOnBox_focusLost(e);
 	}

@@ -211,6 +211,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 		}
 	}
 
+	@Override
 	public void worker() 
 	{ 
 		if ( isConfigModified() ) {
@@ -232,6 +233,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 		instance = c;
 	}
 
+	@Override
 	public int cachedEntries() {
 		return expirations.size();
 	}
@@ -239,10 +241,12 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 	/**
 	 * Those methods are use by the JMX interface:
 	 */
+	@Override
 	public double getHitRate() {
 		return DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager().getHitratio();
 	}
 
+	@Override
 	public void clearCache() {
 		DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager().clearCache();
 	}

@@ -6,6 +6,7 @@ import com.dexels.navajo.geo.GeoColorizer;
 
 public class RedGeoColorizer implements GeoColorizer {
 
+	@Override
 	public String createGeoColorString(double value, double min, double max) {
 		return createKMLColor(createGeoColor(value, min, max), "c0");
 	}
@@ -25,6 +26,7 @@ public class RedGeoColorizer implements GeoColorizer {
 		
 		return opacity+blueString+greenString+redString;
 	}
+	@Override
 	public Color createGeoColor(double value, double min, double max) {
 		if(value>max) {
 			value = max;

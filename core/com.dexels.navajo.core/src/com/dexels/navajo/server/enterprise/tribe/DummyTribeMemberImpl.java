@@ -4,10 +4,12 @@ import java.util.Date;
 
 public class DummyTribeMemberImpl implements TribeMemberInterface {
 
+	@Override
 	public String getMemberName() {
 		return "";
 	}
 
+	@Override
 	public Object getAddress() {
 		return null;
 	}

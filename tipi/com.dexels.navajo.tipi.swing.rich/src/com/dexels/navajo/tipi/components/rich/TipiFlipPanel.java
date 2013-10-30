@@ -18,6 +18,7 @@ public class TipiFlipPanel extends TipiPanel {
 
 	}
 
+	@Override
 	public Object createContainer() {
 		myPanel = new FlipPanel();
 		myPanel.setOpaque(false);
@@ -28,6 +29,7 @@ public class TipiFlipPanel extends TipiPanel {
 	public void addToContainer(final Object c, Object constraints) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				myPanel.addComponent((JComponent) c);
 			}
@@ -61,6 +63,7 @@ public class TipiFlipPanel extends TipiPanel {
 		super.performComponentMethod(name, compMeth, event);
 		if ("flip".equals(name)) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					flip();
 				}
@@ -68,6 +71,7 @@ public class TipiFlipPanel extends TipiPanel {
 		}
 		if ("flipBackwards".equals(name)) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					myPanel.flipBackwards();
 				}

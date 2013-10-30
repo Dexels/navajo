@@ -37,6 +37,7 @@ public class TipiManualExtensionRegistry implements ITipiExtensionRegistry, Seri
 		}
 	}
 	
+	@Override
 	public List<TipiExtension> getExtensionList() {
 		return new ArrayList<TipiExtension>(registeredExtensions);
 	}

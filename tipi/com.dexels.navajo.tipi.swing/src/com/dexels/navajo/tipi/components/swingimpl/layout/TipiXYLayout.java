@@ -33,18 +33,22 @@ public class TipiXYLayout extends TipiLayoutImpl {
 	public TipiXYLayout() {
 	}
 
+	@Override
 	public void createLayout() {
 		setLayout(new NullLayout(this,myComponent));
 	}
 
+	@Override
 	public Object createDefaultConstraint(int index) {
 		return new Rectangle(10, 50 * index, 40, 80);
 	}
 
+	@Override
 	protected void setValue(String name, TipiValue tv) {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
 
+	@Override
 	public Object parseConstraint(String text, int index) {
 		StringTokenizer st = new StringTokenizer(text, ",");
 		int x = Integer.parseInt(st.nextToken());
@@ -59,6 +63,7 @@ public class TipiXYLayout extends TipiLayoutImpl {
 		((NullLayout)myLayout).doUpdate();
 	}
 	
+	@Override
 	public void addToLayout(Object component, Object constraints) {
 		((NullLayout)myLayout).addLayoutComponent((Component) component, constraints);
 	}

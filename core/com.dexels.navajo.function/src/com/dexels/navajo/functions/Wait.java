@@ -11,6 +11,7 @@ public final class Wait extends FunctionInterface {
 	
 	private final static Logger logger = LoggerFactory.getLogger(Wait.class);
 	
+	@Override
 	public final Object evaluate() throws TMLExpressionException {
 		if ( getOperands().size() == 0) {
 			throw new TMLExpressionException(this, "Missing argument");
@@ -28,10 +29,12 @@ public final class Wait extends FunctionInterface {
 		return null;
 	}
 
+	@Override
 	public String remarks() {
 		return "Wait for specified number of milliseconds";
 	}
 
+	@Override
 	public String usage() {
 		return "Wait(integer)";
 	}

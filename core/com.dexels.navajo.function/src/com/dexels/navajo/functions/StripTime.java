@@ -9,10 +9,12 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class StripTime extends FunctionInterface {
 	public StripTime() {}
 
+	@Override
 	public String remarks() {
 		return "Strips the time from a date or string object";
 	}
 
+	@Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		Object o = getOperand(0);
 		java.util.Date date = null;
@@ -44,6 +46,7 @@ public class StripTime extends FunctionInterface {
 		return date;
 	}
 
+	@Override
 	public String usage() {
 		return "StripTime(Date/String): java.sql.Date";
 	}

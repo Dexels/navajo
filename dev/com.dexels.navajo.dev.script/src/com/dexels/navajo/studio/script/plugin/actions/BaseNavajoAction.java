@@ -60,7 +60,9 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
         super();
     }
 
-    public void selectionChanged(IAction action, ISelection selection) {
+    @SuppressWarnings("rawtypes")
+	@Override
+	public void selectionChanged(IAction action, ISelection selection) {
         file = null;
         //        System.err.println("SELECTION TYPE: " + selection.getClass());
 //        System.err.println("Current proj:" +NavajoScriptPluginPlugin.getDefault().getDefaultNavajoProject());
@@ -133,7 +135,8 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
      * 
      * @see IWorkbenchWindowActionDelegate#dispose
      */
-    public void dispose() {
+    @Override
+	public void dispose() {
     }
 
     /**
@@ -142,7 +145,8 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
      * 
      * @see IWorkbenchWindowActionDelegate#init
      */
-    public void init(IWorkbenchWindow window) {
+    @Override
+	public void init(IWorkbenchWindow window) {
         this.window = window;
     }
     /*
@@ -151,7 +155,8 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
      * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
      *      org.eclipse.ui.IEditorPart)
      */
-    public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+    @Override
+	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
         myEditor = targetEditor;
         System.err.println("Editor set");
         // TODO Auto-generated method stub

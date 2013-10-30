@@ -24,6 +24,7 @@ public class ScaleImageMin extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Scales an image to the specified dimensions. Keeps aspect ratio, and uses the smallest value of the dimensions";
 	}
@@ -31,6 +32,7 @@ public class ScaleImageMin extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "ScaleImageMin(Binary,int width,int height)";
 	}
@@ -38,6 +40,7 @@ public class ScaleImageMin extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 	    if (getOperands().size()!=3) {
             throw new TMLExpressionException(this, "Three operands expected. ");

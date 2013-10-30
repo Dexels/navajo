@@ -51,12 +51,15 @@ public class XMLMap extends TagMap implements Mappable {
 	
 	private final static Logger logger = LoggerFactory.getLogger(XMLMap.class);
 	
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 
+	@Override
 	public void kill() {
 	}
 
@@ -76,6 +79,7 @@ public class XMLMap extends TagMap implements Mappable {
 		}
 	}
 
+	@Override
 	public void setChild(TagMap t) throws UserException {
 		if ( this.name != null ) {
 			super.setChild(t);

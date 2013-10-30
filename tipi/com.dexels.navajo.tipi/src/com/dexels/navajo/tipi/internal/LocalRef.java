@@ -29,10 +29,12 @@ public class LocalRef implements TipiReference {
 		myComponent = component;
 	}
 
+	@Override
 	public void setValue(Object expression) {
 		myComponent.setLocalValue(name, expression);
 	}
 
+	@Override
 	public Object getValue() {
 		return myComponent.getLocalValue(name);
 	}

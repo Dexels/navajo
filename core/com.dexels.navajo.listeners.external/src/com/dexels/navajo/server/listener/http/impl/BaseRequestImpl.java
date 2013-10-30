@@ -148,6 +148,7 @@ public class BaseRequestImpl extends BaseInMemoryRequest implements
 		return in;
 	}
 
+	@Override
 	public ClientInfo createClientInfo(long scheduledAt, long startedAt,
 			int queueLength, String queueId) {
 		ClientInfo clientInfo = new ClientInfo(
@@ -171,6 +172,7 @@ public class BaseRequestImpl extends BaseInMemoryRequest implements
 		return cert;
 	}
 
+	@Override
 	public void writeOutput(Navajo inDoc, Navajo outDoc,long scheduledAt, long startedAt, String threadStatus) throws IOException,
 			FileNotFoundException, UnsupportedEncodingException,
 			NavajoException {

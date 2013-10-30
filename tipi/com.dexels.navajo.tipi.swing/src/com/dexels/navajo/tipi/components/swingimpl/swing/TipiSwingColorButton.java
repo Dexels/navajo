@@ -29,14 +29,17 @@ public class TipiSwingColorButton extends JTextField {
 		myComponent = tc;
 		getDocument().addDocumentListener(new DocumentListener() {
 
+			@Override
 			public void changedUpdate(DocumentEvent arg0) {
 				updateMe(getText());
 			}
 
+			@Override
 			public void insertUpdate(DocumentEvent arg0) {
 				updateMe(getText());
 			}
 
+			@Override
 			public void removeUpdate(DocumentEvent arg0) {
 				updateMe(getText());
 			}

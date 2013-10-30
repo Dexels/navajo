@@ -54,11 +54,11 @@ import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  {
 
   protected NavajoClassSupplier classLoader;
-  private final HashMap functions = new HashMap();
+private final HashMap functions = new HashMap();
 
   /**
    * Fields accessable by webservice via Mappable interface.
@@ -121,23 +121,28 @@ private final static Logger logger = LoggerFactory
   @SuppressWarnings("unused")
   private ThreadInfo myThread = null;
 
-  public String getScriptName() {
+  @Override
+public String getScriptName() {
 	  return getClass().getName();
   }
   
-  public String getUser() {
+  @Override
+public String getUser() {
 	  return myAccess.rpcUser;
   }
   
-  public String getAccessId() {
+  @Override
+public String getAccessId() {
 	  return myAccess.accessID;
   }
   
-  public String getThreadName() {
+  @Override
+public String getThreadName() {
 	  return DispatcherFactory.getInstance().getThreadName(myAccess);
   }
   
-  public boolean isWaiting() {
+  @Override
+public boolean isWaiting() {
 	  return getWaiting();
   }
   
@@ -145,19 +150,23 @@ private final static Logger logger = LoggerFactory
 	  return false;
   }
   
-  public String getLockName() {
+  @Override
+public String getLockName() {
 	  return "";
   }
   
-  public String getLockOwner() {
+  @Override
+public String getLockOwner() {
 	  return "";
   }
   
-  public String getLockClass() {
+  @Override
+public String getLockClass() {
 	  return "";
   }
   
-  public String getStackTrace() {
+  @Override
+public String getStackTrace() {
 
 	  StringBuffer stackTrace = new StringBuffer();
 	  StackTraceElement [] elt = myAccess.getThread().getStackTrace();
@@ -167,11 +176,13 @@ private final static Logger logger = LoggerFactory
 	  return stackTrace.toString();
   }
   
-  public long getRunningTime() {
+  @Override
+public long getRunningTime() {
 	  return System.currentTimeMillis() -  myAccess.created.getTime();
   }
   
-  public void kill() {
+  @Override
+public void kill() {
 	  System.err.println("Calling kill from JMX");
 	  myAccess.getCompiledScript().setKill(true);
   }
@@ -451,7 +462,8 @@ private final static Logger logger = LoggerFactory
     return f;
   }
 
-  protected void finalize() {
+  @Override
+protected void finalize() {
 	  functions.clear();
   }
   
@@ -478,10 +490,12 @@ private final static Logger logger = LoggerFactory
 	  classLoader = null;
   }
   
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
   }
  
   /**

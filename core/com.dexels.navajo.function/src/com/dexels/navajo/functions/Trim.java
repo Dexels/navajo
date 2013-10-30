@@ -28,6 +28,7 @@ public final class Trim extends FunctionInterface {
 	public Trim() {
 	}
 
+	@Override
 	public final Object evaluate()
 			throws com.dexels.navajo.parser.TMLExpressionException {
 
@@ -46,10 +47,12 @@ public final class Trim extends FunctionInterface {
 		return s.trim();
 	}
 
+	@Override
 	public String usage() {
 		return "Trim(string)";
 	}
 
+	@Override
 	public String remarks() {
 		return "Trims a string";
 	}

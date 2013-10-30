@@ -11,6 +11,7 @@ import com.dexels.navajo.tipi.TipiContext;
 		public TipiRichExtension() {
 		}
 
+		@Override
 		public void initialize(TipiContext tc) {
 			// Do nothing
 

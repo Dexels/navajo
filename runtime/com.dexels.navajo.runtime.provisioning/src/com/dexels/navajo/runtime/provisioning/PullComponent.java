@@ -43,7 +43,6 @@ public class PullComponent {
 	private long total;
 	private int current;
 
-	@SuppressWarnings("rawtypes")
 	public void activate(Map<String,Object> properties, BundleContext bundleContext) {
 		long stamp;
 		this.bundleContext  = bundleContext;

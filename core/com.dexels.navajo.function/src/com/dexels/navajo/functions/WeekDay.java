@@ -23,13 +23,15 @@ public final class WeekDay extends FunctionInterface {
   public WeekDay() {
   }
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Return a three letter string with the weekday; If no argument is "
         +  "provided return the weekday for today; Only english locale is "
         +  "supported now; The result is return in upper case";
   }
 
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
 	Object o = null;
 	
@@ -63,7 +65,8 @@ public final class WeekDay extends FunctionInterface {
     return new SimpleDateFormat("EEE", locale).format(day).toUpperCase();
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "WeekDay([ Date | Date string ]): String";
   }
 

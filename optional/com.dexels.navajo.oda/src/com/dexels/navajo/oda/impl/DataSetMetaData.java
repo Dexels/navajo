@@ -35,6 +35,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#getConnection()
 	 */
+	@Override
 	public IConnection getConnection() throws OdaException
 	{
         // TODO Auto-generated method stub
@@ -44,6 +45,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#getDataSourceObjects(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
+	@Override
 	public IResultSet getDataSourceObjects( String catalog, String schema, String object, String version ) throws OdaException
 	{
 	    throw new UnsupportedOperationException();
@@ -52,6 +54,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#getDataSourceMajorVersion()
 	 */
+	@Override
 	public int getDataSourceMajorVersion() throws OdaException
 	{
         // TODO Auto-generated method stub
@@ -61,6 +64,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#getDataSourceMinorVersion()
 	 */
+	@Override
 	public int getDataSourceMinorVersion() throws OdaException
 	{
         // TODO Auto-generated method stub
@@ -70,6 +74,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#getDataSourceProductName()
 	 */
+	@Override
 	public String getDataSourceProductName() throws OdaException
 	{
         // TODO Auto-generated method stub
@@ -79,6 +84,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#getDataSourceProductVersion()
 	 */
+	@Override
 	public String getDataSourceProductVersion() throws OdaException
 	{
 		return Integer.toString( getDataSourceMajorVersion() ) + "." +   //$NON-NLS-1$
@@ -88,6 +94,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#getSQLStateType()
 	 */
+	@Override
 	public int getSQLStateType() throws OdaException
 	{
         // TODO Auto-generated method stub
@@ -97,6 +104,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#supportsMultipleResultSets()
 	 */
+	@Override
 	public boolean supportsMultipleResultSets() throws OdaException
 	{
 		return false;
@@ -105,6 +113,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#supportsMultipleOpenResults()
 	 */
+	@Override
 	public boolean supportsMultipleOpenResults() throws OdaException
 	{
 		return true;
@@ -113,6 +122,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#supportsNamedResultSets()
 	 */
+	@Override
 	public boolean supportsNamedResultSets() throws OdaException
 	{
 		return true;
@@ -121,6 +131,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#supportsNamedParameters()
 	 */
+	@Override
 	public boolean supportsNamedParameters() throws OdaException
 	{
         // TODO Auto-generated method stub
@@ -130,6 +141,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#supportsInParameters()
 	 */
+	@Override
 	public boolean supportsInParameters() throws OdaException
 	{
         // TODO Auto-generated method stub
@@ -139,6 +151,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#supportsOutParameters()
 	 */
+	@Override
 	public boolean supportsOutParameters() throws OdaException
 	{
         // TODO Auto-generated method stub
@@ -148,6 +161,7 @@ public class DataSetMetaData implements IDataSetMetaData
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDataSetMetaData#getSortMode()
 	 */
+	@Override
 	public int getSortMode()
 	{
         // TODO Auto-generated method stub

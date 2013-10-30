@@ -24,11 +24,13 @@ public class ParseStringList extends FunctionInterface {
   public ParseStringList() {
   }
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Creates a list out of a string representation, e.g. {1,2,3,8,9}";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object o = getOperand(0);
     if (o == null || (!(o instanceof String))) {
       throw new TMLExpressionException("Expected string");
@@ -45,7 +47,8 @@ public class ParseStringList extends FunctionInterface {
    return result;
   }
 
-  public String usage() {
+  @Override
+public String usage() {
    return "ParseStringList(string, delimeter)";
   }
 

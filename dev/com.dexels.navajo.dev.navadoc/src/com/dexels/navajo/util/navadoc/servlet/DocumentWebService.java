@@ -30,7 +30,8 @@ public class DocumentWebService extends HttpServlet {
     private NavaDocConfigurator config;
 
     //Initialize global variables
-    public void init() throws ServletException {
+    @Override
+	public void init() throws ServletException {
 
     	System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl");
     	
@@ -46,7 +47,8 @@ public class DocumentWebService extends HttpServlet {
     }
 
     //Process the HTTP Get request
-    public void doGet( HttpServletRequest request, HttpServletResponse response )
+    @Override
+	public void doGet( HttpServletRequest request, HttpServletResponse response )
             throws ServletException, IOException {
 
         String sname = null;

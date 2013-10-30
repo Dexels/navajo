@@ -63,6 +63,7 @@ public class MacLink extends JButton {
 		setOpaque(false);
 
 		this.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseEntered(MouseEvent e) {
 				mouseover = true;
 				if (!animating) {
@@ -70,6 +71,7 @@ public class MacLink extends JButton {
 				}
 			}
 
+			@Override
 			public void mouseExited(MouseEvent e) {
 				mouseover = false;
 				if (!animating) {
@@ -80,6 +82,7 @@ public class MacLink extends JButton {
 		});
 
 		addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				fireSpring();
 			}
@@ -122,6 +125,7 @@ public class MacLink extends JButton {
 		bounds.setLocation(location);
 		cc.showHint(this, hint);
 		cc.getAnimator().addTarget(new TimingTargetAdapter() {
+			@Override
 			public void end() {
 				// animating = false;
 			}
@@ -155,6 +159,7 @@ public class MacLink extends JButton {
 		if (in) {
 			Animator animator = PropertySetter.createAnimator(250, this, "scale", scale, max_scale);
 			animator.addTarget(new TimingTargetAdapter() {
+				@Override
 				public void end() {
 					animating = false;
 					if (!mouseover) {
@@ -172,6 +177,7 @@ public class MacLink extends JButton {
 		} else {
 			Animator animator = PropertySetter.createAnimator(250, this, "scale", scale, min_scale);
 			animator.addTarget(new TimingTargetAdapter() {
+				@Override
 				public void end() {
 					animating = false;
 					if (mouseover) {
@@ -187,6 +193,7 @@ public class MacLink extends JButton {
 		repaint();
 	}
 
+	@Override
 	public void paintComponent(Graphics g) {
 		if (myIcon != null) {
 
