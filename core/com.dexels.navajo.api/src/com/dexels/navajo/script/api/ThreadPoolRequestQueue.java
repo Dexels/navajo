@@ -69,20 +69,24 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 	}
 	
 	public final double getRequestRate() {
-		if(finishedServicesAt.isEmpty()) {
-			// don't return 0
-			return 1;
+		synchronized (this) {
+			if(finishedServicesAt.isEmpty()) {
+				// don't return 0
+				return 1;
+			}
+			long first = finishedServicesAt.peek();
+			long diff = System.currentTimeMillis() - first;
+			return diff / finishedServicesAt.size();
 		}
-		long first = finishedServicesAt.peek();
-		long diff = System.currentTimeMillis() - first;
-		return diff / finishedServicesAt.size();
 	}
 
 	@Override
 	public void finished() {
-		finishedServicesAt.add(System.currentTimeMillis());
-		while (finishedServicesAt.size() > MAX_TIMELOG_SIZE) {
-			finishedServicesAt.remove();
+		synchronized (this) {
+			finishedServicesAt.add(System.currentTimeMillis());
+			while (finishedServicesAt.size() > MAX_TIMELOG_SIZE) {
+				finishedServicesAt.remove();
+			}
 		}
 	}
 
