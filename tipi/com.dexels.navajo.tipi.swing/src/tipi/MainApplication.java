@@ -130,6 +130,7 @@ public class MainApplication {
 			}
 			SwingUtilities.invokeAndWait(new Runnable() {
 
+				@Override
 				public void run() {
 					try {
 							if (def == null) {

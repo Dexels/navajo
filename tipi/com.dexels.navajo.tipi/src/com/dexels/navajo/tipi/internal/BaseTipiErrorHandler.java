@@ -50,20 +50,6 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 		// initResource();
 	}
 
-	public void initResource() {
-		try {
-
-			InputStream tipiResourceStream = context
-					.getTipiResourceStream("validation.properties");
-			if (tipiResourceStream == null) {
-				return;
-			}
-			errorMessageBundle = new PropertyResourceBundle(tipiResourceStream);
-		} catch (Exception ex) {
-			logger.warn("No validation bundle found. No problem.");
-			errorMessageBundle = null;
-		}
-	}
 
 	public String hasErrors(Navajo n) {
 		if (n != null) {
@@ -112,7 +98,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 		// String description = id;
 		try {
 			if(errorMessageBundle==null) {
-				initResource();
+				logger.error("Serious problem in Error handler.");
 			}
 			String found = errorMessageBundle.getString(id);
 			if (found != null) {
@@ -136,14 +122,15 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 			// attempt remote propertyresource bundle;
 			try {
 				InputStream tipiResourceStream = c
-						.getTipiResourceStream("validation.properties");
+						. getGenericResourceStream("validation.properties");
 				if (tipiResourceStream != null) {
 					errorMessageBundle = new PropertyResourceBundle(
 							tipiResourceStream);
 				} else {
+					logger.error("Getting validation.properties from server failed. Is validation.properties in *resources*, not *tipi*?");
 				}
 			} catch (IOException e) {
-				logger.warn("Getting validation.properties from server failed.");
+				logger.error("Getting validation.properties from server failed. Is validation.properties in *resources*, not *tipi*?");
 			}
 		}
 	}

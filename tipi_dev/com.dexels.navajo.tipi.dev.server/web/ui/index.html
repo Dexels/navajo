@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap-responsive.min.css" rel="stylesheet"
+	media="screen">
+<link href="css/docs.css" rel="stylesheet" media="screen">
+</head>
+<body style="background-color: #ffd">
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/purl.js"></script>
+	<script src="js/handlebars.js"></script>
+	<script id="some-template" type="text/x-handlebars-template">
+        {{#each applications}} 
+		<div class="panel panel-primary application" style="margin:30px 0px;">
+			<div class="panel-heading">
+				<h2 class="panel-title"><a href="{{httpUrl}}/tree/{{branch}}">{{@key}} - {{branch}}</a></h2>
+			</div>
+			<div class="panel-body">
+				<p>Current version: <a href="{{httpUrl}}/commit/{{lastCommitVersion}}">{{lastCommitVersion}}</a> </p>
+				<p>Message: {{lastCommitMessage}}</p>
+				<p>Date: {{lastCommitDate}}</p>
+				<p>Author: <a href="https://github.com/{{lastCommitAuthor}}">{{lastCommitAuthor}}</a></p>
+				<p>Cache tipi: <a href="/apps/{{@key}}/tipi/remotedigest.properties">properties</a>
+				<p>Cache resource: <a href="/apps/{{@key}}/resource/remotedigest.properties">properties</a>
+				<p>Xsd: <a href="/apps/{{@key}}/tipi/tipi.xsd">XSD</a>
+				<form>
+					{{#each profileStatus}}
+						<a href="../apps/{{../applicationName}}/{{@key}}.jnlp" class="{{classForStatus this}}">{{@key}}</a>
+					{{/each}}
+				
+				</form>
+			</div>
+			<div class="panel-group" id="dependencies{{@key}}">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a class="accordion-toggle" data-toggle="collapse" data-parent="#dependencies{{@key}}" href="#collapseDependency{{@key}}">
+								Dependencies
+							</a>
+						</h4>
+					</div>
+					<div id="collapseDependency{{@key}}" class="panel-collapse collapse">
+						<div class="panel-body">
+							<ul>
+								{{#each dependencies}}
+									<li><a href="#">{{fileName}}</a></li>
+								{{/each}}
+							</ul>
+						</div>
+					</div>
+				</div>
+			<div>
+			<div class="panel-group" id="profiles{{@key}}">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a class="accordion-toggle" data-toggle="collapse" data-parent="#profiles{{@key}}" href="#{{@key}}collapseProfile">
+								Sessions ({{sessionCount}})
+							</a>
+						</h4>
+					</div>
+					<div id="{{@key}}collapseProfile" class="panel-collapse collapse">
+						<div class="panel-body">
+							<ul>
+								{{#each sessions}}
+									<li>
+										<div>
+											<input type="text" class="session_message">
+											<a class="btn btn-success sessionbutton" session="{{session}}" href="#">{{session}} (For profile: {{profile}})</a>
+										</div>
+									</li>
+								{{/each}}
+							</ul>
+						</div>
+					</div>
+				</div>
+			<div>
+
+			<div class="panel-footer">
+				<div class="btn-group">
+					<button id="{{@key}}_pull" type="button" data-loading-text="Pulling..." name="pull" value="{{@key}}" class="btn appstoreoperation btn-default pullbutton {{@key}}" title="Popover title" data-content="Default popover">Pull</button>
+					<button id="{{@key}}_clean" type="button" data-loading-text="Cleaning..." name="clean" value="{{@key}}" class="btn appstoreoperation btn-default">Clean</button>
+					<button id="{{@key}}_buildjnlp" type="button" data-loading-text="Building..." name="build" value="{{@key}}" class="btn appstoreoperation btn-default">Build JNLP</button>
+					<button id="{{@key}}_cache" type="button" data-loading-text="Building cache..." name="cachebuild" value="{{@key}}" class="btn appstoreoperation btn-default">Build cache</button>
+					<button id="{{@key}}_xsd" type="button" data-loading-text="Building XSD..." name="xsd" value="{{@key}}" class="btn appstoreoperation btn-default">Build xsd</button>
+				</div>
+			</div>
+		</div>
+		</div>
+		</div>
+</div>
+</div>
+        {{/each}} 
+	</div>
+
+	</script>
+	<div class="panel panel-info pull-right pull-up"
+		style="margin: 10px 10px; position:">
+		<div class="panel-heading">User data</div>
+		<div class="panel-body">
+			<a href="#" class="btn btn-success hidden authorizebutton pull-left">Login</a>
+			<a href="../logout"
+				class="btn btn-success hidden logoutbutton pull-left">Logout</a> <a
+				class="pull-right pull-up" href="#"> <img class="userimage" />
+			</a>
+			<div class="pull-right pull-up" style="width: 180px;">
+				<h4 class="usernamelabel  pull-up"></h4>
+				<a class="emaillabel" href="mailto:flyaruu@gmail.com"></a>
+				<div class="companylabel"></div>
+			</div>
+
+		</div>
+	</div>
+	<div style="margin: 10px 10px;">
+		<div class="page-header" style="height: 150px;">
+			<h1>
+				Tipi Application Store <small>(handle with care)</small>
+			</h1>
+			<div class="alert alert-info resultmsg pull-left"
+				style="width: 400px; height: 50px"></div>
+		</div>
+		<div id="main"/>
+	</div>
+
+	<script type="text/javascript">
+		Handlebars.registerHelper('classForStatus', function(status, options) {
+			if (status == 'OK') {
+				return "btn btn-success";
+			}
+			if (status == 'OUTDATED') {
+				return "btn btn-warning";
+			}
+			return "btn btn-danger";
+		});
+		function loadApplicationData() {
+
+			$.getJSON('../list', function(data) {
+				$(".application").remove();
+				var source = $("#some-template").html();
+				var template = Handlebars.compile(source);
+				$('#main').append(template(data));
+				console.log(template(data));
+			});
+		}
+
+		loadApplicationData();
+		
+		
+		$(document).on("click", ".sessionbutton", function(source) {
+			var target = source.target;
+			var session = source.target.attributes.session;
+			var text = target.previousElementSibling.value
+			alert('session: '+session.value+" text: "+text);
+			var url = "../sendmessage?session=" + session.value +"&text="+text;
+			 var btn = $(this)
+		     btn.button('loading')
+			 $.ajax({
+				type : 'GET',
+				dataType : 'text',
+				url : url,
+				timeout : 500000,
+				success : function(data, textStatus) {
+					$(".resultmsg").html(data);
+					btn.button('reset')
+					},
+				error : function(xhr, textStatus, errorThrown) {
+					$(".resultmsg").html(errorThrown);
+					alert('send message failed: '+textStatus+' error: '+errorThrown);
+					btn.button('reset')
+				}
+			});
+		});
+		
+		$(document).on("click", ".appstoreoperation", function(source) {
+			var url = "../" + this.name + "?app=" + this.value;
+			/* 	$.get(url,function( data ) {
+			 $( ".resultmsg" ).html( data );
+			 loadApplicationData();
+			
+			 }); */
+//			$("#club-other_clean").popover();
+			 var btn = $(this)
+		     btn.button('loading')
+		        
+			 $.ajax({
+				type : 'GET',
+				dataType : 'json',
+				url : url,
+				timeout : 500000,
+				success : function(data, textStatus) {
+					$(".resultmsg").html(data);
+					loadApplicationData();
+					btn.button('reset')
+					},
+				error : function(xhr, textStatus, errorThrown) {
+					$(".resultmsg").html(errorThrown);
+					alert('request failed');
+					btn.button('reset')
+				}
+			});
+		});
+		$(function () {
+		    $(".pullbutton").popover({
+		        placement : 'top'
+		    });
+		});
+		
+		
+/* 		<p>Checkout: <input type="text" class="form-control"> branch: <input type="text" class="form-control">
+		</p>
+		<button type="submit" class="btn btn-default">Checkout</button>
+ */		
+		$.getJSON("../authorized", function(data) {
+			if (data.authorized) {
+				$(".usernamelabel").html(data.username);
+				$(".usernamelabel").removeClass('hidden');
+				$(".companylabel").html(data.company);
+				$(".companylabel").removeClass('hidden');
+				$(".emaillabel").html(data.email);
+				$(".emaillabel").removeClass('hidden');
+				$(".userimage").attr('src', data.image);
+				$(".userimage").removeClass('hidden');
+				$(".authorizebutton").addClass('hidden');
+				$(".logoutbutton").removeClass('hidden');
+			} else {
+				$(".authorizebutton").removeClass('hidden');
+				$(".logoutbutton").addClass('hidden');
+				$(".authorizebutton").attr(
+						'href',
+						"https://github.com/login/oauth/authorize?client_id="
+								+ data.clientid + "&state=" + data.state);
+				$(".usernamelabel").addClass('hidden');
+				$(".companylabel").addClass('hidden');
+				$(".userimage").addClass('hidden');
+				$(".emaillabel").addClass('hidden');
+			}
+
+		});
+	</script>
+
+</body>
+</html>

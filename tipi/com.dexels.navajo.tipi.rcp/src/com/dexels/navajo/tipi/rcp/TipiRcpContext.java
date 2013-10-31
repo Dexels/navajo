@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.rcp;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
@@ -25,8 +26,8 @@ public class TipiRcpContext extends TipiContext {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiRcpContext.class);
 	
-	public TipiRcpContext(TipiApplicationInstance myApplication, Composite compositeParent, List<TipiExtension> preload, TipiContext parent) {
-		super(myApplication, preload, parent);
+	public TipiRcpContext(TipiApplicationInstance myApplication, Composite compositeParent, List<TipiExtension> preload, TipiContext parent,Map<String,String> systemProperties) {
+		super(myApplication, preload, parent,systemProperties);
 		this.compositeParent = compositeParent;
         RowLayout rowLayout = new RowLayout();
         rowLayout.wrap = false;

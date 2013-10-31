@@ -23,6 +23,7 @@ public class ServiceTag extends BaseNavajoTag {
 		this.serviceString = serviceString;
 	}
 
+	@Override
 	public int doEndTag() throws JspException {
 		getNavajoContext().popNavajo();
 		return EVAL_PAGE;
@@ -32,6 +33,7 @@ public class ServiceTag extends BaseNavajoTag {
 		myService = service;
 	}
 
+	@Override
 	public int doStartTag() throws JspException {
 		Navajo m;
 			if (myService!=null) {

@@ -7,7 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
-
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +41,8 @@ public class VaadinTipiContext extends TipiContext {
 	private final java.util.Random randomizer = new java.util.Random(System.currentTimeMillis());
 
 	
-	public VaadinTipiContext(TipiApplicationInstance myApplication, File install, List<TipiExtension> extensionList) {
-		super(myApplication, extensionList, null);
+	public VaadinTipiContext(TipiApplicationInstance myApplication, File install, List<TipiExtension> extensionList,Map<String,String> systemProperties) {
+		super(myApplication, extensionList, null,systemProperties);
 		
 		
 //		File install = getInstallationFolder();

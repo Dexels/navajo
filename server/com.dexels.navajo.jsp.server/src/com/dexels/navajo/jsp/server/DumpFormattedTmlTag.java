@@ -33,6 +33,7 @@ public class DumpFormattedTmlTag extends BaseNavajoTag  {
 		XhtmlRendererFactory.getRenderer(FileUtils.getExtension(name)).highlight(name, in,out, encoding, false);
 	}
 	
+	@Override
 	public int doStartTag() throws JspException {
 		Navajo n = null;
 		if(myService!=null) {

@@ -55,6 +55,8 @@ public class ServerSocketTest {
             // whoa bit too hardcore here
 //            System.exit(1);
             return;
+        } finally {
+        	serverSocket.close();
         }
 
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);

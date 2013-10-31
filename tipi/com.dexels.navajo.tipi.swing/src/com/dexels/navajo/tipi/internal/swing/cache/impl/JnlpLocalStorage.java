@@ -48,7 +48,6 @@ public class JnlpLocalStorage implements LocalStorage {
 
 	public JnlpLocalStorage(String relativePath, CookieManager cm)
 			throws UnavailableServiceException {
-//		myCookieMananger = cm;
 		ps = (PersistenceService) ServiceManager
 				.lookup("javax.jnlp.PersistenceService");
 		bs = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
@@ -256,6 +255,12 @@ public class JnlpLocalStorage implements LocalStorage {
 		in.close();
 		bout.flush();
 		bout.close();
+	}
+
+	@Override
+	public void delete(String location) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

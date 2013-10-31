@@ -39,6 +39,7 @@ public class TipiGenericChart extends TipiSwingDataComponentImpl {
 	private String title = "Title";
 	private Color backgroundColor = null;
 	
+	@Override
 	public Object createContainer() {		 
 		myChart = new ChartPanel(null);
 		myChart.setMaximumDrawHeight(10000);

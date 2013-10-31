@@ -18,6 +18,7 @@ public class DescriptionTag extends BaseNavajoTag  {
 	private final static Logger logger = LoggerFactory
 			.getLogger(DescriptionTag.class);
 	
+	@Override
 	public int doEndTag() throws JspException {
 		return EVAL_PAGE;
 	}
@@ -26,6 +27,7 @@ public class DescriptionTag extends BaseNavajoTag  {
 		myProperty = property;
 	}
 
+	@Override
 	public int doStartTag() throws JspException {
 		try {
 			Navajo n;

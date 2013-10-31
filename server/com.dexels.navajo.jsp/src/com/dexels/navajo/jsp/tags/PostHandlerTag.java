@@ -14,6 +14,7 @@ public class PostHandlerTag extends BaseNavajoTag {
 	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory.getLogger(PostHandlerTag.class);
 	
+	@Override
 	public int doStartTag() throws JspException {
 
 		ServletRequest request = getPageContext().getRequest();

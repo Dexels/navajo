@@ -12,6 +12,7 @@ public class DebugTag extends BaseNavajoTag {
 	}
 
 
+	@Override
 	public int doStartTag() throws JspException {
 		getNavajoContext().debug();
 		return EVAL_BODY_INCLUDE;

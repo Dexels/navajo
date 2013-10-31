@@ -18,8 +18,6 @@ public class DecryptString extends FunctionInterface {
 		
 		String key = (String) getOperand(0);
 		String message = (String) getOperand(1);
-		System.err.println("Decrypting: |"+key+"|");
-		
 		try {
 			Security s = new Security(key);
 			result = s.decrypt(message);

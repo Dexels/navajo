@@ -1,7 +1,5 @@
 package tipiswing;
 
-import java.util.Collection;
-
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -72,25 +70,29 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 		return instance;
 	}
 	
+	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
 
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public LookAndFeelWrapper getLookAndFeel(String tipiLaf) {
 		try {
-			Collection<ServiceReference<LookAndFeelWrapper>> srl = getBundleContext().getServiceReferences(LookAndFeelWrapper.class, "(className="+tipiLaf+")");
-			if(srl.isEmpty()) {
+			ServiceReference[] srl = getBundleContext().getServiceReferences(LookAndFeelWrapper.class.getName(), "(className="+tipiLaf+")");
+			
+			if(srl == null || srl.length==0) {
 				return null;
 			}
-			ServiceReference<LookAndFeelWrapper> laf = srl.iterator().next();
-			return getBundleContext().getService(laf);
+			ServiceReference laf = srl[0];
+			return (LookAndFeelWrapper)getBundleContext().getService(laf);
 		} catch (InvalidSyntaxException e) {
 			logger.error("Odd OSGi error:",e);
 		}
 		return null;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setLookAndFeel(String tipiLaf) {
 		if(getBundleContext()==null) {
 			// not OSGi, go vintage:
@@ -108,12 +110,16 @@ public class TipiSwingExtension extends TipiAbstractXMLExtension implements
 			return;
 		}
 		try {
-			Collection<ServiceReference<LookAndFeelWrapper>> srl = getBundleContext().getServiceReferences(LookAndFeelWrapper.class, "(className="+tipiLaf+")");
-			if(srl.isEmpty()) {
+			ServiceReference[] srl = getBundleContext().getServiceReferences(LookAndFeelWrapper.class.getName(), "(className="+tipiLaf+")");
+			
+			if(srl == null || srl.length==0) {
+				logger.warn("No service found for LNF: "+tipiLaf);
 				return;
 			}
-			ServiceReference<LookAndFeelWrapper> laf = srl.iterator().next();
-			LookAndFeelWrapper lwd = getBundleContext().getService(laf);
+			ServiceReference laf = srl[0];
+
+			LookAndFeelWrapper lwd = (LookAndFeelWrapper)getBundleContext().getService(laf);
+			
 			lwd.loadLookAndFeel();
 		} catch (InvalidSyntaxException e) {
 			logger.error("Odd OSGi error:",e);

@@ -3,7 +3,7 @@ Bundle-Name: Navajo Client
 Bundle-SymbolicName: com.dexels.navajo.client
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.4.33.qualifier
+Bundle-Version: 3.4.37.qualifier
 Bundle-Activator: navajoclient.Version
 Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.client;version="1.0.0";uses:="com.dexels.navajo.document",
@@ -13,6 +13,7 @@ Export-Package: com.dexels.navajo.client;version="1.0.0";uses:="com.dexels.navaj
  com.dexels.navajo.client.nql.internal.command;x-internal:=true,
  com.dexels.navajo.client.server;uses:="com.dexels.navajo.client.context,com.dexels.navajo.document",
  com.dexels.navajo.client.sessiontoken,
+ com.dexels.navajo.client.stream;version="1.0.0",
  com.dexels.navajo.client.systeminfo,
  navajoclient;uses:="com.dexels.navajo.version,org.osgi.framework,org.osgi.service.cm"
 Bundle-Vendor: Dexels

@@ -83,7 +83,8 @@ public class CallServiceTag extends BaseNavajoTag {
 			logger.error("Error: ", e);
 		}
 	}
- 	public int doStartTag() throws JspException {
+ 	@Override
+	public int doStartTag() throws JspException {
 		assertTest();
 		if(myService==null || "".equals(myService)) {
 			throw new JspException("Error calling service: No service supplied!");

@@ -49,6 +49,7 @@ public class TipiDialChart extends TipiChart {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiDialChart.class);
 
+	@Override
 	public Object createContainer() {
 		super.createContainer();
 		myContainer = new JPanel();
@@ -139,6 +140,7 @@ public class TipiDialChart extends TipiChart {
 		}
 	}
 
+	@Override
 	public void setComponentValue(String name, Object object) {
 		super.setComponentValue(name, object);
 

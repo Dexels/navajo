@@ -2,7 +2,7 @@ Bundle-Name: Navajo Tipi Swinglabs extension
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.swingx
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.1.1.qualifier
+Bundle-Version: 1.1.3.qualifier
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.tipi,

@@ -50,10 +50,12 @@ public class DeployAction implements IObjectActionDelegate {
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
+	@SuppressWarnings("rawtypes")
+	@Override
 	public void run(IAction action) {
 		try {
 		if (selection instanceof IStructuredSelection) {
-			for (Iterator<IStructuredSelection> it = ((IStructuredSelection) selection).iterator(); it.hasNext();) {
+			for (Iterator it = ((IStructuredSelection) selection).iterator(); it.hasNext();) {
 				Object element = it.next();
 				IProject project = null;
 				if (element instanceof IProject) {
@@ -69,6 +71,7 @@ public class DeployAction implements IObjectActionDelegate {
 					
 					if(retrieveTemplates.length != 0) {
 						Dialog dlg = new Dialog(Display.getCurrent().getActiveShell()) {
+							@Override
 							public Composite createDialogArea(Composite parent) {
 								Composite composite = (Composite) super.createDialogArea(parent);
 								composite.setLayout(new GridLayout(2, false));
@@ -78,9 +81,11 @@ public class DeployAction implements IObjectActionDelegate {
 								templateCombo.setItems(retrieveTemplates);
 								templateCombo.setSize(200, 20);
 								templateCombo.addSelectionListener(new SelectionListener() {
+									@Override
 									public void widgetDefaultSelected(SelectionEvent e) {
 									}
 
+									@Override
 									public void widgetSelected(SelectionEvent e) {
 										selectedTemplate = templateCombo.getItems()[templateCombo.getSelectionIndex()];
 									}
@@ -94,10 +99,12 @@ public class DeployAction implements IObjectActionDelegate {
 							   includeJars.setSelection(true);
 								includeJars.addSelectionListener(new SelectionListener(){
 
+									@Override
 									public void widgetDefaultSelected(SelectionEvent arg0) {
 										
 									}
 
+									@Override
 									public void widgetSelected(SelectionEvent arg0) {
 										includeJarsSelected = includeJars.getSelection();
 										
@@ -178,6 +185,7 @@ public class DeployAction implements IObjectActionDelegate {
 	 * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
 	 * .IAction, org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}
@@ -189,6 +197,7 @@ public class DeployAction implements IObjectActionDelegate {
 	 * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action
 	 * .IAction, org.eclipse.ui.IWorkbenchPart)
 	 */
+	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 

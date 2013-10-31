@@ -12,6 +12,7 @@
 		<module>../../com.dexels.navajo.tipi.dev.core</module>
 		<module>../../com.dexels.navajo.tipi.dev.ant</module>
 		<module>../../com.dexels.navajo.tipi.dev.plugin</module>
+		<module>../../com.dexels.navajo.tipi.dev.server</module>
 
 		<module>../</module>
 	</modules>

@@ -2,7 +2,7 @@ Bundle-Name: Navajo Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.2.4.qualifier
+Bundle-Version: 1.2.10.qualifier
 Bundle-Activator: tipipackage.Version
 Export-Package: com.dexels.navajo.tipi;version="1.1.42";
   uses:="com.dexels.navajo.client,
@@ -91,6 +91,7 @@ Export-Package: com.dexels.navajo.tipi;version="1.1.42";
  tipipackage;version="1.1.42";uses:="com.dexels.navajo.version,org.osgi.framework,tipi"
 Bundle-Vendor: Dexels
 Import-Package: com.dexels.navajo.client;version="1.0.0",
+ com.dexels.navajo.client.stream;version="1.0.0",
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
  com.dexels.navajo.document.metadata;version="2.2.0",
@@ -105,6 +106,7 @@ Import-Package: com.dexels.navajo.client;version="1.0.0",
  javax.script,
  navajo;version="1.1.0",
  navajoextension,
+ org.dexels.utils;version="2.2.1",
  org.junit;version="4.8.2";resolution:=optional,
  org.junit.runner;version="4.8.2";resolution:=optional,
  org.junit.runners;version="4.8.2";resolution:=optional,

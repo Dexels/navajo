@@ -14,11 +14,6 @@ public interface SystemInfoProvider {
 
 	public abstract String getOsArch();
 
-	/**
-	 * Returns SystemInfo in compact string.
-	 */
-	public abstract String toString();
-
 	public abstract void init();
 
 }

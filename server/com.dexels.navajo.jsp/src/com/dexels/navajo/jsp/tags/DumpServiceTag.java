@@ -30,6 +30,7 @@ public class DumpServiceTag extends BaseNavajoTag  {
 		myService = service;
 	}
 
+	@Override
 	public int doStartTag() throws JspException {
 		Navajo n = null;
 		if(myService!=null) {

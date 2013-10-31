@@ -14,6 +14,7 @@ public class TipiPreferencePage extends PreferencePage implements IWorkbenchPref
 		return null;
 	}
 
+	@Override
 	public void init(IWorkbench arg0) {
 		// TODO Auto-generated method stub
 		

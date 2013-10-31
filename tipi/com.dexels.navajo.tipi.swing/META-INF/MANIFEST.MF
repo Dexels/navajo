@@ -2,7 +2,7 @@ Bundle-Name: Navajo Swing Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.2.51.qualifier
+Bundle-Version: 1.2.57.qualifier
 Bundle-Activator: tipiswing.TipiSwingExtension
 Export-Package: com.dexels.navajo.tipi.components.swingimpl;version="1.0.0",
  com.dexels.navajo.tipi.components.swingimpl.parsers;version="1.0.0",
@@ -11,7 +11,8 @@ Export-Package: com.dexels.navajo.tipi.components.swingimpl;version="1.0.0",
  tipiswing;version="1.0.0"
 Bundle-Vendor: Dexels
 Bundle-ClassPath: .
-Import-Package: com.dexels.navajo.dnd,
+Import-Package: com.dexels.navajo.client.stream;version="1.0.0",
+ com.dexels.navajo.dnd,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.metadata;version="2.2.0",
  com.dexels.navajo.document.notifier,

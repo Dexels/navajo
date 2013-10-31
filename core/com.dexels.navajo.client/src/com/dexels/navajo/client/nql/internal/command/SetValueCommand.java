@@ -17,10 +17,12 @@ public class SetValueCommand implements NQLCommand {
 	private final static Logger logger = LoggerFactory
 			.getLogger(SetValueCommand.class);
 	
+	@Override
 	public void execute(NQLContext context, OutputCallback callback) throws ClientException,NavajoException {
 		context.set(path, value);
 	}
 
+	@Override
 	public void parse(String raw) {
 		String[] parts = raw.split(":");
 		logger.info("part1: "+parts[0]);

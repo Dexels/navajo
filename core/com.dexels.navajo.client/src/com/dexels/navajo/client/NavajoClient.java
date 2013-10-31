@@ -49,6 +49,8 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.sessiontoken.SessionTokenFactory;
 import com.dexels.navajo.client.sessiontoken.SessionTokenProvider;
+import com.dexels.navajo.client.stream.ClientTransferListener;
+import com.dexels.navajo.client.stream.MeasuredInputStream;
 import com.dexels.navajo.client.systeminfo.SystemInfoFactory;
 import com.dexels.navajo.client.systeminfo.SystemInfoProvider;
 import com.dexels.navajo.document.Guid;
@@ -148,7 +150,8 @@ public static final int DIRECT_PROTOCOL = 0;
    * Sets the number of retries the NavajoClient should perform before giving up
    * @param attempts int
    */
-  public final void setRetryAttempts(int attempts) {
+  @Override
+public final void setRetryAttempts(int attempts) {
     retryAttempts = attempts;
   }
 
@@ -269,7 +272,6 @@ public static final int DIRECT_PROTOCOL = 0;
    * @param useCompression boolean
    */
   
-  @SuppressWarnings("resource")
 private Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, NavajoException {
     URL url;
     //useCompression = false;
@@ -380,22 +382,24 @@ private Navajo doTransaction(String name, Navajo d, boolean useCompression, bool
     InputStream in = null;
     Navajo n = null;
     try {
+    	in = new MeasuredInputStream(ClientTransferListener.getInstance(), name, con.getInputStream());
+    	InputStream inraw = null;
     	if ( con.getResponseCode() >= 400 ) {
     		throw new IOException(readErrorStream(con));
     	} else {
     		if ( useCompression ) {
     			if (forceGzip) {
-        			in = new GZIPInputStream(con.getInputStream());
+    				inraw = new GZIPInputStream(in);
 				} else {
-	    			in = new InflaterInputStream(con.getInputStream());
+					inraw = new InflaterInputStream(in);
 				}
     			
     		} else {
-    			in = con.getInputStream();
+    			inraw = in;
     		}
     	}
-    	if ( in != null ) {
-    		n = NavajoFactory.getInstance().createNavajo(in);
+    	if ( inraw != null ) {
+    		n = NavajoFactory.getInstance().createNavajo(inraw);
     	}
     } finally {
     	if ( in != null ) {
@@ -408,17 +412,18 @@ private Navajo doTransaction(String name, Navajo d, boolean useCompression, bool
 	return n;
   }
 
-  public boolean useHttps() {
+@Override
+public boolean useHttps() {
 	return useHttps;
 }
 
+@Override
 public void setHttps(boolean useHttps) {
 	this.useHttps = useHttps;
 }
 
 private void appendHeaderToHttp(HttpURLConnection con, Header header) {
 	  con.setRequestProperty("rpcName",header.getRPCName());
-	  con.setRequestProperty("rpcPass",header.getRPCPassword());
 	  con.setRequestProperty("rpcUser",header.getRPCUser());
 	  Map<String,String> attrs = header.getHeaderAttributes();
 	  for (Entry<String,String> element : attrs.entrySet()) {
@@ -855,6 +860,7 @@ private final void switchServer(boolean force) {
 	 * @schedule defines a timestamp of the format: HH:mm:ss dd-MM-yyyy. If null assume immediate execution.
 	 * 
 	 */
+	@Override
 	public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException {
 		
 		String triggerURL = null;

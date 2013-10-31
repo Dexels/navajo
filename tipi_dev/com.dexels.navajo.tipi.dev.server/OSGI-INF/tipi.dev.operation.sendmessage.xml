@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="tipi.dev.operation.sendmessage">
+   <implementation class="com.dexels.navajo.tipi.dev.server.appmanager.operations.impl.SendMessage"/>
+   <reference bind="addApplicationStatus" cardinality="0..n" interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus" name="ApplicationStatus" policy="dynamic" unbind="removeApplicationStatus"/>
+   <reference bind="addSocket" cardinality="0..n" interface="com.dexels.navajo.tipi.dev.server.websocket.TipiCallbackSession" name="TipiCallbackSession" policy="dynamic" unbind="removeSocket"/>
+   <service>
+      <provide interface="com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation"/>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="osgi.command.scope" type="String" value="tipi"/>
+   <property name="osgi.command.function" type="String">
+		sendmessage
+   </property>
+   <property name="alias" type="String" value="/sendmessage"/>
+</scr:component>

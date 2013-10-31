@@ -17,6 +17,7 @@ public class TipiPropertyHandler implements ICSSPropertyHandler {
 	public TipiPropertyHandler(TipiEvent te) {
 		this.tipiEvent = te;
 	}
+	@Override
 	public boolean applyCSSProperty(Object element, String property,
 			CSSValue value, String pseudo, CSSEngine engine) throws Exception {
 		TipiElement te = (TipiElement)element;

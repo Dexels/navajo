@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -123,7 +124,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 		VaadinTipiContext va;
 		try {
-			va = new VaadinTipiContext(this, installationFolder, extensionRegistry.getExtensionList());
+			va = new VaadinTipiContext(this, installationFolder, extensionRegistry.getExtensionList(),new HashMap<String, String>());
 		} catch (Throwable e2) {
 			logger.error("Error: ",e2);
 			return null;

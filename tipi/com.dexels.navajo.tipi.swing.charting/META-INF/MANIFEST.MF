@@ -1,8 +1,8 @@
 Bundle-Name: Navajo Tipi Charting
-Bundle-SymbolicName: com.dexels.navajo.tipi.charting
+Bundle-SymbolicName: com.dexels.navajo.tipi.swing.charting
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.12.qualifier
+Bundle-Version: 1.0.20.qualifier
 Export-Package: com.dexels.navajo.tipi.swing.charting
 Bundle-Vendor: Dexels
 Bundle-ClassPath: lib/gnujaxp.jar,

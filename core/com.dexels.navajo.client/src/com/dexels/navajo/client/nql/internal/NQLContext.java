@@ -51,6 +51,7 @@ public class NQLContext implements NqlContextApi {
 		return mimeType;
 	}
 
+	@Override
 	public void setNavajoContext(ClientContext c) {
 		context = c;
 	}
@@ -303,14 +304,17 @@ public class NQLContext implements NqlContextApi {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		final OutputCallback outputCallback = new OutputCallback(){
 
+			@Override
 			public OutputStream getOutputStream() {
 				return baos;
 			}
 
+			@Override
 			public void setOutputType(String mime) {
 				logger.info("Output detected: "+mime);
 			}
 			
+			@Override
 			public void setContentLength(long l) {
 				logger.info("Content length detected: "+l);
 			}

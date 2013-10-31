@@ -10,15 +10,15 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.app.TaskQueueHandle;
 import nextapp.echo2.app.Window;
 import nextapp.echo2.webcontainer.ContainerContext;
 import nextapp.echo2.webrender.Connection;
 import nextapp.echo2.webrender.WebRenderServlet;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
@@ -70,8 +70,6 @@ public class EchoTipiContext extends TipiContext {
     	}
 		eHandler = new BaseTipiErrorHandler();
 		eHandler.setContext(this);
-		eHandler.initResource();
-
     	
     	setCookieManager(new BrowserCookieManager());
     }
@@ -290,7 +288,7 @@ public class EchoTipiContext extends TipiContext {
 	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
 		if (tipiCodeBase != null) {
 			if (tipiCodeBase.indexOf("http:/") != -1) {
-				setTipiResourceLoader(new HttpResourceLoader(tipiCodeBase));
+				setTipiResourceLoader(new HttpResourceLoader(tipiCodeBase,"tipi"));
 			} else {
 				setTipiResourceLoader(new FileResourceLoader(new File(tipiCodeBase)));
 			}

@@ -16,6 +16,7 @@ public class FileRemoteStorage implements RemoteStorage {
 		this.base = base;
 	}
 
+	@Override
 	public InputStream getContents(String location, Map<String, Object> metadata)
 			throws IOException {
 		File u = new File(base, location);
@@ -28,11 +29,13 @@ public class FileRemoteStorage implements RemoteStorage {
 		return fis;
 	}
 
+	@Override
 	public long getRemoteModificationDate(String location) throws IOException {
 		File u = new File(base, location);
 		return u.lastModified();
 	}
 
+	@Override
 	public URL getURL(String location) throws IOException {
 		File u = new File(base, location);
 		return u.toURI().toURL();

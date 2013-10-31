@@ -12,6 +12,7 @@ public class LogTag extends BaseNavajoTag {
 
 
 	
+	@Override
 	public int doStartTag() throws JspException {
 		System.err.println("Log: "+text+"\n");
 		return SKIP_BODY;

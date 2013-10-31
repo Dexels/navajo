@@ -79,12 +79,7 @@ public class Main {
 		StoredConfig config = git.getRepository().getConfig();
 		config.setString("remote", "origin", "fetch", "+refs/*:refs/*");
 		config.save();		
-//		Ref ref = git.checkout().
-//		        setCreateBranch(true).
-//		        setName(branch).
-//		        setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
-//		        setStartPoint("origin/" + branch).
-//		        call();
+
 	}
 
 	protected static Repository getRepository() throws IOException {
