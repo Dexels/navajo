@@ -45,6 +45,7 @@ public class AdapterFieldDependency extends Dependency {
 		return false;
 	}
 
+	@Override
 	public String getType() {
 		return type;
 	}

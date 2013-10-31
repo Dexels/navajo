@@ -14,6 +14,7 @@ public abstract class BaseDescriptionProvider implements DescriptionProvider {
 		this.myContext = myContext;
 	}
 
+	@Override
 	public String getDescription(String id) {
 		String desc = myDescriptionMap.get(id);
 		return desc;

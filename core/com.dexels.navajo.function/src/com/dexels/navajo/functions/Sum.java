@@ -20,11 +20,13 @@ import com.dexels.navajo.parser.Utils;
 
 public final class Sum extends FunctionInterface {
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Get the sum of values in a given list.";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "Sum(ArrayList)";
     }
 
@@ -45,7 +47,8 @@ public final class Sum extends FunctionInterface {
         return sum;
     }
 
-    public Object evaluate() throws TMLExpressionException {
+    @Override
+	public Object evaluate() throws TMLExpressionException {
         return sumList(this.getOperands());
     }
 }

@@ -26,6 +26,7 @@ public class ResourceParser extends BaseTipiParser {
 	 */
 	private static final long serialVersionUID = -4564316145086502257L;
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return source.getContext().getResourceURL(expression);
 	}

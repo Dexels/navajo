@@ -31,22 +31,27 @@ public class TipiScreen extends TipiDataComponentImpl{
         setId("init");
     }
    
-    public Object createContainer() {
+    @Override
+	public Object createContainer() {
         myContext.setDefaultTopLevel(this);
          return null;
     }
-    public Object getContainer() {
+    @Override
+	public Object getContainer() {
         return getTopLevel();
     }
 
-    public void addToContainer(final Object current, final Object constraints) {
+    @Override
+	public void addToContainer(final Object current, final Object constraints) {
     }
 
-    public void removeFromContainer(Object c) {
+    @Override
+	public void removeFromContainer(Object c) {
 
     }
 
-    public TipiComponent getTipiComponentByPath(String path) {
+    @Override
+	public TipiComponent getTipiComponentByPath(String path) {
         if (path.equals(".")) {
             return this;
         }
@@ -87,7 +92,8 @@ public class TipiScreen extends TipiDataComponentImpl{
         return null;
     }
 
-    public String getPath(String typedef) {
+    @Override
+	public String getPath(String typedef) {
         return typedef;
     }
 

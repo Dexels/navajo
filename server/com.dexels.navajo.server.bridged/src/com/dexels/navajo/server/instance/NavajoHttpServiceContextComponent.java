@@ -44,7 +44,6 @@ public class NavajoHttpServiceContextComponent implements NavajoServerContext{
 			logger.info("Navajo HTTP service modified. Why?");
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public void updated(Map<String,Object> settings) {
 //		String pid = (String) settings.get("service.pid");
 //		logger.info("Configuration received, pid: "+pid);

@@ -138,7 +138,8 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 	}
     
 
-    public final Persistable get(Constructor c, String key, String service, long expirationInterval, boolean persist) throws Exception {
+    @Override
+	public final Persistable get(Constructor c, String key, String service, long expirationInterval, boolean persist) throws Exception {
 
     	init();
 
@@ -303,6 +304,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
         return pc;
     }
 
+	@Override
 	public void setConfiguration(Navajo config) {
 		
 	}
@@ -375,6 +377,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 		}
 	}
 
+	@Override
 	public double getHitratio() {
 		PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		return ( (double) pm.cachehits / (double) pm.totalhits );
@@ -394,15 +397,18 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 		
 	}
 
+	@Override
 	public Persistable get(Constructor c, String key, long expirationInterval,
 			boolean persist) throws Exception {
 		throw new IllegalStateException("Persistable implentation error");
 	}
 
+	@Override
 	public void clearCache() {
 		setDoClear(true);
 	}
 
+	@Override
 	public void onNavajoEvent(NavajoEvent ne) {
 		
 		if ( ne instanceof NavajoCompileScriptEvent ) {

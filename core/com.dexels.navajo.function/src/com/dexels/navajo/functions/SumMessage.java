@@ -22,6 +22,7 @@ public class SumMessage extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "";
 	}
@@ -29,6 +30,7 @@ public class SumMessage extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		 return "SumMessage(<Array message>,<expression>)";
 	}
@@ -36,6 +38,7 @@ public class SumMessage extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		 if (getOperands().size() < 2) {
 		      for (int i = 0; i < getOperands().size(); i++) {

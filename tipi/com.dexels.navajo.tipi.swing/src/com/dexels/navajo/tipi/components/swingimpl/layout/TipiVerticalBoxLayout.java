@@ -35,22 +35,26 @@ public class TipiVerticalBoxLayout extends TipiLayoutImpl {
 	public TipiVerticalBoxLayout() {
 	}
 
+	@Override
 	protected void setValue(String name, TipiValue tv) {
 		/**
 		 * Not necessary, no parameters for this layout.
 		 */
 	}
 
+	@Override
 	public Object parseConstraint(String text, int index) {
 		return createDefaultConstraint(index);
 	}
 
+	@Override
 	public void createLayout() throws com.dexels.navajo.tipi.TipiException {
 
 		setLayout(new GridBagLayout());
 
 	}
 
+	@Override
 	public Object createDefaultConstraint(int index) {
 		return new TipiSwingGridBagConstraints(0, index, 1, 1, 1, 1,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,

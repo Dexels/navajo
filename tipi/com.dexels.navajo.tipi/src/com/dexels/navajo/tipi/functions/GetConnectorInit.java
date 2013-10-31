@@ -20,6 +20,7 @@ public class GetConnectorInit extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Retrieves the init function of a connector";
 	}
@@ -29,6 +30,7 @@ public class GetConnectorInit extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "GetConnectorInit(TipiComponent source, String connectorId)";
 	}
@@ -38,6 +40,7 @@ public class GetConnectorInit extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
 		if (pp == null) {

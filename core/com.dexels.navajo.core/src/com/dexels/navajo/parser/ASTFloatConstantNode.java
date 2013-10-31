@@ -10,7 +10,8 @@ public final class ASTFloatConstantNode extends SimpleNode {
         super(id);
     }
 
-    public final Object interpret() {
+    @Override
+	public final Object interpret() {
 
         return new Double(val);
     }

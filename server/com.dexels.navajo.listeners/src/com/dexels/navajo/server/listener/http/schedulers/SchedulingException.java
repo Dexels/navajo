@@ -23,6 +23,7 @@ public class SchedulingException extends Exception {
 		this.user = user;
 	}
 
+	@Override
 	public String getLocalizedMessage() {
 		if (user == null) {
 			return getMessage() + ": " + webservice;

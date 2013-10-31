@@ -56,6 +56,7 @@ private boolean dirty = false;
 		SQLMaintenanceMap.noAccess = noAccess;
 	}
 
+@Override
 public void load(Access access) throws MappableException, UserException {
 
       //if (noAccess)
@@ -76,7 +77,8 @@ public void load(Access access) throws MappableException, UserException {
       //logger.debug(sqlMapConfigFile.toString());
   }
 
-  public synchronized void store() throws MappableException, UserException {
+  @Override
+public synchronized void store() throws MappableException, UserException {
 	  setNoAccess(false);
   }
 
@@ -191,7 +193,8 @@ private void saveConfigFile(boolean copy) throws MappableException {
 	
   }
   
-  public void kill() {
+  @Override
+public void kill() {
 	  setNoAccess(false);
   }
 }

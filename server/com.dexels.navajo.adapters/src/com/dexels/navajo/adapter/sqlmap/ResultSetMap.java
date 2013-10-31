@@ -33,11 +33,14 @@ public class ResultSetMap implements Mappable {
     private HashMap values = new HashMap();
 	private ArrayList order = new ArrayList();
 
-    public final void load(Access access) throws MappableException, UserException {}
+    @Override
+	public final void load(Access access) throws MappableException, UserException {}
 
-    public final void store() throws MappableException, UserException {}
+    @Override
+	public final void store() throws MappableException, UserException {}
 
-    public final void kill() {}
+    @Override
+	public final void kill() {}
 
     public final void addValue(String name, Object o) {
       values.put(name, o);

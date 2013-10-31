@@ -41,10 +41,12 @@ public class GetValue extends FunctionInterface {
 	public GetValue() {
 	}
 
+	@Override
 	public String remarks() {
 		return "Gets the value of a selected property";
 	}
 
+	@Override
 	public Object evaluate()
 			throws com.dexels.navajo.parser.TMLExpressionException {
 		if (getOperands().size() != 1) {
@@ -65,6 +67,7 @@ public class GetValue extends FunctionInterface {
 		return p.getTypedValue();
 	}
 
+	@Override
 	public String usage() {
 		return "GetValue(<property>) -> will return the typed value of a property";
 	}

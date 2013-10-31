@@ -26,14 +26,17 @@ public class AsyncTest extends AsyncMappable {
 
   private float ready = (float) 0.0;
 
+  @Override
   public void load(Access access) throws UserException, MappableException {
     System.out.println("in AsyncTest load()");
   }
 
-  public void kill() {
+  @Override
+public void kill() {
     System.out.println("in AsyncTest kill()");
   }
 
+  @Override
   public void store() throws UserException, MappableException {
     System.out.println("in AsyncTest store()");
   }
@@ -52,6 +55,7 @@ public class AsyncTest extends AsyncMappable {
     return result;
   }
 
+  @Override
   public void run() throws UserException {
       System.out.println("in AsyncTest run()");
       double a = 1000000000.0;
@@ -71,19 +75,23 @@ public class AsyncTest extends AsyncMappable {
       System.out.println("leaving AsyncTest run()");
   }
 
-  public int getPercReady() {
+  @Override
+public int getPercReady() {
     return (int) ready;
   }
 
-  public void afterRequest() {
+  @Override
+public void afterRequest() {
     System.out.println("AsyncTest: in afterReqeust()");
   }
 
-  public void beforeResponse(Access access) {
+  @Override
+public void beforeResponse(Access access) {
     System.out.println("AsyncTest: in beforeResponse()");
   }
 
-  public void afterResponse() {
+  @Override
+public void afterResponse() {
     // Wait for couple of seconds.
     System.out.println("AsyncTest: in afterResponse()");
     try {

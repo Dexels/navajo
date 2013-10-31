@@ -152,6 +152,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		this.addCellEditorListener(this);
 		this.getTableHeader().setReorderingAllowed(false);
 		addMouseListener(new MouseAdapter() {
+			@Override
 			public final void mouseClicked(MouseEvent m) {
 				if (m.getClickCount() > 1) {
 					fireActionEvent();
@@ -159,6 +160,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 			}
 		});
 		addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if ("Left".equals(KeyEvent.getKeyText(e.getKeyCode()))
 						|| "Right".equals(KeyEvent.getKeyText(e.getKeyCode()))) {
@@ -169,6 +171,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 			}
 		});
 		addFocusListener(new FocusListener() {
+			@Override
 			public void focusLost(FocusEvent e) {
 				if (e.getOppositeComponent() == myCurrentEditingComponent) {
 					return;
@@ -179,6 +182,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 				}
 			}
 
+			@Override
 			public void focusGained(FocusEvent e) {
 			}
 		});
@@ -321,6 +325,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 				// gpc.setHorizontalScrolls(false);
 				gpc.setProperty(current);
 				gpc.addPropertyEventListener(new PropertyEventListener() {
+					@Override
 					public void propertyEventFired(Property p, String type,
 							boolean internal) {
 						mtm.fireTableRowsUpdated(getSelectedRow(),
@@ -378,6 +383,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 				tb.setLayout(fl);
 
 				okButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						save();
 						finbd.setVisible(false);
@@ -385,23 +391,27 @@ public class MessageTable extends JTable implements CellEditorListener,
 				});
 
 				nextRowButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						nextRow();
 					}
 				});
 
 				previousRowButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						previousRow();
 					}
 				});
 				saveButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						save();
 					}
 				});
 
 				cancelButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						List<Property> props = m.getAllProperties();
 						for (int i = 0; i < props.size(); i++) {
@@ -459,6 +469,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 					// gpc.setHorizontalScrolls(false);
 					gpc.setProperty(current);
 					gpc.addPropertyEventListener(new PropertyEventListener() {
+						@Override
 						public void propertyEventFired(Property p, String type,
 								boolean internal) {
 							mtm.fireTableRowsUpdated(getSelectedRow(),
@@ -920,6 +931,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		// Dimension(getColumnModel().getTotalColumnWidth(), getRowHeight() *
 		// getRowCount()));
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				replaceProperties();
 			}
@@ -943,6 +955,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 				.getTotalColumnWidth(), getRowHeight() * getRowCount() + 6));
 	}
 
+	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		super.paintComponent(g);
@@ -983,6 +996,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	/**
 	 * Tsjezus wat lelijk... edit:arnoud.. kots
 	 */
+	@Override
 	protected void configureEnclosingScrollPane() {
 		if (showHeader) {
 			super.configureEnclosingScrollPane();
@@ -1201,6 +1215,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		// cdef.getProperty("sortedDirection").getValue());
 		SwingUtilities.invokeLater(new Runnable() {
 
+			@Override
 			public void run() {
 				logger.info("BEWARE OF THE WOBBLE!");
 				doSort(sortedColumn, sortedDirection);
@@ -1323,6 +1338,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		return mtm.getMessageRow(mapRowNumber(row));
 	}
 
+	@Override
 	public int getRowCount() {
 		MessageTableModel mtm = getMessageModel();
 		if (mtm == null) {
@@ -1522,6 +1538,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		return constructed;
 	}
 
+	@Override
 	public final void tableChanged(TableModelEvent parm1) {
 		super.tableChanged(parm1);
 	}
@@ -1556,9 +1573,11 @@ public class MessageTable extends JTable implements CellEditorListener,
 		}
 	}
 
+	@Override
 	public final void editingCanceled(ChangeEvent parm1) {
 	}
 
+	@Override
 	public void editingStopped(ChangeEvent parm1) {
 		Object oldVal = myEditor.getOldValue();
 		Property current = myEditor.getProperty();
@@ -1826,6 +1845,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		return myModel.getColumnId(index);
 	}
 
+	@Override
 	public String getColumnName(int index) {
 		if (index < getColumnCount()) {
 			return myModel.getColumnName(index);
@@ -1974,6 +1994,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		return cdef;
 	}
 
+	@Override
 	public Object getValueAt(int row, int column) {
 		if (row >= getRowCount() || column >= getColumnCount()) {
 			return null;
@@ -1989,16 +2010,19 @@ public class MessageTable extends JTable implements CellEditorListener,
 		return changed;
 	}
 
+	@Override
 	public final void propertyChange(PropertyChangeEvent e) {
 		Property val = (Property) e.getSource();
 		getMessageModel().firePropertyChanged(val, "value");
 
 	}
 
+	@Override
 	public void setConstraint(String id) {
 		primaryKeyColumn = id;
 	}
 
+	@Override
 	public String getConstraint() {
 		return primaryKeyColumn;
 	}
@@ -2010,6 +2034,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 	 * @todo Implement this
 	 *       com.dexels.navajo.swingclient.components.CopyCompatible method
 	 */
+	@Override
 	public Object copyObject() {
 		Message returnMsg = null;
 		String cols = "";
@@ -2074,6 +2099,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		Action tabAction = new AbstractAction() {
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void actionPerformed(ActionEvent e)
 
 			{
@@ -2112,6 +2138,7 @@ public class MessageTable extends JTable implements CellEditorListener,
 		Action invTabAction = new AbstractAction() {
 			private static final long serialVersionUID = -8210184561348696732L;
 
+			@Override
 			public void actionPerformed(ActionEvent e)
 
 			{

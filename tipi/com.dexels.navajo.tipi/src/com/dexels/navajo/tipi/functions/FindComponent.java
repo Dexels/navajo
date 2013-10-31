@@ -19,6 +19,7 @@ public class FindComponent extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Looks for a component with the given ID, will look downwards from the current component. It will do a PRE order tree search.";
 	}
@@ -28,6 +29,7 @@ public class FindComponent extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "FindComponent(TipiComponent source, String path)";
 	}
@@ -38,6 +40,7 @@ public class FindComponent extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
 		if (pp == null) {

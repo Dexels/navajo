@@ -34,12 +34,14 @@ public class TipiTextField extends TipiSwingComponentImpl {
 	public TipiTextField() {
 	}
 
+	@Override
 	public Object createContainer() {
 		myField = new TipiSwingTextField(this);
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
 		addHelper(th);
 		myField.addKeyListener(new KeyListener() {
+			@Override
 			public void keyTyped(KeyEvent e) {
 				// logger.debug("typed: "+e.getKeyChar());
 				Map<String, Object> m = getEventMap(e);
@@ -51,6 +53,7 @@ public class TipiTextField extends TipiSwingComponentImpl {
 				}
 			}
 
+			@Override
 			public void keyPressed(KeyEvent e) {
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "pressed");
@@ -61,6 +64,7 @@ public class TipiTextField extends TipiSwingComponentImpl {
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "released");
@@ -90,16 +94,19 @@ public class TipiTextField extends TipiSwingComponentImpl {
 		});
 		myField.getDocument().addDocumentListener(new DocumentListener() {
 
+			@Override
 			public void changedUpdate(DocumentEvent e) {
 				getAttributeProperty("text").setAnyValue(myField.getText());
 
 			}
 
+			@Override
 			public void insertUpdate(DocumentEvent e) {
 				getAttributeProperty("text").setAnyValue(myField.getText());
 
 			}
 
+			@Override
 			public void removeUpdate(DocumentEvent e) {
 				getAttributeProperty("text").setAnyValue(myField.getText());
 
@@ -108,6 +115,7 @@ public class TipiTextField extends TipiSwingComponentImpl {
 
 		myField.addFocusListener(new FocusListener() {
 
+			@Override
 			public void focusGained(FocusEvent e) {
 				try {
 					performTipiEvent("onFocusGained", null, false);
@@ -118,6 +126,7 @@ public class TipiTextField extends TipiSwingComponentImpl {
 				}
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				try {
 					performTipiEvent("onFocusLost", null, false);
@@ -153,6 +162,7 @@ public class TipiTextField extends TipiSwingComponentImpl {
 	// return super.getComponentValue(name);
 	// }
 
+	@Override
 	protected void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event)
 			throws TipiBreakException {
@@ -168,6 +178,7 @@ public class TipiTextField extends TipiSwingComponentImpl {
 		}
 		if (name.equals("selectAll")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					myField.selectAll();
 				}

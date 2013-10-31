@@ -1,10 +1,7 @@
 package com.dexels.navajo.tipi.internal.cache.impl;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -57,20 +54,6 @@ public class LocalDigestCacheValidator implements CacheValidator {
 		loadDigestFile(LOCAL_DIGEST_PROPERTIES);
 		loadRemoteDigestFile(REMOTE_DIGEST_PROPERTIES);
 		
-	}
-	
-	private final void copyResource(OutputStream out, InputStream in)
-			throws IOException {
-		BufferedInputStream bin = new BufferedInputStream(in);
-		BufferedOutputStream bout = new BufferedOutputStream(out);
-		byte[] buffer = new byte[1024];
-		int read;
-		while ((read = bin.read(buffer)) > -1) {
-			bout.write(buffer, 0, read);
-		}
-		bin.close();
-		bout.flush();
-		bout.close();
 	}
 
 	@Override

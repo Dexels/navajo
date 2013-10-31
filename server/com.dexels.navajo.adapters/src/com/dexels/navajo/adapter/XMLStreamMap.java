@@ -31,10 +31,12 @@ public class XMLStreamMap implements Mappable {
 			.getLogger(XMLStreamMap.class);
 	
 	// @Override
+	@Override
 	public void kill() {
 	}
 
 	// @Override
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		try {
 			content = new Binary();
@@ -130,6 +132,7 @@ public class XMLStreamMap implements Mappable {
 	}
 
 	// @Override
+	@Override
 	public void store() throws MappableException, UserException {
 
 	}

@@ -156,7 +156,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  return all;
   }
   
-  public final String getDatasourceUrl(String datasource) {
+  @Override
+public final String getDatasourceUrl(String datasource) {
 	  SQLMapBroker b = brokerMap.get(datasource);
 	  if ( b != null ) {
 		  return b.getUrl();
@@ -165,7 +166,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  }
   }
   
-  public synchronized int getMaxConnectionsByDatasource(String datasource) {
+  @Override
+public synchronized int getMaxConnectionsByDatasource(String datasource) {
 	  SQLMapBroker b = brokerMap.get(datasource);
 	  if ( b != null && b.broker != null ) {
 		  return b.broker.getMaxCount();
@@ -174,14 +176,16 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  }
   }
   
-  public synchronized void setMaxConnectionsByDatasource(String datasource, int connections) {
+  @Override
+public synchronized void setMaxConnectionsByDatasource(String datasource, int connections) {
 	  // Block all new requests. 
 	  // Wait until all connections are freed.
 	  // Reinitialize conns array.
 	  // Release block.
   }
   
-  public final String getDatasourceUsername(String datasource) {
+  @Override
+public final String getDatasourceUsername(String datasource) {
 	  SQLMapBroker b = brokerMap.get(datasource);
 	  if ( b != null ) {
 		  return b.username;
@@ -374,11 +378,13 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  return DbConnectionBroker.getInstances();
   }
   
-  public int getDatasourceCount() {
+  @Override
+public int getDatasourceCount() {
 	  return brokerMap.size();
   }
   
-  public int getActiveConnections() {
+  @Override
+public int getActiveConnections() {
 	  Iterator<SQLMapBroker> all = brokerMap.values().iterator();
 	  int total = 0;
 	  while ( all.hasNext() ) {
@@ -390,7 +396,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  return total;
   }
   
-  public int getActiveConnectionsByUrl(String url) {
+  @Override
+public int getActiveConnectionsByUrl(String url) {
 	  Set<SQLMapBroker> brokers = getBrokersByUrl(url);
 	  int total = 0;
 	  if ( brokers.size() > 0 ) {
@@ -403,7 +410,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  return total;
   }
 
-  public int getActiveConnectionsByDatasource(String datasource) {
+  @Override
+public int getActiveConnectionsByDatasource(String datasource) {
 	  SQLMapBroker broker = brokerMap.get(datasource);
 	  if ( broker != null && broker.broker != null ) {
 		  return broker.broker.getUseCount();
@@ -411,7 +419,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  return -1;
   }
   
-  public String getDefinedDatasources() {
+  @Override
+public String getDefinedDatasources() {
 	  Iterator<SQLMapBroker> all = brokerMap.values().iterator();
 	  StringBuffer sb = new StringBuffer();
 	  while ( all.hasNext() ) {
@@ -424,7 +433,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  }
   }
   
-  public int getHealthByUrl(String url) {
+  @Override
+public int getHealthByUrl(String url) {
 	  
 	  int maxHealth = 0;
 	  Set<SQLMapBroker> brokers = getBrokersByUrl(url);
@@ -443,7 +453,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  return maxHealth;
   }
 	
-  public int getHealth(String datasource) {
+  @Override
+public int getHealth(String datasource) {
 	  SQLMapBroker broker = ( this.brokerMap.get(datasource.replaceAll("'", "")));
 	  if ( broker == null ) {
 		  try {
@@ -459,7 +470,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  return broker.health;
 	}
   
-  public void setHealth(String datasource, int h) {
+  @Override
+public void setHealth(String datasource, int h) {
 	  SQLMapBroker broker = ( this.brokerMap.get(datasource.replaceAll("'", "")));
 	  if ( broker == null ) {
 		  logger.warn("Could not set health of resource: " + datasource);
@@ -468,7 +480,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 	  }
   }
   
-  public void setHealthByUrl(String url, int health) {
+  @Override
+public void setHealthByUrl(String url, int health) {
 	  Set<SQLMapBroker> brokers = getBrokersByUrl(url);
 	  if ( brokers.size() > 0 ) {
 		 Iterator<SQLMapBroker> i = brokers.iterator();
@@ -485,7 +498,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
    * This function checks whether the resource is available (true) or temporarily unavailable.
    * 
    */
-  public boolean isAvailable(String datasource) {
+  @Override
+public boolean isAvailable(String datasource) {
 
 	  // Make sure to strip "'". 
 	  SQLMapBroker broker = ( this.brokerMap.get(datasource.replaceAll("'", "")));
@@ -513,7 +527,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
 
   private int currentWaitingTime = 0;
   
-  public int getWaitingTime(String resourceId) {
+  @Override
+public int getWaitingTime(String resourceId) {
 	  currentWaitingTime += 500; // Offset current waiting time...
 	  return currentWaitingTime;
   }
@@ -589,7 +604,8 @@ public class ConnectionBrokerManager extends Object implements ResourceManager, 
     	
     }
 
-    public Object clone() {
+    @Override
+	public Object clone() {
       final SQLMapBroker y = new SQLMapBroker(
           this.datasource, this.driver, this.url, this.username, this.password,
           this.minconnections,

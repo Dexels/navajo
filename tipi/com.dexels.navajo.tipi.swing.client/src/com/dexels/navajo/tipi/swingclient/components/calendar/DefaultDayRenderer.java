@@ -46,10 +46,12 @@ public class DefaultDayRenderer extends JPanel implements DayRendererInterface {
 	public DefaultDayRenderer() {
 	}
 
+	@Override
 	public Component getComponent() {
 		return this;
 	}
 
+	@Override
 	public void setDay(Day d) {
 		// myDay = d;
 		myLabel = d.getDateString();
@@ -102,10 +104,12 @@ public class DefaultDayRenderer extends JPanel implements DayRendererInterface {
 		}
 	}
 
+	@Override
 	public void setSelected(boolean value) {
 		isSelected = value;
 	}
 
+	@Override
 	public void setAnchor(boolean value) {
 		isAnchor = value;
 	}

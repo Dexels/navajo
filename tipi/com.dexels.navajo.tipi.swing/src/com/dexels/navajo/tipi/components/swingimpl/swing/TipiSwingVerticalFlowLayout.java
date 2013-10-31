@@ -28,6 +28,7 @@ public class TipiSwingVerticalFlowLayout extends FlowLayout {
 		return 0;
 	}
 
+	@Override
 	public Dimension preferredLayoutSize(Container container) {
 		Dimension dimension2;
 		synchronized (container.getTreeLock()) {

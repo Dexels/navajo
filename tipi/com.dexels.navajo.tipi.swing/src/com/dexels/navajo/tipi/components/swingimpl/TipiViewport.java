@@ -35,6 +35,7 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 	private JPanel clientPanel;
 	private JViewport view;
 
+	@Override
 	public Object createContainer() {
 		view = new TipiSwingViewport();
 		left = new JPanel();
@@ -50,6 +51,7 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 		view.setOpaque(false);
 		view.addComponentListener(new ComponentAdapter() {
 
+			@Override
 			public void componentResized(ComponentEvent e) {
 				updateClientSize(view);
 			}
@@ -60,6 +62,7 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 		return view;
 	}
 
+	@Override
 	public void initBeforeBuildingChildren(XMLElement instance,
 			XMLElement classdef, XMLElement definition) {
 		String constraint = null;
@@ -90,6 +93,7 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 		clientPanel.doLayout();
 	}
 
+	@Override
 	public void addToContainer(Object c, Object constraints) {
 		if (constraints == null) {
 			throw new IllegalArgumentException(
@@ -142,6 +146,7 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 		clientPanel.setLayout(new BoxLayout(clientPanel, axis));
 	}
 
+	@Override
 	public void setComponentValue(String name, final Object object) {
 		super.setComponentValue(name, object);
 		// if (name.equals("x")) {

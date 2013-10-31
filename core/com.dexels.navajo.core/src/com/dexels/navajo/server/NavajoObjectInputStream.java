@@ -20,6 +20,7 @@ public final class NavajoObjectInputStream extends ObjectInputStream {
 		this.classLoader = classLoader;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	protected Class resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
 		return Class.forName(desc.getName(), false, classLoader);

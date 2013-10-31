@@ -51,6 +51,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 	}
 
 
+	@Override
 	public String hasErrors(Navajo n) {
 		if (n != null) {
 			Message error = n.getMessage("error");
@@ -116,6 +117,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 		return id;
 	}
 
+	@Override
 	public void setContext(TipiContext c) {
 		context = c;
 		if (errorMessageBundle == null) {
@@ -135,6 +137,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 		}
 	}
 
+	@Override
 	public TipiContext getContext() {
 		return context;
 	}

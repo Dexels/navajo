@@ -31,9 +31,11 @@ public class ForAll extends FunctionInterface {
 	
 	public ForAll() {
 	}
+	@Override
 	public String remarks() {
 		return "Evaluates a condition (expression evaluating to a boolean) under all the messages of an array message. It will return a 'AND' of all the results";
 	}
+	@Override
 	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		/**@todo Implement this com.dexels.navajo.parser.FunctionInterface abstract method*/
         Message arrayMessage = null;
@@ -111,6 +113,7 @@ public class ForAll extends FunctionInterface {
 		
 		return Boolean.TRUE;
 	}
+	@Override
 	public String usage() {
 		return "ForAll('ArrayMessage','Expression'[, 'Filter']) *ArrayMessage can be both a path and a message";
 	}

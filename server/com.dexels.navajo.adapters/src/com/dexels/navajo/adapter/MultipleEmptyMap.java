@@ -17,13 +17,16 @@ import com.dexels.navajo.script.api.UserException;
 
 public class MultipleEmptyMap implements Mappable {
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
   }
 
-  public void kill() {
+  @Override
+public void kill() {
   }
   
   public void setLoop(com.dexels.navajo.adapter.EmptyMap [] emptyMaps) {

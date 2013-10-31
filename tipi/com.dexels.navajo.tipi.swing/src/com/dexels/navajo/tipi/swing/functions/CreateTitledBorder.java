@@ -20,6 +20,7 @@ public class CreateTitledBorder extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Creates a titled border based on a string and optionally a font style";
 	}
@@ -29,6 +30,7 @@ public class CreateTitledBorder extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "CreateTitledBorder(String title, [String style])";
 	}
@@ -39,6 +41,7 @@ public class CreateTitledBorder extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
 		Object ss = null;

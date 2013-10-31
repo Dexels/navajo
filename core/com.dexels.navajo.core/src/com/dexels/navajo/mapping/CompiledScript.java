@@ -59,11 +59,11 @@ import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionData;
 import com.dexels.navajo.server.DispatcherFactory;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","rawtypes"})
 public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, CompiledScriptInterface  {
 
   protected NavajoClassSupplier classLoader;
-  private final HashMap functions = new HashMap();
+private final HashMap functions = new HashMap();
 
   /**
    * Fields accessable by webservice via Mappable interface.
@@ -126,26 +126,17 @@ private final static Logger logger = LoggerFactory
   @SuppressWarnings("unused")
   private ThreadInfo myThread = null;
 
-  /* (non-Javadoc)
- * @see com.dexels.navajo.script.api.CompiledScriptInterface#getScriptName()
- */
-@Override
+  @Override
 public String getScriptName() {
 	  return getClass().getName();
   }
   
-  /* (non-Javadoc)
- * @see com.dexels.navajo.script.api.CompiledScriptInterface#getUser()
- */
-@Override
+  @Override
 public String getUser() {
 	  return myAccess.rpcUser;
   }
   
-  /* (non-Javadoc)
- * @see com.dexels.navajo.script.api.CompiledScriptInterface#getAccessId()
- */
-@Override
+  @Override
 public String getAccessId() {
 	  return myAccess.accessID;
   }
@@ -159,18 +150,11 @@ public String getAccessId() {
 public void setInDoc(Navajo inDoc) {
 	this.inDoc = inDoc;
 }
-
-/* (non-Javadoc)
- * @see com.dexels.navajo.script.api.CompiledScriptInterface#getThreadName()
- */
 @Override
 public String getThreadName() {
 	  return DispatcherFactory.getInstance().getThreadName(myAccess);
   }
   
-  /* (non-Javadoc)
- * @see com.dexels.navajo.script.api.CompiledScriptInterface#isWaiting()
- */
 @Override
 public boolean isWaiting() {
 	  return getWaiting();
@@ -184,33 +168,21 @@ public boolean getWaiting() {
 	  return false;
   }
   
-  /* (non-Javadoc)
- * @see com.dexels.navajo.script.api.CompiledScriptInterface#getLockName()
- */
 @Override
 public String getLockName() {
 	  return "";
   }
   
-  /* (non-Javadoc)
- * @see com.dexels.navajo.script.api.CompiledScriptInterface#getLockOwner()
- */
 @Override
 public String getLockOwner() {
 	  return "";
   }
   
-  /* (non-Javadoc)
- * @see com.dexels.navajo.script.api.CompiledScriptInterface#getLockClass()
- */
 @Override
 public String getLockClass() {
 	  return "";
   }
   
-  /* (non-Javadoc)
- * @see com.dexels.navajo.script.api.CompiledScriptInterface#getStackTrace()
- */
 @Override
 public String getStackTrace() {
 
@@ -222,17 +194,11 @@ public String getStackTrace() {
 	  return stackTrace.toString();
   }
   
-  /* (non-Javadoc)
- * @see com.dexels.navajo.script.api.CompiledScriptInterface#getRunningTime()
- */
 @Override
 public long getRunningTime() {
 	  return System.currentTimeMillis() -  myAccess.created.getTime();
   }
   
-  /* (non-Javadoc)
- * @see com.dexels.navajo.script.api.CompiledScriptInterface#kill()
- */
 @Override
 public void kill() {
 	  System.err.println("Calling kill from JMX");
@@ -550,7 +516,8 @@ public final Object getFunction(String name) throws Exception {
     return f;
   }
 
-  protected void finalize() {
+  @Override
+protected void finalize() {
 	  functions.clear();
   }
   
@@ -591,17 +558,11 @@ public void releaseCompiledScript() {
 	  classLoader = null;
   }
   
-  /* (non-Javadoc)
- * @see com.dexels.navajo.script.api.CompiledScriptInterface#load(com.dexels.navajo.api.Access)
- */
 @Override
 public void load(Access access) throws MappableException, UserException {
   }
 
-  /* (non-Javadoc)
- * @see com.dexels.navajo.script.api.CompiledScriptInterface#store()
- */
-@Override
+  @Override
 public void store() throws MappableException, UserException {
   }
  

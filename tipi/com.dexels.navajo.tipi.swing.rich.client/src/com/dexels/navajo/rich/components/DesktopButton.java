@@ -80,6 +80,7 @@ public class DesktopButton extends JButton {
 		setIconUrl(imagepath);
 	}
 	
+	@Override
 	public void setEnabled(boolean enabled){
 		super.setEnabled(enabled);
 		setShowSpring(enabled);		
@@ -91,6 +92,7 @@ public class DesktopButton extends JButton {
 		setOpaque(false);
 
 		this.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseEntered(MouseEvent e) {
 				mouseover = true;
 				if (!animating && isEnabled()) {
@@ -98,6 +100,7 @@ public class DesktopButton extends JButton {
 				}
 			}
 
+			@Override
 			public void mouseExited(MouseEvent e) {
 				mouseover = false;
 				if (!animating && isEnabled()) {
@@ -107,12 +110,14 @@ public class DesktopButton extends JButton {
 		});
 
 		addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				fireSpring();
 			}
 		});
 	}
 
+	@Override
 	public Dimension getPreferredSize() {
 			
 		FontMetrics mA = getFontMetrics(textFont);
@@ -152,6 +157,7 @@ public class DesktopButton extends JButton {
 		return new Dimension(width, height);
 	}
 
+	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		Dimension bounds = getPreferredSize();
@@ -194,6 +200,7 @@ public class DesktopButton extends JButton {
 		if (direction) {
 			Animator animator = PropertySetter.createAnimator(animation_speed, this, "glow", max_opacity, 1.0f);
 			animator.addTarget(new TimingTargetAdapter() {
+				@Override
 				public void end() {
 					animating = false;
 					if (!mouseover) {
@@ -208,6 +215,7 @@ public class DesktopButton extends JButton {
 		} else {
 			Animator animator = PropertySetter.createAnimator(animation_speed, this, "glow", 1.0f, max_opacity);
 			animator.addTarget(new TimingTargetAdapter() {
+				@Override
 				public void end() {
 					animating = false;
 					if (mouseover) {

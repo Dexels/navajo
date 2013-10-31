@@ -9,14 +9,17 @@ import com.dexels.navajo.server.DispatcherFactory;
 
 public class GetContextResource extends FunctionInterface {
 
+	@Override
 	public String remarks() {
 		return "GetContextResource gets the contents of a file in the <context>/resources folder";
 	}
 
+	@Override
 	public String usage() {
 		return "GetContextResource(filename)";
 	}
 
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		java.io.File contextRoot = DispatcherFactory.getInstance().getNavajoConfig().getContextRoot();
 		java.io.File res = new java.io.File(contextRoot,"resources");

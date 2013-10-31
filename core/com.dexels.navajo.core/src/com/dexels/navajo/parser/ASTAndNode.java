@@ -7,7 +7,8 @@ public final class ASTAndNode extends SimpleNode {
         super(id);
     }
 
-    public final Object interpret() throws TMLExpressionException {
+    @Override
+	public final Object interpret() throws TMLExpressionException {
 
         Boolean a = (Boolean) jjtGetChild(0).interpret();
 

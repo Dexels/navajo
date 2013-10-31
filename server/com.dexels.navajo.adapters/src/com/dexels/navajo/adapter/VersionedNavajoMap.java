@@ -14,7 +14,6 @@ package com.dexels.navajo.adapter;
  * The purpose of this adapter is to use it for checking data changes between
  * an original query and the subsequent update.
  */
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -36,7 +35,8 @@ public class VersionedNavajoMap extends NavajoMap {
 		private final static Logger logger = LoggerFactory
 				.getLogger(VersionedNavajoMap.class);
 		
- public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException {
+ @Override
+public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException {
 
 	 
      super.setDoSend(method);
@@ -89,7 +89,7 @@ public class VersionedNavajoMap extends NavajoMap {
   public static void main(String [] args) throws Exception {
      Navajo n = NavajoFactory.getInstance().createNavajo(new java.io.FileInputStream("/home/arjen/@@.tml"));
      n.write(System.err);
-     ArrayList l = n.getAllMethods();
+     List<Method> l = n.getAllMethods();
      logger.debug("l = " + l.size());
      System.exit(1);
   }

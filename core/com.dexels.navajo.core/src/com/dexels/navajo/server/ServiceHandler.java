@@ -63,7 +63,8 @@ public abstract class ServiceHandler implements Constructor {
      * @return
      * @throws Exception
      */
-    public final Persistable construct() throws Exception {
+    @Override
+	public final Persistable construct() throws Exception {
         return doService();
     }
 

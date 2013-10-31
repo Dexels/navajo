@@ -47,6 +47,7 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
 	public TipiCardPanel() {
 	}
 
+	@Override
 	public Object createContainer() {
 		JPanel jt = new JPanel();
 		jt.setLayout(myCardLayout);
@@ -56,10 +57,12 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
 		return jt;
 	}
 
+	@Override
 	public void addToContainer(final Object c, final Object constraints) {
 
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				TipiComponent tc = myComponentMap.get(c);
 				if (tc != null) {
@@ -71,6 +74,7 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
 
 	}
 
+	@Override
 	public void setComponentValue(String name, Object object) {
 		super.setComponentValue(name, object);
 		if (name.equals("selected")) {
@@ -90,6 +94,7 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
 		}
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if (name.equals("selected")) {
 			return selectedComponent;
@@ -100,6 +105,7 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	public void addComponent(TipiComponent c, TipiContext context, Object td) {
 		if (c.getContainer() != null) {
 			myComponentList.add(c);
@@ -111,6 +117,7 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
 		super.addComponent(c, context, td);
 	}
 
+	@Override
 	public void removeChild(TipiComponent child) {
 		myComponentList.remove(child);
 		myComponentMap.remove(child);

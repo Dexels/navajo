@@ -52,6 +52,7 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
 		super(tmt);
 	}
 
+	@Override
 	public void loadLayer(XMLElement elt) {
 		super.loadLayer(elt);
 		/**
@@ -78,6 +79,7 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
 		scroll = elt.getBooleanAttribute("scroll", "true", "false", false);
 	}
 
+	@Override
 	public void loadData(final Navajo n, Message current,
 			Stack<TipiTableBaseLayer> layerStack, final JComponent currentPanel) {
 		Message nextMessage = null;
@@ -97,6 +99,7 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
 		final Message msg = nextMessage;
 		Runnable rr = new Runnable() {
 
+			@Override
 			public void run() {
 				JPanel jt = new JPanel();
 				BoxLayout myLayout = new BoxLayout(jt, direction);
@@ -159,6 +162,7 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
 		}
 	}
 
+	@Override
 	public XMLElement store() {
 		XMLElement newElt = super.store();
 		newElt.setAttribute("type", "scroll");
@@ -177,11 +181,13 @@ public class TipiScrollLayer extends TipiTableBaseLayer {
 		return newElt;
 	}
 
+	@Override
 	public int getCurrentSelection() {
 
 		return -1;
 	}
 
+	@Override
 	public void setCurrentSelection(int s) {
 
 	}

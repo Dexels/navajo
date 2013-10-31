@@ -17,6 +17,7 @@ public  class AbstractVersion extends BaseVersion implements BundleActivator {
 	
 	protected BundleContext context = null;
 	
+	@Override
 	public void start(BundleContext bc) throws Exception {
 		context = bc;
 //		defaultContext = bc;
@@ -41,6 +42,7 @@ public  class AbstractVersion extends BaseVersion implements BundleActivator {
 		return context;
 	}
 
+	@Override
 	public void stop(BundleContext arg0) throws Exception {
 		context = null;
 		

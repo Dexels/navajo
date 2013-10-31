@@ -17,6 +17,7 @@ public class EmptyBinary extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Creates an empty binary object";
 	}
@@ -24,6 +25,7 @@ public class EmptyBinary extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "EmptyBinary()";
 	}
@@ -31,6 +33,7 @@ public class EmptyBinary extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 	    if (getOperands().size()>0) {
             throw new TMLExpressionException(this, "No operands expected. ");

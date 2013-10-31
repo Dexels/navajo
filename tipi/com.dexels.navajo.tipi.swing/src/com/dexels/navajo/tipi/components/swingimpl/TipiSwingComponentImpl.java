@@ -35,6 +35,7 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl
 	// private boolean committedInUI;
 	protected SwingTipiContext mySwingTipiContext;
 
+	@Override
 	public void showPopup(MouseEvent e) {
 		((JPopupMenu) myPopupMenu.getSwingContainer()).show(
 				getSwingContainer(), e.getX(), e.getY());
@@ -43,6 +44,7 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl
 	public void setWaitCursor(final boolean b, final JRootPane root) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				if (root != null) {
 					root.setCursor(b ? Cursor
@@ -54,6 +56,7 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl
 
 	}
 
+	@Override
 	public void setPaint(Paint p) {
 		this.myPaint = (TipiGradientPaint) p;
 	}
@@ -62,10 +65,12 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl
 		return myPaint;
 	}
 
+	@Override
 	public void initContainer() {
 		mySwingTipiContext = (SwingTipiContext) myContext;
 		if (getContainer() == null) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					setContainer(createContainer());
 				}
@@ -73,34 +78,42 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl
 		}
 	}
 
+	@Override
 	public Container getSwingContainer() {
 		return (Container) getContainer();
 	}
 
+	@Override
 	public Object getContainerLayout() {
 		return getSwingContainer().getLayout();
 	}
 
+	@Override
 	public void setContainerLayout(Object layout) {
 		((Container) getContainer()).setLayout((LayoutManager) layout);
 	}
 
+	@Override
 	public void addToContainer(final Object c, final Object constraints) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				getSwingContainer().add((Component) c, constraints);
 			}
 		});
 	}
 
+	@Override
 	public void removeFromContainer(final Object c) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				getSwingContainer().remove((Component) c);
 			}
 		});
 	}
 
+	@Override
 	public void animateTransition(TipiEvent te,
 			TipiExecutable executableParent, List<TipiExecutable> exe,
 			int duration) throws TipiBreakException {
@@ -108,10 +121,12 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl
 				getSwingContainer(), exe, duration);
 	}
 
+	@Override
 	protected void loadValues(final XMLElement values, final TipiEvent event)
 			throws TipiException {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				try {
 					TipiSwingComponentImpl.super.loadValues(values, event);
@@ -122,9 +137,11 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl
 		});
 	}
 
+	@Override
 	public void loadStartValues(final XMLElement element, final TipiEvent event) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				TipiSwingComponentImpl.super.loadStartValues(element, event);
 
@@ -132,9 +149,11 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl
 		});
 	}
 
+	@Override
 	protected void doCallSetter(final Object component,
 			final String propertyName, final Object param) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				TipiSwingComponentImpl.super.doCallSetter(component,
 						propertyName, param);

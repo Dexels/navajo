@@ -84,6 +84,7 @@ public class PropertyCellEditor implements TableCellEditor,
 		rowButton.setFont(new Font(rowButton.getFont().getName(), Font.BOLD,
 				rowButton.getFont().getSize()));
 		rowButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					myTable.showEditDialog("Edit", lastSelectedRow);
@@ -94,6 +95,7 @@ public class PropertyCellEditor implements TableCellEditor,
 		});
 	}
 
+	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value,
 			boolean isSelected, int row, int column) {
 		// Edit button in first column
@@ -156,6 +158,7 @@ public class PropertyCellEditor implements TableCellEditor,
 						myMultiSelectPropertyBox = new MultiSelectPropertyBox();
 						myMultiSelectPropertyBox
 								.addItemListener(new ItemListener() {
+									@Override
 									public void itemStateChanged(ItemEvent e) {
 										logger.info(">>> "
 												+ e.getStateChange());
@@ -198,6 +201,7 @@ public class PropertyCellEditor implements TableCellEditor,
 						});
 
 						myPropertyBox.addItemListener(new ItemListener() {
+							@Override
 							public void itemStateChanged(ItemEvent e) {
 								logger.info(">>> " + e.getStateChange());
 								if (ItemEvent.SELECTED == e.getStateChange()) {
@@ -233,6 +237,7 @@ public class PropertyCellEditor implements TableCellEditor,
 					final PropertyBox x = myPropertyBox;
 					SwingUtilities.invokeLater(new Runnable() {
 
+						@Override
 						public void run() {
 							x.setPopupVisible(true);
 
@@ -248,6 +253,7 @@ public class PropertyCellEditor implements TableCellEditor,
 				if (myPropertyCheckBox == null) {
 					myPropertyCheckBox = new PropertyCheckBox();
 					myPropertyCheckBox.addActionListener(new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							// stopCellEditing();
 							// logger.info("CHECKBOX FIRED TOWARDS EDITOR");
@@ -575,6 +581,7 @@ public class PropertyCellEditor implements TableCellEditor,
 
 	// private fireUpdate(
 
+	@Override
 	public void cancelCellEditing() {
 		for (int i = 0; i < myListeners.size(); i++) {
 			CellEditorListener ce = myListeners.get(i);
@@ -582,6 +589,7 @@ public class PropertyCellEditor implements TableCellEditor,
 		}
 	}
 
+	@Override
 	public boolean stopCellEditing() {
 		// logger.info("--------------------------------------------------------------->> Entering stopCellEditor!!!");
 		// if (lastComponent != null) {
@@ -659,10 +667,12 @@ public class PropertyCellEditor implements TableCellEditor,
 		}
 	}
 
+	@Override
 	public Object getCellEditorValue() {
 		return myProperty;
 	}
 
+	@Override
 	public boolean isCellEditable(EventObject e) {
 
 		if (myTable != null) {
@@ -685,20 +695,24 @@ public class PropertyCellEditor implements TableCellEditor,
 		return myProperty;
 	}
 
+	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		/** @todo: Implement this javax.swing.event.ListSelectionListener method */
 		throw new java.lang.UnsupportedOperationException(
 				"Method valueChanged() not yet implemented.");
 	}
 
+	@Override
 	public boolean shouldSelectCell(EventObject parm1) {
 		return true;
 	}
 
+	@Override
 	public void addCellEditorListener(CellEditorListener ce) {
 		myListeners.add(ce);
 	}
 
+	@Override
 	public void removeCellEditorListener(CellEditorListener ce) {
 		myListeners.remove(ce);
 	}
@@ -712,11 +726,13 @@ public class PropertyCellEditor implements TableCellEditor,
 		return false;
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent p) {
 		final PropertyControlled tc = (PropertyControlled) lastComponent;
 		if (lastComponent != null) {
 			if (myProperty == tc.getProperty()) {
 				runSyncInEventThread(new Runnable() {
+					@Override
 					public void run() {
 						tc.setProperty(myProperty);
 					}

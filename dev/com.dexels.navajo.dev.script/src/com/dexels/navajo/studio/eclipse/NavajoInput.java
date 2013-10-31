@@ -22,27 +22,33 @@ public class NavajoInput extends PlatformObject implements IStorageEditorInput {
     public NavajoInput(String name,Navajo n) {
          myStorage = new NavajoStorage(name,n);
     }
-    public IStorage getStorage() throws CoreException {
+    @Override
+	public IStorage getStorage() throws CoreException {
         return myStorage;
     }
 
-    public boolean exists() {
+    @Override
+	public boolean exists() {
         return true;
     }
 
-    public ImageDescriptor getImageDescriptor() {
+    @Override
+	public ImageDescriptor getImageDescriptor() {
         return null;
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         return myStorage.getName()+".xml";
     }
 
-    public IPersistableElement getPersistable() {
+    @Override
+	public IPersistableElement getPersistable() {
            return null;
     }
 
-    public String getToolTipText() {
+    @Override
+	public String getToolTipText() {
         return "TML Browser source: "+myStorage.getName();
     }
 

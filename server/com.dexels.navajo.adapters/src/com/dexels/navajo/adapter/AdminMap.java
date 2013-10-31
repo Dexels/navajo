@@ -25,6 +25,7 @@ import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerInterface;
 
+@Deprecated
 public class AdminMap implements Mappable {
 
   public int openConnections;
@@ -85,7 +86,8 @@ public class AdminMap implements Mappable {
 
   private Access myAccess = null;
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
 	NavajoConfigInterface nc = DispatcherFactory.getInstance().getNavajoConfig();
     scriptPath = nc.getScriptPath();
     configPath = nc.getConfigPath();
@@ -245,10 +247,12 @@ public AsyncProxy [] getAsyncThreads() {
 	   return d.toArray(ams);
    }
 
-   public void store() throws MappableException, UserException {
+   @Override
+public void store() throws MappableException, UserException {
    }
 
-   public void kill() {
+   @Override
+public void kill() {
 
   }
   public void setAsyncThreads(AsyncProxy[] asyncThreads) {

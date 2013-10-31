@@ -30,46 +30,56 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 	public String bcc;
 	public String text;
 	
+	@Override
 	public void setAttachment(AttachmentMapInterface m) {
 		logger.info("In DummyMailMap, setAttachment(" + m + ")");
 	}
 
+	@Override
 	public void setBcc(String bcc) {
 		logger.info("In DummyMailMap, setBcc(" + bcc + ")");	
 		this.bcc = bcc;
 	}
 
+	@Override
 	public void setCc(String cc) {
 		logger.info("In DummyMailMap, setCc(" + cc + ")");	
 		this.cc = cc;
 	}
 
+	@Override
 	public void setContentType(String s) {
 		logger.info("In DummyMailMap, setContentType(" + s + ")");	
 	}
 
+	@Override
 	public void setIgnoreFailures(boolean b) {
 		logger.info("In DummyMailMap, setIgnoreFailures(" + b + ")");
 	}
 
+	@Override
 	public void setMailServer(String s) {
 		logger.info("In DummyMailMap, setMailServer(" + s + ")");
 	}
 
+	@Override
 	public void setMultipleAttachments(AttachmentMapInterface[] c) {
 		logger.info("In DummyMailMap, setMultipleAttachments size: " + c.length );
 		this.multipleAttachments = (DummyAttachmentMap []) c;
 	}
 
+	@Override
 	public void setRecipients(String s) {
 		logger.info("In DummyMailMap, setRecipients(" + s + ")");
 		this.recipients = s;
 	}
 
+	@Override
 	public void setRelatedMultipart(boolean b) {
 		logger.info("In DummyMailMap, setRelatedMultipart(" + b + ")");
 	}
 
+	@Override
 	public void setSender(String s) {
 		logger.info("In DummyMailMap, setSender(" + s + ")");
 		this.sender = s;
@@ -79,28 +89,34 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 		return this.sender;
 	}
 
+	@Override
 	public void setSubject(String s) {
 		logger.info("In DummyMailMap, setSubject(" + s + ")");
 		this.subject = s;
 	}
 
+	@Override
 	public void setText(String s) {
 		logger.info("In DummyMailMap, setText(" + s + ")");
 		this.text = s;
 	}
 
+	@Override
 	public void setXslFile(String s) {
 		logger.info("In DummyMailMap, setXslFile(" + s + ")");
 	}
 
+	@Override
 	public void kill() {
 		
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 		String mailStore = DispatcherFactory.getInstance().getNavajoConfig().getRootPath() + "/log/dummymailmap.log";
 		try {

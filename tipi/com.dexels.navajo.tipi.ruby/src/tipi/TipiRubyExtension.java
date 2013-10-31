@@ -11,6 +11,7 @@ public class TipiRubyExtension extends TipiAbstractXMLExtension implements TipiE
 	public TipiRubyExtension() {
 	}
 
+	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
 	}

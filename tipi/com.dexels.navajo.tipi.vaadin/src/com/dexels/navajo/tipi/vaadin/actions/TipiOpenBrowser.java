@@ -38,7 +38,8 @@ public class TipiOpenBrowser extends TipiVaadinActionImpl {
      * 
      * @see com.dexels.navajo.tipi.internal.TipiAction#execute(com.dexels.navajo.tipi.internal.TipiEvent)
      */
-    protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
+    @Override
+	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
         Object url  = getEvaluatedParameterValue("url", event);
 		Object newWindow = getEvaluatedParameterValue("newWindow",
 				event);

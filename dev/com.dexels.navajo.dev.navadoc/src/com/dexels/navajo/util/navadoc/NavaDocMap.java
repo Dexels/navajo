@@ -9,11 +9,13 @@ public class NavaDocMap implements Mappable{
 
 	public String configUri = null;
 	
+	@Override
 	public void kill() {
 		
 	}
 
 	
+	@Override
 	public void store() throws MappableException, UserException {
   	System.setProperty("configUri", configUri);
 		NavaDoc documenter = null;
@@ -36,6 +38,7 @@ public class NavaDocMap implements Mappable{
 		return this.configUri;		
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		
 	}

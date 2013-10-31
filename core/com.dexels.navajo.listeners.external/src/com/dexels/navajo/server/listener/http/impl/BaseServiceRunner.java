@@ -70,6 +70,7 @@ public abstract class BaseServiceRunner  implements
 	}
 
 	
+	@Override
 	public final void setScheduledAt(long scheduledAt) {
 		this.scheduledAt = scheduledAt;
 	}
@@ -85,10 +86,12 @@ public abstract class BaseServiceRunner  implements
 		return (TmlScheduler) myQueue.getTmlScheduler();
 	}
 
+	@Override
 	public RequestQueue getRequestQueue() {
 		return myQueue;
 	}
 
+	@Override
 	public void setRequestQueue(RequestQueue myQueue) {
 		this.myQueue = myQueue;
 	}
@@ -176,6 +179,7 @@ public abstract class BaseServiceRunner  implements
 		}
 	}
 
+	@Override
 	public AsyncRequest getRequest() {
 		return myRequest;
 	}
@@ -207,10 +211,12 @@ public abstract class BaseServiceRunner  implements
 		}
 	}
 
+	@Override
 	public final void setCommitted(boolean b) {
 		this.committed = b;
 	}
 
+	@Override
 	public final boolean isCommitted() {
 		return committed;
 	}
@@ -247,6 +253,7 @@ public abstract class BaseServiceRunner  implements
 
 	}
 
+	@Override
 	public Navajo getResponseNavajo() {
 		return responseNavajo;
 	}

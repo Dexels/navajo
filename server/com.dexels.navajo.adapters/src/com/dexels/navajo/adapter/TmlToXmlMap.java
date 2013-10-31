@@ -72,13 +72,16 @@ public class TmlToXmlMap implements Mappable {
 		this.rootPath = rootPath;
 	}
 
+	@Override
 	public void kill() {
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		this.access = access;
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 

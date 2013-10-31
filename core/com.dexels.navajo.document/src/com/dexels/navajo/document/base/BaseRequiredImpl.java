@@ -40,6 +40,7 @@ public class BaseRequiredImpl implements Required {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.document.Required#setMethod(java.lang.String)
 	 */
+	@Override
 	public void setMessage(String s) {
 		message = s;
 	}
@@ -47,6 +48,7 @@ public class BaseRequiredImpl implements Required {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.document.Required#getMethod()
 	 */
+	@Override
 	public String getMessage() {
 		return message;
 	}
@@ -54,6 +56,7 @@ public class BaseRequiredImpl implements Required {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.document.Required#setFilter(java.lang.String)
 	 */
+	@Override
 	public void setFilter(String f) {
 		filter = f;
 	}
@@ -61,6 +64,7 @@ public class BaseRequiredImpl implements Required {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.document.Required#getFilter()
 	 */
+	@Override
 	public String getFilter() {
 		return filter;
 	}

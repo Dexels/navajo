@@ -32,7 +32,8 @@ public class CSVEntryMap implements Mappable {
   private int max = -1;
   private boolean update = false;
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
     newEntries = new HashMap<Integer,String>();
   }
 
@@ -62,7 +63,8 @@ public class CSVEntryMap implements Mappable {
 	  return entries.length;
   }
   
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
       if (update) {
           entries = new String[max+1];
           for (int i = 0; i < max+1; i++) {
@@ -74,7 +76,8 @@ public class CSVEntryMap implements Mappable {
       }
   }
 
-  public void kill() {
+  @Override
+public void kill() {
 
   }
 }

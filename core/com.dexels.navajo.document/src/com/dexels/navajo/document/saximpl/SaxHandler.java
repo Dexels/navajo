@@ -37,7 +37,8 @@ public final class SaxHandler implements DocHandler {
     }
 
       
-    public final void startElement(String tag, Hashtable<String,String> h) throws Exception {
+    @Override
+	public final void startElement(String tag, Hashtable<String,String> h) throws Exception {
 //        logger.info("starting element: "+tag+" attrs: "+h);
 //        currentTag = tag;
         
@@ -482,7 +483,8 @@ public final class SaxHandler implements DocHandler {
         }
     }
 
-    public final void endElement(String tag) throws Exception {
+    @Override
+	public final void endElement(String tag) throws Exception {
         if (tag.equals("tml")) {
          }
         if (tag.equals("message")) {
@@ -508,17 +510,20 @@ public final class SaxHandler implements DocHandler {
 
   
 
-    public final void startDocument() throws Exception {
+    @Override
+	public final void startDocument() throws Exception {
           reset();
     }
 
 
-    public final void endDocument() throws Exception {
+    @Override
+	public final void endDocument() throws Exception {
         
     }
 
 
-    public final void text(Reader r) throws Exception {
+    @Override
+	public final void text(Reader r) throws Exception {
         if (currentProperty==null) {
             return;
 //            throw new IllegalArgumentException("Huh?");
@@ -545,7 +550,8 @@ public final class SaxHandler implements DocHandler {
     }
 
 
-    public final String quoteStarted(int quoteCharacter, Reader r, String attributeName, String tagName,StringBuffer attributeBuffer) throws IOException {
+    @Override
+	public final String quoteStarted(int quoteCharacter, Reader r, String attributeName, String tagName,StringBuffer attributeBuffer) throws IOException {
         int c = 0;
         attributeBuffer.delete(0, attributeBuffer.length());
         while ((c = r.read()) != -1) {

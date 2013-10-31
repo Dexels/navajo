@@ -62,10 +62,12 @@ public class PropertyPasswordField extends JPasswordField implements
 
 	}
 
+	@Override
 	public Property getProperty() {
 		return initProperty;
 	}
 
+	@Override
 	public void setProperty(Property p) {
 		if (p == null) {
 			// logger.info("Setting to null property. Ignoring");
@@ -105,6 +107,7 @@ public class PropertyPasswordField extends JPasswordField implements
 		}
 	}
 
+	@Override
 	public void update() {
 		if (initProperty == null) {
 			return;

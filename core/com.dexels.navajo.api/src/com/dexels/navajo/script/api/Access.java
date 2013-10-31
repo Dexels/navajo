@@ -595,16 +595,19 @@ public final class Access implements java.io.Serializable, Mappable {
 		return this.accessID;
 	}
 
+	@Override
 	public void kill() {
 		if ( myScript != null ) {
 			myScript.kill();
 		}
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 		if ( myScript != null ) {
 			myScript.store();

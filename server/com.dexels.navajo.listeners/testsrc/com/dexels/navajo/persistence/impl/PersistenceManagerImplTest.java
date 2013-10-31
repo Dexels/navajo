@@ -27,6 +27,7 @@ class TestConstructor1 implements Constructor {
 		myPersistable = p;
 	}
 	
+	@Override
 	public Persistable construct() throws Exception {
 		Navajo n = (Navajo) myPersistable;
 		Property p = NavajoFactory.getInstance().createProperty((Navajo) myPersistable, "MyResultPropertyKey", 
@@ -45,6 +46,7 @@ class TestConstructor2 implements Constructor {
 		myPersistable = p;
 	}
 	
+	@Override
 	public Persistable construct() throws Exception {
 		Navajo n = (Navajo) myPersistable;
 		Property p = NavajoFactory.getInstance().createProperty((Navajo) myPersistable, "DuplicateProperty", 
@@ -57,6 +59,7 @@ class TestConstructor2 implements Constructor {
 
 public class PersistenceManagerImplTest extends CacheControllerTest {
 
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		
@@ -72,6 +75,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		DispatcherFactory.getInstance().setUseAuthorisation(false);
 	}
 
+	@Override
 	@After
 	public void tearDown() throws Exception {
 		super.tearDown();
@@ -133,6 +137,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		for ( int i = 0; i < MAXTHREADS; i++ ) {
 			final int index = i;
 			threads[i] = new Thread() {
+				@Override
 				public void run() {
 					pm.write(navajos[index], "TestKie", "MyTestWebservice");
 				}
@@ -169,6 +174,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		for ( int i = 0; i < MAXTHREADS; i++ ) {
 			final int index = i;
 			threads[i] = new Thread() {
+				@Override
 				public void run() {
 					pm.write(navajos[index], "TestKie-"+index, "MyTestWebservice");
 				}

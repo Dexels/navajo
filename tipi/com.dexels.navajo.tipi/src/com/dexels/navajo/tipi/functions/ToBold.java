@@ -18,6 +18,7 @@ public class ToBold extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Make text bold. Html-style (depending on 2nd parameter including html tag)";
 	}
@@ -27,6 +28,7 @@ public class ToBold extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "ToBold(string, boolean|empty) duh.";
 	}
@@ -36,6 +38,7 @@ public class ToBold extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
         String result = null;

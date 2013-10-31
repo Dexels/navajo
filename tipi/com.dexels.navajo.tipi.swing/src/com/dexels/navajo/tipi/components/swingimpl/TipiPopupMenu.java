@@ -32,6 +32,7 @@ public class TipiPopupMenu extends TipiSwingDataComponentImpl {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiPopupMenu.class);
+	@Override
 	public Object createContainer() {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		JPopupMenu myMenu = new JPopupMenu();
@@ -65,6 +66,7 @@ public class TipiPopupMenu extends TipiSwingDataComponentImpl {
 			Component c = (Component) parentContainer;
 			c.addMouseListener(new MouseAdapter() {
 
+				@Override
 				public void mousePressed(MouseEvent e) {
 					if (e.isPopupTrigger()) {
 						logger.debug("Showing popup for component: "
@@ -73,6 +75,7 @@ public class TipiPopupMenu extends TipiSwingDataComponentImpl {
 					}
 				}
 
+				@Override
 				public void mouseReleased(MouseEvent e) {
 					if (e.isPopupTrigger()) {
 						logger.debug("Showing popup for component: "
@@ -115,22 +118,27 @@ public class TipiPopupMenu extends TipiSwingDataComponentImpl {
 		jd.setVisible(true);
 		jd.getContentPane().addMouseListener(new MouseListener() {
 
+			@Override
 			public void mouseClicked(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseEntered(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseExited(MouseEvent e) {
 
 			}
 
+			@Override
 			public void mousePressed(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					jp.show(jd.getContentPane(), e.getX(), e.getY());
 				}
 			}
 
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					jp.show(jd.getContentPane(), e.getX(), e.getY());

@@ -12,6 +12,7 @@ public class TipiRssExtension extends TipiAbstractXMLExtension implements TipiEx
 	public TipiRssExtension() {
 	}
 	
+	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
 	}

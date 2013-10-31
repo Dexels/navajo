@@ -19,10 +19,12 @@ public class ModifiedDateCacheValidator implements CacheValidator {
 		return local>remote;
 	}
 
+	@Override
 	public void setLocalStorage(LocalStorage localStorage) {
 		this.localStorage = localStorage;
 	}
 
+	@Override
 	public void setRemoteStorage(RemoteStorage remoteStorage) {
 		this.remoteStorage = remoteStorage;
 	}

@@ -18,10 +18,12 @@ public class RandomInt extends FunctionInterface {
   private static  java.util.Random r = new java.util.Random(System.currentTimeMillis());
   public RandomInt() {
   }
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Returns a random integer, between the given bounds";
   }
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
     List<?> operands = this.getOperands();
 
@@ -33,7 +35,8 @@ public class RandomInt extends FunctionInterface {
     return new Integer(result+min.intValue());
 //    return new Integer(range);
   }
-  public String usage() {
+  @Override
+public String usage() {
     return "Random(min,max) (integers, will return an integer";
   }
 public static void main(String[] args) throws Throwable {

@@ -24,7 +24,8 @@ public class PointsMap implements Mappable {
 
     public PointsMap() {}
 
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings("unchecked")
 	public void load(Access access) throws MappableException {
         myPoints = new Vector[2];
         myPoints[0] = new Vector<Integer>();
@@ -44,8 +45,10 @@ public class PointsMap implements Mappable {
         return this.myString;
     }
 
-    public void store() throws MappableException, UserException {}
+    @Override
+	public void store() throws MappableException, UserException {}
 
-    public void kill() {}
+    @Override
+	public void kill() {}
 
 }

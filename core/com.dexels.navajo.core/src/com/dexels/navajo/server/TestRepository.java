@@ -13,6 +13,7 @@ import com.dexels.navajo.script.api.SystemException;
 
 public class TestRepository extends SimpleRepository {
 
+	@Override
 	public Access authorizeUser(String username, String password,
 			String service, Navajo inMessage, Object certificate)
 			throws SystemException, AuthorizationException {
@@ -34,6 +35,7 @@ public class TestRepository extends SimpleRepository {
 //		return new String[]{"MyTestService1", "YetAnotherNiceService"};
 //	}
 	
+	@Override
 	public void initGlobals(String service, String username, Navajo inMessage, 
 			                Map<String,String> extraParams) throws NavajoException {
 

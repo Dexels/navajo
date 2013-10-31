@@ -14,14 +14,17 @@ public class StandardFunctionDefinitions implements ExtensionDefinition, Seriali
 	private static final long serialVersionUID = -3429274998043371128L;
 	private transient ClassLoader extensionClassLoader = null;
 
+	@Override
 	public InputStream getDefinitionAsStream() {
 		return getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/functions/functions.xml");
 	}
 
+	@Override
 	public String getConnectorId() {
 		return null;
 	}
 
+	@Override
 	public List<String> getDependingProjectUrls() {
 		// list urls to open source projects here
 		return null;
@@ -31,15 +34,18 @@ public class StandardFunctionDefinitions implements ExtensionDefinition, Seriali
 		return null;
 	}
 
+	@Override
 	public String getDescription() {
 		
 		return "Standard navajo function library";
 	}
 
+	@Override
 	public String getId() {
 		return "navajofunction";
 	}
 
+	@Override
 	public String[] getIncludes() {
 		return new String[]{"com/dexels/navajo/functions/functions.xml"};
 	}
@@ -54,26 +60,32 @@ public class StandardFunctionDefinitions implements ExtensionDefinition, Seriali
 		return jars;
 	}
 
+	@Override
 	public String getProjectName() {
 		return "NavajoFunctions";
 	}
 
+	@Override
 	public List<String> getRequiredExtensions() {
 		return null;
 	}
 
+	@Override
 	public boolean isMainImplementation() {
 		return false;
 	}
 
+	@Override
 	public String requiresMainImplementation() {
 		// any will do
 		return null;
 	}
+	@Override
 	public ClassLoader getExtensionClassloader() {
 		return extensionClassLoader;
 	}
 
+	@Override
 	public void setExtensionClassloader(ClassLoader extClassloader) {
 		extensionClassLoader =  extClassloader;
 	}

@@ -77,6 +77,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 		super(tmt);
 	}
 
+	@Override
 	public void loadLayer(XMLElement elt) {
 		super.loadLayer(elt);
 		columns.clear();
@@ -114,6 +115,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 		}
 	}
 
+	@Override
 	public void updateLayer() {
 	}
 
@@ -166,6 +168,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 	private final void updateTableColumns(final MessageTablePanel mtp) {
 		Runnable invocation = new Runnable() {
 
+			@Override
 			public void run() {
 				mtp.createColumnModel();
 				for (int i = 0; i < columnSize.size(); i++) {
@@ -182,6 +185,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 		SwingUtilities.invokeLater(invocation);
 	}
 
+	@Override
 	public void loadData(final Navajo n, final Message current,
 			Stack<TipiTableBaseLayer> layerStack, JComponent currentPanel) {
 		final MessageTableFooterRenderer myFooterRenderer = new MessageTableFooterRenderer(
@@ -212,6 +216,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 					aggregateMap.get(item));
 		}
 		mtp.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				Map<String, Object> m = new HashMap<String, Object>();
 				m.put("table", mtp);
@@ -313,6 +318,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 		myTypeMap.put(id, type);
 	}
 
+	@Override
 	public XMLElement store() {
 		XMLElement newElt = super.store();
 		newElt.setAttribute("type", "table");
@@ -388,6 +394,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 		return remarkPanel;
 	}
 
+	@Override
 	public int getCurrentSelection() {
 		if (myTablePanel != null) {
 			logger.debug("Getting selection of a table. Got: "
@@ -398,6 +405,7 @@ public class TipiTableLayer extends TipiTableBaseLayer {
 		return -1;
 	}
 
+	@Override
 	public void setCurrentSelection(int s) {
 		if (myTablePanel != null) {
 			logger.debug("Table layer. Table found. setting to: " + s);

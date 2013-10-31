@@ -39,6 +39,7 @@ public class TipiMessageTable extends MessageTable {
 		myContext = tc;
 		// myDndManager = new TipiDndManager(this,component);
 		addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
 					logger.debug("Table detected right click!");
@@ -67,6 +68,7 @@ public class TipiMessageTable extends MessageTable {
 		});
 	}
 
+	@Override
 	public synchronized void setMessage(Message m) {
 		setSavePathJustChanged(true);
 		if (columnPathString != null) {
@@ -75,6 +77,7 @@ public class TipiMessageTable extends MessageTable {
 		super.setMessage(m);
 	}
 
+	@Override
 	public void loadColumnsNavajo() {
 		if (columnPathString == null) {
 			// ignoring, but should not happen at all, I think
@@ -96,6 +99,7 @@ public class TipiMessageTable extends MessageTable {
 		}
 	}
 
+	@Override
 	public void saveColumnsNavajo() throws IOException, NavajoException {
 		Navajo n = super.saveColumnDefNavajo();
 		if (n != null) {

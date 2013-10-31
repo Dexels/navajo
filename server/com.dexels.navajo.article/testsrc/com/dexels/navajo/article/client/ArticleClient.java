@@ -60,7 +60,7 @@ public class ArticleClient {
 		ObjectNode art = getArticleMeta(name);
 		ArrayNode input =  (ArrayNode) art.get("input");
 		if(input == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		List<ObjectNode> lo = new LinkedList<ObjectNode>();
 		for (JsonNode jsonNode : input) {
@@ -178,7 +178,7 @@ public class ArticleClient {
 	protected Map<String,Set<String>> getArticleParameters(String c) throws IOException {
 		final List<ObjectNode> args = getArticleArguments(c);
 		if(args.isEmpty()) {
-			return Collections.EMPTY_MAP;
+			return Collections.emptyMap();
 		} else {
 			Map<String, Set<String>> result = new HashMap<String, Set<String>>();
 			for (ObjectNode arg : args) {

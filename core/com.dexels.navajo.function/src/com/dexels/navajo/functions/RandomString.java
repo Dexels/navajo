@@ -27,7 +27,8 @@ public final class RandomString extends FunctionInterface {
 
   // ------------------------------------------------------------ public methods
 
-  public String remarks() {
+  @Override
+public String remarks() {
 
     return ( "allows generation of random string values given a specified " +
       "length using a specific character set, sometimes useful for testing fixtures ..." +
@@ -35,7 +36,8 @@ public final class RandomString extends FunctionInterface {
 
   }
 
-  public final Object evaluate()
+  @Override
+public final Object evaluate()
     throws TMLExpressionException {
 
     final Object len = this.getOperand(0);
@@ -75,7 +77,8 @@ public final class RandomString extends FunctionInterface {
 
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return( "usage: RandomString( int <length> [, String <char. set> ] )" );
   }
 

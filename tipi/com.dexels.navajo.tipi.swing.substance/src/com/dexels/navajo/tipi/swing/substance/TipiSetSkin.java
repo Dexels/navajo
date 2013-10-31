@@ -24,10 +24,12 @@ public class TipiSetSkin extends TipiAction {
 			.getLogger(TipiSetSkin.class);
 	
 	
+	@Override
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		final Operand valueOp = getEvaluatedParameter("value", event);
 		myContext.runSyncInEventThread(new Runnable(){
 
+			@Override
 			public void run() {
 				String value = null;
 				

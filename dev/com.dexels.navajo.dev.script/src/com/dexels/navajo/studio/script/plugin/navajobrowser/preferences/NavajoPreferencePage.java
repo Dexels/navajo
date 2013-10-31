@@ -85,7 +85,8 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
     }
 
 
-    public void init(IWorkbench workbench) {
+    @Override
+	public void init(IWorkbench workbench) {
     }
 
     @Override
@@ -167,7 +168,8 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
         
         defaultProjectSelector.addSelectionChangedListener(new ISelectionChangedListener(){
 
-            public void selectionChanged(SelectionChangedEvent event) {
+            @Override
+			public void selectionChanged(SelectionChangedEvent event) {
                 IStructuredSelection sel = (IStructuredSelection) event.getSelection();
                 System.err.println("FirsT: "+sel.getFirstElement());
 //                IStructuredSelection sel2 = (IStructuredSelection)defaultProjectSelector.getCombo().getSelection();
@@ -185,7 +187,8 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
         selector = new ComboViewer(tmlBrowserComposite);
         setupSelectorBox();
         selector.getCombo().addSelectionListener(new SelectionListener(){
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                 int index = selector.getCombo().getSelectionIndex();
                 ServerEntry se = NavajoScriptPluginPlugin.getDefault().getServerEntries().get(index);
                 nameField.setText(se.getName());
@@ -196,7 +199,8 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
             }
 
  
-            public void widgetDefaultSelected(SelectionEvent e) {
+            @Override
+			public void widgetDefaultSelected(SelectionEvent e) {
             }});
         selector.getCombo().setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,TableWrapData.FILL_GRAB,1,1));
               
@@ -227,16 +231,19 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
         insertButton = formToolKit.createButton(buttonBar, "Insert", SWT.PUSH);
         testButton = formToolKit.createButton(buttonBar, "Test connection", SWT.PUSH);
         saveButton.addSelectionListener(new SelectionListener(){
-           public void widgetSelected(SelectionEvent e) {
+           @Override
+		public void widgetSelected(SelectionEvent e) {
                NavajoScriptPluginPlugin.getDefault().updateServerEntry(selector.getCombo().getSelectionIndex(),nameField.getText(),(String)(((IStructuredSelection)protocolSelector.getSelection()).getFirstElement()),serverField.getText(),usernameField.getText(),passwordField.getText());
                setupSelectorBox();
                rebuildTmlBrowserComposite();
             }
 
-            public void widgetDefaultSelected(SelectionEvent e) {
+            @Override
+			public void widgetDefaultSelected(SelectionEvent e) {
               }});
         insertButton.addSelectionListener(new SelectionListener(){
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                 nameField.setText("New connection");
                 serverField.setText("<enter server url>");
                 usernameField.setText("");
@@ -246,19 +253,23 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
                 rebuildTmlBrowserComposite();
             }
 
-             public void widgetDefaultSelected(SelectionEvent e) {
+             @Override
+			public void widgetDefaultSelected(SelectionEvent e) {
                }});
         deleteButton.addSelectionListener(new SelectionListener(){
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                 NavajoScriptPluginPlugin.getDefault().deleteServerEntry(selector.getCombo().getSelectionIndex());
                 setupSelectorBox();
                 rebuildTmlBrowserComposite();
            }
 
-             public void widgetDefaultSelected(SelectionEvent e) {
+             @Override
+			public void widgetDefaultSelected(SelectionEvent e) {
                }});
         testButton.addSelectionListener(new SelectionListener(){
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                 ServerEntry sel = (ServerEntry)((IStructuredSelection)selector.getSelection()).getFirstElement();
                         try {
                             Navajo n = sel.runInit("InitNavajoStatus");
@@ -285,7 +296,8 @@ public class NavajoPreferencePage extends PreferencePage implements IWorkbenchPr
                         }
               }
 
-             public void widgetDefaultSelected(SelectionEvent e) {
+             @Override
+			public void widgetDefaultSelected(SelectionEvent e) {
                }});
     }
 

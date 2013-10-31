@@ -15,6 +15,7 @@ public class NavajoExpression extends NavajoType {
 		contents = s.replaceAll("\n", " ");
 	}
 
+	@Override
 	public String toString() {
 		return contents;
 	}

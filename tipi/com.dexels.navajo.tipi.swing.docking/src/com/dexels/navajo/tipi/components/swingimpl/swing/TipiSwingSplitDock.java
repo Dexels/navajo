@@ -14,6 +14,7 @@ public class TipiSwingSplitDock extends SplitDock {
 	@Override
 	public void setDividerLocation(final int dividerLocation) {
 		myComponent.runSyncInEventThread(new Runnable(){
+			@Override
 			public void run(){
 				TipiSwingSplitDock.super.setDividerLocation(dividerLocation);
 			}

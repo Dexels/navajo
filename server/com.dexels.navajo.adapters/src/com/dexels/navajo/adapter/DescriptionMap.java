@@ -42,13 +42,16 @@ public class DescriptionMap implements Mappable {
 	public boolean debug = false;
 	private NavajoConfigInterface myConfig = null;
 	
+	@Override
 	public void load(Access a) throws MappableException, UserException {
 		myConfig = DispatcherFactory.getInstance().getNavajoConfig();
 	}
 	
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 
+	@Override
 	public void kill() {
 	}
 

@@ -118,6 +118,7 @@ public class SharedStoreInterfaceTest {
 		for (int i = 0; i < MAXTHREADS; i++) {
 			final int index = i;
 			threads[i] = new Thread() {
+				@Override
 				public void run() {
 					try {
 						si.store("myparent", "mystoredobject" + index,
@@ -174,6 +175,7 @@ public class SharedStoreInterfaceTest {
 		for (int i = 0; i < MAXTHREADS; i++) {
 			final int index = i;
 			threads[i] = new Thread() {
+				@Override
 				public void run() {
 					try {
 						si.store("myparent", "mystoredobject" + index,
@@ -292,6 +294,7 @@ public class SharedStoreInterfaceTest {
 		locks = 0;
 
 		Thread t1 = new Thread() {
+			@Override
 			public void run() {
 				SharedStoreLock ssl = si.lock("myparent", "mylockfile",
 						"owner1", SharedFileStore.READ_WRITE_LOCK, false);
@@ -304,6 +307,7 @@ public class SharedStoreInterfaceTest {
 		};
 
 		Thread t2 = new Thread() {
+			@Override
 			public void run() {
 				SharedStoreLock ssl = si.lock("myparent", "mylockfile",
 						"owner2", SharedFileStore.READ_WRITE_LOCK, false);
@@ -316,6 +320,7 @@ public class SharedStoreInterfaceTest {
 		};
 
 		Thread t3 = new Thread() {
+			@Override
 			public void run() {
 				SharedStoreLock ssl = si.lock("myparent", "mylockfile",
 						"owner3", SharedFileStore.READ_WRITE_LOCK, false);
@@ -346,6 +351,7 @@ public class SharedStoreInterfaceTest {
 		locks = 0;
 
 		Thread t1 = new Thread() {
+			@Override
 			public void run() {
 				SharedStoreLock ssl = si.lock("myparent", "mylockfile",
 						"owner1", SharedFileStore.READ_WRITE_LOCK, true);
@@ -375,6 +381,7 @@ public class SharedStoreInterfaceTest {
 		};
 
 		Thread t2 = new Thread() {
+			@Override
 			public void run() {
 				SharedStoreLock ssl = si.lock("myparent", "mylockfile",
 						"owner2", SharedFileStore.READ_WRITE_LOCK, true);
@@ -403,6 +410,7 @@ public class SharedStoreInterfaceTest {
 		};
 
 		Thread t3 = new Thread() {
+			@Override
 			public void run() {
 				SharedStoreLock ssl = si.lock("myparent", "mylockfile",
 						"owner3", SharedFileStore.READ_WRITE_LOCK, true);

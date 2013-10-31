@@ -43,7 +43,8 @@ public class CompositeEnumeration<T> implements Enumeration<T> {
         }
     }
 
-    public boolean hasMoreElements() {
+    @Override
+	public boolean hasMoreElements() {
         boolean hasMoreElements = this.currentEnumeration.hasMoreElements();
         if (hasMoreElements) {
             return true;
@@ -57,16 +58,19 @@ public class CompositeEnumeration<T> implements Enumeration<T> {
         }
     }
 
-    public T nextElement() {
+    @Override
+	public T nextElement() {
         return this.currentEnumeration.nextElement();
     }
 
     private final class NullObjectEnumeration implements Enumeration<T> {
-        public boolean hasMoreElements() {
+        @Override
+		public boolean hasMoreElements() {
             return false;
         }
 
-        public T nextElement() {
+        @Override
+		public T nextElement() {
             throw new NoSuchElementException();
         }
     }

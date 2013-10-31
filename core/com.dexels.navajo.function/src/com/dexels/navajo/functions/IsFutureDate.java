@@ -16,15 +16,18 @@ import com.dexels.navajo.parser.FunctionInterface;
 public class IsFutureDate extends FunctionInterface {
     public IsFutureDate() {}
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Checks if a (string) object can be transformed to a date.";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "IsFutureDate(String s|Date d)";
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object o = this.getOperand(0);
         java.util.Date date = null;
         if (o instanceof java.util.Date) {

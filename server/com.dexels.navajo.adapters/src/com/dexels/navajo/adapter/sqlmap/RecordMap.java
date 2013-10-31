@@ -20,7 +20,8 @@ public class RecordMap implements Mappable {
   public Object recordValue;
   public String recordName = "";
 
-  public void load(Access access)
+  @Override
+public void load(Access access)
         throws MappableException, UserException {
   }
 
@@ -32,9 +33,11 @@ public class RecordMap implements Mappable {
     return recordName;
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
   }
 
-  public void kill() {
+  @Override
+public void kill() {
   }
 }

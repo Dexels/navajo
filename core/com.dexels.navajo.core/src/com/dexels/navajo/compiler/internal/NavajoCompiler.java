@@ -69,6 +69,7 @@ public class NavajoCompiler
             // Find all jar's in adapter path.
             if (jarFolder!=null && jarFolder.exists()) {
 				File[] jars = jarFolder.listFiles(new FilenameFilter(){
+					@Override
 					public boolean accept(File dir, String name) {
 						return name.endsWith(".jar");
 					}});

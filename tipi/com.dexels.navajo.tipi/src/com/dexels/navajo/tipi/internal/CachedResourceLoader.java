@@ -15,6 +15,7 @@ public abstract class CachedResourceLoader extends ClassPathResourceLoader {
 
 	public abstract CacheManager getCacheManager();
 
+	@Override
 	public InputStream getResourceStream(String location) throws IOException {
 		InputStream contents = getCacheManager().getContents(location);
 		if (contents != null) {
@@ -33,6 +34,7 @@ public abstract class CachedResourceLoader extends ClassPathResourceLoader {
 		return super.getResourceURL(location);
 	}
 
+	@Override
 	public void flushCache() {
 		CacheManager c = getCacheManager();
 		if (c != null) {

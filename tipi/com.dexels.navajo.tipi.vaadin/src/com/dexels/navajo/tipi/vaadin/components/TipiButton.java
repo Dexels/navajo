@@ -42,7 +42,8 @@ public class TipiButton extends TipiVaadinComponentImpl {
 		return button;
 	}
 
-	  public void setComponentValue(final String name, final Object object) {
+	  @Override
+	public void setComponentValue(final String name, final Object object) {
 		    super.setComponentValue(name, object);
 		    Button v = (Button) getVaadinContainer();
 		        if (name.equals("text")) {

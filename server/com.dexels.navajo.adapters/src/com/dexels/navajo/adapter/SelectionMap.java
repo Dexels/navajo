@@ -68,13 +68,16 @@ public class SelectionMap implements Mappable {
 	
     public SelectionMap() {}
 
+@Override
     public void load(Access parm4) throws UserException, MappableException {
         optionsList = new ArrayList<OptionMap>();
     }
 
+@Override
     public void store() throws UserException, MappableException {}
 
-    public void kill() {}
+    @Override
+	public void kill() {}
 
     /**
      * $option = 'Man;M;1';

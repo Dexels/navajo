@@ -1,6 +1,5 @@
 package com.dexels.navajo.adapter.ldap;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -51,12 +50,15 @@ public class Base2LdapAdapter implements Mappable {
 	
 	private InitialDirContext initialDir = null;
 
+	@Override
 	public void kill() {
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 	
@@ -92,7 +94,7 @@ public class Base2LdapAdapter implements Mappable {
 				startup();
 			}
 			DirContext dc = (DirContext) initialDir.lookup(base);
-			NamingEnumeration e = dc.list("");
+			NamingEnumeration<NameClassPair> e = dc.list("");
 			while (e.hasMore()) {
 				Object o = e.next();
 				logger.debug("o: " + o);
@@ -144,14 +146,14 @@ public class Base2LdapAdapter implements Mappable {
 		initSearch.getProperty("ClubSearch/SearchName").setValue("a");
 		final Navajo process2 = NavajoClientFactory.getClient().doSimpleSend(initSearch, "club/ProcessSearchClubs");
 		Message result = process2.getMessage("Club");
-		ArrayList ll = result.getAllMessages();
+		List<Message> ll = result.getAllMessages();
 
 	
 		
 		int count = ll.size();
 		count = Math.min(count, MAX_CLUBS);
 		for (int i = 0; i < count; i++) {
-			Message m = (Message) ll.get(i);
+			Message m = ll.get(i);
 			String value = m.getProperty("ClubIdentifier").getValue();
 			logger.debug("Clubid: " + value);
 			insertClub(root, init, value);
@@ -276,7 +278,7 @@ public class Base2LdapAdapter implements Mappable {
 
 	public void deleteContext(DirContext dd, String dn) throws NamingException {
 
-		NamingEnumeration e = dd.list("");
+		NamingEnumeration<NameClassPair> e = dd.list("");
 		while (e.hasMore()) {
 			e.next();
 
@@ -292,8 +294,8 @@ public class Base2LdapAdapter implements Mappable {
 		dd.unbind(dn);
 	}
 
-	public DirContext insertEntity(String keyAttribute, String keyValue, DirContext context, Message entity, Map mapping,
-			String[] objectClasses, Map constants) throws NamingException {
+	public DirContext insertEntity(String keyAttribute, String keyValue, DirContext context, Message entity, Map<String,String> mapping,
+			String[] objectClasses, Map<String,String> constants) throws NamingException {
 
 		String keySource = null;
 		String keyProperty = null;
@@ -301,15 +303,15 @@ public class Base2LdapAdapter implements Mappable {
 			keySource = keyValue;
 
 		} else {
-			keyProperty = (String) mapping.get(keyAttribute);
+			keyProperty = mapping.get(keyAttribute);
 			if(keyProperty==null) {
-				keySource = (String) constants.get(keyAttribute);
+				keySource = constants.get(keyAttribute);
 				
 			} else {
 				Property property = entity.getProperty(keyProperty);
 				if(property==null) {
 					// Sort of hack...
-					keySource = (String) constants.get(keyAttribute);
+					keySource = constants.get(keyAttribute);
 				} else {
 					keySource = property.getValue();
 				}
@@ -326,12 +328,12 @@ public class Base2LdapAdapter implements Mappable {
 		}
 		mandatory.put(objectclass);
 		if (mapping != null) {
-			for (Iterator iter = mapping.keySet().iterator(); iter.hasNext();) {
-				String currentAttribute = (String) iter.next();
+			for (Iterator<String> iter = mapping.keySet().iterator(); iter.hasNext();) {
+				String currentAttribute = iter.next();
 				// if (currentAttribute.equals(keyAttribute)) {
 				// continue;
 				// }
-				String propertyName = (String) mapping.get(currentAttribute);
+				String propertyName = mapping.get(currentAttribute);
 				if (propertyName != null) {
 					Property currentProperty = entity.getProperty(propertyName);
 					if (currentProperty != null) {
@@ -349,9 +351,9 @@ public class Base2LdapAdapter implements Mappable {
 			}
 		}
 		if (constants != null) {
-			for (Iterator iter = constants.keySet().iterator(); iter.hasNext();) {
-				String currentAttribute = (String) iter.next();
-				String value = (String) constants.get(currentAttribute);
+			for (Iterator<String> iter = constants.keySet().iterator(); iter.hasNext();) {
+				String currentAttribute = iter.next();
+				String value = constants.get(currentAttribute);
 				BasicAttribute attr = new BasicAttribute(currentAttribute, value);
 				mandatory.put(attr);
 			}

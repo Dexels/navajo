@@ -28,11 +28,13 @@ public class IncludeMap implements Mappable {
 
   private Access access;
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
     this.access = access;
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
     try {
       File f = new File(navajoObject);
       if ( type == null || type.equals("tml") || type.equals("tsl") ) {
@@ -59,7 +61,8 @@ public class IncludeMap implements Mappable {
 
   }
 
-  public void kill() {
+  @Override
+public void kill() {
   }
 
   public void setNavajoObject(String navajoObject) {

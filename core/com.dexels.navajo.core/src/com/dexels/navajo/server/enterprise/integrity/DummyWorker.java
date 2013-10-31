@@ -9,14 +9,17 @@ public class DummyWorker implements WorkerInterface {
 		return new DummyWorker();
 	}
 	
+	@Override
 	public Navajo getResponse(Access a, Navajo request) {
 		return null;
 	}
 	
+	@Override
 	public void setResponse(Navajo request, Navajo response) {
 		// Do nothing.
 	}
 	
+	@Override
 	public void removeFromRunningRequestsList(Navajo request) {
 		// Do nothing.
 	}

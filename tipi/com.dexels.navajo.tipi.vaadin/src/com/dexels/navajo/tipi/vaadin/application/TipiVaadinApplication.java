@@ -173,6 +173,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 	}
 	
+	@Override
 	public void setEvalUrl(URL context, String relativeUri) {
 		VaadinTipiContext vaadinTipiContext = (VaadinTipiContext)getCurrentContext();
 		if(vaadinTipiContext!=null) {

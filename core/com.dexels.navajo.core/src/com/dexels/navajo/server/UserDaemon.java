@@ -39,6 +39,7 @@ public class UserDaemon extends GenericThread {
 		}
 	}
 	
+	@Override
 	public void kill() {
 		super.kill();
 		userServices.remove(this.getMyId());

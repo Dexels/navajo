@@ -119,6 +119,7 @@ public class GenericThread implements Runnable, Mappable {
 		}
 	}
 	
+	@Override
 	public void run() {
 		try {
 			while ( !killed ) {
@@ -173,6 +174,7 @@ public class GenericThread implements Runnable, Mappable {
 	 * Called if killed by some life cycle manager.
 	 * 
 	 */
+	@Override
 	public void kill() {
 		killed = true;
 		if ( thread != null ) {
@@ -203,9 +205,11 @@ public class GenericThread implements Runnable, Mappable {
 		threadPool.clear();
 	}
 	
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 	

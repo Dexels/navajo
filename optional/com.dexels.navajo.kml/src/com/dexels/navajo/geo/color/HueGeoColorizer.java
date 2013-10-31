@@ -6,11 +6,13 @@ import com.dexels.navajo.geo.GeoColorizer;
 
 public class HueGeoColorizer implements GeoColorizer {
 
+	@Override
 	public String createGeoColorString(double value, double min, double max) {
 		Color c = createGeoColor(value, min, max);
 		String opacity = "a0";
 		return createKMLColor(c, opacity);
 	}
+	@Override
 	public Color createGeoColor(double value, double min, double max) {
 		if(value > max) {
 			value = max;

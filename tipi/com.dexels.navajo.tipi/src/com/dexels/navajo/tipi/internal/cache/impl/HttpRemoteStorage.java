@@ -7,7 +7,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
@@ -41,7 +40,7 @@ public class HttpRemoteStorage implements RemoteStorage {
 			metadata.put("encoding", uc.getContentEncoding());
 			metadata.put("type", uc.getContentType());
 			uc.connect();
-			Map<String, List<String>> fields = uc.getHeaderFields();
+//			Map<String, List<String>> fields = uc.getHeaderFields();
 //			for (Entry<String,List<String>> e : fields.entrySet()) {
 //				System.err.println("e: "+e.getKey()+" value: "+e.getClass());
 //			}
@@ -61,6 +60,7 @@ public class HttpRemoteStorage implements RemoteStorage {
 		return is;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public long getRemoteModificationDate(String location) throws IOException {
 		if(true) {

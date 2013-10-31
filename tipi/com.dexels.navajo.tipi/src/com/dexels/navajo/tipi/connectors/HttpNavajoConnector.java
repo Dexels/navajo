@@ -17,6 +17,7 @@ public class HttpNavajoConnector extends TipiBaseConnector {
 	 */
 	private static final long serialVersionUID = -8531849428188689877L;
 
+	@Override
 	public void doTransaction(Navajo input, String service)
 			throws TipiBreakException, TipiException {
 		if (input == null) {
@@ -43,6 +44,7 @@ public class HttpNavajoConnector extends TipiBaseConnector {
 		}
 	}
 
+	@Override
 	protected void setComponentValue(String name, Object object) {
 		if (name.equals("server")) {
 			myContext.getClient().setServerUrl((String) object);
@@ -60,19 +62,23 @@ public class HttpNavajoConnector extends TipiBaseConnector {
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public String getConnectorId() {
 		return "http";
 	}
 
+	@Override
 	public void doTransaction(Navajo n, String service, String destination)
 			throws TipiBreakException, TipiException {
 		doTransaction(n, service);
 	}
 
+	@Override
 	public Set<String> getEntryPoints() {
 		return null;
 	}
 
+	@Override
 	public String getDefaultEntryPoint() {
 		return "InitClub";
 	}

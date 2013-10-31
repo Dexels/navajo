@@ -51,6 +51,7 @@ public class NavajoMapContinuations extends NavajoMapUpdated {
 			scheduleExternalNavajoCall(method, on2);
 		} else {
 			Thread t = new Thread() {
+				@Override
 				public void run() {
 					NavajoMapContinuations.this.run();
 				}

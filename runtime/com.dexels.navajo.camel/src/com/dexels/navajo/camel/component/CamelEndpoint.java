@@ -34,16 +34,19 @@ public class CamelEndpoint extends DefaultEndpoint {
 //		this.instance = instance;
 	}
 
+	@Override
 	public Producer createProducer() throws Exception {
 		return new NavajoCamelProducer(this);
 	}
 
+	@Override
 	public Consumer createConsumer(Processor processor) throws Exception {
 		final CamelConsumerImpl camelConsumerImpl = new CamelConsumerImpl(this, processor);
 		myComponent.registerConsumer(camelConsumerImpl, getId());
 		return camelConsumerImpl;
 	}
 
+	@Override
 	public boolean isSingleton() {
 		return true;
 	}

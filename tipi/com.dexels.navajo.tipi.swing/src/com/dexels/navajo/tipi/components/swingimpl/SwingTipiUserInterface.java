@@ -48,10 +48,12 @@ public class SwingTipiUserInterface implements UserInterface {
 		myContext = s;
 	}
 
+	@Override
 	public JFrame getMainFrame() {
 		return (JFrame) myContext.getTopLevel();
 	}
 
+	@Override
 	public JDialog getTopDialog() {
 		RootPaneContainer topDialog = myContext.getTopDialog();
 		if (topDialog instanceof JDialog) {
@@ -60,6 +62,7 @@ public class SwingTipiUserInterface implements UserInterface {
 		return null;
 	}
 
+	@Override
 	public void addDialog(JDialog d) {
 		// d.setLocationRelativeTo(getMainFrame());
 		myContext.addDialog(d);
@@ -117,6 +120,7 @@ public class SwingTipiUserInterface implements UserInterface {
 		dlg.setVisible(true);
 	}
 
+	@Override
 	public boolean showQuestionDialog(String s) {
 		int response = JOptionPane.showConfirmDialog(
 				(Component) myContext.getTopLevel(), s, "",
@@ -133,26 +137,31 @@ public class SwingTipiUserInterface implements UserInterface {
 		return showQuestionDialog("Are you sure?");
 	}
 
+	@Override
 	public void clearClipboard() {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void closeWindow(BaseWindow d) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void copyToClipBoard(CopyCompatible cc) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public Locale getLocale() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public Object pasteFromClipBoard(PasteCompatible pc) {
 		// TODO Auto-generated method stub
 		return null;

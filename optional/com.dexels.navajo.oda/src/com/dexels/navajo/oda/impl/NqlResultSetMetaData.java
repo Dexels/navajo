@@ -78,6 +78,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 		return getColumnProperty(index).getTypedValue();
 	}
 	
+	@Override
 	public IResultSetMetaData getMetaData() throws OdaException
 	{
         /* TODO Auto-generated method stub
@@ -90,6 +91,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSetMetaData#getColumnCount()
 	 */
+	@Override
 	public int getColumnCount() throws OdaException
 	{
 		int size = definition.getAllProperties().size();
@@ -100,6 +102,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSetMetaData#getColumnName(int)
 	 */
+	@Override
 	public String getColumnName( int index ) throws OdaException
 	{
 		return getColumnProperty(index).getName();
@@ -111,6 +114,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSetMetaData#getColumnLabel(int)
 	 */
+	@Override
 	public String getColumnLabel( int index ) throws OdaException
 	{
 		String description = getColumnProperty(index).getDescription();
@@ -123,6 +127,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSetMetaData#getColumnType(int)
 	 */
+	@Override
 	public int getColumnType( int index ) throws OdaException
 	{
 		System.err.println("Looking for column: "+index);
@@ -192,6 +197,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSetMetaData#getColumnTypeName(int)
 	 */
+	@Override
 	public String getColumnTypeName( int index ) throws OdaException
 	{
 		
@@ -202,6 +208,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSetMetaData#getColumnDisplayLength(int)
 	 */
+	@Override
 	public int getColumnDisplayLength( int index ) throws OdaException
 	{
         // TODO replace with data source specific implementation
@@ -217,6 +224,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSetMetaData#getPrecision(int)
 	 */
+	@Override
 	public int getPrecision( int index ) throws OdaException
 	{
         // TODO Auto-generated method stub
@@ -226,6 +234,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSetMetaData#getScale(int)
 	 */
+	@Override
 	public int getScale( int index ) throws OdaException
 	{
 		return -1;
@@ -234,6 +243,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSetMetaData#isNullable(int)
 	 */
+	@Override
 	public int isNullable( int index ) throws OdaException
 	{
 		return IResultSetMetaData.columnNullableUnknown;
@@ -241,6 +251,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#setMaxRows(int)
 	 */
+	@Override
 	public void setMaxRows( int max ) throws OdaException
 	{
 		m_maxRows = max;
@@ -258,6 +269,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#next()
 	 */
+	@Override
 	public boolean next() throws OdaException
 	{
         int maxRows = getMaxRows();
@@ -279,6 +291,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#close()
 	 */
+	@Override
 	public void close() throws OdaException
 	{
         // TODO Auto-generated method stub       
@@ -288,6 +301,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getRow()
 	 */
+	@Override
 	public int getRow() throws OdaException
 	{
 		return m_currentRowId;
@@ -296,6 +310,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getString(int)
 	 */
+	@Override
 	public String getString( int index ) throws OdaException
 	{
 		Object columnPropertyValue = getColumnPropertyValue(index);
@@ -308,6 +323,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getString(java.lang.String)
 	 */
+	@Override
 	public String getString( String columnName ) throws OdaException
 	{
 	    return getString( findColumn( columnName ) );
@@ -316,6 +332,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getInt(int)
 	 */
+	@Override
 	public int getInt( int index ) throws OdaException
 	{
 		return (Integer) getColumnPropertyValue(index);
@@ -324,6 +341,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getInt(java.lang.String)
 	 */
+	@Override
 	public int getInt( String columnName ) throws OdaException
 	{
 	    return getInt( findColumn( columnName ) );
@@ -332,6 +350,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getDouble(int)
 	 */
+	@Override
 	public double getDouble( int index ) throws OdaException
 	{
         // TODO Auto-generated method stub
@@ -341,6 +360,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getDouble(java.lang.String)
 	 */
+	@Override
 	public double getDouble( String columnName ) throws OdaException
 	{
 	    return getDouble( findColumn( columnName ) );
@@ -349,6 +369,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getBigDecimal(int)
 	 */
+	@Override
 	public BigDecimal getBigDecimal( int index ) throws OdaException
 	{
 		return (BigDecimal) getColumnPropertyValue(index);
@@ -357,6 +378,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getBigDecimal(java.lang.String)
 	 */
+	@Override
 	public BigDecimal getBigDecimal( String columnName ) throws OdaException
 	{
 	    return getBigDecimal( findColumn( columnName ) );
@@ -365,6 +387,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getDate(int)
 	 */
+	@Override
 	public Date getDate( int index ) throws OdaException
 	{
 		Object columnPropertyValue = getColumnPropertyValue(index);
@@ -379,6 +402,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getDate(java.lang.String)
 	 */
+	@Override
 	public Date getDate( String columnName ) throws OdaException
 	{
 	    return getDate( findColumn( columnName ) );
@@ -387,6 +411,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getTime(int)
 	 */
+	@Override
 	public Time getTime( int index ) throws OdaException
 	{
 		StopwatchTime time = (StopwatchTime) getColumnPropertyValue(index);
@@ -396,6 +421,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getTime(java.lang.String)
 	 */
+	@Override
 	public Time getTime( String columnName ) throws OdaException
 	{
 	    return getTime( findColumn( columnName ) );
@@ -404,6 +430,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getTimestamp(int)
 	 */
+	@Override
 	public Timestamp getTimestamp( int index ) throws OdaException
 	{
 		return new Timestamp(getDate(index).getTime());
@@ -412,6 +439,7 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getTimestamp(java.lang.String)
 	 */
+	@Override
 	public Timestamp getTimestamp( String columnName ) throws OdaException
 	{
 	    return getTimestamp( findColumn( columnName ) );
@@ -420,7 +448,8 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
     /* 
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getBlob(int)
      */
-    public IBlob getBlob( int index ) throws OdaException
+    @Override
+	public IBlob getBlob( int index ) throws OdaException
     {
     	final Binary b = (Binary) getColumnPropertyValue(index);
     	IBlob bb = new IBlob() {
@@ -449,7 +478,8 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
     /* 
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getBlob(java.lang.String)
      */
-    public IBlob getBlob( String columnName ) throws OdaException
+    @Override
+	public IBlob getBlob( String columnName ) throws OdaException
     {
         return getBlob( findColumn( columnName ) );
     }
@@ -457,7 +487,8 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
     /* 
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getClob(int)
      */
-    public IClob getClob( int index ) throws OdaException
+    @Override
+	public IClob getClob( int index ) throws OdaException
     {
     	final Object b = getColumnPropertyValue(index);
 
@@ -486,7 +517,8 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
     /* 
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getClob(java.lang.String)
      */
-    public IClob getClob( String columnName ) throws OdaException
+    @Override
+	public IClob getClob( String columnName ) throws OdaException
     {
         return getClob( findColumn( columnName ) );
     }
@@ -494,7 +526,8 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getBoolean(int)
      */
-    public boolean getBoolean( int index ) throws OdaException
+    @Override
+	public boolean getBoolean( int index ) throws OdaException
     {
 		return (Boolean) getColumnPropertyValue(index);
     }
@@ -502,7 +535,8 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getBoolean(java.lang.String)
      */
-    public boolean getBoolean( String columnName ) throws OdaException
+    @Override
+	public boolean getBoolean( String columnName ) throws OdaException
     {
         return getBoolean( findColumn( columnName ) );
     }
@@ -510,7 +544,8 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getObject(int)
      */
-    public Object getObject( int index ) throws OdaException
+    @Override
+	public Object getObject( int index ) throws OdaException
     {
 		return getColumnPropertyValue(index);
     }
@@ -518,7 +553,8 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getObject(java.lang.String)
      */
-    public Object getObject( String columnName ) throws OdaException
+    @Override
+	public Object getObject( String columnName ) throws OdaException
     {
         return getObject( findColumn( columnName ) );
     }
@@ -526,7 +562,8 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
     /*
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#wasNull()
      */
-    public boolean wasNull() throws OdaException
+    @Override
+	public boolean wasNull() throws OdaException
     {
         // TODO Auto-generated method stub
         
@@ -537,7 +574,8 @@ public class NqlResultSetMetaData implements IResultSetMetaData, IResultSet
     /*
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#findColumn(java.lang.String)
      */
-    public int findColumn( String columnName ) throws OdaException
+    @Override
+	public int findColumn( String columnName ) throws OdaException
     {
         // TODO replace with data source specific implementation
     	int index = 0;

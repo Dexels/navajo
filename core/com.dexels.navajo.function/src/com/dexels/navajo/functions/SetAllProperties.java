@@ -9,14 +9,17 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class SetAllProperties extends FunctionInterface {
 
+	@Override
 	public String remarks() {
 		return "Loops through an array message, and sets for every message the property with the supplied name to the supplied value";
 	}
 
+	@Override
 	public String usage() {		
 		return "SetAllProperties(Message, String, Object)";
 	}
 
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 	      // input (ArrayList, Object).
         if (this.getOperands().size() != 3)

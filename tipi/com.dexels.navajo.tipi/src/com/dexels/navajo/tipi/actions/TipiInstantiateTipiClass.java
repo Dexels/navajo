@@ -27,12 +27,14 @@ public class TipiInstantiateTipiClass extends TipiInstantiateTipi {
 	 */
 	private static final long serialVersionUID = -3218316846355027977L;
 
+	@Override
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
 		instantiateTipi(true, event);
 	}
 
+	@Override
 	protected void instantiateTipi(boolean byClass, TipiEvent event)
 			throws TipiException {
 

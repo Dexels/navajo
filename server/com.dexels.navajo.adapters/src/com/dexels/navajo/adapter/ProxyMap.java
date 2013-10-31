@@ -27,7 +27,8 @@ public class ProxyMap implements Mappable {
   private Access access;
   private Navajo inMessage;
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
     this.access = access;
     this.inMessage = access.getInDoc();
   }
@@ -48,7 +49,8 @@ public class ProxyMap implements Mappable {
     this.server = u;
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
       if (server == null)
         throw new UserException(-1, "ProxyMap error: no server URI specified, e.g. localhost/servlet/Postman");
       try {
@@ -64,6 +66,7 @@ public class ProxyMap implements Mappable {
       }
   }
 
-  public void kill() {
+  @Override
+public void kill() {
   }
 }

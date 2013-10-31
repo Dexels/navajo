@@ -26,6 +26,7 @@ public interface PropertyComponent extends TipiComponent {
 
 	public void addTipiEventListener(TipiEventListener listener);
 
+	@Override
 	public void addTipiEvent(TipiEvent te);
 
 	public Property getProperty();

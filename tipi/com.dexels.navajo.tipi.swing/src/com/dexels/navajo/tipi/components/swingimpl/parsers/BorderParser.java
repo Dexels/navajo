@@ -47,6 +47,7 @@ public class BorderParser extends TipiTypeParser {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(BorderParser.class);
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return parseBorder(expression);
 	}
@@ -124,7 +125,7 @@ public class BorderParser extends TipiTypeParser {
 				BorderFactory.createTitledBorder(
 						BorderFactory.createLoweredBevelBorder(), "Test1"),
 				"Test1");
-		JComboBox comp = new JComboBox(new String[] { "Aap", "Noot" });
+		JComboBox<String> comp = new JComboBox<String>(new String[] { "Aap", "Noot" });
 		comp.setEnabled(false);
 		aap.getContentPane().add(comp);
 		aap.setVisible(true);
@@ -136,9 +137,11 @@ public class BorderParser extends TipiTypeParser {
 		final JButton comp22 = new JButton("AAP");
 		comp22.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				comp22.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				Thread t = new Thread() {
+					@Override
 					public void run() {
 						try {
 							Thread.sleep(2000);

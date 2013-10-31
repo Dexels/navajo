@@ -28,6 +28,7 @@ public class CompiledTestScript extends CompiledScript {
 
 	}
 
+	@Override
 	public ArrayList<Dependency> getDependentObjects() {
 		ArrayList<Dependency> deps = new ArrayList<Dependency>();
 		deps.add(new ExpressionValueDependency(1, "mies", "noot"));

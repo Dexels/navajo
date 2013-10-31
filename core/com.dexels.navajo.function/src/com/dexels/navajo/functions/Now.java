@@ -7,15 +7,18 @@ import com.dexels.navajo.parser.FunctionInterface;
 
 public final class Now extends FunctionInterface {
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Now() returns the current timestamp as a string in the following format: yyyy/MM/dd HH:uu:mm";
   }
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Date today = new Date();
     SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     return format.format(today);
   }
-  public String usage() {
+  @Override
+public String usage() {
     return "Now()";
   }
 

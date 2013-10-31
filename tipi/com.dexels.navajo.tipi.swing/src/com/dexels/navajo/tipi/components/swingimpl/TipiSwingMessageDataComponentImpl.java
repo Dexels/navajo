@@ -44,10 +44,12 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 
 	protected SwingTipiContext mySwingTipiContext;
 
+	@Override
 	public void initContainer() {
 		mySwingTipiContext = (SwingTipiContext) myContext;
 		if (getContainer() == null) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					setContainer(createContainer());
 				}
@@ -58,6 +60,7 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 	public void setWaitCursor(final boolean b) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				Container cc = getSwingContainer();
 				if (!(cc instanceof JComponent)) {
@@ -74,10 +77,12 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 
 	}
 
+	@Override
 	public void addToContainer(final Object c, final Object constraints) {
 		try {
 			runSyncInEventThread(new Runnable() {
 
+				@Override
 				public void run() {
 					getSwingContainer().add((Component) c, constraints);
 				}
@@ -90,22 +95,27 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 		}
 	}
 
+	@Override
 	public void removeFromContainer(final Object c) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				getSwingContainer().remove((Component) c);
 			}
 		});
 	}
 
+	@Override
 	public void setContainerLayout(final Object layout) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				((Container) getContainer()).setLayout((LayoutManager) layout);
 			}
 		});
 	}
 
+	@Override
 	protected Object getComponentValue(String name) {
 		if (name != null) {
 			if (name.equals("currentPage")) {
@@ -115,6 +125,7 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	public void replaceLayout(TipiLayout tl) {
 		super.replaceLayout(tl);
 		((Container) getContainer()).repaint();
@@ -123,15 +134,18 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 		}
 	}
 
+	@Override
 	public void showPopup(MouseEvent e) {
 		((JPopupMenu) myPopupMenu.getSwingContainer()).show(
 				getSwingContainer(), e.getX(), e.getY());
 	}
 
+	@Override
 	protected void doLayout() {
 		if (getContainer() != null) {
 			if (JComponent.class.isInstance(getContainer())) {
 				runSyncInEventThread(new Runnable() {
+					@Override
 					public void run() {
 						((JComponent) getContainer()).revalidate();
 						((JComponent) getContainer()).repaint();
@@ -143,14 +157,17 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 		}
 	}
 
+	@Override
 	public Object getContainerLayout() {
 		return getSwingContainer().getLayout();
 	}
 
+	@Override
 	public Container getSwingContainer() {
 		return (Container) getContainer();
 	}
 
+	@Override
 	public void refreshLayout() {
 		List<TipiComponent> elementList = new ArrayList<TipiComponent>();
 		for (int i = 0; i < getChildCount(); i++) {
@@ -164,6 +181,7 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 			final TipiComponent current = elementList.get(i);
 			if (current.isVisibleElement()) {
 				runSyncInEventThread(new Runnable() {
+					@Override
 					public void run() {
 						addToContainer(current.getContainer(),
 								current.getConstraints());
@@ -173,6 +191,7 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 		}
 	}
 
+	@Override
 	public void runSyncInEventThread(Runnable r) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			r.run();
@@ -186,6 +205,7 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 		}
 	}
 
+	@Override
 	public void runAsyncInEventThread(Runnable r) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			r.run();
@@ -194,12 +214,14 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 		}
 	}
 
+	@Override
 	protected void performComponentMethod(final String name,
 			final TipiComponentMethod compMeth, TipiEvent event)
 			throws TipiBreakException {
 		super.performComponentMethod(name, compMeth, event);
 	}
 
+	@Override
 	public void setPaint(Paint p) {
 		this.myPaint = (TipiGradientPaint) p;
 	}
@@ -208,10 +230,12 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 		return myPaint;
 	}
 
+	@Override
 	public void commitToUi() {
 		super.commitToUi();
 	}
 
+	@Override
 	public void animateTransition(TipiEvent te,
 			TipiExecutable executableParent, List<TipiExecutable> exe,
 			int duration) throws TipiBreakException {
@@ -226,6 +250,7 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 			// SwingUtilities.invokeAndWait
 			runSyncInEventThread(new Runnable() {
 
+				@Override
 				public void run() {
 					try {
 						TipiSwingMessageDataComponentImpl.super.loadData(n,
@@ -247,10 +272,12 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 
 	}
 
+	@Override
 	protected void loadValues(final XMLElement values, final TipiEvent event)
 			throws TipiException {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				try {
 					TipiSwingMessageDataComponentImpl.super.loadValues(values,
@@ -262,9 +289,11 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 		});
 	}
 
+	@Override
 	public void loadStartValues(final XMLElement element, final TipiEvent event) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				TipiSwingMessageDataComponentImpl.super.loadStartValues(
 						element, event);
@@ -273,9 +302,11 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 		});
 	}
 
+	@Override
 	protected void doCallSetter(final Object component,
 			final String propertyName, final Object param) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				TipiSwingMessageDataComponentImpl.super.doCallSetter(component,
 						propertyName, param);

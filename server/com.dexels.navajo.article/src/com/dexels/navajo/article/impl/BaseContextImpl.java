@@ -113,6 +113,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 		return result;
 	}
 
+	@Override
 	public File resolveArticle(String pathInfo) {
 		String sub;
 		if(pathInfo.startsWith("/")) {

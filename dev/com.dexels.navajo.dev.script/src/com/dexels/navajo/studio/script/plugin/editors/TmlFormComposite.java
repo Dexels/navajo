@@ -252,9 +252,11 @@ public class TmlFormComposite extends Composite {
 		final Composite s = getKit().createComposite(ss, SWT.BORDER);
 		ss.addExpansionListener(new IExpansionListener() {
 
+			@Override
 			public void expansionStateChanging(ExpansionEvent e) {
 			}
 
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				myForm.reflow(true);
 			}
@@ -477,9 +479,11 @@ public class TmlFormComposite extends Composite {
 
 		ss.addExpansionListener(new IExpansionListener() {
 
+			@Override
 			public void expansionStateChanging(ExpansionEvent e) {
 			}
 
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				myForm.reflow(true);
 			}
@@ -664,6 +668,7 @@ public class TmlFormComposite extends Composite {
 						n.getHeader().write(System.err);
 						Display.getDefault().syncExec(new Runnable() {
 
+							@Override
 							public void run() {
 								setNavajo(n, name);
 							}
@@ -764,6 +769,7 @@ public class TmlFormComposite extends Composite {
 						.getActivePage().getActiveEditor();
 				if (editor.getSite().getWorkbenchWindow().getActivePage() != null) {
 					Display.getDefault().syncExec(new Runnable() {
+						@Override
 						public void run() {
 							editor.getSite().getWorkbenchWindow().getActivePage().closeEditor(editor, false);
 						}

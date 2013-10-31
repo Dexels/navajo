@@ -247,6 +247,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * Try to get the database identifier
 	 * @return String
 	 */
+	@Override
 	public String getDbIdentifier() {
 		
 		if ( this.myConnectionBroker != null ) {
@@ -320,6 +321,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	}
 
+	@Override
 	public Object getParameter(int index) {
 		if (parameters == null) {
 			return null;
@@ -401,6 +403,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		// }
 	}
 
+	@Override
 	public void setDebug(boolean b) {
 		this.debug = b;
 	}
@@ -430,6 +433,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		this.updateOnly = updateOnly;
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		// Check whether property file sqlmap.properties exists.
 		navajoConfig = DispatcherFactory.getInstance().getNavajoConfig();
@@ -437,6 +441,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		setReload("");
 	}
 
+	@Override
 	public void setDatasource(String s) {
 		datasource = s;
 	}
@@ -446,12 +451,14 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * 
 	 * @param b
 	 */
+	@Override
 	public void setKill(boolean b) {
 		if (b) {
 			kill();
 		}
 	}
 
+	@Override
 	public void kill() {
 
 		try {
@@ -479,6 +486,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 
 		if ( con == null && gc == null ) {
@@ -586,6 +594,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		overideAutoCommit = true;
 	}
 
+	@Override
 	public void setTransactionContext(int i) throws UserException {
 
 		if (debug) {
@@ -650,10 +659,12 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		return (remaining > 0 ? remaining : 0);
 	}
 
+	@Override
 	public void setRowCount(int i) {
 		this.rowCount = i;
 	}
 
+	@Override
 	public int getRowCount() throws UserException {
 		if (resultSet == null) {
 			getResultSet();
@@ -661,10 +672,12 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		return this.rowCount;
 	}
 
+	@Override
 	public void setUpdateCount(int i) {
 		this.updateCount = 0;
 	}
 
+	@Override
 	public int getUpdateCount() throws UserException {
 		return (this.updateCount);
 	}
@@ -674,6 +687,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		setUpdate(query);
 	}
 
+	@Override
 	public void setUpdate(final String newUpdate) throws UserException {
 		update = newUpdate;
 
@@ -688,6 +702,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		parameters = new ArrayList();
 	}
 
+	@Override
 	public final void setDoUpdate(final boolean doit) throws UserException {
 		this.getResultSet(true);
 	}
@@ -700,6 +715,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		throw new UserException(-1, "Use $columnValue('[name of the column]')");
 	}
 
+	@Override
 	public final Object getColumnName(final Integer index) throws UserException {
 
 		if (resultSet == null) {
@@ -714,6 +730,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	}
 
+	@Override
 	public Object getColumnValue(final Integer index) throws UserException {
 
 		if (resultSet == null) {
@@ -728,6 +745,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	}
 
+	@Override
 	public Object getColumnValue(final String columnName) throws UserException {
 		if (resultSet == null) {
 			getResultSet();
@@ -741,6 +759,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		return rm.getColumnValue(columnName);
 	}
 
+	@Override
 	public void setBinaryQuery(Binary b) throws UserException {
 		String query = new String(b.getData());
 		setQuery(query);
@@ -750,6 +769,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * Use this method to define a new query. All parameters used by a previous
 	 * query are removed. replace " characters with ' characters.
 	 */
+	@Override
 	public void setQuery(final String newQuery) throws UserException {
 
 		if (newQuery.indexOf(";") != -1) {
@@ -777,6 +797,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 *            contains the parameter(s). Multiple parameters are support for
 	 *            string types.
 	 */
+	@Override
 	public final void setMultipleParameters(final Object param) {
 		if (debug) {
 			Access.writeToConsole(myAccess, "in setParameters(), param = " + param + " (" + ((param != null) ? param.getClass().getName() : "") + ")\n");
@@ -800,6 +821,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * @param param
 	 *            the parameter.
 	 */
+	@Override
 	public void setParameter(final Object param) {
 		if (debug) {
 			Access.writeToConsole(myAccess, "in setParameter(), param = " + param + " (" + ((param != null) ? param.getClass().getName() : "") + ")\n");
@@ -810,6 +832,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		parameters.add(param);
 	}
 
+	@Override
 	public void setKillConnection() {
 		if (con != null) {
 			try {
@@ -987,6 +1010,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * ENDINDEX.
 	 * 
 	 */
+	@Override
 	public final ResultSet getDBResultSet(boolean updateOnly) throws SQLException, UserException {
 
 		createConnection();
@@ -1110,6 +1134,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 	}
 
+	@Override
 	public ResultSetMap[] getResultSet() throws UserException {
 
 		if (resultSet == null) {
@@ -1135,6 +1160,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		return rm;
 	}
 
+	@Override
 	public Iterator<ResultSetMap> getStreamingResultSet() throws UserException {
 		requestCount++;
 		ResultSet rs = null;
@@ -1380,6 +1406,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	}
 
+	@Override
 	public void setReplaceQueryDoubleQuotes(boolean b) {
 		this.replaceQueryDoubleQuotes = b;
 	}
@@ -1394,6 +1421,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * 
 	 * @param i
 	 */
+	@Override
 	public void setEndIndex(int i) {
 		endIndex = i;
 	}
@@ -1418,6 +1446,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 *             if we pass an empty string, shouldn't really happen unless
 	 *             you're stupid
 	 */
+	@Override
 	public void setUsername(final String s) throws MappableException, UserException {
 		final StringTokenizer tokenizer = new StringTokenizer(s, this.USERPWDDELIMITER);
 		if (!tokenizer.hasMoreTokens()) {
@@ -1535,6 +1564,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	}
 
+	@Override
 	public String getQuery() {
 		// replace parameters.
 		String dbQuery = savedQuery;
@@ -1564,6 +1594,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 	}
 
+	@Override
 	public String getDatasource() {
 		if (transactionContext != -1) {
 			return "See parent map";
@@ -1572,10 +1603,12 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		return datasource;
 	}
 
+	@Override
 	public int getConnectionId() {
 		return connectionId;
 	}
 
+	@Override
 	public boolean isAutoCommit() {
 		return autoCommit;
 	}
@@ -1585,6 +1618,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * 
 	 * @return
 	 */
+	@Override
 	public Binary getRecords() throws UserException {
 		java.io.File tempFile = null;
 		ResultSet rs = null;
@@ -1663,6 +1697,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * 
 	 * @param s
 	 */
+	@Override
 	public void setSeparator(String s) {
 		this.separator = s;
 	}
@@ -1673,6 +1708,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	 * 
 	 * @param b
 	 */
+	@Override
 	public void setShowHeader(boolean b) {
 		this.showHeader = b;
 	}
@@ -1688,6 +1724,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	/**
 	 * METADATA INFORMATION.
 	 */
+	@Override
 	public DependentResource[] getDependentResourceFields() {
 		return new DependentResource[] {
 				new GenericDependentResource("database", "datasource", AdapterFieldDependency.class),
@@ -1711,6 +1748,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		this.timeAlert = timeAlert;
 	}
 
+	@Override
 	public boolean getDebug() {
 		return this.debug;
 	}

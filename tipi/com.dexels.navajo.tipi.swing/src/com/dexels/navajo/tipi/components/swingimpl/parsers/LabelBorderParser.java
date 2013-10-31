@@ -37,6 +37,7 @@ public class LabelBorderParser extends TipiTypeParser {
 	private final static Logger logger = LoggerFactory
 			.getLogger(LabelBorderParser.class);
 	
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return parseBorder(expression,source);
 	}

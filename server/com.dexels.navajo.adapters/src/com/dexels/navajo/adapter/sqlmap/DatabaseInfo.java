@@ -197,13 +197,16 @@ public class DatabaseInfo implements Mappable {
     return this.version;
   }
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
   }
 
-  public void kill() {
+  @Override
+public void kill() {
   }
 
   public void setCatalogName(String catalogName) {

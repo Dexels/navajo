@@ -48,10 +48,12 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 
 	private static final long serialVersionUID = -5204169989328717042L;
 
+	@Override
 	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
 		super.performComponentMethod(name, compMeth, event);
 	}
 
+	@Override
 	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		try {
 			if(service.equals("InitRss")) {
@@ -74,6 +76,7 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 			return rss;
 	}
 
+	@Override
 	public String getConnectorId() {
 		return "rss";
 	}
@@ -90,7 +93,7 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 		n.addMethod(mm);
 		return n;
 	}
-	@SuppressWarnings({ "rawtypes" })
+	@SuppressWarnings({ })
 	private Navajo getRssNavajo(Channel c, String service) throws NavajoException {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 			Header h =NavajoFactory.getInstance().createHeader(n, service, "unknown","unknown", -1);
@@ -108,7 +111,7 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 		
 		Message m = NavajoFactory.getInstance().createMessage(n, "Rss", Message.MSG_TYPE_ARRAY);
 		n.addMessage(m);
-		Collection s = c.getItems();
+		Collection<Item> s = c.getItems();
 		for (Iterator<Item> iterator = s.iterator(); iterator.hasNext();) {
 			Item i = iterator.next();
 			addItem(m,i);
@@ -196,12 +199,14 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 
 
 
+	@Override
 	public Set<String> getEntryPoints() {
 		Set<String> s = new HashSet<String>();
 		s.add("InitRss");
 		return s;
 	}
 
+	@Override
 	public String getDefaultEntryPoint() {
 		return "InitRss";
 	}

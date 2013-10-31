@@ -41,6 +41,7 @@ public class TipiSwitchPanel extends TipiPanel {
 	public TipiSwitchPanel() {
 	}
 
+	@Override
 	public Object createContainer() {
 		Container c = (Container) super.createContainer();
 		cardLayout = new CardLayout();
@@ -62,6 +63,7 @@ public class TipiSwitchPanel extends TipiPanel {
 		final String name = componentMap.get(c);
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				if (name == null) {
 					getSwingContainer().add((Component) c, name);
@@ -79,6 +81,7 @@ public class TipiSwitchPanel extends TipiPanel {
 
 	}
 
+	@Override
 	public void setComponentValue(String name, Object object) {
 		super.setComponentValue(name, object);
 		if (name.equals("selectedId")) {
@@ -108,6 +111,7 @@ public class TipiSwitchPanel extends TipiPanel {
 		final TipiComponent tc2 = tc;
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				cardLayout.show(getSwingContainer(), tc2.getId());
 

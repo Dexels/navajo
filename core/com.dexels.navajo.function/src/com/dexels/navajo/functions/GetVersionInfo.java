@@ -31,14 +31,17 @@ import com.dexels.navajo.version.AbstractVersion;
 
 public final class GetVersionInfo extends FunctionInterface {
 
+	@Override
 	public String remarks() {
 		return "Gets the version info of a specific Version object";
 	}
 
+	@Override
 	public String usage() {
 		return "GetVersionInfo([package name])";
 	}
 
+	@Override
 	public final Object evaluate() throws TMLExpressionException {
 		Object o = getOperand(0);
 		String packageName = o+"";

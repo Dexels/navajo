@@ -30,7 +30,8 @@ public class NavajoStorage extends PlatformObject implements IStorage {
         myName = name;
     }
     
-    public InputStream getContents() throws CoreException {
+    @Override
+	public InputStream getContents() throws CoreException {
         ByteArrayInputStream bais;
         try {
             StringWriter sw = new StringWriter();
@@ -45,15 +46,18 @@ public class NavajoStorage extends PlatformObject implements IStorage {
         }
     }
 
-    public IPath getFullPath() {
+    @Override
+	public IPath getFullPath() {
          return null;
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         return myName+".xml";
     }
 
-    public boolean isReadOnly() {
+    @Override
+	public boolean isReadOnly() {
         return true;
     }
 

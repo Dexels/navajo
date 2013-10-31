@@ -33,6 +33,7 @@ public class TipiQuestion extends TipiBaseQuestion {
 	private static final long serialVersionUID = -4666897405672564798L;
 	private TipiSwingPanel myPanel;
 
+	@Override
 	public void setValid(boolean b, String msg) {
 
 		if (b == false) {
@@ -45,6 +46,7 @@ public class TipiQuestion extends TipiBaseQuestion {
 		}
 	}
 
+	@Override
 	public Object createContainer() {
 
 		myPanel = new TipiSwingPanel(TipiQuestion.this);
@@ -57,27 +59,33 @@ public class TipiQuestion extends TipiBaseQuestion {
 		return myPanel;
 	}
 
+	@Override
 	public void addToContainer(Object c, Object constraints) {
 
 		myPanel.add((Component) c, constraints);
 	}
 
+	@Override
 	public void removeFromContainer(final Object c) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				((Container) getContainer()).remove((Component) c);
 			}
 		});
 	}
 
+	@Override
 	public void setContainerLayout(final Object layout) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				((Container) getContainer()).setLayout((LayoutManager) layout);
 			}
 		});
 	}
 
+	@Override
 	protected void setQuestionBorder(String val) {
 		if (val == null) {
 			((JPanel) getContainer()).setBorder(BorderFactory
@@ -88,6 +96,7 @@ public class TipiQuestion extends TipiBaseQuestion {
 		}
 	}
 
+	@Override
 	public void runSyncInEventThread(Runnable r) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			r.run();
@@ -101,6 +110,7 @@ public class TipiQuestion extends TipiBaseQuestion {
 		}
 	}
 
+	@Override
 	public void runAsyncInEventThread(Runnable r) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			r.run();
@@ -109,6 +119,7 @@ public class TipiQuestion extends TipiBaseQuestion {
 		}
 	}
 
+	@Override
 	public void setQuestionVisible(boolean b) {
 		((JComponent) getContainer()).setVisible(isRelevant());
 

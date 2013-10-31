@@ -501,7 +501,7 @@ public abstract class ScriptEnvironment implements Serializable {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Class<?> getOSGiClass(String className) throws ClassNotFoundException {
 		if(!hasOSGi()) {
 			ClassLoader cl = DispatcherFactory.getInstance().getNavajoConfig()

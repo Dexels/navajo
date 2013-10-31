@@ -27,6 +27,7 @@ public class SelectionBridge implements Item {
 	}
 
 	
+	@Override
 	public String toString() {
 		return src.getName();
 		

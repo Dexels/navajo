@@ -52,6 +52,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable(){
 
+			@Override
 			public void run() {
 				myMapKit = new TipiSwingMapImpl();
 				overlayPanel = new JPanel();
@@ -59,6 +60,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 				overlayPanel.setOpaque(false);
 				myMapKit.getMainMap().addPropertyChangeListener(new PropertyChangeListener() {
 
+					@Override
 					public void propertyChange(PropertyChangeEvent p) {
 						if (p.getPropertyName().equals("zoom")) {
 							layoutChildren();
@@ -72,18 +74,22 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 				// crate a WaypointPainter to draw the points
 				// WaypointPainter painter = new WaypointPainter();
 				jp.addComponentListener(new ComponentListener() {
+					@Override
 					public void componentHidden(ComponentEvent arg0) {
 					}
 
+					@Override
 					public void componentMoved(ComponentEvent arg0) {
 					}
 
+					@Override
 					public void componentResized(ComponentEvent arg0) {
 						myMapKit.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
 						overlayPanel.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
 						layoutChildren();
 					}
 
+					@Override
 					public void componentShown(ComponentEvent arg0) {
 						myMapKit.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
 						overlayPanel.setBounds(new Rectangle(new Point(0, 0), jp.getSize()));
@@ -97,6 +103,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 				SwingUtilities.invokeLater(new Runnable(){
 
+					@Override
 					public void run() {
 						myMapKit.repaint();
 					}});
@@ -121,6 +128,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		final Message m = n.getMessage(messagePath);
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				ArrayList<Message> al = m.getAllMessages();
 				try {
@@ -164,6 +172,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	protected void setComponentValue(final String name, final Object object) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 
 				if (name.equals("zoom")) {
@@ -263,6 +272,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 		SwingUtilities.invokeLater(new Runnable(){
 
+			@Override
 			public void run() {
 				positionComponent(c, gp, gg);
 
@@ -310,6 +320,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		// super.removeFromContainer(c);
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				mapComponents.remove(c);
 				overlayPanel.remove((Component) c);

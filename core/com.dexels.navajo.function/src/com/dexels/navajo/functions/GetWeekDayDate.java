@@ -18,7 +18,8 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class GetWeekDayDate extends FunctionInterface {
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "This function return the a calendar date of the first given weekday in the past. Optionally a third parameter can be added containing a date. This is the reference date used";
   }
 
@@ -37,7 +38,8 @@ public class GetWeekDayDate extends FunctionInterface {
     return c.getTime();
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object o = this.getOperand(0);
     Object f = this.getOperand(1);
     Object reference = null;
@@ -125,6 +127,7 @@ public class GetWeekDayDate extends FunctionInterface {
 	  
 }
 
+@Override
 public String usage() {
    return "GetWeekdayDate(Integer weekday / String weekday, Boolean past / String 'forward'/'back', Date referenceDate): Date";
   }

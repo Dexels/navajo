@@ -50,11 +50,14 @@ public class OptionMap implements Mappable {
 
     public OptionMap() {}
 
+@Override
     public void load(Access parm4) throws UserException, MappableException {}
 
+@Override
     public void store() throws UserException, MappableException {}
 
-    public void kill() {}
+    @Override
+	public void kill() {}
 
     public String getOptionName() {
         return optionName;

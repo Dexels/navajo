@@ -46,6 +46,7 @@ public class GenericPropertyCellEditor implements TableCellEditor,
 
 	}
 
+	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value,
 			boolean isSelected, int row, int column) {
 		if (Property.class.isInstance(value)) {
@@ -67,11 +68,13 @@ public class GenericPropertyCellEditor implements TableCellEditor,
 		throw new IllegalArgumentException("Er moet een property in baviaan!");
 	}
 
+	@Override
 	public Object getCellEditorValue() {
 		return myComponent.getProperty();
 
 	}
 
+	@Override
 	public boolean isCellEditable(EventObject anEvent) {
 		if (myTable != null) {
 			boolean b = myTable.getMessageModel().isCellEditable(
@@ -92,10 +95,12 @@ public class GenericPropertyCellEditor implements TableCellEditor,
 		return myComponent.getProperty();
 	}
 
+	@Override
 	public boolean shouldSelectCell(EventObject anEvent) {
 		return true;
 	}
 
+	@Override
 	public boolean stopCellEditing() {
 		logger.info("Stopped editing initial: "
 				+ getInitialProperty().getValue());
@@ -115,18 +120,22 @@ public class GenericPropertyCellEditor implements TableCellEditor,
 		return true;
 	}
 
+	@Override
 	public void cancelCellEditing() {
 		// myTable.editingCanceled(null);
 	}
 
+	@Override
 	public void addCellEditorListener(CellEditorListener ce) {
 		myListeners.add(ce);
 	}
 
+	@Override
 	public void removeCellEditorListener(CellEditorListener ce) {
 		myListeners.remove(ce);
 	}
 
+	@Override
 	public void valueChanged(ListSelectionEvent e) {
 	}
 

@@ -16,7 +16,8 @@ public class ToLower extends FunctionInterface {
 
   public ToLower() {}
 
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
       String s = (String) this.getOperands().get(0);
 
       if (s == null)
@@ -25,11 +26,13 @@ public class ToLower extends FunctionInterface {
       return s.toLowerCase();
   }
 
-  public String usage() {
+  @Override
+public String usage() {
       return "ToLower(String)";
   }
 
-  public String remarks() {
+  @Override
+public String remarks() {
       return "Returns a lowercase version of the supplied string.";
   }
 

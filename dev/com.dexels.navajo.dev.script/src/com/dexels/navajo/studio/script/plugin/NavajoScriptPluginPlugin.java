@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -53,7 +52,6 @@ import com.dexels.navajo.studio.eclipse.INavajoActivityListener;
 import com.dexels.navajo.studio.eclipse.IServerEntryListener;
 import com.dexels.navajo.studio.eclipse.NavajoBuilder;
 import com.dexels.navajo.studio.eclipse.ServerEntry;
-import com.dexels.navajo.studio.eclipse.prefs.ProjectListElement;
 import com.dexels.navajo.studio.script.plugin.views.TmlBrowser;
 
 /**
@@ -228,7 +226,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     public void openViewer(final String id) {
         getWorkbench().getDisplay().syncExec(new Runnable() {
 
-            public void run() {
+            @Override
+			public void run() {
                 try {
                     IViewPart iv = getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(id);
                     getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(iv);
@@ -327,7 +326,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     /**
      * This method is called upon plug-in activation
      */
-    public void start(BundleContext context) throws Exception {
+    @Override
+	public void start(BundleContext context) throws Exception {
         super.start(context);
         setup();
     }
@@ -389,33 +389,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
      */
     public ResourceBundle getResourceBundle() {
         return resourceBundle;
-    }
-
-
-    static List readProjectsFromPreferenceStore(String keyInPreferenceStore) {
-        IPreferenceStore pref = NavajoScriptPluginPlugin.getDefault().getPreferenceStore();
-        String stringList = pref.getString(keyInPreferenceStore);
-
-        List<String> projectsIdList = new ArrayList<String>();
-        StringTokenizer tokenizer = new StringTokenizer(stringList, ";");
-        while (tokenizer.hasMoreElements()) {
-            projectsIdList.add(tokenizer.nextToken());
-        }
-
-        return ProjectListElement.stringsToProjectsList(projectsIdList);
-
-    }
-
-    static void saveProjectsToPreferenceStore(List projectList, String keyInPreferenceStore) {
-        IPreferenceStore pref = NavajoScriptPluginPlugin.getDefault().getPreferenceStore();
-        StringBuffer buf = new StringBuffer();
-        Iterator it = projectList.iterator();
-        while (it.hasNext()) {
-            ProjectListElement each = (ProjectListElement) it.next();
-            buf.append(each.getID());
-            buf.append(';');
-        }
-        pref.setValue(keyInPreferenceStore, buf.toString());
     }
 
     public String getApplicationSetting() {
@@ -925,7 +898,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     public void showInfo(final String title, final String message) {
         getWorkbench().getDisplay().syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 MessageDialog.openInformation(getWorkbench().getDisplay().getActiveShell(), title, message);
             }
         });
@@ -938,7 +912,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     public boolean showConfirm(final String title, final String message) {
         getWorkbench().getDisplay().syncExec(new Runnable(){
-            public void run() {
+            @Override
+			public void run() {
                 MessageDialog.openConfirm(getWorkbench().getDisplay().getActiveShell(), title, message);
             }});
         return true;
@@ -946,7 +921,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     public void showError(final String title, final String message) {
         getWorkbench().getDisplay().syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 MessageDialog.openError(getWorkbench().getDisplay().getActiveShell(), title, message);
             }
         });
@@ -954,7 +930,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     public void showWarning(final String title, final String message) {
         getWorkbench().getDisplay().syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 MessageDialog.openWarning(getWorkbench().getDisplay().getActiveShell(), title, message);
             }
         });
@@ -1079,7 +1056,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return null;
     }
     
-    public IPreferenceStore getPreferenceStore() {
+    @Override
+	public IPreferenceStore getPreferenceStore() {
         if (myPreferences==null) {
             myPreferences = super.getPreferenceStore();
         }
@@ -1155,7 +1133,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     
     
     
-       @SuppressWarnings("deprecation")
+       @Override
+	@SuppressWarnings("deprecation")
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
            super.initializeDefaultPreferences(store);
          if (store == null) {
@@ -1172,7 +1151,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         store.setDefault(REMOTE_PORT, "10000");
      }
 
-       @SuppressWarnings("deprecation")
+       @Override
+	@SuppressWarnings("deprecation")
 	protected void savePreferenceStore() {
            String ss = serializeServerEntries();
            if(ss!=null) {

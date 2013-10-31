@@ -10,6 +10,7 @@ public class TipiJabberExtension extends TipiAbstractXMLExtension implements Tip
 
 	public TipiJabberExtension() {
 	}
+	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
 		

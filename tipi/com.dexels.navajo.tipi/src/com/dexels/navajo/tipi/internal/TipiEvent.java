@@ -54,6 +54,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 	public TipiEvent() {
 	}
 
+	@Override
 	public Object clone() {
 
 		TipiEvent ti = new TipiEvent();
@@ -172,6 +173,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 		return false;
 	}
 
+	@Override
 	public TipiContext getContext() {
 		if (getComponent() == null) {
 			throw new RuntimeException("Event without component is not allowed");
@@ -202,6 +204,7 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 		}
 	}
 
+	@Override
 	public void performAction(TipiEvent te, TipiExecutable parent, int index)
 			throws TipiException, TipiBreakException {
 		performAction(getComponent(), parent, null);
@@ -291,11 +294,13 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 		return myEventName;
 	}
 
+	@Override
 	public String toString() {
 		return "TipiEvent: " + myEventName + " - " + " comp: " + getComponent();
 	}
 
 	// This actually has a good reason
+	@Override
 	public TipiEvent getEvent() {
 		return this;
 	}

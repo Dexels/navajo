@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -55,8 +56,8 @@ public class ColumnManagementDialog extends JDialog {
 			.getLogger(ColumnManagementDialog.class);
 	
 	private static final long serialVersionUID = -6795986412646589943L;
-	private JList availableColumnList = new JList();
-	private JList visibleColumnList = new JList();
+	private JList<String> availableColumnList = new JList<String>();
+	private JList<String> visibleColumnList = new JList<String>();
 	private JButton hideButton = new JButton();
 	private JButton showButton = new JButton();
 	private JLabel jLabel1 = new JLabel();
@@ -160,7 +161,7 @@ public class ColumnManagementDialog extends JDialog {
 
 	private final void fillEmUp() {
 		int currentColumnCount = myTable.getColumnCount();
-		DefaultListModel model = (DefaultListModel) visibleColumnList
+		DefaultListModel<String> model = (DefaultListModel<String>) visibleColumnList
 				.getModel();
 
 		for (int i = 0; i < currentColumnCount; i++) {
@@ -172,7 +173,7 @@ public class ColumnManagementDialog extends JDialog {
 			nameIdMap.put(id, item);
 		}
 
-		DefaultListModel model2 = (DefaultListModel) availableColumnList
+		DefaultListModel<String> model2 = (DefaultListModel<String>) availableColumnList
 				.getModel();
 		for (int j = 0; j < availableItems.size(); j++) {
 			String id = availableItems.get(j);
@@ -182,8 +183,8 @@ public class ColumnManagementDialog extends JDialog {
 	}
 
 	private final void jbInit() throws Exception {
-		availableColumnList.setModel(new DefaultListModel());
-		visibleColumnList.setModel(new DefaultListModel());
+		availableColumnList.setModel(new DefaultListModel<String>());
+		visibleColumnList.setModel(new DefaultListModel<String>());
 		this.setTitle("Toevoegen en verwijderen van kolommen");
 		this.getContentPane().setSize(500, 400);
 		setLocationRelativeTo(myToplevel);
@@ -280,11 +281,10 @@ public class ColumnManagementDialog extends JDialog {
 	}
 
 	final void hideButton_actionPerformed(ActionEvent e) {
-		Object[] removedNames = visibleColumnList.getSelectedValues();
-		DefaultListModel vm = (DefaultListModel) visibleColumnList.getModel();
-		DefaultListModel am = (DefaultListModel) availableColumnList.getModel();
-		for (int i = 0; i < removedNames.length; i++) {
-			String name = removedNames[i].toString();
+		List<String> removedNames = visibleColumnList.getSelectedValuesList();
+		DefaultListModel<String> vm = (DefaultListModel<String>) visibleColumnList.getModel();
+		DefaultListModel<String> am = (DefaultListModel<String>) availableColumnList.getModel();
+		for (String name : removedNames) {
 			vm.removeElement(name);
 			am.addElement(name);
 			availableItems.add(name);
@@ -294,15 +294,15 @@ public class ColumnManagementDialog extends JDialog {
 	}
 
 	final void showButton_actionPerformed(ActionEvent e) {
-		Object[] addedNames = availableColumnList.getSelectedValues();
-		DefaultListModel vm = (DefaultListModel) visibleColumnList.getModel();
-		DefaultListModel am = (DefaultListModel) availableColumnList.getModel();
-		for (int i = 0; i < addedNames.length; i++) {
-			String name = addedNames[i].toString();
+		List<String> addedNames = availableColumnList.getSelectedValuesList();
+		DefaultListModel<String> vm = (DefaultListModel<String>) visibleColumnList.getModel();
+		DefaultListModel<String> am = (DefaultListModel<String>) availableColumnList.getModel();
+		for (String name : addedNames) {
 			am.removeElement(name);
 			vm.addElement(name);
 			availableItems.remove(name);
 			visibleItems.add(name);
+		
 		}
 		visibleColumnList.setSelectedIndex(1);
 	}
@@ -314,7 +314,7 @@ public class ColumnManagementDialog extends JDialog {
 			String item = myTable.getMessageModel().getColumnId(i);
 			myTable.removeColumn(item);
 		}
-		DefaultListModel vm = (DefaultListModel) visibleColumnList.getModel();
+		DefaultListModel<String> vm = (DefaultListModel<String>) visibleColumnList.getModel();
 		Enumeration<?> m = vm.elements();
 		myTable.removeAllColumns();
 		while (m.hasMoreElements()) {
@@ -345,9 +345,9 @@ public class ColumnManagementDialog extends JDialog {
 
 	final void upButton_actionPerformed(ActionEvent e) {
 		int index = visibleColumnList.getSelectedIndex();
-		DefaultListModel vm = (DefaultListModel) visibleColumnList.getModel();
+		DefaultListModel<String> vm = (DefaultListModel<String>) visibleColumnList.getModel();
 		if (index > 0) {
-			String value = (String) visibleColumnList.getSelectedValue();
+			String value = visibleColumnList.getSelectedValue();
 			vm.removeElement(value);
 			vm.insertElementAt(value, index - 1);
 			visibleColumnList.setSelectedIndex(index - 1);
@@ -356,9 +356,9 @@ public class ColumnManagementDialog extends JDialog {
 
 	final void downButton_actionPerformed(ActionEvent e) {
 		int index = visibleColumnList.getSelectedIndex();
-		DefaultListModel vm = (DefaultListModel) visibleColumnList.getModel();
+		DefaultListModel<String> vm = (DefaultListModel<String>) visibleColumnList.getModel();
 		if (index < vm.indexOf(vm.lastElement())) {
-			String value = (String) visibleColumnList.getSelectedValue();
+			String value = visibleColumnList.getSelectedValue();
 			vm.removeElement(value);
 			vm.insertElementAt(value, index + 1);
 			visibleColumnList.setSelectedIndex(index + 1);
@@ -376,6 +376,7 @@ class ColumnManagementDialog_hideButton_actionAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.hideButton_actionPerformed(e);
 	}
@@ -390,6 +391,7 @@ class ColumnManagementDialog_showButton_actionAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.showButton_actionPerformed(e);
 	}
@@ -403,6 +405,7 @@ class ColumnManagementDialog_okButton_actionAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.okButton_actionPerformed(e);
 	}
@@ -417,6 +420,7 @@ class ColumnManagementDialog_cancelButton_actionAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.cancelButton_actionPerformed(e);
 	}
@@ -430,6 +434,7 @@ class ColumnManagementDialog_upButton_actionAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.upButton_actionPerformed(e);
 	}
@@ -444,6 +449,7 @@ class ColumnManagementDialog_downButton_actionAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.downButton_actionPerformed(e);
 	}

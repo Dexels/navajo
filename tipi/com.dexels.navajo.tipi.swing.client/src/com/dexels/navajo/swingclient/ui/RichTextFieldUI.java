@@ -25,6 +25,7 @@ public class RichTextFieldUI extends BasicTextFieldUI {
 	public RichTextFieldUI(JComponent c) {
 		this.me = c;
 		me.addPropertyChangeListener("editable", new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				// logger.info("prop: " + evt.getPropertyName());
 				if (((Boolean) evt.getNewValue()).booleanValue()) {

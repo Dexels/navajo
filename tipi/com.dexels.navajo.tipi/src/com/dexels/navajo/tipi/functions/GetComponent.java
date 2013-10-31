@@ -19,6 +19,7 @@ public class GetComponent extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Resolves a tipi path to a TipiComponent. Source component is required to resolve context data.";
 	}
@@ -28,6 +29,7 @@ public class GetComponent extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "GetComponent(TipiComponent source, String path)";
 	}
@@ -38,6 +40,7 @@ public class GetComponent extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
 		if (pp == null) {

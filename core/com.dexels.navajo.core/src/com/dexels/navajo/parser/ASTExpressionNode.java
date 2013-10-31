@@ -9,7 +9,8 @@ public final class ASTExpressionNode extends SimpleNode {
         super(id);
     }
 
-    public final Object interpret() throws TMLExpressionException {
+    @Override
+	public final Object interpret() throws TMLExpressionException {
 
         Object a = jjtGetChild(0).interpret();
 

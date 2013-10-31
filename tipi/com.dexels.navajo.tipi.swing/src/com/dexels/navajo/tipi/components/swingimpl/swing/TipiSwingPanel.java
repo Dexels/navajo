@@ -102,10 +102,12 @@ public class TipiSwingPanel extends JPanel implements Scrollable, TipiDndCapable
 		return checkMin(checkMax(d));
 	}
 
+	@Override
 	public Dimension getPreferredSize() {
 		return checkMaxMin(super.getPreferredSize());
 	}
 
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (paint != null) {
@@ -174,27 +176,33 @@ public class TipiSwingPanel extends JPanel implements Scrollable, TipiDndCapable
 		return alignment;
 	}
 
+	@Override
 	public Dimension getPreferredScrollableViewportSize() {
 		return getPreferredSize();
 	}
 
+	@Override
 	public int getScrollableBlockIncrement(Rectangle arg0, int arg1, int arg2) {
 		return 40;
 	}
 
+	@Override
 	public boolean getScrollableTracksViewportHeight() {
 		return false;
 	}
 
+	@Override
 	public boolean getScrollableTracksViewportWidth() {
 		return false;
 	}
 
+	@Override
 	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
 		return 20;
 	}
 
 	
+	@Override
 	public TipiDndManager getDndManager() {
 		return myDndManager;
 	}

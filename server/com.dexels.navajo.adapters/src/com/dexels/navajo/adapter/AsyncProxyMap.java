@@ -35,6 +35,7 @@ public class AsyncProxyMap extends AsyncMappable {
 		.getLogger(AsyncProxyMap.class);
 
 
+@Override
   public void load(Access access) throws UserException, MappableException {
     username = access.rpcUser;
     password = access.rpcPwd;
@@ -48,29 +49,35 @@ public class AsyncProxyMap extends AsyncMappable {
     this.method = name;
   }
 
-  public void kill() {
+  @Override
+public void kill() {
   }
 
-  public void afterResponse() {
+  @Override
+public void afterResponse() {
     logger.debug("AsyncProxyMap: in afterResponse()");
     access.setOutputDoc(inDoc);
   }
 
-  public int getPercReady() {
+  @Override
+public int getPercReady() {
     logger.debug("AsyncProxyMap: in getPercReady()");
     return 0;
   }
 
-  public void beforeResponse(Access access) {
+  @Override
+public void beforeResponse(Access access) {
     access.setOutputDoc(inDoc);
     logger.debug("AsyncProxyMap: in beforeResponse()");
     logger.debug("INDOC = " + access.getOutputDoc());
   }
 
+  @Override
   public void store() throws UserException, MappableException {
     logger.debug("AsyncProxyMap: in store()");
   }
 
+  @Override
   public void run() throws UserException {
 	  
      Header h = outDoc.getHeader();
@@ -95,7 +102,8 @@ public class AsyncProxyMap extends AsyncMappable {
     
   }
 
-  public void afterRequest() throws UserException {
+  @Override
+public void afterRequest() throws UserException {
     logger.debug("AsyncProxyMap: in afterRequest()");
     if (method == null)
       throw new UserException(-1, "AsyncProxyMap: specify a method");

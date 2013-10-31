@@ -65,7 +65,8 @@ public class SPMap extends SQLMap {
 	  this.isLegacyMode = SQLMapConstants.isLegacyMode();
   }
   
-  public void load(Access access) throws UserException, MappableException {
+  @Override
+public void load(Access access) throws UserException, MappableException {
 	  
 	  super.load(access);
 	  synchronized ( semaphore  ) {
@@ -86,6 +87,7 @@ public class SPMap extends SQLMap {
 
  
 
+@Override
   protected ResultSetMap[] getResultSet(boolean updateOnly) throws UserException {
 
     if (debug) {
@@ -249,7 +251,8 @@ public class SPMap extends SQLMap {
 		return r.useLegacyDateMode();
 	}
 
-  public void setQuery(String newQuery) throws UserException {
+  @Override
+public void setQuery(String newQuery) throws UserException {
 //    if ( (this.query != null) || (this.update != null)) {
 //      throw new UserException( -1,
 //          "SPMap does not allow for multiple queries/updates, use a new SPMap");
@@ -259,6 +262,7 @@ public class SPMap extends SQLMap {
     parameterTypes = new ArrayList();
   }
 
+  @Override
   public void setUpdate(String newUpdate) throws UserException {
     if ( (this.update != null) || (this.query != null)) {
       throw new UserException( -1,
@@ -277,7 +281,8 @@ public class SPMap extends SQLMap {
     parameterTypes = new ArrayList();
   }
 
-  public void setParameter(Object param) {
+  @Override
+public void setParameter(Object param) {
     // logger.info("in setParameter(),");
     super.setParameter(param);
     parameterTypes.add(new Integer(INPUT_PARAM));
@@ -393,6 +398,7 @@ public class SPMap extends SQLMap {
     }
   }
 
+  @Override
   public void store() throws UserException,
       MappableException {
     try {
@@ -408,7 +414,8 @@ public class SPMap extends SQLMap {
     super.store();
   }
 
-  public void kill() {
+  @Override
+public void kill() {
     try {
       if (callStatement != null) {
         callStatement.close();
@@ -425,7 +432,8 @@ public class SPMap extends SQLMap {
   /**
    * This method can not be deleted because it's used in SQLMapHelper - setBlob
    */
-  public void addToBinaryStreamList(InputStream binaryStream) {
+  @Override
+public void addToBinaryStreamList(InputStream binaryStream) {
       super.addToBinaryStreamList(binaryStream);
   }
 }

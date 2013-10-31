@@ -50,6 +50,7 @@ public class CalendarTableModel implements TableModel {
 		myConstants = cc;
 	}
 
+	@Override
 	public int getRowCount() {
 		myCalendar = Calendar.getInstance();
 		myCalendar.set(Calendar.MONTH, myMonth);
@@ -114,6 +115,7 @@ public class CalendarTableModel implements TableModel {
 		}
 	}
 
+	@Override
 	public int getColumnCount() {
 		return 8;
 	}
@@ -123,6 +125,7 @@ public class CalendarTableModel implements TableModel {
 		return dayMap.get(dayOfYear);
 	}
 
+	@Override
 	public Object getValueAt(int week, int day) {
 		Day d = new Day();
 		// Weekdays range from 1-7 instead of 0-6
@@ -199,18 +202,22 @@ public class CalendarTableModel implements TableModel {
 		}
 	}
 
+	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		return true;
 	}
 
+	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		/** @todo Implement this javax.swing.table.TableModel abstract method */
 	}
 
+	@Override
 	public void removeTableModelListener(TableModelListener l) {
 		myListeners.remove(l);
 	}
 
+	@Override
 	public String getColumnName(int columnIndex) {
 		if (myConstants.getColumnWidth() < 70 && columnIndex > 0) {
 			SimpleDateFormat d = new SimpleDateFormat("EE");
@@ -227,10 +234,12 @@ public class CalendarTableModel implements TableModel {
 		}
 	}
 
+	@Override
 	public void addTableModelListener(TableModelListener l) {
 		myListeners.add(l);
 	}
 
+	@Override
 	public Class<?> getColumnClass(int columnIndex) {
 		return Object.class;
 	}

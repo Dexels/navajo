@@ -279,7 +279,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
             buttonBox.setLayout(layout);
             createButtons(buttonBox);
             buttonBox.addDisposeListener(new DisposeListener() {
-                public void widgetDisposed(DisposeEvent event) {
+                @Override
+				public void widgetDisposed(DisposeEvent event) {
                     addButton = null;
                     removeButton = null;
                     upButton = null;
@@ -309,7 +310,8 @@ public class ListFieldEditor extends ListEditor implements NavajoPluginResources
             list = new List(parent, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL);
             list.addSelectionListener(getSelectionListener());
             list.addDisposeListener(new DisposeListener() {
-                public void widgetDisposed(DisposeEvent event) {
+                @Override
+				public void widgetDisposed(DisposeEvent event) {
                     list = null;
                 }
             });

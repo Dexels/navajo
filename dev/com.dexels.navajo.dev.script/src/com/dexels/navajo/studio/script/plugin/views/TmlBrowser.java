@@ -132,7 +132,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
         
         selector.addSelectionChangedListener(new ISelectionChangedListener(){
 
-            public void selectionChanged(SelectionChangedEvent event) {
+            @Override
+			public void selectionChanged(SelectionChangedEvent event) {
                 serverChanged();
             }});
         
@@ -168,18 +169,21 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
         goButton.setText("Go!");
         goButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
         goButton.addSelectionListener(new SelectionListener() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                 go();
             }
 
-            public void widgetDefaultSelected(SelectionEvent e) {
+            @Override
+			public void widgetDefaultSelected(SelectionEvent e) {
             }});
         
         
         localeBox = new ComboViewer(headComp);
         localeBox.getCombo().setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
         localeBox.addSelectionChangedListener(new ISelectionChangedListener(){
-            public void selectionChanged(SelectionChangedEvent event) {
+            @Override
+			public void selectionChanged(SelectionChangedEvent event) {
             	NavajoScriptPluginPlugin.getDefault().setSelectedLocale((String)((IStructuredSelection)event.getSelection()).getFirstElement());
             }});
 
@@ -189,32 +193,38 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
         backButton.setText("<");
         backButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
         backButton.addSelectionListener(new SelectionListener() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                 back();
 
             }
 
-            public void widgetDefaultSelected(SelectionEvent e) {
+            @Override
+			public void widgetDefaultSelected(SelectionEvent e) {
             }});
         forwardButton = new Button(headComp,SWT.PUSH);
         forwardButton.setText(">");
         forwardButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
         forwardButton.addSelectionListener(new SelectionListener() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                 forward();
             }
 
-            public void widgetDefaultSelected(SelectionEvent e) {
+            @Override
+			public void widgetDefaultSelected(SelectionEvent e) {
             }});
         reloadButton = new Button(headComp,SWT.PUSH);
         reloadButton.setText("Reload");
         reloadButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
         reloadButton.addSelectionListener(new SelectionListener() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                 reload();
             }
 
-            public void widgetDefaultSelected(SelectionEvent e) {
+            @Override
+			public void widgetDefaultSelected(SelectionEvent e) {
             }});
 
         sourceButton = new Button(headComp,SWT.PUSH);
@@ -222,11 +232,13 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
         sourceButton.setEnabled(false);
         sourceButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
         sourceButton.addSelectionListener(new SelectionListener() {
-            public void widgetSelected(SelectionEvent e) {
+            @Override
+			public void widgetSelected(SelectionEvent e) {
                 showSource();
             }
 
-            public void widgetDefaultSelected(SelectionEvent e) {
+            @Override
+			public void widgetDefaultSelected(SelectionEvent e) {
             }});
 
         
@@ -257,7 +269,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
 //        formComposite.setLayoutData(td);
         NavajoScriptPluginPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener(){
 
-            public void propertyChange(PropertyChangeEvent event) {
+            @Override
+			public void propertyChange(PropertyChangeEvent event) {
                 System.err.println("Prefs changed. Ouwe: "+event.getOldValue()+" new: "+event.getNewValue());
                 refreshFromPrefs();
             }});
@@ -432,7 +445,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
     public void setNavajo(final Navajo n, final String scriptName) {
          final Display d = PlatformUI.getWorkbench().getDisplay();
         d.syncExec(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 currentService = scriptName;
                 if (NavajoFactory.getInstance().getExpressionEvaluator()==null) {
                     DefaultExpressionEvaluator dee = new DefaultExpressionEvaluator();
@@ -457,7 +471,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
 
     }
 
-    public void gotoScript(String name, Navajo n) {
+    @Override
+	public void gotoScript(String name, Navajo n) {
         currentService = name;
         scriptMap.put(name, n);
         if (historyList.isEmpty()) {
@@ -481,7 +496,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
        sourceButton.setEnabled(myCurrentNavajo!=null);
        }
 
-    public void serverEntryChanged(int index) {
+    @Override
+	public void serverEntryChanged(int index) {
     }
 
     public Navajo getNavajo() {
@@ -493,6 +509,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
     }
 
 
+	@Override
 	public void callScript(String name, Navajo n) {
 		
 	}

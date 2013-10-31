@@ -54,6 +54,7 @@ public class SOAPMap implements Mappable {
 	
 	private final static Logger logger = LoggerFactory.getLogger(SOAPMap.class);
 	
+	@Override
 	public void kill() {
 	}
 	
@@ -61,9 +62,11 @@ public class SOAPMap implements Mappable {
 		namespaces.add(ns);
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 

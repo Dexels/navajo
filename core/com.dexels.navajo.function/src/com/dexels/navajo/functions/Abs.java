@@ -21,6 +21,7 @@ public class Abs extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Returns absolute value of a number";
 	}
@@ -28,6 +29,7 @@ public class Abs extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object o = getOperand(0);
 		if (o == null) {

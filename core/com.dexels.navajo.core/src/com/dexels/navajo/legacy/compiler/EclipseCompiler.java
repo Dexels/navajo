@@ -36,14 +36,16 @@ public class EclipseCompiler implements JavaCompiler {
     ClassLoader loader=null;
 	private Class<?> compilerClass;
 
-    public void setCompilerClass(Class c) {
+    @Override
+	public void setCompilerClass(Class c) {
         compilerClass = c;
     }
     
     /**
      * Specify where the compiler can be found
      */
-    public void setCompilerPath(String compilerPath) {
+    @Override
+	public void setCompilerPath(String compilerPath) {
         // not used by the SunJavaCompiler
 	//this.compilerPath = compilerPath;
     }
@@ -51,33 +53,38 @@ public class EclipseCompiler implements JavaCompiler {
     /**
      * Set the encoding (character set) of the source
      */
-    public void setEncoding(String encoding) {
+    @Override
+	public void setEncoding(String encoding) {
       this.encoding = encoding;
     }
 
     /**
      * Set the class path for the compiler
      */
-    public void setClasspath(String classpath) {
+    @Override
+	public void setClasspath(String classpath) {
       this.classpath = classpath;
     }
 
     /**
      * Set the output directory
      */
-    public void setOutputDir(String outdir) {
+    @Override
+	public void setOutputDir(String outdir) {
       this.outdir = outdir;
     }
 
     /**
      * Set where you want the compiler output (messages) to go
      */
-    public void setMsgOutput(OutputStream out) {
+    @Override
+	public void setMsgOutput(OutputStream out) {
  
     }
 
 
-    public void setOutputWriter(StringWriter out) {
+    @Override
+	public void setOutputWriter(StringWriter out) {
     	this.out = out;
     }
     
@@ -92,15 +99,18 @@ public class EclipseCompiler implements JavaCompiler {
     /**
      * Set if you want debugging information in the class file
      */
-    public void setClassDebugInfo(boolean classDebugInfo) {
+    @Override
+	public void setClassDebugInfo(boolean classDebugInfo) {
         this.classDebugInfo = classDebugInfo;
     }
 
-    public void setCompileClassLoader( ClassLoader cl  ) {
+    @Override
+	public void setCompileClassLoader( ClassLoader cl  ) {
         loader=cl;
     }
 
-    public boolean compile(ArrayList elements) {
+    @Override
+	public boolean compile(ArrayList elements) {
 //        System.err.println("Compiling: "+elements.size()+" elements");
 //        System.err.println("Classpath: "+classpath.replace(';', '\n'));
         try {
@@ -158,6 +168,7 @@ public class EclipseCompiler implements JavaCompiler {
     
     }
     
+	@Override
 	@SuppressWarnings("unchecked")
 	public boolean compile(String source) {
 

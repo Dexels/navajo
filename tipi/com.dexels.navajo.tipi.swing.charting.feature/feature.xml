@@ -18,9 +18,10 @@
    </license>
 
    <plugin
-         id="com.dexels.navajo.tipi.charting"
+         id="com.dexels.navajo.tipi.swing.charting"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

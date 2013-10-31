@@ -300,6 +300,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 	 * server requires it.
 	 */
 	private class SMTPAuthenticator extends javax.mail.Authenticator {
+		@Override
 		public PasswordAuthentication getPasswordAuthentication() {
 			return new PasswordAuthentication(smtpUser, smtpPass);
 		}
@@ -310,6 +311,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 				"mailserver", "mailServer", AdapterFieldDependency.class) };
 	}
 
+	@Override
 	public void load(Access access) throws MappableException {
 		if (access != null) {
 			doc = access.getInDoc();
@@ -318,6 +320,7 @@ public class CommonsMailMap implements Mappable, Queuable {
 		}
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 		if (!queuedSend) {
 			sendMail();
@@ -331,9 +334,11 @@ public class CommonsMailMap implements Mappable, Queuable {
 		}
 	}
 
+	@Override
 	public void kill() {
 	}
 
+	@Override
 	public boolean send() {
 		retries++;
 		try {
@@ -428,54 +433,67 @@ public class CommonsMailMap implements Mappable, Queuable {
 		this.from = s;
 	}
 
+	@Override
 	public void setQueuedSend(boolean b) {
 		queuedSend = b;
 	}
 
+	@Override
 	public void setMaxRetries(int r) {
 		maxRetries = r;
 	}
 
+	@Override
 	public void setWaitUntil(long w) {
 		waitUntil = w;
 	}
 
+	@Override
 	public int getMaxRetries() {
 		return maxRetries;
 	}
 
+	@Override
 	public long getWaitUntil() {
 		return waitUntil;
 	}
 
+	@Override
 	public Binary getResponse() {
 		return null;
 	}
 
+	@Override
 	public Binary getRequest() {
 		return null;
 	}
 
+	@Override
 	public Access getAccess() {
 		return myAccess;
 	}
 
+	@Override
 	public Navajo getNavajo() {
 		return myNavajo;
 	}
 
+	@Override
 	public void resetRetries() {
 		retries = 0;
 	}
 
+	@Override
 	public int getRetries() {
 		return retries;
 	}
 
+	@Override
 	public int getMaxRunningInstances() {
 		return maxRunningInstances;
 	}
 
+	@Override
 	public void setMaxRunningInstances(int maxRunningInstances) {
 		setStaticMaxRunningInstances(maxRunningInstances);
 	}

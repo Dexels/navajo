@@ -35,12 +35,15 @@ public class TipiActivityBar extends TipiLabel implements TipiActivityListener {
 	public TipiActivityBar() {
 	}
 
+	@Override
 	public boolean isActive() {
 		return amIActive;
 	}
 
+	@Override
 	public void setActive(final boolean state) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				amIActive = state;
 				// setComponentValue("indeterminate", new Boolean(amIActive));
@@ -53,6 +56,7 @@ public class TipiActivityBar extends TipiLabel implements TipiActivityListener {
 		});
 	}
 
+	@Override
 	public void setComponentValue(String name, Object object) {
 		super.setComponentValue(name, object);
 		if (name.equals("freeicon")) {
@@ -63,6 +67,7 @@ public class TipiActivityBar extends TipiLabel implements TipiActivityListener {
 		}
 	}
 
+	@Override
 	public void setActiveThreads(int i) {
 		setComponentValue("text", "Active operations: " + i);
 	}
@@ -74,6 +79,7 @@ public class TipiActivityBar extends TipiLabel implements TipiActivityListener {
 	 * @todo Implement this
 	 *       com.dexels.navajo.tipi.components.core.TipiComponentImpl method
 	 */
+	@Override
 	public Object createContainer() {
 		Object o = super.createContainer();
 		myContext.addTipiActivityListener(this);

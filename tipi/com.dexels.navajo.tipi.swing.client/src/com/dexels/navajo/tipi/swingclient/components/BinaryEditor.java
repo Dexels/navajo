@@ -97,6 +97,7 @@ public class BinaryEditor extends JPanel implements PropertyControlled,
 		clearButton.setBorderPainted(false);
 		openButton.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				chooseFile();
 			}
@@ -104,6 +105,7 @@ public class BinaryEditor extends JPanel implements PropertyControlled,
 
 		clearButton.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (myProperty != null) {
 					logger.info("Clearing property!");
@@ -121,10 +123,12 @@ public class BinaryEditor extends JPanel implements PropertyControlled,
 		// flipButton.setVisible(false);
 	}
 
+	@Override
 	public Property getProperty() {
 		return myProperty;
 	}
 
+	@Override
 	public void setProperty(Property p) {
 		if (p != myProperty) {
 			if (myProperty != null) {
@@ -157,6 +161,7 @@ public class BinaryEditor extends JPanel implements PropertyControlled,
 			} else {
 				SwingUtilities.invokeAndWait(new Runnable() {
 
+					@Override
 					public void run() {
 
 						setSyncBinary(b);
@@ -226,9 +231,11 @@ public class BinaryEditor extends JPanel implements PropertyControlled,
 
 	}
 
+	@Override
 	public void update() {
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 		// logger.info("Property change detected: "+e.getPropertyName()+" old: "+e.getOldValue()+" new: "+e.getNewValue());
 		if ("value".equals(e.getPropertyName())) {
@@ -266,6 +273,7 @@ public class BinaryEditor extends JPanel implements PropertyControlled,
 		// }
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		chooseFile();
 	}

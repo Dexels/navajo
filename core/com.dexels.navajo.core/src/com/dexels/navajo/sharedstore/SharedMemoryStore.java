@@ -70,6 +70,7 @@ public class SharedMemoryStore implements SharedStoreInterface {
 		// Do nothing.
 	}
 
+	@Override
 	public void remove(String parent, String name) {
 		removeEntry(parent, name);
 	}

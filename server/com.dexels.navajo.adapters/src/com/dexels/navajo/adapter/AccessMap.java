@@ -111,7 +111,8 @@ private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
     }
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
 
     if (showDetails) {
     	
@@ -146,7 +147,8 @@ private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
     }
   }
 
-  public void kill() {
+  @Override
+public void kill() {
 	  if ( myScript != null ) {
 		  myScript.kill();
 	  }
@@ -298,7 +300,8 @@ private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
 	  }
   }
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
 	  callingAccess = access;
   }
 

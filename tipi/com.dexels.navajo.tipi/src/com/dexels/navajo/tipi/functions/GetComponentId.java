@@ -19,6 +19,7 @@ public class GetComponentId extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Returns the id of a TipiComponent. ";
 	}
@@ -28,6 +29,7 @@ public class GetComponentId extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "GetComponentId(TipiComponent source)";
 	}
@@ -37,6 +39,7 @@ public class GetComponentId extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
 		if (pp == null) {

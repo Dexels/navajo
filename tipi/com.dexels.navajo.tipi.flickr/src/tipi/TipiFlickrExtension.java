@@ -11,6 +11,7 @@ import com.dexels.navajo.tipi.TipiContext;
 		public TipiFlickrExtension() {
 		}
 
+		@Override
 		public void initialize(TipiContext tc) {
 			// Do nothing
 

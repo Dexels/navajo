@@ -121,10 +121,12 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		this.myParentExtension = myParentExtension;
 	}
 
+	@Override
 	public String getComponentType() {
 		return componentType;
 	}
 
+	@Override
 	public void setComponentType(String componentType) {
 		this.componentType = componentType;
 	}
@@ -133,6 +135,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return extension;
 	}
 
+	@Override
 	public void removeFromContainer(Object c) {
 		logger.debug("REMOVE FROM CONTAINER IGNORED: NOT IMPLEMENTED. CLASS: "
 						+ getClass());
@@ -142,6 +145,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return false;
 	}
 
+	@Override
 	public TipiDataComponent getServiceRoot() {
 		if (isServiceRoot()) {
 			return (TipiDataComponent) this;
@@ -152,11 +156,13 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return getTipiParent().getServiceRoot();
 	}
 
+	@Override
 	public void addToContainer(Object c, Object constraints) {
 		throw new UnsupportedOperationException(
 				"Can not add to container of class: " + getClass());
 	}
 
+	@Override
 	public Object getContainerLayout() {
 		// override to be useful
 		return null;
@@ -167,10 +173,12 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		// know what to do");
 	}
 
+	@Override
 	public void setContainerLayout(Object layout) {
 		// override to be useful
 	}
 
+	@Override
 	public TipiContext getContext() {
 		if (myContext == null) {
 			throw new RuntimeException(
@@ -179,6 +187,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return myContext;
 	}
 
+	@Override
 	public void initContainer() {
 		if (getContainer() == null) {
 			setContainer(createContainer());
@@ -190,10 +199,12 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		helperDeregisterEvent(e);
 	}
 
+	@Override
 	public void setName(String name) {
 		myName = name;
 	}
 
+	@Override
 	public void setContext(TipiContext tc) {
 		myContext = tc;
 	}
@@ -206,6 +217,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	// return isTransient;
 	// }
 
+	@Override
 	public boolean isPropertyComponent() {
 		return isPropertyComponent;
 	}
@@ -219,10 +231,12 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	// detectedExpressions.remove(name);
 	// }
 
+	@Override
 	public void setPropertyComponent(boolean b) {
 		isPropertyComponent = b;
 	}
 
+	@Override
 	public void setValue(String name, Object value) {
 		setValue(name, value, this, false, null);
 	}
@@ -305,6 +319,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 
 	// TODO FIXME ETC: Store and release PropertyHandlers
 
+	@Override
 	public void loadPropertiesFromNavajo(Navajo n) {
 		for (String currentPropertyPath : allLinks) {
 			Property p = n.getProperty(currentPropertyPath);
@@ -315,6 +330,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public void loadPropertiesFromMessage(Message m) {
 		for (String currentPropertyPath : allLinks) {
 			Property p = m.getProperty(currentPropertyPath);
@@ -340,6 +356,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public Object getValue(String name) {
 
 		TipiValue tv = componentValues.get(name);
@@ -362,6 +379,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return getAttributeProperty(name).getTypedValue();
 	}
 
+	@Override
 	public Property getAttributeProperty(String name) {
 		return componentAttributes.get(name);
 	}
@@ -373,6 +391,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	/**
 	 * Loads an event definition from the component definition
 	 */
+	@Override
 	public void loadEventsDefinition(TipiContext context,
 			XMLElement definition, XMLElement classDef) throws TipiException {
 		List<XMLElement> defChildren = definition.getChildren();
@@ -423,6 +442,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return null;
 	}
 
+	@Override
 	public void loadMethodDefinitions(TipiContext context,
 			XMLElement definition, XMLElement classDef) throws TipiException {
 		List<XMLElement> defChildren = definition.getChildren();
@@ -436,6 +456,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public void load(XMLElement definition, XMLElement instance,
 			TipiContext context) throws TipiException {
 		setContext(context);
@@ -502,6 +523,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		tl.commitLayout();
 	}
 
+	@Override
 	public void setId(String id) {
 		if(myId!=null) {
 			logger.trace("Not resetting id. Value: "+myId+" requested id: "+id);
@@ -544,14 +566,17 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		tipiComponentList.clear();
 	}
 
+	@Override
 	public final boolean isVisibleElement() {
 		return isVisibleElement;
 	}
 
+	@Override
 	public final boolean isTopLevel() {
 		return isToplevel;
 	}
 
+	@Override
 	public void instantiateComponent(XMLElement instance, XMLElement classdef)
 			throws TipiException {
 		String id = (String) instance.getAttribute("id");
@@ -610,10 +635,12 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	 * @param instance
 	 * @param classdef
 	 */
+	@Override
 	public void initBeforeBuildingChildren(XMLElement instance,
 			XMLElement classdef, XMLElement definition) {
 	}
 
+	@Override
 	public void loadStartValues(XMLElement element, TipiEvent event) {	
 		Iterator<String> it = componentValues.keySet().iterator();
 		while (it.hasNext()) {
@@ -663,10 +690,12 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public boolean isReusable() {
 		return false;
 	}
 
+	@Override
 	public void reUse() {
 		// no action
 	}
@@ -675,6 +704,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 			final String containerPropertyName) throws TipiException {
 		final Property p = getAttributeProperty(propertyName);
 		PropertyChangeListener pcl = new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				if (containerPropertyName.equals(e.getPropertyName())) {
 					p.setAnyValue(e.getNewValue());
@@ -699,6 +729,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 
 			private static final long serialVersionUID = -506166614251050065L;
 
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				Object value = e.getNewValue();
 				if (value != null) {
@@ -710,6 +741,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 				}
 			}
 
+			@Override
 			public String toString() {
 				try {
 					return "TipiComponentBoundProp: " + p.getFullPropertyName()
@@ -820,6 +852,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public String getId() {
 		if (myId == null) {
 			myId = myContext.generateComponentId(getTipiParent(), this);
@@ -827,6 +860,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return myId;
 	}
 
+	@Override
 	public final Message getStateMessage() {
 		if (stateMessage != null) {
 			return stateMessage;
@@ -840,6 +874,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return stateMessage;
 	}
 
+	@Override
 	public final void performMethod(String methodName,
 			Map<String, Object> params, TipiAction invocation, TipiEvent event) {
 		TipiComponentMethod tcm = componentMethods.get(methodName);
@@ -853,6 +888,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public final void performMethod(String methodName, TipiAction invocation,
 			TipiEvent event) throws TipiBreakException {
 		TipiComponentMethod tcm = componentMethods.get(methodName);
@@ -865,6 +901,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public final TipiComponentMethod getTipiComponentMethod(String methodName) {
 		TipiComponentMethod tcm = componentMethods.get(methodName);
 		return tcm;
@@ -884,6 +921,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	 * beware, leading slashes will be stripped. To do a global lookup, use the
 	 * TipiContext
 	 */
+	@Override
 	public TipiComponent getTipiComponentByPath(String path) {
 		if (path.equals(".")) {
 			return this;
@@ -918,24 +956,29 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public void setLayout(TipiLayout tl) {
 		currentLayout = tl;
 	}
 
+	@Override
 	public final TipiLayout getLayout() {
 		return currentLayout;
 	}
 
+	@Override
 	public final TipiComponent getTipiComponent(String s) {
 		return tipiComponentMap.get(s);
 	}
 
+	@Override
 	public final TipiComponent getTipiComponent(int i) {
 		// if (tipiComponentMap.size()!=tipiComponentList.size()) {
 		// }
 		return tipiComponentList.get(i);
 	}
 
+	@Override
 	public Iterable<TipiComponent> getChildren() {
 		return new ArrayList<TipiComponent>(tipiComponentList);
 	}
@@ -957,6 +1000,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	 * programatically dispose a component, call
 	 * TipiContext.disposeComponent(component)
 	 */
+	@Override
 	public void disposeComponent() {
 		if (getContainer() != null) {
 			for (PropertyChangeListener p : myContainerListeners) {
@@ -1003,10 +1047,12 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		myContainerListeners.clear();
 	}
 
+	@Override
 	public final boolean isDisposed() {
 		return isDisposed;
 	}
 
+	@Override
 	public final void removeAllChildren() {
 		ArrayList<TipiComponent> backup = new ArrayList<TipiComponent>(
 				tipiComponentList);
@@ -1018,6 +1064,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		clearAllComponents();
 	}
 
+	@Override
 	public List<PropertyComponent> getRecursiveProperties() {
 		List<PropertyComponent> al = new ArrayList<PropertyComponent>();
 		for (int i = 0; i < getChildCount(); i++) {
@@ -1028,6 +1075,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return al;
 	}
 
+	@Override
 	public void removeChild(TipiComponent child) {
 		if (child == null) {
 			logger.warn("Null child... Can not proceed with deleting.");
@@ -1053,6 +1101,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		removeChildComponent(child);
 	}
 
+	@Override
 	public void setParent(TipiComponent tc) {
 		myParent = tc;
 		if (myParent != null) {
@@ -1060,14 +1109,17 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public TipiComponent getTipiParent() {
 		return myParent;
 	}
 
+	@Override
 	public void addComponent(TipiComponent c, TipiContext context, Object td) {
 		addComponent(c, -1, context, td);
 	}
 
+	@Override
 	public void addComponent(final TipiComponent c, int index,
 			TipiContext context, Object td) {
 		if (td == null && getLayout() != null) {
@@ -1130,15 +1182,18 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public void addedToParentContainer(TipiComponent parentTipiComponent,
 			Object parentContainer, Object container, Object constriants) {
 
 	}
 
+	@Override
 	public Navajo getNavajo() {
 		return myNavajo;
 	}
 
+	@Override
 	public Navajo getNearestNavajo() {
 		if (myNavajo != null) {
 			return myNavajo;
@@ -1149,19 +1204,23 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return myParent.getNearestNavajo();
 	}
 
+	@Override
 	public void setConstraints(Object constraints) {
 		myConstraints = constraints;
 	}
 
+	@Override
 	public Object getConstraints() {
 		return myConstraints;
 	}
 
+	@Override
 	public void addTipiEvent(TipiEvent te) {
 		myEventList.add(te);
 		helperRegisterEvent(te);
 	}
 
+	@Override
 	public void removeTipiEvent(TipiEvent e) {
 		myEventList.remove(e);
 		helperDeregisterEvent(e);
@@ -1180,6 +1239,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public boolean performTipiEvent(String type, Map<String, Object> event,
 			boolean sync) throws TipiException, TipiBreakException {
 		return performTipiEvent(type, event, sync, null);
@@ -1246,9 +1306,11 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return hasEventType;
 	}
 
+	@Override
 	public void eventStarted(TipiExecutable te, Object event) {
 	}
 
+	@Override
 	public void eventFinished(TipiExecutable te, Object event) {
 	}
 
@@ -1257,10 +1319,12 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return myContext.evaluate(expr, source, event);
 	}
 
+	@Override
 	public String getName() {
 		return myName;
 	}
 
+	@Override
 	public Object getContainer() {
 		return myContainer;
 	}
@@ -1269,6 +1333,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		myContainer = c;
 	}
 
+	@Override
 	public void setContainer(Object c) {
 		if (getContainer() == null) {
 			replaceContainer(c);
@@ -1290,9 +1355,11 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return helperGetComponentValue(name);
 	}
 
+	@Override
 	public void setCursor(int cursorid) {
 	}
 
+	@Override
 	public void resetComponentValidationStateByRule(String id) {
 		if (myContainer != null) {
 			Iterator<TipiComponent> it = tipiComponentList.iterator();
@@ -1312,10 +1379,12 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return hadConditionErrors;
 	}
 
+	@Override
 	public int getChildCount() {
 		return tipiComponentList.size();
 	}
 
+	@Override
 	public boolean hasPath(String path, TipiEvent event) {
 		if (path.equals("*")) {
 			return true;
@@ -1325,6 +1394,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return tc == this;
 	}
 
+	@Override
 	public String getPath() {
 		if (this instanceof TipiDataComponent) {
 			return getPath("tipi:/");
@@ -1333,6 +1403,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public String getPath(String typedef) {
 		if (getTipiParent() == null) {
 			return typedef + "/" + getId();
@@ -1341,18 +1412,22 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public AttributeRef getAttributeRef(String name) {
 		return new AttributeRef(this, name);
 	}
 
+	@Override
 	public List<TipiEvent> getEventList() {
 		return myEventList;
 	}
 
+	@Override
 	public void componentInstantiated() {
 		myContext.fireComponentInstantiated(this);
 	}
 
+	@Override
 	public void addHelper(TipiHelper th) {
 		myHelpers.add(th);
 	}
@@ -1407,6 +1482,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return tipiComponentList.indexOf(node);
 	}
 
+	@Override
 	public TipiComponent addComponentInstance(TipiContext context,
 			XMLElement inst, Object constraints) throws TipiException {
 		// TODO add TipiEvent as parameter
@@ -1427,14 +1503,17 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 	private TipiEvent lastEvent = null;
 	private String componentClassName;
 
+	@Override
 	public void setCurrentEvent(TipiEvent event) {
 		lastEvent = event;
 	}
 
+	@Override
 	public Object evaluateExpression(String expression) throws Exception {
 		return myContext.evaluateExpression(expression, this, lastEvent);
 	}
 
+	@Override
 	public void commitToUi() {
 		for (int i = 0; i < tipiComponentList.size(); i++) {
 			TipiComponent current = tipiComponentList.get(i);
@@ -1442,10 +1521,12 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		}
 	}
 
+	@Override
 	public Object getActualComponent() {
 		return getContainer();
 	}
 
+	@Override
 	public String toString() {
 		return "{" + getPath() + " / " + getClass() + " / " + hashCode() + "}";
 	}
@@ -1464,14 +1545,17 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return new String[] {};
 	}
 
+	@Override
 	public boolean isHomeComponent() {
 		return isHomeComponent;
 	}
 
+	@Override
 	public void setHomeComponent(boolean isHomeComponent) {
 		this.isHomeComponent = isHomeComponent;
 	}
 
+	@Override
 	public TipiComponent getHomeComponent() {
 		if (isHomeComponent()) {
 			return this;
@@ -1482,22 +1566,27 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return getTipiParent().getHomeComponent();
 	}
 
+	@Override
 	public String getAlias(String expression) {
 		return aliasMap.get(expression);
 	}
 
+	@Override
 	public void setAlias(String name, String value) {
 		aliasMap.put(name, value);
 	}
 
+	@Override
 	public void runSyncInEventThread(Runnable r) {
 		myContext.runSyncInEventThread(r);
 	}
 
+	@Override
 	public void runAsyncInEventThread(Runnable r) {
 		myContext.runAsyncInEventThread(r);
 	}
 
+	@Override
 	public TipiComponent findTipiComponentById(String id) {
 
 		logger.debug("Component: " + getId() + " - " + getClass()
@@ -1545,22 +1634,27 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return null;
 	}
 	
+	@Override
 	public Object getParentContainer() {
 		return myParentContainer;
 	}
 	
+	@Override
 	public void setParentContainer(Object c) {
 		myParentContainer = c;
 	}
 
+	@Override
 	public void setClassName(String defname) {
 		this.componentClassName = defname;
 	}
 
+	@Override
 	public String getClassName() {
 		return componentClassName;
 	}
 	
+	@Override
 	public void addLocalMethod(XMLElement method) throws TipiException {
 		String name = method.getStringAttribute("name");
 		if (localMethodsMap.containsKey(name))
@@ -1571,6 +1665,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		
 	}
 
+	@Override
 	public XMLElement getLocalMethod(String name) {
 		if(!isHomeComponent())
 		{
@@ -1579,6 +1674,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return localMethodsMap.get(name);
 	}
 
+	@Override
 	public void setLocalValue(String expression, Object value){
 		if(!isHomeComponent())
 		{
@@ -1588,6 +1684,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		
 	}
 
+	@Override
 	public Object getLocalValue(String expression) {
 		if(!isHomeComponent())
 		{
@@ -1596,6 +1693,7 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		return localValuesMap.get(expression);
 	}
 	
+	@Override
 	public boolean containsLocalValue(String expression){
 		if(!isHomeComponent())
 		{

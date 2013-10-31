@@ -40,6 +40,7 @@ public class TipiMenu extends TipiVaadinComponentImpl {
     public TipiMenu() {
     }
 
+	@Override
 	public Object createContainer() {
     	TipiComponent parent = getTipiParent();
 
@@ -57,11 +58,13 @@ public class TipiMenu extends TipiVaadinComponentImpl {
     	super.disposeComponent();
     }	
 	// skip the vaadinComponent's setContainer
+	@Override
 	public void setContainer(Object c) {
 		super.replaceContainer(c);
 	}
 
-    protected void setComponentValue(String name, Object object) {
+    @Override
+	protected void setComponentValue(String name, Object object) {
         
     	if ("text".equals(name)) {
             menuItem.setText("" + object);
@@ -84,6 +87,7 @@ public class TipiMenu extends TipiVaadinComponentImpl {
         }
 //        super.setComponentValue(name, object);
     }
-    public void addToContainer(Object c, Object constraints) {
+    @Override
+	public void addToContainer(Object c, Object constraints) {
     }
 }

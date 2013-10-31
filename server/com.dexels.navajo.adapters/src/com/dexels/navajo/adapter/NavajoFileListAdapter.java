@@ -93,10 +93,12 @@ private final static Logger logger = LoggerFactory
   }
 
 
-  public void kill() {
+  @Override
+public void kill() {
   }
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
 
 //    Property nameProperty = inMessage.getProperty(namePropertyPath);
 //    String name = nameProperty.getValue();
@@ -104,7 +106,8 @@ private final static Logger logger = LoggerFactory
     columns.clear();
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
     File f = new File(pathPrefix);
     if (!f.exists()) {
       if (!f.mkdirs()) {
@@ -118,7 +121,8 @@ private final static Logger logger = LoggerFactory
     File[] files;
     if (fileNameFilter!=null) {
       FilenameFilter ff = new FilenameFilter() {
-        public boolean accept(File f, String s) {
+        @Override
+		public boolean accept(File f, String s) {
           return s.endsWith(fileNameFilter);
         }
       };

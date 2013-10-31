@@ -92,6 +92,7 @@ public class TagMap implements Mappable {
 		name = name + rand.nextInt();
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 	}
 
@@ -419,9 +420,11 @@ public class TagMap implements Mappable {
 		return t;
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 
+	@Override
 	public void kill() {
 	}
 }

@@ -34,13 +34,16 @@ public class TotalLdapAdapter implements Mappable {
 	private InitialDirContext initialDir = null;
 
 	
+	@Override
 	public void kill() {
 
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 
 	}
@@ -70,9 +73,9 @@ public class TotalLdapAdapter implements Mappable {
 				startup();
 			}
 			DirContext dc = (DirContext) initialDir.lookup(base);
-			NamingEnumeration e = dc.list("");
+			NamingEnumeration<NameClassPair> e = dc.list("");
 			while (e.hasMore()) {
-				NameClassPair o = (NameClassPair) e.next();
+				NameClassPair o = e.next();
 				logger.info("NAME: "+o.getName());
 				logger.info("NAMESp: "+o.getNameInNamespace());
 //				o.getSchema("");

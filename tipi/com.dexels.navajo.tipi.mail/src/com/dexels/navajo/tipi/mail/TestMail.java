@@ -48,6 +48,7 @@ public class TestMail {
 
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 
+			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication("flyaruu", "----");
 			}

@@ -53,7 +53,8 @@ public class NavajoNatureWizardPageOne extends WizardPage {
         return gd;
     }
     
-    public void createControl(Composite parent) {
+    @Override
+	public void createControl(Composite parent) {
         Composite top = new Composite(parent,SWT.NONE);
         top.setLayout(new GridLayout(1,false));
         Label l = new Label(top,SWT.BOLD);
@@ -69,7 +70,8 @@ public class NavajoNatureWizardPageOne extends WizardPage {
         rootField = new Text(top,SWT.BORDER);
         rootField.setLayoutData(createGridData());
        rootField.addModifyListener(new ModifyListener(){
-            public void modifyText(ModifyEvent e) {
+            @Override
+			public void modifyText(ModifyEvent e) {
                 updateState();
             }
 

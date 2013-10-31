@@ -24,6 +24,7 @@ public class TestServiceCommand extends ServiceCommand {
 		super("service");
 	}
 	
+	@Override
 	protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n)
 			throws ArticleException {
 		

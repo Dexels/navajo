@@ -32,6 +32,7 @@ public class PropertyParser extends BaseTipiParser {
 	private final static Logger logger = LoggerFactory
 			.getLogger(PropertyParser.class);
 	
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return getPropertyValue(source, expression);
 	}

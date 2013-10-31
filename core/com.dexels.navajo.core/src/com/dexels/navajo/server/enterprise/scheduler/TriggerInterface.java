@@ -58,6 +58,7 @@ public interface TriggerInterface extends Listener {
 	 */
 	public abstract void setTask(TaskInterface t);
 
+	@Override
 	public abstract void setLocal();
 
 }

@@ -52,6 +52,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getMetaData()
 	 */
+	@Override
 	public IResultSetMetaData getMetaData() throws OdaException
 	{
 		return new NqlResultSetMetaData(message);
@@ -60,6 +61,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#setMaxRows(int)
 	 */
+	@Override
 	public void setMaxRows( int max ) throws OdaException
 	{
 		m_maxRows = max;
@@ -77,6 +79,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#next()
 	 */
+	@Override
 	public boolean next() throws OdaException
 	{
         
@@ -95,6 +98,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#close()
 	 */
+	@Override
 	public void close() throws OdaException
 	{
         m_currentRowId = 0;     // reset row counter
@@ -103,6 +107,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getRow()
 	 */
+	@Override
 	public int getRow() throws OdaException
 	{
 		return m_currentRowId;
@@ -111,6 +116,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getString(int)
 	 */
+	@Override
 	public String getString( int index ) throws OdaException
 	{
         
@@ -122,6 +128,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getString(java.lang.String)
 	 */
+	@Override
 	public String getString( String columnName ) throws OdaException
 	{
 	    return getString( findColumn( columnName ) );
@@ -130,6 +137,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getInt(int)
 	 */
+	@Override
 	public int getInt( int index ) throws OdaException
 	{
         
@@ -140,6 +148,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getInt(java.lang.String)
 	 */
+	@Override
 	public int getInt( String columnName ) throws OdaException
 	{
 	    return getInt( findColumn( columnName ) );
@@ -148,6 +157,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getDouble(int)
 	 */
+	@Override
 	public double getDouble( int index ) throws OdaException
 	{
         throw new UnsupportedOperationException();
@@ -156,6 +166,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getDouble(java.lang.String)
 	 */
+	@Override
 	public double getDouble( String columnName ) throws OdaException
 	{
 	    return getDouble( findColumn( columnName ) );
@@ -164,6 +175,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getBigDecimal(int)
 	 */
+	@Override
 	public BigDecimal getBigDecimal( int index ) throws OdaException
 	{
         throw new UnsupportedOperationException();
@@ -172,6 +184,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getBigDecimal(java.lang.String)
 	 */
+	@Override
 	public BigDecimal getBigDecimal( String columnName ) throws OdaException
 	{
 	    return getBigDecimal( findColumn( columnName ) );
@@ -180,6 +193,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getDate(int)
 	 */
+	@Override
 	public Date getDate( int index ) throws OdaException
 	{
         throw new UnsupportedOperationException();
@@ -188,6 +202,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getDate(java.lang.String)
 	 */
+	@Override
 	public Date getDate( String columnName ) throws OdaException
 	{
 	    return getDate( findColumn( columnName ) );
@@ -196,6 +211,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getTime(int)
 	 */
+	@Override
 	public Time getTime( int index ) throws OdaException
 	{
         throw new UnsupportedOperationException();
@@ -204,6 +220,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getTime(java.lang.String)
 	 */
+	@Override
 	public Time getTime( String columnName ) throws OdaException
 	{
 	    return getTime( findColumn( columnName ) );
@@ -212,6 +229,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getTimestamp(int)
 	 */
+	@Override
 	public Timestamp getTimestamp( int index ) throws OdaException
 	{
         throw new UnsupportedOperationException();
@@ -220,6 +238,7 @@ public class NqlResultSet implements IResultSet
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IResultSet#getTimestamp(java.lang.String)
 	 */
+	@Override
 	public Timestamp getTimestamp( String columnName ) throws OdaException
 	{
 	    return getTimestamp( findColumn( columnName ) );
@@ -228,7 +247,8 @@ public class NqlResultSet implements IResultSet
     /* 
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getBlob(int)
      */
-    public IBlob getBlob( int index ) throws OdaException
+    @Override
+	public IBlob getBlob( int index ) throws OdaException
     {
         throw new UnsupportedOperationException();
     }
@@ -236,7 +256,8 @@ public class NqlResultSet implements IResultSet
     /* 
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getBlob(java.lang.String)
      */
-    public IBlob getBlob( String columnName ) throws OdaException
+    @Override
+	public IBlob getBlob( String columnName ) throws OdaException
     {
         return getBlob( findColumn( columnName ) );
     }
@@ -244,7 +265,8 @@ public class NqlResultSet implements IResultSet
     /* 
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getClob(int)
      */
-    public IClob getClob( int index ) throws OdaException
+    @Override
+	public IClob getClob( int index ) throws OdaException
     {
         throw new UnsupportedOperationException();
     }
@@ -252,7 +274,8 @@ public class NqlResultSet implements IResultSet
     /* 
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getClob(java.lang.String)
      */
-    public IClob getClob( String columnName ) throws OdaException
+    @Override
+	public IClob getClob( String columnName ) throws OdaException
     {
         return getClob( findColumn( columnName ) );
     }
@@ -260,7 +283,8 @@ public class NqlResultSet implements IResultSet
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getBoolean(int)
      */
-    public boolean getBoolean( int index ) throws OdaException
+    @Override
+	public boolean getBoolean( int index ) throws OdaException
     {
         throw new UnsupportedOperationException();
     }
@@ -268,7 +292,8 @@ public class NqlResultSet implements IResultSet
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getBoolean(java.lang.String)
      */
-    public boolean getBoolean( String columnName ) throws OdaException
+    @Override
+	public boolean getBoolean( String columnName ) throws OdaException
     {
         return getBoolean( findColumn( columnName ) );
     }
@@ -276,7 +301,8 @@ public class NqlResultSet implements IResultSet
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getObject(int)
      */
-    public Object getObject( int index ) throws OdaException
+    @Override
+	public Object getObject( int index ) throws OdaException
     {
         throw new UnsupportedOperationException();
     }
@@ -284,7 +310,8 @@ public class NqlResultSet implements IResultSet
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#getObject(java.lang.String)
      */
-    public Object getObject( String columnName ) throws OdaException
+    @Override
+	public Object getObject( String columnName ) throws OdaException
     {
         return getObject( findColumn( columnName ) );
     }
@@ -292,7 +319,8 @@ public class NqlResultSet implements IResultSet
     /*
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#wasNull()
      */
-    public boolean wasNull() throws OdaException
+    @Override
+	public boolean wasNull() throws OdaException
     {
         // hard-coded for demo purpose
         return false;
@@ -301,7 +329,8 @@ public class NqlResultSet implements IResultSet
     /*
      * @see org.eclipse.datatools.connectivity.oda.IResultSet#findColumn(java.lang.String)
      */
-    public int findColumn( String columnName ) throws OdaException
+    @Override
+	public int findColumn( String columnName ) throws OdaException
     {
         
         // hard-coded for demo purpose

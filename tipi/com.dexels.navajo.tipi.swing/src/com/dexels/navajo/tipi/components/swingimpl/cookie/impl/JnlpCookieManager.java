@@ -60,6 +60,7 @@ public class JnlpCookieManager extends TmpFileCookieManager implements
 	// logger.debug("Current cookiemap: "+cookieMap);
 	// }
 
+	@Override
 	public void loadCookies() throws IOException {
 		FileContents fc = ps.get(new URL(bs.getCodeBase(), "tipi.cookie"));
 		InputStream inputStream = fc.getInputStream();
@@ -67,6 +68,7 @@ public class JnlpCookieManager extends TmpFileCookieManager implements
 		inputStream.close();
 	}
 
+	@Override
 	@SuppressWarnings("unused")
 	public void saveCookies() throws MalformedURLException, IOException {
 

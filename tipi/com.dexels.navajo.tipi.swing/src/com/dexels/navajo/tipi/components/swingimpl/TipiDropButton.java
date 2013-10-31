@@ -44,6 +44,7 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 
 	private AbstractAction buttonAction;
 
+	@Override
 	public Object createContainer() {
 		final TipiSwingDropButton myButton = new TipiSwingDropButton(this);
 		buttonAction = new AbstractAction("onActionPerformed") {
@@ -53,12 +54,14 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 			 */
 			private static final long serialVersionUID = 7337963753794720632L;
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				doFireAction(myButton);
 			}
 		};
 		myButton.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				buttonAction.actionPerformed(e);
 			}
@@ -88,9 +91,11 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 
 	}
 
+	@Override
 	public final void setComponentValue(final String name, final Object object) {
 		super.setComponentValue(name, object);
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				if (name.equals("text")) {
 					((JButton) getContainer()).setText((String) object);
@@ -148,6 +153,7 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 		return null;
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if (name.equals("text")) {
 			return ((JButton) getContainer()).getText();
@@ -155,6 +161,7 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	protected void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event) {
 		if ("fireAction".equals(name)) {
@@ -168,9 +175,11 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 		}
 	}
 
+	@Override
 	public void eventStarted(TipiExecutable te, Object event) {
 		if (Container.class.isInstance(getContainer())) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					getSwingContainer().setEnabled(false);
 				}
@@ -178,9 +187,11 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 		}
 	}
 
+	@Override
 	public void eventFinished(TipiExecutable te, Object event) {
 		if (Container.class.isInstance(getContainer())) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					((Container) getContainer()).setEnabled(iAmEnabled);
 				}
@@ -193,6 +204,7 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 		setWaitCursor(true, root);
 
 		performTipiEvent("onActionPerformed", null, false, new Runnable() {
+			@Override
 			public void run() {
 				setWaitCursor(false, root);
 			}

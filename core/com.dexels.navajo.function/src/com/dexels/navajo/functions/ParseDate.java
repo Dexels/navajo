@@ -11,15 +11,18 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class ParseDate extends FunctionInterface {
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Tries to transform the (string) object to a date by guessing its format or use the given format.";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "ParseDate(String s|Date d [, pattern])";
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         if (this.getOperand(0) == null) {
             throw new TMLExpressionException(this, "error: null value in first operand of ParseDate(String s|Date d [, pattern]).");
         }

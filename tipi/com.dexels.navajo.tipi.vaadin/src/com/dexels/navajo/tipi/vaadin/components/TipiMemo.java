@@ -13,7 +13,8 @@ public class TipiMemo extends TipiVaadinComponentImpl {
 		textArea.setSizeFull();
 		return textArea;
 	}
-	  public void setComponentValue(final String name, final Object object) {
+	  @Override
+	public void setComponentValue(final String name, final Object object) {
 		    super.setComponentValue(name, object);
 		        if (name.equals("text")) {
 		        	textArea.setValue( object);

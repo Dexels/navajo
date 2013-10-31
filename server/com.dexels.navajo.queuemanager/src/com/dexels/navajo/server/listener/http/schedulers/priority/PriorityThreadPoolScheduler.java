@@ -55,10 +55,12 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	private int [] interArrivalTime = new int[500];
 	private long   arrivals = 0;
 	
+	@Override
 	public int getThrottleDelay() {
 		return throttleDelay;
 	}
 
+	@Override
 	public void setThrottleDelay(int throttleDelay) {
 		this.throttleDelay = throttleDelay;
 	}
@@ -204,6 +206,7 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 	}
 	
 	
+	@Override
 	public final void submit(final TmlRunnable myRunner, boolean priority)  {
 			submitToPool(myRunner, determineThreadPool(myRunner, priority) ) ;
 		
@@ -332,18 +335,22 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 		return timeout;
 	}
 	
+	@Override
 	public final void setTimeout(int timeout) {
 		this.timeout = timeout;
 	}
 
 
+	@Override
 	public final double getExpectedNormalQueueTime() {
 		return queueMap.get("normalPool").getExpectedQueueTime();
 	}
 
+	@Override
 	public final double getExpectedPriorityQueueTime() {
 		return queueMap.get("priorityPool").getExpectedQueueTime();
 	}
+	@Override
 	public final double getExpectedSystemQueueTime() {
 		return queueMap.get("systemPool").getExpectedQueueTime();
 	}

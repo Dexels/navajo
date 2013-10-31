@@ -29,6 +29,7 @@ public class TipiSetDirection extends TipiAction {
 	 */
 	private static final long serialVersionUID = -7414085913763797333L;
 
+	@Override
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

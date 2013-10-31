@@ -21,13 +21,16 @@ public class TestAdapter implements Mappable {
 	
 	public static HashSet preventCollection = new HashSet();
 	
+	@Override
 	public void kill() {
 	}
 	
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		
 	}
 	
+	@Override
 	public void store() throws MappableException, UserException {
 		if ( value != null ) {
 			SharedTribalMap stm = SharedTribalMap.getMap(id);

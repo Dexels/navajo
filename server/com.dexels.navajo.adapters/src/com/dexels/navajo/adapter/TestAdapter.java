@@ -28,7 +28,8 @@ public class TestAdapter implements Mappable {
 	
     public TestAdapter() {}
 
-    public void load(Access access) throws MappableException, UserException {
+    @Override
+	public void load(Access access) throws MappableException, UserException {
        testAdapters = new TestAdapter[5];
        for (int i = 0; i < 5; i++) {
         testAdapters[i] = new TestAdapter();
@@ -38,11 +39,13 @@ public class TestAdapter implements Mappable {
        single.empty = "I am single";
     }
 
-    public void store() throws MappableException, UserException {
+    @Override
+	public void store() throws MappableException, UserException {
     	logger.debug("TestAdapter store() called!!");
     }
 
-    public void kill() {
+    @Override
+	public void kill() {
     	logger.debug("TestAdapter kill() called!!");
     }
 

@@ -17,10 +17,12 @@ import com.dexels.navajo.parser.FunctionInterface;
 public class FileExists extends FunctionInterface {
   public FileExists() {
   }
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Returns true if the filename exists. (Either as a file or as a directory";
   }
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     String path = (String) getOperand(0);
     if (path==null) {
       return Boolean.FALSE;
@@ -28,7 +30,8 @@ public class FileExists extends FunctionInterface {
     File f = new File(path);
     return (f.exists());
   }
-  public String usage() {
+  @Override
+public String usage() {
     return "FileExists(filename)";
   }
 

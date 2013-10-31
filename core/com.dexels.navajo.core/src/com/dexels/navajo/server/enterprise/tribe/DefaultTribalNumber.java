@@ -12,6 +12,7 @@ public class DefaultTribalNumber implements TribalNumber {
 		myName = myAtomic.toString();
 	}
 	
+	@Override
 	public long addAddGet(long delta) {
 		return myAtomic.addAndGet(delta);
 	}

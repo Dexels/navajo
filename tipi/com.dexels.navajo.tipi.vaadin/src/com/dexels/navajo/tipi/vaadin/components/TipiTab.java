@@ -9,11 +9,13 @@ public class TipiTab extends TipiVaadinComponentImpl {
 	private static final long serialVersionUID = 8550459130365507667L;
 	private TipiSwingTab myTab;
 
+	@Override
 	public Object createContainer() {
 		myTab = new TipiSwingTab();
 		return myTab;
 	}
 
+	@Override
 	protected void setComponentValue(String name, Object object) {
 		if (name.equals("tabIcon")) {
 			// Don't know why. The propertyChangeListener seems to miss it when

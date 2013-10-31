@@ -360,6 +360,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			}
 		}, false);
 		((EventTarget) ee).addEventListener("onselect", new EventListener() {
+			@Override
 			public void handleEvent(Event oy) {
 				logger.info("onselect!");
 
@@ -497,11 +498,13 @@ public class SvgBatikComponent extends SvgBaseComponent {
 
 	}
 
+	@Override
 	public void addSvgDocumentListener(SvgDocumentListener sal) {
 		mySvgDocumentListeners.add(sal);
 
 	}
 
+	@Override
 	public void removeSvgDocumentListener(SvgDocumentListener sal) {
 		mySvgDocumentListeners.remove(sal);
 
@@ -514,8 +517,10 @@ public class SvgBatikComponent extends SvgBaseComponent {
 
 	}
 
+	@Override
 	public void setAttribute(final String xlinkNS, final String item, final String attributeName, final String value) {
 		runInUpdateQueue(new Runnable() {
+			@Override
 			public void run() {
 				final SVGElement se = (SVGElement) svgCanvas.getSVGDocument().getElementById(item);
 				if (xlinkNS == null) {
@@ -528,9 +533,11 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		});
 	}
 
+	@Override
 	public void setTextContent(final String id, final String value) {
 		logger.info("Getting component: " + id + " for setting text");
 		runInUpdateQueue(new Runnable() {
+			@Override
 			public void run() {
 				final SVGElement se = (SVGElement) svgCanvas.getSVGDocument().getElementById(id);
 				if (id == null || se == null) {
@@ -542,8 +549,10 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		});
 	}
 
+	@Override
 	public void moveToFirst(final String id) {
 		runInUpdateQueue(new Runnable() {
+			@Override
 			public void run() {
 				final SVGElement se = (SVGElement) svgCanvas.getSVGDocument().getElementById(id);
 				SVGElement parent = (SVGElement) se.getParentNode();
@@ -603,6 +612,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	
 	// Keep track of rotation and add here also.
 	// Keep track of mouse infliced translations as well.
+	@Override
 	public void zoom(double factor) {
 		String vb = svgCanvas.getSVGDocument().getDocumentElement().getAttribute("viewBox");
 		logger.info("Viewbox: " + vb);

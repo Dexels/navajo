@@ -52,6 +52,7 @@ public class VaadinFileServlet extends HttpServlet{
 	// Actions
 	// ------------------------------------------------------------------------------------
 
+	@Override
 	public void init() throws ServletException {
 
 		// Define base path somehow. You can define it as init-param of the
@@ -69,6 +70,7 @@ public class VaadinFileServlet extends HttpServlet{
 		}
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// Get requested file by path info.

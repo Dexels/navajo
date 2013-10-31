@@ -44,6 +44,7 @@ public class NqlConnection implements IConnection
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IConnection#open(java.util.Properties)
 	 */
+	@Override
 	public void open( Properties connProperties ) throws OdaException
 	{
 		
@@ -93,6 +94,7 @@ public class NqlConnection implements IConnection
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IConnection#setAppContext(java.lang.Object)
 	 */
+	@Override
 	public void setAppContext( Object context ) throws OdaException
 	{
 	    // do nothing; assumes no support for pass-through context
@@ -101,6 +103,7 @@ public class NqlConnection implements IConnection
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IConnection#close()
 	 */
+	@Override
 	public void close() throws OdaException
 	{
         // TODO replace with data source specific implementation
@@ -110,6 +113,7 @@ public class NqlConnection implements IConnection
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IConnection#isOpen()
 	 */
+	@Override
 	public boolean isOpen() throws OdaException
 	{
         // TODO Auto-generated method stub
@@ -119,6 +123,7 @@ public class NqlConnection implements IConnection
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IConnection#getMetaData(java.lang.String)
 	 */
+	@Override
 	public IDataSetMetaData getMetaData( String dataSetType ) throws OdaException
 	{
 	    // assumes that this driver supports only one type of data set,
@@ -129,6 +134,7 @@ public class NqlConnection implements IConnection
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IConnection#newQuery(java.lang.String)
 	 */
+	@Override
 	public IQuery newQuery( String dataSetType ) throws OdaException
 	{
         // assumes that this driver supports only one type of data set,
@@ -141,6 +147,7 @@ public class NqlConnection implements IConnection
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IConnection#getMaxQueries()
 	 */
+	@Override
 	public int getMaxQueries() throws OdaException
 	{
 		return 0;	// no limit
@@ -149,6 +156,7 @@ public class NqlConnection implements IConnection
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IConnection#commit()
 	 */
+	@Override
 	public void commit() throws OdaException
 	{
 	    // do nothing; assumes no transaction support needed
@@ -157,6 +165,7 @@ public class NqlConnection implements IConnection
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IConnection#rollback()
 	 */
+	@Override
 	public void rollback() throws OdaException
 	{
         // do nothing; assumes no transaction support needed
@@ -165,7 +174,8 @@ public class NqlConnection implements IConnection
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IConnection#setLocale(com.ibm.icu.util.ULocale)
      */
-    public void setLocale( ULocale locale ) throws OdaException
+    @Override
+	public void setLocale( ULocale locale ) throws OdaException
     {
         // do nothing; assumes no locale support
     }

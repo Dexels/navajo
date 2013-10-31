@@ -25,6 +25,7 @@ public class TipiToolbar extends TipiVaadinComponentImpl {
 		return inner;
 	}
 
+	@Override
 	public void addToContainer(Object c, Object constraints) {
 		if(!(c instanceof Component)) {
 			throw new IllegalArgumentException("Can not add non-vaadin component to component: "+c);

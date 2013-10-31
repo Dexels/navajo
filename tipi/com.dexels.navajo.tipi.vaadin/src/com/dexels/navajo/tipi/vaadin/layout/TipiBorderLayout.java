@@ -26,18 +26,21 @@ public class TipiBorderLayout
   public TipiBorderLayout() {
   }
 
-  public void createLayout() {
+  @Override
+public void createLayout() {
 	 layout =  new BorderLayout();
 	 layout.setSizeFull();
 	  setLayout(layout);
   }
 
-  protected void setValue(String name, TipiValue tv) {
+  @Override
+protected void setValue(String name, TipiValue tv) {
     throw new UnsupportedOperationException("Not implemented.");
   }
   
   
-  public Constraint createDefaultConstraint(int index) {
+  @Override
+public Constraint createDefaultConstraint(int index) {
 //	  Thread.dumpStack();
 	  switch (index) {
 	      case 0:
@@ -103,6 +106,7 @@ public Object parseConstraint(String text, int index) {
     return BorderLayout.Constraint.CENTER;
   }
   
+@Override
 public void addToLayout(Object component, Object constraints) {
 		if(constraints instanceof Constraint) {
 			BorderLayout.Constraint bc = (Constraint) constraints;

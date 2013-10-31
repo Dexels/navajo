@@ -91,14 +91,17 @@ private final static Logger logger = LoggerFactory
   }
 
 
-  public void kill() {
+  @Override
+public void kill() {
   }
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
     this.inMessage = access.getInDoc();
    }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
     logger.debug("fileNamePropertyPath: "+fileNamePropertyPath);
     logger.debug("Using prefix: "+pathPrefix);
 

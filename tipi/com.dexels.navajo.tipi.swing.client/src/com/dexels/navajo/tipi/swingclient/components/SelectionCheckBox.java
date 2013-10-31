@@ -26,6 +26,7 @@ public final class SelectionCheckBox extends JCheckBox {
 	public SelectionCheckBox() {
 		this.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				logger.info("Bim!");
 				// logger.info("Check changed");

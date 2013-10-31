@@ -51,13 +51,16 @@ public class AsyncProxy implements Mappable {
   
   private final static Logger logger = LoggerFactory.getLogger(AsyncProxy.class);
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
   }
 
-  public void kill() {
+  @Override
+public void kill() {
 
   }
   
@@ -67,12 +70,12 @@ public class AsyncProxy implements Mappable {
 
   public void setResume(boolean b) {
    if (b) {
-    Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
-    Iterator iter = all.values().iterator();
+    Map<String,AsyncMappable> all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
+    Iterator<AsyncMappable> iter = all.values().iterator();
     AsyncMappable am = null;
     boolean found = false;
     while (iter.hasNext() && !found) {
-      am = (AsyncMappable) iter.next();
+      am = iter.next();
       if (am.getPointer().equals(this.pointer)) {
         found = true;
       }
@@ -87,13 +90,13 @@ public class AsyncProxy implements Mappable {
 
   public void setInterrupt(boolean b) {
     if (b) {
-     Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().
+     Map<String,AsyncMappable> all = com.dexels.navajo.mapping.AsyncStore.getInstance().
          objectStore;
-     Iterator iter = all.values().iterator();
+     Iterator<AsyncMappable> iter = all.values().iterator();
      AsyncMappable am = null;
      boolean found = false;
      while (iter.hasNext() && !found) {
-       am = (AsyncMappable) iter.next();
+       am = iter.next();
        if (am.getPointer().equals(this.pointer))
          found = true;
      }
@@ -107,12 +110,12 @@ public class AsyncProxy implements Mappable {
 
   public void setKill(boolean b) {
     if (b) {
-      Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
-      Iterator iter = all.values().iterator();
+      Map<String,AsyncMappable> all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
+      Iterator<AsyncMappable> iter = all.values().iterator();
       AsyncMappable am = null;
       boolean found = false;
       while (iter.hasNext() && !found) {
-        am = (AsyncMappable) iter.next();
+        am = iter.next();
         if (am.getPointer().equals(this.pointer))
           found = true;
       }

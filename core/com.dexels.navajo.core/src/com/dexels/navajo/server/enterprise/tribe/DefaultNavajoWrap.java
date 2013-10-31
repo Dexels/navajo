@@ -97,6 +97,7 @@ public class DefaultNavajoWrap implements NavajoRug {
 		return created;
 	}
 	
+	@Override
 	public Navajo getNavajo() {
 		if ( myNavajo == null ) {
 			myNavajo = SerializationUtil.deserializeNavajo(reference);
@@ -129,6 +130,7 @@ public class DefaultNavajoWrap implements NavajoRug {
 		}
 	}
 	
+	@Override
 	public void finalize() {
 		try {
 			// decrease reference count if object is garbage collected.

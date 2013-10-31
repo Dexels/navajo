@@ -11,7 +11,8 @@ public final class ASTExpresionLiteralNode extends SimpleNode {
         super(id);
     }
 
-    public final Object interpret() {
+    @Override
+	public final Object interpret() {
 
         // Strip quotes.
         return val.substring(1, val.length() - 1);

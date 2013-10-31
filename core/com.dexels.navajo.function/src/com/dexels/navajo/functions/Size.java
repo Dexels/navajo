@@ -29,7 +29,8 @@ public final class Size extends FunctionInterface {
 
     public Size() {}
 
-    @SuppressWarnings("rawtypes")
+    @Override
+	@SuppressWarnings("rawtypes")
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     	if(this.getOperands().size()==0) {
     		return new Integer(0);
@@ -66,11 +67,13 @@ public final class Size extends FunctionInterface {
         return new Integer(list.size());
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "Size(list | arraymessage | array)";
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "This function return the size of a list argument, the length of an array, or the size of an array message.";
     }
 

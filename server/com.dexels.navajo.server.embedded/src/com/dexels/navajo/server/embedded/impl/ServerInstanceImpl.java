@@ -106,6 +106,7 @@ public class ServerInstanceImpl implements ServerInstance {
 	}
 
 
+	@Override
 	public NavajoContext getNavajoContext() {
 		return localContext;
 	}
@@ -177,6 +178,7 @@ public class ServerInstanceImpl implements ServerInstance {
 	@Override
 	public void stopServer() {
 		Thread t = new Thread() {
+			@Override
 			public void run() {
 				System.err.println("Stopping server");
 				try {

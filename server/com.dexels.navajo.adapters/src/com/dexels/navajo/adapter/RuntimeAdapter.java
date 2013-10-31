@@ -45,7 +45,8 @@ public class RuntimeAdapter implements Mappable {
   
   private static Object semaphore = new Object();
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
 
   }
 
@@ -151,11 +152,13 @@ public void setRun(boolean b) throws UserException {
      return output;
    }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
 
   }
 
-  public void kill() {
+  @Override
+public void kill() {
 
   }
 

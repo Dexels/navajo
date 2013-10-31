@@ -22,6 +22,7 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 		this.baseFile = baseFile;
 	}
 
+	@Override
 	public String toString() {
 		return "FILELOADER: " + baseFile.toString()+" full: "+baseFile.getAbsolutePath();
 
@@ -42,6 +43,7 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 		return false;
 	}
 
+	@Override
 	public URL getResourceURL(String location) throws IOException {
 		File f = null;
 		if (baseFile == null) {
@@ -60,6 +62,7 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 		return u;
 	}
 
+	@Override
 	public InputStream getResourceStream(String location) throws IOException {
 		URL u = getResourceURL(location);
 		if (u == null) {
@@ -87,6 +90,7 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 		}
 	}
 
+	@Override
 	public List<File> getAllResources() throws IOException {
 		List<File> result = new ArrayList<File>();
 		listAll(result, baseFile);

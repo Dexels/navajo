@@ -6,15 +6,18 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class IsNumeric extends FunctionInterface {
     public IsNumeric() {}
     
-    public String usage() {
+    @Override
+	public String usage() {
         return "IsNumeric(Object)";
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Checks if the given object contains only numeric values. NULL is considered to be ok.";
     }
 
-    @SuppressWarnings("unused")
+    @Override
+	@SuppressWarnings("unused")
     public Object evaluate() throws TMLExpressionException {
         Object o = this.getOperands().get(0);
         if (o == null) {

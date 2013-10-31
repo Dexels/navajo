@@ -19,7 +19,8 @@ public class GetComponentType extends FunctionInterface {
      * 
      * @see com.dexels.navajo.parser.FunctionInterface#remarks()
      */
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Returns the type of a TipiComponent. ";
     }
 
@@ -28,7 +29,8 @@ public class GetComponentType extends FunctionInterface {
      * 
      * @see com.dexels.navajo.parser.FunctionInterface#usage()
      */
-    public String usage() {
+    @Override
+	public String usage() {
         return "GetComponentType(TipiComponent source)";
     }
 
@@ -37,7 +39,8 @@ public class GetComponentType extends FunctionInterface {
      * 
      * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
      */
-    public Object evaluate() throws TMLExpressionException {
+    @Override
+	public Object evaluate() throws TMLExpressionException {
         Object pp = getOperand(0);
         if (pp == null) {
             return null;

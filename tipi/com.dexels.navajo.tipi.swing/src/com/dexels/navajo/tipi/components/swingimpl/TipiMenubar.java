@@ -28,11 +28,13 @@ public class TipiMenubar extends TipiSwingComponentImpl {
 	private static final long serialVersionUID = -6279031914998782201L;
 	private TipiSwingMenuBar myMenuBar;
 
+	@Override
 	public void removeFromContainer(final Object c) {
 		super.removeFromContainer(c);
 		myMenuBar.repaint();
 	}
 
+	@Override
 	public Object createContainer() {
 		myMenuBar = new TipiSwingMenuBar();
 		TipiHelper th = new TipiSwingHelper();

@@ -20,17 +20,20 @@ public final class Random extends FunctionInterface {
       random = new java.util.Random(System.currentTimeMillis());
   }
 
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     double result = random.nextInt();
     if (result < 0)
       result *= -1;
     int i = (int) (result/1000.0);
     return new Integer(i);
   }
-  public String usage() {
+  @Override
+public String usage() {
     return "Random()";
   }
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Returns random integer";
   }
 

@@ -47,10 +47,12 @@ public class PeelPanel extends JPanel implements PeelListener{
 		
 		addMouseMotionListener(new MouseMotionListener() {
 
+			@Override
 			public void mouseDragged(MouseEvent e) {
 				
 			}
 
+			@Override
 			public void mouseMoved(MouseEvent e) {
 				if (animationPanel.isAnimating) {
 					return;
@@ -100,6 +102,7 @@ public class PeelPanel extends JPanel implements PeelListener{
 		c.setVisible(true);
 	}
 
+	@Override
 	public void setBounds(int x, int y, int width, int height) {
 
 		super.setBounds(x, y, width, height);
@@ -132,7 +135,8 @@ public class PeelPanel extends JPanel implements PeelListener{
 		}
 	}
 	
-	 public void peelStopped(boolean full_peel) {
+	 @Override
+	public void peelStopped(boolean full_peel) {
 		animationPanel.setVisible(false);
 		for(int i=0;i<components.size();i++){
 			components.get(i).setVisible(false);

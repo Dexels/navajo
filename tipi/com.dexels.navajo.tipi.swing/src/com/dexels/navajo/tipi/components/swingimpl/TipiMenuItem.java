@@ -24,6 +24,7 @@ public class TipiMenuItem extends TipiSwingComponentImpl {
 
 	private boolean iAmEnabled = true;
 
+	@Override
 	public Object createContainer() {
 		myItem = new TipiSwingMenuItem();
 		// TipiHelper th = new TipiSwingHelper();
@@ -31,11 +32,13 @@ public class TipiMenuItem extends TipiSwingComponentImpl {
 		// addHelper(th);
 		myItem.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				setWaitCursor(true);
 
 				performTipiEvent("onActionPerformed", null, false,
 						new Runnable() {
+							@Override
 							public void run() {
 								setWaitCursor(false);
 							}
@@ -56,6 +59,7 @@ public class TipiMenuItem extends TipiSwingComponentImpl {
 	public void setWaitCursor(final boolean b) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				Container cc = getSwingContainer();
 				if (!(cc instanceof JComponent)) {
@@ -77,9 +81,11 @@ public class TipiMenuItem extends TipiSwingComponentImpl {
 	/**
 	 * Sort of legacy. Don't really know what to do with this one.
 	 */
+	@Override
 	public void eventStarted(TipiExecutable te, Object event) {
 		if (Container.class.isInstance(getContainer())) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					// enabled = ( (Container) getContainer()).isEnabled();
 					getSwingContainer().setEnabled(false);
@@ -88,9 +94,11 @@ public class TipiMenuItem extends TipiSwingComponentImpl {
 		}
 	}
 
+	@Override
 	public void eventFinished(TipiExecutable te, Object event) {
 		if (Container.class.isInstance(getContainer())) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					((Container) getContainer()).setEnabled(iAmEnabled);
 				}

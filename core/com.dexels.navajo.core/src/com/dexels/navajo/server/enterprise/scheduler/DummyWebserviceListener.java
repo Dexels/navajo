@@ -8,11 +8,13 @@ import com.dexels.navajo.server.enterprise.workflow.WorkFlowManagerInterface;
 
 public class DummyWebserviceListener implements WebserviceListenerRegistryInterface {
 
+	@Override
 	public boolean afterWebservice(String webservice, Access a) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public Navajo beforeWebservice(String webservice, Access a) {
 		// TODO Auto-generated method stub
 		return null;

@@ -22,6 +22,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	private final static Logger logger = LoggerFactory
 			.getLogger(OsgiFunctionFactory.class);
 
+	@Override
 	public FunctionInterface getInstance(final ClassLoader cl, final String functionName)  {
 		FunctionDefinition fd = (FunctionDefinition) getComponent(functionName, "functionName", FunctionDefinition.class);
 		if(fd==null) {

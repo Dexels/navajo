@@ -42,6 +42,7 @@ public class TipiSourceViewer extends TipiSwingComponentImpl {
 	public TipiSourceViewer() {
 	}
 
+	@Override
 	public Object createContainer() {
 		myTextArea = new TipiSwingTextArea();
 		// myTextArea.setEditable(false);
@@ -53,6 +54,7 @@ public class TipiSourceViewer extends TipiSwingComponentImpl {
 
 			private static final long serialVersionUID = -5461187048768338542L;
 
+			@Override
 			public void definitionLoaded(String definitionName,
 					XMLElement definition) {
 				if (definitionName.equals(currentDefinition)) {
@@ -64,6 +66,7 @@ public class TipiSourceViewer extends TipiSwingComponentImpl {
 		return jsp;
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		if (name.equals("definition")) {
 			setDefinition((String) object);
@@ -74,6 +77,7 @@ public class TipiSourceViewer extends TipiSwingComponentImpl {
 
 	private void setDefinition(final String object) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				String definition = object;
 				XMLElement xe = myContext.getTipiDefinition(definition);
@@ -96,6 +100,7 @@ public class TipiSourceViewer extends TipiSwingComponentImpl {
 		super.disposeComponent();
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if (name.equals("text")) {
 			return myTextArea.getText();
@@ -103,6 +108,7 @@ public class TipiSourceViewer extends TipiSwingComponentImpl {
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	protected void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event)
 			throws TipiBreakException {

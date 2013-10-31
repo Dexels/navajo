@@ -13,6 +13,7 @@ public class TipiSwingDockingExtension extends TipiAbstractXMLExtension implemen
 //		loadXML();
 	}
 
+	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
 		

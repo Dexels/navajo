@@ -46,7 +46,8 @@ public final class ASTForAllNode extends SimpleNode {
      * @return
      * @throws TMLExpressionException
      */
-    public final Object interpret() throws TMLExpressionException {
+    @Override
+	public final Object interpret() throws TMLExpressionException {
 
         boolean matchAll = true;
 

@@ -17,15 +17,18 @@ public abstract class TipiBaseConnector extends TipiHeadlessComponentImpl
 	
 	private static final long serialVersionUID = 6781839214790284978L;
 
+	@Override
 	public final void doTransaction() throws TipiBreakException, TipiException {
 		doTransaction(null, null, null);
 	}
 
+	@Override
 	public final void doTransaction(String service) throws TipiBreakException,
 			TipiException {
 		doTransaction(null, service, null);
 	}
 
+	@Override
 	public void doTransaction(Navajo n, String service)
 			throws TipiBreakException, TipiException {
 		doTransaction(n, service, null);
@@ -41,6 +44,7 @@ public abstract class TipiBaseConnector extends TipiHeadlessComponentImpl
 		}
 	}
 
+	@Override
 	public Object createContainer() {
 		return null;
 	}

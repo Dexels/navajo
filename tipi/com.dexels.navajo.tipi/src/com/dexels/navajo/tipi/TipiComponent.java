@@ -165,6 +165,7 @@ public interface TipiComponent extends TipiEventListener, TipiLink, Serializable
 	public void removeTipiEvent(TipiEvent e);
 
 
+	@Override
 	public boolean performTipiEvent(String type, Map<String, Object> event,
 			boolean sync) throws TipiException, TipiBreakException;
 

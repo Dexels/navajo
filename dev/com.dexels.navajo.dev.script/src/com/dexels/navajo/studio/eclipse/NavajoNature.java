@@ -44,7 +44,8 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
      * 
      * @see org.eclipse.core.resources.IProjectNature#configure()
      */
-    public void configure() throws CoreException {
+    @Override
+	public void configure() throws CoreException {
     	System.err.println("NOT adding builder to project.");
 //    	if(true) {
 //    		return;
@@ -85,7 +86,8 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
      * 
      * @see org.eclipse.core.resources.IProjectNature#deconfigure()
      */
-    public void deconfigure() throws CoreException {
+    @Override
+	public void deconfigure() throws CoreException {
         System.err.println("Deconfiguring NavajoNature. NOT decomissioning Builder");
 //        if(true) {
 //        	return;
@@ -98,7 +100,8 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
      * 
      * @see org.eclipse.core.resources.IProjectNature#getProject()
      */
-    public IProject getProject() {
+    @Override
+	public IProject getProject() {
         return myProject;
     }
 
@@ -107,7 +110,8 @@ public class NavajoNature extends PlatformObject implements IProjectNature {
      * 
      * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
      */
-    public void setProject(IProject project) {
+    @Override
+	public void setProject(IProject project) {
         myProject = project;
     }
 

@@ -28,11 +28,13 @@ public class RemoveNavajoNatureAction extends BaseNavajoAction implements IWorkb
     /* (non-Javadoc)
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
-    public void run(IAction action) {
+    @Override
+	public void run(IAction action) {
               
            System.err.println("Performing add nature...");
            if (!(selection instanceof IStructuredSelection))
                return;
+           @SuppressWarnings("rawtypes")
            Iterator iter = ((IStructuredSelection) selection).iterator();
            while (iter.hasNext()) {
                System.err.println("Looping through selection...");

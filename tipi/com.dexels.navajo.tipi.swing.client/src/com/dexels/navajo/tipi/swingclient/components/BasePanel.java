@@ -157,6 +157,7 @@ public class BasePanel extends JPanel {
 			try {
 				SwingUtilities.invokeAndWait(new Runnable() {
 
+					@Override
 					public void run() {
 						if (initMessage != null) {
 							init(initMessage);

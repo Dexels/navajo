@@ -12,7 +12,8 @@ public class OpenStreetMapTileFactoryInfo extends TileFactoryInfo {
 		max = maxZoom;
 		setDefaultZoomLevel(1);
 	}
-    public String getTileUrl(int x, int y, int zoom) {
+    @Override
+	public String getTileUrl(int x, int y, int zoom) {
         zoom = max-zoom;
         return this.baseURL +"/"+zoom+"/"+x+"/"+y+".png";
     }

@@ -31,6 +31,7 @@ public class BooleanParser extends TipiTypeParser {
 	public BooleanParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return Boolean.valueOf(expression);
 	}

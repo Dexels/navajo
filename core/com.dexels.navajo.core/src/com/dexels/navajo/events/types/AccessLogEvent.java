@@ -29,6 +29,7 @@ public class AccessLogEvent implements NavajoEvent {
 		this.accessLogCount = accessLogCount;
 	}
 
+	@Override
 	public Navajo getEventNavajo() {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
 		Message event = NavajoFactory.getInstance().createMessage(input, "__event__");

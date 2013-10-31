@@ -5,6 +5,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class ReplaceDiacriticCharacters extends FunctionInterface {
 
+	@Override
 	public final Object evaluate()
 			throws com.dexels.navajo.parser.TMLExpressionException {
 

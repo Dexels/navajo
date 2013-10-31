@@ -9,25 +9,31 @@ public class DummyTask implements TaskInterface {
 	private TriggerInterface trigger;
 	private String workflowDefinition;
 
+	@Override
 	public TaskInterface getInstance() {
 		return new DummyTask();
 	}
 
+	@Override
 	public void setNavajo(Navajo n) {
 		
 	}
 
+	@Override
 	public void setTrigger(String s) throws UserException {
 		
 	}
 
+	@Override
 	public String getId() {
 		return null;
 	}
 
+	@Override
 	public void setKeepRequestResponse(boolean keepRequestResponse) {
 	}
 
+	@Override
 	public void setPersisted(boolean b) {
 	}
 
@@ -35,26 +41,32 @@ public class DummyTask implements TaskInterface {
 		
 	}
 
+	@Override
 	public String getTriggerDescription() {
 		return null;
 	}
 
+	@Override
 	public String getUsername() {
 		return null;
 	}
 
+	@Override
 	public String getWebservice() {
 		return null;
 	}
 
+	@Override
 	public boolean isActive() {
 		return false;
 	}
 
+	@Override
 	public boolean isRunning() {
 		return false;
 	}
 
+	@Override
 	public void runTask() {
 		
 	}

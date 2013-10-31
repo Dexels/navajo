@@ -145,7 +145,6 @@ public final class ASTFunctionNode extends SimpleNode {
 		super(id);
 	}
 
-
 	public Access getAccess() {
 		return access;
 	}
@@ -158,6 +157,7 @@ public final class ASTFunctionNode extends SimpleNode {
 		this.params = params;
 	}
 	
+	@Override
 	public final Object interpret() throws TMLExpressionException {
 
 		ClassLoader cl = null;

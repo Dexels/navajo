@@ -15,6 +15,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
  */
 public class GetNavajoName extends FunctionInterface {
 
+	@Override
 	public String remarks() {
 		return "Returns the name of the navajo object.";
 	}
@@ -24,6 +25,7 @@ public class GetNavajoName extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "GetNavajoName(Navajo): String";
 	}
@@ -33,6 +35,7 @@ public class GetNavajoName extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
 		if (pp == null) {

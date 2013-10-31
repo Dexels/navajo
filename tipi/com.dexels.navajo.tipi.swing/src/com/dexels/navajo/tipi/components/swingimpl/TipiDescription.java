@@ -30,6 +30,7 @@ public class TipiDescription extends TipiSwingComponentImpl implements
 	private String myPropertyName;
 	private Property myProperty;
 
+	@Override
 	public Object createContainer() {
 		myLabel = new TipiSwingLabel(this);
 		TipiHelper th = new TipiSwingHelper();
@@ -59,6 +60,7 @@ public class TipiDescription extends TipiSwingComponentImpl implements
 		return null;
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		if (name.equals("propertyName")) {
 			myPropertyName = (String) object;
@@ -68,19 +70,23 @@ public class TipiDescription extends TipiSwingComponentImpl implements
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public void addTipiEventListener(TipiEventListener listener) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public Property getProperty() {
 		return myProperty;
 	}
 
+	@Override
 	public String getPropertyName() {
 		return myPropertyName;
 	}
 
+	@Override
 	public void setProperty(Property p) {
 		myProperty = p;
 		myLabel.setText(p.getDescription());

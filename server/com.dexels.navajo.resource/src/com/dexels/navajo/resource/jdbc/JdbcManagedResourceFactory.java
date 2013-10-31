@@ -5,7 +5,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -99,10 +98,10 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 	}
 
 	public void close() {
-		for (Entry<String,ServiceRegistration<DataSource>> s: registryMap.entrySet()) {
+//		for (Entry<String,ServiceRegistration<DataSource>> s: registryMap.entrySet()) {
 //			s.getValue().unregister();
 //			I think this thows exceptions
-		}
+//		}
 		registryMap.clear();
 		factoryRegistration.unregister();
 	}

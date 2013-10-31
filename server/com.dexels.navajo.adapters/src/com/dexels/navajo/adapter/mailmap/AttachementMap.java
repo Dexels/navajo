@@ -38,51 +38,67 @@ public class AttachementMap implements Mappable, Serializable, AttachmentMapInte
   // Encoding is e.g. base64
   public String encoding = null;
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
   }
 
-  public void kill() {
+  @Override
+public void kill() {
   }
   
-  public void setEncoding(String s) {
+  @Override
+public void setEncoding(String s) {
 	 this.encoding = s;
   }
-  public String getEncoding() {
+  @Override
+public String getEncoding() {
 	 return encoding;
   }
-  public Binary getAttachFileContent() {
+  @Override
+public Binary getAttachFileContent() {
     return attachFileContent;
   }
-  public void setAttachFileContent(Binary attachFileContent) {
+  @Override
+public void setAttachFileContent(Binary attachFileContent) {
     this.attachFileContent = attachFileContent;
   }
-  public void setAttachFileName(String attachFileName) {
+  @Override
+public void setAttachFileName(String attachFileName) {
     this.attachFileName = attachFileName;
   }
-  public String getAttachFileName() {
+  @Override
+public String getAttachFileName() {
     return attachFileName;
   }
-  public String getAttachFile() {
+  @Override
+public String getAttachFile() {
     return attachFile;
   }
-  public void setAttachFile(String attachFile) {
+  @Override
+public void setAttachFile(String attachFile) {
     this.attachFile = attachFile;
   }
-  public void setAttachContentHeader(String s) {
+  @Override
+public void setAttachContentHeader(String s) {
   	attachContentHeader = s;
   }
-  public String getAttachContentDisposition() {
+  @Override
+public String getAttachContentDisposition() {
 	    return attachContentDisposition;
   }
-  public void setAttachContentDisposition(String s) {
+  @Override
+public void setAttachContentDisposition(String s) {
 	  attachContentDisposition = s;
   }
-  public String getAttachContentType() {
+  @Override
+public String getAttachContentType() {
 	    return attachContentType;
 }
+@Override
 public void setAttachContentType(String s) {
 	  attachContentType = s;
 }

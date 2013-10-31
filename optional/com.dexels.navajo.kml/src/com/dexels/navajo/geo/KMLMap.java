@@ -39,11 +39,13 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 	
 	private final static Logger logger = LoggerFactory.getLogger(KMLMap.class);
 	
+	@Override
 	public void load( Access access) {
 		this.inMessage = access.getInDoc();
 	}
 
 
+	@Override
 	public void store() throws MappableException, UserException {
 		
 	}
@@ -261,6 +263,7 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 //	}
 
 
+	@Override
 	public void kill() {
 	}
 

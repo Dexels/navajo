@@ -34,12 +34,15 @@ public class ClassCount implements Mappable {
 	public String className;
 	public int count;
 	
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 
+	@Override
 	public void kill() {
 	}
 

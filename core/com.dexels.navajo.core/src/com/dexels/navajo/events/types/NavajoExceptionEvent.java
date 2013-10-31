@@ -43,6 +43,7 @@ public class NavajoExceptionEvent implements NavajoEvent {
 	 * Return the event parameters as a Navajo object with a message __event__.
 	 * 
 	 */
+	@Override
 	public Navajo getEventNavajo() {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
 		Message event = NavajoFactory.getInstance().createMessage(input, "__event__");

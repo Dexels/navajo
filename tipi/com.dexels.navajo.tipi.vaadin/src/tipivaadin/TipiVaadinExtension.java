@@ -38,6 +38,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 		TipiVaadinExtension.getInstance().installAllExtensions(extensions);
 	}
 
+	@Override
 	public BundleContext getBundleContext() {
 		return context;
 	}
@@ -52,7 +53,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 		TipiVaadinExtension.instance = instance;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@Override
 	public void start(BundleContext bc) throws Exception {
 		this.context = bc;
 		super.start(bc);
@@ -82,7 +83,6 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 	}
 
 	
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		deregisterTipiExtension(context);
@@ -91,6 +91,7 @@ public class TipiVaadinExtension extends TipiAbstractXMLExtension implements Tip
 		super.stop(context);
 	}
 	
+	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
 	}

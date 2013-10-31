@@ -39,13 +39,16 @@ public class DbCatalog implements Mappable {
   public boolean dummy = false;
   public DbSchema [] schemas;
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
   }
 
-  public void kill() {
+  @Override
+public void kill() {
   }
 
   public String getName() {

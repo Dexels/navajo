@@ -282,7 +282,7 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
    * @see com.dexels.navajo.server.DispatcherMXBean#getRequestRate()
    */
   @Override
-  public  float getRequestRate() {
+public  float getRequestRate() {
     if(rateWindow[0] > 0){
       float time = (rateWindow[rateWindowSize - 1] - rateWindow[0]) / (float)1000.0;
       float avg = rateWindowSize/time;
@@ -295,7 +295,7 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
    * Clears all instantiated Navajo Classloaders to support a reload of Navajo Adapters.
    */
   @Override
-  public synchronized  final void doClearCache() {
+public synchronized  final void doClearCache() {
     navajoConfig.doClearCache();
     GenericHandler.doClearCache();
     System.runFinalization();
@@ -306,7 +306,7 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
    * Clears only the script Navajo classloaders, and leaves the jar cache alone
    */
   @Override
-  public synchronized  final void doClearScriptCache() {
+public synchronized  final void doClearScriptCache() {
       navajoConfig.doClearScriptCache();
       GenericHandler.doClearCache();
 //      System.runFinalization();
@@ -345,7 +345,7 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
    * @return
    */
   @Override
-  public  final NavajoConfigInterface getNavajoConfig() {
+public  final NavajoConfigInterface getNavajoConfig() {
     return navajoConfig;
   }
 
@@ -616,7 +616,7 @@ protected ServiceHandler createHandler(String handler, Access access) {
    * Generate a Navajo error message and log the error to the Database.
    */
   @Override
-  public  final Navajo generateErrorMessage(Access access, String message,
+public  final Navajo generateErrorMessage(Access access, String message,
                                                   int code, int level,
                                                   Throwable t) throws
       FatalException {
@@ -698,7 +698,7 @@ protected ServiceHandler createHandler(String handler, Access access) {
   }
   
   @Override
-  public final void setUseAuthorisation(boolean a) {
+public final void setUseAuthorisation(boolean a) {
     useAuthorisation = a;
   }
   
@@ -710,7 +710,7 @@ protected ServiceHandler createHandler(String handler, Access access) {
    * @return
    */
   @Override
-  public final Navajo removeInternalMessages(Navajo doc) {
+public final Navajo removeInternalMessages(Navajo doc) {
 	  if ( doc != null ) {
 		  try {
 		  //if ( doc.getMessage("__globals__") != null ) {
@@ -733,7 +733,7 @@ protected ServiceHandler createHandler(String handler, Access access) {
    * @throws FatalException
    */
   @Override
-  public final Navajo handle(Navajo inMessage,  TmlRunnable origRunnable, Object userCertificate, ClientInfo clientInfo) throws
+public final Navajo handle(Navajo inMessage,  TmlRunnable origRunnable, Object userCertificate, ClientInfo clientInfo) throws
       FatalException {
     return processNavajo(inMessage, "default", userCertificate,clientInfo,  false,  origRunnable,null);
   }
@@ -746,14 +746,13 @@ protected ServiceHandler createHandler(String handler, Access access) {
    * @throws FatalException
    */
   @Override
-  public final Navajo handle(Navajo inMessage,boolean skipAuth,AfterWebServiceEmitter emit) throws FatalException {
-    return processNavajo(inMessage, "default" ,null, null, skipAuth,null,emit);
-   
+public final Navajo handle(Navajo inMessage,boolean skipAuth,AfterWebServiceEmitter emit) throws FatalException {
+    return processNavajo(inMessage, null,null, null, skipAuth,null,emit);
   }
   
   @Override
-  public final Navajo handle(Navajo inMessage,boolean skipAuth,AfterWebServiceEmitter emit, ClientInfo clientInfo) throws FatalException {
-	    return processNavajo(inMessage, "default", null, clientInfo, skipAuth,null,emit);
+public final Navajo handle(Navajo inMessage,boolean skipAuth,AfterWebServiceEmitter emit, ClientInfo clientInfo) throws FatalException {
+	    return processNavajo(inMessage,null, null, clientInfo, skipAuth,null,emit);
 	   
 	  }
   
@@ -779,7 +778,7 @@ protected ServiceHandler createHandler(String handler, Access access) {
   }
   
   @Override
-  public final boolean isBusy() {
+public final boolean isBusy() {
 	  return  ( accessSet.size() > navajoConfig.getMaxAccessSetSize() );
   }
 
@@ -1150,7 +1149,7 @@ public Navajo handleCallbackPointers(Navajo inMessage) {
 
 
 
-	  @Override
+@Override
 public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, String rpcName, String rpcUser,
 		Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated, AfterWebServiceEmitter emit) {
 	if (access != null && !scheduledWebservice) {
@@ -1240,23 +1239,24 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 	  }
   }
 
-  protected void finalize() {
+  @Override
+protected void finalize() {
 	  instances--;
   }
   
 
-  @Override
+@Override
 public String getServerId() {
 	  return TslCompiler.getHostName();
   }
 
-@Override
-  public String getApplicationId() {
+  @Override
+public String getApplicationId() {
 	  return getNavajoConfig().getInstanceName();
   }
   
   @Override
-  public File getTempDir() {
+public File getTempDir() {
 	  File tempDir = new File(System.getProperty("java.io.tmpdir") + "/" + getApplicationId());
 	  tempDir.mkdirs();
 	  return tempDir;
@@ -1291,8 +1291,8 @@ public String getServerId() {
 	  }
   }
   
-  @Override
-  public File createTempFile(String prefix, String suffix) throws IOException {  
+@Override
+public File createTempFile(String prefix, String suffix) throws IOException {  
 	  File f = File.createTempFile(prefix, suffix, getTempDir());
 	  // Don't use deleteOnExit until Java 1.6, lower version contain memory leak (approx. 1K per call!).
 	  //f.deleteOnExit();
@@ -1315,8 +1315,8 @@ public String getServerId() {
 	  return a;
   }
 
-  @Override
-  public int getAccessSetSize() {
+@Override
+public int getAccessSetSize() {
 	  return DispatcherFactory.getInstance().getAccessSet().size();
   }
 
@@ -1330,7 +1330,7 @@ public String getServerId() {
   }
 
   @Override
-  public void store() throws MappableException, UserException {
+public void store() throws MappableException, UserException {
   }
 
   /*
@@ -1338,7 +1338,7 @@ public String getServerId() {
    * @see com.dexels.navajo.server.DispatcherMXBean#getPeakAccessSetSize()
    */
   @Override
-  public int getPeakAccessSetSize() {
+public int getPeakAccessSetSize() {
 	  return peakAccessSetSize;
   }
 
@@ -1346,7 +1346,8 @@ public String getServerId() {
    * (non-Javadoc)
    * @see com.dexels.navajo.server.DispatcherMXBean#resetAccessSetPeakSize()
    */
-  public void resetAccessSetPeakSize() {
+  @Override
+public void resetAccessSetPeakSize() {
 	  peakAccessSetSize = 0;
   }
 
@@ -1355,7 +1356,7 @@ public String getServerId() {
    * @see com.dexels.navajo.server.DispatcherMXBean#getStarttime()
    */
   @Override
-  public Date getStarttime() {
+public Date getStarttime() {
 	  return startTime;
   }
 
@@ -1367,7 +1368,7 @@ public String getServerId() {
    * (non-Javadoc)
    * @see com.dexels.navajo.server.DispatcherMXBean#getUptime()
    */
-  @Override
+@Override
   public long getUptime() {
 	  return ( System.currentTimeMillis() - startTime.getTime() );
   }
@@ -1377,7 +1378,7 @@ public String getServerId() {
    * @see com.dexels.navajo.server.DispatcherMXBean#getSnmpManangers()
    */
   @Override
-  public String getSnmpManangers() {
+public String getSnmpManangers() {
 	  StringBuffer s = new StringBuffer();
 	  for (int i = 0; i < snmpManagers.size(); i++ ) {
 		  SNMPManager snmp = snmpManagers.get(i);
@@ -1396,7 +1397,7 @@ public String getServerId() {
    * @see com.dexels.navajo.server.DispatcherMXBean#setSnmpManagers(java.lang.String)
    */
   @Override
-  public void setSnmpManagers(String s) {
+public void setSnmpManagers(String s) {
 	  StringTokenizer st = new StringTokenizer(s, ",");
 	  while ( st.hasMoreTokens() ) {
 		  snmpManagers.add(new SNMPManager(st.nextToken()));
@@ -1408,7 +1409,7 @@ public String getServerId() {
    * @see com.dexels.navajo.server.DispatcherMXBean#getRequestCount()
    */
   @Override
-  public long getRequestCount() {
+public long getRequestCount() {
 	  return requestCount;
   }
 
@@ -1481,7 +1482,7 @@ public String getServerId() {
 //  }
 
   @Override
-  public Set<Access> getAccessSet() {
+public Set<Access> getAccessSet() {
 	  return accessSet;
   }
 
@@ -1491,29 +1492,30 @@ public String getServerId() {
   }
 
   @Override
-  public int getRateWindowSize() {
+public int getRateWindowSize() {
 	  return rateWindowSize;
   }
 
-  public double getCPULoad() {
+  @Override
+public double getCPULoad() {
 	 return getNavajoConfig().getCurrentCPUload();
   }
 
   private int health;
   
   @Override
-  public int getHealth(String resourceId) {
+public int getHealth(String resourceId) {
 	  return health;
   }
 
   @Override
-  public int getWaitingTime(String resourceId) {
+public int getWaitingTime(String resourceId) {
 	  return 0;
   }
 
 
   @Override
-  public void setHealth(String resourceId, int h) {
+public void setHealth(String resourceId, int h) {
 	  System.err.println("Dispatcher.setHealth(" + resourceId + "," + h + ")");
 	  health = h;
   }

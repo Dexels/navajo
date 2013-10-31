@@ -45,6 +45,7 @@ public class TipiFileStorageManager implements TipiStorageManager, Serializable 
 		}
 	}
 
+	@Override
 	public Navajo getStorageDocument(String id) throws TipiException {
 		id = id.replace('/', '#');
 		id = id.replace('\\', '$');
@@ -81,6 +82,7 @@ public class TipiFileStorageManager implements TipiStorageManager, Serializable 
 		}
 	}
 
+	@Override
 	public void setStorageDocument(String id, Navajo n) throws TipiException {
 		File base;
 
@@ -130,10 +132,12 @@ public class TipiFileStorageManager implements TipiStorageManager, Serializable 
 
 	}
 
+	@Override
 	public void setInstanceId(String id) {
 		instanceId = id;
 	}
 
+	@Override
 	public void setContext(TipiContext tc) {
 		// TODO Auto-generated method stub
 

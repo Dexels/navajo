@@ -27,6 +27,7 @@ public class CompiledTestScript2 extends CompiledScript {
 
 	}
 
+	@Override
 	public ArrayList<Dependency> getDependentObjects() {
 		ArrayList<Dependency> deps = new ArrayList<Dependency>();
 		deps.add(new AdapterFieldDependency(-1,

@@ -26,23 +26,28 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 	private TipiContext currentContext;
 //	private File installationFolder = null;
 	private static final Logger logger = LoggerFactory.getLogger(BaseTipiApplicationInstance.class);
+	@Override
 	public TipiContext getCurrentContext() {
 		return currentContext;
 	}
 
+	@Override
 	public void setCurrentContext(TipiContext currentContext) {
 		this.currentContext = currentContext;
 	}
 
+	@Override
 	public final void startup() throws IOException, TipiException {
 		TipiContext context = createContext();
 		setCurrentContext(context);
 	}
 
+	@Override
 	public void dispose(TipiContext t) {
 		t.exit();
 	}
 
+	@Override
 	public final void reboot() throws IOException, TipiException {
 		TipiContext tc = currentContext;
 		startup();

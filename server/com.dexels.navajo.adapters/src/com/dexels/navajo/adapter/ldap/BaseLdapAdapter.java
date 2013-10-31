@@ -1,13 +1,14 @@
 package com.dexels.navajo.adapter.ldap;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.naming.Context;
+import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -47,12 +48,15 @@ public class BaseLdapAdapter implements Mappable {
 
 	private InitialDirContext initialDir = null;
 
+	@Override
 	public void kill() {
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 
@@ -105,7 +109,7 @@ public class BaseLdapAdapter implements Mappable {
 				startup();
 			}
 			DirContext dc = (DirContext) initialDir.lookup(base);
-			NamingEnumeration e = dc.list("");
+			NamingEnumeration<NameClassPair> e = dc.list("");
 			while (e.hasMore()) {
 				Object o = e.next();
 				logger.info("o: " + o);
@@ -135,10 +139,10 @@ public class BaseLdapAdapter implements Mappable {
 		
 		
 		Message memberdata = process.getMessage("MembersPerClub");
-		ArrayList al = memberdata.getAllMessages();
+		List<Message> al = memberdata.getAllMessages();
 		BaseLdapAdapter bla = new BaseLdapAdapter();
 		DirContext context = bla.getContext("ou=clubs,dc=dexels,dc=com");
-		Map constants = new HashMap();
+		Map<String,String> constants = new HashMap<String,String>();
 
 		
 		
@@ -168,7 +172,7 @@ public class BaseLdapAdapter implements Mappable {
 		process2.getMessage("ClubData");
 		process2.write(System.err);
 		for (int i = 0; i < al.size(); i++) {
-			Message current = (Message) al.get(i);
+			Message current = al.get(i);
 			bla.insertPerson(context, current,constants);
 			bla.addGroupMember("uid", "horr"+i, "member", context);
 
@@ -184,7 +188,7 @@ public class BaseLdapAdapter implements Mappable {
 
 	}
 
-	public Context insertPerson(DirContext context, Message entity, Map constants) throws NamingException {
+	public Context insertPerson(DirContext context, Message entity, Map<String,String> constants) throws NamingException {
 		Map<String, String> mapping = new HashMap<String, String>();
 		mapping.put("cn", "LastName");
 		mapping.put("sn", "LastName");
@@ -230,11 +234,11 @@ public class BaseLdapAdapter implements Mappable {
 	}
 	
 	
-	public Context insertEntity(String keyAttribute, DirContext context, Message entity, Map mapping, String[] objectClasses, Map constants)
+	public Context insertEntity(String keyAttribute, DirContext context, Message entity, Map<String,String> mapping, String[] objectClasses, Map<String,String> constants)
 			throws NamingException {
 		
 		
-		String keyProperty = (String) mapping.get(keyAttribute);
+		String keyProperty = mapping.get(keyAttribute);
 		String keySource = entity.getProperty(keyProperty).getValue();
 		BasicAttribute objectclass;
 		objectclass = new BasicAttribute("objectclass");
@@ -261,12 +265,12 @@ public class BaseLdapAdapter implements Mappable {
 //		}
 //		mandatory.put("objectClass",objectclass);
 		logger.info("Added to objectClass");
-		for (Iterator iter = mapping.keySet().iterator(); iter.hasNext();) {
-			String currentAttribute = (String) iter.next();
+		for (Iterator<String> iter = mapping.keySet().iterator(); iter.hasNext();) {
+			String currentAttribute = iter.next();
 			if (currentAttribute.equals(keyAttribute)) {
 				continue;
 			}
-			String propertyName = (String) mapping.get(currentAttribute);
+			String propertyName = mapping.get(currentAttribute);
 			if (propertyName != null) {
 				Property currentProperty = entity.getProperty(propertyName);
 				if (currentProperty != null) {
@@ -284,9 +288,9 @@ public class BaseLdapAdapter implements Mappable {
 			}
 		}
 		if (constants != null) {
-			for (Iterator iter = constants.keySet().iterator(); iter.hasNext();) {
-				String currentAttribute = (String) iter.next();
-				String value = (String) constants.get(currentAttribute);
+			for (Iterator<String> iter = constants.keySet().iterator(); iter.hasNext();) {
+				String currentAttribute = iter.next();
+				String value = constants.get(currentAttribute);
 				BasicAttribute attr = new BasicAttribute(currentAttribute, value);
 				logger.info("Adding:     >"+currentAttribute+"="+value+"<");
 				mandatory.put(attr);

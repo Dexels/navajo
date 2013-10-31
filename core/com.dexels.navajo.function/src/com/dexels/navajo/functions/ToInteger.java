@@ -17,7 +17,8 @@ public final class ToInteger extends FunctionInterface {
 
     public ToInteger() {}
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object o = this.getOperands().get(0);
 
         if (o == null || "".equals(o))
@@ -31,11 +32,13 @@ public final class ToInteger extends FunctionInterface {
 
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "ToInteger(Object)";
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Get an integer representation of given object.";
     }
 

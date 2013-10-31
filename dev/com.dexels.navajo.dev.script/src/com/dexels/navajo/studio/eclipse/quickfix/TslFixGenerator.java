@@ -35,7 +35,9 @@ public class TslFixGenerator implements IMarkerResolutionGenerator {
 	/* (non-Javadoc)
      * @see org.eclipse.ui.IMarkerResolutionGenerator#getResolutions(org.eclipse.core.resources.IMarker)
      */
-    public IMarkerResolution[] getResolutions(IMarker marker) {
+    @SuppressWarnings("rawtypes")
+	@Override
+	public IMarkerResolution[] getResolutions(IMarker marker) {
 //            int code = marker.getAttribute("code", 0);
             TslCompileException tce = null;
             try {

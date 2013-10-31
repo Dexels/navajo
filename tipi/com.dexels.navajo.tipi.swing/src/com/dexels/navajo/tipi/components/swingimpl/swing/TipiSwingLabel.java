@@ -103,6 +103,7 @@ public class TipiSwingLabel extends JLabel implements TipiDndCapable {
 		}
 	}
 
+	@Override
 	public TipiDndManager getDndManager() {
 		return myDndManager;
 	}
@@ -166,6 +167,7 @@ public class TipiSwingLabel extends JLabel implements TipiDndCapable {
 		// super.setText("");
 	}
 
+	@Override
 	public String getText() {
 		if (isVertical) {
 			return "";
@@ -174,6 +176,7 @@ public class TipiSwingLabel extends JLabel implements TipiDndCapable {
 		}
 	}
 
+	@Override
 	public void setForeground(Color fg) {
 		super.setForeground(fg);
 		if (isVertical) {

@@ -51,7 +51,8 @@ public class PropertyModifier implements ICellModifier {
      * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object,
      *      java.lang.String)
      */
-    public boolean canModify(Object element, String property) {
+    @Override
+	public boolean canModify(Object element, String property) {
          if (element instanceof Property) {
             Property p = (Property) element;
             if (!p.isDirIn()) {
@@ -108,7 +109,8 @@ public class PropertyModifier implements ICellModifier {
      * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object,
      *      java.lang.String)
      */
-    public Object getValue(Object element, String property) {
+    @Override
+	public Object getValue(Object element, String property) {
            Message mm = (Message) element;
         Property p = mm.getProperty(property);
         if (Property.SELECTION_PROPERTY.equals(p.getType())) {
@@ -169,7 +171,8 @@ public class PropertyModifier implements ICellModifier {
      * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object,
      *      java.lang.String, java.lang.Object)
      */
-    public void modify(Object element, String property, Object value) {
+    @Override
+	public void modify(Object element, String property, Object value) {
         if (element instanceof Item) {
             element = ((Item) element).getData();
         }

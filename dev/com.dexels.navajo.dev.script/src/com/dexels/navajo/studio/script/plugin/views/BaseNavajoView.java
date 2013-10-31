@@ -39,14 +39,16 @@ public abstract class BaseNavajoView extends ViewPart {
 
          NavajoScriptPluginPlugin.getDefaultWorkbench().getDisplay().syncExec(new Runnable(){
 
-            public void run() {
+            @Override
+			public void run() {
             	
                 IWorkbenchPage[] pages = site.getWorkbenchWindow().getPages();
 
                 IPartListener ip = new IPartListener(){
                 	
                 	//                NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new IPartListener(){
-                    public void partActivated(IWorkbenchPart part) {
+                    @Override
+					public void partActivated(IWorkbenchPart part) {
                         if (part==me) {
                             System.err.println("Activated");
                             if (getContextId()!=null) {
@@ -56,16 +58,19 @@ public abstract class BaseNavajoView extends ViewPart {
                         }
                     }
 
-                    public void partBroughtToTop(IWorkbenchPart part) {}
+                    @Override
+					public void partBroughtToTop(IWorkbenchPart part) {}
 
-                    public void partClosed(IWorkbenchPart part) {
+                    @Override
+					public void partClosed(IWorkbenchPart part) {
                         if (part==me) {
                         System.err.println("Close");
                         // TODO: RESET Plugin viewer?
                         }
                     }
 
-                    public void partDeactivated(IWorkbenchPart part) {
+                    @Override
+					public void partDeactivated(IWorkbenchPart part) {
                         if (part==me) {
                             if (currentActivation!=null) {
                                 ics.deactivateContext(currentActivation);
@@ -73,7 +78,8 @@ public abstract class BaseNavajoView extends ViewPart {
                        }
                     }
 
-                    public void partOpened(IWorkbenchPart part) {}
+                    @Override
+					public void partOpened(IWorkbenchPart part) {}
                 };
                 
                 for (int i = 0; i < pages.length; i++) {

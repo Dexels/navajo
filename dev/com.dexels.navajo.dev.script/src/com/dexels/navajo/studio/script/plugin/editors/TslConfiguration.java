@@ -55,11 +55,13 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
             
               return new ITextHover() {
 
-                public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
+                @Override
+				public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
                     return "AAP!";
                 }
 
-                public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
+                @Override
+				public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
                     // TODO Auto-generated method stub
                     return null;
                 }

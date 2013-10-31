@@ -27,6 +27,7 @@ public class TipiSetPassword extends TipiAction {
 	 */
 	private static final long serialVersionUID = -7869048478978643731L;
 
+	@Override
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

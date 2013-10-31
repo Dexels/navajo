@@ -105,9 +105,11 @@ public class MailMap implements MailMapInterface, Mappable,
 	public MailMap() {
 	}
 
+	@Override
 	public void kill() {
 	}
 
+	@Override
 	public void load(Access access) throws MappableException {
 		if (access != null) {
 			doc = access.getInDoc();
@@ -122,6 +124,7 @@ public class MailMap implements MailMapInterface, Mappable,
 		return bins;
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 		if (!queuedSend) {
 			sendMail();
@@ -136,6 +139,7 @@ public class MailMap implements MailMapInterface, Mappable,
 		}
 	}
 
+	@Override
 	public boolean send() {
 		retries++;
 		try {
@@ -312,6 +316,7 @@ public class MailMap implements MailMapInterface, Mappable,
 	 */
 	private class SMTPAuthenticator extends javax.mail.Authenticator {
 
+		@Override
 		public PasswordAuthentication getPasswordAuthentication() {
 			return new PasswordAuthentication(smtpUser, smtpPass);
 		}
@@ -321,6 +326,7 @@ public class MailMap implements MailMapInterface, Mappable,
 		return failure;
 	}
 
+	@Override
 	public void setIgnoreFailures(boolean b) {
 		ignoreFailures = b;
 	}
@@ -341,6 +347,7 @@ public class MailMap implements MailMapInterface, Mappable,
 		this.smtpPass = smtpPass;
 	}
 
+	@Override
 	public void setRecipients(String s) {
 
 		java.util.StringTokenizer tok = new StringTokenizer(s, ",");
@@ -354,30 +361,37 @@ public class MailMap implements MailMapInterface, Mappable,
 		this.recipients = s;
 	}
 
+	@Override
 	public void setSender(String s) {
 		this.sender = s;
 	}
 
+	@Override
 	public void setMailServer(String s) {
 		this.mailServer = s;
 	}
 
+	@Override
 	public void setSubject(String s) {
 		this.subject = s;
 	}
 
+	@Override
 	public void setContentType(String s) {
 		this.contentType = s;
 	}
 
+	@Override
 	public void setXslFile(String s) {
 		this.xslFile = s;
 	}
 
+	@Override
 	public void setText(String s) {
 		this.text += s;
 	}
 
+	@Override
 	public void setBcc(String bcc) {
 		this.bcc = bcc;
 		java.util.StringTokenizer tok = new StringTokenizer(bcc, ",");
@@ -390,6 +404,7 @@ public class MailMap implements MailMapInterface, Mappable,
 		}
 	}
 
+	@Override
 	public void setCc(String cc) {
 		this.cc = cc;
 		java.util.StringTokenizer tok = new StringTokenizer(cc, ",");
@@ -402,6 +417,7 @@ public class MailMap implements MailMapInterface, Mappable,
 		}
 	}
 
+	@Override
 	public void setMultipleAttachments(AttachmentMapInterface[] c) {
 
 		if (attachments == null) {
@@ -413,10 +429,12 @@ public class MailMap implements MailMapInterface, Mappable,
 		}
 	}
 
+	@Override
 	public void setRelatedMultipart(boolean b) {
 		this.relatedMultipart = b;
 	}
 
+	@Override
 	public void setAttachment(AttachmentMapInterface m) {
 		if (attachments == null) {
 			attachments = new ArrayList<AttachmentMapInterface>();
@@ -424,10 +442,12 @@ public class MailMap implements MailMapInterface, Mappable,
 		attachments.add(m);
 	}
 
+	@Override
 	public int getMaxRetries() {
 		return maxRetries;
 	}
 
+	@Override
 	public Binary getRequest() {
 		return null;
 	}
@@ -440,46 +460,57 @@ public class MailMap implements MailMapInterface, Mappable,
 		this.useEncryption = useEncryption;
 	}
 
+	@Override
 	public Binary getResponse() {
 		return null;
 	}
 
+	@Override
 	public int getRetries() {
 		return retries;
 	}
 
+	@Override
 	public long getWaitUntil() {
 		return waitUntil;
 	}
 
+	@Override
 	public void resetRetries() {
 		retries = 0;
 	}
 
+	@Override
 	public void setMaxRetries(int r) {
 		maxRetries = r;
 	}
 
+	@Override
 	public void setQueuedSend(boolean b) {
 		queuedSend = b;
 	}
 
+	@Override
 	public void setWaitUntil(long w) {
 		waitUntil = w;
 	}
 
+	@Override
 	public Access getAccess() {
 		return myAccess;
 	}
 
+	@Override
 	public Navajo getNavajo() {
 		return myNavajo;
 	}
 
+	@Override
 	public int getMaxRunningInstances() {
 		return maxRunningInstances;
 	}
 
+	@Override
 	public void setMaxRunningInstances(int maxRunningInstances) {
 		setStaticMaxRunningInstances(maxRunningInstances);
 	}
@@ -488,6 +519,7 @@ public class MailMap implements MailMapInterface, Mappable,
 		MailMap.maxRunningInstances = maxRunningInstances;
 	}
 
+	@Override
 	public DependentResource[] getDependentResourceFields() {
 		return new DependentResource[] { new GenericDependentResource(
 				"mailserver", "mailServer", AdapterFieldDependency.class) };
