@@ -123,7 +123,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 			// attempt remote propertyresource bundle;
 			try {
 				InputStream tipiResourceStream = c
-						. getGenericResourceStream("validation.properties");
+						. getTipiResourceStream("validation.properties");
 				if (tipiResourceStream != null) {
 					errorMessageBundle = new PropertyResourceBundle(
 							tipiResourceStream);
