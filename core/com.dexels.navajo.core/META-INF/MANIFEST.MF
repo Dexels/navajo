@@ -2,7 +2,7 @@ Bundle-Name: Navajo Core
 Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.12.63.qualifier
+Bundle-Version: 2.12.64
 Bundle-Activator: navajocore.Version
 Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.navajo.server.resource",
