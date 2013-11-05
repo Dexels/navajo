@@ -255,14 +255,14 @@
 					<id>dexels</id>
 					<name>Dexels Repository</name>
 					<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
-					<url>https://repo.dexels.com/nexus/content/repositories/navajo/</url>
+					<url>https://repo.dexels.com/nexus/content/repositories/navajo_test/</url>
 					<layout>default</layout>
 				</repository>
 				<snapshotRepository>
 					<uniqueVersion>true</uniqueVersion>
 					<id>dexels_snap</id>
 					<name>Dexels Snapshots</name>
-					<url>https://repo.dexels.com/nexus/content/repositories/navajo_snapshot</url>
+					<url>https://repo.dexels.com/nexus/content/repositories/navajo_test_snapshot</url>
 					<layout>default</layout>
 				</snapshotRepository>
 			</distributionManagement>
