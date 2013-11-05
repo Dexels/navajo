@@ -5,19 +5,19 @@ branch_name="(unnamed branch)"     # detached HEAD
 
 branch_name=${branch_name##refs/heads/}
 echo "Deploying in branch name: $branch_name"
-if ["$branch_name" == test]; then
-   commitMsg = "Test release of ${PWD##*/} version $1" -a
-   releaseTag = "Test_${PWD##*/}-$1" 
+if [ "$branch_name" == test ]; then
+   commitMsg="Test release of ${PWD##*/} version $1" 
+   releaseTag="Test_${PWD##*/}-$1" 
 else
-   commitMsg = "Release of ${PWD##*/} version $1" -a
-   releaseTag = "Release_${PWD##*/}-$1" 
+   commitMsg="Release of ${PWD##*/} version $1" 
+   releaseTag="Release_${PWD##*/}-$1" 
 fi
 mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=$1
-mvn deploy
+mvn deploy -Dbranch=$branch_name
 git commit -m "$commitMsg" -a
 git tag -a -f "$releaseTag" -m "$commitMsg"
 mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=$2-SNAPSHOT
-mvn deploy
+mvn deploy -Dbranch=$branch_name
 git commit -m "Development stream of ${PWD##*/} version $2" -a
 git push --tags
 git push
