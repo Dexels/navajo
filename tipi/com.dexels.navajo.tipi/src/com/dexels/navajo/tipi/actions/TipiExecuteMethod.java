@@ -83,7 +83,7 @@ public final class TipiExecuteMethod extends TipiAction {
 		}
 		
 		if (globalMethodXML == null && localMethodXML == null) {
-			logger.warn("TipiExecuteMethod: Cannot find local nor global method with name " + name);
+			logger.warn("TipiExecuteMethod: Cannot find local nor global method with name " + name + ", looking in component: " + localMethodDefaultRootComponent);
 			return;
 		}
 		if (getParameter("rootComponent") == null)

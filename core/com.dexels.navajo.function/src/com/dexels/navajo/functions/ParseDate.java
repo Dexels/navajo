@@ -70,7 +70,11 @@ public final class ParseDate extends FunctionInterface {
         put("^\\d{1,2}/\\d{1,2}/\\d{2}$", "MM/dd/yy");
         put("^\\d{4}/\\d{1,2}/\\d{1,2}$", "yyyy/MM/dd");
         put("^\\d{2}/\\d{1,2}/\\d{1,2}$", "yy/MM/dd");
+        put("^\\d{1}\\s[a-z]{3}\\s\\d{4}$", "d MMM yyyy");
+        put("^\\d{1}-\\s[a-z]{3}-\\s\\d{4}$", "d-MMM-yyyy");
         put("^\\d{1,2}\\s[a-z]{3}\\s\\d{4}$", "dd MMM yyyy");
+        put("^\\d{1}\\s[a-z]{4,}\\s\\d{4}$", "d MMMM yyyy");
+        put("^\\d{1}-\\s[a-z]{4,}-\\s\\d{4}$", "d-MMMM-yyyy");
         put("^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}$", "dd MMMM yyyy");
         put("^\\d{12}$", "yyyyMMddHHmm");
         put("^\\d{8}\\s\\d{4}$", "yyyyMMdd HHmm");
@@ -86,8 +90,10 @@ public final class ParseDate extends FunctionInterface {
         put("^\\d{4}-\\d{1,2}-\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$", "yyyy-MM-dd HH:mm:ss");
         put("^\\d{1,2}/\\d{1,2}/\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$", "MM/dd/yyyy HH:mm:ss");
         put("^\\d{4}/\\d{1,2}/\\d{1,2}\\s\\d{1,2}:\\d{2}:\\d{2}$", "yyyy/MM/dd HH:mm:ss");
+        put("^\\d{1}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$", "d MMM yyyy HH:mm:ss");
         put("^\\d{1,2}\\s[a-z]{3}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$", "dd MMM yyyy HH:mm:ss");
         put("^\\d{1,2}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$", "dd MMMM yyyy HH:mm:ss");
+        put("^\\d{1}\\s[a-z]{4,}\\s\\d{4}\\s\\d{1,2}:\\d{2}:\\d{2}$", "d MMMM yyyy HH:mm:ss");
     }};
 
     /**
@@ -135,6 +141,8 @@ public final class ParseDate extends FunctionInterface {
         dates.add("06/14/1982");
         dates.add("06-05-87");
         dates.add("06-05-187");
+        dates.add("2-may-2000");
+        dates.add("2 mei 2000");
         ParseDate td = new ParseDate();
         for (String date : dates) {
             td.reset();

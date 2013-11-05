@@ -93,7 +93,7 @@ public class NavajoContextListener implements ServletContextListener {
 			logger.info("Preventing extension shutdown. OSGi detected, they can fend for themselves.");
 			return;
 		}
-		AbstractVersion.shutdownNavajoExtension("navajo");
+		AbstractVersion.shutdownNavajoExtension("navajocore");
 		AbstractVersion.shutdownNavajoExtension("navajodocument");
 		AbstractVersion.shutdownNavajoExtension("navajoclient");
 		AbstractVersion.shutdownNavajoExtension("navajoadapters");

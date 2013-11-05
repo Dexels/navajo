@@ -1,9 +1,7 @@
 package com.dexels.navajo.script.api;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -11,9 +9,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class ThreadPoolRequestQueue extends RequestQueue {
 
 	private final ThreadPoolExecutor tpe;
-	private final Queue<Long> finishedServicesAt = new LinkedList<Long>();
-	
-	private static final int MAX_TIMELOG_SIZE = 80;
 	
 	protected ThreadPoolRequestQueue(String id, ThreadPoolExecutor tpe, Scheduler ms) {
 		super(ms, id);
@@ -72,21 +67,12 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 	
 	@Override
 	public final double getRequestRate() {
-		if(finishedServicesAt.isEmpty()) {
-			// don't return 0
-			return 1;
-		}
-		long first = finishedServicesAt.peek();
-		long diff = System.currentTimeMillis() - first;
-		return diff / finishedServicesAt.size();
+		return 1.0;
 	}
 
 	@Override
 	public void finished() {
-		finishedServicesAt.add(System.currentTimeMillis());
-		while (finishedServicesAt.size() > MAX_TIMELOG_SIZE) {
-			finishedServicesAt.remove();
-		}
+
 	}
 
 	@Override
@@ -116,14 +102,6 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 	public List<TmlRunnable> getQueuedRequests() {
 		List<TmlRunnable> runnable = new ArrayList<TmlRunnable>();
 		return runnable;
-//		Iterator iter = tpe.getQueue().iterator();
-//	    while ( iter.hasNext() ) {
-//	    	Object o = iter.next();
-//	    	System.err.println("In getQueuedRequests: " + o);
-//	    	TmlRunnable tml = (TmlRunnable) iter.next();
-//	    	runnable.add(tml);
-//	    }
-//	    return runnable;
 	}
 
 }
