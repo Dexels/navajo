@@ -248,7 +248,12 @@
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
-
+   			<activation>
+                <property>
+                    <name>!environment</name>
+                </property>
+            </activation>
+            
 			<distributionManagement>
 				<repository>
 					<uniqueVersion>false</uniqueVersion>
