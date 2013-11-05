@@ -274,9 +274,6 @@
 
 		<profile>
 			<id>release</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
    			<activation>
                 <property>
                     <name>!environment</name>
