@@ -23,7 +23,13 @@ Require-Bundle: org.eclipse.core.runtime,
  com.google.inject;bundle-version="2.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: com.dexels.navajo.studio.script.plugin.views
+Export-Package: com.dexels.navajo.studio.script.plugin.views;
+  uses:="com.dexels.navajo.studio.eclipse,
+   com.dexels.navajo.studio.script.plugin,
+   com.dexels.navajo.studio.script.plugin.editors,
+   org.eclipse.core.resources,
+   org.eclipse.swt.widgets,
+   com.dexels.navajo.document"
 Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.parser,
