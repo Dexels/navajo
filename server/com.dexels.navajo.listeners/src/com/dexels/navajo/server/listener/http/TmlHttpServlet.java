@@ -484,7 +484,8 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 
 			response.setContentType("text/xml; charset=UTF-8");
 			response.setHeader("Accept-Ranges", "none");
-			response.setHeader("Connection", "close");
+			// Why do we want this?
+			//response.setHeader("Connection", "close");
 
 			if (recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {
 				response.setHeader("Content-Encoding", COMPRESS_JZLIB);
