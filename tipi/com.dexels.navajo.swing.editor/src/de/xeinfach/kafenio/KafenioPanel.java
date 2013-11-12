@@ -116,11 +116,13 @@ public class KafenioPanel extends JPanel implements ActionListener,
 
 	/* Components */
 	private JMenuBar jMenuBar;
+	private JToolBar toolbarTipi;
 	private JToolBar toolbar2;
 	private JToolBar toolbar1;
 	private Container kafenioParent; // implements KafenioContainerInterface or
 										// not. Most probably JDialog or JFrame.
 	private KafenioMenuBar kafenioMenuBar;
+	private KafenioToolBar kafenioToolBarTipi;
 	private KafenioToolBar kafenioToolBar1;
 	private KafenioToolBar kafenioToolBar2;
 	private KafenioPanelConfiguration kafenioConfig;
@@ -263,6 +265,7 @@ public class KafenioPanel extends JPanel implements ActionListener,
 		 * need the styles-combo-box for registering a document)
 		 */
 		kafenioMenuBar = new KafenioMenuBar(this);
+		kafenioToolBarTipi = new KafenioToolBar(this);
 		kafenioToolBar1 = new KafenioToolBar(this);
 		kafenioToolBar2 = new KafenioToolBar(this);
 
@@ -297,15 +300,18 @@ public class KafenioPanel extends JPanel implements ActionListener,
 		toolbarPanel.setLayout(new BorderLayout());
 		toolbarPanel.setBackground(getConfig().getBgcolor());
 		// TODO: refactor code - duplicate method calls are used...
+		if (getConfig().isShowToolbarTipi()) {
+			toolbarTipi = kafenioToolBarTipi.createToolbar(getConfig().getCustomToolBarTipi(), getConfig().isShowToolbarTipi());
+			toolbarPanel.add(toolbarTipi, BorderLayout.NORTH);
+			toolbars.add(toolbarTipi);
+		}
 		if (getConfig().isShowToolbar()) {
-			toolbar1 = kafenioToolBar1.createToolbar(getConfig()
-					.getCustomToolBar1(), getConfig().isShowToolbar());
+			toolbar1 = kafenioToolBar1.createToolbar(getConfig().getCustomToolBar1(), getConfig().isShowToolbar());
 			toolbarPanel.add(toolbar1, BorderLayout.NORTH);
 			toolbars.add(toolbar1);
 		}
 		if (getConfig().isShowToolbar2()) {
-			toolbar2 = kafenioToolBar2.createToolbar(getConfig()
-					.getCustomToolBar2(), getConfig().isShowToolbar2());
+			toolbar2 = kafenioToolBar2.createToolbar(getConfig().getCustomToolBar2(), getConfig().isShowToolbar2());
 			toolbarPanel.add(toolbar2, BorderLayout.SOUTH);
 			toolbars.add(toolbar2);
 		}
@@ -376,15 +382,13 @@ public class KafenioPanel extends JPanel implements ActionListener,
 
 		/* Create the scroll area for the text pane */
 		htmlScrollPane = new JScrollPane(htmlPane);
-		htmlScrollPane
-				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		htmlScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		htmlScrollPane.setPreferredSize(new Dimension(400, 400));
 		htmlScrollPane.setMinimumSize(new Dimension(128, 128));
 
 		/* Create the scroll area for the source viewer */
 		srcScrollPane = new JScrollPane(srcPane);
-		srcScrollPane
-				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		srcScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		srcScrollPane.setPreferredSize(new Dimension(400, 100));
 		srcScrollPane.setMinimumSize(new Dimension(64, 64));
 
@@ -409,6 +413,13 @@ public class KafenioPanel extends JPanel implements ActionListener,
 	 */
 	public JMenuBar getJMenuBar() {
 		return jMenuBar;
+	}
+
+	/**
+	 * @see de.xeinfach.kafenio.interfaces.KafenioPanelInterface#getJToolBarTipi()
+	 */
+	public JToolBar getJToolBarTipi() {
+		return toolbarTipi;
 	}
 
 	/**
@@ -811,8 +822,7 @@ public class KafenioPanel extends JPanel implements ActionListener,
 								int so = elem.getStartOffset();
 								int eo = elem.getEndOffset();
 								if (so + 1 < eo) {
-									char[] temp = htmlPane.getText(so, eo - so)
-											.toCharArray();
+									char[] temp = htmlPane.getText(so, eo - so).toCharArray();
 									for (int i = 0; i < temp.length; i++) {
 										if (!(Character.isWhitespace(temp[i]))) {
 											content = true;
@@ -820,23 +830,18 @@ public class KafenioPanel extends JPanel implements ActionListener,
 									}
 								}
 								if (!content) {
-									Element listElement = elem
-											.getParentElement();
+									Element listElement = elem.getParentElement();
 									htmlUtils.removeTag(elem, true);
 									this.setCaretPosition(sOffset - 1);
 									return;
 								} else {
-									htmlPane.setCaretPosition(htmlPane
-											.getCaretPosition() - 1);
-									htmlPane.moveCaretPosition(htmlPane
-											.getCaretPosition() - 2);
+									htmlPane.setCaretPosition(htmlPane.getCaretPosition() - 1);
+									htmlPane.moveCaretPosition(htmlPane.getCaretPosition() - 2);
 									htmlPane.replaceSelection("");
 									return;
 								}
-							} else if (htmlUtils
-									.checkParentsTag(HTML.Tag.TABLE)) {
-								htmlPane.setCaretPosition(htmlPane
-										.getCaretPosition() - 1);
+							} else if (htmlUtils.checkParentsTag(HTML.Tag.TABLE)) {
+								htmlPane.setCaretPosition(htmlPane.getCaretPosition() - 1);
 								ke.consume();
 								return;
 							}
@@ -1002,14 +1007,11 @@ public class KafenioPanel extends JPanel implements ActionListener,
 	 * @throws IOException
 	 *             is thrown if an io exception occured.
 	 */
-	public void insertListStyle(Element element) throws BadLocationException,
-			IOException {
+	public void insertListStyle(Element element) throws BadLocationException, IOException {
 		if (element.getParentElement().getName() == "ol") {
-			getKafenioActions().getActionListOrdered().actionPerformed(
-					new ActionEvent(new Object(), 0, "newListPoint"));
+			getKafenioActions().getActionListOrdered().actionPerformed(new ActionEvent(new Object(), 0, "newListPoint"));
 		} else {
-			getKafenioActions().getActionListUnordered().actionPerformed(
-					new ActionEvent(new Object(), 0, "newListPoint"));
+			getKafenioActions().getActionListUnordered().actionPerformed(new ActionEvent(new Object(), 0, "newListPoint"));
 		}
 	}
 
@@ -1061,8 +1063,7 @@ public class KafenioPanel extends JPanel implements ActionListener,
 	 */
 	public void registerDocument(ExtendedHTMLDocument newHtmlDoc) {
 		htmlPane.setDocument(newHtmlDoc);
-		htmlPane.getDocument().addUndoableEditListener(
-				new CustomUndoableEditListener());
+		htmlPane.getDocument().addUndoableEditListener(new CustomUndoableEditListener());
 		htmlPane.getDocument().addDocumentListener(this);
 		purgeUndos();
 		registerDocumentStyles();
@@ -1073,19 +1074,18 @@ public class KafenioPanel extends JPanel implements ActionListener,
 	 * them to the styles selector
 	 */
 	public void registerDocumentStyles() {
-		if (kafenioToolBar1.getStyleSelector() == null
-				|| kafenioToolBar2.getStyleSelector() == null
-				|| htmlDoc == null) {
+		if (kafenioToolBarTipi.getStyleSelector() == null || kafenioToolBar1.getStyleSelector() == null || kafenioToolBar2.getStyleSelector() == null || htmlDoc == null) {
 			return;
 		}
+		kafenioToolBarTipi.getStyleSelector().setEnabled(false);
+		kafenioToolBarTipi.getStyleSelector().removeAllItems();
+		kafenioToolBarTipi.getStyleSelector().addItem(translatrix.getTranslationString("NoCSSStyle"));
 		kafenioToolBar1.getStyleSelector().setEnabled(false);
 		kafenioToolBar1.getStyleSelector().removeAllItems();
-		kafenioToolBar1.getStyleSelector().addItem(
-				translatrix.getTranslationString("NoCSSStyle"));
+		kafenioToolBar1.getStyleSelector().addItem(translatrix.getTranslationString("NoCSSStyle"));
 		kafenioToolBar2.getStyleSelector().setEnabled(false);
 		kafenioToolBar2.getStyleSelector().removeAllItems();
-		kafenioToolBar2.getStyleSelector().addItem(
-				translatrix.getTranslationString("NoCSSStyle"));
+		kafenioToolBar2.getStyleSelector().addItem(translatrix.getTranslationString("NoCSSStyle"));
 		Vector cssClasses = new Vector();
 		Enumeration e = htmlDoc.getStyleNames();
 		while (e.hasMoreElements()) {
@@ -1098,9 +1098,11 @@ public class KafenioPanel extends JPanel implements ActionListener,
 
 		for (int i = 0; i < cssClasses.size(); i++) {
 			String name = (String) cssClasses.get(i);
+			kafenioToolBarTipi.getStyleSelector().addItem(name);
 			kafenioToolBar1.getStyleSelector().addItem(name);
 			kafenioToolBar2.getStyleSelector().addItem(name);
 		}
+		kafenioToolBarTipi.getStyleSelector().setEnabled(true);
 		kafenioToolBar1.getStyleSelector().setEnabled(true);
 		kafenioToolBar2.getStyleSelector().setEnabled(true);
 	}
@@ -1215,8 +1217,7 @@ public class KafenioPanel extends JPanel implements ActionListener,
 	 */
 	private void insertTableColumn() {
 		int caretPos = htmlPane.getCaretPosition();
-		Element element = htmlDoc.getCharacterElement(htmlPane
-				.getCaretPosition());
+		Element element = htmlDoc.getCharacterElement(htmlPane.getCaretPosition());
 		Element elementParent = element.getParentElement();
 		int startPoint = -1;
 		int rowCount = -1;
@@ -1280,8 +1281,7 @@ public class KafenioPanel extends JPanel implements ActionListener,
 	 */
 	private void deleteTableRow() throws BadLocationException {
 		int caretPos = htmlPane.getCaretPosition();
-		Element element = htmlDoc.getCharacterElement(htmlPane
-				.getCaretPosition());
+		Element element = htmlDoc.getCharacterElement(htmlPane.getCaretPosition());
 		Element elementParent = element.getParentElement();
 		int startPoint = -1;
 		int endPoint = -1;
@@ -1312,8 +1312,7 @@ public class KafenioPanel extends JPanel implements ActionListener,
 	 */
 	private void deleteTableColumn() throws BadLocationException {
 		int caretPos = htmlPane.getCaretPosition();
-		Element element = htmlDoc.getCharacterElement(htmlPane
-				.getCaretPosition());
+		Element element = htmlDoc.getCharacterElement(htmlPane.getCaretPosition());
 		Element elementParent = element.getParentElement();
 		Element elementCell = (Element) null;
 		Element elementRow = (Element) null;
@@ -1350,8 +1349,7 @@ public class KafenioPanel extends JPanel implements ActionListener,
 					}
 					int columnCellStart = elementCell.getStartOffset();
 					int columnCellEnd = elementCell.getEndOffset();
-					htmlDoc.remove(columnCellStart, columnCellEnd
-							- columnCellStart);
+					htmlDoc.remove(columnCellStart, columnCellEnd - columnCellStart);
 				}
 				htmlPane.setDocument(htmlDoc);
 				registerDocument(htmlDoc);
@@ -1367,8 +1365,7 @@ public class KafenioPanel extends JPanel implements ActionListener,
 	/**
 	 * Method for inserting a break (BR) element
 	 */
-	private void insertBreak() throws IOException, BadLocationException,
-			RuntimeException {
+	private void insertBreak() throws IOException, BadLocationException, RuntimeException {
 		int caretPos = htmlPane.getCaretPosition();
 		htmlKit.insertHTML(htmlDoc, caretPos, "<BR>", 0, 0, HTML.Tag.BR);
 		htmlPane.setCaretPosition(caretPos + 1);
@@ -1377,8 +1374,7 @@ public class KafenioPanel extends JPanel implements ActionListener,
 	/**
 	 * Method for inserting a non-breaking space (&amp;nbsp;)
 	 */
-	private void insertNonbreakingSpace() throws IOException,
-			BadLocationException, RuntimeException {
+	private void insertNonbreakingSpace() throws IOException, BadLocationException, RuntimeException {
 		int caretPos = htmlPane.getCaretPosition();
 		htmlDoc.insertString(caretPos, "\240", htmlPane.getInputAttributes());
 		htmlPane.setCaretPosition(caretPos + 1);
@@ -2417,8 +2413,7 @@ public class KafenioPanel extends JPanel implements ActionListener,
 					bodyContent = URLEncoder.encode(contentToPost);
 				}
 			}
-			urlFetcher.setPOSTData(getConfig().getContentParameter() + "="
-					+ bodyContent);
+			urlFetcher.setPOSTData(getConfig().getContentParameter() + "=" + bodyContent);
 			urlFetcher.setURL(new URL(getConfig().getPostUrl()));
 			urlFetcher.fetch();
 			if (!(urlFetcher.getHTTPStatusCode() == 200)) {
@@ -2593,8 +2588,7 @@ public class KafenioPanel extends JPanel implements ActionListener,
 		}
 		repaint();
 		validate();
-		kafenioMenuBar.getViewSourceItem().setSelected(
-				srcScrollPane.isShowing());
+		kafenioMenuBar.getViewSourceItem().setSelected(srcScrollPane.isShowing());
 	}
 
 	/**
@@ -2653,10 +2647,8 @@ public class KafenioPanel extends JPanel implements ActionListener,
 		}
 		int stylefound = -1;
 		if (style != null) {
-			for (int i = 0; i < kafenioToolBar1.getStyleSelector()
-					.getItemCount(); i++) {
-				String in = (String) (kafenioToolBar1.getStyleSelector()
-						.getItemAt(i));
+			for (int i = 0; i < kafenioToolBar1.getStyleSelector().getItemCount(); i++) {
+				String in = (String) (kafenioToolBar1.getStyleSelector().getItemAt(i));
 				if (in.equalsIgnoreCase(style)) {
 					stylefound = i;
 					break;
