@@ -14,15 +14,16 @@ import de.xeinfach.kafenio.util.LeanLogger;
  * 
  * @author Karsten Pawlik
  */
-public class KafenioPanelConfiguration implements
-		KafenioPanelConfigurationInterface {
+public class KafenioPanelConfiguration implements KafenioPanelConfigurationInterface {
 
-	private static LeanLogger log = new LeanLogger(
-			"KafenioPanelConfiguration.class");
+	private static LeanLogger log = new LeanLogger("KafenioPanelConfiguration.class");
 
 	public static final int STANDALONE_MODE = 0;
 	public static final int APPLET_MODE = 1;
 	public static final int JWS_MODE = 2;
+
+	private static String defaultToolbarTipiItems = "SEPARATOR,BOLD,ITALIC,UNDERLINE,SEPARATOR,LEFT,CENTER,RIGHT,JUSTIFY,SEPARATOR,STRIKE,SUPERSCRIPT,SUBSCRIPT,INSERTCHARACTER"
+			+ ",SEPARATOR,ULIST,OLIST,SEPARATOR,DEINDENT,INDENT,SEPARATOR,COLOR,TABLE";
 
 	private static String defaultToolbar1Items = "NEW,OPEN,SAVE,SEPARATOR,CUT,COPY,PASTE,SEPARATOR,BOLD"
 			+ ",ITALIC,UNDERLINE,SEPARATOR,LEFT,CENTER,RIGHT,JUSTIFY"
@@ -44,6 +45,7 @@ public class KafenioPanelConfiguration implements
 	private String imageDir = null;
 	private String fileDir = null;
 	private boolean showMenuBar = true;
+	private boolean showToolbarTipi = false;
 	private boolean showToolbar2 = true;
 	private boolean showToolbar = true;
 	private String document = null;
@@ -61,6 +63,7 @@ public class KafenioPanelConfiguration implements
 	private boolean applet = false;
 	private Color bgcolor = null;
 	private Vector customMenuItems = null;
+	private Vector customToolBarTipi;
 	private Vector customToolBar1;
 	private Vector customToolBar2;
 	private int mode = 0;
@@ -71,6 +74,7 @@ public class KafenioPanelConfiguration implements
 	 * toolbars are loaded. (as proposed by yangyu)
 	 */
 	public KafenioPanelConfiguration() {
+		customToolBarTipi = parseToolbarItems(defaultToolbarTipiItems);
 		customToolBar1 = parseToolbarItems(defaultToolbar1Items);
 		customToolBar2 = parseToolbarItems(defaultToolbar2Items);
 	}
@@ -358,6 +362,14 @@ public class KafenioPanelConfiguration implements
 
 	/**
 	 * @param b
+	 *            true if toolbarTipi is to be displayed.
+	 */
+	public void setShowToolbarTipi(boolean b) {
+		showToolbarTipi = b;
+	}
+
+	/**
+	 * @param b
 	 *            true if toolbar 1 is to be displayed.
 	 */
 	public void setShowToolbar(boolean b) {
@@ -385,6 +397,13 @@ public class KafenioPanelConfiguration implements
 	 */
 	public boolean isShowMenuBar() {
 		return showMenuBar;
+	}
+
+	/**
+	 * @return returns true if toolbarTipi should be displayed.
+	 */
+	public boolean isShowToolbarTipi() {
+		return showToolbarTipi;
 	}
 
 	/**
@@ -598,6 +617,15 @@ public class KafenioPanelConfiguration implements
 	/**
 	 * keys for the items are the constants from KafenioToolBar class
 	 * 
+	 * @return returns vector that contains all items as string for toolbarTipi
+	 */
+	public Vector getCustomToolBarTipi() {
+		return customToolBarTipi;
+	}
+
+	/**
+	 * keys for the items are the constants from KafenioToolBar class
+	 * 
 	 * @return returns vector that contains all items as string for toolbar1
 	 */
 	public Vector getCustomToolBar1() {
@@ -611,6 +639,29 @@ public class KafenioPanelConfiguration implements
 	 */
 	public Vector getCustomToolBar2() {
 		return customToolBar2;
+	}
+
+	/**
+	 * keys for the items are the constants from KafenioToolBar class
+	 * 
+	 * @param vector
+	 *            vector that contains all items as string for toolbarTipi
+	 */
+	public void setCustomToolBarTipi(Vector vector) {
+		customToolBarTipi = vector;
+	}
+
+	/**
+	 * keys for the items are the constants from KafenioToolBar class
+	 * 
+	 * @param toolbarItems
+	 *            string that contains all items as space separated list for
+	 *            toolbarTipi
+	 */
+	public void setCustomToolBarTipi(String toolbarItems) {
+		if (toolbarItems != null) {
+			customToolBarTipi = parseToolbarItems(toolbarItems);
+		}
 	}
 
 	/**
@@ -689,6 +740,7 @@ public class KafenioPanelConfiguration implements
 		out.append("\nisDebugMode: " + isDebugMode());
 		out.append("\nisShowMenuBar: " + isShowMenuBar());
 		out.append("\nisShowMenuIcons: " + isShowMenuIcons());
+		out.append("\nisShowToolbarTipi: " + isShowToolbarTipi());
 		out.append("\nisShowToolbar: " + isShowToolbar());
 		out.append("\nisShowToolbar2: " + isShowToolbar2());
 		out.append("\nisShowViewSource: " + isShowViewSource());

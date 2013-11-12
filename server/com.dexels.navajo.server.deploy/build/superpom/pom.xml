@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.api</artifactId>
-			<version>1.0.30</version>
+			<version>1.0.32</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mozilla</groupId>
@@ -59,7 +59,7 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.listeners.external</artifactId>
-			<version>1.0.29</version>
+			<version>1.0.32</version>
 		</dependency>
 		<dependency>
 			<groupId>jstl</groupId>

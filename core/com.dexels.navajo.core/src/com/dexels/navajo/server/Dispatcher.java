@@ -889,7 +889,7 @@ protected ServiceHandler createHandler(String handler, Access access) {
     				.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null);
       }
       
-      System.err.println("Created Access: " +  access.accessID + ", " + access.rpcName + "(" + access.rpcUser + ")");
+      //System.err.println("Created Access: " +  access.accessID + ", " + access.rpcName + "(" + access.rpcUser + ")");
       
       if(access==null) {
     	  throw new FatalException("Error acquiring Access object in dispatcher. Severe.");
