@@ -65,6 +65,7 @@ public class SharedStoreInterfaceTest {
 		DispatcherFactory.getInstance().setUseAuthorisation(false);
 		si = SharedStoreFactory.getInstance();
 		si.removeAll("");
+		System.err.println("si: " + si);
 	}
 
 	private void deleteFiles(File f) {
@@ -82,7 +83,7 @@ public class SharedStoreInterfaceTest {
 
 	@After
 	public void tearDown() throws Exception {
-		File f = new File("/tmp/sharedstore");
+		File f = new File(System.getProperty("java.io.tmpdir"), "/sharedstore");
 		deleteFiles(f);
 		SharedStoreFactory.clear();
 	}
@@ -345,20 +346,21 @@ public class SharedStoreInterfaceTest {
 		locked = false;
 		locks = 0;
 
+		System.err.println("tempdir: " + System.getProperty("java.io.tmpdir"));
 		Thread t1 = new Thread() {
 			public void run() {
 				SharedStoreLock ssl = si.lock("myparent", "mylockfile",
 						"owner1", SharedFileStore.READ_WRITE_LOCK, true);
 				if (ssl != null) {
 					locked = true;
-					Assert.assertTrue(new File(
-							"/tmp/sharedstore/owner1_myparent_mylockfile.lock")
+					Assert.assertTrue(new File(System.getProperty("java.io.tmpdir"), 
+							"/sharedstore/owner1_myparent_mylockfile.lock")
 							.exists());
-					Assert.assertFalse(new File(
-							"/tmp/sharedstore/owner2_myparent_mylockfile.lock")
+					Assert.assertFalse(new File(System.getProperty("java.io.tmpdir"),
+							"/sharedstore/owner2_myparent_mylockfile.lock")
 							.exists());
-					Assert.assertFalse(new File(
-							"/tmp/sharedstore/owner3_myparent_mylockfile.lock")
+					Assert.assertFalse(new File(System.getProperty("java.io.tmpdir"),
+							"/sharedstore/owner3_myparent_mylockfile.lock")
 							.exists());
 					myssl = ssl;
 					locks++;
@@ -380,14 +382,14 @@ public class SharedStoreInterfaceTest {
 						"owner2", SharedFileStore.READ_WRITE_LOCK, true);
 				if (ssl != null) {
 					locked = true;
-					Assert.assertFalse(new File(
-							"/tmp/sharedstore/owner1_myparent_mylockfile.lock")
+					Assert.assertFalse(new File(System.getProperty("java.io.tmpdir"), 
+							"/sharedstore/owner1_myparent_mylockfile.lock")
 							.exists());
-					Assert.assertTrue(new File(
-							"/tmp/sharedstore/owner2_myparent_mylockfile.lock")
+					Assert.assertTrue(new File(System.getProperty("java.io.tmpdir"),
+							"/sharedstore/owner2_myparent_mylockfile.lock")
 							.exists());
-					Assert.assertFalse(new File(
-							"/tmp/sharedstore/owner3_myparent_mylockfile.lock")
+					Assert.assertFalse(new File(System.getProperty("java.io.tmpdir"),
+							"/sharedstore/owner3_myparent_mylockfile.lock")
 							.exists());
 					myssl = ssl;
 					locks++;
@@ -407,14 +409,14 @@ public class SharedStoreInterfaceTest {
 				SharedStoreLock ssl = si.lock("myparent", "mylockfile",
 						"owner3", SharedFileStore.READ_WRITE_LOCK, true);
 				if (ssl != null) {
-					Assert.assertFalse(new File(
-							"/tmp/sharedstore/owner1_myparent_mylockfile.lock")
+					Assert.assertFalse(new File(System.getProperty("java.io.tmpdir"), 
+							"/sharedstore/owner1_myparent_mylockfile.lock")
 							.exists());
-					Assert.assertFalse(new File(
-							"/tmp/sharedstore/owner2_myparent_mylockfile.lock")
+					Assert.assertFalse(new File(System.getProperty("java.io.tmpdir"), 
+							"/sharedstore/owner2_myparent_mylockfile.lock")
 							.exists());
-					Assert.assertTrue(new File(
-							"/tmp/sharedstore/owner3_myparent_mylockfile.lock")
+					Assert.assertTrue(new File(System.getProperty("java.io.tmpdir"), 
+							"/sharedstore/owner3_myparent_mylockfile.lock")
 							.exists());
 					locked = true;
 					myssl = ssl;
@@ -457,11 +459,11 @@ public class SharedStoreInterfaceTest {
 	public void testRelease() {
 		SharedStoreLock ssl = si.lock("myparent", "mylockfile", "owner",
 				SharedFileStore.READ_WRITE_LOCK, false);
-		Assert.assertTrue(new File(
-				"/tmp/sharedstore/owner_myparent_mylockfile.lock").exists());
+		Assert.assertTrue(new File(System.getProperty("java.io.tmpdir"), 
+				"/sharedstore/owner_myparent_mylockfile.lock").exists());
 		si.release(ssl);
-		Assert.assertFalse(new File(
-				"/tmp/sharedstore/owner_myparent_mylockfile.lock").exists());
+		Assert.assertFalse(new File(System.getProperty("java.io.tmpdir"), 
+				"/sharedstore/owner_myparent_mylockfile.lock").exists());
 	}
 
 	@Test
