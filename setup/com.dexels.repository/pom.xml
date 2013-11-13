@@ -245,13 +245,13 @@
 
 		<profile>
 			<id>release</id>
-   			<activation>
-                <property>
-                    <name>environment</name>
-		    <value>release</name>
-                </property>
-            </activation>
-            
+			<activation>
+				<property>
+					<name>environment</name>
+					<value>release</value>
+				</property>
+			</activation>
+
 			<distributionManagement>
 				<repository>
 					<uniqueVersion>false</uniqueVersion>
