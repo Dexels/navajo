@@ -5,6 +5,8 @@ branch_name="(unnamed branch)"     # detached HEAD
 
 branch_name=${branch_name##refs/heads/}
 echo "Deploying in branch name: $branch_name"
+commitMsg=blank
+releaseTag=blank
 if [ "$branch_name" = "test" ]; then
    commitMsg = "Test release of ${PWD##*/} version $1" 
    releaseTag = "Test_${PWD##*/}-$1" 
