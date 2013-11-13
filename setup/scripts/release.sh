@@ -5,13 +5,17 @@ branch_name="(unnamed branch)"     # detached HEAD
 
 branch_name=${branch_name##refs/heads/}
 echo "Deploying in branch name: $branch_name"
-if ["$branch_name" == test]; then
-   commitMsg = "Test release of ${PWD##*/} version $1" -a
-   releaseTag = "Test_${PWD##*/}-$1" 
+export commitMsg=blank
+export releaseTag=blank
+if [ "$branch_name" = "test" ]; then
+   export commitMsg="Test release of ${PWD##*/} version $1" 
+   export releaseTag="Test_${PWD##*/}-$1" 
 else
-   commitMsg = "Release of ${PWD##*/} version $1" -a
-   releaseTag = "Release_${PWD##*/}-$1" 
+   export commitMsg="Release of ${PWD##*/} version $1" 
+   export releaseTag="Release_${PWD##*/}-$1" 
 fi
+echo "Message: ${commitMsg}"
+echo "Tag: ${releaseTag}"
 mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=$1
 mvn deploy
 git commit -m "$commitMsg" -a
