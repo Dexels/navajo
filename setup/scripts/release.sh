@@ -8,11 +8,11 @@ echo "Deploying in branch name: $branch_name"
 export commitMsg=blank
 export releaseTag=blank
 if [ "$branch_name" = "test" ]; then
-   export commitMsg = "Test release of ${PWD##*/} version $1" 
-   export releaseTag = "Test_${PWD##*/}-$1" 
+   export commitMsg="Test release of ${PWD##*/} version $1" 
+   export releaseTag="Test_${PWD##*/}-$1" 
 else
-   export commitMsg = "Release of ${PWD##*/} version $1" 
-   export releaseTag = "Release_${PWD##*/}-$1" 
+   export commitMsg="Release of ${PWD##*/} version $1" 
+   export releaseTag="Release_${PWD##*/}-$1" 
 fi
 echo "Message: ${commitMsg}"
 echo "Tag: ${releaseTag}"
