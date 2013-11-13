@@ -5,14 +5,14 @@ branch_name="(unnamed branch)"     # detached HEAD
 
 branch_name=${branch_name##refs/heads/}
 echo "Deploying in branch name: $branch_name"
-commitMsg=blank
-releaseTag=blank
+export commitMsg=blank
+export releaseTag=blank
 if [ "$branch_name" = "test" ]; then
-   commitMsg = "Test release of ${PWD##*/} version $1" 
-   releaseTag = "Test_${PWD##*/}-$1" 
+   export commitMsg = "Test release of ${PWD##*/} version $1" 
+   export releaseTag = "Test_${PWD##*/}-$1" 
 else
-   commitMsg = "Release of ${PWD##*/} version $1" 
-   releaseTag = "Release_${PWD##*/}-$1" 
+   export commitMsg = "Release of ${PWD##*/} version $1" 
+   export releaseTag = "Release_${PWD##*/}-$1" 
 fi
 echo "Message: ${commitMsg}"
 echo "Tag: ${releaseTag}"
