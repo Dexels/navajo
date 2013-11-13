@@ -16,16 +16,6 @@ public interface AsyncRequest {
 	public static final String COMPRESS_JZLIB = "jzlib";
 	public static final String COMPRESS_NONE = "";
 
-	public void setRequestSize(int contentLength);
-
-	public int getRequestSize();
-
-	public int getReadCount();
-
-	public InputStream getRequestInputStream() throws IOException;
-
-	public void submitComplete();
-
 	public ClientInfo createClientInfo(long scheduledAt, long startedAt,
 			int queueLength, String queueId);
 

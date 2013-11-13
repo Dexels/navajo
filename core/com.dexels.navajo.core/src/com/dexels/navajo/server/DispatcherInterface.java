@@ -13,6 +13,8 @@ import com.dexels.navajo.server.resource.ResourceManager;
 
 public interface DispatcherInterface extends ResourceManager {
 
+	public void generateServerReadyEvent();
+	
 	/*
 	 * Methods to handle Navajo services.
 	 */

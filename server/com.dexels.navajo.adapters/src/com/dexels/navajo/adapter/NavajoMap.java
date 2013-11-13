@@ -765,9 +765,9 @@ public void store() throws MappableException, UserException {
 	  if (password == null)
 		  password = "";
 
-	  if ( true ) {
-		  System.err.println(access.accessID + "|" + access.rpcName + "|" + access.rpcUser + ": Navajomap call to " + method + " as user " + username);
-	  }
+//	  if ( true ) {
+//		  System.err.println(access.accessID + "|" + access.rpcName + "|" + access.rpcUser + ": Navajomap call to " + method + " as user " + username);
+//	  }
 	  try {
 		  if(this.resource!=null) {
 			  serviceCalled = true;

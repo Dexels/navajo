@@ -29,8 +29,7 @@ import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.ClientInfo;
 
 
-public class BaseRequestImpl extends BaseInMemoryRequest implements
-		AsyncRequest {
+public class BaseRequestImpl implements AsyncRequest {
 
 	protected final HttpServletRequest request;
 	protected HttpServletResponse response;
@@ -61,10 +60,7 @@ public class BaseRequestImpl extends BaseInMemoryRequest implements
 		this.cert = cert;
 		this.connectedAt = System.currentTimeMillis();
 		setUrl(createUrl(this.request));
-		
-		copyResource( getRequestOutputStream(), request.getInputStream());
-		
-		this.inDoc = parseInputNavajo();
+		this.inDoc = parseInputNavajo(request.getInputStream());
 		this.instance = instance;
 	}
 
@@ -120,10 +116,10 @@ public class BaseRequestImpl extends BaseInMemoryRequest implements
 		return url;
 	}
 
-	protected final Navajo parseInputNavajo() throws IOException,
+	protected final Navajo parseInputNavajo(InputStream is) throws IOException,
 			UnsupportedEncodingException {
 		BufferedReader r;
-		InputStream is = getRequestInputStream();
+		//InputStream is = getRequestInputStream();
 		Navajo in = null;
 		logger.debug("Send encoding: "+acceptEncoding);
 		if (acceptEncoding != null
@@ -220,23 +216,10 @@ public class BaseRequestImpl extends BaseInMemoryRequest implements
 		outDoc.getHeader().setHeaderAttribute("threadName",
 				"" + Thread.currentThread().getName());
 
-		File temp = null;
-		temp = File.createTempFile("navajo", ".xml");
-		FileOutputStream fos = new FileOutputStream(temp);
-
-		// Maybe remove this flush. Will be more efficient, but the writing time
-		// will be less accurate.
-		outDoc.write(fos);
-		fos.close();
-
-		response.setContentLength((int) temp.length());
-
-		FileInputStream fis = new FileInputStream(temp);
-		copyResource(out, fis);
-		fis.close();
+		outDoc.write(out);
+		
 		out.close();
-		temp.delete();
-
+		
 		long writeFinishedAt = System.currentTimeMillis();
 		long writeTime = writeFinishedAt - finishedScriptAt;
 

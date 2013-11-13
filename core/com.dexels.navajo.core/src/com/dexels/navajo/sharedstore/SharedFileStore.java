@@ -254,6 +254,7 @@ public class SharedFileStore implements SharedStoreInterface, HasMetrics {
 
 		String name = constructLockName(ssl);
 		File f = new File(sharedStore, name);
+		System.err.println(f.getAbsolutePath());
 		if ( !f.exists() ) {
 			if ( name.contains("/") ) {
 				f.mkdirs();

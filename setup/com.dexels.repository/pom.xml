@@ -247,7 +247,8 @@
 			<id>release</id>
    			<activation>
                 <property>
-                    <name>!environment</name>
+                    <name>environment</name>
+		    <value>release</name>
                 </property>
             </activation>
             

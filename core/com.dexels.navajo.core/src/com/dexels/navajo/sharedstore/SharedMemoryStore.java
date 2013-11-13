@@ -1,8 +1,14 @@
 package com.dexels.navajo.sharedstore;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,13 +16,36 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.server.NavajoObjectInputStream;
+
 public class SharedMemoryStore implements SharedStoreInterface {
 
 	Map<String, SharedStoreEntry> store = null;
 	SharedStoreEntryFactory ssf = null;
+	private Map<String,SharedStoreLock> mLocks = new ConcurrentHashMap<String,SharedStoreLock>();
+	
+	private final static Logger logger = LoggerFactory.getLogger(SharedMemoryStore.class);
 	
 	private final String constructName(String parent, String name) {
 		return parent + "/" + name.replace('/', '_');
+	}
+	
+	private SharedStoreLock tryLock(SharedMemoryStoreLock hcl, boolean block) {
+		if ( block ) {
+			hcl.lock();
+			mLocks.put(constructName(hcl.parent, hcl.name), hcl);
+			return hcl;
+		} else {
+			if ( hcl.tryLock() ) {
+				mLocks.put(constructName(hcl.parent, hcl.name), hcl);
+				return hcl;
+			} else {
+				return null;
+			}
+		}
 	}
 	
 	public SharedMemoryStore(Map<String, SharedStoreEntry> storeImpl, SharedStoreEntryFactory entryFactory) {
@@ -26,6 +55,7 @@ public class SharedMemoryStore implements SharedStoreInterface {
 	
 	public SharedMemoryStore() {
 		store = new ConcurrentHashMap<String, SharedStoreEntry>();
+		ssf = new DefaultSharedStoreEntryFactoryImplementation();
 	}
 	
 	public void setSharedStoreEntryFactory(SharedStoreEntryFactory entryFactory) {
@@ -116,20 +146,21 @@ public class SharedMemoryStore implements SharedStoreInterface {
 
 	@Override
 	public SharedStoreLock lock(String parent, String name, String owner, int lockType, boolean block) {
-		throw new RuntimeException("Not Implemented");
+		SharedMemoryStoreLock ssl = new SharedMemoryStoreLock(name, parent);
+		ssl.setOwner(owner);
+		return tryLock(ssl, block);
 	}
 
 	@Override
-	public SharedStoreLock lock(String parent, String name, int lockType,
-			boolean block) {
-		throw new RuntimeException("Not Implemented");
+	public SharedStoreLock lock(String parent, String name, int lockType, boolean block) {
+		return tryLock(new SharedMemoryStoreLock(name, parent), block);
 	}
 
 	@Override
 	public Serializable get(String parent, String name) throws SharedStoreException {
 		SharedStoreEntry e = getEntry(parent, name);
 		if ( e != null ) {
-			return e.getValue();
+			return (Serializable) e.getValue();
 		} else {
 			throw new SharedStoreException("No such object: " + parent + "/" + name);
 		}
@@ -137,22 +168,55 @@ public class SharedMemoryStore implements SharedStoreInterface {
 
 	@Override
 	public InputStream getStream(String parent, String name) throws SharedStoreException {
-		throw new RuntimeException("Not Implemented");
+		SharedStoreEntry sse = getEntry(parent, name);
+		if ( sse == null ) {
+			return null;
+		}
+		byte [] value = (byte []) sse.getValue();
+		return new ByteArrayInputStream(value);
+		
 	}
 
 	@Override
-	public OutputStream getOutputStream(String parent, String name, boolean requireLock) throws SharedStoreException {
-		throw new RuntimeException("Not Implemented");
+	public OutputStream getOutputStream(final String parent, final String name, final boolean requireLock) throws SharedStoreException {	
+		ByteArrayOutputStream baos = new ByteArrayOutputStream() {
+			@Override 
+			public void close() throws IOException {
+				super.close();
+				SharedStoreLock ssl = null;
+				if ( requireLock ) {
+					ssl = lock(parent, name, 1, true);
+				}
+				try {
+				SharedStoreEntry e = new SharedStoreEntry(constructName(parent, name), toByteArray());
+				store.put(e.getName(), e);
+				} finally {
+					if ( ssl != null ) {
+						release(ssl);
+					}
+				}
+			}
+		};
+		return baos;
 	}
 
 	@Override
 	public void release(SharedStoreLock lock) {
-		throw new RuntimeException("Not Implemented");
+		if ( lock == null ) {
+			logger.error("SharedStoreLock CAN NOT be null in release()");
+			return;
+		}
+		((SharedMemoryStoreLock) lock).unlock();
+		mLocks.remove(constructName(lock.parent, lock.name));
 	}
 
 	@Override
 	public SharedStoreLock getLock(String parent, String name, String owner) {
-		throw new RuntimeException("Not Implemented");
+		SharedStoreLock ssl = mLocks.get(constructName(parent, name));
+		if ( ssl != null && ( owner == null || owner.equals(ssl.getOwner()) ) ) {
+			return ssl;
+		}
+		return null;
 	}
 
 	@Override

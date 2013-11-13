@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" enabled="true" immediate="true" name="navajo.sharedmemorystore">
+   <implementation class="com.dexels.navajo.sharedstore.SharedMemoryStore"/>
+   <property name="persisted" type="Boolean" value="false"/>
+   <service>
+      <provide interface="com.dexels.navajo.sharedstore.SharedStoreInterface"/>
+   </service>
+</scr:component>

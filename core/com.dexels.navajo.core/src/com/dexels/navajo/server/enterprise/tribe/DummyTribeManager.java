@@ -19,8 +19,11 @@ public class DummyTribeManager implements TribeManagerInterface {
 
 //	private NavajoConfigInterface navajoConfig;
 
-	private Map<String,Lock> mLocks = new HashMap<String,Lock>();
-	private Map<String,TribalTopic> topics = new HashMap<String,TribalTopic>();
+	private Map<String,Lock> mLocks = new ConcurrentHashMap<String,Lock>();
+	private Map<String,TribalTopic> topics = new ConcurrentHashMap<String,TribalTopic>();
+	private Map<String,TribalNumber> counters = new ConcurrentHashMap<String,TribalNumber>();
+	private Map<String,Map> distributedMaps = new ConcurrentHashMap<String,Map>();
+	private Map<String,Set> distributedSets = new ConcurrentHashMap<String,Set>();
 	
 	@Override
 	public void terminate() {
@@ -191,18 +194,33 @@ public class DummyTribeManager implements TribeManagerInterface {
 	}
 
 	@Override
-	public ConcurrentHashMap getDistributedMap(String name) {
-		return new ConcurrentHashMap();
+	public synchronized Map getDistributedMap(String name) {
+		if ( distributedMaps.get(name) != null ) {
+			return distributedMaps.get(name);
+		}
+		Map m = new ConcurrentHashMap();
+		distributedMaps.put(name, m);
+		return m;
 	}
 
 	@Override
-	public TribalNumber getDistributedCounter(String name) {
-		return new DefaultTribalNumber();
+	public synchronized TribalNumber getDistributedCounter(String name) {
+		if ( counters.get(name) != null ) {
+			return counters.get(name);
+		}
+		TribalNumber tn = new DefaultTribalNumber();
+		counters.put(name, tn);
+		return tn;
 	}
 
 	@Override
-	public Set getDistributedSet(String name) {
-		return Collections.newSetFromMap(new ConcurrentHashMap());
+	public synchronized Set getDistributedSet(String name) {
+		if ( distributedSets.get(name) != null ) {
+			return distributedSets.get(name);
+		}
+		Set s = Collections.newSetFromMap(new ConcurrentHashMap());
+		distributedSets.put(name, s);
+		return s;
 	}
 
 	@Override

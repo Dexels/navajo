@@ -578,7 +578,11 @@ public final class Access implements java.io.Serializable, Mappable {
 	public String getClientInfo() {
 		return this.clientInfo;
 	}
-
+	
+	public String getAgentId() {
+		return "[deprecated]";
+	}
+	
 	public String getClientToken() {
 		return clientToken ;
 	}
@@ -832,11 +836,6 @@ public final class Access implements java.io.Serializable, Mappable {
 	public void setQueueId(String queueId) {
 		this.queueId = queueId;
 	}
-
-	public String getAgentId() {
-		return "[unknown]";
-	}
-
 
 
 	public void setInstance(String instance) {
