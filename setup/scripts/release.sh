@@ -12,6 +12,8 @@ else
    commitMsg = "Release of ${PWD##*/} version $1" 
    releaseTag = "Release_${PWD##*/}-$1" 
 fi
+echo "Message: ${commitMsg}"
+echo "Tag: ${releaseTag}"
 mvn -Dtycho.mode=maven org.eclipse.tycho:tycho-versions-plugin:set-version -DnewVersion=$1
 mvn deploy
 git commit -m "$commitMsg" -a
