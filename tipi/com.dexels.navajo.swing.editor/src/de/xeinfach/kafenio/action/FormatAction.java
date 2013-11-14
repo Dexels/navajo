@@ -91,7 +91,7 @@ public class FormatAction extends StyledEditorKit.StyledTextAction {
 			pos = parentTextPane.getCaretPosition();
 			try {
 				try {
-					doc.insertString(pos, " ", null);
+					doc.insertString(pos, " ", null);
 					parentTextPane.setSelectionStart(pos);
 					parentTextPane.setSelectionEnd(pos + 1);
 					selText = parentTextPane.getSelectedText();

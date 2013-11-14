@@ -177,7 +177,7 @@ public class HTMLUtilities {
 
 	/** 
 	 * Diese Methode gibt jeweils den Start- und Endoffset des Elements
-	 * sowie dem entsprechenden schließenden Tag zurück
+	 * sowie dem entsprechenden schliesenden Tag zuruck
 	 */
 	private int[] getPositions(Element element, String source, boolean closingTag, String idString) {
 		HTML.Tag tag = getHTMLTag(element);
@@ -262,7 +262,7 @@ public class HTMLUtilities {
 	}
 
 	/**
-	 * @return Diese Methoden geben das erste gefundende dem übergebenen tags entsprechende Element zurück
+	 * @return Diese Methoden geben das erste gefundende dem ubergebenen tags entsprechende Element zuruck
 	 */
 	public Element getListItemParent() {
 		String listItemTag = HTML.Tag.LI.toString();
@@ -280,8 +280,8 @@ public class HTMLUtilities {
 	/**
 	 * @param sourceAS source AttributeSet
 	 * @param removeKey remove key from attributeset
-	 * @return Diese Methode entfernt Attribute aus dem SimpleAttributeSet, gemäß den übergebenen Werten, und
-	 * gibt das Ergebnis als SimpleAttributeSet zurück
+	 * @return Diese Methode entfernt Attribute aus dem SimpleAttributeSet, gem  den ubergebenen Werten, und
+	 * gibt das Ergebnis als SimpleAttributeSet zuruck
 	 */
 
 	public SimpleAttributeSet removeAttributeByKey(SimpleAttributeSet sourceAS, String removeKey) {
@@ -294,8 +294,8 @@ public class HTMLUtilities {
 	 * 
 	 * @param sourceAS source AttributeSet
 	 * @param removeAS AttributeSet to remove
-	 * @return Diese Methode entfernt Attribute aus dem SimpleAttributeSet, gemäß den übergebenen Werten, und
-	 * gibt das Ergebnis als SimpleAttributeSet zurück
+	 * @return Diese Methode entfernt Attribute aus dem SimpleAttributeSet, gem  den ubergebenen Werten, und
+	 * gibt das Ergebnis als SimpleAttributeSet zuruck
 	 */
 	public SimpleAttributeSet removeAttribute(SimpleAttributeSet sourceAS, SimpleAttributeSet removeAS) {
 		try {
@@ -360,7 +360,7 @@ public class HTMLUtilities {
 	}
 
 	/**
-	 * liefert den entsprechenden HTML.Tag zum Element zurück
+	 * liefert den entsprechenden HTML.Tag zum Element zuruck
 	 * 
 	 * @param elem element to get html tag for
 	 * @return returns the element's HTML tag
