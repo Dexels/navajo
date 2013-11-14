@@ -235,21 +235,35 @@
 					<value>release</value>
 				</property>
 			</activation>
-        <repositories>
-                <repository>
-                        <releases>
-                                <enabled>true</enabled>
-                        </releases>
-                        <snapshots>
-                                <enabled>false</enabled>
-                        </snapshots>
-                        <id>central</id>
-                        <name>Dexels Central</name>
-                        <url>https://repo.dexels.com/nexus/content/groups/public/</url>
-                        <layout>default</layout>
-                </repository>
+			<repositories>
+				<repository>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+					<id>central</id>
+					<name>Dexels Central</name>
+					<url>https://repo.dexels.com/nexus/content/groups/public/</url>
+					<layout>default</layout>
+				</repository>
 
-        </repositories>
+				<repository>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+					<id>repo_thirdparty</id>
+					<name>Dexels Central</name>
+					<url>https://repo.dexels.com/nexus/content/repositories/thirdparty/</url>
+					<layout>default</layout>
+				</repository>
+
+
+			</repositories>
 			<distributionManagement>
 				<repository>
 					<uniqueVersion>false</uniqueVersion>
@@ -286,6 +300,10 @@
 
 					<layout>default</layout>
 				</repository>
+
+
+
+
 				<snapshotRepository>
 					<uniqueVersion>true</uniqueVersion>
 					<id>dexels_snap_test</id>
@@ -294,6 +312,32 @@
 					<layout>default</layout>
 				</snapshotRepository>
 			</distributionManagement>
+			<repositories>
+				<repository>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+					<id>dexels_test_snap</id>
+					<name>Dexels Test Snap</name>
+					<url>https://repo.dexels.com/nexus/content/repositories/navajo_test_snapshot/</url>
+					<layout>default</layout>
+				</repository>
+				<repository>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+					<id>repo_thirdparty</id>
+					<name>Dexels Central</name>
+					<url>https://repo.dexels.com/nexus/content/repositories/thirdparty/</url>
+					<layout>default</layout>
+				</repository>
+			</repositories>
 		</profile>
 	</profiles>
 
