@@ -19,36 +19,27 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+*/
 
 package de.xeinfach.kafenio.component;
 
 import java.io.File;
-
 import javax.swing.JFileChooser;
 
 import de.xeinfach.kafenio.util.LeanLogger;
 
-/**
- * Description: Class for providing a chooser that lets the user select an image
- * to insert
+/** 
+ * Description: Class for providing a chooser that lets the user select an image to insert
  * 
- * @author Copyright (C) 2000-2002 Frits Jalvingh & Howard Kistler
+ * @author Copyright (C) 2000-2002  Frits Jalvingh & Howard Kistler
  */
 public class ImageFileChooser extends JFileChooser {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7617191595375581721L;
 	private static LeanLogger log = new LeanLogger("ImageFileChooser.class");
-
-	/**
-	 * Constructor that takes a default directory to start in, specified as a
-	 * File
-	 * 
-	 * @param fileCurrentDirectory
-	 *            File with the default path
+	
+	/** 
+	 * Constructor that takes a default directory to start in, specified as a File
+	 * @param fileCurrentDirectory File with the default path
 	 */
 	public ImageFileChooser(File fileCurrentDirectory) {
 		this.setCurrentDirectory(fileCurrentDirectory);
@@ -56,21 +47,18 @@ public class ImageFileChooser extends JFileChooser {
 		log.debug("new ImageFileChooser created.");
 	}
 
-	/**
-	 * Constructor that takes a default directory to start in, specified as a
-	 * String
-	 * 
-	 * @param currentPath
-	 *            current directory path.
+	/** 
+	 * Constructor that takes a default directory to start in, specified as a String
+	 * @param currentPath current directory path.
 	 */
 	public ImageFileChooser(String currentPath) {
 		this(new File(currentPath));
 	}
 
-	/**
+	/** 
 	 * Empty constructor
 	 */
 	public ImageFileChooser() {
-		this((File) null);
+		this((File)null);
 	}
 }

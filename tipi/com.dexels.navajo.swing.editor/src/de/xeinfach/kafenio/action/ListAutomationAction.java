@@ -19,7 +19,7 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+*/
 package de.xeinfach.kafenio.action;
 
 import java.awt.event.ActionEvent;
@@ -36,21 +36,15 @@ import de.xeinfach.kafenio.component.HTMLUtilities;
 import de.xeinfach.kafenio.component.dialogs.SimpleInfoDialog;
 import de.xeinfach.kafenio.util.LeanLogger;
 
-/**
- * Description: Class for automatically creating bulleted lists from selected
- * text
+/** 
+ * Description: Class for automatically creating bulleted lists from selected text
  * 
  * @author HowardKistler, Karsten Pawlik
  */
 public class ListAutomationAction extends HTMLEditorKit.InsertHTMLTextAction {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7061103896768315637L;
-
 	private static LeanLogger log = new LeanLogger("ListAutomationAction.class");
-
+	
 	private KafenioPanel parentKafenioPanel;
 	private HTML.Tag baseTag;
 	private String listType;
@@ -58,108 +52,101 @@ public class ListAutomationAction extends HTMLEditorKit.InsertHTMLTextAction {
 
 	/**
 	 * creates a new ListAutomationAction using the given parameters.
-	 * 
-	 * @param kafenio
-	 *            a KafenioPanel instance
-	 * @param sLabel
-	 *            a list label
-	 * @param newListType
-	 *            type of the list (OL or UL)
+	 * @param kafenio a KafenioPanel instance
+	 * @param sLabel a list label
+	 * @param newListType type of the list (OL or UL)
 	 */
-	public ListAutomationAction(KafenioPanel kafenio, String sLabel,
-			HTML.Tag newListType) {
+	public ListAutomationAction(KafenioPanel kafenio, String sLabel, HTML.Tag newListType) {
 		super(sLabel, "", newListType, HTML.Tag.LI);
 		parentKafenioPanel = kafenio;
-		baseTag = newListType;
+		baseTag    = newListType;
 		htmlUtilities = new HTMLUtilities(kafenio);
 		log.debug("created new ListAutomationAction.");
 	}
 
 	/**
 	 * method that handles the given ActionEvent
-	 * 
-	 * @param ae
-	 *            the ActionEvent to handle
+	 * @param ae the ActionEvent to handle
 	 */
 	public void actionPerformed(ActionEvent ae) {
 		try {
-			JEditorPane jepEditor = (parentKafenioPanel.getTextPane());
+			JEditorPane jepEditor = (JEditorPane)(parentKafenioPanel.getTextPane());
 			String selTextBase = jepEditor.getSelectedText();
 			int textLength = -1;
-			if (selTextBase != null) {
+			if(selTextBase != null) {
 				textLength = selTextBase.length();
 			}
-			if (selTextBase == null || textLength < 1) {
+			if(selTextBase == null || textLength < 1) {
 				int pos = parentKafenioPanel.getCaretPosition();
 				parentKafenioPanel.setCaretPosition(pos);
-				if (ae.getActionCommand() != "newListPoint") {
-					if (htmlUtilities.checkParentsTag(HTML.Tag.OL)
-							|| htmlUtilities.checkParentsTag(HTML.Tag.UL)) {
-						new SimpleInfoDialog(parentKafenioPanel,
-								getString("Error"), true,
-								getString("ErrorNestedListsNotSupported"));
+				if(ae.getActionCommand() != "newListPoint") {
+					if(	htmlUtilities.checkParentsTag(HTML.Tag.OL) 
+						|| htmlUtilities.checkParentsTag(HTML.Tag.UL)) 
+					{
+						new SimpleInfoDialog(	parentKafenioPanel, 
+												getString("Error"), 
+												true, 
+												getString("ErrorNestedListsNotSupported"));
 						return;
 					}
 				}
 
 				listType = (baseTag == HTML.Tag.OL ? "ol" : "ul");
 				StringBuffer sbNew = new StringBuffer();
-				if (htmlUtilities.checkParentsTag(baseTag)) {
+				if(htmlUtilities.checkParentsTag(baseTag)) {
 					sbNew.append("<li></li>");
-					insertHTML(
-							parentKafenioPanel.getTextPane(),
-							parentKafenioPanel.getExtendedHtmlDoc(),
-							parentKafenioPanel.getTextPane().getCaretPosition(),
-							sbNew.toString(), 0, 0, HTML.Tag.LI);
+					insertHTML(	parentKafenioPanel.getTextPane(), 
+								parentKafenioPanel.getExtendedHtmlDoc(), 
+								parentKafenioPanel.getTextPane().getCaretPosition(), 
+								sbNew.toString(), 
+								0, 
+								0, 
+								HTML.Tag.LI);
 				} else {
-					sbNew.append("<" + listType + "><li></li></" + listType
-							+ ">&nbsp;");
-					insertHTML(
-							parentKafenioPanel.getTextPane(),
-							parentKafenioPanel.getExtendedHtmlDoc(),
-							parentKafenioPanel.getTextPane().getCaretPosition(),
-							sbNew.toString(), 0, 0,
-							(listType.equals("ol") ? HTML.Tag.OL : HTML.Tag.UL));
+					sbNew.append("<" + listType + "><li></li></" + listType + ">&nbsp;");
+					insertHTML(	parentKafenioPanel.getTextPane(), 
+								parentKafenioPanel.getExtendedHtmlDoc(), 
+								parentKafenioPanel.getTextPane().getCaretPosition(), 
+								sbNew.toString(), 
+								0, 
+								0, 
+								(listType.equals("ol") ? HTML.Tag.OL : HTML.Tag.UL));
 				}
 				parentKafenioPanel.refreshOnUpdate();
 			} else {
 				listType = (baseTag == HTML.Tag.OL ? "ol" : "ul");
-				HTMLDocument htmlDoc = (HTMLDocument) (jepEditor.getDocument());
+				HTMLDocument htmlDoc = (HTMLDocument)(jepEditor.getDocument());
 				int iStart = jepEditor.getSelectionStart();
-				int iEnd = jepEditor.getSelectionEnd();
+				int iEnd   = jepEditor.getSelectionEnd();
 				String selText = htmlDoc.getText(iStart, iEnd - iStart);
 				StringBuffer sbNew = new StringBuffer();
 				String sToken = ((selText.indexOf("\r") > -1) ? "\r" : "\n");
-				StringTokenizer stTokenizer = new StringTokenizer(selText,
-						sToken);
+				StringTokenizer stTokenizer = new StringTokenizer(selText, sToken);
 				sbNew.append("<" + listType + ">");
-				while (stTokenizer.hasMoreTokens()) {
+				while(stTokenizer.hasMoreTokens()) {
 					sbNew.append("<li>");
 					sbNew.append(stTokenizer.nextToken());
 					sbNew.append("</li>");
 				}
 				sbNew.append("</" + listType + ">&nbsp;");
 				htmlDoc.remove(iStart, iEnd - iStart);
-				insertHTML(jepEditor, htmlDoc, iStart, sbNew.toString(), 1, 1,
-						null);
+				insertHTML(jepEditor, htmlDoc, iStart, sbNew.toString(), 1, 1, null);
 				parentKafenioPanel.refreshOnUpdate();
 			}
 		} catch (BadLocationException ble) {
 			log.error("BadLocationException: " + ble.fillInStackTrace());
 		}
-
+		
 		parentKafenioPanel.repaint();
 	}
 
 	/**
 	 * returns a translated representation of the given string.
-	 * 
-	 * @param stringToTranslate
-	 *            the string to translate.
+	 * @param stringToTranslate the string to translate.
 	 * @return returns a translated representation of the given string.
 	 */
 	private String getString(String stringToTranslate) {
 		return parentKafenioPanel.getTranslation(stringToTranslate);
 	}
-
+	
 }

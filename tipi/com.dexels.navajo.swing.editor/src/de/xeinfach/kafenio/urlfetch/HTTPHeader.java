@@ -20,74 +20,76 @@ import de.xeinfach.kafenio.util.LeanLogger;
 
 /**
  * Description: Represents an HTTP header.
- * 
+ *
  * @author Todd Wilson, modified by Karsten Pawlik
  */
 public class HTTPHeader {
-
+	
 	private static LeanLogger log = new LeanLogger("HTTPHeader.class");
-
+	
 	/** The key portion of the header. */
 	private String key = null;
 
 	/** The value portion of the header. */
 	private String value = null;
 
+
 	/**
 	 * Generates a new header from the given key and value.
-	 * 
-	 * @param newKey
-	 *            The key portion of the header.
-	 * @param newValue
-	 *            The value portion of the header.
+	 *
+	 * @param newKey The key portion of the header.
+	 * @param newValue	The value portion of the header.
 	 */
-	public HTTPHeader(String newKey, String newValue) {
-		setKey(newKey);
-		setValue(newValue);
+	public HTTPHeader( String newKey, String newValue ) {
+		setKey( newKey );
+		setValue( newValue );
 	}
+
 
 	/**
 	 * Gets the key portion of the parameter.
-	 * 
+	 *
 	 * @return The key.
 	 */
 	public String getKey() {
 		return this.key;
 	}
 
+
 	/**
 	 * Sets the key portion of the parameter.
-	 * 
-	 * @param newKey
-	 *            The key.
+	 *
+	 * @param newKey The key.
 	 */
 	public void setKey(String newKey) {
 		this.key = newKey;
 	}
 
+
 	/**
 	 * Gets the value portion of the parameter.
-	 * 
-	 * @return The value.
+	 *
+	 * @return	The value.
 	 */
 	public String getValue() {
 		return this.value;
 	}
 
+
 	/**
 	 * Sets the value portion of the parameter.
-	 * 
-	 * @param newValue
-	 *            The value.
+	 *
+	 * @param newValue The value.
 	 */
 	public void setValue(String newValue) {
 		this.value = newValue;
 	}
 
+
 	/**
 	 * A string representation of the header.
-	 * 
-	 * @return The header.
+	 *
+	 * @return	The header.
 	 */
 	public String toString() {
 		return key + ": " + value;

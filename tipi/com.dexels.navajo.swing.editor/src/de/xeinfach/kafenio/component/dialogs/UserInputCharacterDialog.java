@@ -1,24 +1,22 @@
 package de.xeinfach.kafenio.component.dialogs;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import de.xeinfach.kafenio.KafenioPanel;
+import de.xeinfach.kafenio.util.LeanLogger;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-
-import javax.swing.BorderFactory;
+import java.awt.event.FocusEvent;
+import java.awt.Color;
+import java.awt.Insets;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import javax.swing.BorderFactory;
 import javax.swing.border.BevelBorder;
-
-import de.xeinfach.kafenio.KafenioPanel;
-import de.xeinfach.kafenio.util.LeanLogger;
+import java.awt.Container;
+import javax.swing.WindowConstants;
 
 /**
  * Description: This class creates a special character input dialog.
@@ -26,14 +24,8 @@ import de.xeinfach.kafenio.util.LeanLogger;
  * @author Karsten Pawlik
  */
 public class UserInputCharacterDialog extends JDialog implements ActionListener {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5128982781809255861L;
-
-	private static LeanLogger log = new LeanLogger(
-			"UserInputCharacterDialog.class");
+	
+	private static LeanLogger log = new LeanLogger("UserInputCharacterDialog.class");
 
 	private KafenioPanel parentKafenioPanel;
 	private String[] labels = null;
@@ -42,32 +34,25 @@ public class UserInputCharacterDialog extends JDialog implements ActionListener 
 
 	/**
 	 * creates a new UserInputCharacterDialog using the given parameters.
-	 * 
-	 * @param parent
-	 *            reference to a KafenioPanel Instance
-	 * @param title
-	 *            window title
-	 * @param bModal
-	 *            boolean value
+	 * @param parent reference to a KafenioPanel Instance
+	 * @param title window title
+	 * @param bModal boolean value
 	 */
-	public UserInputCharacterDialog(KafenioPanel parent, String title,
-			boolean bModal) {
+	public UserInputCharacterDialog(KafenioPanel parent, String title, boolean bModal) {		
 		super(parent.getFrame(), title, bModal);
 		parentKafenioPanel = parent;
 		init();
 	}
 
-	/**
-	 * handles the given action event.
-	 * 
-	 * @param e
-	 *            ActionEvent to handle
-	 */
-	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals("accept")) {
+   	/**
+   	 * handles the given action event.
+   	 * @param e ActionEvent to handle
+   	 */
+   	public void actionPerformed(ActionEvent e) {
+		if(e.getActionCommand().equals("accept")) {
 			setVisible(false);
-		}
-		if (e.getActionCommand().equals("cancel")) {
+		}	
+	  	if(e.getActionCommand().equals("cancel")) {
 			specialChar = null;
 			setVisible(false);
 		}
@@ -79,14 +64,12 @@ public class UserInputCharacterDialog extends JDialog implements ActionListener 
 	public void init() {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
-		setBounds(100, 100, 400, 300);
+		setBounds(100,100,400,300);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
 		labels = new String[117];
 
-		for (int i = 0; i < 96; i++) {
-			labels[i] = "" + ((char) (160 + i));
-		}
+		for (int i = 0; i < 96; i++) labels[i] = "" + ((char) (160 + i));
 
 		labels[96] = "" + ((char) 338);
 		labels[97] = "" + ((char) 339);
@@ -115,23 +98,19 @@ public class UserInputCharacterDialog extends JDialog implements ActionListener 
 		grid.setVgap(2);
 
 		charPanel = new JPanel(grid);
-		charPanel.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createBevelBorder(BevelBorder.LOWERED),
-				"Special Characters"));
+		charPanel.setBorder(BorderFactory.createTitledBorder( 
+							BorderFactory.createBevelBorder(
+							BevelBorder.LOWERED), "Special Characters"));
+				
+		for (int i = 0; i < labels.length; i++) charPanel.add(new MyButton(labels[i]));
 
-		for (int i = 0; i < labels.length; i++) {
-			charPanel.add(new MyButton(labels[i]));
-		}
+		JPanel buttonPanel= new JPanel();	  	
 
-		JPanel buttonPanel = new JPanel();
-
-		JButton saveButton = new JButton(
-				parentKafenioPanel.getTranslation("InsertCharacterLabel"));
+		JButton saveButton = new JButton(parentKafenioPanel.getTranslation("InsertCharacterLabel"));
 		saveButton.setActionCommand("accept");
 		saveButton.addActionListener(this);
 
-		JButton cancelButton = new JButton(
-				parentKafenioPanel.getTranslation("Cancel"));
+		JButton cancelButton = new JButton(parentKafenioPanel.getTranslation("Cancel"));
 		cancelButton.setActionCommand("cancel");
 		cancelButton.addActionListener(this);
 
@@ -140,10 +119,10 @@ public class UserInputCharacterDialog extends JDialog implements ActionListener 
 
 		contentPane.add(charPanel, BorderLayout.NORTH);
 		contentPane.add(buttonPanel, BorderLayout.SOUTH);
-
+		
 		this.pack();
 		this.setVisible(true);
-	}
+   	}
 
 	/**
 	 * @return returns the currently selected character.
@@ -153,25 +132,17 @@ public class UserInputCharacterDialog extends JDialog implements ActionListener 
 	}
 
 	/**
-	 * Inner class that extends JButton. Each special character button is an
-	 * instance of this class. This allows for customized handling of buttons.
-	 * Ie. in this case, when a button is clicked, it simple has it's background
-	 * colour changed to reflect which special character will be inserted.
+	 * Inner class that extends JButton. Each special character button
+	 * is an instance of this class. This allows for customized handling
+	 * of buttons. Ie. in this case, when a button is clicked, it simple has
+	 * it's background colour changed to reflect which special character will
+	 * be inserted.
 	 */
-	protected class MyButton extends JButton implements ActionListener,
-			FocusListener {
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 2507362272363128171L;
+	protected class MyButton extends JButton implements ActionListener, FocusListener {
 
 		/**
 		 * Construct this button with the given special character as a label.
-		 * 
-		 * @param label
-		 *            The special character to be inserted if this button is
-		 *            clicked.
+		 * @param label The special character to be inserted if this button is clicked.
 		 */
 		public MyButton(String label) {
 			super(label);
@@ -204,3 +175,4 @@ public class UserInputCharacterDialog extends JDialog implements ActionListener 
 		}
 	}
 }
+

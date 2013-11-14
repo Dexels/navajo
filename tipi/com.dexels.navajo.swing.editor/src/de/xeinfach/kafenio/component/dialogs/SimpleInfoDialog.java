@@ -19,7 +19,7 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+*/
 package de.xeinfach.kafenio.component.dialogs;
 
 import javax.swing.JOptionPane;
@@ -27,18 +27,11 @@ import javax.swing.JOptionPane;
 import de.xeinfach.kafenio.KafenioPanel;
 import de.xeinfach.kafenio.util.LeanLogger;
 
-/**
- * Description: Class for providing a dialog that lets the user specify values
- * for tag attributes.
- * 
+/** 
+ * Description: Class for providing a dialog that lets the user specify values for tag attributes.
  * @author Howard Kistler, Karsten Pawlik
  */
 public class SimpleInfoDialog extends AbstractKafenioDialog {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4035510618508735969L;
 
 	private static LeanLogger log = new LeanLogger("SimpleInfoDialog.class");
 
@@ -56,46 +49,32 @@ public class SimpleInfoDialog extends AbstractKafenioDialog {
 
 	/**
 	 * creates a new SimpleInfoDialog Object using the given values.
-	 * 
-	 * @param newParent
-	 *            parent frame
-	 * @param title
-	 *            frame title
-	 * @param bModal
-	 *            boolean value
-	 * @param message
-	 *            message text
-	 * @param type
-	 *            type of the SimpleInfoDialog
+	 * @param newParent parent frame
+	 * @param title frame title
+	 * @param bModal boolean value
+	 * @param message message text
+	 * @param type type of the SimpleInfoDialog
 	 */
-	public SimpleInfoDialog(KafenioPanel newParent, String title,
-			boolean bModal, String message, int type) {
+	public SimpleInfoDialog(KafenioPanel newParent, String title, boolean bModal, String message, int type) {
 		super(newParent, title, bModal);
 
 		parent = newParent;
-		panelContents = new Object[] { message };
+		panelContents = new Object[] {message};
 
-		if (type == QUESTION) {
+		if(type == QUESTION) {
 			init(panelContents);
 		} else {
-			buttonLabels = new String[] { parent.getTranslation("DialogClose") };
+			buttonLabels = new String[]{parent.getTranslation("DialogClose") };
 			optionType = JOptionPane.DEFAULT_OPTION;
-			init(panelContents, buttonLabels, new Integer(optionType),
-					new Integer(type));
+			init(panelContents, buttonLabels, new Integer(optionType), new Integer(type));
 		}
+		
+		int centerX = (int)(((parent.getWidth() / 2) + newParent.getX()) - (this.getWidth()  / 2));
+		if(centerX < 0) centerX = 0;
 
-		int centerX = (((parent.getWidth() / 2) + newParent.getX()) - (this
-				.getWidth() / 2));
-		if (centerX < 0) {
-			centerX = 0;
-		}
-
-		int centerY = (((parent.getHeight() / 2) + newParent.getY()) - (this
-				.getHeight() / 2));
-		if (centerY < 0) {
-			centerY = 0;
-		}
-
+		int centerY = (int)(((parent.getHeight() / 2) + newParent.getY()) - (this.getHeight() / 2));
+		if(centerY < 0) centerY = 0;
+		
 		this.setLocation(centerX, centerY);
 	}
 
@@ -108,18 +87,12 @@ public class SimpleInfoDialog extends AbstractKafenioDialog {
 
 	/**
 	 * creates a new SimpleInfoDialog using the given values
-	 * 
-	 * @param newParent
-	 *            parent frame
-	 * @param title
-	 *            frame title
-	 * @param bModal
-	 *            boolean value
-	 * @param message
-	 *            message text
+	 * @param newParent parent frame
+	 * @param title frame title
+	 * @param bModal boolean value
+	 * @param message message text
 	 */
-	public SimpleInfoDialog(KafenioPanel newParent, String title,
-			boolean bModal, String message) {
+	public SimpleInfoDialog(KafenioPanel newParent, String title, boolean bModal, String message) {
 		this(newParent, title, bModal, message, WARNING);
 	}
 

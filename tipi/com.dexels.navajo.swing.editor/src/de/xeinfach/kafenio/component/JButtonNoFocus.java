@@ -19,7 +19,7 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+*/
 package de.xeinfach.kafenio.component;
 
 import javax.swing.Action;
@@ -28,19 +28,14 @@ import javax.swing.JButton;
 
 import de.xeinfach.kafenio.util.LeanLogger;
 
-/**
+/** 
  * Description: Class for providing a JButton that does not obtain focus
- * 
  * @author Howard Kistler
  */
 public class JButtonNoFocus extends JButton {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6148665879380710298L;
 	private static LeanLogger log = new LeanLogger("JButtonNoFocus.class");
-
+	
 	/**
 	 * creates a new JButtonNoFocus Object
 	 */
@@ -51,44 +46,35 @@ public class JButtonNoFocus extends JButton {
 
 	/**
 	 * creates a new JButtonNoFocus Object
-	 * 
-	 * @param a
-	 *            an Action for this button
+	 * @param a an Action for this button
 	 */
 	public JButtonNoFocus(Action a) {
 		super(a);
 		this.setRequestFocusEnabled(false);
 	}
-
+	
 	/**
 	 * creates a new JButtonNoFocus Object
-	 * 
-	 * @param icon
-	 *            an icon for this button
+	 * @param icon an icon for this button
 	 */
 	public JButtonNoFocus(Icon icon) {
 		super(icon);
 		this.setRequestFocusEnabled(false);
 	}
-
+	
 	/**
 	 * creates a new JButtonNoFocus Object
-	 * 
-	 * @param text
-	 *            tooltip-text for this button
+	 * @param text tooltip-text for this button
 	 */
 	public JButtonNoFocus(String text) {
 		super(text);
 		this.setRequestFocusEnabled(false);
 	}
-
+	
 	/**
 	 * creates a new JButtonNoFocus Object
-	 * 
-	 * @param text
-	 *            tooltip-text for this button
-	 * @param icon
-	 *            an icon for this button
+	 * @param text tooltip-text for this button
+	 * @param icon an icon for this button
 	 */
 	public JButtonNoFocus(String text, Icon icon) {
 		super(text, icon);

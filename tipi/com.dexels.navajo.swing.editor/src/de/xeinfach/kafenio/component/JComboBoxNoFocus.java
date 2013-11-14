@@ -19,26 +19,21 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+*/
 package de.xeinfach.kafenio.component;
 
 import javax.swing.JComboBox;
 
 import de.xeinfach.kafenio.util.LeanLogger;
 
-/**
+/** 
  * Description: Class for providing a JComboBox that does not obtain focus
- * 
  * @author Howard Kistler
  */
 public class JComboBoxNoFocus extends JComboBox {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1024167170087878444L;
+	
 	private static LeanLogger log = new LeanLogger("JComboBoxNoFocus.class");
-
+	
 	/**
 	 * constructs a new JComboboxNoFocus
 	 */
