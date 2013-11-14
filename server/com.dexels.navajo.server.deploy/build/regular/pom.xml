@@ -9,9 +9,9 @@
 	<url>http://maven.apache.org</url>
 	<parent>
 		<groupId>com.dexels.navajo</groupId>
-		<artifactId>com.dexels.navajo.server.deploy.super.test</artifactId>
+		<artifactId>com.dexels.navajo.server.deploy.super</artifactId>
 		<version>1.0.0</version>
-		<relativePath>../superpom_test</relativePath>
+		<relativePath>../superpom</relativePath>
 	</parent>
 	<properties>
 	
