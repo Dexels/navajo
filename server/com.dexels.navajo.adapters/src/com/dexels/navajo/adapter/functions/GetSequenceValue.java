@@ -50,11 +50,11 @@ public class GetSequenceValue extends FunctionInterface {
         }
 
         query.evaluate();
-        String dbIdenitifier = query.getDbIdentifier();
+        String dbIdentifier = query.getDbIdentifier();
         if (sequencename != null) {
-            if (SQLMapConstants.POSTGRESDB.equals(dbIdenitifier)) {
+            if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier)) {
                 sql = "SELECT nextval('" + sequencename + "')";
-            } else if (SQLMapConstants.ENTERPRISEDB.equals(dbIdenitifier)) {
+            } else if (SQLMapConstants.ENTERPRISEDB.equals(dbIdentifier)) {
                     sql = "SELECT nextval('" + sequencename + "')";
             } else {
             	sql = "SELECT " + sequencename + ".nextval FROM dual";
