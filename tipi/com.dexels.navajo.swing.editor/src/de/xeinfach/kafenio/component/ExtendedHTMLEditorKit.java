@@ -22,14 +22,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 package de.xeinfach.kafenio.component;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.net.URL;
 
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.HTMLWriter;
+import javax.swing.text.html.MinimalHTMLWriter;
 
 import javax.swing.text.html.StyleSheet;
 import javax.swing.text.Document;
@@ -48,12 +55,21 @@ import de.xeinfach.kafenio.util.LeanLogger;
 public class ExtendedHTMLEditorKit extends HTMLEditorKit
 {
 	private static LeanLogger log = new LeanLogger("ExtendedHTMLEditorKit.class");
+	private boolean noFormatting = false;
 	
 	/** 
 	 * Constructor
 	 */
 	public ExtendedHTMLEditorKit() {
+			this(false);
+	}
+	
+	/** 
+	 * Constructor
+	 */
+	public ExtendedHTMLEditorKit(boolean noFormatting) {
 		log.debug("new ExtendedHTMLEditorKit created.");
+		this.noFormatting = noFormatting;
 	}
 
 	/** 
@@ -72,6 +88,41 @@ public class ExtendedHTMLEditorKit extends HTMLEditorKit
 		return createDefaultDocument(null);
 	}
 	
+    /**
+     * Write content from a document to the given stream
+     * in a format appropriate for this kind of content handler.
+     * 
+     * @param out  the stream to write to
+     * @param doc  the source for the write
+     * @param pos  the location in the document to fetch the
+     *   content
+     * @param len  the amount to write out
+     * @exception IOException on any I/O error
+     * @exception BadLocationException if pos represents an invalid
+     *   location within the document
+     */
+    public void write(Writer out, Document doc, int pos, int len) 
+	throws IOException, BadLocationException {
+
+	if (doc instanceof HTMLDocument) {
+	    HTMLWriter w;
+	    if (noFormatting)
+	    {
+	    	w = new ExtendedHTMLWriter(out, (HTMLDocument)doc, pos, len);
+	    }
+	    else
+	    {
+	    	w = new HTMLWriter(out, (HTMLDocument)doc, pos, len);
+	    }
+	    w.write();
+	} else if (doc instanceof StyledDocument) {
+	    MinimalHTMLWriter w = new MinimalHTMLWriter(out, (StyledDocument)doc, pos, len);
+	    w.write();
+	} else {
+	    super.write(out, doc, pos, len);
+	}
+    }
+
 	/**
 	 * creates a default document and sets the base url to the given value.
 	 * @param baseUrl creates the default document and sets the base url

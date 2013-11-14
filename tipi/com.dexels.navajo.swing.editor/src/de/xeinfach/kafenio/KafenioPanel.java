@@ -168,6 +168,15 @@ public class KafenioPanel extends JPanel implements ActionListener,
      *            the configuration to use for creation.
      */
     public KafenioPanel(KafenioPanelConfigurationInterface iConfiguration) {
+    	this(iConfiguration, false);
+    }
+    /**
+     * Contructs a new KafenioPanel using the given configuration object.
+     *
+     * @param config
+     *            the configuration to use for creation.
+     */
+    public KafenioPanel(KafenioPanelConfigurationInterface iConfiguration, boolean noFormattingAtHtml) {
         super();
         log.info("1");
         kafenioConfig = (KafenioPanelConfiguration) iConfiguration;
@@ -226,7 +235,7 @@ public class KafenioPanel extends JPanel implements ActionListener,
 
         /* Create the editor kit, document, and stylesheet */
         htmlPane = new JTextPane();
-        htmlKit = new ExtendedHTMLEditorKit();
+        htmlKit = new ExtendedHTMLEditorKit(noFormattingAtHtml);
         try {
             htmlDoc = (ExtendedHTMLDocument) (htmlKit
                     .createDefaultDocument(new URL(getConfig().getCodeBase())));
