@@ -9,11 +9,9 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../../com.dexels.navajo.tipi.swt.client</module>
 		<module>../../com.dexels.navajo.birt.push</module>
-		<module>../../com.dexels.navajo.dev.script</module>
 		<module>../../com.dexels.navajo.dev.console</module>
-		<module>../../com.dexels.navajo.dsl.navajomanager</module>
+<!--		<module>../../com.dexels.navajo.dsl.navajomanager</module>
 		<module>../../com.dexels.navajo.dsl.expression.model</module>
 		<module>../../com.dexels.navajo.dsl.expression</module>
 		<module>../../com.dexels.navajo.dsl.expression.ui</module>
@@ -21,6 +19,9 @@
 		<module>../../com.dexels.navajo.dsl.tsl</module>
 		<module>../../com.dexels.navajo.dsl.tsl.ui</module>
 		<module>../../com.dexels.navajo.dsl.integration</module>
+		<module>../../com.dexels.navajo.dev.script</module>
+		<module>../../com.dexels.navajo.tipi.swt.client</module>
+-->
 		<module>../</module>
 
 	</modules>
