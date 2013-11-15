@@ -1,7 +1,11 @@
 package com.dexels.navajo.sharedstore;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -227,7 +231,48 @@ public class SharedMemoryStoreTest {
 		Assert.assertNotNull(obs);
 		Assert.assertEquals(0, obs.length);
 	}
+	
+	@Test
+	public void testGetLock() throws Exception {
+		
+		si.lock("myparent", "mylockfile", "owner",
+				SharedFileStore.READ_WRITE_LOCK, false);
+		SharedStoreLock ssl = si.getLock("myparent", "mylockfile", "owner");
+		Assert.assertNotNull(ssl);
 
+		SharedStoreLock ssl2 = si.getLock("myparent", "mylockfile2", "owner");
+		Assert.assertNull(ssl2);
+
+		SharedStoreLock ssl3 = si.getLock("myparent", "mylockfile", "owner2");
+		Assert.assertNull(ssl3);
+		
+		si.release(ssl);
+
+	}
+	
+	@Test
+	public void testGetOutputStream() throws Exception {
+		Assert.assertNull(si.getStream("myparent", "myname"));
+		
+		OutputStream os = si.getOutputStream("myparent", "myname", false);
+		os.write("Apenoot\n".getBytes());
+		os.close();
+		
+		InputStream is = si.getStream("myparent", "myname");
+		Assert.assertNotNull(is);
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		String l = br.readLine();
+		Assert.assertEquals("Apenoot", l);
+		Assert.assertNotSame("Apenootje", l);
+		br.close();
+		
+		si.remove("myparent", "myname");
+		
+		Assert.assertNull(si.getStream("myparent", "myname"));
+		
+	}
+	
 	@Test
 	public void testStoreWithThreads() throws Exception {
 

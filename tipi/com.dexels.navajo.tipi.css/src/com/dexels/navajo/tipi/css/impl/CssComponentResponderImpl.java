@@ -94,7 +94,7 @@ public class CssComponentResponderImpl implements
 	@Override
 	public List<String> getCssDefinitions(String definition)
 	{
-		logger.info("Getting definigion: "+definition);
+		logger.info("Getting definition: "+definition);
 		// perhaps not yet cached? Turn this off for now because it is probably a big performance drain. Do return an empty list though (prevent NPE further on)
 
 		if (!tipiCssMap.containsKey(definition))

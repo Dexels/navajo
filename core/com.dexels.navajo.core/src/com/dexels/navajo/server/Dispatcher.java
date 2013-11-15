@@ -55,6 +55,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoExceptionEvent;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
+import com.dexels.navajo.events.types.ServerReadyEvent;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.mapping.Mappable;
@@ -154,6 +155,10 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  navajoConfig = null;
   }
    
+  public void generateServerReadyEvent() {
+	  NavajoEventRegistry.getInstance().publishEvent(new ServerReadyEvent());
+  }
+  
   private final void startUpServices() {
 
 	  // Clear temp space.
@@ -889,7 +894,7 @@ protected ServiceHandler createHandler(String handler, Access access) {
     				.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, null);
       }
       
-      System.err.println("Created Access: " +  access.accessID + ", " + access.rpcName + "(" + access.rpcUser + ")");
+      //System.err.println("Created Access: " +  access.accessID + ", " + access.rpcName + "(" + access.rpcUser + ")");
       
       if(access==null) {
     	  throw new FatalException("Error acquiring Access object in dispatcher. Severe.");

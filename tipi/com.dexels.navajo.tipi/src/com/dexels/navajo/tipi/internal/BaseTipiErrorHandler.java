@@ -99,15 +99,16 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 		try {
 			if(errorMessageBundle==null) {
 				logger.error("Serious problem in Error handler.");
-			}
-			String found = errorMessageBundle.getString(id);
-			if (found != null) {
-				return found;
+			} else {
+				String found = errorMessageBundle.getString(id);
+				if (found != null) {
+					return found;
+				}
 			}
 		} catch (MissingResourceException ex) {
 			System.err
-					.println("----> Cannot find reference for condition errorId: "
-							+ id);
+			.println("----> Cannot find reference for condition errorId: "
+					+ id);
 		}
 		Property description = current.getProperty("Description");
 		if (description != null) {
@@ -122,7 +123,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 			// attempt remote propertyresource bundle;
 			try {
 				InputStream tipiResourceStream = c
-						. getGenericResourceStream("validation.properties");
+						. getTipiResourceStream("validation.properties");
 				if (tipiResourceStream != null) {
 					errorMessageBundle = new PropertyResourceBundle(
 							tipiResourceStream);

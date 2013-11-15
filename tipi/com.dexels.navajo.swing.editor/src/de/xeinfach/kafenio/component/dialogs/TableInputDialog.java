@@ -19,7 +19,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
+*/
 package de.xeinfach.kafenio.component.dialogs;
 
 import javax.swing.JTextField;
@@ -27,42 +27,30 @@ import javax.swing.JTextField;
 import de.xeinfach.kafenio.KafenioPanel;
 import de.xeinfach.kafenio.util.LeanLogger;
 
-/**
- * Description: Class for providing a dialog that lets the user specify values
- * for tag attributes
- * 
+/** 
+ * Description: Class for providing a dialog that lets the user specify values for tag attributes
  * @author Howard Kistler, Karsten Pawlik
  */
 public class TableInputDialog extends AbstractKafenioDialog {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6171710064100006610L;
-
 	private static LeanLogger log = new LeanLogger("TableInputDialog.class");
 
-	private String inputRows = new String();
-	private String inputCols = new String();
+	private String inputRows   = new String();
+	private String inputCols   = new String();
 	private String inputBorder = new String();
-	private String inputSpace = new String();
-	private String inputPad = new String();
+	private String inputSpace  = new String();
+	private String inputPad    = new String();
 	private final JTextField jtxfRows;
 	private final JTextField jtxfCols;
 	private final JTextField jtxfBorder;
 	private final JTextField jtxfSpace;
 	private final JTextField jtxfPad;
 	private final Object[] panelContents;
-
 	/**
 	 * creates a new TableInputDialog using the given values.
-	 * 
-	 * @param parent
-	 *            parent frame
-	 * @param title
-	 *            frame title
-	 * @param bModal
-	 *            boolean value
+	 * @param parent parent frame
+	 * @param title frame title
+	 * @param bModal boolean value
 	 */
 	public TableInputDialog(KafenioPanel parent, String title, boolean bModal) {
 		super(parent, title, bModal);
@@ -72,35 +60,35 @@ public class TableInputDialog extends AbstractKafenioDialog {
 		jtxfSpace = new JTextField(3);
 		jtxfPad = new JTextField(3);
 
-		panelContents = new Object[] { parent.getTranslation("TableRows"),
-				jtxfRows, parent.getTranslation("TableColumns"), jtxfCols,
-				parent.getTranslation("TableBorder"), jtxfBorder,
-				parent.getTranslation("TableCellSpacing"), jtxfSpace,
-				parent.getTranslation("TableCellPadding"), jtxfPad };
+		panelContents = new Object[] {
+			parent.getTranslation("TableRows"),        jtxfRows,
+			parent.getTranslation("TableColumns"),     jtxfCols,
+			parent.getTranslation("TableBorder"),      jtxfBorder,
+			parent.getTranslation("TableCellSpacing"), jtxfSpace,
+			parent.getTranslation("TableCellPadding"), jtxfPad
+		};
 
 		init(panelContents);
 	}
 
 	/**
 	 * sets the value based on the PropertyChangeEvent caught by the superclass.
-	 * 
-	 * @param value
-	 *            a value.
+	 * @param value a value. 
 	 */
 	public void setDefaultValues(Object value) {
-		if (value.equals(getButtonLabels()[0])) {
-			inputRows = jtxfRows.getText();
-			inputCols = jtxfCols.getText();
+		if(value.equals(getButtonLabels()[0])) {
+			inputRows   = jtxfRows.getText();
+			inputCols   = jtxfCols.getText();
 			inputBorder = jtxfBorder.getText();
-			inputSpace = jtxfSpace.getText();
-			inputPad = jtxfPad.getText();
+			inputSpace  = jtxfSpace.getText();
+			inputPad    = jtxfPad.getText();
 			setVisible(false);
 		} else {
-			inputRows = "";
-			inputCols = "";
+			inputRows   = "";
+			inputCols   = "";
 			inputBorder = "";
-			inputSpace = "";
-			inputPad = "";
+			inputSpace  = "";
+			inputPad    = "";
 			setVisible(false);
 		}
 	}
@@ -111,7 +99,7 @@ public class TableInputDialog extends AbstractKafenioDialog {
 	public int getRows() {
 		try {
 			return Integer.parseInt(inputRows);
-		} catch (NumberFormatException nfe) {
+		} catch(NumberFormatException nfe) {
 			log.error("not a number: " + nfe.fillInStackTrace());
 			return -1;
 		}
@@ -123,7 +111,7 @@ public class TableInputDialog extends AbstractKafenioDialog {
 	public int getCols() {
 		try {
 			return Integer.parseInt(inputCols);
-		} catch (NumberFormatException nfe) {
+		} catch(NumberFormatException nfe) {
 			log.error("not a number: " + nfe.fillInStackTrace());
 			return -1;
 		}
@@ -135,7 +123,7 @@ public class TableInputDialog extends AbstractKafenioDialog {
 	public int getBorder() {
 		try {
 			return Integer.parseInt(inputBorder);
-		} catch (NumberFormatException nfe) {
+		} catch(NumberFormatException nfe) {
 			log.error("not a number: " + nfe.fillInStackTrace());
 			return -1;
 		}
@@ -147,7 +135,7 @@ public class TableInputDialog extends AbstractKafenioDialog {
 	public int getSpacing() {
 		try {
 			return Integer.parseInt(inputSpace);
-		} catch (NumberFormatException nfe) {
+		} catch(NumberFormatException nfe) {
 			log.error("not a number: " + nfe.fillInStackTrace());
 			return -1;
 		}
@@ -159,7 +147,7 @@ public class TableInputDialog extends AbstractKafenioDialog {
 	public int getPadding() {
 		try {
 			return Integer.parseInt(inputPad);
-		} catch (NumberFormatException nfe) {
+		} catch(NumberFormatException nfe) {
 			log.error("not a number: " + nfe.fillInStackTrace());
 			return -1;
 		}

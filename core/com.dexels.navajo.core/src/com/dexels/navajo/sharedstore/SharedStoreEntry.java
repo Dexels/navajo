@@ -11,7 +11,7 @@ public class SharedStoreEntry implements Serializable {
 	
 	protected long lastModified;
 	protected long length;
-	protected Serializable value;
+	protected Object value;
 	protected String contentType;
 	protected String name;
 	protected String parent;
@@ -30,6 +30,12 @@ public class SharedStoreEntry implements Serializable {
 
 	protected SharedStoreEntry(String name, Serializable v) {
 		this.value = v;
+		this.name = name;
+		lastModified = System.currentTimeMillis();
+	}
+	
+	protected SharedStoreEntry(String name, byte [] value) {
+		this.value = value;
 		this.name = name;
 		lastModified = System.currentTimeMillis();
 	}
@@ -58,7 +64,7 @@ public class SharedStoreEntry implements Serializable {
 		this.lastModified = l;
 	}
 	
-	protected Serializable getValue() {
+	protected Object getValue() {
 		return value;
 	}
 	

@@ -200,4 +200,10 @@ public class TestDispatcher implements DispatcherInterface {
 		return null;
 	}
 
+	@Override
+	public void generateServerReadyEvent() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

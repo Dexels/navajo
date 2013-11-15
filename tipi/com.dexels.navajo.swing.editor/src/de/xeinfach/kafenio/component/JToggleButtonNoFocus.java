@@ -19,7 +19,7 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+*/
 package de.xeinfach.kafenio.component;
 
 import javax.swing.Action;
@@ -28,19 +28,14 @@ import javax.swing.JToggleButton;
 
 import de.xeinfach.kafenio.util.LeanLogger;
 
-/**
+/** 
  * Description: Class for providing a JToggleButton that does not obtain focus
- * 
  * @author Howard Kistler
  */
 public class JToggleButtonNoFocus extends JToggleButton {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2149934996123680328L;
 	private static LeanLogger log = new LeanLogger("JToggleButtonNoFocus.class");
-
+	
 	/**
 	 * creates a new JToggleButtonNoFocus Object.
 	 */
@@ -51,9 +46,7 @@ public class JToggleButtonNoFocus extends JToggleButton {
 
 	/**
 	 * creates a new JToggleButtonNoFocus Object.
-	 * 
-	 * @param a
-	 *            button-Action
+	 * @param a button-Action
 	 */
 	public JToggleButtonNoFocus(Action a) {
 		super(a);
@@ -62,33 +55,26 @@ public class JToggleButtonNoFocus extends JToggleButton {
 
 	/**
 	 * creates a new JToggleButtonNoFocus Object.
-	 * 
-	 * @param icon
-	 *            button-icon
+	 * @param icon button-icon
 	 */
 	public JToggleButtonNoFocus(Icon icon) {
 		super(icon);
 		this.setRequestFocusEnabled(false);
 	}
-
+	
 	/**
 	 * creates a new JToggleButtonNoFocus Object.
-	 * 
-	 * @param text
-	 *            tooltip-text
+	 * @param text tooltip-text
 	 */
 	public JToggleButtonNoFocus(String text) {
 		super(text);
 		this.setRequestFocusEnabled(false);
 	}
-
+	
 	/**
 	 * creates a new JToggleButtonNoFocus Object.
-	 * 
-	 * @param text
-	 *            tooltip-text
-	 * @param icon
-	 *            button-icon
+	 * @param text tooltip-text
+	 * @param icon button-icon
 	 */
 	public JToggleButtonNoFocus(String text, Icon icon) {
 		super(text, icon);

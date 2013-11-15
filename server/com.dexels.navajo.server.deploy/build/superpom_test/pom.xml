@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>com.dexels.navajo.server.deploy.super</artifactId>
+	<artifactId>com.dexels.navajo.server.deploy.super.test</artifactId>
 	<groupId>com.dexels.navajo</groupId>
 	<packaging>pom</packaging>
 	<version>1.0.0</version>
@@ -19,17 +19,17 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.version</artifactId>
-			<version>1.2.6</version>
+			<version>LATEST</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.document</artifactId>
-			<version>2.2.62</version>
+			<version>LATEST</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.api</artifactId>
-			<version>1.0.32</version>
+			<version>LATEST</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mozilla</groupId>
@@ -39,27 +39,27 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.jsp</artifactId>
-			<version>1.1.8</version>
+			<version>LATEST</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.jsp.server</artifactId>
-			<version>1.1.14</version>
+			<version>LATEST</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.client</artifactId>
-			<version>3.4.36</version>
+			<version>LATEST</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.listeners.continuations</artifactId>
-			<version>1.1.10</version>
+			<version>LATEST</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.listeners.external</artifactId>
-			<version>1.0.32</version>
+			<version>LATEST</version>
 		</dependency>
 		<dependency>
 			<groupId>jstl</groupId>
@@ -149,13 +149,13 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.adapters</artifactId>
-			<version>1.1.66</version>
+			<version>LATEST</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.authentication.api</artifactId>
-			<version>1.0.7</version>
+			<version>LATEST</version>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -164,28 +164,28 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.core</artifactId>
-			<version>2.12.64</version>
+			<version>LATEST</version>
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.client.async</artifactId>
-			<version>1.1.22</version>
+			<version>LATEST</version>
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.function</artifactId>
-			<version>3.1.36</version>
+			<version>LATEST</version>
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.listeners</artifactId>
-			<version>3.1.30</version>
+			<version>LATEST</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -198,13 +198,13 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.rhino</artifactId>
-			<version>1.1.22</version>
+			<version>LATEST</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.rhino.continuations</artifactId>
-			<version>1.0.14</version>
+			<version>LATEST</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>

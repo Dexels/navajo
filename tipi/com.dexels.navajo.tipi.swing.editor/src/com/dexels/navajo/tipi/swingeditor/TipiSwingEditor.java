@@ -51,7 +51,10 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 			public void run() {
 			//	LeanLogger.setCurrentLogLevel(4);
 				KafenioPanelConfiguration gpc = new KafenioPanelConfiguration();
-				myEditor = new KafenioPanel(gpc);
+				gpc.setShowToolbar(false);
+				gpc.setShowToolbar2(false);
+				gpc.setShowToolbarTipi(true);
+				myEditor = new KafenioPanel(gpc, true);
 				myEditor.addPropertyChangeListener(new PropertyChangeListener(){
 
 					public void propertyChange(PropertyChangeEvent evt) {

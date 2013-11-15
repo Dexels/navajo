@@ -21,10 +21,6 @@ import de.xeinfach.kafenio.util.LeanLogger;
  */
 public class KafenioControllerApplet extends JApplet implements ActionListener {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2848417585380544816L;
 	private LeanLogger log = new LeanLogger("KafenioControllerApplet.class");
 	private JButtonNoFocus jbtnSaveContent;
 	private KafenioAppletObserver applets = null;
@@ -51,38 +47,39 @@ public class KafenioControllerApplet extends JApplet implements ActionListener {
 	public void init() {
 		log.debug("initializing controller applet...");
 		URL imageURL = getClass().getResource("/ControllerSaveContentHK.gif");
-		ImageIcon buttonIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-				.getImage(imageURL));
-		jbtnSaveContent = new JButtonNoFocus(buttonIcon);
-		jbtnSaveContent.setActionCommand("savecontent");
+		ImageIcon buttonIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(imageURL));
+		jbtnSaveContent = new JButtonNoFocus(buttonIcon); 
+		jbtnSaveContent.setActionCommand("savecontent");   
 		jbtnSaveContent.addActionListener(this);
-		jbtnSaveContent.setBackground(new Color(255, 255, 255));
+		jbtnSaveContent.setBackground(new Color(255,255,255));
 		jbtnSaveContent.setBorderPainted(false);
 
 		this.getContentPane().setLayout(new FlowLayout());
-		this.getContentPane().setBackground(new Color(255, 255, 255));
+		this.getContentPane().setBackground(new Color(255,255,255));
 		this.getContentPane().add(jbtnSaveContent);
 		log.debug("...done");
 		validate();
 	}
 
 	/**
-	 * is called while during applet startup. registers this applet in the
-	 * global appletRegister.
+	 * is called while during applet startup.
+	 * registers this applet in the global appletRegister.
 	 */
 	public void start() {
 	}
-
+	
+	
 	/**
-	 * is called during applet shutdown. de-registers this applet from the
-	 * global appletRegister.
+	 * is called during applet shutdown.
+	 * de-registers this applet from the global appletRegister.
 	 */
 	public void stop() {
 	}
-
+	
+	
 	/**
-	 * is called during applet destruction. de-registers this applet from the
-	 * global appletRegister.
+	 * is called during applet destruction.
+	 * de-registers this applet from the global appletRegister.
 	 */
 	public void destroy() {
 		jbtnSaveContent = null;
@@ -95,7 +92,7 @@ public class KafenioControllerApplet extends JApplet implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if ("savecontent".equalsIgnoreCase(e.getActionCommand())) {
-			applets.saveAllAppletContents();
+			applets.saveAllAppletContents();		
 			log.debug("saved all applet contents.");
 		}
 	}

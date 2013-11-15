@@ -60,8 +60,7 @@ public class Authorize extends BaseOperation implements AppStoreOperation {
 		JsonNode user = callGithub("/user", access_token);
 		final String login = user.get("login").asText();
 		System.err.println("username: "+login);
-		System.err.println("Name: "+user.get("name").asText());
-		String username = user.get("name").asText();
+		JsonNode username = user.get("name");
 		
 		boolean found = false;
 		String organization = applicationManager.getOrganization();
@@ -73,11 +72,31 @@ public class Authorize extends BaseOperation implements AppStoreOperation {
 			}
 		}
 		if(found) {
-			session.setAttribute("username", username);
+			if (username!=null) {
+				System.err.println("Name: "+username.asText());
+				session.setAttribute("username", username.asText());
+			} else {
+				session.setAttribute("username", "<Unknown>");
+			}
 			session.setAttribute("authorized", true);
-			session.setAttribute("image", user.get("avatar_url").asText());
-			session.setAttribute("company", user.get("company").asText());
-			session.setAttribute("email", user.get("email").asText());
+			final JsonNode avatarUrl = user.get("avatar_url");
+			if (avatarUrl!=null) {
+				session.setAttribute("image", avatarUrl.asText());
+			} else {
+//				session.setAttribute("image", avatarUrl.asText());
+			}
+			final JsonNode company = user.get("company");
+			if (company!=null) {
+				session.setAttribute("company", company.asText());
+			} else {
+				session.setAttribute("company", "Unknown company");
+			}
+			final JsonNode email = user.get("email");
+			if (email!=null) {
+				session.setAttribute("email", email.asText());
+			} else {
+				session.setAttribute("email", "unknown@email");
+			}
 		}
 		resp.sendRedirect("ui/index.html");
 	}
