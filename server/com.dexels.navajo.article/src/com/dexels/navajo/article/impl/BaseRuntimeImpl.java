@@ -151,7 +151,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	
 	@Override
 	public void writeNode(JsonNode node) throws IOException {
-		setMimeType("text/json");
+		setMimeType("application/json; charset=utf-8");
 		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 		writer.writeValue(getOutputWriter(),node);
 	}
