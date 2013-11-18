@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.api</artifactId>
-			<version>1.0.32</version>
+			<version>1.0.34</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mozilla</groupId>
@@ -149,7 +149,7 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.adapters</artifactId>
-			<version>1.1.66</version>
+			<version>1.1.70</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -164,7 +164,7 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.core</artifactId>
-			<version>2.12.64</version>
+			<version>2.12.68</version>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -185,7 +185,7 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.listeners</artifactId>
-			<version>3.1.30</version>
+			<version>3.1.32</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
