@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -152,7 +153,7 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 
 		VaadinTipiContext va;
 		try {
-			va = new VaadinTipiContext(this, installationFolder, extensionRegistry.getExtensionList());
+			va = new VaadinTipiContext(this, installationFolder, extensionRegistry.getExtensionList(),new HashMap<String, String>());
 		} catch (Throwable e2) {
 			logger.error("Error: ",e2);
 			return null;
@@ -201,6 +202,7 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 
 	}
 	
+	@Override
 	public void setEvalUrl(URL context, String relativeUri) {
 		VaadinTipiContext vaadinTipiContext = (VaadinTipiContext)getCurrentContext();
 		if(vaadinTipiContext!=null) {
