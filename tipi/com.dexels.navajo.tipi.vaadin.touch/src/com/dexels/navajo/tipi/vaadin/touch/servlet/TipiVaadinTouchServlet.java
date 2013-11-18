@@ -34,6 +34,7 @@ public class TipiVaadinTouchServlet extends TouchKitApplicationServlet {
 	private Set<Application> applications = new HashSet<Application>();
 
 	
+	@Override
 	public void init(final ServletConfig servletConfig) throws ServletException {
 		ServletConfig wrap = new ServletConfig(){
 

@@ -10,16 +10,11 @@ import javax.swing.JPanel;
 import javax.swing.JWindow;
 
 /**
- * Class that displays a splash screen Is run in a separate thread so that the
- * applet continues to load in the background
- * 
+ * Class that displays a splash screen
+ * Is run in a separate thread so that the applet continues to load in the background
  * @author Karsten Pawlik
  */
 public class SplashScreen extends JWindow implements Runnable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -110479158189149703L;
 	private static int timeout = 3000;
 
 	/**
@@ -31,25 +26,19 @@ public class SplashScreen extends JWindow implements Runnable {
 
 	/**
 	 * creates a new splash screen using the given values.
-	 * 
-	 * @param newTimeout
-	 *            maximum timeout in seconds. (can be interrupted by calling the
-	 *            destroy-method
+	 * @param newTimeout maximum timeout in seconds. (can be interrupted by calling the destroy-method
 	 */
 	public SplashScreen(int newTimeout) {
 		try {
 			timeout = newTimeout;
 			if (timeout > 0) {
 				JPanel panel = new JPanel(new BorderLayout());
-				ImageIcon icon = new ImageIcon(
-						SplashScreen.class
-								.getResource("kafenio_editor_splash.gif"));
+				ImageIcon icon = new ImageIcon(SplashScreen.class.getResource("kafenio_editor_splash.gif"));
 				panel.add(new JLabel(icon), BorderLayout.CENTER);
 				getContentPane().add(panel);
 				pack();
 				Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-				setLocation((int) (d.getWidth() - getWidth()) / 2,
-						(int) (d.getHeight() - getHeight()) / 2);
+				setLocation((int) (d.getWidth() - getWidth()) / 2, (int) (d.getHeight() - getHeight()) / 2);
 			}
 		} catch (Exception e) {
 		}
@@ -65,16 +54,17 @@ public class SplashScreen extends JWindow implements Runnable {
 		try {
 			int secs = 1;
 			while (secs <= timeout) {
-				for (int k = 0; k < 1000; k++) {
+				for(int k=0; k < 1000; k++) { 
 					Thread.sleep(1);
 				}
 				secs++;
 			}
 			destroy();
-		} catch (InterruptedException e) {
+		}
+		catch (InterruptedException e) {
 		}
 	}
-
+	
 	/**
 	 * destroys the splashscreen
 	 */

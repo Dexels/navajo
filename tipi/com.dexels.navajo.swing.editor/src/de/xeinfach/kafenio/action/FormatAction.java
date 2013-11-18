@@ -19,7 +19,7 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+*/
 package de.xeinfach.kafenio.action;
 
 import java.awt.event.ActionEvent;
@@ -33,36 +33,25 @@ import javax.swing.text.html.HTMLDocument;
 
 import de.xeinfach.kafenio.KafenioPanel;
 import de.xeinfach.kafenio.util.LeanLogger;
-
-/**
- * Description: Class for implementing HTML formatting actions NOTE : Does not
- * toggle. User must use the "Clear Format" option to remove formatting
- * correctly.
+/** 
+ * Description: Class for implementing HTML formatting actions
+ * NOTE : Does not toggle. User must use the "Clear Format" option to remove formatting correctly.
  * 
  * @author Howard Kistler, Karsten Pawlik
  */
 public class FormatAction extends StyledEditorKit.StyledTextAction {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4294578388580719819L;
-
+	
 	private static LeanLogger log = new LeanLogger("FormatAction.class");
-
+	
 	private KafenioPanel parentKafenio;
 	private HTML.Tag htmlTag;
 	private String htmlAttr;
-
+	
 	/**
 	 * creates a new FormatAction Object based on the given values.
-	 * 
-	 * @param kafenio
-	 *            the kafenioPanel object to apply the changes to.
-	 * @param actionName
-	 *            the name of the action
-	 * @param inTag
-	 *            the HTML-Tag to edit.
+	 * @param kafenio the kafenioPanel object to apply the changes to.
+	 * @param actionName the name of the action
+	 * @param inTag the HTML-Tag to edit.
 	 */
 	public FormatAction(KafenioPanel kafenio, String actionName, HTML.Tag inTag) {
 		super(actionName);
@@ -71,21 +60,15 @@ public class FormatAction extends StyledEditorKit.StyledTextAction {
 		htmlAttr = null;
 		log.debug("new FormatAction created.");
 	}
-
+	
 	/**
 	 * creates a new FormatAction Object based on the given values.
-	 * 
-	 * @param kafenio
-	 *            the kafenioPanel object to apply the changes to.
-	 * @param actionName
-	 *            the name of the action
-	 * @param inTag
-	 *            the HTML-Tag to edit.
-	 * @param inAttr
-	 *            attributes for the action.
+	 * @param kafenio the kafenioPanel object to apply the changes to.
+	 * @param actionName the name of the action
+	 * @param inTag the HTML-Tag to edit.
+	 * @param inAttr attributes for the action.
 	 */
-	public FormatAction(KafenioPanel kafenio, String actionName,
-			HTML.Tag inTag, String inAttr) {
+	public FormatAction(KafenioPanel kafenio, String actionName, HTML.Tag inTag, String inAttr) {
 		super(actionName);
 		parentKafenio = kafenio;
 		htmlTag = inTag;
@@ -94,9 +77,7 @@ public class FormatAction extends StyledEditorKit.StyledTextAction {
 
 	/**
 	 * handles the performed action.
-	 * 
-	 * @param ae
-	 *            the ActionEvent to handle
+	 * @param ae the ActionEvent to handle
 	 */
 	public void actionPerformed(ActionEvent ae) {
 		System.out.println(ae);
@@ -115,8 +96,7 @@ public class FormatAction extends StyledEditorKit.StyledTextAction {
 					parentTextPane.setSelectionEnd(pos + 1);
 					selText = parentTextPane.getSelectedText();
 					log.debug("selectedText: " + selText);
-				} catch (BadLocationException e1) {
-				}
+				} catch (BadLocationException e1) {}
 			} catch (Exception e) {
 				System.out.println(e);
 			}
@@ -125,9 +105,8 @@ public class FormatAction extends StyledEditorKit.StyledTextAction {
 		int textLength = -1;
 		textLength = selText.length();
 
-		SimpleAttributeSet sasText = new SimpleAttributeSet(
-				parentTextPane.getCharacterAttributes());
-
+		SimpleAttributeSet sasText = new SimpleAttributeSet(parentTextPane.getCharacterAttributes());
+		
 		if (htmlAttr == null) {
 			sasText.addAttribute(htmlTag, new SimpleAttributeSet());
 		} else {
@@ -135,7 +114,7 @@ public class FormatAction extends StyledEditorKit.StyledTextAction {
 			attribs.addAttribute(HTML.Attribute.ALIGN, htmlAttr);
 			sasText.addAttribute(htmlTag, attribs);
 		}
-
+		
 		int caretOffset = parentTextPane.getSelectionStart();
 		parentTextPane.select(caretOffset, caretOffset + textLength);
 		parentTextPane.setCharacterAttributes(sasText, true);
@@ -145,8 +124,7 @@ public class FormatAction extends StyledEditorKit.StyledTextAction {
 				doc.remove(caretOffset, 1);
 				parentTextPane.select(caretOffset, caretOffset + textLength);
 				parentTextPane.setCaretPosition(caretOffset);
-			} catch (Exception e) {
-			}
+			} catch (Exception e) {}
 		} else {
 			parentTextPane.setCaretPosition(caretOffset + textLength);
 			parentKafenio.refreshOnUpdate();
@@ -154,3 +132,4 @@ public class FormatAction extends StyledEditorKit.StyledTextAction {
 		}
 	}
 }
+

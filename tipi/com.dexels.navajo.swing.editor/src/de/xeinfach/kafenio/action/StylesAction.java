@@ -19,7 +19,7 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+*/
 package de.xeinfach.kafenio.action;
 
 import java.awt.event.ActionEvent;
@@ -34,27 +34,20 @@ import javax.swing.text.html.HTMLEditorKit;
 
 import de.xeinfach.kafenio.util.LeanLogger;
 
-/**
+/** 
  * Description: Class for handling CSS style events
  * 
  * @author Karsten Pawlik
  */
 public class StylesAction extends StyledEditorKit.StyledTextAction {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5521421815876056323L;
-
 	private static LeanLogger log = new LeanLogger("StylesAction.class");
-
+	
 	private JComboBox parent;
 
 	/**
 	 * constructs a new StylesAction Object.
-	 * 
-	 * @param myParent
-	 *            the Combobox to add the styles to.
+	 * @param myParent the Combobox to add the styles to.
 	 */
 	public StylesAction(JComboBox myParent) {
 		super("css-style");
@@ -64,31 +57,26 @@ public class StylesAction extends StyledEditorKit.StyledTextAction {
 
 	/**
 	 * handles the given ActionEvent.
-	 * 
-	 * @param e
-	 *            the ActionEvent to handle
+	 * @param e the ActionEvent to handle
 	 */
 	public void actionPerformed(ActionEvent e) {
-		if (!(this.isEnabled())) {
+		if(!(this.isEnabled())) {
 			return;
 		}
 		JEditorPane editor = getEditor(e);
-		if (editor != null) {
-			String stylename = (String) (parent.getSelectedItem());
+		if(editor != null) {
+			String stylename = (String)(parent.getSelectedItem());
 
-			if (stylename == null || parent.getSelectedIndex() <= 0) {
-				return;
-			}
+			if(stylename == null || parent.getSelectedIndex() <= 0)	return;
 			boolean replace = false;
-			MutableAttributeSet attr = null;
+			MutableAttributeSet	attr = null;
 			SimpleAttributeSet cls = new SimpleAttributeSet();
 			cls.addAttribute(HTML.Attribute.CLASS, stylename);
 			attr = new SimpleAttributeSet();
 			attr.addAttribute(HTML.Tag.FONT, cls);
 
-			MutableAttributeSet inattr = ((HTMLEditorKit) (editor
-					.getEditorKitForContentType("text/html")))
-					.getInputAttributes();
+			MutableAttributeSet inattr = 
+				((HTMLEditorKit)(editor.getEditorKitForContentType("text/html"))).getInputAttributes();
 
 			inattr.addAttributes(attr);
 			setCharacterAttributes(editor, attr, replace);

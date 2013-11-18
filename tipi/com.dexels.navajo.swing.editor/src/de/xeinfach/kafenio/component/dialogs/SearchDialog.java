@@ -19,7 +19,7 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+*/
 package de.xeinfach.kafenio.component.dialogs;
 
 import javax.swing.JCheckBox;
@@ -28,26 +28,20 @@ import javax.swing.JTextField;
 import de.xeinfach.kafenio.KafenioPanel;
 import de.xeinfach.kafenio.util.LeanLogger;
 
-/**
- * Description: Class for providing a dialog that lets the user specify
- * arguments for the Search Find/Replace functions
- * 
+/** 
+ * Description: Class for providing a dialog that lets the user specify arguments for
+ * the Search Find/Replace functions
  * @author Howard Kistler, Karsten Pawlik
  */
 public class SearchDialog extends AbstractKafenioDialog {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1477982984921327300L;
-
 	private static LeanLogger log = new LeanLogger("SearchDialog.class");
 
-	private String inputFindTerm = null;
-	private String inputReplaceTerm = null;
-	private boolean bCaseSensitive = false;
-	private boolean bStartAtTop = false;
-	private boolean bReplaceAll = false;
+	private String inputFindTerm    = (String)null;
+	private String inputReplaceTerm = (String)null;
+	private boolean bCaseSensitive  = false;
+	private boolean bStartAtTop     = false;
+	private boolean bReplaceAll     = false;
 
 	private final Object[] panelContents;
 	private final boolean isReplaceDialog;
@@ -56,54 +50,56 @@ public class SearchDialog extends AbstractKafenioDialog {
 	private final JCheckBox jchkCase;
 	private final JCheckBox jchkTop;
 	private final JCheckBox jchkAll;
-
+	
 	/**
 	 * creates a new SearchDialog using the given values.
-	 * 
-	 * @param parent
-	 *            parent frame
-	 * @param title
-	 *            frame title
-	 * @param bModal
-	 *            boolean value
-	 * @param bIsReplace
-	 *            is replace turned on by default?
-	 * @param bCaseSetting
-	 *            true for case sensitive search, false for case insensitive.
-	 * @param bTopSetting
-	 *            wrap mode on?
-	 * @param findText
-	 *            the text to find
-	 * @param replaceText
-	 *            the text to replace the found text with
+	 * @param parent parent frame
+	 * @param title frame title
+	 * @param bModal boolean value
+	 * @param bIsReplace is replace turned on by default?
+	 * @param bCaseSetting true for case sensitive search, false for case insensitive.
+	 * @param bTopSetting wrap mode on?
+	 * @param findText the text to find
+	 * @param replaceText the text to replace the found text with
 	 */
-	public SearchDialog(KafenioPanel parent, String title, boolean bModal,
-			boolean bIsReplace, boolean bCaseSetting, boolean bTopSetting,
-			String findText, String replaceText) {
+	public SearchDialog(KafenioPanel parent, 
+						String title, 
+						boolean bModal, 
+						boolean bIsReplace, 
+						boolean bCaseSetting, 
+						boolean bTopSetting,
+						String findText,
+						String replaceText)
+	{
 		super(parent, title, bModal);
-
+		
 		isReplaceDialog = bIsReplace;
 		jtxfFindTerm = new JTextField(3);
 		jtxfReplaceTerm = new JTextField(3);
-		jchkCase = new JCheckBox(parent.getTranslation("SearchCaseSensitive"),
-				bCaseSetting);
-		jchkTop = new JCheckBox(parent.getTranslation("SearchStartAtTop"),
-				bTopSetting);
-		jchkAll = new JCheckBox(parent.getTranslation("SearchReplaceAll"),
-				false);
+		jchkCase = new JCheckBox(parent.getTranslation("SearchCaseSensitive"), bCaseSetting);
+		jchkTop = new JCheckBox(parent.getTranslation("SearchStartAtTop"), bTopSetting);
+		jchkAll = new JCheckBox(parent.getTranslation("SearchReplaceAll"), false);
 
-		if (bIsReplace) {
-			panelContents = new Object[] { parent.getTranslation("SearchFind"),
-					jtxfFindTerm, parent.getTranslation("SearchReplace"),
-					jtxfReplaceTerm, jchkAll, jchkCase, jchkTop };
+		if(bIsReplace){
+			panelContents = new Object[] {	parent.getTranslation("SearchFind"),
+											jtxfFindTerm,
+											parent.getTranslation("SearchReplace"),
+											jtxfReplaceTerm,
+											jchkAll,
+											jchkCase,
+											jchkTop
+			};
 		} else {
-			panelContents = new Object[] { parent.getTranslation("SearchFind"),
-					jtxfFindTerm, jchkCase, jchkTop };
+			panelContents = new Object[] {	parent.getTranslation("SearchFind"),
+											jtxfFindTerm,
+											jchkCase,
+											jchkTop
+			};
 		}
-		if (findText != null) {
+		if(findText != null){
 			jtxfFindTerm.setText(findText);
 		}
-		if (replaceText != null) {
+		if(replaceText != null){
 			jtxfReplaceTerm.setText(replaceText);
 		}
 		init(panelContents);
@@ -114,18 +110,18 @@ public class SearchDialog extends AbstractKafenioDialog {
 	 * @see de.xeinfach.kafenio.component.dialogs.AbstractKafenioDialog#setDefaultValues(java.lang.Object)
 	 */
 	public void setDefaultValues(Object value) {
-		if (value.equals(getButtonLabels()[0])) {
+		if(value.equals(getButtonLabels()[0])) {
 			inputFindTerm = jtxfFindTerm.getText();
 			bCaseSensitive = jchkCase.isSelected();
 			bStartAtTop = jchkTop.isSelected();
-			if (isReplaceDialog) {
+			if(isReplaceDialog) {
 				inputReplaceTerm = jtxfReplaceTerm.getText();
 				bReplaceAll = jchkAll.isSelected();
 			}
 			setVisible(false);
 		} else {
-			inputFindTerm = null;
-			inputReplaceTerm = null;
+			inputFindTerm = (String)null;
+			inputReplaceTerm = (String)null;
 			bCaseSensitive = false;
 			bStartAtTop = false;
 			bReplaceAll = false;
@@ -136,14 +132,14 @@ public class SearchDialog extends AbstractKafenioDialog {
 	/**
 	 * @return returns value of inputFindTerm variable
 	 */
-	public String getFindTerm() {
+	public String  getFindTerm() {
 		return inputFindTerm;
 	}
 
 	/**
 	 * @return returns value of inputReplaceTerm variable
 	 */
-	public String getReplaceTerm() {
+	public String  getReplaceTerm()   {
 		return inputReplaceTerm;
 	}
 
@@ -153,14 +149,14 @@ public class SearchDialog extends AbstractKafenioDialog {
 	public boolean getCaseSensitive() {
 		return bCaseSensitive;
 	}
-
+	
 	/**
 	 * @return returns value of bStartAtTop variable
 	 */
 	public boolean getStartAtTop() {
 		return bStartAtTop;
 	}
-
+	
 	/**
 	 * @return returns value of bReplaceAll variable
 	 */
@@ -168,3 +164,4 @@ public class SearchDialog extends AbstractKafenioDialog {
 		return bReplaceAll;
 	}
 }
+

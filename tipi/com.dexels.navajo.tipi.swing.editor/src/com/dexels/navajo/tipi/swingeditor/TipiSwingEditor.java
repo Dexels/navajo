@@ -57,7 +57,7 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 				gpc.setShowToolbar(false);
 				gpc.setShowToolbar2(false);
 				gpc.setShowToolbarTipi(true);
-				myEditor = new KafenioPanel(gpc);
+				myEditor = new KafenioPanel(gpc, true);
 				myEditor.addPropertyChangeListener(new PropertyChangeListener(){
 
 					@Override

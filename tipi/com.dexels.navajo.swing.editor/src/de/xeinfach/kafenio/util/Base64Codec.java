@@ -8,15 +8,15 @@ import java.util.Vector;
  * @author Howard Kistler
  */
 public final class Base64Codec {
-
+	
 	private static LeanLogger log = new LeanLogger("Base64Codec.class");
 
 	private static Vector base64Tokens = new Vector(64);
 
 	public static final char BASE64PAD = '=';
-	public static final char LINEFEED = (char) 10;
-	public static final char CARRIAGERETURN = (char) 13;
-	public static final int MAXIMUMLINES = 75;
+	public static final char LINEFEED = (char)10;
+	public static final char CARRIAGERETURN = (char)13;
+	public static final int  MAXIMUMLINES = 75;
 
 	static {
 		base64Tokens.add("A");
@@ -83,67 +83,65 @@ public final class Base64Codec {
 		base64Tokens.add("9");
 		base64Tokens.add("+");
 		base64Tokens.add("/");
-	}
+	}	
 
 	/**
 	 * private constructor for utility class.
 	 */
-	private Base64Codec() {
-	}
+	private Base64Codec() {}
 
 	/**
 	 * method used to encode a string into a base64 string.
-	 * 
-	 * @param source
-	 *            plain text to encode.
+	 * @param source plain text to encode.
 	 * @return returns the base64 encoded version of source.
 	 */
-	public static String encode(String source) {
+	public static String encode(String source)
+	{
 		byte[] sourceBytes = source.getBytes();
 		int byteTriad = sourceBytes.length % 3;
 		StringBuffer encoding = new StringBuffer();
 		int bitOffset = 7;
 		int b64Offset = 5;
 		int bytePlace = 0;
-		byte tokenValue = (byte) 0;
+		byte tokenValue = (byte)0;
 		int lineLength = 0;
-		while (bytePlace < sourceBytes.length) {
+		while(bytePlace < sourceBytes.length) {
 
-			tokenValue = (byte) (tokenValue | (byte) ((sourceBytes[bytePlace] & (1 << bitOffset)) > 0 ? (1 << b64Offset)
-					: (byte) 0));
+			tokenValue = (byte)((byte)tokenValue 
+								| (byte)((sourceBytes[bytePlace] & (1 << bitOffset)) > 0 ? (1 << b64Offset) : (byte)0));
 			bitOffset--;
-			if (bitOffset < 0) {
+			if(bitOffset < 0) {
 				bitOffset = 7;
 				bytePlace++;
 			}
 			b64Offset--;
-			if (b64Offset < 0) {
+			if(b64Offset < 0) {
 				b64Offset = 5;
-				encoding.append((String) (base64Tokens.elementAt(tokenValue)));
-				tokenValue = (byte) 0;
+				encoding.append((String)(base64Tokens.elementAt(tokenValue)));
+				tokenValue = (byte)0;
 				lineLength++;
-				if (lineLength > MAXIMUMLINES) {
+				if(lineLength > MAXIMUMLINES) {
 					encoding.append(CARRIAGERETURN);
 					encoding.append(LINEFEED);
 					lineLength = 0;
 				}
 			}
 		}
-		if (b64Offset != 5) {
+		if(b64Offset != 5) {
 			bytePlace--;
-			for (int i = b64Offset; i >= 0; i--) {
-				if (bitOffset >= 0) {
-					tokenValue = (byte) (tokenValue | (byte) ((sourceBytes[bytePlace] & (1 << bitOffset)) > 0 ? (1 << i)
-							: (byte) 0));
+			for(int i = b64Offset; i >= 0; i--) {
+				if(bitOffset >= 0) {
+					tokenValue = (byte)((byte)tokenValue 
+										| (byte)((sourceBytes[bytePlace] & (1 << bitOffset)) > 0 ? (1 << i) : (byte)0));
 				}
 				bitOffset--;
 			}
-			encoding.append((String) (base64Tokens.elementAt(tokenValue)));
-		}
+			encoding.append((String)(base64Tokens.elementAt(tokenValue)));
+		}	
 
-		if (byteTriad == 2) {
+		if(byteTriad == 2) {
 			encoding.append(BASE64PAD);
-		} else if (byteTriad == 1) {
+		} else if(byteTriad == 1) {
 			encoding.append(BASE64PAD);
 			encoding.append(BASE64PAD);
 		}
@@ -153,9 +151,7 @@ public final class Base64Codec {
 
 	/**
 	 * method used to decode a base64 encoded string.
-	 * 
-	 * @param source
-	 *            the string to decode.
+	 * @param source the string to decode.
 	 * @return returns the decoded base64 string.
 	 */
 	public static String decode(String source) {
@@ -163,40 +159,38 @@ public final class Base64Codec {
 		int bitOffset = 7;
 		int b64Offset = 5;
 		int bytePlace = 0;
-		byte charValue = (byte) 0;
-		while (bytePlace < source.length()) {
-			if (source.charAt(bytePlace) == BASE64PAD) {
-				// end processing when encountering special end-padding
-				// character
+		byte charValue = (byte)0;
+		while(bytePlace < source.length())
+		{
+			if(source.charAt(bytePlace) == BASE64PAD) {
+				// end processing when encountering special end-padding character
 				break;
 			}
 
-			if (source.charAt(bytePlace) == LINEFEED
-					|| source.charAt(bytePlace) == CARRIAGERETURN) {
+			if(source.charAt(bytePlace) == LINEFEED 
+				|| source.charAt(bytePlace) == CARRIAGERETURN) 
+			{
 				// ignore standard line break characters
 				bytePlace++;
 				continue;
 			} else {
-				if (!base64Tokens.contains(source.substring(bytePlace,
-						bytePlace + 1))) {
-					// ignore unknown characters (mostly implemented to deal
-					// with other line break character sequences)
+				if(!base64Tokens.contains(source.substring(bytePlace, bytePlace + 1))) {
+					// ignore unknown characters (mostly implemented to deal with other line break character sequences)
 					bytePlace++;
 					continue;
 				} else {
-					byte currentByte = (byte) (base64Tokens.indexOf(source
-							.substring(bytePlace, bytePlace + 1)));
-					charValue = (byte) (charValue | (byte) ((currentByte & (1 << b64Offset)) > 0 ? (1 << bitOffset)
-							: (byte) 0));
+					byte currentByte = (byte)(base64Tokens.indexOf(source.substring(bytePlace, bytePlace + 1)));
+					charValue = (byte)((byte)charValue 
+										| (byte)((currentByte & (1 << b64Offset)) > 0 ? (1 << bitOffset) : (byte)0));
 					bitOffset--;
-					if (bitOffset < 0) {
+					if(bitOffset < 0) {
 						bitOffset = 7;
-						decoding.append((char) charValue);
-						charValue = (byte) 0;
+						decoding.append((char)charValue);
+						charValue = (byte)0;
 					}
 
 					b64Offset--;
-					if (b64Offset < 0) {
+					if(b64Offset < 0) {
 						b64Offset = 5;
 						bytePlace++;
 					}

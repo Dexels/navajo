@@ -7,18 +7,15 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class GetSequenceValue extends FunctionInterface {
     public GetSequenceValue() {}
     
-    @Override
-	public String remarks() {
+    public String remarks() {
         return "Gets the next value for the given sequence in the given database";
     }
 
-    @Override
-	public String usage() {
+    public String usage() {
         return "GetSequenceValue([TransactionContext], [([Username + Password] + @ + [DataSource] + :)]sequencename). Returns the sequence value. Built for tipi";
     }
 
-    @Override
-	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Integer transactionContext = -1;
         String datasource = null;
         String sequencename = null;
@@ -53,11 +50,11 @@ public class GetSequenceValue extends FunctionInterface {
         }
 
         query.evaluate();
-        String dbIdenitifier = query.getDbIdentifier();
+        String dbIdentifier = query.getDbIdentifier();
         if (sequencename != null) {
-            if (SQLMapConstants.POSTGRESDB.equals(dbIdenitifier)) {
+            if (SQLMapConstants.POSTGRESDB.equals(dbIdentifier)) {
                 sql = "SELECT nextval('" + sequencename + "')";
-            } else if (SQLMapConstants.ENTERPRISEDB.equals(dbIdenitifier)) {
+            } else if (SQLMapConstants.ENTERPRISEDB.equals(dbIdentifier)) {
                     sql = "SELECT nextval('" + sequencename + "')";
             } else {
             	sql = "SELECT " + sequencename + ".nextval FROM dual";

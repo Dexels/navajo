@@ -40,6 +40,7 @@ public class TipiPopover extends TipiVaadinComponentImpl {
 		return popover;
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 	    super.setComponentValue(name, object);
 	        if (name.equals("title")) {
@@ -67,7 +68,8 @@ public class TipiPopover extends TipiVaadinComponentImpl {
 	        	popover.setResizable((Boolean) object);
 	        }
 	}
-    protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
+    @Override
+	protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
         super.performComponentMethod(name, compMeth, event);
         if (name.equals("show")) {
 			getVaadinApplication().getMainWindow().addWindow(popover);

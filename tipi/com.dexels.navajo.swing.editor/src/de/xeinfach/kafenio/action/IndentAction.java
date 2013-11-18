@@ -2,44 +2,35 @@ package de.xeinfach.kafenio.action;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JEditorPane;
 import javax.swing.JTextPane;
+import javax.swing.JEditorPane;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledEditorKit;
+import javax.swing.text.StyleConstants;
 import javax.swing.text.html.CSS;
 
 import de.xeinfach.kafenio.KafenioPanel;
 import de.xeinfach.kafenio.util.LeanLogger;
 
 /**
- * Description: class to handle indenting / de-indenting of the current
- * paragraph
+ * Description: class to handle indenting / de-indenting of the current paragraph
  * 
  * @author Karsten Pawlik
  */
 public class IndentAction extends StyledEditorKit.StyledTextAction {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -9170006036883709355L;
-
 	private static LeanLogger log = new LeanLogger("IndentAction.class");
-
+	
 	private KafenioPanel parentKafenioPanel;
 	private String myActionName;
 	private Float currentIndent = null;
 	private int newIndent = 0;
-
+	
 	/**
 	 * creates a new IndentAction Object.
-	 * 
-	 * @param kafenio
-	 *            the KafenioPanel object to apply the changes to.
-	 * @param actionName
-	 *            the name of the IndentAction
+	 * @param kafenio the KafenioPanel object to apply the changes to.
+	 * @param actionName the name of the IndentAction
 	 */
 	public IndentAction(KafenioPanel kafenio, String actionName) {
 		super(actionName);
@@ -47,31 +38,27 @@ public class IndentAction extends StyledEditorKit.StyledTextAction {
 		myActionName = actionName;
 		log.debug("new IndentAction created.");
 	}
-
+	
 	/**
 	 * handles the given ActionEvent.
-	 * 
-	 * @param e
-	 *            the ActionEvent to handle
+	 * @param e the ActionEvent to handle
 	 */
 	public void actionPerformed(ActionEvent e) {
-		if (!(this.isEnabled())) {
+		if(!(this.isEnabled())) {
 			return;
 		}
 
 		JEditorPane editor = getEditor(e);
 
-		if (editor != null) {
+		if(editor != null) {
 			JTextPane parentTextPane = parentKafenioPanel.getTextPane();
 			int pos = parentTextPane.getCaretPosition();
-			MutableAttributeSet sas = new SimpleAttributeSet(
-					parentTextPane.getParagraphAttributes());
+			MutableAttributeSet sas = new SimpleAttributeSet(parentTextPane.getParagraphAttributes());
 			currentIndent = null;
 			if (sas.getAttribute(CSS.Attribute.MARGIN_LEFT) != null) {
-				currentIndent = new Float(sas.getAttribute(
-						CSS.Attribute.MARGIN_LEFT).toString());
+				currentIndent = new Float(sas.getAttribute(CSS.Attribute.MARGIN_LEFT).toString());
 			}
-
+			
 			// indent or de-indent?
 			if (myActionName.equalsIgnoreCase("deindent")) {
 				// check if it is null
@@ -89,8 +76,7 @@ public class IndentAction extends StyledEditorKit.StyledTextAction {
 						setParagraphAttributes(editor, sas, true);
 					} else {
 						sas.removeAttribute(CSS.Attribute.MARGIN_LEFT);
-						sas.addAttribute(StyleConstants.LeftIndent, new Float(
-								newIndent));
+						sas.addAttribute( StyleConstants.LeftIndent, new Float(newIndent));
 						setParagraphAttributes(editor, sas, true);
 					}
 				}
@@ -111,8 +97,7 @@ public class IndentAction extends StyledEditorKit.StyledTextAction {
 				}
 				// if indent size = 0, remove attribute for clearer code
 				sas.removeAttribute(CSS.Attribute.MARGIN_LEFT);
-				sas.addAttribute(StyleConstants.LeftIndent,
-						new Float(newIndent));
+				sas.addAttribute( StyleConstants.LeftIndent, new Float(newIndent));
 				setParagraphAttributes(editor, sas, true);
 				editor.repaint();
 			}

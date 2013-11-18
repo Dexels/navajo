@@ -33,6 +33,7 @@ public class TipiVaadinTouchExtension extends TipiAbstractXMLExtension implement
 		TipiVaadinTouchExtension.getInstance().installAllExtensions(extensions);
 	}
 
+	@Override
 	public BundleContext getBundleContext() {
 		return context;
 	}
@@ -43,6 +44,7 @@ public class TipiVaadinTouchExtension extends TipiAbstractXMLExtension implement
 		loadDescriptor();
 	}
 
+	@Override
 	public void start(BundleContext bc) throws Exception {
 		this.context = bc;
 		logger.info("Starting vaadin tipi bundle");
@@ -58,6 +60,7 @@ public class TipiVaadinTouchExtension extends TipiAbstractXMLExtension implement
 		deregisterTipiExtension(context);
 	}
 	
+	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
 		

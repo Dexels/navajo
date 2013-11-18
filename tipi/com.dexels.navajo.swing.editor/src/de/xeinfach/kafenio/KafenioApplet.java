@@ -19,7 +19,7 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+*/
 package de.xeinfach.kafenio;
 
 import java.awt.BorderLayout;
@@ -32,26 +32,22 @@ import javax.swing.JPanel;
 import de.xeinfach.kafenio.component.ExternalEditorFrame;
 import de.xeinfach.kafenio.interfaces.KafenioContainerInterface;
 import de.xeinfach.kafenio.interfaces.KafenioControllerSaveContentInterface;
+import de.xeinfach.kafenio.util.HTMLTranslate;
 import de.xeinfach.kafenio.util.LeanLogger;
 import de.xeinfach.kafenio.util.Utils;
-
 /**
- * Description: A WYSIWYG Editor Applet that allows to create and edit HTML
- * content and store it to a URL.<BR>
+ * Description: A WYSIWYG Editor Applet that allows to create and edit HTML content 
+ * and store it to a URL.<BR>
  * <BR>
  * the following values for the parameter "BUTTONS" are supported:<BR>
- * NEW, SEPARATOR, CUT, COPY, PASTE, BOLD, ITALIC, UNDERLINE, STRIKE, SUPER,
- * SUB, ULIST, OLIST, CLEAR, ANCHOR, SOURCE, STYLES, DETACHFRAME<BR>
+ * NEW, SEPARATOR, CUT, COPY, PASTE, BOLD, ITALIC, UNDERLINE, STRIKE, SUPER, SUB, ULIST, 
+ * OLIST, CLEAR, ANCHOR, SOURCE, STYLES, DETACHFRAME<BR>
  * 
  * @author Karsten Pawlik
  */
-public class KafenioApplet extends JApplet implements
-		KafenioControllerSaveContentInterface, KafenioContainerInterface {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7732986333349104989L;
-
+public class KafenioApplet extends JApplet 
+	implements KafenioControllerSaveContentInterface, KafenioContainerInterface 
+{
 	private static LeanLogger log = new LeanLogger("KafenioApplet.class");
 
 	private KafenioToolBar kafenioToolBar1;
@@ -69,8 +65,7 @@ public class KafenioApplet extends JApplet implements
 	 * Constructs a new Kafenio Applet.
 	 */
 	public KafenioApplet() {
-		getRootPane().putClientProperty("defeatSystemEventQueueCheck",
-				Boolean.TRUE);
+		getRootPane().putClientProperty("defeatSystemEventQueueCheck", Boolean.TRUE);
 		appletRegister = KafenioAppletObserver.getInstance();
 	}
 
@@ -82,9 +77,7 @@ public class KafenioApplet extends JApplet implements
 		getContentPane().removeAll();
 		appletRegister.registerNewApplet(this);
 		config = readConfig();
-		if (config.isDebugMode()) {
-			LeanLogger.setCurrentLogLevel(LeanLogger.DEBUG);
-		}
+		if (config.isDebugMode()) LeanLogger.setCurrentLogLevel(LeanLogger.DEBUG);
 		kafenioPanel = new KafenioPanel(config);
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().setBackground(config.getBgcolor());
@@ -94,8 +87,8 @@ public class KafenioApplet extends JApplet implements
 	}
 
 	/**
-	 * reads and checks the parameter-input from the applet configuration and
-	 * writes it to the global KafenioPanelConfiguration
+	 * reads and checks the parameter-input from the applet configuration
+	 * and writes it to the global KafenioPanelConfiguration
 	 */
 	private synchronized KafenioPanelConfiguration readConfig() {
 		KafenioPanelConfiguration newConfig = new KafenioPanelConfiguration();
@@ -103,43 +96,31 @@ public class KafenioApplet extends JApplet implements
 		newConfig.setMode(KafenioPanelConfiguration.APPLET_MODE);
 		newConfig.setCodeBase(getCodeBase().toString());
 		newConfig.setBgcolor(Utils.checkNullOrEmpty(getParameter("BGCOLOR")));
-		newConfig.setRawDocument(Utils
-				.checkNullOrEmpty(getParameter("DOCUMENT")));
-		newConfig.setShowViewSource(checkBoolean(getParameter("SOURCEVIEW")));
+		newConfig.setRawDocument(Utils.checkNullOrEmpty(getParameter("DOCUMENT")));
+		newConfig.setShowViewSource(checkBoolean(getParameter("SOURCEVIEW"))); 
 		newConfig.setBase64(checkBoolean(getParameter("BASE64")));
 		newConfig.setUnicode(checkBoolean(getParameter("UNICODE")));
 		if (Utils.checkNullOrEmpty(getParameter("STYLESHEET")) != null) {
-			newConfig.setStyleSheetFileList(KafenioPanel
-					.tokenize(getParameter("STYLESHEET")));
+			newConfig.setStyleSheetFileList(KafenioPanel.tokenize(getParameter("STYLESHEET")));
 		}
 		newConfig.setShowToolbar(checkBoolean(getParameter("TOOLBAR")));
 		newConfig.setShowToolbar2(checkBoolean(getParameter("TOOLBAR2")));
 		newConfig.setShowMenuBar(checkBoolean(getParameter("MENUBAR")));
 		newConfig.setLanguage(Utils.checkNullOrEmpty(getParameter("LANGCODE")));
-		newConfig.setCountry(Utils
-				.checkNullOrEmpty(getParameter("LANGCOUNTRY")));
+		newConfig.setCountry(Utils.checkNullOrEmpty(getParameter("LANGCOUNTRY")));
 		newConfig.setShowMenuIcons(checkBoolean(getParameter("MENUICONS")));
-		newConfig.setImageDir(Utils.checkNullOrEmpty(getParameter("IMAGEDIR"),
-				""));
+		newConfig.setImageDir(Utils.checkNullOrEmpty(getParameter("IMAGEDIR"), "")); 
 		if (Utils.checkNullOrEmpty(getParameter("FILEDIR")) != null) {
-			newConfig.setFileDir(Utils.checkNullOrEmpty(
-					getParameter("FILEDIR"), ""));
+			newConfig.setFileDir(Utils.checkNullOrEmpty(getParameter("FILEDIR"), ""));
 		} else {
-			newConfig.setFileDir(Utils.checkNullOrEmpty(
-					getParameter("IMAGEDIR"), ""));
+			newConfig.setFileDir(Utils.checkNullOrEmpty(getParameter("IMAGEDIR"), ""));
 		}
-		newConfig.setTreePilotSystemID(Utils.checkNullOrEmpty(
-				getParameter("SYSTEMID"), ""));
-		newConfig.setServletUrl(Utils.checkNullOrEmpty(
-				getParameter("SERVLETURL"), ""));
-		newConfig.setServletMode(Utils.checkNullOrEmpty(
-				getParameter("SERVLETMODE"), ""));
-		newConfig.setPostUrl(Utils.checkNullOrEmpty(
-				getParameter("POSTCONTENTURL"), ""));
-		newConfig.setContentParameter(Utils.checkNullOrEmpty(
-				getParameter("CONTENTPARAMETER"), ""));
-		newConfig.setOutputmode(Utils.checkNullOrEmpty(
-				getParameter("OUTPUTMODE"), ""));
+		newConfig.setTreePilotSystemID(Utils.checkNullOrEmpty(getParameter("SYSTEMID"), ""));
+		newConfig.setServletUrl(Utils.checkNullOrEmpty(getParameter("SERVLETURL"),""));
+		newConfig.setServletMode(Utils.checkNullOrEmpty(getParameter("SERVLETMODE"), "")); 
+		newConfig.setPostUrl(Utils.checkNullOrEmpty(getParameter("POSTCONTENTURL"), ""));
+		newConfig.setContentParameter(Utils.checkNullOrEmpty(getParameter("CONTENTPARAMETER"), ""));
+		newConfig.setOutputmode(Utils.checkNullOrEmpty(getParameter("OUTPUTMODE"), ""));
 		newConfig.setDebugMode(checkBoolean(getParameter("DEBUG")));
 
 		String toolbarItems = Utils.checkNullOrEmpty(getParameter("BUTTONS"));
@@ -152,23 +133,26 @@ public class KafenioApplet extends JApplet implements
 		return newConfig;
 	}
 
+
 	/**
-	 * is called while during applet startup. registers this applet in the
-	 * global appletRegister.
+	 * is called while during applet startup.
+	 * registers this applet in the global appletRegister.
 	 */
 	public void start() {
 	}
-
+	
+	
 	/**
-	 * is called during applet shutdown. de-registers this applet from the
-	 * global appletRegister.
+	 * is called during applet shutdown.
+	 * de-registers this applet from the global appletRegister.
 	 */
 	public void stop() {
 	}
-
+	
+	
 	/**
-	 * is called during applet destruction. de-registers this applet from the
-	 * global appletRegister.
+	 * is called during applet destruction.
+	 * de-registers this applet from the global appletRegister.
 	 */
 	public void destroy() {
 		appletRegister.unregisterApplet(this);
@@ -185,78 +169,68 @@ public class KafenioApplet extends JApplet implements
 	}
 
 	/**
-	 * @param condition
-	 *            a condition to check.
-	 * @return returns true if the given String is "true" ignoring the case or
-	 *         false if not.
+	 * @param condition a condition to check.
+	 * @return returns true if the given String is "true" ignoring the case or false if not.
 	 */
 	public boolean checkBoolean(String condition) {
 		return "true".equalsIgnoreCase(condition);
 	}
 
-	/**
-	 * Method for passing back the document text to the applet's container. This
-	 * is the entire document, including the top-level HTML tags.<BR>
+	/** 
+	 * Method for passing back the document text to the applet's container.
+	 * This is the entire document, including the top-level HTML tags.<BR>
 	 * <BR>
-	 * This method is a bridge-function to the KafenioPanel's getDocumentText()
-	 * method.
-	 * 
+	 * This method is a bridge-function to the KafenioPanel's getDocumentText() method.
 	 * @return returns the document text as string.
 	 */
-	public String getDocumentText() {
+	public String getDocumentText()	{
 		return kafenioPanel.getDocumentText();
 	}
 
-	/**
-	 * Method for passing back the document body to the applet's container. This
-	 * is only the text contained within the BODY tags.
-	 * 
+	/** 
+	 * Method for passing back the document body to the applet's container.
+	 * This is only the text contained within the BODY tags.
 	 * @return returns the document body as string.
 	 */
 	public String getDocumentBody() {
 		return kafenioPanel.getDocumentBody();
 	}
 
-	/**
-	 * Method for setting the document manually. Will need code in the web page
-	 * to call this.
-	 * 
-	 * @param text
-	 *            string to set the document text to.
+	/** 
+	 * Method for setting the document manually.
+	 * Will need code in the web page to call this.
+	 * @param text string to set the document text to.
 	 */
 	public void setDocumentText(String text) {
 		kafenioPanel.setDocumentText(text);
 	}
 
 	/**
-	 * Convenience method for getting the document body from dedi
-	 * (http://www.der-dirigent.de)
-	 * 
+	 * Convenience method for getting the document body from dedi (http://www.der-dirigent.de)
 	 * @return returns the document body (same as getDocumentBody())
 	 */
 	public String getContents() {
 		return getDocumentBody();
 	}
-
+	
 	/**
-	 * the method calls the postContentBody method in KafenioPanel. it is part
-	 * of the implementation of the KafenioControllerSaveContentInterface.
-	 * 
+	 * the method calls the postContentBody method in KafenioPanel.
+	 * it is part of the implementation of the KafenioControllerSaveContentInterface.
 	 * @return returns true, if content post was successful, false otherwise.
 	 */
 	public boolean saveAppletContents() {
 		return kafenioPanel.postContentBody();
 	}
+	
 
 	/**
-	 * the method calls the saveAllAppletContents method in
-	 * KafenioAppletObserver. it is part of the implementation of the
-	 * KafenioControllerSaveContentInterface.
+	 * the method calls the saveAllAppletContents method in KafenioAppletObserver.
+	 * it is part of the implementation of the KafenioControllerSaveContentInterface.
 	 */
 	public void saveAllAppletsContent() {
 		appletRegister.saveAllAppletContents();
 	}
-
+	
 	/**
 	 * method for popping the applet into a separate window and back.
 	 */
@@ -264,7 +238,7 @@ public class KafenioApplet extends JApplet implements
 		if (externalEditorFrame == null) {
 			setVisible(false);
 			externalEditorFrame = new ExternalEditorFrame("Kafenio", this);
-			externalEditorFrame.setBounds(0, 0, getWidth(), getHeight());
+			externalEditorFrame.setBounds(0,0,getWidth(),getHeight());
 			externalEditorFrame.setContentPane(getRootPane());
 			externalEditorFrame.setVisible(true);
 		} else {
@@ -276,11 +250,12 @@ public class KafenioApplet extends JApplet implements
 			setVisible(true);
 		}
 	}
-
+	
 	private void showSplash() {
 		splash = new SplashScreen(30);
 		log.info("Info: Displaying splash image for max. 30 seconds.");
 		new Thread(splash).start();
 	}
 
+	
 }

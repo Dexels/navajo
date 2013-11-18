@@ -16,6 +16,7 @@ public class TipiNavigationButton extends TipiButton {
 	public Object createContainer() {
 		Button nb = new NavigationButton(){
 			private static final long serialVersionUID = 4645763999780625837L;
+			@Override
 			protected void fireClick() {
 		    	System.err.println("KLIK!");
 		    }

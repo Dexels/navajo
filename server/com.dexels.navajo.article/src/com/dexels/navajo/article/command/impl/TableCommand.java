@@ -70,7 +70,7 @@ public class TableCommand implements ArticleCommand {
 			m = n.getMessage(path);
 		}
 		try {
-			runtime.setMimeType("text/json");
+			runtime.setMimeType("application/json; charset=utf-8");
 			String tableName = parameters.get("name");
 			if (tableName == null) {
 				tableName = "data";
