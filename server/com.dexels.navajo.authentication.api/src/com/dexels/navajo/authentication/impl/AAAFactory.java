@@ -67,21 +67,21 @@ public final class AAAFactory implements AuthenticationFactory {
 
   public void addAuthenticationModule(AAAInterface a) {
 	  moduleList.add(a);
-	  logger.info("# of auth. modules now: "+moduleList.size());
+	  logger.debug("# of auth. modules now: "+moduleList.size());
   }
   
   public void removeAuthenticationModule(AAAInterface a) {
 	  moduleList.remove(a);
-	  logger.info("# of auth. modules now: "+moduleList.size());
+	  logger.debug("# of auth. modules now: "+moduleList.size());
   }
 
   public void activate() {
-	  logger.info("AAA Factory started.");
+	  logger.debug("AAA Factory started.");
 	  instance = this;
   }
 
   public void deactivate() {
-	  logger.info("AAA Factory stopped.");
+	  logger.debug("AAA Factory stopped.");
 	  instance = null;
   }
 
@@ -90,14 +90,14 @@ public final class AAAFactory implements AuthenticationFactory {
 	  try {
 	  return moduleList.first();
 	  } catch (Exception  e) {
-		  logger.warn("No AuthenticationModule found. No OSGi?", e);
+		  logger.debug("No AuthenticationModule found. No OSGi?", e);
 		  return null;
 	  }
   }
 
   public static AuthenticationFactory getInstance() {
 	  if ( instance == null ) {
-		  logger.warn("No AuthenticatonFactory found. No OSGi?");
+		  logger.debug("No AuthenticatonFactory found. No OSGi?");
 		  instance = new AAAFactory();
 	  } 
 	  return instance;

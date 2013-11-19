@@ -13,6 +13,7 @@ public class TipiHorizontalComponentGroup extends TipiVaadinComponentImpl {
 		return nm;
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 	    super.setComponentValue(name, object);
 	        if (name.equals("title")) {
