@@ -34,7 +34,11 @@ public class StopwatchTimeField extends PropertyField {
 	private Document myDocument = null;
 
 	public StopwatchTimeField() {
-		super();
+		this(true);
+	}
+	
+	public StopwatchTimeField(Boolean addFocusLostListener) {
+		super(addFocusLostListener);
 		myDocument = new StopwatchTimeDocument();
 		setDocument(myDocument);
 	}

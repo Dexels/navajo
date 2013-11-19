@@ -39,7 +39,11 @@ public class ClockTimeField extends PropertyField {
 	private boolean showSeconds = true;
 
 	public ClockTimeField() {
-		super();
+		this(true);
+	}
+	
+	public ClockTimeField(Boolean addFocusLostListener) {
+		super(addFocusLostListener);
 		myDocument = new ClockTimeDocument();
 		setDocument(myDocument);
 		// myDocument.addDocumentListener(new DocumentListener() {

@@ -16,6 +16,11 @@ public class MoneyField extends AbstractPropertyField implements
 			.getInstance();
 
 	public MoneyField() {
+		this(true);
+		
+	}
+	public MoneyField(Boolean addFocusLostListener) {
+		super(addFocusLostListener);
 		myEditFormat.setGroupingUsed(false);
 		myEditFormat.setDecimalSeparatorAlwaysShown(false);
 		myEditFormat.getDecimalFormatSymbols().setDecimalSeparator(',');
