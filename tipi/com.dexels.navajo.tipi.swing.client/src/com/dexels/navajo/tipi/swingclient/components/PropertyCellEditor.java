@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
@@ -293,6 +294,7 @@ public class PropertyCellEditor implements TableCellEditor,
 
 				lastComponent = myDatePropertyField;
 				setComponentColor(myDatePropertyField, isSelected, row, column);
+				removeFocusListeners(myDatePropertyField);
 				myDatePropertyField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
@@ -317,6 +319,7 @@ public class PropertyCellEditor implements TableCellEditor,
 				lastComponent = myIntegerPropertyField;
 				setComponentColor(myIntegerPropertyField, isSelected, row,
 						column);
+				removeFocusListeners(myIntegerPropertyField);
 				myIntegerPropertyField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
@@ -369,6 +372,7 @@ public class PropertyCellEditor implements TableCellEditor,
 				lastComponent = myFloatPropertyField;
 				myFloatPropertyField.setProperty(myProperty);
 				setComponentColor(myFloatPropertyField, isSelected, row, column);
+				removeFocusListeners(myFloatPropertyField);
 				myFloatPropertyField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
@@ -397,6 +401,7 @@ public class PropertyCellEditor implements TableCellEditor,
 				setComponentColor(myMoneyPropertyField, isSelected, row, column);
 				// final String contents = myMoneyPropertyField.getText();
 				final MoneyField m = myMoneyPropertyField;
+				removeFocusListeners(myMoneyPropertyField);
 				myMoneyPropertyField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
@@ -424,6 +429,7 @@ public class PropertyCellEditor implements TableCellEditor,
 				setComponentColor(myPercentagePropertyField, isSelected, row,
 						column);
 				// final String contents = myPercentagePropertyField.getText();
+				removeFocusListeners(myPercentagePropertyField);
 				myPercentagePropertyField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
@@ -450,6 +456,7 @@ public class PropertyCellEditor implements TableCellEditor,
 				lastComponent = myStopwatchTimeField;
 				myStopwatchTimeField.setProperty(myProperty);
 				setComponentColor(myStopwatchTimeField, isSelected, row, column);
+				removeFocusListeners(myStopwatchTimeField);
 				myStopwatchTimeField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
@@ -496,6 +503,7 @@ public class PropertyCellEditor implements TableCellEditor,
 				lastComponent = myClockTimeField;
 				myClockTimeField.setProperty(myProperty);
 				setComponentColor(myClockTimeField, isSelected, row, column);
+				removeFocusListeners(myClockTimeField);
 				myClockTimeField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
@@ -534,6 +542,7 @@ public class PropertyCellEditor implements TableCellEditor,
 
 			if (myPropertyField == null) {
 				myPropertyField = new TextPropertyField();
+				removeFocusListeners(myPropertyField);
 				myPropertyField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
@@ -557,6 +566,14 @@ public class PropertyCellEditor implements TableCellEditor,
 		}
 
 		return myPropertyField;
+	}
+	
+	private void removeFocusListeners(Component c)
+	{
+		for (FocusListener fl : c.getFocusListeners())
+		{
+			c.removeFocusListener(fl);
+		}
 	}
 
 	private final void setComponentColor(Component c, boolean isSelected,
