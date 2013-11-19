@@ -54,7 +54,7 @@ public class TipiVaadinTouchServlet extends TouchKitApplicationServlet {
 					return TipiVaadinTouchApplication.class.getName();
 				}
 				if(Constants.PARAMETER_WIDGETSET.equals(name)) {
-					return "com.dexels.navajo.tipi.vaadin.touch.widgetset.Com_dexels_navajo_tipi_vaadin_touchWidgetset";
+					return "com.dexels.navajo.tipi.vaadin.touch.widgetset.TipiWidgetset";
 				}
 				return servletConfig.getInitParameter(name);
 			}
