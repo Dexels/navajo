@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.jgit;
+package com.dexels.navajo.jgit;
 
 import org.eclipse.jgit.lib.ProgressMonitor;
 

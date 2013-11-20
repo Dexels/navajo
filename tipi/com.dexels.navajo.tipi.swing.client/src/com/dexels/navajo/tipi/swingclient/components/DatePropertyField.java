@@ -55,6 +55,11 @@ public final class DatePropertyField extends PropertyField implements
 	private int row, column;
 
 	public DatePropertyField() {
+		this(true);
+		
+	}
+	public DatePropertyField(Boolean addFocusLostListener) {
+		super(addFocusLostListener);
 		setColumns(10);
 
 		try {

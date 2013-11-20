@@ -35,7 +35,24 @@ public class PropertyField extends JTextField implements PropertyControlled,
 	private String forcedAlignment = null;
 
 	public PropertyField() {
-		this.addFocusListener(this);
+		this(true);
+		
+	}
+	public PropertyField(Boolean addFocusLostListener) {
+		if (addFocusLostListener)
+		{
+			this.addFocusListener(this);
+		}
+		else
+		{
+			final FocusListener fl = (FocusListener) this;
+			this.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					fl.focusGained(e);
+				}
+			});
+		}
 	}
 
 	public boolean isManagingFocus() {

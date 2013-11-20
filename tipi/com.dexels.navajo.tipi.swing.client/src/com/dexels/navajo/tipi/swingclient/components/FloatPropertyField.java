@@ -25,11 +25,16 @@ public class FloatPropertyField extends PropertyField implements
 	protected boolean readOnly = false;
 
 	public FloatPropertyField() {
+		this(true);
+		
+	}
+	public FloatPropertyField(Boolean addFocusLostListener) {
+		super(addFocusLostListener);
 
 		try {
 			myDocument = new FloatNumberDocument();
 			setDocument(myDocument);
-			jbInit();
+			jbInit(addFocusLostListener);
 			if (getForcedAlignment() == null) {
 				setHorizontalAlignment(SwingConstants.RIGHT);
 			}
@@ -76,7 +81,7 @@ public class FloatPropertyField extends PropertyField implements
 		super.setProperty(p);
 	}
 
-	protected void jbInit() throws Exception {
+	protected void jbInit(Boolean addFocusLostListener) throws Exception {
 		myDocument
 				.addDocumentListener(new javax.swing.event.DocumentListener() {
 					public void changedUpdate(DocumentEvent e) {
@@ -91,17 +96,29 @@ public class FloatPropertyField extends PropertyField implements
 						myDocument_removeUpdate(e);
 					}
 				});
-		this.addFocusListener(new java.awt.event.FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				moneyFocusLost(e);
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
-				this_focusGained(e);
-			}
-		});
+		if (addFocusLostListener)
+		{
+			this.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					moneyFocusLost(e);
+				}
+	
+				@Override
+				public void focusGained(FocusEvent e) {
+					this_focusGained(e);
+				}
+			});
+		}
+		else
+		{
+			this.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					this_focusGained(e);
+				}
+			});
+		}
 	}
 
 	void this_focusGained(FocusEvent e) {

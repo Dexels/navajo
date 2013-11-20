@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.jgit;
+package com.dexels.navajo.jgit;
 
 import java.io.File;
 import java.io.IOException;
