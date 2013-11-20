@@ -207,7 +207,12 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 		}
 		ServiceReference<?> ref = bundleContext.getServiceReference(clz);
 		this.serviceReferences.put(clz,ref);
-		return bundleContext.getService(ref);
+		try {
+			return bundleContext.getService(ref);
+		} catch (Throwable t) {
+			logger.warn("Could not find service: " + clz);
+			return null;
+		}
 	}
 	
 	public void setRepositoryFactory(RepositoryFactory rf) {
