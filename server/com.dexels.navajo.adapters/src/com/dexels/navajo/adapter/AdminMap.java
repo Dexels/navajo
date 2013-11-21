@@ -96,7 +96,7 @@ public class AdminMap implements Mappable {
     supportsAsync = nc.isAsyncEnabled();
     supportsStore = ( nc.getAsyncStore() != null );
     supportsIntegrity = nc.isIntegrityWorkerEnabled();
-    supportsStatistics = nc.isStatisticsRunnerEnabled();
+    supportsStatistics = nc.isEnableStatisticsRunner();
     supportsLocks = nc.isLockManagerEnabled();
     
     serverId = DispatcherFactory.getInstance().getApplicationId();
