@@ -262,8 +262,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		this.myApplication = myApplication;
 		this.systemPropertyMap.putAll(systemProperties);
 		classManager = new ClassManager(getClass().getClassLoader());
-		// this();
-		System.err.println("<<<" + this.systemPropertyMap);
 		initializeContext(myApplication,preload, parent);
 		FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
 	}
@@ -547,7 +545,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public String getSystemProperty(String name) {
 
 		String value = systemPropertyMap.get(name);
-		System.err.println(">>>>>>>>>>>>>>>>"+systemPropertyMap);
 		String sysVal = null;
 		if (value != null) {
 			return value;

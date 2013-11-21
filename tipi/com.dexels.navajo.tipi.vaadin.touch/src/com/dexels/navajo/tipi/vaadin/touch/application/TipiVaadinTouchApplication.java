@@ -110,7 +110,6 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 	
 	@Override
 	public void onBrowserDetailsReady() {
-		System.err.println("BBBSize: "+getMainWindow().getWidth()+" :: "+getMainWindow().getHeight());
 		try {
 			setCurrentContext(createContext());
 
@@ -189,7 +188,7 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 
 		if (in != null) {
 			newContext.parseStream(in, ed);
-			newContext.switchToDefinition("startup");
+			newContext.switchToDefinition("init");
 			in.close();
 
 		} else {

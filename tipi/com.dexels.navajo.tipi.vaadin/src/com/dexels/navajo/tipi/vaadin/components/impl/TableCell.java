@@ -122,60 +122,15 @@ public class TableCell extends CssLayout {
 	public void setTagValue(String tag) {
 		tagLabel.setValue(tag);
 	}
-//
-//	public void loadItem(Object itemId, Item item) {
-//		this.index = (Integer) itemId;
-//		DateFormat formatter = new SimpleDateFormat("dd-MMM");
-//		Date time = (Date) item.getItemProperty(tagPropertyName+"@value").getValue();
-//		String s = formatter.format(time);
-//
-//		setTagValue(s);
-//		setBodyValue((String) item.getItemProperty(bodyPropertyName+"@value").getValue());
-//		setHeaderValue((String) item.getItemProperty(headerPropertyName+"@value").getValue());
-//		setSubHeaderValue((String) item.getItemProperty(subHeaderPropertyName+"@value").getValue());
-//	}
 
-//	public Integer getIndex() {
-//		return null;
-//	}
-
-//	public String getHeaderPropertyName() {
-//		return headerPropertyName;
-//	}
-//
-//	public void setHeaderPropertyName(String headerPropertyName) {
-//		this.headerPropertyName = headerPropertyName;
-//	}
-//
-//	public String getSubHeaderPropertyName() {
-//		return subHeaderPropertyName;
-//	}
-//
-//	public void setSubHeaderPropertyName(String subHeaderPropertyName) {
-//		this.subHeaderPropertyName = subHeaderPropertyName;
-//	}
-//
-//	public String getBodyPropertyName() {
-//		return bodyPropertyName;
-//	}
-//
-//	public void setBodyPropertyName(String bodyPropertyName) {
-//		this.bodyPropertyName = bodyPropertyName;
-//	}
-//
-//	public String getTagPropertyName() {
-//		return tagPropertyName;
-//	}
-//
-//	public void setTagPropertyName(String tagPropertyName) {
-//		this.tagPropertyName = tagPropertyName;
-//	}
 
 	public void setStylePrefix(String string) {
 		this.stylePrefix = string;
 		setStyleName(stylePrefix);
-		headerLabel.setStyleName(stylePrefix + "-from");
-		tagLabel.setStyleName(stylePrefix + "-time");
+		headerLabel.setStyleName(stylePrefix + "-header");
+		subHeaderLabel.setStyleName(stylePrefix + "-subheader");
+		bodyLabel.setStyleName(stylePrefix + "-body");
+		tagLabel.setStyleName(stylePrefix + "-tag");
 		
 	}
 

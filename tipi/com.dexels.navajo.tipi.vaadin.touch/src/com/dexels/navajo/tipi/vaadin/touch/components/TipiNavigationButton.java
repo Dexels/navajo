@@ -27,10 +27,11 @@ public class TipiNavigationButton extends TipiButton {
 		    }
 
 		};
-		System.err.println("STYLE: "+nb.getStyleName());
-		nb.removeStyleName("v-button");
-		nb.setWidth("100%");
+//		System.err.println("STYLE: "+nb.getStyleName());
+//		nb.removeStyleName("v-button");
+//		nb.setWidth("100%");
         nb.setStyleName("v-touchkit-navbutton");
+        nb.setCaption("aaap");
         nb.addListener(new ClickListener() {
 			
 			private static final long serialVersionUID = 5975819383218437406L;
