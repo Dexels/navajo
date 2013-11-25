@@ -16,7 +16,7 @@ public class TipiNavigationView extends TipiVaadinComponentImpl {
 	public Object createContainer() {
 		navigationView = new NavigationView();
 		navigationView.getNavigationBar().setVisible(true);
-		VerticalComponentGroup componentGroup = new VerticalComponentGroup();
+//		VerticalComponentGroup componentGroup = new VerticalComponentGroup();
 		return navigationView;
 	}
 

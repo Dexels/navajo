@@ -16,7 +16,9 @@ import com.dexels.navajo.tipi.actions.TipiInstantiateTipi;
 import com.dexels.navajo.tipi.vaadin.document.CompositeArrayContainer;
 import com.dexels.navajo.tipi.vaadin.document.CompositeMessageBridge;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Table;
 
 public class TipiDynamicTable extends TipiMessagePanel  {
@@ -32,9 +34,16 @@ public class TipiDynamicTable extends TipiMessagePanel  {
 	private String definitionName;
 	
 	private final static Logger logger = LoggerFactory.getLogger(TipiDynamicTable.class);
+	private CssLayout css;
 
 	@Override
 	public Object createContainer() {
+		css = new CssLayout();
+		Button b = new Button("aaaap!");
+		b.addStyleName("v-touchkit-navbutton");
+		b.addStyleName("v-touchkit-navbutton-back");
+		b.removeStyleName("v-button");
+		css.addComponent(b);
 		table = new Table();
 		table.setSelectable(true);
 		table.setImmediate(true);
@@ -66,7 +75,8 @@ public class TipiDynamicTable extends TipiMessagePanel  {
 				}
 			}
 		});
-		return table;
+		css.addComponent(table);
+		return css;
 	}
 
 	

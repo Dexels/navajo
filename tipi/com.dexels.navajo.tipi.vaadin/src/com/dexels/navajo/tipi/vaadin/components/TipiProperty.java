@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
+import java.beans.DesignMode;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -73,8 +74,10 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		container = new HorizontalLayout();
 		container.setMargin(false);
 		description = new Label();
+		description.addStyleName("property-description");
 //		description.setHeight("12px");
 		container.addComponent(description);
+		description.setSizeFull();
 		return container;
 	}
 

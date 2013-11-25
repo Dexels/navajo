@@ -33,18 +33,20 @@ public class TipiNavigationManager extends TipiVaadinComponentImpl {
 	@Override
 	protected void addToVaadinContainer(ComponentContainer currentContainer,
 			Component component, Object constraints) {
-		super.addToVaadinContainer(currentContainer, component, constraints);
+//		super.addToVaadinContainer(currentContainer, component, constraints);
 		NavigationManager nm = (NavigationManager)currentContainer;
 //		nm.setCurrentComponent(component);
 		nm.navigateTo(component);
-		if("flush".equals(constraints)) {
-			try {
-				nm.setPreviousComponent(null);
-			} catch (Throwable e) {
-				e.printStackTrace();
-			}
-			nm.requestRepaint();
-		}
+		
+		//does not work at all:
+//		if("flush".equals(constraints)) {
+//			try {
+//				nm.setPreviousComponent(null);
+//			} catch (Throwable e) {
+//				e.printStackTrace();
+//			}
+//			nm.requestRepaint();
+//		}
 
 		}
 	
