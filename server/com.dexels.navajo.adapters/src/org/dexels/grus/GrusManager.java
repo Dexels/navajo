@@ -68,6 +68,8 @@ public class GrusManager implements Runnable {
 					DbConnectionBroker inspectedBroker = allBrokers.next();
 					inspectedBroker.refreshConnections();
 				}
+			} catch (InterruptedException t) {
+				// nothing
 			} catch (Throwable t) {
 				logger.error("Error: ", t);
 			}
