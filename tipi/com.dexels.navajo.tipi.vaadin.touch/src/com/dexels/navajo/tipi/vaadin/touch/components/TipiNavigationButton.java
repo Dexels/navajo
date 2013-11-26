@@ -22,14 +22,9 @@ public class TipiNavigationButton extends TipiButton {
 		    }
 		    @Override
 		    public void changeVariables(Object source, Map<String, Object> variables) {
-//
-//		        fireClick();
 		    }
 
 		};
-//		System.err.println("STYLE: "+nb.getStyleName());
-//		nb.removeStyleName("v-button");
-//		nb.setWidth("100%");
         nb.setStyleName("v-touchkit-navbutton");
         nb.setCaption("aaap");
         nb.addListener(new ClickListener() {

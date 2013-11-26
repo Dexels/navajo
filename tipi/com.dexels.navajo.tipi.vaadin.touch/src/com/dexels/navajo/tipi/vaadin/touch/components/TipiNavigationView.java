@@ -2,10 +2,8 @@ package com.dexels.navajo.tipi.vaadin.touch.components;
 
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.addon.touchkit.ui.NavigationView;
-import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.TextField;
 
 public class TipiNavigationView extends TipiVaadinComponentImpl {
 
@@ -33,8 +31,11 @@ public class TipiNavigationView extends TipiVaadinComponentImpl {
 			Component component, Object constraints) {
 		if("right".equals(constraints)) {
 			navigationView.setRightComponent(component);
+		} else if("toolbar".equals(constraints)) {
+			navigationView.setToolbar(component);
 		} else {
-			super.addToVaadinContainer(currentContainer, component, constraints);
+			navigationView.setContent(component);;
+//			super.addToVaadinContainer(currentContainer, component, constraints);
 		}
 	}
 	

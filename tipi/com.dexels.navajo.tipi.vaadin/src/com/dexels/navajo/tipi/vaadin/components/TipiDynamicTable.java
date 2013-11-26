@@ -39,11 +39,11 @@ public class TipiDynamicTable extends TipiMessagePanel  {
 	@Override
 	public Object createContainer() {
 		css = new CssLayout();
-		Button b = new Button("aaaap!");
-		b.addStyleName("v-touchkit-navbutton");
-		b.addStyleName("v-touchkit-navbutton-back");
-		b.removeStyleName("v-button");
-		css.addComponent(b);
+//		Button b = new Button("aaaap!");
+//		b.addStyleName("v-touchkit-navbutton");
+//		b.addStyleName("v-touchkit-navbutton-back");
+//		b.removeStyleName("v-button");
+//		css.addComponent(b);
 		table = new Table();
 		table.setSelectable(true);
 		table.setImmediate(true);

@@ -18,7 +18,7 @@
 		</values>
 		<methods />
 	</tipiclass>
-	<tipiclass class="TipiVerticalComponentGroup" name="verticalgroup" implements="basecomponent,datacomponent"  package="com.dexels.navajo.tipi.vaadin.touch.components"
+	<tipiclass class="TipiVerticalComponentGroup" name="verticalgroup" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.touch.components"
 		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
 		<events>
 		</events>
@@ -27,7 +27,7 @@
 		</values>
 		<methods />
 	</tipiclass>
-	<tipiclass class="TipiHorizontalComponentGroup" name="horizontalgroup" implements="basecomponent,datacomponent"  package="com.dexels.navajo.tipi.vaadin.touch.components"
+	<tipiclass class="TipiHorizontalComponentGroup" name="horizontalgroup" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.touch.components"
 		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
 		<events>
 		</events>
@@ -36,7 +36,16 @@
 		</values>
 		<methods />
 	</tipiclass>
-	<tipiclass class="TipiNavigationButton" name="navigationbutton" implements="button"  package="com.dexels.navajo.tipi.vaadin.touch.components"
+	<tipiclass class="TipiTouchToolbar" name="touchtoolbar" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.touch.components"
+		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+		<events>
+		</events>
+		<values>
+			<value direction="in" name="title" type="string" />
+		</values>
+		<methods />
+	</tipiclass>
+	<tipiclass class="TipiNavigationButton" name="navigationbutton" implements="basecomponent,datacomponent,vaadincomponent,button"  package="com.dexels.navajo.tipi.vaadin.touch.components"
 		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
 		<events>
 		</events>

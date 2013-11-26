@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
-import java.beans.DesignMode;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -30,15 +29,15 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.Select;
@@ -46,39 +45,33 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
 
-public class TipiProperty extends TipiVaadinComponentImpl implements PropertyComponent {
+public class TipiCssProperty extends TipiVaadinComponentImpl implements PropertyComponent {
 
 	private static final long serialVersionUID = 142570190396385078L;
 	private Label description;
 	private Component value;
 	private com.dexels.navajo.document.Property property;
 	private String propertyName;
-	private int label_indent;
-	private HorizontalLayout container;
+	private CssLayout container;
 	
 	private PropertyChangeListener myChangeListener = null;
 	private boolean showLabel = false;
 	private boolean forceReadOnly;
-	private Integer width;
 	private String selectiontype = "combo";
 	private int memoColumnCount = 40;
 	private int memoRowCount = 5;
 	private ValuePropertyBridge currentDataSource;
     private final List<TipiEventListener> myListeners = new ArrayList<TipiEventListener>();
-    private int sizeUnit = Sizeable.UNITS_PIXELS;
 	private final static Logger logger = LoggerFactory
-			.getLogger(TipiProperty.class);
+			.getLogger(TipiCssProperty.class);
     
 	@Override
 	public Object createContainer() {
-		container = new HorizontalLayout();
-		container.setMargin(false);
+		container = new CssLayout();
 		description = new Label();
 		description.addStyleName("property-description");
 		container.addStyleName("property-container");
-//		description.setHeight("12px");
 		container.addComponent(description);
-//		description.setSizeFull();
 		return container;
 	}
 
@@ -89,8 +82,6 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 
 	@Override
 	public void addTipiEventListener(TipiEventListener listener) {
-        if (listener == null) {
-        }
         myListeners.add(listener);
 	}
 
@@ -108,9 +99,6 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		}
 		this.property = p;
 		this.refreshPropertyValue();
-		if(this.width!=null) {
-			value.setWidth(this.width, this.sizeUnit);
-		}
 		value.addStyleName("tipi-property-direction-"+p.getDirection());
 		value.addStyleName("tipi-property-type-"+p.getType());
 		if(style!=null) {
@@ -306,7 +294,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 			if("radio".equals(selectiontype)) {
 				value = new OptionGroup("",selectionListBridge);
 			} else {
-				value = new Select("",selectionListBridge);
+				value = new NativeSelect("",selectionListBridge);
 			}
 			final AbstractSelect t = (AbstractSelect)value;
 			t.setNewItemsAllowed(false);
@@ -368,7 +356,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 				((TextArea)p).setRows(this.memoRowCount);
 			} else {
 				p = new TextField(currentDataSource);
-				p.setSizeUndefined();
+//				p.setSizeUndefined();
 			}
 		
 		}
@@ -383,7 +371,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 				
 				logger.info("New: "+event.getText()+" old value: "+property.getTypedValue()+" eventval: "+event.getText());
 				currentDataSource.setRespondToServerSideChanges(false);
-				TipiProperty.this.property.setValue(event.getText());
+				TipiCssProperty.this.property.setValue(event.getText());
 				currentDataSource.setRespondToServerSideChanges(true);
 				propertyEventFired(property, "onValueChanged");
 			}
@@ -393,7 +381,6 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 
 	private void addPropertyComponent(Component value) {
 		container.addComponent(value);
-		container.setExpandRatio(value, 1);
 	}
 
 
@@ -446,32 +433,12 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		if(name.toLowerCase().equals("propertyname")) {
 			this.propertyName = (String) object;
 		}
-		if(name.equals("label_indent")) {
-			this.label_indent = (Integer) object;
-			description.setWidth(this.label_indent, Sizeable.UNITS_PIXELS);
-		}
+
 		if(name.equals("memoColumnCount")) {
 			this.memoColumnCount = (Integer) object;
 		}
 		if(name.equals("memoRowCount")) {
 			this.memoRowCount = (Integer) object;
-		}
-
-		if(name.equals("width")) {
-			this.width = (Integer) object;
-			this.sizeUnit = Sizeable.UNITS_PIXELS;
-			if(value!=null) {
-				value.setWidth(this.width, this.sizeUnit);
-				
-			}
-		}
-		
-		if(name.equals("widthPercentage")){
-			this.width = (Integer) object;
-			this.sizeUnit = Sizeable.UNITS_PERCENTAGE;
-			if(value!=null) {
-				value.setWidth(this.width, this.sizeUnit);				
-			}
 		}
 
 		if(name.equals("visible")) {
