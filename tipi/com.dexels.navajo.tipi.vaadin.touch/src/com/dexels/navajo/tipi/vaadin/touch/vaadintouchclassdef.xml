@@ -48,6 +48,7 @@
 	<tipiclass class="TipiNavigationButton" name="navigationbutton" implements="basecomponent,datacomponent,vaadincomponent,button"  package="com.dexels.navajo.tipi.vaadin.touch.components"
 		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
 		<events>
+			<event name="onActionPerfomed" />
 		</events>
 		<values>
 		</values>

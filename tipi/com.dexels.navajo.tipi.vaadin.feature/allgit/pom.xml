@@ -10,6 +10,7 @@
 
 	<modules>
 		<module>../../com.dexels.navajo.tipi.vaadin</module>
+		<module>../../com.dexels.navajo.tipi.vaadin.touch</module>
 		<module>../../com.dexels.navajo.tipi.vaadin.embedded</module>
 		<module>../../com.dexels.navajo.tipi.vaadin.bridged</module>
 		<module>../</module>

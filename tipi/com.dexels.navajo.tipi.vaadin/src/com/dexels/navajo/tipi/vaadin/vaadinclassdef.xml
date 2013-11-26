@@ -331,6 +331,15 @@
 		<methods />
 	</tipiclass>
 
+	<tipiclass class="TipiCss" name="css" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.components"
+	type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+		<events>
+		</events>
+		<values>
+		</values>
+		<methods />
+	</tipiclass>
+	
 	<tipiclass class="TipiToolbar" name="toolbar" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.components"
 		type="tipi" childcount="*" layoutmanager="false" addtocontainer="true" toplevel="false">
 		<events>

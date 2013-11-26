@@ -14,7 +14,7 @@ public class TipiNavigationButton extends TipiButton {
 
 	@Override
 	public Object createContainer() {
-		Button nb = new NavigationButton(){
+		NavigationButton nb = new NavigationButton(){
 			private static final long serialVersionUID = 4645763999780625837L;
 			@Override
 			protected void fireClick() {
@@ -25,6 +25,7 @@ public class TipiNavigationButton extends TipiButton {
 		    }
 
 		};
+		nb.setTargetView(null);
         nb.setStyleName("v-touchkit-navbutton");
         nb.setCaption("aaap");
         nb.addListener(new ClickListener() {

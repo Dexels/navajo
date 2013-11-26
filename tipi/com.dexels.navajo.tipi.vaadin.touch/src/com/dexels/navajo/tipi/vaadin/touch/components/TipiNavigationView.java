@@ -12,9 +12,21 @@ public class TipiNavigationView extends TipiVaadinComponentImpl {
 
 	@Override
 	public Object createContainer() {
-		navigationView = new NavigationView();
+		navigationView = new NavigationView() {
+			
+			private static final long serialVersionUID = 6897448332261629281L;
+
+			@Override
+			protected void onBecomingVisible() {
+				String constr = (String) getConstraints();
+				if("noback".equals(constr)) {
+					getNavigationBar().getLeftComponent().setVisible(false);
+				}
+			}
+		};
 		navigationView.getNavigationBar().setVisible(true);
-//		VerticalComponentGroup componentGroup = new VerticalComponentGroup();
+		//		VerticalComponentGroup componentGroup = new VerticalComponentGroup();
+		
 		return navigationView;
 	}
 
