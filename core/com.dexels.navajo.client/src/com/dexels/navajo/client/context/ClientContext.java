@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 
 public interface ClientContext {
 
@@ -25,5 +26,7 @@ public interface ClientContext {
 	public void setUsername(String username);
 
 	public void setPassword(String password);
+
+	public Property parsePropertyPath(String path);
 	
 }

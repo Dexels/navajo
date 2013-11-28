@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
-    <feature resolver="(obr)" name='navajo.core' version='1.0.18' start-level='80'  >
+    <feature resolver="(obr)" name='navajo.core' version='1.0.20' start-level='80'  >
 	    <details>Navajo Core Components</details>
 		<feature version="[2.3.0,3.1.0)">scr</feature>
 		<feature version="[2.3.0,3.1.0)">eventadmin</feature>
 
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.62</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/1.0.34</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/1.0.36</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.4.36</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.1.22</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.7</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.12.68</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.1.24</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.9</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.12.70</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
@@ -31,15 +31,15 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/1.1.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.1.32</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.queuemanager/1.0.26</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.queuemanager/1.0.30</bundle>
 		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
 		<bundle dependency='true'>mvn:commons-lang/commons-lang/2.4</bundle>
 		<bundle dependency='true'>mvn:commons-dbcp/commons-dbcp/1.4</bundle>
 		<bundle dependency='true'>mvn:org.apache.commons/commons-email/1.3.1</bundle>
 	</feature>
 	
-    <feature resolver="(obr)" name='navajo.rhino' version='1.0.1' start-level='81'  >
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino/1.1.22</bundle>
+    <feature resolver="(obr)" name='navajo.rhino' version='1.0.2' start-level='81'  >
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino/1.1.24</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino.continuations/1.0.14</bundle>
 	</feature>
 
@@ -55,12 +55,12 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>	
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='1.0.24' start-level='81' >
+	<feature resolver="(obr)" name='navajo.server.osgi' version='1.0.25' start-level='81' >
 		<feature version="[1.0.8,2)">navajo.server</feature>
 		<feature version="[1.0.3,2)">navajo.adapter</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/1.0.1</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.resource/1.0.19</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/1.1.6</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/1.1.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/1.0.19</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.http/1.0.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource/1.0.18</bundle>
@@ -128,9 +128,9 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.twitter/1.0.22</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='navajo.dev' version='1.0.6' start-level='81' >
+	<feature resolver="(obr)" name='navajo.dev' version='1.0.7' start-level='81' >
 		<feature version="[1.0.5,2)">navajo.server.osgi</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/1.0.13</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.dev.console/1.0.15</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.birt.push/1.0.9</bundle>
 	</feature>			
 
