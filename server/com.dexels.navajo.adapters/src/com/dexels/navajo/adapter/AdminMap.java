@@ -107,7 +107,7 @@ public class AdminMap implements Mappable {
     instanceGroup = nc.getInstanceGroup();
     clientId = access.getClientToken();
     
-    JabberWorkerInterface jw = JabberWorkerFactory.getInstance();
+    JabberWorkerInterface jw = JabberWorkerFactory.getJabberWorkerInstance();
     
     if ( jw != null ) {
     	jabberServer = jw.getJabberServer();
