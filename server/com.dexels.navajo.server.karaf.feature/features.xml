@@ -9,13 +9,12 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.62</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/1.0.36</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.4.36</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.4.40</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.1.24</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.9</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.12.70</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.12.72</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
-		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.external/1.0.32</bundle>
 		<bundle dependency='true'>mvn:org.apache.commons/commons-compress/1.5</bundle>
 	</feature>
@@ -31,7 +30,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.server/1.1.14</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.continuations/1.1.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners/3.1.32</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.queuemanager/1.0.30</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.queuemanager/1.0.32</bundle>
 		<bundle dependency='true'>mvn:commons-pool/commons-pool/1.6</bundle>
 		<bundle dependency='true'>mvn:commons-lang/commons-lang/2.4</bundle>
 		<bundle dependency='true'>mvn:commons-dbcp/commons-dbcp/1.4</bundle>
@@ -39,8 +38,9 @@
 	</feature>
 	
     <feature resolver="(obr)" name='navajo.rhino' version='1.0.2' start-level='81'  >
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino/1.1.24</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino/1.1.26</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.rhino.continuations/1.0.14</bundle>
+		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
 	</feature>
 
     <feature resolver="(obr)" name='navajo.adapter' version='1.0.6' start-level='81'  >
