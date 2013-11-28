@@ -23,4 +23,4 @@ Export-Package: com.dexels.navajo.queuemanager,
  com.dexels.navajo.queuemanager.internal,
  com.dexels.navajo.server.listener.http.schedulers.priority
 Bundle-Activator: navajoqueuemanager.Version
-Service-Component: OSGI-INF/priorityThreadPool.xml
+Service-Component: OSGI-INF/priorityThreadPool.xml,OSGI-INF/queueManager.xml
