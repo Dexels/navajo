@@ -69,6 +69,7 @@ public final class ParseDate extends FunctionInterface {
         put("^\\d{2}/\\d{1,2}/\\d{1,2}$", "yy/MM/dd");
         put("^\\d{1}\\s[a-z]{3}\\s\\d{4}$", "d MMM yyyy");
         put("^\\d{1}-\\s[a-z]{3}-\\s\\d{4}$", "d-MMM-yyyy");
+        put("^\\d{1,2}-\\s[a-z]{3}-\\s\\d{4}$", "dd-MMM-yyyy");
         put("^\\d{1,2}\\s[a-z]{3}\\s\\d{4}$", "dd MMM yyyy");
         put("^\\d{1}\\s[a-z]{4,}\\s\\d{4}$", "d MMMM yyyy");
         put("^\\d{1}-\\s[a-z]{4,}-\\s\\d{4}$", "d-MMMM-yyyy");
