@@ -172,7 +172,7 @@ public class FormatIdentification implements Serializable
 		        if (!zipEntry.isDirectory()) {
 		            final String fileName = zipEntry.getName();
 		            if (fileName.endsWith(".xml")) {
-		                zipInput = new ZipInputStream(new FileInputStream(fileName));
+		                //zipInput = new ZipInputStream(new FileInputStream(fileName));
 		                input = zipFile.getInputStream(zipEntry);
 		                br = new BufferedReader(new InputStreamReader(input, "UTF-8"));
 		                
