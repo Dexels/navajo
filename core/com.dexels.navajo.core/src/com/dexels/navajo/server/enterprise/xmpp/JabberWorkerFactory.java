@@ -15,55 +15,74 @@ import com.dexels.navajo.util.AuditLog;
 
 public class JabberWorkerFactory {
 
-	private static volatile JabberWorkerInterface instance = null;
+	private static volatile JabberWorkerInterface workerInstance = null;
+	private static volatile JabberWorkerFactory instance = null;
 	private static Object semaphore = new Object();
+	
+	private JabberWorkerInterface boundInstance = null;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(JabberWorkerFactory.class);
 	
 	
 	public static void shutdown() {
-		if(instance==null) {
+		if(workerInstance==null) {
 			return;
 		}
-		getInstance().terminate();
-		instance = null;
+		getJabberWorkerInstance().terminate();
+		workerInstance = null;
 	}
 	
-	public static JabberWorkerInterface getInstance() {
+	public void setJabberWorker(JabberWorkerInterface ji) {
+		boundInstance = ji;
+	}
+
+	public void clearJabberWorker(JabberWorkerInterface ji) {
+		boundInstance = null;
+	}
+	
+	public static JabberWorkerFactory getInstance() {
+		if(instance!=null) {
+			return instance;
+		}
+		if(!Version.osgiActive()) {
+			instance = new JabberWorkerFactory();
+			return instance;
+		}
+		return null;
+	}
+	
+	public static JabberWorkerInterface getJabberWorkerInstance() {
 		if(Version.osgiActive()) {
 			return getOSGiJabberWorker();
 		}
-		if ( instance != null ) {
-			return instance;
+		if ( workerInstance != null ) {
+			return workerInstance;
 		} else {
 			synchronized (semaphore) {
-				if ( instance == null ) {
-					instance = createLegacyJabberWorker();	
+				if ( workerInstance == null ) {
+					workerInstance = createLegacyJabberWorker();	
 				}
-				return instance;
+				return workerInstance;
 			}
 		}
 
 	}
 	
 	private static JabberWorkerInterface getOSGiJabberWorker() {
-		ServiceReference<JabberWorkerInterface> sr = Version.getDefaultBundleContext().getServiceReference(JabberWorkerInterface.class);
-		if(sr==null) {
-			logger.warn("No JabberWorker implementation found");
-			return null;
+
+		if(instance!=null) {
+			return instance.boundInstance;
 		}
-		JabberWorkerInterface result = Version.getDefaultBundleContext().getService(sr);
-		Version.getDefaultBundleContext().ungetService(sr);
-		return result;
+		return null;
 	}
 
 	public void activate() {
-		
+		logger.debug("Jabber worker factory activated");
 	}
 	
 	public void deactivate() {
-		
+		logger.debug("Jabber worker factory deactivated");
 	}
 
 	

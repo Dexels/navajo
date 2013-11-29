@@ -192,7 +192,7 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  TribeManagerFactory.startStatusCollector();
 	  
 	  // Startup Jabber
-	  JabberWorkerFactory.getInstance();
+	  JabberWorkerFactory.getJabberWorkerInstance();
 
   }
   

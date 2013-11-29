@@ -58,7 +58,7 @@ public class PingAnswer extends Answer implements Mappable {
 		uptime = DispatcherFactory.getInstance().getUptime();
 		busy = DispatcherFactory.getInstance().isBusy();
 		statistics = TribeManagerFactory.getInstance().getStatistics();
-		postmanURL = JabberWorkerFactory.getInstance().getPostmanURL();
+//		postmanURL = JabberWorkerFactory.getInstance().getPostmanURL();
 	}
 	
 	public boolean acknowledged() {

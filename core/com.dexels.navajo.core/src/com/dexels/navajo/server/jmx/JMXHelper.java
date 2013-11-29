@@ -184,7 +184,10 @@ public final class JMXHelper  {
 			synchronized ( NAVAJO_DOMAIN ) {
 				DispatcherInterface instance = DispatcherFactory.getInstance();
 				if(instance==null) {
-					logger.warn("Navajo instance not started. Is navajo context listener valid? Check web.xml");
+					// lower to debug. This will happen all the time in OSGi, and is reasonable.
+					// TODO Fix https://github.com/Dexels/navajo/issues/153. Use some kind of whiteboard
+					// pattern, or check the OSGi / JMX stuff that's out there.
+					logger.debug("Navajo instance not started. Is navajo context listener valid? Check web.xml");
 					return null;
 				}
 				NavajoConfigInterface navajoConfig = instance.getNavajoConfig();
