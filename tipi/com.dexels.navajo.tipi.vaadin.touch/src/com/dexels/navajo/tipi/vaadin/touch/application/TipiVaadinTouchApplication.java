@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -104,7 +105,7 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 			EvalHandler eval = new EvalHandler(this);
 			getMainWindow().addParameterHandler(eval);
 			getMainWindow().addURIHandler(eval);
-			setTheme("mobilemail");
+			setTheme("default");
 
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -114,11 +115,21 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 	 private void configureMainWindow(TouchKitWindow mainWindow) {
 	        // These configurations modify how the app behaves as "ios webapp".
 		 System.err.println("Applicationurl: "+getURL());
-	        mainWindow.addApplicationIcon(getContextUrl()
-	                + "VAADIN/themes/oao/logo_slb.png");
-	        mainWindow.setStartupImage(getContextUrl()
-	                + "VAADIN/themes/oao/logo.png");
-	        mainWindow.setWebAppCapable(true);
+		 URL u = getURL();
+		 if(u==null) {
+			 return;
+		 }
+		 try {
+			URL p = new URL(u.getProtocol(),u.getHost(),u.getPort(),"");
+			 System.err.println("Context Applicationurl: "+p);
+		        mainWindow.addApplicationIcon(p
+		                + "/VAADIN/themes/default/icon.png");
+		        mainWindow.setStartupImage(p
+		                + "/VAADIN/themes/default/startup.png");
+		        mainWindow.setWebAppCapable(true);
+		} catch (MalformedURLException e) {
+			logger.error("Error: ", e);
+		}
 //	        mainWindow.setPersistentSessionCookie(true);
 
 	    }

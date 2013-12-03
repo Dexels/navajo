@@ -44,6 +44,8 @@ public class TipiVaadinTouchServlet extends TouchKitApplicationServlet {
 	private String language =null;
 	private String region = null;
 
+	protected String productionMode=null;
+
 	public void activate(final Map<String,Object> settings, BundleContext bundleContext) {
 		logger.info("Activating Tipi Instance: {}",settings);
 		final String profile = (String) settings.get("tipi.instance.profile");
@@ -51,7 +53,7 @@ public class TipiVaadinTouchServlet extends TouchKitApplicationServlet {
 		final String deployment= (String) settings.get("tipi.instance.deployment");
 		language = (String) settings.get("tipi.instance.language");
 		region = (String) settings.get("tipi.instance.region");
-
+		productionMode = (String) settings.get("tipi.instance.productionmode");
 		ContextInstance ci = new ContextInstance() {
 			
 			@Override
@@ -94,6 +96,9 @@ public class TipiVaadinTouchServlet extends TouchKitApplicationServlet {
 				if("application".equals(name)) {
 					return TipiVaadinTouchApplication.class.getName();
 				}
+				if("productionMode".equals(name)) {
+					return ""+TipiVaadinTouchServlet.this.productionMode;
+				}
 				if(Constants.PARAMETER_WIDGETSET.equals(name)) {
 					return "com.dexels.navajo.tipi.vaadin.touch.widgetset.TipiWidgetset";
 				}
@@ -110,6 +115,7 @@ public class TipiVaadinTouchServlet extends TouchKitApplicationServlet {
 				}
 				l.add("application");
 				l.add(Constants.PARAMETER_WIDGETSET);
+				l.add("productionMode");
 				Enumeration<String> ext = Collections.enumeration(l);
 				return ext;
 			}};
