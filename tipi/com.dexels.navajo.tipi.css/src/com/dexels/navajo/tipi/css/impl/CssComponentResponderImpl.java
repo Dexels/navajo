@@ -214,11 +214,18 @@ public class CssComponentResponderImpl implements
 //		logger.debug("Current locale is " + getClient().getLocaleCode() + " and current subLocale is " + getClient().getSubLocaleCode());
 		// first try in the same dir as the definition file (ie location)
 		String strippedLocation = null;
-		if (location != null && location.lastIndexOf("/") != -1)
+		if (location != null)
 		{
-			strippedLocation = location.substring(0, location.lastIndexOf("/") + 1) + definition;
+			if(location.lastIndexOf("/") != -1) {
+				strippedLocation = location.substring(0, location.lastIndexOf("/") + 1) + definition;
+			} else {
+				if(location.indexOf('.')!=-1) {
+					strippedLocation = location.substring(0,location.lastIndexOf('.'));
+				} else {
+					strippedLocation = location;
+				}
+			}
 		}
-
 		List<String> cssResources = null; 
 		if (strippedLocation != null)
 		{

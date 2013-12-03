@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import tipi.TipiCoreExtension;
-import tipi.TipiCssExtension;
 import tipi.TipiExtension;
+import tipicss.TipiCssExtension;
 
 
 public class CoreTipi extends AbstractTipiTest {
