@@ -211,7 +211,7 @@ public class CssComponentResponderImpl implements
 	private void loadCssDefinition(String definition, String location) throws IOException
 	{
 		logger.info("Finding CSS files for definition: " + definition + " with location " + location);
-//		logger.debug("Current locale is " + getClient().getLocaleCode() + " and current subLocale is " + getClient().getSubLocaleCode());
+		logger.info("Current locale is " + context.getApplicationInstance().getLocaleCode() + " and current subLocale is " + context.getApplicationInstance().getSubLocaleCode());
 		// first try in the same dir as the definition file (ie location)
 		String strippedLocation = null;
 		if (location != null)
