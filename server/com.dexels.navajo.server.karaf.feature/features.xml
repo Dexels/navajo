@@ -43,9 +43,9 @@
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
 	</feature>
 
-    <feature resolver="(obr)" name='navajo.adapter' version='1.0.6' start-level='81'  >
+    <feature resolver="(obr)" name='navajo.adapter' version='1.0.7' start-level='81'  >
 		<feature version="[1.0.5,2)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/1.1.70</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/1.1.73</bundle>
 	</feature>
 	
 	<feature resolver="(obr)" name='navajo.core.jabber' version='1.0.3' start-level='81' >
