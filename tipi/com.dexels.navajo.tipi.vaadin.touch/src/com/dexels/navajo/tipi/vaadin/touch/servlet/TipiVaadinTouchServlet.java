@@ -140,6 +140,8 @@ public class TipiVaadinTouchServlet extends TouchKitApplicationServlet {
 		}
 		if(language!=null && region!=null) {
 			tipiApplication.setLocale(new Locale(language,region));
+			tipiApplication.setLocaleCode(language);
+			tipiApplication.setSubLocaleCode(region);
 			
 		}
 //		tipiApplication.setLocale(new Locale("nl","NL"));

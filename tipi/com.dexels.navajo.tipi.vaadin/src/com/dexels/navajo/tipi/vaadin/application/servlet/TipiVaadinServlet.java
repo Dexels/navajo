@@ -42,7 +42,7 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 
 	private LocalClient localClient;
 
-	private String locale =null;
+	private String language =null;
 	private String region = null;
 
 	@Override
@@ -54,7 +54,7 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		logger.info("Activating Tipi Instance: {}",settings);
 		final String profile = (String) settings.get("tipi.instance.profile");
 		final String deployment= (String) settings.get("tipi.instance.deployment");
-		locale = (String) settings.get("tipi.instance.locale");
+		language = (String) settings.get("tipi.instance.language");
 		region = (String) settings.get("tipi.instance.region");
 
 		ContextInstance ci = new ContextInstance() {
@@ -93,7 +93,12 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 			logger.info("injected instance found");
 			tipiApplication.setContextInstance(contextInstance);
 		}
-		tipiApplication.setLocale(new Locale("nl","NL"));
+		if(language!=null && region!=null) {
+			tipiApplication.setLocale(new Locale(language,region));
+			tipiApplication.setLocaleCode(language);
+			tipiApplication.setSubLocaleCode(region);
+			
+		}		
 		tipiApplication.setServletContext(getServletContext());
 		for (TipiContextListener tc : tipiContextListeners) {
 			tipiApplication.addTipiContextListener(tc);
@@ -182,7 +187,7 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 	
 	public void deactivate() {
 		region = null;
-		locale = null;
+		language = null;
 		for (Application a : applications) {
 			a.close();
 		}
