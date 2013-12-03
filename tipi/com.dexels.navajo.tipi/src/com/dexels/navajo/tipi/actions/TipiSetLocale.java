@@ -36,15 +36,16 @@ public class TipiSetLocale extends TipiAction {
 		// final Operand context = getEvaluatedParameter("context", event);
 		// myContext.initRemoteDescriptionProvider((String)context.value,
 		// (String)locale.value);
-		Boolean localeChanged = !myContext.getClient().getLocaleCode().equals("" + locale.value); 
+		final String currentLocale = myContext.getApplicationInstance().getLocaleCode();
+		Boolean localeChanged = currentLocale==null || !currentLocale.equals("" + locale.value); 
 
-		myContext.getClient().setLocaleCode("" + locale.value);
+		myContext.getApplicationInstance().setLocaleCode("" + locale.value);
 		// check/change subLocale if given
 		if (hasParameter("subLocale"))
 		{
 			final Operand subLocale = getEvaluatedParameter("subLocale", event);
-			localeChanged = localeChanged || !myContext.getClient().getSubLocaleCode().equals("" + subLocale.value); 
-			myContext.getClient().setSubLocaleCode("" + subLocale.value);
+			localeChanged = localeChanged || !myContext.getApplicationInstance().getSubLocaleCode().equals("" + subLocale.value); 
+			myContext.getApplicationInstance().setSubLocaleCode("" + subLocale.value);
 		}
 		
 		if (localeChanged)

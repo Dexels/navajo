@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -23,9 +25,11 @@ import tipipackage.TipiManualExtensionRegistry;
 import tipivaadin.TipiVaadinExtension;
 
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiContextListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.actionmanager.OSGiActionManager;
 import com.dexels.navajo.tipi.classdef.OSGiClassManager;
+import com.dexels.navajo.tipi.connectors.TipiConnector;
 import com.dexels.navajo.tipi.context.ContextInstance;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.application.eval.EvalHandler;
@@ -58,6 +62,10 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	private String referer;
 	private ContextInstance contextInstance;
 	private TipiVaadinServlet servlet;
+	private final Set<TipiContextListener> tipiContextListeners = new HashSet<TipiContextListener>();
+	private TipiConnector defaultConnector;
+	private String language;
+	private String region;
 
 	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinApplication.class);
 
@@ -131,6 +139,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 		}
 		va.setClassManager(new OSGiClassManager(TipiVaadinExtension.getInstance().getBundleContext(), va));
 		va.setActionManager(new OSGiActionManager(TipiVaadinExtension.getInstance().getBundleContext()));
+		va.setDefaultConnector(defaultConnector);
 		BaseTipiApplicationInstance.processSettings(applicationDeploy, applicationProfile, installationFolder, va);
 
 		String theme = va.getSystemProperty("tipi.vaadin.theme");
@@ -293,6 +302,37 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 	public void setServlet(TipiVaadinServlet tipiVaadinServlet) {
 		this.servlet = tipiVaadinServlet;
+	}
+
+
+
+	@Override
+	public void setDefaultConnector(TipiConnector tipiConnector) {
+		this.defaultConnector = tipiConnector;
+		
+	}
+	
+
+	@Override
+	public void addTipiContextListener(TipiContextListener t) {
+		tipiContextListeners.add(t);
+	}
+
+	@Override
+	public void setLocaleCode(String locale) {
+		this.language = locale;
+	}
+	@Override
+	public String getLocaleCode() {
+		return language;
+	}
+	@Override
+	public void setSubLocaleCode(String region) {
+		this.region = region;
+	}
+	@Override
+	public String getSubLocaleCode() {
+		return region;
 	}
 
 	

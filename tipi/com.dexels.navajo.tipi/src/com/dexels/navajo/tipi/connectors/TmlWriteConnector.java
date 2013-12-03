@@ -20,7 +20,7 @@ public class TmlWriteConnector extends TipiBaseConnector {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TmlWriteConnector.class);
 	// assume a load:
-	public void doTransaction(Navajo input, String service)
+	public Navajo doTransaction(Navajo input, String service)
 			throws TipiBreakException, TipiException {
 		throw new TipiException("Please supply a service and a destination.");
 	}
@@ -33,7 +33,7 @@ public class TmlWriteConnector extends TipiBaseConnector {
 		return "tmlwrite";
 	}
 
-	public void doTransaction(Navajo n, String service, String destination)
+	public Navajo doTransaction(Navajo n, String service, String destination)
 			throws TipiBreakException, TipiException {
 		if (n == null || destination == null) {
 			throw new TipiException(
@@ -51,11 +51,10 @@ public class TmlWriteConnector extends TipiBaseConnector {
 				os.flush();
 				os.close();
 			}
-
 		} catch (IOException e) {
 			logger.error("Error: ",e);
 		}
-
+		return null;
 	}
 
 	public Set<String> getEntryPoints() {

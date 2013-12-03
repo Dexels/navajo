@@ -19,7 +19,7 @@ public class ResourceNavajoConnector extends TipiBaseConnector {
 	private final static Logger logger = LoggerFactory
 			.getLogger(ResourceNavajoConnector.class);
 	// assume a load:
-	public void doTransaction(Navajo input, String service)
+	public Navajo doTransaction(Navajo input, String service)
 			throws TipiBreakException, TipiException {
 		throw new TipiException(
 				"Please supply a service and a destination. Navajo input is ignored");
@@ -34,7 +34,7 @@ public class ResourceNavajoConnector extends TipiBaseConnector {
 		return "resource";
 	}
 
-	public void doTransaction(Navajo n, String service, String destination)
+	public Navajo doTransaction(Navajo n, String service, String destination)
 			throws TipiBreakException, TipiException {
 		try {
 			InputStream is = myContext.getGenericResourceLoader()
@@ -45,9 +45,10 @@ public class ResourceNavajoConnector extends TipiBaseConnector {
 			Navajo result = NavajoFactory.getInstance().createNavajo(is);
 			is.close();
 			myContext.loadNavajo(result, destination);
-
+			return result;
 		} catch (IOException e) {
 			logger.error("Error: ",e);
+			return null;
 		}
 
 	}

@@ -19,6 +19,7 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.connectors.TipiConnector;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
 import com.dexels.navajo.tipi.vaadin.components.io.URLInputStreamSource;
 import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
@@ -248,5 +249,7 @@ public class VaadinTipiContext extends TipiContext {
 		sr.setMIMEType(lastMimeType);
 		return sr;
 	}
+
+
 	
 }

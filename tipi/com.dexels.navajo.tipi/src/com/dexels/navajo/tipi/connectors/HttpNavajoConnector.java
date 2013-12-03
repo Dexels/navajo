@@ -17,7 +17,7 @@ public class HttpNavajoConnector extends TipiBaseConnector {
 	 */
 	private static final long serialVersionUID = -8531849428188689877L;
 
-	public void doTransaction(Navajo input, String service)
+	public Navajo doTransaction(Navajo input, String service)
 			throws TipiBreakException, TipiException {
 		if (input == null) {
 			input = NavajoFactory.getInstance().createNavajo();
@@ -37,7 +37,7 @@ public class HttpNavajoConnector extends TipiBaseConnector {
 						result.getHeader().getRPCName());
 			}
 			myContext.loadNavajo(result, service);
-
+			return result;
 		} catch (ClientException e) {
 			throw new TipiException("Error calling service: " + service, e);
 		}
@@ -64,9 +64,9 @@ public class HttpNavajoConnector extends TipiBaseConnector {
 		return "http";
 	}
 
-	public void doTransaction(Navajo n, String service, String destination)
+	public Navajo doTransaction(Navajo n, String service, String destination)
 			throws TipiBreakException, TipiException {
-		doTransaction(n, service);
+		return doTransaction(n, service);
 	}
 
 	public Set<String> getEntryPoints() {

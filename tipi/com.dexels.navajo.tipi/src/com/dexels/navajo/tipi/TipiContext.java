@@ -606,8 +606,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					"Sorry, I deprecated the direct client for tipi usage");
 		}
 
-		getClient().setLocaleCode(locale);
-		getClient().setSubLocaleCode(sublocale);
+		getApplicationInstance().setLocaleCode(locale);
+		getApplicationInstance().setSubLocaleCode(sublocale);
 	}
 
 	public void parseStream(InputStream in, ExtensionDefinition ed)
@@ -2873,6 +2873,17 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 		return defaultConnector;
 	}
+
+
+	public void setDefaultConnector(TipiConnector defaultConnector) {
+		this.defaultConnector = defaultConnector;
+		if(this.defaultConnector!=null) {
+			this.defaultConnector.setContext(this);
+			
+		}
+	}
+
+	
 
 	private void registerConnector(TipiConnector tc) {
 		tipiConnectorMap.put(tc.getConnectorId(), tc);

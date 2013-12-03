@@ -75,11 +75,12 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 		xx.write(System.err);
 	}
 
-	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
+	public Navajo doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		if(service.equals("InitListFlickr")) {
 			try {
 				Navajo result = createInitListFlickr();
 				injectNavajo(service, result);
+				return result;
 			} catch (NavajoException e) {
 				throw new TipiException("Error calling service: "+service,e);
 			}
@@ -88,6 +89,7 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 			try {
 				Navajo result = createInitFlickr();
 				injectNavajo(service, result);
+				return result;
 			} catch (NavajoException e) {
 				throw new TipiException("Error calling service: "+service,e);
 			}
@@ -98,6 +100,7 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 			try {
 				Navajo result = createInitQueryFlickr();
 				injectNavajo(service, result);
+				return result;
 			} catch (NavajoException e) {
 				throw new TipiException("Error calling service: "+service,e);
 			}
@@ -106,6 +109,7 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 			try {
 				Navajo result = doListPictures(n);
 				injectNavajo(service, result);
+				return result;
 			} catch (NavajoException e) {
 				throw new TipiException("Error calling service: "+service,e);
 			}
@@ -115,10 +119,12 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 			try {
 				Navajo result = doQueryPicture(n);
 				injectNavajo(service, result);
+				return result;
 			} catch (NavajoException e) {
 				throw new TipiException("Error calling service: "+service,e);
 			}
 		}
+		return null;
 	}
 
 	private Navajo createInitFlickr() throws NavajoException {

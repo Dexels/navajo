@@ -162,14 +162,14 @@ public class CssComponentResponderImpl implements
 		{
 			cssResources.add(result);
 		}
-		result = resolveCssResource(baseLocation + "_" + context.getClient().getLocaleCode() + ".css");
+		result = resolveCssResource(baseLocation + "_" + context.getApplicationInstance().getLocaleCode() + ".css");
 		if (result != null && !result.isEmpty())
 		{
 			cssResources.add(result);
 		}
-		if (context.getClient().getSubLocaleCode() != null && !context.getClient().getSubLocaleCode().isEmpty())
+		if (context.getApplicationInstance().getSubLocaleCode() != null && !context.getApplicationInstance().getSubLocaleCode().isEmpty())
 		{
-			result = resolveCssResource(baseLocation + "_" + context.getClient().getLocaleCode() + "_" + context.getClient().getSubLocaleCode().toLowerCase() + ".css");
+			result = resolveCssResource(baseLocation + "_" + context.getApplicationInstance().getLocaleCode() + "_" + context.getApplicationInstance().getSubLocaleCode().toLowerCase() + ".css");
 			if (result != null && !result.isEmpty())
 			{
 				cssResources.add(result);

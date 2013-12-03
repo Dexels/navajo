@@ -33,8 +33,8 @@ public class TipiSetSubLocale extends TipiAction {
 			com.dexels.navajo.tipi.TipiBreakException {
 		// TODO Add support for multi-servers
 		final Operand locale = getEvaluatedParameter("locale", event);
-		Boolean localeChanged = !myContext.getClient().getSubLocaleCode().equals("" + locale.value); 
-		myContext.getClient().setSubLocaleCode("" + locale.value);
+		Boolean localeChanged = !myContext.getApplicationInstance().getSubLocaleCode().equals("" + locale.value); 
+		myContext.getApplicationInstance().setSubLocaleCode("" + locale.value);
 		if (localeChanged)
 		{
 			// TODO re-enable

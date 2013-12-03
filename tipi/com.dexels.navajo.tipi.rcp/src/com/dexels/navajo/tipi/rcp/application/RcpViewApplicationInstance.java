@@ -3,7 +3,9 @@ package com.dexels.navajo.tipi.rcp.application;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.eclipse.swt.widgets.Composite;
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import tipi.TipiApplicationInstance;
 import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiContextListener;
 import com.dexels.navajo.tipi.rcp.TipiRcpContext;
 
 public class RcpViewApplicationInstance extends BaseTipiApplicationInstance implements TipiApplicationInstance {
@@ -21,6 +24,8 @@ public class RcpViewApplicationInstance extends BaseTipiApplicationInstance impl
 	private final static Logger logger = LoggerFactory
 			.getLogger(RcpViewApplicationInstance.class);
 	private final Composite compositeParent;
+	private final Set<TipiContextListener> tipiContextListeners = new HashSet<TipiContextListener>();
+
 	public RcpViewApplicationInstance(Composite parent) {
 		compositeParent = parent;
 		try {
@@ -72,7 +77,10 @@ public class RcpViewApplicationInstance extends BaseTipiApplicationInstance impl
 	@Override
 	public void close() {
 		// TODO Auto-generated method stub
-		
 	}
 
+	@Override
+	public void addTipiContextListener(TipiContextListener t) {
+		tipiContextListeners.add(t);
+	}
 }

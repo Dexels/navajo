@@ -20,10 +20,14 @@ import tipipackage.ITipiExtensionContainer;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.connectors.TipiConnector;
 
 public abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
 
 	private TipiContext currentContext;
+	private TipiConnector defaultConnector;
+	private String language;
+	private String region;
 //	private File installationFolder = null;
 	private static final Logger logger = LoggerFactory.getLogger(BaseTipiApplicationInstance.class);
 	public TipiContext getCurrentContext() {
@@ -172,4 +176,29 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 			result.put(key, prb.getString(key));
 		}
 	}
+	
+
+	@Override
+	public void setDefaultConnector(TipiConnector tipiConnector) {
+		this.defaultConnector = tipiConnector;
+	}
+	
+	@Override
+	public void setLocaleCode(String locale) {
+		this.language = locale;
+	}
+	@Override
+	public String getLocaleCode() {
+		return language;
+	}
+	@Override
+	public void setSubLocaleCode(String region) {
+		this.region = region;
+	}
+	@Override
+	public String getSubLocaleCode() {
+		return region;
+	}
+
+
 }

@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -19,19 +21,23 @@ import org.slf4j.LoggerFactory;
 
 import tipi.BaseTipiApplicationInstance;
 import tipi.TipiApplicationInstance;
+import tipi.TipiExtension;
 import tipipackage.TipiManualExtensionRegistry;
 import tipivaadin.TipiVaadinExtension;
 
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiContextListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.actionmanager.OSGiActionManager;
 import com.dexels.navajo.tipi.classdef.OSGiClassManager;
+import com.dexels.navajo.tipi.connectors.TipiConnector;
 import com.dexels.navajo.tipi.context.ContextInstance;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.application.VaadinInstallationPathResolver;
 import com.dexels.navajo.tipi.vaadin.application.WindowCloseManager;
 import com.dexels.navajo.tipi.vaadin.application.eval.EvalHandler;
 import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
+import com.dexels.navajo.tipi.vaadin.instance.LocalTipiConnector;
 import com.dexels.navajo.tipi.vaadin.touch.servlet.TipiVaadinTouchServlet;
 import com.vaadin.addon.touchkit.ui.TouchKitApplication;
 import com.vaadin.addon.touchkit.ui.TouchKitWindow;
@@ -58,6 +64,10 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 	private String referer;
 	private ContextInstance contextInstance;
 	private TipiVaadinTouchServlet servlet;
+	private final Set<TipiContextListener> tipiContextListeners = new HashSet<TipiContextListener>();
+	private TipiConnector defaultConnector;
+	private String region;
+	private String language;
 
 	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinTouchApplication.class);
 
@@ -67,7 +77,12 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 	}
 
 
-
+	@Override
+	public void addTipiContextListener(TipiContextListener t) {
+		tipiContextListeners.add(t);
+	}
+	
+	
 	protected void actualInit() {
 //		final WebApplicationContext context = ((WebApplicationContext) getContext());
 //		
@@ -159,6 +174,10 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 		}
 		va.setClassManager(new OSGiClassManager(TipiVaadinExtension.getInstance().getBundleContext(), va));
 		va.setActionManager(new OSGiActionManager(TipiVaadinExtension.getInstance().getBundleContext()));
+		for (TipiContextListener t : tipiContextListeners) {
+			t.setContext(va);
+		}
+		va.setDefaultConnector(defaultConnector);
 		BaseTipiApplicationInstance.processSettings(applicationDeploy, applicationProfile, installationFolder, va);
 
 		String theme = va.getSystemProperty("tipi.vaadin.theme");
@@ -325,6 +344,28 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 		this.servlet = tipiVaadinTouchServlet;
 	}
 
+
+	@Override
+	public void setDefaultConnector(TipiConnector tipiDefaultConnector) {
+		this.defaultConnector = tipiDefaultConnector;
+	}
+
+	@Override
+	public void setLocaleCode(String locale) {
+		this.language = locale;
+	}
+	@Override
+	public String getLocaleCode() {
+		return language;
+	}
+	@Override
+	public void setSubLocaleCode(String region) {
+		this.region = region;
+	}
+	@Override
+	public String getSubLocaleCode() {
+		return region;
+	}
 	
 
 }
