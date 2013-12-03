@@ -2,7 +2,7 @@ Bundle-Name: Tipi CSS Binding
 Bundle-SymbolicName: com.dexels.navajo.tipi.css.tkui
 Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.16.qualifier
+Bundle-Version: 1.0.17
 Export-Package: org.akrogen.core.impl.resources;uses:="org.akrogen.core.resources",
  org.akrogen.core.resources,
  org.akrogen.core.utils,
@@ -176,15 +176,11 @@ Bundle-ClassPath: .,
  lib/flute-1.3.jar,
  lib/sac-1.3.jar,
  lib/org.apache.xerces_2.9.0.v201101211617.jar
-Import-Package: javax.imageio,
+Import-Package: com.dexels.navajo.tipi;version="1.1.42",
+ com.dexels.navajo.tipilink,
+ javax.imageio,
  javax.swing,
  javax.swing.border,
+ org.apache.commons.logging,
  org.osgi.framework,
  org.slf4j;version="[1.6.1,1.8.0)"
-Require-Bundle: org.apache.commons.collections;bundle-version="3.2.0",
- org.apache.commons.beanutils;bundle-version="1.7.0",
- org.apache.commons.logging;bundle-version="1.0.4",
- com.dexels.navajo.tipi;bundle-version="1.1.0",
- com.dexels.navajo.core;bundle-version="2.9.5",
- com.dexels.navajo.document;bundle-version="2.1.0",
- com.dexels.navajo.version;bundle-version="1.0.10"
