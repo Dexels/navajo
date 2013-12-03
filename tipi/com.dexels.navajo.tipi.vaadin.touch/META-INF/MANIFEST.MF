@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Touch Extension
 Bundle-SymbolicName: com.dexels.navajo.tipi.vaadin.touch
-Bundle-Version: 0.1.2.qualifier
+Bundle-Version: 0.1.3
 Bundle-Activator: vaadintouch.TipiVaadinTouchExtension
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
