@@ -25,20 +25,25 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
 	 * 
 	 */
 	private static final long serialVersionUID = -1867359996556685730L;
-	
-public final static String VERSION = "$Id$";
-	
-  //Set the fixed year constants.
-  public static final int FIXED_YEAR = 1971;
-  public static final int FIXED_MONTH = 0;
-  public static final int FIXED_DAY = 1;
-  //private Date value;
-  private Calendar calValue;
-  
-  private boolean shortFormat = false;
-  // Not thread safe!
-  // TODO fix that
-  //private static final DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN);
+
+	public final static String VERSION = "$Id$";
+
+	//Set the fixed year constants.
+	public static final int FIXED_YEAR = 1971;
+	public static final int FIXED_MONTH = 0;
+	public static final int FIXED_DAY = 1;
+	//private Date value;
+	private Calendar calValue;
+
+	private boolean shortFormat = false;
+
+	private final static ThreadLocal<DateFormat> df = new ThreadLocal<DateFormat>() {
+		@Override
+		protected DateFormat initialValue()
+		{
+			return SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN);
+		}
+	}; 
 
   private final void normalize() {
     calValue.set(Calendar.MILLISECOND, 0);
@@ -116,7 +121,7 @@ public final static String VERSION = "$Id$";
             //throw new Exception("Invalid clocktime: " + s);
           }
           try {
-            value = SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN).parse("00:" + s + ":00");
+            value = df.get().parse("00:" + s + ":00");
           }
           catch (Exception e) {
             calValue = null;
@@ -170,7 +175,7 @@ public final static String VERSION = "$Id$";
         s += ":00";
       }
       try {
-        value = SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN).parse(s);
+        value = df.get().parse(s);
         calValue = Calendar.getInstance();
         calValue.setTime(value);
         normalize();
@@ -224,7 +229,7 @@ public final static String VERSION = "$Id$";
 		  return toShortString();
 	  }
     if (calValue != null) {
-      return SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN).format(calValue.getTime());
+      return df.get().format(calValue.getTime());
     }
     else {
       return "";
@@ -232,7 +237,7 @@ public final static String VERSION = "$Id$";
   }
   public final String toShortString() {
 	    if (calValue != null) {
-	      return SimpleDateFormat.getTimeInstance(DateFormat.SHORT, Locale.GERMAN).format(calValue.getTime());
+	      return df.get().format(calValue.getTime());
 	    }
 	    else {
 	      return null;
@@ -303,9 +308,32 @@ public final static String VERSION = "$Id$";
   }
 
 
-public boolean isEmpty() {
-    return calValue==null;
+  public boolean isEmpty() {
+	  return calValue==null;
 
-}
+  } 
+  
+  public static void main(String [] args) {
+	  long l = System.currentTimeMillis();
+	  for ( int i = 0; i < 1000000; i++ ) {
+		  DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN);
+		  df.format(new java.util.Date());
+	  }
+	  System.err.println("Per call (1): " + ( System.currentTimeMillis() - l ) );
+	  
+	  l = System.currentTimeMillis();
+	  ThreadLocal<DateFormat> a = new ThreadLocal<DateFormat>() {
+		  @Override
+		  protected DateFormat initialValue()
+		  {
+			  return SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN);
+		  } 
+	  };
+	  for ( int i = 0; i < 1000000; i++ ) {
+		  a.get().format(new java.util.Date());
+	  }
+	  System.err.println("Per call (2): " + ( System.currentTimeMillis() - l ) );
+	  
+  }
 
 }

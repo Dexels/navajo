@@ -73,7 +73,36 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	protected String myName;
 	protected String myValue = null;
 	private static final Logger logger = LoggerFactory.getLogger(BasePropertyImpl.class);
-
+	private final static ThreadLocal<SimpleDateFormat> dateFormat1 = new ThreadLocal<SimpleDateFormat>() {
+		 @Override
+	        protected SimpleDateFormat initialValue()
+	        {
+	            return new SimpleDateFormat( Property.DATE_FORMAT1 );
+	        }
+	}; 
+	private final static ThreadLocal<SimpleDateFormat> dateFormat4 = new ThreadLocal<SimpleDateFormat>() {
+		 @Override
+	        protected SimpleDateFormat initialValue()
+	        {
+	            return new SimpleDateFormat( Property.DATE_FORMAT4 );
+	        }
+	}; 
+	private final static ThreadLocal<SimpleDateFormat> dateFormat2 = new ThreadLocal<SimpleDateFormat>() {
+		 @Override
+	        protected SimpleDateFormat initialValue()
+	        {
+	            return new SimpleDateFormat( Property.DATE_FORMAT2 );
+	        }
+	}; 
+	private final static ThreadLocal<SimpleDateFormat> dateFormat3 = new ThreadLocal<SimpleDateFormat>() {
+		 @Override
+	        protected SimpleDateFormat initialValue()
+	        {
+	            return new SimpleDateFormat( Property.DATE_FORMAT3 );
+	        }
+	}; 
+	//SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
+	
 	protected final ArrayList<BaseSelectionImpl> selectionList = new ArrayList<BaseSelectionImpl>() {
 		private static final long serialVersionUID = 2460743050491944290L;
 
@@ -631,20 +660,16 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				return null;
 			}
 
-			SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
-		  
 			try {
-				Date d = dateFormat1.parse(getValue());
+				Date d = dateFormat1.get().parse(getValue());
 				return d;
 			} catch (Exception ex) {
 				try {
-					SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT4 );
-					Date d = dateFormat2.parse(getValue());
+					Date d = dateFormat4.get().parse(getValue());
 					return d;
 				} catch (Exception ex2) {
 					try {
-						SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
-						Date d = dateFormat2.parse(getValue());
+						Date d = dateFormat2.get().parse(getValue());
 						return d;
 					} catch (Exception ex3) {
 						logger.info("Sorry I really can't parse that date: " + getValue());
@@ -793,13 +818,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	
 	private final void setValue(java.util.Date value, Boolean internal) {
 		
-		SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
-	    
 		Object old = getTypedValue();
 		setType(DATE_PROPERTY);
 
 		if (value != null) {
-			setCheckedValue(dateFormat1.format(value));
+			setCheckedValue(dateFormat1.get().format(value));
 		} else {
 			myValue = null;
 		}
@@ -1180,10 +1203,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	public final String toString() {
 		
-	    SimpleDateFormat dateFormat3 = new SimpleDateFormat( Property.DATE_FORMAT3 );
 	    
 		if (getType().equals(Property.DATE_PROPERTY)) {
-			return (this.getTypedValue() != null) ? dateFormat3.format((Date) this.getTypedValue()) : "";
+			return (this.getTypedValue() != null) ? dateFormat3.get().format((Date) this.getTypedValue()) : "";
 		} else if (getType().equals(Property.SELECTION_PROPERTY)) {
 			return this.getSelected().getName();
 		} else if (getType().equals(Property.BOOLEAN_PROPERTY)) {
@@ -1665,8 +1687,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	public final boolean isEqual(Property p) {
 
-	    SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
-	    
 		if (!getName().equals(p.getName())) {
 			return false;
 		}
@@ -1691,7 +1711,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 			java.util.Date myDate = (java.util.Date) getTypedValue();
 			java.util.Date otherDate = (java.util.Date) p.getTypedValue();
-			if (dateFormat2.format(myDate).equals(dateFormat2.format(otherDate))) {
+			if (dateFormat2.get().format(myDate).equals(dateFormat2.get().format(otherDate))) {
 				return true;
 			} else {
 				return false;
