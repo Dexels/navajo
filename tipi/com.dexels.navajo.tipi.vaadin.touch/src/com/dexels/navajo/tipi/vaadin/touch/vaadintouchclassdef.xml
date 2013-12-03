@@ -7,7 +7,12 @@
 		<values>
 			<value direction="in" name="logo" type="resource" />
 		</values>
-		<methods />
+		<methods>
+			<method name="navigateBack" />
+			<method name="navigateTo" >
+				<param name="target" type="component" required="true"/>
+			</method>
+		</methods>
 	</tipiclass>
 	<tipiclass class="TipiNavigationView" name="navigationview" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.touch.components"
 		type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">

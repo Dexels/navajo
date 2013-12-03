@@ -3,6 +3,10 @@ package com.dexels.navajo.tipi.vaadin.touch.components;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.vaadin.components.base.TipiVaadinComponentImpl;
 import com.vaadin.addon.touchkit.ui.NavigationManager;
 import com.vaadin.addon.touchkit.ui.NavigationView;
@@ -32,21 +36,46 @@ public class TipiNavigationManager extends TipiVaadinComponentImpl {
 	        }
 	}
 
+	
 	@Override
 	protected void addToVaadinContainer(ComponentContainer currentContainer,
 			Component component, Object constraints) {
 		NavigationManager nm = (NavigationManager)currentContainer;
-		nm.navigateTo(component);
 		if("noback".equals(constraints)) {
 			NavigationView nv = (NavigationView)component;
 			nv.getNavigationBar().getLeftComponent().setVisible(false);
-			Component prev = nm.getPreviousComponent();
-			if(prev!=null) {
-				logger.info("Removing previous!");
-				nm.removeComponent(prev);
-			}
+			nm.removeAllComponents();
 		}
+		nm.navigateTo(component);
 		}
+
+	@Override
+	public void removeFromContainer(Object c) {
+		NavigationManager nm = (NavigationManager)getContainer();
+		NavigationView nv = (NavigationView)c;
+		Component top = nm.getCurrentComponent();
+		if(nv==top) {
+			nm.navigateBack();
+		}
+//		nm.removeComponent(nv);
+	}
+
+	@Override
+	protected synchronized void performComponentMethod(String name,
+			TipiComponentMethod compMeth, TipiEvent event)
+			throws TipiBreakException {
+		NavigationManager nm = (NavigationManager)getContainer();
+		if(name.equals("navigateBack")) {
+			nm.navigateBack();
+			return;
+		}
+		if(name.equals("navigateTo")) {
+			TipiComponent tc = (TipiComponent) compMeth.getEvaluatedParameter("target", event);
+			nm.navigateTo((Component) tc.getContainer());
+			return;
+		}
+		super.performComponentMethod(name, compMeth, event);
+	}
 	
 	
 }
