@@ -2,7 +2,7 @@ Bundle-Name: Tipi CSS Binding
 Bundle-SymbolicName: com.dexels.navajo.tipi.css.tkui
 Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.12.qualifier
+Bundle-Version: 1.0.13
 Export-Package: org.akrogen.core.impl.resources;uses:="org.akrogen.core.resources",
  org.akrogen.core.resources,
  org.akrogen.core.utils,
@@ -165,13 +165,6 @@ Export-Package: org.akrogen.core.impl.resources;uses:="org.akrogen.core.resource
  org.akrogen.tkui.css.tipi.serializers;uses:="org.akrogen.tkui.css.core.serializers",
  org.akrogen.tkui.css.xml.engine;uses:="org.akrogen.tkui.css.core.impl.engine",
  org.akrogen.tkui.css.xml.properties.css2;uses:="org.akrogen.tkui.css.core.engine,org.w3c.dom.css,org.akrogen.tkui.css.core.dom.properties.css2",
- org.apache.xml.serialize;version="2.9.0";
-  uses:="org.apache.xerces.util,
-   org.w3c.dom.ls,
-   org.xml.sax.ext,
-   org.apache.xerces.dom,
-   org.w3c.dom,
-   org.xml.sax",
  org.w3c.css.sac,
  org.w3c.css.sac.helpers,
  org.w3c.flute.parser;version="3.0.0";uses:="org.w3c.css.sac",
