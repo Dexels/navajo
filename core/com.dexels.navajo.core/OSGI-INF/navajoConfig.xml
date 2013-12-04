@@ -7,7 +7,7 @@
    <reference bind="setConfigAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="dynamic" unbind="clearConfigAdmin"/>
    <reference bind="setIOConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoIOConfig" name="NavajoIOConfig" policy="dynamic" unbind="clearIOConfig"/>
    <reference bind="setRepositoryFactory" cardinality="1..1" interface="com.dexels.navajo.server.RepositoryFactory" name="RepositoryFactory" policy="dynamic" unbind="clearRepositoryFactory"/>
-   <reference bind="addDescriptionProvider" unbind="removeDescriptionProvider" cardinality="0..n" interface="com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface" name="DescriptionProviderInterface" policy="dynamic"/>
+   <reference bind="addDescriptionProvider" unbind="removeDescriptionProvider" cardinality="0..n" interface="com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface" name="DescriptionProviderInterface" policy="dynamic"/>
    <reference bind="setAsyncStore" unbind="clearAsyncStore" cardinality="1..1" interface="com.dexels.navajo.mapping.AsyncStore" name="AsyncStore" policy="dynamic"/>
    <reference bind="setIntegrityWorker" unbind="clearIntegrityWorker" cardinality="0..1" interface="com.dexels.navajo.server.enterprise.integrity.WorkerInterface" name="WorkerInterface" policy="dynamic"/>
 </scr:component>

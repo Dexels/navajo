@@ -30,7 +30,7 @@ import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.navajo.server.Repository;
 import com.dexels.navajo.server.RepositoryFactory;
-import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
+import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;

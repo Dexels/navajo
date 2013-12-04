@@ -3,7 +3,7 @@ package com.dexels.navajo.server;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
-import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
+import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;

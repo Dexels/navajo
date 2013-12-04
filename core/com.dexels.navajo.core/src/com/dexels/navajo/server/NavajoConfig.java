@@ -20,7 +20,7 @@ import com.dexels.navajo.loader.NavajoLegacyClassLoader;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.PersistenceManagerFactory;
-import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
+import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerFactory;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;

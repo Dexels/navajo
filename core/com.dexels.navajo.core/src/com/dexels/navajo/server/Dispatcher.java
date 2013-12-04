@@ -67,7 +67,7 @@ import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.TmlRunnable;
-import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
+import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;

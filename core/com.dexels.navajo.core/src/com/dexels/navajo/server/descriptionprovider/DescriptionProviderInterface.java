@@ -1,4 +1,4 @@
-package com.dexels.navajo.server.enterprise.descriptionprovider;
+package com.dexels.navajo.server.descriptionprovider;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
