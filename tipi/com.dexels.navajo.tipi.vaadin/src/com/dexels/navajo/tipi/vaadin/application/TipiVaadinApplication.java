@@ -31,6 +31,7 @@ import com.dexels.navajo.tipi.actionmanager.OSGiActionManager;
 import com.dexels.navajo.tipi.classdef.OSGiClassManager;
 import com.dexels.navajo.tipi.connectors.TipiConnector;
 import com.dexels.navajo.tipi.context.ContextInstance;
+import com.dexels.navajo.tipi.locale.LocaleListener;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.application.eval.EvalHandler;
 import com.dexels.navajo.tipi.vaadin.application.servlet.TipiVaadinServlet;
@@ -66,6 +67,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	private TipiConnector defaultConnector;
 	private String language;
 	private String region;
+	private final Set<LocaleListener> localeListeners = new HashSet<LocaleListener>();
 
 	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinApplication.class);
 
@@ -182,6 +184,7 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 
 	}
 	
+	@Override
 	public void setEvalUrl(URL context, String relativeUri) {
 		VaadinTipiContext vaadinTipiContext = (VaadinTipiContext)getCurrentContext();
 		if(vaadinTipiContext!=null) {
@@ -321,6 +324,9 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	@Override
 	public void setLocaleCode(String locale) {
 		this.language = locale;
+		for (LocaleListener l : localeListeners) {
+			l.localeChanged(getCurrentContext(), language, region);
+		}
 	}
 	@Override
 	public String getLocaleCode() {
@@ -329,12 +335,24 @@ public class TipiVaadinApplication extends Application implements TipiApplicatio
 	@Override
 	public void setSubLocaleCode(String region) {
 		this.region = region;
+		for (LocaleListener l : localeListeners) {
+			l.localeChanged(getCurrentContext(), language, region);
+		}
 	}
 	@Override
 	public String getSubLocaleCode() {
 		return region;
 	}
 
-	
+	@Override
+	public void addLocaleListener(LocaleListener l) {
+		localeListeners.add(l);
+	}
+
+	@Override
+	public void removeLocaleListener(LocaleListener l) {
+		localeListeners.remove(l);
+	}
+
 
 }

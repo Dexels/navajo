@@ -26,6 +26,7 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.css.CssApplier;
 import com.dexels.navajo.tipi.css.actions.impl.TipiPropertyHandler;
 import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.locale.LocaleListener;
 
 public class CssComponentResponderImpl implements
 		TipiComponentInstantiatedListener, CssApplier {
@@ -35,7 +36,6 @@ public class CssComponentResponderImpl implements
 
 	private final TipiContext context;
 
-	private static CssComponentResponderImpl instance = null;
 
 	private final Map<String, CSSEngine> engineCache = new HashMap<String, CSSEngine>();
 
@@ -44,14 +44,17 @@ public class CssComponentResponderImpl implements
 	 */
 	private final Map<String, List<String>> tipiCssMap = new HashMap<String, List<String>>();
 
-	
-	public static CssComponentResponderImpl getInstance() {
-		return instance;
-	}
-
 	public CssComponentResponderImpl(TipiContext tc) {
 		this.context = tc;
-		instance = this;
+		tc.getApplicationInstance().addLocaleListener(new LocaleListener(){
+
+			@Override
+			public void localeChanged(TipiContext context, String language,
+					String region) {
+				reloadCssDefinitions();
+				// TODO Auto-generated method stub
+				
+			}});
 	}
 
 	private void doComponentInstantiated(TipiComponent tc) {

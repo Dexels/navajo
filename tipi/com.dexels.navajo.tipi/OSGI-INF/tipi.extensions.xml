@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="tipi.extensions">
+   <implementation class="tipipackage.impl.TipiExtensionProviderImpl"/>
+   <reference bind="addTipiExtension" cardinality="0..n" interface="tipi.TipiExtension" name="TipiExtension" policy="dynamic" unbind="removeTipiExtension"/>
+   <service>
+      <provide interface="tipipackage.TipiExtensionProvider"/>
+   </service>
+</scr:component>

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import tipi.BaseTipiApplicationInstance;
 import tipi.TipiApplicationInstance;
 import tipi.TipiExtension;
-import tipipackage.TipiManualExtensionRegistry;
 import tipivaadin.TipiVaadinExtension;
 
 import com.dexels.navajo.tipi.TipiContext;
@@ -33,12 +33,12 @@ import com.dexels.navajo.tipi.actionmanager.OSGiActionManager;
 import com.dexels.navajo.tipi.classdef.OSGiClassManager;
 import com.dexels.navajo.tipi.connectors.TipiConnector;
 import com.dexels.navajo.tipi.context.ContextInstance;
+import com.dexels.navajo.tipi.locale.LocaleListener;
 import com.dexels.navajo.tipi.vaadin.VaadinTipiContext;
 import com.dexels.navajo.tipi.vaadin.application.VaadinInstallationPathResolver;
 import com.dexels.navajo.tipi.vaadin.application.WindowCloseManager;
 import com.dexels.navajo.tipi.vaadin.application.eval.EvalHandler;
 import com.dexels.navajo.tipi.vaadin.cookie.BrowserCookieManager;
-import com.dexels.navajo.tipi.vaadin.instance.LocalTipiConnector;
 import com.dexels.navajo.tipi.vaadin.touch.servlet.TipiVaadinTouchServlet;
 import com.vaadin.addon.touchkit.ui.TouchKitApplication;
 import com.vaadin.addon.touchkit.ui.TouchKitWindow;
@@ -60,15 +60,17 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 	private String applicationProfile;
 	private String applicationDeploy;
 
-	private final TipiManualExtensionRegistry extensionRegistry = new TipiManualExtensionRegistry();
 	private WindowCloseManager windowCloseManager;
 	private String referer;
 	private ContextInstance contextInstance;
 	private TipiVaadinTouchServlet servlet;
 	private final Set<TipiContextListener> tipiContextListeners = new HashSet<TipiContextListener>();
+	private final Set<LocaleListener> localeListeners = new HashSet<LocaleListener>();
+
 	private TipiConnector defaultConnector;
 	private String region;
 	private String language;
+	private final List<TipiExtension> tipiExtensions = new ArrayList<TipiExtension>();
 
 	private static final Logger logger = LoggerFactory.getLogger(TipiVaadinTouchApplication.class);
 
@@ -85,22 +87,10 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 	
 	
 	protected void actualInit() {
-//		final WebApplicationContext context = ((WebApplicationContext) getContext());
-//		
-//		ApplicationUtils.setupContext(context);
-		
 		try {
-//			TouchKitWindow		
 			final TouchKitWindow mainWindow = new TouchKitWindow();
 			configureMainWindow(mainWindow);
-//			setMainWindow(mainWindow);
-//	        setTheme("mobilemail");
-
-//	        NavigationManager nm = new NavigationManager();
-//	        mainWindow.setContent(nm);
 	        setMainWindow(mainWindow);
-//	        NavigationView nv = new NavigationView("Hoei");
-//	        nm.addComponent(nv);
 			windowCloseManager = new WindowCloseManager(this, getCurrentContext());
 			EvalHandler eval = new EvalHandler(this);
 			getMainWindow().addParameterHandler(eval);
@@ -108,31 +98,32 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 			setTheme("default");
 
 		} catch (Throwable t) {
-			t.printStackTrace();
+			logger.error("Error: ", t);
 		}
 	}
 
-	 private void configureMainWindow(TouchKitWindow mainWindow) {
-	        // These configurations modify how the app behaves as "ios webapp".
-		 System.err.println("Applicationurl: "+getURL());
-		 URL u = getURL();
-		 if(u==null) {
-			 return;
-		 }
-		 try {
-			URL p = new URL(u.getProtocol(),u.getHost(),u.getPort(),"");
-			 System.err.println("Context Applicationurl: "+p);
-		        mainWindow.addApplicationIcon(p
-		                + "/VAADIN/themes/default/icon.png");
-		        mainWindow.setStartupImage(p
-		                + "/VAADIN/themes/default/startup.png");
-		        mainWindow.setWebAppCapable(true);
+	private void configureMainWindow(TouchKitWindow mainWindow) {
+		// These configurations modify how the app behaves as "ios webapp".
+		logger.debug("Applicationurl: " + getURL());
+		URL u = getURL();
+		if (u == null) {
+			return;
+		}
+		try {
+			URL p = new URL(u.getProtocol(), u.getHost(), u.getPort(), "");
+			logger.debug("Context Applicationurl: " + p);
+			mainWindow
+					.addApplicationIcon(p + "/VAADIN/themes/default/icon.png");
+			mainWindow
+					.setStartupImage(p + "/VAADIN/themes/default/startup.png");
+			mainWindow.setWebAppCapable(true);
 		} catch (MalformedURLException e) {
 			logger.error("Error: ", e);
 		}
-//	        mainWindow.setPersistentSessionCookie(true);
+		mainWindow.setOfflineTimeout(50000);
+		// mainWindow.setPersistentSessionCookie(true);
 
-	    }
+	}
 	
 	@Override
 	public void onBrowserDetailsReady() {
@@ -178,7 +169,7 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 
 		VaadinTipiContext va;
 		try {
-			va = new VaadinTipiContext(this, installationFolder, extensionRegistry.getExtensionList(),new HashMap<String, String>());
+			va = new VaadinTipiContext(this, installationFolder, tipiExtensions,new HashMap<String, String>());
 		} catch (Throwable e2) {
 			logger.error("Error: ",e2);
 			return null;
@@ -361,9 +352,14 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 		this.defaultConnector = tipiDefaultConnector;
 	}
 
+
+	
 	@Override
 	public void setLocaleCode(String locale) {
 		this.language = locale;
+		for (LocaleListener l : localeListeners) {
+			l.localeChanged(getCurrentContext(), language, region);
+		}
 	}
 	@Override
 	public String getLocaleCode() {
@@ -372,11 +368,28 @@ public class TipiVaadinTouchApplication extends TouchKitApplication implements T
 	@Override
 	public void setSubLocaleCode(String region) {
 		this.region = region;
+		for (LocaleListener l : localeListeners) {
+			l.localeChanged(getCurrentContext(), language, region);
+		}
 	}
 	@Override
 	public String getSubLocaleCode() {
 		return region;
 	}
-	
+
+	@Override
+	public void addLocaleListener(LocaleListener l) {
+		localeListeners.add(l);
+	}
+
+	@Override
+	public void removeLocaleListener(LocaleListener l) {
+		localeListeners.remove(l);
+	}
+
+
+	public void addExtension(TipiExtension tipiExtension) {
+		this.tipiExtensions .add(tipiExtension);
+	}
 
 }

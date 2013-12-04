@@ -119,6 +119,9 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 
 	public void setContext(TipiContext c) {
 		context = c;
+		
+		String locale = c.getApplicationInstance().getLocaleCode();
+		
 		if (errorMessageBundle == null) {
 			// attempt remote propertyresource bundle;
 			try {

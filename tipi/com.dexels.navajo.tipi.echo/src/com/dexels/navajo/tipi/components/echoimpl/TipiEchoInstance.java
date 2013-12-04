@@ -37,6 +37,7 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiContextListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.connectors.TipiConnector;
+import com.dexels.navajo.tipi.locale.LocaleListener;
 
 public class TipiEchoInstance extends ApplicationInstance implements TipiApplicationInstance {
 
@@ -291,5 +292,12 @@ private String region;
 		return region;
 	}
 
+	public void addLocaleListener(LocaleListener l) {
+		logger.warn("Locale listeners not supported in Echo");
+	}
+
+	public void removeLocaleListener(LocaleListener l) {
+		logger.warn("Locale listeners not supported in Echo");
+	}
 
 }

@@ -19,6 +19,9 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import tipi.TipiExtension;
+import tipipackage.TipiExtensionProvider;
+
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.tipi.TipiContextListener;
 import com.dexels.navajo.tipi.context.ContextInstance;
@@ -39,6 +42,8 @@ public class TipiVaadinTouchServlet extends TouchKitApplicationServlet {
 	private Set<Application> applications = new HashSet<Application>();
 	private final Set<TipiContextListener> tipiContextListeners= new HashSet<TipiContextListener>();
 
+	private TipiExtensionProvider tipiExtensionProvider = null;
+	
 	private LocalClient localClient;
 
 	private String language =null;
@@ -131,6 +136,10 @@ public class TipiVaadinTouchServlet extends TouchKitApplicationServlet {
 		//		Class<? extends Application> appInstanceClass = Class.forName(appInstance);
 		TipiVaadinTouchApplication tipiApplication = (TipiVaadinTouchApplication) super.getNewApplication(request);
 		tipiApplication.setServletContext(getServletContext());
+		List<TipiExtension> extensions = tipiExtensionProvider.getExtensionList();
+		for (TipiExtension tipiExtension : extensions) {
+			tipiApplication.addExtension(tipiExtension);
+		}
 		for (TipiContextListener tc : tipiContextListeners) {
 			tipiApplication.addTipiContextListener(tc);
 		}
@@ -162,6 +171,14 @@ public class TipiVaadinTouchServlet extends TouchKitApplicationServlet {
      	hs.setAttribute("tipiInstance",tipiApplication);
 		// add request data?
 		return tipiApplication;
+	}
+	
+	public void setTipiExtensionProvider(TipiExtensionProvider tipiExtensionProvider) {
+		this.tipiExtensionProvider = tipiExtensionProvider;
+	}
+	
+	public void clearTipiExtensionProvider(TipiExtensionProvider tipiExtensionProvider) {
+		this.tipiExtensionProvider = null;
 	}
 
 

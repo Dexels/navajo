@@ -17,6 +17,7 @@ import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiContextListener;
+import com.dexels.navajo.tipi.locale.LocaleListener;
 import com.dexels.navajo.tipi.rcp.TipiRcpContext;
 
 public class RcpViewApplicationInstance extends BaseTipiApplicationInstance implements TipiApplicationInstance {
@@ -83,4 +84,7 @@ public class RcpViewApplicationInstance extends BaseTipiApplicationInstance impl
 	public void addTipiContextListener(TipiContextListener t) {
 		tipiContextListeners.add(t);
 	}
+	
+
+
 }
