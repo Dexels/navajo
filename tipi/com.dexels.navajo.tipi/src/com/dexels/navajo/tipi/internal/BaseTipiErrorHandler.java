@@ -119,14 +119,16 @@ public class BaseTipiErrorHandler implements TipiErrorHandler, Serializable {
 
 	public void setContext(TipiContext c) {
 		context = c;
-		
-		String locale = c.getApplicationInstance().getLocaleCode();
-		
+		String lcode = c.getApplicationInstance().getLocaleCode();
+		String lcSpecificValidations = "validation_" + lcode + ".properties";
 		if (errorMessageBundle == null) {
 			// attempt remote propertyresource bundle;
 			try {
-				InputStream tipiResourceStream = c
-						. getTipiResourceStream("validation.properties");
+				InputStream tipiResourceStream = null;
+				tipiResourceStream = c.getTipiResourceStream(lcSpecificValidations);
+				if ( tipiResourceStream == null ) {
+					tipiResourceStream = c.getTipiResourceStream("validation.properties");
+				}
 				if (tipiResourceStream != null) {
 					errorMessageBundle = new PropertyResourceBundle(
 							tipiResourceStream);

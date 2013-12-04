@@ -48,10 +48,11 @@ public class TipiSetLocale extends TipiAction {
 			myContext.getApplicationInstance().setSubLocaleCode("" + subLocale.value);
 		}
 		
-		if (localeChanged)
-		{
+		//if (localeChanged)
+		//{
+			getContext().updateValidationProperties();
 			// TODO re-enable
 //			myContext.reloadCssDefinitions();
-		}
+		//}
 	}
 }

@@ -1775,7 +1775,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			// TODO No remove completely. Don't like it.
 			if (eHandler == null) {
 				eHandler = new BaseTipiErrorHandler();
-				eHandler.setContext(this);
+				updateValidationProperties();
 
 			}
 			String errorMessage = eHandler.hasErrors(reply);
@@ -2541,8 +2541,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		setTipiResourceLoader(tipiCodeBase);
 		setGenericResourceLoader(resourceCodeBase);
 
-		eHandler = new BaseTipiErrorHandler();
-		eHandler.setContext(this);
+		updateValidationProperties();
 
 //		try {
 //			Class<?> c = Class
@@ -2554,6 +2553,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 //			logger.error("Error loading XSD?",e);
 //		}
 
+	}
+
+	public void updateValidationProperties() {
+		eHandler = new BaseTipiErrorHandler();
+		eHandler.setContext(this);
 	}
 
 	public void fireTipiStructureChanged(TipiComponent tc) {
