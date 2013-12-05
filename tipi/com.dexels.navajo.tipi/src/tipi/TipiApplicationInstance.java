@@ -5,7 +5,10 @@ import java.net.URL;
 import java.util.Locale;
 
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiContextListener;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.connectors.TipiConnector;
+import com.dexels.navajo.tipi.locale.LocaleListener;
 
 public interface TipiApplicationInstance {
 	public TipiContext getCurrentContext();
@@ -32,4 +35,16 @@ public interface TipiApplicationInstance {
 	
 	public void close();
 
+	void setDefaultConnector(TipiConnector tipiConnector);
+
+	void addTipiContextListener(TipiContextListener t);
+
+		public void setLocaleCode(String locale);
+		public String getLocaleCode();
+		public void setSubLocaleCode(String locale);
+		public String getSubLocaleCode();
+
+	public void addLocaleListener(LocaleListener l);
+	public void removeLocaleListener(LocaleListener l);
+	
 }

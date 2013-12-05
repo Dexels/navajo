@@ -38,7 +38,7 @@
     </map>
     <map>
     	<tagname>propertydescription</tagname>
-		<object>com.dexels.navajo.server.enterprise.descriptionprovider.PropertyDescription</object>
+		<object>com.dexels.navajo.server.descriptionprovider.PropertyDescription</object>
     </map>
     <map>
     	<tagname>persistencemanager</tagname>

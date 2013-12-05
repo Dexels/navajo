@@ -6,9 +6,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -23,6 +25,7 @@ import tipi.TipiExtension;
 import tipipackage.ITipiExtensionContainer;
 
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiContextListener;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.actionmanager.OSGiActionManager;
 import com.dexels.navajo.tipi.classdef.OSGiClassManager;
@@ -51,7 +54,8 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 
 	private File tipiInstallationFolder = null;
 	private final Map<String,String> systemProperties = new HashMap<String, String>();
-	
+	private final Set<TipiContextListener> tipiContextListeners = new HashSet<TipiContextListener>();
+
 	private final static Logger logger = LoggerFactory.getLogger(SwingTipiApplicationInstance.class);
 	
 	public SwingTipiApplicationInstance(String definition,
@@ -220,6 +224,12 @@ public class SwingTipiApplicationInstance extends BaseTipiApplicationInstance im
 	@Override
 	public void close() {
 		logger.warn("Close requested in SwingTipiApplication instance. (but ignored");
+	}
+	
+
+	@Override
+	public void addTipiContextListener(TipiContextListener t) {
+		tipiContextListeners.add(t);
 	}
 
 }

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
@@ -289,7 +290,7 @@ public class PropertyCellEditor implements TableCellEditor,
 
 			if (myPropertyType.equals(Property.DATE_PROPERTY)) {
 				if (myDatePropertyField == null) {
-					myDatePropertyField = new DatePropertyField();
+					myDatePropertyField = new DatePropertyField(false);
 				}
 				myDatePropertyField.setEditable(myProperty.isDirIn());
 				myDatePropertyField.setProperty(myProperty);
@@ -302,7 +303,7 @@ public class PropertyCellEditor implements TableCellEditor,
 				myDatePropertyField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
-						((PropertyControlled) e.getSource()).update();
+//						((PropertyControlled) e.getSource()).update();
 						if (e.getOppositeComponent() != myTable) {
 							stopCellEditing();
 						}
@@ -316,7 +317,7 @@ public class PropertyCellEditor implements TableCellEditor,
 
 			if (myPropertyType.equals(Property.INTEGER_PROPERTY)) {
 				if (myIntegerPropertyField == null) {
-					myIntegerPropertyField = new IntegerPropertyField();
+					myIntegerPropertyField = new IntegerPropertyField("false");
 				}
 				myIntegerPropertyField.setEditable(myProperty.isDirIn());
 				myIntegerPropertyField.setProperty(myProperty);
@@ -369,7 +370,7 @@ public class PropertyCellEditor implements TableCellEditor,
 
 			if (myPropertyType.equals(Property.FLOAT_PROPERTY)) {
 				if (myFloatPropertyField == null) {
-					myFloatPropertyField = new FloatPropertyField();
+					myFloatPropertyField = new FloatPropertyField(false);
 				}
 				myFloatPropertyField.setEditable(myProperty.isDirIn());
 				lastComponent = myFloatPropertyField;
@@ -395,18 +396,16 @@ public class PropertyCellEditor implements TableCellEditor,
 			if (myPropertyType.equals(Property.MONEY_PROPERTY)) {
 				logger.info("Editing money!");
 				if (myMoneyPropertyField == null) {
-					myMoneyPropertyField = new MoneyField();
+					myMoneyPropertyField = new MoneyField(false);
 				}
 				myMoneyPropertyField.setEditable(myProperty.isDirIn());
 				lastComponent = myMoneyPropertyField;
 				myMoneyPropertyField.setProperty(myProperty);
 				setComponentColor(myMoneyPropertyField, isSelected, row, column);
 				// final String contents = myMoneyPropertyField.getText();
-				final MoneyField m = myMoneyPropertyField;
 				myMoneyPropertyField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {
-						m.focusLost(e);
 						if (e.getOppositeComponent() != myTable) {
 							stopCellEditing();
 						}
@@ -422,7 +421,7 @@ public class PropertyCellEditor implements TableCellEditor,
 			if (myPropertyType.equals(Property.PERCENTAGE_PROPERTY)) {
 				logger.info("Editing percentage!");
 				if (myPercentagePropertyField == null) {
-					myPercentagePropertyField = new PercentageField();
+					myPercentagePropertyField = new PercentageField(false);
 				}
 				myPercentagePropertyField.setEditable(myProperty.isDirIn());
 				lastComponent = myPercentagePropertyField;
@@ -449,7 +448,7 @@ public class PropertyCellEditor implements TableCellEditor,
 			if (myPropertyType.equals(Property.STOPWATCHTIME_PROPERTY)) {
 				logger.info("Editing a stopwatchtime!");
 				if (myStopwatchTimeField == null) {
-					myStopwatchTimeField = new StopwatchTimeField();
+					myStopwatchTimeField = new StopwatchTimeField(false);
 				}
 				myStopwatchTimeField.setEditable(myProperty.isDirIn());
 
@@ -495,7 +494,7 @@ public class PropertyCellEditor implements TableCellEditor,
 			if (myPropertyType.equals(Property.CLOCKTIME_PROPERTY)) {
 				logger.info("Editing a time!");
 				if (myClockTimeField == null) {
-					myClockTimeField = new ClockTimeField();
+					myClockTimeField = new ClockTimeField(false);
 				}
 				myClockTimeField.setEditable(myProperty.isDirIn());
 				myClockTimeField.showSeconds(false);
@@ -539,7 +538,7 @@ public class PropertyCellEditor implements TableCellEditor,
 			}
 
 			if (myPropertyField == null) {
-				myPropertyField = new TextPropertyField();
+				myPropertyField = new TextPropertyField(false);
 				myPropertyField.addFocusListener(new FocusAdapter() {
 					@Override
 					public void focusLost(FocusEvent e) {

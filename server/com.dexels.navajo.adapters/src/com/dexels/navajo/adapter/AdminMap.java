@@ -98,7 +98,7 @@ public void load(Access access) throws MappableException, UserException {
     supportsAsync = nc.isAsyncEnabled();
     supportsStore = ( nc.getAsyncStore() != null );
     supportsIntegrity = nc.isIntegrityWorkerEnabled();
-    supportsStatistics = nc.isStatisticsRunnerEnabled();
+    supportsStatistics = nc.isEnableStatisticsRunner();
     supportsLocks = nc.isLockManagerEnabled();
     
     serverId = DispatcherFactory.getInstance().getApplicationId();
@@ -109,7 +109,7 @@ public void load(Access access) throws MappableException, UserException {
     instanceGroup = nc.getInstanceGroup();
     clientId = access.getClientToken();
     
-    JabberWorkerInterface jw = JabberWorkerFactory.getInstance();
+    JabberWorkerInterface jw = JabberWorkerFactory.getJabberWorkerInstance();
     
     if ( jw != null ) {
     	jabberServer = jw.getJabberServer();

@@ -2,7 +2,7 @@ Bundle-Name: Navajo Queue Manager
 Bundle-SymbolicName: com.dexels.navajo.queuemanager
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.27.qualifier
+Bundle-Version: 1.0.33.qualifier
 Bundle-ClassPath: .
 Include-Resource: lib
 Bundle-Vendor: Dexels
@@ -23,4 +23,4 @@ Export-Package: com.dexels.navajo.queuemanager,
  com.dexels.navajo.queuemanager.internal,
  com.dexels.navajo.server.listener.http.schedulers.priority
 Bundle-Activator: navajoqueuemanager.Version
-Service-Component: OSGI-INF/priorityThreadPool.xml
+Service-Component: OSGI-INF/priorityThreadPool.xml,OSGI-INF/queueManager.xml

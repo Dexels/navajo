@@ -1,26 +1,37 @@
 package com.dexels.navajo.tipi.vaadin.application.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.tipi.TipiContextListener;
 import com.dexels.navajo.tipi.context.ContextInstance;
 import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
+import com.dexels.navajo.tipi.vaadin.instance.LocalTipiConnector;
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
+import com.vaadin.terminal.gwt.server.Constants;
 
 public class TipiVaadinServlet extends AbstractApplicationServlet {
 
@@ -33,11 +44,97 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 	private ContextInstance contextInstance;
 	private Set<Application> applications = new HashSet<Application>();
 	
-	@Override
-	public void init(ServletConfig servletConfig) throws ServletException {
-		super.init(servletConfig);
-    }
+	private final Set<TipiContextListener> tipiContextListeners= new HashSet<TipiContextListener>();
 
+	private LocalClient localClient;
+
+	private String language =null;
+	private String region = null;
+
+	protected String widgetset;
+	protected String productionMode;
+
+	@Override
+	public void init(final ServletConfig servletConfig) throws ServletException {
+		ServletConfig wrap = new ServletConfig(){
+
+			@Override
+			public String getServletName() {
+				return servletConfig.getServletName();
+			}
+
+			@Override
+			public ServletContext getServletContext() {
+				return servletConfig.getServletContext();
+			}
+
+			@Override
+			public String getInitParameter(String name) {
+				if("application".equals(name)) {
+					return TipiVaadinServlet.class.getName();
+				}
+				if("productionMode".equals(name)) {
+					return ""+TipiVaadinServlet.this.productionMode;
+				}
+				if(Constants.PARAMETER_WIDGETSET.equals(name)) {
+					return ""+TipiVaadinServlet.this.widgetset;
+				}
+				return servletConfig.getInitParameter(name);
+			}
+
+			@Override
+			public Enumeration<String> getInitParameterNames() {
+				final Enumeration<String> en = servletConfig.getInitParameterNames();
+				List<String> l = new ArrayList<String>();
+				while (en.hasMoreElements()) {
+					String name = en.nextElement();
+					l.add(name);
+				}
+				l.add("application");
+				l.add(Constants.PARAMETER_WIDGETSET);
+				l.add("productionMode");
+				Enumeration<String> ext = Collections.enumeration(l);
+				return ext;
+			}};
+		super.init(wrap);
+	}
+
+
+
+	public void activate(final Map<String,Object> settings, BundleContext bundleContext) {
+		logger.info("Activating Tipi Instance: {}",settings);
+		final String profile = (String) settings.get("tipi.instance.profile");
+		final String deployment= (String) settings.get("tipi.instance.deployment");
+		language = (String) settings.get("tipi.instance.language");
+		region = (String) settings.get("tipi.instance.region");
+		productionMode = (String) settings.get("tipi.instance.productionmode");
+		widgetset = (String) settings.get("tipi.instance.widgetset");
+
+		
+		ContextInstance ci = new ContextInstance() {
+			
+			@Override
+			public String getProfile() {
+				return profile;
+			}
+			
+			@Override
+			public String getPath() {
+				return (String) settings.get("tipi.instance.path");
+			}
+			
+			@Override
+			public String getDeployment() {
+				return deployment;
+			}
+			@Override
+			public String getContext() {
+				return null;
+			}
+		};
+		setContextInstance(ci);
+	}
+	
 	@Override
 	protected Application getNewApplication(HttpServletRequest request)
 			throws ServletException {
@@ -50,8 +147,19 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 			logger.info("injected instance found");
 			tipiApplication.setContextInstance(contextInstance);
 		}
-		tipiApplication.setLocale(new Locale("nl","NL"));
+		if(language!=null && region!=null) {
+			tipiApplication.setLocale(new Locale(language,region));
+			tipiApplication.setLocaleCode(language);
+			tipiApplication.setSubLocaleCode(region);
+			
+		}		
 		tipiApplication.setServletContext(getServletContext());
+		for (TipiContextListener tc : tipiContextListeners) {
+			tipiApplication.addTipiContextListener(tc);
+		}
+		if(localClient!=null) {
+			tipiApplication.setDefaultConnector(new LocalTipiConnector(localClient));
+		}		
 		String referer = request.getHeader("x-forwarded-host");
 		logger.info("Creating application. Referer: "+referer);
 		tipiApplication.setReferer(referer);
@@ -123,13 +231,6 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		logger.info("Activating Vaadin Servlet");
 	}
 
-	public void deactivate() {
-		logger.info("Deactivating Vaadin Servlet");
-		for (Application  a: applications) {
-			a.close();
-		}
-		applications.clear();
-	}
 
 	
 	@Override
@@ -138,6 +239,14 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		return TipiVaadinApplication.class;
 	}
 	
+	public void deactivate() {
+		region = null;
+		language = null;
+		for (Application a : applications) {
+			a.close();
+		}
+		applications.clear();
+	}	
 
 	public void setContextInstance(ContextInstance ci) {
 		this.contextInstance = ci;
@@ -153,5 +262,21 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 
 	public void applicationClosed(Application a) {
 		applications.remove(a);
+	}
+	
+	public void addTipiContextListener(TipiContextListener t) {
+		tipiContextListeners.add(t);
+	}
+
+	public void removeTipiContextListener(TipiContextListener t) {
+		tipiContextListeners.remove(t);
+	}
+	
+	public void setLocalClient(LocalClient lc) {
+		this.localClient = lc;
+	}
+
+	public void clearLocalClient(LocalClient lc) {
+		this.localClient = null;
 	}
 }

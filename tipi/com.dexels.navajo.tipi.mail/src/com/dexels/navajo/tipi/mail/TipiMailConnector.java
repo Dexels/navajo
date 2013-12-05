@@ -69,7 +69,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	
 
 	@Override
-	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
+	public Navajo doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		try {
 			ensureOpenConnection();
 		} catch (MessagingException e) {
@@ -81,17 +81,17 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			service = "InitMail";
 		}
 		if (service.equals("InitMail")) {
-			injectNavajo(service, createMailInit());
+			return injectNavajo(service, createMailInit());
 		}
 		if (service.equals("InitGetFolders")) {
-			injectNavajo(service, createFolderNavajo());
+			return injectNavajo(service, createFolderNavajo());
 		}
 		if (service.equals("InitGetMessages")) {
-			injectNavajo(service, createInitGetMessages());
+			return injectNavajo(service, createInitGetMessages());
 		}
 
 		if (service.equals("GetInboxMessages")) {
-			injectNavajo(service, createMessagesNavajo());
+			return injectNavajo(service, createMessagesNavajo());
 		}
 		// if (service.equals("GetMessages")) {
 		// injectNavajo(service, createMessagesNavajo(n));
@@ -100,7 +100,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		// injectNavajo(service, createMessagesNavajo(n));
 		// }
 		if (service.equals("GetMessage")) {
-			injectNavajo(service, createGetMessage(n));
+			return injectNavajo(service, createGetMessage(n));
 		}
 		if (service.equals("DeleteMessage")) {
 			setMessageFlag(n, Flag.DELETED, true);
@@ -119,6 +119,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		if (service.equals("SendMessage")) {
 			sendMessage(n);
 		}
+		return null;
 	}
 
 	private void activity() {

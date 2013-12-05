@@ -26,6 +26,7 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.css.CssApplier;
 import com.dexels.navajo.tipi.css.actions.impl.TipiPropertyHandler;
 import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.tipi.locale.LocaleListener;
 
 public class CssComponentResponderImpl implements
 		TipiComponentInstantiatedListener, CssApplier {
@@ -35,7 +36,6 @@ public class CssComponentResponderImpl implements
 
 	private final TipiContext context;
 
-	private static CssComponentResponderImpl instance = null;
 
 	private final Map<String, CSSEngine> engineCache = new HashMap<String, CSSEngine>();
 
@@ -44,14 +44,17 @@ public class CssComponentResponderImpl implements
 	 */
 	private final Map<String, List<String>> tipiCssMap = new HashMap<String, List<String>>();
 
-	
-	public static CssComponentResponderImpl getInstance() {
-		return instance;
-	}
-
 	public CssComponentResponderImpl(TipiContext tc) {
 		this.context = tc;
-		instance = this;
+		tc.getApplicationInstance().addLocaleListener(new LocaleListener(){
+
+			@Override
+			public void localeChanged(TipiContext context, String language,
+					String region) {
+				reloadCssDefinitions();
+				// TODO Auto-generated method stub
+				
+			}});
 	}
 
 	private void doComponentInstantiated(TipiComponent tc) {
@@ -163,14 +166,14 @@ public class CssComponentResponderImpl implements
 		{
 			cssResources.add(result);
 		}
-		result = resolveCssResource(baseLocation + "_" + context.getClient().getLocaleCode() + ".css");
+		result = resolveCssResource(baseLocation + "_" + context.getApplicationInstance().getLocaleCode() + ".css");
 		if (result != null && !result.isEmpty())
 		{
 			cssResources.add(result);
 		}
-		if (context.getClient().getSubLocaleCode() != null && !context.getClient().getSubLocaleCode().isEmpty())
+		if (context.getApplicationInstance().getSubLocaleCode() != null && !context.getApplicationInstance().getSubLocaleCode().isEmpty())
 		{
-			result = resolveCssResource(baseLocation + "_" + context.getClient().getLocaleCode() + "_" + context.getClient().getSubLocaleCode().toLowerCase() + ".css");
+			result = resolveCssResource(baseLocation + "_" + context.getApplicationInstance().getLocaleCode() + "_" + context.getApplicationInstance().getSubLocaleCode().toLowerCase() + ".css");
 			if (result != null && !result.isEmpty())
 			{
 				cssResources.add(result);
@@ -212,14 +215,21 @@ public class CssComponentResponderImpl implements
 	private void loadCssDefinition(String definition, String location) throws IOException
 	{
 		logger.info("Finding CSS files for definition: " + definition + " with location " + location);
-//		logger.debug("Current locale is " + getClient().getLocaleCode() + " and current subLocale is " + getClient().getSubLocaleCode());
+		logger.info("Current locale is " + context.getApplicationInstance().getLocaleCode() + " and current subLocale is " + context.getApplicationInstance().getSubLocaleCode());
 		// first try in the same dir as the definition file (ie location)
 		String strippedLocation = null;
-		if (location != null && location.lastIndexOf("/") != -1)
+		if (location != null)
 		{
-			strippedLocation = location.substring(0, location.lastIndexOf("/") + 1) + definition;
+			if(location.lastIndexOf("/") != -1) {
+				strippedLocation = location.substring(0, location.lastIndexOf("/") + 1) + definition;
+			} else {
+				if(location.indexOf('.')!=-1) {
+					strippedLocation = location.substring(0,location.lastIndexOf('.'));
+				} else {
+					strippedLocation = location;
+				}
+			}
 		}
-
 		List<String> cssResources = null; 
 		if (strippedLocation != null)
 		{

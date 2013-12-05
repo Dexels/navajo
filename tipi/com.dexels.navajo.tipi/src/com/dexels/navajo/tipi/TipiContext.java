@@ -261,8 +261,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		this.myApplication = myApplication;
 		this.systemPropertyMap.putAll(systemProperties);
 		classManager = new ClassManager(getClass().getClassLoader());
-		// this();
-		System.err.println("<<<" + this.systemPropertyMap);
 		initializeContext(myApplication,preload, parent);
 		FunctionFactoryFactory.getInstance().addFunctionResolver(classManager);
 	}
@@ -546,7 +544,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	public String getSystemProperty(String name) {
 
 		String value = systemPropertyMap.get(name);
-		System.err.println(">>>>>>>>>>>>>>>>"+systemPropertyMap);
 		String sysVal = null;
 		if (value != null) {
 			return value;
@@ -608,8 +605,8 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 					"Sorry, I deprecated the direct client for tipi usage");
 		}
 
-		getClient().setLocaleCode(locale);
-		getClient().setSubLocaleCode(sublocale);
+		getApplicationInstance().setLocaleCode(locale);
+		getApplicationInstance().setSubLocaleCode(sublocale);
 	}
 
 	public void parseStream(InputStream in, ExtensionDefinition ed)
@@ -1733,7 +1730,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			// TODO No remove completely. Don't like it.
 			if (eHandler == null) {
 				eHandler = new BaseTipiErrorHandler();
-				eHandler.setContext(this);
+				updateValidationProperties();
 
 			}
 			String errorMessage = eHandler.hasErrors(reply);
@@ -2499,8 +2496,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		setTipiResourceLoader(tipiCodeBase);
 		setGenericResourceLoader(resourceCodeBase);
 
-		eHandler = new BaseTipiErrorHandler();
-		eHandler.setContext(this);
+		updateValidationProperties();
 
 //		try {
 //			Class<?> c = Class
@@ -2512,6 +2508,11 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 //			logger.error("Error loading XSD?",e);
 //		}
 
+	}
+
+	public void updateValidationProperties() {
+		eHandler = new BaseTipiErrorHandler();
+		eHandler.setContext(this);
 	}
 
 	public void fireTipiStructureChanged(TipiComponent tc) {
@@ -2831,6 +2832,17 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 		return defaultConnector;
 	}
+
+
+	public void setDefaultConnector(TipiConnector defaultConnector) {
+		this.defaultConnector = defaultConnector;
+		if(this.defaultConnector!=null) {
+			this.defaultConnector.setContext(this);
+			
+		}
+	}
+
+	
 
 	private void registerConnector(TipiConnector tc) {
 		tipiConnectorMap.put(tc.getConnectorId(), tc);

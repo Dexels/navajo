@@ -64,13 +64,14 @@ public class InstanceConfigurationProviderImpl implements
 		this.configAdmin = null;
 	}
 	
+	
+
 	public void activate(Map<String,Object> parameters, BundleContext bundleContext) throws FileNotFoundException {
 		deployments.clear();
 		profiles.clear();
 		resourcePids.clear();
 //		"/Users/frank/git/memberportal/com.sportlink.memberportal.tipi"
 		String root = (String) parameters.get("path");
-		logger.info("========>  Activating");
 		rootFolder = new File(root);
 		
 		if(!rootFolder.exists()) {
@@ -133,6 +134,7 @@ public class InstanceConfigurationProviderImpl implements
 			}
 			// loop again over all profiles:
 			for (String file : files) {
+				try {
 				String[] parts = file.split("\\.");
 				if(parts.length<2) {
 					continue;
@@ -155,6 +157,15 @@ public class InstanceConfigurationProviderImpl implements
 						// profileKey is for all deployments
 						for (String currentDeployment : deployments) {
 							deploymentSettings.get(currentDeployment).get(currentProfile).put(profileKey, profileArguments.getObject(profileKey));
+						}
+					}
+				}
+				} finally {
+					if(fis!=null) {
+						try {
+							fis.close();
+						} catch (Exception e) {
+
 						}
 					}
 				}
@@ -193,6 +204,7 @@ public class InstanceConfigurationProviderImpl implements
 				o.put("tipi.instance.profile", profile);
 				o.put("tipi.instance.deployment", deployment);
 				o.put("tipi.instance.path", rootFolder.getAbsolutePath());
+				o.put("alias", "/"+deployment+"/"+profile);
 				o.putAll(global);
 				String pid = "tipi.instance";
 				String implementation = (String) o.get("tipi.instance.implementation");

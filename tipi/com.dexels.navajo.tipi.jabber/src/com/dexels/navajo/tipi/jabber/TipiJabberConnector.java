@@ -622,7 +622,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 	}
 
 	@Override
-	public void doTransaction(Navajo n, String service) throws TipiBreakException, TipiException {
+	public Navajo doTransaction(Navajo n, String service) throws TipiBreakException, TipiException {
 		if (service.equals("JabberRoster")) {
 			postRoster(connection.getRoster());
 		}
@@ -630,7 +630,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 	}
 
 	@Override
-	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
+	public Navajo doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		if (destination == null) {
 			// try {
 			// broadcastMessage("Broadcast navajo service: " + service);
@@ -663,6 +663,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		} catch (NavajoException e) {
 			logger.error("Error: ",e);
 		}
+		return null;
 	}
 
 	@Override

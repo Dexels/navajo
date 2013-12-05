@@ -54,7 +54,9 @@ public class TipiMenu extends TipiVaadinComponentImpl {
 
     @Override
 	public void disposeComponent() {
-    	menuItem.getParent().removeChild(menuItem);
+    	if(menuItem!=null && menuItem.getParent()!=null) {
+        	menuItem.getParent().removeChild(menuItem);
+    	}
     	super.disposeComponent();
     }	
 	// skip the vaadinComponent's setContainer

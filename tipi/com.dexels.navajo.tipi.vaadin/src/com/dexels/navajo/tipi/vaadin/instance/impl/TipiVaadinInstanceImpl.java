@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.vaadin.instance.impl;
+	package com.dexels.navajo.tipi.vaadin.instance.impl;
 
 import java.util.Dictionary;
 import java.util.Hashtable;

@@ -73,6 +73,7 @@ import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.script.api.UserException;
+import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
@@ -201,7 +202,7 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  TribeManagerFactory.startStatusCollector();
 	  
 	  // Startup Jabber
-	  JabberWorkerFactory.getInstance();
+	  JabberWorkerFactory.getJabberWorkerInstance();
 
   }
   
@@ -1213,12 +1214,12 @@ public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, 
 }
 
   private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage) {
-		if (navajoConfig.getDescriptionProvider() == null) {
-			//System.err.println("No description provider");
+		final DescriptionProviderInterface descriptionProvider = navajoConfig.getDescriptionProvider();
+		if (descriptionProvider == null) {
 			return;
 		}
 		try {
-			navajoConfig.getDescriptionProvider().updatePropertyDescriptions(inMessage, outMessage);
+			descriptionProvider.updatePropertyDescriptions(inMessage, outMessage);
 		} catch (NavajoException e) {
 			logger.error("Error: ", e);
 		}

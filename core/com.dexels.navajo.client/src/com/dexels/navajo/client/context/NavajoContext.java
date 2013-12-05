@@ -278,6 +278,7 @@ public abstract class NavajoContext implements ClientContext {
 	}
 
 
+	@Override
 	public Property parsePropertyPath(String path) {
 		if(path.indexOf(":")==-1) {
 			Navajo n = getNavajo();

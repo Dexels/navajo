@@ -44,19 +44,35 @@ public class TextPropertyField extends PropertyField {
 			TextPropertyField.class.getResource("view.png"));
 
 	public TextPropertyField() {
+		this(true);
+	}
+	public TextPropertyField(Boolean addFocusLostListener) {
+		super(addFocusLostListener);
 		setDocument(myDocument);
-		this.addFocusListener(new java.awt.event.FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				lostFocus(e);
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
-				selectAll();
-			}
-		});
-
+		if (addFocusLostListener)
+		{
+			this.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					lostFocus(e);
+				}
+	
+				@Override
+				public void focusGained(FocusEvent e) {
+					selectAll();
+				}
+			});
+		}
+		else
+		{
+			this.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					selectAll();
+				}
+			});
+			
+		}
 	}
 
 	@Override

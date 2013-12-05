@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.jgit;
+package com.dexels.navajo.jgit;
 
 import org.eclipse.jgit.transport.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.OpenSshConfig.Host;

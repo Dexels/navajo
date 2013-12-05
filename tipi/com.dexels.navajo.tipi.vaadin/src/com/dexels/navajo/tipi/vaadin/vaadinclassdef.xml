@@ -331,6 +331,15 @@
 		<methods />
 	</tipiclass>
 
+	<tipiclass class="TipiCss" name="css" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.components"
+	type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
+		<events>
+		</events>
+		<values>
+		</values>
+		<methods />
+	</tipiclass>
+	
 	<tipiclass class="TipiToolbar" name="toolbar" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.components"
 		type="tipi" childcount="*" layoutmanager="false" addtocontainer="true" toplevel="false">
 		<events>
@@ -558,6 +567,86 @@
 		</values>
 		<methods />
 	</tipiclass>
+	
+	
+		<tipiclass class="TipiCssProperty" name="cssproperty" implements="basecomponent,datacomponent,vaadincomponent"  package="com.dexels.navajo.tipi.vaadin.components"
+		propertycomponent="true" type="component" addtocontainer="true">
+		<events>
+	        <event name="onValueChanged">
+	           <description>
+	              Fired when any value has been changed in the table.
+	              Use the event parameters to filter the exact changes you are interested in.
+	           </description>
+	           <param name="propertyName" type="string" />
+	           <param name="old" type="string" />
+	           <param name="new" type="string" />
+	           <param name="propertyValue" type="object" />
+	           <param name="row" type="string" />
+	           <param name="column" type="string" />
+	           <param name="message" type="message" />
+	           <param name="property" type="property" />
+	           <param name="path" type="string" />
+	        </event>
+			<event name="onStateChanged" />
+			<event name="onFocusGained" />
+			<event name="onFocusLost" />
+			<event name="onEnter" />
+			<event name="onActionPerformed" />
+			<event name="onBinarySelected" />
+
+			<!-- only included for compatibility reasons. Not implement. -->
+			<event name="onKey">
+				<param name="code" type="integer" />
+				<param name="key" type="string" />
+				<param name="modifiers" type="string" />
+				<param name="mode" type="string" />
+			</event>
+		</events>
+		<values>
+			<value direction="inout" name="propertyname" type="string" />
+			<value direction="inout" name="propertyValue" type="object" />
+			<value direction="inout" name="enabled" type="boolean" />
+			<value direction="inout" name="visible" type="boolean" />
+			<value direction="inout" name="allowStringLineWrap" type="boolean" />
+			<value direction="inout" name="use_checkbox" type="boolean" />
+			<value direction="in" name="visibleRowCount" type="integer" />
+			<value direction="in" name="width" type="integer" />
+			<value direction="in" name="widthPercentage" type="integer" />
+			<value direction="in" name="selectiontype" type="selection">
+				<option description="radio" value="radio" />
+				<option description="combo" value="combo" />
+				<option description="list" value="list" />
+				<option description="checkbox" value="checkbox" />
+			</value>
+
+			<value direction="inout" name="label_halign" type="selection">
+				<option description="Leading" value="leading" />
+				<option description="Left" value="left" />
+				<option description="Center" value="center" />
+				<option description="Right" value="right" />
+				<option description="Trailing" value="trailing" />
+			</value>
+			<value direction="inout" name="label_valign" type="selection" value="'top'">
+				<option description="Top" value="top" />
+				<option description="Center" value="center" />
+				<option description="Bottom" value="bottom" />
+			</value>
+			<value direction="inout" name="label_indent" type="integer" />
+			<value direction="inout" name="showlabel" type="boolean" value="true" />
+
+			<value direction="in" name="useCheckBoxes" type="boolean" value="true" />
+			<value direction="in" name="memoRowCount" type="integer" />
+			<value direction="in" name="memoColumnCount" type="integer" />
+			<value direction="in" name="horizontalScrolls" type="boolean" />
+			<value direction="in" name="verticalScrolls" type="boolean" />
+			<value direction="in" name="maxImageHeight" type="integer" />
+			<value direction="in" name="maxImageWidth" type="integer" />
+		</values>
+		<methods />
+	</tipiclass>
+	
+	
+	
 
 	<tipiclass addtocontainer="true" class="TipiCheckbox" implements="basecomponent,datacomponent,vaadincomponent" module="component"
 		name="checkbox" childcount="0" layoutmanager="false" package="com.dexels.navajo.tipi.vaadin.components"

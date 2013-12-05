@@ -25,6 +25,10 @@ public class PercentageField extends AbstractPropertyField implements
 			.getInstance();
 
 	public PercentageField() {
+		this(true);
+	}
+	public PercentageField(Boolean addFocusLostListener) {
+		super(addFocusLostListener);
 		myEditFormat.setGroupingUsed(false);
 		myEditFormat.setDecimalSeparatorAlwaysShown(false);
 		myEditFormat.getDecimalFormatSymbols().setDecimalSeparator(',');

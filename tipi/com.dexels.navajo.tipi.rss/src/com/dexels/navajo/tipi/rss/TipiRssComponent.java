@@ -54,18 +54,21 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 	}
 
 	@Override
-	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
+	public Navajo doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		try {
 			if(service.equals("InitRss")) {
 				Navajo nn = createInitNavajo();
 				injectNavajo(service, nn);
+				return nn;
 			}
 			if(service.equals("Rss")) {
 				String url = n.getProperty("Rss/URL").getValue();
 				Rss rss = createRssFeed(url);
 				Navajo nn = getRssNavajo(rss.getChannel(),service);
 				injectNavajo("Rss", nn);			
+				return nn;
 			}
+			return null;
 		} catch (Exception e) {
 			throw new TipiException(e);
 		}

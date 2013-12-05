@@ -7,8 +7,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletConfig;
@@ -32,7 +34,10 @@ import tipi.TipiEchoExtension;
 
 import com.dexels.navajo.echoclient.components.Styles;
 import com.dexels.navajo.tipi.TipiContext;
+import com.dexels.navajo.tipi.TipiContextListener;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.connectors.TipiConnector;
+import com.dexels.navajo.tipi.locale.LocaleListener;
 
 public class TipiEchoInstance extends ApplicationInstance implements TipiApplicationInstance {
 
@@ -49,8 +54,15 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 	private ServletConfig myServletConfig;
 
 //	private String resourceDir;
+	private final Set<TipiContextListener> tipiContextListeners = new HashSet<TipiContextListener>();
 
 	private ServletContext myServletContext;
+
+private TipiConnector defaultConnector;
+
+private String language;
+
+private String region;
 
 	public TipiEchoInstance(ServletConfig sc, ServletContext c) throws Exception {
 		myServletConfig = sc;
@@ -185,6 +197,7 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 		
 		// Title.Sub
 		EchoTipiContext newContext = new EchoTipiContext(this,null);
+		newContext.setDefaultConnector(defaultConnector);
 		ServletContextResourceLoader servletContextTipiLoader = new ServletContextResourceLoader(myServletContext,"tipi");
 		newContext.setTipiResourceLoader(servletContextTipiLoader);
 		ServletContextResourceLoader servletContextResourceLoader = new ServletContextResourceLoader(myServletContext,"resource");
@@ -249,6 +262,42 @@ public class TipiEchoInstance extends ApplicationInstance implements TipiApplica
 	@Override
 	public void close() {
 		
+	}
+
+	@Override
+	public void setDefaultConnector(TipiConnector tipiConnector) {
+		this.defaultConnector = tipiConnector;
+		
+	}
+
+	@Override
+	public void addTipiContextListener(TipiContextListener t) {
+		tipiContextListeners.add(t);
+	}
+
+	@Override
+	public void setLocaleCode(String locale) {
+		this.language = locale;
+	}
+	@Override
+	public String getLocaleCode() {
+		return language;
+	}
+	@Override
+	public void setSubLocaleCode(String region) {
+		this.region = region;
+	}
+	@Override
+	public String getSubLocaleCode() {
+		return region;
+	}
+
+	public void addLocaleListener(LocaleListener l) {
+		logger.warn("Locale listeners not supported in Echo");
+	}
+
+	public void removeLocaleListener(LocaleListener l) {
+		logger.warn("Locale listeners not supported in Echo");
 	}
 
 }

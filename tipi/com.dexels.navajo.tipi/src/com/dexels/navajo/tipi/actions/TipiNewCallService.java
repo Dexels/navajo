@@ -45,32 +45,39 @@ public class TipiNewCallService extends TipiAction {
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
 
-		TipiValue parameter = getParameter("input");
-		// String unevaluated = null;
-
-		if (parameter != null) {
-			// unevaluated = parameter.getValue();
-		}
-		Operand serviceOperand = getEvaluatedParameter("service", event);
-		Operand inputOperand = getEvaluatedParameter("input", event);
-		Operand destination = getEvaluatedParameter("destination", event);
-		Operand connector = getEvaluatedParameter("connector", event);
+		String service = (String) getEvaluatedParameterValue("service", event);
+		Navajo input = (Navajo) getEvaluatedParameterValue("input", event);
+//		Operand destination = getEvaluatedParameter("destination", event);
+		String destination = (String) getEvaluatedParameterValue("destination", event);
+		String connector = (String) getEvaluatedParameterValue("connector", event);
 		Object cached = getEvaluatedParameterValue("cached", event);
+		Boolean local = (Boolean) getEvaluatedParameterValue("local", event);
+		Boolean breakOnError = (Boolean) getEvaluatedParameterValue("breakOnError", event);
+		if(breakOnError==null) {
+			breakOnError = false;
+		}
+
 		// Object silentValue = getEvaluatedParameterValue("silent", event);
 		// Boolean silent = (Boolean)silentValue;
-		if (connector == null || connector.value == null) {
+		final TipiConnector defaultConnector = getContext().getDefaultConnector();
+		
+//		if(connector == null && defaultConnector!=null) {
+//			Navajo result = defaultConnector.doTransaction(input,service);
+//			processResult(breakOnError, destination, service, result);
+//			return;
+//		}
+		if (connector == null &&  defaultConnector==null) {
 			oldExecute(event);
 			return;
 		}
-		String destAddress = null;
-		if (destination != null) {
-			destAddress = (String) destination.value;
-		}
-		if (serviceOperand == null || serviceOperand.value == null) {
+//		String destAddress = null;
+//		if (destination != null) {
+//			destAddress = (String) destination.value;
+//		}
+		if (service == null ) {
 			throw new TipiException(
 					"Error in callService action: service parameter missing!");
 		}
-		String service = (String) serviceOperand.value;
 
 		if (cached != null && cached instanceof Boolean) {
 			boolean c = (Boolean) cached;
@@ -85,31 +92,28 @@ public class TipiNewCallService extends TipiAction {
 			}
 		}
 
-		Navajo input = null;
-		if (inputOperand != null) {
-			input = (Navajo) inputOperand.value;
-		}
+
 		setThreadState("waiting");
-		TipiConnector defaultConnector = myContext.getDefaultConnector();
-		if (connector.value == null) {
+		if (connector == null) {
 			// long timeStamp = System.currentTimeMillis();
-			logger.info("No connector");
+			logger.debug("No connector");
 			if (defaultConnector == null) {
 				throw new IllegalStateException(
 						"No default tipi connector found!");
 			}
-			defaultConnector.doTransaction(input, service);
+			Navajo result = defaultConnector.doTransaction(input, service);
+			processResult(breakOnError, destination, service, result);
 		} else {
 			TipiConnector ttt = myContext
-					.getConnector((String) connector.value);
+					.getConnector( connector);
 			if (ttt == null) {
 				logger.warn("Warning: connector: "
-						+ (String) connector.value
+						+ connector
 						+ " not found, reverting to default connector");
 
-				defaultConnector.doTransaction(input, service, destAddress);
+				defaultConnector.doTransaction(input, service, destination);
 			} else {
-				ttt.doTransaction(input, service, destAddress);
+				ttt.doTransaction(input, service, destination);
 			}
 		}
 		setThreadState("busy");
@@ -121,18 +125,24 @@ public class TipiNewCallService extends TipiAction {
 			com.dexels.navajo.tipi.TipiBreakException {
 		TipiValue parameter = getParameter("input");
 		String unevaluated = null;
-		boolean breakOnError = false;
+		if(getContext().getClient()==null) {
+			throw new TipiException("No (HTTP) client configured, call will fail.");
+		}
+		getContext().getClient().setLocaleCode(getContext().getApplicationInstance().getLocaleCode());
+		getContext().getClient().setSubLocaleCode(getContext().getApplicationInstance().getSubLocaleCode());
+		
 
 		if (parameter != null) {
 			unevaluated = parameter.getValue();
 		}
 		Operand serviceOperand = getEvaluatedParameter("service", event);
 		Operand inputOperand = getEvaluatedParameter("input", event);
-		Operand destinationOperand = getEvaluatedParameter("destination", event);
-		Operand brk = getEvaluatedParameter("breakOnError", event);
-		if (brk != null) {
-			breakOnError = ((Boolean) brk.value).booleanValue();
+		String destination = (String) getEvaluatedParameterValue("destination", event);
+		Boolean breakOnError = (Boolean) getEvaluatedParameterValue("breakOnError", event);
+		if(breakOnError==null) {
+			breakOnError = false;
 		}
+		
 		if (serviceOperand == null || serviceOperand.value == null) {
 			throw new TipiException(
 					"Error in callService action: service parameter missing!");
@@ -151,14 +161,23 @@ public class TipiNewCallService extends TipiAction {
 		if (input == null) {
 			input = NavajoFactory.getInstance().createNavajo();
 		}
+		Navajo nn = input.copy();
+		// nn
+		// Don't let NavajoClient touch your original navajo! It will mess
+		// things up.
+		myContext.fireNavajoSent(input, service);
 		try {
-			Navajo nn = input.copy();
-			// nn
-			// Don't let NavajoClient touch your original navajo! It will mess
-			// things up.
-			myContext.fireNavajoSent(input, service);
-
 			Navajo result = myContext.getClient().doSimpleSend(nn, service);
+			processResult(breakOnError, destination, service, nn);
+	} catch (ClientException e) {
+			e.printStackTrace();
+		}
+
+	
+	}
+
+	private void processResult(boolean breakOnError, String destination,
+			String service, Navajo result) throws TipiException {
 
 			myContext.addNavajo(service, result);
 			// is this correct? It is a bit odd.
@@ -166,10 +185,8 @@ public class TipiNewCallService extends TipiAction {
 				result.getHeader().setHeaderAttribute("sourceScript",
 						result.getHeader().getRPCName());
 			}
-			if (destinationOperand != null) {
-				if (destinationOperand.value != null) {
-					service = (String) destinationOperand.value;
-				}
+			if (destination != null) {
+					service = destination;
 			}
 			myContext.loadNavajo(result, service);
 			if (myContext.hasErrors(result)) {
@@ -182,10 +199,5 @@ public class TipiNewCallService extends TipiAction {
 					throw new TipiBreakException(TipiBreakException.USER_BREAK);
 				}
 			}
-
-		} catch (ClientException e) {
-			logger.error("Error: ",e);
-		}
-
 	}
 }

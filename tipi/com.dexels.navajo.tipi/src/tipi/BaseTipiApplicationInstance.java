@@ -6,11 +6,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.PropertyResourceBundle;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
@@ -20,11 +22,18 @@ import tipipackage.ITipiExtensionContainer;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.connectors.TipiConnector;
+import com.dexels.navajo.tipi.locale.LocaleListener;
 
 public abstract class BaseTipiApplicationInstance implements TipiApplicationInstance {
 
 	private TipiContext currentContext;
+	private TipiConnector defaultConnector;
+	private String language;
+	private String region;
 //	private File installationFolder = null;
+	
+	private final Set<LocaleListener> localeListeners = new HashSet<LocaleListener>();
 	private static final Logger logger = LoggerFactory.getLogger(BaseTipiApplicationInstance.class);
 	@Override
 	public TipiContext getCurrentContext() {
@@ -177,4 +186,44 @@ public abstract class BaseTipiApplicationInstance implements TipiApplicationInst
 			result.put(key, prb.getString(key));
 		}
 	}
+	
+
+	@Override
+	public void setDefaultConnector(TipiConnector tipiConnector) {
+		this.defaultConnector = tipiConnector;
+	}
+	
+	@Override
+	public void setLocaleCode(String locale) {
+		this.language = locale;
+		for (LocaleListener l : localeListeners) {
+			l.localeChanged(currentContext, language, region);
+		}
+	}
+	@Override
+	public String getLocaleCode() {
+		return language;
+	}
+	@Override
+	public void setSubLocaleCode(String region) {
+		this.region = region;
+		for (LocaleListener l : localeListeners) {
+			l.localeChanged(currentContext, language, region);
+		}
+	}
+	@Override
+	public String getSubLocaleCode() {
+		return region;
+	}
+
+	@Override
+	public void addLocaleListener(LocaleListener l) {
+		localeListeners.add(l);
+	}
+
+	@Override
+	public void removeLocaleListener(LocaleListener l) {
+		localeListeners.remove(l);
+	}
+
 }

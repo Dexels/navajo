@@ -63,49 +63,53 @@ public class NavajoLogComponent implements LogListener {
 	
 	@Override
 	public void logged(LogEntry log) {
-		if ((log.getBundle() == null)
-				|| (log.getBundle().getSymbolicName() == null)) {
-			return;
-		}
-		// Retrieve a Logger object, or create it if none exists.
-		Logger logger = loggers.get("osgi.log");
-		if (logger == null) {
-			logger = LoggerFactory.getLogger(log.getBundle().getSymbolicName());
-			loggers.put(log.getBundle().getBundleId(), logger);
-		}
+		try {
+			if ((log.getBundle() == null)
+					|| (log.getBundle().getSymbolicName() == null)) {
+				return;
+			}
+			// Retrieve a Logger object, or create it if none exists.
+			Logger logger = loggers.get("osgi.log");
+			if (logger == null) {
+				logger = LoggerFactory.getLogger(log.getBundle().getSymbolicName());
+				loggers.put(log.getBundle().getBundleId(), logger);
+			}
 
-		// If there is an exception available, use it, otherwise just log
-		// the message
-		if (log.getException() != null) {
-			switch (log.getLevel()) {
-			case LogService.LOG_DEBUG:
-				logger.debug(log.getMessage(), log.getException());
-				break;
-			case LogService.LOG_INFO:
-				logger.info(log.getMessage(), log.getException());
-				break;
-			case LogService.LOG_WARNING:
-				logger.warn(log.getMessage(), log.getException());
-				break;
-			case LogService.LOG_ERROR:
-				logger.error(log.getMessage(), log.getException());
-				break;
+			// If there is an exception available, use it, otherwise just log
+			// the message
+			if (log.getException() != null) {
+				switch (log.getLevel()) {
+				case LogService.LOG_DEBUG:
+					logger.debug(log.getMessage(), log.getException());
+					break;
+				case LogService.LOG_INFO:
+					logger.info(log.getMessage(), log.getException());
+					break;
+				case LogService.LOG_WARNING:
+					logger.warn(log.getMessage(), log.getException());
+					break;
+				case LogService.LOG_ERROR:
+					logger.error(log.getMessage(), log.getException());
+					break;
+				}
+			} else {
+				switch (log.getLevel()) {
+				case LogService.LOG_DEBUG:
+					logger.debug(log.getMessage());
+					break;
+				case LogService.LOG_INFO:
+					logger.info(log.getMessage());
+					break;
+				case LogService.LOG_WARNING:
+					logger.warn(log.getMessage());
+					break;
+				case LogService.LOG_ERROR:
+					logger.error(log.getMessage());
+					break;
+				}
 			}
-		} else {
-			switch (log.getLevel()) {
-			case LogService.LOG_DEBUG:
-				logger.debug(log.getMessage());
-				break;
-			case LogService.LOG_INFO:
-				logger.info(log.getMessage());
-				break;
-			case LogService.LOG_WARNING:
-				logger.warn(log.getMessage());
-				break;
-			case LogService.LOG_ERROR:
-				logger.error(log.getMessage());
-				break;
-			}
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
 	}
 }

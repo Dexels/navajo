@@ -29,7 +29,7 @@ import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.navajo.server.Repository;
 import com.dexels.navajo.server.RepositoryFactory;
-import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
+import com.dexels.navajo.server.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
@@ -206,7 +206,12 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 		}
 		ServiceReference<?> ref = bundleContext.getServiceReference(clz);
 		this.serviceReferences.put(clz,ref);
-		return bundleContext.getService(ref);
+		try {
+			return bundleContext.getService(ref);
+		} catch (Throwable t) {
+			logger.warn("Could not find service: " + clz);
+			return null;
+		}
 	}
 	
 	public void setRepositoryFactory(RepositoryFactory rf) {

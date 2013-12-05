@@ -45,16 +45,23 @@ public final class IntegerPropertyField extends PropertyField implements
 	private boolean readOnly = false;
 
 	public IntegerPropertyField() {
+		this("true");
+	}
+	public IntegerPropertyField(String addFocusLostListener) {
+		super(addFocusLostListener != null && addFocusLostListener.equals("true"));
 
 		try {
 			myDocument = new WholeNumberDocument();
 			setDocument(myDocument);
-			this.addFocusListener(new java.awt.event.FocusAdapter() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					this_focusLost(e);
-				}
-			});
+			if (addFocusLostListener != null && addFocusLostListener.equals("true"))
+			{
+				this.addFocusListener(new java.awt.event.FocusAdapter() {
+					@Override
+					public void focusLost(FocusEvent e) {
+						this_focusLost(e);
+					}
+				});
+			}
 			if (getForcedAlignment() == null) {
 				setHorizontalAlignment(SwingConstants.RIGHT);
 			}
@@ -64,8 +71,13 @@ public final class IntegerPropertyField extends PropertyField implements
 		}
 	}
 
+	public IntegerPropertyField(boolean longMode, String addFocusLostListener) {
+		this(addFocusLostListener);
+		this.longMode = true;
+	}
+
 	public IntegerPropertyField(boolean longMode) {
-		this();
+		this("true");
 		this.longMode = true;
 	}
 

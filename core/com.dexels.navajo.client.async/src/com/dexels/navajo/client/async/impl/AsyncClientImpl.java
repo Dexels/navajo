@@ -308,6 +308,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		n.write(baos);
 		byte[] byteArray = baos.toByteArray();
 		ByteArrayInputStream bais = new ByteArrayInputStream(byteArray);
+		exchange.addRequestHeader("Content-Length", byteArray.length+"");
 		exchange.setRequestContentSource(bais);
 		exchange.setURL(url);
 		setActualCalls(getActualCalls()+1);

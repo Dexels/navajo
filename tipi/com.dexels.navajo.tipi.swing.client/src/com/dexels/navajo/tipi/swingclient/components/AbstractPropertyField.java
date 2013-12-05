@@ -31,7 +31,24 @@ public abstract class AbstractPropertyField extends JTextField implements
 	private boolean isEditing = false;
 
 	public AbstractPropertyField() {
-		addFocusListener(this);
+		this(true);
+		
+	}
+	public AbstractPropertyField(Boolean addFocusLostListener) {
+		if (addFocusLostListener)
+		{
+			this.addFocusListener(this);
+		}
+		else
+		{
+			final FocusListener fl = (FocusListener) this;
+			this.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					fl.focusGained(e);
+				}
+			});
+		}
 		setOpaque(true);
 	}
 

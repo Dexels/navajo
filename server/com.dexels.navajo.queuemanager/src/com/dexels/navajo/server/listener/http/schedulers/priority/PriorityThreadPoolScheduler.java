@@ -275,6 +275,9 @@ public final class PriorityThreadPoolScheduler implements TmlScheduler, Priority
 //			if(false) {
 //				throw new NavajoSchedulingException(1, "sure");
 //			}
+			if(queueName==null) {
+				return getDefaultQueue();
+			}
 		} catch (NavajoSchedulingException e) {
 			if(e.getReason()==NavajoSchedulingException.SCRIPT_PROBLEM || e.getReason() == NavajoSchedulingException.UNKNOWN) {
 				logger.info(RESOLUTION_SCRIPT_DOES_NOT_EXIST, "Could not find queue resolution script, using default queue.",e);

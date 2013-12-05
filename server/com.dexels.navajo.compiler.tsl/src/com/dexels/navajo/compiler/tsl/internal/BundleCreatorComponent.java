@@ -116,7 +116,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		// boolean isInDefaultPackage = script.indexOf('/')==-1;
 		final String formatCompilationDate = formatCompilationDate(compilationDate);
 		List<Dependency> dependencies = new ArrayList<Dependency>();
-		if (f.isDirectory()) {
+		if (f.isDirectory() && f.getCanonicalPath().equals(scriptFolder + "/" + script) ) {
 			compileAllIn(f, compilationDate, failures, success, skipped, force,
 					keepIntermediate,tenant);
 		} else {

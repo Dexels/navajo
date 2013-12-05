@@ -29,7 +29,6 @@ import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 
 public class PingAnswer extends Answer implements Mappable {
 
@@ -58,7 +57,7 @@ public class PingAnswer extends Answer implements Mappable {
 		uptime = DispatcherFactory.getInstance().getUptime();
 		busy = DispatcherFactory.getInstance().isBusy();
 		statistics = TribeManagerFactory.getInstance().getStatistics();
-		postmanURL = JabberWorkerFactory.getInstance().getPostmanURL();
+//		postmanURL = JabberWorkerFactory.getInstance().getPostmanURL();
 	}
 	
 	@Override

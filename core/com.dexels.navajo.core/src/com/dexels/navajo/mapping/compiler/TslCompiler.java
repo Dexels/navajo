@@ -535,6 +535,10 @@ public class TslCompiler {
 			value = getCDATAContent(valueElt);
 			if (value == null) {
 				Node child = valueElt.getFirstChild();
+				if ( child == null ) {
+					logger.error("Could not child in element: " + valueElt.getNodeName());
+					throw new Exception("Invalid script: " + valueElt.getNodeName());
+				}
 				value = child.getNodeValue();
 			}
 		}

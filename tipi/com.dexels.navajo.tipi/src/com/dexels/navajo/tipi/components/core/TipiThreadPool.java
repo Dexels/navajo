@@ -158,7 +158,6 @@ public class TipiThreadPool implements Serializable {
 				} else {
 					exe.performAction(null, null, 0);
 				}
-				exe.performAction(null, null, 0);
 			} catch (TipiBreakException e) {
 				logger.error("Error: ",e);
 			} catch (TipiSuspendException e) {

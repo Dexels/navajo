@@ -100,6 +100,9 @@ public class QueueManagerImpl implements QueueManager {
 			} else {
 				pr = callResolutionScript(in, script);
 			}
+			if(pr==null) {
+				return null;
+			}
 			cache.put(in.getServiceName(), pr);
 		} else {
 			//System.err.println("Returning cached response");			
@@ -152,7 +155,11 @@ public class QueueManagerImpl implements QueueManager {
     	} else {
     		scriptFile = new File(getScriptDir(),script);
     	}
-		FileReader fr = null;
+    	if(!scriptFile.exists()) {
+    		logger.debug("Can not resolve resolution script.");
+    		return null;
+    	}
+    	FileReader fr = null;
         try {
     		fr = new FileReader(scriptFile);
 		globalScope = NavajoScopeManager.getInstance()
