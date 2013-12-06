@@ -61,6 +61,11 @@ public final class StringFunction extends FunctionInterface {
 
 		Object returnValue = null;
 		try {
+			// fix for contains method (see issue #135 GitHub).
+			if ( "contains".equals(methodName) ) { // replace java.lang.String for CharSequence...
+				classTypes = new Class[1];
+				classTypes[0] = java.lang.CharSequence.class;
+			}
 			Method m = java.lang.String.class.getMethod(methodName, classTypes);
 			if (m == null && classTypes!=null) {
 				String parameterList = "";
@@ -110,10 +115,10 @@ public final class StringFunction extends FunctionInterface {
 		String noot = "06 - 2322 7572";
 		f.reset();
 
-		f.insertOperand("replaceAll");
+		f.insertOperand("contains");
 		f.insertOperand(noot);
-		f.insertOperand("[ ]+");
-		f.insertOperand("");
+		f.insertOperand("02");
+		
 		Object o = f.evaluate();
 		System.out.println("o = " + o + ", type = " + o.getClass().getName());
 
