@@ -41,7 +41,11 @@ public class WindowCloseManager implements CloseListener {
 			@Override
 			public void run() {
 				logger.debug("Shutdown firing!");
-				tipiContext.shutdown();
+				try {
+					tipiContext.shutdown();
+				} catch (Throwable e) {
+					logger.info("Graceful shutdown of context seems to fail, continuing application shutdown",e);
+				}
 				application.close();
 				logger.info("Shutting down instance. Goodbye");
 			}}, 10000);

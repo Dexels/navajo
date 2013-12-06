@@ -1,12 +1,17 @@
 package com.dexels.navajo.tipi.vaadin.application.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +31,7 @@ import com.dexels.navajo.tipi.vaadin.application.TipiVaadinApplication;
 import com.dexels.navajo.tipi.vaadin.instance.LocalTipiConnector;
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
+import com.vaadin.terminal.gwt.server.Constants;
 
 public class TipiVaadinServlet extends AbstractApplicationServlet {
 
@@ -45,10 +51,55 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 	private String language =null;
 	private String region = null;
 
+	protected String widgetset;
+	protected String productionMode;
+
 	@Override
-	public void init(ServletConfig servletConfig) throws ServletException {
-		super.init(servletConfig);
-    }
+	public void init(final ServletConfig servletConfig) throws ServletException {
+		ServletConfig wrap = new ServletConfig(){
+
+			@Override
+			public String getServletName() {
+				return servletConfig.getServletName();
+			}
+
+			@Override
+			public ServletContext getServletContext() {
+				return servletConfig.getServletContext();
+			}
+
+			@Override
+			public String getInitParameter(String name) {
+				if("application".equals(name)) {
+					return TipiVaadinServlet.class.getName();
+				}
+				if("productionMode".equals(name)) {
+					return ""+TipiVaadinServlet.this.productionMode;
+				}
+				if(Constants.PARAMETER_WIDGETSET.equals(name)) {
+					return ""+TipiVaadinServlet.this.widgetset;
+				}
+				return servletConfig.getInitParameter(name);
+			}
+
+			@Override
+			public Enumeration<String> getInitParameterNames() {
+				final Enumeration<String> en = servletConfig.getInitParameterNames();
+				List<String> l = new ArrayList<String>();
+				while (en.hasMoreElements()) {
+					String name = en.nextElement();
+					l.add(name);
+				}
+				l.add("application");
+				l.add(Constants.PARAMETER_WIDGETSET);
+				l.add("productionMode");
+				Enumeration<String> ext = Collections.enumeration(l);
+				return ext;
+			}};
+		super.init(wrap);
+	}
+
+
 
 	public void activate(final Map<String,Object> settings, BundleContext bundleContext) {
 		logger.info("Activating Tipi Instance: {}",settings);
@@ -56,7 +107,10 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		final String deployment= (String) settings.get("tipi.instance.deployment");
 		language = (String) settings.get("tipi.instance.language");
 		region = (String) settings.get("tipi.instance.region");
+		productionMode = (String) settings.get("tipi.instance.productionmode");
+		widgetset = (String) settings.get("tipi.instance.widgetset");
 
+		
 		ContextInstance ci = new ContextInstance() {
 			
 			@Override
