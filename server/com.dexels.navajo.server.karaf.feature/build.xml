@@ -6,11 +6,7 @@
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
 	<property name="artifact" value="com.dexels.navajo.karaf.feature" />
-<<<<<<< HEAD
-	<property name="version" value="1.1.33-SNAPSHOT" />
-=======
 	<property name="version" value="1.1.48" />
->>>>>>> master
 	<condition property="test">
 		<matches pattern=".*SNAPSHOT" string="${version}"/>
 	</condition>
@@ -46,7 +42,6 @@
 
 	<target name="deploy" depends="prepare">
 		<artifact:pom id="mypom" file="${output}/pom.xml" />
-		<artifact:install pomrefid="mypom" file="${output}/features.xml" />
 		<if>
 			<equals arg1="${test}" arg2="true" />
 			<then>
@@ -66,7 +61,6 @@
 		</if>
 	</target>
 	<!-- 
-    mvn:com/dexels/navajo/com.dexels.navajo.karaf.feature/1.1.6-SNAPSHOT/features.xml
 	mvn:com.dexels.navajo/com.dexels.navajo.karaf.feature/1.0.35/features.xml
 	 -->
 </project>
