@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter.mailmap;
 
+import java.io.File;
 import java.io.Serializable;
 
 import com.dexels.navajo.adapter.MailMap;
@@ -68,7 +69,11 @@ public class AttachementMap implements Mappable, Serializable, AttachmentMapInte
   public String getAttachFile() {
     return attachFile;
   }
-  public void setAttachFile(String attachFile) {
+  public void setAttachFile(String attachFile) throws UserException {
+	// Check whether file exists.
+	if (! ( new File(attachFile).exists() ) ) {
+		throw new UserException(-1, "Could not attach file to mail. File not found: " + attachFile);
+	}
     this.attachFile = attachFile;
   }
   public void setAttachContentHeader(String s) {
