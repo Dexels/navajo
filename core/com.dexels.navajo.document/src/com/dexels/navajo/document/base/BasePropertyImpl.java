@@ -1865,6 +1865,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			return prop;
 		} else {
 			Property prop = new BasePropertyImpl(getRootDoc(), getName(), getType(), null, getLength(), getDescription(), getDirection());
+			if ( getSubtype() != null ) {
+				prop.setSubType(getSubType());
+			}
 			if ( getKey() != null ) {
 				prop.setKey(getKey());
 			}
