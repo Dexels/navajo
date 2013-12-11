@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dexels.githubosgi.servlet" immediate="true" enabled="true">
+   <implementation class="com.dexels.githubosgi.impl.GitHubServlet"/>
+   <reference bind="addRepositoryInstance" cardinality="0..n" interface="com.dexels.githubosgi.RepositoryInstance" name="RepositoryInstance" policy="dynamic" unbind="removeRepositoryInstance"/>
+   <reference bind="setRepositoryManager" cardinality="1..1" interface="com.dexels.githubosgi.RepositoryManager" name="RepositoryManager" policy="dynamic" unbind="clearRepositoryManager"/>
+   
+   <property name="alias" type="String" value="/github"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+</scr:component>

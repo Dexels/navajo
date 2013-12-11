@@ -1,4 +1,4 @@
-package com.dexels.navajo.jgit;
+package com.dexels.githubosgi.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,32 +28,34 @@ import org.eclipse.jgit.transport.CredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.githubosgi.GitRepositoryInstance;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 
-public class GitApplicationStatusImpl  {
-
+public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements GitRepositoryInstance {
 	
-	private final static Logger logger = LoggerFactory.getLogger(GitApplicationStatusImpl.class);
+	private final static Logger logger = LoggerFactory.getLogger(GitRepositoryInstanceImpl.class);
 
 	private File privateKey;
 	private File publicKey;
 	private String branch;
 	private String gitUrl;
 
+	protected File applicationFolder;
+//	protected ApplicationManager applicationManager;
+
 	private Git git;
 
 	private RevCommit lastCommit;
-
-	private String reponame;
 
 	private String name;
 
 	private String httpUrl;
 
-	private File gitRepoFolder;
+	public GitRepositoryInstanceImpl() {
+		logger.info("Instance created!");
+	}
 
-	private File storeFolder;
 
 
 	public String getGitUrl() {
@@ -71,6 +73,7 @@ public class GitApplicationStatusImpl  {
 		return null;
 	}
 
+	
 	public String getLastCommitMessage() {
 		if(lastCommit!=null) {
 			return lastCommit.getFullMessage();
@@ -116,9 +119,7 @@ public class GitApplicationStatusImpl  {
 		return branch;
 	}
 	
-	public String getRepositoryName() {
-		return reponame;
-	}
+
 	
 	public void deactivate() {
 
@@ -126,27 +127,28 @@ public class GitApplicationStatusImpl  {
 	
 	
 	public void activate(Map<String,Object> settings) throws IOException {
-		gitRepoFolder = new File((String) settings.get("repoFolder"));
-		storeFolder = new File((String) settings.get("storeFolder"));
+		logger.info("Starging activation");
+		File gitRepoFolder = repositoryManager.getRepositoryFolder();
 		gitUrl = (String) settings.get("url");
 		httpUrl = (String) settings.get("httpUrl");
-		reponame = (String) settings.get("repositoryname");
 		String key = (String) settings.get("key");
 		branch = (String) settings.get("branch");
 		name = (String) settings.get("name");
 
-		//		String combinedname = reponame + "-"+branch;
-		File keyFolder = new File(storeFolder,"gitssh");
-		
-		privateKey = null;
-		publicKey = null;
-		privateKey = new File(keyFolder,key);
-		publicKey = new File(keyFolder,key+".pub");
+		String combinedname = name + "-"+branch;
+		applicationFolder = new File(gitRepoFolder,combinedname);
+		File keyFolder = repositoryManager.getSshFolder();
+		if(keyFolder!=null && keyFolder.exists()) {
+			privateKey = null;
+			publicKey = null;
+			privateKey = new File(keyFolder,key);
+			publicKey = new File(keyFolder,key+".pub");
+		}
 		try {
 			
-			if(gitRepoFolder.exists()) {
-//				callPull();
-				Repository repository = getRepository(gitRepoFolder);
+			if(applicationFolder.exists()) {
+				callPull();
+				Repository repository = getRepository(applicationFolder);
 				git = new Git(repository);
 				Iterable<RevCommit> log = git.log().call();
 				lastCommit = log.iterator().next();
@@ -168,25 +170,25 @@ public class GitApplicationStatusImpl  {
 
 	}
 
-    
+	
+	@Override
 	public void callPull() throws GitAPIException, IOException {
-		File gitSubfolder = new File(gitRepoFolder, ".git");
+		File gitSubfolder = new File(applicationFolder, ".git");
 		if (!gitSubfolder.exists()) {
-			logger.info("Folder: " + gitRepoFolder.getAbsolutePath()
+			logger.info("Folder: " + applicationFolder.getAbsolutePath()
 					+ " is not a git repo. Not pulling.");
 		}
 		Repository repository = null;
 		try {
-			repository = getRepository(gitRepoFolder);
+			repository = getRepository(applicationFolder);
 			git = new Git(repository);
 			git.checkout().setName(branch).call();
 			git.reset().setMode(ResetType.HARD).call();
-			git.pull().setProgressMonitor(new NavajoProgress()).call();
+			git.pull().setProgressMonitor(new LoggingProgressMonitor()).call();
 			logger.info("Current branch: " + repository.getBranch());
 			git.clean().call();
 			Iterable<RevCommit> log = git.log().call();
 			lastCommit = log.iterator().next();
-			// only will work when built:
 
 //			xsdBuild.build(this);
 //			cacheBuild.build(this);
@@ -196,10 +198,11 @@ public class GitApplicationStatusImpl  {
 		}
 	}
 
+	@Override
 	public void callCheckout(String objectId, String branchname) throws IOException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
 		Repository repository = null;
 		try {
-			repository = getRepository(gitRepoFolder);
+			repository = getRepository(applicationFolder);
 			git = new Git(repository);
 //			git.checkout().setName("Production").setForce(true).call();
 			git.checkout().setCreateBranch(true).setName(branchname).setStartPoint(objectId).setForce(true).setUpstreamMode(SetupUpstreamMode.NOTRACK).call();
@@ -214,31 +217,35 @@ public class GitApplicationStatusImpl  {
 		}
 	}
 	
+	@Override
 	public void callClone() throws GitAPIException,
 			InvalidRemoteException, TransportException, IOException {
 	    JSch jsch = new JSch();
-	    JSch.setLogger(new com.jcraft.jsch.Logger() {
-			@Override
-			public void log(int arg0, String txt) {
-			}
+	    if(privateKey!=null && publicKey!=null) {
+		    JSch.setLogger(new com.jcraft.jsch.Logger() {
+				@Override
+				public void log(int level, String txt) {
+					logger.debug(txt);
+				}
+				
+				@Override
+				public boolean isEnabled(int arg0) {
+					return true;
+				}
+			});
+		    try {
+		        jsch.addIdentity(privateKey.getAbsolutePath(),publicKey.getAbsolutePath());
+		    } catch (JSchException e) {
+		    	logger.error("Error: ", e);
+		    }
 			
-			@Override
-			public boolean isEnabled(int arg0) {
-				return true;
-			}
-		});
-	    try {
-	        jsch.addIdentity(privateKey.getAbsolutePath(),publicKey.getAbsolutePath());
-	    } catch (JSchException e) {
-	    	logger.error("Error: ", e);
 	    }
-		
 	    CredentialsProvider user = CredentialsProvider.getDefault(); // new
 	    Repository repository = null;
 	    try {
-			repository = getRepository(gitRepoFolder);
-			git = Git.cloneRepository().setProgressMonitor(new NavajoProgress()).
-					setBare(false).setCloneAllBranches(true).setDirectory(gitRepoFolder).
+			repository = getRepository(applicationFolder);
+			git = Git.cloneRepository().setProgressMonitor(new LoggingProgressMonitor()).
+					setBare(false).setCloneAllBranches(true).setDirectory(applicationFolder).
 					setURI(gitUrl).setCredentialsProvider(user).call();
 			repository = git.getRepository();
 //		if(branch!=null) {
@@ -294,5 +301,12 @@ public class GitApplicationStatusImpl  {
 		System.err.println("failed: "+pr.getMergeResult().getFailingPaths());
 //		git.checkout().setName("Production").setForce(true).call();
 //		git.checkout().setStartPoint("25f17284bc94236a9f921e08aebf36b3c143f2e0").setName("Production").setCreateBranch(true).setForce(true).call();
+	}
+
+
+
+	@Override
+	public String getUrl() {
+		return gitUrl;
 	}
 }

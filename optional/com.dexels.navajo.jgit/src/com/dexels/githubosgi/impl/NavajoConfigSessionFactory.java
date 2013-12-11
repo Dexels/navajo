@@ -1,4 +1,4 @@
-package com.dexels.navajo.jgit;
+package com.dexels.githubosgi.impl;
 
 import org.eclipse.jgit.transport.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.OpenSshConfig.Host;
@@ -9,12 +9,7 @@ public class NavajoConfigSessionFactory extends JschConfigSessionFactory {
 
 	@Override
 	protected void configure(Host h, Session s) {
-		
 
-//		s.setIdentityRepository(js.getHostKeyRepository());
-//		IdentityRepository i = new LocalIdentityRepository();
-		
-	
 	}
 
 }

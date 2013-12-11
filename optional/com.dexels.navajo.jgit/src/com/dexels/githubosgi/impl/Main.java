@@ -1,4 +1,4 @@
-package com.dexels.navajo.jgit;
+package com.dexels.githubosgi.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,14 +57,14 @@ public class Main {
 		FetchCommand pc = git.fetch();
 		pc.setRemote("origin");
 		//		pc.
-		pc.setProgressMonitor(new NavajoProgress());
+		pc.setProgressMonitor(new LoggingProgressMonitor());
 		pc.call();
 	}
 
 	protected static void callClone(String url, String branch) throws GitAPIException,
 			InvalidRemoteException, TransportException, IOException {
 		CloneCommand clone = Git.cloneRepository();
-		clone.setProgressMonitor(new NavajoProgress());
+		clone.setProgressMonitor(new LoggingProgressMonitor());
 		clone.setBare(false);
 		clone.setCloneAllBranches(false);
 		if(branch!=null) {

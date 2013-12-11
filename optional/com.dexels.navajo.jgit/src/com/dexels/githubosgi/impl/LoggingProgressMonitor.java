@@ -1,8 +1,8 @@
-package com.dexels.navajo.jgit;
+package com.dexels.githubosgi.impl;
 
 import org.eclipse.jgit.lib.ProgressMonitor;
 
-public class NavajoProgress implements ProgressMonitor {
+public class LoggingProgressMonitor implements ProgressMonitor {
 
 	int total = -1;
 	int progress = 0;
@@ -24,7 +24,6 @@ public class NavajoProgress implements ProgressMonitor {
 
 	@Override
 	public boolean isCancelled() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
