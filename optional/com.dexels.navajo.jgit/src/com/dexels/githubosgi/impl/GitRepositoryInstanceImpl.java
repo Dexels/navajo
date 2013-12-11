@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
+import org.eclipse.jgit.api.DiffCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
@@ -18,13 +19,20 @@ import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.treewalk.AbstractTreeIterator;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +74,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	}
 
 	
+	@Override
 	public String getLastCommitVersion() {
 		if(lastCommit!=null) {
 			return lastCommit.getId().name();
@@ -189,9 +198,6 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			git.clean().call();
 			Iterable<RevCommit> log = git.log().call();
 			lastCommit = log.iterator().next();
-
-//			xsdBuild.build(this);
-//			cacheBuild.build(this);
 			logger.info("Git pull complete.");
 		} finally {
 			repository.close();
@@ -304,7 +310,37 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	}
 
 
+	@Override
+	public List<DiffEntry> diff(String oldHash) throws IOException, GitAPIException {
+		Repository repository = getRepository(applicationFolder);
+		Git git = new Git(repository);
+		DiffCommand diff = git.diff().setShowNameAndStatusOnly(true).setOldTree(getTreeIterator(repository, oldHash));
+		diff.setNewTree(getTreeIterator(repository, "HEAD"));
+		List<DiffEntry> entries = diff.call();
+		System.err.println(">>> entries: "+entries);
+		for (DiffEntry diffEntry : entries) {
 
+			String newPath = diffEntry.getNewPath();
+			System.err.println(">> "+newPath);
+		}
+		return entries;
+		
+	}
+
+	private AbstractTreeIterator getTreeIterator(Repository repository, String name)
+			throws IOException {
+		final ObjectId id = repository.resolve(name);
+		if (id == null)
+			throw new IllegalArgumentException(name);
+		final CanonicalTreeParser p = new CanonicalTreeParser();
+		final ObjectReader or = repository.newObjectReader();
+		try {
+			p.reset(or, new RevWalk(repository).parseTree(id));
+			return p;
+		} finally {
+			or.release();
+		}
+	}
 	@Override
 	public String getUrl() {
 		return gitUrl;
