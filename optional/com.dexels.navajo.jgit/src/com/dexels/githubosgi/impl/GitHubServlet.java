@@ -184,7 +184,7 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 			throws IOException {
 		int count = 0;
 		String oldVersion = application.getLastCommitVersion();
-		System.err.println(">>> last commit version: " + oldVersion);
+		logger.debug(">>> last commit version: " + oldVersion);
 		try {
 			application.callPull();
 			List<DiffEntry> diffEntries = application.diff(oldVersion);
@@ -226,7 +226,6 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 
 			}
 
-			System.err.println("diffed!");
 			return count;
 		} catch (GitAPIException e) {
 			logger.error("Error: ", e);
