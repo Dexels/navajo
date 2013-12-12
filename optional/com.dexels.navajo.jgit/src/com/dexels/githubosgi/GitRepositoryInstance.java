@@ -30,5 +30,7 @@ public interface GitRepositoryInstance extends RepositoryInstance {
 
 	public String getLastCommitVersion();
 
+	public int refreshApplication() throws IOException;
+
 
 }

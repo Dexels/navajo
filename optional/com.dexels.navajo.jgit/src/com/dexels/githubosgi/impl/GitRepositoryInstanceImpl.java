@@ -3,7 +3,9 @@ package com.dexels.githubosgi.impl;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +35,8 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,11 +63,26 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	private String name;
 
 	private String httpUrl;
+	
+	private EventAdmin eventAdmin = null;
+
 
 	public GitRepositoryInstanceImpl() {
 		logger.info("Instance created!");
 	}
 
+	public void setEventAdmin(EventAdmin eventAdmin) {
+		this.eventAdmin = eventAdmin;
+	}
+
+	/**
+	 * 
+	 * @param eventAdmin
+	 *            the eventadmin to clear
+	 */
+	public void clearEventAdmin(EventAdmin eventAdmin) {
+		this.eventAdmin = null;
+	}
 
 
 	public String getGitUrl() {
@@ -344,5 +363,82 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	@Override
 	public String getUrl() {
 		return gitUrl;
+	}
+	
+
+	@Override
+	public int refreshApplication() throws IOException {
+		String oldVersion = getLastCommitVersion();
+		logger.debug(">>> last commit version: " + oldVersion);
+		try {
+			callPull();
+			String newVersion = getLastCommitVersion();
+			
+			List<String> added = new ArrayList<String>();
+			List<String> modified = new ArrayList<String>();
+			List<String> copied = new ArrayList<String>();
+			List<String> deleted = new ArrayList<String>();
+
+			List<DiffEntry> diffEntries = diff(oldVersion);
+			if(newVersion.equals(oldVersion)) {
+				logger.info("Identical versions. Nothing pulled");
+				return 0;
+			}
+			if(diffEntries.isEmpty()) {
+				logger.info("Empty changeset (but there was a commit). Maybe empty commit?");
+				return 0;
+			}
+
+			for (DiffEntry diffEntry : diffEntries) {
+				
+				if (diffEntry.getChangeType().equals(ChangeType.ADD)) {
+					added.add(diffEntry.getNewPath());
+				} else if (diffEntry.getChangeType().equals(ChangeType.MODIFY)) {
+					modified.add(diffEntry.getNewPath());
+				} else if (diffEntry.getChangeType().equals(ChangeType.COPY)) {
+					copied.add(diffEntry.getOldPath());
+				} else if (diffEntry.getChangeType().equals(ChangeType.DELETE)) {
+					deleted.add(diffEntry.getOldPath());
+				} else if (diffEntry.getChangeType().equals(ChangeType.RENAME)) {
+					added.add(diffEntry.getNewPath());
+					deleted.add(diffEntry.getOldPath());
+				}
+				
+			}
+			Map<String, Object> properties = new HashMap<String, Object>();
+			properties.put(ChangeType.ADD.name(), added);
+			properties.put(ChangeType.MODIFY.name(), modified);
+			properties.put(ChangeType.COPY.name(), copied);
+			properties.put(ChangeType.DELETE.name(), deleted);
+			if (oldVersion != null) {
+				properties.put("oldCommit", oldVersion);
+			}
+			if (newVersion != null) {
+				properties.put("newCommit", newVersion);
+			}
+			String url = getUrl();
+			if (url != null) {
+				properties.put("url", url);
+			}
+			sendChangeEvent("githubosgi/change", properties);
+			return 1;
+		} catch (GitAPIException e) {
+			logger.error("Error: ", e);
+			return -1;
+		}
+
+	}
+
+	private void sendChangeEvent(String topic, Map<String, Object> properties) {
+		if (eventAdmin == null) {
+			logger.warn("No event administrator, not sending any events");
+			return;
+		}
+
+		// properties.put("repositoryName", application.getApplicationName());
+		Event event = new Event(topic, properties);
+
+		eventAdmin.postEvent(event);
+
 	}
 }

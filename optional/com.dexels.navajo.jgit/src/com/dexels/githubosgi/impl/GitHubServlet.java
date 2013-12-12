@@ -74,7 +74,7 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 			resp.sendError(400, "No repo");
 			return;
 		}
-		int eventCount = refreshApplication(r);
+		int eventCount = r.refreshApplication();
 		resp.getWriter().write(""+eventCount+"events sent");
 	}
 
@@ -167,7 +167,7 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 		final GitRepositoryInstance application = findApplication(url, branch);
 		try {
 			if (application != null) {
-				int eventCount = refreshApplication(application);
+				int eventCount = application.refreshApplication();
 				logger.info("pull complete: "+eventCount+" events sent!");
 			} else {
 				logger.warn("No repository found from url: " + url
@@ -180,89 +180,6 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 
 	}
 
-	private int refreshApplication(final GitRepositoryInstance application)
-			throws IOException {
-		int count = 0;
-		String oldVersion = application.getLastCommitVersion();
-		logger.debug(">>> last commit version: " + oldVersion);
-		try {
-			application.callPull();
-			List<DiffEntry> diffEntries = application.diff(oldVersion);
-			for (DiffEntry diffEntry : diffEntries) {
-				if (diffEntry.getChangeType().equals(ChangeType.ADD)) {
-					sendChangeEvent(application, oldVersion,
-							diffEntry.getNewPath(),
-							ChangeType.ADD.name());
-					count++;
-				} else if (diffEntry.getChangeType().equals(
-						ChangeType.MODIFY)) {
-					sendChangeEvent(application, oldVersion,
-							diffEntry.getNewPath(),
-							ChangeType.MODIFY.name());
-					count++;
-				} else if (diffEntry.getChangeType().equals(
-						ChangeType.COPY)) {
-					sendChangeEvent(application, oldVersion,
-							diffEntry.getNewPath(),
-							ChangeType.COPY.name());
-					count++;
-				} else if (diffEntry.getChangeType().equals(
-						ChangeType.DELETE)) {
-					sendChangeEvent(application, oldVersion,
-							diffEntry.getOldPath(),
-							ChangeType.DELETE.name());
-					count++;
-				} else if (diffEntry.getChangeType().equals(
-						ChangeType.RENAME)) {
-					sendChangeEvent(application, oldVersion,
-							diffEntry.getOldPath(),
-							ChangeType.RENAME.name());
-					sendChangeEvent(application, oldVersion,
-							diffEntry.getNewPath(),
-							ChangeType.RENAME.name());
-					count++;
-					count++;
-				}
-
-			}
-
-			return count;
-		} catch (GitAPIException e) {
-			logger.error("Error: ", e);
-			return -1;
-		}
-
-	}
-
-	private void sendChangeEvent(GitRepositoryInstance application,
-			String oldHash, String path, String type) {
-		if (eventAdmin == null) {
-			logger.warn("No event administrator, not sending any events for changed path: "
-					+ path);
-			return;
-		}
-		Map<String, String> properties = new HashMap<String, String>();
-		if (path != null) {
-			properties.put("path", path);
-		}
-		properties.put("type", type);
-		if (oldHash != null) {
-			properties.put("oldCommit", oldHash);
-		}
-		String newHash = application.getLastCommitVersion();
-		if (newHash != null) {
-			properties.put("newCommit", newHash);
-		}
-		String url = application.getUrl();
-		if (url != null) {
-			properties.put("url", url);
-		}
-		// properties.put("repositoryName", application.getApplicationName());
-		Event event = new Event("githubosgi/change", properties);
-
-		eventAdmin.postEvent(event);
-
-	}
 
 	private GitRepositoryInstance findApplication(String gitUrl, String branch) {
 		for (Map.Entry<RepositoryInstance, Map<String, Object>> e : repositorySettings
@@ -314,18 +231,6 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 		return null;
 	}
 
-	public void setEventAdmin(EventAdmin eventAdmin) {
-		this.eventAdmin = eventAdmin;
-	}
-
-	/**
-	 * 
-	 * @param eventAdmin
-	 *            the eventadmin to clear
-	 */
-	public void clearEventAdmin(EventAdmin eventAdmin) {
-		this.eventAdmin = null;
-	}
 
 	public static void main(String[] args) throws IOException {
 
