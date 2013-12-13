@@ -9,7 +9,8 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../../com.dexels.navajo.version</module>
+		<module>../../com.dexels.navajo.repository.api</module>
+	    <module>../../com.dexels.navajo.version</module>
 		<module>../../com.dexels.navajo.document</module>
 		<module>../../com.dexels.navajo.client</module>
 		<module>../../com.dexels.navajo.client.jabber</module>
