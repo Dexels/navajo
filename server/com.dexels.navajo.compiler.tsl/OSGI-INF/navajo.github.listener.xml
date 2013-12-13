@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true"
+	name="navajo.github.listener">
+	<implementation class="com.dexels.navajo.compiler.tsl.internal.listener.GitChangeListener" />
+	<service>
+		<provide interface="org.osgi.service.event.EventHandler" />
+	</service>
+	<reference bind="setBundleCreator" cardinality="1..1" interface="com.dexels.navajo.compiler.BundleCreator" name="BundleCreator" policy="static" unbind="clearBundleCreator" />
+	<property name="event.topics" type="String">
+		githubosgi/change
+	</property>
+</scr:component>
