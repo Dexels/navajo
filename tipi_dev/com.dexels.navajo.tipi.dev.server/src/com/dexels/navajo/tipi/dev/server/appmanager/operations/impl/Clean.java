@@ -12,8 +12,8 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 
 public class Clean extends BaseOperation implements AppStoreOperation {
 
@@ -24,13 +24,13 @@ public class Clean extends BaseOperation implements AppStoreOperation {
 	
 	public void clean(String name) throws IOException {
 		logger.info("Cleaning application: {}",name);
-		ApplicationStatus as = applications.get(name);
+		RepositoryInstance as = applications.get(name);
 		build(as);
 	}
 	
 	public void clean() throws IOException {
 		logger.info("Cleaning all applications");
-		for (ApplicationStatus a: applications.values()) {
+		for (RepositoryInstance a: applications.values()) {
 			build(a);
 		}
 	}
@@ -51,21 +51,21 @@ public class Clean extends BaseOperation implements AppStoreOperation {
 	}
 
 	@Override
-	public void build(ApplicationStatus a) throws IOException {
-		File lib = new File(a.getAppFolder(),"lib");
+	public void build(RepositoryInstance a) throws IOException {
+		File lib = new File(a.getRepositoryFolder(),"lib");
 		if(lib.exists()) {
 			FileUtils.deleteQuietly(lib);
 		}
-		File xsd = new File(a.getAppFolder(),"xsd");
+		File xsd = new File(a.getRepositoryFolder(),"xsd");
 		if(xsd.exists()) {
 			FileUtils.deleteQuietly(xsd);
 		}
-		File digest = new File(a.getAppFolder(),"resource/remotedigest.properties");
+		File digest = new File(a.getRepositoryFolder(),"resource/remotedigest.properties");
 		if(digest.exists()) {
 			FileUtils.deleteQuietly(digest);
 		}
 		
-		File[] jnlps = a.getAppFolder().listFiles(new FilenameFilter() {
+		File[] jnlps = a.getRepositoryFolder().listFiles(new FilenameFilter() {
 			
 			@Override
 			public boolean accept(File dir, String name) {

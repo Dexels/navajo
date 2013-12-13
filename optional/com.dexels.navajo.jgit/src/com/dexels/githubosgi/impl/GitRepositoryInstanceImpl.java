@@ -156,7 +156,6 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	
 	
 	public void activate(Map<String,Object> settings) throws IOException {
-		logger.info("Starging activation");
 		File gitRepoFolder = repositoryManager.getRepositoryFolder();
 		gitUrl = (String) settings.get("url");
 		httpUrl = (String) settings.get("httpUrl");
@@ -164,8 +163,8 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		branch = (String) settings.get("branch");
 		name = (String) settings.get("name");
 
-		String combinedname = name + "-"+branch;
-		applicationFolder = new File(gitRepoFolder,combinedname);
+		repositoryName = name + "-"+branch;
+		applicationFolder = new File(gitRepoFolder,repositoryName);
 		File keyFolder = repositoryManager.getSshFolder();
 		if(keyFolder!=null && keyFolder.exists()) {
 			privateKey = null;

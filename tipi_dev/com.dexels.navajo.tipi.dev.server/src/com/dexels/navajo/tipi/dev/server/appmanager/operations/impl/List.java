@@ -14,8 +14,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.felix.service.command.CommandSession;
 
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 
 public class List extends BaseOperation implements AppStoreOperation {
 
@@ -39,10 +39,10 @@ public class List extends BaseOperation implements AppStoreOperation {
 		verifyAuthorization(req,resp);
 		resp.setContentType("application/json");
 		
-		java.util.List<ApplicationStatus> ll = new ArrayList<ApplicationStatus>(applications.values());
+		java.util.List<RepositoryInstance> ll = new ArrayList<RepositoryInstance>(applications.values());
 		Collections.sort(ll);
 		Map<String,Map<String,?>> wrap = new LinkedHashMap<String, Map<String,?>>();
-		final Map<String,ApplicationStatus> extwrap = new HashMap<String, ApplicationStatus>();
+		final Map<String,RepositoryInstance> extwrap = new HashMap<String, RepositoryInstance>();
 		Map<String,String> user = new HashMap<String, String>();
 		wrap.put("user", user);
 		HttpSession session = req.getSession();
@@ -50,15 +50,15 @@ public class List extends BaseOperation implements AppStoreOperation {
 		user.put("image", (String)session.getAttribute("image"));
 		
 
-		for (ApplicationStatus applicationStatus : ll) {
-			extwrap.put(applicationStatus.getApplicationName(), applicationStatus);
+		for (RepositoryInstance applicationStatus : ll) {
+			extwrap.put(applicationStatus.getRepositoryName(), applicationStatus);
 		}
 		wrap.put("applications", extwrap);
 		writeValueToJsonArray(resp.getOutputStream(),wrap);
 	}
 
 	@Override
-	public void build(ApplicationStatus a) throws IOException {
+	public void build(RepositoryInstance a) throws IOException {
 
 	}
 }

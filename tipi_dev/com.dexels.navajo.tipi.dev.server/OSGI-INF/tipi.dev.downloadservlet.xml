@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" immediate="true" name="tipi.dev.downloadservlet">
    <implementation class="jnlp.sample.servlet.JnlpDownloadServlet"/>
-   <reference bind="setApplicationManager" cardinality="1..1" interface="com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager" name="ApplicationManager" policy="dynamic" unbind="clearApplicationManager"/>
+   <reference bind="setAppStoreManager" cardinality="1..1" interface="com.dexels.navajo.tipi.dev.server.appmanager.AppStoreManager" name="AppStoreManager" policy="dynamic" unbind="clearAppStoreManager"/>
+   <reference bind="setRepositoryManager" cardinality="1..1" interface="com.dexels.navajo.repository.api.RepositoryManager" name="ResourceManager" policy="dynamic" unbind="clearRepositoryManager"/>
    <service>
       <provide interface="javax.servlet.Servlet"/>
    </service>

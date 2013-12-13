@@ -16,12 +16,13 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.ant.AntRun;
 import com.dexels.navajo.tipi.dev.ant.LoggingOutputStream;
 import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
 import com.dexels.navajo.tipi.dev.core.projectbuilder.LocalJnlpBuilder;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
+import com.dexels.navajo.tipi.dev.server.appmanager.impl.RepositoryInstanceWrapper;
 import com.dexels.navajo.tipi.dev.server.appmanager.impl.UnsignJarTask;
 
 public class JnlpBuild extends BaseOperation implements AppStoreOperation {
@@ -32,9 +33,9 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 			.getLogger(JnlpBuild.class);
 	
 	public void build(String name) throws IOException {
-		ApplicationStatus as = applications.get(name);
+		RepositoryInstance as = applications.get(name);
 		if(as==null) {
-			for (ApplicationStatus a: applications.values()) {
+			for (RepositoryInstance a: applications.values()) {
 				build(a);
 			}
 			
@@ -57,7 +58,7 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 	}
 	
 	public void build() {
-		for (ApplicationStatus a: applications.values()) {
+		for (RepositoryInstance a: applications.values()) {
 			try {
 				build(a);
 			} catch (IOException e) {
@@ -67,14 +68,14 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 	}	
 	
 	@Override
-	public void build(ApplicationStatus a) throws IOException {
+	public void build(RepositoryInstance repoInstance) throws IOException {
 		List<String> extraHeaders = new ArrayList<String>();
 		extraHeaders.add("Permissions: all-permissions");
-		String applicationName = applicationManager.getApplicationName();
+		String applicationName = appStoreManager.getApplicationName();
 		if(applicationName!=null) {
 			extraHeaders.add("Application-Name: "+applicationName);
 		}
-		String manifestCodebase = applicationManager.getManifestCodebase();
+		String manifestCodebase = appStoreManager.getManifestCodebase();
 		if(manifestCodebase!=null) {
 			extraHeaders.add("Codebase: "+manifestCodebase);
 		} else {
@@ -82,7 +83,7 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 		}
 		
 		
-		File unsigned = new File(a.getAppFolder(), "unsigned");
+		File unsigned = new File(repoInstance.getRepositoryFolder(), "unsigned");
 
 		if(unsigned.exists()) {
 			FileUtils.deleteDirectory(unsigned);
@@ -91,8 +92,8 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 			unsigned.mkdirs();
 		}
 		
-		File repo = new File(applicationManager.getStoreFolder(), "repo");
-		File lib = new File(a.getAppFolder(),"lib");
+		File repo = new File(getRepositoryManager().getRepositoryFolder(), "repo");
+		File lib = new File(repoInstance.getRepositoryFolder(),"lib");
 		if(lib.exists()) {
 			FileUtils.deleteDirectory(lib);
 		}
@@ -100,18 +101,20 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 			lib.mkdirs();
 		}
 		logger.info("Loading application");
+		
+		RepositoryInstanceWrapper a = new RepositoryInstanceWrapper(repoInstance);
 		a.load();
 		for (Dependency dd : a.getDependencies()) {
 			File localSigned = dd.getFilePathForDependency(repo);
 			if(!localSigned.exists()) {
 				UnsignJarTask.downloadDepencency(dd,repo, new File(unsigned.getAbsolutePath()),extraHeaders);
-				signdependency(dd, a.getSettingString("sign_alias"),  a.getSettingString("sign_storepass"),  new File(a.getAppFolder(),a.getSettingString("sign_keystore")), repo);
+				signdependency(dd, a.getSettingString("sign_alias"),  a.getSettingString("sign_storepass"),  new File(repoInstance.getRepositoryFolder(),a.getSettingString("sign_keystore")), repo);
 			}
 			FileUtils.copyFileToDirectory(localSigned, lib );
 		}
 		logger.info("Detected dependencies: "+a.getDependencies());
 		LocalJnlpBuilder jj = new LocalJnlpBuilder();
-		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),a.getAppFolder(),a.getProfiles(),"",applicationManager.getCodeBase(),a.getApplicationName());
+		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),repoInstance.getRepositoryFolder(),a.getProfiles(),"",appStoreManager.getCodeBase(),repoInstance.getRepositoryName());
 //		signall(a);
 	}
 

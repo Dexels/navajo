@@ -13,19 +13,33 @@ import javax.servlet.http.HttpSession;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.dexels.navajo.repository.api.RepositoryInstance;
+import com.dexels.navajo.repository.api.RepositoryManager;
+import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreManager;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 
 public abstract class BaseOperation extends HttpServlet  implements AppStoreOperation {
 
 	private static final long serialVersionUID = 7744618301328519140L;
-	protected final Map<String,ApplicationStatus> applications = new HashMap<String, ApplicationStatus>();
-	protected ApplicationManager applicationManager = null;
-
+	protected final Map<String,RepositoryInstance> applications = new HashMap<String, RepositoryInstance>();
+	protected AppStoreManager appStoreManager = null;
 	
-	public void setApplicationManager(ApplicationManager am) {
-		this.applicationManager = am;
+	private RepositoryManager repositoryManager;
+
+	public void setRepositoryManager(RepositoryManager repositoryManager) {
+		this.repositoryManager = repositoryManager;
+	}
+
+	public void clearRepositoryManager(RepositoryManager repositoryManager) {
+		this.repositoryManager = null;
+	}
+	
+	public RepositoryManager getRepositoryManager() {
+		return this.repositoryManager;
+	}
+
+	public void setAppStoreManager(AppStoreManager am) {
+		this.appStoreManager = am;
 	}
 
 	protected void verifyAuthorization(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -41,20 +55,18 @@ public abstract class BaseOperation extends HttpServlet  implements AppStoreOper
 		}
 		return b;
 	}
-	public void clearApplicationManager(ApplicationManager am) {
-		this.applicationManager = null;
-	}
 
-	public void addApplicationStatus(ApplicationStatus a) {
-		applications.put(a.getApplicationName(), a);
+
+	public void addApplicationStatus(RepositoryInstance a) {
+		applications.put(a.getRepositoryName(), a);
 	}
 	
-	public void removeApplicationStatus(ApplicationStatus a) {
-		applications.remove(a.getApplicationName());
+	public void removeApplicationStatus(RepositoryInstance a) {
+		applications.remove(a.getRepositoryName());
 	}
 
 	protected Set<String> listApplications() {
-		 return applicationManager.listApplications();
+		 return appStoreManager.listApplications();
 	}
 	
 	protected void writeValueToJsonArray(OutputStream os, Object value) throws IOException {  

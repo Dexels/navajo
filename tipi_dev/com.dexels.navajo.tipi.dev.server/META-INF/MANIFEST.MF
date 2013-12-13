@@ -4,7 +4,9 @@ Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.50.qualifier
 Bundle-Vendor: Dexels
-Import-Package: com.dexels.navajo.document;version="2.2.1",
+Import-Package: com.dexels.githubosgi,
+ com.dexels.navajo.document;version="2.2.1",
+ com.dexels.navajo.repository.api;version="1.0.0",
  com.dexels.navajo.tipi.dev.ant;version="1.0.0",
  com.dexels.navajo.tipi.dev.core.projectbuilder,
  com.dexels.navajo.tipi.dev.core.util.zip;version="1.0.0",
@@ -41,14 +43,12 @@ Import-Package: com.dexels.navajo.document;version="2.2.1",
  org.w3c.dom,
  org.xml.sax
 Bundle-ClassPath: .
-Service-Component: OSGI-INF/tipi.dev.applicationmanager.xml,
- OSGI-INF/tipi.dev.downloadservlet.xml,
+Service-Component: OSGI-INF/tipi.dev.downloadservlet.xml,
  OSGI-INF/tipi.dev.gitapplication.xml,
- OSGI-INF/tipi.store.application.xml,
+ OSGI-INF/tipi.dev.appstore.manager.xml,
  OSGI-INF/tipi.dev.systempropertyhandler.xml,
  OSGI-INF/tipi.dev.filter.xml,
  OSGI-INF/tipi.dev.uiresolver.xml,
- OSGI-INF/tipi.dev.githubservlet.xml,
  OSGI-INF/tipi.dev.websocket.xml,
  OSGI-INF/tipi.dev.operation.build.xml,
  OSGI-INF/tipi.dev.operation.pull.xml,

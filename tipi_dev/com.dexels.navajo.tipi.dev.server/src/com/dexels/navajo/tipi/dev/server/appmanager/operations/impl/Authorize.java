@@ -25,8 +25,8 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 
 public class Authorize extends BaseOperation implements AppStoreOperation {
 
@@ -34,7 +34,7 @@ public class Authorize extends BaseOperation implements AppStoreOperation {
 	private static final long serialVersionUID = 8640712571228602628L;
 	
 	public void list(CommandSession session ) throws IOException {
-		Map<String,Map<String,ApplicationStatus>> wrap = new HashMap<String, Map<String,ApplicationStatus>>();
+		Map<String,Map<String,RepositoryInstance>> wrap = new HashMap<String, Map<String,RepositoryInstance>>();
 		wrap.put("applications", applications);
 		writeValueToJsonArray(session.getConsole(),wrap);
 	}
@@ -50,9 +50,9 @@ public class Authorize extends BaseOperation implements AppStoreOperation {
 		String code = req.getParameter("code");
 		resp.setContentType("application/json");
 		Map<String,String> params = new HashMap<String, String>();
-		params.put("client_id", applicationManager.getClientId());
+		params.put("client_id", appStoreManager.getClientId());
 		params.put("code", code);
-		params.put("client_secret", applicationManager.getClientSecret());
+		params.put("client_secret", appStoreManager.getClientSecret());
 
 		post("https://github.com/login/oauth/access_token",params,session);
 		final String access_token = (String) session.getAttribute("access_token");
@@ -63,7 +63,7 @@ public class Authorize extends BaseOperation implements AppStoreOperation {
 		JsonNode username = user.get("name");
 		
 		boolean found = false;
-		String organization = applicationManager.getOrganization();
+		String organization = appStoreManager.getOrganization();
 		ArrayNode members = (ArrayNode) callGithub("/orgs/"+organization+"/members", access_token);
 		for (JsonNode member : members) {
 			String currentLogin = member.get("login").asText();
@@ -162,7 +162,7 @@ public class Authorize extends BaseOperation implements AppStoreOperation {
 	}
 
 	@Override
-	public void build(ApplicationStatus a) throws IOException {
+	public void build(RepositoryInstance a) throws IOException {
 
 	}
 }

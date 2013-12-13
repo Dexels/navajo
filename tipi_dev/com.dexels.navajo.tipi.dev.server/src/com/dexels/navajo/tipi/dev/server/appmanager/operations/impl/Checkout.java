@@ -11,9 +11,9 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.githubosgi.GitRepositoryInstance;
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
-import com.dexels.navajo.tipi.dev.server.appmanager.GitApplicationStatus;
 
 public class Checkout extends BaseOperation implements AppStoreOperation {
 
@@ -28,11 +28,11 @@ public class Checkout extends BaseOperation implements AppStoreOperation {
 	@Descriptor(value = "Checkout a specific id") 
 	public void checkout(String name,String objectid, String branchname) throws IOException {
 		logger.info("Checkout application: {}",name);
-		ApplicationStatus as = applications.get(name);
-		if(!(as instanceof GitApplicationStatus)) {
+		RepositoryInstance as = applications.get(name);
+		if(!(as instanceof GitRepositoryInstance)) {
 			throw new IOException("Can only pull from a Git application");
 		}
-		GitApplicationStatus ha = (GitApplicationStatus) as;
+		GitRepositoryInstance ha = (GitRepositoryInstance) as;
 		try {
 			ha.callCheckout(objectid,branchname);
 		} catch (GitAPIException e) {
@@ -55,6 +55,6 @@ public class Checkout extends BaseOperation implements AppStoreOperation {
 	}
 
 	@Override
-	public void build(ApplicationStatus a) throws IOException {
+	public void build(RepositoryInstance a) throws IOException {
 	}
 }

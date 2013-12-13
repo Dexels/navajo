@@ -4,11 +4,10 @@ import java.io.File;
 
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.repository.api.RepositoryManager;
-import com.dexels.navajo.server.api.NavajoServerContext;
 
-public class RepositoryInstanceImpl implements RepositoryInstance,NavajoServerContext {
+public class RepositoryInstanceImpl implements RepositoryInstance {
 	
-	private String applicationName;
+	protected String repositoryName;
 	protected File applicationFolder;
 	protected RepositoryManager repositoryManager;
 
@@ -26,13 +25,9 @@ public class RepositoryInstanceImpl implements RepositoryInstance,NavajoServerCo
 	}
 
 
-	
-	/* (non-Javadoc)
-	 * @see com.dexels.navajo.tipi.dev.server.appmanager.impl.ApplicationStatus#getApplicationName()
-	 */
 	@Override
 	public String getRepositoryName() {
-		return applicationName;
+		return repositoryName;
 	}
 
 
@@ -40,11 +35,6 @@ public class RepositoryInstanceImpl implements RepositoryInstance,NavajoServerCo
 	@Override
 	public int compareTo(RepositoryInstance o) {
 		return getRepositoryName().compareTo(o.getRepositoryName());
-	}
-
-	@Override
-	public String getInstallationPath() {
-		return getRepositoryFolder().getAbsolutePath();
 	}
 
 
