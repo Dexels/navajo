@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="ignore" deactivate="deactivate" immediate="true" name="tipi.multitenant.configurator">
+   <implementation class="com.dexels.navajo.tipi.instance.impl.InstanceConfigurationProviderImpl"/>
+   <reference bind="setConfigAdmin" cardinality="1..1" interface="org.osgi.service.cm.ConfigurationAdmin" name="ConfigurationAdmin" policy="dynamic" unbind="clearConfigAdmin"/>
+   <reference bind="setInstancePathProvider" cardinality="1..1" interface="com.dexels.navajo.tipi.instance.InstancePathProvider" name="InstancePathProvider" policy="dynamic" unbind="clearInstancePathProvider"/>
+   <service>
+      <provide interface="com.dexels.navajo.tipi.instance.InstanceConfigurationProvider"/>
+   </service>
+</scr:component>
