@@ -1,16 +1,22 @@
 package com.dexels.githubosgi.impl;
 
 import org.eclipse.jgit.lib.ProgressMonitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoggingProgressMonitor implements ProgressMonitor {
 
 	int total = -1;
 	int progress = 0;
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(LoggingProgressMonitor.class);
+	
 	@Override
 	public void update(int x) {
 		if(progress % 100 == 0) {
-			System.err.println("Progress: " + progress + "/" + total);
+			logger.info("Progress: " + progress + "/" + total);
 			
 		}
 		progress += x;
@@ -18,7 +24,7 @@ public class LoggingProgressMonitor implements ProgressMonitor {
 
 	@Override
 	public void start(int total) {
-		System.err.println("Total: " + total);
+		logger.info("Total: " + total);
 		this.total = total;
 	}
 
@@ -29,12 +35,12 @@ public class LoggingProgressMonitor implements ProgressMonitor {
 
 	@Override
 	public void endTask() {
-		System.err.println("Done!");
+		logger.info("Done!");
 	}
 
 	@Override
 	public void beginTask(String title, int work) {
-		System.err.println("Starting task: " + title + " total work: "
+		logger.info("Starting task: " + title + " total work: "
 				+ work);
 		total = work;
 		progress = 0;

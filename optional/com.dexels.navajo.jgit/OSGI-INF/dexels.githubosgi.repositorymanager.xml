@@ -2,6 +2,6 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="dexels.githubosgi.repositorymanager" immediate="true" configuration-policy="require">
    <implementation class="com.dexels.githubosgi.impl.RepositoryManagerImpl"/>
    <service>
-      <provide interface="com.dexels.githubosgi.RepositoryManager"/>
+      <provide interface="com.dexels.navajo.repository.api.RepositoryManager"/>
    </service>
 </scr:component>

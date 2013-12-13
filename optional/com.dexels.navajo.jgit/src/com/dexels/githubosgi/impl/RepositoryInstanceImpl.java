@@ -2,17 +2,18 @@ package com.dexels.githubosgi.impl;
 
 import java.io.File;
 
-import com.dexels.githubosgi.RepositoryInstance;
-import com.dexels.githubosgi.RepositoryManager;
+import com.dexels.navajo.repository.api.RepositoryInstance;
+import com.dexels.navajo.repository.api.RepositoryManager;
+import com.dexels.navajo.server.api.NavajoServerContext;
 
-public class RepositoryInstanceImpl implements RepositoryInstance {
+public class RepositoryInstanceImpl implements RepositoryInstance,NavajoServerContext {
 	
 	private String applicationName;
 	protected File applicationFolder;
 	protected RepositoryManager repositoryManager;
 
 	@Override
-	public File getAppFolder() {
+	public File getRepositoryFolder() {
 		return this.applicationFolder;
 	}
 
@@ -30,7 +31,7 @@ public class RepositoryInstanceImpl implements RepositoryInstance {
 	 * @see com.dexels.navajo.tipi.dev.server.appmanager.impl.ApplicationStatus#getApplicationName()
 	 */
 	@Override
-	public String getApplicationName() {
+	public String getRepositoryName() {
 		return applicationName;
 	}
 
@@ -38,7 +39,12 @@ public class RepositoryInstanceImpl implements RepositoryInstance {
 
 	@Override
 	public int compareTo(RepositoryInstance o) {
-		return getApplicationName().compareTo(o.getApplicationName());
+		return getRepositoryName().compareTo(o.getRepositoryName());
+	}
+
+	@Override
+	public String getInstallationPath() {
+		return getRepositoryFolder().getAbsolutePath();
 	}
 
 

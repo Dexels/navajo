@@ -12,6 +12,8 @@ import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.diff.DiffEntry;
 
+import com.dexels.navajo.repository.api.RepositoryInstance;
+
 public interface GitRepositoryInstance extends RepositoryInstance {
 
 	public void callClone() throws GitAPIException, InvalidRemoteException,
@@ -25,6 +27,8 @@ public interface GitRepositoryInstance extends RepositoryInstance {
 			InvalidRefNameException, CheckoutConflictException, GitAPIException;
 
 	public String getUrl();
+
+	public String getHttpUrl();
 
 	public List<DiffEntry> diff(String oldHash) throws IOException, GitAPIException;
 

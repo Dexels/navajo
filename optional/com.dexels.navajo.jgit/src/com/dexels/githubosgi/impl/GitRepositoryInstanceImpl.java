@@ -32,7 +32,7 @@ import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.osgi.service.event.Event;
@@ -53,7 +53,6 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	private String branch;
 	private String gitUrl;
 
-	protected File applicationFolder;
 //	protected ApplicationManager applicationManager;
 
 	private Git git;
@@ -88,6 +87,8 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	public String getGitUrl() {
 		return gitUrl;
 	}
+
+	@Override
 	public String getHttpUrl() {
 		return httpUrl;
 	}
@@ -265,13 +266,15 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		    }
 			
 	    }
-	    CredentialsProvider user = CredentialsProvider.getDefault(); // new
+//	    CredentialsProvider user = CredentialsProvider.getDefault(); 
+	    UsernamePasswordCredentialsProvider upc = new UsernamePasswordCredentialsProvider("flyaruu", "automati");
+	    // new
 	    Repository repository = null;
 	    try {
 			repository = getRepository(applicationFolder);
 			git = Git.cloneRepository().setProgressMonitor(new LoggingProgressMonitor()).
 					setBare(false).setCloneAllBranches(true).setDirectory(applicationFolder).
-					setURI(gitUrl).setCredentialsProvider(user).call();
+					setURI(gitUrl).setCredentialsProvider(upc).call();
 			repository = git.getRepository();
 //		if(branch!=null) {
 //			clone.setBranch(branch);

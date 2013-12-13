@@ -23,17 +23,12 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffEntry.ChangeType;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.githubosgi.GitRepositoryInstance;
-import com.dexels.githubosgi.RepositoryInstance;
-import com.dexels.githubosgi.RepositoryManager;
+import com.dexels.navajo.repository.api.RepositoryInstance;
+import com.dexels.navajo.repository.api.RepositoryManager;
 
 public class GitHubServlet extends HttpServlet implements Servlet {
 
@@ -46,8 +41,6 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 	private final Map<RepositoryInstance, Map<String, Object>> repositorySettings = new HashMap<RepositoryInstance, Map<String, Object>>();
 
 	private RepositoryManager repositoryManager;
-
-	private EventAdmin eventAdmin = null;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -104,12 +97,12 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 
 	public void addRepositoryInstance(RepositoryInstance a,
 			Map<String, Object> settings) {
-		repositories.put(a.getApplicationName(), a);
+		repositories.put(a.getRepositoryName(), a);
 		repositorySettings.put(a, settings);
 	}
 
 	public void removeRepositoryInstance(RepositoryInstance a) {
-		repositories.remove(a.getApplicationName());
+		repositories.remove(a.getRepositoryName());
 		repositorySettings.remove(a);
 	}
 
@@ -181,7 +174,7 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 	}
 
 
-	private GitRepositoryInstance findApplication(String gitUrl, String branch) {
+	private GitRepositoryInstance findApplication(String postedUrl, String branch) {
 		for (Map.Entry<RepositoryInstance, Map<String, Object>> e : repositorySettings
 				.entrySet()) {
 			final RepositoryInstance instance = e.getKey();
@@ -190,9 +183,10 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 			}
 			GitRepositoryInstance gi = (GitRepositoryInstance) instance;
 			String url = gi.getUrl();
+			String httpurl = gi.getHttpUrl();
 			Map<String, Object> s = e.getValue();
 			if (s != null) {
-				if (gitUrl.equals(url)) {
+				if (postedUrl.equals(url) || postedUrl.equals(httpurl)) {
 					if (branch.equals(s.get("branch"))) {
 						logger.info("Found application for repo from url: "
 								+ url + " and branch: " + branch);
@@ -201,7 +195,7 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 				}
 			}
 		}
-		logger.info("Did not find application for repo from url : " + gitUrl
+		logger.info("Did not find application for repo from url : " + postedUrl
 				+ " branch: " + branch);
 		return null;
 	}
