@@ -200,6 +200,24 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 
 	
 	@Override
+	public void callClean() throws GitAPIException, IOException {
+		File gitSubfolder = new File(applicationFolder, ".git");
+		if (!gitSubfolder.exists()) {
+			logger.info("Folder: " + applicationFolder.getAbsolutePath()
+					+ " is not a git repo. Not pulling.");
+		}
+		Repository repository = null;
+		try {
+			repository = getRepository(applicationFolder);
+			git = new Git(repository);
+			git.clean().call();
+			logger.info("Git clean complete.");
+		} finally {
+			repository.close();
+		}
+	}
+	
+	@Override
 	public void callPull() throws GitAPIException, IOException {
 		File gitSubfolder = new File(applicationFolder, ".git");
 		if (!gitSubfolder.exists()) {
@@ -214,7 +232,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			git.reset().setMode(ResetType.HARD).call();
 			git.pull().setProgressMonitor(new LoggingProgressMonitor()).call();
 			logger.info("Current branch: " + repository.getBranch());
-			git.clean().call();
+//			git.clean().call();
 			Iterable<RevCommit> log = git.log().call();
 			lastCommit = log.iterator().next();
 			logger.info("Git pull complete.");

@@ -216,7 +216,8 @@
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/1.3_5</bundle>
 		<bundle dependency='true'>mvn:org.eclipse.jgit/org.eclipse.jgit/3.0.3.201309161630-r</bundle>
 		<bundle dependency='true'>mvn:com.dexels.thirdparty/javaewah/0.5.6</bundle>
-	</feature>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jgit/1.0.1</bundle>
+			</feature>
 	<feature resolver="(obr)" name='tipi.appstore' version='1.0.20' start-level='81' >
 	    <feature version="[1.0.0,2)">github.osgi</feature>
 	    <feature version="[1.0.5,2)">navajo.core</feature>

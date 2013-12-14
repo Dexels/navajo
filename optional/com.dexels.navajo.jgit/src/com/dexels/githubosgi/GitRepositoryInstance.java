@@ -36,5 +36,7 @@ public interface GitRepositoryInstance extends RepositoryInstance {
 
 	public int refreshApplication() throws IOException;
 
+	public void callClean() throws GitAPIException, IOException;
+
 
 }

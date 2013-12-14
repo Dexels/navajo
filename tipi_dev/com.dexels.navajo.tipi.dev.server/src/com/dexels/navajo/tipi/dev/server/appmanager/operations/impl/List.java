@@ -16,6 +16,7 @@ import org.apache.felix.service.command.CommandSession;
 
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
+import com.dexels.navajo.tipi.dev.server.appmanager.impl.RepositoryInstanceWrapper;
 
 public class List extends BaseOperation implements AppStoreOperation {
 
@@ -24,7 +25,7 @@ public class List extends BaseOperation implements AppStoreOperation {
 	
 	public void list(CommandSession session ) throws IOException {
 		Map<String,Map<String,?>> wrap = new HashMap<String, Map<String,?>>();
-		wrap.put("applications", applications);
+		wrap.put("applications", getApplications());
 		
 		writeValueToJsonArray(session.getConsole(),wrap);
 	}
@@ -36,13 +37,13 @@ public class List extends BaseOperation implements AppStoreOperation {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		verifyAuthorization(req,resp);
+//		verifyAuthorization(req,resp);
 		resp.setContentType("application/json");
 		
-		java.util.List<RepositoryInstance> ll = new ArrayList<RepositoryInstance>(applications.values());
+		java.util.List<RepositoryInstanceWrapper> ll = new ArrayList<RepositoryInstanceWrapper>(getApplications().values());
 		Collections.sort(ll);
 		Map<String,Map<String,?>> wrap = new LinkedHashMap<String, Map<String,?>>();
-		final Map<String,RepositoryInstance> extwrap = new HashMap<String, RepositoryInstance>();
+		final Map<String,RepositoryInstanceWrapper> extwrap = new HashMap<String, RepositoryInstanceWrapper>();
 		Map<String,String> user = new HashMap<String, String>();
 		wrap.put("user", user);
 		HttpSession session = req.getSession();
@@ -50,7 +51,7 @@ public class List extends BaseOperation implements AppStoreOperation {
 		user.put("image", (String)session.getAttribute("image"));
 		
 
-		for (RepositoryInstance applicationStatus : ll) {
+		for (RepositoryInstanceWrapper applicationStatus : ll) {
 			extwrap.put(applicationStatus.getRepositoryName(), applicationStatus);
 		}
 		wrap.put("applications", extwrap);

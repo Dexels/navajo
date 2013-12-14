@@ -12,18 +12,19 @@ import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
 
-public class RepositoryInstanceWrapper {
+public class RepositoryInstanceWrapper implements Comparable<RepositoryInstanceWrapper> {
 	
 	private final List<Dependency> dependencies = new ArrayList<Dependency>();
 	private final RepositoryInstance instance;
 	private List<String> profiles = new ArrayList<String>();
-	private PropertyResourceBundle settings;
+	private transient PropertyResourceBundle settings;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(RepositoryInstanceWrapper.class);
@@ -36,6 +37,11 @@ public class RepositoryInstanceWrapper {
 	
 	public RepositoryInstanceWrapper(RepositoryInstance instance) {
 		this.instance = instance;
+		try {
+			load();
+		} catch (IOException e) {
+			logger.error("Error: ", e);
+		}
 	}
 
 	
@@ -127,6 +133,7 @@ public class RepositoryInstanceWrapper {
 		return dependencies;
 	}
 
+	@JsonIgnore
 	public ResourceBundle getSettingsBundle() {
 		return settings;
 	}
@@ -146,6 +153,17 @@ public class RepositoryInstanceWrapper {
 			}
 		}
 		this.profiles = pro;
+	}
+
+
+	@Override
+	public int compareTo(RepositoryInstanceWrapper o) {
+		return instance.getRepositoryName().compareTo(o.instance.getRepositoryName());
+	}
+
+
+	public String getRepositoryName() {
+		return instance.getRepositoryName();
 	}
 
 	

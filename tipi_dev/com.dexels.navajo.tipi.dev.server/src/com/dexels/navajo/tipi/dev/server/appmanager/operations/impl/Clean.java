@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.githubosgi.GitRepositoryInstance;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 
@@ -52,6 +54,9 @@ public class Clean extends BaseOperation implements AppStoreOperation {
 
 	@Override
 	public void build(RepositoryInstance a) throws IOException {
+		if(a instanceof GitRepositoryInstance) {
+			callGitClean((GitRepositoryInstance)a);
+		}
 		File lib = new File(a.getRepositoryFolder(),"lib");
 		if(lib.exists()) {
 			FileUtils.deleteQuietly(lib);
@@ -75,5 +80,14 @@ public class Clean extends BaseOperation implements AppStoreOperation {
 		for (File file : jnlps) {
 			FileUtils.deleteQuietly(file);
 		}
+	}
+
+	private void callGitClean(GitRepositoryInstance a) throws IOException {
+		try {
+			a.callClean();
+		} catch (GitAPIException e) {
+			throw new IOException("Error git-cleaning!",e);
+		}
+		
 	}
 }
