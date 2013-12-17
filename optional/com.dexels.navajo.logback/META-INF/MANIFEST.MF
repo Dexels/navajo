@@ -1,0 +1,16 @@
+Bundle-Name: Navajo Logback
+Bundle-SymbolicName: com.dexels.navajo.logback
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .
+Bundle-Vendor: Dexels
+Service-Component: OSGI-INF/navajo.repository.logback.xml
+Import-Package: ch.qos.logback.classic;version="1.0.13",
+ ch.qos.logback.classic.joran;version="1.0.13",
+ ch.qos.logback.core;version="1.0.13",
+ ch.qos.logback.core.joran;version="1.0.13",
+ ch.qos.logback.core.joran.spi;version="1.0.13",
+ ch.qos.logback.core.spi;version="1.0.13",
+ ch.qos.logback.core.util;version="1.0.13",
+ com.dexels.navajo.repository.api;version="1.0.0",
+ org.slf4j;version="1.7.5"
