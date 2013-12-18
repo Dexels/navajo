@@ -454,8 +454,8 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			logger.warn("No event administrator, not sending any events");
 			return;
 		}
-
-		// properties.put("repositoryName", application.getApplicationName());
+		properties.put("repository", this);
+		 properties.put("repositoryName", getRepositoryName());
 		Event event = new Event(topic, properties);
 
 		eventAdmin.postEvent(event);
