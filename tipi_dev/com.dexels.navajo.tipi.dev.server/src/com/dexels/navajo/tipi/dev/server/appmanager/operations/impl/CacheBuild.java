@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.impl.RepositoryInstanceWrapper;
 
 public class CacheBuild extends BaseOperation implements AppStoreOperation, EventHandler {
 

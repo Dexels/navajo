@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
-import java.beans.DesignMode;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
