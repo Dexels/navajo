@@ -262,24 +262,4 @@ public class ViewBoxTest extends WindowAdapter implements
         System.exit(0);
     }
 
-    public static void main(String[] args) throws Exception {
-        ConsoleAppender consoleAppender = new ConsoleAppender(
-          new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN),
-          ConsoleAppender.SYSTEM_ERR);
-        consoleAppender.setThreshold(Level.DEBUG);
-        BasicConfigurator.configure(consoleAppender);
-        if (args.length == 0) {
-            args = new String[] {
-              "http://svn.apache.org/repos/asf/xmlgraphics/batik/trunk"
-              + "/samples/tests/spec/coordinates/percentagesAndUnits.svg"
-            };
-        } else if (args.length != 1) {
-            logger.info("Usage: java ViewBoxTest [file | URL]");
-            System.exit(1);
-        }
-        File file = new File(args[0]);
-        if (file.exists())
-            args[0] = file.toURI().toURL().toString();
-        new ViewBoxTest(args[0]).go();
-    }
 }

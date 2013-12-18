@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="892">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="909">
 <locations>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.equinox.server.core.feature.group" version="1.2.0.v20120522-1841-7K7VFMRF7RZHQYI0Yh8U-ov"/>
+<unit id="org.eclipse.core.runtime.feature.feature.group" version="1.1.0.v20120521-2346-7H7NFHkBpeIm_WQ_SXscjz-J1Zi9"/>
+<unit id="org.eclipse.equinox.compendium.sdk.feature.group" version="3.8.0.v20120522-1841-7X7eGb7FPGjtJjv1kjS_NdG"/>
+<unit id="org.eclipse.equinox.sdk.feature.group" version="3.8.0.v20120522-1841-7M7fA78g5_y-eMftHxcd13UXuq5J"/>
+<unit id="org.eclipse.equinox.server.servletbridge.feature.group" version="1.0.101.v20120522-1841-42F9w9oB58B5KBB2ADHO"/>
+<repository location="http://repo.dexels.com/eclipse/equinox_3.8"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.restlet.ext.osgi.servlet.feature.feature.group" version="0.5.2.201207252154"/>
+<unit id="org.restlet.ext.osgi.di.eclipse.feature.feature.group" version="0.5.2.201207252154"/>
+<repository location="http://bryanhunt.github.io/Restlet-Extension-for-OSGi-Environments/releases/0.5.2/"/>
+</location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.restlet.feature.group" version="2.1.4.v20130907-1635"/>
 <unit id="org.restlet.ext.odata.feature.group" version="2.1.4.v20130907-1635"/>
@@ -14,6 +27,10 @@
 <repository location="http://p2.restlet.org/2.1/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.3.201305221702"/>
+<repository location="http://repo.dexels.com/eclipse/jetty8"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.jgit.java7.feature.group" version="3.1.0.201310021548-r"/>
 <unit id="org.eclipse.jgit.feature.group" version="3.1.0.201310021548-r"/>
 <unit id="org.eclipse.jgit.pgm.feature.group" version="3.1.0.201310021548-r"/>
@@ -22,33 +39,8 @@
 <repository location="http://repo.dexels.com/eclipse/egit"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.restlet.ext.osgi.servlet.feature.feature.group" version="0.5.2.201207252154"/>
-<unit id="org.restlet.ext.osgi.di.eclipse.feature.feature.group" version="0.5.2.201207252154"/>
-<repository location="http://bryanhunt.github.io/Restlet-Extension-for-OSGi-Environments/releases/0.5.2/"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.equinox.server.core.feature.group" version="1.2.0.v20120522-1841-7K7VFMRF7RZHQYI0Yh8U-ov"/>
-<unit id="org.eclipse.core.runtime.feature.feature.group" version="1.1.0.v20120521-2346-7H7NFHkBpeIm_WQ_SXscjz-J1Zi9"/>
-<unit id="org.eclipse.equinox.compendium.sdk.feature.group" version="3.8.0.v20120522-1841-7X7eGb7FPGjtJjv1kjS_NdG"/>
-<unit id="org.eclipse.equinox.sdk.feature.group" version="3.8.0.v20120522-1841-7M7fA78g5_y-eMftHxcd13UXuq5J"/>
-<unit id="org.eclipse.equinox.server.servletbridge.feature.group" version="1.0.101.v20120522-1841-42F9w9oB58B5KBB2ADHO"/>
-<repository location="http://repo.dexels.com/eclipse/equinox_3.8"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.datatools.connectivity.feature.feature.group" version="1.8.2.v201010181125-7C7b8mEt1Zwkn9kfkUHHsoP_3to"/>
-<unit id="org.eclipse.datatools.enablement.feature.feature.group" version="1.8.2.v201010181125-7J8x7UBWwUN6z02z-fiI_w4x4uLf"/>
-<unit id="org.eclipse.datatools.enablement.oda.designer.feature.feature.group" version="1.8.2.v201010181125-3328s735357795A78"/>
-<unit id="org.eclipse.datatools.modelbase.feature.feature.group" version="1.8.2.v201010181125-77078CcNBGKBZI_FcRd"/>
-<unit id="org.eclipse.datatools.connectivity.oda.designer.feature.feature.group" version="1.8.2.v201010181125-4107w3121151A1A53"/>
-<repository location="http://repo.dexels.com/eclipse/dtp"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.dexels.thirdparty.feature.feature.group" version="1.7.2.RELEASE"/>
 <repository location="http://repo.dexels.com/eclipse/3rdparty_1.7.2"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.3.201305221702"/>
-<repository location="http://repo.dexels.com/eclipse/jetty8"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.apache.solr.servlet.source" version="1.4.0.v20100421-0704"/>
@@ -376,383 +368,359 @@
 </location>
 </locations>
 <includeBundles>
-<plugin id="org.apache.aries.jmx.blueprint.api"/>
-<plugin id="org.codehaus.jackson.core"/>
-<plugin id="org.eclipse.ecf.provider.filetransfer"/>
-<plugin id="org.eclipse.equinox.coordinator"/>
-<plugin id="org.apache.felix.http.bridge"/>
-<plugin id="org.ops4j.pax.url.classpath"/>
-<plugin id="org.apache.aries.jmx.api"/>
-<plugin id="javax.xml.bind"/>
-<plugin id="org.ops4j.pax.web.pax-web-jetty-bundle"/>
-<plugin id="org.apache.tika.core"/>
-<plugin id="org.apache.commons.fileupload"/>
-<plugin id="org.eclipse.jetty.io" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.equinox.transforms.xslt"/>
-<plugin id="org.apache.commons.beanutils.source"/>
-<plugin id="org.apache.commons.jxpath"/>
-<plugin id="org.eclipse.jetty.util" version="8.1.11.v20130520"/>
-<plugin id="org.eclipse.jgit.archive"/>
-<plugin id="org.ops4j.pax.jdbc.mysql"/>
-<plugin id="org.eclipse.equinox.frameworkadmin"/>
-<plugin id="javax.jcr"/>
-<plugin id="org.eclipse.equinox.metatype"/>
-<plugin id="org.restlet.ext.servlet.source"/>
-<plugin id="org.apache.batik.svggen"/>
-<plugin id="org.apache.commons.net" version="3.1.0"/>
-<plugin id="aQute.xray.plugin"/>
-<plugin id="org.ops4j.pax.swissbox.tracker"/>
-<plugin id="org.eclipse.equinox.transforms.hook"/>
-<plugin id="org.eclipse.datatools.connectivity.ui"/>
-<plugin id="org.sat4j.pb" version="2.3.0.v20110329"/>
-<plugin id="org.ops4j.pax.jdbc"/>
-<plugin id="org.eclipse.equinox.supplement"/>
-<plugin id="org.eclipse.jetty.ajp"/>
-<plugin id="org.ops4j.pax.swissbox.pax-swissbox-bnd"/>
-<plugin id="org.eclipse.jdt.core.compiler.batch"/>
-<plugin id="org.restlet.ext.osgi.source"/>
-<plugin id="org.apache.camel.camel-crypto"/>
-<plugin id="org.apache.commons.el"/>
-<plugin id="org.eclipse.equinox.io"/>
-<plugin id="org.apache.xml.resolver" version="1.2.0.v201005080400"/>
-<plugin id="org.apache.solr.servlet"/>
-<plugin id="org.eclipse.equinox.servletbridge.extensionbundle"/>
-<plugin id="org.apache.log4j"/>
-<plugin id="org.apache.camel.camel-blueprint"/>
-<plugin id="org.apache.felix.servicediagnostics.plugin"/>
-<plugin id="org.apache.httpcomponents.httpclient" version="4.1.2"/>
-<plugin id="org.apache.camel.camel-context"/>
-<plugin id="org.apache.felix.prefs"/>
-<plugin id="org.restlet.ext.ssl"/>
-<plugin id="javax.transaction"/>
-<plugin id="org.restlet.ext.osgi.servlet.source"/>
-<plugin id="org.apache.xbean.bundleutils"/>
-<plugin id="org.restlet.ext.json.source"/>
-<plugin id="org.apache.felix.webconsole.plugins.packageadmin"/>
-<plugin id="org.kjkoster.zapcat"/>
-<plugin id="org.eclipse.osgi"/>
-<plugin id="org.apache.xmlrpc"/>
-<plugin id="org.apache.camel.camel-http4"/>
-<plugin id="org.apache.commons.io"/>
-<plugin id="org.apache.aries.jmx.core"/>
-<plugin id="org.json"/>
-<plugin id="org.apache.felix.webconsole"/>
-<plugin id="org.eclipse.equinox.frameworkadmin.equinox"/>
-<plugin id="org.eclipse.equinox.security.win32.x86"/>
-<plugin id="org.h2.jdbc.service"/>
-<plugin id="org.apache.aries.blueprint.api"/>
-<plugin id="org.apache.solr.common"/>
-<plugin id="org.eclipse.equinox.ds"/>
-<plugin id="org.ops4j.pax.web.pax-web-runtime"/>
-<plugin id="org.eclipse.ecf.provider.filetransfer.httpclient"/>
-<plugin id="org.ops4j.pax.url.wrap"/>
-<plugin id="org.apache.felix.shell"/>
-<plugin id="org.apache.xbean.finder"/>
-<plugin id="org.apache.pdfbox.fontbox"/>
-<plugin id="org.eclipse.equinox.concurrent"/>
-<plugin id="org.apache.derby"/>
-<plugin id="org.eclipse.equinox.weaving.caching.j9"/>
-<plugin id="org.eclipse.equinox.console.ssh"/>
-<plugin id="org.apache.batik.util"/>
-<plugin id="org.apache.camel.camel-mail"/>
-<plugin id="org.eclipse.datatools.connectivity.oda.profile"/>
-<plugin id="org.apache.batik.transcoder"/>
-<plugin id="slf4j.simple"/>
-<plugin id="org.apache.xalan"/>
-<plugin id="org.apache.bcel"/>
-<plugin id="org.apache.camel.camel-ftp"/>
-<plugin id="jackson-core-lgpl"/>
-<plugin id="org.eclipse.equinox.jsp.jasper"/>
-<plugin id="org.apache.commons.beanutils"/>
-<plugin id="org.apache.commons.httpclient" version="3.1.0.v201012070820"/>
-<plugin id="org.eclipse.equinox.log"/>
-<plugin id="org.eclipse.equinox.event"/>
-<plugin id="ch.qos.logback.classic" version="1.0.13"/>
-<plugin id="org.apache.servicemix.bundles.commons-io"/>
-<plugin id="org.eclipse.equinox.security.win32.x86_64"/>
-<plugin id="javax.inject"/>
-<plugin id="org.apache.commons.cli"/>
-<plugin id="org.jgroups"/>
-<plugin id="com.jcraft.jsch" version="0.1.46.v201205102330"/>
-<plugin id="javax.management"/>
-<plugin id="org.apache.felix.shell.tui"/>
-<plugin id="org.eclipse.equinox.registry"/>
-<plugin id="org.ops4j.pax.swissbox.core"/>
-<plugin id="org.apache.servicemix.bundles.lucene"/>
-<plugin id="org.apache.commons.discovery"/>
-<plugin id="org.eclipse.equinox.security.ui"/>
-<plugin id="org.apache.felix.webconsole.plugins.event"/>
-<plugin id="org.ops4j.pax.configmanager"/>
-<plugin id="org.eclipse.datatools.connectivity.oda.design.ui"/>
-<plugin id="org.apache.servicemix.bundles.commons-csv"/>
-<plugin id="org.eclipse.equinox.security"/>
-<plugin id="org.apache.servicemix.bundles.javax.mail"/>
-<plugin id="com.google.gwtjsonrpc"/>
-<plugin id="org.apache.felix.dependencymanager.runtime"/>
-<plugin id="org.slf4j.jcl"/>
-<plugin id="org.apache.batik.dom.svg"/>
-<plugin id="org.apache.xml.security"/>
-<plugin id="org.apache.commons.email"/>
-<plugin id="org.apache.aries.proxy.impl"/>
-<plugin id="org.eclipse.jetty.servlets"/>
-<plugin id="org.apache.xerces" version="2.9.0.v201101211617"/>
-<plugin id="org.igniterealtime.smackx"/>
-<plugin id="org.apache.jasper"/>
-<plugin id="org.apache.felix.http.proxy"/>
-<plugin id="org.apache.batik.extension"/>
-<plugin id="org.apache.ant.source" version="1.8.2.v20110505-1300"/>
-<plugin id="org.eclipse.core.runtime"/>
-<plugin id="org.restlet.source"/>
-<plugin id="org.ops4j.pax.url.commons"/>
-<plugin id="org.apache.felix.http.jetty"/>
-<plugin id="org.eclipse.osgi.services"/>
-<plugin id="org.apache.felix.webconsole.plugins.obr"/>
-<plugin id="org.apache.batik.css"/>
-<plugin id="org.eclipse.equinox.useradmin"/>
-<plugin id="org.apache.camel.camel-jdbc"/>
-<plugin id="org.apache.camel.camel-eventadmin"/>
-<plugin id="org.eclipse.ecf"/>
-<plugin id="org.apache.felix.framework.security"/>
-<plugin id="org.apache.commons.codec" version="1.3.0.v201101211617"/>
-<plugin id="org.eclipse.equinox.http.registry"/>
-<plugin id="org.ops4j.pax.web.pax-web-extender-whiteboard"/>
-<plugin id="org.eclipse.ecf.provider.filetransfer.httpclient.ssl"/>
-<plugin id="org.apache.commons.logging" version="1.0.4.v201101211617"/>
-<plugin id="org.eclipse.jetty.nosql"/>
-<plugin id="org.eclipse.equinox.http.servletbridge"/>
-<plugin id="javax.xml.soap"/>
-<plugin id="jackson-mapper-lgpl"/>
-<plugin id="org.ops4j.base.util.property"/>
-<plugin id="org.slf4j.ext"/>
-<plugin id="org.junit"/>
-<plugin id="org.eclipse.equinox.wireadmin"/>
-<plugin id="org.restlet"/>
-<plugin id="org.apache.felix.resolver"/>
-<plugin id="com.hazelcast"/>
-<plugin id="org.ops4j.pax.web.pax-web-api"/>
 <plugin id="org.apache.karaf.shell.console"/>
-<plugin id="org.apache.pdfbox.jempbox"/>
-<plugin id="org.eclipse.jgit.java7"/>
-<plugin id="org.ops4j.pax.url.obr"/>
-<plugin id="org.ops4j.pax.url.war"/>
-<plugin id="org.apache.xerces" version="2.9.0.v201005080400"/>
-<plugin id="org.apache.axis"/>
-<plugin id="org.apache.geronimo.specs.geronimo-javamail_1.4_spec"/>
-<plugin id="org.apache.camel.camel-csv"/>
-<plugin id="org.apache.batik.xml"/>
-<plugin id="org.ops4j.pax.swissbox.converter"/>
-<plugin id="org.apache.felix.deployment.rp.autoconf"/>
-<plugin id="org.apache.xml.serializer" version="2.7.1.v201005080400"/>
-<plugin id="osgi.cmpn"/>
-<plugin id="org.apache.taglibs.standard.glassfish"/>
-<plugin id="org.eclipse.jetty.osgi.httpservice"/>
-<plugin id="org.w3c.dom.events"/>
-<plugin id="javax.persistence"/>
-<plugin id="org.eclipse.osgi.util"/>
-<plugin id="org.eclipse.equinox.util.source"/>
-<plugin id="org.apache.batik.bridge"/>
+<plugin id="org.apache.felix.http.jetty"/>
+<plugin id="org.ops4j.pax.url.wrap"/>
+<plugin id="org.w3c.dom.svg"/>
+<plugin id="org.eclipse.equinox.launcher"/>
+<plugin id="org.apache.commons.codec" version="1.3.0.v201101211617"/>
 <plugin id="org.apache.aries.jmx.blueprint.core"/>
-<plugin id="org.eclipse.jgit"/>
-<plugin id="org.apache.felix.dependencymanager"/>
-<plugin id="javax.annotation"/>
-<plugin id="org.eclipse.equinox.ip"/>
-<plugin id="org.apache.tika.bundle"/>
-<plugin id="org.ops4j.base.monitors"/>
-<plugin id="javax.management.remote"/>
-<plugin id="org.apache.felix.scr"/>
-<plugin id="org.apache.camel.camel-eclipse"/>
-<plugin id="com.springsource.org.json"/>
-<plugin id="org.eclipse.jgit.pgm"/>
-<plugin id="org.apache.pdfbox"/>
-<plugin id="javax.xml.stream"/>
-<plugin id="org.apache.httpcomponents.httpcore.nio"/>
-<plugin id="org.apache.felix.metatype"/>
-<plugin id="org.eclipse.datatools.connectivity.oda"/>
-<plugin id="org.apache.solr.client.solrj.embedded"/>
-<plugin id="org.scala-lang.scala-reflect"/>
-<plugin id="org.apache.felix.configadmin"/>
-<plugin id="ch.qos.logback.access"/>
-<plugin id="org.eclipse.ecf.filetransfer"/>
-<plugin id="org.apache.felix.gogo.runtime" version="0.10.0"/>
-<plugin id="com.google.collect"/>
-<plugin id="org.apache.felix.http.api"/>
-<plugin id="org.eclipse.equinox.security.macosx"/>
-<plugin id="org.restlet.ext.servlet"/>
-<plugin id="org.apache.ant" version="1.8.2.v20110505-1300"/>
-<plugin id="org.ops4j.base.net"/>
-<plugin id="org.apache.batik.swing"/>
-<plugin id="org.eclipse.equinox.weaving.hook"/>
-<plugin id="org.ops4j.pax.url.assembly"/>
-<plugin id="javax.ws.rs"/>
-<plugin id="org.eclipse.datatools.connectivity.oda.design"/>
-<plugin id="javax.activation"/>
-<plugin id="org.apache.thrift"/>
-<plugin id="org.restlet.ext.oauth"/>
-<plugin id="org.apache.camel.camel-ahc"/>
-<plugin id="org.slf4j.log4j"/>
-<plugin id="org.apache.cassandra"/>
-<plugin id="org.apache.neethi"/>
-<plugin id="org.eclipse.core.variables"/>
-<plugin id="org.eclipse.equinox.jsp.jasper.registry"/>
-<plugin id="org.eclipse.equinox.console.jaas.fragment"/>
-<plugin id="org.postgresql.jdbc4"/>
-<plugin id="com.google.inject"/>
-<plugin id="org.apache.camel.camel-jackson"/>
 <plugin id="org.eclipse.jetty.servlet" version="8.1.11.v20130520"/>
-<plugin id="org.apache.commons.compress" version="1.5.0"/>
-<plugin id="org.eclipse.jetty.http" version="8.1.11.v20130520"/>
-<plugin id="javaewah" version="0.5.6.v201307211000"/>
-<plugin id="org.ops4j.pax.url.reference"/>
-<plugin id="org.restlet.ext.openid.source"/>
-<plugin id="org.eclipse.equinox.http.servlet"/>
-<plugin id="org.scala-lang.scala-library"/>
-<plugin id="org.eclipse.equinox.http.jetty"/>
-<plugin id="org.eclipse.equinox.app"/>
-<plugin id="org.apache.felix.http.bundle"/>
-<plugin id="org.apache.commons.pool" version="1.4.0.v20081016-1000"/>
-<plugin id="org.mongodb.mongo-java-driver"/>
-<plugin id="org.eclipse.equinox.servletbridge"/>
-<plugin id="org.restlet.ext.oauth.source"/>
-<plugin id="org.eclipse.equinox.preferences"/>
-<plugin id="org.apache.felix.bundlerepository"/>
-<plugin id="org.apache.solr.core"/>
-<plugin id="org.apache.felix.http.base"/>
-<plugin id="org.eclipse.jetty.annotations"/>
-<plugin id="org.apache.commons.collections"/>
-<plugin id="org.ops4j.base.io"/>
-<plugin id="javax.servlet.jsp.jstl"/>
-<plugin id="org.eclipse.equinox.weaving.caching"/>
-<plugin id="org.ops4j.pax.web.pax-web-spi"/>
-<plugin id="jline"/>
-<plugin id="org.apache.felix.gogo.command" version="0.12.0"/>
-<plugin id="org.scala-lang.scala-compiler"/>
-<plugin id="biz.aQute.bndlib"/>
-<plugin id="org.eclipse.jetty.security" version="8.1.11.v20130520"/>
-<plugin id="org.w3c.dom.smil"/>
-<plugin id="org.apache.aries.blueprint.cm"/>
-<plugin id="org.restlet.ext.json"/>
-<plugin id="org.codehaus.jackson.mapper"/>
-<plugin id="org.apache.oro"/>
-<plugin id="org.ops4j.pax.jdbc.h2"/>
-<plugin id="org.eclipse.datatools.connectivity"/>
-<plugin id="org.ops4j.pax.url.link"/>
-<plugin id="org.apache.ws.jaxme"/>
-<plugin id="org.restlet.ext.ssl.source"/>
-<plugin id="org.apache.felix.webconsole.plugins.memoryusage"/>
-<plugin id="org.ops4j.base.spi"/>
-<plugin id="ch.qos.logback.slf4j"/>
-<plugin id="org.eclipse.jetty.client"/>
-<plugin id="org.ops4j.pax.web.pax-web-jsp"/>
-<plugin id="javax.servlet.jsp" version="2.2.0.v201103241009"/>
-<plugin id="org.codehaus.jackson.xc"/>
-<plugin id="org.apache.ws.commons.schema"/>
-<plugin id="org.apache.felix.eventadmin"/>
-<plugin id="org.apache.solr.client.solrj"/>
-<plugin id="org.apache.felix.dependencymanager.compat"/>
-<plugin id="org.codehaus.jackson.smile"/>
-<plugin id="org.apache.batik.pdf"/>
-<plugin id="ch.qos.logback.core" version="1.0.13"/>
-<plugin id="org.eclipse.jetty.continuation" version="8.1.11.v20130520"/>
-<plugin id="osgi.enterprise"/>
-<plugin id="org.apache.aries.proxy.api"/>
-<plugin id="org.restlet.ext.osgi.di.eclipse.source"/>
-<plugin id="com.jogamp.jogl"/>
-<plugin id="org.apache.sshd.core"/>
-<plugin id="org.apache.tika.parsers"/>
-<plugin id="org.eclipse.ecf.identity"/>
-<plugin id="org.apache.felix.log"/>
-<plugin id="org.ops4j.pax.url.cache"/>
-<plugin id="org.osgi.service.obr"/>
-<plugin id="org.ops4j.pax.jdbc.derby"/>
-<plugin id="org.codehaus.jackson.jaxrs"/>
-<plugin id="org.slf4j.jul"/>
-<plugin id="javax.mail" version="1.4.0.v201005080615"/>
-<plugin id="com.jcraft.jzlib"/>
-<plugin id="org.ops4j.pax.swissbox.optional.jcl"/>
-<plugin id="org.apache.felix.fileinstall"/>
-<plugin id="org.apache.felix.dependencymanager.shell"/>
-<plugin id="org.apache.camel.camel-core-osgi"/>
-<plugin id="org.apache.felix.inventory"/>
-<plugin id="org.eclipse.ecf.ssl"/>
-<plugin id="org.restlet.ext.odata"/>
-<plugin id="org.fusesource.jansi"/>
-<plugin id="org.apache.batik.util.gui"/>
-<plugin id="org.apache.commons.math"/>
-<plugin id="com.springsource.org.apache.commons.io"/>
-<plugin id="javax.wsdl" version="1.5.1.v201005080630"/>
-<plugin id="org.ops4j.pax.jdbc.postgresql"/>
-<plugin id="org.eclipse.equinox.simpleconfigurator"/>
-<plugin id="org.apache.commons.dbcp"/>
-<plugin id="org.junit.source"/>
-<plugin id="org.restlet.ext.osgi.servlet"/>
-<plugin id="org.eclipse.equinox.cm"/>
-<plugin id="org.eclipse.equinox.weaving.aspectj"/>
-<plugin id="org.h2" version="1.3.162"/>
-<plugin id="org.ops4j.pax.swissbox.lifecycle"/>
-<plugin id="org.apache.karaf.jaas.boot"/>
-<plugin id="org.apache.camel.camel-jetty"/>
-<plugin id="org.restlet.ext.xml"/>
-<plugin id="org.apache.commons.lang" version="2.4.0.v201005080502"/>
-<plugin id="org.ops4j.pax.swissbox.framework"/>
-<plugin id="org.eclipse.equinox.util"/>
-<plugin id="org.restlet.ext.osgi"/>
-<plugin id="org.eclipse.jetty.server" version="8.1.11.v20130520"/>
-<plugin id="org.igniterealtime.smack"/>
-<plugin id="org.apache.batik.dom"/>
-<plugin id="org.apache.bsf"/>
-<plugin id="com.oracle.jdbc.driver"/>
-<plugin id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
-<plugin id="javax.xml.rpc"/>
-<plugin id="javax.xml.ws"/>
-<plugin id="org.ops4j.pax.url.mvn"/>
-<plugin id="org.apache.camel.camel-core"/>
-<plugin id="org.apache.felix.http.whiteboard"/>
-<plugin id="org.eclipse.equinox.common"/>
-<plugin id="org.apache.camel.camel-http"/>
-<plugin id="org.apache.batik.ext.awt"/>
-<plugin id="org.apache.servicemix.specs.activation-api-1.1"/>
-<plugin id="org.apache.httpcomponents.httpcore" version="4.1.2"/>
-<plugin id="org.eclipse.datatools.connectivity.oda.consumer"/>
-<plugin id="slf4j.api"/>
-<plugin id="javax.jws"/>
-<plugin id="org.eclipse.ecf.provider.filetransfer.ssl"/>
-<plugin id="javax.servlet" version="3.0.0.v201103241727"/>
-<plugin id="org.apache.felix.framework"/>
-<plugin id="org.apache.aries.blueprint.core"/>
-<plugin id="javax.wsdl" version="1.6.2.v201012040545"/>
-<plugin id="org.apache.jasper.glassfish" version="2.2.2.v201205150955"/>
-<plugin id="com.vaadin"/>
-<plugin id="org.restlet.ext.odata.source"/>
+<plugin id="org.apache.commons.email"/>
+<plugin id="org.ops4j.pax.web.pax-web-runtime"/>
 <plugin id="org.apache.camel.camel-mongodb"/>
+<plugin id="org.apache.solr.client.solrj.embedded"/>
+<plugin id="org.apache.ant" version="1.8.2.v20110505-1300"/>
+<plugin id="org.eclipse.core.variables"/>
+<plugin id="javax.mail" version="1.4.0.v201005080615"/>
+<plugin id="org.apache.commons.logging" version="1.0.4.v201101211617"/>
 <plugin id="org.apache.felix.webconsole.plugins.upnp"/>
-<plugin id="com.jogamp.jogl-macosx-universal"/>
-<plugin id="org.apache.velocity"/>
-<plugin id="org.ops4j.base.lang"/>
+<plugin id="org.apache.aries.jmx.core"/>
+<plugin id="org.eclipse.ecf.provider.filetransfer"/>
+<plugin id="org.apache.felix.http.whiteboard"/>
+<plugin id="org.apache.solr.client.solrj"/>
+<plugin id="org.apache.batik.dom.svg"/>
+<plugin id="org.apache.felix.webconsole.plugins.memoryusage"/>
+<plugin id="org.codehaus.jackson.xc"/>
+<plugin id="com.google.inject"/>
+<plugin id="org.ops4j.pax.jdbc.derby"/>
+<plugin id="org.h2" version="1.3.162"/>
+<plugin id="org.eclipse.equinox.transforms.hook"/>
+<plugin id="org.eclipse.jetty.util" version="8.1.11.v20130520"/>
+<plugin id="org.apache.xbean.finder"/>
+<plugin id="org.restlet.ext.ssl.source"/>
+<plugin id="org.eclipse.ecf.ssl"/>
+<plugin id="org.eclipse.osgi.util"/>
+<plugin id="com.jcraft.jzlib"/>
+<plugin id="org.apache.felix.log"/>
+<plugin id="org.apache.geronimo.specs.geronimo-javamail_1.4_spec"/>
+<plugin id="org.eclipse.equinox.coordinator"/>
+<plugin id="org.apache.commons.beanutils.source"/>
+<plugin id="org.apache.camel.camel-blueprint"/>
+<plugin id="org.apache.camel.camel-ahc"/>
+<plugin id="org.ops4j.pax.swissbox.property"/>
+<plugin id="org.apache.commons.dbcp"/>
+<plugin id="org.apache.log4j"/>
+<plugin id="org.h2.jdbc.service"/>
+<plugin id="slf4j.api"/>
 <plugin id="org.restlet.ext.osgi.di.eclipse"/>
 <plugin id="org.restlet.ext.openid"/>
-<plugin id="org.apache.camel.camel-stream"/>
-<plugin id="org.apache.hadoop.zookeeper" version="3.3.5"/>
-<plugin id="org.apache.wsil4j"/>
-<plugin id="org.ops4j.pax.swissbox.extender"/>
-<plugin id="org.apache.mina.core"/>
-<plugin id="org.apache.ws.commons.util"/>
-<plugin id="org.apache.aries.quiesce.api"/>
-<plugin id="org.apache.batik.parser"/>
-<plugin id="com.mysql.jdbc"/>
-<plugin id="org.sat4j.core" version="2.3.0.v20110329"/>
-<plugin id="org.w3c.dom.svg"/>
-<plugin id="org.ops4j.pax.swissbox.property"/>
-<plugin id="org.eclipse.equinox.device"/>
-<plugin id="javax.security.auth.message"/>
-<plugin id="org.apache.felix.shell.remote"/>
-<plugin id="org.apache.servicemix.bundles.geronimo-javamail_1.4_provider"/>
-<plugin id="javax.xml" version="1.3.4.v201005080400"/>
-<plugin id="org.apache.aries.util"/>
-<plugin id="org.ops4j.pax.url.dir"/>
-<plugin id="org.restlet.ext.xml.source"/>
-<plugin id="javax.el" version="2.2.0.v201108011116"/>
-<plugin id="org.apache.felix.webconsole.plugins.ds"/>
 <plugin id="org.apache.felix.gogo.shell" version="0.10.0"/>
-<plugin id="org.eclipse.equinox.launcher"/>
+<plugin id="org.restlet.ext.xml.source"/>
+<plugin id="javax.annotation"/>
+<plugin id="org.fusesource.jansi"/>
+<plugin id="org.apache.servicemix.specs.activation-api-1.1"/>
+<plugin id="org.apache.camel.camel-eclipse"/>
+<plugin id="org.eclipse.equinox.preferences"/>
+<plugin id="org.apache.commons.el"/>
+<plugin id="org.eclipse.equinox.ds"/>
+<plugin id="org.restlet.ext.osgi.source"/>
+<plugin id="org.apache.commons.httpclient" version="3.1.0.v201012070820"/>
+<plugin id="org.ops4j.pax.url.reference"/>
+<plugin id="org.apache.camel.camel-crypto"/>
+<plugin id="org.apache.servicemix.bundles.lucene"/>
+<plugin id="org.eclipse.jgit"/>
+<plugin id="org.apache.xerces"/>
+<plugin id="org.ops4j.pax.swissbox.tracker"/>
+<plugin id="com.jcraft.jsch" version="0.1.46.v201205102330"/>
+<plugin id="org.apache.felix.shell.remote"/>
+<plugin id="org.apache.ws.jaxme"/>
+<plugin id="org.apache.solr.common"/>
+<plugin id="org.eclipse.equinox.frameworkadmin"/>
+<plugin id="org.apache.camel.camel-csv"/>
+<plugin id="org.apache.commons.compress" version="1.5.0"/>
+<plugin id="org.sat4j.pb" version="2.3.0.v20110329"/>
+<plugin id="org.apache.camel.camel-mail"/>
+<plugin id="org.apache.felix.fileinstall"/>
+<plugin id="com.jogamp.jogl"/>
+<plugin id="org.hamcrest.core"/>
+<plugin id="org.postgresql.jdbc4"/>
+<plugin id="javax.management"/>
+<plugin id="org.apache.camel.camel-core-osgi"/>
+<plugin id="org.eclipse.equinox.supplement"/>
+<plugin id="org.codehaus.jackson.smile"/>
+<plugin id="biz.aQute.bndlib"/>
+<plugin id="org.codehaus.jackson.mapper"/>
+<plugin id="org.codehaus.jackson.core"/>
+<plugin id="org.ops4j.pax.url.commons"/>
+<plugin id="org.apache.solr.servlet"/>
+<plugin id="org.apache.commons.jxpath"/>
+<plugin id="javax.jcr"/>
+<plugin id="org.eclipse.equinox.common"/>
+<plugin id="org.apache.aries.quiesce.api"/>
+<plugin id="org.apache.aries.proxy.api"/>
+<plugin id="javax.servlet.jsp" version="2.2.0.v201103241009"/>
+<plugin id="org.apache.thrift"/>
+<plugin id="org.apache.camel.camel-jdbc"/>
+<plugin id="org.apache.batik.extension"/>
+<plugin id="org.restlet.ext.oauth.source"/>
+<plugin id="org.eclipse.equinox.cm"/>
+<plugin id="org.eclipse.jetty.osgi.httpservice"/>
+<plugin id="org.apache.felix.http.bundle"/>
+<plugin id="org.ops4j.pax.swissbox.framework"/>
+<plugin id="org.apache.commons.cli"/>
+<plugin id="org.apache.felix.webconsole.plugins.obr"/>
+<plugin id="org.ops4j.pax.jdbc.h2"/>
+<plugin id="org.igniterealtime.smackx"/>
+<plugin id="org.eclipse.equinox.jsp.jasper"/>
+<plugin id="org.mongodb.mongo-java-driver"/>
+<plugin id="org.eclipse.equinox.device"/>
+<plugin id="org.apache.batik.bridge"/>
+<plugin id="javax.persistence"/>
+<plugin id="javax.xml.rpc"/>
+<plugin id="org.apache.wsil4j"/>
+<plugin id="org.ops4j.pax.jdbc.mysql"/>
+<plugin id="org.apache.felix.webconsole.plugins.event"/>
+<plugin id="org.apache.felix.deployment.rp.autoconf"/>
+<plugin id="com.google.gwtjsonrpc"/>
+<plugin id="org.apache.felix.http.base"/>
+<plugin id="org.sat4j.core" version="2.3.0.v20110329"/>
+<plugin id="org.apache.xml.security"/>
+<plugin id="org.apache.felix.shell"/>
+<plugin id="org.eclipse.equinox.ip"/>
+<plugin id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
+<plugin id="org.eclipse.osgi.services"/>
+<plugin id="javax.security.auth.message"/>
+<plugin id="org.apache.bsf"/>
+<plugin id="org.apache.taglibs.standard.glassfish"/>
+<plugin id="jackson-core-lgpl"/>
+<plugin id="org.apache.camel.camel-http4"/>
+<plugin id="org.apache.felix.webconsole.plugins.ds"/>
+<plugin id="org.eclipse.equinox.useradmin"/>
+<plugin id="org.apache.felix.gogo.runtime" version="0.10.0"/>
+<plugin id="org.eclipse.equinox.concurrent"/>
+<plugin id="org.apache.batik.ext.awt"/>
+<plugin id="org.apache.camel.camel-jetty"/>
+<plugin id="org.slf4j.log4j"/>
+<plugin id="org.apache.pdfbox.fontbox"/>
+<plugin id="org.eclipse.jetty.security" version="8.1.11.v20130520"/>
+<plugin id="org.apache.commons.pool" version="1.4.0.v20081016-1000"/>
+<plugin id="org.ops4j.base.net"/>
+<plugin id="org.apache.batik.dom"/>
+<plugin id="org.ops4j.pax.swissbox.pax-swissbox-bnd"/>
+<plugin id="org.ops4j.base.spi"/>
+<plugin id="org.apache.tika.parsers"/>
+<plugin id="org.restlet.ext.odata.source"/>
+<plugin id="org.apache.aries.blueprint.api"/>
+<plugin id="org.eclipse.equinox.registry"/>
+<plugin id="org.w3c.dom.smil"/>
+<plugin id="org.apache.camel.camel-context"/>
+<plugin id="org.apache.servicemix.bundles.commons-io"/>
+<plugin id="org.eclipse.jetty.continuation" version="8.1.11.v20130520"/>
+<plugin id="org.apache.camel.camel-core"/>
+<plugin id="org.eclipse.jetty.annotations"/>
+<plugin id="org.junit"/>
+<plugin id="org.apache.xmlrpc"/>
+<plugin id="jackson-mapper-lgpl"/>
+<plugin id="org.apache.batik.xml"/>
+<plugin id="org.apache.commons.io"/>
+<plugin id="org.apache.batik.util"/>
+<plugin id="org.ops4j.pax.web.pax-web-jetty-bundle"/>
+<plugin id="org.restlet.ext.odata"/>
+<plugin id="org.eclipse.equinox.security.macosx"/>
+<plugin id="org.eclipse.jetty.nosql"/>
+<plugin id="org.apache.felix.shell.tui"/>
+<plugin id="javax.xml"/>
+<plugin id="org.eclipse.jetty.io" version="8.1.11.v20130520"/>
+<plugin id="org.apache.felix.servicediagnostics.plugin"/>
+<plugin id="com.springsource.org.json"/>
+<plugin id="org.eclipse.equinox.frameworkadmin.equinox"/>
+<plugin id="ch.qos.logback.core" version="1.0.13"/>
+<plugin id="org.restlet.ext.osgi.servlet.source"/>
+<plugin id="org.apache.batik.util.gui"/>
+<plugin id="org.eclipse.jgit.archive"/>
+<plugin id="org.eclipse.jetty.server" version="8.1.11.v20130520"/>
+<plugin id="org.apache.servicemix.bundles.geronimo-javamail_1.4_provider"/>
+<plugin id="javax.transaction"/>
+<plugin id="org.ops4j.pax.swissbox.lifecycle"/>
+<plugin id="javax.servlet" version="3.0.0.v201103241727"/>
+<plugin id="org.ops4j.pax.web.pax-web-api"/>
+<plugin id="org.restlet.ext.json.source"/>
+<plugin id="org.apache.felix.metatype"/>
+<plugin id="org.apache.httpcomponents.httpclient" version="4.1.2"/>
+<plugin id="org.eclipse.equinox.event"/>
+<plugin id="org.apache.aries.jmx.blueprint.api"/>
+<plugin id="org.apache.aries.blueprint.cm"/>
+<plugin id="org.apache.felix.resolver"/>
+<plugin id="com.mysql.jdbc"/>
+<plugin id="org.scala-lang.scala-library"/>
+<plugin id="org.apache.aries.proxy.impl"/>
+<plugin id="org.apache.ws.commons.util"/>
+<plugin id="org.apache.velocity"/>
+<plugin id="javax.xml.soap"/>
+<plugin id="org.eclipse.jdt.core.compiler.batch"/>
+<plugin id="org.ops4j.pax.swissbox.converter"/>
+<plugin id="org.eclipse.equinox.app"/>
+<plugin id="org.ops4j.pax.web.pax-web-jsp"/>
+<plugin id="org.osgi.service.obr"/>
+<plugin id="org.apache.camel.camel-eventadmin"/>
+<plugin id="org.restlet.ext.osgi.di.eclipse.source"/>
+<plugin id="org.apache.felix.webconsole.plugins.packageadmin"/>
+<plugin id="jline"/>
+<plugin id="org.scala-lang.scala-reflect"/>
+<plugin id="org.restlet.ext.openid.source"/>
+<plugin id="org.apache.camel.camel-stream"/>
+<plugin id="org.apache.commons.fileupload"/>
+<plugin id="org.apache.xml.serializer"/>
+<plugin id="javax.wsdl"/>
+<plugin id="org.restlet.ext.xml"/>
+<plugin id="org.apache.bcel"/>
+<plugin id="org.apache.commons.collections"/>
+<plugin id="org.apache.felix.bundlerepository"/>
+<plugin id="org.ops4j.base.monitors"/>
+<plugin id="org.slf4j.jcl"/>
+<plugin id="org.apache.xml.resolver"/>
+<plugin id="org.apache.felix.dependencymanager.runtime"/>
+<plugin id="org.apache.axis"/>
+<plugin id="com.springsource.org.apache.commons.io"/>
+<plugin id="org.eclipse.equinox.security"/>
+<plugin id="org.eclipse.equinox.util"/>
+<plugin id="org.ops4j.pax.url.dir"/>
+<plugin id="org.apache.felix.configadmin"/>
+<plugin id="org.apache.servicemix.bundles.commons-csv"/>
+<plugin id="ch.qos.logback.access"/>
+<plugin id="org.ops4j.pax.jdbc.postgresql"/>
+<plugin id="ch.qos.logback.classic" version="1.0.13"/>
+<plugin id="slf4j.simple"/>
+<plugin id="org.apache.hadoop.zookeeper" version="3.3.5"/>
+<plugin id="org.apache.xbean.bundleutils"/>
+<plugin id="org.apache.felix.framework.security"/>
+<plugin id="org.junit.source"/>
+<plugin id="org.eclipse.ecf.identity"/>
+<plugin id="org.eclipse.equinox.console.ssh"/>
+<plugin id="javax.inject"/>
+<plugin id="org.codehaus.jackson.jaxrs"/>
+<plugin id="javaewah" version="0.5.6.v201307211000"/>
+<plugin id="org.ops4j.pax.url.classpath"/>
+<plugin id="org.apache.neethi"/>
+<plugin id="org.apache.felix.inventory"/>
+<plugin id="org.apache.pdfbox.jempbox"/>
+<plugin id="osgi.cmpn"/>
+<plugin id="org.jgroups"/>
+<plugin id="org.ops4j.pax.url.link"/>
+<plugin id="org.apache.pdfbox"/>
+<plugin id="org.restlet.ext.servlet.source"/>
+<plugin id="org.apache.httpcomponents.httpcore" version="4.1.2"/>
+<plugin id="org.ops4j.pax.url.war"/>
+<plugin id="org.slf4j.jul"/>
+<plugin id="javax.xml.ws"/>
+<plugin id="javax.xml.stream"/>
+<plugin id="org.ops4j.pax.swissbox.core"/>
+<plugin id="org.apache.mina.core"/>
+<plugin id="org.eclipse.equinox.log"/>
+<plugin id="com.oracle.jdbc.driver"/>
+<plugin id="org.apache.felix.http.proxy"/>
+<plugin id="org.igniterealtime.smack"/>
+<plugin id="org.apache.cassandra"/>
+<plugin id="org.apache.felix.dependencymanager.shell"/>
+<plugin id="javax.el" version="2.2.0.v201108011116"/>
+<plugin id="org.restlet.ext.osgi"/>
+<plugin id="javax.management.remote"/>
+<plugin id="org.restlet.ext.ssl"/>
+<plugin id="org.apache.aries.util"/>
+<plugin id="org.apache.felix.http.bridge"/>
+<plugin id="org.apache.karaf.jaas.boot"/>
+<plugin id="org.apache.batik.swing"/>
+<plugin id="org.apache.commons.net" version="3.1.0"/>
+<plugin id="org.ops4j.base.lang"/>
+<plugin id="ch.qos.logback.slf4j"/>
+<plugin id="org.ops4j.pax.url.obr"/>
+<plugin id="javax.xml.bind"/>
+<plugin id="org.apache.commons.lang" version="2.4.0.v201005080502"/>
+<plugin id="org.eclipse.jetty.servlets"/>
+<plugin id="org.apache.servicemix.bundles.javax.mail"/>
+<plugin id="org.apache.camel.camel-ftp"/>
+<plugin id="org.eclipse.equinox.servletbridge.extensionbundle"/>
+<plugin id="org.eclipse.ecf.provider.filetransfer.httpclient"/>
+<plugin id="org.apache.felix.scr"/>
+<plugin id="org.apache.xalan"/>
+<plugin id="org.apache.camel.camel-http"/>
+<plugin id="org.eclipse.ecf"/>
+<plugin id="javax.ws.rs"/>
+<plugin id="org.eclipse.osgi"/>
+<plugin id="org.restlet.ext.oauth"/>
+<plugin id="com.google.collect"/>
+<plugin id="org.apache.felix.dependencymanager.compat"/>
+<plugin id="org.ops4j.base.io"/>
+<plugin id="org.apache.tika.core"/>
+<plugin id="org.restlet.ext.osgi.servlet"/>
+<plugin id="org.apache.felix.prefs"/>
+<plugin id="org.apache.camel.camel-jackson"/>
+<plugin id="org.apache.commons.discovery"/>
+<plugin id="org.ops4j.pax.web.pax-web-spi"/>
+<plugin id="org.apache.jasper"/>
+<plugin id="org.eclipse.jgit.pgm"/>
+<plugin id="org.ops4j.pax.swissbox.extender"/>
+<plugin id="org.json"/>
+<plugin id="osgi.enterprise"/>
+<plugin id="org.eclipse.equinox.util.source"/>
+<plugin id="org.apache.jasper.glassfish" version="2.2.2.v201205150955"/>
+<plugin id="org.eclipse.jetty.http" version="8.1.11.v20130520"/>
+<plugin id="org.apache.tika.bundle"/>
+<plugin id="org.apache.commons.math"/>
+<plugin id="org.slf4j.ext"/>
+<plugin id="org.apache.batik.svggen"/>
+<plugin id="com.jogamp.jogl-macosx-universal"/>
+<plugin id="javax.jws"/>
+<plugin id="org.eclipse.ecf.provider.filetransfer.ssl"/>
+<plugin id="org.apache.aries.blueprint.core"/>
+<plugin id="org.restlet.ext.json"/>
+<plugin id="org.w3c.dom.events"/>
+<plugin id="org.apache.felix.framework"/>
+<plugin id="org.eclipse.ecf.filetransfer"/>
+<plugin id="org.ops4j.pax.url.mvn"/>
+<plugin id="javax.activation"/>
+<plugin id="org.eclipse.equinox.simpleconfigurator"/>
+<plugin id="org.apache.solr.core"/>
+<plugin id="org.apache.httpcomponents.httpcore.nio"/>
+<plugin id="aQute.xray.plugin"/>
+<plugin id="org.apache.ws.commons.schema"/>
+<plugin id="org.apache.batik.parser"/>
+<plugin id="org.apache.felix.gogo.command" version="0.12.0"/>
+<plugin id="org.apache.aries.jmx.api"/>
+<plugin id="org.apache.derby"/>
+<plugin id="org.ops4j.pax.url.cache"/>
+<plugin id="org.eclipse.ecf.provider.filetransfer.httpclient.ssl"/>
+<plugin id="org.apache.felix.http.api"/>
+<plugin id="org.ops4j.pax.web.pax-web-extender-whiteboard"/>
+<plugin id="com.vaadin"/>
+<plugin id="org.apache.commons.beanutils"/>
+<plugin id="org.eclipse.jetty.ajp"/>
+<plugin id="org.apache.ant.source" version="1.8.2.v20110505-1300"/>
+<plugin id="org.apache.oro"/>
+<plugin id="org.ops4j.pax.jdbc"/>
+<plugin id="org.eclipse.jetty.client"/>
+<plugin id="org.apache.batik.css"/>
+<plugin id="javax.servlet.jsp.jstl"/>
+<plugin id="org.restlet.ext.servlet"/>
+<plugin id="org.ops4j.pax.swissbox.optional.jcl"/>
+<plugin id="org.apache.felix.dependencymanager"/>
+<plugin id="org.restlet.source"/>
+<plugin id="org.eclipse.jgit.java7"/>
+<plugin id="org.apache.sshd.core"/>
+<plugin id="org.scala-lang.scala-compiler"/>
+<plugin id="org.apache.batik.transcoder"/>
+<plugin id="org.eclipse.equinox.io"/>
+<plugin id="org.ops4j.pax.url.assembly"/>
+<plugin id="org.apache.felix.webconsole"/>
+<plugin id="org.eclipse.equinox.jsp.jasper.registry"/>
+<plugin id="org.kjkoster.zapcat"/>
+<plugin id="org.eclipse.equinox.metatype"/>
+<plugin id="org.ops4j.base.util.property"/>
+<plugin id="org.eclipse.core.runtime"/>
+<plugin id="org.restlet"/>
+<plugin id="org.ops4j.pax.configmanager"/>
+<plugin id="org.apache.felix.eventadmin"/>
+<plugin id="com.hazelcast"/>
 </includeBundles>
 </target>

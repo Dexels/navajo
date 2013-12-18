@@ -17,10 +17,10 @@
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true -Dstorage.path=${project_loc:com.dexels.navajo.jgit}/testrepo"/>
 <stringAttribute key="pde.version" value="3.3"/>
-<booleanAttribute key="show_selected_only" value="true"/>
+<booleanAttribute key="show_selected_only" value="false"/>
 <stringAttribute key="target_bundles" value="ch.qos.logback.classic@default:default,ch.qos.logback.core@default:default,com.jcraft.jsch@default:default,com.springsource.org.apache.commons.io@default:default,jackson-core-lgpl@default:default,jackson-mapper-lgpl@default:default,javaewah@default:default,org.apache.commons.fileupload@default:default,org.apache.felix.configadmin@default:default,org.apache.felix.eventadmin@default:default,org.apache.felix.log@default:default,org.apache.felix.metatype@default:default,org.apache.felix.scr@default:default,org.apache.felix.webconsole.plugins.ds@default:default,org.apache.felix.webconsole.plugins.event@default:default,org.apache.felix.webconsole@default:default,org.eclipse.jgit@default:default,org.eclipse.osgi@-1:true,org.json@default:default,org.ops4j.pax.web.pax-web-extender-whiteboard@default:default,org.ops4j.pax.web.pax-web-jetty-bundle@default:default,slf4j.api@default:default,slf4j.simple@default:false"/>
 <booleanAttribute key="tracing" value="false"/>
 <booleanAttribute key="useCustomFeatures" value="false"/>
 <booleanAttribute key="useDefaultConfigArea" value="true"/>
-<stringAttribute key="workspace_bundles" value="com.dexels.navajo.jgit@default:default"/>
+<stringAttribute key="workspace_bundles" value="com.dexels.navajo.jgit@default:default,com.dexels.navajo.repository.api@default:default"/>
 </launchConfiguration>

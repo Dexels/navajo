@@ -1,15 +1,18 @@
 package com.dexels.navajo.adapters.svg;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import org.apache.batik.transcoder.*;
-import org.apache.batik.transcoder.image.*;
-import org.apache.fop.svg.PDFTranscoder;
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.apache.fop.svg.*;
 
-import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.document.types.Binary;
 
 public class NavajoSvgRenderAdapter {
 
@@ -23,27 +26,27 @@ public class NavajoSvgRenderAdapter {
 		return b;
 	}
 	
-	public static void renderPDF(InputStream fis, OutputStream ostream, float width, float height) throws  IOException {
-		 
-		PDFTranscoder t = new PDFTranscoder();
-        TranscoderInput input = new TranscoderInput(fis);
-        t.addTranscodingHint(PDFTranscoder.KEY_HEIGHT,new Float(width));
-        t.addTranscodingHint(PDFTranscoder.KEY_WIDTH,new Float(height));
-        TranscoderOutput output = new TranscoderOutput(ostream);
-
-        
-        // Save the image.
-        try {
-			t.transcode(input, output);
-		} catch (TranscoderException e) {
-			logger.error("Error: ", e);
-		}
-
-        // Flush and close the stream.
-        ostream.flush();
-        ostream.close();
-        fis.close();
-	}
+//	public static void renderPDF(InputStream fis, OutputStream ostream, float width, float height) throws  IOException {
+//		 
+//		PDFTranscoder t = new PDFTranscoder();
+//        TranscoderInput input = new TranscoderInput(fis);
+//        t.addTranscodingHint(PDFTranscoder.KEY_HEIGHT,new Float(width));
+//        t.addTranscodingHint(PDFTranscoder.KEY_WIDTH,new Float(height));
+//        TranscoderOutput output = new TranscoderOutput(ostream);
+//
+//        
+//        // Save the image.
+//        try {
+//			t.transcode(input, output);
+//		} catch (TranscoderException e) {
+//			logger.error("Error: ", e);
+//		}
+//
+//        // Flush and close the stream.
+//        ostream.flush();
+//        ostream.close();
+//        fis.close();
+//	}
 	public static void renderPNG(InputStream fis, OutputStream ostream, float width, float height) throws  IOException {
 		 
 		PNGTranscoder t = new PNGTranscoder();

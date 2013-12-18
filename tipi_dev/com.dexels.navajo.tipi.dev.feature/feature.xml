@@ -32,7 +32,7 @@
          unpack="false"/>
 
    <plugin
-         id="com.dexels.navajo.tipi.dev.plugin"
+         id="com.dexels.navajo.tipi.dev.server"
          download-size="0"
          install-size="0"
          version="0.0.0"
