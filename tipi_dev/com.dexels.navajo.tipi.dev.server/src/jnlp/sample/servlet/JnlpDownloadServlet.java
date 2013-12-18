@@ -272,6 +272,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 		JnlpResource jnlpres = new JnlpResource(getServletContext(),
 				dreq.getPath());
 		if (!jnlpres.exists()) {
+			logger.info("File not found: "+dreq.getPath());
 			throw new ErrorResponseException(
 					DownloadResponse.getNoContentResponse());
 		}

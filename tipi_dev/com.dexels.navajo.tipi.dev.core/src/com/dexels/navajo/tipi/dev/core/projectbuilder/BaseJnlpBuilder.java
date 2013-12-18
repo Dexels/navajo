@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.dev.core.projectbuilder;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +23,16 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 	
 
 	protected boolean appendResourceForExtension(XMLElement resources,
-			Dependency d) throws IOException {
+			String name, String version, boolean main) throws IOException {
 		XMLElement x = new CaseSensitiveXMLElement("jar");
 		resources.addChild(x);
-		x.setAttribute("version", d.getVersion());
-		x.setAttribute("href", "lib/" + d.getFileName());
+		if(version!=null) {
+			x.setAttribute("version", version);
+		}
+		x.setAttribute("href", "lib/" + name);
+		if(main) {
+			x.setAttribute("main", "true");
+		}
 		return false;
 	}
 
@@ -85,7 +91,6 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 	public void buildFromMaven(ResourceBundle settings,
 			List<Dependency> dependencyList, File appFolder,
 			List<String> profiles, String resourceBase, String suppliedCodebase, String applicationName) {
-		
 		logger.debug("Building in folder: "+appFolder);
 		if(profiles==null) {
 			logger.warn("No profiles loaded, not building jnlp");
@@ -113,7 +118,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		output.setAttribute("version", "1");
 		output.setAttribute("spec", "1.0+");
 		output.setAttribute("codebase", assembleCodebase(suppliedCodebase,applicationName,"apps"));
-		output.setAttribute("href", "$$name");
+		output.setAttribute("href", profile+".jnlp");
 
 		XMLElement information = output.addTagKeyValue("information", "");
 		information.addTagKeyValue("title", params. getString("title"));
@@ -144,8 +149,10 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 		java.setAttribute("version", "1.6+");
 		appendSecurity(output, params.getString("permissions"));
 		for (Dependency dependency : dependencies) {
-			appendResourceForExtension(resources, dependency);
+			appendResourceForExtension(resources, dependency.getFileName(),dependency.getVersion(),false);
 		}
+		appendResourceForExtension(resources, profile+"_jnlp.jar",null,true);
+		
 		XMLElement app = output.addTagKeyValue("application-desc", "");
 		app.setAttribute("main-class", "tipi.MainApplication");
 

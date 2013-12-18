@@ -23,4 +23,6 @@ public interface AppStoreManager {
 
 	public Set<String> listApplications();
 
+	public int getSessionCount();
+
 }

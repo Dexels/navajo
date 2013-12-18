@@ -19,13 +19,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
+import com.dexels.navajo.tipi.dev.server.appmanager.impl.RepositoryInstanceWrapper;
 
-public class CacheBuild extends BaseOperation implements AppStoreOperation {
+public class CacheBuild extends BaseOperation implements AppStoreOperation, EventHandler {
 
 	private static final long serialVersionUID = 4675519591066489420L;
 	private final static Logger logger = LoggerFactory
@@ -162,6 +165,18 @@ public class CacheBuild extends BaseOperation implements AppStoreOperation {
 
 	public String convertPath(String location) {
 		return location.replaceAll("/", "_");
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+
+			System.err.println("EVENT FOUND!");
+			RepositoryInstance ri =  (RepositoryInstance) event.getProperty("repository");
+			try {
+				build(ri);
+			} catch (IOException e) {
+				logger.error("Error: ", e);
+			}
 	}
 
 

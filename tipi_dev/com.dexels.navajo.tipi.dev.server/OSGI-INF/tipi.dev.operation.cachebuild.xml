@@ -6,10 +6,15 @@
    <service>
       <provide interface="com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation"/>
       <provide interface="javax.servlet.Servlet"/>
-   </service>
+	  <provide interface="org.osgi.service.event.EventHandler" />
+	</service>
    <property name="osgi.command.scope" type="String" value="tipi"/>
    <property name="osgi.command.function" type="String">
 		cachebuild
    </property>
+	<property name="event.topics" type="String">
+		githubosgi/change
+	</property>
    <property name="alias" type="String" value="/cachebuild"/>
 </scr:component>
+

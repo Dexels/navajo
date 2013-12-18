@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="tipi.dev.operation.build">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" immediate="true" name="tipi.dev.operation.build">
    <implementation class="com.dexels.navajo.tipi.dev.server.appmanager.operations.impl.JnlpBuild"/>
    <reference bind="addRepositoryInstance" cardinality="0..n" interface="com.dexels.navajo.repository.api.RepositoryInstance" name="RepositoryInstance" policy="dynamic" unbind="removeRepositoryInstance" target="(type=appstore)"/>
    <reference bind="setAppStoreManager" cardinality="1..1" interface="com.dexels.navajo.tipi.dev.server.appmanager.AppStoreManager" name="AppStoreManager" policy="dynamic" unbind="clearAppStoreManager"/>

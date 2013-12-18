@@ -26,8 +26,20 @@ public class List extends BaseOperation implements AppStoreOperation {
 	public void list(CommandSession session ) throws IOException {
 		Map<String,Map<String,?>> wrap = new HashMap<String, Map<String,?>>();
 		wrap.put("applications", getApplications());
-		
+		wrap.put("settings", getSettings());
 		writeValueToJsonArray(session.getConsole(),wrap);
+	}
+
+
+
+
+	private Map<String, Object> getSettings() {
+		Map<String,Object> settings = new HashMap<String, Object>();
+		settings.put("manifestcodebase", appStoreManager.getManifestCodebase());
+		settings.put("codebase", appStoreManager.getCodeBase());
+		settings.put("organization", appStoreManager.getOrganization());
+		settings.put("sessions", appStoreManager.getSessionCount());
+		return settings;
 	}
 	
 
@@ -55,6 +67,8 @@ public class List extends BaseOperation implements AppStoreOperation {
 			extwrap.put(applicationStatus.getRepositoryName(), applicationStatus);
 		}
 		wrap.put("applications", extwrap);
+		wrap.put("settings", getSettings());
+
 		writeValueToJsonArray(resp.getOutputStream(),wrap);
 	}
 
