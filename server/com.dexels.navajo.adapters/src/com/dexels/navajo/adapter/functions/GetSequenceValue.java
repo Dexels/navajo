@@ -7,15 +7,18 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class GetSequenceValue extends FunctionInterface {
     public GetSequenceValue() {}
     
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Gets the next value for the given sequence in the given database";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "GetSequenceValue([TransactionContext], [([Username + Password] + @ + [DataSource] + :)]sequencename). Returns the sequence value. Built for tipi";
     }
 
-    public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Integer transactionContext = -1;
         String datasource = null;
         String sequencename = null;

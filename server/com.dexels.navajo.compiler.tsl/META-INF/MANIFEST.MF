@@ -25,7 +25,8 @@ Import-Package: com.dexels.navajo.compiler,
  org.slf4j;version="[1.6.1,1.8.0)",
  org.w3c.dom
 Bundle-Activator: navajotsl.Activator
-Service-Component: OSGI-INF/navajoTslCompiler.xml, OSGI-INF/javaCompiler.xml, OSGI-INF/javaCompilerComponent.xml, OSGI-INF/bundleCreator.xml
+Service-Component: OSGI-INF/navajoTslCompiler.xml, OSGI-INF/javaCompiler.xml, OSGI-INF/javaCompilerComponent.xml, 
+ OSGI-INF/bundleCreator.xml, OSGI-INF/navajo.github.listener.xml
 Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.compiler.tsl.custom;uses:="javax.tools,org.osgi.framework,javax.lang.model.element",
  com.dexels.navajo.compiler.tsl.internal;

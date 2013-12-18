@@ -72,31 +72,31 @@ public class CallbackServlet extends WebSocketServlet implements Runnable {
 	}
 
 	
-//	private void notifyMembers(String message) {
-//
-//		for(SCSocket member: members){
-//			if(member.isOpen()){
-//				try{
-//					member.sendMessage(message);
-//				} catch(Exception e){
-//					e.printStackTrace();
-//				}
-//			}
-//		}
-//	}
+	private void notifyMembers(String message) {
+
+		for(SCSocket member: members){
+			if(member.isOpen()){
+				try{
+					member.sendMessage(message);
+				} catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 	@Override
 	public void run() {
-//		int count = 0;
-//		while(true) {
-//			notifyMembers("Heartbeat #"+count);
-//			count++;
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
+		int count = 0;
+		while(true) {
+			notifyMembers("Heartbeat #"+count);
+			count++;
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
  
 }

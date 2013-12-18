@@ -131,7 +131,7 @@ public class TipiVaadinTouchServlet extends TouchKitApplicationServlet {
 	@Override
 	protected Application getNewApplication(HttpServletRequest request)
 			throws ServletException {
-		boolean supported = isSupportedBrowser(request);
+		isSupportedBrowser(request);
 
 		//		Class<? extends Application> appInstanceClass = Class.forName(appInstance);
 		TipiVaadinTouchApplication tipiApplication = (TipiVaadinTouchApplication) super.getNewApplication(request);

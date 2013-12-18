@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.instance.InstanceConfigurationProvider;
+import com.dexels.navajo.tipi.instance.InstancePathProvider;
 
 
 public class InstanceConfigurationProviderImpl implements
@@ -41,6 +42,8 @@ public class InstanceConfigurationProviderImpl implements
 			.getLogger(InstanceConfigurationProviderImpl.class);
 
 	private File rootFolder;
+
+	private InstancePathProvider instancePathProvider;
 
 	@Override
 	public Set<String> getProfiles() {
@@ -66,16 +69,14 @@ public class InstanceConfigurationProviderImpl implements
 	
 	
 
-	public void activate(Map<String,Object> parameters, BundleContext bundleContext) throws FileNotFoundException {
+	public void activate(BundleContext bundleContext) throws FileNotFoundException {
 		deployments.clear();
 		profiles.clear();
 		resourcePids.clear();
-//		"/Users/frank/git/memberportal/com.sportlink.memberportal.tipi"
-		String root = (String) parameters.get("path");
-		rootFolder = new File(root);
+		rootFolder = instancePathProvider.getInstancePath();
 		
 		if(!rootFolder.exists()) {
-			throw new FileNotFoundException("Tipi root path not found: "+root+". Disabling tipi instance provider for now");
+			throw new FileNotFoundException("Tipi root path not found: "+rootFolder.getAbsolutePath()+". Disabling tipi instance provider for now");
 		}
 		
 		File arguments = new File(rootFolder,"settings/arguments.properties");
@@ -84,8 +85,8 @@ public class InstanceConfigurationProviderImpl implements
 		}
 		
 		try {
-			emitLogbackConfiguration(root);
-			emitTipiGlobal(root);
+			emitLogbackConfiguration(rootFolder.getAbsolutePath());
+			emitTipiGlobal(rootFolder.getAbsolutePath());
 
 		} catch (IOException e1) {
 			logger.error("Error emitting global configurations:",e1);
@@ -179,6 +180,14 @@ public class InstanceConfigurationProviderImpl implements
 		}
 	}
 	
+	public void setInstancePathProvider(InstancePathProvider instancePathProvider) {
+		this.instancePathProvider = instancePathProvider;
+	}
+
+	public void clearInstancePathProvider(InstancePathProvider instancePathProvider) {
+		this.instancePathProvider = null;
+	}
+
 	private void emitLogbackConfiguration(String filePath) throws IOException {
 //		emitIfChanged("navajo.logback", filter, settings)
 		Dictionary<String,Object> settings = new Hashtable<String, Object>();

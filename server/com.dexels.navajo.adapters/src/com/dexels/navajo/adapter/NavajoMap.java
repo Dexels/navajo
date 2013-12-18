@@ -753,6 +753,9 @@ public void store() throws MappableException, UserException {
    */
   public void setDoSend(String method, Navajo od) throws UserException, ConditionErrorException, SystemException {
   
+	  if ( serviceCalled ) {
+		  logger.warn("DO NOT USE A NAVAJOMAP TO CALL A SECOND WEBSERVICE, USE NEW NAVAJOMAP INSTEAD");
+	  }
 	  // Reset current msgPointer when performing new doSend.
 	  msgPointer = null;
 	  setMethod(method);

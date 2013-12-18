@@ -68,7 +68,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	private transient Timer disconnectTimer = new Timer("DisconnectTimer",true);
 	
 
-	@Override
+@Override
 	public Navajo doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		try {
 			ensureOpenConnection();

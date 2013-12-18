@@ -520,7 +520,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 				"mailserver", "mailServer", AdapterFieldDependency.class) };
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UserException {
 		MailMapAlternative mma = new MailMapAlternative();
 		mma.setMailServer("mail.dexels.com");
 		mma.setSubject("Test");

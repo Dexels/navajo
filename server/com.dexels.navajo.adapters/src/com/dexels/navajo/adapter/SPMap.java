@@ -89,7 +89,6 @@ public void load(Access access) throws UserException, MappableException {
 
 @Override
   protected ResultSetMap[] getResultSet(boolean updateOnly) throws UserException {
-
     if (debug) {
       System.out.print("TIMING SPMAP, start query... : " + update);
 

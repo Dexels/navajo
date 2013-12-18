@@ -36,9 +36,6 @@
    <feature url="features/com.dexels.navajo.tipi.mail.feature_1.0.25.qualifier.jar" id="com.dexels.navajo.tipi.mail.feature" version="1.0.25.qualifier">
       <category name="TipiOptional"/>
    </feature>
-   <feature url="features/com.dexels.navajo.tipi.rcp.feature_1.0.2.qualifier.jar" id="com.dexels.navajo.tipi.rcp.feature" version="1.0.2.qualifier">
-      <category name="TipiOptional"/>
-   </feature>
    <feature url="features/com.dexels.navajo.tipi.rss.feature_1.0.9.qualifier.jar" id="com.dexels.navajo.tipi.rss.feature" version="1.0.9.qualifier">
       <category name="TipiOptional"/>
    </feature>
@@ -78,10 +75,7 @@
    <feature url="features/com.dexels.navajo.server.feature_1.0.6.qualifier.jar" id="com.dexels.navajo.server.feature" version="1.0.6.qualifier">
       <category name="Navajo Core"/>
    </feature>
-   <feature url="features/com.dexels.navajo.dev.feature_2.0.6.qualifier.jar" id="com.dexels.navajo.dev.feature" version="2.0.6.qualifier">
-      <category name="Navajo SDK"/>
-   </feature>
-   <feature url="features/com.dexels.navajo.oda.feature_1.0.4.qualifier.jar" id="com.dexels.navajo.oda.feature" version="1.0.4.qualifier">
+   <feature url="features/com.dexels.navajo.dev.feature_2.0.7.qualifier.jar" id="com.dexels.navajo.dev.feature" version="2.0.7.qualifier">
       <category name="Navajo SDK"/>
    </feature>
    <feature url="features/com.dexels.navajo.runtime.feature_1.0.2.qualifier.jar" id="com.dexels.navajo.runtime.feature" version="1.0.2.qualifier">

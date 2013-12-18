@@ -53,26 +53,10 @@ import jnlp.sample.servlet.impl.FileSystemResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationManager;
+import com.dexels.navajo.repository.api.RepositoryManager;
+import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreManager;
 
-/**
- * This Servlet class is an implementation of JNLP Specification's Download
- * Protocols.
- * 
- * All requests to this servlet is in the form of HTTP GET commands. The
- * parameters that are needed are:
- * <ul>
- * <li><code>arch</code>,
- * <li><code>os</code>,
- * <li><code>locale</code>,
- * <li><code>version-id</code> or <code>platform-version-id</code>,
- * <li><code>current-version-id</code>,
- * <li>code>known-platforms</code>
- * </ul>
- * <p>
- * 
- * @version 1.8 01/23/03
- */
+
 public class JnlpDownloadServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -351516869579920417L;
@@ -92,10 +76,13 @@ public class JnlpDownloadServlet extends HttpServlet {
 	private JnlpFileHandler _jnlpFileHandler = null;
 //	private JarDiffHandler _jarDiffHandler = null;
 	private ResourceCatalog _resourceCatalog = null;
-	private ApplicationManager applicationManager;
 	//private String appFolder;
 
 	private String basePath;
+
+	private RepositoryManager repositoryManager;
+
+	private AppStoreManager appStoreManager;
 
 	
 	public JnlpDownloadServlet() {
@@ -105,22 +92,14 @@ public class JnlpDownloadServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		try {
 			super.init(config);
-			// Setup logging
-//			Enumeration<String> en = config.getInitParameterNames();
-//			while (en.hasMoreElements()) {
-//				String pp = (String) en.nextElement();
-//			}
-			// String appFolder = (String)
-			// config.getServletContext().getInitParameter("appFolder");
-			File baseDir = getAppFolder();
+			File baseDir = repositoryManager.getRepositoryFolder();
 			config.getServletContext().setAttribute("resourceResolver",new FileSystemResourceResolver(baseDir,basePath));
 			// Get extension from Servlet configuration, or use default
 			JnlpResource.setDefaultExtensions(
 					config.getInitParameter(PARAM_JNLP_EXTENSION),
 					config.getInitParameter(PARAM_JAR_EXTENSION));
 
-			_jnlpFileHandler = new JnlpFileHandler(config.getServletContext(), logger,applicationManager);
-//			_jarDiffHandler = new JarDiffHandler(config.getServletContext(), logger);
+			_jnlpFileHandler = new JnlpFileHandler(config.getServletContext(), logger,appStoreManager);
 			_resourceCatalog = new ResourceCatalog(config.getServletContext(), logger);
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
@@ -135,25 +114,29 @@ public class JnlpDownloadServlet extends HttpServlet {
 		return _resourceBundle;
 	}
 
-	private File getAppFolder() {
-		return applicationManager.getAppsFolder();
+	public void setRepositoryManager(RepositoryManager repositoryManager) {
+		this.repositoryManager = repositoryManager;
+	}
+	
+	public void clearRepositoryManager(RepositoryManager repositoryManager) {
+		this.repositoryManager = null;
+	}
+	
+	
+	public AppStoreManager getAppStoreManager() {
+		return appStoreManager;
 	}
 
-	public ApplicationManager getApplicationManager() {
-		return applicationManager;
+	public void setAppStoreManager(AppStoreManager appStoreManager) {
+		this.appStoreManager = appStoreManager;
 	}
 
-	public void setApplicationManager(ApplicationManager applicationManager) {
-		this.applicationManager = applicationManager;
-	}
-
-	public void clearApplicationManager(ApplicationManager applicationManager) {
-		this.applicationManager = null;
+	public void clearAppStoreManager(AppStoreManager appStoreManager) {
+		this.appStoreManager = null;
 	}
 
 	public void activate(Map<String,Object> settings) {
 		this.basePath = (String) settings.get("tipi.base.path");
-//		this.codebase = (String) settings.get("tipi.codebase");
 		if(basePath==null) {
 			basePath = "/apps";
 		}
@@ -181,25 +164,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 	private void handleRequest(HttpServletRequest request,
 			HttpServletResponse response, boolean isHead) throws IOException {
 		String requestStr = request.getRequestURI();
-		// logger.info("Request: "+request.getRequestURI()+" query: "+request.getQueryString());
-//		Enumeration<String> en = request.getHeaderNames();
-//		while (en.hasMoreElements()) {
-//			String key = (String) en.nextElement();
-//			logger.info("HTTP Key: "+key+" header: "+request.getHeader(key));
-//		}
-		// TipiAdminServlet.buildIfNecessary(request,getAppFolder(),getServletContext());
-//		Map en = request.getParameterMap();
-//		for (Object key : en.keySet()) {
-//			Object value = en.get(key);
-//			if (value instanceof Object[]) {
-//				Object[] vals = (Object[]) value;
-				// for (Object object : vals) {
-				// logger.info("Value element: "+object);
-				// }
-//			} else {
-//				logger.debug("Param: " + key + " value: " + en.get(key));
-//			}
-//		}
+
 		if (request.getQueryString() != null)
 			requestStr += "?" + request.getQueryString().trim();
 
@@ -307,6 +272,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 		JnlpResource jnlpres = new JnlpResource(getServletContext(),
 				dreq.getPath());
 		if (!jnlpres.exists()) {
+			logger.info("File not found: "+dreq.getPath());
 			throw new ErrorResponseException(
 					DownloadResponse.getNoContentResponse());
 		}

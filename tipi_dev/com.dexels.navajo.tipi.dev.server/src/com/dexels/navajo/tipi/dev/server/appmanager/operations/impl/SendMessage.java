@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 import com.dexels.navajo.tipi.dev.server.websocket.TipiCallbackSession;
 
 public class SendMessage extends BaseOperation implements AppStoreOperation {
@@ -58,7 +58,7 @@ public class SendMessage extends BaseOperation implements AppStoreOperation {
 
 	
 	@Override
-	public void build(ApplicationStatus a) throws IOException {
+	public void build(RepositoryInstance a) throws IOException {
 
 	}
 }

@@ -1297,7 +1297,7 @@ public File getTempDir() {
 	  }
   }
   
-@Override
+  @Override
 public File createTempFile(String prefix, String suffix) throws IOException {  
 	  File f = File.createTempFile(prefix, suffix, getTempDir());
 	  // Don't use deleteOnExit until Java 1.6, lower version contain memory leak (approx. 1K per call!).
@@ -1327,11 +1327,11 @@ public int getAccessSetSize() {
   }
 
   @Override
-  public void kill() {
+public void kill() {
   }
 
   @Override
-  public void load(Access access) throws MappableException, UserException {
+public void load(Access access) throws MappableException, UserException {
 
   }
 
@@ -1493,7 +1493,7 @@ public Set<Access> getAccessSet() {
   }
 
   @Override
- public java.util.Date getStartTime() {
+public java.util.Date getStartTime() {
 	  return startTime;
   }
 

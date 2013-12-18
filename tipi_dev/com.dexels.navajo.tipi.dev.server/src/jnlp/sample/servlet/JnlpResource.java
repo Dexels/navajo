@@ -44,6 +44,9 @@ import java.util.Date;
 
 import javax.servlet.ServletContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A JnlpResource encapsulate the information about a resource that is needed to
  * process a JNLP Download Request.
@@ -101,7 +104,10 @@ public class JnlpResource {
 	private String _mimeType; // Mime-type for resource
 	private String _returnVersionId; // Version Id to return
 	// private String _encoding; // Accept encoding
-
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(JnlpResource.class);
+	
 	public JnlpResource(ServletContext context, String path) {
 		this(context, null, null, null, null, null, path, null);
 	}
@@ -202,6 +208,7 @@ public class JnlpResource {
 				}
 			}
 		} catch (IOException ioe) {
+			logger.error("Error: ", ioe);
 			_resource = null;
 		}
 	}

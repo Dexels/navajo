@@ -2786,6 +2786,18 @@ public class TslCompiler {
 		} else if (n.getNodeName().equals("antimessage")) {
 
 			String messageName = ((Element) n).getAttribute("name");
+			String condition = ((Element) n).getAttribute("condition");
+			boolean conditionClause = false;
+			
+			if (!condition.equals("")) {
+				conditionClause = true;
+				result.append(printIdent(ident)
+						+ "if (Condition.evaluate("
+						+ replaceQuotes(condition)
+						+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
+				ident += 2;
+			}
+			
 			result.append(printIdent(ident)
 					+ "if ( currentOutMsg != null && currentOutMsg.getMessage(\""
 					+ messageName + "\") != null ) {\n");
@@ -2800,6 +2812,12 @@ public class TslCompiler {
 					+ "access.getOutputDoc().removeMessage(\"" + messageName
 					+ "\");\n");
 			result.append(printIdent(ident) + "}\n");
+			
+			if (conditionClause) {
+				ident -= 2;
+				result.append(printIdent(ident) + "} // EOF message condition \n");
+			}
+			
 		} else if (n.getNodeName().equals("methods")) {
 			result.append(methodsNode(ident, (Element) n));
 		} else if (n.getNodeName().equals("operations")) {

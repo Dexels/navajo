@@ -9,21 +9,23 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 
 public class CleanRepo extends BaseOperation implements AppStoreOperation {
 
 	
+	
 	private static final long serialVersionUID = -3363914555886806226L;
 
+
 	public void cleanrepo() throws IOException {
-		File repo = new File(applicationManager.getStoreFolder(), "repo");
+		File repo = new File(getRepositoryManager().getRepositoryFolder(), "repo");
 		FileUtils.deleteQuietly(repo);
 	}
 	
 	@Override
-	public void build(ApplicationStatus a) throws IOException {
+	public void build(RepositoryInstance a) throws IOException {
 		//
 	}
 

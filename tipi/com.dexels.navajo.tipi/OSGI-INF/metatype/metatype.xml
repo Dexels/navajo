@@ -6,7 +6,7 @@
     <AD name="Profile"  id="profile" required="true" type="String" default=""/>
   </OCD>
   <OCD description="Tipi Vaadin Path" name="Tipi Vaadin Path" id="tipi.multitenant.instance" >
-    <AD name="installationPath"  id="path" required="true" type="String" default="/Users/frank/Documents/workspace42/SportlinkOfficialPortal"/>
+    <AD name="installationPath"  id="path" required="true" type="String" default=""/>
   </OCD>
   <Designate pid="tipi.multitenant.instance">
      <Object ocdref="tipi.multitenant.instance"/>

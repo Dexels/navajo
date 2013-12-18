@@ -18,7 +18,6 @@
 		<module>../../com.dexels.navajo.tipi.jabber.feature/allgit</module>
 		<!-- <module>../../com.dexels.navajo.tipi.jogl.feature/allgit</module>-->
 		<module>../../com.dexels.navajo.tipi.mail.feature/allgit</module>
-		<module>../../com.dexels.navajo.tipi.rcp.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.rss.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.ruby.feature/allgit</module>
 		<module>../../com.dexels.navajo.tipi.jcr.feature/allgit</module>

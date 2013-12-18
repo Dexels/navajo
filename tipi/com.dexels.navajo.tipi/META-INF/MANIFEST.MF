@@ -101,6 +101,7 @@ Import-Package: com.dexels.navajo.client;version="1.0.0",
  com.dexels.navajo.functions.util,
  com.dexels.navajo.parser,
  com.dexels.navajo.script.api;version="1.0.0",
+ com.dexels.navajo.repository.api;version="1.0.0",
  com.dexels.navajo.tipilink,
  com.dexels.navajo.version;version="1.1.0",
  javax.imageio.spi,
@@ -117,4 +118,5 @@ Import-Package: com.dexels.navajo.client;version="1.0.0",
 Bundle-ClassPath: beansclasses/,
  .
 Service-Component: OSGI-INF/tipi.context.manager.xml,OSGI-INF/tipi.context.instance.xml,
- OSGI-INF/tipi.multitenant.instance.xml,OSGI-INF/tipi.extensions.xml
+ OSGI-INF/tipi.multitenant.instance.xml,OSGI-INF/tipi.extensions.xml,
+ OSGI-INF/tipi.multitenant.configurator.xml,OSGI-INF/tipi.repository.provider.xml

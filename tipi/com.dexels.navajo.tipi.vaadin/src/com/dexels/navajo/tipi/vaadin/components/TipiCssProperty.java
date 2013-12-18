@@ -40,7 +40,6 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.Select;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
@@ -403,6 +402,7 @@ public class TipiCssProperty extends TipiVaadinComponentImpl implements Property
 		return true;
 	}
 
+	@Override
 	protected Object getComponentValue(String name) {
 		if(name.equals("propertyValue")) {
 			// ----
@@ -411,6 +411,7 @@ public class TipiCssProperty extends TipiVaadinComponentImpl implements Property
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	protected void setComponentValue(String name, Object object) {
 		if(name.equals("propertyValue")) {
 			if(property!=null) {

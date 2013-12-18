@@ -167,7 +167,6 @@ public boolean isWaiting() {
 public boolean getWaiting() {
 	  return false;
   }
-  
 @Override
 public String getLockName() {
 	  return "";

@@ -346,6 +346,11 @@ public final class MappingUtils {
     if (subtype != null && !subtype.equals("")) {
       prop.setSubType(subtype);
     }
+    
+    // Set description if not empty.
+    if (description != null && !description.equals("")) {
+      prop.setDescription(description);
+    }
     return prop;
   }
 

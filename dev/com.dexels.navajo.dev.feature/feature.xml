@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.dev.feature"
       label="Navajo Development Plugin"
-      version="2.0.6.qualifier"
+      version="2.0.7.qualifier"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">

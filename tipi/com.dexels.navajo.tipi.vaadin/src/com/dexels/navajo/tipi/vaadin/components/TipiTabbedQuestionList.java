@@ -62,8 +62,9 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 	public Object createContainer() {
     	myTabbedPane = new TabSheet();
         myTabbedPane.setSizeFull();
-        myTabbedPane.setStyleName("Default");
-        
+//        myTabbedPane.setStyleName("Default");
+        myTabbedPane.addStyleName("tabbed-questionlist");
+
 //        defaultTabModel = new DefaultTabModel();
 //        TipiHelper th = new EchoTipiHelper();
 //        th.initHelper(this);
@@ -88,9 +89,13 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 //		tabSheet.addTab(component, ""+constraints, null);
     	myTabbedPane.addComponent(component);
 		component.setSizeFull();
-		myTabbedPane.addTab(component, ""+constraints, null);
-
-//    	myTabbedPane.addTab( (Component)c, tabName, null);
+		Tab t =  myTabbedPane.addTab(component, ""+constraints, null);
+//		t.setStyleName("tabbed-question");
+		t.getComponent().addStyleName("tabbed-question-"+""+constraints);
+//		myTabbedPane.getTabCaption(component).
+		//		t.getComponent().setWidth("130px");
+//		final Component tabComponent = t.getComponent();
+		//    	myTabbedPane.addTab( (Component)c, tabName, null);
     }
     
     protected void clearQuestions() {
