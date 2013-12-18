@@ -1,9 +1,0 @@
-<workflow transient="true">
-    <state id="init">
-       <transition trigger="navajo:matchform/ProcessFinalizeMatch" nextstate="finalizedone" username="dummy"/>
-    </state>
-    <state id="finalizedone">
-        <task service="matchform/ProcessFinalizeMatchImplementation" navajo="finalizedone:request"/>
-        <transition trigger="immediate" nextstate="null"/>
-    </state>
-</workflow>

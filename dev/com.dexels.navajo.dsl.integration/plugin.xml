@@ -1,9 +1,0 @@
-<plugin>
-   <extension point="org.eclipse.ui.views">
-
-      <view name="TML Client View" icon="icons/dexels_start.gif" category="com.dexels.plugin.views"
-         class="com.dexels.navajo.studio.script.plugin.views.TmlClientView"
-         id="com.dexels.TmlClientView"/>
-   </extension>
-   
- </plugin>
