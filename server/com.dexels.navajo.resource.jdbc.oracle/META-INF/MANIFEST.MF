@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JDBC Driver for Oracle database
 Bundle-SymbolicName: com.dexels.navajo.resource.jdbc.oracle
-Bundle-Version: 1.0.14
+Bundle-Version: 1.0.15.qualifier
 Bundle-Activator: com.dexels.navajo.resource.jdbc.oracle.Activator
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
