@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Article
 Bundle-SymbolicName: com.dexels.navajo.article
-Bundle-Version: 1.0.27
+Bundle-Version: 1.0.28.qualifier
 Bundle-Activator: navajoarticle.Activator
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
