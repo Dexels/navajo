@@ -16,14 +16,14 @@
 
     <div class="container">
 
-      <form class="form-signin" role="form">
+      <form class="form-signin" role="form" method="post" action="/oauth/login">
         <h2 class="form-signin-heading">Club site 'De Schoof'</h2>
         <ul>
            <li>Je gebruikers gegevens</li>
         </ul>
-        <input type="text" class="form-control" placeholder="Club code" required autofocus value="BBKY84H" editable=false>
-        <input type="text" class="form-control" placeholder="Gebruikersnaam" required>
-        <input type="password" class="form-control" placeholder="Wachtwoord" required>
+        <input type="text" name="clubcode" class="form-control" placeholder="Club code" required autofocus value="BBKY84H" >
+        <input type="text" name="userid" class="form-control" placeholder="Gebruikersnaam" required>
+        <input type="password"  name="password" class="form-control" placeholder="Wachtwoord" required>
         <label class="checkbox">
           <input type="checkbox" value="remember-me"> Remember me
         </label>

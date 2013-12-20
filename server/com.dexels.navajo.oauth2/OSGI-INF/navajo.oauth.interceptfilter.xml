@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.oauth.interceptfilter">
+   <implementation class="com.multi.oauth2.provider.util.OAuth2Interceptor"/>
+   <reference bind="setDao" cardinality="1..1" interface="com.multi.oauth2.provider.dao.OAuth2Service" name="OAuth2Service" policy="static" unbind="clearDao"/>
+   <reference bind="setTokenService" cardinality="1..1" interface="com.multi.oauth2.provider.util.OAuth2AccessTokenService" name="OAuth2AccessTokenService" policy="static" unbind="clearTokenService"/>
+   <service>
+      <provide interface="javax.servlet.Filter"/>
+   </service>
+   <property name="urlPatterns" type="String" value="/"/>
+   <property name="httpContext.id" type="String" value="oauthContext"/>
+</scr:component>

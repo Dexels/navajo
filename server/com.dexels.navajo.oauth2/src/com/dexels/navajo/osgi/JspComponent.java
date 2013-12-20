@@ -6,8 +6,10 @@ import java.util.Hashtable;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.ops4j.pax.web.extender.whiteboard.ExtenderConstants;
 import org.ops4j.pax.web.service.WebContainer;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ public class JspComponent {
 	private final static Logger logger = LoggerFactory
 			.getLogger(JspComponent.class);
 	private HttpContext httpContext;
+	private ServiceRegistration<HttpContext> httpContextReg;
 
 	public WebContainer getWebContainer() {
 		return webContainer;
@@ -49,6 +52,11 @@ public class JspComponent {
 		instance = this;
 		try {
 			httpContext = webContainer.createDefaultHttpContext();
+			
+			Dictionary<String, String> props = new Hashtable<String, String>();
+            props.put(ExtenderConstants.PROPERTY_HTTP_CONTEXT_ID, "oauthContext");
+            httpContextReg = bundleContext.registerService(HttpContext.class,httpContext, props);
+			
 			Dictionary<String, Object> contextProperties = new Hashtable<String, Object>();
 			webContainer.setContextParam(contextProperties, httpContext);
 			webContainer.registerEventListener(new ServletContextListener() {
@@ -67,13 +75,14 @@ public class JspComponent {
 
 			// PageContext pc = new Page
 
-			webContainer.registerJsps(new String[] { "/auth/index.jsp" },
+			webContainer.registerJsps(new String[] { "/auth/index.jsp" , "/auth/client.jsp" },
 					httpContext);
 			webContainer.registerResources("/auth/css", "/auth/css", httpContext);
 			webContainer.registerResources("/auth/js", "/auth/js", httpContext);
 			webContainer.registerResources("/auth/img", "/auth/img", httpContext);
 			webContainer.registerWelcomeFiles(new String[] { "auth/index.jsp" },
 					false, httpContext);
+			
 		} catch (NamespaceException e) {
 			logger.error("Error: ", e);
 		}
@@ -82,6 +91,9 @@ public class JspComponent {
 
 	public void deactivate() {
 		instance = null;
+		if(httpContextReg!=null) {
+			httpContextReg.unregister();
+		}
 		if (webContainer == null) {
 			return;
 		}
