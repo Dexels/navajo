@@ -175,8 +175,8 @@ public class OAuth2Controller extends HttpServlet {
 				e.printStackTrace();
 				return "auth/auth.jsp";
 			}
-		} else if (request.getSession().getAttribute("userVO") != null){
-			uVO = (UserVO)request.getSession().getAttribute("userVO");
+		} else if (request.getSession().getAttribute("user") != null){
+			uVO = (UserVO)request.getSession().getAttribute("user");
 		} else {
 			throw new OAuth2Exception(401, OAuth2ErrorConstant.UNAUTHORIZED_CLIENT);
 		}
