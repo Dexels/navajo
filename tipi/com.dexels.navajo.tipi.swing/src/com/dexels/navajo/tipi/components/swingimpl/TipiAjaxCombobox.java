@@ -55,14 +55,12 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 
 	protected Object selectedValue;
 
-	@Override
 	public Object createContainer() {
 		myCombo = new AjaxComboBox();
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
 		addHelper(th);
 		myCombo.setCurrentRemoteRefresh(new RemoteRefreshFilter() {
-			@Override
 			public Navajo getNavajo(String filterString) {
 				logger.debug("Gettin: " + filterString);
 				currentSelection = filterString;
@@ -84,7 +82,6 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 
 		myCombo.addItemListener(new ItemListener() {
 
-			@Override
 			public void itemStateChanged(ItemEvent arg0) {
 				try {
 					String sel = (String) myCombo.getSelectedItem();
@@ -103,7 +100,6 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 
 		myCombo.getDocument().addDocumentListener(new DocumentListener() {
 
-			@Override
 			public void changedUpdate(DocumentEvent de) {
 				try {
 					fireTextChange(de.getDocument().getText(0,
@@ -113,7 +109,6 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 				}
 			}
 
-			@Override
 			public void insertUpdate(DocumentEvent de) {
 				try {
 					fireTextChange(de.getDocument().getText(0,
@@ -123,7 +118,6 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 				}
 			}
 
-			@Override
 			public void removeUpdate(DocumentEvent de) {
 				try {
 					fireTextChange(de.getDocument().getText(0,
@@ -136,7 +130,6 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 
 		myCombo.addEnterEventListener(new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					myCombo.hidePopup();
@@ -182,7 +175,6 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 		// myCombo.loadData(n, currentSelection);
 	}
 
-	@Override
 	public final void setComponentValue(final String name, final Object object) {
 		super.setComponentValue(name, object);
 		if (name.equals("messagePath")) {
@@ -205,11 +197,9 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 		}
 	}
 
-	@Override
 	public void eventStarted(TipiExecutable te, Object event) {
 		if (Container.class.isInstance(getContainer())) {
 			runSyncInEventThread(new Runnable() {
-				@Override
 				public void run() {
 					// enabled = ( (Container) getContainer()).isEnabled();
 					getSwingContainer().setEnabled(false);
@@ -218,7 +208,6 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 		}
 	}
 
-	@Override
 	protected void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event) {
 		if ("updateCombo".equals(name)) {

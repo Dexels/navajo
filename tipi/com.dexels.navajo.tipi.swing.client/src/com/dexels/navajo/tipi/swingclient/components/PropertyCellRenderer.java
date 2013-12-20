@@ -31,7 +31,7 @@ import com.dexels.navajo.document.Selection;
 
 
 public class PropertyCellRenderer implements TableCellRenderer,
-		ListCellRenderer<Selection> {
+		ListCellRenderer {
 
 	
 	private final static Logger logger = LoggerFactory
@@ -112,7 +112,6 @@ public class PropertyCellRenderer implements TableCellRenderer,
 		return highColor;
 	}
 
-	@Override
 	public JComponent getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		// JPanel myPanel = new JPanel();
@@ -392,10 +391,10 @@ public class PropertyCellRenderer implements TableCellRenderer,
 		}
 	}
 
-	@Override
-	public Component getListCellRendererComponent(JList list, Selection value,
+	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
-		l.setText(value == null ? "" : value.toString());
+		Selection sel = (Selection) value;
+		l.setText(sel == null ? "" : sel.toString());
 		setComponentColor(l, isSelected, index, -1, false, list.getModel()
 				.getSize(), false);
 		return l;
