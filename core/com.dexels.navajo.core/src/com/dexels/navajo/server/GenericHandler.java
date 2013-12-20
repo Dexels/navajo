@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -60,7 +59,7 @@ import com.dexels.navajo.util.AuditLog;
 
 public class GenericHandler extends ServiceHandler {
 
-    private static ConcurrentHashMap<String,NavajoClassSupplier> loadedClasses = null;
+    private static volatile ConcurrentHashMap<String,NavajoClassSupplier> loadedClasses = null;
 
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();

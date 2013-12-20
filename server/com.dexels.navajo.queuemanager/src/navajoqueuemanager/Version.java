@@ -37,7 +37,7 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 
 	private static BundleContext defaultBundleContext = null;
 	@SuppressWarnings("rawtypes")
-	private ServiceRegistration registration;
+	private ServiceRegistration registration = null;
 
 	public static boolean isOSGi() {
 		return defaultBundleContext!=null;

@@ -213,7 +213,9 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			git.clean().call();
 			logger.info("Git clean complete.");
 		} finally {
-			repository.close();
+			if(repository!=null) {
+				repository.close();
+			}
 		}
 	}
 	
@@ -237,7 +239,9 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			lastCommit = log.iterator().next();
 			logger.info("Git pull complete.");
 		} finally {
-			repository.close();
+			if(repository!=null) {
+				repository.close();
+			}
 		}
 	}
 
@@ -256,7 +260,9 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			lastCommit = log.iterator().next();
 
 		} finally {
-			repository.close();
+			if(repository!=null) {
+				repository.close();
+			}
 		}
 	}
 	
@@ -319,7 +325,9 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			config.save();
 			callPull();
 		} finally {
-			repository.close();
+			if(repository!=null) {
+				repository.close();
+			}
 		}
 
 	}

@@ -51,13 +51,14 @@ public class TipiReloadNavajo extends TipiAction {
 
 				service.value = myContext.getNavajo(serviceName);
 				actualNavajo = (Navajo) service.value;
+				myContext.loadNavajo(actualNavajo, serviceName);
 			} else {
 				if (service.value instanceof Navajo) {
 					actualNavajo = (Navajo) service.value;
 					serviceName = actualNavajo.getHeader().getRPCName();
+					myContext.loadNavajo(actualNavajo, serviceName);
 				}
 			}
-			myContext.loadNavajo(actualNavajo, serviceName);
 			return;
 		}
 		TipiDataComponent toData = (TipiDataComponent) to.value;

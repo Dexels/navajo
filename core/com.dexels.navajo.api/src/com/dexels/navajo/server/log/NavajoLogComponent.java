@@ -1,6 +1,7 @@
 package com.dexels.navajo.server.log;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.osgi.service.log.LogEntry;
 import org.osgi.service.log.LogListener;
@@ -15,7 +16,7 @@ public class NavajoLogComponent implements LogListener {
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoLogComponent.class);
 	
-	HashMap<Long, Logger> loggers = new HashMap<Long,Logger>();
+	Map<Long, Logger> loggers = new HashMap<Long,Logger>();
 
 	public LogService getLogService() {
 		return logService;
@@ -69,7 +70,7 @@ public class NavajoLogComponent implements LogListener {
 				return;
 			}
 			// Retrieve a Logger object, or create it if none exists.
-			Logger logger = loggers.get("osgi.log");
+			Logger logger = loggers.get(log.getBundle().getBundleId());
 			if (logger == null) {
 				logger = LoggerFactory.getLogger(log.getBundle().getSymbolicName());
 				loggers.put(log.getBundle().getBundleId(), logger);

@@ -25,11 +25,13 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 	public abstract void updateProperty(Navajo in, Property element, String locale);
 
 	
+	@Override
 	public void setDescriptionConfigMessage(Message descriptionMessage) {
 		this.descriptionMessage = descriptionMessage;
 	}
 
 
+	@Override
 	public void updatePropertyDescriptions(Navajo in, Navajo out) throws NavajoException {
 		String locale = in.getHeader().getHeaderAttribute("locale");
 		if (locale==null) {
@@ -71,21 +73,25 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 	}
 
 
+	@Override
 	public void deletePropertyContext(String locale, String context) {
 		
 	}
 
 
+	@Override
 	public void flushCache() {
 		
 	}
 
 
+	@Override
 	public void flushUserCache(String user) {
 		
 	}
 
 
+	@Override
 	public int getCacheSize() {
 		return 0;
 	}
@@ -98,6 +104,7 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 	}
 
 
+	@Override
 	public void updateDescription(String locale, String name,
 			String description, String context, String username) {
 		
@@ -108,14 +115,17 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 //		
 //	}
 
+	@Override
 	public void kill() {
 	}
 
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 	}
 
 
+	@Override
 	public void store() throws MappableException, UserException {
 	}
 	
