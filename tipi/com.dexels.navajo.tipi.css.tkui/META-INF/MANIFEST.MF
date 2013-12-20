@@ -2,7 +2,7 @@ Bundle-Name: Tipi CSS Binding
 Bundle-SymbolicName: com.dexels.navajo.tipi.css.tkui
 Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.21
+Bundle-Version: 1.0.22.qualifier
 Export-Package: org.akrogen.core.impl.resources;uses:="org.akrogen.core.resources",
  org.akrogen.core.resources,
  org.akrogen.core.utils,
