@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
-    <feature resolver="(obr)" name='navajo.core' version='1.0.28' start-level='80'  >
+    <feature resolver="(obr)" name='navajo.core' version='1.0.29' start-level='80'  >
 	    <details>Navajo Core Components</details>
 
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.68</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.version/1.2.8</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.api/1.0.40</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.repository.api/1.0.1</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.repository.api/1.0.3</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.4.40</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.1.24</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.9</bundle>
@@ -203,7 +203,7 @@
 		
 	</feature>	
 
-	<feature resolver="(obr)" name='github.osgi' version='1.1.1' start-level='81' >
+	<feature resolver="(obr)" name='github.osgi' version='1.1.2' start-level='81' >
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
@@ -212,7 +212,7 @@
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/1.3_5</bundle>
 		<bundle dependency='true'>mvn:org.eclipse.jgit/org.eclipse.jgit/3.1.0.201310021548-r</bundle>
 		<bundle dependency='true'>mvn:com.dexels.thirdparty/javaewah/0.5.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jgit/1.0.3</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jgit/1.0.5</bundle>
 			</feature>
 	<feature resolver="(obr)" name='tipi.appstore' version='2.0.0' start-level='81' >
 	    <feature version="[1.0.0,2)">github.osgi</feature>
