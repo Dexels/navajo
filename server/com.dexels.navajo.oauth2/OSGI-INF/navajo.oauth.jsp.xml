@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="navajo.oauth.jsp">
+   <implementation class="com.dexels.navajo.osgi.JspComponent"/>
+   <reference bind="setWebContainer" cardinality="1..1" interface="org.ops4j.pax.web.service.WebContainer" name="WebContainer" policy="static" unbind="clearWebContainer"/>
+</scr:component>

@@ -6,22 +6,6 @@ Bundle-Version: 1.0.3.qualifier
 Include-Resource: lib
 Export-Package: com.dexels.navajo.adapters.svg
 Bundle-Vendor: Dexels
-Require-Bundle: org.apache.batik.css;bundle-version="[1.6.0,2.0.0)",
- org.apache.batik.dom;bundle-version="[1.6.0,2.0.0)";resolution:=optional,
- org.apache.batik.dom.svg;bundle-version="[1.6.0,2.0.0)",
- org.apache.batik.parser;bundle-version="[1.6.0,2.0.0)",
- org.apache.batik.svggen;bundle-version="[1.6.0,2.0.0)",
- org.apache.batik.transcoder;bundle-version="[1.6.0,2.0.0)",
- org.apache.batik.util;bundle-version="[1.6.0,2.0.0)",
- org.apache.batik.util.gui;bundle-version="[1.6.0,2.0.0)",
- org.apache.batik.xml;bundle-version="[1.6.0,2.0.0)",
- org.w3c.dom.smil;bundle-version="1.0.1",
- org.w3c.dom.svg;bundle-version="1.1.0",
- org.apache.batik.bridge;bundle-version="[1.6.0,2.0.0)",
- org.apache.batik.ext.awt;bundle-version="[1.6.0,2.0.0)",
- org.apache.log4j;bundle-version="1.2.15",
- org.apache.batik.swing;bundle-version="[1.6.0,2.0.0)",
- org.apache.batik.pdf;bundle-version="1.6.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/batik-all.jar,
  lib/pdf-transcoder.jar,
@@ -32,6 +16,9 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  navajo;version="1.1.0",
  navajoextension,
+ org.apache.batik,
+ org.apache.batik.transcoder;version="1.7.0",
+ org.apache.batik.transcoder.image;version="1.7.0",
  org.osgi.framework;version="1.6.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Bundle-Activator: navajosvg.Version

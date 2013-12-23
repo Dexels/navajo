@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.dexels.navajo.tipi.vaadin.components.TipiButton;
 import com.vaadin.addon.touchkit.ui.NavigationButton;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 

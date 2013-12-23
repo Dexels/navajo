@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE project>
+<project default="signjnlp">
+	<target name="signjnlp" >
+		<echo message="File ${jnlpFile} profile: ${profile}"/>
+		<mkdir dir="tmp" />
+		<mkdir dir="tmp/JNLP-INF"/>
+		<copy todir="tmp/JNLP-INF" file="${jnlpFile}"/>
+		<jar destfile="${profile}_jnlp.jar" manifest="../tmp/META-INF/MANIFEST.MF" >
+			<fileset dir="tmp">
+				<include name="JNLP-INF"/>
+			</fileset>
+		</jar>
+		<signjar  keystore="${keystore}" storepass="${storepass}"  alias="${alias}" jar="${profile}_jnlp.jar">
+		</signjar>
+	</target>
+</project>

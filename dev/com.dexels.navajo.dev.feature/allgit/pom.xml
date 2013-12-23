@@ -5,22 +5,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>temp</groupId>
 	<artifactId>com.dexels.navajo.dev.aggr</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>../../com.dexels.navajo.tipi.swt.client</module>
 		<module>../../com.dexels.navajo.birt.push</module>
-		<module>../../com.dexels.navajo.dev.script</module>
 		<module>../../com.dexels.navajo.dev.console</module>
-		<module>../../com.dexels.navajo.dsl.navajomanager</module>
-		<module>../../com.dexels.navajo.dsl.expression.model</module>
-		<module>../../com.dexels.navajo.dsl.expression</module>
-		<module>../../com.dexels.navajo.dsl.expression.ui</module>
-		<module>../../com.dexels.navajo.dsl.tsl.model</module>
-		<module>../../com.dexels.navajo.dsl.tsl</module>
-		<module>../../com.dexels.navajo.dsl.tsl.ui</module>
-		<module>../../com.dexels.navajo.dsl.integration</module>
 		<module>../</module>
 
 	</modules>

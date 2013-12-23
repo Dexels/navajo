@@ -1,9 +1,0 @@
-grammar com.dexels.navajo.dsl.expression.NavajoExpression with org.eclipse.xtext.common.Terminals
-
-generate navajoExpression "http://www.dexels.com/navajo/dsl/expression/NavajoExpression"
-
-Model:
-	greetings+=Greeting*;
-	
-Greeting:
-	'Hello' name=ID '!';

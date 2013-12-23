@@ -15,6 +15,7 @@ public class RepositoryManagerImpl implements RepositoryManager {
 	protected String organization;
 	private File repositoryFolder;
 	private File sshFolder;
+	private File configurationFolder;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(RepositoryManagerImpl.class);
@@ -33,7 +34,17 @@ public class RepositoryManagerImpl implements RepositoryManager {
 		File storeFolder = new File(path);
 		
 		repositoryFolder = new File(storeFolder,"repositories");
+		if(!repositoryFolder.exists()) {
+			repositoryFolder.mkdirs();
+		}
 		sshFolder = new File(storeFolder,"gitssh");
+		if(!sshFolder.exists()) {
+			sshFolder.mkdirs();
+		}
+		configurationFolder = new File(storeFolder,"etc");
+		if(!configurationFolder.exists()) {
+			configurationFolder.mkdirs();
+		}
 		logger.info("Repository manager activated");
 
 	}
@@ -51,6 +62,11 @@ public class RepositoryManagerImpl implements RepositoryManager {
 	@Override
 	public File getRepositoryFolder() {
 		return repositoryFolder;
+	}
+
+	@Override
+	public File getConfigurationFolder() {
+		return configurationFolder;
 	}
 
 }

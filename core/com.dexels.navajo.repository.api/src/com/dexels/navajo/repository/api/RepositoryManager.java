@@ -5,6 +5,7 @@ import java.io.File;
 
 public interface RepositoryManager {
 
+	public File getConfigurationFolder();
 
 	public File getRepositoryFolder();
 

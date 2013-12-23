@@ -57,10 +57,10 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 	JScrollPane jScrollPane2 = new JScrollPane();
 	JButton selectButton = new JButton();
 	JButton deselectButton = new JButton();
-	DefaultListModel<Selection> selectedModel = new DefaultListModel<Selection>();
-	DefaultListModel<Selection> deselectedModel = new DefaultListModel<Selection>();
-	JList<Selection> notSelectedList = new JList<Selection>(deselectedModel);
-	JList<Selection> selectedList = new JList<Selection>(selectedModel);
+	DefaultListModel selectedModel = new DefaultListModel();
+	DefaultListModel deselectedModel = new DefaultListModel();
+	JList notSelectedList = new JList(deselectedModel);
+	JList selectedList = new JList(selectedModel);
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 	private Property myProperty;
 	private PropertyChangeListener myPropertyListener = null;
@@ -118,7 +118,6 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 	 * @todo Implement this
 	 *       com.dexels.navajo.swingclient.components.PropertyControlled method
 	 */
-	@Override
 	public final Property getProperty() {
 		return myProperty;
 	}
@@ -131,7 +130,6 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 	 * @todo Implement this
 	 *       com.dexels.navajo.swingclient.components.PropertyControlled method
 	 */
-	@Override
 	public final void setProperty(final Property p) {
 		if (myPropertyListener != null && myProperty != null) {
 			myProperty.removePropertyChangeListener(myPropertyListener);
@@ -198,17 +196,16 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 		}
 	}
 
-	@Override
 	public final void update() {
 	}
 
 	final void selectButton_actionPerformed(ActionEvent e) {
-		List<Selection> selectedInList = notSelectedList.getSelectedValuesList();
+		Object[] selectedInList = notSelectedList.getSelectedValues();
 		ArrayList<String> ll = new ArrayList<String>();
-		for (Selection s : selectedInList) {
+		for (int i = 0; i < selectedInList.length; i++) {
+			Selection s = (Selection) selectedInList[i];
 			ll.add(s.getValue());
 		}
-
 
 		try {
 			ArrayList<Selection> alreadySelected = myProperty
@@ -240,11 +237,14 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements
 	}
 
 	final void deselectButton_actionPerformed(ActionEvent e) {
-		List<Selection> selectedInList = selectedList.getSelectedValuesList();
+		Object[] selectedInList = selectedList.getSelectedValues();
 		ArrayList<String> ll = new ArrayList<String>();
-		for (Selection s : selectedInList) {
+		for (int i = 0; i < selectedInList.length; i++) {
+			Selection s = (Selection) selectedInList[i];
 			ll.add(s.getValue());
+
 		}
+
 		try {
 			ArrayList<String> invLL = invertSelection(myProperty, ll);
 			myProperty.setSelected(invLL);
@@ -319,7 +319,6 @@ final class MultipleSelectionPropertyPickList_selectButton_actionAdapter
 		this.adaptee = adaptee;
 	}
 
-	@Override
 	public final void actionPerformed(ActionEvent e) {
 		adaptee.selectButton_actionPerformed(e);
 	}
@@ -334,7 +333,6 @@ final class MultipleSelectionPropertyPickList_deselectButton_actionAdapter
 		this.adaptee = adaptee;
 	}
 
-	@Override
 	public final void actionPerformed(ActionEvent e) {
 		adaptee.deselectButton_actionPerformed(e);
 	}

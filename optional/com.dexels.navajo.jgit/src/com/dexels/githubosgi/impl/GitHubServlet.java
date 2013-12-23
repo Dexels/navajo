@@ -46,7 +46,6 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String pathInfo = req.getPathInfo();
-		System.err.println("><>" + pathInfo);
 		if (pathInfo == null) {
 			resp.sendError(400, "Bad request path");
 			return;
@@ -251,6 +250,12 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 			public File getSshFolder() {
 				return new File(
 						"/Users/frank/git/navajo/tipi_dev/com.dexels.navajo.tipi.dev.store/gitssh");
+			}
+
+			@Override
+			public File getConfigurationFolder() {
+				return new File(
+						"/Users/frank/git/navajo/tipi_dev/com.dexels.navajo.tipi.dev.store/etc");
 			}
 
 		});

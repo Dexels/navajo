@@ -2,7 +2,6 @@ package com.dexels.navajo.sharedstore;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.Assert;
 import org.junit.Before;

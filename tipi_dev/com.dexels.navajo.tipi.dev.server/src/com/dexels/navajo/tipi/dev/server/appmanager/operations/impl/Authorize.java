@@ -115,7 +115,7 @@ public class Authorize extends BaseOperation implements AppStoreOperation {
 		
 	}
 	private void post(String url, Map<String,String> params, HttpSession session) throws IOException {
-		URL u = new URL("https://github.com/login/oauth/access_token");
+		URL u = new URL(url);
 		HttpURLConnection uc = (HttpURLConnection) u.openConnection();
 
 		uc.setReadTimeout(10000);

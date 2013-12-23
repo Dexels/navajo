@@ -2630,7 +2630,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			logger.error("Error: ",e);
 			return;
 		}
-		propertyBindMap.remove(master);
+		propertyBindMap.remove(service + ":"+ master.getFullPropertyName());
 		if (pref != null) {
 			for (PropertyChangeListener propertyChangeListener : pref) {
 				master.removePropertyChangeListener(propertyChangeListener);
@@ -2706,10 +2706,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			propertyLinkRegistry.put(master, p);
 		}
 		p.add(slave);
-
-		List<PropertyChangeListener> xx = propertyBindMap.get(master);
 		Navajo rootDoc = master.getRootDoc();
 		String service = rootDoc.getHeader().getRPCName();
+
+		List<PropertyChangeListener> xx = propertyBindMap.get(service + ":" + master.getFullPropertyName());
 		if (xx == null) {
 			xx = new LinkedList<PropertyChangeListener>();
 			try {

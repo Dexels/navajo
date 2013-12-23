@@ -107,4 +107,9 @@ public class AppStoreManagerImpl implements AppStoreManager {
 		return repositories.keySet();
 	}
 
+	@Override
+	public int getSessionCount() {
+		return sessionSet.size();
+	}
+
 }
