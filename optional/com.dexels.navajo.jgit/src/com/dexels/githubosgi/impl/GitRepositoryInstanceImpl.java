@@ -166,6 +166,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 
 		repositoryName = name + "-"+branch;
 		applicationFolder = new File(gitRepoFolder,repositoryName);
+		super.setSettings(settings);
 		File keyFolder = repositoryManager.getSshFolder();
 		if(keyFolder!=null && keyFolder.exists()) {
 			privateKey = null;
@@ -467,5 +468,18 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 
 		eventAdmin.postEvent(event);
 
+	}
+
+	@Override
+	public Map<String, Object> getSettings() {
+		Map<String, Object> result = super.getSettings();
+		result.put("gitUrl", getGitUrl());
+		result.put("httpUrl", getHttpUrl());
+		result.put("lastCommitAuthor", getLastCommitAuthor());
+		result.put("lastCommitDate", getLastCommitDate());
+		result.put("lastCommitEmail", getLastCommitEmail());
+		result.put("lastCommitMessage", getLastCommitMessage());
+		result.put("lastCommitVersion", getLastCommitVersion());
+		return result;
 	}
 }

@@ -42,12 +42,12 @@ public class RepositoryInstanceImpl implements RepositoryInstance {
 
 	@Override
 	public Map<String,Object> getSettings() {
-		return settings;
+		return new HashMap<String, Object>(settings);
 	}
 	
 	protected void setSettings(Map<String,Object> settings) {
-		settings.clear();
-		settings.putAll(settings);
+		this.settings.clear();
+		this.settings.putAll(settings);
 	}
 
 }
