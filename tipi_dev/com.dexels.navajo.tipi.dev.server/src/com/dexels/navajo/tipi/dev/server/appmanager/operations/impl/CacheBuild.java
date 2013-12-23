@@ -49,6 +49,7 @@ public class CacheBuild extends BaseOperation implements AppStoreOperation, Even
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String val = req.getParameter("app");
+		verifyAuthorization(req, resp);
 		if(val!=null) {
 			cachebuild(val);
 		} else {

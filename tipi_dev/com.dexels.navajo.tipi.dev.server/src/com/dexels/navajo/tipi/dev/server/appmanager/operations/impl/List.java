@@ -49,7 +49,7 @@ public class List extends BaseOperation implements AppStoreOperation {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-//		verifyAuthorization(req,resp);
+		verifyAuthorization(req,resp);
 		resp.setContentType("application/json");
 		
 		java.util.List<RepositoryInstanceWrapper> ll = new ArrayList<RepositoryInstanceWrapper>(getApplications().values());

@@ -22,10 +22,6 @@
 		<feature version="[1.0.5,2)">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.function/3.1.42</bundle>
 	</feature>
-	<feature resolver="(obr)" name='pax-http' version='3.0.0.M3' start-level='81' >
-    </feature>
-	<feature resolver="(obr)" name='pax-war' version='3.0.0.M3' start-level='81' >
-    </feature>
 	<feature resolver="(obr)" name='navajo.server' version='1.0.12' start-level='81' >
 		<feature version="[1.0.15,2)">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp/1.1.10</bundle>
@@ -207,14 +203,14 @@
 		
 	</feature>	
 
-	<feature resolver="(obr)" name='github.osgi' version='1.1.0' start-level='81' >
+	<feature resolver="(obr)" name='github.osgi' version='1.1.1' start-level='81' >
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-core-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.11</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.ant/1.9.2_1</bundle>
 		<bundle dependency='true'>mvn:com.jcraft/jsch-bundle/0.1.46</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-codec/1.3_5</bundle>
-		<bundle dependency='true'>mvn:org.eclipse.jgit/org.eclipse.jgit/3.0.3.201309161630-r</bundle>
+		<bundle dependency='true'>mvn:org.eclipse.jgit/org.eclipse.jgit/3.1.0.201310021548-r</bundle>
 		<bundle dependency='true'>mvn:com.dexels.thirdparty/javaewah/0.5.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jgit/1.0.3</bundle>
 			</feature>

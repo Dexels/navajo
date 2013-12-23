@@ -45,6 +45,7 @@ public class Checkout extends BaseOperation implements AppStoreOperation {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		verifyAuthorization(req, resp);
 		String app = req.getParameter("app");
 		String commitId = req.getParameter("commitId");
 		String branchname = req.getParameter("branchName");

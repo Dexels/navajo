@@ -42,6 +42,8 @@ public class Clean extends BaseOperation implements AppStoreOperation {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+
+		verifyAuthorization(req, resp);
 		String val = req.getParameter("app");
 		if(val!=null) {
 			clean(val);

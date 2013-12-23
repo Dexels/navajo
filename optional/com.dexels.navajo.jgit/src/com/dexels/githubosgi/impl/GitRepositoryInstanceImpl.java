@@ -157,6 +157,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	
 	public void activate(Map<String,Object> settings) throws IOException {
 		File gitRepoFolder = repositoryManager.getRepositoryFolder();
+		setSettings(settings);
 		gitUrl = (String) settings.get("url");
 		httpUrl = (String) settings.get("httpUrl");
 		String key = (String) settings.get("key");
@@ -290,7 +291,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			
 	    }
 //	    CredentialsProvider user = CredentialsProvider.getDefault(); 
-	    UsernamePasswordCredentialsProvider upc = new UsernamePasswordCredentialsProvider("flyaruu", "automati");
+	    UsernamePasswordCredentialsProvider upc = new UsernamePasswordCredentialsProvider("******", "********");
 	    // new
 	    Repository repository = null;
 	    try {
@@ -441,9 +442,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			if (oldVersion != null) {
 				properties.put("oldCommit", oldVersion);
 			}
-			if (newVersion != null) {
-				properties.put("newCommit", newVersion);
-			}
+			properties.put("newCommit", newVersion);
 			String url = getUrl();
 			if (url != null) {
 				properties.put("url", url);

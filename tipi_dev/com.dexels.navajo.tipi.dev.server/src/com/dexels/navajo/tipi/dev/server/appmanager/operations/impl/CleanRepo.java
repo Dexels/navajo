@@ -33,6 +33,7 @@ public class CleanRepo extends BaseOperation implements AppStoreOperation {
 	// Maybe we should protect this one, it is kind of destructive
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		verifyAuthorization(req, resp);
 		cleanrepo();
 		writeValueToJsonArray(resp.getOutputStream(),"cleanrepo  ok");
 

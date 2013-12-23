@@ -28,6 +28,7 @@ public class SendMessage extends BaseOperation implements AppStoreOperation {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
+		verifyAuthorization(req, resp);
 		String session = req.getParameter("session");
 		String message = req.getParameter("text");
 		System.err.println("Session:"+session);
