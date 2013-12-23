@@ -179,7 +179,7 @@ public class RepositoryInstanceWrapper implements RepositoryInstance {
 	@Override
 	public Map<String, Object> getSettings() {
 		// TODO Auto-generated method stub
-		return null;
+		return instance.getSettings();
 	}
 
 	

@@ -16,13 +16,13 @@
         {{#each applications}} 
 		<div class="panel panel-primary application" style="margin:30px 0px;">
 			<div class="panel-heading">
-				<h2 class="panel-title"><a href="{{httpUrl}}/tree/{{branch}}">{{@key}} - {{branch}}</a></h2>
+				<h2 class="panel-title"><a href="{{settings.httpUrl}}/tree/{{settings.branch}}">{{@key}} - {{settings.branch}}</a></h2>
 			</div>
 			<div class="panel-body">
-				<p>Current version: <a href="{{httpUrl}}/commit/{{lastCommitVersion}}">{{lastCommitVersion}}</a> </p>
-				<p>Message: {{lastCommitMessage}}</p>
-				<p>Date: {{lastCommitDate}}</p>
-				<p>Author: <a href="https://github.com/{{lastCommitAuthor}}">{{lastCommitAuthor}}</a></p>
+				<p>Current version: <a href="{{settings.httpUrl}}/commit/{{settings.lastCommitVersion}}">{{settings.lastCommitVersion}}</a> </p>
+				<p>Message: {{settings.lastCommitMessage}}</p>
+				<p>Date: {{settings.lastCommitDate}}</p>
+				<p>Author: <a href="https://github.com/{{settings.lastCommitAuthor}}">{{settings.lastCommitAuthor}}</a></p>
 				<p>Cache tipi: <a href="/apps/{{@key}}/tipi/remotedigest.properties">properties</a>
 				<p>Cache resource: <a href="/apps/{{@key}}/resource/remotedigest.properties">properties</a>
 				<p>Xsd: <a href="/apps/{{@key}}/tipi/tipi.xsd">XSD</a>
