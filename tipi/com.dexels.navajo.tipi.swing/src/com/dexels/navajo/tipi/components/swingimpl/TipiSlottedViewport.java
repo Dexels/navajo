@@ -59,6 +59,7 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 	// private int width = 1;
 	// private int height = 2;
 	//
+	@Override
 	public Object createContainer() {
 		view = new TipiSwingViewport();
 		// left = new JPanel();
@@ -74,6 +75,7 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 		view.setOpaque(false);
 		view.addComponentListener(new ComponentAdapter() {
 
+			@Override
 			public void componentResized(ComponentEvent e) {
 				updateClientSize(view);
 			}
@@ -86,6 +88,7 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 	@Override
 	public void setContainerLayout(final Object layout) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				clientPanel.setLayout((LayoutManager) layout);
 			}
@@ -113,6 +116,7 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 		clientPanel.doLayout();
 	}
 
+	@Override
 	public void addToContainer(final Object c, final Object constraints) {
 		// if (constraints == null) {
 		// throw new
@@ -120,6 +124,7 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 		// }
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				clientPanel.add((Component) c, constraints);
 				updateClientSize(view);
@@ -179,6 +184,7 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 	// private void updateLayout() {
 	// clientPanel.setLayout(new BoxLayout(clientPanel, axis));
 	// }
+	@Override
 	public void setComponentValue(String name, final Object object) {
 		super.setComponentValue(name, object);
 		// if (name.equals("x")) {
@@ -238,15 +244,19 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 			final Point targetPos = currentComponent.getLocation();
 			myAnimator.addTarget(new TimingTarget() {
 
+				@Override
 				public void begin() {
 				}
 
+				@Override
 				public void end() {
 				}
 
+				@Override
 				public void repeat() {
 				}
 
+				@Override
 				public void timingEvent(float e) {
 					view.setViewPosition(interpolate(initial, targetPos, e));
 				}
@@ -270,6 +280,7 @@ public class TipiSlottedViewport extends TipiSwingDataComponentImpl {
 	private void refreshView() {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				if (currentComponent != null) {
 //					Point p = getLocation(currentComponent);

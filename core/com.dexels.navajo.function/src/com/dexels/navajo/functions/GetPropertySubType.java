@@ -33,10 +33,12 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class GetPropertySubType extends FunctionInterface {
   public GetPropertySubType() {
   }
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Gets the subtype of property as a string";
   }
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     if (getOperands().size() != 2) {
       throw new TMLExpressionException(this, "Invalid function call");
     }
@@ -61,7 +63,8 @@ public class GetPropertySubType extends FunctionInterface {
 			   return p.getSubType(subType);
 	}
   }
-  public String usage() {
+  @Override
+public String usage() {
    return "GetPropertySubType(String propertyName, string subtypeName) OR GetPropertySubType(Property p, String subtypeName)";
   }
 

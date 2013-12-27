@@ -17,7 +17,8 @@ public final class ASTStringConstantNode extends SimpleNode {
         super(id);
     }
 
-    public final Object interpret() {
+    @Override
+	public final Object interpret() {
         // Strip quotes.
         String s = val.substring(1, val.length() - 1);
         String t = s.replaceAll("\\\\'","'");

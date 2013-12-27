@@ -25,11 +25,13 @@ public class NavajoHealthCheckEvent implements NavajoEvent, LevelEvent {
 		return message;
 	}
 
+	@Override
 	public Navajo getEventNavajo() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public Level getLevel() {
 		return level;
 	}

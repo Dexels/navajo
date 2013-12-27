@@ -37,6 +37,7 @@ public class GetPropertyAttribute extends FunctionInterface {
 	public GetPropertyAttribute() {
 	}
 
+	@Override
 	public String remarks() {
 		return "Gets the type of property as a string";
 	}
@@ -61,6 +62,7 @@ public class GetPropertyAttribute extends FunctionInterface {
 		}
 	}
 
+	@Override
 	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		if (getOperands().size() != 2) {
 			throw new TMLExpressionException(this, "Invalid function call");
@@ -80,6 +82,7 @@ public class GetPropertyAttribute extends FunctionInterface {
 		return getAttribute(propertyName, attribute);
 	}
 
+	@Override
 	public String usage() {
 		return "GetPropertyAttribute(property name, attribute name)";
 	}

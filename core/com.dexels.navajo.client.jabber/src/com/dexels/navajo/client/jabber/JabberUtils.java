@@ -222,6 +222,7 @@ public class JabberUtils {
 				// thread before the
 				// actual joining happens.
 				new Thread() {
+					@Override
 					public void run() {
 						try {
 							logger.info("Joined, waiting");
@@ -408,6 +409,7 @@ public class JabberUtils {
 
 			myMultiuserChat.addParticipantListener(new PacketListener() {
 
+				@Override
 				public void processPacket(Packet arg0) {
 					logger.info("IN addParticipantListener: "
 							+ arg0.getClass().getName());
@@ -433,6 +435,7 @@ public class JabberUtils {
 					Chat chat = myMultiuserChat.createPrivateChat(okkie,
 							new MessageListener() {
 
+								@Override
 								public void processMessage(Chat arg0,
 										Message arg1) {
 									logger.info("IN processMessage..");

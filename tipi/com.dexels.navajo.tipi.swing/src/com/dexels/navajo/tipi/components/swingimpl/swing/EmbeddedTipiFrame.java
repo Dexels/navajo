@@ -12,6 +12,7 @@ public class EmbeddedTipiFrame extends JInternalFrame {
 	private final static Logger logger = LoggerFactory
 			.getLogger(EmbeddedTipiFrame.class);
 	
+	@Override
 	public void setVisible(boolean arg0) {
 		logger.debug("setVisible: " + arg0);
 		super.setVisible(true);

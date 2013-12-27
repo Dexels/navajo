@@ -32,10 +32,12 @@ public class PropertyRef implements TipiReference {
 		// myProperty = p;
 	}
 
+	@Override
 	public void setValue(Object expression) {
 
 	}
 
+	@Override
 	public Object getValue() {
 		return null;
 	}

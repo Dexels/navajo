@@ -34,14 +34,17 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class ParseSelection extends FunctionInterface {
 
+	@Override
 	public String remarks() {
 		return "This function creates a selection out of a semi-colon separated string of options";
 	}
 
+	@Override
 	public String usage() {
 		return "ParseSelection(String)";
 	}
 
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if ( getOperands().size() == 0 ) {
 			throw new TMLExpressionException(this, "Operand expected");

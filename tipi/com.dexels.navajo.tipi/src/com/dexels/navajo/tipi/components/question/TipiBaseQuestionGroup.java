@@ -59,10 +59,12 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 		myQuestionList = tql;
 	}
 
+	@Override
 	public void removeFromContainer(Object c) {
 		// panel.remove((Component)c);
 	}
 
+	@Override
 	public void setComponentValue(String name, Object object) {
 		if (name.equals("messagePath")) {
 			messagePath = (String) object;
@@ -87,6 +89,7 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if (name.equals("valid")) {
 			return new Boolean(isValid());
@@ -119,6 +122,7 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 		return true;
 	}
 
+	@Override
 	public void loadData(Navajo n, String method) throws TipiException {
 		// removeInstantiatedChildren();
 

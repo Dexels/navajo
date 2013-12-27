@@ -28,6 +28,7 @@ public class TipiLoadStateNavajo extends TipiAction {
 	 */
 	private static final long serialVersionUID = 1681280526959616752L;
 
+	@Override
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

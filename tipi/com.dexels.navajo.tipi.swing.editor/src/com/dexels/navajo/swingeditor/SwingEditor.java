@@ -47,6 +47,7 @@ public class SwingEditor extends KafenioPanel {
 
 		addPropertyChangeListener(new PropertyChangeListener() {
 
+			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				// logger.info("Log: " + evt.getPropertyName() + " val: "
 				// + evt.getNewValue());
@@ -54,14 +55,17 @@ public class SwingEditor extends KafenioPanel {
 		});
 		getSourcePane().getDocument().addDocumentListener(new DocumentListener() {
 
+			@Override
 			public void changedUpdate(DocumentEvent e) {
 				fireChange("change", e);
 			}
 
+			@Override
 			public void insertUpdate(DocumentEvent e) {
 				fireChange("insert", e);
 			}
 
+			@Override
 			public void removeUpdate(DocumentEvent e) {
 				fireChange("remove", e);
 			}
@@ -160,6 +164,7 @@ public class SwingEditor extends KafenioPanel {
 		jf.setVisible(true);
 		JButton jb = new JButton("Teext");
 		jb.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				ExtendedHTMLDocument extendedHtmlDoc = kp.getExtendedHtmlDoc();
 				try {
@@ -172,6 +177,7 @@ public class SwingEditor extends KafenioPanel {
 		});
 		kp.addPropertyChangeListener(new PropertyChangeListener() {
 
+			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				logger.info("Log: " + evt.getPropertyName() + " val: " + evt.getNewValue());
 

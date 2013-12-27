@@ -27,14 +27,17 @@ public final class GetLogoImage extends FunctionInterface {
 	private int height = 60;
 	private int width = 265;
 
+	@Override
 	public String remarks() {
 		return "Get the specified string a a nice mirroed logo image";
 	}
 
+	@Override
 	public String usage() {
 		return "Get the string as an image";
 	}
 
+	@Override
 	public final Object evaluate() throws TMLExpressionException {
 		// input (ArrayList, Object).
 		if (this.getOperands().size() != 1)

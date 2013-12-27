@@ -19,21 +19,25 @@ public class ResourceNavajoConnector extends TipiBaseConnector {
 	private final static Logger logger = LoggerFactory
 			.getLogger(ResourceNavajoConnector.class);
 	// assume a load:
+	@Override
 	public Navajo doTransaction(Navajo input, String service)
 			throws TipiBreakException, TipiException {
 		throw new TipiException(
 				"Please supply a service and a destination. Navajo input is ignored");
 	}
 
+	@Override
 	protected void setComponentValue(String name, Object object) {
 
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public String getConnectorId() {
 		return "resource";
 	}
 
+	@Override
 	public Navajo doTransaction(Navajo n, String service, String destination)
 			throws TipiBreakException, TipiException {
 		try {
@@ -53,10 +57,12 @@ public class ResourceNavajoConnector extends TipiBaseConnector {
 
 	}
 
+	@Override
 	public Set<String> getEntryPoints() {
 		return null;
 	}
 
+	@Override
 	public String getDefaultEntryPoint() {
 		return null;
 	}

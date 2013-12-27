@@ -36,14 +36,17 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class Zip extends FunctionInterface {
 
 	
+	@Override
 	public String remarks() {
 		return "Zips a binary property";
 	}
 
+	@Override
 	public String usage() {
 		return "Zip(Binary content, String filename)";
 	}
 
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() != 2) {
 			return new TMLExpressionException(this, "Wrong number of arguments");

@@ -89,10 +89,12 @@ public final class PropertyRadioSelection extends JPanel implements
 		doLayout();
 	}
 
+	@Override
 	public final Property getProperty() {
 		return myProperty;
 	}
 
+	@Override
 	public final void setProperty(Property p) {
 		selectionMap.clear();
 		buttonList.clear();
@@ -179,6 +181,7 @@ public final class PropertyRadioSelection extends JPanel implements
 		return jr;
 	}
 
+	@Override
 	public final void update() {
 	}
 
@@ -192,6 +195,7 @@ public final class PropertyRadioSelection extends JPanel implements
 		return i.intValue();
 	}
 
+	@Override
 	public final void actionPerformed(ActionEvent e) {
 		logger.info("Radio action performed");
 		updateProperty((JRadioButton) e.getSource());

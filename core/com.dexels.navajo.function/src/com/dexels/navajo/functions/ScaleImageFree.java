@@ -24,6 +24,7 @@ public class ScaleImageFree extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
         return "Scales an image to the specified dimensions. Does not keep aspect ratio.";
 	}
@@ -31,6 +32,7 @@ public class ScaleImageFree extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "ScaleImageFree(Binary,int width,int height)";
 	}
@@ -38,6 +40,7 @@ public class ScaleImageFree extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 	    if (getOperands().size()!=3) {
             throw new TMLExpressionException(this, "Three operands expected. ");

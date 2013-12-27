@@ -193,7 +193,8 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
    * Clone this Clocktime object
    * @return Object
    */
-  public final Object clone() {
+  @Override
+public final Object clone() {
     return new ClockTime(dateValue());
   }
 
@@ -224,7 +225,8 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
    * Get the String representation of this ClockTime object
    * @return String
    */
-  public final String toString() {
+  @Override
+public final String toString() {
 	  if(shortFormat) {
 		  return toShortString();
 	  }
@@ -246,7 +248,8 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
   
   
 
-  public final int compareTo(ClockTime o) {
+  @Override
+public final int compareTo(ClockTime o) {
 
     if (o == null) {
       return 0;
@@ -267,14 +270,16 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
     return (int) (calValue.getTimeInMillis() - o.dateValue().getTime());
   }
 
-  public int hashCode() {
+  @Override
+public int hashCode() {
 	  if ( calValue == null ) {
 		  return 434343;
 	  }
 	  return calValue.toString().hashCode();
   }
   
-  public boolean equals(Object obj) {
+  @Override
+public boolean equals(Object obj) {
 
     if (calValue == null && obj == null) {
       return true;
@@ -308,9 +313,9 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
   }
 
 
-  public boolean isEmpty() {
-	  return calValue==null;
-
+@Override
+public boolean isEmpty() {
+    return calValue==null;
   } 
   
   public static void main(String [] args) {

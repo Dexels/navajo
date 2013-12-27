@@ -21,6 +21,7 @@ public class GetNavajo extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Resolves a navajo name. Source component is required.";
 	}
@@ -30,6 +31,7 @@ public class GetNavajo extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "GetNavajo(TipiComponent) OR GetNavajo(Context,name)";
 	}
@@ -39,6 +41,7 @@ public class GetNavajo extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() == 0) {
 			throw new TMLExpressionException(this, "GetNavajo NEEEDS arguments");

@@ -744,6 +744,7 @@ public class TestProperty {
 		p1.addSelection(new BaseSelectionImpl(n, "opt2", "2", true));
 		p1.addPropertyChangeListener(new PropertyChangeListener() {
 
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				logger.info("Old: " + e.getOldValue());
 				logger.info("New: " + e.getNewValue());
@@ -836,7 +837,6 @@ public class TestProperty {
 
 	}
 
-	@SuppressWarnings("null")
 	@Test
 	public void testDateTime() {
 		Navajo n = NavajoFactory.getInstance().createNavajo(getClass().getClassLoader().getResourceAsStream("iphone.xml"));

@@ -52,7 +52,8 @@ import org.slf4j.LoggerFactory;
  */
 
 class JarFilter implements FilenameFilter {
-    public boolean accept(File f, String name) {
+    @Override
+	public boolean accept(File f, String name) {
         if (name.endsWith("jar"))
             return true;
         else
@@ -62,7 +63,8 @@ class JarFilter implements FilenameFilter {
 
 
 class BetaJarFilter implements FilenameFilter {
-    public boolean accept(File f, String name) {
+    @Override
+	public boolean accept(File f, String name) {
         if (name.endsWith("jar_beta"))
             return true;
         else
@@ -148,6 +150,7 @@ public class NavajoClassLoader extends MultiClassLoader {
      * @return
      * @throws ClassNotFoundException
      */
+	@Override
 	public final Class<?> getCompiledNavaScript(String script) throws ClassNotFoundException {
 
       if ( myScriptClass != null ) {
@@ -217,6 +220,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     /**
      * Always use this method to load a class. It uses the cache first before retrieving the class from a jar resource.
      */
+	@Override
 	public Class<?> getClass(String className) throws ClassNotFoundException {
     	try {
     		return Class.forName(className, false, this);
@@ -226,7 +230,8 @@ public class NavajoClassLoader extends MultiClassLoader {
     	}
     }
 
-    public final File [] getJarFiles(String path, boolean beta) {
+    @Override
+	public final File [] getJarFiles(String path, boolean beta) {
     	
     	 if ( adapterPath == null ) {
     		 // Try my parent.
@@ -306,7 +311,8 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     
         
-    public InputStream getResourceAsStream(String name) {
+    @Override
+	public InputStream getResourceAsStream(String name) {
 
       if ( jarResources == null || betaJarResources == null ) {
     	initializeJarResources();
@@ -361,7 +367,8 @@ public class NavajoClassLoader extends MultiClassLoader {
      * This method loads the class from a jar file.
      * Beta jars are supported if the beta flag is on.
      */
-    protected byte[] loadClassBytes(String className) {
+    @Override
+	protected byte[] loadClassBytes(String className) {
 
         // Support the MultiClassLoader's class name munging facility.
         className = formatClassName(className);
@@ -420,7 +427,8 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     }
 
-    protected void finalize() {
+    @Override
+	protected void finalize() {
         instances--;
     }
 

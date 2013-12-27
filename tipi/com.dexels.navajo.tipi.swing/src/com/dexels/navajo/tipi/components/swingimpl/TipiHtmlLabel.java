@@ -41,6 +41,7 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
 	private PropertyHandler myHandler;
 	private Property myProperty;
 
+	@Override
 	public Object createContainer() {
 		myHandler = new PropertyHandler(this, null);
 		// myHandler.addMapping("value", "text");
@@ -67,10 +68,12 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
 		return jsp;
 	}
 
+	@Override
 	public Object getActualComponent() {
 		return myLabel;
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		if (name.equals("text")) {
 			setHtmlText("" + object);
@@ -88,6 +91,7 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
 	 */
 	private void setHtmlText(final String text) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				myLabel.setText(text);
 				myLabel.setCaretPosition(0);
@@ -96,17 +100,21 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements
 
 	}
 
+	@Override
 	public void addTipiEventListener(TipiEventListener listener) {
 	}
 
+	@Override
 	public Property getProperty() {
 		return myProperty;
 	}
 
+	@Override
 	public String getPropertyName() {
 		return myPropertyName;
 	}
 
+	@Override
 	public void setProperty(Property p) {
 		myProperty = p;
 		myHandler.setProperty(p);

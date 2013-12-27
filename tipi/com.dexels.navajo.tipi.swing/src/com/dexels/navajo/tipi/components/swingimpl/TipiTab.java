@@ -13,11 +13,13 @@ public class TipiTab extends TipiSwingDataComponentImpl {
 	private final static Logger logger = LoggerFactory.getLogger(TipiTab.class);
 	private TipiSwingTab myTab;
 
+	@Override
 	public Object createContainer() {
 		myTab = new TipiSwingTab();
 		return myTab;
 	}
 
+	@Override
 	protected void setComponentValue(String name, Object object) {
 		logger.debug("Setting: " + name + " to: " + object);
 		if (name.equals("tabIcon")) {

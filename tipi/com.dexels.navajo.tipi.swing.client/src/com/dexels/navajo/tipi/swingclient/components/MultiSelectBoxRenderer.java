@@ -32,6 +32,7 @@ public class MultiSelectBoxRenderer implements ListCellRenderer {
 	public MultiSelectBoxRenderer() {
 	}
 
+	@Override
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
 		final Selection sel = (Selection) value;

@@ -29,6 +29,7 @@ public class ExistsResource extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Checks for the existence of a resource";
 	}
@@ -38,6 +39,7 @@ public class ExistsResource extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "ExistsResource(Context,name)";
 	}
@@ -47,6 +49,7 @@ public class ExistsResource extends FunctionInterface {
 	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() == 0) {
 			throw new TMLExpressionException(this,

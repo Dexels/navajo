@@ -19,6 +19,7 @@ public class XmlEscape extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
+	@Override
 	public String remarks() {
 		return "Escapes the following characters in the characters: &'<>\"";
 	}
@@ -26,6 +27,7 @@ public class XmlEscape extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
+	@Override
 	public String usage() {
 		return "XmlEscape(String)";
 	}
@@ -33,6 +35,7 @@ public class XmlEscape extends FunctionInterface {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object o = getOperand(0);
 		if (o == null) {

@@ -102,14 +102,17 @@ public class StandardDialog extends JDialog implements DialogConstants {
 		getContentPane().add(mainPanel);
 		getContentPane().add(dialogToolbar, BorderLayout.SOUTH);
 		getContentPane().addKeyListener(new KeyListener() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				logger.info("Pressed dialog");
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				logger.info("Released dialog");
 			}
 
+			@Override
 			public void keyTyped(KeyEvent e) {
 				logger.info("Typed dialog");
 			}
@@ -253,6 +256,7 @@ public class StandardDialog extends JDialog implements DialogConstants {
 			}
 		});
 		iconButtonPanel.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				iconButtonPanel_actionPerformed(e);
 			}
@@ -353,6 +357,7 @@ public class StandardDialog extends JDialog implements DialogConstants {
 			try {
 				SwingUtilities.invokeAndWait(new Runnable() {
 
+					@Override
 					public void run() {
 						receive(n, method, id);
 					}

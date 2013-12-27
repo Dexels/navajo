@@ -30,6 +30,7 @@ public class FontParser extends TipiTypeParser {
 	 */
 	private static final long serialVersionUID = -1017456764895180192L;
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return parseFont(expression);
 	}

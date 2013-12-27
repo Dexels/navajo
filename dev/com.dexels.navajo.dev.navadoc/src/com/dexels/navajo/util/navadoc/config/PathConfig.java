@@ -71,7 +71,8 @@ public class PathConfig {
         return ( this.pathMap.get( name ) );
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         final StringBuffer s = new StringBuffer( "<path-config>" );
 
         final Set<String> keys = this.pathMap.keySet();

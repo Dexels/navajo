@@ -49,6 +49,7 @@ public class TipiSwingStandaloneToplevel extends TipiPanel implements
 		// myPanel.setLayout(myLayout);
 		super.setName("init");
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				if (jj == null) {
 					myPanel = new JPanel();
@@ -66,6 +67,7 @@ public class TipiSwingStandaloneToplevel extends TipiPanel implements
 		this(null);
 	}
 
+	@Override
 	public void addToContainer(final Object c, final Object constraints) {
 		if (myPanel != null) {
 			// logger.debug("Adding to toplevel: "+c.getClass()+
@@ -74,6 +76,7 @@ public class TipiSwingStandaloneToplevel extends TipiPanel implements
 			logger.debug("BEWArE: Tiplet hack");
 			runSyncInEventThread(new Runnable() {
 
+				@Override
 				public void run() {
 					// myPanel.add((Component)c,BorderLayout.CENTER);
 				}
@@ -81,44 +84,55 @@ public class TipiSwingStandaloneToplevel extends TipiPanel implements
 		}
 	}
 
+	@Override
 	public void setLayout(TipiLayout tl) {
 		// no way jose
 	}
 
+	@Override
 	public Object getContainerLayout() {
 		return myLayout;
 	}
 
+	@Override
 	public void setContainerLayout(Object o) {
 		// no way jose
 	}
 
+	@Override
 	public Object createContainer() {
 		return myPanel;
 	}
 
+	@Override
 	public Component getGlassPane() {
 		return null;
 	}
 
+	@Override
 	public void setGlassPane(Component glassPane) {
 	}
 
+	@Override
 	public Container getContentPane() {
 		return myPanel;
 	}
 
+	@Override
 	public void setContentPane(Container contentPane) {
 	}
 
+	@Override
 	public JLayeredPane getLayeredPane() {
 		logger.debug("GETTING LAYERED PANE. BEWARE");
 		return null;
 	}
 
+	@Override
 	public void setLayeredPane(JLayeredPane layeredPane) {
 	}
 
+	@Override
 	public JRootPane getRootPane() {
 		logger.debug("GETTING ROOT PANE. BEWARE");
 		return null;

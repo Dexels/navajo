@@ -33,14 +33,17 @@ public class TipiSwingPaintEditor extends JTextField {
 		setBackground(null);
 		getDocument().addDocumentListener(new DocumentListener() {
 
+			@Override
 			public void changedUpdate(DocumentEvent arg0) {
 				updateMe(getText());
 			}
 
+			@Override
 			public void insertUpdate(DocumentEvent arg0) {
 				updateMe(getText());
 			}
 
+			@Override
 			public void removeUpdate(DocumentEvent arg0) {
 				updateMe(getText());
 			}

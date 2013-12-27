@@ -27,6 +27,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class UrlParser extends TipiTypeParser {
 	private static final long serialVersionUID = -7297017153371186707L;
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return getUrl(expression);
 	}

@@ -38,10 +38,12 @@ public class TipiFrame extends TipiVaadinComponentImpl{
 		return this.layout;
 	}
 
+	@Override
 	public void addToContainer(Object c, Object constraints) {
 		super.addToContainer(c, constraints);
 	}
 	
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 	    super.setComponentValue(name, object);
 	        if (name.equals("title")) {

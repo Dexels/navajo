@@ -1,8 +1,5 @@
 package com.dexels.navajo.tipi.vaadin.touch.components;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiComponentMethod;
@@ -16,9 +13,6 @@ import com.vaadin.ui.ComponentContainer;
 public class TipiNavigationManager extends TipiVaadinComponentImpl {
 
 	private static final long serialVersionUID = -5043895594246857632L;
-	
-	private final static Logger logger = LoggerFactory
-			.getLogger(TipiNavigationManager.class);
 	
 	@Override
 	public Object createContainer() {

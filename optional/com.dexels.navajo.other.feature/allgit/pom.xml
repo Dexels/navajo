@@ -10,6 +10,7 @@
 
 	<modules>
 		<module>../../com.dexels.navajo.utilities</module>
+		<module>../../com.dexels.navajo.jgit</module>
 		<module>../</module>
 
 	</modules>

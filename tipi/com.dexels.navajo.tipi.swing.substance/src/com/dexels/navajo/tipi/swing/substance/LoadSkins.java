@@ -25,6 +25,7 @@ public class LoadSkins extends TipiAction {
 	private final static Logger logger = LoggerFactory
 			.getLogger(LoadSkins.class);
 
+	@Override
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		String serviceName = (String) getEvaluatedParameterValue("service", event);
 		try {

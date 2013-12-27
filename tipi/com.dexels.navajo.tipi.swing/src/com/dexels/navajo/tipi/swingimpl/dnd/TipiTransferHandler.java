@@ -27,6 +27,7 @@ public class TipiTransferHandler extends TransferHandler {
 		myParent = null;
 	}
 
+	@Override
 	public int getSourceActions(JComponent c) {
 		return COPY;
 	}

@@ -15,12 +15,12 @@
 		<module>server/com.dexels.navajo.server.feature/allgit/</module>
 		<module>tipi/com.dexels.navajo.tipi.extensions.feature/allgit/</module>
 		<module>tipi_dev/com.dexels.navajo.tipi.dev.feature/allgit/</module>
-<!--		<module>dev/com.dexels.navajo.dev.feature/allgit/</module>-->
+		<module>dev/com.dexels.navajo.dev.feature/allgit/</module>
 		<module>runtime/com.dexels.navajo.runtime.feature/allgit/</module>
-		<module>optional/com.dexels.navajo.oda.feature/allgit/</module>
 		<module>optional/com.dexels.navajo.other.feature/allgit/</module>
 		<module>optional/com.dexels.navajo.geo.feature/allgit/</module>
 		<module>optional/com.dexels.navajo.twitter.feature/allgit/</module>
+		<module>setup/com.dexels.p2</module>
 	</modules>
 	<parent>
 		<groupId>com.dexels.navajo</groupId>

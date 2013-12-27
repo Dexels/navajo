@@ -175,6 +175,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 				final NavajoListener nl = i.next();
 				try {
 					new Thread() {
+						@Override
 						public void run() {
 							nl.onNavajoEvent(ne);
 						}
@@ -261,10 +262,12 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		return false;
 	}
 	
+	@Override
 	public void addMonitoredEvent(String type) {
 		monitoredEvents.add(type);
 	}
 	
+	@Override
 	public void addMonitoredEvent(String type, String level) {
 		synchronized ( monitorLeveledEvents ) {
 			HashSet<String> levelSet = monitorLeveledEvents.get(level);
@@ -276,10 +279,12 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		}
 	}
 
+	@Override
 	public void removeMonitoredEvent(String type) {
 		monitoredEvents.remove(type);
 	}
 
+	@Override
 	public String getMonitoredEvents() {
 		return monitoredEvents.toString();
 	}
@@ -287,6 +292,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	/** 
 	 * Handles a JMX notification.
 	 */
+	@Override
 	public void handleNotification(Notification notification, Object handback) {
 
 		logger.info(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getType() );
@@ -297,6 +303,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 
 	}
 
+	@Override
 	public MBeanNotificationInfo[] getNotificationInfo() { 
 		String[] types = new String[] { 
 				AttributeChangeNotification.ATTRIBUTE_CHANGE
@@ -309,6 +316,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		return new MBeanNotificationInfo[] {info}; 
 	} 
 	 
+	@Override
 	public int getNumberOfRegisteredListeners() {
 		return registry.size();
 	}

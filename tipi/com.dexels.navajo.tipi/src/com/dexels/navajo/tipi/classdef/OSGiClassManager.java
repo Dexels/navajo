@@ -107,6 +107,7 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 	/**
 	 * 
 	 */
+	@Override
 	public Class<?> getTipiClass(XMLElement xe) {
 //		String pack = (String) xe.getAttribute("package");
 		String clas = (String) xe.getAttribute("class");
@@ -151,6 +152,7 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 		return ttp;
 	}
 	
+	@Override
 	public TipiTypeParser getParser(String name) {
 		TipiTypeParser ttp = super.getParser(name);
 		if(ttp!=null) {
@@ -171,6 +173,7 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 		return null;
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String name, String expression,
 			TipiEvent te) {
 		TipiTypeParser ttp = getParser(name);
@@ -192,6 +195,7 @@ public class OSGiClassManager extends BaseClassManager implements IClassManager,
 		return o;
 	}
 	
+	@Override
 	public boolean isValidType(String name) {
 		boolean isV = super.isValidType(name);
 		if(isV) {

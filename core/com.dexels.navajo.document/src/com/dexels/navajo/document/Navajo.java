@@ -178,7 +178,8 @@ public interface Navajo
    * GIves the String representation of the current Navajo
    * @return String
    */
-  public String toString();
+  @Override
+public String toString();
 
   /**
    * Add a method to the Navajo document. If the method name already exists, replace the old one.
@@ -229,7 +230,8 @@ public interface Navajo
    * @return String persistence key
    */
 
-  public String persistenceKey();
+  @Override
+public String persistenceKey();
 
   /**
    * Retun the Message buffer object

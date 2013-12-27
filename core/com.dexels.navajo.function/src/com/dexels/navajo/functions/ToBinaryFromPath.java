@@ -20,11 +20,13 @@ public class ToBinaryFromPath extends FunctionInterface {
   public ToBinaryFromPath() {
   }
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Load a binary from a URL";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
    Object o = getOperand(0);
    String s = (String)o;
  	try {
@@ -38,7 +40,8 @@ public class ToBinaryFromPath extends FunctionInterface {
 	}
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "ToBinaryFromPath(String): Binary";
   }
 

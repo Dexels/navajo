@@ -36,6 +36,7 @@ public class TipiRemoveAllMessages extends TipiAction {
 	 */
 	private static final long serialVersionUID = -6814896223185805866L;
 
+	@Override
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

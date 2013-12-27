@@ -55,6 +55,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		System.err.println("So something insignificant");
 	}
 
+	@Override
 	public Object navajoEvaluate(String expression) throws NavajoException {
 		// if (getCurrentTreeNode()==null) {
 		// System.err.println("Evaluating navajo: "+expression+" without tree");
@@ -291,6 +292,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		popMappableTreeNode();
 	}
 
+	@Override
 	public void setAccess(Access access) {
 		super.setAccess(access);
 		myElementStack.push(access.getOutputDoc());
@@ -350,6 +352,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		return myInverseNavajoMap.get(n);
 	}
 
+	@Override
 	public void callFinished(String service, Navajo n) {
 		myNavajoMap.put(service, n);
 		myInverseNavajoMap.put(n, service);
@@ -797,6 +800,7 @@ public class StackScriptEnvironment extends ScriptEnvironment {
 		return m;
 	}
 
+	@Override
 	public ScriptEnvironment createEnvironment() {
 		return new StackScriptEnvironment(this);
 	}

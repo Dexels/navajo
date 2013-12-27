@@ -44,6 +44,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 		this.id = id;
 	}
 	
+	@Override
 	public void finalize() {
 	}
 	
@@ -129,6 +130,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 		}
 	}
 	
+	@Override
 	public Object put(Object key, Object value) {
 		
 		SharedStoreLock ssl = null;
@@ -155,6 +157,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 	}
 	
 
+	@Override
 	public boolean containsKey(Object key) {
 		SharedStoreLock ssl = null;
 		if ( tribalSafe ) {
@@ -170,6 +173,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 		}
 	}
 	
+	@Override
 	public Object get(Object key) {
 
 		SharedStoreLock ssl = null;
@@ -186,6 +190,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 		}
 	}
 	
+	@Override
 	public void clear() {
 		clearLocal();
 		SharedTribalElement ste = new SharedTribalElement(getId(), null, null);
@@ -208,6 +213,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 		}
 	}
 	
+	@Override
 	public Object remove(Object key) {
 
 		SharedStoreLock ssl = null;

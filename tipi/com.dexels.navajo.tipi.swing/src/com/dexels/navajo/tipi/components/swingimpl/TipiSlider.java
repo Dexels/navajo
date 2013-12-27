@@ -30,6 +30,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 	public TipiSlider() {
 	}
 
+	@Override
 	public Object createContainer() {
 		mySlide = new TipiSwingSlider();
 
@@ -39,6 +40,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 
 		mySlide.addFocusListener(new FocusListener() {
 
+			@Override
 			public void focusGained(FocusEvent e) {
 				try {
 					performTipiEvent("onFocusGained", null, false);
@@ -49,6 +51,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 				}
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				try {
 					performTipiEvent("onFocusLost", null, false);
@@ -63,6 +66,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 
 		mySlide.addChangeListener(new ChangeListener() {
 
+			@Override
 			public void stateChanged(ChangeEvent e) {
 				try {
 					performTipiEvent("onValueChanged", null, false);
@@ -77,9 +81,11 @@ public class TipiSlider extends TipiSwingComponentImpl {
 		return mySlide;
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		if (name.equals("value")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					mySlide.setValue((Integer) object);
 				}
@@ -87,6 +93,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 		}
 		if (name.equals("min")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					mySlide.setMinimum((Integer) object);
 				}
@@ -94,6 +101,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 		}
 		if (name.equals("max")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					mySlide.setMaximum((Integer) object);
 				}
@@ -101,6 +109,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 		}
 		if (name.equals("orientation")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					String or = (String) object;
 					if ("horizontal".equals(or)) {
@@ -115,6 +124,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 		}
 		if (name.equals("snaptoticks")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					mySlide.setSnapToTicks((Boolean) object);
 				}
@@ -123,6 +133,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 
 		if (name.equals("showticks")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					mySlide.setPaintTicks((Boolean) object);
 				}
@@ -130,6 +141,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 		}
 		if (name.equals("minortick")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					mySlide.setMinorTickSpacing((Integer) object);
 				}
@@ -137,6 +149,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 		}
 		if (name.equals("majortick")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					mySlide.setMajorTickSpacing((Integer) object);
 				}
@@ -146,6 +159,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if (name.equals("value")) {
 			return mySlide.getValue();
@@ -153,6 +167,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	protected void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event)
 			throws TipiBreakException {

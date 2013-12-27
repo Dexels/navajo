@@ -258,10 +258,12 @@ public class GenericPropertyComponent extends JPanel {
 
 			private static final long serialVersionUID = -2232067207475872106L;
 
+			@Override
 			public void propertyChange(final PropertyChangeEvent evt) {
 				if (evt.getPropertyName().equals("description")) {
 					runSyncInEventThread(new Runnable() {
 
+						@Override
 						public void run() {
 							setLabel((String) evt.getNewValue());
 						}
@@ -270,6 +272,7 @@ public class GenericPropertyComponent extends JPanel {
 				else if (evt.getPropertyName().equals("subType")) {
 					runSyncInEventThread(new Runnable() {
 
+						@Override
 						public void run() {
 							setLabel(myProperty.getDescription());
 						}
@@ -319,6 +322,7 @@ public class GenericPropertyComponent extends JPanel {
 		setPropFlag = false;
 	}
 
+	@Override
 	public void requestFocus() {
 		if (currentComponent != null) {
 			currentComponent.requestFocus();
@@ -326,6 +330,7 @@ public class GenericPropertyComponent extends JPanel {
 
 	}
 
+	@Override
 	public boolean requestFocusInWindow() {
 		if (currentComponent != null) {
 			return currentComponent.requestFocusInWindow();
@@ -441,6 +446,7 @@ public class GenericPropertyComponent extends JPanel {
 
 	public final void setVerticalLabelAlignment(final int alignment) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				valign = alignment;
 				if (getLabel() != null) {
@@ -474,6 +480,7 @@ public class GenericPropertyComponent extends JPanel {
 
 	public final void setHorizontalLabelAlignment(final int alignment) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				halign = alignment;
 				if (getLabel() != null) {
@@ -485,6 +492,7 @@ public class GenericPropertyComponent extends JPanel {
 
 	public final void setCheckBoxLabelPosition(final int alignment) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				if (myCheckBox != null) {
 					myCheckBox.setHorizontalTextPosition(alignment);
@@ -839,6 +847,7 @@ public class GenericPropertyComponent extends JPanel {
 
 		if (!addedCustomListeners) {
 			c.addFocusListener(new FocusAdapter() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					for (int i = 0; i < focusListeners.size(); i++) {
 						FocusListener fl = focusListeners.get(i);
@@ -846,6 +855,7 @@ public class GenericPropertyComponent extends JPanel {
 					}
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					for (int i = 0; i < focusListeners.size(); i++) {
 						FocusListener fl = focusListeners.get(i);
@@ -893,6 +903,7 @@ public class GenericPropertyComponent extends JPanel {
 		}
 	}
 
+	@Override
 	public void setFocusable(boolean b) {
 		isFocusable = b;
 		setRequestFocusEnabled(b);
@@ -911,15 +922,18 @@ public class GenericPropertyComponent extends JPanel {
 			// }
 			// });
 			myBox.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					myBox_focusGained(e);
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					myBox_focusLost(e);
 				}
 			});
 			myBox.addItemListener(new java.awt.event.ItemListener() {
+				@Override
 				public void itemStateChanged(ItemEvent e) {
 					myBox_itemStateChanged(e);
 				}
@@ -934,6 +948,7 @@ public class GenericPropertyComponent extends JPanel {
 			myMultipleList = new MultipleSelectionPropertyList();
 			myMultipleList
 					.addListSelectionListener(new ListSelectionListener() {
+						@Override
 						public void valueChanged(ListSelectionEvent e) {
 							myMultipleList_valueChanged(e);
 						}
@@ -960,6 +975,7 @@ public class GenericPropertyComponent extends JPanel {
 		if (myMultiple == null) {
 			myMultiple = new MultipleSelectionPropertyCheckboxGroup();
 			myMultiple.addCheckboxListener(new ItemListener() {
+				@Override
 				public void itemStateChanged(ItemEvent e) {
 					fireTipiEvent("onValueChanged");
 				}
@@ -1004,20 +1020,24 @@ public class GenericPropertyComponent extends JPanel {
 			myCheckBox = new PropertyCheckBox();
 			addPropertyComponent(myCheckBox);
 			myCheckBox.addActionListener(new java.awt.event.ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					myCheckBox_actionPerformed(e);
 				}
 			});
 			myCheckBox.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					myCheckBox_focusGained(e);
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					myCheckBox_focusLost(e);
 				}
 			});
 			myCheckBox.addItemListener(new java.awt.event.ItemListener() {
+				@Override
 				public void itemStateChanged(ItemEvent e) {
 					myCheckBox_itemStateChanged(e);
 				}
@@ -1036,15 +1056,18 @@ public class GenericPropertyComponent extends JPanel {
 		if (myIntField == null) {
 			myIntField = new IntegerPropertyField();
 			myIntField.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					myField_focusGained(e);
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					myField_focusLost(e);
 				}
 			});
 			myIntField.addActionListener(new java.awt.event.ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					myField_actionPerformed(e);
 				}
@@ -1058,15 +1081,18 @@ public class GenericPropertyComponent extends JPanel {
 		if (myIntField == null) {
 			myIntField = new IntegerPropertyField(true);
 			myIntField.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					myField_focusGained(e);
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					myField_focusLost(e);
 				}
 			});
 			myIntField.addActionListener(new java.awt.event.ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					myField_actionPerformed(e);
 				}
@@ -1081,15 +1107,18 @@ public class GenericPropertyComponent extends JPanel {
 		if (myFloatField == null) {
 			myFloatField = new FloatPropertyField();
 			myFloatField.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					myField_focusGained(e);
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					myField_focusLost(e);
 				}
 			});
 			myFloatField.addActionListener(new java.awt.event.ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					myField_actionPerformed(e);
 				}
@@ -1104,15 +1133,18 @@ public class GenericPropertyComponent extends JPanel {
 			myDateField = new DatePropertyField();
 			myDateField.setShowCalendarPickerButton(showDatePicker);
 			myDateField.addActionListener(new java.awt.event.ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					myDateField_actionPerformed(e);
 				}
 			});
 			myDateField.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					myDateField_focusGained(e);
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					myDateField_focusLost(e);
 				}
@@ -1127,15 +1159,18 @@ public class GenericPropertyComponent extends JPanel {
 			myField = new TextPropertyField();
 
 			myField.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					myField_focusGained(e);
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					myField_focusLost(e);
 				}
 			});
 			myField.addActionListener(new java.awt.event.ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					myField_actionPerformed(e);
 				}
@@ -1156,15 +1191,18 @@ public class GenericPropertyComponent extends JPanel {
 			myURIField = new URIPropertyField();
 
 			myURIField.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					myURIField_focusGained(e);
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					myURIField_focusLost(e);
 				}
 			});
 			myURIField.addActionListener(new java.awt.event.ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					myURIField_actionPerformed(e);
 				}
@@ -1179,16 +1217,19 @@ public class GenericPropertyComponent extends JPanel {
 		if (myPasswordField == null) {
 			myPasswordField = new PropertyPasswordField();
 			myPasswordField.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					myPasswordField_focusGained(e);
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					myPasswordField_focusLost(e);
 				}
 			});
 			myPasswordField
 					.addActionListener(new java.awt.event.ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							myPasswordField_actionPerformed(e);
 						}
@@ -1202,16 +1243,19 @@ public class GenericPropertyComponent extends JPanel {
 		if (myHiddenField == null) {
 			myHiddenField = new PropertyHiddenField();
 			myHiddenField.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					myPasswordField_focusGained(e);
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					myPasswordField_focusLost(e);
 				}
 			});
 			myHiddenField
 					.addActionListener(new java.awt.event.ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							myPasswordField_actionPerformed(e);
 						}
@@ -1225,15 +1269,18 @@ public class GenericPropertyComponent extends JPanel {
 		if (myMoneyField == null) {
 			myMoneyField = new MoneyField();
 			myMoneyField.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
 				public void focusGained(FocusEvent e) {
 					myMoneyField_focusGained(e);
 				}
 
+				@Override
 				public void focusLost(FocusEvent e) {
 					myMoneyField_focusLost(e);
 				}
 			});
 			myMoneyField.addActionListener(new java.awt.event.ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					myMoneyField_actionPerformed(e);
 				}
@@ -1271,10 +1318,12 @@ public class GenericPropertyComponent extends JPanel {
 		if (myRadioButtonField == null) {
 			myRadioButtonField = new PropertyRadioSelection(
 					new java.awt.event.FocusAdapter() {
+						@Override
 						public final void focusGained(FocusEvent e) {
 							myRadioButtonField_focusGained(e);
 						}
 
+						@Override
 						public final void focusLost(FocusEvent e) {
 							myRadioButtonField_focusLost(e);
 						}
@@ -1288,6 +1337,7 @@ public class GenericPropertyComponent extends JPanel {
 
 			myRadioButtonField
 					.addActionListener(new java.awt.event.ActionListener() {
+						@Override
 						public final void actionPerformed(ActionEvent e) {
 							myRadioButtonField_actionPerformed(e);
 						}
@@ -1306,16 +1356,19 @@ public class GenericPropertyComponent extends JPanel {
 			myClockTimeField = new ClockTimeField();
 			myClockTimeField
 					.addFocusListener(new java.awt.event.FocusAdapter() {
+						@Override
 						public final void focusGained(FocusEvent e) {
 							myClockTimeField_focusGained(e);
 						}
 
+						@Override
 						public final void focusLost(FocusEvent e) {
 							myClockTimeField_focusLost(e);
 						}
 					});
 			myClockTimeField
 					.addActionListener(new java.awt.event.ActionListener() {
+						@Override
 						public final void actionPerformed(ActionEvent e) {
 							myClockTimeField_actionPerformed(e);
 						}
@@ -1335,16 +1388,19 @@ public class GenericPropertyComponent extends JPanel {
 			myStopwatchTimeField = new StopwatchTimeField();
 			myStopwatchTimeField
 					.addFocusListener(new java.awt.event.FocusAdapter() {
+						@Override
 						public final void focusGained(FocusEvent e) {
 							myStopwatchTimeField_focusGained(e);
 						}
 
+						@Override
 						public final void focusLost(FocusEvent e) {
 							myStopwatchTimeField_focusLost(e);
 						}
 					});
 			myStopwatchTimeField
 					.addActionListener(new java.awt.event.ActionListener() {
+						@Override
 						public final void actionPerformed(ActionEvent e) {
 							myStopwatchTimeField_actionPerformed(e);
 						}
@@ -1358,10 +1414,12 @@ public class GenericPropertyComponent extends JPanel {
 		if (myMemoField == null) {
 			myMemoField = new PropertyTextArea();
 			myMemoField.addFocusListener(new java.awt.event.FocusAdapter() {
+				@Override
 				public final void focusGained(FocusEvent e) {
 					fireTipiEvent("onFocusGained");
 				}
 
+				@Override
 				public final void focusLost(FocusEvent e) {
 					fireTipiEvent("onFocusLost");
 					p.setValue(myMemoField.getText());
@@ -1399,6 +1457,7 @@ public class GenericPropertyComponent extends JPanel {
 		memoFieldScrollPane = new JScrollPane() {
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public Dimension getMinimumSize() {
 				return getPreferredSize();
 			}
@@ -1626,6 +1685,7 @@ public class GenericPropertyComponent extends JPanel {
 		firePropertyEvents(myProperty, type, true);
 	}
 
+	@Override
 	@SuppressWarnings("deprecation")
 	public void setEnabled(boolean value) {
 		if (myProperty != null) {
@@ -1751,6 +1811,7 @@ public class GenericPropertyComponent extends JPanel {
 		}
 	}
 
+	@Override
 	public final void setCursor(Cursor cursor) {
 		super.setCursor(cursor);
 		if (currentPropertyComponent != null) {
@@ -1855,6 +1916,7 @@ public class GenericPropertyComponent extends JPanel {
 	public void resetChanged() {
 	}
 
+	@Override
 	public final boolean hasFocus() {
 		if (currentComponent != null) {
 			return currentComponent.hasFocus();
@@ -1870,12 +1932,14 @@ public class GenericPropertyComponent extends JPanel {
 	// public Dimension getMinimumSize() {
 	// return getPreferredSize();
 	// }
+	@Override
 	public Dimension getMaximumSize() {
 		return new Dimension(super.getMaximumSize().width,
 				super.getMaximumSize().height);
 		// return super.getMaximumSize();
 	}
 
+	@Override
 	public Dimension getPreferredSize() {
 		// if (true) {
 		return limitTo(super.getPreferredSize(), getMaximumSize());
@@ -1962,6 +2026,7 @@ public class GenericPropertyComponent extends JPanel {
 	public void requestPropertyFocus() {
 		SwingUtilities.invokeLater(new Runnable() {
 
+			@Override
 			public void run() {
 				if (currentComponent != null) {
 					currentComponent.requestFocusInWindow();
@@ -2070,10 +2135,12 @@ public class GenericPropertyComponent extends JPanel {
 				Integer.MAX_VALUE));
 	}
 
+	@Override
 	public String getToolTipText() {
 		return toolTipText;
 	}
 
+	@Override
 	public void setToolTipText(String toolTipText) {
 		logger.info("Setting tooltiptext: " + toolTipText);
 		this.toolTipText = toolTipText;

@@ -12,6 +12,7 @@ public class FileSize extends FunctionInterface {
 	public FileSize() {
 	}
 	
+	@Override
 	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		
 		if (getOperand(0) == null) {
@@ -23,6 +24,7 @@ public class FileSize extends FunctionInterface {
 		return new Integer( (int) binaryFile.getLength());
     }
 	
+	@Override
 	public String remarks() {
 	    return "Get the filesize of supplied Binary object in bytes.";
 	}

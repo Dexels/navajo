@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -83,9 +82,11 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 	public TipiDialog() {
 	}
 
+	@Override
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				tp = new TipiSwingPanel(TipiDialog.this);
 				TipiHelper th = new TipiSwingHelper();
@@ -97,6 +98,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 		return tp;
 	}
 
+	@Override
 	public void instantiateComponent(XMLElement instance, XMLElement classdef)
 			throws TipiException {
 		super.instantiateComponent(instance, classdef);
@@ -104,8 +106,10 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 				new SerializablePropertyChangeListener() {
 					private static final long serialVersionUID = -6759912965035092081L;
 
+					@Override
 					public void propertyChange(final PropertyChangeEvent evt) {
 						runSyncInEventThread(new Runnable() {
+							@Override
 							public void run() {
 								setComponentValue("h", evt.getNewValue());
 							}
@@ -116,8 +120,10 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 				new SerializablePropertyChangeListener() {
 					private static final long serialVersionUID = -328558635748778593L;
 
+					@Override
 					public void propertyChange(final PropertyChangeEvent evt) {
 						runSyncInEventThread(new Runnable() {
+							@Override
 							public void run() {
 								setComponentValue("w", evt.getNewValue());
 							}
@@ -128,8 +134,10 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 				new SerializablePropertyChangeListener() {
 					private static final long serialVersionUID = 1768826439432626245L;
 
+					@Override
 					public void propertyChange(final PropertyChangeEvent evt) {
 						runSyncInEventThread(new Runnable() {
+							@Override
 							public void run() {
 								setComponentValue("x", evt.getNewValue());
 							}
@@ -140,8 +148,10 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 				new SerializablePropertyChangeListener() {
 					private static final long serialVersionUID = 6549320305985952129L;
 
+					@Override
 					public void propertyChange(final PropertyChangeEvent evt) {
 						runSyncInEventThread(new Runnable() {
+							@Override
 							public void run() {
 								setComponentValue("y", evt.getNewValue());
 							}
@@ -166,6 +176,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 
 	protected void createWindowListener(final JDialog d) {
 		d.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				// logger.debug("Dialog closing");
 				// logger.debug("Defaultop: "+d.getDefaultCloseOperation()+" : "+JDialog.DO_NOTHING_ON_CLOSE+" :: "+JDialog.DISPOSE_ON_CLOSE+" ::: "+JDialog.HIDE_ON_CLOSE);
@@ -186,6 +197,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 				}
 			}
 
+			@Override
 			public void windowClosed(WindowEvent e) {
 				// logger.debug("Dialog closed");
 				// dialog_windowClosing();
@@ -198,6 +210,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 		// d.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		d.addInternalFrameListener(new InternalFrameAdapter() {
 
+			@Override
 			public void internalFrameClosing(InternalFrameEvent e) {
 				// logger.debug("Dialog closing");
 				try {
@@ -229,9 +242,11 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 	// public void removeFromContainer(Object c) {
 	// getSwingContainer().remove( (Component) c);
 	// }
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				if (name.equals("modal")) {
 					modal = ((Boolean) object).booleanValue();
@@ -300,6 +315,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		/** @todo Override this com.dexels.navajo.tipi.impl.DefaultTipi method */
 		if ("isShowing".equals(name)) {
@@ -330,9 +346,11 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	public void disposeComponent() {
 
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				if (getDialogContainer() != null) {
 					if (getDialogContainer() instanceof JDialog) {
@@ -555,6 +573,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 		return myBounds;
 	}
 
+	@Override
 	protected void helperRegisterEvent(TipiEvent te) {
 		if (te != null && te.getEventName().equals("onWindowClosed")) {
 			// overridden.. should be ok.
@@ -563,6 +582,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 		}
 	}
 
+	@Override
 	protected synchronized void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event)
 			throws TipiBreakException {
@@ -573,6 +593,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 		if (name.equals("show")) {
 			// logger.debug("ENTERING SHOW\n=================");
 			SwingUtilities.invokeLater(new Runnable() {
+				@Override
 				public void run() {
 					setValue("x", myBoundsByDefinition.x);
 					setValue("y", myBoundsByDefinition.y);
@@ -672,6 +693,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 		}
 		if (name.equals("hide")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					// logger.debug("Hiding dialog!!!\n\n\n\n");
 					if (getDialogContainer() != null
@@ -706,6 +728,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 		if (name.equals("dispose")) {
 			runSyncInEventThread(new Runnable() {
 
+				@Override
 				public void run() {
 					// logger.debug("Hide dialog: Disposing dialog!");
 					if (getDialogContainer() != null) {
@@ -773,6 +796,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 
 	// public void setContainerVisible(boolean b) {
 	// }
+	@Override
 	public void reUse() {
 	}
 

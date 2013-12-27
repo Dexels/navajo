@@ -20,6 +20,7 @@ public class TipiShowWarning extends TipiAction {
 	 */
 	private static final long serialVersionUID = 2254358585459295325L;
 
+	@Override
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

@@ -40,10 +40,12 @@ public class Base64Encode extends FunctionInterface {
 	private final static Logger logger = LoggerFactory
 			.getLogger(Base64Encode.class);
 	
+	@Override
 	public String remarks() {
 		return "Get a Base64 representation of a given string or binary(deprecated).";
 	}
 
+	@Override
 	public String usage() {
 		return "Base64Encode(Binary|String)";
 	}
@@ -51,6 +53,7 @@ public class Base64Encode extends FunctionInterface {
     // I think this function does not work when you pass a Binary into it.
     // It is a bit pointless anyway, it is more like a 'clone' then.
 
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		Object o = getOperand(0);
 		String data = null;

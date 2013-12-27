@@ -3,10 +3,7 @@ package com.dexels.navajo.server.listener.http.impl;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -144,6 +141,7 @@ public class BaseRequestImpl implements AsyncRequest {
 		return in;
 	}
 
+	@Override
 	public ClientInfo createClientInfo(long scheduledAt, long startedAt,
 			int queueLength, String queueId) {
 		ClientInfo clientInfo = new ClientInfo(
@@ -167,6 +165,7 @@ public class BaseRequestImpl implements AsyncRequest {
 		return cert;
 	}
 
+	@Override
 	public void writeOutput(Navajo inDoc, Navajo outDoc,long scheduledAt, long startedAt, String threadStatus) throws IOException,
 			FileNotFoundException, UnsupportedEncodingException,
 			NavajoException {

@@ -10,6 +10,7 @@ public class ServerTooBusyEvent implements NavajoEvent {
 	 */
 	private static final long serialVersionUID = 7547786342264688745L;
 
+	@Override
 	public Navajo getEventNavajo() {
 		// TODO Auto-generated method stub
 		return null;

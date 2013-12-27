@@ -105,7 +105,8 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
   /**
    * Start the main AsyncStore loop.
    */
-  public final void worker() {
+  @Override
+public final void worker() {
 	  
 	  synchronized (instance) {
 		  Set<String> s = new HashSet<String>(objectStore.keySet());
@@ -193,11 +194,13 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 	  }
   }
   
-  public String getVERSION() {
+  @Override
+public String getVERSION() {
 	  return VERSION;
   }
   
-  public int getStoreSize() {
+  @Override
+public int getStoreSize() {
 	  return objectStore.size();
   }
   

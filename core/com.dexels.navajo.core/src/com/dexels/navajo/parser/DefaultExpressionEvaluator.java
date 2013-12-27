@@ -48,11 +48,13 @@ public final class DefaultExpressionEvaluator
   }
 
 
-  public final Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException {
+  @Override
+public final Operand evaluate(String clause, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException {
 	  return evaluate(clause, inMessage, mappableTreeNode, parent, null);
   }
   
-  public final Operand evaluate(String clause, Navajo inMessage,
+  @Override
+public final Operand evaluate(String clause, Navajo inMessage,
                                 Object mappableTreeNode, Message parent, Message currentParam) throws
       NavajoException {
     if (parent != null) {
@@ -69,7 +71,8 @@ public final class DefaultExpressionEvaluator
     }
   }
 
-  public final Operand evaluate(String clause, Navajo inMessage) throws
+  @Override
+public final Operand evaluate(String clause, Navajo inMessage) throws
       NavajoException {
     try {
       return Expression.evaluate(clause, inMessage);
@@ -81,7 +84,8 @@ public final class DefaultExpressionEvaluator
     }
   }
 
-  public Message match(String matchString, Navajo inMessage,
+  @Override
+public Message match(String matchString, Navajo inMessage,
                        Object mappableTreeNode, Message parent) throws
       NavajoException {
     try {
@@ -211,7 +215,8 @@ public final class DefaultExpressionEvaluator
     return refreshQueue;
   }
 
-  public final List<Property> processRefreshQueue(Map<Property,List<Property>> depMap) throws NavajoException {
+  @Override
+public final List<Property> processRefreshQueue(Map<Property,List<Property>> depMap) throws NavajoException {
 //    printStamp("Before processRefreshQueue: ");
     List<Property> updateQueue = createUpdateQueue(depMap);
     return processRefreshQueue(updateQueue);
@@ -254,7 +259,8 @@ public final class DefaultExpressionEvaluator
     return original;
   }
 
-  public Map<Property,List<Property>> createDependencyMap(Navajo n) throws NavajoException {
+  @Override
+public Map<Property,List<Property>> createDependencyMap(Navajo n) throws NavajoException {
     List<Property> l = getExpressionList(n);
     Map<Property,List<Property>> mm = getExpressionDependencyMap(n, l);
     return mm;
@@ -481,7 +487,8 @@ public final class DefaultExpressionEvaluator
 
   }
 
-  public ClassLoader getScriptClassLoader() {
+  @Override
+public ClassLoader getScriptClassLoader() {
 	  return DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
   }
 

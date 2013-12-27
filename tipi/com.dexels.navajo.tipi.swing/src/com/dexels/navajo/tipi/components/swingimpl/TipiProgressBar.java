@@ -30,6 +30,7 @@ public class TipiProgressBar extends TipiSwingComponentImpl {
 	private static final long serialVersionUID = -3330147644343514894L;
 	private TipiSwingProgressBar myProgressBar = null;
 
+	@Override
 	public Object createContainer() {
 		myProgressBar = new TipiSwingProgressBar();
 		myProgressBar.setMinimum(0);
@@ -42,13 +43,16 @@ public class TipiProgressBar extends TipiSwingComponentImpl {
 		return myProgressBar;
 	}
 
+	@Override
 	public Object getContainer() {
 		return myProgressBar;
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		if (name.equals("text")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					myProgressBar.setString((String) object);
 				}
@@ -57,6 +61,7 @@ public class TipiProgressBar extends TipiSwingComponentImpl {
 		}
 		if (name.equals("value")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					int value = (int) Float.parseFloat("" + object);
 					myProgressBar.setValue(value);
@@ -67,6 +72,7 @@ public class TipiProgressBar extends TipiSwingComponentImpl {
 		}
 		if (name.equals("orientation")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					String or = (String) object;
 					if ("horizontal".equals(or)) {
@@ -81,6 +87,7 @@ public class TipiProgressBar extends TipiSwingComponentImpl {
 		}
 		if (name.equals("indeterminate")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					myProgressBar.setIndeterminate(((Boolean) object)
 							.booleanValue());
@@ -95,6 +102,7 @@ public class TipiProgressBar extends TipiSwingComponentImpl {
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if (name.equals("text")) {
 			return myProgressBar.getString();

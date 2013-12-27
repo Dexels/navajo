@@ -27,8 +27,10 @@ public class TipiTabDock extends TipiDataComponentImpl {
 	
 	TabDock myTabDock;
 
+	@Override
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				myTabDock = new TabDock();				
 			}
@@ -44,6 +46,7 @@ public class TipiTabDock extends TipiDataComponentImpl {
 		}
 		final int intConstr = Integer.parseInt(constr);
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				TipiDockable td = (TipiDockable)c;
 				Dockable dockable = new DefaultDockable(c.hashCode() + "", (Component) c, td.getTitle(), new ImageIcon(td.getIcon()), (DockingMode.ALL - DockingMode.FLOAT) );

@@ -16,6 +16,7 @@ public class GeoPoint extends GeoElement {
 		this.lon = lon;
 	}
 	
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -33,6 +34,7 @@ public class GeoPoint extends GeoElement {
 			this.lat = Double.parseDouble(latString);
 	}
 	
+	@Override
 	public String toString() {
 
 		if(id!=null) {
@@ -47,6 +49,7 @@ public class GeoPoint extends GeoElement {
 		return sss;
 	}
 
+	@Override
 	public XMLElement createElement() {
 		return createElement(null);
 	}
@@ -62,6 +65,7 @@ public class GeoPoint extends GeoElement {
 		}
 		return c;
 	}
+	@Override
 	public XMLElement createPlaceMark() {
 		XMLElement c = new CaseSensitiveXMLElement("Placemark");
 		c.setAttribute("id", id);
@@ -86,6 +90,7 @@ public class GeoPoint extends GeoElement {
 	
 
 	
+	@Override
 	public boolean equals(Object o) {
 		if(!(o instanceof GeoPoint)) {
 			return false;

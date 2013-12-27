@@ -51,6 +51,7 @@ public class TipiSwingTextField extends JTextField implements TipiDndCapable {
 		super.setText(t);
 	}
 
+	@Override
 	public TipiDndManager getDndManager() {
 		return myDndManager;
 	}

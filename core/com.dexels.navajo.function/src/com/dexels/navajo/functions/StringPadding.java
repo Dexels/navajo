@@ -12,11 +12,13 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class StringPadding extends FunctionInterface {
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "This function ads whitespace (spaces) to a string until it has the specified size";
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     	
     	if (this.getOperands().size() < 2) {
     		throw new TMLExpressionException(this, "Wrong number of arguments");
@@ -57,7 +59,8 @@ public class StringPadding extends FunctionInterface {
         return object;
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "StringPadding( String Object, Integer PadToSize, [String PaddingChar (default (' ')], [boolean Post/Pre (default 0)] )";
     }
 

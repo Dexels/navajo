@@ -22,10 +22,6 @@
          version="0.0.0"/>
 
    <includes
-         id="com.dexels.navajo.tipi.dev.feature"
-         version="0.0.0"/>
-
-   <includes
          id="com.dexels.navajo.tipi.echo.feature"
          version="0.0.0"/>
 
@@ -41,16 +37,8 @@
          id="com.dexels.navajo.tipi.jabber.feature"
          version="0.0.0"/>
 
-  <!-- <includes
-         id="com.dexels.navajo.tipi.jogl.feature"
-         version="0.0.0"/>
-	-->
    <includes
          id="com.dexels.navajo.tipi.mail.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="com.dexels.navajo.tipi.rcp.feature"
          version="0.0.0"/>
 
    <includes
@@ -109,9 +97,4 @@
          id="com.dexels.navajo.tipi.jcr.feature"
          version="0.0.0"/>
 
-<!--
-   <includes
-         id="com.dexels.navajo.tipi.swing.rdf.feature"
-         version="0.0.0"/>
--->
 </feature>

@@ -41,6 +41,7 @@ public class ServiceRequest extends Request {
 		this.skipAuthorization = skipAuthorization;
 	}
 	
+	@Override
 	public Answer getAnswer() {
 		
 		String origin = getRequest().getHeader().getHeaderAttribute("origin");

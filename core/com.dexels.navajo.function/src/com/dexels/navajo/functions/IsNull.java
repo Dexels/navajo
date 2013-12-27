@@ -16,11 +16,13 @@ import com.dexels.navajo.parser.FunctionInterface;
 public class IsNull extends FunctionInterface {
   public IsNull() {
   }
-  public String remarks() {
+  @Override
+public String remarks() {
     /**@todo Implement this com.dexels.navajo.parser.FunctionInterface abstract method*/
     return "Will return true if the supplied argument is null, false otherwise";
   }
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object arg = this.getOperands().get(0);
     if (arg==null) {
         return Boolean.TRUE;
@@ -31,7 +33,8 @@ public class IsNull extends FunctionInterface {
     }
     return Boolean.FALSE;
   }
-  public String usage() {
+  @Override
+public String usage() {
     return "IsNull( <argument>)";
   }
 

@@ -45,6 +45,7 @@ public class TipiCookieStorageManager implements TipiStorageManager {
 
 	}
 
+	@Override
 	public Navajo getStorageDocument(String id) throws TipiException {
 		FileContents fc;
 		try {
@@ -62,6 +63,7 @@ public class TipiCookieStorageManager implements TipiStorageManager {
 		}
 	}
 
+	@Override
 	public void setInstanceId(String id) {
 		// ignoring?
 	}
@@ -75,6 +77,7 @@ public class TipiCookieStorageManager implements TipiStorageManager {
 		return id;
 	}
 
+	@Override
 	public void setStorageDocument(String id, Navajo n) throws TipiException {
 		try {
 			id = cleanUpId(id);
@@ -104,6 +107,7 @@ public class TipiCookieStorageManager implements TipiStorageManager {
 		}
 	}
 
+	@Override
 	public void setContext(TipiContext tc) {
 //		myContext = tc;
 	}

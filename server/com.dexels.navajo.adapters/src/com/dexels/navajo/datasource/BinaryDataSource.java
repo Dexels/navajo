@@ -25,22 +25,26 @@ public class BinaryDataSource implements DataSource {
 
   
 
-    public InputStream getInputStream() throws IOException {
+    @Override
+	public InputStream getInputStream() throws IOException {
         if (m_data == null) {
             throw new IOException("no data");
         }
         return m_data.getDataAsStream();
     }
 
-    public OutputStream getOutputStream() throws IOException {
+    @Override
+	public OutputStream getOutputStream() throws IOException {
         throw new IOException("not implemented");
     }
 
-    public String getContentType() {
+    @Override
+	public String getContentType() {
         return m_data.getMimeType();
     }
 
-    public String getName() {
+    @Override
+	public String getName() {
         return m_name;
     }
 }

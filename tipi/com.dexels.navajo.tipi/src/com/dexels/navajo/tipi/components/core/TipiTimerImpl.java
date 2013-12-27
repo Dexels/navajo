@@ -51,6 +51,7 @@ public class TipiTimerImpl extends TipiHeadlessComponentImpl implements
 		t = null;
 	}
 
+	@Override
 	public void run() {
 		while (isRunning) {
 			try {
@@ -64,6 +65,7 @@ public class TipiTimerImpl extends TipiHeadlessComponentImpl implements
 		t = null;
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		if (name.equals("interval")) {
 			if (object instanceof Integer) {

@@ -42,10 +42,12 @@ public abstract class TipiQuestionList extends TipiBaseQuestionList {
 	public TipiQuestionList() {
 	}
 
+	@Override
 	protected Object getGroupConstraints(Message groupMessage) {
 		return null;
 	}
 
+	@Override
 	public void runSyncInEventThread(Runnable r) {
 		if (SwingUtilities.isEventDispatchThread()) {
 			r.run();

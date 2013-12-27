@@ -9,6 +9,7 @@ public class TipiParser extends BaseTipiParser {
 	public TipiParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return getTipiByPath(source, expression);
 	}

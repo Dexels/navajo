@@ -27,6 +27,7 @@ public class TipiEmailLauncher extends TipiSwingDataComponentImpl {
 			.getLogger(TipiEmailLauncher.class);
 	private Message recipient = null;
 
+	@Override
 	protected void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event) {
 
@@ -91,6 +92,7 @@ public class TipiEmailLauncher extends TipiSwingDataComponentImpl {
 		}
 	}
 
+	@Override
 	public Object createContainer() {
 		return null;
 	}

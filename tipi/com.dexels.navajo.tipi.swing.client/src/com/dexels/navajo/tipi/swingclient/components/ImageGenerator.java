@@ -70,6 +70,7 @@ public class ImageGenerator implements ImageConsumer {
 	 *            Consuming of a single jpg image returns for example
 	 *            SINGLEFRAMEDONE.
 	 */
+	@Override
 	public void imageComplete(int status) {
 		// if(status == STATICIMAGEDONE ||
 		// status == IMAGEABORTED ||
@@ -91,6 +92,7 @@ public class ImageGenerator implements ImageConsumer {
 	 * @param model
 	 *            The model to use
 	 */
+	@Override
 	public void setColorModel(ColorModel model) {
 		colorModel = model;
 		createImage();
@@ -104,6 +106,7 @@ public class ImageGenerator implements ImageConsumer {
 	 * @param h
 	 *            The height of the source image
 	 */
+	@Override
 	public void setDimensions(int w, int h) {
 		width = w;
 		height = h;
@@ -117,6 +120,7 @@ public class ImageGenerator implements ImageConsumer {
 	 * @param flags
 	 *            The hints
 	 */
+	@Override
 	public void setHints(int flags) {
 	}
 
@@ -139,6 +143,7 @@ public class ImageGenerator implements ImageConsumer {
 	 * @param scansize
 	 *            The number of pixel values between rows
 	 */
+	@Override
 	public void setPixels(int x, int y, int w, int h, ColorModel model,
 			byte[] pixels, int offset, int scansize) {
 		if ((intBuffer == null) || (pixels.length > intBuffer.length))
@@ -169,6 +174,7 @@ public class ImageGenerator implements ImageConsumer {
 	 * @param scansize
 	 *            The number of pixel values between rows
 	 */
+	@Override
 	public void setPixels(int x, int y, int w, int h, ColorModel model,
 			int[] pixels, int offset, int scansize) {
 		image.setRGB(x, y, w, h, pixels, offset, scansize);
@@ -180,6 +186,7 @@ public class ImageGenerator implements ImageConsumer {
 	 * @param props
 	 *            The map of properties for this image
 	 */
+	@Override
 	public void setProperties(Hashtable<?, ?> props) {
 		// properties = props;
 		createImage();

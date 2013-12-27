@@ -16,7 +16,6 @@ import com.dexels.navajo.tipi.actions.TipiInstantiateTipi;
 import com.dexels.navajo.tipi.vaadin.document.CompositeArrayContainer;
 import com.dexels.navajo.tipi.vaadin.document.CompositeMessageBridge;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Table;
@@ -113,7 +112,8 @@ public class TipiDynamicTable extends TipiMessagePanel  {
         table.addGeneratedColumn("message", new Table.ColumnGenerator() {
             private static final long serialVersionUID = 1L;
 
-            public Component generateCell(Table source, final Object itemId, Object columnId) {
+            @Override
+			public Component generateCell(Table source, final Object itemId, Object columnId) {
             	
             		CompositeMessageBridge item = (CompositeMessageBridge) source.getContainerDataSource().getItem(itemId);
             		Map<String, Object> eventParams = new HashMap<String, Object>();
@@ -174,6 +174,7 @@ public class TipiDynamicTable extends TipiMessagePanel  {
 		super.setComponentValue(name, object);
 	}
 	
+	@Override
 	public Object getComponentValue(String name) {
 		if ("selectedMessage".equals(name)) {
 			return getSelectedMessage();

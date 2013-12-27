@@ -28,11 +28,13 @@ import com.dexels.navajo.server.SystemException;
 public class SumProperties
     extends FunctionInterface {
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Sums all properties in an array message";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.
       TMLExpressionException {
 
     if (getOperands().size() < 2) {
@@ -161,7 +163,8 @@ public class SumProperties
     }
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "SumProperties(<Array message name>,<Property name>[,<filter>])";
   }
 

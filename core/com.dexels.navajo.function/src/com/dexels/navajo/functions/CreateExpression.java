@@ -22,7 +22,8 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class CreateExpression extends FunctionInterface {
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Create a Navajo expression from a string that only contains text and property references";
   }
 
@@ -31,7 +32,8 @@ public class CreateExpression extends FunctionInterface {
    * @return
    * @throws com.dexels.navajo.parser.TMLExpressionException
    */
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
     String input = (String) getOperand(0);
     StringBuffer expression = new StringBuffer(input.length());
@@ -64,7 +66,8 @@ public class CreateExpression extends FunctionInterface {
     return expression.toString();
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "CreateExpression(String)";
   }
 

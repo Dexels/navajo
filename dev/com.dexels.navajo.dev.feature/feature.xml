@@ -2,7 +2,7 @@
 <feature
       id="com.dexels.navajo.dev.feature"
       label="Navajo Development Plugin"
-      version="2.0.6.qualifier"
+      version="2.0.7.qualifier"
       provider-name="Dexels">
 
    <description url="http://www.example.com/description">
@@ -24,76 +24,6 @@
 
    <plugin
          id="com.dexels.navajo.birt.push"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.tipi.swt.client"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.dev.script"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.dsl.expression"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.dsl.expression.model"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.dsl.expression.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.dsl.integration"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.dsl.navajomanager"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.dsl.tsl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.dsl.tsl.model"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.dexels.navajo.dsl.tsl.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

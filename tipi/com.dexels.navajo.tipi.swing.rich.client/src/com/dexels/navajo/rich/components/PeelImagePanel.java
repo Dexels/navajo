@@ -58,11 +58,13 @@ public class PeelImagePanel extends JPanel {
 
 		addMouseMotionListener(new MouseMotionListener() {
 
+			@Override
 			public void mouseDragged(MouseEvent e) {
 				peelLoc = e.getPoint();
 				repaint();
 			}
 
+			@Override
 			public void mouseMoved(MouseEvent e) {
 				if (isAnimating) {
 					return;
@@ -93,10 +95,12 @@ public class PeelImagePanel extends JPanel {
 		});
 
 		addMouseListener(new MouseAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				isDragging = true;
 			}
 
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				isDragging = false;
 				if (!isAnimating) {
@@ -218,6 +222,7 @@ public class PeelImagePanel extends JPanel {
 	}
 
 
+	@Override
 	public void paint(Graphics g) {
 
 		Rectangle bnds = getBounds();
@@ -349,6 +354,7 @@ public class PeelImagePanel extends JPanel {
 		isAnimating = true;
 		Animator anim = PropertySetter.createAnimator(duration, PeelImagePanel.this, "peelFactor", 0.0, 1.0);
 		anim.addTarget(new TimingTargetAdapter() {
+			@Override
 			public void end() {
 				isAnimating = false;
 				isPeeling = false;

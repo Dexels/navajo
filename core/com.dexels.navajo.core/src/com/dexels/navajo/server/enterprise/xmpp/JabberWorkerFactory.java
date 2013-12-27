@@ -5,7 +5,6 @@ import java.util.logging.Level;
 
 import navajocore.Version;
 
-import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -79,6 +79,7 @@ public abstract class BaseComboBox extends JComboBox {
 		long lastKeyTime = 0;
 		String pattern = "";
 
+		@Override
 		public int selectionForKey(char aKey, ComboBoxModel model) {
 			int selIx = 01;
 			Object sel = model.getSelectedItem();

@@ -20,14 +20,17 @@ public class SimpleScheduler implements Scheduler {
 		return true;
 	}
 
+	@Override
 	public String getSchedulingStatus() {
 		return "SimpleScheduler: " + normalPool.getActiveRequestCount() + "/" + normalPool.getMaximumActiveRequestCount() + " (" + normalPool.getQueueSize() + ")";
 	}
 
+	@Override
 	public int getTimeout() {
 		return 0;
 	}
 
+	@Override
 	public void run(TmlRunnable myRunner) {
 		myRunner.run();
 	}
@@ -36,14 +39,17 @@ public class SimpleScheduler implements Scheduler {
 //	public void runFinished(TmlRunnable tr) {
 //	}
 
+	@Override
 	public void shutdownScheduler() {
 	}
 
+	@Override
 	public void submit(TmlRunnable myRunner, boolean priority)
 			throws IOException {
 		normalPool.submit(myRunner);
 	}
 
+	@Override
 	public RequestQueue getDefaultQueue() {
 		return normalPool;
 	}

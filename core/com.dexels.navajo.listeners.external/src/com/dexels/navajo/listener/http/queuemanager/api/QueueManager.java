@@ -2,9 +2,6 @@ package com.dexels.navajo.listener.http.queuemanager.api;
 
 import java.io.File;
 
-import com.dexels.navajo.listener.http.queuemanager.api.InputContext;
-import com.dexels.navajo.listener.http.queuemanager.api.QueueContext;
-
 public interface QueueManager {
 
 	public void setScriptDir(File scriptDir);

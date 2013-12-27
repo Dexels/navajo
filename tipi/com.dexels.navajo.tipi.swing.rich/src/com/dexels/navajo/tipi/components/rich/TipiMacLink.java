@@ -10,6 +10,7 @@ public class TipiMacLink extends TipiButton {
 	private static final long serialVersionUID = 1758966176003009568L;
 	private MacLink myButton;
 
+	@Override
 	public Object createContainer() {
 		myButton = new MacLink();
 		TipiHelper th = new TipiSwingHelper();

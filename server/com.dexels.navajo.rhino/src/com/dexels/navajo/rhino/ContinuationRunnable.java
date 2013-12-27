@@ -192,6 +192,7 @@ public class ContinuationRunnable extends BasicRunnable implements TmlRunnable {
 
 
 
+	@Override
 	public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException,
 			FileNotFoundException, UnsupportedEncodingException,
 			NavajoException {

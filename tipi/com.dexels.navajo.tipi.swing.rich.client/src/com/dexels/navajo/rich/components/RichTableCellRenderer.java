@@ -19,6 +19,7 @@ public class RichTableCellRenderer implements TableCellRenderer {
 		component.setForeground(Color.white);
 	}
 
+	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
 		if (isSelected) {

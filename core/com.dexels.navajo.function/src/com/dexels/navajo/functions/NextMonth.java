@@ -19,15 +19,18 @@ public final class NextMonth extends FunctionInterface {
 
     public NextMonth() {}
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Get the next month as a date object, where supplied integer is an offset for the current year.";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "NextMonth(Integer)";
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
         java.util.Date datum = new java.util.Date();
         Calendar c = Calendar.getInstance();

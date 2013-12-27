@@ -57,6 +57,7 @@ public class TipiValue implements Serializable {
 	// / private Object rawValue = null;
 
 	// private XMLElement myXml = null;
+	@Override
 	public Object clone() {
 		TipiValue tv = new TipiValue(this.myComponent);
 		tv.name = this.name;
@@ -144,6 +145,7 @@ public class TipiValue implements Serializable {
 		return null;
 	}
 
+	@Override
 	public String toString() {
 		// if (myXml!=null) {
 		// return myXml.toString();

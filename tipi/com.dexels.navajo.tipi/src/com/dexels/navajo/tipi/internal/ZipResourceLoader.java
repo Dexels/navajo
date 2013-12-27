@@ -35,6 +35,7 @@ public class ZipResourceLoader extends ClassPathResourceLoader {
 		zipFile = new ZipFile(tipiDefFile);
 	}
 
+	@Override
 	public URL getResourceURL(String location) throws IOException {
 		logger.info("Trying to locate in zip: " + location);
 		ZipEntry z = zipFile.getEntry(location);
@@ -57,6 +58,7 @@ public class ZipResourceLoader extends ClassPathResourceLoader {
 		}
 	}
 
+	@Override
 	public InputStream getResourceStream(String location) throws IOException {
 		logger.info("Trying to locate in zip: " + location);
 		ZipEntry z = zipFile.getEntry(location);

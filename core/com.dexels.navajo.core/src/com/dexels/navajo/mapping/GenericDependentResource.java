@@ -7,7 +7,6 @@ package com.dexels.navajo.mapping;
  * @author arjen
  *
  */
-@SuppressWarnings({"rawtypes","unchecked"})
 public class GenericDependentResource implements DependentResource {
 
 	private String type;
@@ -22,14 +21,17 @@ public class GenericDependentResource implements DependentResource {
 		this.myDependencyClass = depClass;
 	}
 	
+	@Override
 	public String getType() {
 		return type;
 	}
 
+	@Override
 	public String getValue() {
 		return value;
 	}
 
+	@Override
 	public Class getDependencyClass() {
 		return myDependencyClass;
 	}

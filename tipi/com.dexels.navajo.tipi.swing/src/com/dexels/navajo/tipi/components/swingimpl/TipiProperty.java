@@ -56,6 +56,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 	
 	
 
+	@Override
 	public Object createContainer() {
 		p = new TipiSwingPropertyComponent(this);
 		p.addPropertyEventListener(this);
@@ -65,6 +66,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 		addHelper(th);
 		addTipiEventListener(this);
 		p.addPropertyKeyListener(new KeyListener() {
+			@Override
 			public void keyTyped(KeyEvent e) {
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "typed");
@@ -82,6 +84,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 				}
 			}
 
+			@Override
 			public void keyPressed(KeyEvent e) {
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "typed");
@@ -92,6 +95,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				Map<String, Object> m = getEventMap(e);
 				m.put("mode", "released");
@@ -115,12 +119,14 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 		return p;
 	}
 
+	@Override
 	public Property getProperty() {
 		return myProperty;
 	}
 
 	public void setLabelWidth(final int width) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				((GenericPropertyComponent) getContainer())
 						.setLabelIndent(width);
@@ -130,6 +136,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 
 	public void setValueWidth(final int width) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				((GenericPropertyComponent) getContainer())
 						.setPropertyWidth(width);
@@ -139,6 +146,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 	
 	public void setLabelColor(final Color c) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				((GenericPropertyComponent) getContainer())
 						.setLabelColor(c);
@@ -149,6 +157,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 	
 	public void setLabelFont(final Font f) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				((GenericPropertyComponent) getContainer())
 						.setLabelFont(f);
@@ -162,6 +171,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 
 	public void setLabelVisible(final boolean state) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				if (state) {
 					((GenericPropertyComponent) getContainer()).showLabel();
@@ -203,8 +213,10 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public void setProperty(final Property p) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				if (myProperty != null) {
 					myProperty.removePropertyChangeListener(TipiProperty.this);
@@ -225,12 +237,14 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 		});
 	}
 
+	@Override
 	public void addTipiEventListener(TipiEventListener listener) {
 		if (listener == null) {
 		}
 		myListeners.add(listener);
 	}
 
+	@Override
 	public String getPropertyName() {
 		TipiSwingPropertyComponent tpc = (TipiSwingPropertyComponent) getContainer();
 		String name = tpc.getPropertyName();
@@ -240,6 +254,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 		return getId();
 	}
 
+	@Override
 	public void propertyEventFired(Property p, String eventType,
 			boolean internal) {
 		propertyEventFired(p, eventType, null, internal);
@@ -315,10 +330,12 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 		((GenericPropertyComponent) getContainer()).updateProperty();
 	}
 
+	@Override
 	protected void performComponentMethod(final String name,
 			final TipiComponentMethod compMeth, TipiEvent event) {
 		if ("updateProperty".equals(name)) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					updateProperty();
 				}
@@ -358,9 +375,11 @@ public class TipiProperty extends TipiSwingComponentImpl implements
 		((GenericPropertyComponent) getContainer()).requestPropertyFocus();
 	}
 
+	@Override
 	public void propertyChange(final PropertyChangeEvent e) {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				if (e.getPropertyName().equals("value")
 						|| e.getPropertyName().equals("selection")) {

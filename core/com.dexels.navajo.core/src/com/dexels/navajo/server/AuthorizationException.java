@@ -31,7 +31,8 @@ public class AuthorizationException extends Exception {
     this.authorizationError = authorizationError;
   }
 
-  public String getMessage() {
+  @Override
+public String getMessage() {
     return this.message;
   }
 

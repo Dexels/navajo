@@ -26,6 +26,7 @@ public class ComponentParser extends BaseTipiParser {
 	 */
 	private static final long serialVersionUID = 5584565910100210484L;
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return getTipiComponent(source, expression);
 	}

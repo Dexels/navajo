@@ -55,10 +55,12 @@ public class PropertyField extends JTextField implements PropertyControlled,
 		}
 	}
 
+	@Override
 	public boolean isManagingFocus() {
 		return false;
 	}
 
+	@Override
 	public Property getProperty() {
 		return initProperty;
 	}
@@ -90,6 +92,7 @@ public class PropertyField extends JTextField implements PropertyControlled,
 		}
 	}
 
+	@Override
 	public void setProperty(Property p) {
 		if (p == null) {
 			return;
@@ -98,6 +101,7 @@ public class PropertyField extends JTextField implements PropertyControlled,
 		setEditable(p.isDirIn());
 	}
 
+	@Override
 	public void focusLost(FocusEvent e) {
 		textValue = getText();
 		if (initProperty != null
@@ -106,10 +110,12 @@ public class PropertyField extends JTextField implements PropertyControlled,
 		}
 	}
 
+	@Override
 	public void focusGained(FocusEvent e) {
 		selectAll();
 	}
 
+	@Override
 	public void update() {
 		if (initProperty == null) {
 			return;

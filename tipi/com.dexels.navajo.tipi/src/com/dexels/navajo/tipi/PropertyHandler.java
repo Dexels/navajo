@@ -30,6 +30,7 @@ public class PropertyHandler implements SerializablePropertyChangeListener {
 		setProperty(p);
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		logger.debug("EVENT: " + evt.getPropertyName() + "val: "
 				+ evt.getNewValue());

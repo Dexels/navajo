@@ -68,6 +68,7 @@ public class NavajoEventRegistryTest {
 	public void testGetInstanceMultipleThreads() throws Exception {
 
 		Thread t1 = new Thread() {
+			@Override
 			public void run() {
 				instance1 = NavajoEventRegistry.getInstance();
 				System.err.println("instance1 = " + instance1);
@@ -75,6 +76,7 @@ public class NavajoEventRegistryTest {
 		};
 
 		Thread t2 = new Thread() {
+			@Override
 			public void run() {
 				instance2 = NavajoEventRegistry.getInstance();
 				System.err.println("instance2 = " + instance2);
@@ -82,6 +84,7 @@ public class NavajoEventRegistryTest {
 		};
 
 		Thread t3 = new Thread() {
+			@Override
 			public void run() {
 				instance3 = NavajoEventRegistry.getInstance();
 				System.err.println("instance3 = " + instance3);
@@ -89,6 +92,7 @@ public class NavajoEventRegistryTest {
 		};
 
 		Thread t4 = new Thread() {
+			@Override
 			public void run() {
 				instance4 = NavajoEventRegistry.getInstance();
 				System.err.println("instance4 = " + instance4);
@@ -118,6 +122,7 @@ public class NavajoEventRegistryTest {
 		Assert.assertEquals(instance.getNumberOfRegisteredListeners(), 0);
 		instance.addListener(AuditLogEvent.class, new NavajoListener() {
 
+			@Override
 			public void onNavajoEvent(NavajoEvent ne) {
 				System.err.println("Received AuditLogEvent!");
 			}
@@ -132,6 +137,7 @@ public class NavajoEventRegistryTest {
 
 		NavajoEventRegistry instance = NavajoEventRegistry.getInstance();
 		instance.addListener(AuditLogEvent.class, new NavajoListener() {
+			@Override
 			public void onNavajoEvent(NavajoEvent ne) {
 				message = "Received AuditLogEvent!";
 				System.err.println(message);
@@ -148,6 +154,7 @@ public class NavajoEventRegistryTest {
 
 		NavajoEventRegistry instance = NavajoEventRegistry.getInstance();
 		instance.addListener(AuditLogEvent.class, new NavajoListener() {
+			@Override
 			public void onNavajoEvent(NavajoEvent ne) {
 
 				try {

@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.vaadin.components;
 
-import java.beans.DesignMode;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -416,6 +415,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		return true;
 	}
 
+	@Override
 	protected Object getComponentValue(String name) {
 		if(name.equals("propertyValue")) {
 			// ----
@@ -424,6 +424,7 @@ public class TipiProperty extends TipiVaadinComponentImpl implements PropertyCom
 		return super.getComponentValue(name);
 	}
 
+	@Override
 	protected void setComponentValue(String name, Object object) {
 		if(name.equals("propertyValue")) {
 			if(property!=null) {

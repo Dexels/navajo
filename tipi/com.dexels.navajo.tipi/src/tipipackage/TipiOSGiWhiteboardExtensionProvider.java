@@ -33,6 +33,7 @@ public class TipiOSGiWhiteboardExtensionProvider extends TipiManualExtensionRegi
 	}
 	
 
+	@Override
 	public List<TipiExtension> getExtensionList() {
 		List<TipiExtension> extensionList = new LinkedList<TipiExtension>();
 		try {

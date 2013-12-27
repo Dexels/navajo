@@ -16,11 +16,13 @@ public class ToBinary extends FunctionInterface {
   public ToBinary() {
   }
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Cast a string to a binary object";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
    Object o = getOperand(0);
   
    if (o == null) {
@@ -36,7 +38,8 @@ public class ToBinary extends FunctionInterface {
    }
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "ToBinary(String): Binary";
   }
 

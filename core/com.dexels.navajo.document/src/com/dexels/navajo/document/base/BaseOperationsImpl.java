@@ -22,15 +22,18 @@ public class BaseOperationsImpl extends BaseNode {
     super(n);
   }
 
-    public Map<String,String> getAttributes() {
+    @Override
+	public Map<String,String> getAttributes() {
         return null;
     }
 
-    public List<BaseNode> getChildren() {
+    @Override
+	public List<BaseNode> getChildren() {
         return myOperations;
     }
 
-    public String getTagName() {
+    @Override
+	public String getTagName() {
         return "operations";
     }
 

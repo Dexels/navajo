@@ -31,6 +31,7 @@ public class TestLock {
 	private static void runDruif(final String name, final int before, final int timeout, final King k) throws XMPPException,
 			InterruptedException {
 		new Thread() {
+			@Override
 			public void run() {
 				final JabberLockImpl l = new JabberLockImpl();
 				try {
@@ -58,6 +59,7 @@ public class TestLock {
 				}
 				l.addLockingListener(new PropertyChangeListener() {
 
+					@Override
 					public void propertyChange(PropertyChangeEvent evt) {
 						logger.info("L :" + name + " Prop: " + evt);
 

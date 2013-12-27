@@ -113,6 +113,7 @@ public class CacheControllerTest  {
 		for (int i = 0; i < MAXTHREADS; i++) {
 			final int index = i;
 			threads[i] = new Thread() {
+				@Override
 				public void run() {
 					instances[index] = CacheController.getInstance();
 				}

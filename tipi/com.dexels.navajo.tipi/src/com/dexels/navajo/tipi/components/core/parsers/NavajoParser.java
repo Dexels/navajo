@@ -33,6 +33,7 @@ public class NavajoParser extends TipiTypeParser {
 	public NavajoParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		if (".".equals(expression)) {
 			return source.getValue(expression);

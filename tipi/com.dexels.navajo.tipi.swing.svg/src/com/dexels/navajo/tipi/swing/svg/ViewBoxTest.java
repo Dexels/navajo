@@ -1,19 +1,31 @@
 package com.dexels.navajo.tipi.swing.svg;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
-import org.apache.batik.bridge.*;
-import org.apache.batik.swing.*;
-import org.apache.batik.swing.gvt.*;
-import org.apache.batik.swing.svg.*;
-import org.apache.log4j.*;
+import org.apache.batik.bridge.UpdateManager;
+import org.apache.batik.bridge.UpdateManagerEvent;
+import org.apache.batik.bridge.UpdateManagerListener;
+import org.apache.batik.swing.JSVGCanvas;
+import org.apache.batik.swing.gvt.GVTTreeRendererEvent;
+import org.apache.batik.swing.gvt.GVTTreeRendererListener;
+import org.apache.batik.swing.svg.AbstractJSVGComponent;
+import org.apache.batik.swing.svg.GVTTreeBuilderEvent;
+import org.apache.batik.swing.svg.GVTTreeBuilderListener;
+import org.apache.batik.swing.svg.SVGDocumentLoaderEvent;
+import org.apache.batik.swing.svg.SVGDocumentLoaderListener;
+import org.apache.batik.swing.svg.SVGLoadEventDispatcherEvent;
+import org.apache.batik.swing.svg.SVGLoadEventDispatcherListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.svg.*;
+import org.w3c.dom.svg.SVGDocument;
+import org.w3c.dom.svg.SVGElement;
 
 public class ViewBoxTest extends WindowAdapter implements
   SVGDocumentLoaderListener, GVTTreeBuilderListener,
@@ -262,24 +274,4 @@ public class ViewBoxTest extends WindowAdapter implements
         System.exit(0);
     }
 
-    public static void main(String[] args) throws Exception {
-        ConsoleAppender consoleAppender = new ConsoleAppender(
-          new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN),
-          ConsoleAppender.SYSTEM_ERR);
-        consoleAppender.setThreshold(Level.DEBUG);
-        BasicConfigurator.configure(consoleAppender);
-        if (args.length == 0) {
-            args = new String[] {
-              "http://svn.apache.org/repos/asf/xmlgraphics/batik/trunk"
-              + "/samples/tests/spec/coordinates/percentagesAndUnits.svg"
-            };
-        } else if (args.length != 1) {
-            logger.info("Usage: java ViewBoxTest [file | URL]");
-            System.exit(1);
-        }
-        File file = new File(args[0]);
-        if (file.exists())
-            args[0] = file.toURI().toURL().toString();
-        new ViewBoxTest(args[0]).go();
-    }
 }

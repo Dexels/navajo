@@ -457,7 +457,8 @@ public class JSONTokener {
      *
      * @return " at character [this.myIndex] of [this.mySource]"
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return " at character " + this.myIndex + " of " + this.mySource;
     }
 }

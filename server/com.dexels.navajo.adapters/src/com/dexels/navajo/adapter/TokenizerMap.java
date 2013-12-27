@@ -28,14 +28,17 @@ public class TokenizerMap implements Mappable{
 		return tokens;		
 	}
 	
+	@Override
 	public void kill() {
 		
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 		
 	}

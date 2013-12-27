@@ -24,6 +24,7 @@ public class NavajoLogListener implements LogListener {
 	 * This methods is called by the LogReaderService, and dispatch them to a
 	 * set of Loggers, created with
 	 */
+	@Override
 	public void logged(LogEntry log) {
 		if ((log.getBundle() == null)
 				|| (log.getBundle().getSymbolicName() == null)) {

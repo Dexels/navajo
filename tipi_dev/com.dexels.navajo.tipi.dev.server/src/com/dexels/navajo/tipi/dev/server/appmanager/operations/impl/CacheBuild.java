@@ -14,18 +14,21 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 
-public class CacheBuild extends BaseOperation implements AppStoreOperation {
+public class CacheBuild extends BaseOperation implements Servlet, AppStoreOperation, EventHandler {
 
 	private static final long serialVersionUID = 4675519591066489420L;
 	private final static Logger logger = LoggerFactory
@@ -33,12 +36,12 @@ public class CacheBuild extends BaseOperation implements AppStoreOperation {
 	
 	
 	public void cachebuild(String name) throws IOException {
-		ApplicationStatus as = applications.get(name);
+		RepositoryInstance as = applications.get(name);
 		build(as);
 	}
 	
 	public void cachebuild() throws IOException {
-		for (ApplicationStatus a: applications.values()) {
+		for (RepositoryInstance a: applications.values()) {
 			build(a);
 		}
 	}
@@ -47,6 +50,7 @@ public class CacheBuild extends BaseOperation implements AppStoreOperation {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String val = req.getParameter("app");
+		verifyAuthorization(req, resp);
 		if(val!=null) {
 			cachebuild(val);
 		} else {
@@ -57,18 +61,18 @@ public class CacheBuild extends BaseOperation implements AppStoreOperation {
 	}
 	
 	public void build() throws IOException {
-		for (ApplicationStatus a: applications.values()) {
+		for (RepositoryInstance a: applications.values()) {
 			build(a);
 		}
 	}
 	
 	@Override
-	public void build(ApplicationStatus a) throws IOException {
+	public void build(RepositoryInstance a) throws IOException {
 		MessageDigest messageDigest;
 		try {
 			messageDigest = MessageDigest.getInstance("MD5");
-			createDigestFor(messageDigest, "tipi",a.getAppFolder());
-			createDigestFor(messageDigest, "resource",a.getAppFolder());
+			createDigestFor(messageDigest, "tipi",a.getRepositoryFolder());
+			createDigestFor(messageDigest, "resource",a.getRepositoryFolder());
 		} catch (NoSuchAlgorithmException e) {
 			logger.error("Error: ", e);
 		}
@@ -162,6 +166,18 @@ public class CacheBuild extends BaseOperation implements AppStoreOperation {
 
 	public String convertPath(String location) {
 		return location.replaceAll("/", "_");
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+
+			System.err.println("EVENT FOUND!");
+			RepositoryInstance ri =  (RepositoryInstance) event.getProperty("repository");
+			try {
+				build(ri);
+			} catch (IOException e) {
+				logger.error("Error: ", e);
+			}
 	}
 
 

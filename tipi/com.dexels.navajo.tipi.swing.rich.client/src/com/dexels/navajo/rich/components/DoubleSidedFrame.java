@@ -27,12 +27,14 @@ public class DoubleSidedFrame extends JComponent {
 				0), 0, 0));
 
 		flipFront = new ScreenTransition(frontSide, new TransitionTarget() {
+			@Override
 			public void setupNextScreen() {
 				frontSide.setVisible(!frontSide.isVisible());
 			}
 		}, 1500);
 
 		flipBack = new ScreenTransition(backSide, new TransitionTarget() {
+			@Override
 			public void setupNextScreen() {
 				backSide.setVisible(!backSide.isVisible());
 			}

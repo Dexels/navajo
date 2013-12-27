@@ -25,7 +25,8 @@ public class H2DataSourceFactory implements DataSourceFactory {
     /* (non-Javadoc)
      * @see org.osgi.service.jdbc.DataSourceFactory#createDataSource(java.util.Properties)
      */
-    public DataSource createDataSource(Properties props) throws SQLException {
+    @Override
+	public DataSource createDataSource(Properties props) throws SQLException {
         JdbcDataSource source = new JdbcDataSource();
         setup(source, props);
         return source;
@@ -34,7 +35,8 @@ public class H2DataSourceFactory implements DataSourceFactory {
     /* (non-Javadoc)
      * @see org.osgi.service.jdbc.DataSourceFactory#createConnectionPoolDataSource(java.util.Properties)
      */
-    public ConnectionPoolDataSource createConnectionPoolDataSource(Properties props) throws SQLException {
+    @Override
+	public ConnectionPoolDataSource createConnectionPoolDataSource(Properties props) throws SQLException {
         JdbcDataSource source = new JdbcDataSource();
         setupXSource(source, props);
         return source;
@@ -43,7 +45,8 @@ public class H2DataSourceFactory implements DataSourceFactory {
     /* (non-Javadoc)
      * @see org.osgi.service.jdbc.DataSourceFactory#createXADataSource(java.util.Properties)
      */
-    public XADataSource createXADataSource(Properties props) throws SQLException {
+    @Override
+	public XADataSource createXADataSource(Properties props) throws SQLException {
         JdbcDataSource source = new JdbcDataSource();
         setupXSource(source, props);
         return source;
@@ -52,7 +55,8 @@ public class H2DataSourceFactory implements DataSourceFactory {
     /* (non-Javadoc)
      * @see org.osgi.service.jdbc.DataSourceFactory#createDriver(java.util.Properties)
      */
-    public Driver createDriver(Properties props) throws SQLException {
+    @Override
+	public Driver createDriver(Properties props) throws SQLException {
         return new org.h2.Driver();
     }
 

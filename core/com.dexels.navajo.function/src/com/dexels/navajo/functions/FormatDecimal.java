@@ -17,21 +17,24 @@ public class FormatDecimal extends FunctionInterface {
     /* (non-Javadoc)
      * @see com.dexels.navajo.parser.FunctionInterface#remarks()
      */
-    public String remarks() {
+    @Override
+	public String remarks() {
        return "Formats a number";
     }
 
     /* (non-Javadoc)
      * @see com.dexels.navajo.parser.FunctionInterface#usage()
      */
-    public String usage() {
+    @Override
+	public String usage() {
        return "FormatDecimal(Object number, String format)";
     }
 
     /* (non-Javadoc)
      * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
      */
-    public Object evaluate() throws TMLExpressionException {
+    @Override
+	public Object evaluate() throws TMLExpressionException {
        if (getOperands().size() != 2) {
            throw new TMLExpressionException(this, "Invalid number of arguments");
        }

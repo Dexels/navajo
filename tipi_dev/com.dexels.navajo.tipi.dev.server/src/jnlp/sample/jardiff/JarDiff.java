@@ -69,7 +69,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @version 1.13, 06/26/03
  */
-@SuppressWarnings({ "unchecked", "unused", "rawtypes" })
+@SuppressWarnings({ "unchecked",  "rawtypes" })
 public class JarDiff implements JarDiffConstants {
 	private static final int DEFAULT_READ_SIZE = 2048;
 	private static byte[] newBytes = new byte[DEFAULT_READ_SIZE];
@@ -103,7 +103,7 @@ public class JarDiff implements JarDiffConstants {
 		try {
 			Iterator entries;
 			HashMap moved = new HashMap();
-			HashSet visited = new HashSet();
+//			HashSet visited = new HashSet();
 			HashSet implicit = new HashSet();
 			HashSet moveSrc = new HashSet();
 			HashSet newEntries = new HashSet();

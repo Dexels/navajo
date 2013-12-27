@@ -43,7 +43,8 @@ public class TipiPanel extends TipiVaadinComponentImpl {
 	}
 
 
-	  public void setComponentValue(final String name, final Object object) {
+	  @Override
+	public void setComponentValue(final String name, final Object object) {
 		    super.setComponentValue(name, object);
 			Component v = getVaadinContainer();
 

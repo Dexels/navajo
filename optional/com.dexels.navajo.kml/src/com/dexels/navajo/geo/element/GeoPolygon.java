@@ -91,6 +91,7 @@ public class GeoPolygon extends GeoElement {
 		return true;
 	}
 
+	@Override
 	public XMLElement createElement() {
 		XMLElement c = new CaseSensitiveXMLElement("Polygon");
 
@@ -142,6 +143,7 @@ public class GeoPolygon extends GeoElement {
 		return geoPoint;
 	}
 
+	@Override
 	public XMLElement createPlaceMark() {
 		return createPlaceMark(null);
 	}
@@ -161,6 +163,7 @@ public class GeoPolygon extends GeoElement {
 
 	}
 
+	@Override
 	public List<XMLElement> createPlaceMarkList() {
 		List<XMLElement> result = new ArrayList<XMLElement>();
 		result.add(createElement());
@@ -342,6 +345,7 @@ public class GeoPolygon extends GeoElement {
 		return Math.abs(aIndex - bIndex) == 1;
 	}
 
+	@Override
 	public String getId() {
 		return id;
 	}

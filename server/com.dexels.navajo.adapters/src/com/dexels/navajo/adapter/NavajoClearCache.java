@@ -26,11 +26,13 @@ public class NavajoClearCache implements Mappable {
   public NavajoClearCache() {
   }
 
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
       this.config = DispatcherFactory.getInstance().getNavajoConfig();
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
       String cachePath = config.getRootPath()+"/cache";
       File path = new File(cachePath);
       File [] allFile = path.listFiles();
@@ -39,7 +41,8 @@ public class NavajoClearCache implements Mappable {
       }
   }
 
-  public void kill() {
+  @Override
+public void kill() {
 
   }
 }

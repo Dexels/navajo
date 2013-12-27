@@ -109,6 +109,7 @@ public abstract class AbstractPropertyField extends JTextField implements
 		}
 	}
 
+	@Override
 	public void focusGained(FocusEvent e) {
 		editProperty();
 	}
@@ -117,6 +118,7 @@ public abstract class AbstractPropertyField extends JTextField implements
 		if (myProperty != null) {
 			try {
 				Runnable runAction = new Runnable() {
+					@Override
 					public void run() {
 						String editingFormat = getEditingFormat(myProperty
 								.getTypedValue());
@@ -140,6 +142,7 @@ public abstract class AbstractPropertyField extends JTextField implements
 		}
 	}
 
+	@Override
 	public void focusLost(FocusEvent e) {
 
 		if (myProperty != null) {
@@ -164,6 +167,7 @@ public abstract class AbstractPropertyField extends JTextField implements
 		setEditing(false);
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 		Property p = (Property) e.getSource();
 		if (p != myProperty) {
@@ -176,6 +180,7 @@ public abstract class AbstractPropertyField extends JTextField implements
 		final String s = getPresentationFormat(o);
 		try {
 			Runnable runAction = new Runnable() {
+				@Override
 				public void run() {
 					setText(s);
 				}

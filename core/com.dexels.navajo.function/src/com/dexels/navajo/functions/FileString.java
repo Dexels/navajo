@@ -28,11 +28,13 @@ public class FileString extends FunctionInterface {
   public FileString() {
   }
 
-  public String remarks() {
+  @Override
+public String remarks() {
    return "Reads a file into a string";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
     String fileName = (String) getOperand(0);
 

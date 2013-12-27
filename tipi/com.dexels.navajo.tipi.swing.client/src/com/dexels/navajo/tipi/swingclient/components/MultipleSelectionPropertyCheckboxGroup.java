@@ -69,10 +69,12 @@ public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel
 
 	/** @todo Add action / changelisteners to this class */
 
+	@Override
 	public final Property getProperty() {
 		return myProperty;
 	}
 
+	@Override
 	public final void setProperty(Property p) {
 		try {
 			if (myProperty != null) {
@@ -133,10 +135,12 @@ public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel
 		}
 	}
 
+	@Override
 	public final void update() {
 		// dummy
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 		if (e.getPropertyName().equals("value")) {
 			fireListeners(null);

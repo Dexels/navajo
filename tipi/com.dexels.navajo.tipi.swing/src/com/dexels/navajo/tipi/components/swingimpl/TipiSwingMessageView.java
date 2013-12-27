@@ -29,6 +29,7 @@ public class TipiSwingMessageView extends TipiSwingDataComponentImpl {
 			try {
 				SwingUtilities.invokeAndWait(new Runnable() {
 
+					@Override
 					public void run() {
 						setMessage((Message) object);
 					}

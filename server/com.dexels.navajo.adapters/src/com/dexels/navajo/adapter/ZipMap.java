@@ -52,6 +52,7 @@ public class ZipMap implements Mappable {
 	ByteArrayOutputStream baos = null;
 	ZipOutputStream zo = null;
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		baos = new ByteArrayOutputStream();
 		zo = new ZipOutputStream(baos);
@@ -91,10 +92,12 @@ public class ZipMap implements Mappable {
 		return null;
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 
 	}
 
+	@Override
 	public void kill() {
 
 	}

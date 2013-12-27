@@ -36,7 +36,8 @@ public final class ASTGTNode extends SimpleNode {
 //            throw new TMLExpressionException("Illegal comparison for gt; " + a.getClass().getName() + " " + b.getClass().getName());
     }
 
-    public final Object interpret() throws TMLExpressionException {
+    @Override
+	public final Object interpret() throws TMLExpressionException {
         // System.out.println("in ASTGENode()");
         Object a = jjtGetChild(0).interpret();
         // System.out.println("Got first argument");

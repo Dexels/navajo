@@ -32,10 +32,12 @@ public class TipiBorderLayout extends TipiLayoutImpl {
 	public TipiBorderLayout() {
 	}
 
+	@Override
 	public void createLayout() {
 		setLayout(new BorderLayout());
 	}
 
+	@Override
 	public Object createDefaultConstraint(int index) {
 		switch (index) {
 		case 0:
@@ -53,10 +55,12 @@ public class TipiBorderLayout extends TipiLayoutImpl {
 		}
 	}
 
+	@Override
 	protected void setValue(String name, TipiValue tv) {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
 
+	@Override
 	public Object parseConstraint(String text, int index) {
 
 		if (text == null) {

@@ -100,6 +100,7 @@ public class SelectedItemValuePropertyBridge implements Property, Property.Value
 		return src.isDirOut() || !editable;
 	}
 
+	@Override
 	public String toString() {
 		return ""+getValue();
 	}

@@ -24,7 +24,8 @@ public class TipiLabel extends TipiVaadinComponentImpl {
 //		return label.getCaption();
 //	}
 	
-	  public void setComponentValue(final String name, final Object object) {
+	  @Override
+	public void setComponentValue(final String name, final Object object) {
 		    super.setComponentValue(name, object);
 			Component v = getVaadinContainer();
 		        if (name.equals("text")) {

@@ -1,0 +1,19 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+	<OCD description="Repository Manager" name="Repository Manager" id="dexels.githubosgi.repositorymanager">
+		<AD name="Storage Folder" id="storage.path" required="true" type="String" />
+	</OCD>
+	<OCD description="Git Repository Instance" name="Git Repository Instance" id="dexels.githubosgi.gitrepository">
+		<AD name="Remote Git URL" id="url" required="true" type="String" />
+		<AD name="Repository name" id="name" required="true" type="String" default="myrepo" />
+		<AD name="Https Git URL" id="httpUrl" required="false" type="String" />
+		<AD name="SSH Key file (public as *.pub)" id="key" required="false" type="String" />
+		<AD name="Git Branch" id="branch" required="true" type="String" default="master" />
+	</OCD>
+
+	<Designate factoryPid="dexels.githubosgi.gitrepository">
+		<Object ocdref="dexels.githubosgi.gitrepository" />
+	</Designate>
+	<Designate pid="dexels.githubosgi.repositorymanager">
+		<Object ocdref="dexels.githubosgi.repositorymanager" />
+	</Designate>
+</metatype:MetaData>

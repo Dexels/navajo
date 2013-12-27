@@ -26,10 +26,12 @@ public class SystemPropertyRef implements TipiReference {
 		this.name = name;
 	}
 
+	@Override
 	public void setValue(Object expression) {
 		System.setProperty(name, "" + expression);
 	}
 
+	@Override
 	public Object getValue() {
 		return System.getProperty(name);
 	}

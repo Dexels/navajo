@@ -38,6 +38,7 @@ public class TipiInstantiateTipi extends TipiAction {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiInstantiateTipi.class);
+	@Override
 	public void execute(TipiEvent event)
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {

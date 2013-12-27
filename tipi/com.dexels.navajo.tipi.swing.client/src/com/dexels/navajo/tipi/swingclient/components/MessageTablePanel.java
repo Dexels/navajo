@@ -183,11 +183,13 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 			pop.add(sel);
 			pop.add(emp);
 			sel.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					copyMe();
 				}
 			});
 			emp.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					SwingClient.getUserInterface().clearClipboard();
 				}
@@ -209,6 +211,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 				JPopupMenu pop = new JPopupMenu();
 				JMenuItem sel1 = new JMenuItem("Kolominstellingen wijzigen");
 				sel1.addActionListener(new ActionListener() {
+					@Override
 					public final void actionPerformed(ActionEvent e) {
 						try {
 							filterPanel.showColumnManagementDialog();
@@ -221,6 +224,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 				pop.add(sel1);
 				JMenuItem sel = new JMenuItem("Kolominstellingen opslaan");
 				sel.addActionListener(new ActionListener() {
+					@Override
 					public final void actionPerformed(ActionEvent e) {
 						try {
 							getTable().saveColumnsNavajo();
@@ -232,6 +236,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 				pop.add(sel);
 				JMenuItem sel2 = new JMenuItem("Kolominstellingen verwijderen");
 				sel2.addActionListener(new ActionListener() {
+					@Override
 					public final void actionPerformed(ActionEvent e) {
 						try {
 							getTable().removeColumnsNavajo();
@@ -245,6 +250,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 				if (showColumnEditDialog) {
 					JMenuItem sel3 = new JMenuItem("Wijzig kolommen");
 					sel3.addActionListener(new ActionListener() {
+						@Override
 						public final void actionPerformed(ActionEvent e) {
 							try {
 								getFilterPanel().showColumnManagementDialog();
@@ -258,6 +264,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 				}
 				JMenuItem sel4 = new JMenuItem("Afdrukken");
 				sel4.addActionListener(new ActionListener() {
+					@Override
 					public final void actionPerformed(ActionEvent e) {
 						try {
 							Binary b = getTableReport(null, null, null);
@@ -312,18 +319,21 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 					JMenuItem dsel = new JMenuItem("Deselecteer alles");
 					JMenuItem inv = new JMenuItem("Selectie omkeren");
 					inv.addActionListener(new ActionListener() {
+						@Override
 						public final void actionPerformed(ActionEvent e) {
 							invertSelection(col);
 							setAllUpdateFlags();
 						}
 					});
 					sel.addActionListener(new ActionListener() {
+						@Override
 						public final void actionPerformed(ActionEvent e) {
 							setSelectAll(col, true);
 							setAllUpdateFlags();
 						}
 					});
 					dsel.addActionListener(new ActionListener() {
+						@Override
 						public final void actionPerformed(ActionEvent e) {
 							setSelectAll(col, false);
 							setAllUpdateFlags();
@@ -351,6 +361,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 					// UNDESIRED BEHAVIOUR!
 
 					comp.addPropertyEventListener(new PropertyEventListener() {
+						@Override
 						public void propertyEventFired(Property p, String id,
 								boolean internal) {
 							if ("onActionPerformed".equals(id)) {
@@ -515,6 +526,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		this.setLayout(new GridBagLayout());
 		messageTable
 				.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+					@Override
 					public final void valueChanged(ListSelectionEvent e) {
 						messageTable_valueChanged(e);
 					}
@@ -968,10 +980,12 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		}
 	}
 
+	@Override
 	public void setConstraint(String id) {
 		messageTable.setConstraint(id);
 	}
 
+	@Override
 	public String getConstraint() {
 		return messageTable.getConstraint();
 	}
@@ -992,6 +1006,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 	 * @todo Implement this
 	 *       com.dexels.navajo.swingclient.components.CopyCompatible method
 	 */
+	@Override
 	public Object copyObject() {
 		return messageTable.copyObject();
 	}
@@ -1104,6 +1119,7 @@ public class MessageTablePanel extends BasePanel implements CopyCompatible,
 		return messageTable.isShowingRowHeaders();
 	}
 
+	@Override
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex)
 			throws PrinterException {
 		print(graphics);

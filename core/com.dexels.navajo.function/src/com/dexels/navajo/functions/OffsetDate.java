@@ -19,15 +19,18 @@ public final class OffsetDate extends FunctionInterface {
 
     public OffsetDate() {}
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Returns a date with a certain offset.";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "OffsetDate(<Date>,<int +/- year>,<int +/- month>,<int +/- day>,<int +/- hour(24h)>,<int +/- min>,<int +/- sec>)";
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         java.util.Date date = (java.util.Date) this.getOperands().get(0);
         int year = ((Integer)getOperands().get(1)).intValue();
         int month = ((Integer)getOperands().get(2)).intValue();

@@ -41,6 +41,7 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 	private SimpleUserAgentContext localContext;
 	private NavajoHtmlRendererContext renderingContext;
 
+	@Override
 	public Object createContainer() {
 		java.util.logging.Logger.getLogger("org.lobobrowser").setLevel(Level.WARNING);
 

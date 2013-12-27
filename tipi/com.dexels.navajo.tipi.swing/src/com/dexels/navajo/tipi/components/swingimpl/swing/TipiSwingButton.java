@@ -48,6 +48,7 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 		myDndManager = new TipiDndManager(this, component);
 		addMouseListener(new MouseAdapter() {
 
+			@Override
 			public void mouseEntered(MouseEvent e) {
 				TipiSwingButton.this.setBorderPainted(true);
 				try {
@@ -59,6 +60,7 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 				}
 			}
 
+			@Override
 			public void mouseExited(MouseEvent e) {
 				TipiSwingButton.this.setBorderPainted(tipiBorderPainted);
 				try {
@@ -88,6 +90,7 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 		}
 	}
 
+	@Override
 	public void setForeground(Color fg) {
 		super.setForeground(fg);
 		if (isVertical) {
@@ -95,6 +98,7 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 		}
 	}
 
+	@Override
 	public String getText() {
 		if (isVertical) {
 			return "";
@@ -157,6 +161,7 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 		super.setCursor(cursor);
 	}
 
+	@Override
 	public Dimension getMinimumSize() {
 		return getPreferredSize();
 	}
@@ -199,6 +204,7 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 		setMnemonic(s.charAt(0));
 	}
 
+	@Override
 	public TipiDndManager getDndManager() {
 		return myDndManager;
 	}

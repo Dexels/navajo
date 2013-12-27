@@ -216,6 +216,7 @@ public abstract class CachedDescriptionProvider extends BaseDescriptionProvider 
 	}
 
 	
+	@Override
 	public void flushUserCache(String user) {
 //		for (Iterator<String> iter = cache.keySet().iterator(); iter.hasNext();) {
 //			String element = (String) iter.next();
@@ -230,11 +231,13 @@ public abstract class CachedDescriptionProvider extends BaseDescriptionProvider 
 	protected abstract String retrieveDescriptionWithUsernameWithoutService(String locale, String username, String propertyName);
 	
 
+	@Override
 	public void flushCache() {
 		cache.clear();
 		
 	}
 
+	@Override
 	public int getCacheSize() {
 		return cache.size();
 	}

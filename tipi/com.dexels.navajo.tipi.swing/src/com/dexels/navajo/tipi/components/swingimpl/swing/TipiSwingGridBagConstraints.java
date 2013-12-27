@@ -77,6 +77,7 @@ public class TipiSwingGridBagConstraints extends GridBagConstraints {
 		bert.setAttribute("gridbag", "1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0");
 	}
 
+	@Override
 	public String toString() {
 		return "" + gridx + "," + gridy + "," + gridwidth + "," + gridheight
 				+ "," + weightx + "," + weighty + "," + anchor + "," + fill

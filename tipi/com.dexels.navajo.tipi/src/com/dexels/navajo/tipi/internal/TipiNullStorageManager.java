@@ -23,19 +23,23 @@ public class TipiNullStorageManager implements TipiStorageManager, Serializable 
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiNullStorageManager.class);
 	
+	@Override
 	public Navajo getStorageDocument(String id) throws TipiException {
 		logger.warn("TipiNullStorageManager: Asked for: " + id);
 		return null;
 	}
 
+	@Override
 	public void setStorageDocument(String id, Navajo n) throws TipiException {
 		logger.warn("TipiNullStorageManager: Stored: " + id);
 	}
 
+	@Override
 	public void setInstanceId(String id) {
 		// whatever
 	}
 
+	@Override
 	public void setContext(TipiContext tc) {
 
 	}

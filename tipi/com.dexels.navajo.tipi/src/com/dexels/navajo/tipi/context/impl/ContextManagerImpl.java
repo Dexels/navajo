@@ -46,6 +46,8 @@ public class ContextManagerImpl implements ContextManager {
 					}
 				}
 			}
+		} else {
+			logger.warn("No tipiDir set");
 		}
 	}
 

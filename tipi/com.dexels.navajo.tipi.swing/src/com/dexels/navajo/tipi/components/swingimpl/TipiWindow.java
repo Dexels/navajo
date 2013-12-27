@@ -65,6 +65,7 @@ public final class TipiWindow
 		myWindow.setVisible(true);
 		myWindow.addInternalFrameListener(new InternalFrameAdapter() {
 
+			@Override
 			public void internalFrameClosed(InternalFrameEvent e) {
 				if (myWindow != null) {
 					// will re-enter this event, so its a bit defensive
@@ -75,10 +76,12 @@ public final class TipiWindow
 				}
 			}
 
+			@Override
 			public void internalFrameClosing(final InternalFrameEvent e) {
 //				Component cc = ((JInternalFrame) e.getSource()).getFocusOwner();
 				SwingUtilities.invokeLater(new Runnable() {
 
+					@Override
 					public void run() {
 						try {
 							performTipiEvent("onWindowClosed", null, true);
@@ -105,10 +108,12 @@ public final class TipiWindow
 		return myWindow;
 	}
 
+	@Override
 	public Object createContainer() {
 		return constructWindow();
 	}
 
+	@Override
 	public void animateTransition(TipiEvent te,
 			TipiExecutable executableParent, List<TipiExecutable> exe,
 			int duration) throws TipiBreakException {
@@ -116,8 +121,10 @@ public final class TipiWindow
 				myWindow.getContentPane(), exe, duration);
 	}
 
+	@Override
 	public void addToContainer(final Object c, final Object constraints) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				JInternalFrame internalFrame = ((JInternalFrame) getContainer());
 				internalFrame.getContentPane().add((Component) c, constraints);
@@ -125,6 +132,7 @@ public final class TipiWindow
 		});
 		SwingUtilities.invokeLater(new Runnable() {
 
+			@Override
 			public void run() {
 				try {
 					((JInternalFrame) getContainer()).setSelected(true);
@@ -136,8 +144,10 @@ public final class TipiWindow
 		});
 	}
 
+	@Override
 	public void removeFromContainer(final Object c) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				((JInternalFrame) getContainer()).getContentPane().remove(
 						(Component) c);
@@ -146,8 +156,10 @@ public final class TipiWindow
 		});
 	}
 
+	@Override
 	public void setContainerLayout(final Object layout) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				checkContainerInstance();
 				((JInternalFrame) getContainer()).getContentPane().setLayout(
@@ -156,6 +168,7 @@ public final class TipiWindow
 		});
 	}
 
+	@Override
 	public Container getSwingContainer() {
 		checkContainerInstance();
 		return super.getSwingContainer();
@@ -232,22 +245,27 @@ public final class TipiWindow
 		}
 	}
 
+	@Override
 	protected void performComponentMethod(final String name,
 			final TipiComponentMethod compMeth, TipiEvent event) {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				doPerformMethod(name, compMeth);
 			}
 		});
 	}
 
+	@Override
 	public boolean isReusable() {
 		return true;
 	}
 
+	@Override
 	public void disposeComponent() {
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				JInternalFrame jj = (JInternalFrame) getContainer();
 				if (jj != null) {
@@ -266,6 +284,7 @@ public final class TipiWindow
 
 	}
 
+	@Override
 	public void reUse() {
 		// if (myParent!=null) {
 		// myParent.addToContainer();

@@ -11,6 +11,7 @@ public class Activator extends AbstractCoreExtension implements BundleActivator 
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		ExampleAdapterLibrary library = new ExampleAdapterLibrary();
@@ -21,6 +22,7 @@ public class Activator extends AbstractCoreExtension implements BundleActivator 
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
 		super.stop(bundleContext);
 	}

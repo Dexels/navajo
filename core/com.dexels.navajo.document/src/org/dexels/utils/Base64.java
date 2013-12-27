@@ -250,15 +250,18 @@ public class Base64 {
 			encoder = pEncoder;
 		}
 		private final byte[] oneByte = new byte[1];
+		@Override
 		public void write(int b) throws IOException {
 			oneByte[0] = (byte) b;
 			encoder.write(oneByte, 0, 1);
 //            encoder.flush();
 		}
+		@Override
 		public void write(byte[] pBuffer, int pOffset, int pLen) throws IOException {
 			encoder.write(pBuffer, pOffset, pLen);
 //            encoder.flush();
 		}
+		@Override
 		public void close() throws IOException {
 			encoder.flush();
 		}
@@ -292,6 +295,7 @@ public class Base64 {
 	 */
 	public static OutputStream newEncoder(final Writer pWriter, int pLineSize, String pSeparator) {
 		final Encoder encoder = new Encoder(new char[4096], pLineSize, pSeparator){
+			@Override
 			protected void writeBuffer(char[] pBuffer, int pOffset, int pLen) throws IOException {
 				pWriter.write(pBuffer, pOffset, pLen);
 //!!!!  VERY IMPORTANT
@@ -328,6 +332,7 @@ public class Base64 {
 		 * @throws SAXIOException Writing to the content handler
 		 * caused a SAXException.
 		 */
+		@Override
 		protected void writeBuffer(char[] pChars, int pOffset, int pLen) throws IOException {
 			try {
 				handler.characters(pChars, pOffset, pLen);
@@ -507,17 +512,21 @@ public class Base64 {
 	public static Writer newDecoder(final OutputStream pStream) {
 		return new Writer(){
 			private final Decoder decoder = new Decoder(1024){
+				@Override
 				protected void writeBuffer(byte[] pBytes, int pOffset, int pLen) throws IOException {
 					pStream.write(pBytes, pOffset, pLen);
 				}
 			};
+			@Override
 			public void close() throws IOException {
 				flush();
 			}
+			@Override
 			public void flush() throws IOException {
 				decoder.flush();
 				pStream.flush();
 			}
+			@Override
 			public void write(char[] cbuf, int off, int len) throws IOException {
 				try {
                     decoder.write(cbuf, off, len);
@@ -543,6 +552,7 @@ public class Base64 {
 	public static byte[] decode(char[] pBuffer, int pOffset, int pLength) throws DecodingException {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Decoder d = new Decoder(1024){
+			@Override
 			protected void writeBuffer(byte[] pBuf, int pOff, int pLen) throws IOException {
 				baos.write(pBuf, pOff, pLen);
 			}

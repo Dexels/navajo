@@ -27,12 +27,14 @@ public class TipiColumn extends TipiPanel {
 	 */
 	private static final long serialVersionUID = 2978470466062729297L;
 
+	@Override
 	public Object createContainer() {
 		Container container = (Container) super.createContainer();
 		container.setLayout(new GridBagLayout());
 		return container;
 	}
 
+	@Override
 	public void addToContainer(Object c, Object constraints) {
 		int currentCount = getChildCount();
 		super.addToContainer(c, new TipiSwingGridBagConstraints(0,

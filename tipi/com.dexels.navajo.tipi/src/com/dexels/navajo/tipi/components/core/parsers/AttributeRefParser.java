@@ -27,6 +27,7 @@ public class AttributeRefParser extends BaseTipiParser {
 	 */
 	private static final long serialVersionUID = 8285931156529653085L;
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return getAttributeRefByPath(source, expression);
 	}

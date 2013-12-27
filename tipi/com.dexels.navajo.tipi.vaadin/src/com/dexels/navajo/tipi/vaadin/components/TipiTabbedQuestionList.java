@@ -41,7 +41,8 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiTabbedQuestionList.class);
 	
-    protected Object getGroupConstraints(Message groupMessage) {
+    @Override
+	protected Object getGroupConstraints(Message groupMessage) {
         Property name = groupMessage.getProperty("Name");
         if (name != null) {
             if (name.getValue() == null) {
@@ -51,16 +52,19 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         }
         return "Unknown tab";
     }
-    public void loadData(final Navajo n,final String method) throws TipiException {
+    @Override
+	public void loadData(final Navajo n,final String method) throws TipiException {
         clearQuestions();
         super.loadData(n, method);
     }
     
-    public Object createContainer() {
+    @Override
+	public Object createContainer() {
     	myTabbedPane = new TabSheet();
         myTabbedPane.setSizeFull();
-        myTabbedPane.setStyleName("Default");
-        
+//        myTabbedPane.setStyleName("Default");
+        myTabbedPane.addStyleName("tabbed-questionlist");
+
 //        defaultTabModel = new DefaultTabModel();
 //        TipiHelper th = new EchoTipiHelper();
 //        th.initHelper(this);
@@ -76,7 +80,8 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     }
     
 
-    public void addToContainer(Object c, Object constraints) {
+    @Override
+	public void addToContainer(Object c, Object constraints) {
 //        defaultTabModel.addTab(tabName, (Component) c);
 //		tabSheet.addComponent(component);
 		Component component = (Component)c;
@@ -84,9 +89,13 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 //		tabSheet.addTab(component, ""+constraints, null);
     	myTabbedPane.addComponent(component);
 		component.setSizeFull();
-		myTabbedPane.addTab(component, ""+constraints, null);
-
-//    	myTabbedPane.addTab( (Component)c, tabName, null);
+		Tab t =  myTabbedPane.addTab(component, ""+constraints, null);
+//		t.setStyleName("tabbed-question");
+		t.getComponent().addStyleName("tabbed-question-"+""+constraints);
+//		myTabbedPane.getTabCaption(component).
+		//		t.getComponent().setWidth("130px");
+//		final Component tabComponent = t.getComponent();
+		//    	myTabbedPane.addTab( (Component)c, tabName, null);
     }
     
     protected void clearQuestions() {
@@ -96,6 +105,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 
    
     
+	@Override
 	public void setGroupValid(boolean valid, TipiBaseQuestionGroup group) {
         super.setGroupValid(valid, group);
         int i = myGroups.indexOf(group);

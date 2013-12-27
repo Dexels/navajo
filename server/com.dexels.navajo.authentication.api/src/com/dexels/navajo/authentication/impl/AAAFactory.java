@@ -65,7 +65,8 @@ public final class AAAFactory implements AuthenticationFactory {
   }
 
 
-  public void addAuthenticationModule(AAAInterface a) {
+  @Override
+public void addAuthenticationModule(AAAInterface a) {
 	  moduleList.add(a);
 	  logger.debug("# of auth. modules now: "+moduleList.size());
   }

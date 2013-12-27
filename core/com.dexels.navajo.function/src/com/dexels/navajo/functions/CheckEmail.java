@@ -33,10 +33,12 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class CheckEmail extends FunctionInterface {
 
-  public String remarks() {
+  @Override
+public String remarks() {
    return "This functions checks the syntactic validity of email adressess";
   }
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
     Object o = getOperand(0);
     if (!(o instanceof String)) {

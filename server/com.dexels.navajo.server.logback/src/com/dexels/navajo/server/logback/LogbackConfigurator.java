@@ -19,8 +19,7 @@ import ch.qos.logback.core.util.StatusPrinter;
 public class LogbackConfigurator {
 
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(LogbackConfigurator.class);
+	private final static Logger logger = LoggerFactory.getLogger(LogbackConfigurator.class);
 	
 	public void activate(Map<String, Object> settings) {
 		try {

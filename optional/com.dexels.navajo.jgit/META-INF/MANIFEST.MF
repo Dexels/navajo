@@ -2,16 +2,32 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Jgit connector
 Bundle-SymbolicName: com.dexels.navajo.jgit
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.8.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: com.jcraft.jsch;version="0.1.46",
+Import-Package: com.dexels.navajo.repository.api;version="1.0.0",
+ com.jcraft.jsch;version="0.1.46",
+ javax.servlet;version="3.0.0",
+ javax.servlet.http;version="3.0.0",
+ org.codehaus.jackson;version="1.9.11",
+ org.codehaus.jackson.annotate;version="1.9.11",
+ org.codehaus.jackson.map;version="1.9.11",
  org.eclipse.jgit.api;version="[3.0.0,4.0.0)",
  org.eclipse.jgit.api.errors;version="[3.0.0,4.0.0)",
+ org.eclipse.jgit.diff;version="3.1.0",
  org.eclipse.jgit.lib;version="[3.0.0,4.0.0)",
  org.eclipse.jgit.revwalk;version="[3.0.0,4.0.0)",
  org.eclipse.jgit.storage.file;version="[3.0.0,4.0.0)",
  org.eclipse.jgit.transport;version="[3.0.0,4.0.0)",
+ org.eclipse.jgit.treewalk;version="3.1.0",
  org.osgi.framework;version="1.3.0",
+ org.osgi.service.event;version="1.3.0",
+ org.osgi.service.log;version="1.3.0",
+ org.osgi.service.url;version="1.0.0",
  org.slf4j;version="[1.6.0,1.8.0)"
 Bundle-ClassPath: .
+Service-Component: OSGI-INF/dexels.githubosgi.gitrepository.xml,
+ OSGI-INF/dexels.githubosgi.repositorymanager.xml,
+ OSGI-INF/dexels.githubosgi.servlet.xml
+Export-Package: com.dexels.githubosgi
+

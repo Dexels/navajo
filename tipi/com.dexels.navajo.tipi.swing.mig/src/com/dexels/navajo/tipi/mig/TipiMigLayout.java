@@ -24,7 +24,8 @@ public class TipiMigLayout
 public TipiMigLayout() {
   }
 
-  public void createLayout() {
+  @Override
+public void createLayout() {
     String grid = myDefinition.getStringAttribute("grid");
 //    logger.info("Creating grid: >"+grid+"<");
     MigLayout layout = new MigLayout(grid);
@@ -32,13 +33,15 @@ public TipiMigLayout() {
     setLayout(layout);
   }
 
-  public Object parseConstraint(String text, int index) {
+  @Override
+public Object parseConstraint(String text, int index) {
 //	  logger.info("parsing constraint: "+text);
     return text;
   }
   
   
 
+@Override
 protected void setValue(String name, TipiValue tv) {
     throw new UnsupportedOperationException("Not implemented yet. But I should.");
   }

@@ -19,6 +19,7 @@ public class TipiSwingPropertyDescriptionLabel extends JLabel implements
 		myDndManager = new TipiDndManager(this, tc);
 	}
 
+	@Override
 	public TipiDndManager getDndManager() {
 		// TODO Auto-generated method stub
 		return myDndManager;

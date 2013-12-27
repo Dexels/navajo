@@ -44,6 +44,7 @@ public class TipiSwingToolBar extends JToolBar {
 
 	}
 
+	@Override
 	public Dimension getMinimumSize() {
 		return getPreferredSize();
 	}

@@ -29,6 +29,7 @@ public class ColorParser extends TipiTypeParser {
 	 */
 	private static final long serialVersionUID = 8612302861714882776L;
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		return parseColor(expression);
 	}

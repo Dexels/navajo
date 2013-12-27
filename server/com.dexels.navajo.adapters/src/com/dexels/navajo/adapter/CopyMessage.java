@@ -23,7 +23,8 @@ public class CopyMessage implements Mappable {
   									  // or currently processed outgoing (useOutputDoc = true) will be copied.
   public String copyMessageTo = null;
  
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
     outputDoc = access.getOutputDoc();
     inDoc = access.getInDoc();
     myAccess = access;
@@ -59,7 +60,8 @@ public class CopyMessage implements Mappable {
 
   }
   
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
 
 //    if (copyMessageTo.equals(""))
 //      throw new UserException( -1, "copyMessageTo has to be specified");
@@ -103,7 +105,8 @@ public class CopyMessage implements Mappable {
    
   }
 
-  public void kill() {
+  @Override
+public void kill() {
 
   }
 

@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -1025,51 +1024,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		return null;
 	}
 	
-	private InputStream resolveLocation(String location)
-	{
-		InputStream iss = getClass().getClassLoader().getResourceAsStream(
-				location);
-		if (iss != null) {
-			return iss;
-		}
-		try {
-			InputStream in = getTipiResourceStream(location);
-			if (in != null)
-			{
-				return in;
-			}
-		} catch (IOException e) {
-			logger.debug("Error resolving tipi location", e);
-			// classload failed. Continuing.
-		}
-		
-		if (genericResourceLoader != null)
-		{
-			try {
-				iss = genericResourceLoader.getResourceStream(location);
-				if (iss != null)
-				{
-					return iss;
-				}
-			} catch (IOException e) {
-				logger.debug("Error resolving tipi location", e);
-			} 
-		}
-		if (tipiResourceLoader != null)
-		{
-			try {
-				iss = tipiResourceLoader.getResourceStream(location);
-				return iss;
-			} catch (IOException e) {
-				logger.debug("Error resolving tipi location", e);
-			}
-		}
-		return null;
-	}
-	
 
-
-	
 	/**
 	 * 
 	 * @param definition The name of the definition for which to load the CSS
@@ -1511,7 +1466,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 		tipiComponentMap.put(defname, elm);
 		
-		Object applyCss = elm.getAttribute("applyCss", "false");
+//		Object applyCss = elm.getAttribute("applyCss", "false");
 //		if (applyCss != null && applyCss.toString().equals("true"))
 //		{
 //			try
@@ -2675,7 +2630,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			logger.error("Error: ",e);
 			return;
 		}
-		propertyBindMap.remove(master);
+		propertyBindMap.remove(service + ":"+ master.getFullPropertyName());
 		if (pref != null) {
 			for (PropertyChangeListener propertyChangeListener : pref) {
 				master.removePropertyChangeListener(propertyChangeListener);
@@ -2751,10 +2706,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			propertyLinkRegistry.put(master, p);
 		}
 		p.add(slave);
-
-		List<PropertyChangeListener> xx = propertyBindMap.get(master);
 		Navajo rootDoc = master.getRootDoc();
 		String service = rootDoc.getHeader().getRPCName();
+
+		List<PropertyChangeListener> xx = propertyBindMap.get(service + ":" + master.getFullPropertyName());
 		if (xx == null) {
 			xx = new LinkedList<PropertyChangeListener>();
 			try {

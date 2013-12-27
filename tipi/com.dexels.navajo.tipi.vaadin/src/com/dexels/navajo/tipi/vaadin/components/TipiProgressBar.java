@@ -28,6 +28,7 @@ public class TipiProgressBar extends TipiVaadinComponentImpl {
 	private static final long serialVersionUID = -2061730327911948158L;
 	private ProgressIndicator myProgressBar = null;
 
+	@Override
 	public Object createContainer() {
 		myProgressBar = new ProgressIndicator();
 
@@ -35,13 +36,16 @@ public class TipiProgressBar extends TipiVaadinComponentImpl {
 		return myProgressBar;
 	}
 
+	@Override
 	public Object getContainer() {
 		return myProgressBar;
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		if (name.equals("text")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					myProgressBar.setCaption((String) object);
 				}
@@ -50,6 +54,7 @@ public class TipiProgressBar extends TipiVaadinComponentImpl {
 		}
 		if (name.equals("value")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					int value = (int) Float.parseFloat("" + object);
 					myProgressBar.setValue(value/100);
@@ -63,6 +68,7 @@ public class TipiProgressBar extends TipiVaadinComponentImpl {
 		}
 		if (name.equals("indeterminate")) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					myProgressBar.setIndeterminate(((Boolean) object)
 							.booleanValue());
@@ -73,6 +79,7 @@ public class TipiProgressBar extends TipiVaadinComponentImpl {
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if (name.equals("text")) {
 			return myProgressBar.getCaption();

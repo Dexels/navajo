@@ -10,6 +10,7 @@ public final class StringFunction extends FunctionInterface {
 
 //	private final static Logger logger = LoggerFactory.getLogger(StringFunction.class);
 
+	@Override
 	public String remarks() {
 		return "Perform a Java stringfunction on a given string.";
 	}
@@ -22,6 +23,7 @@ public final class StringFunction extends FunctionInterface {
 	 * @return
 	 * @throws TMLExpressionException
 	 */
+	@Override
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public final Object evaluate()
 			throws com.dexels.navajo.parser.TMLExpressionException {
@@ -94,6 +96,7 @@ public final class StringFunction extends FunctionInterface {
 		return returnValue;
 	}
 
+	@Override
 	public String usage() {
 		return "StringFunction(Method, Object, Arguments)";
 	}

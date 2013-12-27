@@ -23,6 +23,7 @@ public class NavajoJabberSession extends NavajoPushSession {
 	private XMPPConnection connection = null;
 //	private MultiUserChat muc = null;
 	
+	@Override
 	public void load(Navajo n, String agentId) throws ClientException{
 		String server = (String) n.getProperty("SessionParameters/ChatServer").getTypedValue();
 		int port = (Integer) n.getProperty("SessionParameters/ChatPort").getTypedValue();

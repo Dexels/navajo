@@ -46,26 +46,32 @@ public class TipiExtendedTable extends TipiSwingDataComponentImpl {
 		myTable.setEditable(true);
 		myTable.setSearchable(new Searchable() {
 
+			@Override
 			public int search(String arg0) {
 				return 0;
 			}
 
+			@Override
 			public int search(Pattern arg0) {
 				return 0;
 			}
 
+			@Override
 			public int search(String arg0, int arg1) {
 				return 0;
 			}
 
+			@Override
 			public int search(Pattern arg0, int arg1) {
 				return 0;
 			}
 
+			@Override
 			public int search(String arg0, int arg1, boolean arg2) {
 				return 0;
 			}
 
+			@Override
 			public int search(Pattern arg0, int arg1, boolean arg2) {
 				return 0;
 			}
@@ -75,6 +81,7 @@ public class TipiExtendedTable extends TipiSwingDataComponentImpl {
 		return js;
 	}
 
+	@Override
 	public void loadData(final Navajo n, String method) throws TipiException, TipiBreakException {
 		Message m = n.getMessage("FileAssociations");
 		final MessageTableModel mtm = new MessageTableModel(m);
@@ -83,6 +90,7 @@ public class TipiExtendedTable extends TipiSwingDataComponentImpl {
 		logger.info("Created model: " + mtm.getColumnCount());
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				myTable.setModel(mtm);
 

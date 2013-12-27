@@ -38,6 +38,7 @@ public class TipiToggleButton extends TipiSwingComponentImpl {
 
 	private boolean iAmEnabled = true;
 
+	@Override
 	public Object createContainer() {
 		myButton = new JToggleButton();
 		myButton.setOpaque(false);
@@ -47,9 +48,11 @@ public class TipiToggleButton extends TipiSwingComponentImpl {
 		return myButton;
 	}
 
+	@Override
 	public void setComponentValue(final String name, final Object object) {
 		super.setComponentValue(name, object);
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				if (name.equals("text")) {
 					myButton.setText((String) object);
@@ -76,6 +79,7 @@ public class TipiToggleButton extends TipiSwingComponentImpl {
 		return new ImageIcon(u);
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if (name.equals("text")) {
 			return myButton.getText();
@@ -88,9 +92,11 @@ public class TipiToggleButton extends TipiSwingComponentImpl {
 	}
 
 	// private boolean enabled = false;
+	@Override
 	public void eventStarted(TipiExecutable te, Object event) {
 		if (Container.class.isInstance(getContainer())) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					// enabled = ( (Container) getContainer()).isEnabled();
 					getSwingContainer().setEnabled(false);
@@ -99,9 +105,11 @@ public class TipiToggleButton extends TipiSwingComponentImpl {
 		}
 	}
 
+	@Override
 	public void eventFinished(TipiExecutable te, Object event) {
 		if (Container.class.isInstance(getContainer())) {
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					((Container) getContainer()).setEnabled(iAmEnabled);
 				}

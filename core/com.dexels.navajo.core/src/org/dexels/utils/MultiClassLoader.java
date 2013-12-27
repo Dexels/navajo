@@ -52,11 +52,13 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
 
 
 
-    public Class<?> loadClass(String className) throws ClassNotFoundException {
+    @Override
+	public Class<?> loadClass(String className) throws ClassNotFoundException {
         return (loadClass(className, true, false));
     }
 
-    public synchronized Class<?> loadClass(String className, boolean resolveIt) throws ClassNotFoundException {
+    @Override
+	public synchronized Class<?> loadClass(String className, boolean resolveIt) throws ClassNotFoundException {
         return (loadClass(className, resolveIt, false));
     }
 

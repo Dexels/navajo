@@ -19,9 +19,12 @@ import com.dexels.navajo.server.UserException;
  object.
  */
 public class DatasourceMap implements Mappable {
-    public void load(Access access) throws MappableException, UserException {}
+    @Override
+	public void load(Access access) throws MappableException, UserException {}
 
-    public void store() {}
+    @Override
+	public void store() {}
 
-    public void kill() {}
+    @Override
+	public void kill() {}
 }

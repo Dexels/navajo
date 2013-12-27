@@ -49,6 +49,7 @@ public class TipiTabLayer extends TipiTableBaseLayer {
 
 	}
 
+	@Override
 	public void loadLayer(XMLElement elt) {
 		super.loadLayer(elt);
 		/**
@@ -80,6 +81,7 @@ public class TipiTabLayer extends TipiTableBaseLayer {
 
 	}
 
+	@Override
 	public void loadData(final Navajo n, Message current,
 			Stack<TipiTableBaseLayer> layerStack, final JComponent currentPanel) {
 		Message nextMessage = null;
@@ -97,6 +99,7 @@ public class TipiTabLayer extends TipiTableBaseLayer {
 
 		final TipiTableBaseLayer nextLayer = newStack.pop();
 		myTable.runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				JTabbedPane jt = new JTabbedPane();
 				myTabbedPane = jt;
@@ -130,6 +133,7 @@ public class TipiTabLayer extends TipiTableBaseLayer {
 		});
 	}
 
+	@Override
 	public XMLElement store() {
 
 		XMLElement newElt = super.store();
@@ -159,6 +163,7 @@ public class TipiTabLayer extends TipiTableBaseLayer {
 		return newElt;
 	}
 
+	@Override
 	public int getCurrentSelection() {
 		if (myTabbedPane != null) {
 			logger.debug("Getting selected TAB: "
@@ -170,6 +175,7 @@ public class TipiTabLayer extends TipiTableBaseLayer {
 		return -1;
 	}
 
+	@Override
 	public void setCurrentSelection(int s) {
 		if (myTabbedPane != null) {
 			if (s != -1) {

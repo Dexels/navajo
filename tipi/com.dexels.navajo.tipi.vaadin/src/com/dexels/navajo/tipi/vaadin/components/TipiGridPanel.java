@@ -79,6 +79,7 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 
 
 
+	@Override
 	public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef, XMLElement def) {
 		  String ss = instance.getStringAttribute("columnWidth");
 		  if (ss==null && def != null) {
@@ -268,7 +269,8 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 	            this.y = y;
 	        }
 
-	        public boolean equals(Object o) {
+	        @Override
+			public boolean equals(Object o) {
 	            if (o == null) {
 	                return false;
 	            }
@@ -279,7 +281,8 @@ public class TipiGridPanel extends TipiVaadinComponentImpl {
 	            return c.x == x && c.y == y;
 	        }
 
-	        public String toString() {
+	        @Override
+			public String toString() {
 	            return "{" + x + "," + y + "}";
 	        }
 

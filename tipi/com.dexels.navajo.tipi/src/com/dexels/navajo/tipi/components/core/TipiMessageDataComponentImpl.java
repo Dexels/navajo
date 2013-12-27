@@ -21,10 +21,12 @@ public abstract class TipiMessageDataComponentImpl extends
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiMessageDataComponentImpl.class);
 	
+	@Override
 	public Message getMessage() {
 		return myMessage;
 	}
 
+	@Override
 	public String getMessageName() {
 		return myMessageName;
 	}
@@ -38,6 +40,7 @@ public abstract class TipiMessageDataComponentImpl extends
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	public void setMessage(Message m) {
 		myMessage = m;
 
@@ -46,6 +49,7 @@ public abstract class TipiMessageDataComponentImpl extends
 	/**
 	 * @param n
 	 */
+	@Override
 	protected void loadProperties(Navajo n) {
 		if (myMessage == null) {
 			// No message has been set. Reverting to parent behavior.

@@ -13,8 +13,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.felix.service.command.CommandSession;
 
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 
 public class Authorized extends BaseOperation implements AppStoreOperation {
 
@@ -22,7 +22,7 @@ public class Authorized extends BaseOperation implements AppStoreOperation {
 	private static final long serialVersionUID = 8640712571228602628L;
 	
 	public void list(CommandSession session ) throws IOException {
-		Map<String,Map<String,ApplicationStatus>> wrap = new HashMap<String, Map<String,ApplicationStatus>>();
+		Map<String,Map<String,RepositoryInstance>> wrap = new HashMap<String, Map<String,RepositoryInstance>>();
 		wrap.put("applications", applications);
 		writeValueToJsonArray(session.getConsole(),wrap);
 	}
@@ -51,7 +51,7 @@ public class Authorized extends BaseOperation implements AppStoreOperation {
 		result.put("image", image);
 		result.put("email", email);
 		result.put("authorized", authorized);
-		result.put("clientid", applicationManager.getClientId());
+		result.put("clientid", appStoreManager.getClientId());
 		final String state = generateRandom();
 		result.put("state", state);
 		session.setAttribute("state", state);
@@ -67,7 +67,7 @@ public class Authorized extends BaseOperation implements AppStoreOperation {
 	}
 
 	@Override
-	public void build(ApplicationStatus a) throws IOException {
+	public void build(RepositoryInstance a) throws IOException {
 
 	}
 }

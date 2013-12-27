@@ -65,6 +65,7 @@ public class CalendarPickerDialog extends StandardDialog implements
 	JLabel yearLabel = new JLabel();
 	Date selected = null;
 
+	@Override
 	public void load(Date d) {
 	}
 
@@ -120,11 +121,13 @@ public class CalendarPickerDialog extends StandardDialog implements
 				1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
 				new Insets(2, 2, 2, 2), 0, 0));
 		nextMonthButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				performAction(1);
 			}
 		});
 		previousMonthButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				performAction(-1);
 			}
@@ -148,11 +151,13 @@ public class CalendarPickerDialog extends StandardDialog implements
 				0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
 				new Insets(2, 2, 2, 2), 0, 0));
 		nextYearButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				performAction(12);
 			}
 		});
 		previousYearButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				performAction(-12);
 			}
@@ -164,6 +169,7 @@ public class CalendarPickerDialog extends StandardDialog implements
 		// setUndecorated(true);
 		SwingUtilities.invokeLater(new Runnable() {
 
+			@Override
 			public void run() {
 				((JComponent) getContentPane()).revalidate();
 			}
@@ -216,6 +222,7 @@ public class CalendarPickerDialog extends StandardDialog implements
 	 *       com.dexels.navajo.swingclient.components.calendar.CalendarManager
 	 *       method
 	 */
+	@Override
 	public void fireCalendarEvent(CalendarEvent e) {
 		ArrayList<Day> days = calendar.getSelectedDays();
 		if (days.size() > 0) {
@@ -241,6 +248,7 @@ public class CalendarPickerDialog extends StandardDialog implements
 	 *       com.dexels.navajo.swingclient.components.calendar.CalendarManager
 	 *       method
 	 */
+	@Override
 	public void setSource(CalendarTable t) {
 	}
 

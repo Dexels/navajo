@@ -66,13 +66,16 @@ public class SelectionMap implements Mappable {
 	
     public SelectionMap() {}
 
-    public void load(Access parm4) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+    @Override
+	public void load(Access parm4) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
         optionsList = new ArrayList<OptionMap>();
     }
 
-    public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}
+    @Override
+	public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}
 
-    public void kill() {}
+    @Override
+	public void kill() {}
 
     /**
      * $option = 'Man;M;1';

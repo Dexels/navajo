@@ -41,7 +41,6 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.CompiledScript;
@@ -49,7 +48,6 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.script.api.TmlRunnable;
 import com.dexels.navajo.server.enterprise.statistics.MapStatistics;
-import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 
 /**
  * An Access object is created for each web service access to the Navajo server.
@@ -615,16 +613,19 @@ public final class Access implements java.io.Serializable, Mappable {
 		return this.accessID;
 	}
 
+	@Override
 	public void kill() {
 		if ( myScript != null ) {
 			myScript.kill();
 		}
 	}
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		
 	}
 
+	@Override
 	public void store() throws MappableException, UserException {
 		if ( myScript != null ) {
 			myScript.store();

@@ -29,6 +29,7 @@ public class TipiArrayPanel extends TipiVaadinComponentImpl {
 	private static final long serialVersionUID = -6921316557265986129L;
 	private String messagePath = null;
 
+	@Override
 	public Object createContainer() {
 		Component panel = new VerticalLayout();
 		return panel;
@@ -59,6 +60,7 @@ public class TipiArrayPanel extends TipiVaadinComponentImpl {
 		super.setComponentValue(name, object);
 	}
 
+	@Override
 	protected void cascadeLoad(Navajo n, String method) throws TipiException {
 	}
 

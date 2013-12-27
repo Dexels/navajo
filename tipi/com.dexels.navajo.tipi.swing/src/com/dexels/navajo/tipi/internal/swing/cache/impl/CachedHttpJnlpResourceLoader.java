@@ -4,9 +4,6 @@ import java.net.URL;
 
 import javax.jnlp.UnavailableServiceException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.dexels.navajo.tipi.internal.CachedResourceLoader;
 import com.dexels.navajo.tipi.internal.cache.CacheManager;
 import com.dexels.navajo.tipi.internal.cache.impl.GeneralCacheManager;

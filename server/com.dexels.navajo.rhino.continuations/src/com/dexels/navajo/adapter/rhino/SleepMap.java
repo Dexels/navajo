@@ -13,6 +13,7 @@ public class SleepMap implements Mappable {
 
 	private Access access;
 
+	@Override
 	public void load(Access access) throws MappableException, UserException {
 		this.access = access;
 	}

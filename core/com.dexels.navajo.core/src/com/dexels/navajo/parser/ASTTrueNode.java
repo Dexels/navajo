@@ -6,7 +6,8 @@ public final class ASTTrueNode extends SimpleNode {
         super(id);
     }
 
-    public final Object interpret() {
+    @Override
+	public final Object interpret() {
         return Boolean.TRUE;
     }
 

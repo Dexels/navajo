@@ -45,6 +45,7 @@ public class TipiJXTaskPanel extends TipiSwingDataComponentImpl {
 		actionPane.add(jgx);
 		jgx.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showConfirmDialog(jgx, "Den aep!");
 			}

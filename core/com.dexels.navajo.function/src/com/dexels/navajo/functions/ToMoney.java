@@ -19,11 +19,13 @@ public final class ToMoney extends FunctionInterface {
   public ToMoney() {
   }
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Cast a string/double/integer to a money object";
   }
 
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object o = getOperand(0);
    if (o == null) {
      return new Money( (Money)null);
@@ -33,7 +35,8 @@ public final class ToMoney extends FunctionInterface {
    }
   }
 
-  public String usage() {
+  @Override
+public String usage() {
     return "ToMoney(String/Integer/Double): Money";
   }
 

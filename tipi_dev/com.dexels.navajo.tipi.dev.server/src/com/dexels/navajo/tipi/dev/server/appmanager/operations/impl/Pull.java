@@ -10,9 +10,9 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.githubosgi.GitRepositoryInstance;
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
-import com.dexels.navajo.tipi.dev.server.appmanager.GitApplicationStatus;
 
 public class Pull extends BaseOperation implements AppStoreOperation {
 
@@ -23,13 +23,13 @@ public class Pull extends BaseOperation implements AppStoreOperation {
 	
 	public void pull(String name) throws IOException {
 		logger.info("Pull application: {}",name);
-		ApplicationStatus as = applications.get(name);
+		RepositoryInstance as = applications.get(name);
 		build(as);
 	}
 	
 	public void pull() throws IOException {
 		logger.info("Pull all applications");
-		for (ApplicationStatus a: applications.values()) {
+		for (RepositoryInstance a: applications.values()) {
 			build(a);
 		}
 	}
@@ -39,6 +39,7 @@ public class Pull extends BaseOperation implements AppStoreOperation {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		verifyAuthorization(req, resp);
 		String val = req.getParameter("app");
 		if(val!=null) {
 			pull(val);
@@ -50,11 +51,11 @@ public class Pull extends BaseOperation implements AppStoreOperation {
 	}
 
 	@Override
-	public void build(ApplicationStatus a) throws IOException {
-		if(!(a instanceof GitApplicationStatus)) {
+	public void build(RepositoryInstance a) throws IOException {
+		if(!(a instanceof GitRepositoryInstance)) {
 			throw new IOException("Can only pull from a Git application");
 		}
-		GitApplicationStatus ha = (GitApplicationStatus) a;
+		GitRepositoryInstance ha = (GitRepositoryInstance) a;
 		try {
 			ha.callPull();
 		} catch (GitAPIException e) {

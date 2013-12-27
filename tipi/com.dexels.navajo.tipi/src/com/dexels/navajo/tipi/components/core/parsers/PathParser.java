@@ -26,6 +26,7 @@ public class PathParser extends BaseTipiParser {
 	 */
 	private static final long serialVersionUID = -8834263600977034155L;
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		/**
 		 * @todo Implement this com.dexels.navajo.tipi.TipiTypeParser abstract

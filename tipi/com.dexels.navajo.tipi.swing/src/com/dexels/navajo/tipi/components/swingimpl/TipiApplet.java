@@ -29,6 +29,7 @@ public class TipiApplet extends JApplet {
 	public TipiApplet() throws Exception {
 	}
 
+	@Override
 	public void stop() {
 		myContext.shutdown();
 		try {
@@ -39,6 +40,7 @@ public class TipiApplet extends JApplet {
 		super.stop();
 	}
 
+	@Override
 	public void destroy() {
 		myContext.shutdown();
 		try {
@@ -49,6 +51,7 @@ public class TipiApplet extends JApplet {
 		super.destroy();
 	}
 
+	@Override
 	public void init() {
 		super.init();
 		List<String> arguments = new ArrayList<String>();

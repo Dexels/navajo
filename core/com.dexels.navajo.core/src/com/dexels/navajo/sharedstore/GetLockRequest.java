@@ -57,6 +57,7 @@ public class GetLockRequest extends Request {
 		//System.err.println("TRYING TO GET LOCK FOR: " + parent + "/" + name + " (type = " + lockType + ", block = " + block + ")");
 	}
 	
+	@Override
 	public Answer getAnswer() {
 		
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();

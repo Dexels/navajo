@@ -23,6 +23,7 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 		t.setMaximumPoolSize(nrThreads);
         t.setThreadFactory(new NamedThreadFactory(id) {
 			
+			@Override
 			public Thread newThread(Runnable r) {
 				Thread t = super.newThread(r);
 				t.setPriority(priority);
@@ -58,11 +59,13 @@ public class ThreadPoolRequestQueue extends RequestQueue {
 	}
 
 
+	@Override
 	public final int getExpectedQueueTime() {
 		int backlog = getQueueSize();
 		return  (int) ((backlog + 1) / getRequestRate());
 	}
 	
+	@Override
 	public final double getRequestRate() {
 		return 1.0;
 	}

@@ -18,6 +18,7 @@ public abstract class BaseAdapter {
 	public Object getValue(String attribute) {
 		return myComponent.getValue(attribute);
 	}
+	@Override
 	public String toString() {
 		return myComponent.getClass().getName();
 	}

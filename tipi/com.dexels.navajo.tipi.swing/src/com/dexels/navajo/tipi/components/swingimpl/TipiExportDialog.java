@@ -51,10 +51,12 @@ public class TipiExportDialog extends TipiDialog {
 
 	}
 
+	@Override
 	public Object createContainer() {
 		final Object c = super.createContainer();
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				gridBagLayout1 = new GridBagLayout();
 				setContainer(c);
@@ -109,15 +111,18 @@ public class TipiExportDialog extends TipiDialog {
 		c.first(container);
 	}
 
+	@Override
 	public void setContainerLayout(Object layout) {
 	}
 
+	@Override
 	public void setComponentValue(String name, Object value) {
 		super.setComponentValue(name, value);
 		if ("messagepath".equals(name)) {
 			msgPath = (String) value;
 			data = getNavajo().getMessage(msgPath);
 			runSyncInEventThread(new Runnable() {
+				@Override
 				public void run() {
 					sp.setMessage(data);
 				}
@@ -125,6 +130,7 @@ public class TipiExportDialog extends TipiDialog {
 		}
 	}
 
+	@Override
 	public Object getComponentValue(String name) {
 		if ("messagepath".equals(name)) {
 			return msgPath;
@@ -270,6 +276,7 @@ class TipiExportDialog_proceedButton_actionAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.proceedButton_actionPerformed(e);
 	}
@@ -283,6 +290,7 @@ class TipiExportDialog_cancelButton_actionAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.cancelButton_actionPerformed(e);
 	}
@@ -296,6 +304,7 @@ class TipiExportDialog_backButton_actionAdapter implements
 		this.adaptee = adaptee;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		adaptee.backButton_actionPerformed(e);
 	}

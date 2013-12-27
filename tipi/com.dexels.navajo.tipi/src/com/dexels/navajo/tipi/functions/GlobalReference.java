@@ -15,14 +15,17 @@ import com.dexels.navajo.tipi.internal.GlobalRef;
  */
 public class GlobalReference extends FunctionInterface {
 
+	@Override
 	public String remarks() {
 		return "GlobalReference to a certain global";
 	}
 
+	@Override
 	public String usage() {
 		return "GlobalReference(context,'name')";
 	}
 
+	@Override
 	public Object evaluate() throws TMLExpressionException {
 		if (getOperands().size() != 2) {
 			throw new TMLExpressionException(this,

@@ -25,6 +25,7 @@ class ConstructorTest implements Constructor {
 		this.myId = myId;
 	}
 
+	@Override
 	public Persistable construct() throws Exception {
 
 		Navajo n = NavajoFactory.getInstance().createNavajo();

@@ -17,7 +17,8 @@ import com.dexels.navajo.parser.FunctionInterface;
 
 public class ToMilliseconds extends FunctionInterface{
 
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object o = this.getOperands().get(0);
 
 
@@ -38,11 +39,13 @@ public class ToMilliseconds extends FunctionInterface{
 
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "ToMilliseconds(StopwatchTime|ClockTime)";
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Get the supplied time in milliseconds (long).";
     }
 

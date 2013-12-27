@@ -22,15 +22,18 @@ public final class CheckRange extends FunctionInterface {
 
     public CheckRange() {}
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Check if a list of values is zero or lesser than a given number.";
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "CheckRange(List, Integer) where List is an ArrayList containing integers or doubles.";
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         List<?> list = (List<?>) this.getOperands().get(0);
         Integer a = (Integer) this.getOperands().get(1);
 

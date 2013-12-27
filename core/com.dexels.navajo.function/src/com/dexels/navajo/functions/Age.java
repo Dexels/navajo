@@ -10,7 +10,8 @@ public final class Age
 
   public Age() {}
 
-  public final Object evaluate() throws com.dexels.navajo.parser.
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.
       TMLExpressionException {
 
     final Object o = this.getOperands().get(0);
@@ -53,7 +54,8 @@ public final class Age
     return new Integer(result);
   }
 
-  public String remarks() {
+  @Override
+public String remarks() {
     return "calculates the age given a birth date.  The calculation is as of the second date parameter, otherwise, if not provided, will be as of today.";
   }
 

@@ -21,7 +21,8 @@ public final class GetInitials extends FunctionInterface {
     public GetInitials() {// Hallo
     }
 
-    public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+    @Override
+	public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object a = this.getOperands().get(0);
         String text;
         try{
@@ -42,11 +43,13 @@ public final class GetInitials extends FunctionInterface {
         return result.trim();
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "GetInitials(string)";
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "This function returns the initials of a specified string field . Eg. GetInitials('aap noot mies') results in 'a n m'";
     }
 }

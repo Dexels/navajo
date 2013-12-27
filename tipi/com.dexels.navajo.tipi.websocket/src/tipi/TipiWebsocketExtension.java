@@ -20,6 +20,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 import com.dexels.navajo.tipi.websocket.TipiWebsocketConnector;
 import com.dexels.navajo.tipi.websocket.WebsocketSession;
 
+@SuppressWarnings("unused")
 public class TipiWebsocketExtension extends TipiAbstractXMLExtension implements TipiExtension {
 
 	private static final long serialVersionUID = 5014050975833573426L;

@@ -34,6 +34,7 @@ public class MessageParser extends BaseTipiParser {
 	private final static Logger logger = LoggerFactory
 			.getLogger(MessageParser.class);
 	
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		if (expression.indexOf(":") != -1) {
 			StringTokenizer st = new StringTokenizer(expression, ":");

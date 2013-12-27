@@ -33,6 +33,7 @@ public class TribeMemberDownEvent implements NavajoEvent {
 		return tm;
 	}
 
+	@Override
 	public Navajo getEventNavajo() {
 		// TODO Auto-generated method stub
 		return null;

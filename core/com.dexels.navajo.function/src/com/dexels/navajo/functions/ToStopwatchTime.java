@@ -15,7 +15,8 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class ToStopwatchTime extends FunctionInterface{
 
-  public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object o = this.getOperands().get(0);
 
         if (o == null)
@@ -33,11 +34,13 @@ public class ToStopwatchTime extends FunctionInterface{
 
     }
 
-    public String usage() {
+    @Override
+	public String usage() {
         return "ToStopwatchTime(Date|Integer)";
     }
 
-    public String remarks() {
+    @Override
+	public String remarks() {
         return "Get a stopwatchtime representation of the supplied integer(in milliseconds) or date.";
     }
 

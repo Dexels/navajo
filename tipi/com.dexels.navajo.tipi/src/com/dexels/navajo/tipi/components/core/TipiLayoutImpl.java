@@ -39,10 +39,12 @@ public abstract class TipiLayoutImpl extends TipiLayout {
 	 * @param text  
 	 * @param index 
 	 */
+	@Override
 	public Object parseConstraint(String text, int index) {
 		return null;
 	}
 
+	@Override
 	public void loadLayout(XMLElement def, TipiComponent t)
 			throws com.dexels.navajo.tipi.TipiException {
 		myInstanceElement = def;

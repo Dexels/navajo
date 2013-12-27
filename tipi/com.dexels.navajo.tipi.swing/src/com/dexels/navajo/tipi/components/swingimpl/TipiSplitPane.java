@@ -44,6 +44,7 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
 	private boolean inverse_oriented = false;
 	private int dividerlocation = 0;
 
+	@Override
 	public Object createContainer() {
 		left = new JPanel();
 		right = new JPanel();
@@ -59,6 +60,7 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
 		sp.setDividerLocation(0.5);
 		sp.setContinuousLayout(true);
 		sp.addComponentListener(new ComponentAdapter() {
+			@Override
 			public void componentResized(ComponentEvent e) {
 				updateDividerLocation();
 			}
@@ -66,6 +68,7 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
 		return sp;
 	}
 
+	@Override
 	public void addToContainer(Object c, Object constraints) {
 		if (constraints == null) {
 			throw new IllegalArgumentException(
@@ -75,6 +78,7 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
 		final Component cc = (Component) c;
 		runSyncInEventThread(new Runnable() {
 
+			@Override
 			public void run() {
 				Dimension minimumSize = new Dimension(0, 0);
 				if ("bottom".equals(constr)) {
@@ -106,6 +110,7 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
 
 	}
 
+	@Override
 	public void setComponentValue(String name, Object object) {
 		super.setComponentValue(name, object);
 		if (name.equals("orientation")) {

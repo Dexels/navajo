@@ -31,11 +31,13 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class ArraySelection extends FunctionInterface {
 
+	@Override
 	public String remarks() {
 		// 'MessagePath' 'NameProperty' 'ValueProperty'
 		return "Checks whether properties in an array message have unique values";
 	}
 
+	@Override
 	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
 		if (getOperands().size() < 3) {
@@ -77,6 +79,7 @@ public class ArraySelection extends FunctionInterface {
 		return result;
 	}
 
+	@Override
 	public String usage() {
 		return "ArraySelection(<Array message name (absolute path)>,<Name Property name>,<Value Property name>)";
 	}

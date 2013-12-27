@@ -47,14 +47,16 @@ private final static Logger logger = LoggerFactory
       return "SAXP";
   }
   
-  public void addHeader(Header h) {
+  @Override
+public void addHeader(Header h) {
 //    if (myHeader == null) {
       myHeader = (BaseHeaderImpl)h;
 //    }
 //    myHeader.merge((BaseHeaderImpl)h);
   }
 
-  public void removeHeader() {
+  @Override
+public void removeHeader() {
     myHeader = null;
     /** @todo Don't really know what I should do here */
   }
@@ -65,7 +67,8 @@ private final static Logger logger = LoggerFactory
   }
 
 
-  public Navajo copy() {
+  @Override
+public Navajo copy() {
     Navajo ni = NavajoFactory.getInstance().createNavajo();
     BaseNavajoImpl n = (BaseNavajoImpl)ni;
 //    n.setRootMessage(cop getRootMessage().copy(n));
@@ -91,10 +94,12 @@ private final static Logger logger = LoggerFactory
     }
     return n;
   }
-  public void addMethod(Method m) {
+  @Override
+public void addMethod(Method m) {
     myMethods.addMethod(m);
   }
- public Message getMessage(String name)  {
+ @Override
+public Message getMessage(String name)  {
     return rootMessage.getMessage(name);
   }
 
@@ -102,16 +107,19 @@ private final static Logger logger = LoggerFactory
 //    return rootMessage.getMessage(name,index);
 //  }
 
-  public Message getRootMessage() {
+  @Override
+public Message getRootMessage() {
     return rootMessage;
   }
 
-  public void addMap(com.dexels.navajo.document.MapTag map) throws NavajoException {
+  @Override
+public void addMap(com.dexels.navajo.document.MapTag map) throws NavajoException {
     throw new java.lang.UnsupportedOperationException(
         "Method addMap() not yet implemented.");
    }
 
-  public Message addMessage(Message m) {
+  @Override
+public Message addMessage(Message m) {
 	 if(m==null) {
 		 throw new NullPointerException("Can not add null message to Navajo object");
 	 }
@@ -144,11 +152,13 @@ private final static Logger logger = LoggerFactory
   }
 
 
-  public ArrayList<Message> getAllMessages() {
+  @Override
+public ArrayList<Message> getAllMessages() {
     return rootMessage.getAllMessages();
   }
 
-  public ArrayList<Message> getMessages(String regexp) throws NavajoException {
+  @Override
+public ArrayList<Message> getMessages(String regexp) throws NavajoException {
     if (regexp.startsWith(MESSAGE_SEPARATOR)) {
       return rootMessage.getMessages(regexp.substring(1));
     }
@@ -163,12 +173,14 @@ private final static Logger logger = LoggerFactory
 //<method name="navajo_logon_send"> <required message="identification"/> <required message="services"/> </method>
 
 
-  public Header getHeader() {
+  @Override
+public Header getHeader() {
     return myHeader;
   }
 
 
-  public ArrayList<Method> getAllMethods() {
+  @Override
+public ArrayList<Method> getAllMethods() {
     return myMethods.getAllMethods();
   }
 
@@ -178,14 +190,16 @@ private final static Logger logger = LoggerFactory
 
 /** @deprecated. This is SO JAXP
 */
-  public void importMessage(Message m) {
+  @Override
+public void importMessage(Message m) {
     BaseMessageImpl mi = (BaseMessageImpl) m;
     Message n = mi.copy(this);
     rootMessage.addMessage(n);
   }
 
 
-  public void clearAllSelections() {
+  @Override
+public void clearAllSelections() {
     try {
       rootMessage.clearAllSelections();
     }
@@ -195,7 +209,8 @@ private final static Logger logger = LoggerFactory
   }
 
 
-  public String toString() {
+  @Override
+public String toString() {
 	  StringWriter sw = new StringWriter();
 	  try {
 		this.write(sw);
@@ -205,7 +220,8 @@ private final static Logger logger = LoggerFactory
 	  return sw.toString();
   }
   
-  public String persistenceKey() {
+  @Override
+public String persistenceKey() {
       Navajo copy = this.copy();
       copy.removeHeader();
       StringWriter sw = new StringWriter();
@@ -217,18 +233,22 @@ private final static Logger logger = LoggerFactory
       return sw.toString().hashCode() + "";
   }
   
-  public void removeMessage(String s) {
+  @Override
+public void removeMessage(String s) {
     rootMessage.removeMessage(s);
   }
-  public void removeMessage(Message m) {
+  @Override
+public void removeMessage(Message m) {
     rootMessage.removeMessage(m);
   }
 
-  public Message addMessage(Message m, boolean b) {
+  @Override
+public Message addMessage(Message m, boolean b) {
     return rootMessage.addMessage(m,b);
   }
   
-  public Message mergeMessage(Message m) {
+  @Override
+public Message mergeMessage(Message m) {
 	  return rootMessage.mergeMessage(m);
   }
   
@@ -236,22 +256,26 @@ private final static Logger logger = LoggerFactory
 	  return rootMessage.mergeMessage(m, preferThisNavajo);
   }
 
-  public Message copyMessage(String s, Navajo n) {
+  @Override
+public Message copyMessage(String s, Navajo n) {
     Message m = getMessage(s);
     return copyMessage(m,n);
   }
 
-  public Message copyMessage(Message m, Navajo n) {
+  @Override
+public Message copyMessage(Message m, Navajo n) {
     BaseMessageImpl mc = (BaseMessageImpl)(((BaseMessageImpl)m).copy(n));
     return mc;
   }
 
-  public boolean contains(String s) {
+  @Override
+public boolean contains(String s) {
     /** @todo Implement */
     throw new UnsupportedOperationException();
   }
 
-  public Selection getSelection(String property) throws NavajoException {
+  @Override
+public Selection getSelection(String property) throws NavajoException {
         Selection sel = null;
         Property prop = null;
         StringTokenizer tok = new StringTokenizer(property, Navajo.MESSAGE_SEPARATOR);
@@ -292,11 +316,13 @@ private final static Logger logger = LoggerFactory
 
         return sel;
   }
-  public Property getProperty(String s) {
+  @Override
+public Property getProperty(String s) {
     return rootMessage.getProperty(s);
   }
 
-  public ArrayList<Property> getProperties(String s) throws NavajoException {
+  @Override
+public ArrayList<Property> getProperties(String s) throws NavajoException {
     ArrayList<Property> props = new ArrayList<Property>();
         Property prop = null;
         ArrayList<Message> messages = null;
@@ -330,11 +356,13 @@ private final static Logger logger = LoggerFactory
 
   }
 
-  public Method getMethod(String s) {
+  @Override
+public Method getMethod(String s) {
       return myMethods.getMethod(s);
   }
 
-  public Vector<String> getRequiredMessages(String s) {
+  @Override
+public Vector<String> getRequiredMessages(String s) {
 
     /** @todo Implement */
     throw new UnsupportedOperationException();
@@ -342,10 +370,12 @@ private final static Logger logger = LoggerFactory
 
 
 
-  public int getErrorNumber() {
+  @Override
+public int getErrorNumber() {
     return myErrorNumber;
   }
-  public void setErrorNumber(int i) {
+  @Override
+public void setErrorNumber(int i) {
     myErrorNumber = i;
   }
 
@@ -353,14 +383,17 @@ private final static Logger logger = LoggerFactory
    * Get the errorDescription class property.
    */
 
-  public String getErrorDescription() {
+  @Override
+public String getErrorDescription() {
     return myErrorDescription;
   }
-  public void setErrorDescription(String s) {
+  @Override
+public void setErrorDescription(String s) {
     myErrorDescription = s;
   }
 
-  public boolean isEqual(Navajo o) {
+  @Override
+public boolean isEqual(Navajo o) {
      try {
       Navajo other = o;
       ArrayList<Message> otherMsgs = other.getAllMessages();
@@ -401,7 +434,8 @@ private final static Logger logger = LoggerFactory
 
 
 
-  public synchronized List<Property> refreshExpression() throws NavajoException{
+  @Override
+public synchronized List<Property> refreshExpression() throws NavajoException{
     try {
 
     	Map<Property,List<Property>> depSet = NavajoFactory.getInstance().getExpressionEvaluator().createDependencyMap(this);
@@ -431,10 +465,12 @@ private final static Logger logger = LoggerFactory
       throw new UnsupportedOperationException("getRef not possible on base type. Override it if you need it");
   }
 
+@Override
 public String writeDocument(String filename) {
     throw new UnsupportedOperationException("Oh please. writeDocument is SO five years ago");
 }
 
+@Override
 public void writeMessage(String name, String filename) throws NavajoException {
     throw new UnsupportedOperationException("Oh please. writeMessage is SO five years ago");
 }
@@ -442,6 +478,7 @@ public void writeMessage(String name, String filename) throws NavajoException {
 /**
  * @deprecated
  */
+@Override
 @Deprecated
 public Method copyMethod(String name, Navajo newDocument) {
     return null;
@@ -450,6 +487,7 @@ public Method copyMethod(String name, Navajo newDocument) {
 /**
  * @deprecated
  */
+@Override
 @Deprecated
 public Method copyMethod(Method method, Navajo newDocument) {
      return null;
@@ -458,6 +496,7 @@ public Method copyMethod(Method method, Navajo newDocument) {
 /**
  * @deprecated
  */
+@Override
 @Deprecated
 public Object getMessageBuffer() {
      return this;
@@ -466,6 +505,7 @@ public Object getMessageBuffer() {
 /**
  * @deprecated
  */
+@Override
 @Deprecated
 public void appendDocBuffer(Object d) throws NavajoException {
     Navajo n = (Navajo)d;
@@ -476,10 +516,12 @@ public void appendDocBuffer(Object d) throws NavajoException {
     }
 }
 
+@Override
 public void write(Writer writer, boolean condense, String method) throws NavajoException {
     write(writer);
 }
 
+@Override
 public void write(OutputStream stream, boolean condense, String method) throws NavajoException {
     super.write(stream);
 }
@@ -492,12 +534,14 @@ public void disposeReader(Reader r) {
     
 }
 
+@Override
 public Map<String,String> getAttributes() {
     Map<String,String> m = new HashMap<String,String>();
     m.put("documentImplementation",getImplementationName());
     return m;
 }
 
+@Override
 public List<BaseNode> getChildren() {
     ArrayList<BaseNode> al = new ArrayList<BaseNode>();
     if (myHeader!=null) {
@@ -511,11 +555,13 @@ public List<BaseNode> getChildren() {
     return al;
 }
 
+@Override
 public String getTagName() {
     return "tml";
 }
 
 
+@Override
 public void firePropertyDataChanged(Property p,Object oldValue, Object newValue) {
 //	logger.info("Navajo changed. ");
 	if (myPropertyDataListeners != null) {
@@ -529,6 +575,7 @@ public void firePropertyDataChanged(Property p,Object oldValue, Object newValue)
 	}
 }
 
+@Override
 public void addPropertyChangeListener(PropertyChangeListener p) {
 	if (myPropertyDataListeners == null) {
 		myPropertyDataListeners = new ArrayList<PropertyChangeListener>();
@@ -539,6 +586,7 @@ public void addPropertyChangeListener(PropertyChangeListener p) {
 	}
 }
 
+@Override
 public void removePropertyChangeListener(PropertyChangeListener p) {
 	if (myPropertyDataListeners == null) {
 		return;
@@ -555,10 +603,12 @@ public static void main(String [] args) throws Exception {
 	merge.write(System.err);
 }
 
+@Override
 public NavajoFactory getNavajoFactory() {
 	return myFactory;
 }
 
+@Override
 public void writeJSON(Writer w) throws NavajoException{
 	try{
 		this.printElementJSON(w, false);
@@ -567,6 +617,7 @@ public void writeJSON(Writer w) throws NavajoException{
 	}
 }
 
+@Override
 public void writeJSONTypeless(Writer w) throws NavajoException{
 	try{
 		this.printElementJSONTypeless(w);
@@ -575,6 +626,7 @@ public void writeJSONTypeless(Writer w) throws NavajoException{
 	}
 }
 
+@Override
 public final void printElementJSONTypeless(final Writer sw) throws IOException {
 	ArrayList<Message> list = getAllMessages();
 	
@@ -591,10 +643,12 @@ public final void printElementJSONTypeless(final Writer sw) throws IOException {
 
 }
 
+@Override
 public Navajo merge(Navajo with) throws NavajoException {
 	return merge(with, false);
 }
 
+@Override
 public Navajo merge(Navajo with, boolean preferThisNavajo) throws NavajoException {
 
 	// Find duplicate messages.
@@ -633,6 +687,7 @@ public Navajo merge(Navajo with, boolean preferThisNavajo) throws NavajoExceptio
 
 }
 
+@Override
 public Map<String,Message> getMessages() {
 	return getRootMessage().getMessages();
 }

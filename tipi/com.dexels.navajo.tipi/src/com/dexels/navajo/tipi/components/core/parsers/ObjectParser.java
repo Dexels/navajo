@@ -31,6 +31,7 @@ public class ObjectParser extends TipiTypeParser {
 	public ObjectParser() {
 	}
 
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		throw new RuntimeException("Objects are unparsable");
 	}

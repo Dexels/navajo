@@ -34,6 +34,7 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 
 		j.setTransferHandler(new TipiTransferHandler(j.getTransferHandler()));
 		j.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
 			public void mouseDragged(MouseEvent e) {
 				JComponent c = (JComponent) e.getSource();
 				if (c instanceof JTextComponent) {
@@ -63,16 +64,19 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 
 	}
 
+	@Override
 	public List<String> getDragCategory() {
 		List<String> dragCategory = (List<String>) myTipiComponent
 				.getValue("dragCategory");
 		return dragCategory;
 	}
 
+	@Override
 	public Object getDragValue() {
 		return myTipiComponent.getValue("dragValue");
 	}
 
+	@Override
 	public boolean acceptsDropCategory(List<String> category) {
 		List<String> dropCategory = (List<String>) myTipiComponent
 				.getValue("dropCategory");
@@ -92,6 +96,7 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 		return null;
 	}
 
+	@Override
 	public void fireDropEvent(Object o) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("value", o);

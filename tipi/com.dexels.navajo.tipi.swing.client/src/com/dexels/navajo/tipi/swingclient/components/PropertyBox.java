@@ -27,6 +27,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled,
 		// PropertyCellRenderer renderer2 = new PropertyCellRenderer();
 		// this.setRenderer(renderer2);
 		this.addItemListener(new java.awt.event.ItemListener() {
+			@Override
 			public void itemStateChanged(ItemEvent e) {
 				this_itemStateChanged(e);
 			}
@@ -35,10 +36,12 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled,
 		setEditable(false);
 	}
 
+	@Override
 	public final Property getProperty() {
 		return myProperty;
 	}
 
+	@Override
 	public final void update() {
 		if (myProperty != null) {
 			lastSelection = myProperty.getTypedValue();
@@ -75,6 +78,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled,
 		super.setEditable(b);
 	}
 
+	@Override
 	public final void setProperty(Property p) {
 		if (myProperty != null) {
 			myProperty.removePropertyChangeListener(this);
@@ -141,6 +145,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled,
 
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (evt.getSource().equals(myProperty)) {
 			logger.info("change: " + evt.getOldValue() + " new: "

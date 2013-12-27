@@ -31,6 +31,7 @@ public class ExpressionValueDependency extends Dependency {
 		return false;
 	}
 
+	@Override
 	public String getType() {
 		return type;
 	}

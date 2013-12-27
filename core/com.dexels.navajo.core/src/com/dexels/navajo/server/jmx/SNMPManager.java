@@ -69,18 +69,22 @@ public class SNMPManager implements CompositeData {
 		return (String) items.get(SNMPVERSION);
 	}
 	
+	@Override
 	public boolean containsKey(String key) {
 		return items.containsKey(key);
 	}
 
+	@Override
 	public boolean containsValue(Object value) {
 		return items.containsValue(value);
 	}
 
+	@Override
 	public Object get(String key) {
 		return items.get(key);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object[] getAll(String[] keys) {
 		ArrayList l = new ArrayList();
@@ -92,6 +96,7 @@ public class SNMPManager implements CompositeData {
 		return o;
 	}
 
+	@Override
 	public CompositeType getCompositeType() {
 		
 		CompositeType ct = null;
@@ -110,6 +115,7 @@ public class SNMPManager implements CompositeData {
 		return ct;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Collection values() {
 		return items.values();

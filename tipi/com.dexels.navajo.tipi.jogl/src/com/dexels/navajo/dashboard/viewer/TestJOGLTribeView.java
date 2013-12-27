@@ -101,21 +101,26 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
     
 //    private float z = -500f;  // Camera height
 
+	@Override
 	public Object createContainer() {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 
 				canvas = new GLCanvas() {
 					private static final long serialVersionUID = -6597323676724928801L;
 
+					@Override
 					public Dimension getMaximumSize() {
 						return new Dimension(0, 0);
 					}
 
+					@Override
 					public Dimension getMinimumSize() {
 						return new Dimension(0, 0);
 					}
 
+					@Override
 					public Dimension getPreferredSize() {
 						return new Dimension(0, 0);
 					}
@@ -132,10 +137,12 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 		canvas.addGLEventListener(this);
 
 		canvas.addMouseListener(new MouseListener() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 
 			}
 
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				logger.info("Clicked: " + mouseOverTribe);
 
@@ -164,21 +171,26 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 				}
 			}
 
+			@Override
 			public void mouseEntered(MouseEvent arg0) {
 			}
 
+			@Override
 			public void mouseExited(MouseEvent arg0) {
 			}
 
+			@Override
 			public void mouseReleased(MouseEvent e) {
 			}
 		});
 
 		canvas.addMouseMotionListener(new MouseMotionListener() {
+			@Override
 			public void mouseDragged(MouseEvent e) {
 
 			}
 
+			@Override
 			public void mouseMoved(MouseEvent e) {
 				if (mouseOverTribe > -1) {
 					canvas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -192,6 +204,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 
 		canvas.addMouseWheelListener(new MouseWheelListener() {
 
+			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {				
 				int amt = e.getWheelRotation();
 				if((maxTribeRadius - 10*amt) > 0){
@@ -297,6 +310,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 				radiusAnim.setAcceleration(.8f);
 				radiusAnim.setDeceleration(.1f);
 				radiusAnim.addTarget(new TimingTargetAdapter() {
+					@Override
 					public void end() {
 						applyTribeFocus(tribe_id);
 					}
@@ -362,6 +376,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 
 	}
 
+	@Override
 	public void display(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 //		gl.glMatrixMode(gl.GL_PROJECTION);
@@ -423,6 +438,7 @@ public class TestJOGLTribeView extends TipiDataComponentImpl implements GLEventL
 
 	public void repaintCanvas() {
 		runSyncInEventThread(new Runnable() {
+			@Override
 			public void run() {
 				canvas.repaint();
 			}

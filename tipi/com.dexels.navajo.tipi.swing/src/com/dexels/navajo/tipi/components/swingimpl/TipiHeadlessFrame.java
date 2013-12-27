@@ -30,6 +30,7 @@ public class TipiHeadlessFrame extends TipiDataComponentImpl {
 	public TipiHeadlessFrame() {
 	}
 
+	@Override
 	public Object createContainer() {
 		return null;
 	}

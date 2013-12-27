@@ -18,6 +18,7 @@ public class TipiCoreExtension extends TipiAbstractXMLExtension implements Seria
 		super();
 	}
 
+	@Override
 	public void initialize(TipiContext tc) {
 		// Do nothing
 	}

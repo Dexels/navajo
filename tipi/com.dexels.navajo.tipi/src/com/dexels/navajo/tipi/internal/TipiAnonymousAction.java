@@ -17,24 +17,29 @@ public class TipiAnonymousAction implements TipiExecutable {
 		myRunnable = r;
 	}
 
+	@Override
 	public String getBlockParam(String key) {
 		return null;
 	}
 
+	@Override
 	public TipiComponent getComponent() {
 		return null;
 	}
 
+	@Override
 	public TipiEvent getEvent() {
 		return null;
 	}
 
+	@Override
 	public void performAction(TipiEvent te, TipiExecutable parent, int index)
 			throws TipiBreakException, TipiException {
 		myRunnable.run();
 
 	}
 
+	@Override
 	public void setEvent(TipiEvent e) {
 
 	}
@@ -43,18 +48,22 @@ public class TipiAnonymousAction implements TipiExecutable {
 		return null;
 	}
 
+	@Override
 	public TipiStackElement getStackElement() {
 		return null;
 	}
 
+	@Override
 	public void setStackElement(TipiStackElement myStackElement) {
 
 	}
 
+	@Override
 	public void dumpStack(String message) {
 
 	}
 
+	@Override
 	public void setComponent(TipiComponent c) {
 
 	}

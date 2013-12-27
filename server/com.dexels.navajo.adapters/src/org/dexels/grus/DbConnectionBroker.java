@@ -270,6 +270,7 @@ public final class DbConnectionBroker
 		return dead;
 	}
 	
+	@Override
 	public void finalize() {
 		destroy();
 	}

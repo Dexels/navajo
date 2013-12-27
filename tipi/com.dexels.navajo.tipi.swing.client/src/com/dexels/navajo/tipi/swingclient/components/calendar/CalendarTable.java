@@ -83,17 +83,20 @@ public class CalendarTable extends JTable {
 				.getColor(CalendarConstants.BACKGROUND_COLOR));
 
 		this.addKeyListener(new KeyListener() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				// logger.info("You pressed: " +
 				// e.getKeyText(e.getKeyCode()));
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 				// logger.info("You released: " +
 				// e.getKeyText(e.getKeyCode()));
 				registerKeyEvent(e);
 			}
 
+			@Override
 			public void keyTyped(KeyEvent e) {
 				// logger.info("You typed: " +
 				// e.getKeyText(e.getKeyCode()));
@@ -103,20 +106,25 @@ public class CalendarTable extends JTable {
 		});
 
 		this.addMouseListener(new MouseListener() {
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				cellClicked(e);
 			}
 
+			@Override
 			public void mouseExited(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseEntered(MouseEvent e) {
 			}
 
+			@Override
 			public void mousePressed(MouseEvent e) {
 				return;
 			}
 
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				return;
 			}

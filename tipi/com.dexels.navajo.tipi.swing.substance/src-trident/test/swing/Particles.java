@@ -33,6 +33,7 @@ public class Particles {
 		public void dispose() {
 		}
 
+		@Override
 		public void compose(Raster src, Raster dstIn, WritableRaster dstOut) {
 			if (src.getSampleModel().getDataType() != DataBuffer.TYPE_INT
 					|| dstIn.getSampleModel().getDataType() != DataBuffer.TYPE_INT

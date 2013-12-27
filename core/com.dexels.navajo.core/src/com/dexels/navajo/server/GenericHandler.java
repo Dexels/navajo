@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -60,7 +59,7 @@ import com.dexels.navajo.util.AuditLog;
 
 public class GenericHandler extends ServiceHandler {
 
-    private static ConcurrentHashMap<String,NavajoClassSupplier> loadedClasses = null;
+    private static volatile ConcurrentHashMap<String,NavajoClassSupplier> loadedClasses = null;
 
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
@@ -242,6 +241,7 @@ public class GenericHandler extends ServiceHandler {
 		File currentScriptDir = new File(DispatcherFactory.getInstance().getNavajoConfig().getScriptPath() + "/" + pathPrefix);
 		final String servName = serviceName;
 		File[] scripts = currentScriptDir.listFiles(new FilenameFilter() {
+			@Override
 			public boolean accept(File dir, String name) {
 				return name.startsWith(servName);
 			}
@@ -331,7 +331,8 @@ public class GenericHandler extends ServiceHandler {
     	return nr;
     }
     
-    public boolean needsRecompile() {
+    @Override
+	public boolean needsRecompile() {
     	return needsRecompileForScript(this.access);
     }
     
@@ -418,6 +419,7 @@ public class GenericHandler extends ServiceHandler {
      * @throws SystemException
      * @throws AuthorizationException
      */
+	@Override
 	public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
 
     	// Check whether break-was-set for access from 'the-outside'. If so, do NOT perform service and return

@@ -26,7 +26,8 @@ public class NavajoAccess implements Mappable {
 
     public NavajoAccess() {}
 
-    public void load(Access access) throws MappableException, UserException {
+    @Override
+	public void load(Access access) throws MappableException, UserException {
         this.access = access;
     }
 
@@ -50,7 +51,9 @@ public class NavajoAccess implements Mappable {
 //    }
 //
 
-    public void store() throws MappableException, UserException {}
+    @Override
+	public void store() throws MappableException, UserException {}
 
-    public void kill() {}
+    @Override
+	public void kill() {}
 }

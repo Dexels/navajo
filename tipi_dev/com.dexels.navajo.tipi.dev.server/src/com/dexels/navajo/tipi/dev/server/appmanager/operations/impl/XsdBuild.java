@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.core.projectbuilder.XsdBuilder;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
-import com.dexels.navajo.tipi.dev.server.appmanager.ApplicationStatus;
 
 public class XsdBuild extends BaseOperation implements AppStoreOperation {
 
@@ -23,12 +23,12 @@ public class XsdBuild extends BaseOperation implements AppStoreOperation {
 			.getLogger(XsdBuild.class);
 	
 	public void xsd(String name) throws IOException {
-		ApplicationStatus as = applications.get(name);
+		RepositoryInstance as = applications.get(name);
 		build(as);
 	}
 	
 	public void xsd() throws IOException {
-		for (ApplicationStatus a: applications.values()) {
+		for (RepositoryInstance a: applications.values()) {
 			build(a);
 		}
 	}
@@ -37,6 +37,7 @@ public class XsdBuild extends BaseOperation implements AppStoreOperation {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String val = req.getParameter("app");
+		verifyAuthorization(req, resp);
 		if(val!=null) {
 			xsd(val);
 		} else {
@@ -47,9 +48,9 @@ public class XsdBuild extends BaseOperation implements AppStoreOperation {
 	}
 	
 	@Override
-	public void build(ApplicationStatus a) throws IOException {
+	public void build(RepositoryInstance a) throws IOException {
 		XsdBuilder xsd = new XsdBuilder();
-		File lib = new File(a.getAppFolder(),"lib");
+		File lib = new File(a.getRepositoryFolder(),"lib");
 		File[] jars = lib.listFiles(new FilenameFilter() {
 			
 			@Override
@@ -64,6 +65,6 @@ public class XsdBuild extends BaseOperation implements AppStoreOperation {
 		for (File file : jars) {
 			xsd.addJar(file);
 		}
-		xsd.writeXsd(a.getAppFolder());
+		xsd.writeXsd(a.getRepositoryFolder());
 	}
 }

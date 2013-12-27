@@ -41,7 +41,8 @@ public class TMLExpressionException extends Exception {
         this.message = s + "\nUsage: " + usage + "\nRemarks: " + remarks;
     }
 
-    public String getMessage() {
+    @Override
+	public String getMessage() {
         return this.message;
     }
 }

@@ -14,7 +14,7 @@ import tipi.TipiApplicationInstance;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.swingimpl.TipiSwingWrapper;
 
-@SuppressWarnings({"rawtypes","unused"})
+@SuppressWarnings({"unused"})
 
 public class ApplicationComponent {
 	

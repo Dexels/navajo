@@ -2,6 +2,7 @@ package com.dexels.navajo.server.resource;
 
 public class TestResourceManager implements ResourceManager {
 
+	@Override
 	public int getWaitingTime(String resourceId) {
 		if (resourceId.equals("id1")) {
 			return 1000;
@@ -12,6 +13,7 @@ public class TestResourceManager implements ResourceManager {
 		}
 	}
 
+	@Override
 	public boolean isAvailable(String resourceId) {
 		if (resourceId.equals("id1")) {
 			return true;
@@ -20,6 +22,7 @@ public class TestResourceManager implements ResourceManager {
 		}
 	}
 
+	@Override
 	public int getHealth(String resourceId) {
 		if (resourceId.equals("id5")) {
 			return ServiceAvailability.STATUS_DEAD;
@@ -28,6 +31,7 @@ public class TestResourceManager implements ResourceManager {
 		}
 	}
 
+	@Override
 	public void setHealth(String resourceId, int h) {
 		// TODO Auto-generated method stub
 

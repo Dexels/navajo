@@ -48,6 +48,7 @@ public class TipiDockingPanel extends TipiPanel {
 		// Without it the docking panels will fail upon startup.
 		
 		SwingUtilities.invokeLater(new Runnable(){
+			@Override
 			public void run(){
 				// See if a global docModel is allready set, if so use that
 				dockModel = DockingManager.getDockModel();
@@ -78,6 +79,7 @@ public class TipiDockingPanel extends TipiPanel {
 				}  
 				final int position = pos;
 				runSyncInEventThread(new Runnable(){
+					@Override
 					public void run(){
 						logger.info("--> Adding doc to toplevel");
 						myContainer.addChildDock((Dock)c, new Position(position));
@@ -128,6 +130,7 @@ public class TipiDockingPanel extends TipiPanel {
 		final DefaultDockableStateAction restoreAction = new DefaultDockableStateAction(dockable, DockableState.NORMAL);
 		try{
 			runSyncInEventThread(new Runnable(){
+				@Override
 				public void run(){
 					restoreAction.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Restore"));
 				}
@@ -142,6 +145,7 @@ public class TipiDockingPanel extends TipiPanel {
 		final DefaultDockableStateAction closeAction = new DefaultDockableStateAction(dockable, DockableState.CLOSED);
 		try{
 			runSyncInEventThread(new Runnable(){
+				@Override
 				public void run(){
 					closeAction.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Close"));
 				}

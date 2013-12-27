@@ -91,8 +91,8 @@ public class UnsignJarTask  {
 		}
 		File tmpManifest = new File(metainf,"TMPMANIFEST.MF");
 		FileUtils.moveFile(manifest, tmpManifest);
-		logger.info("Moving file from: "+manifest.getAbsolutePath()+" to: "+tmpManifest.getAbsolutePath());
 		if(manifest!=null) {
+			logger.info("Moving file from: "+manifest.getAbsolutePath()+" to: "+tmpManifest.getAbsolutePath());
 			cleanManifest(tmpManifest,manifest,extraHeaders);
 		}
 		tmpManifest.delete();

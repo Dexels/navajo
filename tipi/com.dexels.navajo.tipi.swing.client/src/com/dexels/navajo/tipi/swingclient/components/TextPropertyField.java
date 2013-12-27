@@ -201,6 +201,7 @@ public class TextPropertyField extends PropertyField {
 		this.search = mode;
 	}
 
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if ("icon".equals(search)) {

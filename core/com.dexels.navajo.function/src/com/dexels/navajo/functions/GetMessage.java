@@ -33,11 +33,13 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class GetMessage extends FunctionInterface {
   public GetMessage() {
   }
-  public String remarks() {
+  @Override
+public String remarks() {
     return "Gets a message from an array message";
   }
 
-  public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+  @Override
+public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     if (getOperands().size() == 1) {
    	 System.err.println("One operand found");
    	 return getMessageFromNavajo((String)getOperand(0));
@@ -69,6 +71,7 @@ public class GetMessage extends FunctionInterface {
 	  return inMessage.getMessage(path);
 }
 
+@Override
 public String usage() {
     return "GetMessage(Message,int index). Returns array message element Built for tipi. OR: GetMessage('MessagePath') will retrieve the message from the current navajo (Used for scripts)";
   }

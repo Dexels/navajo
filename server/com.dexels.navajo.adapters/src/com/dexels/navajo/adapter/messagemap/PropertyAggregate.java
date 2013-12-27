@@ -72,10 +72,17 @@ public class PropertyAggregate {
 				Date date = (Date) myProp.getTypedValue();
 				if ( minDate == null && maxDate == null) {
 					minDate = maxDate = date;
-				} else if ( date.before(minDate) ) {
-					minDate = date;
-				} else if ( date.after(maxDate) ) {
-					maxDate = date;
+				} else {
+					if (minDate!=null) {
+						if ( date.before(minDate) ) {
+							minDate = date;
+						}						
+					}
+					if(maxDate!=null) {
+						if ( date.after(maxDate) ) {
+							maxDate = date;
+						}
+					}
 				}
 			}
 		}

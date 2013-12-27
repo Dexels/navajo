@@ -44,10 +44,12 @@ public class GetSelectedName extends FunctionInterface {
 	public GetSelectedName() {
 	}
 
+	@Override
 	public String remarks() {
 		return "Gets the name of a selected property";
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object evaluate()
 			throws com.dexels.navajo.parser.TMLExpressionException {
@@ -84,6 +86,7 @@ public class GetSelectedName extends FunctionInterface {
 		return null;
 	}
 
+	@Override
 	public String usage() {
 		return "GetSelectedName(<value of selection property>) -> will return the first name of a selected selection";
 	}
