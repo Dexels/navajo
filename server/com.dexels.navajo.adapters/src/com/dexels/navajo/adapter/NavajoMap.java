@@ -643,6 +643,16 @@ private String resource;
 	  
 	  if ( this.useCurrentOutDoc ) {
 	
+		  // Copy param messages.
+		  if ( inMessage.getMessage("__parms__") != null ) {
+			  Message params = inMessage.getMessage("__parms__").copy(outDoc);
+			  try {
+				outDoc.addMessage(params);
+			} catch (NavajoException e) {
+				e.printStackTrace(Access.getConsoleWriter(access));
+			}
+		  }
+		  
 		  // Check for deleted messages.
 		  if ( deletedMessages.size() > 0 ) {
 			  for (String dMn: deletedMessages ) {
@@ -653,6 +663,7 @@ private String resource;
 				  }
 			  }
 		  }
+		  
 		  // Check for deleted properties.
 		  if ( deletedProperties.size() > 0 ) {
 			  for (String dPn: deletedProperties) {
