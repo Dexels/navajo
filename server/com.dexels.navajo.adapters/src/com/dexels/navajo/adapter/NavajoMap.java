@@ -185,7 +185,8 @@ private static final long MAX_WAITTIME = 300000;
 private Object waitForResult = new Object();
 private String resource;
   
-  public void load(Access access) throws MappableException, UserException {
+  @Override
+public void load(Access access) throws MappableException, UserException {
     this.access = access;
     this.config = DispatcherFactory.getInstance().getNavajoConfig();
     this.inMessage = access.getInDoc();
@@ -197,7 +198,8 @@ private String resource;
     }
   }
 
-  public void store() throws MappableException, UserException {
+  @Override
+public void store() throws MappableException, UserException {
 	  if ( block && serviceCalled ) {
 		  waitForResult();
 	  }
@@ -1093,13 +1095,13 @@ private String resource;
 	  if (!msgPointer.isArrayMessage())
 		  throw new UserException(-1, "getMessages can only be used for array messages");
 	  try {
-		  ArrayList all = msgPointer.getAllMessages(); //inDoc.getMessages(messagePointer);
+		  List<Message> all = msgPointer.getAllMessages(); //inDoc.getMessages(messagePointer);
 		  if ((all == null))
 			  throw new UserException(-1, "Could not find messages: " + messagePointer + " in response document");
 		  messages = new MessageMap[all.size()];
 		  for (int i = 0; i < all.size(); i++) {
 			  MessageMap msg = new MessageMap();
-			  msg.setMsg((Message) all.get(i));
+			  msg.setMsg(all.get(i));
 			  messages[i] = msg;
 		  }
 		  return messages;
@@ -1124,7 +1126,8 @@ private String resource;
     return new java.util.Date();
    }
 
-  public void kill() {
+  @Override
+public void kill() {
 
   }
 
@@ -1216,20 +1219,24 @@ private String resource;
 	  performOrderBy = b;
   }
 
-  public void afterRequest() throws UserException {
+  @Override
+public void afterRequest() throws UserException {
 	  if (method == null)
 		  throw new UserException(-1, "AsyncProxyMap: specify a method");
   }
 
-  public void afterResponse() {
+  @Override
+public void afterResponse() {
 	  access.setOutputDoc(inDoc);
   }
 
-  public int getPercReady() {
+  @Override
+public int getPercReady() {
 	  return 0;
   }
 
-  public void beforeResponse(Access access) {
+  @Override
+public void beforeResponse(Access access) {
 	  access.setOutputDoc(inDoc);
   }
 
@@ -1244,7 +1251,8 @@ private String resource;
 	      // Call sorted.
 	      if ( performOrderBy ) {
 	    	  OutputStream os = new OutputStream(){
-	    		  public void write(int b) throws IOException {
+	    		  @Override
+				public void write(int b) throws IOException {
 	    			  // do nothing
 	    		  } 
 	    	  };
@@ -1333,7 +1341,8 @@ private String resource;
 	 
   }
   
-  public void run()  {
+  @Override
+public void run()  {
   
 	  try {
 		  Header h = outDoc.getHeader();
@@ -1495,7 +1504,8 @@ public void setTaskId(String t) {
 	  return false;
   }
   
-  public DependentResource[] getDependentResourceFields() {
+  @Override
+public DependentResource[] getDependentResourceFields() {
 	  return new DependentResource[]{new GenericDependentResource(GenericDependentResource.SERVICE_DEPENDENCY, "doSend", AdapterFieldDependency.class), 
 			                         new GenericDependentResource("navajoserver", "server", AdapterFieldDependency.class)};
   }
@@ -1572,7 +1582,8 @@ public void setTaskId(String t) {
    * 
  * @param response  
  */
-  public void onResponse(Navajo response) {
+  @Override
+public void onResponse(Navajo response) {
 	  inDoc = response;
 	  serviceFinished = true;
 	  serviceCalled = true;
@@ -1608,26 +1619,31 @@ public void setTaskId(String t) {
 	  logger.warn("Aborting navajomap: "+reason);
   }
 
-  public void endTransaction() throws IOException {
+  @Override
+public void endTransaction() throws IOException {
 
   }
 
-  public Navajo getInputNavajo() throws IOException {
+  @Override
+public Navajo getInputNavajo() throws IOException {
 	  return null;
   }
 
 
-  public boolean isAborted() {
+  @Override
+public boolean isAborted() {
 	  // TODO Auto-generated method stub
 	  return false;
   }
 
-  public boolean isCommitted() {
+  @Override
+public boolean isCommitted() {
 	  // TODO Auto-generated method stub
 	  return false;
   }
 
-  public void setCommitted(boolean b) {
+  @Override
+public void setCommitted(boolean b) {
 	  // TODO Auto-generated method stub
 
   }
@@ -1636,21 +1652,25 @@ public void setTaskId(String t) {
 	  myException = e;
   }
 
-  public Exception getException() {
+  @Override
+public Exception getException() {
 	  return myException;
   }
   
-  public void setScheduledAt(long currentTimeMillis) {
+  @Override
+public void setScheduledAt(long currentTimeMillis) {
 	  // TODO Auto-generated method stub
 
   }
 
   // FIXME I think this is a bit strange
-  public void setResponseNavajo(Navajo n)  {
+  @Override
+public void setResponseNavajo(Navajo n)  {
 		logger.warn("Set input navajo in NavajoMap... Isn't this odd? Shouldn't it be the output navajo?");	
 		inDoc = n;
 	}
 
+@Override
 public String getUrl() {
 	return "TEMPORARY VERSION!!!";
 	//return this.access.getRequestUrl();
@@ -1660,6 +1680,7 @@ public String getUrl() {
 
 
 
+@Override
 public void writeOutput(Navajo inDoc, Navajo outDoc) throws IOException, FileNotFoundException, UnsupportedEncodingException,
 		NavajoException {
 	// TODO Auto-generated method stub
