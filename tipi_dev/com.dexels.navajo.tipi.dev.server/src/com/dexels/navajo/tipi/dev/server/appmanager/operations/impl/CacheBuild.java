@@ -12,6 +12,10 @@ import java.io.OutputStream;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.Servlet;
@@ -20,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
@@ -33,6 +39,7 @@ public class CacheBuild extends BaseOperation implements Servlet, AppStoreOperat
 	private static final long serialVersionUID = 4675519591066489420L;
 	private final static Logger logger = LoggerFactory
 			.getLogger(CacheBuild.class);
+	private ServiceRegistration<EventHandler> eventHandler;
 	
 	
 	public void cachebuild(String name) throws IOException {
@@ -46,6 +53,17 @@ public class CacheBuild extends BaseOperation implements Servlet, AppStoreOperat
 		}
 	}
 	
+	public void activate(BundleContext bundleContext) {
+		Dictionary<String,Object> properties = new Hashtable<String,Object>();
+		properties.put("event.topics", new String[]{"githubosgi/change"});
+		eventHandler = bundleContext.registerService(EventHandler.class, this, properties);
+	}
+	
+	public void deactivate() {
+		if(eventHandler!=null) {
+			eventHandler.unregister();
+		}
+	}
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {

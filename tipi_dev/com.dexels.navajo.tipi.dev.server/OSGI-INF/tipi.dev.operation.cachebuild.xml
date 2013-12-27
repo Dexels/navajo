@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="tipi.dev.operation.cachebuild">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="tipi.dev.operation.cachebuild">
    <implementation class="com.dexels.navajo.tipi.dev.server.appmanager.operations.impl.CacheBuild"/>
    <reference bind="addRepositoryInstance" cardinality="0..n" interface="com.dexels.navajo.repository.api.RepositoryInstance" name="RepositoryInstance" policy="dynamic" unbind="removeRepositoryInstance" target="(type=appstore)"/>
    <reference bind="setRepositoryManager" cardinality="1..1" interface="com.dexels.navajo.repository.api.RepositoryManager" name="RepositoryManager" policy="dynamic" unbind="clearRepositoryManager"/>
    <service>
       <provide interface="com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation"/>
-	  <provide interface="org.osgi.service.event.EventHandler" />
       <provide interface="javax.servlet.Servlet"/>
 	</service>
    <property name="osgi.command.scope" type="String" value="tipi"/>
    <property name="osgi.command.function" type="String">
 		cachebuild
    </property>
-	<property name="event.topics" type="String">
-		githubosgi/change
-	</property>
+
    <property name="alias" type="String" value="/cachebuild"/>
 </scr:component>
 
