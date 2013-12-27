@@ -92,7 +92,7 @@ public class CallbackServlet extends WebSocketServlet implements Runnable {
 			notifyMembers("Heartbeat #"+count);
 			count++;
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(60000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
