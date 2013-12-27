@@ -14,6 +14,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 
-public class CacheBuild extends BaseOperation implements AppStoreOperation, EventHandler {
+public class CacheBuild extends BaseOperation implements Servlet, AppStoreOperation, EventHandler {
 
 	private static final long serialVersionUID = 4675519591066489420L;
 	private final static Logger logger = LoggerFactory
