@@ -214,11 +214,11 @@
 		<bundle dependency='true'>mvn:com.dexels.thirdparty/javaewah/0.5.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jgit/1.0.7</bundle>
 			</feature>
-	<feature resolver="(obr)" name='tipi.appstore' version='2.0.1' start-level='81' >
+	<feature resolver="(obr)" name='tipi.appstore' version='2.0.2' start-level='81' >
 	    <feature version="[1.0.0,2)">github.osgi</feature>
 	    <feature version="[1.0.5,2)">navajo.core</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.core/1.1.18</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.ant/1.1.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.server/2.0.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.dev.server/2.0.6</bundle>
 	</feature>
 </features>
