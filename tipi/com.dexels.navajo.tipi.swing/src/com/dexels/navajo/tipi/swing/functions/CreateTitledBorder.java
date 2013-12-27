@@ -82,28 +82,32 @@ public class CreateTitledBorder extends FunctionInterface {
 		Border typedBorder = null;
 		if (bordertype != null && !bordertype.isEmpty()) {
 			if ( bordertype.equalsIgnoreCase("rounded") ) {
-				typedBorder = BorderFactory.createLineBorder(linecolor, 1, true);
+				typedBorder = BorderFactory.createLineBorder(linecolor, 1);
+				// typedBorder = BorderFactory.createLineBorder(linecolor, 1, true);
 			} else if ( bordertype.equalsIgnoreCase("etched") ) {
-				typedBorder = BorderFactory.createEtchedBorder(1, linecolor, shadowcolor);
+				// typedBorder = BorderFactory.createEtchedBorder(1, linecolor, shadowcolor);
 			} else if ( bordertype.equalsIgnoreCase("raisedetched") ) {
-				typedBorder = BorderFactory.createEtchedBorder(EtchedBorder.RAISED, linecolor, shadowcolor);
+				// typedBorder = BorderFactory.createEtchedBorder(EtchedBorder.RAISED, linecolor, shadowcolor);
 			} else if ( bordertype.equalsIgnoreCase("loweredetched") ) {
-				typedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, linecolor, shadowcolor);
+				// typedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, linecolor, shadowcolor);
 			} else if ( bordertype.equalsIgnoreCase("raisedbevel") ) {
 				typedBorder = BorderFactory.createRaisedBevelBorder();
 			} else if ( bordertype.equalsIgnoreCase("loweredbevel") ) {
 				typedBorder = BorderFactory.createLoweredBevelBorder();
 			} else if ( bordertype.equalsIgnoreCase("softraisedbevel") ) {
-				typedBorder = BorderFactory.createSoftBevelBorder(BevelBorder.RAISED, linecolor, shadowcolor);
+				// typedBorder = BorderFactory.createSoftBevelBorder(BevelBorder.RAISED, linecolor, shadowcolor);
 			} else if ( bordertype.equalsIgnoreCase("softloweredbevel") ) {
-				typedBorder = BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED, linecolor, shadowcolor);
+				// typedBorder = BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED, linecolor, shadowcolor);
 			} else if ( bordertype.equalsIgnoreCase("compound") ) {
-				Border inner = BorderFactory.createLineBorder(linecolor, 1, false);
-				Border outer = BorderFactory.createLineBorder(shadowcolor, 1, false);
+				// Border inner = BorderFactory.createLineBorder(linecolor, 1, false);
+				Border inner = BorderFactory.createLineBorder(linecolor, 1);
+				// Border outer = BorderFactory.createLineBorder(shadowcolor, 1, false);
+				Border outer = BorderFactory.createLineBorder(shadowcolor, 1);
 				typedBorder = BorderFactory.createCompoundBorder(inner, outer);
 			}
 		} else {
-			typedBorder = BorderFactory.createLineBorder(linecolor, 1, false);
+			typedBorder = BorderFactory.createLineBorder(linecolor, 1);
+			// typedBorder = BorderFactory.createLineBorder(linecolor, 1, false);
 		}
 		
 		// Set title alignment
