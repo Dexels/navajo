@@ -13,4 +13,6 @@ public interface CssApplier {
 
 	public void reloadCssDefinitions(String string);
 
+	public void clearCssDefinitions();
+
 }

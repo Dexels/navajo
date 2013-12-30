@@ -7,9 +7,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.akrogen.tkui.css.core.dom.properties.ICSSPropertyHandler;
 import org.akrogen.tkui.css.core.dom.properties.ICSSPropertyHandlerProvider;
@@ -146,7 +149,7 @@ public class CssComponentResponderImpl implements
 		for (String string : cssDefList) {
 			System.err.println(">>>>>>>>>>>\n>>>>>>>>>>>>\n"+string);
 		}
-		CSSEngine engine = perpareEngine(cssDefList);
+		CSSEngine engine = prepareEngine(cssDefList);
 		engineCache.put(definitions.toString(), engine);
 
 		return engine;
@@ -261,6 +264,18 @@ public class CssComponentResponderImpl implements
 	}
 	
 	/**
+	 * Only clears the cache
+	 */
+	public void clearCssDefinitions()
+	{
+		Set<String> iterSet = new HashSet<String>(tipiCssMap.keySet());
+		for (Iterator<String> iter = iterSet.iterator(); iter.hasNext();) {
+			String definitionName = iter.next();
+			tipiCssMap.remove(definitionName);
+		}
+	}
+	
+	/**
 	 * Reloads all current Css definitions. This should happen only when locale and/or sublocale have changed.
 	 */
 	public void reloadCssDefinitions()
@@ -367,7 +382,7 @@ public class CssComponentResponderImpl implements
 		return null;
 	}
 
-	private CSSTipiEngineImpl perpareEngine(List<String> styleList) {
+	private CSSTipiEngineImpl prepareEngine(List<String> styleList) {
 		CSSTipiEngineImpl engine = new CSSTipiEngineImpl();
 		engine.setErrorHandler(new CSSErrorHandler() {
 			@Override

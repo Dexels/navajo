@@ -11,5 +11,10 @@
 		<param name="forceReloadCssDefinition" type="boolean" required="false"/>
 		<param name="component" type="component" required="true" />
 	</tipiaction>
+    <tipiaction name="clearCssCache" class="TipiClearCssCache" package="com.dexels.navajo.tipi.css.actions">
+	  <description>
+		Removes the loaded tipi definitions from the in memory cache. Mostly used to commit 
+	  </description>
+   </tipiaction>
 
 </tid>
