@@ -21,12 +21,12 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.ant.AntRun;
 import com.dexels.navajo.tipi.dev.ant.LoggingOutputStream;
 import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
 import com.dexels.navajo.tipi.dev.core.projectbuilder.LocalJnlpBuilder;
-import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.impl.RepositoryInstanceWrapper;
 import com.dexels.navajo.tipi.dev.server.appmanager.impl.UnsignJarTask;
 

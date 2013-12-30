@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" configuration-policy="require" name="navajo.repository.logback">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" configuration-policy="require" name="navajo.repository.logback">
    <implementation class="com.dexels.navajo.logback.LogbackConfigurator"/>
    <reference bind="setRepositoryManager" cardinality="1..1" interface="com.dexels.navajo.repository.api.RepositoryManager" name="RepositoryManager" policy="static" unbind="clearRepositoryManager"/>
 </scr:component>

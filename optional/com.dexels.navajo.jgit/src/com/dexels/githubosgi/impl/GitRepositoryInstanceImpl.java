@@ -66,6 +66,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	private EventAdmin eventAdmin = null;
 
 
+
 	public GitRepositoryInstanceImpl() {
 		logger.info("Instance created!");
 	}
@@ -163,6 +164,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		String key = (String) settings.get("key");
 		branch = (String) settings.get("branch");
 		name = (String) settings.get("name");
+		this.type = (String) settings.get("type");
 
 		repositoryName = name + "-"+branch;
 		applicationFolder = new File(gitRepoFolder,repositoryName);

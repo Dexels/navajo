@@ -81,11 +81,9 @@
 
 			<div class="panel-footer">
 				<div class="btn-group">
-					<button id="{{@key}}_pull" type="button" data-loading-text="Pulling..." name="pull" value="{{@key}}" class="btn appstoreoperation btn-default pullbutton {{@key}}" title="Popover title" data-content="Default popover">Pull</button>
-					<button id="{{@key}}_clean" type="button" data-loading-text="Cleaning..." name="clean" value="{{@key}}" class="btn appstoreoperation btn-default">Clean</button>
-					<button id="{{@key}}_buildjnlp" type="button" data-loading-text="Building..." name="build" value="{{@key}}" class="btn appstoreoperation btn-default">Build JNLP</button>
-					<button id="{{@key}}_cache" type="button" data-loading-text="Building cache..." name="cachebuild" value="{{@key}}" class="btn appstoreoperation btn-default">Build cache</button>
-					<button id="{{@key}}_xsd" type="button" data-loading-text="Building XSD..." name="xsd" value="{{@key}}" class="btn appstoreoperation btn-default">Build xsd</button>
+        {{#each operations}} 
+					<button id="{{../repositoryName}}_{{this}}" type="button" data-loading-text="Performing {{this}}..." name="{{this}}" value="{{../repositoryName}}" class="btn appstoreoperation btn-default {{this}}button {{this}}" title="Popover title" data-content="Default popover">{{this}}</button>
+		{{/each}}
 				</div>
 			</div>
 		</div>
@@ -189,7 +187,7 @@
 				type : 'GET',
 				dataType : 'json',
 				url : url,
-				timeout : 500000,
+				timeout : 900000,
 				success : function(data, textStatus) {
 					$(".resultmsg").html(data);
 					loadApplicationData();
