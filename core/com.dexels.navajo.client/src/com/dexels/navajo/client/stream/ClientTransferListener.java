@@ -39,6 +39,6 @@ public class ClientTransferListener implements TransferDataListener {
 	}
 	
 	private void report() {
-		logger.info("Loader: client network: "+total+" connections: "+connections+" failed: "+failed+" duration: "+duration+" millis since start: ");
+		logger.debug("Loader: client network: "+total+" connections: "+connections+" failed: "+failed+" duration: "+duration+" millis since start: ");
 	}
 }

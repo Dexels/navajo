@@ -94,7 +94,7 @@ public class HttpResourceLoader extends ClassPathResourceLoader implements Seria
 		this.connections++;
 		this.failed ++;
 		this.duration+= duration;
-		logger.warn("Failed load: "+label,new Exception());
+		logger.debug("Failed load: "+label);
 		report();
 	}
 	

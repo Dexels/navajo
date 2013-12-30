@@ -19,7 +19,7 @@ public class MeasuredInputStream extends FilterInputStream {
 	
     @Override
 	public void close() throws IOException {
-    	logger.info("Transfer: "+label+" complete. Used bytes: "+totalNumBytesRead);
+    	logger.debug("Transfer: "+label+" complete. Used bytes: "+totalNumBytesRead);
     	if(transferDataListener!=null) {
     		transferDataListener.transferCompleted(label,totalNumBytesRead,(System.currentTimeMillis() - started));
     	}

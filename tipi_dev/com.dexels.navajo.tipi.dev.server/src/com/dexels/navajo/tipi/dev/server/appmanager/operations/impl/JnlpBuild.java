@@ -122,7 +122,7 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 			}
 			FileUtils.copyFileToDirectory(localSigned, lib );
 		}
-		logger.info("Detected dependencies: "+a.getDependencies());
+//		logger.info("Detected dependencies: "+a.getDependencies());
 		LocalJnlpBuilder jj = new LocalJnlpBuilder();
 		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),repoInstance.getRepositoryFolder(),a.getProfiles(),"",appStoreManager.getCodeBase(),repoInstance.getRepositoryName());
 		for (String profile : a.getProfiles()) {
