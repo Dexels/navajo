@@ -16,4 +16,9 @@
         <input>string,string|empty,color|empty,color|empty,string|empty,string|empty</input>
         <result>border</result>
     </function>
+    <function name="CreateWindowBorder" class="com.dexels.navajo.tipi.swing.functions.CreateWindowBorder">
+        <description>Create a window border - CreateWindowBorder(Color startGradientColor, Color endGradientColor, [gradientLayout]</description>
+        <input>color,color,string|empty</input>
+        <result>border</result>
+    </function>
 </functiondef>
