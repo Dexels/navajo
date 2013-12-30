@@ -26,23 +26,12 @@ public class RepositoryManagerImpl implements RepositoryManager {
 
 	
 	public void activate(Map<String,Object> configuration) throws IOException {
+
 		String path = (String) configuration.get("storage.path");
-		
-		if(path==null || "".equals(path)) {
-			path = System.getProperty("storage.path");
-		}
-		File storeFolder = null;
-		if(path==null) {
-			logger.info("No storage.path found, now trying to retrieve from felix.fileinstall.filename");
-			final String fileNamePath = (String) configuration.get("felix.fileinstall.filename");
-			storeFolder = findByFileInstaller(fileNamePath);
-		} else {
-			storeFolder = new File(path);
-		}
-		if(storeFolder==null) {
-			throw new IOException("No storage.path set in configuration!");
-		}
-		
+		final String fileInstallPath= (String) configuration.get("felix.fileinstall.filename");
+
+		File storeFolder = findConfiguration(path,fileInstallPath);
+
 		repositoryFolder = new File(storeFolder,"repositories");
 		if(!repositoryFolder.exists()) {
 			repositoryFolder.mkdirs();
@@ -57,6 +46,28 @@ public class RepositoryManagerImpl implements RepositoryManager {
 		}
 		logger.info("Repository manager activated");
 
+	}
+
+	private File findConfiguration(String path, String fileInstallPath)
+			throws IOException {
+		
+		if(path==null || "".equals(path)) {
+			path = System.getProperty("storage.path");
+		}
+		File storeFolder = null;
+		if(path==null) {
+			logger.info("No storage.path found, now trying to retrieve from felix.fileinstall.filename");
+			storeFolder = findByFileInstaller(fileInstallPath);
+		} else {
+			storeFolder = new File(path);
+		}
+		if(storeFolder==null || !storeFolder.exists()) {
+			storeFolder = findByFileInstaller(fileInstallPath);
+		}
+		if(storeFolder==null || !storeFolder.exists()) {
+			throw new IOException("No storage.path set in configuration!");
+		}
+		return storeFolder;
 	}
 
 	// f-in' beautiful
