@@ -48,7 +48,6 @@ public class ResourceNavajoConnector extends TipiBaseConnector {
 			}
 			Navajo result = NavajoFactory.getInstance().createNavajo(is);
 			is.close();
-			myContext.loadNavajo(result, destination);
 			return result;
 		} catch (IOException e) {
 			logger.error("Error: ",e);

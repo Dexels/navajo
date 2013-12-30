@@ -37,7 +37,6 @@ public class HttpNavajoConnector extends TipiBaseConnector {
 				result.getHeader().setHeaderAttribute("sourceScript",
 						result.getHeader().getRPCName());
 			}
-			myContext.loadNavajo(result, service);
 			return result;
 		} catch (ClientException e) {
 			throw new TipiException("Error calling service: " + service, e);

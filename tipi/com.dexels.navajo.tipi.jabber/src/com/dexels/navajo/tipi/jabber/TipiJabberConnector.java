@@ -296,7 +296,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 
 	}
 
-	protected void postRoster(Roster roster) {
+	protected Navajo postRoster(Roster roster) {
 		try {
 			Navajo n = NavajoFactory.getInstance().createNavajo();
 			com.dexels.navajo.document.Message m = NavajoFactory.getInstance().createMessage(n, "Roster", com.dexels.navajo.document.Message.MSG_TYPE_ARRAY);
@@ -323,14 +323,13 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			}
 			// n.write(System.err);
 			// to allow it to run straight from main:
-			if (myContext != null) {
-				getContext().loadNavajo(n, "JabberRoster");
-			}
+			return n;
 		} catch (NavajoException e1) {
 			e1.printStackTrace();
 		} catch (TipiBreakException e) {
 			logger.error("Error: ",e);
 		}
+		return null;
 	}
 
 	public void sendMessage(String text, String recipient) throws XMPPException {
@@ -613,7 +612,8 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 	}
 
 	protected void rosterUpdated() {
-		postRoster(connection.getRoster());
+		Navajo n = postRoster(connection.getRoster());
+		injectNavajo("JabberRoster", n);
 		try {
 			performTipiEvent("onRosterChanged", null, false);
 		} catch (TipiException e) {
@@ -624,7 +624,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 	@Override
 	public Navajo doTransaction(Navajo n, String service) throws TipiBreakException, TipiException {
 		if (service.equals("JabberRoster")) {
-			postRoster(connection.getRoster());
+			return postRoster(connection.getRoster());
 		}
 		throw new UnsupportedOperationException("umm, need destination for jabber!");
 	}

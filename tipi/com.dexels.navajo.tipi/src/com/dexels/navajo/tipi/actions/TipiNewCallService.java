@@ -111,9 +111,11 @@ public class TipiNewCallService extends TipiAction {
 						+ connector
 						+ " not found, reverting to default connector");
 
-				defaultConnector.doTransaction(input, service, destination);
+				Navajo result = defaultConnector.doTransaction(input, service, destination);
+				processResult(breakOnError, destination, service, result);
 			} else {
-				ttt.doTransaction(input, service, destination);
+				Navajo result = ttt.doTransaction(input, service, destination);
+				processResult(breakOnError, destination, service, result);
 			}
 		}
 		setThreadState("busy");
