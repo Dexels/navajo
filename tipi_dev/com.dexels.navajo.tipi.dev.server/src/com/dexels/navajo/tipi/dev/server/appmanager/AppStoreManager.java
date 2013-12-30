@@ -14,7 +14,7 @@ public interface AppStoreManager {
 	
 	public String getClientSecret();
 	
-	// Members of this organization will be granted access
+	// Members of this GitHub organization will be granted access
 	public String getOrganization();
 
 	public String getApplicationName();

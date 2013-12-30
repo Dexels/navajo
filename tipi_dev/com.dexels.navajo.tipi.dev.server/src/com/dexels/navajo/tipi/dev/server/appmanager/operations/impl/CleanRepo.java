@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
-import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 
 public class CleanRepo extends BaseOperation implements AppStoreOperation {
 

@@ -13,10 +13,10 @@ import javax.servlet.http.HttpSession;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.repository.api.RepositoryManager;
 import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreManager;
-import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.impl.RepositoryInstanceWrapper;
 
 public abstract class BaseOperation extends HttpServlet  implements AppStoreOperation {
@@ -26,6 +26,8 @@ public abstract class BaseOperation extends HttpServlet  implements AppStoreOper
 	protected AppStoreManager appStoreManager = null;
 	
 	private RepositoryManager repositoryManager;
+	private String type;
+	private String repo;
 
 	public void setRepositoryManager(RepositoryManager repositoryManager) {
 		this.repositoryManager = repositoryManager;
@@ -42,7 +44,20 @@ public abstract class BaseOperation extends HttpServlet  implements AppStoreOper
 	public void setAppStoreManager(AppStoreManager am) {
 		this.appStoreManager = am;
 	}
+
+	public void clearAppStoreManager(AppStoreManager am) {
+		this.appStoreManager = null;
+	}
 	
+	@Override
+	public String getRepoType() {
+		return repo;
+	}
+	
+	@Override
+	public String getType() {
+		return type;
+	}
 	protected Map<String,RepositoryInstanceWrapper> getApplications() {
 		Map<String,RepositoryInstanceWrapper> result = new HashMap<String, RepositoryInstanceWrapper>();
 		for (Map.Entry<String, RepositoryInstance> e : applications.entrySet()) {
@@ -50,7 +65,17 @@ public abstract class BaseOperation extends HttpServlet  implements AppStoreOper
 		}
 		return result;
 	}
+	
+	public void activate(Map<String,Object> settings) {
+		type = (String) settings.get("type");
+		repo = (String) settings.get("repo");
+	}
 
+	public void deactivate() {
+		type = null;
+		repo = null;
+	}
+	
 	protected void verifyAuthorization(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		if(!isAuthorized(req)) {
 			resp.sendError(400,"Not authorized for operation");

@@ -23,7 +23,7 @@ public class CallbackServlet extends WebSocketServlet implements Runnable {
 	private static final long serialVersionUID = 8386266364760399706L;
 	
 	private final Set<SCSocket> members = new CopyOnWriteArraySet<SCSocket>();
-	private final Thread heartbeatThread = new Thread(this);
+	private Thread heartbeatThread = null;
 
 	private BundleContext bundleContext;
 
@@ -39,6 +39,7 @@ public class CallbackServlet extends WebSocketServlet implements Runnable {
 	@Override
 	public void init() throws ServletException {
 		super.init();
+		heartbeatThread =  new Thread(this);
 		heartbeatThread.start();
 	}
 
@@ -48,6 +49,10 @@ public class CallbackServlet extends WebSocketServlet implements Runnable {
 
 	public void deactivate() {
 		this.bundleContext = null;
+		if(heartbeatThread!=null) {
+			heartbeatThread.interrupt();
+			heartbeatThread = null;
+		}
 	}
 	public BundleContext getBundleContext() {
 		return bundleContext;

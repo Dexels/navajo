@@ -14,8 +14,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.felix.service.command.CommandSession;
 
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
-import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.impl.RepositoryInstanceWrapper;
 
 public class List extends BaseOperation implements AppStoreOperation {

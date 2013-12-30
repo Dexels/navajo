@@ -13,9 +13,7 @@ import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Dictionary;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.Servlet;
@@ -31,8 +29,8 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
-import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 
 public class CacheBuild extends BaseOperation implements Servlet, AppStoreOperation, EventHandler {
 

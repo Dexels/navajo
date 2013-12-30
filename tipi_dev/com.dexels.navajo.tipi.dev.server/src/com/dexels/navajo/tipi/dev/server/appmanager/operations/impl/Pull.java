@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.githubosgi.GitRepositoryInstance;
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
-import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 
 public class Pull extends BaseOperation implements AppStoreOperation {
 
