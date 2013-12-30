@@ -11,15 +11,20 @@ import javax.swing.border.TitledBorder;
 
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.tipi.components.swingimpl.layout.TipiTextBalloonBorder;
+import com.dexels.navajo.tipi.components.swingimpl.layout.TipiRoundedBorder;
 
 /**
  * @author frank
  * 
  */
 public class CreateTitledBorder extends FunctionInterface {
-	private Color defaultLineColor = Color.darkGray;
-	private Color defaultShadowColor = Color.WHITE;
+	private Color defaultLineColor = Color.BLACK;
+	private Color defaultShadowColor = Color.DARK_GRAY;
 	private int titleAlignment = TitledBorder.LEFT;
+	private Color startGradientColor = Color.RED;
+	private Color endGradientColor = Color.WHITE;
+	private int lineSize = 1;
 	
 	/*
 	 * (non-Javadoc)
@@ -80,12 +85,33 @@ public class CreateTitledBorder extends FunctionInterface {
 		
 		// See what type of border we are going to create
 		Border typedBorder = null;
+		
 		if (bordertype != null && !bordertype.isEmpty()) {
 			if ( bordertype.equalsIgnoreCase("rounded") ) {
-				typedBorder = BorderFactory.createLineBorder(linecolor, 1);
-				// typedBorder = BorderFactory.createLineBorder(linecolor, 1, true);
+				typedBorder = new TipiRoundedBorder(linecolor, lineSize);
+				// typedBorder = BorderFactory.createLineBorder(linecolor, lineSize, true);
+			} else if ( bordertype.equalsIgnoreCase("window") ) {
+				typedBorder = new TipiRoundedBorder(linecolor, lineSize, startGradientColor, endGradientColor, "vertical", false);
+			} else if ( bordertype.equalsIgnoreCase("roundedgradient_horizontal") ) {
+				typedBorder = new TipiRoundedBorder(linecolor, lineSize, startGradientColor, endGradientColor, "horizontal", false);
+			} else if ( bordertype.equalsIgnoreCase("roundedgradient_vertical") ) {
+				typedBorder = new TipiRoundedBorder(linecolor, lineSize, startGradientColor, endGradientColor, "vertical", false);
+			} else if ( bordertype.equalsIgnoreCase("roundedbordergradient_horizontal") ) {
+				typedBorder = new TipiRoundedBorder(linecolor, lineSize, Color.DARK_GRAY, Color.LIGHT_GRAY, "horizontal", true);
+//				typedBorder = new TipiRoundedBorder(linecolor, lineSize, startGradientColor, endGradientColor, "horizontal", true);
+			} else if ( bordertype.equalsIgnoreCase("roundedbordergradient_vertical") ) {
+				typedBorder = new TipiRoundedBorder(linecolor, lineSize, startGradientColor, endGradientColor, "vertical", true);
+			} else if ( bordertype.equalsIgnoreCase("roundedshadow") ) {
+				typedBorder = new TipiRoundedBorder(linecolor, lineSize, shadowcolor);
+			} else if ( bordertype.equalsIgnoreCase("roundedshadowgradient_horizontal") ) {
+				typedBorder = new TipiRoundedBorder(linecolor, lineSize, startGradientColor, endGradientColor, "horizontal", false, shadowcolor);
+			} else if ( bordertype.equalsIgnoreCase("roundedshadowgradient_vertical") ) {
+				typedBorder = new TipiRoundedBorder(linecolor, lineSize, Color.BLUE, Color.GREEN, "vertical", false, shadowcolor);
+//				typedBorder = new TipiRoundedBorder(linecolor, lineSize, startGradientColor, endGradientColor, "vertical", false, shadowcolor);
+			} else if ( bordertype.equalsIgnoreCase("balloon") || bordertype.equalsIgnoreCase("textballoon") ) {
+				typedBorder = new TipiTextBalloonBorder(linecolor, lineSize);
 			} else if ( bordertype.equalsIgnoreCase("etched") ) {
-				// typedBorder = BorderFactory.createEtchedBorder(1, linecolor, shadowcolor);
+				// typedBorder = BorderFactory.createEtchedBorder(lineSize, linecolor, shadowcolor);
 			} else if ( bordertype.equalsIgnoreCase("raisedetched") ) {
 				// typedBorder = BorderFactory.createEtchedBorder(EtchedBorder.RAISED, linecolor, shadowcolor);
 			} else if ( bordertype.equalsIgnoreCase("loweredetched") ) {
@@ -99,15 +125,15 @@ public class CreateTitledBorder extends FunctionInterface {
 			} else if ( bordertype.equalsIgnoreCase("softloweredbevel") ) {
 				// typedBorder = BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED, linecolor, shadowcolor);
 			} else if ( bordertype.equalsIgnoreCase("compound") ) {
-				// Border inner = BorderFactory.createLineBorder(linecolor, 1, false);
-				Border inner = BorderFactory.createLineBorder(linecolor, 1);
-				// Border outer = BorderFactory.createLineBorder(shadowcolor, 1, false);
-				Border outer = BorderFactory.createLineBorder(shadowcolor, 1);
+				// Border inner = BorderFactory.createLineBorder(linecolor, lineSize, false);
+				Border inner = BorderFactory.createLineBorder(linecolor, lineSize);
+				// Border outer = BorderFactory.createLineBorder(shadowcolor, lineSize, false);
+				Border outer = BorderFactory.createLineBorder(shadowcolor, lineSize);
 				typedBorder = BorderFactory.createCompoundBorder(inner, outer);
 			}
 		} else {
-			typedBorder = BorderFactory.createLineBorder(linecolor, 1);
-			// typedBorder = BorderFactory.createLineBorder(linecolor, 1, false);
+			typedBorder = BorderFactory.createLineBorder(linecolor, lineSize);
+			// typedBorder = BorderFactory.createLineBorder(linecolor, lineSize, false);
 		}
 		
 		// Set title alignment
@@ -122,6 +148,7 @@ public class CreateTitledBorder extends FunctionInterface {
 		}
 		
 		TitledBorder border = BorderFactory.createTitledBorder( typedBorder, title );
+		border.setTitlePosition(2); // default position is in the border
 		border.setTitleJustification(titleAlignment);
 //		TitledBorder border = BorderFactory.createTitledBorder( BorderFactory.createLineBorder(Color.darkGray, 1), title );
 		if (ss != null && ss instanceof String) {
