@@ -179,12 +179,12 @@ public class SwingEditor extends KafenioPanel {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				logger.info("Log: " + evt.getPropertyName() + " val: " + evt.getNewValue());
+				logger.debug("Log: " + evt.getPropertyName() + " val: " + evt.getNewValue());
 
 			}
 		});
 		jf.getContentPane().add(jb, BorderLayout.SOUTH);
-		kp.setDocumentText("Mujaheddin!");
+		kp.setDocumentText("!");
 	}
 
 }
