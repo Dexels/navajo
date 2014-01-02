@@ -45,6 +45,9 @@ public class TipiNewCallService extends TipiAction {
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
 
+		getContext().getClient().setLocaleCode(getContext().getApplicationInstance().getLocaleCode());
+		getContext().getClient().setSubLocaleCode(getContext().getApplicationInstance().getSubLocaleCode());
+
 		String service = (String) getEvaluatedParameterValue("service", event);
 		Navajo input = (Navajo) getEvaluatedParameterValue("input", event);
 //		Operand destination = getEvaluatedParameter("destination", event);
