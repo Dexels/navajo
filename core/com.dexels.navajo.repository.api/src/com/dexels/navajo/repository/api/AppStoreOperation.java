@@ -10,4 +10,6 @@ public interface AppStoreOperation {
 	public String getRepoType();
 
 	public String getType();
+	
+	public String getName();
 }

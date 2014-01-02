@@ -28,7 +28,12 @@ public abstract class BaseOperation extends HttpServlet  implements AppStoreOper
 	private RepositoryManager repositoryManager;
 	private String type;
 	private String repo;
+	private String name = null;
 
+	@Override
+	public String getName() {
+		return name;
+	}
 	public void setRepositoryManager(RepositoryManager repositoryManager) {
 		this.repositoryManager = repositoryManager;
 	}
@@ -69,6 +74,7 @@ public abstract class BaseOperation extends HttpServlet  implements AppStoreOper
 	public void activate(Map<String,Object> settings) {
 		type = (String) settings.get("type");
 		repo = (String) settings.get("repo");
+		name  = (String) settings.get("name");
 	}
 
 	public void deactivate() {

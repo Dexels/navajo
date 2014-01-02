@@ -6,7 +6,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,10 +55,6 @@ public class Pull extends BaseOperation implements AppStoreOperation {
 			throw new IOException("Can only pull from a Git application");
 		}
 		GitRepositoryInstance ha = (GitRepositoryInstance) a;
-		try {
-			ha.callPull();
-		} catch (GitAPIException e) {
-			throw new IOException(e);
-		}
+		ha.refreshApplication();
 	}
 }

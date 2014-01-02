@@ -18,6 +18,8 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +32,7 @@ import com.dexels.navajo.tipi.dev.core.projectbuilder.LocalJnlpBuilder;
 import com.dexels.navajo.tipi.dev.server.appmanager.impl.RepositoryInstanceWrapper;
 import com.dexels.navajo.tipi.dev.server.appmanager.impl.UnsignJarTask;
 
-public class JnlpBuild extends BaseOperation implements AppStoreOperation {
+public class JnlpBuild extends BaseOperation implements AppStoreOperation,EventHandler {
 
 	
 	private static final long serialVersionUID = -325075211700621696L;
@@ -63,9 +65,6 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 		
 	}
 	
-	public void activate() {
-		System.err.println("Activating!");
-	}
 	
 	public void build() {
 		for (RepositoryInstance a: applications.values()) {
@@ -78,7 +77,7 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 	}	
 	
 	@Override
-	public void build(RepositoryInstance repoInstance) throws IOException {
+	public synchronized void build(RepositoryInstance repoInstance) throws IOException {
 		List<String> extraHeaders = new ArrayList<String>();
 		extraHeaders.add("Permissions: all-permissions");
 		String applicationName = appStoreManager.getApplicationName();
@@ -223,6 +222,40 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation {
 		} catch (IOException e) {
 			logger.error("Error: ", e);
 		}
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		RepositoryInstance ri = (RepositoryInstance)event.getProperty("repository");
+		Boolean b = (Boolean) ri.getSettings().get("autobuild");
+		if(b==null || b==false) {
+			logger.warn("Skipping build for non-autobuilding repo");
+			return;
+		}
+		List<String> added = (List<String>) event.getProperty("ADD");
+		List<String> modified = (List<String>) event.getProperty("MODIFY");
+		List<String> copied = (List<String>) event.getProperty("COPY");
+		List<String> deleted = (List<String>) event.getProperty("DELETE");
+		List<String> all = new ArrayList<String>();
+		all.addAll(added);
+		all.addAll(copied);
+		all.addAll(modified);
+		all.addAll(deleted);
+		boolean found = false;
+		for (String path : all) {
+			if(path.startsWith("settings/")) {
+				found = true;
+			}
+		}
+		
+		if(found) {
+			try {
+				build(ri);
+			} catch (IOException e) {
+				logger.error("Error: ", e);
+			}
+		}
+
 	}
 
 
