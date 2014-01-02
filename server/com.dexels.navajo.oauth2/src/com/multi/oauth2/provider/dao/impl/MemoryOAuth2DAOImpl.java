@@ -29,7 +29,10 @@ public class MemoryOAuth2DAOImpl implements OAuth2Service {
 	public MemoryOAuth2DAOImpl() {
 		addUser(new UserVO("alfredo","4lfredo","Alfredo Strudelini",99L));
 		try {
-			insertClient("client123", "client_secret123", "alfredo", "client name","desciption of client");
+			final String clientId = "client123";
+			insertClient(clientId, "client_secret123", "alfredo", "client name","desciption of client");
+			ClientVO cc = getClientOne(clientId);
+			cc.setRedirect_uri("http://aap.nl");
 		} catch (OAuth2Exception e) {
 			e.printStackTrace();
 		}
@@ -120,6 +123,7 @@ public class MemoryOAuth2DAOImpl implements OAuth2Service {
 		ClientVO client = new ClientVO(clientId,clientSecret,userid,clientName,description,"client_url","client_type","scope","redirect_url",new Date());
 		clients.put(clientId, client);
 		List<ClientVO> prev = getClientList(userid);
+		
 		prev.add(client);
 	}
 

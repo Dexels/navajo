@@ -23,6 +23,7 @@
         </ul>
         <input type="text" name="clubcode" class="form-control" placeholder="Club code" required autofocus value="BBKY84H" >
         <input type="text" name="userid" class="form-control" placeholder="Gebruikersnaam" required>
+        <input type="hidden" name="clientId" value="client123"/>
         <input type="password"  name="password" class="form-control" placeholder="Wachtwoord" required>
         <label class="checkbox">
           <input type="checkbox" value="remember-me"> Remember me
