@@ -834,8 +834,12 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 		 }
 	 }
   
-  public static final String createPackageName(String packagePath) {
+  public static final String createPackageName(String packagePath) throws Exception {
 
+	if (packagePath.startsWith("/")) {
+		throw new Exception("Invalid package name");
+	}
+	
     if (packagePath.equals(""))
       return packagePath;
 
