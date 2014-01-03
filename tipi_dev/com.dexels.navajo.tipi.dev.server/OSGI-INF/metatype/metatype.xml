@@ -4,8 +4,9 @@
     <AD name="Https Git URL"    id="httpUrl"   required="false"  type="String"/>   
     <AD name="Repository name"    id="repositoryname"   required="true"  type="String"/>   
     <AD name="SSH Key"    id="key"   required="false"  type="String"/>   
-    <AD name="Git Branch"    id="branch"   required="true"  type="String" default="master"/>   
-  </OCD>
+    <AD name="Git Branch"    id="branch"   required="true"  type="String" default="master"/>
+    <AD name="Autobuild"    id="autobuild"   required="false"  type="Boolean" default="false"/>
+    </OCD>
   
   <Designate factoryPid="tipi.dev.gitapplication" pid="tipi.dev.gitapplication">
      <Object ocdref="tipi.dev.gitapplication"/>

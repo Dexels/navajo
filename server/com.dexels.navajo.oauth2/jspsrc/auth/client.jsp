@@ -29,9 +29,9 @@
 			<tr>
 				<td>tralala</td>
 			</tr>			
-			<c:forEach var="window" items="${sessionScope[userVO]}">
-			    <c:out value="${window}"/> 
-			</c:forEach>
+	<c:forEach var="c" items="${sessionScope.clients}">
+	    <c:out value="${window}"/> 
+	</c:forEach>
 		</table>
 
 

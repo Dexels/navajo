@@ -33,9 +33,17 @@ public class LoginController extends HttpServlet {
 			throws ServletException, IOException {
 		String userid = req.getParameter("userid");
 		String password = req.getParameter("password");
-		req.getSession().setAttribute("test", "tralalalalala");
+		String clientId = req.getParameter("clientId");
+		req.getSession().setAttribute("clientId", clientId);
 		try {
 			String result = login(req.getSession(), userid, password);
+			ClientVO cv =  dao.getClientOne(clientId);
+			if(cv!=null) {
+				String red = cv.getRedirect_uri();
+				if(red!=null) {
+					resp.sendRedirect(red);
+				}
+			}
 			resp.sendRedirect(result);
 			resp.getWriter().write(result);
 		} catch (OAuth2Exception e) {

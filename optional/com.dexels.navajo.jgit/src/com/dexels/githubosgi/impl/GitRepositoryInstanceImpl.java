@@ -179,12 +179,12 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		try {
 			
 			if(applicationFolder.exists()) {
-				callPull();
 				Repository repository = getRepository(applicationFolder);
 				git = new Git(repository);
 				Iterable<RevCommit> log = git.log().call();
 				lastCommit = log.iterator().next();
 				repository.close();
+				refreshApplication();
 			} else {
 				callClone();
 			}
@@ -241,6 +241,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 //			git.clean().call();
 			Iterable<RevCommit> log = git.log().call();
 			lastCommit = log.iterator().next();
+//			lastCommit.getC
 			logger.info("Git pull complete.");
 		} finally {
 			if(repository!=null) {
