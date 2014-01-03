@@ -165,14 +165,27 @@ public final class MappingUtils {
     		  }
     	  }
 
-    	  if (newMsg == null) {
+    	  if (newMsg != null && newMsg.getType().equals(Message.MSG_TYPE_ARRAY )) {
+    		  if ( arrayChild != -1 ) {
+    			  msg = newMsg.getMessage(useElementIndex);
+    			  if ( msg == null ) {
+    				  msg = NavajoFactory.getInstance().createMessage(source, messageName, Message.MSG_TYPE_ARRAY_ELEMENT);
+    				  newMsg.addMessage(msg);
+    			  }
+    			  newMsg = msg;
+    		  } else {
+    			  throw source.getNavajoFactory().createNavajoException(new Exception("Can only create array elements inside array message"));
+    		  }
+    	  } else if (newMsg == null) {
 
     		  if ( arrayChild != -1 ) {
     			  if ( msg != null ) 
     			  { 
     				  msg.setType("array"); 
     			  } else {
-    				  throw source.getNavajoFactory().createNavajoException(new Exception("Can only create array elements inside array message"));
+    				  // Create array message.
+    				  msg = NavajoFactory.getInstance().createMessage(source, messageName, Message.MSG_TYPE_ARRAY);
+    				  source.addMessage(msg);
     			  }
     		  }
 
