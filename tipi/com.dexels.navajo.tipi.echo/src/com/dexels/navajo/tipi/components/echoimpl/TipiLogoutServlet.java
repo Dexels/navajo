@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,7 +26,7 @@ public class TipiLogoutServlet extends HttpServlet {
 		  destination = "/";
 	  }
 	  logger.info("Logout path: "+request.getContextPath());
-	  response.sendRedirect(destination);
+	  response.sendRedirect(URLEncoder.encode(destination,"UTF-8"));
 	 }
 
 	}
