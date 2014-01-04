@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 import org.codehaus.jackson.JsonNode;
@@ -35,22 +37,25 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 
 	private final Stack<Navajo> navajoStack = new Stack<Navajo>();
 	private final Map<String, Navajo> navajoStore = new HashMap<String, Navajo>();
+	private final Map<String, String> suppliedScopes; 
 	protected final XMLElement article;
 	private final String articleName;
 
 	private final ObjectMapper mapper = new ObjectMapper();
 	private final ObjectNode rootNode;
 
-	protected BaseRuntimeImpl(String articleName, XMLElement article) {
+	protected BaseRuntimeImpl(String articleName, XMLElement article, Map<String, String> suppliedScopes) {
 		rootNode = mapper.createObjectNode();
 		this.article = article;
 		this.articleName = articleName;
+		this.suppliedScopes = suppliedScopes;
 	}
 
-	protected BaseRuntimeImpl(String articleName, File articleFile)
+	protected BaseRuntimeImpl(String articleName, File articleFile, Map<String, String> suppliedScopes)
 			throws IOException {
 		article = new CaseSensitiveXMLElement();
 		rootNode = mapper.createObjectNode();
+		this.suppliedScopes = suppliedScopes;
 		this.articleName = articleName;
 		Reader r = null;
 		try {
@@ -63,6 +68,36 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 				r.close();
 			}
 		}
+	}
+	
+	protected void verifyScopes() throws ArticleException {
+		for (String scope : getRequiredScopes()) {
+			if(!suppliedScopes.containsKey(scope)) {
+				throw new ArticleException("Required scope: "+scope+" missing");
+			}
+		}
+	}
+	
+	@Override
+	public Set<String> getRequiredScopes() {
+		Set<String> result = new HashSet<String>();
+		String required = article.getStringAttribute("scopes");
+		if(required!=null) {
+			String[] arr = required.split(",");
+			for (String element : arr) {
+				result.add(element);
+			}
+		}
+		return result;
+	}
+	
+	@Override
+	public String resolveScope(String name) throws ArticleException {
+		if(!name.startsWith("$")) {
+			throw new ArticleException("scope references should start with $");
+		}
+		String stripped = name.substring(1);
+		return suppliedScopes.get(stripped);
 	}
 
 	public ObjectNode getGroupNode(ObjectNode parent, String name) throws ArticleException {
@@ -97,6 +132,7 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 
 	@Override
 	public void execute(ArticleContext context) throws ArticleException, DirectOutputThrowable {
+		verifyScopes();
 		List<XMLElement> children = article.getChildren();
 		try {
 			List<JsonNode> elements = new ArrayList<JsonNode>();

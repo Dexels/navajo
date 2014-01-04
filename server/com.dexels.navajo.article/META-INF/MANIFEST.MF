@@ -28,5 +28,6 @@ Service-Component: OSGI-INF/navajo.server.article.xml,
  OSGI-INF/navajo.server.article.session.servlet.xml,
  OSGI-INF/navajo.article.command.service.xml,
  OSGI-INF/navajo.article.command.element.xml,
+ OSGI-INF/navajo.article.command.literal.xml,
  OSGI-INF/navajo.article.command.table.xml,
  OSGI-INF/navajo.article.command.setvalue.xml
