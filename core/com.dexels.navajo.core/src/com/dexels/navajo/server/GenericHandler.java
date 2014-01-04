@@ -155,7 +155,7 @@ public class GenericHandler extends ServiceHandler {
 
     }
     
-    private final Object[] getScriptPathServiceNameAndScriptFile(String rpcName, boolean betaUser) {
+    private final Object[] getScriptPathServiceNameAndScriptFile(String rpcName, boolean betaUser) throws Exception {
     	String scriptPath = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
     	//System.err.println("Looking for script: "+rpcName);
     	int strip = rpcName.lastIndexOf("/");
@@ -313,7 +313,7 @@ public class GenericHandler extends ServiceHandler {
      * @param a
      * @return
      */
-    public final boolean needsRecompileForScript(Access a) {
+    public final boolean needsRecompileForScript(Access a) throws Exception {
     	Object [] all = getScriptPathServiceNameAndScriptFile(a.rpcName, a.betaUser);
  		if(all==null) {
  			return false;
@@ -332,7 +332,7 @@ public class GenericHandler extends ServiceHandler {
     }
     
     @Override
-	public boolean needsRecompile() {
+	public boolean needsRecompile() throws Exception {
     	return needsRecompileForScript(this.access);
     }
     

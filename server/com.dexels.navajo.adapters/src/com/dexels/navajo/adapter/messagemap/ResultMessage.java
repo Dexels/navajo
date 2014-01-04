@@ -195,8 +195,13 @@ public class ResultMessage implements Mappable {
 	}
 	
 	public Object getPropertyValue(String s) throws UserException {
-		if ( msg.getProperty(s) != null ) {
-			return msg.getProperty(s).getTypedValue();
+		Property p = msg.getProperty(s);
+		if ( p != null ) {
+			if ( p.getType().equals(Property.SELECTION_PROPERTY) ) {
+				return ( p.getSelected() != null ? p.getSelected().getValue() : (String) null );
+			} else {
+				return p.getTypedValue();
+			}
 		} else {
 			throw new UserException(-1, "Exception in getting propertyValue for property: " + s);
 		}
