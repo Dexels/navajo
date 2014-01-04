@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MongoDb driver for Navajo
 Bundle-SymbolicName: com.dexels.navajo.resource.mongodb
-Bundle-Version: 1.0.7.qualifier
+Bundle-Version: 1.0.9.qualifier
 Bundle-Activator: com.dexels.navajo.resource.mongodb.Activator
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
-import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 
 public class CleanRepo extends BaseOperation implements AppStoreOperation {
 
@@ -33,6 +33,7 @@ public class CleanRepo extends BaseOperation implements AppStoreOperation {
 	// Maybe we should protect this one, it is kind of destructive
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		verifyAuthorization(req, resp);
 		cleanrepo();
 		writeValueToJsonArray(resp.getOutputStream(),"cleanrepo  ok");
 

@@ -11,8 +11,10 @@ package com.dexels.navajo.script.api;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 class ArrayChildStatistics implements Serializable {
 	/**
@@ -43,9 +45,9 @@ public final class MappableTreeNode implements Mappable, Serializable {
         public int totaltime;
 
         // HashMap to cache method references.
-		private HashMap methods;
+		private Map<String,Method> methods;
         private int id = 0;
-        private HashMap elementCount = null;
+        private Map<String,ArrayChildStatistics> elementCount = null;
         private Access myAccess = null;
         private boolean arrayElement = false;
 
@@ -58,7 +60,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
         public MappableTreeNode(Access a, MappableTreeNode parent, Object o, boolean isArrayElement) {
             this.parent = parent;
             this.myObject = o;
-            methods = new HashMap();
+            methods = new HashMap<String,Method>();
             starttime = System.currentTimeMillis();
             myAccess = a;
             arrayElement = isArrayElement;
@@ -106,14 +108,14 @@ public final class MappableTreeNode implements Mappable, Serializable {
         	if ( elementCount == null ) {
         		return null;
         	}
-        	return (ArrayChildStatistics) elementCount.get(mapName);
+        	return elementCount.get(mapName);
         }
         
         private final void incrementElementCount(String mapName) {
         	if ( elementCount == null ) {
-        		elementCount = new HashMap();
+        		elementCount = new HashMap<String,ArrayChildStatistics>();
         	}
-        	ArrayChildStatistics c = (ArrayChildStatistics) elementCount.get(mapName);
+        	ArrayChildStatistics c = elementCount.get(mapName);
         	if ( c == null ) {
         		c = new ArrayChildStatistics();
         		c.elementCount = 1;
@@ -144,9 +146,9 @@ public final class MappableTreeNode implements Mappable, Serializable {
         		// Sum array children.
         		if ( elementCount != null ) {
         			int childId = id + 1;
-        			for (Iterator iter = elementCount.keySet().iterator(); iter.hasNext();) {
-        				String mapName = (String) iter.next();
-        				ArrayChildStatistics acs = (ArrayChildStatistics) elementCount.get(mapName);
+        			for (Iterator<String> iter = elementCount.keySet().iterator(); iter.hasNext();) {
+        				String mapName = iter.next();
+        				ArrayChildStatistics acs = elementCount.get(mapName);
         				//System.err.println("array child time: " + mapName + ", count " + acs.elementCount + ", totaltime: " + acs.totalTime );
         				MapStatistics childStatistics = myAccess.createStatistics();
         				myAccess.updateStatistics(childStatistics, childId, mapName, acs.totalTime, acs.elementCount, true);
@@ -197,7 +199,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
               }
           }
 
-          Method m = (Method) methods.get(key.toString());
+          Method m = methods.get(key.toString());
 
           if (m == null) {
 
@@ -222,8 +224,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
        }
 
        public final Method setMethodReference(String name, Class [] parameters) throws MappingException {
-
-               java.lang.reflect.Method m = (Method) methods.get(name+parameters.hashCode());
+               java.lang.reflect.Method m = methods.get(name+Arrays.hashCode(parameters));
 
                if (m == null) {
                      String methodName = "set" + (name.charAt(0) + "").toUpperCase()
@@ -251,7 +252,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
                   if (m == null) {
                       throw new MappingException("Could not find method in Mappable object: " + methodName);
                   }
-                  methods.put(name+parameters.hashCode(), m);
+                  methods.put(name+Arrays.hashCode(parameters), m);
              }
 
             return m;

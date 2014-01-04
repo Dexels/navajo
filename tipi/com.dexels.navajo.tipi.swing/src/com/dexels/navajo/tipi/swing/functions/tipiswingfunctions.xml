@@ -11,11 +11,14 @@
         <input></input>
         <result>integer</result>
     </function>
-    
     <function name="CreateTitledBorder" class="com.dexels.navajo.tipi.swing.functions.CreateTitledBorder">
-        <description>Create a border</description>
-        <input>string</input>
+        <description>Create a border - CreateTitledBorder(String title, [String bordertype], [Color linecolor], [Color shadowcolor], [titlealignment], [String style]</description>
+        <input>string,string|empty,color|empty,color|empty,string|empty,string|empty</input>
         <result>border</result>
     </function>
-
+    <function name="CreateWindowBorder" class="com.dexels.navajo.tipi.swing.functions.CreateWindowBorder">
+        <description>Create a window border - CreateWindowBorder(Color startGradientColor, Color endGradientColor, [gradientLayout]</description>
+        <input>color,color,string|empty</input>
+        <result>border</result>
+    </function>
 </functiondef>

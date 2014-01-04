@@ -14,20 +14,22 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.osgi.framework.BundleContext;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
-import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 
-public class CacheBuild extends BaseOperation implements AppStoreOperation, EventHandler {
+public class CacheBuild extends BaseOperation implements Servlet, AppStoreOperation, EventHandler {
 
 	private static final long serialVersionUID = 4675519591066489420L;
 	private final static Logger logger = LoggerFactory
@@ -45,10 +47,12 @@ public class CacheBuild extends BaseOperation implements AppStoreOperation, Even
 		}
 	}
 	
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String val = req.getParameter("app");
+		verifyAuthorization(req, resp);
 		if(val!=null) {
 			cachebuild(val);
 		} else {

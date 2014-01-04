@@ -3217,7 +3217,7 @@ public class TslCompiler {
 			throw (e);
 		} catch (Exception e) {
 			throw new SystemException(-1,
-					"Error while generating Java code for script: " + script, e);
+					"Error while generating Java code for script: " + script + ": " + e.getMessage(), e);
 		}
 	}
 

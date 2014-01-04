@@ -108,7 +108,10 @@ public final class MappingUtils {
         else if (o instanceof Selection []) {
         	return Property.SELECTION_PROPERTY;
         }
-        else
+        else if ( o instanceof Property ) {
+        	return "property";
+        }
+        else 
           return "unknown";
 
 //            throw new TMLExpressionException("Could not determine NavajoType for Java type: " + o.getClass().getName());
@@ -167,14 +170,27 @@ public final class MappingUtils {
     		  }
     	  }
 
-    	  if (newMsg == null) {
+    	  if (newMsg != null && newMsg.getType().equals(Message.MSG_TYPE_ARRAY )) {
+    		  if ( arrayChild != -1 ) {
+    			  msg = newMsg.getMessage(useElementIndex);
+    			  if ( msg == null ) {
+    				  msg = NavajoFactory.getInstance().createMessage(source, messageName, Message.MSG_TYPE_ARRAY_ELEMENT);
+    				  newMsg.addMessage(msg);
+    			  }
+    			  newMsg = msg;
+    		  } else {
+    			  throw source.getNavajoFactory().createNavajoException(new Exception("Can only create array elements inside array message"));
+    		  }
+    	  } else if (newMsg == null) {
 
     		  if ( arrayChild != -1 ) {
     			  if ( msg != null ) 
     			  { 
     				  msg.setType("array"); 
     			  } else {
-    				  throw source.getNavajoFactory().createNavajoException(new Exception("Can only create array elements inside array message"));
+    				  // Create array message.
+    				  msg = NavajoFactory.getInstance().createMessage(source, messageName, Message.MSG_TYPE_ARRAY);
+    				  source.addMessage(msg);
     			  }
     		  }
 
@@ -257,6 +273,10 @@ public final class MappingUtils {
 
     if (prop == null) { // Property does not exist.
     	if (!parameter) {
+    		if ( value != null && value instanceof Property ) {
+    			// Value is a property itself!
+    			prop = (Property) ((Property) value).clone(name);
+    		} else
     		if (Property.SELECTION_PROPERTY.equals(type)) {
     			prop = ref.getRootDoc().getNavajoFactory().createProperty(outputDoc, actualName, "1", description, direction);
     			if ( value instanceof Selection [] ) {
@@ -314,10 +334,11 @@ public final class MappingUtils {
     else { // Existing property.
     	prop.clearValue();
     	prop.setType(type);
-    	if ( Property.DIR_IN.equals(direction) || Property.DIR_OUT.equals(direction) ) {
-    		prop.setDirection(direction);
-    	}   	
-    	if (Property.BINARY_PROPERTY.equals(type)) {
+    	
+    	if ( value != null && value instanceof Property ) {
+    		// Value is a property itself!
+    		prop = (Property) ((Property) value).clone(name);
+    	} else if (Property.BINARY_PROPERTY.equals(type)) {
     		if (value != null && (value instanceof Binary)) {
     			prop.setValue( (Binary) value);
     		} else {
@@ -337,6 +358,9 @@ public final class MappingUtils {
     		else {
     			prop.clearValue();
     		}
+    	}
+    	if ( Property.DIR_IN.equals(direction) || Property.DIR_OUT.equals(direction) ) {
+    		prop.setDirection(direction);
     	}
 
       prop.setName(actualName); // Should not matter ;)
@@ -815,8 +839,12 @@ public static final boolean isObjectMappable(String className) throws UserExcept
 		 }
 	 }
   
-  public static final String createPackageName(String packagePath) {
+  public static final String createPackageName(String packagePath) throws Exception {
 
+	if (packagePath.startsWith("/")) {
+		throw new Exception("Invalid package name");
+	}
+	
     if (packagePath.equals(""))
       return packagePath;
 

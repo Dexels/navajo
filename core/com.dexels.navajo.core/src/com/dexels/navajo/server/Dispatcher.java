@@ -165,7 +165,8 @@ private final static Logger logger = LoggerFactory.getLogger(Dispatcher.class);
 	  navajoConfig = null;
   }
    
-  public void generateServerReadyEvent() {
+  @Override
+public void generateServerReadyEvent() {
 	  NavajoEventRegistry.getInstance().publishEvent(new ServerReadyEvent());
   }
   

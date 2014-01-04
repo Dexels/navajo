@@ -32,7 +32,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.Property;
 
-public class AjaxComboBox extends JComboBox<String> {
+public class AjaxComboBox extends JComboBox {
 	private static final long serialVersionUID = 7442041537617539253L;
 	private String messagePath;
 	private String propertyName;
@@ -64,16 +64,13 @@ public class AjaxComboBox extends JComboBox<String> {
 		editor.setDocument(new AjaxEditorDocument(this));
 		editor.addKeyListener(new KeyListener() {
 
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 
-			@Override
 			public void keyReleased(KeyEvent e) {
 
 			}
 
-			@Override
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					int i = getSelectedIndex();
@@ -162,7 +159,6 @@ public class AjaxComboBox extends JComboBox<String> {
 		Runnable r = new Runnable() {
 
 			// @Override
-			@Override
 			public void run() {
 				if (!syncRefresh) {
 					try {
@@ -245,12 +241,11 @@ public class AjaxComboBox extends JComboBox<String> {
 		try {
 			Runnable r = new Runnable() {
 
-				@Override
 				public void run() {
 					if (t.isInterrupted()) {
 						return;
 					}
-					DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>(
+					DefaultComboBoxModel model = new DefaultComboBoxModel(
 							propertyList);
 					JTextComponent textComponent = ((JTextComponent) getEditor()
 							.getEditorComponent());
@@ -455,7 +450,6 @@ public class AjaxComboBox extends JComboBox<String> {
 		localCombo.setText("Abcoude");
 		localCombo.setCurrentRemoteRefresh(new RemoteRefreshFilter() {
 
-			@Override
 			public Navajo getNavajo(String filterString) {
 				Property p = init.getProperty("ClubSearch/SearchName");
 				p.setValue(filterString);
@@ -473,7 +467,6 @@ public class AjaxComboBox extends JComboBox<String> {
 
 		localCombo.addItemListener(new ItemListener() {
 
-			@Override
 			public void itemStateChanged(ItemEvent arg0) {
 				myValue.setText("" + localCombo.getSelectedValue());
 			}

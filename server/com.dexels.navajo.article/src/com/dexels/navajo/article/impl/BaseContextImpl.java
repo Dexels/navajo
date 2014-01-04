@@ -28,20 +28,21 @@ import com.dexels.navajo.server.NavajoIOConfig;
 
 public abstract class BaseContextImpl implements ArticleContext {
 
-	private final Map<String,ArticleCommand> commands = new HashMap<String, ArticleCommand>();
+	private final Map<String, ArticleCommand> commands = new HashMap<String, ArticleCommand>();
 	private NavajoIOConfig config;
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseContextImpl.class);
-	
+
 	public void activate() {
 		logger.debug("Activating article context");
 	}
-	
+
 	public void deactivate() {
 		logger.debug("Deactivating article context");
-		
+
 	}
+
 	public void addCommand(ArticleCommand command) {
 		commands.put(command.getName(), command);
 	}
@@ -56,6 +57,17 @@ public abstract class BaseContextImpl implements ArticleContext {
 	}
 
 	@Override
+	public Map<String, String> getScopes(String token) {
+		Map<String, String> result = new HashMap<String, String>();
+		if (token != null) {
+			//
+		} else {
+			result.put("userdata", "bertus");
+		}
+		return result;
+	}
+
+	@Override
 	public List<String> listArticles() {
 		return listArticles(false);
 	}
@@ -63,9 +75,9 @@ public abstract class BaseContextImpl implements ArticleContext {
 	protected List<String> listArticles(boolean filterArticlesWithArguments) {
 		String root = getConfig().getRootPath();
 		File rootFolder = new File(root);
-		File articles = new File(rootFolder,"article");
+		File articles = new File(rootFolder, "article");
 		String[] list = articles.list(new FilenameFilter() {
-			
+
 			@Override
 			public boolean accept(File dir, String name) {
 				return name.endsWith(".xml");
@@ -73,43 +85,44 @@ public abstract class BaseContextImpl implements ArticleContext {
 		});
 		List<String> result = new ArrayList<String>();
 		for (String elt : list) {
-			if(filterArticlesWithArguments) {
-				Map<String,String> arguments = getArticleArguments(new File(articles,elt));
-				if(arguments.isEmpty()) {
+			if (filterArticlesWithArguments) {
+				Map<String, String> arguments = getArticleArguments(new File(
+						articles, elt));
+				if (arguments.isEmpty()) {
 					result.add(elt.substring(0, elt.lastIndexOf('.')));
 				}
 			} else {
 				result.add(elt.substring(0, elt.lastIndexOf('.')));
 			}
-			
+
 		}
 		return result;
 	}
 
-	
 	private Map<String, String> getArticleArguments(File file) {
 		FileReader fr = null;
-		Map<String,String> result = new HashMap<String, String>();
+		Map<String, String> result = new HashMap<String, String>();
 		try {
 			fr = new FileReader(file);
 			XMLElement x = new CaseSensitiveXMLElement();
 			x.parseFromReader(fr);
-			final Iterator<String> enumerateAttributeNames = x.enumerateAttributeNames();
-			while(enumerateAttributeNames.hasNext()) {
+			final Iterator<String> enumerateAttributeNames = x
+					.enumerateAttributeNames();
+			while (enumerateAttributeNames.hasNext()) {
 				String attr = enumerateAttributeNames.next();
 				result.put(attr, x.getStringAttribute(attr));
 			}
 		} catch (IOException e) {
 			logger.error("Problem parsing article: ", e);
 		} finally {
-			if(fr!=null) {
+			if (fr != null) {
 				try {
 					fr.close();
 				} catch (IOException e) {
 				}
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -124,17 +137,17 @@ public abstract class BaseContextImpl implements ArticleContext {
 		} else {
 			sub = pathInfo;
 		}
-		
+
 		String root = getConfig().getRootPath();
 		File rootFolder = new File(root);
-		File articles = new File(rootFolder,"article");
-		File article = new File(articles,sub+".xml");
-		logger.info("Article resolved to: "+article.getAbsolutePath());
+		File articles = new File(rootFolder, "article");
+		File article = new File(articles, sub + ".xml");
 		return article;
 	}
 
 	@Override
-	public void interpretArticle(File article, ArticleRuntime ac) throws IOException, ArticleException, DirectOutputThrowable {
+	public void interpretArticle(File article, ArticleRuntime ac)
+			throws IOException, ArticleException, DirectOutputThrowable {
 		XMLElement articleXml = new CaseSensitiveXMLElement();
 		Reader r = null;
 		try {
@@ -144,7 +157,7 @@ public abstract class BaseContextImpl implements ArticleContext {
 		} catch (IOException e) {
 			throw e;
 		} finally {
-			if(r!=null) {
+			if (r != null) {
 				try {
 					r.close();
 				} catch (IOException e) {
@@ -153,69 +166,89 @@ public abstract class BaseContextImpl implements ArticleContext {
 			}
 		}
 	}
-	
-	public void interpretMeta(XMLElement article, ObjectMapper mapper, ObjectNode articleNode) throws ArticleException {
-		
+
+	public void interpretMeta(XMLElement article, ObjectMapper mapper,
+			ObjectNode articleNode) throws ArticleException {
+
 		String outputType = article.getStringAttribute("output");
-		if(outputType!=null) {
+		if (outputType != null) {
 			articleNode.put("output", outputType);
 		}
-			XMLElement argTag = article.getChildByTagName("_arguments");
-			ArrayNode inputArgs = mapper.createArrayNode();
-			articleNode.put("input", inputArgs);
-			if(argTag!=null) {
-				List<XMLElement> args = argTag.getChildren();
-				for (XMLElement xmlElement : args) {
-//					name="aantalregels" description="Maximum aantal regels" type="integer" optional="true" default="5"
-					ObjectNode input = mapper.createObjectNode();
-					input.put("name", xmlElement.getStringAttribute("name"));
-					input.put("description", xmlElement.getStringAttribute("description"));
-					input.put("type", xmlElement.getStringAttribute("type"));
-					final boolean optional = xmlElement.getBooleanAttribute("optional", "true", "false", false);
-					input.put("optional", optional);
-					
-					final String defaultValue = xmlElement.getStringAttribute("default");
-					if(defaultValue!=null) {
-						input.put("default", defaultValue);
-					}
-					final String sourcearticle = xmlElement.getStringAttribute("sourcearticle");
-					if (sourcearticle!=null) {
-						input.put("sourcearticle", sourcearticle);
-					}
-					final String sourcekey = xmlElement.getStringAttribute("sourcekey");
-					if(sourcekey!=null) {
-						input.put("sourcekey", sourcekey);
-					}
-					inputArgs.add(input);
-				}
+		String scopes = article.getStringAttribute("scopes");
+		if (scopes != null) {
+			String[] scopeArray = scopes.split(",");
+			ArrayNode scopeArgs = mapper.createArrayNode();
+			for (String scope : scopeArray) {
+				scopeArgs.add(scope);
 			}
-			ArrayNode outputArgs = mapper.createArrayNode();
-			articleNode.put("output", outputArgs);
-			List<XMLElement> children = article.getChildren();
-			
-			for (XMLElement e : children) {
-				String name = e.getName();
-				if(name.startsWith("_")) {
-					continue;
-				}
-				ArticleCommand ac = getCommand(name);
-				if(ac==null) {
-					throw new ArticleException("Unknown command: "+name);
-				}
-				Map<String,String> parameters = new HashMap<String, String>();
-				 
-				for (Iterator<String> iterator = e.enumerateAttributeNames(); iterator.hasNext();) {
-					String attributeName = iterator.next();
-					parameters.put(attributeName, e.getStringAttribute(attributeName));
-				}
-				if(ac.writeMetadata(e,outputArgs,mapper)) {
-				}
+			articleNode.put("scopes", scopeArgs);
+		}
 
+		XMLElement argTag = article.getChildByTagName("_arguments");
+		ArrayNode inputArgs = mapper.createArrayNode();
+		articleNode.put("input", inputArgs);
+		if (argTag != null) {
+			List<XMLElement> args = argTag.getChildren();
+			for (XMLElement xmlElement : args) {
+				// name="aantalregels" description="Maximum aantal regels"
+				// type="integer" optional="true" default="5"
+				ObjectNode input = mapper.createObjectNode();
+				input.put("name", xmlElement.getStringAttribute("name"));
+				input.put("description",
+						xmlElement.getStringAttribute("description"));
+				input.put("type", xmlElement.getStringAttribute("type"));
+				final boolean optional = xmlElement.getBooleanAttribute(
+						"optional", "true", "false", false);
+				input.put("optional", optional);
+
+				final String defaultValue = xmlElement
+						.getStringAttribute("default");
+				if (defaultValue != null) {
+					input.put("default", defaultValue);
+				}
+				final String sourcearticle = xmlElement
+						.getStringAttribute("sourcearticle");
+				if (sourcearticle != null) {
+					input.put("sourcearticle", sourcearticle);
+				}
+				final String sourcekey = xmlElement
+						.getStringAttribute("sourcekey");
+				if (sourcekey != null) {
+					input.put("sourcekey", sourcekey);
+				}
+				inputArgs.add(input);
 			}
+		}
+		ArrayNode outputArgs = mapper.createArrayNode();
+		articleNode.put("output", outputArgs);
+		List<XMLElement> children = article.getChildren();
+
+		for (XMLElement e : children) {
+			String name = e.getName();
+			if (name.startsWith("_")) {
+				continue;
+			}
+			ArticleCommand ac = getCommand(name);
+			if (ac == null) {
+				throw new ArticleException("Unknown command: " + name);
+			}
+			Map<String, String> parameters = new HashMap<String, String>();
+
+			for (Iterator<String> iterator = e.enumerateAttributeNames(); iterator
+					.hasNext();) {
+				String attributeName = iterator.next();
+				parameters.put(attributeName,
+						e.getStringAttribute(attributeName));
+			}
+			if (ac.writeMetadata(e, outputArgs, mapper)) {
+			}
+
+		}
 	}
 
 	@Override
-	public void writeArticleMeta(String name,ObjectNode w, ObjectMapper mapper) throws ArticleException {
+	public void writeArticleMeta(String name, ObjectNode w, ObjectMapper mapper)
+			throws ArticleException {
 		File in = resolveArticle(name);
 		FileReader fr = null;
 		try {
@@ -225,18 +258,18 @@ public abstract class BaseContextImpl implements ArticleContext {
 			XMLElement x = new CaseSensitiveXMLElement();
 			x.parseFromReader(fr);
 			article.put("name", name);
-			interpretMeta(x, mapper,article);
+			interpretMeta(x, mapper, article);
 		} catch (IOException e) {
 			logger.error("Problem parsing article: ", e);
 		} finally {
-			if(fr!=null) {
+			if (fr != null) {
 				try {
 					fr.close();
 				} catch (IOException e) {
 				}
 			}
 		}
-		
+
 	}
 
 	public NavajoIOConfig getConfig() {

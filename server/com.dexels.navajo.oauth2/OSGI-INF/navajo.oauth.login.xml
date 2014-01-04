@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.oauth.login">
+   <implementation class="com.multi.oauth2.provider.view.controller.LoginController"/>
+   <reference bind="setDao" cardinality="1..1" interface="com.multi.oauth2.provider.dao.OAuth2Service" name="OAuth2Service" policy="static" unbind="clearDao"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="alias" type="String" value="/oauth/login"/>
+   <property name="httpContext.id" type="String" value="oauthContext"/>
+</scr:component>

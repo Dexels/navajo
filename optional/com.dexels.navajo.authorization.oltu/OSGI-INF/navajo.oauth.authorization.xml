@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.oauth.authorization">
+   <implementation class="com.dexels.navajo.authorization.oauth2.AuthEndpoint"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="alias" type="String" value="/auth/client"/>
+</scr:component>

@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
-import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.websocket.TipiCallbackSession;
 
 public class SendMessage extends BaseOperation implements AppStoreOperation {
@@ -28,6 +28,7 @@ public class SendMessage extends BaseOperation implements AppStoreOperation {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
+		verifyAuthorization(req, resp);
 		String session = req.getParameter("session");
 		String message = req.getParameter("text");
 		System.err.println("Session:"+session);

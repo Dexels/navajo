@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.oauth.oauth2">
+   <implementation class="com.multi.oauth2.provider.view.controller.OAuth2Controller"/>
+   <reference bind="setDao" cardinality="1..1" interface="com.multi.oauth2.provider.dao.OAuth2Service" name="OAuth2Service" policy="static" unbind="clearDao"/>
+   <reference bind="setTokenService" cardinality="1..1" interface="com.multi.oauth2.provider.util.OAuth2AccessTokenService" name="OAuth2AccessTokenService" policy="static" unbind="clearTokenService"/>
+   <service>
+      <provide interface="javax.servlet.Servlet"/>
+   </service>
+   <property name="alias" type="String" value="/oauth/oauth2"/>
+   <property name="httpContext.id" type="String" value="oauthContext"/>
+</scr:component>

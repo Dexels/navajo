@@ -125,10 +125,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	 * less in favor of lazy loading
 	 */
 	private final Map<String, XMLElement> tipiComponentMap = new HashMap<String, XMLElement>();
-	/**
-	 * Contains the cache of CSS definitions per tipi component.
-	 */
-	private final Map<String, List<String>> tipiCssMap = new HashMap<String, List<String>>();
 
 	private final Map<String, TipiComponentTransformer> tipiTransformerMap = new HashMap<String, TipiComponentTransformer>();
 
@@ -504,7 +500,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	protected void clearResources() {
 		tipiInstanceMap.clear();
 		tipiComponentMap.clear();
-		tipiCssMap.clear();
 		// tipiClassMap.clear();
 //		getClassManager().clearClassMap();
 		clearTopScreen();
@@ -525,11 +520,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		for (Iterator<String> iter = iterSet.iterator(); iter.hasNext();) {
 			String definitionName = iter.next();
 			tipiComponentMap.remove(definitionName);
-		}
-		iterSet = new HashSet<String>(tipiCssMap.keySet());
-		for (Iterator<String> iter = iterSet.iterator(); iter.hasNext();) {
-			String definitionName = iter.next();
-			tipiCssMap.remove(definitionName);
 		}
 	}
 
@@ -1025,13 +1015,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 	
 
-	/**
-	 * 
-	 * @param definition The name of the definition for which to load the CSS
-	 * @param location Can be null. The path at which the definition file can be found.
-	 */
-
-	
 	public TipiComponentTransformer getTipiComponentTransformer(String name) {
 		return tipiTransformerMap.get(name);
 	}
@@ -1466,24 +1449,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 		}
 		tipiComponentMap.put(defname, elm);
 		
-//		Object applyCss = elm.getAttribute("applyCss", "false");
-//		if (applyCss != null && applyCss.toString().equals("true"))
-//		{
-//			try
-//			{
-//				loadCssDefinition(defname, locationMap.get(defname));
-//			}
-//			catch(IOException ioe)
-//			{
-//				logger.debug("Something going wrong loading css definitions for " + defname, ioe);
-//			}
-//		}
-//		else
-//		{
-//			tipiCssMap.put(defname, new ArrayList<String>());  
-//			
-//		}
-
 		if (!hasDebugger) {
 			// debug mode, don't cache at all
 
@@ -1871,7 +1836,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			}
 			// synchronized (sync) {
 			tc.setCurrentEvent(event);
-			o = Expression.evaluate(expr, n, null, currentMessage,null, null, tc);
+			o = Expression.evaluate(expr, n, null, currentMessage, null, tc);
 			if (o == null) {
 				logger.debug("Expression evaluated to null operand!");
 				return null;
@@ -2012,7 +1977,6 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public void deleteDefinition(String definition) {
 		tipiComponentMap.remove(definition);
-		tipiCssMap.remove(definition);
 	}
 
 	public void replaceDefinition(XMLElement xe) {
@@ -2630,7 +2594,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			logger.error("Error: ",e);
 			return;
 		}
-		propertyBindMap.remove(master);
+		propertyBindMap.remove(service + ":"+ master.getFullPropertyName());
 		if (pref != null) {
 			for (PropertyChangeListener propertyChangeListener : pref) {
 				master.removePropertyChangeListener(propertyChangeListener);
@@ -2706,10 +2670,10 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			propertyLinkRegistry.put(master, p);
 		}
 		p.add(slave);
-
-		List<PropertyChangeListener> xx = propertyBindMap.get(master);
 		Navajo rootDoc = master.getRootDoc();
 		String service = rootDoc.getHeader().getRPCName();
+
+		List<PropertyChangeListener> xx = propertyBindMap.get(service + ":" + master.getFullPropertyName());
 		if (xx == null) {
 			xx = new LinkedList<PropertyChangeListener>();
 			try {

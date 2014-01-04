@@ -17,7 +17,7 @@ public class JdbcResourceComponent {
 	private static JdbcResourceComponent instance = null;
 	private static final Logger logger = LoggerFactory.getLogger(JdbcResourceComponent.class);
 	private final Map<Integer,Connection> transactionMap = new ConcurrentHashMap<Integer, Connection>();
-	private static BundleContext bundleContext;
+	private BundleContext bundleContext;
 	
 	public void activate(BundleContext bc) {
 		bundleContext = bc;
@@ -54,11 +54,11 @@ public class JdbcResourceComponent {
 
 	public static DataSource getDataSource(String shortName) throws InvalidSyntaxException {
 		ServiceReference<DataSource> ss = getDataSourceReference(shortName);
-		return bundleContext.getService(ss);
+		return instance.bundleContext.getService(ss);
 	}
 	private static ServiceReference<DataSource> getDataSourceReference(String shortName) throws InvalidSyntaxException {
 		logger.debug("Getting datasource reference: "+shortName);
-		Collection<ServiceReference<DataSource>> dlist = bundleContext.getServiceReferences(DataSource.class,"(name="+shortName+")");
+		Collection<ServiceReference<DataSource>> dlist = getInstance().bundleContext.getServiceReferences(DataSource.class,"(name="+shortName+")");
 		if(dlist.size()!=1) {
 			logger.info("Matched: {} datasources.",dlist.size());
 		}

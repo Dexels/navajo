@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,13 +16,13 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.felix.service.command.CommandSession;
 
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
-import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 import com.dexels.navajo.tipi.dev.server.appmanager.impl.RepositoryInstanceWrapper;
 
 public class List extends BaseOperation implements AppStoreOperation {
 
-	
+	private final Set<AppStoreOperation> operations = new HashSet<AppStoreOperation>();
 	private static final long serialVersionUID = 8640712571228602628L;
 	
 	public void list(CommandSession session ) throws IOException {
@@ -39,17 +41,29 @@ public class List extends BaseOperation implements AppStoreOperation {
 		settings.put("codebase", appStoreManager.getCodeBase());
 		settings.put("organization", appStoreManager.getOrganization());
 		settings.put("sessions", appStoreManager.getSessionCount());
+		final java.util.List<String> commandNames = new ArrayList<String>();
+		for (AppStoreOperation a : operations) {
+			commandNames.add(a.getName());
+		}
+		settings.put("globalCommands", commandNames);
 		return settings;
 	}
 	
+	public void addOperation(AppStoreOperation op) {
+		operations.add(op);
+	}
 
+	public void removeOperation(AppStoreOperation op) {
+		operations.remove(op);
+		
+	}
 	
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-//		verifyAuthorization(req,resp);
+		verifyAuthorization(req,resp);
 		resp.setContentType("application/json");
 		
 		java.util.List<RepositoryInstanceWrapper> ll = new ArrayList<RepositoryInstanceWrapper>(getApplications().values());
@@ -63,8 +77,8 @@ public class List extends BaseOperation implements AppStoreOperation {
 		user.put("image", (String)session.getAttribute("image"));
 		
 
-		for (RepositoryInstanceWrapper applicationStatus : ll) {
-			extwrap.put(applicationStatus.getRepositoryName(), applicationStatus);
+		for (RepositoryInstanceWrapper repository : ll) {
+			extwrap.put(repository.getRepositoryName(), repository);
 		}
 		wrap.put("applications", extwrap);
 		wrap.put("settings", getSettings());

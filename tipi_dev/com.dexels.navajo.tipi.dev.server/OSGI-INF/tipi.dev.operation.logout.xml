@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="tipi.dev.operation.logout">
    <implementation class="com.dexels.navajo.tipi.dev.server.appmanager.operations.impl.Logout"/>
-   <reference bind="addRepositoryInstance" cardinality="0..n" interface="com.dexels.navajo.repository.api.RepositoryInstance" name="RepositoryInstance" policy="dynamic" unbind="removeRepositoryInstance" target="(type=appstore)"/>
-   <reference bind="setRepositoryManager" cardinality="1..1" interface="com.dexels.navajo.repository.api.RepositoryManager" name="RepositoryManager" policy="dynamic" unbind="clearRepositoryManager"/>
    <service>
       <provide interface="javax.servlet.Servlet"/>
    </service>
    <property name="alias" type="String" value="/logout"/>
+   <property name="name" type="String" value="logout"/>
+   <property name="type" type="String" value="global"/>
 </scr:component>

@@ -16,10 +16,11 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
 
-public class RepositoryInstanceWrapper implements Comparable<RepositoryInstanceWrapper> {
+public class RepositoryInstanceWrapper implements RepositoryInstance {
 	
 	private final List<Dependency> dependencies = new ArrayList<Dependency>();
 	private final RepositoryInstance instance;
@@ -157,13 +158,49 @@ public class RepositoryInstanceWrapper implements Comparable<RepositoryInstanceW
 
 
 	@Override
-	public int compareTo(RepositoryInstanceWrapper o) {
-		return instance.getRepositoryName().compareTo(o.instance.getRepositoryName());
+	public int compareTo(RepositoryInstance o) {
+		return instance.getRepositoryName().compareTo(o.getRepositoryName());
 	}
 
 
+	@Override
 	public String getRepositoryName() {
 		return instance.getRepositoryName();
+	}
+
+
+
+
+	@Override
+	public File getRepositoryFolder() {
+		return instance.getRepositoryFolder();
+	}
+
+
+	@Override
+	public Map<String, Object> getSettings() {
+		// TODO Auto-generated method stub
+		return instance.getSettings();
+	}
+
+
+	@Override
+	public void addOperation(AppStoreOperation op, Map<String, Object> settings) {
+		instance.addOperation(op, settings);
+	}
+
+
+	@Override
+	public void removeOperation(AppStoreOperation op,
+			Map<String, Object> settings) {
+		instance.removeOperation(op, settings);
+		
+	}
+
+
+	@Override
+	public List<String> getOperations() {
+		return instance.getOperations();
 	}
 
 	

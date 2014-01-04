@@ -66,6 +66,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	private EventAdmin eventAdmin = null;
 
 
+
 	public GitRepositoryInstanceImpl() {
 		logger.info("Instance created!");
 	}
@@ -157,14 +158,17 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	
 	public void activate(Map<String,Object> settings) throws IOException {
 		File gitRepoFolder = repositoryManager.getRepositoryFolder();
+		setSettings(settings);
 		gitUrl = (String) settings.get("url");
 		httpUrl = (String) settings.get("httpUrl");
 		String key = (String) settings.get("key");
 		branch = (String) settings.get("branch");
 		name = (String) settings.get("name");
+		this.type = (String) settings.get("type");
 
 		repositoryName = name + "-"+branch;
 		applicationFolder = new File(gitRepoFolder,repositoryName);
+		super.setSettings(settings);
 		File keyFolder = repositoryManager.getSshFolder();
 		if(keyFolder!=null && keyFolder.exists()) {
 			privateKey = null;
@@ -175,12 +179,12 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		try {
 			
 			if(applicationFolder.exists()) {
-				callPull();
 				Repository repository = getRepository(applicationFolder);
 				git = new Git(repository);
 				Iterable<RevCommit> log = git.log().call();
 				lastCommit = log.iterator().next();
 				repository.close();
+				refreshApplication();
 			} else {
 				callClone();
 			}
@@ -213,7 +217,9 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			git.clean().call();
 			logger.info("Git clean complete.");
 		} finally {
-			repository.close();
+			if(repository!=null) {
+				repository.close();
+			}
 		}
 	}
 	
@@ -235,9 +241,12 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 //			git.clean().call();
 			Iterable<RevCommit> log = git.log().call();
 			lastCommit = log.iterator().next();
+//			lastCommit.getC
 			logger.info("Git pull complete.");
 		} finally {
-			repository.close();
+			if(repository!=null) {
+				repository.close();
+			}
 		}
 	}
 
@@ -256,7 +265,9 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			lastCommit = log.iterator().next();
 
 		} finally {
-			repository.close();
+			if(repository!=null) {
+				repository.close();
+			}
 		}
 	}
 	
@@ -284,7 +295,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			
 	    }
 //	    CredentialsProvider user = CredentialsProvider.getDefault(); 
-	    UsernamePasswordCredentialsProvider upc = new UsernamePasswordCredentialsProvider("flyaruu", "automati");
+	    UsernamePasswordCredentialsProvider upc = new UsernamePasswordCredentialsProvider("******", "********");
 	    // new
 	    Repository repository = null;
 	    try {
@@ -319,7 +330,9 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			config.save();
 			callPull();
 		} finally {
-			repository.close();
+			if(repository!=null) {
+				repository.close();
+			}
 		}
 
 	}
@@ -433,9 +446,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			if (oldVersion != null) {
 				properties.put("oldCommit", oldVersion);
 			}
-			if (newVersion != null) {
-				properties.put("newCommit", newVersion);
-			}
+			properties.put("newCommit", newVersion);
 			String url = getUrl();
 			if (url != null) {
 				properties.put("url", url);
@@ -460,5 +471,18 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 
 		eventAdmin.postEvent(event);
 
+	}
+
+	@Override
+	public Map<String, Object> getSettings() {
+		Map<String, Object> result = super.getSettings();
+		result.put("gitUrl", getGitUrl());
+		result.put("httpUrl", getHttpUrl());
+		result.put("lastCommitAuthor", getLastCommitAuthor());
+		result.put("lastCommitDate", getLastCommitDate());
+		result.put("lastCommitEmail", getLastCommitEmail());
+		result.put("lastCommitMessage", getLastCommitMessage());
+		result.put("lastCommitVersion", getLastCommitVersion());
+		return result;
 	}
 }

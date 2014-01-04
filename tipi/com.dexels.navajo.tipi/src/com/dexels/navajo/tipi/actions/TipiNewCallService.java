@@ -45,6 +45,9 @@ public class TipiNewCallService extends TipiAction {
 			throws com.dexels.navajo.tipi.TipiException,
 			com.dexels.navajo.tipi.TipiBreakException {
 
+		getContext().getClient().setLocaleCode(getContext().getApplicationInstance().getLocaleCode());
+		getContext().getClient().setSubLocaleCode(getContext().getApplicationInstance().getSubLocaleCode());
+
 		String service = (String) getEvaluatedParameterValue("service", event);
 		Navajo input = (Navajo) getEvaluatedParameterValue("input", event);
 //		Operand destination = getEvaluatedParameter("destination", event);
@@ -111,9 +114,11 @@ public class TipiNewCallService extends TipiAction {
 						+ connector
 						+ " not found, reverting to default connector");
 
-				defaultConnector.doTransaction(input, service, destination);
+				Navajo result = defaultConnector.doTransaction(input, service, destination);
+				processResult(breakOnError, destination, service, result);
 			} else {
-				ttt.doTransaction(input, service, destination);
+				Navajo result = ttt.doTransaction(input, service, destination);
+				processResult(breakOnError, destination, service, result);
 			}
 		}
 		setThreadState("busy");

@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -56,8 +55,8 @@ public class ColumnManagementDialog extends JDialog {
 			.getLogger(ColumnManagementDialog.class);
 	
 	private static final long serialVersionUID = -6795986412646589943L;
-	private JList<String> availableColumnList = new JList<String>();
-	private JList<String> visibleColumnList = new JList<String>();
+	private JList availableColumnList = new JList();
+	private JList visibleColumnList = new JList();
 	private JButton hideButton = new JButton();
 	private JButton showButton = new JButton();
 	private JLabel jLabel1 = new JLabel();
@@ -161,7 +160,7 @@ public class ColumnManagementDialog extends JDialog {
 
 	private final void fillEmUp() {
 		int currentColumnCount = myTable.getColumnCount();
-		DefaultListModel<String> model = (DefaultListModel<String>) visibleColumnList
+		DefaultListModel model = (DefaultListModel) visibleColumnList
 				.getModel();
 
 		for (int i = 0; i < currentColumnCount; i++) {
@@ -173,7 +172,7 @@ public class ColumnManagementDialog extends JDialog {
 			nameIdMap.put(id, item);
 		}
 
-		DefaultListModel<String> model2 = (DefaultListModel<String>) availableColumnList
+		DefaultListModel model2 = (DefaultListModel) availableColumnList
 				.getModel();
 		for (int j = 0; j < availableItems.size(); j++) {
 			String id = availableItems.get(j);
@@ -183,8 +182,8 @@ public class ColumnManagementDialog extends JDialog {
 	}
 
 	private final void jbInit() throws Exception {
-		availableColumnList.setModel(new DefaultListModel<String>());
-		visibleColumnList.setModel(new DefaultListModel<String>());
+		availableColumnList.setModel(new DefaultListModel());
+		visibleColumnList.setModel(new DefaultListModel());
 		this.setTitle("Toevoegen en verwijderen van kolommen");
 		this.getContentPane().setSize(500, 400);
 		setLocationRelativeTo(myToplevel);
@@ -281,10 +280,11 @@ public class ColumnManagementDialog extends JDialog {
 	}
 
 	final void hideButton_actionPerformed(ActionEvent e) {
-		List<String> removedNames = visibleColumnList.getSelectedValuesList();
-		DefaultListModel<String> vm = (DefaultListModel<String>) visibleColumnList.getModel();
-		DefaultListModel<String> am = (DefaultListModel<String>) availableColumnList.getModel();
-		for (String name : removedNames) {
+		Object[] selected = visibleColumnList.getSelectedValues();
+		DefaultListModel vm = (DefaultListModel) visibleColumnList.getModel();
+		DefaultListModel am = (DefaultListModel) availableColumnList.getModel();
+		for (Object o : selected) {
+			String name = (String)o;
 			vm.removeElement(name);
 			am.addElement(name);
 			availableItems.add(name);
@@ -294,10 +294,12 @@ public class ColumnManagementDialog extends JDialog {
 	}
 
 	final void showButton_actionPerformed(ActionEvent e) {
-		List<String> addedNames = availableColumnList.getSelectedValuesList();
-		DefaultListModel<String> vm = (DefaultListModel<String>) visibleColumnList.getModel();
-		DefaultListModel<String> am = (DefaultListModel<String>) availableColumnList.getModel();
-		for (String name : addedNames) {
+		Object[] selected = availableColumnList.getSelectedValues();
+//		List<String> addedNames = availableColumnList.getSelectedValuesList();
+		DefaultListModel vm = (DefaultListModel) visibleColumnList.getModel();
+		DefaultListModel am = (DefaultListModel) availableColumnList.getModel();
+		for (Object o : selected) {
+			String name = (String)o;
 			am.removeElement(name);
 			vm.addElement(name);
 			availableItems.remove(name);
@@ -314,7 +316,7 @@ public class ColumnManagementDialog extends JDialog {
 			String item = myTable.getMessageModel().getColumnId(i);
 			myTable.removeColumn(item);
 		}
-		DefaultListModel<String> vm = (DefaultListModel<String>) visibleColumnList.getModel();
+		DefaultListModel vm = (DefaultListModel) visibleColumnList.getModel();
 		Enumeration<?> m = vm.elements();
 		myTable.removeAllColumns();
 		while (m.hasMoreElements()) {
@@ -345,9 +347,9 @@ public class ColumnManagementDialog extends JDialog {
 
 	final void upButton_actionPerformed(ActionEvent e) {
 		int index = visibleColumnList.getSelectedIndex();
-		DefaultListModel<String> vm = (DefaultListModel<String>) visibleColumnList.getModel();
+		DefaultListModel vm = (DefaultListModel) visibleColumnList.getModel();
 		if (index > 0) {
-			String value = visibleColumnList.getSelectedValue();
+			String value = (String)visibleColumnList.getSelectedValue();
 			vm.removeElement(value);
 			vm.insertElementAt(value, index - 1);
 			visibleColumnList.setSelectedIndex(index - 1);
@@ -356,9 +358,9 @@ public class ColumnManagementDialog extends JDialog {
 
 	final void downButton_actionPerformed(ActionEvent e) {
 		int index = visibleColumnList.getSelectedIndex();
-		DefaultListModel<String> vm = (DefaultListModel<String>) visibleColumnList.getModel();
+		DefaultListModel vm = (DefaultListModel) visibleColumnList.getModel();
 		if (index < vm.indexOf(vm.lastElement())) {
-			String value = visibleColumnList.getSelectedValue();
+			String value = (String)visibleColumnList.getSelectedValue();
 			vm.removeElement(value);
 			vm.insertElementAt(value, index + 1);
 			visibleColumnList.setSelectedIndex(index + 1);

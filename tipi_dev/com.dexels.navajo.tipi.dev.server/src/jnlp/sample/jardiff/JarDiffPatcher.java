@@ -83,7 +83,6 @@ public class JarDiffPatcher implements JarDiffConstants, Patcher {
 		return JarDiff.getResources();
 	}
 
-	@SuppressWarnings("resource")
 	@Override
 	public void applyPatch(Patcher.PatchDelegate delegate, String oldJarPath,
 			String jarDiffPath, OutputStream result) throws IOException {
@@ -228,7 +227,8 @@ public class JarDiffPatcher implements JarDiffConstants, Patcher {
 
 		if (is == null) {
 			handleException("jardiff.error.noindex", null);
-
+			// to appease findbugs:
+			return;
 		}
 		LineNumberReader indexReader = new LineNumberReader(
 				new InputStreamReader(is, "UTF-8"));

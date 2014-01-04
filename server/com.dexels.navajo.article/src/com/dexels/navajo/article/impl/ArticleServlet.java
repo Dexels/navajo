@@ -3,6 +3,7 @@ package com.dexels.navajo.article.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -56,12 +57,12 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
-		String token = req.getParameter("token");
-		if(token==null) {
-			throw new ServletException("Please supply a token");
+//		BZ2kTR4xD1Yqrkr0PlHP+3VOpTuzQzF3vzikqTjBLFioMmoofvpE0ykd1UT2tYPtayqzbWHrDdJA289Y1/IZGKa3h5/d9RMXzi65OsEP7W4=
+		String clientId = req.getParameter("token");
+		if(clientId==null) {
+			throw new ServletException("Please supply a token (a client id, actually)");
 		}
-		
+		Map<String,String> scopes = context.getScopes(getToken(req));
 		String pathInfo = req.getPathInfo();
 		String instance = determineInstanceFromRequest(req);
 		logger.info("Instance determined: "+instance);
@@ -70,7 +71,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		}
 		File article = context.resolveArticle(pathInfo);
 		if(article.exists()) {
-			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article,pathInfo,req.getParameterMap(),instance);
+			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article,pathInfo,req.getParameterMap(),instance,scopes);
 			try {
 				runtime.execute(context);
 				resp.setContentType("application/json; charset=utf-8");
@@ -99,6 +100,11 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 			instance = pathinfo;
 		}
 		return instance;
+	}
+
+	private String getToken(HttpServletRequest req) {
+
+		return null;
 	}
 
 	@Override

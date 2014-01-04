@@ -6,13 +6,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.githubosgi.GitRepositoryInstance;
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
-import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 
 public class Pull extends BaseOperation implements AppStoreOperation {
 
@@ -39,6 +38,7 @@ public class Pull extends BaseOperation implements AppStoreOperation {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		verifyAuthorization(req, resp);
 		String val = req.getParameter("app");
 		if(val!=null) {
 			pull(val);
@@ -55,10 +55,6 @@ public class Pull extends BaseOperation implements AppStoreOperation {
 			throw new IOException("Can only pull from a Git application");
 		}
 		GitRepositoryInstance ha = (GitRepositoryInstance) a;
-		try {
-			ha.callPull();
-		} catch (GitAPIException e) {
-			throw new IOException(e);
-		}
+		ha.refreshApplication();
 	}
 }

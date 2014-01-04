@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,11 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.tipi.dev.core.projectbuilder.XsdBuilder;
-import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 
-public class XsdBuild extends BaseOperation implements AppStoreOperation {
+public class XsdBuild extends BaseOperation implements AppStoreOperation, Servlet {
 
 	
 	private static final long serialVersionUID = -7219236999229829020L;
@@ -37,6 +38,7 @@ public class XsdBuild extends BaseOperation implements AppStoreOperation {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String val = req.getParameter("app");
+		verifyAuthorization(req, resp);
 		if(val!=null) {
 			xsd(val);
 		} else {

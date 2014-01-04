@@ -81,17 +81,17 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			service = "InitMail";
 		}
 		if (service.equals("InitMail")) {
-			return injectNavajo(service, createMailInit());
+			return createMailInit();
 		}
 		if (service.equals("InitGetFolders")) {
-			return injectNavajo(service, createFolderNavajo());
+			return createFolderNavajo();
 		}
 		if (service.equals("InitGetMessages")) {
-			return injectNavajo(service, createInitGetMessages());
+			return createInitGetMessages();
 		}
 
 		if (service.equals("GetInboxMessages")) {
-			return injectNavajo(service, createMessagesNavajo());
+			return createMessagesNavajo();
 		}
 		// if (service.equals("GetMessages")) {
 		// injectNavajo(service, createMessagesNavajo(n));
@@ -100,7 +100,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		// injectNavajo(service, createMessagesNavajo(n));
 		// }
 		if (service.equals("GetMessage")) {
-			return injectNavajo(service, createGetMessage(n));
+			return createGetMessage(n);
 		}
 		if (service.equals("DeleteMessage")) {
 			setMessageFlag(n, Flag.DELETED, true);
@@ -634,11 +634,13 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		mailMode = "pop3";
 		connect();
 		Navajo init = createInitGetMessages();
-		doTransaction(init,"GetInboxMessages");
+		Navajo n = doTransaction(init,"GetInboxMessages");
+		injectNavajo("GetInboxMessages", n);
 
 		init.getProperty("Folder/MessageNumber").setAnyValue(3);
 
-		doTransaction(getNavajo(), "InitGetMessages");
+		n = doTransaction(getNavajo(), "InitGetMessages");
+		injectNavajo("InitGetMessages", n);
 				
 		logger.info("Sleeping....");		
 		try {
@@ -648,7 +650,8 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		}
 		logger.info("End of sleep...");
 				
-		doTransaction(init, "GetMessage");
+		n = doTransaction(init, "GetMessage");
+		injectNavajo("GetMessage", n);
 		disconnect();
 		
 	}

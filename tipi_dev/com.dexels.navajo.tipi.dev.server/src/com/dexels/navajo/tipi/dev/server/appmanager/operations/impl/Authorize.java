@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.felix.service.command.CommandSession;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
@@ -25,22 +24,16 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 
+import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
-import com.dexels.navajo.tipi.dev.server.appmanager.AppStoreOperation;
 
 public class Authorize extends BaseOperation implements AppStoreOperation {
 
-	
 	private static final long serialVersionUID = 8640712571228602628L;
 	
-	public void list(CommandSession session ) throws IOException {
-		Map<String,Map<String,RepositoryInstance>> wrap = new HashMap<String, Map<String,RepositoryInstance>>();
-		wrap.put("applications", applications);
-		writeValueToJsonArray(session.getConsole(),wrap);
+	public Authorize() {
+		
 	}
-	
-
-	
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)

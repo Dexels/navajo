@@ -62,7 +62,7 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 
 					@Override
 					public void propertyChange(PropertyChangeEvent evt) {
-							logger.info("Log: "+evt.getPropertyName()+" val: "+evt.getNewValue());
+							logger.debug("Log: "+evt.getPropertyName()+" val: "+evt.getNewValue());
 					
 					}});
 				myEditor.getSourcePane().getDocument().addDocumentListener(new DocumentListener(){
@@ -83,7 +83,7 @@ public class TipiSwingEditor extends TipiSwingDataComponentImpl  {
 					}
 					
 					private void fireChange(String changeType, DocumentEvent e) {
-						logger.info("Change: "+changeType+" evt: "+e);
+						logger.debug("Change: "+changeType+" evt: "+e);
 					}
 				});
 

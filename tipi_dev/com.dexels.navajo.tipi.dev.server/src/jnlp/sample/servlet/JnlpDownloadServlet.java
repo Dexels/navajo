@@ -223,7 +223,7 @@ public class JnlpDownloadServlet extends HttpServlet {
 			dres.sendRespond(response);
 
 		} catch (ErrorResponseException ere) {
-				logger.info("servlet.log.info.badrequest:"+ requestStr,ere);
+//				logger.info("servlet.log.info.badrequest:"+ requestStr,ere);
 				logger.debug("Response: " + ere.toString());
 			// Return response from exception
 			ere.getDownloadResponse().sendRespond(response);

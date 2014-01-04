@@ -3,6 +3,7 @@ package com.dexels.navajo.article;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
@@ -21,4 +22,6 @@ public interface ArticleContext {
 	public List<String> listArticles();
 	
 	public void writeArticleMeta(String name,ObjectNode rootNode, ObjectMapper mapper) throws ArticleException, IOException;
+
+	public Map<String,String> getScopes(String token);
 }

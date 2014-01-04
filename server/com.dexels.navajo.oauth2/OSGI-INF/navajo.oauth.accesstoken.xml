@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.oauth.accesstoken">
+   <implementation class="com.multi.oauth2.provider.util.OAuth2AccessTokenService"/>
+   <reference bind="setDao" cardinality="1..1" interface="com.multi.oauth2.provider.dao.OAuth2Service" name="OAuth2Service" policy="static" unbind="clearDao"/>
+   <service>
+      <provide interface="com.multi.oauth2.provider.util.OAuth2AccessTokenService"/>
+   </service>
+</scr:component>

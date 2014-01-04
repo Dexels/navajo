@@ -106,7 +106,7 @@ public class NavajoMessage extends DefaultMessage implements Message {
 
 	@Override
 	public Map<String, Object> getHeaders() {
-		Map<String, Object> res = getHeaders();
+		Map<String, Object> res = super.getHeaders();
 		if(res==null) {
 			res = new HashMap<String, Object>();
 		}

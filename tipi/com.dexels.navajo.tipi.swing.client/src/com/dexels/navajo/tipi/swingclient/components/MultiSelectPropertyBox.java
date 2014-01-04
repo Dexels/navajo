@@ -45,7 +45,6 @@ public class MultiSelectPropertyBox extends BaseComboBox implements
 	public MultiSelectPropertyBox() {
 		this.setRenderer(new PropertyCellRenderer());
 		this.addItemListener(new java.awt.event.ItemListener() {
-			@Override
 			public void itemStateChanged(ItemEvent e) {
 				// this_itemStateChanged(e);
 			}
@@ -58,7 +57,6 @@ public class MultiSelectPropertyBox extends BaseComboBox implements
 		// gar nichts
 	}
 
-	@Override
 	public final Property getProperty() {
 		if (myValueProperty != null) {
 			return myValueProperty;
@@ -66,7 +64,6 @@ public class MultiSelectPropertyBox extends BaseComboBox implements
 		return myProperty;
 	}
 
-	@Override
 	public final void update() {
 		// required method
 	}
@@ -93,7 +90,6 @@ public class MultiSelectPropertyBox extends BaseComboBox implements
 	//
 	// }
 
-	@Override
 	public final void setProperty(Property p) {
 		if (p == null) {
 			logger.info("Resetting property to null.");
@@ -129,7 +125,7 @@ public class MultiSelectPropertyBox extends BaseComboBox implements
 			return;
 		}
 		for (int i = 0; i < getItemCount(); i++) {
-			Selection current = getItemAt(i);
+			Selection current = (Selection) getItemAt(i);
 			if (current != null && current.getValue() != null
 					&& current.getValue().equals(s.getValue())) {
 				boolean b = current.isSelected();
