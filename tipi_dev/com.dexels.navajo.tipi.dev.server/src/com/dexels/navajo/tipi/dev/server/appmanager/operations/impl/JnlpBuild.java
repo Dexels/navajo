@@ -81,6 +81,7 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation,EventH
 		List<String> extraHeaders = new ArrayList<String>();
 		extraHeaders.add("Permissions: all-permissions");
 		String applicationName = appStoreManager.getApplicationName();
+		
 		if(applicationName!=null) {
 			extraHeaders.add("Application-Name: "+applicationName);
 		}
@@ -123,7 +124,7 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation,EventH
 		}
 //		logger.info("Detected dependencies: "+a.getDependencies());
 		LocalJnlpBuilder jj = new LocalJnlpBuilder();
-		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),repoInstance.getRepositoryFolder(),a.getProfiles(),"",appStoreManager.getCodeBase(),repoInstance.getRepositoryName());
+		jj.buildFromMaven(a.getSettingsBundle(),a.getDependencies(),repoInstance.getRepositoryFolder(),a.getProfiles(),"",appStoreManager.getCodeBase(),repoInstance.getRepositoryName(), repoInstance.getSettings());
 		for (String profile : a.getProfiles()) {
 			createSignedJnlpJar(repoInstance.getRepositoryFolder(),profile,a);
 		}
