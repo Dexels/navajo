@@ -69,7 +69,7 @@ public class TmlContinuationServlet extends HttpServlet implements
 				localClient = getLocalClient(req);
 			} 
 			logger.debug("Servlet path info: "+req.getPathInfo());
-			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,"default");
+			TmlRunnable instantiateRunnable = TmlRunnableBuilder.prepareRunnable(req,resp,localClient,null);
 			if(instantiateRunnable!=null) {
 				getTmlScheduler().submit(instantiateRunnable, false);
 			}
