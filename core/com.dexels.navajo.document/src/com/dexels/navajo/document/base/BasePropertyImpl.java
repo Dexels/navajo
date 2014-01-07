@@ -695,7 +695,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 						Date d = dateFormat2.get().parse(getValue());
 						return d;
 					} catch (Exception ex3) {
-						logger.info("Sorry I really can't parse that date: " + getValue());
+						try {
+							Long l = Long.parseLong(getValue());
+							Date d = new java.util.Date();
+							d.setTime(l);
+							return d;
+						} catch (Exception e4) {
+							logger.info("Sorry I really can't parse that date: " + getValue());
+						}
 					}
 				}
 			}
