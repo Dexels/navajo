@@ -136,7 +136,7 @@ public final class TipiWindow extends TipiEchoDataComponentImpl{
     		} catch (TipiException e) {
 				logger.error("Error: ",e);
     		} catch (TipiBreakException e) {
-				logger.error("Error: ",e);
+				logger.debug("Error: ",e);
 			}
     	// myContext.disposeTipi(this);
     }

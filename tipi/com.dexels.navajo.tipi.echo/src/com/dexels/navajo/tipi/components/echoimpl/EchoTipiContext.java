@@ -126,7 +126,7 @@ public class EchoTipiContext extends TipiContext {
 					logger.error("Error: ",e);
 					showInternalError(e.getMessage(),e);
 				} catch (TipiBreakException e) {
-					logger.error("Error: ",e);
+					logger.debug("Error: ",e);
 				}
 				
 			}

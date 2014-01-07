@@ -76,7 +76,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 				try {
 					performTipiEvent("onSelectionChanged", tempMap, false);
 				} catch (TipiBreakException e) {
-					logger.error("Error: ",e);
+					logger.debug("Error: ",e);
 				} catch (TipiException e) {
 					logger.error("Error: ",e);
 				}
@@ -100,7 +100,7 @@ public class TipiTable extends TipiVaadinComponentImpl {
 					try {
 						performTipiEvent("onActionPerformed", tempMap, false);
 					} catch (TipiBreakException e) {
-						logger.error("Error: ",e);
+						logger.debug("Error: ",e);
 					} catch (TipiException e) {
 						logger.error("Error: ",e);
 					}

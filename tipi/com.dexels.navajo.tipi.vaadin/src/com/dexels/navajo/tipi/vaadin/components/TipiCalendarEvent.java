@@ -97,7 +97,7 @@ public class TipiCalendarEvent extends TipiComponentImpl {
 		try {
 			performTipiEvent("onActionPerformed", null, true);
 		} catch (TipiBreakException e) {
-			logger.error("Error: ",e);
+			logger.debug("Error: ",e);
 		} catch (TipiException e) {
 			logger.error("Error: ",e);
 		}		

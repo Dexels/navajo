@@ -80,7 +80,7 @@ public class TipiMessagePanel extends TipiVaadinComponentImpl implements
 		try {
 			performTipiEvent("onLoad", eventParams, true);
 		} catch (TipiBreakException e) {
-			logger.error("Error: ",e);
+			logger.debug("Error: ",e);
 		} catch (TipiException e) {
 			logger.error("Error: ",e);
 		}
@@ -107,7 +107,7 @@ public class TipiMessagePanel extends TipiVaadinComponentImpl implements
 	                try {
 	                	performTipiEvent("onActionPerformed", null, true);
 					} catch (TipiBreakException e) {
-						logger.error("Error: ",e);
+						logger.debug("Error: ",e);
 					} catch (TipiException e) {
 						logger.error("Error: ",e);
 					}

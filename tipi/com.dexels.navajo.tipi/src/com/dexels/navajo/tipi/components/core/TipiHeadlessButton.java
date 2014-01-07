@@ -67,7 +67,7 @@ public class TipiHeadlessButton extends TipiComponentImpl {
 					try {
 						doFireAction();
 					} catch (TipiBreakException e) {
-						logger.error("Error: ",e);
+						logger.debug("Error: ",e);
 					} catch (TipiException e) {
 						logger.error("Error: ",e);
 					}

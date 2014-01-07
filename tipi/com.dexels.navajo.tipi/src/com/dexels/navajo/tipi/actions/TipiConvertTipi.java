@@ -103,7 +103,14 @@ public class TipiConvertTipi extends TipiAction {
 					processElement(d, d.getDocumentElement(), relativePath);
 					break;
 				} catch (TipiBreakException e) {
-					logger.info("Break. change #" + i++);
+					if(logger.isDebugEnabled())
+					{
+						logger.info("Break. change #" + i++, e);
+					}
+					else
+					{
+						logger.info("Break. change #" + i++);
+					}
 				}
 
 			}

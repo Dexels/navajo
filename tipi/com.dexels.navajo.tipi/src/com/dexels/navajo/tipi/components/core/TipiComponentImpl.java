@@ -1036,11 +1036,9 @@ public abstract class TipiComponentImpl implements TipiEventListener,
 		try {
 			performTipiEvent("onDispose", null, true);
 		} catch (TipiBreakException e) {
-			logger.warn("Error, but continuing, when firing the onDispose event for: " + this);
-			e.printStackTrace();
+			logger.debug("Error, but continuing, when firing the onDispose event for: " + this, e);
 		} catch (TipiException e) {
-			logger.warn("Error, but continuing, when firing the onDispose event for: " + this);
-			e.printStackTrace();
+			logger.warn("Error, but continuing, when firing the onDispose event for: " + this, e);
 		}
 		helperDispose();
 		isDisposed = true;

@@ -187,7 +187,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 
 				} catch (TipiBreakException e1) {
 					// logger.debug("Break in window listener");
-					// logger.error("Error detected",e1);
+					logger.debug("Error detected",e1);
 					if (e1.getType() == TipiBreakException.COMPONENT_DISPOSED) {
 						// if the break is because the component is disposing
 						// (that can happen while closing)
@@ -219,7 +219,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl{
 
 				} catch (TipiBreakException e1) {
 					// logger.debug("Break in window listener");
-					logger.error("Error detected",e1);
+					logger.debug("Error detected",e1);
 					if (e1.getType() == TipiBreakException.COMPONENT_DISPOSED) {
 						// if the break is because the component is disposing
 						// (that can happen while closing)

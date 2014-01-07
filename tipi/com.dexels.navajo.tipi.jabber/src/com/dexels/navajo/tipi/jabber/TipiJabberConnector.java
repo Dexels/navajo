@@ -327,7 +327,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		} catch (NavajoException e1) {
 			e1.printStackTrace();
 		} catch (TipiBreakException e) {
-			logger.error("Error: ",e);
+			logger.debug("Error: ",e);
 		}
 		return null;
 	}
