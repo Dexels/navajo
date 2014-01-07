@@ -345,7 +345,8 @@ public class ServiceEntityOperation implements EntityOperation {
 		if(myOperation.getMethod().equals(Operation.PUT) || myOperation.getMethod().equals(Operation.POST)) {
 			
 			// Check for (Mongo) entity, if Mongo make sure that _id is added if it does not exist.
-			if ( myOperation.getMethod().equals(Operation.POST) ) {
+			// PUT == insert
+			if ( myOperation.getMethod().equals(Operation.PUT) ) {
 				List<String> missing = checkRequired(inputEntity, myEntity.getMessage(), true);
 				if ( missing.size() > 0  ) {
 					throw new EntityException(EntityException.BAD_REQUEST, "Could not perform update, missing required properties:\n" + listToString(missing));
@@ -373,7 +374,8 @@ public class ServiceEntityOperation implements EntityOperation {
 				}
 			}
 			
-			if ( myOperation.getMethod().equals(Operation.PUT) ) {
+			// POST == update
+			if ( myOperation.getMethod().equals(Operation.POST) ) {
 				// Required properties check.
 				List<String> missing = checkRequired(inputEntity, myEntity.getMessage(), false);
 				if ( missing.size() > 0  ) {
@@ -480,8 +482,8 @@ public class ServiceEntityOperation implements EntityOperation {
 			NavajoTransaction nt = (NavajoTransaction) NavajoTransactionManager.getInstance().getTransaction();
 			if ( nt != null && !myOperation.getMethod().equals(Operation.GET) ) {
 				Navajo original = null;
-				// fetch original Navajo (before POST or DELETE).
-				if ( myOperation.getMethod().equals(Operation.POST) || myOperation.getMethod().equals(Operation.DELETE)) {
+				// fetch original Navajo (before PUT or DELETE).
+				if ( myOperation.getMethod().equals(Operation.PUT) || myOperation.getMethod().equals(Operation.DELETE)) {
 					original = getCurrentEntity(input);
 				}
 				// Perform operation (blocking!)
