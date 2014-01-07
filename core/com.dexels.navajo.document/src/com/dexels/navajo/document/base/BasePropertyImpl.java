@@ -2117,7 +2117,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				value = s.getValue();
 			}
 		}
-		value = value.replace("\"", "\\\"");
+		value = ( value != null ? value.replace("\"", "\\\"") : "" );
 		writeElement(sw, "\"" + getName() + "\" : \"" + value + "\"");		
 	}
 
