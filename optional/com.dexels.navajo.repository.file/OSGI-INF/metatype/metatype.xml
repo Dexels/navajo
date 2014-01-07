@@ -1,0 +1,9 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+	<OCD description="Repository File Instance" name="Repository File Instance" id="navajo.repository.file">
+		<AD name="Storage Folder" id="storage.path" required="true" type="String" />
+	</OCD>
+
+	<Designate pid="navajo.repository.file">
+		<Object ocdref="navajo.repository.file" />
+	</Designate>
+</metatype:MetaData>
