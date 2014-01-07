@@ -441,7 +441,14 @@ public class GenericHandler extends ServiceHandler {
 
         try {
             // Should method getCompiledNavaScript be fully synced???
-        	CompiledScriptInterface cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName);
+        	CompiledScriptInterface cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName,false);
+        	if(cso!=null) {
+        		boolean dirty = cso.hasDirtyDependencies(access);
+        		if(dirty) {
+                	cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName,true);
+            		logger.warn(">>>>>>>>>>>>>>>> dirty script!");
+        		}
+        	}
         	//(access.rpcName);
         	if(cso==null) {
         		if(Version.osgiActive()) {
@@ -556,7 +563,7 @@ public class GenericHandler extends ServiceHandler {
 ////		 return ss;
 //	}
 
-	private CompiledScriptInterface loadOnDemand(BundleContext bundleContext, String rpcName) throws Exception {
+	private CompiledScriptInterface loadOnDemand(BundleContext bundleContext, String rpcName,boolean force) throws Exception {
 		if(bundleContext==null) {
 			logger.debug("No OSGi context found");
 			return null;
@@ -568,7 +575,7 @@ public class GenericHandler extends ServiceHandler {
 			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
 			return null;
 		}
-		CompiledScriptInterface sc = bc.getOnDemandScriptService(rpcName,tenantConfig.getInstanceGroup(),tenantConfig.hasTenantScriptFile(rpcName,tenantConfig.getInstanceGroup()));
+		CompiledScriptInterface sc = bc.getOnDemandScriptService(rpcName,tenantConfig.getInstanceGroup(),tenantConfig.hasTenantScriptFile(rpcName,tenantConfig.getInstanceGroup()),force);
 		// wait for it..
 		bundleContext.ungetService(ref);
 		return sc;

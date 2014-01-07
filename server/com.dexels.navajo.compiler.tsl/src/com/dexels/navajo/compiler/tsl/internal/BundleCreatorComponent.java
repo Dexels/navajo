@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.compiler.ScriptCompiler;
-import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.compiler.SkipCompilationException;
 import com.dexels.navajo.script.api.CompiledScriptFactory;
 import com.dexels.navajo.script.api.CompiledScriptInterface;
@@ -520,25 +519,23 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	@Override
-	public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified)
+	public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified, boolean force)
 			throws Exception {
 		CompiledScriptInterface sc = getCompiledScript(rpcName,tenant);
 
 		if (sc != null) {
 			boolean needsRecompile = checkForRecompile(rpcName,tenant,tenantQualified);
-			if (!needsRecompile) {
+			if (!force && !needsRecompile) {
 				return sc;
 			}
 		}
 		List<String> failures = new ArrayList<String>();
 		List<String> success = new ArrayList<String>();
 		List<String> skipped = new ArrayList<String>();
-		boolean force = false;
 		// so no resolution
-		if (needsCompilation(rpcName,tenant)) {
+		if (needsCompilation(rpcName,tenant) || force) {
 			createBundle(rpcName, new Date(), "xml", failures, success,
-					skipped, false, false,tenant);
-			force = true;
+					skipped, force, false,tenant);
 			// createBundleJar(rpcName, formatCompilationDate(new Date()),
 			// false);
 		}

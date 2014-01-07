@@ -2,6 +2,7 @@ package com.dexels.navajo.repository.api;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -18,5 +19,8 @@ public interface RepositoryInstance extends Comparable<RepositoryInstance> {
 	public void removeOperation(AppStoreOperation op, Map<String, Object> settings);
 
 	public List<String> getOperations();
+
+	public int refreshApplication() throws IOException;
+
 
 }

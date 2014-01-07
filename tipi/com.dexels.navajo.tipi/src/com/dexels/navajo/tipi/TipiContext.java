@@ -1775,7 +1775,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			try {
 				t.loadData(reply, method);
 			} catch (TipiBreakException e) {
-				logger.warn("Data refused by component");
+				logger.debug("Data refused by component");
 			}
 		}
 
@@ -2004,7 +2004,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 			showInternalError("Error performing action: " + te.getEventName()
 					+ " on component: " + te.getComponent().getPath(), e);
 		} catch (TipiBreakException e) {
-			logger.error("Error: ",e);
+			logger.debug("Error: ",e);
 			showInternalError("Error performing action: " + te.getEventName()
 					+ " on component: " + te.getComponent().getPath(), e);
 		} catch (Throwable e) {

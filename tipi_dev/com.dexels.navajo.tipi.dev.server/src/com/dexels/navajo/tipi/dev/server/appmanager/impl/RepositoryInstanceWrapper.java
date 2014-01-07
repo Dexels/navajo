@@ -203,5 +203,11 @@ public class RepositoryInstanceWrapper implements RepositoryInstance {
 		return instance.getOperations();
 	}
 
+
+	@Override
+	public int refreshApplication() throws IOException {
+		return 0;
+	}
+
 	
 }

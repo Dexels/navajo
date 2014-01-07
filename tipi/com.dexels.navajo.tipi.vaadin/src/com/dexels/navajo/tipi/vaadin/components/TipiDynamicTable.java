@@ -68,7 +68,7 @@ public class TipiDynamicTable extends TipiMessagePanel  {
 				try {
 					performTipiEvent("onSelectionChanged", tempMap, false);
 				} catch (TipiBreakException e) {
-					logger.error("Error: ",e);
+					logger.debug("Error: ",e);
 				} catch (TipiException e) {
 					logger.error("Error: ",e);
 				}
@@ -129,7 +129,7 @@ public class TipiDynamicTable extends TipiMessagePanel  {
 						try {
 	            			tc.performTipiEvent("onRow", eventParams, true);
 	            		} catch (TipiBreakException e) {
-	            			logger.error("Error: ",e);
+	            			logger.debug("Error: ",e);
 	            		} catch (TipiException e) {
 	            			logger.error("Error: ",e);
 	            		}

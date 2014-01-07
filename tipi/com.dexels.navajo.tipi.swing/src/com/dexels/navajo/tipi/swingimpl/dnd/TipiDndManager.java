@@ -56,7 +56,7 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 						TransferHandler th = c.getTransferHandler();
 						th.exportAsDrag(c, e, TransferHandler.COPY);
 					} catch (TipiBreakException e1) {
-						logger.debug("Component did a break on drag!");
+						logger.debug("Component did a break on drag!", e1);
 					}
 				}
 			}
@@ -104,7 +104,7 @@ public class TipiDndManager implements TipiDraggable, TipiDroppable {
 			logger.debug("Value: " + o);
 			myTipiComponent.performTipiEvent("onDrop", params, true);
 		} catch (TipiBreakException e) {
-			logger.error("Error detected",e);
+			logger.debug("Error detected",e);
 		} catch (TipiException e) {
 			logger.error("Error detected",e);
 		}

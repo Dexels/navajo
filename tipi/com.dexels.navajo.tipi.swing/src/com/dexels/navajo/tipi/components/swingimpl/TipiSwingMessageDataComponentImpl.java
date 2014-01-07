@@ -256,7 +256,7 @@ public abstract class TipiSwingMessageDataComponentImpl extends
 						TipiSwingMessageDataComponentImpl.super.loadData(n,
 								method);
 					} catch (TipiBreakException e) {
-						logger.error("Error detected",e);
+						logger.debug("Error detected",e);
 					} catch (Throwable e) {
 						logger.error("Error detected",e);
 						myContext.showInternalError("Error loading component: "

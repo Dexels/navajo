@@ -76,7 +76,7 @@ public class TipiUndecoratedWindow extends TipiSwingDataComponentImpl {
 				} catch (TipiException e) {
 					logger.error("Error detected",e);
 				} catch (TipiBreakException e) {
-					logger.error("Error detected",e);
+					logger.debug("Error detected",e);
 				}
 
 			}

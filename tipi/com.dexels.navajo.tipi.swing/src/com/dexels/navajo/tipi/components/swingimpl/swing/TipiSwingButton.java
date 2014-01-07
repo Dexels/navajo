@@ -54,7 +54,7 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 				try {
 					component.performTipiEvent("onMouseEntered", null, false);
 				} catch (TipiBreakException e1) {
-					logger.error("Error detected",e1);
+					logger.debug("Error detected",e1);
 				} catch (TipiException e1) {
 					logger.error("Error detected",e1);
 				}
@@ -66,7 +66,7 @@ public class TipiSwingButton extends JButton implements TipiDndCapable {
 				try {
 					component.performTipiEvent("onMouseExited", null, false);
 				} catch (TipiBreakException e1) {
-					logger.error("Error detected",e1);
+					logger.debug("Error detected",e1);
 				} catch (TipiException e1) {
 					logger.error("Error detected",e1);
 				}

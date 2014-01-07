@@ -174,6 +174,7 @@ public class TipiCalendar extends TipiMessagePanel  {
 				try {
 				tc.performTipiEvent("onCalendarEvent", eventParams, true);
 				} catch (TipiBreakException e) {
+					logger.debug("Break: ", e);
 				}
 				cep.addEvent(tc.getCalendarEvent());
 //				tc.setCalendar(this);

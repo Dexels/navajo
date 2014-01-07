@@ -1,6 +1,7 @@
 package com.dexels.githubosgi.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,6 +99,11 @@ public class RepositoryInstanceImpl implements RepositoryInstance {
 		}
 		return result;
 		
+	}
+
+	@Override
+	public int refreshApplication() throws IOException {
+		return 0;
 	}
 
 }
