@@ -58,6 +58,7 @@ public class TipiWindow extends TipiVaadinComponentImpl{
             		}
             		myContext.disposeTipiComponent(TipiWindow.this);
         		} catch (TipiBreakException e1) {
+        			logger.debug("Break: ", e1);
 					if (e1.getType() == TipiBreakException.COMPONENT_DISPOSED) {
 						myContext.disposeTipiComponent(TipiWindow.this);
 					}

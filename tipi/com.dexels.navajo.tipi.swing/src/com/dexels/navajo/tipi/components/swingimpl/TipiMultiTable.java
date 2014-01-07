@@ -93,7 +93,7 @@ public class TipiMultiTable extends TipiSwingDataComponentImpl {
 		} catch (TipiException ex) {
 			logger.error("Error detected",ex);
 		} catch (TipiBreakException e) {
-			logger.error("Error detected",e);
+			logger.debug("Error detected",e);
 		}
 	}
 

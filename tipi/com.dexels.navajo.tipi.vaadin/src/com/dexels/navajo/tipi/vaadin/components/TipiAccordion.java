@@ -49,7 +49,7 @@ public class TipiAccordion extends TipiVaadinComponentImpl {
 				try {
 					performTipiEvent("onTabChanged", null, true);
 				} catch (TipiBreakException e) {
-					logger.error("Error: ",e);
+					logger.debug("Error: ",e);
 				} catch (TipiException e) {
 					logger.error("Error: ",e);
 				}

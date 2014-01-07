@@ -77,7 +77,7 @@ public class TipiMessagePanel extends TipiSwingDataComponentImpl implements
 		try {
 			performTipiEvent("onLoad", eventParams, true);
 		} catch (TipiBreakException e) {
-			logger.error("Error detected",e);
+			logger.debug("Error detected",e);
 		} catch (TipiException e) {
 			logger.error("Error detected",e);
 		}

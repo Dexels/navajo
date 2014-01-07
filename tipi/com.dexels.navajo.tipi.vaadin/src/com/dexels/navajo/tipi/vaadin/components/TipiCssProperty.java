@@ -329,7 +329,7 @@ public class TipiCssProperty extends TipiVaadinComponentImpl implements Property
 						property.setSelected(ss);
 						performTipiEvent("onValueChanged", null, true);
 					} catch (TipiBreakException e) {
-						logger.error("Error: ",e);
+						logger.debug("Error: ",e);
 					} catch (TipiException e) {
 						logger.error("Error: ",e);
 					} catch (NavajoException e) {

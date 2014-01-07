@@ -45,7 +45,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 				try {
 					performTipiEvent("onFocusGained", null, false);
 				} catch (TipiBreakException e1) {
-					logger.error("Error detected",e1);
+					logger.debug("Error detected",e1);
 				} catch (TipiException e1) {
 					logger.error("Error detected",e1);
 				}
@@ -56,7 +56,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 				try {
 					performTipiEvent("onFocusLost", null, false);
 				} catch (TipiBreakException e1) {
-					logger.error("Error detected",e1);
+					logger.debug("Error detected",e1);
 				} catch (TipiException e1) {
 					logger.error("Error detected",e1);
 				}
@@ -71,7 +71,7 @@ public class TipiSlider extends TipiSwingComponentImpl {
 				try {
 					performTipiEvent("onValueChanged", null, false);
 				} catch (TipiBreakException e1) {
-					logger.error("Error detected",e1);
+					logger.debug("Error detected",e1);
 				} catch (TipiException e1) {
 					logger.error("Error detected",e1);
 				}

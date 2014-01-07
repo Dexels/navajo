@@ -251,7 +251,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		try {
 			stc.getContext().loadNavajo(n.copy(), method);
 		} catch (TipiBreakException e) {
-			logger.error("Error: ",e);
+			logger.debug("Error: ",e);
 		}
 	}
 

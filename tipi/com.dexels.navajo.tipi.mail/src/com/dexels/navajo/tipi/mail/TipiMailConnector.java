@@ -143,7 +143,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 						} catch (MessagingException e) {
 							logger.error("Error: ",e);
 						} catch (TipiBreakException e) {
-							logger.error("Error: ",e);
+							logger.debug("Error: ",e);
 						} catch (TipiException e) {
 							logger.error("Error: ",e);
 						}
@@ -552,16 +552,16 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			params.put("unreadMessageCount", unreadMessageCount);
 			performTipiEvent("onFolderOpened", params, false);
 		} catch (TipiBreakException e1) {
-			e1.printStackTrace();
+			logger.debug("Error", e1);
 		} catch (TipiException e1) {
-			e1.printStackTrace();
+			logger.error("Error", e1);
 		}
 		try {
 			injectNavajo("InitGetMessages", createInitGetMessages());
 		} catch (TipiBreakException e1) {
-			e1.printStackTrace();
+			logger.debug("Error", e1);
 		} catch (TipiException e1) {
-			e1.printStackTrace();
+			logger.error("Error", e1);
 		}
 	}
 

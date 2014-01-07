@@ -37,6 +37,7 @@ public class TipiDialog extends TipiVaadinComponentImpl{
             		}
             		myContext.disposeTipiComponent(TipiDialog.this);
         		} catch (TipiBreakException e1) {
+        			logger.debug("Break: ", e1);
 					if (e1.getType() == TipiBreakException.COMPONENT_DISPOSED) {
 	            		myContext.disposeTipiComponent(TipiDialog.this);
 					}
