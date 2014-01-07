@@ -89,10 +89,11 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 	@Override
 	public void buildFromMaven(ResourceBundle settings,
 			List<Dependency> dependencyList, File appFolder,
-			List<String> profiles, String resourceBase, String suppliedCodebase, String applicationName) {
+			List<String> profiles, String resourceBase, String suppliedCodebase, String applicationName, Map<String,Object> repoSettings) {
 		logger.debug("Building in folder: "+appFolder);
 		if(profiles==null) {
 			logger.warn("No profiles loaded, not building jnlp");
+			return;
 		}
 		for (String fileName : profiles) {
 			File jnlpFile = new File(appFolder, fileName+".jnlp");
@@ -100,7 +101,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 			try {
 				FileWriter fw1 = new FileWriter(jnlpFile);
 				fw1.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-				XMLElement output = buildElementFromMaven(dependencyList,settings,"deployment",appFolder, resourceBase,fileName+".jnlp", fileName,suppliedCodebase,applicationName);
+				XMLElement output = buildElementFromMaven(dependencyList,settings,"deployment",appFolder, resourceBase,fileName+".jnlp", fileName,suppliedCodebase,applicationName,repoSettings);
 				output.write(fw1);
 				fw1.flush();
 				fw1.close();
@@ -111,7 +112,7 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 	}
 
 
-	private XMLElement buildElementFromMaven(List<Dependency> dependencies, ResourceBundle params,String deployment, File baseDir, String resourceBase, String fileName, String profile, String suppliedCodebase, String applicationName) throws IOException {
+	private XMLElement buildElementFromMaven(List<Dependency> dependencies, ResourceBundle params,String deployment, File baseDir, String resourceBase, String fileName, String profile, String suppliedCodebase, String applicationName, Map<String,Object> repoSettings) throws IOException {
 		XMLElement output = new CaseSensitiveXMLElement();
 		output.setName("jnlp");
 		output.setAttribute("version", "1");
@@ -145,7 +146,11 @@ public abstract class BaseJnlpBuilder extends BaseDeploymentBuilder {
 
 		XMLElement resources = output.addTagKeyValue("resources", "");
 		XMLElement java = resources.addTagKeyValue("j2se", "");
-		java.setAttribute("version", "1.6+");
+		String jvmVersion = (String) repoSettings.get("java.version");
+		if(jvmVersion==null) {
+			jvmVersion = "1.7+";
+		}
+		java.setAttribute("version", jvmVersion);
 		appendSecurity(output, params.getString("permissions"));
 		for (Dependency dependency : dependencies) {
 			appendResourceForExtension(resources, dependency.getFileName(),dependency.getVersion(),false);

@@ -27,23 +27,24 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	
 	private final HttpServletRequest request;
 	private final HttpServletResponse response;
-	private String token = null;
-	private String username;
+	private final String token;
+	private final String username;
 	private final StringWriter writer = new StringWriter();
-	private Map<String, String[]> parameterMap; 
+	private final Map<String, String[]> parameterMap; 
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(ServletArticleRuntimeImpl.class);
 	
-	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, File article,String articleName, Map<String, String[]> parameterMap) throws IOException {
-		super(articleName,article);
+	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, File article,String articleName, Map<String, String[]> parameterMap,Map<String, String> suppliedScopes) throws IOException {
+		super(articleName,article,suppliedScopes);
 		this.request = req;
 		this.parameterMap = parameterMap;
 		this.response = resp;
-		this.token = URLDecoder.decode(req.getParameter("token"),"UTF-8");
-		token=token.replaceAll(" ", "+");
+		this.token = URLDecoder.decode(req.getParameter("token"),"UTF-8").replaceAll(" ", "+");
 		this.username = req.getParameter("username");
 	}
+
+	
 	@Override
 	public String resolveArgument(String name) throws ArticleException {
 		// TODO use optionality / default value

@@ -20,5 +20,8 @@ Import-Package: javax.servlet;version="3.0.0",
  org.apache.oltu.oauth2.common.message;version="0.31.0",
  org.apache.oltu.oauth2.common.message.types;version="0.31.0",
  org.apache.oltu.oauth2.common.token;version="0.31.0",
+ org.apache.oltu.oauth2.common.utils;version="0.31.0",
  org.codehaus.jettison;version="1.2.0",
  org.codehaus.jettison.json;version="1.2.0"
+Service-Component: OSGI-INF/navajo.oauth.authorization.xml,
+ OSGI-INF/navajo.oauth.token.xml

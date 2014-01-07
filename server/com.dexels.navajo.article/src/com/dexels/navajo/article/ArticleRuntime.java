@@ -3,6 +3,7 @@ package com.dexels.navajo.article;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -41,4 +42,8 @@ public interface ArticleRuntime {
 	public Map<String, String[]> getParameterMap();
 
 	public ObjectNode getGroupNode(String name) throws ArticleException;
+
+	public Set<String> getRequiredScopes();
+
+	public String resolveScope(String name) throws ArticleException;
 }
