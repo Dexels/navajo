@@ -18,7 +18,8 @@ import com.dexels.navajo.document.ParamTag;
 import com.dexels.navajo.document.Point;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.document.json.JSONParser;
+import com.dexels.navajo.document.json.JSONTML;
+import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.document.saximpl.SaxHandler;
 import com.dexels.navajo.document.saximpl.qdxml.QDParser;
 /**
@@ -260,9 +261,8 @@ public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable
 	@Override
 	public Navajo createNavajoJSON(Reader r){
 		try{
-			JSONParser jsoParser = new JSONParser();
-			jsoParser.parse(r);
-			return jsoParser.getNavajo();
+			JSONTML jsoParser = JSONTMLFactory.getInstance();
+			return jsoParser.parse(r);
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}

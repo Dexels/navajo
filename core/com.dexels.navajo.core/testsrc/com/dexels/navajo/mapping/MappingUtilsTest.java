@@ -25,5 +25,13 @@ public class MappingUtilsTest {
 		Assert.assertEquals("Lekker", n.getProperty("Apenoot/Kip").getValue());
 		
 	}
+	
+	@Test
+	public void testCreateMessage() {
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		MappingUtils.getMessageObject("/Apenoot@0/Kibbeling", null, false, n, false, "", -1);
+		MappingUtils.getMessageObject("/Apenoot@1/Kibbeling", null, false, n, false, "", -1);
+		Assert.assertEquals(2, n.getMessage("Apenoot").getElements().size());
+	}
 
 }

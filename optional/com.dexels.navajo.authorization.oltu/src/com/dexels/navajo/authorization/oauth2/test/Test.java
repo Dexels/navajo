@@ -1,4 +1,4 @@
-package com.dexels;
+package com.dexels.navajo.authorization.oauth2.test;
 
 import java.io.BufferedReader;
 import java.io.IOException;

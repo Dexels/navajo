@@ -21,11 +21,11 @@ public class TestRuntimeImpl extends BaseRuntimeImpl {
 			.getLogger(TestRuntimeImpl.class);
 	
 	public TestRuntimeImpl(String articleName, XMLElement article) {
-		super(articleName,article);
+		super(articleName,article,null);
 	}
 	
 	public TestRuntimeImpl(String articleName, File articleFile) throws IOException {
-		super(articleName,articleFile);
+		super(articleName,articleFile,null);
 	}
 
 	@Override

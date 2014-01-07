@@ -30,20 +30,28 @@ public class MessageMapTest {
 				Property p2 = NavajoFactory.getInstance().createProperty(n, "Age", Property.INTEGER_PROPERTY, (i * 10 )+ "", 0, "", "out");
 				String d3 = "2012-01-" + ( (i+1) < 10 ? "0" + (i+1) : i);
 				Property p3 = NavajoFactory.getInstance().createProperty(n, "Date", Property.DATE_PROPERTY,d3, 0, "", "out");
+				Property p4 = NavajoFactory.getInstance().createProperty(n, "Gender", "1", "Geslacht", "");
+				p4.addSelection(NavajoFactory.getInstance().createSelection(n, "Man", "Man", false));
+				p4.addSelection(NavajoFactory.getInstance().createSelection(n, "Vrouw", "Vrouw", true));
 				c.addProperty(p1);
 				c.addProperty(p1a);
 				c.addProperty(p2);
 				c.addProperty(p3);
+				c.addProperty(p4);
 			} else {
 				Property p1 = NavajoFactory.getInstance().createProperty(n, "Product", Property.STRING_PROPERTY, "PC", 0, "", "out");
 				Property p1a = NavajoFactory.getInstance().createProperty(n, "Sub", Property.STRING_PROPERTY, "Desktop", 0, "", "out");
 				Property p2 = NavajoFactory.getInstance().createProperty(n, "Age", Property.INTEGER_PROPERTY, (i * 20 )+ "", 0, "", "out");
 				String d3 = "2012-01-" + ( (i+1) < 10 ? "0" + (i+1) : (i+1) );
 				Property p3 = NavajoFactory.getInstance().createProperty(n, "Date", Property.DATE_PROPERTY,d3, 0, "", "out");
+				Property p4 = NavajoFactory.getInstance().createProperty(n, "Gender", "1", "Geslacht", "");
+				p4.addSelection(NavajoFactory.getInstance().createSelection(n, "Man", "Man", false));
+				p4.addSelection(NavajoFactory.getInstance().createSelection(n, "Vrouw", "Vrouw", true));
 				c.addProperty(p1);
 				c.addProperty(p1a);
 				c.addProperty(p2);
 				c.addProperty(p3);
+				c.addProperty(p4);
 			}
 		}
 		n.write(System.err);
@@ -96,6 +104,73 @@ public class MessageMapTest {
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-09"), result[0].getMax("Date"));
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").parseObject("2012-01-10"), result[1].getMax("Date"));
 		
+		
+	}
+	
+	@Test
+	public void test2() throws Exception {
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		Message array = NavajoFactory.getInstance().createMessage(n, "Array");
+		n.addMessage(array);
+		array.setType(Message.MSG_TYPE_ARRAY);
+		for ( int i = 0; i < 10; i++ ) {
+			Message c = NavajoFactory.getInstance().createMessage(n, "Array");
+			array.addElement(c);
+			if ( i % 2 == 0) {
+				Property p1 = NavajoFactory.getInstance().createProperty(n, "Product", Property.STRING_PROPERTY, "PC", 0, "", "out");
+				Property p1a = NavajoFactory.getInstance().createProperty(n, "Sub", Property.STRING_PROPERTY, "Laptop", 0, "", "out");
+				Property p2 = NavajoFactory.getInstance().createProperty(n, "Age", Property.INTEGER_PROPERTY, (i * 10 )+ "", 0, "", "out");
+				String d3 = "2012-01-" + ( (i+1) < 10 ? "0" + (i+1) : i);
+				Property p3 = NavajoFactory.getInstance().createProperty(n, "Date", Property.DATE_PROPERTY,d3, 0, "", "out");
+				Property p4 = NavajoFactory.getInstance().createProperty(n, "Gender", "1", "Geslacht", "");
+				p4.addSelection(NavajoFactory.getInstance().createSelection(n, "Man", "Man", false));
+				p4.addSelection(NavajoFactory.getInstance().createSelection(n, "Vrouw", "Vrouw", true));
+				c.addProperty(p1);
+				c.addProperty(p1a);
+				c.addProperty(p2);
+				c.addProperty(p3);
+				c.addProperty(p4);
+			} else {
+				Property p1 = NavajoFactory.getInstance().createProperty(n, "Product", Property.STRING_PROPERTY, "PC", 0, "", "out");
+				Property p1a = NavajoFactory.getInstance().createProperty(n, "Sub", Property.STRING_PROPERTY, "Desktop", 0, "", "out");
+				Property p2 = NavajoFactory.getInstance().createProperty(n, "Age", Property.INTEGER_PROPERTY, (i * 20 )+ "", 0, "", "out");
+				String d3 = "2012-01-" + ( (i+1) < 10 ? "0" + (i+1) : (i+1) );
+				Property p3 = NavajoFactory.getInstance().createProperty(n, "Date", Property.DATE_PROPERTY,d3, 0, "", "out");
+				Property p4 = NavajoFactory.getInstance().createProperty(n, "Gender", "1", "Geslacht", "");
+				p4.addSelection(NavajoFactory.getInstance().createSelection(n, "Man", "Man", false));
+				p4.addSelection(NavajoFactory.getInstance().createSelection(n, "Vrouw", "Vrouw", true));
+				c.addProperty(p1);
+				c.addProperty(p1a);
+				c.addProperty(p2);
+				c.addProperty(p3);
+				c.addProperty(p4);
+			}
+		}
+		n.write(System.err);
+		
+		Access a = new Access();
+		a.setOutputDoc(n);
+		
+		MessageMap mm = new MessageMap();
+		mm.load(a);
+		//mm.setGroupBy("Product,Sub");
+		
+		mm.setJoinMessage1("Array");
+		mm.setJoinType("outer");
+		//mm.setRemoveSource(true);
+		
+		Message resultMessage = NavajoFactory.getInstance().createMessage(n, "ResultingMessage");
+		resultMessage.setType("array");
+		n.addMessage(resultMessage);
+		
+		a.setCurrentOutMessage(resultMessage);
+		
+		ResultMessage [] result = mm.getResultMessage();
+		
+		a.setCurrentOutMessage(null);
+		mm.store();
+		
+		assertEquals("Vrouw", result[0].getProperty("Gender"));
 		//n.write(System.err);
 		
 	}

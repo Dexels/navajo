@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.article.command.literal">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.article.command.element">
    <implementation class="com.dexels.navajo.article.command.impl.LiteralCommand"/>
-   <property name="command.name" type="String" value="element"/>
+   <property name="command.name" type="String" value="literal"/>
    <service>
       <provide interface="com.dexels.navajo.article.command.ArticleCommand"/>
    </service>

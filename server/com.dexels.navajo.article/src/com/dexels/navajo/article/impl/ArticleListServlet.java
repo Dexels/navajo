@@ -56,12 +56,8 @@ public class ArticleListServlet extends HttpServlet implements Servlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		// BZ2kTR4xD1Yqrkr0PlHP+3VOpTuzQzF3vzikqTjBLFioMmoofvpE0ykd1UT2tYPtayqzbWHrDdJA289Y1/IZGKa3h5/d9RMXzi65OsEP7W4=
 		try {
-			String token = req.getParameter("token");
-			if (token == null) {
-				throw new ServletException("Please supply a token");
-			}
+			
 			ObjectMapper mapper = new ObjectMapper();
 			ObjectNode rootNode = mapper.createObjectNode(); 
 			String requestedArticle = req.getParameter("article");
