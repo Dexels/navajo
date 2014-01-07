@@ -519,25 +519,23 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	@Override
-	public CompiledScript getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified)
+	public CompiledScript getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified, boolean force)
 			throws Exception {
 		CompiledScript sc = getCompiledScript(rpcName,tenant);
 
 		if (sc != null) {
 			boolean needsRecompile = checkForRecompile(rpcName,tenant,tenantQualified);
-			if (!needsRecompile) {
+			if (!force && !needsRecompile) {
 				return sc;
 			}
 		}
 		List<String> failures = new ArrayList<String>();
 		List<String> success = new ArrayList<String>();
 		List<String> skipped = new ArrayList<String>();
-		boolean force = false;
 		// so no resolution
-		if (needsCompilation(rpcName,tenant)) {
+		if (needsCompilation(rpcName,tenant) || force) {
 			createBundle(rpcName, new Date(), "xml", failures, success,
-					skipped, false, false,tenant);
-			force = true;
+					skipped, force, false,tenant);
 			// createBundleJar(rpcName, formatCompilationDate(new Date()),
 			// false);
 		}
