@@ -68,4 +68,8 @@ public class UserException extends Exception {
 	public String getMessage() {
         return message;
     }
+    
+    public int getCode() {
+    	return code;
+    }
 }
