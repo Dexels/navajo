@@ -513,7 +513,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements
 								try {
 									performTipiEvent("onRowLoad", m, true);
 								} catch (TipiBreakException e) {
-									logger.debug("Row break!");
+									logger.debug("Row break!", e);
 									break;
 								} catch (TipiException e) {
 									logger.error("Error detected",e);

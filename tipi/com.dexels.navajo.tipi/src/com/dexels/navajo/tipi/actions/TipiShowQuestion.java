@@ -39,12 +39,13 @@ public class TipiShowQuestion extends TipiAction {
 		try
 		{
 			myContext.showQuestion((String) o.value, title, options, event.getComponent());
-			performTipiEvent("onYes", null, true);
 		}
 		catch(TipiBreakException tbe)
 		{
 			performTipiEvent("onNo", null, true);
 			throw tbe;
 		}
+		// cannot be inside the try, otherwise a TBE inside the onYes event results in the onNo also being executed
+		performTipiEvent("onYes", null, true);
 	}
 }

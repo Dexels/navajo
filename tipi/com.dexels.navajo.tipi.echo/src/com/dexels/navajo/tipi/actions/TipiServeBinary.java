@@ -53,7 +53,7 @@ public class TipiServeBinary extends TipiAction {
 			}
 
 		} catch (TipiBreakException e1) {
-			logger.error("Error: ", e1);
+			logger.debug("Error: ", e1);
 		} catch (TipiException e1) {
 			logger.error("Error: ", e1);
 		}

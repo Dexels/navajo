@@ -94,6 +94,7 @@ public class TipiBrowseBinary extends TipiVaadinActionImpl {
 					getApplication().getMainWindow().removeWindow(w);
 					continueAction(getEvent());
 				} catch (TipiBreakException e) {
+					logger.debug("Break: ", e);
 				} catch (TipiSuspendException e) {
 				} catch (TipiException e) {
 					logger.error("Error: ",e);

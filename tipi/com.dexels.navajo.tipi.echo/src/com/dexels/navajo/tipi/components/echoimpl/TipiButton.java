@@ -118,7 +118,14 @@ public class TipiButton extends TipiEchoComponentImpl {
               catch (TipiException ex) {
             	  logger.error("Error: ", ex);
               } catch (TipiBreakException e) {
-            	  logger.info("Break in event");
+            	  if (logger.isDebugEnabled())
+            	  {
+            		  logger.info("Break in event", e);
+            	  }
+            	  else
+            	  {
+            		  logger.info("Break in event");
+            	  }
               }
             }
           }

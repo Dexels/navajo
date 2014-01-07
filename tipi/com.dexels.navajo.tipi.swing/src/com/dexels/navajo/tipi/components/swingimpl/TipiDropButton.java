@@ -84,7 +84,7 @@ public class TipiDropButton extends TipiSwingComponentImpl {
 		try {
 			performTipiEvent("onBinaryDropped", event, false);
 		} catch (TipiBreakException e) {
-			logger.error("Error detected",e);
+			logger.debug("Error detected",e);
 		} catch (TipiException e) {
 			logger.error("Error detected",e);
 		}

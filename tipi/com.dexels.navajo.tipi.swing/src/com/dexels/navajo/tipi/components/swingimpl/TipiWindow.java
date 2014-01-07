@@ -90,7 +90,7 @@ public final class TipiWindow
 							((JInternalFrame) e.getSource()).dispose();
 							logger.error("Error detected",e1);
 						} catch (TipiBreakException e2) {
-							logger.debug("Breakie breakie");
+							logger.debug("Breakie breakie", e2);
 							if (e2.getType() == TipiBreakException.COMPONENT_DISPOSED) {
 								// a component disposed event should still close
 								// the window

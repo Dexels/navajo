@@ -359,7 +359,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 					} catch (TipiException e) {
 						logger.error("Error: ",e);
 					} catch (TipiBreakException e) {
-						logger.error("Error: ",e);
+						logger.debug("Error: ",e);
 					}
 				}
 				// SwingTipiContext.debugSwingTree((Component)getContainer(),
