@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: File implementation of repository
 Bundle-SymbolicName: com.dexels.navajo.repository.file
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.1
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.repository.api;version="1.0.0",
