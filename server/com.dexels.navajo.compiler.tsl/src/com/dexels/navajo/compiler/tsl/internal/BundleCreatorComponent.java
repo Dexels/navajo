@@ -522,7 +522,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	public CompiledScript getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified, boolean force)
 			throws Exception {
 		CompiledScript sc = getCompiledScript(rpcName,tenant);
-
+		boolean forceReinstall = false;
 		if (sc != null) {
 			boolean needsRecompile = checkForRecompile(rpcName,tenant,tenantQualified);
 			if (!force && !needsRecompile) {
@@ -536,12 +536,13 @@ public class BundleCreatorComponent implements BundleCreator {
 		if (needsCompilation(rpcName,tenant) || force) {
 			createBundle(rpcName, new Date(), "xml", failures, success,
 					skipped, force, false,tenant);
+			forceReinstall = true;
 			// createBundleJar(rpcName, formatCompilationDate(new Date()),
 			// false);
 		}
 
 		// File bundleJar = getScriptBundleJar(rpcName);
-		installBundle(rpcName, tenant,failures, success, skipped, force);
+		installBundle(rpcName, tenant,failures, success, skipped, forceReinstall);
 
 		logger.debug("On demand installation finished, waiting for service...");
 //		CompiledScript cs = waitForService(rpcName,tenant);
