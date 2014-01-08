@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mongodb.DB;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 
 public class MongoManagedResourceFactory implements ManagedServiceFactory {
 
@@ -99,8 +99,7 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 			logger.info("Dict: "+key+" : "+settings.get(key));
 		}
 //		MongoOptions o = new MongoOptions();
-		
-		Mongo m = new Mongo((String) settings.get(HOST));
+		MongoClient m = new MongoClient((String) settings.get(HOST));
 		final String database = (String) settings.get(DATABASE);
 		logger.info(">>> "+database);
 		if(database!=null) {

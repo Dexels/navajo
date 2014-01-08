@@ -17,7 +17,6 @@ public class ScriptTestContext  {
 
 	private static ScriptTestContext instance;
 
-	private ScriptEnumerator myEnumerator = null;
 	private ScriptInputLocator myInputLocator = null;
 	private final Map<String,Navajo> navajoMap = new HashMap<String,Navajo>();
 
@@ -40,11 +39,7 @@ public class ScriptTestContext  {
 	}
 
 	public List<String> getQualifiedScriptNames() {
-		if (myEnumerator == null) {
-			throw new AssertionError("Can not enumerate scripts: No enumerator found.");
-		}
-		return myEnumerator.getQualifiedScriptNames();
-
+		throw new AssertionError("Can not enumerate scripts: No enumerator found.");
 	}
 
 

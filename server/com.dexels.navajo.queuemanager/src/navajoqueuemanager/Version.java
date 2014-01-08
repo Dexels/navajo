@@ -24,66 +24,13 @@
  */
 package navajoqueuemanager;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
-
-
-
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
-	private static BundleContext defaultBundleContext = null;
-	@SuppressWarnings("rawtypes")
-	private ServiceRegistration registration = null;
-
-	public static boolean isOSGi() {
-		return defaultBundleContext!=null;
-	}
 	@Override
 	public void start(BundleContext bc) throws Exception {
 		super.start(bc);
-		defaultBundleContext = bc;
-		try {
-			if(bc!=null) {
-				Dictionary<String, Object> wb = new Hashtable<String, Object>();
-				wb.put("schedulerClass", "com.dexels.navajo.server.listener.http.schedulers.priority.PriorityThreadPoolScheduler");
-				 wb.put("service.ranking", 10);
-//				 registration = bc.registerService(TmlScheduler.class.getName(), new ServiceFactory<TmlScheduler>() {
-//
-//					@Override
-//					public TmlScheduler getService(Bundle bundle,
-//							ServiceRegistration<TmlScheduler> registration) {
-//						PriorityThreadPoolScheduler ptps = new PriorityThreadPoolScheduler();
-//						return ptps;
-//					}
-//
-//					@Override
-//					public void ungetService(Bundle bundle,
-//							ServiceRegistration<TmlScheduler> registration,
-//							TmlScheduler service) {
-//						
-//					}
-//				},wb);
-			}
-		} catch (Throwable e) {
-			logger.error("Activation start failed: ",e);
-		}
-
 	}
-
-	@Override
-	public void stop(BundleContext arg0) throws Exception {
-		if(registration!=null) {
-			registration.unregister();
-		}
-		defaultBundleContext = null;
-		super.stop(arg0);
-	}
-	
-	
-
 }
 
