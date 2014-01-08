@@ -449,6 +449,53 @@
 		<abstract>false</abstract>
 		<object>com.dexels.navajo.adapter.navajomap.MessageMap</object>
 	</map>
+	<!-- REST adapter -->
+	<map>
+		<tagname>rest</tagname>
+		<object>com.dexels.navajo.adapter.RESTAdapter</object>
+		<description>This adapter can be used to call REST services
+		</description>
+		<values>
+			<value name="sendThrough" type="boolean" required="false"
+				direction="in" />
+			<value name="url" type="string" required="false" direction="in" />
+			<value name="method" type="string" required="false" direction="in" />
+			<value name="useCurrentOutDoc" type="boolean" required="false"
+				direction="in" />
+			<value name="useCurrentMessages" type="string" required="false" direction="in"/>
+			<value name="messagePointer" type="string" required="false"
+				direction="in" />
+			<value name="selectionPointer" type="string" required="false"
+				direction="in" />
+			<value name="message" map="messagemap" required="false"
+				direction="out" />
+			<value name="messages" map="messagemap []" required="false"
+				direction="out" />
+		</values>
+		<methods>
+			<!-- Creates a new property -->
+			<method name="createproperty">
+				<param name="name" field="propertyName" type="string" required="true" />
+				<param name="type" field="propertyType" type="string" required="false"/>
+				<param name="value" field="property" type="any" required="true" />
+			</method>
+			<!--  Deletes a property -->
+			<method name="deleteproperty">
+				<param name="name" field="deleteProperty" type="string" required="true"/>
+			</method>
+			<!--  Deletes a message -->
+			<method name="deletemessage">
+				<param name="name" field="deleteMessage" type="string" required="true"/>
+			</method>
+			<method name="callservice">
+				<param name="url" field="url" type="string" required="true" />
+				<param name="method" field="method" type="string" required="true" />
+				<param name="value" field="doSend" type="string" required="automatic" value="'CALLREST'" />
+			    <param name="appendTo" field="appendTo" type="string" required="false" />
+				<param name="append" field="append" type="string" required="false" />
+			</method>
+		</methods>
+	</map>
 	<!-- RSS adapter -->
 
 	<!-- Moved to NavajoEnterpriseAdapters I think TODO Check & FIX -->
