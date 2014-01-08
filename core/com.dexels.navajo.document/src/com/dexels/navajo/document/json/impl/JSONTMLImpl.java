@@ -33,15 +33,15 @@ public class JSONTMLImpl implements JSONTML {
 	private String topLevelMessageName = null;
 	private boolean skipTopLevelMessage = false;
 	private Navajo entityTemplate = null;
-	
+
 	private final static String TOP_LEVEL_MSG = "__TOP__";
-	
+
 	public JSONTMLImpl() {
 		jsonFactory =  new JsonFactory();
 		// Use default typing.
 		om = new ObjectMapper().enableDefaultTyping();
 	}
-	 
+
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.document.json.impl.JSONTML#parse(java.io.InputStream)
 	 */
@@ -55,12 +55,12 @@ public class JSONTMLImpl implements JSONTML {
 			throw new Exception("Could not parse JSON inputstream: " + e.getMessage(), e);
 		} 
 	}
-	
+
 	public Navajo parse(InputStream is, String topLevelMessageName) throws Exception {
 		this.topLevelMessageName = topLevelMessageName;
 		return parse(is);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.document.json.impl.JSONTML#parse(java.io.Reader)
 	 */
@@ -74,24 +74,24 @@ public class JSONTMLImpl implements JSONTML {
 			throw new Exception("Could not parse JSON inputstream: " + e.getMessage());
 		} 
 	}
-	
+
 	public Navajo parse(Reader r, String topLevelMessageName) throws Exception {
 		this.topLevelMessageName = topLevelMessageName;
 		return parse(r);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.document.json.impl.JSONTML#format(com.dexels.navajo.document.Navajo, java.io.OutputStream)
 	 */
 	@Override
 	public void format(Navajo n, OutputStream os) throws Exception {
 		try {
-			
-		
+
+
 			//ObjectMapper mapper = new ObjectMapper().enableDefaultTyping();
-			
+
 			JsonGenerator jg = jsonFactory.createJsonGenerator(os); 
-			
+
 			jg.useDefaultPrettyPrinter();
 			format(jg, n);
 			jg.close();
@@ -100,12 +100,12 @@ public class JSONTMLImpl implements JSONTML {
 		} 
 
 	}
-	
+
 	public void format(Navajo n, OutputStream os, boolean skipTopLevelMessage) throws Exception {
 		this.skipTopLevelMessage = skipTopLevelMessage;
 		format(n, os);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.document.json.impl.JSONTML#format(com.dexels.navajo.document.Navajo, java.io.Writer)
 	 */
@@ -121,17 +121,24 @@ public class JSONTMLImpl implements JSONTML {
 			throw new Exception("Could not parse JSON inputstream: " + e.getMessage());
 		} 
 	}
-	
+
 	public void format(Navajo n, Writer w, boolean skipTopLevelMessage) throws Exception {
 		this.skipTopLevelMessage = skipTopLevelMessage;
 		format(n, w);
 	}
-	
+
 	private void format(JsonGenerator jg, Property p) throws Exception {
 
 		jg.writeFieldName(p.getName());
-		om.writeValue(jg, p.getTypedValue());
-		//jg.writeObject(p.getTypedValue());
+		if ( p.getType().equals(Property.SELECTION_PROPERTY)) {
+			if ( p.getSelected() != null ) {
+				om.writeValue(jg, p.getSelected().getValue());
+			} else {
+				om.writeValue(jg, "null");
+			}
+		} else {
+			om.writeValue(jg, p.getTypedValue());
+		}
 
 	}
 
@@ -169,15 +176,15 @@ public class JSONTMLImpl implements JSONTML {
 	private void format(JsonGenerator jg, Navajo n) throws Exception {
 
 		try {
-		jg.writeStartObject();
-		List<Message> messages = n.getAllMessages();
-		for ( Message m: messages) {
-			if ( skipTopLevelMessage ) {
-				m.setName(TOP_LEVEL_MSG);
+			jg.writeStartObject();
+			List<Message> messages = n.getAllMessages();
+			for ( Message m: messages) {
+				if ( skipTopLevelMessage ) {
+					m.setName(TOP_LEVEL_MSG);
+				}
+				format(jg, m, false);
 			}
-			format(jg, m, false);
-		}
-		jg.writeEndObject();
+			jg.writeEndObject();
 		} catch (IOException ioe) {
 			throw ioe;
 		} catch (Exception e) {
@@ -200,10 +207,10 @@ public class JSONTMLImpl implements JSONTML {
 					prop.setType(ep.getType());
 				}
 			} else {
-				System.err.println("Could not find property in template: " + prop.getFullPropertyName());
+				//System.err.println("Could not find property in template: " + prop.getFullPropertyName());
 			}
 		}
-		
+
 	}
 
 	private void parseArrayMessageElement(Message arrayMessage, JsonParser jp) throws Exception {
@@ -270,6 +277,6 @@ public class JSONTMLImpl implements JSONTML {
 	public void setEntityTemplate(Navajo m) {
 		this.entityTemplate = m;
 	}
-	
+
 
 }
