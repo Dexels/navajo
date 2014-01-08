@@ -4,7 +4,8 @@ Bundle-Name: File implementation of repository
 Bundle-SymbolicName: com.dexels.navajo.repository.file
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Dexels
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.repository.api;version="1.0.0",
+ org.osgi.service.event;version="1.3.0",
  org.slf4j;version="1.7.5"
 Service-Component: OSGI-INF/navajo.repository.file.xml
