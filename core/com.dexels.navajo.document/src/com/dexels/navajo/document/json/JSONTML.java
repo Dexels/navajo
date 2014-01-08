@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 
 public interface JSONTML {
@@ -21,6 +20,8 @@ public interface JSONTML {
 	public abstract Navajo parse(Reader r, String topLevelMessageName) throws Exception;
 
 	public abstract void format(Navajo n, OutputStream os) throws Exception;
+	
+	public abstract void format(Navajo n, OutputStream os, boolean skipTopLevelMessage) throws Exception;
 
 	public abstract void format(Navajo n, Writer w) throws Exception;
 	

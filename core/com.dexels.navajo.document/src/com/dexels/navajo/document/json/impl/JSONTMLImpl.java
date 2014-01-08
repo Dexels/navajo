@@ -56,6 +56,7 @@ public class JSONTMLImpl implements JSONTML {
 		} 
 	}
 	
+	@Override
 	public Navajo parse(InputStream is, String topLevelMessageName) throws Exception {
 		this.topLevelMessageName = topLevelMessageName;
 		return parse(is);
@@ -75,6 +76,7 @@ public class JSONTMLImpl implements JSONTML {
 		} 
 	}
 	
+	@Override
 	public Navajo parse(Reader r, String topLevelMessageName) throws Exception {
 		this.topLevelMessageName = topLevelMessageName;
 		return parse(r);
@@ -101,6 +103,11 @@ public class JSONTMLImpl implements JSONTML {
 
 	}
 	
+	public void format(Navajo n, OutputStream os, boolean skipTopLevelMessage) throws Exception {
+		this.skipTopLevelMessage = skipTopLevelMessage;
+		format(n, os);
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.document.json.impl.JSONTML#format(com.dexels.navajo.document.Navajo, java.io.Writer)
 	 */
@@ -117,6 +124,7 @@ public class JSONTMLImpl implements JSONTML {
 		} 
 	}
 	
+	@Override
 	public void format(Navajo n, Writer w, boolean skipTopLevelMessage) throws Exception {
 		this.skipTopLevelMessage = skipTopLevelMessage;
 		format(n, w);
