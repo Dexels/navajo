@@ -490,6 +490,8 @@
 			<method name="callservice">
 				<param name="url" field="url" type="string" required="true" />
 				<param name="method" field="method" type="string" required="true" />
+				<param name="topMessage" field="topMessage" type="string" required="false" />
+				<param name="removeTopMessage" field="removeTopMessage" type="boolean" required="false"/>
 				<param name="value" field="doSend" type="string" required="automatic" value="'CALLREST'" />
 			    <param name="appendTo" field="appendTo" type="string" required="false" />
 				<param name="append" field="append" type="string" required="false" />
