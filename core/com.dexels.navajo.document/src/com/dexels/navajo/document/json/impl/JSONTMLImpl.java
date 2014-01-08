@@ -101,6 +101,11 @@ public class JSONTMLImpl implements JSONTML {
 
 	}
 	
+	public void format(Navajo n, OutputStream os, boolean skipTopLevelMessage) throws Exception {
+		this.skipTopLevelMessage = skipTopLevelMessage;
+		format(n, os);
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.document.json.impl.JSONTML#format(com.dexels.navajo.document.Navajo, java.io.Writer)
 	 */
