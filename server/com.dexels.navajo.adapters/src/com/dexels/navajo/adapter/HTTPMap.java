@@ -32,7 +32,6 @@ import java.net.URL;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.logging.Level;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -51,7 +50,6 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.queue.Queuable;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
-import com.dexels.navajo.util.AuditLog;
 
 public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 
@@ -208,14 +206,14 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		increaseInstanceCount();
 
 		if ( !isBelowInstanceThreshold()  ) {
-			AuditLog.log("HTTPMap", "WARNING: More than 100 waiting HTTP requests", Level.WARNING, myAccess.accessID);
+			logger.warn("WARNING: More than 100 waiting HTTP requests");
 		}
 		try {
-
-			AuditLog.log("HTTPMap", "About to send to: " + url, Level.INFO, myAccess.accessID);
+			
+			logger.info("About to send to: " + url);
 			URL u = null;
 			if(!url.startsWith("http://") && (!url.startsWith("https://"))) {
-				AuditLog.log("HTTPMap", "No protocol. Always prepend protocol. Assuming http.",Level.WARNING);
+				logger.warn("HTTPMap", "No protocol. Always prepend protocol. Assuming http.");
 				u = new URL("http://" + url);
 			} else {
 				u = new URL(url);
@@ -258,7 +256,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 				} finally {
 					osw.close();
 				}
-			} else if ( content != null && !method.equals("GET")) {
+			} else if ( content != null && !method.equals("GET") && !method.equals("HEAD")) {
 				OutputStream os = null;
 				os = con.getOutputStream();
 				try {
@@ -270,7 +268,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 				}
 			} else {
 				if ( method.equals("POST")) {
-					AuditLog.log("HTTPMap", "Empty content.", Level.INFO, myAccess.accessID);
+					logger.warn("Empty content.");
 					throw new UserException(-1, "");
 				}
 			}
@@ -291,14 +289,14 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		} catch (java.net.SocketTimeoutException sto) {
 			// 
 			if (!catchConnectionTimeOut) {
-				AuditLog.log("HTTPMap", "Got connectiontimeout", Level.WARNING, myAccess.accessID);
+				logger.error("Got connectiontimeout for " + url);
 				throw new UserException(-1, sto.getMessage(), sto);
 			} else {	
-				AuditLog.log("HTTPMap", "Got connectiontimeout", Level.WARNING, myAccess.accessID);
+				logger.warn("Got connectiontimeout for " + url);
 				hasConnectionTimeOut = true;
 			}
 		} catch (Exception e) {
-			AuditLog.log("HTTPMap", "Got other exception: " + e.getMessage(), Level.WARNING, myAccess.accessID);
+			logger.error("Got other exception: " + e.getMessage() + " for url: " + url);
 			throw new UserException(-1, e.getMessage(), e);
 		} finally {
 			decreaseInstanceCount();
@@ -342,7 +340,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 			try {
 				RequestResponseQueueFactory.getInstance().send(this, 100);
 			} catch (Exception e) {
-				AuditLog.log("HTTPMap", e.getMessage(), Level.WARNING, myAccess.accessID);
+				logger.error(e.getMessage(), e);
 			}
 		}
 	}
