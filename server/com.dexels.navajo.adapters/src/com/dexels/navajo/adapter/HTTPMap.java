@@ -29,9 +29,15 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +58,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 	private static final long serialVersionUID = 5398399368623971687L;
 	
 	public Binary content = null;
+	public long contentLength = 0;
 	public String textContent = null;
 	public String method = "POST";
 	public String contentType = null;
@@ -80,6 +87,9 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 			.getLogger(HTTPMap.class);
 	
 	private HashMap<String, String> headers = new HashMap<String, String>();
+
+	private int responseCode;
+	private String responseMessage;
 	
 	@Override
 	public void load(Access access) throws MappableException, UserException {
@@ -103,12 +113,16 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		content = b;
 	}
 	
+	public void setContentLength(long length) {
+		contentLength = length;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.adapter.URLMap#setUrl(java.lang.String)
 	 */
 	@Override
 	public void setUrl(String s) {
-		url = s;
+		url = s.trim();
 	}
 	
 	/* (non-Javadoc)
@@ -166,10 +180,34 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		}
 	}
 	
+	public void trustAll()  {
+		TrustManager trm = new X509TrustManager() {
+			public X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
+
+			public void checkClientTrusted(X509Certificate[] certs, String authType) {
+
+			}
+
+			public void checkServerTrusted(X509Certificate[] certs, String authType) {
+			}
+
+		};
+
+		try {
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, new TrustManager[] { trm }, null);
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+		}
+	}
+	
 	private final void sendOverHTTP() throws UserException {
 		increaseInstanceCount();
 
-		if ( isBelowInstanceThreshold()  ) {
+		if ( !isBelowInstanceThreshold()  ) {
 			AuditLog.log("HTTPMap", "WARNING: More than 100 waiting HTTP requests", Level.WARNING, myAccess.accessID);
 		}
 		try {
@@ -191,13 +229,18 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 				con.setReadTimeout(readTimeOut);
 			}
 			con.setRequestMethod(method);
-			if ( method.equals("POST")) {
+			if ( method.equals("POST") || method.equals("PUT") || method.equals("DELETE") ) {
 				con.setDoOutput(true);
-				con.setDoInput(true);
+				if ( !method.equals("DELETE")) {
+					con.setDoInput(true);
+				}
 			}
 			con.setUseCaches(false);
 			if ( contentType != null ) {
 				con.setRequestProperty("Content-type", contentType);
+			}
+			if ( contentLength > 0 ) {
+				con.setRequestProperty("Content-length", contentLength +"");
 			}
 			// Add headers
 			if(headers.size() > 0){
@@ -215,7 +258,7 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 				} finally {
 					osw.close();
 				}
-			} else if ( content != null ) {
+			} else if ( content != null && !method.equals("GET")) {
 				OutputStream os = null;
 				os = con.getOutputStream();
 				try {
@@ -232,8 +275,11 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 				}
 			}
 
-			InputStream is = null;
-			is = con.getInputStream();
+			responseCode =  con.getResponseCode();
+			responseMessage = con.getResponseMessage();
+			
+			InputStream is = ( responseCode < 400 ? con.getInputStream() : con.getErrorStream() ) ;
+			
 			try {
 				result = new Binary(is);
 			} finally {
@@ -310,6 +356,14 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		return null;
 	}
 
+	public int getResponseCode() {
+		return responseCode;
+	}
+	
+	public String getResponseMessage() {
+		return responseMessage;
+	}
+	
 	@Override
 	public boolean send() {
 		retries++;
