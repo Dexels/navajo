@@ -25,5 +25,6 @@ Import-Package: com.dexels.navajo.client,
  org.junit;resolution:=optional,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)"
-Service-Component: OSGI-INF/navajo.resource.navajo.manager.xml
+Service-Component: OSGI-INF/navajo.resource.navajo.manager.xml,
+ OSGI-INF/resource.navajo.client.async.xml
  
