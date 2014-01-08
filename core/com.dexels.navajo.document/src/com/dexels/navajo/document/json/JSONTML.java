@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
-import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 
 public interface JSONTML {

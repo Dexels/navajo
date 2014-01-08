@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.net.ssl.KeyManager;
@@ -87,6 +88,17 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		}
 		logger.warn("Skipped the 'start' method call, it seems to have vanished. Don't know if it's a problem.");
 	}
+	
+	public void activate(Map<String,Object> settings) {
+		setServer((String) settings.get("server"));
+		setUsername((String) settings.get("username"));
+		setPassword((String) settings.get("password"));
+		setName((String) settings.get("name"));
+	}
+
+	public void deactivate() {
+		
+	}
 
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.client.async.AsyncClient#callService(com.dexels.navajo.document.Navajo, java.lang.String, com.dexels.navajo.client.NavajoResponseHandler)
@@ -107,9 +119,16 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		
 		final Object semaphore = new Object();
 		final Set<Navajo> result = new HashSet<Navajo>();
-				
+		
 		NavajoResponseHandler nrh = new NavajoResponseHandler() {
+			Throwable caughtException = null;
 			
+			@Override
+			public Throwable getCaughtException() {
+				synchronized (semaphore) {
+					return caughtException;
+				}
+			}
 			@Override
 			public void onResponse(Navajo n) {
 				result.add(n);
@@ -122,6 +141,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 			public void onFail(Throwable t) throws IOException {
 				logger.error("Problem calling navajo: ",t);
 				synchronized (semaphore) {
+					caughtException = t;
 					semaphore.notify();
 				}
 				
@@ -130,10 +150,15 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		callService(input, service, nrh);
 		synchronized (semaphore) {
 			try {
-				semaphore.wait();
+				while(result.isEmpty() && nrh.getCaughtException()==null) {
+					semaphore.wait();
+				}
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.debug("Error: ", e);
 			}
+		}
+		if(nrh.getCaughtException()!=null) {
+			throw new IOException("Error calling remote navajo: "+server,nrh.getCaughtException());
 		}
 		return result.iterator().next();
 	}
@@ -176,6 +201,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		header.setRPCUser(currentAccess.rpcUser);
 		header.setRPCPassword(currentAccess.rpcPwd);
 		NavajoResponseHandler nrh = new NavajoResponseHandler() {
+			Throwable caughtException = null;
 
 			@Override
 			public void onResponse(Navajo n) {
@@ -196,7 +222,9 @@ public class AsyncClientImpl implements ManualAsyncClient {
 			}
 
 			@Override
-			public void onFail(Throwable t) throws IOException {
+			public synchronized void onFail(Throwable t) throws IOException {
+				caughtException = t;
+				logger.error("Error: ", caughtException);
 				setActualCalls(getActualCalls()-1);
 				try {
 					if (onFail != null) {
@@ -208,6 +236,13 @@ public class AsyncClientImpl implements ManualAsyncClient {
 					setActualCalls(getActualCalls()-1);
 				}
 			}
+			
+			
+			@Override
+			public synchronized Throwable getCaughtException() {
+					return caughtException;
+				}
+
 		};
 		setActualCalls(getActualCalls()+1);
 
@@ -340,6 +375,12 @@ public class AsyncClientImpl implements ManualAsyncClient {
 			@Override
 			public void onFail(Throwable t) {
 				logger.error("whoops: ",t);
+			}
+
+			@Override
+			public Throwable getCaughtException() {
+				// TODO Auto-generated method stub
+				return null;
 			}
 		};
 

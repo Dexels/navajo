@@ -55,7 +55,7 @@ public class JSONTMLImpl implements JSONTML {
 			throw new Exception("Could not parse JSON inputstream: " + e.getMessage(), e);
 		} 
 	}
-
+	
 	public Navajo parse(InputStream is, String topLevelMessageName) throws Exception {
 		this.topLevelMessageName = topLevelMessageName;
 		return parse(is);

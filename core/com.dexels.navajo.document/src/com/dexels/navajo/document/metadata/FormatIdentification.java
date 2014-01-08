@@ -148,7 +148,6 @@ public class FormatIdentification implements Serializable
 		return file;
 	}
 	
-	@SuppressWarnings("resource")
 	private static FormatDescription identifyZipByContent (byte[] data, File file) {
 		FormatDescription newDesc = null;
 		InputStream input = null;
@@ -201,7 +200,9 @@ public class FormatIdentification implements Serializable
 		                	}
 		                }
 		                br.close();
-		                zipInput.closeEntry();
+						if (zipInput != null) {
+							zipInput.closeEntry();
+						}
 		                input.close();
 		            }
 		        }

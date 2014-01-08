@@ -48,6 +48,11 @@ public class TestAsyncClient {
 			public void onFail(Throwable t) {
 				logger.error("whoops: ", t);
 			}
+
+			@Override
+			public Throwable getCaughtException() {
+				return null;
+			}
 		};
 
 		String service = "club/InitUpdateClub";

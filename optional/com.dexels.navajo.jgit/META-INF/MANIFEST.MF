@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Jgit connector
 Bundle-SymbolicName: com.dexels.navajo.jgit
-Bundle-Version: 1.0.8.qualifier
+Bundle-Version: 1.0.10.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.repository.api;version="1.0.0",

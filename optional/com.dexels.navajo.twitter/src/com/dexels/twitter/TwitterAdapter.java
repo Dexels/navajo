@@ -18,7 +18,7 @@ import com.dexels.navajo.server.UserException;
 
 public class TwitterAdapter {
 	private Twitter twit;
-	private String username, password; //, status;
+	private String username = null; //, status;
 	private String currentUser;
 	private String token1;
 	private String token2;
@@ -39,7 +39,7 @@ public class TwitterAdapter {
 	@SuppressWarnings("deprecation")
 	public TwitterStatus getStatus(){
 		if (twit == null) {
-			twit = new Twitter(username, password);
+			twit = new Twitter(username, (String)null);
 		}
 		Status s;
 		if(currentUser == null){

@@ -2,7 +2,7 @@ Bundle-Name: Navajo Async Client
 Bundle-SymbolicName: com.dexels.navajo.client.async
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.1.27.qualifier
+Bundle-Version: 1.1.29.qualifier
 Export-Package: com.dexels.navajo.client.async,
  navajoasyncclient
 Bundle-Vendor: Dexels
@@ -25,5 +25,6 @@ Import-Package: com.dexels.navajo.client,
  org.junit;resolution:=optional,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)"
-Service-Component: OSGI-INF/navajo.resource.navajo.manager.xml
+Service-Component: OSGI-INF/navajo.resource.navajo.manager.xml,
+ OSGI-INF/resource.navajo.client.async.xml
  

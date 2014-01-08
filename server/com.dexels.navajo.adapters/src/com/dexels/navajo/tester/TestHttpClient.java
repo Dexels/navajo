@@ -105,7 +105,12 @@ public class TestHttpClient extends Thread implements NavajoResponseHandler {
 			 } else {
 				 System.err.println(this + "," + i + ", Success, " +  ( end - start ) + ", " + serverTime + ", " + failedCount );
 			 }
-			 double sleepTime = ( sleep != null ? sleep : (minTime - ( end - start )) );
+			 double sleepTime;
+			 if(sleep!=null) {
+				 sleepTime = sleep;
+			 } else {
+				 sleepTime = (minTime - ( end - start ));
+			 }
 			 //System.err.println("sleepTime: " + sleepTime);
 			 if ( sleepTime > 0 ) {
 				 Thread.sleep((long) sleepTime);
@@ -207,8 +212,7 @@ public class TestHttpClient extends Thread implements NavajoResponseHandler {
 				try {
 					semaphore.wait( ( timeout != null ? timeout : 5000 ));
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.debug("Error: ", e);
 				}
 			}
 		}
@@ -225,7 +229,12 @@ public class TestHttpClient extends Thread implements NavajoResponseHandler {
 	
 	@Override
 	public void onFail(Throwable t) throws IOException {
-		t.printStackTrace(System.err);
+		logger.info("onFail: ", t);
 		fail = true;
+	}
+
+	@Override
+	public Throwable getCaughtException() {
+		return null;
 	}
 }

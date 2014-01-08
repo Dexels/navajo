@@ -19,7 +19,7 @@ public abstract class TouchServlet extends com.vaadin.terminal.gwt.server.Abstra
 
 	private static final long serialVersionUID = -6650995696015481525L;
 	private ThreadLocal<Window> window = new ThreadLocal<Window>();
-    private Class<? extends Application> fallbackApplicationClass;
+    private Class<? extends Application> fallbackApplicationClass = null;
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
