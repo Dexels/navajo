@@ -8,7 +8,7 @@
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
 	<property name="artifact" value="com.dexels.navajo.karaf.feature" />
-	<property name="version" value="1.2.6" />
+	<property name="version" value="1.2.7" />
 	<condition property="test">
 		<matches pattern=".*SNAPSHOT" string="${version}" />
 	</condition>
