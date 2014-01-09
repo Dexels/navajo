@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0" name="navajo.repo-[[VERSION]]">
 	<!-- scr, http, webconsole -->
-    <feature resolver="(obr)" name='navajo.core' version='1.0.31' start-level='80'  >
+    <feature resolver="(obr)" name='navajo.core' version='1.0.32' start-level='80'  >
 	    <details>Navajo Core Components</details>
 
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.document/2.2.70</bundle>
@@ -10,7 +10,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.repository.api/1.0.11</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client/3.4.44</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.client.async/1.1.28</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.11</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.authentication.api/1.0.13</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.core/2.13.4</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/1.1.1_1</bundle>
 		<bundle dependency='true'>mvn:commons-io/commons-io/2.4</bundle>
