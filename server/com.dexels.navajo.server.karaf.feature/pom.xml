@@ -4,7 +4,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>[[ARTIFACTID]]</artifactId>
 	<name>Navajo Karaf feature</name>
-	<packaging>[[FILE]]</packaging>
 	<parent>
 		<groupId>com.dexels.navajo</groupId>
 		<artifactId>com.dexels.navajo.super</artifactId>
