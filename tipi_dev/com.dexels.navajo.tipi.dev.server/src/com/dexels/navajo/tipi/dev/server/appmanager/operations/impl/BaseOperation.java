@@ -83,6 +83,11 @@ public abstract class BaseOperation extends HttpServlet  implements AppStoreOper
 	}
 	
 	protected void verifyAuthorization(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		if(appStoreManager!=null) {
+			if(!appStoreManager.useAuthorization()) {
+				return;
+			}
+		}
 		if(!isAuthorized(req)) {
 			resp.sendError(400,"Not authorized for operation");
 			throw new IOException("Not authorized for operation");

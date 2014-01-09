@@ -25,4 +25,5 @@ public interface AppStoreManager {
 
 	public int getSessionCount();
 
+	public boolean useAuthorization();
 }

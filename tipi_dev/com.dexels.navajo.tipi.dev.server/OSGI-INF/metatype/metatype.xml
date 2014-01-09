@@ -1,14 +1,30 @@
 <metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
   <OCD description="Git Application Instance" name="Git Application Instance" id="tipi.dev.gitapplication">
-    <AD name="Remote Git URL"    id="url"   required="true"  type="String"/>   
+    <AD name="Remote Git URL"    id="url"   required="true"  type="String"/> 
     <AD name="Https Git URL"    id="httpUrl"   required="false"  type="String"/>   
     <AD name="Repository name"    id="repositoryname"   required="true"  type="String"/>   
     <AD name="SSH Key"    id="key"   required="false"  type="String"/>   
     <AD name="Git Branch"    id="branch"   required="true"  type="String" default="master"/>
     <AD name="Autobuild"    id="autobuild"   required="false"  type="Boolean" default="false"/>
     </OCD>
-  
+  <OCD description="AppStore Manager" name="AppStore Manager" id="tipi.dev.appstore.manager">
+   <AD name="GitHub ClientId"    id="tipi.store.clientid"   required="false"  type="String"/>   
+   <AD name="GitHub Client Secret"    id="tipi.store.clientsecret"   required="false"  type="String"/>   
+   <AD name="Global Application Name"    id="tipi.store.applicationname"   required="false"  type="String"/>   
+   <AD name="Manifest Code Base"    id="tipi.store.manifestcodebase"   required="false"  type="String"/>   
+   <AD name="JNLP Code Base"    id="tipi.store.codebase" required="false"  type="String"/>   
+   <AD name="Use authorization"    id="authorize" required="false"  type="Boolean" default="true"/>   
+   </OCD>
   <Designate factoryPid="tipi.dev.gitapplication" pid="tipi.dev.gitapplication">
      <Object ocdref="tipi.dev.gitapplication"/>
   </Designate>
+
+	<!-- tipi.dev.appstore.manager	clientid = (String) configuration.get("tipi.store.clientid");
+		clientsecret = (String) configuration.get("tipi.store.clientsecret");
+		organization = (String) configuration.get("tipi.store.organization");
+		applicationName = (String) configuration.get("tipi.store.applicationname");
+		manifestCodebase = (String) configuration.get("tipi.store.manifestcodebase");
+		codebase = (String)configuration.get("tipi.store.codebase");
+		Boolean auth = (Boolean)configuration.get("authorize");
+   -->
 </metatype:MetaData>
