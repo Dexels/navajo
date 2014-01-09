@@ -27,7 +27,6 @@ Import-Package: com.dexels.navajo.repository.api;version="1.0.0",
  org.slf4j;version="[1.6.0,1.8.0)"
 Bundle-ClassPath: .
 Service-Component: OSGI-INF/dexels.githubosgi.gitrepository.xml,
- OSGI-INF/dexels.githubosgi.repositorymanager.xml,
  OSGI-INF/dexels.githubosgi.servlet.xml
 Export-Package: com.dexels.githubosgi
 

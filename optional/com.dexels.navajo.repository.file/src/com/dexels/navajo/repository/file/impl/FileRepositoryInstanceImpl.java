@@ -273,5 +273,15 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 		
 	}
 
+	@Override
+	public String repositoryType() {
+		return "file";
+	}
+
+	@Override
+	public String applicationType() {
+		return type;
+	}
+
 
 }
