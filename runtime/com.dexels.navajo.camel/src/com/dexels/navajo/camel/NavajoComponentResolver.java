@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.camel.component.NavajoCamelComponent;
+import com.dexels.navajo.camel.smtpserver.SMTPComponent;
 
 public class NavajoComponentResolver implements ComponentResolver {
 
@@ -52,8 +53,18 @@ public class NavajoComponentResolver implements ComponentResolver {
 	@Override
 	public Component resolveComponent(String name, CamelContext context)
 			throws Exception {
-		registerProcessors(context);
-		return camelComponent;
+//		registerProcessors(context);
+		try {
+			if(name.equals("navajo")) {
+				return camelComponent;
+			}
+			if(name.equals("smtpserver")) {
+				return new SMTPComponent();
+			}
+		} catch (Throwable e) {
+			logger.error("Error: ", e);
+		}
+		return null;
 	}
 	
 	

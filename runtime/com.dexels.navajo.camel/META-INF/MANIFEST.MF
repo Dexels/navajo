@@ -12,6 +12,8 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.mapping.compiler.meta,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
+ javax.mail;version="1.4.0",
+ javax.mail.internet;version="1.4.1",
  navajo;version="1.1.0",
  navajoextension,
  org.apache.camel;version="2.10.2",
@@ -31,3 +33,9 @@ Export-Package: com.dexels.navajo.camel.adapter,
  com.dexels.navajo.camel.component,
  com.dexels.navajo.camel.consumer
 Bundle-Activator: navajocamel.Version
+Bundle-ClassPath: lib/protocols-api-1.6.3.jar,
+ lib/protocols-impl-1.6-beta2.jar,
+ lib/protocols-netty-1.6.3.jar,
+ lib/protocols-smtp-1.6.3.jar,
+ .
+Require-Bundle: org.jboss.netty;bundle-version="3.9.0"
