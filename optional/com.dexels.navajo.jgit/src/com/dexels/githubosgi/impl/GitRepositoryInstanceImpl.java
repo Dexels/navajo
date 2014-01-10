@@ -485,4 +485,14 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		result.put("lastCommitVersion", getLastCommitVersion());
 		return result;
 	}
+
+	@Override
+	public String repositoryType() {
+		return "git";
+	}
+
+	@Override
+	public String applicationType() {
+		return type;
+	}
 }

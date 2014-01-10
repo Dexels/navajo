@@ -1,0 +1,9 @@
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
+	<OCD description="Repository Manager" name="Repository Manager" id="navajo.repository.manager">
+		<AD name="Storage Folder" id="storage.path" required="true" type="String" />
+	</OCD>
+
+	<Designate pid="navajo.repository.manager">
+		<Object ocdref="navajo.repository.manager" />
+	</Designate>
+</metatype:MetaData>

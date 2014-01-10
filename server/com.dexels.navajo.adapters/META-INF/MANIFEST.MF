@@ -2,7 +2,7 @@ Bundle-Name: Navajo Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.1.78.qualifier
+Bundle-Version: 1.1.80.qualifier
 DynamicImport-Package: *
 Bundle-Activator: navajoadapters.Version
 Export-Package: com.dexels.navajo.adapter,
@@ -50,6 +50,7 @@ Import-Package: com.dexels.navajo.adapter.navajomap.manager,
  com.dexels.navajo.client.async,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.jaxpimpl.xml;version="2.2.0",
+ com.dexels.navajo.document.json,
  com.dexels.navajo.document.nanoimpl;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.events,

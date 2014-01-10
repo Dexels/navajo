@@ -41,6 +41,11 @@ public class ContinuationNavajoClient {
 				public void onFail(Throwable t) throws IOException {
 					throw new IOException("Navajo failed.", t);
 				}
+
+				@Override
+				public Throwable getCaughtException() {
+					return null;
+				}
 			};
 			logger.info("Calling server: " + getClient().getServer());
 			getClient().callService(n, service, nrh);

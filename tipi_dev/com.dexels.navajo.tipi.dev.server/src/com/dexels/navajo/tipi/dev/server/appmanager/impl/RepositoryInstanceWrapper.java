@@ -203,5 +203,28 @@ public class RepositoryInstanceWrapper implements RepositoryInstance {
 		return instance.getOperations();
 	}
 
+
+	@Override
+	public int refreshApplication() throws IOException {
+		return 0;
+	}
+
+
+	@Override
+	public String repositoryType() {
+		return instance.repositoryType();
+	}
+
+
+	@Override
+	public String applicationType() {
+		return instance.applicationType();
+	}
+
+	@Override
+	public String toString() {
+		return getRepositoryName()+": "+repositoryType()+"=>"+applicationType();
+	}
+
 	
 }

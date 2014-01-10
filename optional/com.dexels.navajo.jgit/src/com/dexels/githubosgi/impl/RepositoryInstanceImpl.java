@@ -1,6 +1,7 @@
 package com.dexels.githubosgi.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +14,7 @@ import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.repository.api.RepositoryManager;
 
-public class RepositoryInstanceImpl implements RepositoryInstance {
+public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 	
 	protected String repositoryName;
 	protected File applicationFolder;
@@ -98,6 +99,16 @@ public class RepositoryInstanceImpl implements RepositoryInstance {
 		}
 		return result;
 		
+	}
+
+	@Override
+	public int refreshApplication() throws IOException {
+		return 0;
+	}
+	
+	@Override
+	public String toString() {
+		return getRepositoryName()+": "+repositoryType()+"=>"+applicationType();
 	}
 
 }

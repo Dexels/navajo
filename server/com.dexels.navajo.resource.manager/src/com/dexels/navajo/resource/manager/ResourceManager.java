@@ -6,12 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Dictionary;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -32,7 +33,7 @@ public class ResourceManager {
 	private static final Logger logger = LoggerFactory.getLogger(ResourceManager.class);
 	private ConfigurationAdmin configAdmin;
 
-	private final Set<String> resourcePids = new HashSet<String>();
+	private final Map<String,Configuration> resourcePids = new HashMap<String,Configuration>();
 	private NavajoServerContext navajoServerContext;
 
 	private BundleContext bundleContext = null;
@@ -58,12 +59,11 @@ public class ResourceManager {
 	}
 
 	public void unloadDataSources() {
-		for (String pid : resourcePids) {
+		for (Entry<String,Configuration> entry : resourcePids.entrySet()) {
 			try {
-				Configuration c = configAdmin.getConfiguration(pid);
-				c.delete();
+				entry.getValue().delete();
 			} catch (IOException e) {
-				logger.error("Error deregistering configuration: "+pid);
+				logger.error("Error deregistering configuration: "+entry.getKey());
 			}
 		}
 	}
@@ -86,11 +86,10 @@ public class ResourceManager {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addDatasource(Message dataSource) throws Exception {
 		String name = dataSource.getName();
 		List<Property> props = dataSource.getAllProperties();
-		Dictionary settings = new Hashtable(); 
+		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
 		for (Property property : props) {
 			// skip type, it is not a 'real' connection setter
 			if(property.getName().equals("type")) {
@@ -100,13 +99,61 @@ public class ResourceManager {
 		}
 		settings.put("name", "navajo.resource."+name);
 		String type = (String)dataSource.getProperty("type").getTypedValue();
-		Configuration cc = configAdmin.createFactoryConfiguration("navajo.resource."+type,null);
-		resourcePids.add(cc.getPid());
-		cc.update(settings);
+		final String factoryPid = "navajo.resource."+type;
+		final String filter = "(name="+name+")";
+//		Configuration cc = configAdmin.createFactoryConfiguration(factoryPid,null);
+//		resourcePids.put(cc.getPid(),cc);
+//		cc.update(settings);
+		emitFactoryIfChanged(factoryPid, filter, settings);
 		logger.info("Data source settings for source: {} : {}",name,settings);
 		
 //		ResourceReference rr = new ResourceReference(name,type ,settings);
 //		addResourceReference(rr);
+	}
+
+//	private void emitConfig(String pid, Dictionary<String,Object> settings) throws IOException {
+//		Configuration config =  configAdmin.getConfiguration(pid,null);
+//		updateIfChanged(config, settings);
+//	}
+
+	private void emitFactoryIfChanged(String factoryPid, String filter,Dictionary<String,Object> settings) throws IOException {
+		updateIfChanged(createOrReuseFactoryConfiguration(factoryPid, filter), settings);
+	}
+	
+	protected Configuration createOrReuseFactoryConfiguration(String factoryPid, final String filter)
+			throws IOException {
+		Configuration cc = null;
+		try {
+			Configuration[] c = configAdmin.listConfigurations(filter);
+			if(c!=null && c.length>1) {
+				logger.warn("Multiple configurations found for filter: {}", filter);
+			}
+			if(c!=null && c.length>0) {
+				cc = c[0];
+			}
+		} catch (InvalidSyntaxException e) {
+			logger.error("Error in filter: {}",filter,e);
+		}
+		if(cc==null) {
+			cc = configAdmin.createFactoryConfiguration(factoryPid,null);
+			resourcePids.put(cc.getPid(),cc);
+		}
+		return cc;
+	}
+	
+	private void updateIfChanged(Configuration c, Dictionary<String,Object> settings) throws IOException {
+		Dictionary<String,Object> old = c.getProperties();
+		if(old!=null) {
+			if(!old.equals(settings)) {
+				c.update(settings);
+			} else {
+				logger.info("Ignoring equal");
+			}
+		} else {
+			// this will make this component 'own' this configuration, unsure if this is desirable.
+			resourcePids.put(c.getPid(),c);
+			c.update(settings);
+		}
 	}
 
 
