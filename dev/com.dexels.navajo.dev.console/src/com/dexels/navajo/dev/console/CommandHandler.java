@@ -86,10 +86,10 @@ public class CommandHandler {
 		ScriptListCommand script = new ScriptListCommand(bundleContext);
 		registerCommand(script,"scripts");
 		
-		VerifyCommand verify = new VerifyCommand();
-		verify.setBundleCreator(bundleCreator);
-		registerCommand(verify,"verify");
-		
+//		VerifyCommand verify = new VerifyCommand();
+//		verify.setBundleCreator(bundleCreator);
+//		registerCommand(verify,"verify");
+//		
 		CallCommand cc = new CallCommand();
 		cc.setLocalClient(localClient);
 		registerCommand(cc, "call");

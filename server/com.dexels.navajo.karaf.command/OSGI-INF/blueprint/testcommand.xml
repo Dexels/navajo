@@ -1,12 +1,12 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
     <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
         <command name="yourcommand/hello">
-            <action class="com.dexels.navajo.karaf.command.HelloShellCommand"/>
+            <action class="com.dexels.navajo.karaf.command.YourCommand"/>
             <completers>
                 <ref component-id="yourCompleter"/>
                 <null/>
             </completers>
         </command>
     </command-bundle>
-    <bean id="yourCompleter" class="com.dexels.navajo.karaf.command.TestCompleter"/>
+    <bean id="yourCompleter" class="com.dexels.navajo.karaf.command.YourCompleter"/>
 </blueprint>

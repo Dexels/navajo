@@ -637,7 +637,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			// Collection<ServiceReference<CompiledScriptFactory>> sr =
 			// bundleContext.getServiceReferences(CompiledScriptFactory.class,
 			// filter);
-			if (ssr.length == 0) {
+			if (ssr==null || ssr.length == 0) {
 				logger.warn("Can not locate service for script: " + scriptPath
 						+ " filter: " + filter);
 				failed.add(scriptPath);
