@@ -28,6 +28,7 @@ public class VerifyCommand extends OsgiCommandSupport {
 	public void setBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = bundleCreator;
 	}
+	
     @Argument(index = 0, name = "arg", 
             description = "The command argument", 
             required = false, multiValued = false)

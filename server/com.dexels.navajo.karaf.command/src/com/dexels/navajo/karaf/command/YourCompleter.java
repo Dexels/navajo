@@ -11,7 +11,7 @@ public class YourCompleter implements Completer {
 	* @param candidates the list of completions proposed to the user
 	*/
 	 @Override
-	public int complete(String buffer, int cursor, List candidates) {
+	public int complete(String buffer, int cursor, List<String> candidates) {
 	  StringsCompleter delegate = new StringsCompleter();
 	  delegate.getStrings().add("one");
 	  delegate.getStrings().add("two");

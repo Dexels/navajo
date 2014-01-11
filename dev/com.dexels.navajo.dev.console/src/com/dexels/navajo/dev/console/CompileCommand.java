@@ -5,13 +5,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Descriptor;
-import org.apache.felix.service.command.Parameter;
+import org.apache.karaf.shell.commands.Argument;
+import org.apache.karaf.shell.commands.Option;
+
+import org.apache.karaf.shell.console.OsgiCommandSupport;
 
 import com.dexels.navajo.compiler.BundleCreator;
 
-public class CompileCommand {
+public class CompileCommand extends OsgiCommandSupport  {
 	
 //	import org.osgi.service.command.CommandProcessor;
 	
@@ -31,13 +33,20 @@ public class CompileCommand {
 		this.bundleCreator = null;
 	}
 
+    @Argument(index = 0, name = "arg", 
+            description = "The command argument", 
+            required = false, multiValued = false)
+    String script = null;
+	
+    @Option(name = "-f", aliases = {"--force"}, description = "Compile even if the script seems unchanged", required = false, multiValued = false)
+         boolean force;
+
+    @Option(name = "-k", aliases = {"--keep"}, description = "Keep temporary files, can be useful for debugging", required = false, multiValued = false)
+    boolean keepIntermediateFiles;
+
+	@Override
 	@Descriptor(value = "compile a script with a certain path.") 
-	public void compile(CommandSession session, 
-			@Descriptor(value = "Compile even if the script seems unchanged") 
-			@Parameter(names = { "-f", "--force" }, presentValue = "true", absentValue = "false") boolean force, 
-			@Descriptor(value = "Keep temporary files, can be useful for debugging") 
-			@Parameter(names = { "-k", "--keep" }, presentValue = "true", absentValue = "false") boolean keepIntermediateFiles, 
-			@Descriptor(value = "The path, prefix, or '/' to compile everything") String script) {
+	protected Object doExecute() throws Exception {
 		try {
 			long tm = System.currentTimeMillis();
 			if(script.equals("/")) {
@@ -49,14 +58,20 @@ public class CompileCommand {
 			List<String> skipped = new ArrayList<String>();
 			bundleCreator.createBundle(script,new Date(),"xml",failures,success,skipped, force,keepIntermediateFiles,"default");
 			long tm2 = System.currentTimeMillis() - tm;
-			session.getConsole().println("Compiling java complete. took: "+tm2+" millis.");
-			session.getConsole().println("Succeeded: "+success.size()+" failed: "+failures.size()+" skipped: "+skipped.size());
-			session.getConsole().println("Avg: "+(1000 * (float)success.size() / tm2)+" scripts / sec");
+			System.err.println("Compiling java complete. took: "+tm2+" millis.");
+			System.err.println("Succeeded: "+success.size()+" failed: "+failures.size()+" skipped: "+skipped.size());
+			System.err.println("Avg: "+(1000 * (float)success.size() / tm2)+" scripts / sec");
 			for (String failed : failures) {
-				session.getConsole().println("Failed: "+failed);
+				System.err.println("Failed: "+failed);
 			}
 		} catch (Throwable e) {
-			e.printStackTrace(session.getConsole());
+			e.printStackTrace(System.err);
 		}
+		return null;
+	}
+
+	public void compile(String script) throws Exception {
+		this.script = script;
+		doExecute();
 	}
 }

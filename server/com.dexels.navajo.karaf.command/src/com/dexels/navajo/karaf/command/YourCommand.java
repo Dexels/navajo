@@ -9,6 +9,7 @@ public class YourCommand extends OsgiCommandSupport {
 
 	public YourCommand() {
 		System.err.println("Constructing command");
+		
 	}
 
     @Argument(index = 0, name = "arg", 
