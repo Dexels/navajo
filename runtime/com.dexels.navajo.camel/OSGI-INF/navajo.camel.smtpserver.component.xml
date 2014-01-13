@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" immediate="true" name="navajo.camel.smtpserver.component">
+   <implementation class="com.dexels.navajo.camel.component.NavajoCamelComponent"/>
+   <service>
+      <provide interface="org.apache.camel.Component"/>
+      <provide interface="com.dexels.navajo.camel.component.NavajoCamelComponent"/>
+   </service>
+   <reference bind="setLocalClient" cardinality="1..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="dynamic" unbind="clearLocalClient"/>
+   <property name="name" type="String" value="navajo"/>
+</scr:component>

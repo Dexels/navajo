@@ -40,32 +40,39 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 	public void clearConfigurationAdmin(ConfigurationAdmin ca) {
 		this.myConfigurationAdmin = null;
 	}
+	
+	public ConfigurationAdmin getConfigurationAdmin() {
+		return myConfigurationAdmin;
+	}
+	
 
 	public void activate(Map<String,Object> settings) {
 		try {
 			String contextPath = (String)settings.get("contextPath");
 			installationPath = (String) settings.get("installationPath");
-			addFolderMonitorListener(contextPath,installationPath,"adapters");
-			addFolderMonitorListener(contextPath,installationPath,"camel");
-			emitLogbackConfiguration(installationPath);
+			initializeContext(contextPath);
 			
 		} catch (IOException e) {
-			logger.error("Error creating folder monitor: ",e);
-		} catch (InvalidSyntaxException e) {
 			logger.error("Error creating folder monitor: ",e);
 		} catch( Throwable t) {
 			logger.error("Whoops: ",t);
 		}
 	}
+
+	protected void initializeContext(String contextPath) throws IOException {
+		this.installationPath = contextPath;
+		try {
+			addFolderMonitorListener(contextPath,installationPath,"adapters");
+			addFolderMonitorListener(contextPath,installationPath,"camel");
+		} catch (InvalidSyntaxException e) {
+			logger.error("Error creating folder monitor: ",e);
+		}
+		emitLogbackConfiguration(installationPath);
+	}
 	
 	public void deactivate()  {
 		try {
-//			if(monitoredFolderConfigurations!=null) {
-//				for (Configuration c : monitoredFolderConfigurations) {
-//					c.delete();
-//				}
-//				monitoredFolderConfigurations.clear();
-//			}
+
 			for (Entry<String,Configuration> entry : resourcePids.entrySet()) {
 				try {
 					entry.getValue().delete();

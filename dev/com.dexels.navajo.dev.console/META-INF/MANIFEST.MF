@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Console commands
 Bundle-SymbolicName: com.dexels.navajo.dev.console
-Bundle-Version: 1.0.16.qualifier
+Bundle-Version: 1.0.18.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.client,
@@ -17,9 +17,15 @@ Import-Package: com.dexels.navajo.client,
  com.dexels.navajo.sharedstore,
  javax.servlet;version="[2.5.0,4.0.0)",
  javax.servlet.http;version="[2.5.0,4.0.0)",
+ org.apache.felix.gogo.commands;version="0.10.0",
  org.apache.felix.service.command;status=provisional;version="0.10.0",
+ org.apache.karaf.shell.commands;version="2.3.0",
+ org.apache.karaf.shell.console;version="2.3.0",
+ org.apache.karaf.shell.console.completer;version="3.0.0",
  org.osgi.framework;version="1.3.0",
  org.slf4j;version="[1.6.1,1.8.0)"
-Service-Component: OSGI-INF/commandhandler.xml, OSGI-INF/navajo.tester.compile.xml
+Service-Component: OSGI-INF/commandhandler.xml, OSGI-INF/navajo.tester.compile.xml,
+ OSGI-INF/navajo.command.verify.xml
 Export-Package: com.dexels.navajo.dev.console
+Bundle-Blueprint: OSGI-INF/blueprint/*.xml
 

@@ -30,12 +30,12 @@ public class CheckCommand {
 
 	@Descriptor(value = "Check the modification dates of a certain script.") 
 
-	public void check(CommandSession session, @Descriptor(value = "The path of the script") String script,@Descriptor(value = "The current tenant")  String tenant) throws FileNotFoundException {
+	public void check(@Descriptor(value = "The path of the script") String script,@Descriptor(value = "The current tenant")  String tenant) throws FileNotFoundException {
 		Date installed = bundleCreator.getBundleInstallationDate(script,tenant);
 		Date modified = bundleCreator.getScriptModificationDate(script,tenant);
 		Date compiled = bundleCreator.getCompiledModificationDate(script,tenant);
-		session.getConsole().println("Modified at: "+modified);
-		session.getConsole().println("Compiled at: "+compiled);
-		session.getConsole().println("Installed at: "+installed);
+		System.out.println("Modified at: "+modified);
+		System.out.println("Compiled at: "+compiled);
+		System.out.println("Installed at: "+installed);
 	}
 }
