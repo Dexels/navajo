@@ -1013,6 +1013,9 @@
 		</description>
       <events>
          <event name="onWindowClosed" />
+         <!-- IMPORTANT: minimize and deminimize happen AFTER the minimize/deminimize -->
+         <event name="onMinimize" />
+         <event name="onDeminimize" />
       </events>
       <values>
          <value direction="in" name="icon" type="resource" property="iconUrl" />
