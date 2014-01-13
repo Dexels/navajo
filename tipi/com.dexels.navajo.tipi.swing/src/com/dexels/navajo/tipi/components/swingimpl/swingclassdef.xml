@@ -1198,6 +1198,7 @@
          <value direction="in" name="tabIcon" type="resource" property="iconUrl" />
          <value direction="in" name="tabText" type="string" property="tabText" />
          <value direction="in" name="border" type="border" />
+         <value direction="out" name="visible" type="boolean" />
       </values>
       <methods>
 

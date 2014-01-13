@@ -393,6 +393,11 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 		super.removeFromContainer(c);
 	}
 
+	public Boolean isChildVisible(TipiComponent child)
+	{
+		Component c = (Component) child.getContainer();
+		return visibilityMap.get(c);
+	}
 	public void setChildVisible(TipiComponent child, boolean visible) {
 		Component c = (Component) child.getContainer();
 		visibilityMap.put(c, visible);
