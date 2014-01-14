@@ -66,6 +66,42 @@ public final class TipiWindow
 		myWindow.addInternalFrameListener(new InternalFrameAdapter() {
 
 			@Override
+			public void internalFrameDeiconified(InternalFrameEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						try {
+							performTipiEvent("onDeminimize", null, true);
+						} catch (TipiException e1) {
+							logger.error("Error detected",e1);
+						} catch (TipiBreakException e2) {
+							logger.debug("Breakie breakie", e2);
+						}
+
+					}
+				});
+			}
+			
+			@Override
+			public void internalFrameIconified(InternalFrameEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						try {
+							performTipiEvent("onMinimize", null, true);
+						} catch (TipiException e1) {
+							logger.error("Error detected",e1);
+						} catch (TipiBreakException e2) {
+							logger.debug("Breakie breakie", e2);
+						}
+
+					}
+				});
+			}
+			
+			@Override
 			public void internalFrameClosed(InternalFrameEvent e) {
 				if (myWindow != null) {
 					// will re-enter this event, so its a bit defensive
