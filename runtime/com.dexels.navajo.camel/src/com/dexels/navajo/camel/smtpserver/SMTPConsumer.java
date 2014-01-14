@@ -19,14 +19,15 @@
 package com.dexels.navajo.camel.smtpserver;
 
 import java.net.InetSocketAddress;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.impl.DefaultConsumer;
-import org.apache.james.protocols.impl.NettyServer;
+import org.apache.james.protocols.api.Protocol;
+import org.apache.james.protocols.api.ProtocolServer;
+import org.apache.james.protocols.netty.NettyServer;
 import org.apache.james.protocols.smtp.MailEnvelope;
 import org.apache.james.protocols.smtp.SMTPConfigurationImpl;
 import org.apache.james.protocols.smtp.SMTPProtocol;
@@ -64,15 +65,44 @@ public class SMTPConsumer extends DefaultConsumer {
     protected void doStart() throws Exception {
         try {
 			super.doStart();
-			chain = new SMTPProtocolHandlerChain();
-			chain.add(new AllowToRelayHandler());
-			chain.add(new ProcessorMessageHook());
-			server = new NettyServer(new SMTPProtocol(chain, new SMTPConfigurationImpl(), new ProtocolLogger(SMTPConsumer.class)));
-			server.setListenAddresses(Arrays.asList(new InetSocketAddress(config.getBindIP(), config.getBindPort())));
-			server.bind();
+			
+			
+		    ProtocolServer server;
+		      SMTPProtocolHandlerChain chain;
+				chain = new SMTPProtocolHandlerChain();
+				chain.add(new  AbstractAuthRequiredToRelayRcptHook(){
+
+					@Override
+					protected boolean isLocalDomain(String arg0) {
+		              return true;
+					}});
+				chain.add(new ProcessorMessageHook());
+				chain.wireExtensibleHandlers();
+				final SMTPConfigurationImpl config = new SMTPConfigurationImpl();
+				config.setUseAddressBracketsEnforcement(false);
+				server =  createServer(new SMTPProtocol(chain, config, new ProtocolLogger(SMTPConsumer.class)), new InetSocketAddress("0.0.0.0", 8025)); // new NettyServer(new SMTPProtocol(chain, new SMTPConfigurationImpl(), new ProtocolLogger(SMTPConsumer.class)));
+				server.bind();
+
+			
+			
+			
+			
+//			chain = new SMTPProtocolHandlerChain();
+//			chain.add(new AllowToRelayHandler());
+//			chain.add(new ProcessorMessageHook());
+//			chain.wireExtensibleHandlers();
+//			server = new NettyServer(new SMTPProtocol(chain, new SMTPConfigurationImpl(), new ProtocolLogger(SMTPConsumer.class)));
+//			server.setListenAddresses(new InetSocketAddress(config.getBindIP(), config.getBindPort()));
+//			server.bind();
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+    }
+
+    protected static ProtocolServer createServer(Protocol protocol, InetSocketAddress address) {
+        NettyServer server =  new NettyServer(protocol);
+        server.setListenAddresses(address);
+        return server;
     }
 
     /**
@@ -115,7 +145,7 @@ public class SMTPConsumer extends DefaultConsumer {
          * @see org.apache.james.protocols.smtp.hook.MessageHook#onMessage(org.apache.james.protocols.smtp.SMTPSession, org.apache.james.protocols.smtp.MailEnvelope)
          */
         @Override
-		public HookResult onMessage(SMTPSession arg0, MailEnvelope env) {
+		public HookResult onMessage(SMTPSession s, MailEnvelope env) {
             Exchange exchange = getEndpoint().createExchange();
             exchange.setIn(new MailEnvelopeMessage(env));
             try {
