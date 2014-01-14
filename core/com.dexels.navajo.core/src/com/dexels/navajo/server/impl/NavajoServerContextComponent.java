@@ -60,7 +60,6 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 	}
 
 	protected void initializeContext(String contextPath) throws IOException {
-		this.installationPath = contextPath;
 		try {
 			addFolderMonitorListener(contextPath,installationPath,"adapters");
 			addFolderMonitorListener(contextPath,installationPath,"camel");
