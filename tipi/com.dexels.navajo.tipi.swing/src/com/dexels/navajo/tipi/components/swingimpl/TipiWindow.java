@@ -226,7 +226,10 @@ public final class TipiWindow
 				JInternalFrame jj = (JInternalFrame) getContainer();
 				TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
 				jj.setIcon(true);
-				tt.getDesktopManager().iconifyFrame(jj);
+				if (tt != null && tt.getDesktopManager() != null)
+				{
+					tt.getDesktopManager().iconifyFrame(jj);
+				}
 			} catch (Exception ex) {
 				logger.error("Error detected",ex);
 			}
@@ -235,34 +238,64 @@ public final class TipiWindow
 			checkContainerInstance();
 
 			JInternalFrame jj = (JInternalFrame) getContainer();
-			if (jj.isMaximum()) {
-				return;
+			TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
+			if (!jj.isMaximum())
+			{
+				try {
+					jj.setMaximum(true);
+					if (tt != null && tt.getDesktopManager() != null)
+					{
+						tt.getDesktopManager().maximizeFrame(jj);
+					}
+				} catch (Error ex1) {
+					logger.error("Error detected",ex1);
+				} catch (Exception ex1) {
+					logger.error("Error detected",ex1);
+				}
 			}
-			try {
-				TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
-				jj.setMaximum(true);
-				tt.getDesktopManager().maximizeFrame(jj);
-			} catch (Error ex1) {
-				logger.error("Error detected",ex1);
-			} catch (Exception ex1) {
-				logger.error("Error detected",ex1);
+			if (jj.isIcon())
+			{
+				try {
+					jj.setIcon(false);
+					if (tt != null && tt.getDesktopManager() != null)
+					{
+						tt.getDesktopManager().deiconifyFrame(jj);
+					}
+				} catch (Error ex1) {
+					logger.error("Error detected",ex1);
+				} catch (Exception ex1) {
+					logger.error("Error detected",ex1);
+				}
 			}
 		}
 		if (name.equals("restore")) {
 			checkContainerInstance();
 			JInternalFrame jj = (JInternalFrame) getContainer();
-			if (!jj.isMaximum()) {
-				logger.debug("Ignoring: Nothing to restore");
-				return;
-			}
 			TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
-			tt.getDesktopManager().minimizeFrame(jj);
-			try {
-				jj.setMaximum(false);
-				// // This might give an exception.. don't worry.. can't help
-				// it.
-			} catch (PropertyVetoException ex1) {
-				logger.error("Error detected",ex1);
+			if (jj.isMaximum())
+			{
+				tt.getDesktopManager().minimizeFrame(jj);
+				try {
+					jj.setMaximum(false);
+					// // This might give an exception.. don't worry.. can't help
+					// it.
+				} catch (PropertyVetoException ex1) {
+					logger.error("Error detected",ex1);
+				}
+			}
+			if (jj.isIcon())
+			{
+				try {
+					jj.setIcon(false);
+					if (tt != null && tt.getDesktopManager() != null)
+					{
+						tt.getDesktopManager().deiconifyFrame(jj);
+					}
+				} catch (Error ex1) {
+					logger.error("Error detected",ex1);
+				} catch (Exception ex1) {
+					logger.error("Error detected",ex1);
+				}
 			}
 		}
 		if (name.equals("toFront")) {
@@ -270,14 +303,27 @@ public final class TipiWindow
 
 			JInternalFrame jj = (JInternalFrame) getContainer();
 			TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
-			if (tt == null) {
-				return;
+			if (tt != null) {
+				jj.toFront();
 			}
-			jj.toFront();
-			if (tt.getDesktopManager() == null) {
-				return;
+			if (jj.isIcon())
+			{
+				try {
+					jj.setIcon(false);
+					if (tt != null && tt.getDesktopManager() != null)
+					{
+						tt.getDesktopManager().deiconifyFrame(jj);
+					}
+				} catch (Error ex1) {
+					logger.error("Error detected",ex1);
+				} catch (Exception ex1) {
+					logger.error("Error detected",ex1);
+				}
 			}
-			tt.getDesktopManager().activateFrame(jj);
+			if (tt != null && tt.getDesktopManager() != null)
+			{
+				tt.getDesktopManager().activateFrame(jj);
+			}
 		}
 	}
 
