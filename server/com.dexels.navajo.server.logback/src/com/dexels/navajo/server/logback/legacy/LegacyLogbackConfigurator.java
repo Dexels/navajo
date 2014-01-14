@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +71,12 @@ public class LegacyLogbackConfigurator {
 	}
 	
 	private void loadLogbackConfig(InputStream is, String path) {
-		LoggerContext lc =(LoggerContext)LoggerFactory.getILoggerFactory();
+		final ILoggerFactory iLoggerFactory = LoggerFactory.getILoggerFactory();
+		if(!(iLoggerFactory instanceof LoggerContext)) {
+			logger.warn("Can not configure legacy logback, the LoggerFactory is not a logback factory");
+			return;
+		}
+		LoggerContext lc =(LoggerContext)iLoggerFactory;
 	      lc.reset(); 
 
 		StatusPrinter.print(lc);
