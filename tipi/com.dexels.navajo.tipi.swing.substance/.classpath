@@ -2,10 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="src-trident"/>
-	<classpathentry exported="true" kind="lib" path="lib/laf-plugin-7.1.jar" sourcepath="/Users/frank/.m2/repository/com/github/insubstantial/laf-plugin/7.1/laf-plugin-7.1-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/laf-widget-7.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/substance-7.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/trident.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/laf-plugin-7.2.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/laf-widget-7.2.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/substance-7.2.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/trident-7.2.1.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="classes"/>
