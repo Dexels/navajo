@@ -50,7 +50,7 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 		try {
 			String contextPath = (String)settings.get("contextPath");
 			installationPath = (String) settings.get("installationPath");
-			initializeContext(contextPath);
+			initializeContext(installationPath,contextPath);
 			
 		} catch (IOException e) {
 			logger.error("Error creating folder monitor: ",e);
@@ -59,7 +59,8 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 		}
 	}
 
-	protected void initializeContext(String contextPath) throws IOException {
+	protected void initializeContext(String installationPath,String contextPath) throws IOException {
+		this.installationPath = installationPath;
 		try {
 			addFolderMonitorListener(contextPath,installationPath,"adapters");
 			addFolderMonitorListener(contextPath,installationPath,"camel");

@@ -99,8 +99,8 @@ public class SMTPConsumer extends DefaultConsumer {
 		}
     }
 
-    protected static ProtocolServer createServer(Protocol protocol, InetSocketAddress address) {
-        NettyServer server =  new NettyServer(protocol);
+    protected ProtocolServer createServer(Protocol protocol, InetSocketAddress address) {
+        server = new NettyServer(protocol);
         server.setListenAddresses(address);
         return server;
     }

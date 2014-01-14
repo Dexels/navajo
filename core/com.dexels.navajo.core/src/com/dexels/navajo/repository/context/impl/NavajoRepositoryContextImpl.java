@@ -25,7 +25,7 @@ public class NavajoRepositoryContextImpl extends NavajoServerContextComponent im
 	}
 	
 	public void activate() throws IOException, InvalidSyntaxException {
-		initializeContext(getInstallationPath());
+		initializeContext(getInstallationPath(),"default");
 	}
 	
 	@Override
