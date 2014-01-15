@@ -4,9 +4,11 @@ Bundle-Name: Navajo integration with Oltu
 Bundle-SymbolicName: com.dexels.navajo.authorization.oltu
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Dexels
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.servlet;version="3.0.0",
  javax.servlet.http;version="3.0.0",
+ javax.ws.rs;version="1.1.1",
+ javax.ws.rs.core;version="1.1.1",
  org.apache.oltu.oauth2.as.issuer;version="0.31.0",
  org.apache.oltu.oauth2.as.request;version="0.31.0",
  org.apache.oltu.oauth2.as.response;version="0.31.0",
@@ -21,6 +23,9 @@ Import-Package: javax.servlet;version="3.0.0",
  org.apache.oltu.oauth2.common.message.types;version="0.31.0",
  org.apache.oltu.oauth2.common.token;version="0.31.0",
  org.apache.oltu.oauth2.common.utils;version="0.31.0",
+ org.apache.oltu.oauth2.rs;version="0.31.0",
+ org.apache.oltu.oauth2.rs.request;version="0.31.0",
+ org.apache.oltu.oauth2.rs.response;version="0.31.0",
  org.codehaus.jettison;version="1.2.0",
  org.codehaus.jettison.json;version="1.2.0"
 Service-Component: OSGI-INF/navajo.oauth.authorization.xml,

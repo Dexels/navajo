@@ -184,6 +184,7 @@ private static final long MAX_WAITTIME = 300000;
 
 private Object waitForResult = new Object();
 private String resource;
+private Throwable caughtThrowable;
   
   @Override
 public void load(Access access) throws MappableException, UserException {
@@ -1603,6 +1604,7 @@ public void onResponse(Navajo response) {
   @Override
   public void onFail(Throwable t) throws IOException {
 	  Navajo response = null;
+	  this.caughtThrowable = t;
 	  try {
 		  response = NavajoFactory.getInstance().createNavajo();
 		  Message error = NavajoFactory.getInstance().createMessage(response, "error");
@@ -1612,6 +1614,7 @@ public void onResponse(Navajo response) {
 		  Property code = NavajoFactory.getInstance().createProperty(response, "code", Property.STRING_PROPERTY, "unknown", 0, "", "");
 		  error.addProperty(msg);
 		  error.addProperty(code);
+		  
 	  } finally {
 		  onResponse(response);
 	  }
@@ -1738,6 +1741,10 @@ public void setResource(String resourceName) {
 public String getNavajoInstance() {
 	// TODO Auto-generated method stub
 	return null;
+}
+
+public Throwable getCaughtException() {
+	return caughtThrowable;
 }
 
 }

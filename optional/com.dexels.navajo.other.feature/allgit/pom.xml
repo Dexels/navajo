@@ -11,6 +11,7 @@
 	<modules>
 		<module>../../com.dexels.navajo.utilities</module>
 		<module>../../com.dexels.navajo.jgit</module>
+		<module>../../com.dexels.navajo.repository.file</module>
 		<module>../</module>
 
 	</modules>

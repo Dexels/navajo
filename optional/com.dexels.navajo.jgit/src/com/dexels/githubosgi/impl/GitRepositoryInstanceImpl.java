@@ -234,9 +234,15 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		try {
 			repository = getRepository(applicationFolder);
 			git = new Git(repository);
-			git.checkout().setName(branch).call();
+			String currentBranch = repository.getBranch();
+			if(!currentBranch.equals(branch)) {
+				logger.warn("Wrong branch seems to be checked out");
+				git.checkout().setName(branch).call();
+			}
+			// TODO check local changes, see if a hard reset is necessary
 			git.reset().setMode(ResetType.HARD).call();
-			git.pull().setProgressMonitor(new LoggingProgressMonitor()).call();
+			git.pull().setProgressMonitor(new LoggingProgressMonitor()).call().getMergeResult().getMergedCommits();
+			
 			logger.info("Current branch: " + repository.getBranch());
 //			git.clean().call();
 			Iterable<RevCommit> log = git.log().call();
@@ -254,16 +260,24 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	public void callCheckout(String objectId, String branchname) throws IOException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CheckoutConflictException, GitAPIException {
 		Repository repository = null;
 		try {
+//			git.checkout().
+//	        setCreateBranch(true).
+//	        setName("branchName").
+//	        setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK).
+//	        setStartPoint("origin/" + branchName).
+//	        call();
+			
+			
 			repository = getRepository(applicationFolder);
 			git = new Git(repository);
 //			git.checkout().setName("Production").setForce(true).call();
-			git.checkout().setCreateBranch(true).setName(branchname).setStartPoint(objectId).setForce(true).setUpstreamMode(SetupUpstreamMode.NOTRACK).call();
+			git.checkout().setCreateBranch(true).setName(branchname).setStartPoint(objectId).setForce(true).setUpstreamMode(SetupUpstreamMode.TRACK).setStartPoint(branchname).call();
 			logger.info("Current branch: " + repository.getBranch());
 			git.clean().call();
 			git.reset().setMode(ResetType.HARD).call();
 			Iterable<RevCommit> log = git.log().call();
 			lastCommit = log.iterator().next();
-
+			this.branch = branchname;
 		} finally {
 			if(repository!=null) {
 				repository.close();
@@ -346,7 +360,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 
 	public static void main(String[] args) throws IOException, GitAPIException {
 //		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		Git git = Git.open(new File("/Users/frank/git/tipi.appstore/appstore/applications/club"));
+		Git git = Git.open(new File("/Users/frank/git/com.sportlink.serv"));
 		List<Ref> aa = git.branchList().call();
 		System.err.println("aa: "+aa+" size: "+aa.size());
 //		git.branchCreate().setName("Acceptance").call();
@@ -357,7 +371,21 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		System.err.println("C/O conf: "+pr.getMergeResult().getCheckoutConflicts());
 		System.err.println("Fetch: "+pr.getFetchResult().getMessages());
 		System.err.println("failed: "+pr.getMergeResult().getFailingPaths());
-//		git.checkout().setName("Production").setForce(true).call();
+		ObjectId[] merged = pr.getMergeResult().getMergedCommits();
+		if(merged==null) {
+			System.err.println("Merged seems null.");
+		} else {
+			System.err.println("# of merged refs: "+merged.length);
+			for (ObjectId objectId : merged) {
+				System.err.println("ObjectId: "+objectId.toString());
+			}
+		}
+		ObjectId base = pr.getMergeResult().getBase();
+		System.err.println("base: "+base.toString());
+		ObjectId head = pr.getMergeResult().getNewHead();
+		System.err.println("base: "+head.toString());
+
+		//		git.checkout().setName("Production").setForce(true).call();
 //		git.checkout().setStartPoint("25f17284bc94236a9f921e08aebf36b3c143f2e0").setName("Production").setCreateBranch(true).setForce(true).call();
 	}
 
@@ -401,6 +429,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 
 	@Override
 	public int refreshApplication() throws IOException {
+		RevCommit last = lastCommit;
 		String oldVersion = getLastCommitVersion();
 		logger.debug(">>> last commit version: " + oldVersion);
 		try {
@@ -411,7 +440,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			List<String> modified = new ArrayList<String>();
 			List<String> copied = new ArrayList<String>();
 			List<String> deleted = new ArrayList<String>();
-
+			
 			List<DiffEntry> diffEntries = diff(oldVersion);
 			if(newVersion.equals(oldVersion)) {
 				logger.info("Identical versions. Nothing pulled");
@@ -484,5 +513,15 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		result.put("lastCommitMessage", getLastCommitMessage());
 		result.put("lastCommitVersion", getLastCommitVersion());
 		return result;
+	}
+
+	@Override
+	public String repositoryType() {
+		return "git";
+	}
+
+	@Override
+	public String applicationType() {
+		return type;
 	}
 }

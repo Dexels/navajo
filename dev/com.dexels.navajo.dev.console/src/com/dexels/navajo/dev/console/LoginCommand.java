@@ -1,4 +1,4 @@
-package com.dexels.navajo.dev.console;
+			package com.dexels.navajo.dev.console;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Descriptor;
 

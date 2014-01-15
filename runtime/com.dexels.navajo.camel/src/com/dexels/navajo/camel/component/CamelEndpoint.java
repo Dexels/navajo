@@ -1,5 +1,7 @@
 package com.dexels.navajo.camel.component;
 
+import java.util.Map;
+
 import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.camel.component.impl.CamelConsumerImpl;
 import com.dexels.navajo.camel.message.NavajoMessage;
+import com.dexels.navajo.script.api.LocalClient;
 
 /**
  * Represents a com.dexels.navajo.camel.component endpoint.
@@ -17,14 +20,26 @@ import com.dexels.navajo.camel.message.NavajoMessage;
 public class CamelEndpoint extends DefaultEndpoint {
 
 //	private String instance;
+	private final LocalClient localclient;
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(CamelEndpoint.class);
 
 	private final NavajoCamelComponent myComponent;
+
+	private final String service;
+	private String username;
+	private String password;
 	
-	public CamelEndpoint(String uri, NavajoCamelComponent component) {
+
+
+	private final Map<String, Object> parameters;
+	
+	public CamelEndpoint(String uri, NavajoCamelComponent component, LocalClient localClient, String service, Map<String, Object> parameters) {
 		super(uri, component);
+		this.localclient = localClient;
+		this.service = service;
+		this.parameters = parameters;
 		myComponent = component;
 		logger.info("Endpoint created with URI: " + uri);
 	}
@@ -36,7 +51,7 @@ public class CamelEndpoint extends DefaultEndpoint {
 
 	@Override
 	public Producer createProducer() throws Exception {
-		return new NavajoCamelProducer(this);
+		return new NavajoCamelProducer(this,localclient,service,username,password);
 	}
 
 	@Override
@@ -51,59 +66,6 @@ public class CamelEndpoint extends DefaultEndpoint {
 		return true;
 	}
 
-//	public Exchange createFakeNavajoExchange() {
-//		Exchange e = createExchange();
-//		Message m = new DefaultMessage();
-//		e.setIn(m);
-//		e.addOnCompletion(new Synchronization() {
-//
-//			@Override
-//			public void onFailure(Exchange ex) {
-//				logger.error("Firing on failure: ");
-//
-//			}
-//
-//			@Override
-//			public void onComplete(Exchange ex) {
-//				logger.error("Firing on complete: ");
-//			}
-//		});
-//		return e;
-//	}
-
-//	public Exchange createNavajoExchange(final TmlRunnable tml) {
-//
-//		Exchange e = createExchange();
-//		Message m = new DefaultMessage();
-//		e.setIn(m);
-//		try {
-//			m.setBody(tml.getInputNavajo());
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
-//
-//		e.addOnCompletion(new Synchronization() {
-//
-//			@Override
-//			public void onFailure(Exchange ex) {
-//				logger.error("Firing on faillure: ");
-//				tml.abort("trouble");
-//			}
-//
-//			@Override
-//			public void onComplete(Exchange ex) {
-//				try {
-//					logger.error("Firing on complete: ");
-//					tml.endTransaction();
-//				} catch (IOException e) {
-//					logger.error("Error ending transaction.");
-//				}
-//
-//			}
-//		});
-//		return e;
-
-//	}
 
 	@Override
 	public Exchange createExchange() {
@@ -112,5 +74,15 @@ public class CamelEndpoint extends DefaultEndpoint {
 		return e;
 		
 	}
+	
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 
 }

@@ -3,6 +3,7 @@ package com.dexels.navajo.util.navadoc.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -88,8 +89,8 @@ public class DocumentWebService extends HttpServlet {
             transformer.transformWebService( sname );
 //            final NavaDocOutputter outputter =
             		new NavaDocOutputter(transformer, (PrintWriter) null);
-            
-            response.sendRedirect("doc/" + sname + ".html");
+           
+            response.sendRedirect("doc/" +  URLEncoder.encode(sname,"UTF-8") + ".html");
             return;
         }
      

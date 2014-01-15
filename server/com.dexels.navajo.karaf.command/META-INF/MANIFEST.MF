@@ -6,9 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Blueprint: OSGI-INF/blueprint/*.xml
-Import-Package: org.apache.felix.gogo.api;version="0.10.0",
- org.apache.felix.service.command;status=provisional;version="0.10.0",
- org.apache.karaf.shell.commands,
+Import-Package: org.apache.karaf.shell.commands,
  org.apache.karaf.shell.console,
- org.osgi.framework;version="1.3.0"
-Service-Component: OSGI-INF/navajo.command.hello.xml
+ org.apache.karaf.shell.console.completer;version="2.3.0",
+ org.osgi.framework;version="[1.3.0,2.0.0)"

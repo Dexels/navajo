@@ -19,7 +19,7 @@
       <form class="form-signin" role="form" method="post" action="/oauth/login">
         <h2 class="form-signin-heading">Club site 'De Schoof'</h2>
         <ul>
-           <li>Je gebruikers gegevens</li>
+           <li>Uw gebruikers gegevens</li>
         </ul>
         <input type="text" name="clubcode" class="form-control" placeholder="Club code" required autofocus value="BBKY84H" >
         <input type="text" name="userid" class="form-control" placeholder="Gebruikersnaam" required>

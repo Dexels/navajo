@@ -494,7 +494,7 @@ public ClassLoader getScriptClassLoader() {
 
 
 @Override
-public Comparator getComparator(String compareFunction) {
+public Comparator<Message> getComparator(String compareFunction) {
 	if(!Version.osgiActive()) {
 		return getLegacyComparator(compareFunction);
 	}
@@ -506,14 +506,14 @@ public Comparator getComparator(String compareFunction) {
 	return instance.getComparator(compareFunction);
 }
 
-private Comparator getLegacyComparator(String compareFunction) {
+private Comparator<Message> getLegacyComparator(String compareFunction) {
 	ClassLoader cl = getScriptClassLoader();
 	if(cl==null) {
 		cl = getClass().getClassLoader();
 	}
 	try {
-		Class<? extends Comparator> compareClass = (Class<? extends Comparator>) Class.forName(compareFunction, true, cl);
-		Comparator c = compareClass.newInstance();
+		Class<? extends Comparator<Message>> compareClass = (Class<? extends Comparator<Message>>) Class.forName(compareFunction, true, cl);
+		Comparator<Message> c = compareClass.newInstance();
 		return c;
 	} catch (InstantiationException e) {
 		logger.error("Can not find compare function: "+compareFunction+" in non-OSGI mode",e);

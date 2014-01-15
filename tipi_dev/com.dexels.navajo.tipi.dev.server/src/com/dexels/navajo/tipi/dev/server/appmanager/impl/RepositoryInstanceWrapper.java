@@ -209,5 +209,22 @@ public class RepositoryInstanceWrapper implements RepositoryInstance {
 		return 0;
 	}
 
+
+	@Override
+	public String repositoryType() {
+		return instance.repositoryType();
+	}
+
+
+	@Override
+	public String applicationType() {
+		return instance.applicationType();
+	}
+
+	@Override
+	public String toString() {
+		return getRepositoryName()+": "+repositoryType()+"=>"+applicationType();
+	}
+
 	
 }

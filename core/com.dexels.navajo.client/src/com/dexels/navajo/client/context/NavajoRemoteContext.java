@@ -100,12 +100,8 @@ public class NavajoRemoteContext extends NavajoContext {
 	 * @param debugAll
 	 */
 	public void setupClient(String server, String username, String password,String requestServerName,int requestServerPort, String requestContextPath, String postmanPath, boolean debugAll) {
-
-		//		Thread.dumpStack();
 		NavajoClientFactory.resetClient();
-//			NavajoClientFactory.createDefaultClient()
 		 myClient = NavajoClientFactory.getClient();
-//		 myClient.setAllowCompression(false);
 		 if (username == null) {
 			username = "demo";
 		}

@@ -28,7 +28,7 @@ public class NavajoCamelComponent extends DefaultComponent implements Component 
 	private final Map<String,CamelEndpoint> endPoints = new HashMap<String, CamelEndpoint>();
 	private final Map<String,NavajoCamelConsumer> consumers = new HashMap<String, NavajoCamelConsumer>();
 	private final Map<String, ServiceRegistration<Endpoint>> endPointRegistrations = new HashMap<String, ServiceRegistration<Endpoint>>();
-	private final Map<String, ServiceRegistration> consumerRegistrations = new HashMap<String, ServiceRegistration>();
+	private final Map<String, ServiceRegistration<Consumer>> consumerRegistrations = new HashMap<String, ServiceRegistration<Consumer>>();
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoCamelComponent.class);
 	
@@ -59,16 +59,9 @@ public class NavajoCamelComponent extends DefaultComponent implements Component 
 
 	@Override
 	protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
-    	System.err.println("uri: "+uri);
-    	System.err.println("remaining: "+remaining);
-//    	if(remaining.equals("call")) {
-//    		CamelProcessor cp = new CamelProcessor(this);
-//    		ProcessorEndpoint pe = new CamelProcessorEndpoint(uri,this, cp);
-//    		return pe;
-//    	}
-//    	if(remaining.equals("call")) {
-//    	}
-    	CamelEndpoint endpoint = new CamelEndpoint(uri, this);
+    	logger.info("uri: "+uri);
+    	logger.info("remaining: "+remaining);
+    	CamelEndpoint endpoint = new CamelEndpoint(uri, this,localClient,remaining,parameters);
     	registerEndPoint(endpoint, remaining);
         setProperties(endpoint, parameters);
         return endpoint;
@@ -89,7 +82,7 @@ public class NavajoCamelComponent extends DefaultComponent implements Component 
 		Dictionary<String,Object> so = new Hashtable<String,Object>();
 		so.put("type", "navajo");
 		so.put("id", id);
-		ServiceRegistration reg = bundleContext.registerService(new String[]{Consumer.class.getName(),NavajoCamelConsumer.class.getName()}, e, so);
+		ServiceRegistration<Consumer> reg = (ServiceRegistration<Consumer>) bundleContext.registerService(new String[]{Consumer.class.getName(),NavajoCamelConsumer.class.getName()}, e, so);
 		consumerRegistrations.put(id, reg);
 	}
 

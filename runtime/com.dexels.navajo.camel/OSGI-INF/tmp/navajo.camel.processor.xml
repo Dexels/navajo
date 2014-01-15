@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.camel.processor">
+   <implementation class="com.dexels.navajo.camel.processor.LocalClientProcessor"/>
+   <reference bind="setLocalClient" cardinality="1..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="dynamic" unbind="clearLocalClient"/>
+   <service>
+      <provide interface="org.apache.camel.Processor"/>
+   </service>
+</scr:component>

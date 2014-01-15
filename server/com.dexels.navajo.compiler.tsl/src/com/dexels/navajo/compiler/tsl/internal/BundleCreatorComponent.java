@@ -523,6 +523,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			throws Exception {
 		CompiledScriptInterface sc = getCompiledScript(rpcName,tenant);
 
+		boolean forceReinstall = false;
 		if (sc != null) {
 			boolean needsRecompile = checkForRecompile(rpcName,tenant,tenantQualified);
 			if (!force && !needsRecompile) {
@@ -536,12 +537,13 @@ public class BundleCreatorComponent implements BundleCreator {
 		if (needsCompilation(rpcName,tenant) || force) {
 			createBundle(rpcName, new Date(), "xml", failures, success,
 					skipped, force, false,tenant);
+			forceReinstall = true;
 			// createBundleJar(rpcName, formatCompilationDate(new Date()),
 			// false);
 		}
 
 		// File bundleJar = getScriptBundleJar(rpcName);
-		installBundle(rpcName, tenant,failures, success, skipped, force);
+		installBundle(rpcName, tenant,failures, success, skipped, forceReinstall);
 
 		logger.debug("On demand installation finished, waiting for service...");
 //		CompiledScript cs = waitForService(rpcName,tenant);
@@ -636,7 +638,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			// Collection<ServiceReference<CompiledScriptFactory>> sr =
 			// bundleContext.getServiceReferences(CompiledScriptFactory.class,
 			// filter);
-			if (ssr.length == 0) {
+			if (ssr==null || ssr.length == 0) {
 				logger.warn("Can not locate service for script: " + scriptPath
 						+ " filter: " + filter);
 				failed.add(scriptPath);

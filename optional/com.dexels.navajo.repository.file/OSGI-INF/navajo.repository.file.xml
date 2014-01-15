@@ -4,5 +4,7 @@
    <service>
       <provide interface="com.dexels.navajo.repository.api.RepositoryInstance"/>
    </service>
+   <reference bind="setEventAdmin" cardinality="0..1" interface="org.osgi.service.event.EventAdmin" name="EventAdmin" policy="dynamic" unbind="clearEventAdmin"/>
+   <reference bind="addOperation" cardinality="0..n" interface="com.dexels.navajo.repository.api.AppStoreOperation" name="AppStoreOperation" policy="dynamic" unbind="removeOperation"/>
    <property name="repo" type="String" value="file"/>
 </scr:component>

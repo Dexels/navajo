@@ -5,11 +5,15 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +24,9 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 	
 	protected String repositoryName;
 	protected File applicationFolder;
+	
+	private EventAdmin eventAdmin = null;
+
 	private final Map<String,Object> settings = new HashMap<String, Object>();
 	private final Map<String,AppStoreOperation> operations = new HashMap<String, AppStoreOperation>();
 	private final Map<String,Map<String,Object>> operationSettings = new HashMap<String, Map<String,Object>>();
@@ -27,6 +34,94 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(FileRepositoryInstanceImpl.class);
+	private WatchDir watchDir;
+	
+	public void setEventAdmin(EventAdmin eventAdmin) {
+		this.eventAdmin = eventAdmin;
+	}
+
+	/**
+	 * 
+	 * @param eventAdmin
+	 *            the eventadmin to clear
+	 */
+	public void clearEventAdmin(EventAdmin eventAdmin) {
+		this.eventAdmin = null;
+	}
+
+
+	@Override
+	public int refreshApplication() throws IOException {
+//		logger.debug(">>> last commit version: " + oldVersion);
+//		try {
+//			String newVersion = getLastCommitVersion();
+//			
+//			List<String> added = new ArrayList<String>();
+//			List<String> modified = new ArrayList<String>();
+//			List<String> copied = new ArrayList<String>();
+//			List<String> deleted = new ArrayList<String>();
+//
+//			List<DiffEntry> diffEntries = diff(oldVersion);
+//			if(newVersion.equals(oldVersion)) {
+//				logger.info("Identical versions. Nothing pulled");
+//				return 0;
+//			}
+//			if(diffEntries.isEmpty()) {
+//				logger.info("Empty changeset (but there was a commit). Maybe empty commit?");
+//				return 0;
+//			}
+//
+//			for (DiffEntry diffEntry : diffEntries) {
+//				
+//				if (diffEntry.getChangeType().equals(ChangeType.ADD)) {
+//					added.add(diffEntry.getNewPath());
+//				} else if (diffEntry.getChangeType().equals(ChangeType.MODIFY)) {
+//					modified.add(diffEntry.getNewPath());
+//				} else if (diffEntry.getChangeType().equals(ChangeType.COPY)) {
+//					copied.add(diffEntry.getOldPath());
+//				} else if (diffEntry.getChangeType().equals(ChangeType.DELETE)) {
+//					deleted.add(diffEntry.getOldPath());
+//				} else if (diffEntry.getChangeType().equals(ChangeType.RENAME)) {
+//					added.add(diffEntry.getNewPath());
+//					deleted.add(diffEntry.getOldPath());
+//				}
+//				
+//			}
+//			Map<String, Object> properties = new HashMap<String, Object>();
+//			properties.put(ChangeType.ADD.name(), added);
+//			properties.put(ChangeType.MODIFY.name(), modified);
+//			properties.put(ChangeType.COPY.name(), copied);
+//			properties.put(ChangeType.DELETE.name(), deleted);
+//			if (oldVersion != null) {
+//				properties.put("oldCommit", oldVersion);
+//			}
+//			properties.put("newCommit", newVersion);
+//			String url = getUrl();
+//			if (url != null) {
+//				properties.put("url", url);
+//			}
+//			sendChangeEvent("githubosgi/change", properties);
+//			return 1;
+//		} catch (GitAPIException e) {
+//			logger.error("Error: ", e);
+			return -1;
+//		}
+
+	}
+
+	
+	private void sendChangeEvent(String topic, Map<String, Object> properties) {
+		if (eventAdmin == null) {
+			logger.warn("No event administrator, not sending any events");
+			return;
+		}
+		properties.put("repository", this);
+		 properties.put("repositoryName", getRepositoryName());
+		Event event = new Event(topic, properties);
+
+		eventAdmin.postEvent(event);
+
+	}	
 	
 	
 	@Override
@@ -49,9 +144,26 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 
 		applicationFolder = findConfiguration(path,fileInstallPath);
 		logger.info("Repository instance activated");
-
+		Path currentPath = Paths.get(applicationFolder.toURI());
+		watchDir = new WatchDir(currentPath, true);
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+				watchDir.processEvents();
+			}
+		};
+		t.start();
 	}
 
+	public void deactivate() {
+		if(watchDir!=null) {
+			try {
+				watchDir.close();
+			} catch (IOException e) {
+				logger.error("Error: ", e);
+			}
+		}
+	}
 	private File findConfiguration(String path, String fileInstallPath)
 			throws IOException {
 		
@@ -107,11 +219,6 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 		}
 		return null;
 	}
-	
-	public void deactivate() {
-
-	}
-
 
 	@Override
 	public int compareTo(RepositoryInstance o) {
@@ -167,8 +274,14 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 	}
 
 	@Override
-	public int refreshApplication() throws IOException {
-		return 0;
+	public String repositoryType() {
+		return "file";
 	}
+
+	@Override
+	public String applicationType() {
+		return type;
+	}
+
 
 }
