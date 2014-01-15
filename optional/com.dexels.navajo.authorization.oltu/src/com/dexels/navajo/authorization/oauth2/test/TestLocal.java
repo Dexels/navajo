@@ -13,21 +13,23 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 
-public class Test {
+public class TestLocal {
 
 	private static final String CLIENT_ID = "4d8cf0e90a1ce66536b9";
 	private static final String CLIENT_SECRET = "dcf2867488ba880348d037a4f45b28dc1d41117f";
 	private static final String REDIRECT_URL = "http://localhost:8080/authorize";
-	private static final String ACCESS_TOKEN_ENDPOINT = "https://github.com/login/oauth/authorize";
+	private static final String ACCESS_TOKEN_ENDPOINT = "http://localhost:8080/auth/client";
 
 	public static void main(String[] args) throws OAuthSystemException,
 			OAuthProblemException, IOException {
 		// TODO Auto-generated method stub
 //		grantCode(AUTHORIZATION_CODE);
-		testGitHub();
+		testLocal();
 	}
+	
+	// /auth/client?response_type=code&client_id=123&redirect_url=aap.nl
 
-	private static void testGitHub() throws OAuthSystemException, OAuthProblemException, IOException {
+	private static void testLocal() throws OAuthSystemException, OAuthProblemException, IOException {
 		OAuthClientRequest request = OAuthClientRequest
 				.tokenLocation(ACCESS_TOKEN_ENDPOINT)
 				   .setClientId(CLIENT_ID)
