@@ -1,5 +1,7 @@
 package com.dexels.navajo.camel.component;
 
+import java.util.Map;
+
 import org.apache.camel.Consumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -26,11 +28,18 @@ public class CamelEndpoint extends DefaultEndpoint {
 	private final NavajoCamelComponent myComponent;
 
 	private final String service;
+	private String username;
+	private String password;
 	
-	public CamelEndpoint(String uri, NavajoCamelComponent component, LocalClient localClient, String service) {
+
+
+	private final Map<String, Object> parameters;
+	
+	public CamelEndpoint(String uri, NavajoCamelComponent component, LocalClient localClient, String service, Map<String, Object> parameters) {
 		super(uri, component);
 		this.localclient = localClient;
 		this.service = service;
+		this.parameters = parameters;
 		myComponent = component;
 		logger.info("Endpoint created with URI: " + uri);
 	}
@@ -42,7 +51,7 @@ public class CamelEndpoint extends DefaultEndpoint {
 
 	@Override
 	public Producer createProducer() throws Exception {
-		return new NavajoCamelProducer(this,localclient,service);
+		return new NavajoCamelProducer(this,localclient,service,username,password);
 	}
 
 	@Override
@@ -65,5 +74,15 @@ public class CamelEndpoint extends DefaultEndpoint {
 		return e;
 		
 	}
+	
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 
 }

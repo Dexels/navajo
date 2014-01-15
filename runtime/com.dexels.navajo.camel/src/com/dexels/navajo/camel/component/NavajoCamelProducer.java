@@ -1,6 +1,8 @@
 package com.dexels.navajo.camel.component;
 
 
+import java.util.Map;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultProducer;
@@ -26,11 +28,15 @@ public class NavajoCamelProducer extends DefaultProducer {
 	final LocalClient localClient;
 
 	private final String service;
+	private final String username;
+	private final String password;
 	
-    public NavajoCamelProducer(CamelEndpoint endpoint, LocalClient localClient, String service) {
+    public NavajoCamelProducer(CamelEndpoint endpoint, LocalClient localClient, String service, String username, String password) {
         super(endpoint);
         this.localClient = localClient;
         this.service = service;
+        this.username = username;
+        this.password = password;
     }
 
     @Override
@@ -40,15 +46,7 @@ public class NavajoCamelProducer extends DefaultProducer {
     	Object rawbody = in.getBody();
     	if(rawbody instanceof Navajo) {
     		Navajo input = (Navajo)rawbody;
-    		Header h = input.getHeader();
-    		if(h==null) {
-    			h = NavajoFactory.getInstance().createHeader(input, service, "R3OT", "stup1d0", -1);
-    			input.addHeader(h);
-    		} else {
-    			h.setRPCName(service);
-    			h.setRPCUser("R3OT");
-    			h.setRPCPassword("stup1d0");
-    		}
+    		setupHeader(input);
     		
     		Navajo result = localClient.call(input);
     		result.write(System.err);
@@ -58,5 +56,17 @@ public class NavajoCamelProducer extends DefaultProducer {
     	}
     	
     }
+
+	private void setupHeader(Navajo input) {
+		Header h = input.getHeader();
+		if(h==null) {
+			h = NavajoFactory.getInstance().createHeader(input, service,username, password, -1);
+			input.addHeader(h);
+		} else {
+			h.setRPCName(service);
+			h.setRPCUser(username);
+			h.setRPCPassword(password);
+		}
+	}
 
 }

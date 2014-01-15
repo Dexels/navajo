@@ -61,7 +61,7 @@ public class NavajoCamelComponent extends DefaultComponent implements Component 
 	protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
     	logger.info("uri: "+uri);
     	logger.info("remaining: "+remaining);
-    	CamelEndpoint endpoint = new CamelEndpoint(uri, this,localClient,remaining);
+    	CamelEndpoint endpoint = new CamelEndpoint(uri, this,localClient,remaining,parameters);
     	registerEndPoint(endpoint, remaining);
         setProperties(endpoint, parameters);
         return endpoint;
