@@ -7,12 +7,12 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
 
-public class GitChangeListener implements EventHandler {
+public class RepoChangeListener implements EventHandler {
 
 	private BundleCreator bundleCreator = null;
 	
 	private final static Logger logger = LoggerFactory
-			.getLogger(GitChangeListener.class);
+			.getLogger(RepoChangeListener.class);
 	
 	public void setBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = bundleCreator;

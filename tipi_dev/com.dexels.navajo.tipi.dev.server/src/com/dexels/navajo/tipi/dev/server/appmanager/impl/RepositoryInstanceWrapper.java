@@ -226,5 +226,11 @@ public class RepositoryInstanceWrapper implements RepositoryInstance {
 		return getRepositoryName()+": "+repositoryType()+"=>"+applicationType();
 	}
 
+
+	@Override
+	public List<String> getMonitoredFolders(String layout) {
+		return instance.getMonitoredFolders(layout);
+	}
+
 	
 }

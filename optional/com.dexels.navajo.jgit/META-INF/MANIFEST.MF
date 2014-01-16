@@ -6,6 +6,7 @@ Bundle-Version: 1.0.12.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.repository.api;version="1.0.0",
+ com.dexels.navajo.repository.api.diff;version="1.0.0",
  com.jcraft.jsch;version="0.1.46",
  javax.servlet;version="3.0.0",
  javax.servlet.http;version="3.0.0",

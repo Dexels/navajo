@@ -12,22 +12,34 @@ import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.WatchEvent;
+import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.repository.api.diff.EntryChangeType;
 
 public class WatchDir implements Closeable {
 
 	private final WatchService watcher;
 	private final Map<WatchKey, Path> keys;
-	private final boolean recursive;
+	private final boolean recursive = true;
 	private boolean trace = false;
-
+	private final FileRepositoryInstanceImpl fileRepository;
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(WatchDir.class);
+	
+	
 	@SuppressWarnings("unchecked")
 	static <T> WatchEvent<T> cast(WatchEvent<?> event) {
 		return (WatchEvent<T>) event;
@@ -68,11 +80,10 @@ public class WatchDir implements Closeable {
 		});
 	}
 
-	public WatchDir(Path dir, boolean recursive) throws IOException {
+	public WatchDir(Path dir,  FileRepositoryInstanceImpl fileRepository) throws IOException {
 		this.watcher = FileSystems.getDefault().newWatchService();
 		this.keys = new HashMap<WatchKey, Path>();
-		this.recursive = recursive;
-
+		this.fileRepository = fileRepository;
 		if (recursive) {
 			System.out.format("Scanning %s ...\n", dir);
 			registerAll(dir);
@@ -84,6 +95,35 @@ public class WatchDir implements Closeable {
 		this.trace = true;
 	}
 
+	public int refreshApplication(WatchEvent<Path> ev, Path path) throws IOException {
+			
+			List<String> added = new ArrayList<String>();
+			List<String> modified = new ArrayList<String>();
+			List<String> deleted = new ArrayList<String>();
+
+			Kind<Path> k = ev.kind();
+				
+				if (k == ENTRY_CREATE) {
+					added.add(path.toFile().getAbsolutePath());
+				} else if (k == ENTRY_MODIFY) {
+					modified.add(path.toFile().getAbsolutePath());
+				} else if (k == ENTRY_DELETE) {
+					deleted.add(path.toFile().getAbsolutePath());
+				}
+				
+			Map<String, Object> properties = new HashMap<String, Object>();
+			properties.put(EntryChangeType.ADD.name(), added);
+			properties.put(EntryChangeType.MODIFY.name(), modified);
+			properties.put(EntryChangeType.DELETE.name(), deleted);
+
+			fileRepository.sendChangeEvent("repository/change", properties);
+			return 1;
+
+
+	}
+
+	
+	
 	public void processEvents() {
 		for (;;) {
 
@@ -117,8 +157,12 @@ public class WatchDir implements Closeable {
 
 				// print out event
 				System.out.format("%s: %s\n", event.kind().name(), child);
-
-				// if directory is created, and watching recursively, then
+				try {
+					refreshApplication(ev,child);
+				} catch (IOException e) {
+					logger.error("Error: ", e);
+				}
+					// if directory is created, and watching recursively, then
 				// register it and its sub-directories
 				if (recursive && (kind == ENTRY_CREATE)) {
 					try {
@@ -142,31 +186,6 @@ public class WatchDir implements Closeable {
 				}
 			}
 		}
-	}
-
-	static void usage() {
-		System.err.println("usage: java WatchDir [-r] dir");
-		System.exit(-1);
-	}
-
-	public static void main(String[] args) throws IOException {
-		// parse arguments
-		if (args.length == 0 || args.length > 2)
-			usage();
-		boolean recursive = false;
-		int dirArg = 0;
-		if (args[0].equals("-r")) {
-			if (args.length < 2)
-				usage();
-			recursive = true;
-			dirArg++;
-		}
-
-		// register directory and process its events
-		Path dir = Paths.get(args[dirArg]);
-		final WatchDir watchDir = new WatchDir(dir, recursive);
-		watchDir.processEvents();
-		watchDir.close();
 	}
 
 	@Override

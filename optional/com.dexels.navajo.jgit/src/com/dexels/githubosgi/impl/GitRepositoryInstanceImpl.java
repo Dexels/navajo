@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.githubosgi.GitRepositoryInstance;
+import com.dexels.navajo.repository.api.diff.EntryChangeType;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 
@@ -468,10 +469,10 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 				
 			}
 			Map<String, Object> properties = new HashMap<String, Object>();
-			properties.put(ChangeType.ADD.name(), added);
-			properties.put(ChangeType.MODIFY.name(), modified);
-			properties.put(ChangeType.COPY.name(), copied);
-			properties.put(ChangeType.DELETE.name(), deleted);
+			properties.put(EntryChangeType.ADD.name(), added);
+			properties.put(EntryChangeType.MODIFY.name(), modified);
+			properties.put(EntryChangeType.COPY.name(), copied);
+			properties.put(EntryChangeType.DELETE.name(), deleted);
 			if (oldVersion != null) {
 				properties.put("oldCommit", oldVersion);
 			}
@@ -523,5 +524,11 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	@Override
 	public String applicationType() {
 		return type;
+	}
+
+	@Override
+	public List<String> getMonitoredFolders(String layout) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

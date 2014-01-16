@@ -9,8 +9,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
@@ -30,6 +32,8 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 	private final Map<String,Object> settings = new HashMap<String, Object>();
 	private final Map<String,AppStoreOperation> operations = new HashMap<String, AppStoreOperation>();
 	private final Map<String,Map<String,Object>> operationSettings = new HashMap<String, Map<String,Object>>();
+
+	private final Set<Path> monitoredPaths = new HashSet<Path>();
 	protected String type;
 	
 	private final static Logger logger = LoggerFactory
@@ -50,67 +54,8 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 	}
 
 
-	@Override
-	public int refreshApplication() throws IOException {
-//		logger.debug(">>> last commit version: " + oldVersion);
-//		try {
-//			String newVersion = getLastCommitVersion();
-//			
-//			List<String> added = new ArrayList<String>();
-//			List<String> modified = new ArrayList<String>();
-//			List<String> copied = new ArrayList<String>();
-//			List<String> deleted = new ArrayList<String>();
-//
-//			List<DiffEntry> diffEntries = diff(oldVersion);
-//			if(newVersion.equals(oldVersion)) {
-//				logger.info("Identical versions. Nothing pulled");
-//				return 0;
-//			}
-//			if(diffEntries.isEmpty()) {
-//				logger.info("Empty changeset (but there was a commit). Maybe empty commit?");
-//				return 0;
-//			}
-//
-//			for (DiffEntry diffEntry : diffEntries) {
-//				
-//				if (diffEntry.getChangeType().equals(ChangeType.ADD)) {
-//					added.add(diffEntry.getNewPath());
-//				} else if (diffEntry.getChangeType().equals(ChangeType.MODIFY)) {
-//					modified.add(diffEntry.getNewPath());
-//				} else if (diffEntry.getChangeType().equals(ChangeType.COPY)) {
-//					copied.add(diffEntry.getOldPath());
-//				} else if (diffEntry.getChangeType().equals(ChangeType.DELETE)) {
-//					deleted.add(diffEntry.getOldPath());
-//				} else if (diffEntry.getChangeType().equals(ChangeType.RENAME)) {
-//					added.add(diffEntry.getNewPath());
-//					deleted.add(diffEntry.getOldPath());
-//				}
-//				
-//			}
-//			Map<String, Object> properties = new HashMap<String, Object>();
-//			properties.put(ChangeType.ADD.name(), added);
-//			properties.put(ChangeType.MODIFY.name(), modified);
-//			properties.put(ChangeType.COPY.name(), copied);
-//			properties.put(ChangeType.DELETE.name(), deleted);
-//			if (oldVersion != null) {
-//				properties.put("oldCommit", oldVersion);
-//			}
-//			properties.put("newCommit", newVersion);
-//			String url = getUrl();
-//			if (url != null) {
-//				properties.put("url", url);
-//			}
-//			sendChangeEvent("githubosgi/change", properties);
-//			return 1;
-//		} catch (GitAPIException e) {
-//			logger.error("Error: ", e);
-			return -1;
-//		}
-
-	}
-
 	
-	private void sendChangeEvent(String topic, Map<String, Object> properties) {
+	void sendChangeEvent(String topic, Map<String, Object> properties) {
 		if (eventAdmin == null) {
 			logger.warn("No event administrator, not sending any events");
 			return;
@@ -139,13 +84,22 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 	public void activate(Map<String,Object> configuration) throws IOException {
 
 		String path = (String) configuration.get("repository.folder");
+		String type = (String) configuration.get("type");
 		repositoryName = (String) configuration.get("repository.name");
 		final String fileInstallPath= (String) configuration.get("felix.fileinstall.filename");
 
 		applicationFolder = findConfiguration(path,fileInstallPath);
+		List<String> monitored = getMonitoredFolders(type);
+		for (String element : monitored) {
+			File c = new File(applicationFolder,element);
+			if(c.exists()) {
+				Path currentPath = Paths.get(applicationFolder.toURI());
+				monitoredPaths.add(currentPath);
+			}
+		}
 		logger.info("Repository instance activated");
 		Path currentPath = Paths.get(applicationFolder.toURI());
-		watchDir = new WatchDir(currentPath, true);
+		watchDir = new WatchDir(currentPath, this);
 		Thread t = new Thread() {
 			@Override
 			public void run() {
@@ -153,6 +107,49 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 			}
 		};
 		t.start();
+	}
+
+	@Override
+	public List<String> getMonitoredFolders(String layout) {
+		final List<String> result = new ArrayList<String>();
+		switch (layout) {
+		case "navajo":
+			result.add("config");
+			result.add("scripts");
+			result.add("article");
+			result.add("authorization");
+			result.add("adapters");
+			result.add("camel");
+			result.add("workflows");
+			result.add("tasks");
+			break;
+		case "navajomulti":
+			result.add("config");
+			result.add("scripts");
+			result.add("article");
+			result.add("authorization");
+			result.add("adapters");
+			result.add("camel");
+			result.add("workflows");
+			result.add("tasks");
+			result.add("settings");
+			break;
+
+		case "tipi":
+			result.add("settings");
+			result.add("tipi");
+			result.add("resource");
+			result.add("VAADIN");
+			break;
+			
+		case "appstore":
+			result.add("gitssh");
+			result.add("load");
+			break;
+		default:
+			break;
+		}
+		return result;
 	}
 
 	public void deactivate() {
@@ -281,6 +278,12 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 	@Override
 	public String applicationType() {
 		return type;
+	}
+
+	@Override
+	public int refreshApplication() throws IOException {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 
