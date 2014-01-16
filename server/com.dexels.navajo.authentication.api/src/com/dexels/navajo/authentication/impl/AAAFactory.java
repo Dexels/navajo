@@ -47,6 +47,7 @@ public final class AAAFactory implements AuthenticationFactory {
 
   private final SortedSet<AAAInterface> moduleList;
   private final Map<String,AAAInterface> moduleMap = new HashMap<String, AAAInterface>();
+private AAAInterface defaultAAAInterface;
   
   private final static Logger logger = LoggerFactory.getLogger(AAAFactory.class);
   private static AuthenticationFactory instance = null;
@@ -80,6 +81,7 @@ public final class AAAFactory implements AuthenticationFactory {
 			  moduleMap.put(instance,a);
 		  } else {
 			  logger.warn("Possible problem: AAAInterface found, probably in multitenant mode, but no instance associated.");
+			  this.defaultAAAInterface = a;
 		  }
 	  }
   }
@@ -93,6 +95,7 @@ public final class AAAFactory implements AuthenticationFactory {
 			  moduleMap.remove(instance);
 		  } else {
 			  logger.warn("Possible problem: Removing AAAInterface, probably in multitenant mode, but no instance associated.");
+			  this.defaultAAAInterface = null;
 		  }
 	  }
 //	  logger.info("# of auth. modules now: "+moduleList.size());
@@ -111,7 +114,11 @@ public final class AAAFactory implements AuthenticationFactory {
   @Override
   public AAAInterface getAuthenticationModule() {
 	  try {
-	  return moduleList.first();
+		  if(defaultAAAInterface!=null) {
+			  return defaultAAAInterface;
+		  }
+		  logger.warn("Looking for AAA interface, not multitenant, no default, getting desparate.");
+		  return moduleList.first();
 	  } catch (Exception  e) {
 		  logger.debug("No AuthenticationModule found. No OSGi?", e);
 		  return null;
