@@ -115,7 +115,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		// boolean isInDefaultPackage = script.indexOf('/')==-1;
 		final String formatCompilationDate = formatCompilationDate(compilationDate);
 		List<Dependency> dependencies = new ArrayList<Dependency>();
-		if (f.isDirectory() && f.getCanonicalPath().equals(scriptFolder + "/" + script) ) {
+		if (isDirectory(script, scriptFolder, f) ) {
 			compileAllIn(f, compilationDate, failures, success, skipped, force,
 					keepIntermediate,tenant);
 		} else {
@@ -148,6 +148,14 @@ public class BundleCreatorComponent implements BundleCreator {
 			}
 
 		}
+	}
+
+	private boolean isDirectory(String script, File scriptFolder, File f)
+			throws IOException {
+		if("".equals(script)) {
+			return true;
+		}
+		return f.isDirectory() && f.getCanonicalPath().equals(scriptFolder + "/" + script);
 	}
 
 	private void compileAllIn(File baseDir, Date compileDate,
