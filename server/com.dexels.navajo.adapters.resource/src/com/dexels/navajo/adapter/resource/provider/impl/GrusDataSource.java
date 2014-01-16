@@ -46,9 +46,22 @@ public class GrusDataSource implements GrusConnection {
 		String url = (String) settings.get("url");
 		String user = (String) settings.get("user");
 		String password = (String) settings.get("password");
-		int minConns = (Integer) settings.get("min_connections");
-		int maxConns = (Integer) settings.get("max_connections");
-		double refresh = (Double) settings.get("refresh");
+		final Object minObject = settings.get("min_connections");
+		int minConns = 1;
+		if(minObject!=null) {
+			minConns = (Integer) minObject;
+		}
+		int maxConns = 99;
+		final Object maxObject = settings.get("max_connections");
+		if(maxObject!=null) {
+			maxConns = (Integer) maxObject;
+		}
+		final Object refreshObject = settings.get("refresh");
+		double refresh = 0.01;
+		if(refreshObject!=null) {
+			refresh = (Double) refreshObject;
+			
+		}
 		
 		try {
 			this.dbConnectionBroker = new DbConnectionBroker(null, url, user, password, minConns, maxConns, refresh);

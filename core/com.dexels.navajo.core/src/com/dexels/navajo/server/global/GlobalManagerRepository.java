@@ -9,4 +9,7 @@ public interface GlobalManagerRepository {
 	public void removeGlobalManager(GlobalManager manager,Map<String,Object> settings);
 
 	public GlobalManager getGlobalManager(String instance);
+
+	public GlobalManager getDefaultGlobalManager();
+
 }

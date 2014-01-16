@@ -75,7 +75,12 @@ public class ResourceManager {
 	}
 
 	private void loadResourceTml(Navajo n) {
-		Message datasources = n.getMessage("resources");
+		Message datasources = n.getMessage("datasources");
+		if(datasources!=null) {
+			logger.warn("In datasource definitions, please use 'resources' instead of 'datasources' as top level tag");
+		} else {
+			datasources = n.getMessage("resources");
+		}
 		if(datasources==null) {
 			logger.warn("Datasources message is missing.");
 		} else {

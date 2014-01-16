@@ -83,6 +83,8 @@ import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.enterprise.xmpp.JabberWorkerFactory;
 import com.dexels.navajo.server.global.GlobalManager;
+import com.dexels.navajo.server.global.GlobalManagerRepository;
+import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
 import com.dexels.navajo.server.jmx.SNMPManager;
 import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.AuditLog;
@@ -776,7 +778,7 @@ public final Navajo handle(Navajo inMessage,boolean skipAuth,AfterWebServiceEmit
   
   @Override
   public final Navajo handle(Navajo inMessage) throws FatalException {
-	  return processNavajo(inMessage, "default", null, null, false,null,null);
+	  return processNavajo(inMessage, null, null, null, false,null,null);
   }
 
   @Override
@@ -941,6 +943,21 @@ public final boolean isBusy() {
     	  Thread.currentThread().setName(getThreadName(access));
       }
 
+		final GlobalManagerRepository globalManagerInstance = GlobalManagerRepositoryFactory.getGlobalManagerInstance();
+		if(globalManagerInstance == null) {
+			logger.warn("No global manager found");
+		}
+		GlobalManager gm = null;
+		if(globalManagerInstance!=null) {
+			if (instance==null) {
+				gm = globalManagerInstance.getDefaultGlobalManager();
+			} else {
+				gm = globalManagerInstance.getGlobalManager(instance);
+			}
+		}      
+		if(gm!=null) {
+			gm.initGlobals( inMessage);
+		}
       // register TmlRunnable with access object:
       
       if(origRunnable!=null) {

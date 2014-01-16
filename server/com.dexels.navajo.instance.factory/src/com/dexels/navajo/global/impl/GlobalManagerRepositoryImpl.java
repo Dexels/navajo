@@ -9,6 +9,7 @@ import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
 
 public class GlobalManagerRepositoryImpl implements GlobalManagerRepository {
 	private final Map<String,GlobalManager> globalManagers = new HashMap<String, GlobalManager>();
+	private GlobalManager defaultGlobalManager = null;
 	
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.global.impl.GlobalManagerRepository#addGlobalManager(java.lang.String, com.dexels.navajo.server.GlobalManager)
@@ -16,7 +17,12 @@ public class GlobalManagerRepositoryImpl implements GlobalManagerRepository {
 	@Override
 	public void addGlobalManager(GlobalManager manager, Map<String,Object> settings) {
 		String instance = (String) settings.get("instance");
-		globalManagers.put(instance, manager);
+		if(instance==null) {
+			defaultGlobalManager  = manager;
+		} else {
+			globalManagers.put(instance, manager);
+			
+		}
 	}
 
 	/* (non-Javadoc)
@@ -25,7 +31,12 @@ public class GlobalManagerRepositoryImpl implements GlobalManagerRepository {
 	@Override
 	public void removeGlobalManager(GlobalManager manager,Map<String,Object> settings) {
 		String instance = (String) settings.get("instance");
-		globalManagers.remove(instance);
+		if(instance==null) {
+			defaultGlobalManager  = null;
+		} else {
+			globalManagers.remove(instance);
+			
+		}
 	}
 
 	public void activate() {
@@ -39,6 +50,11 @@ public class GlobalManagerRepositoryImpl implements GlobalManagerRepository {
 	@Override
 	public GlobalManager getGlobalManager(String instance) {
 		return globalManagers.get(instance);
+	}
+
+	@Override
+	public GlobalManager getDefaultGlobalManager() {
+		return defaultGlobalManager;
 	}
 
 }
