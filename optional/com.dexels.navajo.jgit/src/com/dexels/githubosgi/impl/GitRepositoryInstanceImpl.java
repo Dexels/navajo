@@ -41,12 +41,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.githubosgi.GitRepositoryInstance;
+import com.dexels.navajo.repository.api.diff.EntryChangeType;
+import com.dexels.navajo.repository.api.diff.RepositoryLayout;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 
 public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements GitRepositoryInstance {
 	
 	private final static Logger logger = LoggerFactory.getLogger(GitRepositoryInstanceImpl.class);
+
+	private final Map<String,RepositoryLayout> repositoryLayout = new HashMap<String, RepositoryLayout>();
 
 	private File privateKey;
 	private File publicKey;
@@ -75,6 +79,25 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		this.eventAdmin = eventAdmin;
 	}
 
+	public void addRepositoryLayout(RepositoryLayout r, Map<String,Object> settings) {
+		repositoryLayout.put((String) settings.get("name"),r);
+	}
+	
+	public void removeRepositoryLayout(RepositoryLayout r, Map<String,Object> settings) {
+		repositoryLayout.remove(settings.get("name"));
+	}
+
+	@Override
+	public List<String> getMonitoredFolders() {
+		RepositoryLayout r = repositoryLayout.get(type);
+		if(r==null) {
+			logger.warn("Unknown repository layout: "+type+", change monitoring might not work!");
+			return null;
+		}
+		return r.getMonitoredFolders();
+	}
+	
+	
 	/**
 	 * 
 	 * @param eventAdmin
@@ -468,10 +491,10 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 				
 			}
 			Map<String, Object> properties = new HashMap<String, Object>();
-			properties.put(ChangeType.ADD.name(), added);
-			properties.put(ChangeType.MODIFY.name(), modified);
-			properties.put(ChangeType.COPY.name(), copied);
-			properties.put(ChangeType.DELETE.name(), deleted);
+			properties.put(EntryChangeType.ADD.name(), added);
+			properties.put(EntryChangeType.MODIFY.name(), modified);
+			properties.put(EntryChangeType.COPY.name(), copied);
+			properties.put(EntryChangeType.DELETE.name(), deleted);
 			if (oldVersion != null) {
 				properties.put("oldCommit", oldVersion);
 			}
@@ -524,4 +547,5 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 	public String applicationType() {
 		return type;
 	}
+
 }
