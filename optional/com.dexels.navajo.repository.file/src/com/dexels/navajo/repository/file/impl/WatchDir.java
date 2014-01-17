@@ -116,8 +116,12 @@ public class WatchDir implements Closeable,Runnable {
 		for (String folder : fileRepository.getMonitoredFolders()) {
 			File folderF = new File(fileRepository.getRepositoryFolder(),folder);
 			System.err.println("Registering folder: "+folderF.getAbsolutePath());
-			Path dir = Paths.get(folderF.toURI());
-			registerAll(dir);
+			if(folderF.exists()) {
+				Path dir = Paths.get(folderF.toURI());
+				registerAll(dir);
+			} else {
+				logger.warn("Not registering non-existant folder: "+folderF.getAbsolutePath());
+			}
 			
 		}
 		this.trace = true;
