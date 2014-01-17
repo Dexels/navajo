@@ -30,14 +30,13 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.server.api.NavajoServerContext;
 
 public class NavajoContextInstanceFactory implements NavajoServerContext {
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoContextInstanceFactory.class);
 
-	private File rootPath = null;
-	private File settings = null;
 //	private BundleContext bundleContext;
 	private ConfigurationAdmin configAdmin;
 //	private final Map<String,Set<String>> aliasesForDataSource = new HashMap<String, Set<String>>();
@@ -47,12 +46,28 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		System.err.println("constructed!");
 	}
 
-	public void activate(Map<String,Object> properties) {
+	private RepositoryInstance repositoryInstance;
+	
+	public void setRepositoryInstance(RepositoryInstance ri) {
+		this.repositoryInstance = ri;
+	}
+
+	public void clearRepositoryInstance(RepositoryInstance ri) {
+		this.repositoryInstance = null;
+	}
+	
+	public void activate() {
 //		this.bundleContext = context;
-		logger.info("NavajoContextInstance activated");
-		String installPath = (String) properties.get("installationPath");
-		rootPath = new File(installPath);
-		settings = new File(rootPath,"settings");
+
+		try {
+			startInstanceFactory(repositoryInstance.getRepositoryFolder());
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void startInstanceFactory(File rootPath) {
+		File settings = new File(rootPath,"settings");
 		File config = new File(rootPath,"config");
 		File globalResourceFile = new File(config,"resources.xml");
 		File[] fd = settings.listFiles();
@@ -277,32 +292,6 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		logger.info("NavajoContextInstance deactivated");
 	}
 
-//	private void registerInstance(String instance) throws IOException {
-//		logger.info("Registering instance: {}",instance);
-//		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
-//		settings.put("instance", instance);
-//		final String filter = "(instance="+instance+")";
-//		Configuration cc = null;
-//		try {
-//			Configuration[] c = configAdmin.listConfigurations(filter);
-//			if(c!=null && c.length>1) {
-//				logger.warn("Multiple configurations found for filter: {}", filter);
-//			}
-//			if(c!=null && c.length>0) {
-//				cc = c[0];
-//			}
-//		} catch (InvalidSyntaxException e) {
-//			logger.error("Error in filter: {}",filter,e);
-//		}
-//		if(cc==null) {
-//			cc = configAdmin.createFactoryConfiguration("navajo.instance",null);
-//			resourcePids.add(cc.getPid());
-//		}
-//		cc.update(settings);
-//		logger.debug("Instance settings for source: {} : {}",instance,settings);
-//
-//	}
-	
 	private void addDatasource(String instance,Message dataSource, Map<String, Set<String>> aliases) throws IOException {
 		String name = dataSource.getName();
 		List<Property> props = dataSource.getAllProperties();
@@ -321,21 +310,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			} else {
 				settings.put(property.getName(), property.getTypedValue());
 			}
-//		    <AD name="url"    id="url"   required="true"  type="String" default="jdbc:oracle:thin:@//myhost:1521/orcl"/>   
-//		    <AD name="user"  id="user" required="false" type="String" default="demo"/>
-//		    <AD name="password"  id="password" required="false" type="String" default="demo"/>
-//		    <AD name="name"  id="name" required="false" type="String" default="navajo.resource.myjdbc"/>
-//		    <AD name="instance"  id="instance" required="false" type="String" default="*"/>
-			
-//	        <message name="default">
-//            <property name="type" value="oracle" />
-//            <property name="url" value="jdbc:oracle:thin:@odysseus:1521:SLTEST02"/>
-//            <property name="username" value="bbnkern"/>
-//            <property name="password" value="bbn"/>
-//            <property name="refresh" type="float" value="0.01"/>
-//            <property name="min_connections" type="integer" value="1"/>
-//            <property name="max_connections" type="integer" value="100"/>
-//            </message>			
+		
 			
 		}
 //		Set<String> allNames = new HashSet<String>();
@@ -438,7 +413,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 
 	@Override
 	public String getInstallationPath() {
-		return rootPath.getAbsolutePath();
+		return repositoryInstance.getRepositoryFolder().getAbsolutePath();
 	}
 
 	

@@ -28,6 +28,4 @@ public interface RepositoryInstance extends Comparable<RepositoryInstance> {
 
 	public List<String> getMonitoredFolders();
 	
-
-
 }

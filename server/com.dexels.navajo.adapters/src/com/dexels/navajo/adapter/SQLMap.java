@@ -882,7 +882,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
 					this.ownConnection = false;
 				} else {
-					gc = GrusProviderFactory.getInstance().requestConnection(myAccess.getInstance(), datasource,alternativeUsername);
+					String instance = null;
+					if (myAccess!=null) {
+						instance = myAccess.getInstance();
+					}
+					gc = GrusProviderFactory.getInstance().requestConnection(instance, datasource,alternativeUsername);
 					setTransactionContext((int) gc.getId());
 					this.ownConnection = true;
 				}
