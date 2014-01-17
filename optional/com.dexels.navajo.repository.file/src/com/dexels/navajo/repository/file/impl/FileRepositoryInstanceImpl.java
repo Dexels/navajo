@@ -112,8 +112,7 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 	@Override
 	public List<String> getMonitoredFolders(String layout) {
 		final List<String> result = new ArrayList<String>();
-		switch (layout) {
-		case "navajo":
+		if("navajo".equals(layout)) {
 			result.add("config");
 			result.add("scripts");
 			result.add("article");
@@ -122,8 +121,7 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 			result.add("camel");
 			result.add("workflows");
 			result.add("tasks");
-			break;
-		case "navajomulti":
+		} else if("navajomulti".equals(layout)) {
 			result.add("config");
 			result.add("scripts");
 			result.add("article");
@@ -133,21 +131,14 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 			result.add("workflows");
 			result.add("tasks");
 			result.add("settings");
-			break;
-
-		case "tipi":
+		} else if("tipi".equals(layout)) {
 			result.add("settings");
 			result.add("tipi");
 			result.add("resource");
 			result.add("VAADIN");
-			break;
-			
-		case "appstore":
+		} else if("appstore".equals(layout)) {
 			result.add("gitssh");
 			result.add("load");
-			break;
-		default:
-			break;
 		}
 		return result;
 	}
