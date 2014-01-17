@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
+import com.dexels.navajo.repository.api.diff.RepositoryLayout;
 
 public class FileRepositoryInstanceImpl implements RepositoryInstance {
 	
@@ -31,6 +32,7 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 
 	private final Map<String,Object> settings = new HashMap<String, Object>();
 	private final Map<String,AppStoreOperation> operations = new HashMap<String, AppStoreOperation>();
+	private final Map<String,RepositoryLayout> repositoryLayout = new HashMap<String, RepositoryLayout>();
 	private final Map<String,Map<String,Object>> operationSettings = new HashMap<String, Map<String,Object>>();
 
 	private final Set<Path> monitoredPaths = new HashSet<Path>();
@@ -84,12 +86,12 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 	public void activate(Map<String,Object> configuration) throws IOException {
 
 		String path = (String) configuration.get("repository.folder");
-		String type = (String) configuration.get("type");
+		type = (String) configuration.get("type");
 		repositoryName = (String) configuration.get("repository.name");
 		final String fileInstallPath= (String) configuration.get("felix.fileinstall.filename");
 
 		applicationFolder = findConfiguration(path,fileInstallPath);
-		List<String> monitored = getMonitoredFolders(type);
+		List<String> monitored = getMonitoredFolders();
 		for (String element : monitored) {
 			File c = new File(applicationFolder,element);
 			if(c.exists()) {
@@ -98,51 +100,21 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 			}
 		}
 		logger.info("Repository instance activated");
-		Path currentPath = Paths.get(applicationFolder.toURI());
-		watchDir = new WatchDir(currentPath, this);
-		Thread t = new Thread() {
-			@Override
-			public void run() {
-				watchDir.processEvents();
-			}
-		};
-		t.start();
+		watchDir = new WatchDir(this);
 	}
 
+
+	
 	@Override
-	public List<String> getMonitoredFolders(String layout) {
-		final List<String> result = new ArrayList<String>();
-		if("navajo".equals(layout)) {
-			result.add("config");
-			result.add("scripts");
-			result.add("article");
-			result.add("authorization");
-			result.add("adapters");
-			result.add("camel");
-			result.add("workflows");
-			result.add("tasks");
-		} else if("navajomulti".equals(layout)) {
-			result.add("config");
-			result.add("scripts");
-			result.add("article");
-			result.add("authorization");
-			result.add("adapters");
-			result.add("camel");
-			result.add("workflows");
-			result.add("tasks");
-			result.add("settings");
-		} else if("tipi".equals(layout)) {
-			result.add("settings");
-			result.add("tipi");
-			result.add("resource");
-			result.add("VAADIN");
-		} else if("appstore".equals(layout)) {
-			result.add("gitssh");
-			result.add("load");
+	public List<String> getMonitoredFolders() {
+		RepositoryLayout r = repositoryLayout.get(type);
+		if(r==null) {
+			logger.warn("Unknown repository layout: "+type+", change monitoring might not work!");
+			return null;
 		}
-		return result;
+		return r.getMonitoredFolders();
 	}
-
+	
 	public void deactivate() {
 		if(watchDir!=null) {
 			try {
@@ -150,8 +122,18 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 			} catch (IOException e) {
 				logger.error("Error: ", e);
 			}
+			watchDir = null;
 		}
 	}
+	
+	public void addRepositoryLayout(RepositoryLayout r, Map<String,Object> settings) {
+		repositoryLayout.put((String) settings.get("name"),r);
+	}
+	
+	public void removeRepositoryLayout(RepositoryLayout r, Map<String,Object> settings) {
+		repositoryLayout.remove(settings.get("name"));
+	}
+
 	private File findConfiguration(String path, String fileInstallPath)
 			throws IOException {
 		
@@ -276,6 +258,7 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 
 }

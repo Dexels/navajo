@@ -228,8 +228,8 @@ public class RepositoryInstanceWrapper implements RepositoryInstance {
 
 
 	@Override
-	public List<String> getMonitoredFolders(String layout) {
-		return instance.getMonitoredFolders(layout);
+	public List<String> getMonitoredFolders() {
+		return instance.getMonitoredFolders();
 	}
 
 	

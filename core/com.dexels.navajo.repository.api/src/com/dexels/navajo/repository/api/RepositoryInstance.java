@@ -26,7 +26,7 @@ public interface RepositoryInstance extends Comparable<RepositoryInstance> {
 	
 	public String applicationType();
 
-	public List<String> getMonitoredFolders(String layout);
+	public List<String> getMonitoredFolders();
 	
 
 

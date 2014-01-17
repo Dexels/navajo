@@ -1,5 +1,7 @@
 package com.dexels.navajo.compiler.tsl.internal.listener;
 
+import java.util.List;
+
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
@@ -31,7 +33,16 @@ public class RepoChangeListener implements EventHandler {
 	public void handleEvent(Event e) {
 		logger.info("EVENT FOUND! "+e);
 		for (String p : e.getPropertyNames()) {
-			logger.info("Name: _"+p+" value: "+e.getProperty(p));
+			final Object value = e.getProperty(p);
+			if(value==null) {
+				continue;
+			}
+			if(value instanceof List) {
+				if (((List<?>)value).isEmpty()) {
+					continue;
+				}
+			}
+			logger.info("Name: "+p+" value: "+value);
 			
 		}
 	}
