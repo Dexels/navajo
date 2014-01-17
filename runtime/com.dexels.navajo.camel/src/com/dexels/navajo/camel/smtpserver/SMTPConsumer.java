@@ -19,7 +19,6 @@
 package com.dexels.navajo.camel.smtpserver;
 
 import java.net.InetSocketAddress;
-import java.util.List;
 
 import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
@@ -45,15 +44,12 @@ import org.apache.james.protocols.smtp.hook.MessageHook;
  */
 public class SMTPConsumer extends DefaultConsumer {
 
-    private SMTPURIConfiguration config;
+//    private SMTPURIConfiguration config;
     private NettyServer server;
-    private SMTPProtocolHandlerChain chain;
-    
-
 
     public SMTPConsumer(Endpoint endpoint, Processor processor, SMTPURIConfiguration config) {
         super(endpoint, processor);
-        this.config = config;
+//        this.config = config;
 
         
     }
@@ -115,25 +111,21 @@ public class SMTPConsumer extends DefaultConsumer {
     }
 
  
-    /**
-     * Check if the domain is local and if so accept the email. If not reject it
-     * 
-     *
-     */
-    private final class AllowToRelayHandler extends AbstractAuthRequiredToRelayRcptHook {
 
-        @Override
-        protected boolean isLocalDomain(String domain) {
-            List<String> domains = config.getLocalDomains();
-            if (domains == null) {
-                // no restriction was set.. accept it!
-                return true;
-            } else {
-                return domains.contains(domain.trim());
-            }
-        }
-        
-    }
+//    private final class AllowToRelayHandler extends AbstractAuthRequiredToRelayRcptHook {
+//
+//        @Override
+//        protected boolean isLocalDomain(String domain) {
+//            List<String> domains = config.getLocalDomains();
+//            if (domains == null) {
+//                // no restriction was set.. accept it!
+//                return true;
+//            } else {
+//                return domains.contains(domain.trim());
+//            }
+//        }
+//    }
+//
     /**
      * Send the {@link Exchange} to the {@link Processor} after receiving a message via SMTP
      *

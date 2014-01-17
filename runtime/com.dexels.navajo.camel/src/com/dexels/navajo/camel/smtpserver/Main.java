@@ -1,21 +1,14 @@
 package com.dexels.navajo.camel.smtpserver;
 
 import java.net.InetSocketAddress;
-import java.util.Arrays;
 
 import org.apache.james.protocols.api.Protocol;
 import org.apache.james.protocols.api.ProtocolServer;
 import org.apache.james.protocols.netty.NettyServer;
-import org.apache.james.protocols.smtp.MailEnvelope;
-import org.apache.james.protocols.smtp.SMTPConfiguration;
 import org.apache.james.protocols.smtp.SMTPConfigurationImpl;
 import org.apache.james.protocols.smtp.SMTPProtocol;
 import org.apache.james.protocols.smtp.SMTPProtocolHandlerChain;
-import org.apache.james.protocols.smtp.SMTPSession;
 import org.apache.james.protocols.smtp.core.AbstractAuthRequiredToRelayRcptHook;
-import org.apache.james.protocols.smtp.hook.HookResult;
-import org.apache.james.protocols.smtp.hook.HookReturnCode;
-import org.apache.james.protocols.smtp.hook.MessageHook;
 
 public class Main {
     public static void main(String[] args) throws Exception {

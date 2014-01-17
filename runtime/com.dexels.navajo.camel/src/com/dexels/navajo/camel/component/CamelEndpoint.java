@@ -33,13 +33,13 @@ public class CamelEndpoint extends DefaultEndpoint {
 	
 
 
-	private final Map<String, Object> parameters;
+//	private final Map<String, Object> parameters;
 	
 	public CamelEndpoint(String uri, NavajoCamelComponent component, LocalClient localClient, String service, Map<String, Object> parameters) {
 		super(uri, component);
 		this.localclient = localClient;
 		this.service = service;
-		this.parameters = parameters;
+//		this.parameters = parameters;
 		myComponent = component;
 		logger.info("Endpoint created with URI: " + uri);
 	}

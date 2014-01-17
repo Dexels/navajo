@@ -3,7 +3,6 @@ package com.dexels.navajo.camel.processor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-import java.util.Set;
 
 import javax.activation.DataHandler;
 
