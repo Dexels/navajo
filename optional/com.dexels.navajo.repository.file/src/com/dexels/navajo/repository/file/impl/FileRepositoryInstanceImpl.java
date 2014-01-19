@@ -100,7 +100,12 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 			}
 		}
 		logger.info("Repository instance activated");
-		watchDir = new WatchDir(this);
+		try {
+			watchDir = new WatchDir(this);
+		} catch (Throwable e) {
+			logger.error("Error registering watchdir: ", e);
+			throw(new IOException(e));
+		}
 	}
 
 
