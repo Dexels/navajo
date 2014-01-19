@@ -89,7 +89,7 @@ private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
     addProperty(parent, "Map", m.getMapName(), Property.STRING_PROPERTY, 50);
     addProperty(parent, "Totaltime", new Integer(m.getTotaltime()), Property.STRING_PROPERTY, 50);
 
-    Class ccc = null;
+    Class<?> ccc = null;
 	try {
 		ccc = Class.forName("com.dexels.navajo.adapter.SPMap");
 	} catch (ClassNotFoundException e) {
@@ -258,7 +258,8 @@ public void kill() {
     return requestNavajo;
   }
 
-  private String getOutMessageStack() {
+  @SuppressWarnings("rawtypes")
+private String getOutMessageStack() {
     StringBuffer stackBuffer = new StringBuffer();
     Stack s = myAccess.getCompiledScript().outMsgStack;
     Iterator iter = s.iterator();
@@ -271,7 +272,8 @@ public void kill() {
     return stackBuffer.toString();
   }
 
-  private String getMapStack() {
+  @SuppressWarnings("rawtypes")
+private String getMapStack() {
    StringBuffer stackBuffer = new StringBuffer();
    Stack s = myAccess.getCompiledScript().treeNodeStack;
    Iterator iter = s.iterator();

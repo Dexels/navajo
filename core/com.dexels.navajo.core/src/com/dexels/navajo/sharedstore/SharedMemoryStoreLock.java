@@ -7,6 +7,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class SharedMemoryStoreLock extends SharedStoreLock implements Lock {
 
+
+	private static final long serialVersionUID = 3528476039156586866L;
 	private final Lock myLock = new ReentrantLock();
 	
 	public SharedMemoryStoreLock(String name, String parent) {

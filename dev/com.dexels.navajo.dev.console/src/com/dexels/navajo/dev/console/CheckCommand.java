@@ -4,7 +4,6 @@ package com.dexels.navajo.dev.console;
 import java.io.FileNotFoundException;
 import java.util.Date;
 
-import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Descriptor;
 
 import com.dexels.navajo.compiler.BundleCreator;

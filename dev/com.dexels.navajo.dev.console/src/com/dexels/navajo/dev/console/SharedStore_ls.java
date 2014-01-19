@@ -1,7 +1,9 @@
 package com.dexels.navajo.dev.console;
 
 import java.util.List;
+
 import org.apache.felix.service.command.CommandSession;
+
 import com.dexels.navajo.sharedstore.SharedStoreSession;
 import com.dexels.navajo.sharedstore.SharedStoreSessionEntry;
 

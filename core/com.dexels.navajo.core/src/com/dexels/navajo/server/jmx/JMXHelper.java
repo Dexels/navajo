@@ -55,7 +55,7 @@ public final class JMXHelper  {
 	//public static final String EVENT_DOMAIN = "navajo.event:type=";
 	public static final String MONITOR_DOMAIN = "navajo.monitor:type=";
 	//public static final String QUEUED_ADAPTER_DOMAIN = "navajo.queuedadapter:type=";
-	
+	private static Object semaphore = new Object();
 	private static HashSet<Monitor> monitors = new HashSet<Monitor>();
 	private static HashSet<ObjectName> mbeans = new HashSet<ObjectName>();
 	
@@ -181,7 +181,7 @@ public final class JMXHelper  {
 
 	public final static ObjectName getObjectName(String domain, String type) {
 		if ( applicationPrefix == null ) {
-			synchronized ( NAVAJO_DOMAIN ) {
+			synchronized ( semaphore ) {
 				DispatcherInterface instance = DispatcherFactory.getInstance();
 				if(instance==null) {
 					// lower to debug. This will happen all the time in OSGi, and is reasonable.

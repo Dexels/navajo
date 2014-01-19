@@ -39,6 +39,7 @@ public class RESTAdapter extends NavajoMap {
 		this.url = url.trim();
 	}
 
+	@Override
 	public void setMethod(String method) {
 		this.method = method.trim();
 	}
