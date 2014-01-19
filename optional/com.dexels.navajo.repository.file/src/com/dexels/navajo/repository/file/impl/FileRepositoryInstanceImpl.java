@@ -103,8 +103,8 @@ public class FileRepositoryInstanceImpl implements RepositoryInstance {
 		try {
 			watchDir = new WatchDir(this);
 		} catch (Throwable e) {
-			e.printStackTrace();
-			throw(e);
+			logger.error("Error registering watchdir: ", e);
+			throw(new IOException(e));
 		}
 	}
 
