@@ -8,7 +8,6 @@ import java.util.List;
 import org.apache.felix.service.command.Descriptor;
 import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Option;
-
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 
 import com.dexels.navajo.compiler.BundleCreator;

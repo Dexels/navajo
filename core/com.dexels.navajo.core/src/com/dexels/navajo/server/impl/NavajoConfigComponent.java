@@ -122,7 +122,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	@Override
 	public Reader getOutputReader(String outputPath, String scriptPackage,
 			String scriptName, String extension) throws IOException {
-		return getOutputReader(outputPath, scriptPackage, scriptName, extension);
+		return navajoIOConfig.getOutputReader(outputPath, scriptPackage, scriptName, extension);
 	}
 
 	@Override

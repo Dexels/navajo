@@ -19,10 +19,10 @@
 
 package com.dexels.navajo.dev.console;
 
-import org.apache.karaf.shell.console.completer.StringsCompleter;
-import org.apache.karaf.shell.console.Completer;
-
 import java.util.List;
+
+import org.apache.karaf.shell.console.Completer;
+import org.apache.karaf.shell.console.completer.StringsCompleter;
 
 /**
 * <p>

@@ -379,17 +379,6 @@ public class MessageMap implements Mappable {
 		return this.resultMessage;
 	}
 
-	private void renameDuplicates(Message c1, Message c2) {
-		for ( Property p1 : c1.getAllProperties() ) {
-			for ( Property p2 : c2.getAllProperties() ) {
-				if ( p1.getName().equals(p2.getName()) && ( ( p1.getValue() == null && p2.getValue() == null ) || 
-						( p1.getValue() != null && p2.getValue() != null && p1.getValue().equals(p2.getValue()) ) ) ) {
-					p2.setName(p2.getName()+"_2");
-				}
-			}
-		}
-	}
-
 	private int getMessageHash(Message m) {
 		int hashCode = 0;
 		for ( int i = 0; i < m.getAllProperties().size(); i++ ) {

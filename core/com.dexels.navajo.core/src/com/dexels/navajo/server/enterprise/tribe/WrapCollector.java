@@ -22,6 +22,7 @@ public class WrapCollector extends GenericThread {
 	
 	private final static Logger logger = LoggerFactory.getLogger(WrapCollector.class);
 	
+	@SuppressWarnings("unchecked")
 	public WrapCollector() {
 		threadId = "Navajo Wrap Collector";
 		if ( TribeManagerFactory.getInstance() != null ) {

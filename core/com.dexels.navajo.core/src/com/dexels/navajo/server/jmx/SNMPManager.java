@@ -3,6 +3,8 @@ package com.dexels.navajo.server.jmx;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.management.openmbean.CompositeData;
@@ -25,9 +27,8 @@ public class SNMPManager implements CompositeData {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(SNMPManager.class);
-	private HashMap items = new HashMap();
+	private Map<String,Object> items = new HashMap<String,Object>();
 	
-	@SuppressWarnings("unchecked")
 	public SNMPManager (String value) {
 
 		String host = "localhost";
@@ -50,7 +51,6 @@ public class SNMPManager implements CompositeData {
 		items.put(SNMPVERSION, version);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public SNMPManager (String host, int port, String version) {
 		items.put(HOSTNAME, host);
 		items.put(PORT, new Integer(port));
@@ -85,9 +85,9 @@ public class SNMPManager implements CompositeData {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Object[] getAll(String[] keys) {
-		ArrayList l = new ArrayList();
+
+		List<Object> l = new ArrayList<Object>();
 		for (int i = 0; i < keys.length; i++) {
 			l.add(items.get(keys[i]));
 		}
@@ -116,8 +116,7 @@ public class SNMPManager implements CompositeData {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public Collection values() {
+	public Collection<Object> values() {
 		return items.values();
 	}
 	
