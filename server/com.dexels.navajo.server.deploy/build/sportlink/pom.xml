@@ -4,7 +4,7 @@
 	<artifactId>com.dexels.navajo.server.deploy.sportlink</artifactId>
 	<groupId>com.dexels.navajo</groupId>
 	<packaging>war</packaging>
-	<version>2.11.18-SNAPSHOT</version>
+	<version>3.0.0</version>
 	<name>navajo war file sportlink</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -13,9 +13,9 @@
 	</properties>
 	<parent>
 		<groupId>com.dexels.navajo</groupId>
-		<artifactId>com.dexels.navajo.server.deploy.super.test</artifactId>
+		<artifactId>com.dexels.navajo.server.deploy.super</artifactId>
 		<version>1.0.0</version>
-		<relativePath>../superpom_test</relativePath>
+		<relativePath>../superpom</relativePath>
 	</parent>
 	<build>
 				<plugins>

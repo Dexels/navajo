@@ -4,14 +4,14 @@
 	<artifactId>com.dexels.navajo.server.deploy</artifactId>
 	<groupId>com.dexels.navajo</groupId>
 	<packaging>war</packaging>
-	<version>2.11.18-SNAPSHOT</version>
+	<version>3.0.0</version>
 	<name>navajo war file regular</name>
 	<url>http://maven.apache.org</url>
 	<parent>
 		<groupId>com.dexels.navajo</groupId>
-		<artifactId>com.dexels.navajo.server.deploy.super.test</artifactId>
+		<artifactId>com.dexels.navajo.server.deploy.super</artifactId>
 		<version>1.0.0</version>
-		<relativePath>../superpom_test</relativePath>
+		<relativePath>../superpom</relativePath>
 	</parent>
 	<properties>
 	
