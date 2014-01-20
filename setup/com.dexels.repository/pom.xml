@@ -286,6 +286,16 @@
 					<url>https://repo.dexels.com/nexus/content/repositories/other/</url>
 					<layout>default</layout>
 				</repository>
+				<repository>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<id>navajo_release</id>
+					<name>Navajo Release Repository</name>
+					<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
+					<url>https://repo.dexels.com/nexus/content/repositories/navajo/</url>
+					<layout>default</layout>
+				</repository>
 			</repositories>
 			<distributionManagement>
 				<repository>
