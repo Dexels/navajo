@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JDBC Driver for MySql database
 Bundle-SymbolicName: com.dexels.navajo.resource.jdbc.mysql
-Bundle-Version: 1.1.0
+Bundle-Version: 1.1.1.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.resource,
