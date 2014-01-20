@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Vaadin bridged tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi.vaadin.bridged
-Bundle-Version: 1.0.10.qualifier
+Bundle-Version: 1.1.0
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.tipi,
