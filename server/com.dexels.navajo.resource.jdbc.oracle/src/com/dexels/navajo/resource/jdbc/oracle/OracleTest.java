@@ -24,9 +24,9 @@ import org.osgi.service.jdbc.DataSourceFactory;
 
 	    final OracleWrapped ow = new OracleWrapped();
 	    Map<String,Object> settings = new HashMap<String,Object>();
-	    settings.put("url", "jdbc:oracle:thin:@odysseus:1521:SLTEST01");
-	    settings.put("user", "knvbkern");
-	    settings.put("password", "knvb");
+	    settings.put("url", "jdbc:oracle:thin:@testserver:1521:SLTEST01");
+	    settings.put("user", "username");
+	    settings.put("password", "****");
 	    settings.put(DataSourceFactory.JDBC_MAX_POOL_SIZE, 10);
 	    ow.activate(settings);
 	    // Set connection parameters
