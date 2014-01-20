@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dexels.navajo</groupId>
@@ -15,9 +14,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<!-- <pluginRepositories> <pluginRepository> <id>tycho_spiritus</id> <url>https://repo.dexels.com/nexus/content/repositories/tycho/</url> 
-		<snapshots> <enabled>true</enabled> </snapshots> </pluginRepository> <pluginRepository> 
-		<id>tycho</id> <url>http://repository.sonatype.org/content/groups/sonatype-public-grid</url> 
-		<snapshots> <enabled>true</enabled> </snapshots> </pluginRepository> </pluginRepositories> -->
+		<snapshots> <enabled>true</enabled> </snapshots> </pluginRepository> <pluginRepository> <id>tycho</id> 
+		<url>http://repository.sonatype.org/content/groups/sonatype-public-grid</url> <snapshots> <enabled>true</enabled> 
+		</snapshots> </pluginRepository> </pluginRepositories> -->
 
 	<!-- -->
 	<build>
@@ -43,8 +42,7 @@
 					<filters>
 
 
-						<!-- example 2: remove all providers of the package javax.persistence 
-							except the bundle javax.persistence -->
+						<!-- example 2: remove all providers of the package javax.persistence except the bundle javax.persistence -->
 						<filter>
 							<type>java-package</type>
 							<id>javax.persistence</id>
@@ -119,26 +117,24 @@
 				<version>${tycho-version}</version>
 				<!-- <executions> <execution> <id>materialize-products</id> <goals> <goal>materialize-products</goal> 
 					</goals> </execution> <execution> <id>archive-products</id> <goals> <goal>archive-products</goal> 
-					</goals> </execution> </executions> <configuration> <products> <product> 
-					<id>navajo</id> </product> </products> </configuration> -->
+					</goals> </execution> </executions> <configuration> <products> <product> <id>navajo</id> </product> 
+					</products> </configuration> -->
 			</plugin>
 
-			<!-- Disabled, handles by Nexus now <plugin> <groupId>org.apache.felix</groupId> 
-				<artifactId>maven-bundle-plugin</artifactId> <version>2.3.7</version> <extensions>true</extensions> 
-				<configuration> <supportedProjectTypes> <supportedProjectType>jar</supportedProjectType> 
+			<!-- Disabled, handles by Nexus now <plugin> <groupId>org.apache.felix</groupId> <artifactId>maven-bundle-plugin</artifactId> 
+				<version>2.3.7</version> <extensions>true</extensions> <configuration> <supportedProjectTypes> <supportedProjectType>jar</supportedProjectType> 
 				<supportedProjectType>bundle</supportedProjectType> <supportedProjectType>eclipse-plugin</supportedProjectType> 
-				<supportedProjectType>eclipse-feature</supportedProjectType> </supportedProjectTypes> 
-				<instructions> <Bundle-Description>Navajo Suite</Bundle-Description> </instructions> 
-				<remoteOBR>repo-rel</remoteOBR> <prefixUrl>https://source.dexels.com/nexus/content/repositories/navajo_snapshot</prefixUrl> 
-				<ignoreLock>true</ignoreLock> </configuration> <executions> <execution> <id>bundle-deploy</id> 
-				<phase>deploy</phase> <goals> <goal>deploy</goal> </goals> </execution> </executions> 
-				</plugin> -->
+				<supportedProjectType>eclipse-feature</supportedProjectType> </supportedProjectTypes> <instructions> 
+				<Bundle-Description>Navajo Suite</Bundle-Description> </instructions> <remoteOBR>repo-rel</remoteOBR> 
+				<prefixUrl>https://source.dexels.com/nexus/content/repositories/navajo_snapshot</prefixUrl> <ignoreLock>true</ignoreLock> 
+				</configuration> <executions> <execution> <id>bundle-deploy</id> <phase>deploy</phase> <goals> <goal>deploy</goal> 
+				</goals> </execution> </executions> </plugin> -->
 		</plugins>
 
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence 
+					on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -235,21 +231,21 @@
 					<value>release</value>
 				</property>
 			</activation>
-        <repositories>
-                <repository>
-                        <releases>
-                                <enabled>true</enabled>
-                        </releases>
-                        <snapshots>
-                                <enabled>false</enabled>
-                        </snapshots>
-                        <id>central</id>
-                        <name>Dexels Central</name>
-                        <url>https://repo.dexels.com/nexus/content/groups/public/</url>
-                        <layout>default</layout>
-                </repository>
+			<repositories>
+				<repository>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+					<id>central</id>
+					<name>Dexels Central</name>
+					<url>https://repo.dexels.com/nexus/content/groups/public/</url>
+					<layout>default</layout>
+				</repository>
 
-        </repositories>
+			</repositories>
 			<distributionManagement>
 				<repository>
 					<uniqueVersion>false</uniqueVersion>
@@ -268,6 +264,50 @@
 				</snapshotRepository>
 			</distributionManagement>
 		</profile>
+
+	<profile>
+			<id>maintenance</id>
+			<activation>
+				<property>
+					<name>environment</name>
+					<value>maintenance</value>
+				</property>
+			</activation>
+			<repositories>
+				<repository>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+					<id>central</id>
+					<name>Dexels Third party</name>
+					<url>https://repo.dexels.com/nexus/content/repositories/thirdparty/</url>
+					<layout>default</layout>
+				</repository>
+			</repositories>
+			<distributionManagement>
+				<repository>
+					<uniqueVersion>false</uniqueVersion>
+					<id>dexels</id>
+					<name>Dexels Repository</name>
+					<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
+					<url>https://repo.dexels.com/nexus/content/repositories/maintenance_release/</url>
+					<layout>default</layout>
+				</repository>
+				<snapshotRepository>
+					<uniqueVersion>true</uniqueVersion>
+					<id>dexels_snap</id>
+					<name>Dexels Snapshots</name>
+					<url>https://repo.dexels.com/nexus/content/repositories/maintenance_snapshot</url>
+					<layout>default</layout>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+
+
+
 		<profile>
 			<id>test</id>
 			<activation>
