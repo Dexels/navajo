@@ -283,7 +283,7 @@
 					</snapshots>
 					<id>central</id>
 					<name>Dexels Third party</name>
-					<url>https://repo.dexels.com/nexus/content/repositories/thirdparty/</url>
+					<url>https://repo.dexels.com/nexus/content/repositories/other/</url>
 					<layout>default</layout>
 				</repository>
 			</repositories>
