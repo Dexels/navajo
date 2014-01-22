@@ -260,8 +260,8 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			String currentBranch = repository.getBranch();
 			if(!currentBranch.equals(branch)) {
 				logger.warn("Wrong branch seems to be checked out");
-				git.checkout().setName(branch).call();
 			}
+			git.checkout().setName(branch).call();
 			// TODO check local changes, see if a hard reset is necessary
 			git.reset().setMode(ResetType.HARD).call();
 			git.pull().setProgressMonitor(new LoggingProgressMonitor()).call().getMergeResult().getMergedCommits();
