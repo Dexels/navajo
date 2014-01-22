@@ -1,4 +1,4 @@
-package com.dexels.navajo.camel.processor;
+package com.dexels.navajo.camel.processor.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,19 +11,20 @@ import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.camel.processor.NavajoProcessor;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 
-public class NavajoInputProcessor implements Processor {
+public class NavajoInputProcessorImpl implements Processor, NavajoProcessor {
 
 	
 	private final static Logger logger = LoggerFactory
-			.getLogger(NavajoInputProcessor.class);
+			.getLogger(NavajoInputProcessorImpl.class);
 	
-	public NavajoInputProcessor() {
+	public NavajoInputProcessorImpl() {
 		logger.warn("Navajo input processor present!");
 	}
 

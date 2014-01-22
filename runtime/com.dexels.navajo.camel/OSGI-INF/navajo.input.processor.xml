@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="navajo.input.processor" immediate="true">
-   <implementation class="com.dexels.navajo.camel.processor.NavajoInputProcessor"/>
+   <implementation class="com.dexels.navajo.camel.processor.impl.NavajoInputProcessorImpl"/>
    <service>
       <provide interface="org.apache.camel.Processor"/>
       <provide interface="com.dexels.navajo.camel.processor.NavajoInputProcessor"/>
