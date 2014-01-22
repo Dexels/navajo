@@ -8,6 +8,8 @@ import javax.activation.DataHandler;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -17,8 +19,17 @@ import com.dexels.navajo.document.types.Binary;
 
 public class NavajoInputProcessor implements Processor {
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(NavajoInputProcessor.class);
+	
+	public NavajoInputProcessor() {
+		logger.warn("Navajo input processor present!");
+	}
+
 	@Override
 	public void process(Exchange ex) throws Exception {
+		logger.warn("Start proccing NavajoInput");
 		org.apache.camel.Message in = ex.getIn();
 		Map<String,Object> headers = in.getHeaders();
 		Object body = in.getBody();
