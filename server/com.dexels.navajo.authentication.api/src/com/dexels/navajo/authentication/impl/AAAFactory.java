@@ -80,7 +80,7 @@ private AAAInterface defaultAAAInterface;
 		  if(instance!=null) {
 			  moduleMap.put(instance,a);
 		  } else {
-			  logger.warn("Possible problem: AAAInterface found, probably in multitenant mode, but no instance associated.");
+			  logger.warn("Possible problem: AAAInterface found, probably in multitenant mode, but no instance associated: "+a.getClass());
 			  this.defaultAAAInterface = a;
 		  }
 	  }
