@@ -114,10 +114,10 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tipi.mail/1.1.20</bundle>
 	</feature>
 	
-	<feature resolver="(obr)" name='navajo.camel' version='3.0.0' start-level='81' >
+	<feature resolver="(obr)" name='navajo.camel' version='3.0.2' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<feature version="[2.10.2,3)">camel</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/2.0.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.camel/2.0.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.listeners.camel/2.0.0</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.javax.mail/1.4.1_5</bundle>
 		<bundle dependency='true'>mvn:org.apache.james.protocols/protocols-api/1.6.3</bundle>
