@@ -212,6 +212,7 @@ public class JarDiffPatcher implements JarDiffConstants, Patcher {
 		updateDelegate(delegate, currentEntry, size);
 
 		jos.finish();
+		oldJar.close();
 	}
 
 	private void updateDelegate(Patcher.PatchDelegate delegate,
