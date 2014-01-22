@@ -1,5 +1,6 @@
 package com.dexels.navajo.tunnel.impl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,10 +99,14 @@ public class NavajoTunnelComponentImpl implements Tunnel {
 	private void connect(String username, String sshHost, String host, int remotePort,String localhost, int localPort,int sshPort, String privateKey) throws JSchException {
 		int assigned = 0;
 			JSch.setLogger(new JschLoggerBridge(logger));
-
-			
 			jsch = new JSch(); 
-			jsch.addIdentity(privateKey);
+			File privateKeyFile = new File(privateKey);
+			if(privateKeyFile.exists()) {
+				jsch.addIdentity(privateKey);
+			} else {
+				logger.warn("Private key mentioned in configuration not found: "+privateKey+" not adding this key, but I'll still try to make a tunnel.");
+			}
+			
             session = jsch.getSession(username, sshHost, sshPort);
 
 			java.util.Properties config = new java.util.Properties();
