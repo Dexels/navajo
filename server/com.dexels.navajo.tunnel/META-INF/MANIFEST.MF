@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo SSH Tunnel
 Bundle-SymbolicName: com.dexels.navajo.tunnel
-Bundle-Version: 2.0.0
+Bundle-Version: 2.0.1.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Service-Component: OSGI-INF/navajo.tunnel.xml
