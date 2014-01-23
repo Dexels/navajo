@@ -84,13 +84,15 @@ public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 			String operationName = entry.getKey();
 			Map<String,Object> settings = operationSettings.get(operationName);
 			String operationType = (String) settings.get("type");
-			// TODO match repository type
-			if(this.type==null) {
-				//
-			}
+
 			if("global".equals(operationType)) {
 				continue;
 			}
+			if("any".equals(this.type)) {
+				result.add(operationName);
+				continue;
+			}
+			
 			if(operationType!=null && !this.type.equals(operationType)) {
 				logger.warn("Operation type not matching: "+type+" vs. "+operationType);
 				continue;

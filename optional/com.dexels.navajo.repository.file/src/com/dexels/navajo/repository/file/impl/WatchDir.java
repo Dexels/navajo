@@ -36,7 +36,7 @@ public class WatchDir implements Closeable,Runnable {
 	private final WatchService watcher;
 	private final Map<WatchKey, Path> keys;
 	private boolean trace = false;
-	private final FileRepositoryInstanceImpl fileRepository;
+	private final BaseFileRepositoryInstanceImpl fileRepository;
 	private boolean isClosed = false;
 	private Thread monitorThread;
 	private final Path repoRoot;
@@ -108,7 +108,7 @@ public class WatchDir implements Closeable,Runnable {
 		});
 	}
 
-	public WatchDir(FileRepositoryInstanceImpl fileRepository) throws IOException {
+	public WatchDir(BaseFileRepositoryInstanceImpl fileRepository) throws IOException {
 		this.watcher = FileSystems.getDefault().newWatchService();
 		this.keys = new HashMap<WatchKey, Path>();
 		this.fileRepository = fileRepository;
