@@ -37,7 +37,7 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  org.osgi.framework;version="1.6.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/navajoCamelComponentResolver.xml,OSGI-INF/navajoCamelComponent.xml,
- OSGI-INF/navajo.camel.processor.xml,OSGI-INF/navajo.input.processor.xml
+ OSGI-INF/navajo.input.processor.xml
 Export-Package: com.dexels.navajo.camel.adapter,
  com.dexels.navajo.camel.component,
  com.dexels.navajo.camel.consumer,

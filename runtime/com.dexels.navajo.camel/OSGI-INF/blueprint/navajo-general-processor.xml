@@ -5,6 +5,6 @@
 	<bean id="generalProcessor" class="com.dexels.navajo.camel.processor.NavajoGeneralProcessor">
 		
 	</bean>
-	<service ref="generalProcessor" interface="org.apache.camel.Processor">
-	</service>
+<!-- <service ref="generalProcessor" interface="org.apache.camel.Processor">
+	</service>-->
 </blueprint>
