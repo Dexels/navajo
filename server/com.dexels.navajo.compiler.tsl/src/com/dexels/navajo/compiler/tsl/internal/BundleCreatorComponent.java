@@ -155,7 +155,9 @@ public class BundleCreatorComponent implements BundleCreator {
 		if("".equals(script)) {
 			return true;
 		}
-		return f.isDirectory() && f.getCanonicalPath().equals(scriptFolder + "/" + script);
+		final boolean equalsCanonical = f.getCanonicalPath().equals(scriptFolder.getCanonicalFile() + "/" + script);
+		final boolean isDir = f.isDirectory();
+		return isDir && equalsCanonical;
 	}
 
 	private void compileAllIn(File baseDir, Date compileDate,
