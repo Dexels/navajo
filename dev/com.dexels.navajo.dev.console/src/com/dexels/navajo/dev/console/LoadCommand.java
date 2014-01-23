@@ -7,11 +7,13 @@ import java.util.List;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Descriptor;
 import org.apache.felix.service.command.Parameter;
+import org.apache.karaf.shell.commands.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
 
+@Command(scope = "navajo", name = "load", description="Loads scripts")
 public class LoadCommand {
 	
 	
@@ -32,12 +34,16 @@ public class LoadCommand {
 	}
 
 	@Descriptor(value = "install a script with a certain path.") 
-	public void loadbundle(CommandSession session, @Descriptor(value = "Force installation if the script is already installed") @Parameter(names = { "-f", "--force" }, presentValue = "true", absentValue = "false") boolean force,@Descriptor(value = "The path, prefix, or '/' to install everything")  String script) {
+	public void load(@Descriptor(value = "Force installation if the script is already installed") @Parameter(names = { "-f", "--force" }, presentValue = "true", absentValue = "false") boolean force,@Descriptor(value = "The path, prefix, or '/' to install everything")  String script) {
+		loadbundle(force, script);
+	}
+	@Descriptor(value = "install a script with a certain path.") 
+	public void loadbundle(@Descriptor(value = "Force installation if the script is already installed") @Parameter(names = { "-f", "--force" }, presentValue = "true", absentValue = "false") boolean force,@Descriptor(value = "The path, prefix, or '/' to install everything")  String script) {
 		try {
 			
 //			, @Descriptor(value ="The current tenant to assume, will use 'default' if unspecified") @Parameter(absentValue="default", names = {"-t","--tenant"}) String tenant
 			String tenant = "default";
-			session.getConsole().println("Installing path: "+script+" for tenant: "+tenant);
+			System.out.println("Installing path: "+script+" for tenant: "+tenant);
 			if(script.equals("/")) {
 				script = "";
 			}
@@ -47,11 +53,11 @@ public class LoadCommand {
 //			this.bundleCreator.installAllBundles("",script,);
 			this.bundleCreator.installBundles(script,tenant, failed, success, skipped,force);
 			for (String fail : failed) {
-				session.getConsole().println("Installation error: "+fail);
+				System.out.println("Installation error: "+fail);
 			}
-			session.getConsole().println("Installed: "+success.size()+" bundles");
-			session.getConsole().println("Skipped: "+skipped.size()+" bundles");
-			session.getConsole().println("Failed: "+failed.size()+" bundles");
+			System.out.println("Installed: "+success.size()+" bundles");
+			System.out.println("Skipped: "+skipped.size()+" bundles");
+			System.out.println("Failed: "+failed.size()+" bundles");
 
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
