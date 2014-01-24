@@ -3,7 +3,6 @@
    <implementation class="com.dexels.navajo.camel.processor.impl.NavajoInputProcessorImpl"/>
    <service>
       <provide interface="org.apache.camel.Processor"/>
-      <provide interface="com.dexels.navajo.camel.processor.NavajoProcessor"/>
    </service>
    <property name="processor.name" type="String" value="navajo.input"/>
 </scr:component>

@@ -23,6 +23,7 @@ import com.dexels.navajo.script.api.LocalClient;
  */
 public class NavajoCamelComponent extends DefaultComponent implements Component {
 
+	private static LocalClient staticLocalClient;
 	private LocalClient localClient;
 	private BundleContext bundleContext;
 	private final Map<String,CamelEndpoint> endPoints = new HashMap<String, CamelEndpoint>();
@@ -36,6 +37,9 @@ public class NavajoCamelComponent extends DefaultComponent implements Component 
 		return localClient;
 	}
 
+	public static LocalClient getStaticLocalClient() {
+		return staticLocalClient;
+	}
 	public void activate(BundleContext bc) {
 		this.bundleContext = bc;
 	}
@@ -51,6 +55,7 @@ public class NavajoCamelComponent extends DefaultComponent implements Component 
 	
 	public void setLocalClient(LocalClient lc) {
 		this.localClient = lc;
+		staticLocalClient = lc;
 	}
 
 	public void clearLocalClient(LocalClient lc) {

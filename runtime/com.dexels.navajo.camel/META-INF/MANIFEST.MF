@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Camel
 Bundle-SymbolicName: com.dexels.navajo.camel
-Bundle-Version: 2.0.11.qualifier
+Bundle-Version: 2.0.12
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Blueprint: OSGI-INF/blueprint/*.xml
@@ -41,7 +41,7 @@ Service-Component: OSGI-INF/navajoCamelComponentResolver.xml,OSGI-INF/navajoCame
 Export-Package: com.dexels.navajo.camel.adapter,
  com.dexels.navajo.camel.component,
  com.dexels.navajo.camel.consumer,
- com.dexels.navajo.camel.processor
+ com.dexels.navajo.camel.processor.impl
 Bundle-Activator: navajocamel.Version
 Bundle-ClassPath: .
 Require-Bundle: org.jboss.netty;bundle-version="3.9.0"

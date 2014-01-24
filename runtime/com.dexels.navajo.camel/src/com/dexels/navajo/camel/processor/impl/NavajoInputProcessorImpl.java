@@ -11,14 +11,13 @@ import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.camel.processor.NavajoProcessor;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 
-public class NavajoInputProcessorImpl implements Processor, NavajoProcessor {
+public class NavajoInputProcessorImpl implements Processor {
 
 	
 	private final static Logger logger = LoggerFactory
