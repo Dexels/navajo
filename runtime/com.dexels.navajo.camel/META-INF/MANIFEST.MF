@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Camel
 Bundle-SymbolicName: com.dexels.navajo.camel
-Bundle-Version: 2.0.13.qualifier
+Bundle-Version: 2.0.14
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Blueprint: OSGI-INF/blueprint/*.xml
@@ -12,6 +12,7 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.mapping.compiler.meta,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
+ javax.activation,
  javax.mail;version="1.4.0",
  javax.mail.internet;version="1.4.1",
  navajo;version="1.1.0",
