@@ -2,4 +2,5 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="com.dexels.connectionbroker">
    <implementation class="com.dexels.connectionbroker.ConnectionBroker"/>
    <reference bind="registerDriver" cardinality="0..n" interface="org.osgi.service.jdbc.DataSourceFactory" name="DataSourceFactory" policy="static" unbind="unregisterDriver"/>
+   <property name="type" type="String" value="mysql"/>
 </scr:component>

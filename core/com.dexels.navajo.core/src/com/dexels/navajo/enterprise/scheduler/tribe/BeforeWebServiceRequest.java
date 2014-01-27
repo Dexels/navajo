@@ -2,7 +2,7 @@ package com.dexels.navajo.enterprise.scheduler.tribe;
 
 import java.util.HashSet;
 
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
 import com.dexels.navajo.server.enterprise.tribe.Request;
 

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" name="com.dexels.navajo.resource.test">
-   <reference bind="setResourceManager" cardinality="0..n" interface="com.dexels.navajo.resource.manager.ResourceManager" name="ResourceManager" policy="dynamic" unbind="clearResourceManager"/>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="com.dexels.navajo.resource.test">
    <implementation class="com.dexels.navajo.resource.test.ResourceManagerTest"/>
 </scr:component>

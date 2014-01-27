@@ -32,10 +32,10 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.JavaCompiler;
 import com.dexels.navajo.compiler.ScriptCompiler;
-import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.compiler.SkipCompilationException;
-import com.dexels.navajo.mapping.compiler.meta.Dependency;
-import com.dexels.navajo.server.CompiledScriptFactory;
+import com.dexels.navajo.script.api.CompiledScriptFactory;
+import com.dexels.navajo.script.api.CompiledScriptInterface;
+import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class BundleCreatorComponent implements BundleCreator {
@@ -115,7 +115,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		// boolean isInDefaultPackage = script.indexOf('/')==-1;
 		final String formatCompilationDate = formatCompilationDate(compilationDate);
 		List<Dependency> dependencies = new ArrayList<Dependency>();
-		if (f.isDirectory() && f.getCanonicalPath().equals(scriptFolder + "/" + script) ) {
+		if (isDirectory(script, scriptFolder, f) ) {
 			compileAllIn(f, compilationDate, failures, success, skipped, force,
 					keepIntermediate,tenant);
 		} else {
@@ -148,6 +148,16 @@ public class BundleCreatorComponent implements BundleCreator {
 			}
 
 		}
+	}
+
+	private boolean isDirectory(String script, File scriptFolder, File f)
+			throws IOException {
+		if("".equals(script)) {
+			return true;
+		}
+		final boolean equalsCanonical = f.getCanonicalPath().equals(scriptFolder.getCanonicalFile() + "/" + script);
+		final boolean isDir = f.isDirectory();
+		return isDir && equalsCanonical;
 	}
 
 	private void compileAllIn(File baseDir, Date compileDate,
@@ -519,9 +529,10 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	@Override
-	public CompiledScript getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified, boolean force)
+	public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified, boolean force)
 			throws Exception {
-		CompiledScript sc = getCompiledScript(rpcName,tenant);
+		CompiledScriptInterface sc = getCompiledScript(rpcName,tenant);
+
 		boolean forceReinstall = false;
 		if (sc != null) {
 			boolean needsRecompile = checkForRecompile(rpcName,tenant,tenantQualified);
@@ -560,7 +571,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 
 	@Override
-	public CompiledScript getCompiledScript(String rpcName, String tenant)
+	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant)
 			throws ClassNotFoundException {
 		String scriptName = rpcName.replaceAll("/", ".");
 		String filter = null;
@@ -586,7 +597,7 @@ public class BundleCreatorComponent implements BundleCreator {
 							+ " found, but could not be resolved.");
 					return null;
 				}
-				CompiledScript cs = csf.getCompiledScript();
+				CompiledScriptInterface cs = csf.getCompiledScript();
 				return cs;
 			}
 		} catch (InvalidSyntaxException e) {
@@ -637,7 +648,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			// Collection<ServiceReference<CompiledScriptFactory>> sr =
 			// bundleContext.getServiceReferences(CompiledScriptFactory.class,
 			// filter);
-			if (ssr.length == 0) {
+			if (ssr==null || ssr.length == 0) {
 				logger.warn("Can not locate service for script: " + scriptPath
 						+ " filter: " + filter);
 				failed.add(scriptPath);
@@ -658,7 +669,7 @@ public class BundleCreatorComponent implements BundleCreator {
 						+ " found, but could not be resolved.");
 				return;
 			}
-			CompiledScript cs = csf.getCompiledScript();
+			CompiledScriptInterface cs = csf.getCompiledScript();
 			logger.debug("Compiled script seems ok. " + cs.toString());
 			bundleContext.ungetService(ssr[0]);
 			success.add(scriptPath);

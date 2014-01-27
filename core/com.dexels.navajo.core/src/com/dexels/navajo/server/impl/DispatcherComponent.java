@@ -43,19 +43,6 @@ public class DispatcherComponent extends Dispatcher implements
 		logger.debug("setNavajoConfig dispatcher!");
 		super.setNavajoConfig(nci);
 	}
-//	public void clearNavajoConfig(NavajoConfigInterface nci) {
-//		logger.debug("clearNavajoConfig dispatcher!");
-//		super.clearNavajoConfig(nci);
-//	}
-
-//	public void setBundleCreator(BundleCreator nci) {
-//		logger.debug("setBundleCreator dispatcher!");
-//		super.setBundleCreator(nci);
-//	}
-//	public void clearBundleCreator(BundleCreator nci) {
-//		logger.debug("clearBundleCreater dispatcher!");
-//		super.clearBundleCreator(nci);
-//	}
 
 	public void setTribeManager(TribeManagerInterface tmi) {
 		tribeManager = tmi;

@@ -1,32 +1,22 @@
 package navajotsl;
 
-import java.util.Locale;
-
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.compiler.tsl.custom.CustomClassloaderJavaFileManager;
 
 
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;
-	private StandardJavaFileManager fileManager;
-	private CustomClassloaderJavaFileManager customJavaFileManager;
+//	private StandardJavaFileManager fileManager;
+//	private CustomClassloaderJavaFileManager customJavaFileManager;
 	private JavaCompiler compiler;
-	private DiagnosticListener<JavaFileObject> compilerOutputListener;
+//	private DiagnosticListener<JavaFileObject> compilerOutputListener;
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(Activator.class);
+//	private final static Logger logger = LoggerFactory
+//			.getLogger(Activator.class);
 	
 	static BundleContext getContext() {
 		return context;
@@ -41,19 +31,19 @@ public class Activator implements BundleActivator {
 		if(compiler==null) {
 			throw new RuntimeException("Error: Toolprovider did not supply a system compiler!");
 		}
-		compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
-
-			@Override
-			public void report(Diagnostic<? extends JavaFileObject> jfo) {
-				if(jfo.getKind()==javax.tools.Diagnostic.Kind.ERROR || jfo.getKind()==javax.tools.Diagnostic.Kind.MANDATORY_WARNING) {
-					logger.warn("Compilation problem: "+jfo.getMessage(Locale.ENGLISH));
-				}
-				
-			}
-			
-		};
-		fileManager = compiler.getStandardFileManager(compilerOutputListener, null, null);
-		customJavaFileManager = new CustomClassloaderJavaFileManager(context, getClass().getClassLoader(), fileManager);
+//		compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
+//
+//			@Override
+//			public void report(Diagnostic<? extends JavaFileObject> jfo) {
+//				if(jfo.getKind()==javax.tools.Diagnostic.Kind.ERROR || jfo.getKind()==javax.tools.Diagnostic.Kind.MANDATORY_WARNING) {
+//					logger.warn("Compilation problem: "+jfo.getMessage(Locale.ENGLISH));
+//				}
+//				
+//			}
+//			
+//		};
+//		fileManager = compiler.getStandardFileManager(compilerOutputListener, null, null);
+//		customJavaFileManager = new CustomClassloaderJavaFileManager(context, getClass().getClassLoader(), fileManager);
 
 		// test the example, it shouldn't really be here, actually
 //		JavaFileObject jfo = compile(getJavaSourceFileObject("mathtest/Calculator", getExampleCode()));
@@ -80,7 +70,7 @@ public class Activator implements BundleActivator {
 	 */
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
-		customJavaFileManager.close();
+//		customJavaFileManager.close();
 		Activator.context = null;
 	}
 

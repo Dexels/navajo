@@ -4,10 +4,10 @@
  */
 package com.dexels.navajo.adapter.filemap;
 
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 
 /**
  * @author arjen
@@ -17,7 +17,7 @@ public class FileRecordMap implements Mappable {
 	public String record;
 	
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.mapping.Mappable#load(com.dexels.navajo.server.Parameters, com.dexels.navajo.document.Navajo, com.dexels.navajo.server.Access, com.dexels.navajo.server.NavajoConfig)
+	 * @see com.dexels.navajo.script.api.Mappable#load(com.dexels.navajo.server.Parameters, com.dexels.navajo.document.Navajo, com.dexels.navajo.api.Access, com.dexels.navajo.server.NavajoConfig)
 	 */
 	@Override
 	public void load(Access access) throws MappableException, UserException {
@@ -26,7 +26,7 @@ public class FileRecordMap implements Mappable {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.mapping.Mappable#store()
+	 * @see com.dexels.navajo.script.api.Mappable#store()
 	 */
 	@Override
 	public void store() throws MappableException, UserException {
@@ -35,7 +35,7 @@ public class FileRecordMap implements Mappable {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.mapping.Mappable#kill()
+	 * @see com.dexels.navajo.script.api.Mappable#kill()
 	 */
 	@Override
 	public void kill() {

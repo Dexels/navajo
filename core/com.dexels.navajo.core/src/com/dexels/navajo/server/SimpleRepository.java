@@ -12,6 +12,7 @@ package com.dexels.navajo.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,11 +23,16 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.AuthorizationException;
+import com.dexels.navajo.script.api.SystemException;
+import com.dexels.navajo.server.global.GlobalManager;
 
 public class SimpleRepository implements Repository, GlobalManager {
 
@@ -118,7 +124,19 @@ public class SimpleRepository implements Repository, GlobalManager {
 		}
 	}
 
-	private void parseBundle(String method, String username, Navajo inMessage, Map<String, String> extraParams, ResourceBundle rb)
+	private static void parseBundle(String method, String username,
+			Navajo inMessage, Map<String, String> extraParams, ResourceBundle rb) {
+		Map<String, String> map = new HashMap<String, String>();
+		Enumeration<String> all = rb.getKeys();
+		while (all.hasMoreElements()) {
+			String key = all.nextElement();
+			String value = rb.getString(key);
+			map.put(key, value);
+		}
+		parseBundle(method, username, inMessage, extraParams, map);
+	}
+
+	public static void parseBundle(String method, String username, Navajo inMessage, Map<String, String> extraParams, Map<String,String> m)
 			throws NavajoException {
 		Message msg = inMessage.getMessage(GLOBALSMSGNAME);
 
@@ -129,20 +147,37 @@ public class SimpleRepository implements Repository, GlobalManager {
 			paramMsg = NavajoFactory.getInstance().createMessage(inMessage, GLOBALSMSGNAME);
 			inMessage.addMessage(paramMsg);
 		}
+
 		Property nu = NavajoFactory.getInstance().createProperty(inMessage, "NavajoUser", Property.STRING_PROPERTY, username, 50, "", Property.DIR_OUT);
 		paramMsg.addProperty(nu);
 		Property nm = NavajoFactory.getInstance().createProperty(inMessage, "NavajoMethod", Property.STRING_PROPERTY, method, 50, "", Property.DIR_OUT);
 		paramMsg.addProperty(nm);
+		
+		appendMapToInput(inMessage, extraParams, m);
+	}
 
+	public static void appendMapToInput(Navajo inMessage, Map<String, String> extraParams,
+			Map<String, String> m) {
+		
+		Message msg = inMessage.getMessage(GLOBALSMSGNAME);
+
+		Message paramMsg = null;
+		if (msg!=null) {
+			paramMsg = msg;
+		} else {
+			paramMsg = NavajoFactory.getInstance().createMessage(inMessage, GLOBALSMSGNAME);
+			inMessage.addMessage(paramMsg);
+		}
+		
 		// Add application instance, i.e. "Bond" specific parameters from
 		// application.properties file.
-		Enumeration<String> all = rb.getKeys();
-		while (all.hasMoreElements()) {
-			String key = all.nextElement();
-			Property p2 = NavajoFactory.getInstance().createProperty(inMessage, key, Property.STRING_PROPERTY,
-					rb.getString(key), 10, "",
-					Property.DIR_OUT);
-			paramMsg.addProperty(p2);
+		if(m!=null) {
+			for (Entry<String,String> e : m.entrySet()) {
+				Property p2 = NavajoFactory.getInstance().createProperty(inMessage, e.getKey(), Property.STRING_PROPERTY,
+						e.getValue(), 10, "",
+						Property.DIR_OUT);
+				paramMsg.addProperty(p2);
+			}
 		}
 		if (extraParams!=null) {
 			for (Iterator<Entry<String,String>> iter = extraParams.entrySet().iterator(); iter.hasNext();) {
@@ -165,6 +200,18 @@ public class SimpleRepository implements Repository, GlobalManager {
 			return "com.dexels.navajo.rhino.RhinoHandler";
 		}
 			return "com.dexels.navajo.server.GenericHandler";
+	}
+
+	@Override
+	public void initGlobals(Navajo inMessage) throws NavajoException {
+		Header h = inMessage.getHeader();
+		if(h==null) {
+			logger.warn("Can not append globals to input message: No header found.");
+			return;
+		}
+		String rpcName = h.getRPCName();
+		String username = h.getRPCUser();
+		initGlobals(rpcName, username, inMessage, null);
 	}
 
 }

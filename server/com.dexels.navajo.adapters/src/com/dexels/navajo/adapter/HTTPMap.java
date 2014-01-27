@@ -44,10 +44,10 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.http.HTTPMapInterface;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.enterprise.queue.Queuable;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 
@@ -180,14 +180,17 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 	
 	public void trustAll()  {
 		TrustManager trm = new X509TrustManager() {
+			@Override
 			public X509Certificate[] getAcceptedIssuers() {
 				return null;
 			}
 
+			@Override
 			public void checkClientTrusted(X509Certificate[] certs, String authType) {
 
 			}
 
+			@Override
 			public void checkServerTrusted(X509Certificate[] certs, String authType) {
 			}
 

@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.vaadin.application.servlet;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -135,6 +136,17 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		setContextInstance(ci);
 	}
 	
+	
+	
+	@Override
+	protected void writeAjaxPageHtmlHeader(BufferedWriter page, String title,
+			String themeUri, HttpServletRequest request) throws IOException {
+		super.writeAjaxPageHtmlHeader(page, title, themeUri, request);
+	       page.append("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=10\" />");
+	}
+
+
+
 	@Override
 	protected Application getNewApplication(HttpServletRequest request)
 			throws ServletException {

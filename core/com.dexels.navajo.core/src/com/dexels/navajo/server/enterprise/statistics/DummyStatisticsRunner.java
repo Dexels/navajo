@@ -7,7 +7,7 @@ import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.NavajoListener;
 import com.dexels.navajo.events.types.AuditLogEvent;
 import com.dexels.navajo.mapping.AsyncMappable;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 
 public class DummyStatisticsRunner implements StatisticsRunnerInterface, NavajoListener {
 

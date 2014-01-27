@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.UserException;
 
 public class OracleAdministratorMap extends SQLMap {
 

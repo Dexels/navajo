@@ -19,6 +19,7 @@ import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.script.api.SystemException;
 
 
 public class Parameters extends java.util.Hashtable<String,Parameter> implements java.io.Serializable {
@@ -50,7 +51,8 @@ public class Parameters extends java.util.Hashtable<String,Parameter> implements
             if (condition.trim().equals(""))
                 eval = true;
             else
-                eval = Condition.evaluate(condition, doc);
+            	// TODO don't like passing null here, but have no idea what this whole thing does
+                eval = Condition.evaluate(condition, doc,null);
         } catch (TMLExpressionException ce) {
             // ce.printStackTrace();
             eval = false;
@@ -62,7 +64,7 @@ public class Parameters extends java.util.Hashtable<String,Parameter> implements
             Parameter p = new Parameter();
             p.name = name;
             try {
-                Operand op = Expression.evaluate(value, doc, null, null, null, null);
+                Operand op = Expression.evaluate(value, doc, null, null, null, null,null);
                 p.value = op.value;
             } catch (TMLExpressionException tmle) {// throw new SystemException(SystemException.PARSE_ERROR, "Invalid parameter expression: " + value + "\n"+tmle.getMessage());
             }

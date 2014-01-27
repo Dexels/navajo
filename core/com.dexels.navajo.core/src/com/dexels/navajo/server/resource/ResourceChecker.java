@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.GenericDependentResource;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
-import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.CompiledScriptInterface;
+import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
 
@@ -38,14 +38,14 @@ public class ResourceChecker {
 	
 	private Navajo inMessage = null;
 	private boolean initialized = false;
-	private CompiledScript myCompiledScript = null;
+	private CompiledScriptInterface myCompiledScript = null;
 	private String webservice;
 	
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(ResourceChecker.class);
 	
-	public ResourceChecker(CompiledScript s) {
+	public ResourceChecker(CompiledScriptInterface s) {
 		// For unit tests.
 		this.myCompiledScript = s;
 		this.webservice = s.getClass().getSimpleName();

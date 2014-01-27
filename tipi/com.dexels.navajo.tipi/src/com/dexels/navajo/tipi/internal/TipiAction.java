@@ -72,7 +72,7 @@ public abstract class TipiAction extends TipiAbstractExecutable{
 	}
 
 	public boolean performTipiEvent(String type, Map<String, Object> event,
-			boolean sync) throws TipiException, TipiBreakException {
+			boolean sync) throws TipiBreakException {
 		return performTipiEvent(type, event, sync, null);
 	}
 

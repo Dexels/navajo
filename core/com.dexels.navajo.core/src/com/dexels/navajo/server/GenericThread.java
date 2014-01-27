@@ -35,8 +35,10 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoHealthCheckEvent;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 
 /**
  * NOTE: This is NOT an abstract class since it can be used by a web service as an adapter to introspect the running

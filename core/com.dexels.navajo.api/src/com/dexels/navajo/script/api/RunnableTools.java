@@ -119,6 +119,11 @@ public class RunnableTools {
 				return target.getRequest();
 			}
 
+			@Override
+			public String getNavajoInstance() {
+				return target.getNavajoInstance();
+			}
+
 			
 		};
 		return t;

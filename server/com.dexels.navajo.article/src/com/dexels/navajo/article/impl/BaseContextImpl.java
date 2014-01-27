@@ -129,8 +129,11 @@ public abstract class BaseContextImpl implements ArticleContext {
 	@Override
 	public File resolveArticle(String pathInfo) {
 		String sub;
-		if (pathInfo.startsWith("/")) {
-			sub = pathInfo.substring(1);
+		if(pathInfo.startsWith("/")) {
+			pathInfo = pathInfo.substring(1);
+		}
+		if(pathInfo.indexOf("/")!=-1) {
+			sub = pathInfo.substring(pathInfo.lastIndexOf("/"), pathInfo.length());
 		} else {
 			sub = pathInfo;
 		}
@@ -279,5 +282,10 @@ public abstract class BaseContextImpl implements ArticleContext {
 
 	public void clearConfig(NavajoIOConfig ioConfig) {
 		this.config = null;
+	}
+
+	public static void main(String[] args) {
+		
+		
 	}
 }

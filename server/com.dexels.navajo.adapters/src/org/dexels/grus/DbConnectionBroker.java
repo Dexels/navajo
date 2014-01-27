@@ -1,6 +1,7 @@
 package org.dexels.grus;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
@@ -37,15 +38,7 @@ public final class DbConnectionBroker
 	// The cardinality of this semaphore equals the maximum number of connections that this data source allows.
 	private final Semaphore availableConnections;
 
-	
-	public DbConnectionBroker(String dbDriver,
-			String dbServer,
-			String dbLogin,
-			String dbPassword)
-	throws ClassNotFoundException
-	{
-		this(dbDriver, dbServer, dbLogin, dbPassword, 8, 8, 0.1);
-	}
+
 	public DbConnectionBroker(String dbDriver,
 			String dbServer,
 			String dbLogin,
@@ -59,6 +52,7 @@ public final class DbConnectionBroker
 		this(dbDriver, dbServer, dbLogin, dbPassword,
 				minConns, maxConns, maxConnTime);
 	}
+
 	
 	public DbConnectionBroker(String dbDriver,
 			String dbServer,
@@ -69,7 +63,9 @@ public final class DbConnectionBroker
 			double maxConnTime)
 	throws ClassNotFoundException
 	{
-		Class.forName(dbDriver);
+		if(dbDriver!=null) {
+			Class.forName(dbDriver);
+		}
 		
 		location  = dbServer;
 		username  = dbLogin;
@@ -94,7 +90,7 @@ public final class DbConnectionBroker
 	
 	public static GrusConnection getGrusConnection(int connectionId) {
 
-		GrusConnection gc = GrusConnection.getGrusConnectionById(connectionId);
+		GrusConnection gc = LegacyGrusConnection.getGrusConnectionById(connectionId);
 		if ( gc != null ) {
 			return gc;
 		} else {
@@ -112,7 +108,7 @@ public final class DbConnectionBroker
 	}
 	
 	@Deprecated
-	public final Connection getConnection() {
+	public final Connection getConnection() throws SQLException {
 		GrusConnection gc = getGrusConnection();
 		if ( gc != null ) {
 			return gc.getConnection();
@@ -154,7 +150,7 @@ public final class DbConnectionBroker
 			
 			if ( getSize() < maxConnections ) {
 				try {
-					GrusConnection gc = new GrusConnection(location, username, password, this, timeoutDays);
+					LegacyGrusConnection gc = new LegacyGrusConnection(location, username, password, this, timeoutDays);
 					inUse.add(gc);
 					usedConnectionInstanceIds.add(gc.setInstanceId(instanceCounter++));
 					return gc;
@@ -219,7 +215,7 @@ public final class DbConnectionBroker
 
 		logger.warn("In freeConnection(Connection)");
 		
-		GrusConnection gc = GrusConnection.getGrusConnectionByConnection(conn);
+		GrusConnection gc = LegacyGrusConnection.getGrusConnectionByConnection(conn);
 		if ( gc != null ) {
 			freeConnection(gc);
 		} else {

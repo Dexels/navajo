@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
-import com.dexels.navajo.mapping.compiler.meta.Dependency;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Dependency;
 
 public class CompiledTestScript2 extends CompiledScript {
 

@@ -8,7 +8,8 @@
  */
 package com.dexels.navajo.parser;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Message;
@@ -18,16 +19,20 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
-import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.mapping.MappingUtils;
-import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.MappableTreeNode;
+import com.dexels.navajo.script.api.SystemException;
+//import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.tipilink.TipiLink;
 
 public final class Expression {
 
+	 public static String ACCESS = "ACCESS";
+	
     public final static Operand evaluate(String clause, 
     		Navajo inMessage, MappableTreeNode o, Message parent, Message paramParent,
-			Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
+			Selection sel, TipiLink tl, Map<String,Object> params) throws TMLExpressionException, SystemException {
 
         Object aap = null;
 
@@ -41,9 +46,15 @@ public final class Expression {
         try {
 
           TMLParser parser = null;
-
+          
           java.io.StringReader input = new java.io.StringReader(clause);
           parser = new TMLParser(input);
+          if(params!=null) {
+        	  Access a = (Access) params.get(ACCESS);
+        	  if(a!=null) {
+        		  parser.setAccess(a);
+        	  }
+          }
           parser.setNavajoDocument(inMessage);
           parser.setMappableObject(o);
           parser.setParentMsg(parent);
@@ -72,20 +83,29 @@ public final class Expression {
 
     }
 
+    @Deprecated
+    public final static Operand evaluate(String clause, 
+    		Navajo inMessage, MappableTreeNode o, Message parent, Message paramParent,
+			Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
+    	return evaluate(clause, inMessage, o, parent, paramParent, sel, tl,null);
+    }
+    @Deprecated
     public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, Selection sel, TipiLink tl) throws TMLExpressionException, SystemException {
-    	return evaluate(clause, inMessage, o, parent, null, sel, tl);
+    	return evaluate(clause, inMessage, o, parent, null, sel, tl,null);
     }
     
+    @Deprecated
     public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
-        return evaluate(clause, inMessage, o, parent, null, null, null);
+        return evaluate(clause, inMessage, o, parent, null, null, null,null);
     }
 
+    @Deprecated
     public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent, Message parentParam) throws TMLExpressionException, SystemException {
-        return evaluate(clause, inMessage, o, parent, parentParam, null, null);
+        return evaluate(clause, inMessage, o, parent, parentParam, null, null,null);
     }
     
     public final static Operand evaluate(String clause, Navajo inMessage) throws TMLExpressionException, SystemException {
-        return evaluate(clause, inMessage, null, null, null, null, null);
+        return evaluate(clause, inMessage, null, null, null, null, null,null);
     }
 
     public final static Message match(String matchString, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
@@ -101,10 +121,10 @@ public final class Expression {
             if (matchValue == null)
                 throw new TMLExpressionException("Invalid usage of match: match=\"[match set];[match value]\"");
 
-            Operand value = evaluate(matchValue, inMessage, o, parent, null, null);
+            Operand value = evaluate(matchValue, inMessage, o, parent, null,null, null,null);
 
 
-            ArrayList properties;
+            List<Property> properties;
 
             if (parent == null)
                 properties = inMessage.getProperties(matchSet);

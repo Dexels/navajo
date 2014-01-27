@@ -14,7 +14,7 @@ import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.script.api.SystemException;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -76,7 +76,7 @@ public Object evaluate() throws com.dexels.navajo.parser.
         Message m = arrayMsg.get(i);
         Property p = m.getProperty(propertyName);
         boolean evaluate = (filter != null ?
-                            Condition.evaluate(filter, doc, null, m) : true);
+                            Condition.evaluate(filter, doc, null, m,getAccess()) : true);
         if (evaluate) {
           if (p != null) {
             Object o = p.getTypedValue();

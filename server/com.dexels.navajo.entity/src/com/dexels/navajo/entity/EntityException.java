@@ -3,7 +3,7 @@ package com.dexels.navajo.entity;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.UserException;
 
 public class EntityException extends UserException {
 

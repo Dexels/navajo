@@ -22,8 +22,8 @@ import com.dexels.navajo.entity.transactions.NavajoTransaction;
 import com.dexels.navajo.entity.transactions.NavajoTransactionManager;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.DispatcherInterface;
-import com.dexels.navajo.server.UserException;
 
 public class ServiceEntityOperation implements EntityOperation {
 

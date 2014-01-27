@@ -103,17 +103,6 @@
 		</methods>
 	</map>
 
-	<map>
-		<tagname>bundlemanager</tagname>
-		<object>com.dexels.navajo.adapter.BundleManagerMap</object>
-		<values>
-			<value name="functionBinary" type="binary" required="false"
-				direction="out" />
-			<value name="adapterBinary" type="binary" required="false"
-				direction="out" />
-		</values>
-	</map>
-
 
 	<map>
 		<tagname>dirmap</tagname>

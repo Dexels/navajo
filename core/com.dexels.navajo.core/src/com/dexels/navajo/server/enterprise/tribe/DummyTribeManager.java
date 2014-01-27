@@ -11,7 +11,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 
 public class DummyTribeManager implements TribeManagerInterface {

@@ -10,7 +10,7 @@ import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.script.api.SystemException;
 
 
 /**
@@ -51,7 +51,7 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
 
       try {
         //System.err.println("Evaluating " + expression + " against Navajo " + currentNavajo + ", and message " + currentMessage);
-        result = Expression.evaluate(expression, currentNavajo, null, currentMessage);
+        result = Expression.evaluate(expression, currentNavajo, null, currentMessage,null,null,null);
       }
       catch (SystemException ex) {
     	  logger.error("Error: ", ex);
@@ -65,10 +65,10 @@ public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionExce
        String exp2 = (String) getOperand(2);
 
       try {
-        if (Condition.evaluate(condition, currentNavajo, null, currentMessage)) {
-          result =  Expression.evaluate(exp1, currentNavajo, null, currentMessage);
+        if (Condition.evaluate(condition, currentNavajo, null, currentMessage,getAccess())) {
+          result =  Expression.evaluate(exp1, currentNavajo, null, currentMessage,null,null,null);
         } else {
-          result =  Expression.evaluate(exp2, currentNavajo, null, currentMessage);
+          result =  Expression.evaluate(exp2, currentNavajo, null, currentMessage,null,null,null);
         }
       }
       catch (SystemException ex1) {

@@ -586,7 +586,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 				return fallbackHandleTransaction(dis, in, certObject, clientInfo);
 			}
 			LocalClient lc =  (LocalClient)bundleContext.getService(sr);
-			Navajo nn = lc.handleInternal(in, certObject, clientInfo);
+			Navajo nn = lc.handleInternal("default",in, certObject, clientInfo);
 			bundleContext.ungetService(sr);
 			lc = null;
 			return nn;
@@ -599,7 +599,7 @@ public class TmlHttpServlet extends BaseNavajoServlet {
 		if(dis==null) {
 			throw new FatalException("Navajo configuration problem: No dispatcher available.");
 		}
-		Navajo outDoc = dis.removeInternalMessages(dis.handle(in, certObject,clientInfo));
+		Navajo outDoc = dis.removeInternalMessages(dis.handle(in,"default", certObject,clientInfo));
 		return outDoc;
 	}
 	

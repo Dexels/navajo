@@ -2,7 +2,7 @@ Bundle-Name: Navajo Twitter Adapter
 Bundle-SymbolicName: com.dexels.navajo.twitter
 Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.27.qualifier
+Bundle-Version: 1.1.1.qualifier
 Bundle-Activator: navajotwitter.Version
 Export-Package: com.dexels.twitter,
  com.google.gdata.util.common.base,
@@ -22,6 +22,7 @@ Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.client;bundle-version="1.0.0"
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
+ com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
  com.dexels.navajo.version,
  navajo,

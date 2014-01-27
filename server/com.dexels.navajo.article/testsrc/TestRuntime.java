@@ -32,10 +32,14 @@ public class TestRuntime {
 			
 			@Override
 			public Navajo call(Navajo n) throws FatalException {
-				logger.info("Calling: "+n.getHeader().getRPCName());
-//				n.write(System.err);
+				return call(null,n);
+			}
+
+			@Override
+			public Navajo call(String instance, Navajo n) throws FatalException {
+				logger.info("Calling: "+n.getHeader().getRPCName()+" instance: "+instance);
+	
 				Navajo res = NavajoFactory.getInstance().createNavajo();
-				
 				return res;
 			}
 		};

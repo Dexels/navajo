@@ -39,21 +39,21 @@ import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.mapping.DependentResource;
 import com.dexels.navajo.mapping.GenericDependentResource;
 import com.dexels.navajo.mapping.HasDependentResources;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.MappingUtils;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.AsyncRequest;
+import com.dexels.navajo.script.api.AuthorizationException;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
 import com.dexels.navajo.script.api.RequestQueue;
 import com.dexels.navajo.script.api.SchedulerRegistry;
+import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.script.api.TmlRunnable;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.AuthorizationException;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionErrorException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.SystemException;
-import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.AuditLog;
 
@@ -406,9 +406,9 @@ public void store() throws MappableException, UserException {
 	  waitForResult();
 
 	  try {
-		  Message parm = ( access.getCompiledScript().currentParamMsg == null ? 
+		  Message parm = ( access.getCompiledScript().getCurrentParamMsg() == null ? 
 				  access.getInDoc().getMessage("__parms__") :
-					  access.getCompiledScript().currentParamMsg);
+					  access.getCompiledScript().getCurrentParamMsg());
 
 		  List<Message> list = null;
 		  // If append message equals '/'.
@@ -1358,8 +1358,11 @@ public void run()  {
 		  // Clear request id.
 		  h.setRequestId(null);
 		  h.setHeaderAttribute("parentaccessid", access.accessID);
+
+		  inDoc = DispatcherFactory.getInstance().handle(outDoc,access.getInstance(), true);
+		  serviceFinished = true;
+		  serviceCalled = true;
 		  
-		  inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
 		  continueAfterRun();
 	 } catch (Exception e) {
 		 setException(e);
@@ -1735,6 +1738,11 @@ public void setResource(String resourceName) {
 }
 
 @Override
+public String getNavajoInstance() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
 public Throwable getCaughtException() {
 	return caughtThrowable;
 }

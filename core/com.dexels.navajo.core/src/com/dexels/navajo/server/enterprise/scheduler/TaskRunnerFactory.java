@@ -18,6 +18,9 @@ public class TaskRunnerFactory {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TaskRunnerFactory.class);
 	
+	public static void setInstance(TaskRunnerInterface instance) {
+		TaskRunnerFactory.instance = instance;
+	}
 	/**
 	 * Beware, this functions should only be called from the authorized class that can enable this thread(!).
 	 * 

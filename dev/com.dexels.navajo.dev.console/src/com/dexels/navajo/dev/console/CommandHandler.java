@@ -65,17 +65,17 @@ public class CommandHandler {
 		this.bundleContext = bundleContext;
 		logger.info("Command handler in business");
 
-		CompileCommand c = new CompileCommand();
-		c.setBundleCreator(bundleCreator);
-		registerCommand(c,"compile");
+//		CompileCommand c = new CompileCommand();
+//		c.setBundleCreator(bundleCreator);
+//		registerCommand(c,"compile");
 
 		CheckCommand check = new CheckCommand();
 		check.setBundleCreator(bundleCreator);
 		registerCommand(check,"check");
 	
-		LoadCommand load = new LoadCommand();
-		load.setBundleCreator(bundleCreator);
-		registerCommand(load,"loadbundle");
+//		LoadCommand load = new LoadCommand();
+//		load.setBundleCreator(bundleCreator);
+//		registerCommand(load,"loadbundle");
 
 		FunctionListCommand func = new FunctionListCommand(bundleContext);
 		registerCommand(func,"functions");
@@ -86,10 +86,10 @@ public class CommandHandler {
 		ScriptListCommand script = new ScriptListCommand(bundleContext);
 		registerCommand(script,"scripts");
 		
-		VerifyCommand verify = new VerifyCommand();
-		verify.setBundleCreator(bundleCreator);
-		registerCommand(verify,"verify");
-		
+//		VerifyCommand verify = new VerifyCommand();
+//		verify.setBundleCreator(bundleCreator);
+//		registerCommand(verify,"verify");
+//		
 		CallCommand cc = new CallCommand();
 		cc.setLocalClient(localClient);
 		registerCommand(cc, "call");

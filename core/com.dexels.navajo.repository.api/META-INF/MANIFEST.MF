@@ -2,9 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Java Repository Interfaces
 Bundle-SymbolicName: com.dexels.navajo.repository.api
-Bundle-Version: 1.0.8.qualifier
+Bundle-Version: 2.0.1.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: com.dexels.navajo.repository.api;version="1.0.0"
-Import-Package: org.slf4j;version="1.7.5"
-Service-Component: OSGI-INF/navajo.repository.manager.xml
+Export-Package: com.dexels.navajo.repository.api;version="1.0.0",
+ com.dexels.navajo.repository.api.diff;version="1.0.0"
+Import-Package: org.slf4j;version="[1.6.0,1.8.0)"
+Service-Component: OSGI-INF/navajo.repository.manager.xml,
+ OSGI-INF/navajo.repository.layout.navajo.xml,
+ OSGI-INF/navajo.repository.layout.multitenant.xml,
+

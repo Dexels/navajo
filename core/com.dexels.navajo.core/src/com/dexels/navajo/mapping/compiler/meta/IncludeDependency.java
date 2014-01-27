@@ -2,6 +2,7 @@ package com.dexels.navajo.mapping.compiler.meta;
 
 import java.io.File;
 
+import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.DispatcherFactory;
 
 public class IncludeDependency extends Dependency {

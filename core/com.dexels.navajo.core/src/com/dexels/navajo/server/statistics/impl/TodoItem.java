@@ -25,7 +25,7 @@
 package com.dexels.navajo.server.statistics.impl;
 
 import com.dexels.navajo.mapping.AsyncMappable;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 
 public final class TodoItem {
 	

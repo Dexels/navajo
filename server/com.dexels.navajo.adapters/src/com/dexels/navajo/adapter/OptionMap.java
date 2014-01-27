@@ -40,19 +40,21 @@ package com.dexels.navajo.adapter;
  */
 
 
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 
 
 public class OptionMap implements Mappable {
 
     public OptionMap() {}
 
-    @Override
-	public void load(Access parm4) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}
+@Override
+    public void load(Access parm4) throws UserException, MappableException {}
 
-    @Override
-	public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}
+@Override
+    public void store() throws UserException, MappableException {}
 
     @Override
 	public void kill() {}

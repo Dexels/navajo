@@ -13,7 +13,7 @@ import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.script.api.SystemException;
 
 
 /**
@@ -74,7 +74,7 @@ public class ForAll extends FunctionInterface {
 				Message current = arrayMsg.get(i);
 				try {
 					boolean evaluate = (filter != null ?
-							Condition.evaluate(filter, doc, null, current) : true);
+							Condition.evaluate(filter, doc, null, current,getAccess()) : true);
 					if (evaluate) {
 						
 						Operand result = Expression.evaluate(expression, doc, null, current);

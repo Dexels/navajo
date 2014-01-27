@@ -19,7 +19,8 @@ import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
-import com.dexels.navajo.mapping.compiler.meta.Dependency;
+import com.dexels.navajo.script.api.CompiledScriptFactory;
+import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
 
 public class TslCompilerComponent implements ScriptCompiler {
@@ -28,7 +29,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 	private ClassLoader classLoader = null;
 	private final static Logger logger = LoggerFactory.getLogger(TslCompilerComponent.class);
 	private TslCompiler compiler;
-	String[] standardPackages = new String[]{"com.dexels.navajo.document","com.dexels.navajo.document.types","com.dexels.navajo.script.api","com.dexels.navajo.server","com.dexels.navajo.mapping","com.dexels.navajo.server.enterprise.tribe","com.dexels.navajo.mapping.compiler.meta","com.dexels.navajo.parser","com.dexels.navajo.loader"};
+	String[] standardPackages = new String[]{"com.dexels.navajo.document","com.dexels.navajo.document.types","com.dexels.navajo.script.api","com.dexels.navajo.server","com.dexels.navajo.mapping","com.dexels.navajo.server.enterprise.tribe","com.dexels.navajo.mapping.compiler.meta","com.dexels.navajo.parser","com.dexels.navajo.loader","org.osgi.framework"};
 	private ExpressionEvaluator expressionEvaluator;
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.compiler.tsl.ScriptCompiler#compileTsl(java.lang.String)
@@ -136,6 +137,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		
 		w.println("import com.dexels.navajo.server.*;");
 		w.println("import com.dexels.navajo.mapping.*;");
+		w.println("import com.dexels.navajo.script.api.*;");
 		w.println();
 		w.println("public class "+script+"Factory extends CompiledScriptFactory {");
 		w.println("	protected String getScriptName() {");
@@ -253,7 +255,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		xe.addChild(service);
 		XMLElement provide = new CaseSensitiveXMLElement("provide");
 		service.addChild(provide);
-		provide.setAttribute("interface", "com.dexels.navajo.server.CompiledScriptFactory");
+		provide.setAttribute("interface", CompiledScriptFactory.class.getName());
 
 		addProperty("navajo.scriptName","String",symbolicName, xe);
 		if(hasTenantSpecificFile) {

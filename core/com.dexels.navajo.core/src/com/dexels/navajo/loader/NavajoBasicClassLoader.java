@@ -6,6 +6,8 @@ package com.dexels.navajo.loader;
 
 import java.io.File;
 
+import com.dexels.navajo.script.api.NavajoClassSupplier;
+
 /**
  * @author Administrator
  *
@@ -16,7 +18,7 @@ public class NavajoBasicClassLoader extends NavajoClassSupplier {
 		super(parent);
 	}
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.loader.NavajoClassSupplier#getClass(java.lang.String)
+	 * @see com.dexels.navajo.script.api.NavajoClassSupplier#getClass(java.lang.String)
 	 */
 	@Override
 	public Class<?> getClass(String className) throws ClassNotFoundException {
@@ -25,7 +27,7 @@ public class NavajoBasicClassLoader extends NavajoClassSupplier {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.loader.NavajoClassSupplier#getJarFiles(java.lang.String, boolean)
+	 * @see com.dexels.navajo.script.api.NavajoClassSupplier#getJarFiles(java.lang.String, boolean)
 	 */
 	@Override
 	public File[] getJarFiles(String path, boolean beta) {
@@ -33,7 +35,7 @@ public class NavajoBasicClassLoader extends NavajoClassSupplier {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.loader.NavajoClassSupplier#getCompiledNavaScript(java.lang.String)
+	 * @see com.dexels.navajo.script.api.NavajoClassSupplier#getCompiledNavaScript(java.lang.String)
 	 */
 	@Override
 	public Class<?> getCompiledNavaScript(String className)

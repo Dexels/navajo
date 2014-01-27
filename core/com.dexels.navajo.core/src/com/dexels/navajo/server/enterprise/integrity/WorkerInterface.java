@@ -1,7 +1,7 @@
 package com.dexels.navajo.server.enterprise.integrity;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 
 public interface WorkerInterface {
 

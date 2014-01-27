@@ -103,7 +103,8 @@ public class AuthEndpoint extends HttpServlet {
 
 			String redirectURI = oauthRequest
 					.getParam(OAuth.OAUTH_REDIRECT_URI);
-
+			oauthRequest.getClientId();
+			
 			final OAuthResponse response = builder.location(redirectURI)
 					.buildQueryMessage();
 			URI url = new URI(response.getLocationUri());

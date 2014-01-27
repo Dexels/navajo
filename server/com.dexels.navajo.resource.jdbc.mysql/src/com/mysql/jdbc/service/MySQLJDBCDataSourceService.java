@@ -1,22 +1,3 @@
-/*
-  Copyright (c) 2011, Christoph Läubrich. All rights reserved.
-
-  The MySQLJDBCDataSourceService is licensed under the same terms as the MySQL Connector/J
-  which are the terms of the GPLv2  <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
-
-  This program is free software; you can redistribute it and/or modify it under the terms
-  of the GNU General Public License as published by the Free Software Foundation; version 2
-  of the License.
-
-  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-  See the GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License along with this
-  program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth
-  Floor, Boston, MA 02110-1301  USA
-
-*/
 package com.mysql.jdbc.service;
 
 import java.sql.Driver;
@@ -38,15 +19,13 @@ import com.mysql.jdbc.jdbc2.optional.MysqlXADataSource;
 /**
  * Implementation of the OSGi {@link DataSourceFactory} for MySQL, no special
  * properties are supported yet
- * 
- * @author Christoph Läubrich
  */
+
 public class MySQLJDBCDataSourceService implements DataSourceFactory {
 
 	
-	private final static Logger logger = LoggerFactory
-			.getLogger(MySQLJDBCDataSourceService.class);
-
+	private final static Logger logger = LoggerFactory.getLogger(MySQLJDBCDataSourceService.class);
+	
     public void start() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         //Load driver if not already done...
         Class<?> clazz = Class.forName("com.mysql.jdbc.Driver");

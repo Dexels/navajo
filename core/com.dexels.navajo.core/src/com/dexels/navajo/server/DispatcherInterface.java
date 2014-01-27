@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.TmlRunnable;
@@ -17,13 +18,14 @@ public interface DispatcherInterface extends ResourceManager {
 	/*
 	 * Methods to handle Navajo services.
 	 */
-	public Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo) throws FatalException;
+	public Navajo handle(Navajo inMessage, String instance, Object userCertificate, ClientInfo clientInfo) throws FatalException;
 	public Navajo handle(Navajo inMessage, TmlRunnable initialRunnable, Object userCertificate, ClientInfo clientInfo) throws FatalException;
 //	public Navajo handle(Navajo inMessage, boolean skipAuth) throws FatalException;
 	public Navajo handle(Navajo inMessage, boolean skipAuth, AfterWebServiceEmitter emit) throws FatalException;
 	public Navajo handle(Navajo inMessage, boolean skipAuth, AfterWebServiceEmitter emit, ClientInfo clientInfo) throws FatalException;
 	public Navajo handle(Navajo inMessage, boolean skipAuth) throws FatalException;
 	public Navajo handle(Navajo inMessage) throws FatalException;
+	public Navajo handle(Navajo inMessage, String instance, boolean skipAuth) throws FatalException;
 	
 	public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, String rpcName, String rpcUser,		Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated, AfterWebServiceEmitter emit);
 
@@ -97,6 +99,9 @@ public interface DispatcherInterface extends ResourceManager {
 	
 	
 	  public  Navajo generateErrorMessage(Access access, String message, int code, int level, Throwable t) throws FatalException;
+	
+	  
+	  public Navajo handleCallbackPointers(Navajo inMessage);
 
 	//
 	/**

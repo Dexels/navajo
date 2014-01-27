@@ -169,11 +169,10 @@ public class EclipseCompiler implements JavaCompiler {
     }
     
 	@Override
-	@SuppressWarnings("unchecked")
 	public boolean compile(String source) {
 
         try {
-            Class c;
+            Class<?> c;
             if( loader==null )
                 c = Class.forName("org.eclipse.jdt.internal.compiler.batch.Main");
             else

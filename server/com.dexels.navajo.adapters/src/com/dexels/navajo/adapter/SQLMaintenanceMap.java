@@ -14,12 +14,12 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.UserException;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -127,27 +127,6 @@ private void saveConfigFile(boolean copy) throws MappableException {
         }
   }
 
-  public synchronized void setDeleteDatasources(SQLMapDatasourceMap [] datasources) throws MappableException, UserException {
-
-	  if (noAccess)
-	        throw new MappableException("Cannot enter maintenance object in write mode, already in use");
-	  
-      saveConfigFile(true);
-
-      SQLMap sqlMap = new SQLMap();
-      dirty = false;
-      for (int i = 0; i < datasources.length; i++) {
-          Message msg = sqlMapConfigFile.getMessage("datasources").getMessage(datasources[i].getDatasourceName());
-          if (msg != null) {
-            dirty = true;
-            sqlMapConfigFile.getMessage("datasources").removeMessage(msg);
-          }
-          sqlMap.setDeleteDatasource(datasources[i].datasourceName);
-      }
-      if (dirty) {  // rewrite sqlmap.xml property file!
-        saveConfigFile(false);
-      }
-  }
 
   public synchronized void setDatasources(SQLMapDatasourceMap [] datasources) throws UserException, NavajoException, MappableException {
 

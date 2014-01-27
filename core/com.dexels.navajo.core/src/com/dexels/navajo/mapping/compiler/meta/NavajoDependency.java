@@ -1,5 +1,7 @@
 package com.dexels.navajo.mapping.compiler.meta;
 
+import com.dexels.navajo.script.api.Dependency;
+
 @Deprecated
 public final class NavajoDependency extends Dependency {
 

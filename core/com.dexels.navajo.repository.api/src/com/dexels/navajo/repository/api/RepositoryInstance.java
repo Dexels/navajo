@@ -21,6 +21,11 @@ public interface RepositoryInstance extends Comparable<RepositoryInstance> {
 	public List<String> getOperations();
 
 	public int refreshApplication() throws IOException;
+	
+	public String repositoryType();
+	
+	public String applicationType();
 
-
+	public List<String> getMonitoredFolders();
+	
 }

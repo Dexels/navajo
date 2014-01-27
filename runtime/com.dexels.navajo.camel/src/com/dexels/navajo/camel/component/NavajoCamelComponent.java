@@ -23,6 +23,7 @@ import com.dexels.navajo.script.api.LocalClient;
  */
 public class NavajoCamelComponent extends DefaultComponent implements Component {
 
+	private static LocalClient staticLocalClient;
 	private LocalClient localClient;
 	private BundleContext bundleContext;
 	private final Map<String,CamelEndpoint> endPoints = new HashMap<String, CamelEndpoint>();
@@ -36,6 +37,9 @@ public class NavajoCamelComponent extends DefaultComponent implements Component 
 		return localClient;
 	}
 
+	public static LocalClient getStaticLocalClient() {
+		return staticLocalClient;
+	}
 	public void activate(BundleContext bc) {
 		this.bundleContext = bc;
 	}
@@ -51,6 +55,7 @@ public class NavajoCamelComponent extends DefaultComponent implements Component 
 	
 	public void setLocalClient(LocalClient lc) {
 		this.localClient = lc;
+		staticLocalClient = lc;
 	}
 
 	public void clearLocalClient(LocalClient lc) {
@@ -61,7 +66,7 @@ public class NavajoCamelComponent extends DefaultComponent implements Component 
 	protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
     	logger.info("uri: "+uri);
     	logger.info("remaining: "+remaining);
-    	CamelEndpoint endpoint = new CamelEndpoint(uri, this);
+    	CamelEndpoint endpoint = new CamelEndpoint(uri, this,localClient,remaining,parameters);
     	registerEndPoint(endpoint, remaining);
         setProperties(endpoint, parameters);
         return endpoint;

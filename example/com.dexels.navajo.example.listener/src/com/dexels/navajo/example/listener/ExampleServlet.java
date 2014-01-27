@@ -1,6 +1,7 @@
 package com.dexels.navajo.example.listener;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
@@ -45,7 +47,7 @@ public class ExampleServlet extends HttpServlet {
 				resp.setContentType("text/plain");
 				resp.getWriter().write("Service: "+serviceName+" took: "+diff+" millis.");
 			} catch (FatalException e) {
-				resp.sendError(500, "Error calling service: "+serviceName);
+				resp.sendError(500, "Error calling service: "+URLEncoder.encode(serviceName,"UTF-8"));
 			}
 		} else {
 			logger.info("Not active!");

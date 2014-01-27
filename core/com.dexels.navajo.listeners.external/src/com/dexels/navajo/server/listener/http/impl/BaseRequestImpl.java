@@ -24,7 +24,6 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.script.api.AsyncRequest;
 import com.dexels.navajo.script.api.ClientInfo;
-import com.dexels.navajo.script.api.LocalClient;
 
 
 public class BaseRequestImpl implements AsyncRequest {
@@ -38,7 +37,7 @@ public class BaseRequestImpl implements AsyncRequest {
 	protected long connectedAt = -1;
 	private String url;
 	private Navajo inDoc;
-	private final LocalClient myLocalClient;
+	private final String instance;
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(BaseRequestImpl.class);
@@ -47,11 +46,10 @@ public class BaseRequestImpl implements AsyncRequest {
 			.getLogger("stats");
 
 	
-	public BaseRequestImpl(LocalClient lc, HttpServletRequest request,
+	public BaseRequestImpl(HttpServletRequest request,
 			HttpServletResponse response, String acceptEncoding,
-			String contentEncoding, Object cert) throws UnsupportedEncodingException, IOException {
+			String contentEncoding, Object cert, String instance) throws UnsupportedEncodingException, IOException {
 		// this.event = event;
-		this.myLocalClient = lc;
 		this.response = response;
 		this.request = request;
 		this.contentEncoding = contentEncoding;
@@ -60,11 +58,11 @@ public class BaseRequestImpl implements AsyncRequest {
 		this.connectedAt = System.currentTimeMillis();
 		setUrl(createUrl(this.request));
 		this.inDoc = parseInputNavajo(request.getInputStream());
+		this.instance = instance;
 	}
 
-	public BaseRequestImpl(LocalClient lc, Navajo in, HttpServletRequest request, HttpServletResponse response)  {
+	public BaseRequestImpl(Navajo in, HttpServletRequest request, HttpServletResponse response, String instance)  {
 		// this.event = event;
-		this.myLocalClient = lc;
 		this.contentEncoding = null;
 		this.acceptEncoding = null;
 		this.request = request;
@@ -73,7 +71,14 @@ public class BaseRequestImpl implements AsyncRequest {
 		this.connectedAt = System.currentTimeMillis();
 		setUrl(createUrl(this.request));
 		this.inDoc = in;
+		this.instance = instance;
 	}
+	
+	@Override
+	public String getInstance() {
+		return instance;
+	}
+	
 	@Override
 	public long getConnectedAt() {
 		return connectedAt;
@@ -221,10 +226,10 @@ public class BaseRequestImpl implements AsyncRequest {
 		if (inDoc != null
 				&& inDoc.getHeader() != null
 				&& outDoc.getHeader() != null
-				&& !myLocalClient.isSpecialWebservice(inDoc.getHeader()
+				&& isSpecialwebservice(inDoc.getHeader()
 						.getRPCName())) {
 			statLogger.info ("("
-					+ myLocalClient.getApplicationId()
+					+ instance
 					+ "): "
 					+ new java.util.Date(connectedAt)
 					+ ": "
@@ -308,5 +313,24 @@ public class BaseRequestImpl implements AsyncRequest {
 	public ServletRequest getHttpRequest() {
 		return request;
 	}
+	
+	/**
+	   * Determine if WS is reserved Navajo webservice.
+	   *
+	   * @param name
+	   * @return
+	   */
+	  private static final boolean isSpecialwebservice(String name) {
+		  
+		  if (name == null) {
+			  return false;
+		  }
+		  if ( name.startsWith("navajo") || name.equals("InitNavajoStatus") || name.equals("navajo_logon") ) {
+			  return true;
+		  }
+		  else {
+			  return false;
+		  }
+	  }
 
 }

@@ -18,7 +18,7 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVersion {
 	
-	private final Set<ServiceRegistration> registrations = new HashSet<ServiceRegistration>();
+	private final Set<ServiceRegistration<?>> registrations = new HashSet<ServiceRegistration<?>>();
 //	private ServiceRegistration registration;
 
 	
@@ -35,7 +35,7 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 	}
 
 	private void deregisterAll() {
-		for (ServiceRegistration sr : registrations) {
+		for (ServiceRegistration<?> sr : registrations) {
 //			final String property = (String) sr.getReference().getProperty("functionName");
 //			logger.info("Deregistering: "+property);
 			sr.unregister();
@@ -48,7 +48,6 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 		fi.clearFunctionNames();
 		fi.injectExtension(extensionDef);
 		final Set<String> functionNames = fi.getFunctionNames(extensionDef);
-		logger.debug("Function names: "+functionNames);
 		for (String functionName : functionNames) {
 			FunctionDefinition fd = fi.getDef(extensionDef,functionName);
 			 registerFunction(context, fi, functionName, fd,extensionDef);
@@ -120,7 +119,7 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 		props.put("type", "function");
 //		logger.debug("registering function: {}",functionName);
 		Class<? extends FunctionInterface> clz;
-		ServiceRegistration registration;
+		ServiceRegistration<FunctionDefinition> registration;
 		try {
 			clz = (Class<? extends FunctionInterface>) Class.forName(fd.getObject(),true,extensionDef.getClass().getClassLoader());
 //			logger.debug("Registering functionclass: {} context: {}"+ functionName, clz.getName(),extensionDef.getClass().getName());
@@ -135,9 +134,5 @@ public class AbstractCoreExtension extends com.dexels.navajo.version.AbstractVer
 		} catch (ClassNotFoundException e) {
 			logger.error("Error registering service: {}",functionName,e);
 		}
-//		registration = context.registerService(
-//				FunctionInterface.class.getName(),
-//				fi.instantiateFunctionClass(fd, getClass().getClassLoader()),
-//				props);
 	}
 }

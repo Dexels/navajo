@@ -2,7 +2,7 @@ Bundle-Name: Navajo Core
 Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.13.5.qualifier
+Bundle-Version: 3.0.3.qualifier
 Bundle-Activator: navajocore.Version
 Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.navajo.server.resource",
@@ -52,6 +52,7 @@ Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  com.dexels.navajo.server.enterprise.tribe;uses:="com.dexels.navajo.server,com.dexels.navajo.mapping,com.dexels.navajo.document",
  com.dexels.navajo.server.enterprise.workflow;uses:="com.dexels.navajo.document",
  com.dexels.navajo.server.enterprise.xmpp,
+ com.dexels.navajo.server.global,
  com.dexels.navajo.server.impl;
   uses:="com.dexels.navajo.sharedstore,
    com.dexels.navajo.events,
@@ -98,7 +99,7 @@ Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  com.dexels.navajo.sharedstore.map;uses:="com.dexels.navajo.server.enterprise.tribe,com.dexels.navajo.server,com.dexels.navajo.mapping",
  com.dexels.navajo.test;uses:="com.dexels.navajo.document.types",
  com.dexels.navajo.tipilink,
- com.dexels.navajo.util;
+ com.dexels.navajo.util;version="1.0.0";
   uses:="com.dexels.navajo.server,
    com.dexels.navajo.mapping,
    org.w3c.dom,
@@ -116,8 +117,8 @@ Import-Package: com.dexels.navajo.authentication.api,
  com.dexels.navajo.document.nanoimpl;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.persistence;version="2.2.0",
+ com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.repository.api;version="1.0.0",
- com.dexels.navajo.script.api,
  com.dexels.navajo.version,
  javax.imageio,
  javax.imageio.spi,
@@ -147,4 +148,3 @@ Service-Component: OSGI-INF/simpleRepository.xml, OSGI-INF/repositoryFactory.xml
  OSGI-INF/sharedFileStore.xml,OSGI-INF/dummyTribeManager.xml,OSGI-INF/dummyJabberWorker.xml,OSGI-INF/asyncStoreRunner.xml,
  OSGI-INF/navajoContext.xml,OSGI-INF/dummyIntegrityWorker.xml,OSGI-INF/sharedMemoryStore.xml,
  OSGI-INF/propertyFileDescriptionProvider.xml,OSGI-INF/navajo.repository.context.xml
-

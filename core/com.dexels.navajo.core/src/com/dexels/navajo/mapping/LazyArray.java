@@ -1,6 +1,7 @@
 package com.dexels.navajo.mapping;
 
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.UserException;
+
 
 /**
  * <p>Title: Navajo Product Project</p>

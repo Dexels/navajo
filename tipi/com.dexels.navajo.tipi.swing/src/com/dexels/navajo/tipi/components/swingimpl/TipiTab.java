@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,23 @@ public class TipiTab extends TipiSwingDataComponentImpl {
 	}
 
 	@Override
+	public Object getComponentValue(String name) {
+		if (name.equals("visible")) {
+			if (getTipiParent() instanceof TipiTabs)
+			{
+				TipiTabs tabs = (TipiTabs) getTipiParent();
+				return tabs.isChildVisible(this);
+			}
+			else
+			{
+				throw new UnsupportedOperationException("Cannot ask visible of a TipiTab which is a child of a non-TipiTabs component!");
+			}
+		}
+
+		return super.getComponentValue(name);
+	}
+
+	@Override
 	protected void setComponentValue(String name, Object object) {
 		logger.debug("Setting: " + name + " to: " + object);
 		if (name.equals("tabIcon")) {
@@ -36,6 +54,9 @@ public class TipiTab extends TipiSwingDataComponentImpl {
 			// Don't know why. The propertyChangeListener seems to miss it when
 			// the icon is being set to null.
 			myTab.setTabTooltip((String)object);
+		}
+		if (name.equals("visible")) {
+			throw new UnsupportedOperationException("Setting visible is not supported on a TipiTab. Use 'showTab' of its parent instead.");
 		}
 		super.setComponentValue(name, object);
 	}

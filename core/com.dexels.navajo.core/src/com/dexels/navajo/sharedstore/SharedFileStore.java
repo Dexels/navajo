@@ -47,7 +47,7 @@ import navajocore.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.NavajoObjectInputStream;

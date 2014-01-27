@@ -2,10 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo API package
 Bundle-SymbolicName: com.dexels.navajo.api
-Bundle-Version: 1.0.43.qualifier
+Bundle-Version: 2.0.1.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.dexels.navajo.document;version="2.2.0",
+ com.dexels.navajo.document.types;version="2.2.1",
  javax.servlet;version="[2.5.0,4.0.0)",
  javax.servlet.http;version="[2.5.0,4.0.0)",
  org.osgi.framework,

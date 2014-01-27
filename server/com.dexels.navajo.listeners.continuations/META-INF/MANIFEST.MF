@@ -2,7 +2,7 @@ Bundle-Name: Navajo Listeners Jetty Continuations
 Bundle-SymbolicName: com.dexels.navajo.listeners.continuations
 Bundle-Description: Continuations
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.1.11.qualifier
+Bundle-Version: 2.0.1.qualifier
 Bundle-Activator: navajolistenerscontinuations.Version
 Bundle-ClassPath: .
 Include-Resource: lib
@@ -11,7 +11,9 @@ Export-Package: com.dexels.navajo.server.listener.http.continuation,
  navajolistenerscontinuations
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.mapping,
- com.dexels.navajo.script.api,
+ com.dexels.navajo.script.api;version="1.0.0",
+ com.dexels.navajo.server,
+ com.dexels.navajo.server.global,
  com.dexels.navajo.server.listener.http,
  com.dexels.navajo.server.listener.http.standard,
  com.dexels.navajo.version,
@@ -24,5 +26,4 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Require-Bundle: com.dexels.navajo.listeners.external;bundle-version="1.0.0"
-Service-Component: OSGI-INF/cometListener.xml, 
- OSGI-INF/navajo.server.listener.continuations.filter.xml
+Service-Component: OSGI-INF/*.xml

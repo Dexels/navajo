@@ -19,17 +19,17 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.version</artifactId>
-			<version>LATEST</version>
+			<version>1.2.11-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.document</artifactId>
-			<version>LATEST</version>
+			<version>2.2.69-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.api</artifactId>
-			<version>LATEST</version>
+			<version>1.0.43-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mozilla</groupId>
@@ -39,27 +39,27 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.jsp</artifactId>
-			<version>LATEST</version>
+			<version>1.1.11-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.jsp.server</artifactId>
-			<version>LATEST</version>
+			<version>1.1.17-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.client</artifactId>
-			<version>LATEST</version>
+			<version>3.4.43-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.listeners.continuations</artifactId>
-			<version>LATEST</version>
+			<version>1.1.11-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.listeners.external</artifactId>
-			<version>LATEST</version>
+			<version>1.0.37-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>jstl</groupId>
@@ -149,13 +149,13 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.adapters</artifactId>
-			<version>LATEST</version>
+			<version>1.1.78-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.authentication.api</artifactId>
-			<version>LATEST</version>
+			<version>1.0.10-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -164,47 +164,47 @@
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.core</artifactId>
-			<version>LATEST</version>
+			<version>2.13.3-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.client.async</artifactId>
-			<version>LATEST</version>
+			<version>1.1.23-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.function</artifactId>
-			<version>LATEST</version>
+			<version>3.1.43-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.listeners</artifactId>
-			<version>LATEST</version>
+			<version>3.1.35-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.queuemanager</artifactId>
-			<version>1.0.26</version>
+			<version>1.0.35-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.rhino</artifactId>
-			<version>LATEST</version>
+			<version>1.1.27-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.dexels.navajo</groupId>
 			<artifactId>com.dexels.navajo.rhino.continuations</artifactId>
-			<version>LATEST</version>
+			<version>1.0.15-SNAPSHOT</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>

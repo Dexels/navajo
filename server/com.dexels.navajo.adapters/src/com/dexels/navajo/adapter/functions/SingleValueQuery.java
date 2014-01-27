@@ -35,6 +35,9 @@ public class SingleValueQuery extends FunctionInterface {
       this.dbIdentifier = dbIdentifier;
   }
 
+  public SingleValueQuery() {
+	  super();
+  }
   
   protected final JDBCMappable evaluateQuery() throws com.dexels.navajo.parser.TMLExpressionException {
 	  String query = "";
@@ -65,13 +68,12 @@ public class SingleValueQuery extends FunctionInterface {
 	  if (query.endsWith("?"))
 		  parameterCount++;
 	  
-	  sql = JDBCFactory.getJDBCMap();
 	  String datasource = "";
 	  String user = "";
 
 	  //sql.setDebug(true);
 	  try {
-		  sql.load(null);
+		  sql = JDBCFactory.getJDBCMap(getAccess());
 		  if (query.indexOf(DATASOURCEDELIMITER) != -1) {
 			  // Contains datasource specification
 			  datasource = query.substring(0, query.indexOf(DATASOURCEDELIMITER));

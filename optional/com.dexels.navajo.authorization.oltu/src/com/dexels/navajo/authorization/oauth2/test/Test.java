@@ -74,8 +74,11 @@ public class Test {
 				+ " headers: " + request.getHeaders() + " body: "
 				+ request.getBody());
 		OAuthAccessTokenResponse response = oAuthClient.accessToken(request);
-
-		System.err.println("Response: " + response);
+		System.err.println("Response: " + response.getAccessToken());
+		System.err.println("scope: "+response.getScope());
+		System.err.println("body: "+response.getBody());
+		System.err.println("expiresin: "+response.getExpiresIn());
+		System.err.println("refresh: "+response.getRefreshToken());
 	}
 
 }

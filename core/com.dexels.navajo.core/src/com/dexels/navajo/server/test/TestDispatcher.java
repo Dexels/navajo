@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.ClientInfo;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.TmlRunnable;
-import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.AfterWebServiceEmitter;
 import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.NavajoConfigInterface;
@@ -49,7 +49,7 @@ public class TestDispatcher implements DispatcherInterface {
 	}
 
 	@Override
-	public Navajo handle(Navajo inMessage, Object userCertificate,
+	public Navajo handle(Navajo inMessage, String instance, Object userCertificate,
 			ClientInfo clientInfo) throws FatalException {
 		
 		return null;
@@ -201,6 +201,18 @@ public class TestDispatcher implements DispatcherInterface {
 		return null;
 	}
 
+	@Override
+	public Navajo handleCallbackPointers(Navajo inMessage) {
+		return null;
+	}
+
+	@Override
+	public Navajo handle(Navajo inMessage, String instance, boolean skipAuth)
+			throws FatalException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	@Override
 	public void generateServerReadyEvent() {
 		// TODO Auto-generated method stub

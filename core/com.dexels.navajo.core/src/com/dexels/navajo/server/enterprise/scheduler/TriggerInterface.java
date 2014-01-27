@@ -1,6 +1,6 @@
 package com.dexels.navajo.server.enterprise.scheduler;
 
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 
 public interface TriggerInterface extends Listener {
 

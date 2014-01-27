@@ -21,10 +21,10 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.geo.impl.AbstractKMLMap;
 import com.dexels.navajo.geo.renderer.SvgRenderer;
 import com.dexels.navajo.geo.zipcode.Gemeente2Population;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.UserException;
 
 public class KMLMap extends AbstractKMLMap implements Mappable {
 

@@ -18,8 +18,6 @@ import static org.junit.Assert.*;
 
 public class Switch extends AbstractFunction {
 
-	protected FunctionFactoryInterface fff;
-	protected ClassLoader cl;
 	
 	@Override
 	@Before

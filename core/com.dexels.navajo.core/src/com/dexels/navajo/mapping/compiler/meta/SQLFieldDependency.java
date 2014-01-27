@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.dexels.navajo.script.api.Dependency;
+
 /**
  * This class is used to store database object dependencies that are hidden in adapter fields.
  * It finds database objects (stored procedures, views and tables) within a SQL statement.

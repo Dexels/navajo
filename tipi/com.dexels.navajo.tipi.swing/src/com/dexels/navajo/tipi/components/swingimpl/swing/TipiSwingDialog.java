@@ -96,11 +96,25 @@ public class TipiSwingDialog extends JDialog {
 	}
 
 	public void setIconUrl(URL u) {
-		setIconImage(new ImageIcon(u).getImage());
+		if (u == null)
+		{
+			setIconImage(null);
+		}
+		else
+		{
+			setIconImage(new ImageIcon(u).getImage());
+		}
 	}
 
 	public void setIconUrl(Object u) {
-		setIconImage(getIcon(u).getImage());
+		if (u == null || getIcon(u) == null)
+		{
+			setIconImage(null);
+		}
+		else
+		{
+			setIconImage(getIcon(u).getImage());
+		}
 	}
 
 	protected ImageIcon getIcon(Object u) {

@@ -10,7 +10,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
-import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.script.api.SystemException;
 
 
 /**
@@ -69,7 +69,7 @@ public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException 
       for (int i = 0; i < arrayMsg.size(); i++) {
         Message m = arrayMsg.get(i);
         Property p = m.getProperty(propertyName);
-        boolean evaluate = (filter != null ? Condition.evaluate(filter, doc, null, m) : true);
+        boolean evaluate = (filter != null ? Condition.evaluate(filter, doc, null, m,getAccess()) : true);
         if (evaluate) {
           if (p != null) {
             Object o = null;

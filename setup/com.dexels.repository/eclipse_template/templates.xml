@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="java" deleted="false" description="SLF4J logger" enabled="true" name="slf">${:import(org.slf4j.Logger,org.slf4j.LoggerFactory)}
+private final static Logger logger = LoggerFactory.getLogger(${primary_type_name}.class);
+</template><template autoinsert="true" context="java" deleted="false" description="SLF dump" enabled="true" name="slfdump">logger.error("Error: ",${localVar});</template></templates>

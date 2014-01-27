@@ -7,9 +7,9 @@ import java.util.Iterator;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.DependentResource;
-import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 
 public interface JDBCMappable {
 

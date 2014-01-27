@@ -33,7 +33,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.script.api.NavajoResponseCallback;
 import com.dexels.navajo.script.api.SchedulerRegistry;
 import com.dexels.navajo.script.api.TmlRunnable;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 
 public class AsyncClientImpl implements ManualAsyncClient {
 
@@ -179,7 +179,7 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.dexels.navajo.client.async.AsyncClient#callService(com.dexels.navajo.server.Access, com.dexels.navajo.document.Navajo, java.lang.String, com.dexels.navajo.script.api.TmlRunnable, com.dexels.navajo.script.api.TmlRunnable, com.dexels.navajo.script.api.NavajoResponseCallback)
+	 * @see com.dexels.navajo.client.async.AsyncClient#callService(com.dexels.navajo.api.Access, com.dexels.navajo.document.Navajo, java.lang.String, com.dexels.navajo.script.api.TmlRunnable, com.dexels.navajo.script.api.TmlRunnable, com.dexels.navajo.script.api.NavajoResponseCallback)
 	 */
 	@Override
 	// Only used from Rhino

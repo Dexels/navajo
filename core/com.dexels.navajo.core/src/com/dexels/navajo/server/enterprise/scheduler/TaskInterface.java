@@ -3,7 +3,7 @@ package com.dexels.navajo.server.enterprise.scheduler;
 import java.io.Serializable;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.UserException;
 
 public interface TaskInterface extends Serializable, TaskMXBean {
 

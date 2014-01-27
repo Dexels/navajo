@@ -4,6 +4,7 @@
     <AD name="user"  id="user" required="false" type="String" default="demo"/>
     <AD name="password"  id="password" required="false" type="String" default="demo"/>
     <AD name="name"  id="name" required="false" type="String" default="navajo.resource.myjdbc"/>
+    <AD name="instance"  id="instance" required="false" type="String" default="*"/>
   </OCD>
   <Designate pid="navajo.resource.h2" factoryPid="navajo.resource.h2">
      <Object ocdref="navajo.resource.h2"/>

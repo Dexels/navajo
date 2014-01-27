@@ -1,6 +1,11 @@
 package com.dexels.navajo.authentication.api;
 
+import java.util.Map;
+
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.AuthorizationException;
+import com.dexels.navajo.script.api.SystemException;
 
 /**
  * <p>Title: <h3>SportLink Services</h3><br></p>
@@ -39,6 +44,9 @@ public interface AAAInterface {
      * @throws AAAException
      */
     public String [] checkUser(String username, String password) throws AAAException;
+
+    
+   // public Access authorizeUser(String username, String password, String service, Navajo inMessage, Object certificate) throws SystemException, AuthorizationException;
 
     /**
      * Determine whether a user is autenticated.
@@ -88,7 +96,10 @@ public interface AAAInterface {
      * @return
      * @throws AAAException
      */
-    public boolean isAuthorizedAccess(String region, String username, String actionObject, Navajo inputData) throws AAAException;
+    public boolean isAuthorizedAccess(String region, String username, String actionObject, Navajo inputData, Map<String,String> extraParams, Access access) throws AAAException;
+
+    
+	  public Access authorizeUser(String username, String password, String service, Navajo inMessage, Object certificate) throws SystemException, AuthorizationException;
 
     /**
      * Authenticate a user, using username and password.

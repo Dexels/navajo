@@ -12,14 +12,14 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.mapping.CompiledScript;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.mapping.MappableTreeNode;
-import com.dexels.navajo.mapping.MappingException;
 import com.dexels.navajo.mapping.MappingUtils;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.CompiledScriptInterface;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.MappableTreeNode;
+import com.dexels.navajo.script.api.MappingException;
+import com.dexels.navajo.script.api.UserException;
 
 public final class AccessMap implements Mappable {
 
@@ -37,7 +37,7 @@ public final class AccessMap implements Mappable {
   public boolean killed = false;
   public boolean waiting = false;
   public String waitingFor = null;
-  public CompiledScript myScript = null;
+  public CompiledScriptInterface myScript = null;
   
 private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
 
@@ -52,13 +52,13 @@ private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
 	  this.myScript = a.getCompiledScript();
   }
 
-  public CompiledScript getMyScript() {
+  public CompiledScriptInterface getMyScript() {
 	  return myScript;
   }
   
   public void setKilled(boolean b) {
-	  if (myAccess.getCompiledScript().currentMap != null) {
-		  Mappable myMap = (Mappable) myAccess.getCompiledScript().currentMap.myObject;
+	  if (myAccess.getCompiledScript().getCurrentMap() != null) {
+		  Mappable myMap = (Mappable) myAccess.getCompiledScript().getCurrentMap().myObject;
 		  if (myMap != null && myMap instanceof com.dexels.navajo.adapter.SQLMap) {
 			  ((SQLMap) myMap).setKillConnection();
 		  }
@@ -79,7 +79,7 @@ private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
 
   private void addProperty(Message m, String name, Object value, String type, int length) throws NavajoException, MappingException {
     MappingUtils.setProperty(false, m, name, value, type, null, Property.DIR_OUT, "", length,
-    		callingAccess.getOutputDoc(), callingAccess.getCompiledScript().inDoc, false);
+    		callingAccess.getOutputDoc(), callingAccess.getCompiledScript().getInDoc(), false);
   }
 
   private void showMapDetails(Message parent, MappableTreeNode m) throws NavajoException, MappingException, UserException {
@@ -89,7 +89,7 @@ private final static Logger logger = LoggerFactory.getLogger(AccessMap.class);
     addProperty(parent, "Map", m.getMapName(), Property.STRING_PROPERTY, 50);
     addProperty(parent, "Totaltime", new Integer(m.getTotaltime()), Property.STRING_PROPERTY, 50);
 
-    Class ccc = null;
+    Class<?> ccc = null;
 	try {
 		ccc = Class.forName("com.dexels.navajo.adapter.SPMap");
 	} catch (ClassNotFoundException e) {
@@ -228,7 +228,7 @@ public void kill() {
     return (int) ( System.currentTimeMillis() - myAccess.created.getTime() );
   }
   private MappableTreeNode getCurrentMap() {
-    MappableTreeNode current = myAccess.getCompiledScript().currentMap;
+    MappableTreeNode current = myAccess.getCompiledScript().getCurrentMap();
     return current;
   }
 
@@ -248,7 +248,7 @@ public void kill() {
 
   private String getRequestNavajo() {
     if (requestNavajo == null) {
-      Navajo in = myAccess.getCompiledScript().inDoc.copy();
+      Navajo in = myAccess.getCompiledScript().getInDoc().copy();
       in.removeMessage("__globals__");
       in.removeMessage("__parms__");
       java.io.StringWriter sw = new java.io.StringWriter();
@@ -258,9 +258,10 @@ public void kill() {
     return requestNavajo;
   }
 
-  private String getOutMessageStack() {
+  @SuppressWarnings("rawtypes")
+private String getOutMessageStack() {
     StringBuffer stackBuffer = new StringBuffer();
-    Stack s = myAccess.getCompiledScript().outMsgStack;
+    Stack s = myAccess.getCompiledScript().getOutMsgStack();
     Iterator iter = s.iterator();
     while (iter.hasNext()) {
       Object o = iter.next();
@@ -271,9 +272,10 @@ public void kill() {
     return stackBuffer.toString();
   }
 
-  private String getMapStack() {
+  @SuppressWarnings("rawtypes")
+private String getMapStack() {
    StringBuffer stackBuffer = new StringBuffer();
-   Stack s = myAccess.getCompiledScript().treeNodeStack;
+   Stack s = myAccess.getCompiledScript().getTreeNodeStack();
    Iterator iter = s.iterator();
    while (iter.hasNext()) {
      MappableTreeNode o = (MappableTreeNode) iter.next();

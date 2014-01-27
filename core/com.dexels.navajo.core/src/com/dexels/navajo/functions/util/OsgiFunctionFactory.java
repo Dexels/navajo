@@ -50,6 +50,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	}
 
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List<XMLElement> getAllFunctionElements(String interfaceClass, String propertyKey)  {
 		List<XMLElement> result = new ArrayList<XMLElement>();
@@ -101,7 +102,7 @@ public class OsgiFunctionFactory extends JarFunctionFactory {
 	}
 	
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Object getComponent( final String name, String serviceKey, Class interfaceClass)  {
 		BundleContext context = navajocore.Version.getDefaultBundleContext();
 		try {

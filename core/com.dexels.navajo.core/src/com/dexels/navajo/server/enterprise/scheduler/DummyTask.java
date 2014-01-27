@@ -1,7 +1,7 @@
 package com.dexels.navajo.server.enterprise.scheduler;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.UserException;
 
 public class DummyTask implements TaskInterface {
 

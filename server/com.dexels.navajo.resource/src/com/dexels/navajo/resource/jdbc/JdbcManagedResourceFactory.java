@@ -84,7 +84,6 @@ public class JdbcManagedResourceFactory implements ManagedServiceFactory {
 		while (en.hasMoreElements()) {
 			final String key = (String) en.nextElement();
 			final Object value = settings.get(key);
-			logger.debug("Property element: {} value: {}",key,value);
 			prop.put(key, value);
 		}
 	    prop.put(DataSourceFactory.JDBC_URL,settings.get(DataSourceFactory.JDBC_URL)); 

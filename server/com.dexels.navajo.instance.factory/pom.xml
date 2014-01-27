@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>com.dexels.navajo.instance.factory</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<version>1.0.6-SNAPSHOT</version>
+	<version>2.0.1-SNAPSHOT</version>
 	<parent>
 		<groupId>com.dexels.navajo</groupId>
 		<artifactId>com.dexels.navajo.super</artifactId>

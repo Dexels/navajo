@@ -67,7 +67,6 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		fileManager = compiler.getStandardFileManager(compilerOutputListener, null, null);
 		customJavaFileManager = new CustomClassloaderJavaFileManager(context, getClass().getClassLoader(), fileManager);
 		this.customClassLoader = new CustomClassLoader(customJavaFileManager);
-		
 		this.fileManagerRegistration = this.context.registerService(JavaFileManager.class, customJavaFileManager, null);
 		
 //		(type=navajoScriptClassLoader)

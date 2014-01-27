@@ -17,6 +17,7 @@ public class TmlStandardRunner extends BaseServiceRunner implements TmlRunnable 
 	
 	public TmlStandardRunner(AsyncRequest asyncRequest, LocalClient lc) {
 		super(asyncRequest,lc);
+		
 //		this.inputDoc = inputDoc;
 		attributes.put("httpRequest", asyncRequest.getHttpRequest());
 	}
@@ -39,6 +40,7 @@ public class TmlStandardRunner extends BaseServiceRunner implements TmlRunnable 
 	public String getUrl() {
 		return getRequest().getUrl();
 	}
+
 
 
 

@@ -17,7 +17,6 @@ public class JdbcResourceComponent {
 	private static JdbcResourceComponent instance = null;
 	private static final Logger logger = LoggerFactory.getLogger(JdbcResourceComponent.class);
 	private final Map<Integer,Connection> transactionMap = new ConcurrentHashMap<Integer, Connection>();
-//	private BundleContext bundleContext;
 	private BundleContext bundleContext;
 	
 	public void activate(BundleContext bc) {
@@ -34,20 +33,7 @@ public class JdbcResourceComponent {
 		instance = jdbcResourceComponent;
 		
 	}
-//	public void setResourceManager(ResourceManager r) {
-//		logger.info("Adding Resource Manager, instantiating JdbcResourceComponent");
-//		instance = this;
-//	}
-//
-//	/**
-//	 * @param r the resource manager to remove 
-//	 */
-//	public void removeResourceManager(ResourceManager r) {
-//		logger.info("Removing Resource Manager, uninstantiating JdbcResourceComponent");
-//		instance = null;
-//		transactionMap.clear();
-//	}
-	
+
 	public static JdbcResourceComponent getInstance() {
 		return instance;
 	}
@@ -82,7 +68,6 @@ public class JdbcResourceComponent {
 	
 
 	public static void setTestConnection() {
-//		testConnection = new Mongo();
 	}
 
 	public Connection getJdbc(int transactionContext) {

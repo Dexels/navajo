@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.adapter.SQLMap;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
 
 /**
  * <p>Title: </p>

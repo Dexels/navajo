@@ -86,9 +86,10 @@ public class RepositoryManagerImpl implements RepositoryManager {
 					File root = etc.getParentFile();
 					if(root!=null) {
 						File storage = new File(root,"storage");
-						if(storage.exists()) {
-							return storage;
+						if(!storage.exists()) {
+							storage.mkdirs();
 						}
+						return storage;
 					}
 				}
 			}

@@ -20,6 +20,8 @@ import java.util.logging.Level;
 
 import org.dexels.grus.DbConnectionBroker;
 import org.dexels.grus.GrusConnection;
+import org.dexels.grus.GrusProviderFactory;
+import org.dexels.grus.LegacyGrusConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,19 +41,19 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.AuditLogEvent;
 import com.dexels.navajo.jdbc.JDBCMappable;
-import com.dexels.navajo.mapping.Debugable;
 import com.dexels.navajo.mapping.DependentResource;
 import com.dexels.navajo.mapping.GenericDependentResource;
 import com.dexels.navajo.mapping.GenericMultipleDependentResource;
 import com.dexels.navajo.mapping.HasDependentResources;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
 import com.dexels.navajo.mapping.compiler.meta.SQLFieldDependency;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Debugable;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfigInterface;
-import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.resource.ResourceManager;
 import com.dexels.navajo.util.AuditLog;
 
@@ -211,7 +213,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	protected static int requestCount = 0;
 
 	private static Navajo configFile = null;
-	protected static final Map autoCommitMap = Collections.synchronizedMap(new HashMap());
+	protected static final Map<String,Boolean> autoCommitMap = Collections.synchronizedMap(new HashMap());
 
 	private int connectionId = -1;
 
@@ -228,6 +230,8 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	private boolean updateOnly;
 	private boolean isLegacyMode;
 	private String dbIdentifier = null;
+	private GrusConnection multiTenantGrusConnection;
+	private boolean ownConnection;
 
 	private static Object semaphore = new Object();
 	private static boolean initialized = false;
@@ -325,27 +329,6 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		return parameters.get(index);
 	}
 
-	public int getInstances() {
-		return ConnectionBrokerManager.getInstances();
-	}
-
-	public synchronized void setDeleteDatasource(String datasourceName)
-			throws MappableException, UserException {
-
-		if (fixedBroker != null) {
-			fixedBroker.destroy(datasourceName);
-		}
-		fixedBroker = null;
-	}
-
-	public static void terminateFixedBroker() {
-		if (fixedBroker != null) {
-			fixedBroker.terminate();
-		}
-		fixedBroker = null;
-
-	}
-  
 	/**
 	 * 
 	 * @param reload
@@ -379,10 +362,14 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 						if (datasourceName.equals("")) {
 							// Get other data sources.
-							ArrayList all = configFile.getMessages("/datasources/.*");
-							for (int i = 0; i < all.size(); i++) {
-								Message body = (Message) all.get(i);
-								createDataSource(body, navajoConfig);
+							if(configFile!=null) {
+								ArrayList all = configFile.getMessages("/datasources/.*");
+								for (int i = 0; i < all.size(); i++) {
+									Message body = (Message) all.get(i);
+									createDataSource(body, navajoConfig);
+								}
+							} else {
+								logger.debug("No config file set. Normal in multitenant.");
 							}
 						} else {
 							createDataSource(configFile.getMessage("/datasources/" + datasourceName), navajoConfig);
@@ -479,7 +466,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				return;
 			}
 			boolean ac = (this.overideAutoCommit) ? autoCommit
-					: ((Boolean) autoCommitMap.get(datasource)).booleanValue();
+					: supportsAutoCommit(datasource);
 			if (!ac) {
 				if (con != null) {
 					kill = true;
@@ -513,6 +500,11 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		}
 		cleanupBinaryStreams();
 
+		if (ownConnection && GrusProviderFactory.getInstance()!=null && gc!=null) {
+			GrusProviderFactory.getInstance().release(gc);
+			return;
+		} 
+		
 		if (transactionContext == -1) {
 
 			String resetSession = null;
@@ -534,13 +526,18 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					}
 					// Determine autocommit value
 					if (myConnectionBroker == null || myConnectionBroker.supportsAutocommit) {
-						boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
+						boolean ac = (this.overideAutoCommit) ? autoCommit : supportsAutoCommit(datasource);
 						if (!ac && !kill) { // Only commit if kill (rollback)
 											// was not called.
 							con.commit();
 						}
 						con.setAutoCommit(true);
 					}
+					if(multiTenantGrusConnection!=null) {
+						GrusProviderFactory.getInstance().release(multiTenantGrusConnection);
+						multiTenantGrusConnection = null;
+					}
+
 				}
 			} catch (SQLException sqle) {
 				logger.warn("COULD NOT RESET SCHEMA. session: "+resetSession);
@@ -565,6 +562,15 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	}
 
+	private boolean supportsAutoCommit(String datasource) {
+		Boolean ac = autoCommitMap.get(datasource);
+		if(ac==null) {
+			// TODO eh? Need to fix?
+			return false;
+		}
+		return ((Boolean) ac).booleanValue();
+	}
+
 	public void setTransactionIsolationLevel(int j) {
 		transactionIsolation = j;
 	}
@@ -574,7 +580,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			createConnection();
 			if (con != null
 					&& (myConnectionBroker == null || myConnectionBroker.supportsAutocommit)) {
-				if (!autoCommit) {
+				if (!con.getAutoCommit()) {
 					con.commit(); // Commit previous actions.
 				}
 				this.autoCommit = b;
@@ -844,10 +850,14 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		if (this.debug) {
 			Access.writeToConsole(myAccess, this.getClass() + ": in createConnection()\n");
 		}
-
 		if (transactionContext != -1) {
 
-			GrusConnection gc = DbConnectionBroker.getGrusConnection(transactionContext);
+			GrusConnection gc = null;
+			if (GrusProviderFactory.getInstance()!=null) {
+				gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
+			} else {
+				gc = DbConnectionBroker.getGrusConnection(transactionContext);
+			}
 			if (gc == null) {
 				throw new UserException(-1, "Invalid transaction context set: " + transactionContext);
 			}
@@ -866,21 +876,37 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			if (this.debug) {
 				Access.writeToConsole(myAccess, "in createConnection() for datasource " + datasource + " and username " + username + "\n");
 			}
+			if (GrusProviderFactory.getInstance()!=null) {
+				// in multitenant
+				if(transactionContext!=-1) {
+					gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
+					this.ownConnection = false;
+				} else {
+					String instance = null;
+					if (myAccess!=null) {
+						instance = myAccess.getInstance();
+					}
+					gc = GrusProviderFactory.getInstance().requestConnection(instance, datasource,alternativeUsername);
+					setTransactionContext((int) gc.getId());
+					this.ownConnection = true;
+				}
+				multiTenantGrusConnection = gc;
+			} else {
+				myConnectionBroker = null;
+				if (fixedBroker != null) {
+					myConnectionBroker = fixedBroker.get(this.datasource, null, null);
+				}
 
-			myConnectionBroker = null;
-			if (fixedBroker != null) {
-				myConnectionBroker = fixedBroker.get(this.datasource, null, null);
+				if (myConnectionBroker == null) {
+					throw new UserException(-1,
+							"Could not create connection to datasource "
+									+ this.datasource + ", using username "
+									+ this.username + ", fixedBroker = "
+									+ fixedBroker);
+				}
+
+				gc = myConnectionBroker.getGrusConnection();
 			}
-
-			if (myConnectionBroker == null) {
-				throw new UserException(-1,
-						"Could not create connection to datasource "
-								+ this.datasource + ", using username "
-								+ this.username + ", fixedBroker = "
-								+ fixedBroker);
-			}
-
-			gc = myConnectionBroker.getGrusConnection();
 			if ( gc == null ) {
 				AuditLog.log("SQLMap",
 						"Could (still) not connect to database: " + datasource
@@ -927,11 +953,12 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			}
 
 			if (con != null && (myConnectionBroker == null || myConnectionBroker.supportsAutocommit)) {
-				boolean ac = (this.overideAutoCommit) ? autoCommit : ((Boolean) autoCommitMap.get(datasource)).booleanValue();
-				if (!ac) {
+				boolean ac = (this.overideAutoCommit) ? autoCommit : supportsAutoCommit(datasource);
+				con.setAutoCommit(ac);
+				if (!con.getAutoCommit()) {
 					con.commit();
 				}
-				con.setAutoCommit(ac);
+
 				// con.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
 				if (transactionIsolation != -1) {
 					con.setTransactionIsolation(transactionIsolation);
@@ -957,7 +984,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			createConnection();
 		} catch (SQLException sqle) {
 			sqle.printStackTrace(Access.getConsoleWriter(myAccess));
-			throw new UserException(-1, sqle.getMessage());
+			throw new UserException(-1, sqle.getMessage(),sqle);
 		}
 		if (debug) {
 			Access.writeToConsole(myAccess, "IN GETTRANSACTIONCONTEXT(), CONNECTIONID = " + connectionId + "\n");
@@ -1105,7 +1132,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		try {
 			createConnection();
 			return this.con;
-		} catch (com.dexels.navajo.server.UserException ue) {
+		} catch (UserException ue) {
 			ue.printStackTrace(Access.getConsoleWriter(myAccess));
 			return null;
 		}
@@ -1232,6 +1259,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 					}
 
 				} catch (Exception e) {
+					e.printStackTrace();
 					/*************************************************
 					 * this is a bit of a kludge, for batch mode, we'll poke
 					 * ahead to see if we really do have a result set,
@@ -1325,10 +1353,14 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 
 	private final DatabaseInfo getMetaData() throws UserException {
 		if (fixedBroker == null || myConnectionBroker == null) {
-			throw new UserException(-1,
-					"Could not create connection to datasource "
-							+ this.datasource + ", using username "
-							+ this.username);
+			if(GrusProviderFactory.getInstance()==null) {
+				throw new UserException(-1,
+						"Could not create connection to datasource "
+								+ this.datasource + ", using username "
+								+ this.username);
+			} else {
+//				logger.warn("Metadata not yet implemented in multi tenant");
+			}
 		}
 		return fixedBroker.getMetaData(this.datasource, null, null);
 	}

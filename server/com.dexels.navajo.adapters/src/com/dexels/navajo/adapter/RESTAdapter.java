@@ -5,10 +5,10 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.json.JSONTML;
 import com.dexels.navajo.document.json.JSONTMLFactory;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.SystemException;
+import com.dexels.navajo.script.api.UserException;
 import com.dexels.navajo.server.ConditionErrorException;
-import com.dexels.navajo.server.SystemException;
-import com.dexels.navajo.server.UserException;
 
 public class RESTAdapter extends NavajoMap {
 
@@ -39,6 +39,7 @@ public class RESTAdapter extends NavajoMap {
 		this.url = url.trim();
 	}
 
+	@Override
 	public void setMethod(String method) {
 		this.method = method.trim();
 	}

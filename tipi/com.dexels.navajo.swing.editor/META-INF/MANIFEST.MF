@@ -2,7 +2,7 @@ Bundle-Name: Navajo Swing Editor
 Bundle-SymbolicName: com.dexels.navajo.swing.editor
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.1.9.qualifier
+Bundle-Version: 1.2.1.qualifier
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.core;bundle-version="2.9.2"
 Export-Package: com.dexels.navajo.swingeditor,

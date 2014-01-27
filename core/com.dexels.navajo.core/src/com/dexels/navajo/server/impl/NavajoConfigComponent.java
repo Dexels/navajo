@@ -21,11 +21,10 @@ import org.slf4j.LoggerFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.loader.NavajoBasicClassLoader;
 import com.dexels.navajo.loader.NavajoClassLoader;
-import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.impl.PersistenceManagerImpl;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.NavajoIOConfig;
 import com.dexels.navajo.server.Repository;
@@ -123,7 +122,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	@Override
 	public Reader getOutputReader(String outputPath, String scriptPackage,
 			String scriptName, String extension) throws IOException {
-		return getOutputReader(outputPath, scriptPackage, scriptName, extension);
+		return navajoIOConfig.getOutputReader(outputPath, scriptPackage, scriptName, extension);
 	}
 
 	@Override
@@ -289,15 +288,6 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	@Override
 	public double getCurrentCPUload() {
 		return -1;
-	}
-
-	@Override
-	public boolean needsFullAccessLog(Access a) {
-		if ( a.isDebugAll() || ( a.getCompiledScript() != null && a.getCompiledScript().isDebugAll() ) ) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	@Override

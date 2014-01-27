@@ -379,48 +379,48 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 	 * 
 	 * @param q
 	 */
-	private void initPropertyFromDefinition(Property q) {
-		// Set default values from definition message.
-		BaseMessageImpl parentArrayMessage = (BaseMessageImpl) getArrayParentMessage();
-		if (parentArrayMessage != null) {
-
-			Property definitionProperty = parentArrayMessage.getPropertyDefinition(q.getName());
-
-			if (definitionProperty != null) {
-				if (q.getDescription() == null || "".equals(q.getDescription())) {
-					q.setDescription(definitionProperty.getDescription());
-				}
-				if (q.getDirection() == null || "".equals(q.getDirection())) {
-					q.setDirection(definitionProperty.getDirection());
-				}
-				if (q.getType() == null || "".equals(q.getType())) {
-					q.setType(definitionProperty.getType());
-				}
-				// if (q.getLength() == null) {
-				// length = definitionProperty.getLength();
-				// }
-				if (q.getSubType() == null) {
-					if (definitionProperty.getSubType() != null) {
-						q.setSubType(definitionProperty.getSubType());
-					} else {
-						q.setSubType(null);
-					}
-				} else {
-					if (definitionProperty.getSubType() != null) {
-						/**
-						 * Concatenated subtypes. The if the same key of a subtype is
-						 * present in both the property and the definition property.
-						 */
-						q.setSubType(definitionProperty.getSubType() + "," + q.getSubType());
-					}
-				}
-
-				if (q.getValue() == null || "".equals(q.getValue())) {
-					q.setValue(definitionProperty.getValue());
-				}
-			}
-		}
-	}
+//	private void initPropertyFromDefinition(Property q) {
+//		// Set default values from definition message.
+//		BaseMessageImpl parentArrayMessage = (BaseMessageImpl) getArrayParentMessage();
+//		if (parentArrayMessage != null) {
+//
+//			Property definitionProperty = parentArrayMessage.getPropertyDefinition(q.getName());
+//
+//			if (definitionProperty != null) {
+//				if (q.getDescription() == null || "".equals(q.getDescription())) {
+//					q.setDescription(definitionProperty.getDescription());
+//				}
+//				if (q.getDirection() == null || "".equals(q.getDirection())) {
+//					q.setDirection(definitionProperty.getDirection());
+//				}
+//				if (q.getType() == null || "".equals(q.getType())) {
+//					q.setType(definitionProperty.getType());
+//				}
+//				// if (q.getLength() == null) {
+//				// length = definitionProperty.getLength();
+//				// }
+//				if (q.getSubType() == null) {
+//					if (definitionProperty.getSubType() != null) {
+//						q.setSubType(definitionProperty.getSubType());
+//					} else {
+//						q.setSubType(null);
+//					}
+//				} else {
+//					if (definitionProperty.getSubType() != null) {
+//						/**
+//						 * Concatenated subtypes. The if the same key of a subtype is
+//						 * present in both the property and the definition property.
+//						 */
+//						q.setSubType(definitionProperty.getSubType() + "," + q.getSubType());
+//					}
+//				}
+//
+//				if (q.getValue() == null || "".equals(q.getValue())) {
+//					q.setValue(definitionProperty.getValue());
+//				}
+//			}
+//		}
+//	}
 
 	@Override
 	public final ArrayList<Property> getAllProperties() {
@@ -1687,10 +1687,8 @@ public class BaseMessageImpl extends BaseNode implements Message, Comparable<Mes
 						writeElement(sw, ", ");
 					}
 					Property p = getProperty(s);
-					if(s!=null) {
-						((BaseNode) p).printElementJSONTypeless(sw);
-						cnt++;
-					}
+					((BaseNode) p).printElementJSONTypeless(sw);
+					cnt++;
 				}
 			} else {
 				for (Property p : properties) {

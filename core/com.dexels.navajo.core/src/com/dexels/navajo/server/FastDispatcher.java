@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.FatalException;
 
 public class FastDispatcher {

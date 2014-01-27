@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.loader.NavajoClassSupplier;
-import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.compiler.meta.AdapterFieldDependency;
-import com.dexels.navajo.mapping.compiler.meta.Dependency;
 import com.dexels.navajo.mapping.compiler.meta.ExpressionValueDependency;
 import com.dexels.navajo.mapping.compiler.meta.IncludeDependency;
 import com.dexels.navajo.mapping.compiler.meta.InheritDependency;
 import com.dexels.navajo.mapping.compiler.meta.JavaDependency;
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.CompiledScriptInterface;
+import com.dexels.navajo.script.api.Dependency;
+import com.dexels.navajo.script.api.NavajoClassSupplier;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.NavajoConfig;
@@ -29,7 +29,7 @@ public class ScriptIntrospection {
 	public String script;
 	public String packageName = "";
 	
-	private CompiledScript myCompiledScript;
+	private CompiledScriptInterface myCompiledScript;
 	private CVSVersionControl cvs;
 	private String rootPath;
 	private String errors = "";
@@ -193,7 +193,7 @@ public class ScriptIntrospection {
 		return errors;
 	}
 	
-	public CompiledScript getCompiledScript() throws Exception {
+	public CompiledScriptInterface getCompiledScript() throws Exception {
 		if ( myCompiledScript == null && !hasErrors ) {
 			initializeScript(script);
 		}

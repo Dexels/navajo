@@ -16,11 +16,11 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.NavajoExpression;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.Mappable;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 
 /**
  * MessageMap is used to manipulate/join Messages.
@@ -377,17 +377,6 @@ public class MessageMap implements Mappable {
 
 
 		return this.resultMessage;
-	}
-
-	private void renameDuplicates(Message c1, Message c2) {
-		for ( Property p1 : c1.getAllProperties() ) {
-			for ( Property p2 : c2.getAllProperties() ) {
-				if ( p1.getName().equals(p2.getName()) && ( ( p1.getValue() == null && p2.getValue() == null ) || 
-						( p1.getValue() != null && p2.getValue() != null && p1.getValue().equals(p2.getValue()) ) ) ) {
-					p2.setName(p2.getName()+"_2");
-				}
-			}
-		}
 	}
 
 	private int getMessageHash(Message m) {

@@ -12,7 +12,9 @@ package com.dexels.navajo.mapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.server.Access;
+import com.dexels.navajo.script.api.Access;
+import com.dexels.navajo.script.api.MappableException;
+import com.dexels.navajo.script.api.UserException;
 
 public class AsyncTest extends AsyncMappable {
 
@@ -25,7 +27,7 @@ public class AsyncTest extends AsyncMappable {
   private float ready = (float) 0.0;
 
   @Override
-public void load(Access access) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+  public void load(Access access) throws UserException, MappableException {
     System.out.println("in AsyncTest load()");
   }
 
@@ -35,7 +37,7 @@ public void kill() {
   }
 
   @Override
-public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+  public void store() throws UserException, MappableException {
     System.out.println("in AsyncTest store()");
   }
 
@@ -54,7 +56,7 @@ public void store() throws com.dexels.navajo.server.UserException, com.dexels.na
   }
 
   @Override
-public void run() throws com.dexels.navajo.server.UserException {
+  public void run() throws UserException {
       System.out.println("in AsyncTest run()");
       double a = 1000000000.0;
       for (int i = 0; i < iter; i++) {

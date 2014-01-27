@@ -21,6 +21,7 @@ public class AppStoreManagerImpl implements AppStoreManager {
 	protected String organization;
 	private String applicationName;
 	private String manifestCodebase;
+	private boolean authorize=true;
 	
 	private final Map<String, RepositoryInstance> repositories = new HashMap<String, RepositoryInstance>();
 	private final Map<RepositoryInstance, Map<String, Object>> repositorySettings = new HashMap<RepositoryInstance, Map<String, Object>>();
@@ -64,6 +65,10 @@ public class AppStoreManagerImpl implements AppStoreManager {
 		applicationName = (String) configuration.get("tipi.store.applicationname");
 		manifestCodebase = (String) configuration.get("tipi.store.manifestcodebase");
 		codebase = (String)configuration.get("tipi.store.codebase");
+		Boolean auth = (Boolean)configuration.get("authorize");
+		if(auth!=null) {
+			authorize = auth;
+		}
 	}
 	
 	public void deactivate() {
@@ -110,6 +115,11 @@ public class AppStoreManagerImpl implements AppStoreManager {
 	@Override
 	public int getSessionCount() {
 		return sessionSet.size();
+	}
+
+	@Override
+	public boolean useAuthorization() {
+		return authorize;
 	}
 
 }

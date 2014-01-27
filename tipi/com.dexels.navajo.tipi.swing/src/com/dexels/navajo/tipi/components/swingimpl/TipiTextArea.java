@@ -99,7 +99,7 @@ public class TipiTextArea extends TipiSwingComponentImpl {
 
 	@Override
 	public void setComponentValue(final String name, final Object object) {
-		logger.debug("Settting: " + name + " to " + object);
+		logger.debug("Setting: " + name + " to " + object);
 		if (name.equals("text")) {
 			runSyncInEventThread(new Runnable() {
 				@Override

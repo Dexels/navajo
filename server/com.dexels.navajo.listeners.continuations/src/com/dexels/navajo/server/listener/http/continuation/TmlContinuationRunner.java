@@ -17,6 +17,9 @@ import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.script.api.NavajoDoneException;
 import com.dexels.navajo.script.api.TmlScheduler;
+import com.dexels.navajo.server.global.GlobalManager;
+import com.dexels.navajo.server.global.GlobalManagerRepository;
+import com.dexels.navajo.server.global.GlobalManagerRepositoryFactory;
 import com.dexels.navajo.server.listener.http.standard.TmlStandardRunner;
 
 public class TmlContinuationRunner extends TmlStandardRunner {
@@ -90,12 +93,10 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 			  in.getHeader().setHeaderAttribute("useComet", "true");
 				  boolean continuationFound = false;
 				  try {
-					  
 				      int queueSize = getRequestQueue().getQueueSize();
 				      String queueId = getRequestQueue().getId();
-				      
 					  ClientInfo clientInfo = getRequest().createClientInfo(scheduledAt, startedAt, queueSize, queueId);
-					  setResponseNavajo(getLocalClient().handleInternal(in, getRequest().getCert(), clientInfo));
+					  setResponseNavajo(getLocalClient().handleInternal(getNavajoInstance(), in, getRequest().getCert(), clientInfo));
 				  } catch (NavajoDoneException e) {
 					  // temp catch, to be able to pre
 					  continuationFound = true;
@@ -143,6 +144,24 @@ public class TmlContinuationRunner extends TmlStandardRunner {
 	@Override
 	public void run() {
 		try {
+			final GlobalManagerRepository globalManagerInstance = GlobalManagerRepositoryFactory.getGlobalManagerInstance();
+			if(globalManagerInstance == null) {
+				logger.warn("No global manager found");
+			}
+			String instance = getRequest().getInstance();
+			logger.warn("instance: "+instance);
+			if(instance!=null && globalManagerInstance!=null) {
+
+				GlobalManager gm = globalManagerInstance.getGlobalManager(instance);
+				if(gm!=null) {
+					gm.initGlobals(getRequest().getInputDocument());
+				} else {
+					logger.warn("No global manager found for instance: " + instance);
+				}
+				
+			} else {
+				logger.debug("Not using instance based GlobalManager: No instance found in request");
+			}
 			execute();
 		} catch(NavajoDoneException e) {
 			logger.debug("NavajoDoneException caught. This thread fired a continuation. Another thread will finish it in the future.");
