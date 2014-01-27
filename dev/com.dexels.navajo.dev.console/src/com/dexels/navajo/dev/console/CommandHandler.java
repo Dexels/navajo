@@ -115,6 +115,15 @@ public class CommandHandler {
 		SharedStore_get get = new SharedStore_get();
 		registerCommand(get, "get");
 		
+		SharedStore_put put = new SharedStore_put();
+		registerCommand(put, "put");
+		
+		SharedStore_mkdir mkdir = new SharedStore_mkdir();
+		registerCommand(mkdir, "mkdir");
+		
+		SharedStore_rmdir rmdir = new SharedStore_rmdir();
+		registerCommand(rmdir, "rmdir");
+		
 		SharedStore_pwd pwd = new SharedStore_pwd();
 		registerCommand(pwd, "pwd");
 		

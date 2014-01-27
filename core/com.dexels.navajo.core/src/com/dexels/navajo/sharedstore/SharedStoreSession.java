@@ -3,6 +3,7 @@ package com.dexels.navajo.sharedstore;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +39,27 @@ public class SharedStoreSession {
 		for ( SharedStoreSessionEntry s: matches ) {
 			mySharedStore.remove(parentPath, s.getObjectName());
 		}
+	}
+	
+	public String rmdir(String name, boolean force) throws Exception {
+		String savedPath = parentPath;
+		try {
+			cdInternal(name);
+			if ( !force && ( mySharedStore.getParentObjects(parentPath).length > 0 || mySharedStore.getEntries(parentPath).length > 0 ) ) {
+				throw new Exception("Directory not empty: " + parentPath);
+			}
+			mySharedStore.removeAll(parentPath);
+			return parentPath;
+		} finally {
+			parentPath = savedPath;
+		}
+	}
+	
+	public void mkdir(String name) throws Exception {
+		String savedPath = parentPath;
+		cdInternal(name);
+		mySharedStore.createParent(parentPath);
+		parentPath = savedPath;
 	}
 	
 	public List<SharedStoreSessionEntry> ls(String filter) {
@@ -86,6 +108,17 @@ public class SharedStoreSession {
 		throw new Exception("File not found: " + file);
 	}
 
+	public void put(String source) throws Exception {
+		try {
+			File url = new File(source);
+			InputStream is = new FileInputStream(url);
+			OutputStream os =  mySharedStore.getOutputStream(parentPath, url.getName(), false);
+			copyResource(os, is);
+		} catch (Exception e) {
+			throw new Exception("Could not get file: " + source + " (" + e.getMessage() + ")");
+		}
+	}
+	
 	public File get(String source, String destination) throws Exception {
 
 		try {
@@ -120,6 +153,10 @@ public class SharedStoreSession {
 	}
 
 	private void cdInternal(String parent) {
+		if ( parent.equals("/") ) {
+			parentPath = "";
+			return;
+		}
 		if ( parent == null || parent.equals("") ) {
 			return;
 		} else if ( parent.indexOf("/") != -1 ) {
