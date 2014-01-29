@@ -63,6 +63,7 @@ public class CompileCommand extends OsgiCommandSupport  {
 			for (String failed : failures) {
 				System.err.println("Failed: "+failed);
 			}
+			bundleCreator.flushCompilerCache();
 		} catch (Throwable e) {
 			e.printStackTrace(System.err);
 		}

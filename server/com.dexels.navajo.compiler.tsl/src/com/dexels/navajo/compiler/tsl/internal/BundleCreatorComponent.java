@@ -37,6 +37,7 @@ import com.dexels.navajo.script.api.CompiledScriptFactory;
 import com.dexels.navajo.script.api.CompiledScriptInterface;
 import com.dexels.navajo.script.api.Dependency;
 import com.dexels.navajo.server.NavajoIOConfig;
+import com.dexels.osgicompiler.OSGiJavaCompiler;
 
 public class BundleCreatorComponent implements BundleCreator {
 
@@ -55,6 +56,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	 * )
 	 */
 	private BundleContext bundleContext;
+	private OSGiJavaCompiler osgiJavaCompiler;
 
 	public void setScriptCompiler(ScriptCompiler scriptCompiler) {
 		this.scriptCompiler = scriptCompiler;
@@ -62,6 +64,20 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	public void setJavaCompiler(JavaCompiler javaCompiler) {
 		this.javaCompiler = javaCompiler;
+	}
+
+	public void setJavaCompiler(OSGiJavaCompiler comp) {
+		osgiJavaCompiler = comp;
+	}
+
+	public void clearJavaCompiler(OSGiJavaCompiler comp) {
+		osgiJavaCompiler = null;
+	}
+	
+	@Override
+	public void flushCompilerCache() {
+		this.osgiJavaCompiler.flushCompilerCache();
+		logger.info("Compiler cache flushed");
 	}
 
 	/**

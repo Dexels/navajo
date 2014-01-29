@@ -21,7 +21,6 @@ import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
-import javax.tools.ToolProvider;
 
 import org.apache.commons.io.IOUtils;
 import org.osgi.framework.BundleContext;
@@ -53,11 +52,16 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		
 	}
 	
+	@Override
+	public void flushCompilerCache() {
+		ToolProviderNavajo.flushCompilerCache();
+	}
 	public void activateCompiler(BundleContext context) {
 		logger.info("Activating java compiler.");
 		this.context = context;
-		compiler = ToolProvider.getSystemJavaCompiler();
+		compiler = ToolProviderNavajo.getSystemJavaCompiler();
 		compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
+			
 
 			@Override
 			public void report(Diagnostic<? extends JavaFileObject> diagnostic) {

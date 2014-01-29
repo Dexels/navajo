@@ -28,7 +28,9 @@ public interface BundleCreator {
 //			FileNotFoundException;
 	
 //	public Collection<Long> installBundles(String scriptPrefix) throws BundleException;
+	public void flushCompilerCache();
 
+	
 	public void createBundle(String script, Date date, String extension,
 			List<String> failures, List<String> success, List<String> skipped, boolean force,boolean keepIntermediateFiles, String tenant) throws Exception;
 

@@ -5,4 +5,6 @@ import java.io.InputStream;
 
 public interface OSGiJavaCompiler {
 	public byte[] compile(String className, InputStream source) throws IOException;
+
+	public void flushCompilerCache();
 }

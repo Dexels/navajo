@@ -1,10 +1,11 @@
 package navajotsl;
 
 import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+
+import com.dexels.osgicompiler.internal.ToolProviderNavajo;
 
 
 public class Activator implements BundleActivator {
@@ -27,7 +28,7 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 		
-		compiler = ToolProvider.getSystemJavaCompiler();
+		compiler = ToolProviderNavajo.getSystemJavaCompiler();
 		if(compiler==null) {
 			throw new RuntimeException("Error: Toolprovider did not supply a system compiler!");
 		}
