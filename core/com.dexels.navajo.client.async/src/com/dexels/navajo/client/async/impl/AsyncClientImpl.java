@@ -90,7 +90,11 @@ public class AsyncClientImpl implements ManualAsyncClient {
 	}
 	
 	public void activate(Map<String,Object> settings) {
-		setServer((String) settings.get("server"));
+		String serverString = (String) settings.get("server");
+		if(serverString==null) {
+			serverString =  (String) settings.get("url");
+		}
+		setServer(serverString);
 		setUsername((String) settings.get("username"));
 		setPassword((String) settings.get("password"));
 		setName((String) settings.get("name"));
