@@ -69,7 +69,7 @@ public class ResourceManager {
 	}
 
 
-	public void loadResourceTml(InputStream is) {
+	private void loadResourceTml(InputStream is) {
 		Navajo n = NavajoFactory.getInstance().createNavajo(is);
 		loadResourceTml(n);
 	}
@@ -222,6 +222,8 @@ public class ResourceManager {
 			loadResourceTml(fis);
 			fis.close();
 		} catch (IOException e) {
+			logger.error("Error reading datasources file: ", e);
+		} catch (Throwable e) {
 			logger.error("Error reading datasources file: ", e);
 		} finally {
 			if(fis!=null) {
