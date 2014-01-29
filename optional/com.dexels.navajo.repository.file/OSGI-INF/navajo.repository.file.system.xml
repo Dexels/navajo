@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate"  name="navajo.repository.file.system" immediate="true" configuration-policy="ignore">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate"  name="navajo.repository.file.system" immediate="true">
    <implementation class="com.dexels.navajo.repository.file.impl.SystemPropertyFileRepositoryInstanceImpl"/>
    <service>
       <provide interface="com.dexels.navajo.repository.api.RepositoryInstance"/>
    </service>
    <reference bind="setEventAdmin" cardinality="0..1" interface="org.osgi.service.event.EventAdmin" name="EventAdmin" policy="dynamic" unbind="clearEventAdmin"/>
    <reference bind="addOperation" cardinality="0..n" interface="com.dexels.navajo.repository.api.AppStoreOperation" name="AppStoreOperation" policy="dynamic" unbind="removeOperation"/>
-   <reference bind="addRepositoryLayout" cardinality="0..n" interface="com.dexels.navajo.repository.api.diff.RepositoryLayout" name="RepositoryLayout" policy="dynamic" unbind="removeRepositoryLayout"/>
+   <reference target="(name=navajo)" bind="addRepositoryLayout" cardinality="1..n" interface="com.dexels.navajo.repository.api.diff.RepositoryLayout" name="RepositoryLayout" policy="dynamic" unbind="removeRepositoryLayout"/>
    <property name="repo" type="String" value="file"/>
-   <property name="type" type="String" value="any"/>
+   <property name="type" type="String" value="navajo"/>
 </scr:component>
