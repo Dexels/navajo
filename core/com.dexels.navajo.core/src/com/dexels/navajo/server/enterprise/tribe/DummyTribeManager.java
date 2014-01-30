@@ -34,6 +34,14 @@ public class DummyTribeManager implements TribeManagerInterface {
 //		}
 	}
 	
+	public void activate() {
+		TribeManagerFactory.setInstance(this);
+	}
+	
+	public void deactivate() {
+		TribeManagerFactory.setInstance(null);
+	}
+	
 	@Override
 	public Navajo forward(Navajo in) throws Exception {
 		return null;

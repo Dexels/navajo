@@ -26,27 +26,28 @@ public class TribeManagerFactory {
 	}
 	
 	public static TribeManagerInterface getInstance() {
-		
+
 		if (instance == null ) {
-			synchronized (semaphore) {
-				if ( instance == null ) {
-					instance = getTribeManagerService();
-					if(instance == null || instance instanceof DummyTribeManager) {
-						tribeManagerFound = false;
-					} else {
-						tribeManagerFound = true;
+			
+			if ( !Version.osgiActive() ) {
+				synchronized (semaphore) {
+					if ( instance == null ) {
+						instance = getTribeManagerService();
+						if(instance == null || instance instanceof DummyTribeManager) {
+							tribeManagerFound = false;
+						} else {
+							tribeManagerFound = true;
+						}
 					}
 				}
 			}
 		}
 		return instance;
-		
+
 	}
 
 	private static TribeManagerInterface getTribeManagerService() {
-		if(Version.osgiActive()) {
-			return getOSGiTribeManagerService();
-		}
+		
 			try {
 				Object value = DispatcherFactory.getInstance().getNavajoConfig().getParameter("useCluster"); // getMessage("parameters").getProperty("isLegacyMode");
 				if (value != null) {
@@ -72,21 +73,6 @@ public class TribeManagerFactory {
 				return new DummyTribeManager();
 			}	
 	}
-	
-
-	public static TribeManagerInterface getOSGiTribeManagerService() {
-			ServiceReference<TribeManagerInterface> sr = Version.getDefaultBundleContext().getServiceReference(TribeManagerInterface.class);
-			if(sr!=null) {
-				// TODO unsure of this
-				TribeManagerInterface tmi = Version.getDefaultBundleContext().getService(sr);
-				Version.getDefaultBundleContext().ungetService(sr);
-				return tmi;
-			} else {
-				logger.warn("No tribe manager found!");
-				return null;
-			}
-}
-
 	
 	public static void startStatusCollector() {
 		if ( instance != null && tribeManagerFound ) {
