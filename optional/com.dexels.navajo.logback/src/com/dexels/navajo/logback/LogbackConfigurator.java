@@ -26,7 +26,7 @@ public class LogbackConfigurator {
 
 	private static final String DEFAULTPATH = "logback.xml";
 
-	public RepositoryManager repositoryManager;
+//	public RepositoryManager repositoryManager;
 	
 	public void activate(Map<String, Object> settings) {
 		try {
@@ -81,14 +81,7 @@ public class LogbackConfigurator {
 		}
 	}
 
-	public void setRepositoryManager(RepositoryManager am) {
-		this.repositoryManager = am;
-	}
 
-	public void clearRepositoryManager(RepositoryManager am) {
-		this.repositoryManager = null;
-	}
-	
 	private void loadLogbackConfig(InputStream is, Map<String, Object> settings) {
 		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		lc.reset();
