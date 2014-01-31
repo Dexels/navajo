@@ -945,7 +945,7 @@ public final boolean isBusy() {
 
 		final GlobalManagerRepository globalManagerInstance = GlobalManagerRepositoryFactory.getGlobalManagerInstance();
 		if(globalManagerInstance == null) {
-			logger.warn("No global manager found");
+			logger.debug("No global manager found");
 		}
 		GlobalManager gm = null;
 		if(globalManagerInstance!=null) {
