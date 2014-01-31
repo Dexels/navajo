@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Navajo Camel
 Bundle-SymbolicName: com.dexels.navajo.camel
-Bundle-Version: 2.0.14
+Bundle-Version: 2.0.18.qualifier
 Bundle-Vendor: DEXELS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Blueprint: OSGI-INF/blueprint/*.xml
@@ -35,6 +35,7 @@ Import-Package: com.dexels.navajo.document;version="2.2.0",
  org.apache.james.protocols.smtp.core;version="1.6.3",
  org.apache.james.protocols.smtp.core.log;version="1.6.3",
  org.apache.james.protocols.smtp.hook;version="1.6.3",
+ org.junit;version="[4.8.2,5.0.0)";resolution:=optional,
  org.osgi.framework;version="1.6.0",
  org.slf4j;version="[1.6.1,1.8.0)"
 Service-Component: OSGI-INF/navajoCamelComponentResolver.xml,OSGI-INF/navajoCamelComponent.xml,
