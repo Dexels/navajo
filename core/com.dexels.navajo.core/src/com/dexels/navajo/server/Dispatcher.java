@@ -1111,7 +1111,7 @@ public final boolean isBusy() {
     finally {
     	if(!preventFinalize) {
     		//System.err.println("prevent Finalize not set, so finalizing service");
-				finalizeService(inMessage, access, outMessage, rpcName, rpcUser, myException, origThreadName, scheduledWebservice,
+				finalizeService(inMessage, access, rpcName, rpcUser, myException, origThreadName, scheduledWebservice,
 						afterWebServiceActivated,emit);
 			}
 		}
@@ -1174,10 +1174,11 @@ public Navajo handleCallbackPointers(Navajo inMessage) {
 
 
 @Override
-public void finalizeService(Navajo inMessage, Access access, Navajo outMessage, String rpcName, String rpcUser,
+public void finalizeService(Navajo inMessage, Access access, String rpcName, String rpcUser,
 		Throwable myException, String origThreadName, boolean scheduledWebservice, boolean afterWebServiceActivated, AfterWebServiceEmitter emit) {
 	if (access != null && !scheduledWebservice) {
 		
+		Navajo outMessage = access.getOutputDoc();
 		try { 
 			// Always make sure header contains original rpcName and rpcUser
 			// (BUT NOT PASSWORD!).

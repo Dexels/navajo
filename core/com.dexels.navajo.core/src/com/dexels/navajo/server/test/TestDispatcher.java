@@ -178,7 +178,7 @@ public class TestDispatcher implements DispatcherInterface {
 
 	@Override
 	public void finalizeService(Navajo inMessage, Access access,
-			Navajo outMessage, String rpcName, String rpcUser,
+			String rpcName, String rpcUser,
 			Throwable myException, String origThreadName,
 			boolean scheduledWebservice, boolean afterWebServiceActivated,
 			AfterWebServiceEmitter emit) {
