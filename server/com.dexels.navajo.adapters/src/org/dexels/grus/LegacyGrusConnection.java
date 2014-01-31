@@ -10,13 +10,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Deprecated
 public class LegacyGrusConnection implements GrusConnection {
 
-	private final static Logger logger = LoggerFactory.getLogger(DbConnectionBroker.class);
+	private final static Logger logger = LoggerFactory.getLogger(LegacyDbConnectionBroker.class);
 	private final static int LOGIN_TIMEOUT = 10;
 	
 	final Connection myConnection;
-	final DbConnectionBroker myBroker;
+	final LegacyDbConnectionBroker myBroker;
 	final long id;
 	final long created;
 	final int maxAge;
@@ -48,7 +49,7 @@ public class LegacyGrusConnection implements GrusConnection {
 	@Deprecated
 	private static final Map<Connection,GrusConnection> connectionMapping = new ConcurrentHashMap<Connection, GrusConnection>();
 	
-	public LegacyGrusConnection(String location, String username, String password, DbConnectionBroker broker, double maxAge) {
+	public LegacyGrusConnection(String location, String username, String password, LegacyDbConnectionBroker broker, double maxAge) {
 		DriverManager.setLoginTimeout(LOGIN_TIMEOUT);
 		try {
 			myConnection = DriverManager.getConnection(location, username, password);
@@ -144,7 +145,7 @@ public class LegacyGrusConnection implements GrusConnection {
 	 * @see org.dexels.grus.GrusConnection#getMyBroker()
 	 */
 	@Override
-	public DbConnectionBroker getMyBroker() {
+	public LegacyDbConnectionBroker getMyBroker() {
 		return  myBroker;
 	}
 
@@ -160,10 +161,4 @@ public class LegacyGrusConnection implements GrusConnection {
 		
 	}
 
-	// TODO deal with the 'conversion'
-	@Override
-	public Connection getConnection(String username, String password)
-			throws SQLException {
-		return myConnection;
-	}
 }

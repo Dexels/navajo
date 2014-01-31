@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.dexels.grus.DbConnectionBroker;
 import org.dexels.grus.GrusConnection;
+import org.dexels.grus.LegacyDbConnectionBroker;
 import org.dexels.grus.LegacyGrusConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -375,7 +376,7 @@ public final String getDatasourceUsername(String datasource) {
   }
 
   public static int getInstances() {
-	  return DbConnectionBroker.getInstances();
+	  return LegacyDbConnectionBroker.getInstances();
   }
   
   @Override
@@ -575,7 +576,7 @@ public int getWaitingTime(String resourceId) {
     }
 
     private void createBroker() throws ClassNotFoundException {
-    	this.broker = new DbConnectionBroker(this.driver, this.url, this.username,
+    	this.broker = new LegacyDbConnectionBroker(this.driver, this.url, this.username,
     			this.password,
     			this.minconnections,
     			this.maxconnections, this.logFile,
@@ -589,7 +590,7 @@ public int getWaitingTime(String resourceId) {
     				Connection c = gc.getConnection();
     				if (c != null) {
     					DatabaseMetaData dbmd = c.getMetaData();
-    					broker.supportsAutocommit = dbmd.supportsTransactions();
+    					broker.setSupportsAutoCommit(dbmd.supportsTransactions());
     					dbInfo = new DatabaseInfo(dbmd, this.datasource);
     				}
     			}

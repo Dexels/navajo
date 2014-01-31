@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import org.dexels.grus.DbConnectionBroker;
 import org.dexels.grus.GrusConnection;
 import org.dexels.grus.GrusProviderFactory;
+import org.dexels.grus.LegacyDbConnectionBroker;
 import org.dexels.grus.LegacyGrusConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -525,7 +526,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 						stmt.close();
 					}
 					// Determine autocommit value
-					if (myConnectionBroker == null || myConnectionBroker.supportsAutocommit) {
+					if (myConnectionBroker == null || myConnectionBroker.hasAutoCommit() ) {
 						boolean ac = (this.overideAutoCommit) ? autoCommit : supportsAutoCommit(datasource);
 						if (!ac && !kill) { // Only commit if kill (rollback)
 											// was not called.
@@ -579,7 +580,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		try {
 			createConnection();
 			if (con != null
-					&& (myConnectionBroker == null || myConnectionBroker.supportsAutocommit)) {
+					&& (myConnectionBroker == null || myConnectionBroker.hasAutoCommit())) {
 				if (!con.getAutoCommit()) {
 					con.commit(); // Commit previous actions.
 				}
@@ -856,7 +857,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 			if (GrusProviderFactory.getInstance()!=null) {
 				gc = GrusProviderFactory.getInstance().requestConnection(transactionContext);
 			} else {
-				gc = DbConnectionBroker.getGrusConnection(transactionContext);
+				gc = LegacyDbConnectionBroker.getGrusConnection(transactionContext);
 			}
 			if (gc == null) {
 				throw new UserException(-1, "Invalid transaction context set: " + transactionContext);
@@ -952,7 +953,7 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 				}
 			}
 
-			if (con != null && (myConnectionBroker == null || myConnectionBroker.supportsAutocommit)) {
+			if (con != null && (myConnectionBroker == null || myConnectionBroker.hasAutoCommit() )) {
 				boolean ac = (this.overideAutoCommit) ? autoCommit : supportsAutoCommit(datasource);
 				con.setAutoCommit(ac);
 				if (!con.getAutoCommit()) {

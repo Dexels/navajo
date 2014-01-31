@@ -14,7 +14,7 @@ public class GrusManager implements Runnable {
 
 	private final static GrusManager instance; 
 	private Thread myThread;
-	private final Set<DbConnectionBroker> registeredBrokers = Collections.synchronizedSet(new HashSet<DbConnectionBroker>());
+	private final Set<LegacyDbConnectionBroker> registeredBrokers = Collections.synchronizedSet(new HashSet<LegacyDbConnectionBroker>());
 	private boolean shutdown = false;
 	
 	private final static Logger logger = LoggerFactory
@@ -32,8 +32,8 @@ public class GrusManager implements Runnable {
 
 		shutdown = true;
 		myThread.interrupt();
-		List<DbConnectionBroker> br = new ArrayList<DbConnectionBroker>(registeredBrokers);
-		for (DbConnectionBroker db : br) {
+		List<LegacyDbConnectionBroker> br = new ArrayList<LegacyDbConnectionBroker>(registeredBrokers);
+		for (LegacyDbConnectionBroker db : br) {
 			try {
 				db.destroy();
 			} catch (Throwable t) {
@@ -47,11 +47,11 @@ public class GrusManager implements Runnable {
 		return instance;
 	}
 
-	public void addBroker(DbConnectionBroker broker) {
+	public void addBroker(LegacyDbConnectionBroker broker) {
 		registeredBrokers.add(broker);
 	}
 
-	public void removeBroker(DbConnectionBroker broker) {
+	public void removeBroker(LegacyDbConnectionBroker broker) {
 		registeredBrokers.remove(broker);
 	}
 
@@ -64,9 +64,9 @@ public class GrusManager implements Runnable {
 					wait(60000);
 				}
 				// Make copy to avoid concurrent modification exception.com
-				Iterator<DbConnectionBroker> allBrokers = registeredBrokers.iterator();
+				Iterator<LegacyDbConnectionBroker> allBrokers = registeredBrokers.iterator();
 				while ( allBrokers.hasNext() ) {
-					DbConnectionBroker inspectedBroker = allBrokers.next();
+					LegacyDbConnectionBroker inspectedBroker = allBrokers.next();
 					inspectedBroker.refreshConnections();
 				}
 			} catch (InterruptedException t) {

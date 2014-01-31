@@ -110,7 +110,12 @@ public class GrusProviderImpl implements GrusProvider {
 			throw new UserException(-1,"Error resolving datasource for instance: "+instance+" and name: "+name);
 		}
 		int id = connectionCounter.getAndIncrement();
-		GrusConnection gc = new GrusDataSource(id, dataSourceInstance,settings,this);
+		GrusConnection gc;
+		try {
+			gc = new GrusDataSource(id, dataSourceInstance,settings,this);
+		} catch (Exception e) {
+			throw new UserException(-1,"Could not create datasource connection for: "+instance+" and name: "+name);
+		}
 		grusIds.put((long) id,gc);
 		return gc;
 	}

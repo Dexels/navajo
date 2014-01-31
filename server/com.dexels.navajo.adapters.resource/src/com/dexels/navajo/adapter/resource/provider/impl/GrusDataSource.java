@@ -18,14 +18,14 @@ public class GrusDataSource implements GrusConnection {
 	private final Map<String, Object> settings;
 	private DbConnectionBroker dbConnectionBroker;
 	private final int id;
-	private Connection connection;
+	private final Connection connection;
 
 	private final GrusProvider grusProvider;
 	
 	private final static Logger logger = LoggerFactory.getLogger(GrusDataSource.class);
 	
 	
-	public GrusDataSource(int id, DataSource dataSourceInstance,Map<String, Object> settings, GrusProvider provider) {
+	public GrusDataSource(int id, DataSource dataSourceInstance,Map<String, Object> settings, GrusProvider provider) throws Exception {
 		this.datasource = dataSourceInstance;
 		this.id = id;
 		this.grusProvider = provider;
@@ -63,11 +63,10 @@ public class GrusDataSource implements GrusConnection {
 			
 		}
 		
-		try {
-			this.dbConnectionBroker = new DbConnectionBroker(null, url, user, password, minConns, maxConns, refresh);
-		} catch (ClassNotFoundException e) {
-			// doesnt happen
-		}
+		this.dbConnectionBroker = new DbConnectionBrokerWrapper(this, user, maxConns);
+		
+		this.connection = this.datasource.getConnection();
+		
 		this.settings = settings;
 	}
 
@@ -78,9 +77,6 @@ public class GrusDataSource implements GrusConnection {
 
 	@Override
 	public Connection getConnection() throws SQLException {
-		if(connection==null) {
-			connection = this.datasource.getConnection();
-		}
 		return connection;
 	}
 
@@ -111,7 +107,6 @@ public class GrusDataSource implements GrusConnection {
 			} catch (SQLException e) {
 				logger.error("Error closing connection: ", e);
 			}
-			connection = null;
 		}
 	}
 
@@ -142,10 +137,5 @@ public class GrusDataSource implements GrusConnection {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public Connection getConnection(String username, String password) throws SQLException {
-		return this.datasource.getConnection(username, password);
-	}	
 
 }
