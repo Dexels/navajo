@@ -5,10 +5,13 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.nio.file.FileSystems;
+import java.nio.file.PathMatcher;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -108,12 +111,24 @@ public class SharedStoreSession {
 		throw new Exception("File not found: " + file);
 	}
 
-	public void put(String source) throws Exception {
+	public void put(final String sourcePath, final String source) throws Exception {
 		try {
-			File url = new File(source);
-			InputStream is = new FileInputStream(url);
-			OutputStream os =  mySharedStore.getOutputStream(parentPath, url.getName(), false);
-			copyResource(os, is);
+			
+			File dir = new File(sourcePath);
+			File [] files = dir.listFiles(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					return name.matches(source);
+				}
+			});
+			
+			for ( File url: files ) {
+				//File url = new File(source);
+				InputStream is = new FileInputStream(url);
+				OutputStream os =  mySharedStore.getOutputStream(parentPath, url.getName(), false);
+				copyResource(os, is);
+			}
+			
 		} catch (Exception e) {
 			throw new Exception("Could not get file: " + source + " (" + e.getMessage() + ")");
 		}
