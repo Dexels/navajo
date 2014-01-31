@@ -76,6 +76,7 @@ public class SMTPConsumer extends DefaultConsumer {
 				chain.wireExtensibleHandlers();
 				final SMTPConfigurationImpl config = new SMTPConfigurationImpl();
 				config.setUseAddressBracketsEnforcement(false);
+				// TODO remove hardcoded interface, it should be in the url
 				server =  createServer(new SMTPProtocol(chain, config, new ProtocolLogger(SMTPConsumer.class)), new InetSocketAddress("0.0.0.0", 8025)); // new NettyServer(new SMTPProtocol(chain, new SMTPConfigurationImpl(), new ProtocolLogger(SMTPConsumer.class)));
 				server.bind();
 
@@ -138,9 +139,9 @@ public class SMTPConsumer extends DefaultConsumer {
          */
         @Override
 		public HookResult onMessage(SMTPSession s, MailEnvelope env) {
-            Exchange exchange = getEndpoint().createExchange();
-            exchange.setIn(new MailEnvelopeMessage(env));
             try {
+                Exchange exchange = getEndpoint().createExchange();
+                exchange.setIn(new MailEnvelopeMessage(env));
                 getProcessor().process(exchange);
             } catch (Exception e) {
                 return new HookResult(HookReturnCode.DENYSOFT);
