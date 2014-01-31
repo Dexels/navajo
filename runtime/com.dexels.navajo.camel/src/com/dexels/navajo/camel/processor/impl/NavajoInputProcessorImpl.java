@@ -61,9 +61,9 @@ public class NavajoInputProcessorImpl implements Processor {
 		}
 //		GetMailNavajo gmn = new GetMailNavajo();
 //		gmn.evaluate(inputBinary, attachMsg);
-//		in.setBody(n);
+		in.setBody(n);
 //		System.err.println("Converted to navajo:");
-		n.write(System.err);
+//		n.write(System.err);
 	}
 
 	private void appendDataHandler(Message attach, String name, DataHandler value) throws IOException {
