@@ -167,8 +167,8 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	}
 
 	@Override
-	public Date getScriptModificationDate(String scriptPath, String tenant) throws FileNotFoundException {
-		return navajoIOConfig.getScriptModificationDate(scriptPath, tenant);
+	public Date getScriptModificationDate(String scriptPath, String tenant,String extension) throws FileNotFoundException {
+		return navajoIOConfig.getScriptModificationDate(scriptPath, tenant,extension);
 	}
 
 	@Override
@@ -433,24 +433,24 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	}
 
 	@Override
-	public File getApplicableScriptFile(String rpcName, String tenant)
+	public File getApplicableScriptFile(String rpcName, String tenant, String extension)
 			throws FileNotFoundException {
-		return navajoIOConfig.getApplicableScriptFile(rpcName, tenant);
+		return navajoIOConfig.getApplicableScriptFile(rpcName, tenant,extension);
 	}
 
 	@Override
-	public File getApplicableBundleForScript(String rpcName, String tenant) {
-		return navajoIOConfig.getApplicableBundleForScript(rpcName, tenant);
+	public File getApplicableBundleForScript(String rpcName, String tenant, String extension) {
+		return navajoIOConfig.getApplicableBundleForScript(rpcName, tenant,extension);
 	}
 
 	@Override
-	public boolean hasTenantScriptFile(String rpcName, String tenant) {
-		return navajoIOConfig.hasTenantScriptFile(rpcName, tenant);
+	public boolean hasTenantScriptFile(String rpcName, String tenant,String extension) {
+		return navajoIOConfig.hasTenantScriptFile(rpcName, tenant,extension);
 	}
 
 	@Override
-	public InputStream getScript(String name, String tenant) throws IOException {
-		return navajoIOConfig.getScript(name, tenant);
+	public InputStream getScript(String name, String tenant,String extension) throws IOException {
+		return navajoIOConfig.getScript(name, tenant,extension);
 	}
 
 	

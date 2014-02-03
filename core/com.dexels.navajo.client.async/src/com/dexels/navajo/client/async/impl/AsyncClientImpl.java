@@ -86,7 +86,6 @@ public class AsyncClientImpl implements ManualAsyncClient {
 		} catch (Exception e) {
 			logger.error("Error: ", e);
 		}
-		logger.warn("Skipped the 'start' method call, it seems to have vanished. Don't know if it's a problem.");
 	}
 	
 	public void activate(Map<String,Object> settings) {
