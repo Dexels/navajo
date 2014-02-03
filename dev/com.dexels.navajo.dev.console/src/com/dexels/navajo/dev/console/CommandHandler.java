@@ -18,8 +18,8 @@ public class CommandHandler {
 	private final static Logger logger = LoggerFactory
 			.getLogger(CommandHandler.class);
 	private BundleCreator bundleCreator = null;
-	private final Collection<ServiceRegistration<?>> registeredCommands = new ArrayList<ServiceRegistration<?>>();
-	private BundleContext bundleContext;
+	protected final Collection<ServiceRegistration<?>> registeredCommands = new ArrayList<ServiceRegistration<?>>();
+	protected BundleContext bundleContext;
 	
 	private LocalClient localClient;
 	private NqlContextApi nqlContext;
@@ -136,10 +136,12 @@ public class CommandHandler {
 		NavajoStatusCommand navajoStatus = new NavajoStatusCommand();
 		registerCommand(navajoStatus, "status");
 		
-
+		HelpCommand help = new HelpCommand(this);
+		registerCommand(help, "help");
+		
 	}
 
-	private void registerCommand(Object c, String command) {
+	private void registerCommand(ConsoleCommand c, String command) {
 		Dictionary<String,String> dd = new Hashtable<String,String>();
 		dd.put("osgi.command.scope", "navajo");
 		dd.put("osgi.command.function", command);

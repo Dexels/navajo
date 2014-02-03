@@ -12,4 +12,9 @@ public class SharedStore_sharedstore extends SharedStoreCommand {
 		session.getConsole().println(sss.showImplementation());
 		
 	}
+
+	@Override
+	public String showUsage() {
+		return "navajo:sharedstore";
+	}
 }

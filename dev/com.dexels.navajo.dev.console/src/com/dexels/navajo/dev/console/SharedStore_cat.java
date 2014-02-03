@@ -17,4 +17,9 @@ public class SharedStore_cat extends SharedStoreCommand {
 			session.getConsole().println(e);
 		}
 	}
+
+	@Override
+	public String showUsage() {
+		return "cat <filename>";
+	}
 }

@@ -8,7 +8,7 @@ import org.apache.felix.service.command.Descriptor;
 
 import com.dexels.navajo.compiler.BundleCreator;
 
-public class CheckCommand {
+public class CheckCommand extends ConsoleCommand {
 	
 	private BundleCreator bundleCreator = null;
 //	private final static Logger logger = LoggerFactory
@@ -36,5 +36,11 @@ public class CheckCommand {
 		System.out.println("Modified at: "+modified);
 		System.out.println("Compiled at: "+compiled);
 		System.out.println("Installed at: "+installed);
+	}
+
+	@Override
+	public String showUsage() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

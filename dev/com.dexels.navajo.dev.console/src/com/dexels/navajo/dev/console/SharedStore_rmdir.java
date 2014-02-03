@@ -24,4 +24,9 @@ public class SharedStore_rmdir extends SharedStoreCommand {
 			session.getConsole().println(e);
 		}
 	}
+
+	@Override
+	public String showUsage() {
+		return "navajo:rmdir <empty shared store path>";
+	}
 }

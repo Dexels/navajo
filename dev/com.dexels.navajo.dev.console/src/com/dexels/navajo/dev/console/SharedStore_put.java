@@ -46,4 +46,11 @@ public class SharedStore_put extends SharedStoreCommand {
 			session.getConsole().println(e);
 		}
 	}
+
+	@Override
+	public String showUsage() {
+		return "navajo:put <filename pattern>\n" + 
+			   "navajo:put <local source path> <filename pattern>\n" + 
+			   "navajo:put <local source path> <filename pattern> <sharedstore destination path>";
+	}
 }

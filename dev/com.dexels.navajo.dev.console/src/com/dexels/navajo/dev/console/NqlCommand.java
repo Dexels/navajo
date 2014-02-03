@@ -11,7 +11,7 @@ import com.dexels.navajo.client.nql.NqlContextApi;
 import com.dexels.navajo.client.nql.OutputCallback;
 import com.dexels.navajo.document.NavajoException;
 
-public class NqlCommand {
+public class NqlCommand extends ConsoleCommand {
 
 	private NqlContextApi nqlContext;
 
@@ -59,5 +59,11 @@ public class NqlCommand {
 
 	public void setNqlContext(NqlContextApi nqlContext) {
 		this.nqlContext = nqlContext;
+	}
+
+	@Override
+	public String showUsage() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

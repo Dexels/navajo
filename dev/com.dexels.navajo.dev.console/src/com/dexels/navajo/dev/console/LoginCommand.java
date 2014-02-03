@@ -4,7 +4,7 @@ import org.apache.felix.service.command.Descriptor;
 
 import com.dexels.navajo.client.nql.NqlContextApi;
 
-public class LoginCommand {
+public class LoginCommand extends ConsoleCommand {
 
 //	private final BundleContext bundleContext;
 	private NqlContextApi nqlContext;
@@ -21,5 +21,11 @@ public class LoginCommand {
 
 	public void setNqlContext(NqlContextApi nqlContext) {
 		this.nqlContext = nqlContext;
+	}
+
+	@Override
+	public String showUsage() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

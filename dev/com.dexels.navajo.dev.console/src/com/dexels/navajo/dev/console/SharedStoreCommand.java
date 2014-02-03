@@ -5,7 +5,7 @@ import org.apache.felix.service.command.CommandSession;
 import com.dexels.navajo.sharedstore.SharedStoreFactory;
 import com.dexels.navajo.sharedstore.SharedStoreSession;
 
-public class SharedStoreCommand {
+public abstract class SharedStoreCommand extends ConsoleCommand {
 	
 	public SharedStoreSession getSharedStoreSession(CommandSession mySession) {
 		SharedStoreSession sss = (SharedStoreSession) mySession.get("sharedstoresession");

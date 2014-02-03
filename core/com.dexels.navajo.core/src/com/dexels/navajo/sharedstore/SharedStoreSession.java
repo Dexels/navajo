@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.nio.file.FileSystems;
-import java.nio.file.PathMatcher;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -122,6 +120,9 @@ public class SharedStoreSession {
 				}
 			});
 			
+			if ( files.length == 0 ) {
+				throw new Exception("Could not find any files matching pattern: " + source + " on source path " + dir.getAbsolutePath());
+			}
 			for ( File url: files ) {
 				//File url = new File(source);
 				InputStream is = new FileInputStream(url);
@@ -130,19 +131,38 @@ public class SharedStoreSession {
 			}
 			
 		} catch (Exception e) {
-			throw new Exception("Could not get file: " + source + " (" + e.getMessage() + ")");
+			throw new Exception("Could not put file: " + source + " (" + e.getMessage() + ")");
 		}
 	}
 	
-	public File get(String source, String destination) throws Exception {
+	public String get(final String source, String destination) throws Exception {
 
+		File parent = new File(destination);
+		if ( !parent.exists() ) {
+			throw new Exception("Could not find destination path " + destination);
+		}
 		try {
-			File url = new File(destination);
-			OutputStream os = new FileOutputStream(url);
-			InputStream is = mySharedStore.getStream(parentPath, source);
-			copyResource(os, is);
-			return url;
+
+			String [] matchingObjects = mySharedStore.getObjects(parentPath);
+			File url = null;
+			int count = 0;
+			for ( int i = 0; i < matchingObjects.length; i++ ) {
+				if ( matchingObjects[i].matches(source) ) {
+					url = new File(parent, matchingObjects[i]);
+					OutputStream os = new FileOutputStream(url);
+					InputStream is = mySharedStore.getStream(parentPath, matchingObjects[i]);
+					count++;
+					copyResource(os, is);
+				}
+			}
+
+			if ( count > 0 ) {
+				return "Downloaded " + count + " files to: " + parent.getAbsolutePath();
+			} else {
+				return "No matching files";
+			}
 		} catch (Exception e) {
+			e.printStackTrace(System.err);
 			throw new Exception("Could not get file: " + source + " (" + e.getMessage() + ")");
 		}
 	}

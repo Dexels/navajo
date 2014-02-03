@@ -7,5 +7,10 @@ public class SharedStore_pwd extends SharedStoreCommand {
 	public void pwd(CommandSession session) {
 		session.getConsole().println(getSharedStoreSession(session).pwd());
 	}
+
+	@Override
+	public String showUsage() {
+		return "navajo:pwd";
+	}
 	
 }

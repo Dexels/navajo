@@ -21,4 +21,9 @@ public class SharedStore_ls extends SharedStoreCommand {
 			session.getConsole().println(s.getFormattedName());
 		}
 	}
+
+	@Override
+	public String showUsage() {
+		return "navajo:ls [<file name pattern>]";
+	}
 }

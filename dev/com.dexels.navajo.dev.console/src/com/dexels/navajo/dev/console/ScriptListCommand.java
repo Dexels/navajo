@@ -4,7 +4,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
-public class ScriptListCommand {
+public class ScriptListCommand extends ConsoleCommand {
 
 	private final BundleContext bundleContext;
 
@@ -35,4 +35,10 @@ public class ScriptListCommand {
 			}
 
 	 }
+
+	@Override
+	public String showUsage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

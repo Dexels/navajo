@@ -14,5 +14,10 @@ public class SharedStore_rm extends SharedStoreCommand {
 			session.getConsole().println(e);
 		}
 	}
+
+	@Override
+	public String showUsage() {
+		return "navajo:rm <file pattern>";
+	}
 	
 }
