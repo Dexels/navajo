@@ -7,6 +7,7 @@
    <service>
       <provide interface="com.dexels.navajo.repository.api.AppStoreOperation"/>
       <provide interface="javax.servlet.Servlet"/>
+      <provide interface="org.osgi.service.event.EventHandler" />
    </service>
    <property name="osgi.command.scope" type="String" value="tipi"/>
    <property name="osgi.command.function" type="String">
@@ -15,4 +16,7 @@
    <property name="alias" type="String" value="/build"/>
    <property name="name" type="String" value="build"/>
    <property name="type" type="String" value="webstart"/>
+   <property name="event.topics" type="String">
+		repository/change
+   </property>
 </scr:component>

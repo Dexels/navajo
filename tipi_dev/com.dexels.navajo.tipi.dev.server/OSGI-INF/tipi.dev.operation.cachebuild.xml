@@ -6,7 +6,8 @@
    <service>
       <provide interface="com.dexels.navajo.repository.api.AppStoreOperation"/>
       <provide interface="javax.servlet.Servlet"/>
-	</service>
+      <provide interface="org.osgi.service.event.EventHandler" />
+   </service>
    <property name="osgi.command.scope" type="String" value="tipi"/>
    <property name="osgi.command.function" type="String">
 		cachebuild
@@ -15,5 +16,8 @@
    <property name="alias" type="String" value="/cachebuild"/>
    <property name="name" type="String" value="cachebuild"/>
    <property name="type" type="String" value="webstart"/>
+   <property name="event.topics" type="String">
+		repository/change
+   </property>
 </scr:component>
 
