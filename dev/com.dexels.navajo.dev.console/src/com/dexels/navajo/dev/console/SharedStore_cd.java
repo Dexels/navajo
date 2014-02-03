@@ -21,4 +21,9 @@ public class SharedStore_cd extends SharedStoreCommand {
 			session.getConsole().println(e);
 		}
 	}
+
+	@Override
+	public String showUsage() {
+		return "navajo:cd <shared store path>";
+	}
 }

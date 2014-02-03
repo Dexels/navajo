@@ -9,7 +9,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
 
-public class CallCommand {
+public class CallCommand extends ConsoleCommand {
 	
 	private LocalClient localClient;
 	
@@ -43,5 +43,11 @@ public class CallCommand {
 		} catch (FatalException e) {
 			e.printStackTrace(session.getConsole());
 		}
+	}
+
+	@Override
+	public String showUsage() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

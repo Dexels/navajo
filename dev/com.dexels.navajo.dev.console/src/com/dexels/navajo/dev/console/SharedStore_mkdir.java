@@ -18,4 +18,9 @@ public class SharedStore_mkdir extends SharedStoreCommand {
 			session.getConsole().println(e);
 		}
 	}
+
+	@Override
+	public String showUsage() {
+		return "navajo:mkdir <new shared store path>";
+	}
 }
