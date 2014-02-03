@@ -3227,13 +3227,14 @@ public class TslCompiler {
 			boolean hasTenantSpecificScript) throws SystemException,
 			SkipCompilationException {
 
+		final String extension = ".xml";
 		String fullScriptPath = null;
 		if (hasTenantSpecificScript) {
 			fullScriptPath = scriptPath + "/" + packagePath + "/" + script
-					+ "_" + tenant + ".xml";
+					+ "_" + tenant + extension;
 		} else {
 			fullScriptPath = scriptPath + "/" + packagePath + "/" + script
-					+ ".xml";
+					+ extension;
 		}
 
 		ArrayList<String> inheritedScripts = new ArrayList<String>();
@@ -3246,18 +3247,18 @@ public class TslCompiler {
 				scriptType = "navascript";
 				MapMetaData mmd = MapMetaData.getInstance();
 				InputStream metais = navajoIOConfig.getScript(packagePath + "/"
-						+ script, tenant);
+						+ script, tenant,extension);
 
 				String intermed = mmd.parse(fullScriptPath, metais);
 				metais.close();
 				is = new ByteArrayInputStream(intermed.getBytes());
 			} else {
 				is = navajoIOConfig.getScript(packagePath + "/" + script,
-						tenant);
+						tenant,extension);
 			}
 
 			InputStream sis = navajoIOConfig.getScript(packagePath + "/"
-					+ script, tenant);
+					+ script, tenant,extension);
 			logger.debug("Getting script: " + packagePath + "/" + script);
 			if (ScriptInheritance.containsInject(sis)) {
 				// Inheritance preprocessor before compiling.
@@ -3594,7 +3595,7 @@ public class TslCompiler {
 								offsetPath, classpath, configPath, deps,
 								tenant, legacyNavajoIOConfig
 										.hasTenantScriptFile(compileName,
-												tenant));
+												tenant,".xml"));
 						logger.info("Standalone compile finished. Detected dependencies: "
 								+ deps);
 					}

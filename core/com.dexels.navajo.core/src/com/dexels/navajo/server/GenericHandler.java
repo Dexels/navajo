@@ -376,7 +376,7 @@ public class GenericHandler extends ServiceHandler {
 									tslCompiler.compileScript(serviceName, 
     										scriptPath,
     										properties.getCompiledScriptPath(),
-    										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps,tenant,tenantConfig.hasTenantScriptFile(serviceName, tenant));
+    										pathPrefix,properties.getOutputWriter(properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"),deps,tenant,tenantConfig.hasTenantScriptFile(serviceName, tenant,".xml"));
     							} catch (SystemException ex) {
     								sourceFile.delete();
     								AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER , ex.getMessage(), Level.SEVERE, a.accessID);
@@ -441,11 +441,11 @@ public class GenericHandler extends ServiceHandler {
 
         try {
             // Should method getCompiledNavaScript be fully synced???
-        	CompiledScriptInterface cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName,false);
+        	CompiledScriptInterface cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName,false,".xml");
         	if(cso!=null) {
         		boolean dirty = cso.hasDirtyDependencies(access);
         		if(dirty) {
-                	cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName,true);
+                	cso = loadOnDemand(Version.getDefaultBundleContext(), access.rpcName,true,".xml");
             		logger.warn(">>>>>>>>>>>>>>>> dirty script!");
         		}
         	}
@@ -563,7 +563,7 @@ public class GenericHandler extends ServiceHandler {
 ////		 return ss;
 //	}
 
-	private CompiledScriptInterface loadOnDemand(BundleContext bundleContext, String rpcName,boolean force) throws Exception {
+	private CompiledScriptInterface loadOnDemand(BundleContext bundleContext, String rpcName,boolean force,String extension) throws Exception {
 		if(bundleContext==null) {
 			logger.debug("No OSGi context found");
 			return null;
@@ -575,7 +575,7 @@ public class GenericHandler extends ServiceHandler {
 			logger.error("No bundleCreator in GenericHandler, load on demand is going to fail.");
 			return null;
 		}
-		CompiledScriptInterface sc = bc.getOnDemandScriptService(rpcName,tenantConfig.getInstanceGroup(),tenantConfig.hasTenantScriptFile(rpcName,tenantConfig.getInstanceGroup()),force);
+		CompiledScriptInterface sc = bc.getOnDemandScriptService(rpcName,tenantConfig.getInstanceGroup(),tenantConfig.hasTenantScriptFile(rpcName,tenantConfig.getInstanceGroup(),extension),force,extension);
 		// wait for it..
 		bundleContext.ungetService(ref);
 		return sc;

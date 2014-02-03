@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.githubosgi.GitRepositoryInstance;
 import com.dexels.navajo.repository.api.diff.EntryChangeType;
+import com.dexels.navajo.repository.api.diff.RepositoryChange;
 import com.dexels.navajo.repository.api.diff.RepositoryLayout;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -503,7 +504,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 			if (url != null) {
 				properties.put("url", url);
 			}
-			sendChangeEvent("githubosgi/change", properties);
+			sendChangeEvent(RepositoryChange.TOPIC, properties);
 			return 1;
 		} catch (GitAPIException e) {
 			logger.error("Error: ", e);
