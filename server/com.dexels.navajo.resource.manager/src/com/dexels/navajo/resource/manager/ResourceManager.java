@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -19,6 +20,8 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,10 +29,13 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.server.api.NavajoServerContext;
 
-public class ResourceManager {
+public class ResourceManager implements EventHandler {
 	
+	private static final String CONFIG_DATASOURCES_XML = "config/datasources.xml";
+	private static final String CONFIG_CLIENT_PROPERTIES = "config/client.properties";
 	private static final Logger logger = LoggerFactory.getLogger(ResourceManager.class);
 	private ConfigurationAdmin configAdmin;
 
@@ -110,7 +116,7 @@ public class ResourceManager {
 		settings.put("name", "navajo.resource."+name);
 		String type = (String)dataSource.getProperty("type").getTypedValue();
 		final String factoryPid = "navajo.resource."+type;
-		final String filter = "(name="+name+")";
+		final String filter = "(name=navajo.resource."+name+")";
 //		Configuration cc = configAdmin.createFactoryConfiguration(factoryPid,null);
 //		resourcePids.put(cc.getPid(),cc);
 //		cc.update(settings);
@@ -213,7 +219,7 @@ public class ResourceManager {
 		FileInputStream fis = null;
 		try {
 			logger.info("Looking for datasources in: "+navajoServerContext.getInstallationPath());
-			File install = new File(navajoServerContext.getInstallationPath(),"config/datasources.xml");
+			File install = new File(navajoServerContext.getInstallationPath(),CONFIG_DATASOURCES_XML);
 			if(!install.exists()) {
 				logger.warn("Datasources file: "+install.getAbsolutePath()+" does not exist, not injecting explicit datasources");
 				return;
@@ -238,7 +244,7 @@ public class ResourceManager {
 
 	private void setupTesterUser() {
 		FileInputStream fis = null;
-		File install = new File(navajoServerContext.getInstallationPath(),"config/client.properties");
+		File install = new File(navajoServerContext.getInstallationPath(),CONFIG_CLIENT_PROPERTIES);
 		try {
 			fis = new FileInputStream(install);
 			ResourceBundle b = new PropertyResourceBundle(fis);
@@ -295,5 +301,19 @@ public class ResourceManager {
 	}
 
 
+	@Override
+	public void handleEvent(Event e) {
+		
+		List<String> paths = new ArrayList<String>();
+		paths.add(CONFIG_DATASOURCES_XML);
+		if(RepositoryEventParser.touched(e,paths)) {
+			setupResources();
+		}
+		paths.clear();
+		paths.add(CONFIG_CLIENT_PROPERTIES);
+		if(RepositoryEventParser.touched(e,paths)) {
+			setupTesterUser();
+		}
+	}
 
 }
