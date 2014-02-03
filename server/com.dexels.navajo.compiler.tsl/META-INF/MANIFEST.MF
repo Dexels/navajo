@@ -10,6 +10,7 @@ Import-Package: com.dexels.navajo.compiler,
  com.dexels.navajo.mapping,
  com.dexels.navajo.mapping.compiler,
  com.dexels.navajo.mapping.compiler.meta,
+ com.dexels.navajo.repository.api.util;version="1.0.0",
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
  javax.tools,
@@ -20,13 +21,14 @@ Import-Package: com.dexels.navajo.compiler,
  org.osgi.framework;version="1.6.0",
  org.osgi.framework.wiring;version="1.0.0",
  org.osgi.service.cm;version="1.3.0",
- org.osgi.service.event;version="1.1.0",
+ org.osgi.service.event;version="[1.1.0,2.0.0)",
  org.osgi.util.tracker;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)",
  org.w3c.dom
 Bundle-Activator: navajotsl.Activator
 Service-Component: OSGI-INF/navajoTslCompiler.xml, OSGI-INF/javaCompiler.xml, OSGI-INF/javaCompilerComponent.xml, 
- OSGI-INF/bundleCreator.xml, OSGI-INF/navajo.repository.listener.xml
+ OSGI-INF/bundleCreator.xml, OSGI-INF/navajo.repository.listener.xml,
+ OSGI-INF/navajo.bundlecreator.queue.xml
 Bundle-ClassPath: .
 Export-Package: com.dexels.navajo.compiler.tsl.custom;uses:="javax.tools,org.osgi.framework,javax.lang.model.element",
  com.dexels.navajo.compiler.tsl.internal;
