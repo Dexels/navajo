@@ -98,7 +98,8 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 			return;
 		}
 		//fileInstallConfiguration = myConfigurationAdmin.createFactoryConfiguration("org.apache.felix.fileinstall",null);
-		final String absolutePath = monitoredFolder.getAbsolutePath();
+//		monitoredFolder.getCanonicalFile().getAbsolutePath()
+		final String absolutePath = monitoredFolder.getCanonicalFile().getAbsolutePath();
 		Configuration newConfig = getUniqueResourceConfig(contextPath, absolutePath);
 		Dictionary<String,Object> d = newConfig.getProperties();
 		if(d==null) {
@@ -106,6 +107,7 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 		}
 		d.put("felix.fileinstall.dir",absolutePath );
 		d.put("contextPath",contextPath );
+		d.put("injectedBy","repository-instance" );
 		String pid = newConfig.getPid();
 		resourcePids.put(pid, newConfig);
 		newConfig.update(d);	
