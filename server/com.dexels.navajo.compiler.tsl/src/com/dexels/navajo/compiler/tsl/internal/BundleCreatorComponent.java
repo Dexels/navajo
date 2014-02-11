@@ -119,7 +119,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		final String formatCompilationDate = formatCompilationDate(compilationDate);
 		if (isDirectory(script, scriptFolder, f) ) {
 			compileAllIn(f, compilationDate, failures, success, skipped, force,
-					keepIntermediate,tenant);
+					keepIntermediate,tenant,scriptExtension);
 		} else {
 			File scriptFile = navajoIOConfig.getApplicableScriptFile(script, tenant,scriptExtension);
 			boolean hasTenantSpecificFile = navajoIOConfig.hasTenantScriptFile(script, tenant,scriptExtension);
@@ -165,12 +165,11 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	private void compileAllIn(File baseDir, Date compileDate,
 			List<String> failures, List<String> success, List<String> skipped,
-			boolean force, boolean keepIntermediate, String tenant) throws Exception {
-		final String extension = "xml";
+			boolean force, boolean keepIntermediate, String tenant, String extension) throws Exception {
 		File scriptPath = new File(navajoIOConfig.getScriptPath());
-
+		
 		Iterator<File> it = FileUtils.iterateFiles(baseDir,
-				new String[] { extension }, true);
+				new String[] { "xml" }, true);
 		while (it.hasNext()) {
 			File file = it.next();
 			String relative = getRelative(file, scriptPath);

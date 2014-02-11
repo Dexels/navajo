@@ -76,13 +76,20 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 	public void handleEvent(Event e) {
 		List<String> changedScripts = RepositoryEventParser.filterChanged(e,SCRIPTS_FOLDER);
 		for (String changedScript : changedScripts) {
-			extractScript(changedScript);
+			try {
+				extractScript(changedScript);
+			} catch (IllegalArgumentException e1) {
+				logger.warn("Error: ", e1);
+			}
 		}
 	}
 
 	private void extractScript(String changedScript) {
 		String stripped = changedScript.substring(SCRIPTS_FOLDER.length());
 		int dotIndex = stripped.lastIndexOf(".");
+		if(dotIndex<0) {
+			throw new IllegalArgumentException("Scripts need an extension, and "+changedScript+" has none. Ignoring.");
+		}
 		String scriptName = stripped.substring(0,dotIndex);
 		String extension = stripped.substring(dotIndex,stripped.length());
 		int scoreIndex = scriptName.lastIndexOf("_");
@@ -91,9 +98,9 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 			tenant = scriptName.substring(scoreIndex+1, scriptName.length());
 			scriptName = scriptName.substring(0,scoreIndex);
 		}
-		System.err.println("scriptName: "+scriptName);
-		System.err.println("extension: "+extension);
-		System.err.println("tenant: "+tenant);
+		logger.debug("scriptName: "+scriptName);
+		logger.debug("extension: "+extension);
+		logger.debug("tenant: "+tenant);
 		enqueueScript(scriptName,extension,tenant);
 	}
 
