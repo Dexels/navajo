@@ -4,4 +4,5 @@
    <reference bind="setWebContainer" cardinality="1..1" interface="org.ops4j.pax.web.service.WebContainer" name="WebContainer" policy="static" unbind="clearWebContainer"/>
    <reference bind="setNavajoConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoConfigInterface" name="NavajoConfig" policy="dynamic" unbind="clearNavajoConfig"/>
    <reference bind="setClientContext" cardinality="1..1" interface="com.dexels.navajo.client.context.ClientContext" name="ClientContext" policy="dynamic" unbind="clearClientContext"/>
+   <reference bind="setLocalClient" cardinality="1..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="static" unbind="clearLocalClient"/>
 </scr:component>

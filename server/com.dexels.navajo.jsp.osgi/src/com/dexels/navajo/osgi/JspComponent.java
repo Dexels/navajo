@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.client.context.ClientContext;
+import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
 public class JspComponent {
@@ -26,6 +27,7 @@ public class JspComponent {
 	private final static Logger logger = LoggerFactory
 			.getLogger(JspComponent.class);
 	private HttpContext httpContext;
+	private LocalClient localClient = null;
 
 	public WebContainer getWebContainer() {
 		return webContainer;
@@ -62,6 +64,17 @@ public class JspComponent {
 	public void clearClientContext(ClientContext clientContext) {
 		this.clientContext = null;
 	}
+	
+//	   <reference bind="setLocalClient" cardinality="1..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="static" unbind="clearLocalClient"/>
+
+	public void setLocalClient(LocalClient localClient) {
+		this.localClient  = localClient;
+		
+	}
+
+	public void clearLocalClient(LocalClient localClient) {
+		this.localClient = null;
+	}
 
 	public static JspComponent getInstance() {
 		return instance;
@@ -88,6 +101,7 @@ public class JspComponent {
 				public void contextInitialized(ServletContextEvent sce) {
 					sce.getServletContext().setAttribute("navajoContext",
 							clientContext);
+					sce.getServletContext().setAttribute("localClient", localClient);
 				}
 
 				@Override

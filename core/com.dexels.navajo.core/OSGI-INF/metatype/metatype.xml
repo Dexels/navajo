@@ -43,6 +43,8 @@
  <OCD description="Dummy Tribemanager" name="Dummy Tribemanager" id="navajo.server.tribemanager.dummy" >
     <AD name="Enable"  id="enable" required="true" type="Boolean" default="true"/>
   </OCD>
+ <OCD description="Navajo Local Context" name="Navajo Local Context" id="com.dexels.navajo.local.context" >
+ </OCD>
  
 
 
@@ -62,7 +64,7 @@
   <Designate pid="navajo.server.async" >
      <Object ocdref="navajo.server.async"/>
   </Designate>
-  <Designate pid="com.dexels.navajo.localclient" >
+  <Designate pid="com.dexels.navajo.localclient" factoryPid="com.dexels.navajo.localclient">
      <Object ocdref="com.dexels.navajo.localclient"/>
   </Designate>
   <Designate pid="navajo.server.config" >
@@ -74,7 +76,7 @@
   <Designate pid="navajo.server.tribemanager.dummy">
      <Object ocdref="navajo.server.tribemanager.dummy"/>
   </Designate>
-
-  
-  
+  <Designate pid="com.dexels.navajo.local.context">
+     <Object ocdref="com.dexels.navajo.local.context"/>
+  </Designate>
 </metatype:MetaData>
