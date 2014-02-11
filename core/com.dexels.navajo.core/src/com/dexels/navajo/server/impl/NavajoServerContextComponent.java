@@ -33,6 +33,8 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 //	private final Set<Configuration> monitoredFolderConfigurations = new HashSet<Configuration>();
 	private final Map<String,Configuration> resourcePids = new HashMap<String,Configuration>();
 
+	private boolean suppressAdapters = false;;
+
 	public void setConfigurationAdmin(ConfigurationAdmin ca) {
 		this.myConfigurationAdmin = ca;
 	}
@@ -51,7 +53,10 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 			String contextPath = (String)settings.get("contextPath");
 			installationPath = (String) settings.get("installationPath");
 			initializeContext(installationPath,contextPath);
-			
+			String suppressAdapters = System.getenv("navajo.suppress.adaptersfolder");
+			if("true".equals(suppressAdapters)) {
+				this.suppressAdapters  = true;
+			}
 		} catch (IOException e) {
 			logger.error("Error creating folder monitor: ",e);
 		} catch( Throwable t) {
@@ -62,7 +67,9 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 	protected void initializeContext(String installationPath,String contextPath) throws IOException {
 		this.installationPath = installationPath;
 		try {
-			addFolderMonitorListener(contextPath,installationPath,"adapters");
+			if(!suppressAdapters) {
+				addFolderMonitorListener(contextPath,installationPath,"adapters");
+			}
 			addFolderMonitorListener(contextPath,installationPath,"camel");
 		} catch (InvalidSyntaxException e) {
 			logger.error("Error creating folder monitor: ",e);
