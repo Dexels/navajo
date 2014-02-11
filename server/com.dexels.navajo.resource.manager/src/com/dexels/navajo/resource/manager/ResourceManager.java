@@ -207,12 +207,6 @@ public class ResourceManager implements EventHandler {
 		this.configAdmin = null;
 	}
 
-	public void activateManager() {
-		setupResources();
-		setupTesterUser();
-	}
-
-
 
 	
 	public void setupResources() {

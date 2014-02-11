@@ -453,7 +453,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 
 	@Override
 	public int refreshApplication() throws IOException {
-		RevCommit last = lastCommit;
+//		RevCommit last = lastCommit;
 		String oldVersion = getLastCommitVersion();
 		logger.debug(">>> last commit version: " + oldVersion);
 		try {

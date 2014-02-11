@@ -18,8 +18,6 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 
-import com.dexels.navajo.repository.api.RepositoryManager;
-
 public class LogbackConfigurator {
 
 	private final static Logger logger = LoggerFactory.getLogger(LogbackConfigurator.class);
