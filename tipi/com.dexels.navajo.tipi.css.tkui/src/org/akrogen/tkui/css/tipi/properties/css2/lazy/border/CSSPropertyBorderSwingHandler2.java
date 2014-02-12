@@ -33,9 +33,9 @@ public class CSSPropertyBorderSwingHandler2 implements ICSSPropertyHandler2 {
 			// .getClientProperty(CSSSwingConstants.COMPONENT_CSS2BORDER_KEY);
 			if (border == null)
 				return;
-			Border swingBorder = CSSSwingHelpers.getBorder(border, engine
-					.getResourcesRegistry());
-			// component.setBorder(swingBorder);
+//			Border swingBorder = CSSSwingHelpers.getBorder(border, engine
+//					.getResourcesRegistry());
+//			// component.setBorder(swingBorder);
 		}
 	}
 

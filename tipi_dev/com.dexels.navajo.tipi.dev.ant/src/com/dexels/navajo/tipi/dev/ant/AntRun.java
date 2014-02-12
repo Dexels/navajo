@@ -49,12 +49,13 @@ public class AntRun {
 	}
 
 	public static void callAnt(File buildFile, File baseDir, Map<String,String> userProperties, Map<String,Class<?>> taskDefinitions, String target, PrintStream errorStream) throws IOException {
-		userProperties.put("tipiAppstore", "true");
+//		userProperties.put("tipiAppstore", "true");
 		
 		Project p = new Project();
 		p.setBaseDir(baseDir);
 		p.setUserProperty("ant.file", buildFile.getAbsolutePath());		
 		p.setUserProperty("baseDir", baseDir.getAbsolutePath());		
+		p.setUserProperty("tipiAppstore", "true");		
 		if(userProperties!=null) {
 			for (Entry<String,String> w : userProperties.entrySet()) {
 //				logger.info("Adding property: "+w.getKey()+" value: "+w.getValue());

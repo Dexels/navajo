@@ -26,7 +26,7 @@ public class TipiLogoutServlet extends HttpServlet {
 		  destination = "/";
 	  }
 	  logger.info("Logout path: "+request.getContextPath());
-	  response.sendRedirect(URLEncoder.encode(destination,"UTF-8"));
+		  response.sendRedirect(URLEncoder.encode(destination,"UTF-8"));
 	 }
 
 	}

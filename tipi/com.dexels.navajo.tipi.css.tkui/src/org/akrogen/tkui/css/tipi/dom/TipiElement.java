@@ -161,7 +161,9 @@ public class TipiElement extends ElementAdapter implements NodeList {
 			@Override
 			public Node item(int index) {
 				return new TipiElement(getComponent().getTipiComponent(index),engine);
-			}};
+			}
+		};
+		// TODO Is this right? Shouldn't we return n?
 		return this;
 	}
 

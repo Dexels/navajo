@@ -22,7 +22,7 @@ public class CSSPropertyCursorHandler extends AbstractCSSPropertySwingHandler {
 
 	public void applyCSSProperty(TipiComponent component, String property,
 			CSSValue value, String pseudo, CSSEngine engine) throws Exception {
-		Cursor cursor = (Cursor) engine.convert(value, Cursor.class, null);
+//		Cursor cursor = (Cursor) engine.convert(value, Cursor.class, null);
 		// TODO Frank
 //		component.setCursor(cursor);
 	}

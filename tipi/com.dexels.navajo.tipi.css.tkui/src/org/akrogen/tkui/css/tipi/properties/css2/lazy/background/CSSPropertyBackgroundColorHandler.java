@@ -28,7 +28,7 @@ public class CSSPropertyBackgroundColorHandler extends
 	protected void applyCSSPropertyValue(TipiComponent component, String property,
 			Object value, String pseudo, CSSEngine engine) throws Exception {
 		if (value instanceof Color) {
-			Color color = (Color) value;
+//			Color color = (Color) value;
 //			component.setBackground(color);
 // TODO Frank
 			return;
