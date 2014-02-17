@@ -61,6 +61,6 @@ public final class Condition {
     }
 
     public final static boolean evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent,Access a) throws TMLExpressionException, SystemException {
-    			return evaluate(clause, inMessage, o, parent, null);
+    			return evaluate(clause, inMessage, o, parent, null,a);
     }
 }
