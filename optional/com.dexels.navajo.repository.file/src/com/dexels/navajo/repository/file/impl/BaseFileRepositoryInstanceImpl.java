@@ -37,6 +37,7 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 
 	protected final Set<Path> monitoredPaths = new HashSet<Path>();
 	protected String type;
+	protected boolean active = false;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(FileRepositoryInstanceImpl.class);
@@ -72,6 +73,10 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 	
 	protected void setupMonitoredFolders() throws IOException {
 		List<String> monitored = getMonitoredFolders();
+		if(monitored==null) {
+			logger.info("Can not setup up monitored folders: Layout isn't known (yet?): "+type); 
+			return;
+		}
 		for (String element : monitored) {
 			File c = new File(applicationFolder,element);
 			if(c.exists()) {
@@ -115,7 +120,15 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 	}
 	
 	public void addRepositoryLayout(RepositoryLayout r, Map<String,Object> settings) {
-		repositoryLayout.put((String) settings.get("name"),r);
+		final String layoutName = (String) settings.get("name");
+		repositoryLayout.put(layoutName,r);
+		if(active && layoutName.equals(type)) {
+			try {
+				setupMonitoredFolders();
+			} catch (IOException e) {
+				logger.error("Error: ", e);
+			}
+		}
 	}
 	
 	public void removeRepositoryLayout(RepositoryLayout r, Map<String,Object> settings) {

@@ -28,6 +28,7 @@ public class SystemPropertyFileRepositoryInstanceImpl extends BaseFileRepository
 		}
 		applicationFolder = new File(path); //findConfiguration(path,fileInstallPath);
 		setupMonitoredFolders();
+		active = true;
 	}
 
 	public void deactivate() {
@@ -39,6 +40,7 @@ public class SystemPropertyFileRepositoryInstanceImpl extends BaseFileRepository
 			}
 			watchDir = null;
 		}
+		active = false;
 	}
 	
 

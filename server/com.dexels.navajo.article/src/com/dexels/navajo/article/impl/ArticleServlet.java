@@ -91,6 +91,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 	
 	private String determineInstanceFromRequest(final HttpServletRequest req) {
 		String pathinfo = req.getPathInfo();
+		logger.info("Assuming multi teant, trying to determine instance from path info: "+pathinfo);
 		if(pathinfo.startsWith("/")) {
 			pathinfo = pathinfo.substring(1);
 		}
@@ -98,7 +99,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		if(pathinfo.indexOf('/')!=-1) {
 			instance = pathinfo.substring(0, pathinfo.indexOf('/'));
 		} else {
-			instance = pathinfo;
+			instance = null;
 		}
 		return instance;
 	}

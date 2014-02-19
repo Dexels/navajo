@@ -35,7 +35,7 @@ import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;
 
-public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterface {
+public class NavajoConfigComponent implements NavajoConfigInterface {
 
 	private NavajoIOConfig navajoIOConfig = null;
 	private RepositoryFactory repositoryFactory;

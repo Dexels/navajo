@@ -22,6 +22,7 @@ public class FileRepositoryInstanceImpl extends BaseFileRepositoryInstanceImpl i
 
 		applicationFolder = findConfiguration(path,fileInstallPath);
 		super.setupMonitoredFolders();
+		active = true;
 	}
 
 	public void deactivate() {
@@ -33,6 +34,7 @@ public class FileRepositoryInstanceImpl extends BaseFileRepositoryInstanceImpl i
 			}
 			watchDir = null;
 		}
+		active = false;
 	}
 	
 
