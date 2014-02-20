@@ -67,14 +67,14 @@ public class SystemPropertyListener {
 		return cc;
 	}
 	
-	private void updateIfChanged(Configuration c, Dictionary<String,Object> settings) throws IOException {
-		Dictionary<String,Object> old = c.getProperties();
-		if(old!=null) {
-			if(!old.equals(settings)) {
-				c.update(settings);
-			}
-		} else {
-			c.update(settings);
-		}
-	}
+//	private void updateIfChanged(Configuration c, Dictionary<String,Object> settings) throws IOException {
+//		Dictionary<String,Object> old = c.getProperties();
+//		if(old!=null) {
+//			if(!old.equals(settings)) {
+//				c.update(settings);
+//			}
+//		} else {
+//			c.update(settings);
+//		}
+//	}
 }

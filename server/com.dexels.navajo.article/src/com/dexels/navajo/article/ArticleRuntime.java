@@ -46,4 +46,6 @@ public interface ArticleRuntime {
 	public Set<String> getRequiredScopes();
 
 	public String resolveScope(String name) throws ArticleException;
+
+	public String getInstance();
 }

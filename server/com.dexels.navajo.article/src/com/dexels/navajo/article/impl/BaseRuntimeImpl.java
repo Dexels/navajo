@@ -44,19 +44,23 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	private final ObjectMapper mapper = new ObjectMapper();
 	private final ObjectNode rootNode;
 
-	protected BaseRuntimeImpl(String articleName, XMLElement article, Map<String, String> suppliedScopes) {
+	private final String instance;
+
+	protected BaseRuntimeImpl(String articleName, XMLElement article, Map<String, String> suppliedScopes, String instance) {
 		rootNode = mapper.createObjectNode();
 		this.article = article;
 		this.articleName = articleName;
 		this.suppliedScopes = suppliedScopes;
+		this.instance = instance;
 	}
 
-	protected BaseRuntimeImpl(String articleName, File articleFile, Map<String, String> suppliedScopes)
+	protected BaseRuntimeImpl(String articleName, File articleFile, Map<String, String> suppliedScopes, String instance)
 			throws IOException {
 		article = new CaseSensitiveXMLElement();
 		rootNode = mapper.createObjectNode();
 		this.suppliedScopes = suppliedScopes;
 		this.articleName = articleName;
+		this.instance = instance;
 		Reader r = null;
 		try {
 			r = new FileReader(articleFile);
@@ -130,6 +134,11 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 		return current;
 	}
 
+	@Override
+	public String getInstance() {
+		return instance;
+	}
+	
 	@Override
 	public void execute(ArticleContext context) throws ArticleException, DirectOutputThrowable {
 		verifyScopes();

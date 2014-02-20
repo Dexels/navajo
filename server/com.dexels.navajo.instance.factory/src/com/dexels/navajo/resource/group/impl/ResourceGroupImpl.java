@@ -21,12 +21,11 @@ public class ResourceGroupImpl implements ResourceGroup {
 	private BundleContext bundleContext;
 	private String name;
 	private String type;
-	private ServiceTracker tracker;
+	private ServiceTracker<Object,Object> tracker;
 	
-	private final Map<String,ServiceReference> references = new HashMap<String,ServiceReference>();
+	private final Map<String,ServiceReference<Object>> references = new HashMap<String,ServiceReference<Object>>();
 	private final Map<String,Object> serviceObjects = new HashMap<String,Object>();
 	
-	@SuppressWarnings("unchecked")
 	public void activate(Map<String,Object> settings, BundleContext context) {
 		logger.info("Acticating resource group");
 //		ManagedServiceFactory
@@ -35,10 +34,10 @@ public class ResourceGroupImpl implements ResourceGroup {
 		this.type = (String)settings.get("type");
 		try {
 			Filter f = bundleContext.createFilter("(&(service.factoryPid=navajo.resource."+type+")(name=navajo.resource."+name+"))");
-			tracker = new ServiceTracker(bundleContext, f,null) {
+			tracker = new ServiceTracker<Object, Object>(bundleContext, f,null) {
 
 				@Override
-				public Object addingService(ServiceReference reference) {
+				public Object addingService(ServiceReference<Object> reference) {
 					final String instance = (String) reference.getProperty("instance");
 					logger.info("Service added: "+reference.getProperty("name")+" type: "+reference.getProperty("type")+" instance: "+instance);
 					references.put(instance, reference);
@@ -48,14 +47,14 @@ public class ResourceGroupImpl implements ResourceGroup {
 				}
 
 				@Override
-				public void modifiedService(ServiceReference reference,
+				public void modifiedService(ServiceReference<Object> reference,
 						Object service) {
 					logger.info("Service modified: "+reference.getProperty("name")+" type: "+reference.getProperty("type"));
 					super.modifiedService(reference, service);
 				}
 
 				@Override
-				public void removedService(ServiceReference reference,
+				public void removedService(ServiceReference<Object> reference,
 						Object service) {
 					final String instance = (String) reference.getProperty("instance");
 					logger.info("Service removed: "+reference.getProperty("name")+" type: "+reference.getProperty("type"));

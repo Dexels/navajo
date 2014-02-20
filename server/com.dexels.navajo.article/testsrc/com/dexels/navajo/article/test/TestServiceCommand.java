@@ -25,7 +25,7 @@ public class TestServiceCommand extends ServiceCommand {
 	}
 	
 	@Override
-	protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n)
+	protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n, String instance)
 			throws ArticleException {
 		
 		File tmlFolder = new File("testresources/tml");

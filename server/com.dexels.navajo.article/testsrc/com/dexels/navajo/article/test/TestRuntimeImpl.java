@@ -20,12 +20,12 @@ public class TestRuntimeImpl extends BaseRuntimeImpl {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TestRuntimeImpl.class);
 	
-	public TestRuntimeImpl(String articleName, XMLElement article) {
-		super(articleName,article,null);
+	public TestRuntimeImpl(String articleName, XMLElement article, String instance) {
+		super(articleName,article,null,instance);
 	}
 	
-	public TestRuntimeImpl(String articleName, File articleFile) throws IOException {
-		super(articleName,articleFile,null);
+	public TestRuntimeImpl(String articleName, File articleFile, String instance) throws IOException {
+		super(articleName,articleFile,null,instance);
 	}
 
 	@Override

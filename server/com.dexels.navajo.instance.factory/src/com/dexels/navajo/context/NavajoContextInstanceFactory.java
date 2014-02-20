@@ -102,6 +102,10 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 	
 	private void addWatchedFolder(File folder,String fileFilter, String configName) {
+		if(!folder.exists()) {
+			logger.debug("Not watching folder: "+folder.getAbsolutePath()+" because it does not exist");
+			return;
+		}
 		final String factoryPid = "org.apache.felix.fileinstall";
 		final String filter = "(&(service.factoryPid="+factoryPid+")(name="+configName+"))";
 		try {
