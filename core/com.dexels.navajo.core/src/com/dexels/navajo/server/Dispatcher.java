@@ -767,7 +767,7 @@ public final Navajo handle(Navajo inMessage,boolean skipAuth,AfterWebServiceEmit
   
   @Override
   public final Navajo handle(Navajo inMessage,boolean skipAuth) throws FatalException {
-	    return processNavajo(inMessage, "default", null, null, skipAuth,null,null);
+	    return processNavajo(inMessage, null, null, null, skipAuth,null,null);
 	  }
 
   @Override
