@@ -1,8 +1,11 @@
 package com.dexels.navajo.osgi;
 
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -17,7 +20,7 @@ import com.dexels.navajo.client.context.ClientContext;
 import com.dexels.navajo.script.api.LocalClient;
 import com.dexels.navajo.server.NavajoConfigInterface;
 
-public class JspComponent {
+public class JspComponent implements ServletContextListener {
 	private WebContainer webContainer;
 	private NavajoConfigInterface navajoConfig;
 	private ClientContext clientContext;
@@ -29,6 +32,8 @@ public class JspComponent {
 	private HttpContext httpContext;
 	private LocalClient localClient = null;
 
+	private final Map<String,LocalClient> localClients = new HashMap<String, LocalClient>();
+	private ServletContext servletContext;
 	public WebContainer getWebContainer() {
 		return webContainer;
 	}
@@ -67,13 +72,24 @@ public class JspComponent {
 	
 //	   <reference bind="setLocalClient" cardinality="1..1" interface="com.dexels.navajo.script.api.LocalClient" name="LocalClient" policy="static" unbind="clearLocalClient"/>
 
-	public void setLocalClient(LocalClient localClient) {
-		this.localClient  = localClient;
+	public void addLocalClient(LocalClient localClient, Map<String,Object> settings) {
+		String name = (String) settings.get("instance");
+		if (name==null) {
+			this.localClient  = localClient;
+		} else {
+			this.localClients.put(name, localClient);
+		}
 		
 	}
 
-	public void clearLocalClient(LocalClient localClient) {
-		this.localClient = null;
+	public void removeLocalClient(LocalClient localClient, Map<String,Object> settings) {
+		String name = (String) settings.get("instance");
+		if (name==null) {
+			this.localClient  = null;
+		} else {
+			this.localClients.remove(name);
+		}
+//		this.localClient = null;
 	}
 
 	public static JspComponent getInstance() {
@@ -84,6 +100,23 @@ public class JspComponent {
 		return bundleContext.getBundle().getVersion().toString();
 	}
 
+
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+		logger.debug("Context destroyed.");
+		this.servletContext = null;
+		}
+
+	@Override
+	public void contextInitialized(ServletContextEvent sce) {
+		this.servletContext = sce.getServletContext();
+		sce.getServletContext().setAttribute("navajoContext",
+				clientContext);
+		sce.getServletContext().setAttribute("localClient", localClient);
+		sce.getServletContext().setAttribute("localClients", this.localClients);
+		
+	}
+	
 	public void activate(BundleContext cc) {
 		this.bundleContext = cc;
 		instance = this;
@@ -95,20 +128,7 @@ public class JspComponent {
 			contextProperties.put("forcedNavajoPath",
 					navajoConfig.getRootPath());
 			webContainer.setContextParam(contextProperties, httpContext);
-			webContainer.registerEventListener(new ServletContextListener() {
-
-				@Override
-				public void contextInitialized(ServletContextEvent sce) {
-					sce.getServletContext().setAttribute("navajoContext",
-							clientContext);
-					sce.getServletContext().setAttribute("localClient", localClient);
-				}
-
-				@Override
-				public void contextDestroyed(ServletContextEvent sce) {
-					logger.debug("Context destroyed.");
-				}
-			}, httpContext);
+			webContainer.registerEventListener(this, httpContext);
 
 			// PageContext pc = new Page
 
@@ -151,5 +171,6 @@ public class JspComponent {
 		// HttpContext context = webContainer.
 		webContainer.unregisterJsps(httpContext);
 	}
+
 
 }

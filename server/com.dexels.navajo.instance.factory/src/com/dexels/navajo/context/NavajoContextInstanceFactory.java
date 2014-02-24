@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -219,6 +220,46 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 //		registerInstance(name);
 		registerInstanceProperties(name,copyOfProperties);
 		registerInstanceResources(name,resources,aliases);
+		registerLocalClients(name,instanceFolder);
+	}
+
+	private void registerLocalClients(String name, File instanceFolder) {
+		Map<String,Object> settings = new HashMap<String, Object>();
+		settings.put("instance", name);
+		File clientProperties = new File(instanceFolder,"navajoclient.cfg");
+		if(!clientProperties.exists()) {
+			logger.debug("Ignoring non existing navajoclient.cfg");
+			return;
+		}
+		InputStream is = null;
+		try {
+			is = new FileInputStream(clientProperties);
+			PropertyResourceBundle prb = new PropertyResourceBundle(is);
+			Enumeration<String> en = prb.getKeys();
+			do {
+				String next = en.nextElement();
+				settings.put(next, prb.getObject(next));
+			} while(en.hasMoreElements());
+			injectLocalClient(name,settings);
+		} catch (Exception e) {
+			logger.error("Error: ", e);
+		} finally {
+			if(is!=null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		
+	}
+
+	private void injectLocalClient(String instance, Map<String, Object> settings) throws IOException {
+		final String filter = "(&(instance="+instance+")(service.factoryPid=navajo.local.client))";
+		Configuration cc = createOrReuse("navajo.local.client", filter);
+		Dictionary<String, Object> dict = new Hashtable<String, Object>(settings);
+		updateIfChanged(cc, dict);
+
 	}
 
 	private void registerAuthorization(String instance, File instanceFolder) throws IOException {

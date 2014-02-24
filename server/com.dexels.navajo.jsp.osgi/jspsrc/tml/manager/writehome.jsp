@@ -18,6 +18,5 @@
 	</c:when>
 	<c:otherwise>
 		<h2>Welcome to Navajo</h2>
-		Check documentation, tips, and cool gadgets at <a href="http://www.navajo.nl">www.navajo.nl</a> 
 	</c:otherwise>
 </c:choose>

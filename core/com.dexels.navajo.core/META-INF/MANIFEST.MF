@@ -150,4 +150,5 @@ Service-Component: OSGI-INF/simpleRepository.xml, OSGI-INF/repositoryFactory.xml
  OSGI-INF/navajoConfig.xml,OSGI-INF/dispatcher.xml, OSGI-INF/expressionEvaluator.xml,OSGI-INF/navajoEventRegistry.xml,
  OSGI-INF/sharedFileStore.xml,OSGI-INF/dummyTribeManager.xml,OSGI-INF/dummyJabberWorker.xml,OSGI-INF/asyncStoreRunner.xml,
  OSGI-INF/navajoContext.xml,OSGI-INF/dummyIntegrityWorker.xml,OSGI-INF/sharedMemoryStore.xml,
- OSGI-INF/propertyFileDescriptionProvider.xml,OSGI-INF/navajo.repository.context.xml
+ OSGI-INF/propertyFileDescriptionProvider.xml,OSGI-INF/navajo.repository.context.xml,
+ OSGI-INF/navajoGlobalManager.xml,OSGI-INF/navajo.local.client.xml

@@ -13,4 +13,5 @@ Import-Package: ch.qos.logback.classic;version="1.0.13",
  ch.qos.logback.core.spi;version="1.0.13",
  ch.qos.logback.core.util;version="1.0.13",
  com.dexels.navajo.repository.api;version="1.0.0",
+ com.dexels.navajo.server,
  org.slf4j;version="1.7.5"

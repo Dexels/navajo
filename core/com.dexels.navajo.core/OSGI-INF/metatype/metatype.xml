@@ -45,9 +45,16 @@
   </OCD>
  <OCD description="Navajo Local Context" name="Navajo Local Context" id="com.dexels.navajo.local.context" >
  </OCD>
+   <OCD description="Navajo Local Client" name="Navajo Local Client" id="navajo.local.client">
+    <AD name="Username"  id="user" required="true" type="String" default=""/>
+    <AD name="Password"  id="password" required="true" type="String" default=""/>
+    <AD name="Instance"  id="instance" required="true" type="String" />
+    </OCD>
+
+  <Designate factoryPid="navajo.local.client" >
+     <Object ocdref="navajo.local.client"/>
+  </Designate>
  
-
-
   <Designate pid="navajo.server.store" >
      <Object ocdref="navajo.server.store"/>
   </Designate>

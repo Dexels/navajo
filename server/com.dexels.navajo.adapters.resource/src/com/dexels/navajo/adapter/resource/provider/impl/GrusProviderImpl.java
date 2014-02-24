@@ -74,6 +74,8 @@ public class GrusProviderImpl implements GrusProvider {
 			if(dataSource != null) {
 				return dataSource;
 			}
+			dataSource = getInstanceDataSources("*").get(name);
+			return dataSource;
 
 		}
 // I think this makes no sense

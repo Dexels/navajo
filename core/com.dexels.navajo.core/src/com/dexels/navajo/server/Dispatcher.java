@@ -1122,9 +1122,10 @@ public final boolean isBusy() {
 private Access authenticateUser(Navajo inMessage, String instance,
 		Object userCertificate, String rpcName, String rpcUser,
 		String rpcPassword) throws SystemException, AuthorizationException {
-	Access access;
-	if(instance!=null && !"default".equals(instance)) {
-		  logger.info("using multitenant: "+instance);
+	Access access = null;
+	if(instance!=null ) {
+		  logger.info("using multitenant: "+instance, new Exception());
+		  
 		  AAAInterface aaai = getAuthorizator(instance);
 		  if(aaai!=null) {
 			  access = aaai.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
@@ -1132,7 +1133,9 @@ private Access authenticateUser(Navajo inMessage, String instance,
 		  }
 		  logger.warn("No access returned from multitenant, instance specific authorization");
 	  }
-	  access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+	  if(access==null) {
+			access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+	  }
 	  access.setInstance(instance);
 	  return access;
 }

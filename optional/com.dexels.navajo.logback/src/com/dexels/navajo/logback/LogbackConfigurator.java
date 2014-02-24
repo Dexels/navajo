@@ -7,11 +7,14 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.dexels.navajo.server.NavajoIOConfig;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
@@ -24,11 +27,26 @@ public class LogbackConfigurator {
 
 	private static final String DEFAULTPATH = "logback.xml";
 
+	private NavajoIOConfig navajoIOConfig = null;
+
 //	public RepositoryManager repositoryManager;
+	
+
+	public void setNavajoIOConfig(NavajoIOConfig navajoIOConfig) {
+		this.navajoIOConfig  = navajoIOConfig;
+	}
+
+	public void clearNavajoIOConfig(NavajoIOConfig navajoIOConfig) {
+		this.navajoIOConfig = null;
+	}
+
+	
 	
 	public void activate(Map<String, Object> settings) {
 		try {
-			URL joranURL = getSettingsFile(settings);
+			Map<String,Object> localMap = new HashMap<String, Object>(settings);
+			localMap.put("rootPath", navajoIOConfig.getRootPath());
+			URL joranURL = getSettingsFile(localMap);
 			if(joranURL!=null) {
 				logger.debug("Using logger configfile: "+joranURL);
 			}
@@ -39,7 +57,7 @@ public class LogbackConfigurator {
 			InputStream joranFis = null;
 			try {
 				joranFis = joranURL.openStream();
-				loadLogbackConfig(joranFis, settings);
+				loadLogbackConfig(joranFis, localMap);
 			} catch (FileNotFoundException e) {
 				logger.error("Error: ", e);
 			} finally {

@@ -15,6 +15,7 @@
 <jsp:useBean id="installerContext" class="com.dexels.navajo.jsp.server.InstallerContext" scope="application" />
 <jsp:setProperty property="installerContext" name="serverContext" value="${installerContext}"/>
 <jsp:setProperty property="pageContext" name="installerContext" value="${pageContext}"/>
+<nav:instance/>
 <nav:postHandler/>
 <html>
 <head>
@@ -73,6 +74,7 @@
       <div id="nav">
         <!-- skiplink anchor: navigation -->
         <a id="navigation" name="navigation"></a>
+
         <div class="hlist">
   
           <!-- main navigation: horizontal list -->
@@ -87,6 +89,7 @@
        </div>
         <div id="col3">
           <div id="col3_content" class="clearfix" style="overflow:auto">
+   		<c:import url="tml/writeinstances.jsp" />
 			<c:catch var="signal">
 				<c:import url="tml/manager/content.jsp"/>
 			</c:catch>
