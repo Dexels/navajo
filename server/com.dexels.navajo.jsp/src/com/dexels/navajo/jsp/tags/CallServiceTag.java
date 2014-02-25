@@ -62,7 +62,7 @@ public class CallServiceTag extends BaseNavajoTag {
 			String instance = (String) getPageContext().getSession().getAttribute("currentInstance");
 			
 			Navajo navajo = null;
-			if (myNavajo==null) {
+			if (myNavajo==null || "".equals(myNavajo)) {
 				navajo = NavajoFactory.getInstance().createNavajo();
 				navajo.addHeader(NavajoFactory.getInstance().createHeader(navajo, myService, null,null, -1));
 			} else {

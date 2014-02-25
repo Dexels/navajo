@@ -341,14 +341,11 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		String name = dataSource.getName();
 		List<Property> props = dataSource.getAllProperties();
 		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
-		System.err.println("Processing data source:");
-		dataSource.write(System.err);
 		for (Property property : props) {
 			// skip type, it is not a 'real' connection setter
 			if(property.getName().equals("type") || property.getName().equals("alias")) {
 				continue;
 			}
-			System.err.println("Processing property with name: "+property.getName()+" and value: "+property.getTypedValue());
 			// Conversion 
 			if(property.getName().equals("username")) {
 				settings.put("user", property.getTypedValue());

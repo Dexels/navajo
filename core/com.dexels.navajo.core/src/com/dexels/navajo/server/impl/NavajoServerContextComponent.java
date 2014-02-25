@@ -18,7 +18,7 @@ import com.dexels.navajo.server.api.NavajoServerContext;
 
 public class NavajoServerContextComponent implements NavajoServerContext {
 
-	private String installationPath;
+	protected String installationPath;
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoServerContextComponent.class);
@@ -33,7 +33,7 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 //	private final Set<Configuration> monitoredFolderConfigurations = new HashSet<Configuration>();
 	private final Map<String,Configuration> resourcePids = new HashMap<String,Configuration>();
 
-	private boolean suppressAdapters = false;;
+	protected boolean suppressAdapters = false;;
 
 	public void setConfigurationAdmin(ConfigurationAdmin ca) {
 		this.myConfigurationAdmin = ca;
@@ -52,6 +52,10 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 		try {
 			String contextPath = (String)settings.get("contextPath");
 			installationPath = (String) settings.get("installationPath");
+			String injectedPath = System.getenv("navajo.path");
+			if(injectedPath!=null) {
+				installationPath = injectedPath;
+			}
 			initializeContext(installationPath,contextPath);
 			String suppressAdapters = System.getenv("navajo.suppress.adaptersfolder");
 			if("true".equals(suppressAdapters)) {
