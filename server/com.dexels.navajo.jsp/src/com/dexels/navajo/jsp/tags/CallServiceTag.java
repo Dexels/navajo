@@ -94,28 +94,30 @@ public class CallServiceTag extends BaseNavajoTag {
 		logger.debug("Calling service: "+myService);
 		LocalClient lc = (LocalClient) getPageContext().getServletContext().getAttribute("localClient");
 		Map<String,LocalClient> localClients = (Map<String,LocalClient>) getPageContext().getServletContext().getAttribute("localClients");
-		String selectedInstance = (String) getPageContext().getSession().getAttribute("selectedInstance");
-		String sessionId =  getPageContext().getSession().getId();
-		System.err.println("Session Id: "+sessionId);
 		if(localClients==null) {
 			logger.warn("No localClients in JSP environment. No multitenant, perhaps?");
 		} else {
 			logger.warn(">>>>> Number of localClients: "+localClients.size());
 		}
-		if(selectedInstance==null) {
+
+		boolean multitenant = localClients!=null&&localClients.size()>0;
+		
+		String selectedInstance = (String) getPageContext().getSession().getAttribute("selectedInstance");
+		String sessionId =  getPageContext().getSession().getId();
+		System.err.println("Session Id: "+sessionId);
+		if (multitenant) {
+			if(selectedInstance==null) {
+				throw new JspException("Multitenant mode, but no selected instance");
+			}
+			lc = localClients.get(selectedInstance);
+			callNewStyle(lc);
+		} else {
 			if(lc==null) {
 				callOldStyle();
 			} else {
 				callNewStyle(lc);
 			}
 			
-		} else {
-			lc = localClients.get(selectedInstance);
-			if(lc==null) {
-				callOldStyle();
-			} else {
-				callNewStyle(lc);
-			}
 		}
 		
 		resultNavajo = getNavajoContext().getNavajo(myService);
