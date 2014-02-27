@@ -45,7 +45,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
         public int totaltime;
 
         // HashMap to cache method references.
-		private Map<String,Method> methods;
+		private transient Map<String,Method> methods;
         private int id = 0;
         private Map<String,ArrayChildStatistics> elementCount = null;
         private Access myAccess = null;
@@ -182,7 +182,8 @@ public final class MappableTreeNode implements Mappable, Serializable {
           }
         }
 
-       public final Method getMethodReference(String name, Object [] arguments) throws MappingException {
+       @SuppressWarnings("rawtypes")
+	public final Method getMethodReference(String name, Object [] arguments) throws MappingException {
 
           StringBuffer key = new StringBuffer();
           key.append(name);
@@ -223,7 +224,8 @@ public final class MappableTreeNode implements Mappable, Serializable {
 
        }
 
-       public final Method setMethodReference(String name, Class [] parameters) throws MappingException {
+       @SuppressWarnings("rawtypes")
+	public final Method setMethodReference(String name, Class [] parameters) throws MappingException {
                java.lang.reflect.Method m = methods.get(name+Arrays.hashCode(parameters));
 
                if (m == null) {

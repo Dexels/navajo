@@ -4,7 +4,6 @@ package com.dexels.navajo.dev.console;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Descriptor;
 import org.apache.felix.service.command.Parameter;
 import org.apache.karaf.shell.commands.Command;

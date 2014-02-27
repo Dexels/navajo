@@ -57,7 +57,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String method = req.getMethod();
+//		String method = req.getMethod();
 
 		String clientId = req.getParameter("token");
 		if(clientId==null) {

@@ -20,7 +20,7 @@ public class ConfigurationReceiver implements ConfigurationInjectionInterface {
 	
 	
 	@Override
-	public void addConfiguration(String name, Dictionary data) throws IOException {
+	public void addConfiguration(String name, Dictionary<String,?> data) throws IOException {
 //		Configuration c = 
 		if(!active) {
 			logger.error("Can not add configuration: "+name+": Not activated");
@@ -31,7 +31,7 @@ public class ConfigurationReceiver implements ConfigurationInjectionInterface {
 	}
 	
 	@Override
-	public String addFactoryConfiguration(String name, Dictionary data) throws IOException {
+	public String addFactoryConfiguration(String name, Dictionary<String, ?> data) throws IOException {
 //		Configuration c = 
 		if(!active) {
 			logger.error("Can not add configuration: "+name+": Not activated");

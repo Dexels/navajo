@@ -76,9 +76,7 @@ public class PersistenceManagerImplTest {
 		Navajo p = (Navajo) pi.get(new ConstructorTest("1234"), "aap.noot",
 				"aap/noot", 10000, true);
 		Assert.assertNotNull(p);
-		if (p != null) {
-			Assert.assertNotNull(p.getMessage("1234"));
-		}
+		Assert.assertNotNull(p.getMessage("1234"));
 	}
 
 	@Test
@@ -119,9 +117,7 @@ public class PersistenceManagerImplTest {
 				true);
 		Navajo n = (Navajo) pi.read("aap.noot", "aap/noot", 213232);
 		Assert.assertNotNull(n);
-		if (n != null) {
-			Assert.assertNotNull(n.getMessage("123456"));
-		}
+		Assert.assertNotNull(n.getMessage("123456"));
 	}
 
 }

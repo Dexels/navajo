@@ -1124,14 +1124,14 @@ private Access authenticateUser(Navajo inMessage, String instance,
 		String rpcPassword) throws SystemException, AuthorizationException {
 	Access access = null;
 	if(instance!=null ) {
-		  logger.info("using multitenant: "+instance, new Exception());
+//		  logger.info("using multitenant: "+instance, new Exception());
 		  
 		  AAAInterface aaai = getAuthorizator(instance);
 		  if(aaai!=null) {
 			  access = aaai.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
 			  return access;
 		  }
-		  logger.warn("No access returned from multitenant, instance specific authorization");
+		  logger.warn("No access returned from multitenant, instance specific authorization. Instance: "+instance);
 	  }
 	  if(access==null) {
 			access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);

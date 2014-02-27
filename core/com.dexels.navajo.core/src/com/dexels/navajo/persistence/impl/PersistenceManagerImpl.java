@@ -322,9 +322,9 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 
 	public boolean isCached(String service, String serviceKeyValues) {
 		PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
-		Iterator iter = pm.inMemoryCache.values().iterator();
+		Iterator<PersistentEntry> iter = pm.inMemoryCache.values().iterator();
 		while ( iter.hasNext() ) {
-			PersistentEntry pe = (PersistentEntry) iter.next();
+			PersistentEntry pe = iter.next();
 			if ( pe != null && (  pe.getService().equals(service) && ( serviceKeyValues == null || pe.getKeyValues().equals(serviceKeyValues) ) ) ) {
 				return true;
 			}
