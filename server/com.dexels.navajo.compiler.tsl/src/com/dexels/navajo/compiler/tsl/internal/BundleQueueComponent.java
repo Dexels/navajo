@@ -1,6 +1,7 @@
 package com.dexels.navajo.compiler.tsl.internal;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
 import com.dexels.navajo.compiler.tsl.BundleQueue;
+import com.dexels.navajo.repository.api.RepositoryInstance;
 import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 
 public class BundleQueueComponent implements EventHandler, BundleQueue {
@@ -74,10 +76,15 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 
 	@Override
 	public void handleEvent(Event e) {
+		RepositoryInstance ri =  (RepositoryInstance) e.getProperty("repository");
 		List<String> changedScripts = RepositoryEventParser.filterChanged(e,SCRIPTS_FOLDER);
 		for (String changedScript : changedScripts) {
 			try {
-				extractScript(changedScript);
+				File location = new File(ri.getRepositoryFolder(),changedScript);
+				if(location.isFile()) {
+					extractScript(changedScript);
+
+				}
 			} catch (IllegalArgumentException e1) {
 				logger.warn("Error: ", e1);
 			}
@@ -96,7 +103,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 		String tenant = null;
 		if(scoreIndex>=0) {
 			tenant = scriptName.substring(scoreIndex+1, scriptName.length());
-			scriptName = scriptName.substring(0,scoreIndex);
+//			scriptName = scriptName.substring(0,scoreIndex);
 		}
 		logger.debug("scriptName: "+scriptName);
 		logger.debug("extension: "+extension);
