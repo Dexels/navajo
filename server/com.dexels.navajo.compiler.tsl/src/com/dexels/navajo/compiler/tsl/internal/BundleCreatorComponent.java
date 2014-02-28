@@ -113,8 +113,18 @@ public class BundleCreatorComponent implements BundleCreator {
 		}
 		String script = scriptName.replaceAll("\\.", "/");
 
+		int scoreIndex = scriptName.lastIndexOf("_");
+		if(scoreIndex>=0) {
+			tenant = scriptName.substring(scoreIndex+1, scriptName.length());
+//			scriptName = scriptName.substring(0,scoreIndex);
+		}
+
+		
 		File scriptFolder = new File(navajoIOConfig.getScriptPath());
 		File f = new File(scriptFolder, script);
+		
+		
+		
 		// boolean isInDefaultPackage = script.indexOf('/')==-1;
 		final String formatCompilationDate = formatCompilationDate(compilationDate);
 		if (isDirectory(script, scriptFolder, f) ) {
