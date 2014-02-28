@@ -2664,7 +2664,8 @@ public class TslCompiler {
 		String script = ((Element) n).getAttribute("script");
 		if (script == null || script.equals("")) {
 			throw new UserException(-1,
-					"No script name found in include tag (missing or empty script attribute): "
+					"No script name found in include tag ("
+					+ "missing or empty script attribute): "
 							+ n);
 		}
 
@@ -2794,7 +2795,7 @@ public class TslCompiler {
 				result.append(printIdent(ident)
 						+ "if (Condition.evaluate("
 						+ replaceQuotes(condition)
-						+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
+						+ ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg,access)) { \n");
 				ident += 2;
 			}
 			
