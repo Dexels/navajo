@@ -11,7 +11,7 @@
 	<map>
 		<tagname>asyncproxy</tagname>
 		<object>com.dexels.navajo.adapter.AsyncProxy</object>
-	</map>	
+	</map>
 	<map>
 		<tagname>sqldatasourcemap</tagname>
 		<object>com.dexels.navajo.adapter.sqlmap.SQLMapDatasourceMap</object>
@@ -43,7 +43,7 @@
 	<map>
 		<tagname>tokenizer</tagname>
 		<object>com.dexels.navajo.adapter.TokenizerMap</object>
-	</map>	
+	</map>
 	<map>
 		<tagname>databaseinfo</tagname>
 		<object>com.dexels.navajo.adapter.sqlmap.DatabaseInfo</object>
@@ -56,47 +56,43 @@
 		<tagname>zipmap</tagname>
 		<object>com.dexels.navajo.adapter.ZipMap</object>
 	</map>
-	
+
 	<map>
 		<tagname>description</tagname>
 		<object>com.dexels.navajo.adapter.DescriptionMap</object>
-	</map>	
+	</map>
 	<map>
 		<tagname>save</tagname>
 		<object>com.dexels.navajo.adapter.NavajoSaveAdapter</object>
-	</map>	
+	</map>
 
 	<map>
 		<tagname>load</tagname>
 		<object>com.dexels.navajo.adapter.NavajoLoadAdapter</object>
-	</map>	
+	</map>
 	<map>
 		<tagname>filelist</tagname>
 		<object>com.dexels.navajo.adapter.NavajoFileListAdapter</object>
-	</map>	
+	</map>
 
-	
+
 	<map>
 		<tagname>option</tagname>
 		<object>com.dexels.navajo.adapter.OptionMap</object>
-	</map>	
-	
-	
+	</map>
+
+
 	<!-- Loops files in a directory -->
 	<map>
 		<tagname>fileentry</tagname>
 		<object>com.dexels.navajo.adapter.dirmap.FileEntryMap</object>
 		<values>
 			<value name="name" type="string" required="false" direction="out" />
-			<value name="absolutePath" type="string" required="false"
-				direction="in" />
-			<value name="contents" type="binary" required="false"
-				direction="out" />
-			<value name="mimeType" type="string" required="false"
-				direction="out" />
+			<value name="absolutePath" type="string" required="false" direction="in" />
+			<value name="contents" type="binary" required="false" direction="out" />
+			<value name="mimeType" type="string" required="false" direction="out" />
 			<value name="size" type="integer" required="false" direction="out" />
-			<value name="fileAge" type="integer" required="false"
-				direction="out" />
+			<value name="fileAge" type="integer" required="false" direction="out" />
 			<value name="delete" type="boolean" required="false" direction="out" />
 		</values>
 		<methods>
@@ -109,8 +105,7 @@
 		<object>com.dexels.navajo.adapter.DirMap</object>
 		<values>
 			<value name="path" type="string" required="true" direction="in" />
-			<value name="fileEntries" map="fileentry[]" required="false"
-				direction="out" />
+			<value name="fileEntries" map="fileentry[]" required="false" direction="out" />
 		</values>
 	</map>
 
@@ -119,8 +114,7 @@
 		<tagname>arraymessage</tagname>
 		<object>com.dexels.navajo.adapter.MultipleEmptyMap</object>
 		<values>
-			<value name="loop" map="arrayelement []" required="false"
-				direction="in" />
+			<value name="loop" map="arrayelement []" required="false" direction="in" />
 		</values>
 	</map>
 	<map>
@@ -133,19 +127,13 @@
 		<object>com.dexels.navajo.adapter.MessageMap</object>
 		<methods>
 			<method name="join">
-				<param name="message1" field="joinMessage1" type="string"
-					required="true" />
-				<param name="message2" field="joinMessage2" type="string"
-					required="false" />
-				<param name="joinCondition" field="joinCondition" type="string"
-					required="false" />
+				<param name="message1" field="joinMessage1" type="string" required="true" />
+				<param name="message2" field="joinMessage2" type="string" required="false" />
+				<param name="joinCondition" field="joinCondition" type="string" required="false" />
 				<param name="type" field="joinType" type="string" required="false" />
-				<param name="ignoreSource" field="removeSource" type="boolean"
-					required="false" />
-				<param name="suppressProperties" field="suppressProperties"
-					type="string" required="false" />
-				<param name="removeDuplicates" field="removeDuplicates" type="boolean"
-					required="false" />
+				<param name="ignoreSource" field="removeSource" type="boolean" required="false" />
+				<param name="suppressProperties" field="suppressProperties" type="string" required="false" />
+				<param name="removeDuplicates" field="removeDuplicates" type="boolean" required="false" />
 				<param name="groupBy" field="groupBy" type="string" required="false" />
 			</method>
 		</methods>
@@ -155,14 +143,10 @@
 		<tagname>copymessage</tagname>
 		<object>com.dexels.navajo.adapter.CopyMessage</object>
 		<values>
-			<value name="useOutputDoc" type="boolean" required="true"
-				direction="in" />
-			<value name="useDefinitionMessage" type="boolean" required="false"
-				direction="in" />
-			<value name="copyMessageFrom" type="string" required="false"
-				direction="in" />
-			<value name="copyMessageTo" type="string" required="false"
-				direction="in" />
+			<value name="useOutputDoc" type="boolean" required="true" direction="in" />
+			<value name="useDefinitionMessage" type="boolean" required="false" direction="in" />
+			<value name="copyMessageFrom" type="string" required="false" direction="in" />
+			<value name="copyMessageTo" type="string" required="false" direction="in" />
 		</values>
 	</map>
 	<!-- CSV adapter -->
@@ -170,21 +154,14 @@
 		<tagname>csv</tagname>
 		<object>com.dexels.navajo.adapter.CSVMap</object>
 		<values>
-			<value name="maximumImportCount" type="integer" required="false"
-				direction="in" />
-			<value name="skipFirstRow" type="boolean" required="false"
-				direction="in" />
-			<value name="fileName" type="string" required="false"
-				direction="in" />
-			<value name="fileContent" type="binary" required="false"
-				direction="in" />
-			<value name="separator" type="string" required="true"
-				direction="in" />
+			<value name="maximumImportCount" type="integer" required="false" direction="in" />
+			<value name="skipFirstRow" type="boolean" required="false" direction="in" />
+			<value name="fileName" type="string" required="false" direction="in" />
+			<value name="fileContent" type="binary" required="false" direction="in" />
+			<value name="separator" type="string" required="true" direction="in" />
 			<value name="update" type="boolean" required="false" direction="in" />
-			<value name="includeEmpty" type="boolean" required="false"
-				direction="in" />
-			<value name="entries" map="csvline []" required="false"
-				direction="out" />
+			<value name="includeEmpty" type="boolean" required="false" direction="in" />
+			<value name="entries" map="csvline []" required="false" direction="out" />
 		</values>
 	</map>
 	<map>
@@ -199,18 +176,14 @@
 		<values>
 			<value name="url" type="string" required="true" direction="in" />
 			<value name="method" type="string" required="false" direction="in" />
-			<value name="textContent" type="string" required="false"
-				direction="in" />
-			<value name="contentType" type="string" required="false"
-				direction="in" />
+			<value name="textContent" type="string" required="false" direction="in" />
+			<value name="contentType" type="string" required="false" direction="in" />
 			<value name="content" type="binary" required="false" direction="in" />
-			<value name="queuedsend" type="boolean" required="false"
-				direction="in" />
+			<value name="queuedsend" type="boolean" required="false" direction="in" />
 		</values>
 		<methods>
 			<method name="doSend">
-				<param name="value" field="doSend" type="boolean" required="automatic"
-					value="true" />
+				<param name="value" field="doSend" type="boolean" required="automatic" value="true" />
 			</method>
 		</methods>
 	</map>
@@ -222,27 +195,18 @@
 		<tagname>mail</tagname>
 		<object>com.dexels.navajo.adapter.MailMap</object>
 		<values>
-			<value name="mailServer" type="string" required="true"
-				direction="in" />
-			<value name="queuedSend" type="boolean" required="false"
-				direction="in" />
-			<value name="ignoreFailures" type="boolean" required="false"
-				direction="in" />
+			<value name="mailServer" type="string" required="true" direction="in" />
+			<value name="queuedSend" type="boolean" required="false" direction="in" />
+			<value name="ignoreFailures" type="boolean" required="false" direction="in" />
 			<value name="sender" type="string" required="false" direction="in" />
 			<value name="subject" type="string" required="false" direction="in" />
 			<value name="text" type="string" required="false" direction="in" />
-			<value name="recipients" type="string" required="false"
-				direction="in" />
-			<value name="attachment" map="attachment" required="false"
-				direction="in" />
-			<value name="multipleAttachments" map="attachment []" required="false"
-				direction="in" />
-			<value name="smtpUser" type="string" required="false"
-				direction="in" />
-			<value name="smtpPass" type="string" required="false"
-				direction="in" />
-			<value name="useEncryption" type="boolean" required="false"
-				direction="in" />
+			<value name="recipients" type="string" required="false" direction="in" />
+			<value name="attachment" map="attachment" required="false" direction="in" />
+			<value name="multipleAttachments" map="attachment []" required="false" direction="in" />
+			<value name="smtpUser" type="string" required="false" direction="in" />
+			<value name="smtpPass" type="string" required="false" direction="in" />
+			<value name="useEncryption" type="boolean" required="false" direction="in" />
 		</values>
 	</map>
 	<!--Alternative mail adapter -->
@@ -250,62 +214,44 @@
 		<tagname>mailalternative</tagname>
 		<object>com.dexels.navajo.adapter.MailMapAlternative</object>
 		<values>
-			<value name="mailServer" type="string" required="true"
-				direction="in" />
-			<value name="queuedSend" type="boolean" required="false"
-				direction="in" />
-			<value name="ignoreFailures" type="boolean" required="false"
-				direction="in" />
+			<value name="mailServer" type="string" required="true" direction="in" />
+			<value name="queuedSend" type="boolean" required="false" direction="in" />
+			<value name="ignoreFailures" type="boolean" required="false" direction="in" />
 			<value name="sender" type="string" required="false" direction="in" />
 			<value name="subject" type="string" required="false" direction="in" />
 			<value name="text" type="string" required="false" direction="in" />
-			<value name="recipients" type="string" required="false"
-				direction="in" />
-			<value name="attachment" map="attachment" required="false"
-				direction="in" />
-			<value name="relatedBodyPart" map="attachment" required="false"
-				direction="in" />
-			<value name="multipleAttachments" map="attachment []" required="false"
-				direction="in" />
+			<value name="recipients" type="string" required="false" direction="in" />
+			<value name="attachment" map="attachment" required="false" direction="in" />
+			<value name="relatedBodyPart" map="attachment" required="false" direction="in" />
+			<value name="multipleAttachments" map="attachment []" required="false" direction="in" />
 		</values>
 	</map>
-    <!-- MailMap through commons.email -->
-    <map>
-        <tagname>commonsmailmap</tagname>
-        <object>com.dexels.navajo.adapter.CommonsMailMap</object>
-        <values>
-            <value name="mailServer" type="string" required="true"
-                direction="in" />
-            <value name="queuedSend" type="boolean" required="false"
-                direction="in" />
-            <value name="ignoreFailures" type="boolean" required="false"
-                direction="in" />
-            <value name="sender" type="string" required="false" direction="in" />
-            <value name="subject" type="string" required="false" direction="in" />
-            <value name="text" type="string" required="false" direction="in" />
-            <value name="recipients" type="string" required="false"
-                direction="in" />
-            <value name="attachment" map="attachment" required="false"
-                direction="in" />
-            <value name="multipleAttachments" map="attachment []" required="false"
-                direction="in" />
-            <value name="smtpUser" type="string" required="false"
-                direction="in" />
-            <value name="smtpPass" type="string" required="false"
-                direction="in" />
-            <value name="useEncryption" type="boolean" required="false"
-                direction="in" />
-        </values>
-    </map>
+	<!-- MailMap through commons.email -->
+	<map>
+		<tagname>commonsmailmap</tagname>
+		<object>com.dexels.navajo.adapter.CommonsMailMap</object>
+		<values>
+			<value name="mailServer" type="string" required="true" direction="in" />
+			<value name="queuedSend" type="boolean" required="false" direction="in" />
+			<value name="ignoreFailures" type="boolean" required="false" direction="in" />
+			<value name="sender" type="string" required="false" direction="in" />
+			<value name="subject" type="string" required="false" direction="in" />
+			<value name="text" type="string" required="false" direction="in" />
+			<value name="recipients" type="string" required="false" direction="in" />
+			<value name="attachment" map="attachment" required="false" direction="in" />
+			<value name="multipleAttachments" map="attachment []" required="false" direction="in" />
+			<value name="smtpUser" type="string" required="false" direction="in" />
+			<value name="smtpPass" type="string" required="false" direction="in" />
+			<value name="useEncryption" type="boolean" required="false" direction="in" />
+		</values>
+	</map>
 	<map>
 		<tagname>attachment</tagname>
 		<object>com.dexels.navajo.adapter.mailmap.AttachementMap</object>
 		<description />
 		<values>
-			<value name="attachFileName" type="string" required="false"
-				direction="in" />
-			<value name="attachFileContent" type="binary" required="false"
-				direction="in" />
+			<value name="attachFileName" type="string" required="false" direction="in" />
+			<value name="attachFileContent" type="binary" required="false" direction="in" />
 		</values>
 	</map>
 	<map>
@@ -322,7 +268,8 @@
 	<map>
 		<tagname>navajogroup</tagname>
 		<object>com.dexels.navajo.adapter.NavajoMapGroupAdapter</object>
-		<description>This adapter can be used to group other Navajo maps typically as a barrier for asynchronous service calls
+		<description>This adapter can be used to group other Navajo maps typically as a barrier for
+			asynchronous service calls
 		</description>
 		<methods>
 			<!-- Append response from non-blocking called navajomap -->
@@ -343,92 +290,73 @@
 		<tagname>navajomap</tagname>
 		<object>com.dexels.navajo.adapter.NavajoMap</object>
 		<description>This adapter can be used to call other Navajo services,
-			either synchronously, asynchronously or scheduled
+			either synchronously,
+			asynchronously or scheduled
 		</description>
 		<values>
 			<value name="trigger" type="string" required="false" direction="in" />
-			<value name="sendThrough" type="boolean" required="false"
-				direction="in" />
+			<value name="sendThrough" type="boolean" required="false" direction="in" />
 			<value name="server" type="string" required="false" direction="in" />
 			<value name="id" type="string" required="false" direction="in" />
 			<value name="block" type="boolean" required="false" direction="in" />
-			<value name="username" type="string" required="false"
-				direction="in" />
-			<value name="password" type="string" required="false"
-				direction="in" />
+			<value name="username" type="string" required="false" direction="in" />
+			<value name="password" type="string" required="false" direction="in" />
 			<value name="server" type="string" required="false" direction="in" />
 			<value name="resource" type="string" required="false" direction="in" />
-			<value name="useCurrentOutDoc" type="boolean" required="false"
-				direction="in" />
-			<value name="useCurrentMessages" type="string" required="false" direction="in"/>
-			<value name="messagePointer" type="string" required="false"
-				direction="in" />
-			<value name="selectionPointer" type="string" required="false"
-				direction="in" />
-			<value name="message" map="messagemap" required="false"
-				direction="out" />
-			<value name="messages" map="messagemap []" required="false"
-				direction="out" />
+			<value name="useCurrentOutDoc" type="boolean" required="false" direction="in" />
+			<value name="useCurrentMessages" type="string" required="false" direction="in" />
+			<value name="messagePointer" type="string" required="false" direction="in" />
+			<value name="selectionPointer" type="string" required="false" direction="in" />
+			<value name="message" map="messagemap" required="false" direction="out" />
+			<value name="messages" map="messagemap []" required="false" direction="out" />
 		</values>
 		<methods>
 			<!-- Creates a new property -->
 			<method name="createproperty">
-				<param name="name" field="propertyName" type="string"
-					required="true" />
-				<param name="type" field="propertyType" type="string" required="false"/>
+				<param name="name" field="propertyName" type="string" required="true" />
+				<param name="type" field="propertyType" type="string" required="false" />
 				<param name="value" field="property" type="any" required="true" />
 			</method>
-			<!--  Deletes a property -->
+			<!-- Deletes a property -->
 			<method name="deleteproperty">
-				<param name="name" field="deleteProperty" type="string" required="true"/>
+				<param name="name" field="deleteProperty" type="string" required="true" />
 			</method>
-			<!--  Deletes a message -->
+			<!-- Deletes a message -->
 			<method name="deletemessage">
-				<param name="name" field="deleteMessage" type="string" required="true"/>
+				<param name="name" field="deleteMessage" type="string" required="true" />
 			</method>
 			<!-- Suppresses a defined property -->
 			<method name="suppressproperty">
 				<param name="name" field="propertyId" type="string" required="true" />
-				<param name="directive" field="propertyDirective" type="string"
-					required="automatic" value="'suppress'" />
+				<param name="directive" field="propertyDirective" type="string" required="automatic"
+					value="'suppress'" />
 			</method>
-			<!-- Shows a defined property, if show is used all properties will be 
-				suppressed by default -->
+			<!-- Shows a defined property, if show is used all properties will be suppressed by default -->
 			<method name="showproperty">
 				<param name="name" field="propertyId" type="string" required="true" />
-				<param name="direction" field="propertyDirective" type="string"
-					required="false" />
-				<param name="directive" field="propertyDirective" type="string"
-					required="automatic" value="'show'" />
+				<param name="direction" field="propertyDirective" type="string" required="false" />
+				<param name="directive" field="propertyDirective" type="string" required="automatic"
+					value="'show'" />
 			</method>
 			<!-- Sets the direction of a property -->
 			<method name="setdirection">
 				<param name="name" field="propertyId" type="string" required="true" />
-				<param name="direction" field="propertyDirective" type="string"
-					required="true" />
+				<param name="direction" field="propertyDirective" type="string" required="true" />
 			</method>
 			<method name="callwebservice">
-				<param name="breakOnConditionError" field="breakOnConditionError"
-					type="boolean" required="false" />
-				<param name="breakOnException" field="breakOnException" type="boolean"
+				<param name="breakOnConditionError" field="breakOnConditionError" type="boolean"
 					required="false" />
+				<param name="breakOnException" field="breakOnException" type="boolean" required="false" />
 				<param name="server" field="server" type="string" required="false" />
-				<param name="username" field="username" type="string"
-					required="false" />
-				<param name="password" field="password" type="string"
-					required="false" />
-				<param name="showProperties" field="suppressProperties" type="string"
-					required="false" />
-				<param name="suppressProperties" field="suppressProperties"
-					type="string" required="false" />
-				<param name="inputProperties" field="inputProperties" type="string"
-					required="false" />
-				<param name="outputProperties" field="outputProperties" type="string"
-					required="false" />
+				<param name="username" field="username" type="string" required="false" />
+				<param name="password" field="password" type="string" required="false" />
+				<param name="showProperties" field="suppressProperties" type="string" required="false" />
+				<param name="suppressProperties" field="suppressProperties" type="string" required="false" />
+				<param name="inputProperties" field="inputProperties" type="string" required="false" />
+				<param name="outputProperties" field="outputProperties" type="string" required="false" />
 				<param name="block" field="block" type="boolean" required="false" />
 				<param name="name" field="doSend" type="boolean" required="true" />
-				<param name="appendTo" field="appendTo" type="string"
-					required="false" />
+				<param name="appendTo" field="appendTo" type="string" required="false" />
 				<param name="append" field="append" type="string" required="false" />
 			</method>
 		</methods>
@@ -445,44 +373,38 @@
 		<description>This adapter can be used to call REST services
 		</description>
 		<values>
-			<value name="sendThrough" type="boolean" required="false"
-				direction="in" />
+			<value name="sendThrough" type="boolean" required="false" direction="in" />
 			<value name="url" type="string" required="false" direction="in" />
 			<value name="method" type="string" required="false" direction="in" />
-			<value name="useCurrentOutDoc" type="boolean" required="false"
-				direction="in" />
-			<value name="useCurrentMessages" type="string" required="false" direction="in"/>
-			<value name="messagePointer" type="string" required="false"
-				direction="in" />
-			<value name="selectionPointer" type="string" required="false"
-				direction="in" />
-			<value name="message" map="messagemap" required="false"
-				direction="out" />
-			<value name="messages" map="messagemap []" required="false"
-				direction="out" />
+			<value name="useCurrentOutDoc" type="boolean" required="false" direction="in" />
+			<value name="useCurrentMessages" type="string" required="false" direction="in" />
+			<value name="messagePointer" type="string" required="false" direction="in" />
+			<value name="selectionPointer" type="string" required="false" direction="in" />
+			<value name="message" map="messagemap" required="false" direction="out" />
+			<value name="messages" map="messagemap []" required="false" direction="out" />
 		</values>
 		<methods>
 			<!-- Creates a new property -->
 			<method name="createproperty">
 				<param name="name" field="propertyName" type="string" required="true" />
-				<param name="type" field="propertyType" type="string" required="false"/>
+				<param name="type" field="propertyType" type="string" required="false" />
 				<param name="value" field="property" type="any" required="true" />
 			</method>
-			<!--  Deletes a property -->
+			<!-- Deletes a property -->
 			<method name="deleteproperty">
-				<param name="name" field="deleteProperty" type="string" required="true"/>
+				<param name="name" field="deleteProperty" type="string" required="true" />
 			</method>
-			<!--  Deletes a message -->
+			<!-- Deletes a message -->
 			<method name="deletemessage">
-				<param name="name" field="deleteMessage" type="string" required="true"/>
+				<param name="name" field="deleteMessage" type="string" required="true" />
 			</method>
 			<method name="callservice">
 				<param name="url" field="url" type="string" required="true" />
 				<param name="method" field="method" type="string" required="true" />
 				<param name="topMessage" field="topMessage" type="string" required="false" />
-				<param name="removeTopMessage" field="removeTopMessage" type="boolean" required="false"/>
+				<param name="removeTopMessage" field="removeTopMessage" type="boolean" required="false" />
 				<param name="value" field="doSend" type="string" required="automatic" value="'CALLREST'" />
-			    <param name="appendTo" field="appendTo" type="string" required="false" />
+				<param name="appendTo" field="appendTo" type="string" required="false" />
 				<param name="append" field="append" type="string" required="false" />
 			</method>
 		</methods>
@@ -490,11 +412,10 @@
 	<!-- RSS adapter -->
 
 	<!-- Moved to NavajoEnterpriseAdapters I think TODO Check & FIX -->
-	<!-- <map> <tagname>rss</tagname> <object>com.dexels.navajo.adapter.RSSMap</object> 
-		<description>This adapter can be used to parse or generate RSS feeds</description> 
-		<values> <value name="rssFeed" type="string" required="false" direction="in"/> 
-		</values> <methods> <method name="setTitle"> <param name="name" field="title" 
-		type="string" required="true"/> </method> </methods> </map> -->
+	<!-- <map> <tagname>rss</tagname> <object>com.dexels.navajo.adapter.RSSMap</object> <description>This 
+		adapter can be used to parse or generate RSS feeds</description> <values> <value name="rssFeed" type="string" 
+		required="false" direction="in"/> </values> <methods> <method name="setTitle"> <param name="name" 
+		field="title" type="string" required="true"/> </method> </methods> </map> -->
 	<!-- Navajo listener adapter -->
 	<map>
 		<tagname>navajolistener</tagname>
@@ -510,19 +431,13 @@
 		<values>
 			<value name="query" type="string" required="false" direction="in" />
 			<value name="update" type="string" required="false" direction="in" />
-			<value name="binaryQuery" type="binary" required="false"
-				direction="in" />
-			<value name="binaryUpdate" type="binary" required="false"
-				direction="in" />
+			<value name="binaryQuery" type="binary" required="false" direction="in" />
+			<value name="binaryUpdate" type="binary" required="false" direction="in" />
 			<value name="debug" type="boolean" required="false" direction="in" />
-			<value name="transactionContext" type="integer" required="false"
-				direction="in" />
-			<value name="datasource" type="string" required="false"
-				direction="in" />
-			<value name="username" type="string" required="false"
-				direction="in" />
-			<value name="parameter" type="any" required="false" direction="in"
-				cardinality="+" />
+			<value name="transactionContext" type="integer" required="false" direction="in" />
+			<value name="datasource" type="string" required="false" direction="in" />
+			<value name="username" type="string" required="false" direction="in" />
+			<value name="parameter" type="any" required="false" direction="in" cardinality="+" />
 			<value name="resultSet" map="resultrow []" required="false" direction="out" />
 		</values>
 		<methods>
@@ -530,12 +445,10 @@
 				<param name="value" field="parameter" type="any" required="true" />
 			</method>
 			<method name="doUpdate">
-				<param name="value" field="doUpdate" type="boolean" required="automatic"
-					value="true" />
+				<param name="value" field="doUpdate" type="boolean" required="automatic" value="true" />
 			</method>
 			<method name="rollback">
-				<param name="value" field="kill" type="boolean" required="automatic"
-					value="true" />
+				<param name="value" field="kill" type="boolean" required="automatic" value="true" />
 			</method>
 		</methods>
 	</map>
@@ -549,30 +462,23 @@
 			<value name="query" type="string" required="false" direction="in" />
 			<value name="update" type="string" required="false" direction="in" />
 			<value name="debug" type="boolean" required="false" direction="in" />
-			<value name="transactionContext" type="integer" required="false"
-				direction="in" />
-			<value name="datasource" type="string" required="false"
-				direction="in" />
-			<value name="username" type="string" required="false"
-				direction="in" />
-			<value name="resultSet" map="resultrow []" required="false"
-				direction="out" />
+			<value name="transactionContext" type="integer" required="false" direction="in" />
+			<value name="datasource" type="string" required="false" direction="in" />
+			<value name="username" type="string" required="false" direction="in" />
+			<value name="resultSet" map="resultrow []" required="false" direction="out" />
 		</values>
 		<methods>
 			<method name="addParameter">
 				<param name="value" field="parameter" type="any" required="false" />
 			</method>
 			<method name="addOutputParameter">
-				<param name="type" field="outputParameterType" type="any"
-					required="false" />
+				<param name="type" field="outputParameterType" type="any" required="false" />
 			</method>
 			<method name="doUpdate">
-				<param name="value" field="doUpdate" type="boolean" required="automatic"
-					value="true" />
+				<param name="value" field="doUpdate" type="boolean" required="automatic" value="true" />
 			</method>
 			<method name="rollback">
-				<param name="value" field="kill" type="boolean" required="automatic"
-					value="true" />
+				<param name="value" field="kill" type="boolean" required="automatic" value="true" />
 			</method>
 		</methods>
 	</map>
@@ -615,26 +521,20 @@
 		</values>
 		<methods>
 			<method name="startElement">
-				<param name="name" field="startElement" type="string"
-					required="true" />
+				<param name="name" field="startElement" type="string" required="true" />
 			</method>
 			<method name="endElement">
-				<param name="name" field="endElement" type="boolean" required="automatic"
-					value="true" />
+				<param name="name" field="endElement" type="boolean" required="automatic" value="true" />
 			</method>
 			<method name="newline">
-				<param name="name" field="newline" type="boolean" required="automatic"
-					value="true" />
+				<param name="name" field="newline" type="boolean" required="automatic" value="true" />
 			</method>
 			<method name="setAttribute">
-				<param name="name" field="attributeName" type="string"
-					required="true" />
-				<param name="value" field="attributeValue" type="string"
-					required="true" />
+				<param name="name" field="attributeName" type="string" required="true" />
+				<param name="value" field="attributeValue" type="string" required="true" />
 			</method>
 			<method name="setValue">
-				<param name="value" field="value" type="string"
-					required="true" />
+				<param name="value" field="value" type="string" required="true" />
 			</method>
 		</methods>
 	</map>
@@ -645,8 +545,7 @@
 		<description>This adapter can be used to create XML documents.
 		</description>
 		<values>
-			<value name="stringContent" type="string" required="false"
-				direction="in" />
+			<value name="stringContent" type="string" required="false" direction="in" />
 			<value name="indent" type="integer" required="false" direction="in" />
 			<value name="child" map="tagmap" required="false" direction="out" />
 			<value name="start" type="string" required="false" direction="in" />
@@ -662,10 +561,8 @@
 			</method>
 			<method name="setAttribute">
 				<param name="tag" field="childName" type="string" required="true" />
-				<param name="attribute" field="attributeName" type="string"
-					required="true" />
-				<param name="value" field="attributeText" type="string"
-					required="true" />
+				<param name="attribute" field="attributeName" type="string" required="true" />
+				<param name="value" field="attributeText" type="string" required="true" />
 			</method>
 		</methods>
 	</map>
@@ -685,28 +582,25 @@
 			</method>
 			<method name="setAttribute">
 				<param name="tag" field="childName" type="string" required="true" />
-				<param name="attribute" field="attributeName" type="string"
-					required="true" />
-				<param name="value" field="attributeText" type="string"
-					required="true" />
+				<param name="attribute" field="attributeName" type="string" required="true" />
+				<param name="value" field="attributeText" type="string" required="true" />
 			</method>
 		</methods>
 	</map>
 	<!-- com.dexels.navajo.mapping.bean.ServiceMapper -->
-	<!-- This one should be declared in navajo's own adapters. I think there 
-		is no problem now, as NavajoAdapters uses a filthy DynamicImport flag -->
+	<!-- This one should be declared in navajo's own adapters. I think there is no problem now, as NavajoAdapters 
+		uses a filthy DynamicImport flag -->
 	<!-- <map> <tagname>service</tagname> <object>com.dexels.navajo.mapping.bean.ServiceMapper</object> 
-		<values> <value name="serviceClass" type="string" required="true" direction="in"/> 
-		<value name="serviceMethod" type="string" required="true" direction="in"/> 
-		</values> <methods> <method name="invoke"> <param name="value" field="invoke" 
-		type="boolean" required="automatic" value="true"/> </method> </methods> </map> -->
+		<values> <value name="serviceClass" type="string" required="true" direction="in"/> <value name="serviceMethod" 
+		type="string" required="true" direction="in"/> </values> <methods> <method name="invoke"> <param 
+		name="value" field="invoke" type="boolean" required="automatic" value="true"/> </method> </methods> 
+		</map> -->
 	<!-- SOAP adapter -->
 	<map>
 		<tagname>soap</tagname>
 		<object>com.dexels.navajo.adapter.SOAPMap</object>
 		<values>
-			<value name="soapAction" type="string" required="false"
-				direction="in" />
+			<value name="soapAction" type="string" required="false" direction="in" />
 			<value name="url" type="string" required="false" direction="in" />
 		</values>
 		<methods>
@@ -714,18 +608,14 @@
 				<param name="value" field="namespace" type="string" required="true" />
 			</method>
 			<method name="requestBody">
-				<param name="value" field="requestBody" type="binary"
-					required="true" />
+				<param name="value" field="requestBody" type="binary" required="true" />
 			</method>
 			<method name="request">
-				<param name="header" field="requestHeader" type="binary"
-					required="false" />
-				<param name="value" field="requestBody" type="binary"
-					required="true" />
+				<param name="header" field="requestHeader" type="binary" required="false" />
+				<param name="value" field="requestBody" type="binary" required="true" />
 			</method>
 			<method name="doSend">
-				<param name="value" field="doSend" type="boolean" required="automatic"
-					value="true" />
+				<param name="value" field="doSend" type="boolean" required="automatic" value="true" />
 			</method>
 		</methods>
 	</map>
@@ -739,20 +629,15 @@
 		</values>
 		<methods>
 			<method name="addAttribute">
-				<param name="path" field="attributePath" type="string"
-					required="true" />
-				<param name="name" field="attributeName" type="string"
-					required="true" />
-				<param name="value" field="attributeValue" type="string"
-					required="true" />
+				<param name="path" field="attributePath" type="string" required="true" />
+				<param name="name" field="attributeName" type="string" required="true" />
+				<param name="value" field="attributeValue" type="string" required="true" />
 			</method>
 			<method name="dumpObject">
-				<param name="value" field="dumpObject" type="boolean"
-					required="automatic" value="true" />
+				<param name="value" field="dumpObject" type="boolean" required="automatic" value="true" />
 			</method>
 			<method name="buildContent">
-				<param name="value" field="buildContent" type="boolean"
-					required="automatic" value="true" />
+				<param name="value" field="buildContent" type="boolean" required="automatic" value="true" />
 			</method>
 		</methods>
 	</map>
@@ -760,6 +645,10 @@
 	<map>
 		<tagname>com.dexels.navajo.adapter.AdminMap</tagname>
 		<object>com.dexels.navajo.adapter.AdminMap</object>
+	</map>
+	<map>
+		<tagname>com.dexels.navajo.adapter.AccessMap</tagname>
+		<object>com.dexels.navajo.adapter.AccessMap</object>
 	</map>
 	<map>
 		<tagname>com.dexels.navajo.adapter.MultipleSQLMap</tagname>
