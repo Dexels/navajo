@@ -206,8 +206,8 @@ public class TipiExportDialog extends TipiDialog {
 				for (int j = 0; j < properties.size(); j++) {
 					Property current_prop = current.getProperty(properties
 							.get(j));
-					String propValue;
-					if (current_prop.getType().equals(Property.DATE_PROPERTY)) {
+					String propValue = "";
+					if (current_prop != null && current_prop.getType().equals(Property.DATE_PROPERTY)) {
 						Date d = (Date) current_prop.getTypedValue();
 						if (d == null) {
 							propValue = "";
@@ -216,11 +216,11 @@ public class TipiExportDialog extends TipiDialog {
 									"yyyy-MM-dd");
 							propValue = df.format(d);
 						}
-					} else {
+					} else if (current_prop != null) {
 						propValue = (current_prop.getValue() == null) ? ""
 								: current_prop.getValue();
 					}
-					if (properties.contains(current_prop.getName())) {
+					if (current_prop == null || properties.contains(current_prop.getName())) {
 						line_complies_to_filter = true;
 						if (new_line) {
 							line = line + "\"" + propValue + "\"";
