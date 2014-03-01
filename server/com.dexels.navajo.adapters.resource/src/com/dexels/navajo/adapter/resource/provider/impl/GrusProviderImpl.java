@@ -116,7 +116,7 @@ public class GrusProviderImpl implements GrusProvider {
 		try {
 			gc = new GrusDataSource(id, dataSourceInstance,settings,this);
 		} catch (Exception e) {
-			throw new UserException(-1,"Could not create datasource connection for: "+instance+" and name: "+name);
+			throw new UserException(-1,"Could not create datasource connection for: "+instance+" and name: "+name,e);
 		}
 		grusIds.put((long) id,gc);
 		return gc;

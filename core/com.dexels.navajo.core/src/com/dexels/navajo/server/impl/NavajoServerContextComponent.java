@@ -56,11 +56,11 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 			if(injectedPath!=null) {
 				installationPath = injectedPath;
 			}
-			initializeContext(installationPath,contextPath);
-			String suppressAdapters = System.getenv("navajo.suppress.adaptersfolder");
+			String suppressAdapters = System.getProperty("navajo.suppress.adaptersfolder");
 			if("true".equals(suppressAdapters)) {
 				this.suppressAdapters  = true;
 			}
+			initializeContext(installationPath,contextPath);
 		} catch (IOException e) {
 			logger.error("Error creating folder monitor: ",e);
 		} catch( Throwable t) {
