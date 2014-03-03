@@ -180,7 +180,7 @@ public class WatchDir implements Closeable,Runnable {
 			}
 			List<WatchEvent<Path>> eventList = new ArrayList<WatchEvent<Path>>();
 			for (WatchEvent<?> event : key.pollEvents()) {
-				System.err.println("Displaying events:");
+//				System.err.println("Displaying events:");
 				WatchEvent.Kind<?> kind = event.kind();
 
 				// TODO provide example of how OVERFLOW event is handled
