@@ -249,7 +249,7 @@ public class ResourceManager implements EventHandler {
 			processClientBundle(b);
 			fis.close();
 		} catch (IOException e) {
-			logger.error("Error reading client.properies file. "+install.getAbsolutePath());
+			logger.error("Error reading client.properties file. "+install.getAbsolutePath());
 		} finally {
 			if(fis!=null) {
 				try {
