@@ -11,4 +11,3 @@
 <c:forEach items="${applicationScope['localClients']}" var="entry">
     <a href="index.jsp?instance=${entry.key}">${entry.key}</a>
 </c:forEach>
-current: ${sessionScope["selectedInstance"]}
