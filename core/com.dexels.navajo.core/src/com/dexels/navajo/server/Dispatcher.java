@@ -1003,6 +1003,7 @@ public final boolean isBusy() {
         MDC.put("accessId", access.accessID);
         MDC.put("rpcName", access.getRpcName());
         MDC.put("rpcUser", access.getRpcUser());
+        MDC.put("tenant", access.getInstance());
         MDC.put("rootPath", getNavajoConfig().getRootPath());
         MDC.put("instanceName", getNavajoConfig().getInstanceName());
         MDC.put("instanceGroup", getNavajoConfig().getInstanceGroup());
@@ -1166,7 +1167,7 @@ public Navajo handleCallbackPointers(Navajo inMessage) {
 }
   
   
-	public String getServlet(Access access) {
+	private String getServlet(Access access) {
 		String compLanguage = DispatcherFactory.getInstance().getNavajoConfig().getCompilationLanguage();
 		if("javascript".equals(compLanguage)) {
 			return "com.dexels.navajo.rhino.RhinoHandler";
