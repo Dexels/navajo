@@ -1,5 +1,6 @@
 package com.oracle.jdbc.service.impl;
 
+import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -12,6 +13,8 @@ import oracle.jdbc.OracleDriver;
 import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 import oracle.jdbc.xa.client.OracleXADataSource;
 
+import org.apache.commons.dbcp.ConnectionFactory;
+import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
@@ -27,7 +30,7 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
 			.getLogger(OracleJDBCDataSourceService.class);
 	private ObjectPool pool;
 	
-//	private PoolableConnectionFactory poolableConnectionFactory;
+	private PoolableConnectionFactory poolableConnectionFactory;
     public void start() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         //Load driver if not already done...
         Class<?> clazz = Class.forName("oracle.jdbc.OracleDriver");
@@ -174,16 +177,16 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
      this.pool = connectionPool; 
 
        
-//     ConnectionFactory connectionFactory = new ConnectionFactory() {
-//		
-//		@Override
-//		public Connection createConnection() throws SQLException {
-//
-//			return baseSource.getConnection(username,password);
-//		}
-//	};
-//       poolableConnectionFactory = new PoolableConnectionFactory(
-//     	connectionFactory,connectionPool,null,"select 1 from dual",false,false);
+     ConnectionFactory connectionFactory = new ConnectionFactory() {
+		
+		@Override
+		public Connection createConnection() throws SQLException {
+
+			return baseSource.getConnection(username,password);
+		}
+	};
+       poolableConnectionFactory = new PoolableConnectionFactory(
+     	connectionFactory,connectionPool,null,"select 1 from dual",false,false);
 
        PoolingDataSource dataSource = 
        	new PoolingDataSource(connectionPool);
