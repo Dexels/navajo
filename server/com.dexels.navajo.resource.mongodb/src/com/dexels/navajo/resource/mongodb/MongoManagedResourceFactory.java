@@ -90,7 +90,7 @@ public class MongoManagedResourceFactory implements ManagedServiceFactory {
 
 	
 	@SuppressWarnings({ "rawtypes" })
-	public Object instantiate( Dictionary<String,Object> settings) throws Exception {
+	private Object instantiate( Dictionary<String,Object> settings) throws Exception {
 		Properties prop = new Properties(); 
 		Enumeration en = settings.keys();
 		while (en.hasMoreElements()) {

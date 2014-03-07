@@ -78,7 +78,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		Map<String,Message> globalResources = readResources(globalResourceFile,aliases);
 		for (Message dataSource : globalResources.values()) {
 			try {
-				addDatasource("*",dataSource,aliases);
+				addDatasource(null,dataSource,aliases);
 			} catch (IOException e) {
 				logger.error("Error: ", e);
 			}
@@ -380,7 +380,9 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			settings.put("aliases", aliasVector);
 		}
 		settings.put("name", name);
-		settings.put("instance", instance);
+		if (instance!=null) {
+			settings.put("instance", instance);
+		}
 		String type = (String)dataSource.getProperty("type").getTypedValue();
 		
 		if(configAdmin==null) {
@@ -389,7 +391,12 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		}
 //		configAdmin.getConfiguration(arg0)
 //		Configuration cc = configAdmin.getConfiguration("navajo.resource."+instance+"."+name,null);
-		final String filter = "(&(instance="+instance+")(name=navajo.resource."+name+")(service.factoryPid=navajo.resource"+type+"))";
+		final String filter;
+		if (instance==null) {
+			filter = "(&(name=navajo.resource."+name+")(service.factoryPid=navajo.resource."+type+"))";
+		} else {
+			filter = "(&(instance="+instance+")(name=navajo.resource."+name+")(service.factoryPid=navajo.resource."+type+"))";
+		}
 		Configuration cc = createOrReuse("navajo.resource."+type, filter);
 		updateIfChanged(cc, settings);
 //		cc.update(settings);

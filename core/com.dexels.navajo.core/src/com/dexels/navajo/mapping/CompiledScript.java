@@ -333,8 +333,8 @@ public Dependency [] getDependencies() {
 public final void run(Access access) throws Exception {
 
 	  myAccess = access;
-	  @SuppressWarnings("unused")
-	final String myThreadName = getThreadName();
+//	  @SuppressWarnings("unused")
+//	final String myThreadName = getThreadName();
 	  //JMXHelper.registerMXBean(this, JMXHelper.SCRIPT_DOMAIN, myThreadName);
 
 	  long start = System.currentTimeMillis();
@@ -385,7 +385,11 @@ public final void run(Access access) throws Exception {
 	  }
   }
 
-  /**
+  protected Access getAccess() {
+	return myAccess;
+}
+
+/**
    * Deprecated method to check validation errors. Use <validations> block inside webservice script instead.
    *
    * @param conditions
