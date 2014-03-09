@@ -3,7 +3,10 @@ package com.dexels.navajo.persistence.impl;
 import java.io.File;
 
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -24,6 +27,10 @@ class ConstructorTest implements Constructor {
 	public ConstructorTest(String myId) {
 		this.myId = myId;
 	}
+	
+    @Rule
+    public TemporaryFolder folder= new TemporaryFolder();
+   
 
 	@Override
 	public Persistable construct() throws Exception {
@@ -43,6 +50,7 @@ public class PersistenceManagerImplTest {
 	private SharedStoreInterface si;
 	private PersistenceManagerImpl pi = null;
 
+	@Before
 	public void setUp() throws Exception {
 		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
 		DispatcherFactory.getInstance().setUseAuthorisation(false);

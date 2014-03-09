@@ -9,20 +9,20 @@
 	<properties>
 		<tycho-version>0.19.0</tycho-version>
 		<tycho-groupid>org.eclipse.tycho</tycho-groupid>
-		<!-- <forceContextQualifier>20120229-1926</forceContextQualifier> -->
-
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	<!-- <pluginRepositories> <pluginRepository> <id>tycho_spiritus</id> <url>https://repo.dexels.com/nexus/content/repositories/tycho/</url> 
-		<snapshots> <enabled>true</enabled> </snapshots> </pluginRepository> <pluginRepository> <id>tycho</id> 
-		<url>http://repository.sonatype.org/content/groups/sonatype-public-grid</url> <snapshots> <enabled>true</enabled> 
-		</snapshots> </pluginRepository> </pluginRepositories> -->
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
-	<!-- -->
 	<build>
+		<testOutputDirectory>${project.build.directory}/classes</testOutputDirectory>
 		<plugins>
-			<!-- -->
-
 			<plugin>
 				<groupId>${tycho-groupid}</groupId>
 				<artifactId>target-platform-configuration</artifactId>
@@ -40,8 +40,6 @@
 					</target>
 					<ignoreTychoRepositories>false</ignoreTychoRepositories>
 					<filters>
-
-
 						<!-- example 2: remove all providers of the package javax.persistence except the bundle javax.persistence -->
 						<filter>
 							<type>java-package</type>
@@ -115,20 +113,7 @@
 				<groupId>${tycho-groupid}</groupId>
 				<artifactId>tycho-p2-director-plugin</artifactId>
 				<version>${tycho-version}</version>
-				<!-- <executions> <execution> <id>materialize-products</id> <goals> <goal>materialize-products</goal> 
-					</goals> </execution> <execution> <id>archive-products</id> <goals> <goal>archive-products</goal> 
-					</goals> </execution> </executions> <configuration> <products> <product> <id>navajo</id> </product> 
-					</products> </configuration> -->
 			</plugin>
-
-			<!-- Disabled, handles by Nexus now <plugin> <groupId>org.apache.felix</groupId> <artifactId>maven-bundle-plugin</artifactId> 
-				<version>2.3.7</version> <extensions>true</extensions> <configuration> <supportedProjectTypes> <supportedProjectType>jar</supportedProjectType> 
-				<supportedProjectType>bundle</supportedProjectType> <supportedProjectType>eclipse-plugin</supportedProjectType> 
-				<supportedProjectType>eclipse-feature</supportedProjectType> </supportedProjectTypes> <instructions> 
-				<Bundle-Description>Navajo Suite</Bundle-Description> </instructions> <remoteOBR>repo-rel</remoteOBR> 
-				<prefixUrl>https://source.dexels.com/nexus/content/repositories/navajo_snapshot</prefixUrl> <ignoreLock>true</ignoreLock> 
-				</configuration> <executions> <execution> <id>bundle-deploy</id> <phase>deploy</phase> <goals> <goal>deploy</goal> 
-				</goals> </execution> </executions> </plugin> -->
 		</plugins>
 
 		<pluginManagement>
@@ -219,6 +204,31 @@
 							</execution>
 						</executions>
 					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>2.16</version>
+						<executions>
+							<execution>
+								<id>test</id>
+								<phase>test</phase>
+								<configuration>
+									<includes>
+										<include>**/*.java</include>
+									</includes>
+								</configuration>
+								<goals>
+									<goal>test</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+
+						</configuration>
+					</plugin>
+
+
+
 				</plugins>
 			</build>
 		</profile>
@@ -279,7 +289,7 @@
 			</distributionManagement>
 		</profile>
 
-	<profile>
+		<profile>
 			<id>maintenance</id>
 			<activation>
 				<property>
@@ -345,15 +355,10 @@
 					<uniqueVersion>false</uniqueVersion>
 					<id>dexels_test</id>
 					<name>Dexels Repository</name>
-					<!-- <url>scp://navajo@spiritus.dexels.nl:/var/www/html/maven_release/</url> -->
 					<url>https://repo.dexels.com/nexus/content/repositories/navajo_test/</url>
 
 					<layout>default</layout>
 				</repository>
-
-
-
-
 				<snapshotRepository>
 					<uniqueVersion>true</uniqueVersion>
 					<id>dexels_snap_test</id>
@@ -390,10 +395,6 @@
 			</repositories>
 		</profile>
 	</profiles>
-
-
-
-
 	<organization>
 		<name>Dexels</name>
 		<url>http://www.dexels.com</url>
