@@ -3,12 +3,10 @@ package com.dexels.navajo.sharedstore;
 import java.io.File;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.Before;
 import org.junit.rules.TemporaryFolder;
 
 import com.dexels.navajo.document.Message;
