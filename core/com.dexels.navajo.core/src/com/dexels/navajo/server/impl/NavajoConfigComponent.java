@@ -46,7 +46,7 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	private final Map<Class<?>,ServiceReference<?>> serviceReferences = new HashMap<Class<?>,ServiceReference<?>>();
 	private final Map<String, DescriptionProviderInterface> desciptionProviders = new HashMap<String,DescriptionProviderInterface>();
 	private ConfigurationAdmin myConfigurationAdmin;
-	private PersistenceManager persistenceManager;
+	private PersistenceManagerImpl persistenceManager;
 	private AsyncStore asyncStore;
 	private WorkerInterface integrityWorker;
 	private final static Logger logger = LoggerFactory
@@ -84,6 +84,7 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 			this.properties = props;
 			this.bundleContext = bundleContext;
 			this.persistenceManager = new PersistenceManagerImpl();
+			this.persistenceManager.setSharedStore(getSharedStore());
 		} catch (Throwable e) {
 			logger.error("activation error",bundleContext);
 		}

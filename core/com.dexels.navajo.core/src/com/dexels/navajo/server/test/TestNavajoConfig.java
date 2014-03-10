@@ -29,8 +29,15 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 //	private Repository myRepository;
 	private NavajoClassSupplier myClassloader;
 	
-	public TestNavajoConfig() {
+	private SharedFileStore sharedFileStore;
+	
+	public TestNavajoConfig() throws Exception {
+		this(null);
+	}
+	
+	public TestNavajoConfig(File configRoot) throws Exception {
 		setClassloader( new NavajoClassLoader(this.getClass().getClassLoader()));
+		sharedFileStore = new SharedFileStore(configRoot,this);
 	}
 	
 	public TestNavajoConfig(String name, String group) {
@@ -51,9 +58,9 @@ public class TestNavajoConfig extends FileNavajoConfig implements NavajoConfigIn
 
 	@Override
 	public PersistenceManager getPersistenceManager() {
-		if ( myPersistenceManager == null ) {
-			myPersistenceManager = PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
-		}
+//		if ( myPersistenceManager == null ) {
+//			myPersistenceManager = PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
+//		}
 		return myPersistenceManager;
 	}
 

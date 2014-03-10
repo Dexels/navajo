@@ -38,7 +38,9 @@ public class DispatcherFactory {
 	public static DispatcherInterface getInstance() {
 		return instance;
 	}
-	
+	public synchronized static void setInstance(DispatcherInterface dispatcher) {
+		instance = dispatcher;
+	}
 	
 	/**
 	 * Only use this getInstance to get a reference to the real Dispatcher.
