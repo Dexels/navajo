@@ -13,8 +13,7 @@ Bundle-ClassPath: .,
  lib/swingx.jar
 Export-Package: com.dexels.navajo.tipi.swingx,
  com.dexels.navajo.tipi.swingx.impl,
- org.jdesktop.swingx.painter,
- tipiswingx
+ org.jdesktop.swingx.painter
 Bundle-Activator: tipiswingx.TipiSwingXExtension
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
