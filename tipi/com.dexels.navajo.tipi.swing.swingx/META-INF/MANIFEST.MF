@@ -14,8 +14,8 @@ Bundle-ClassPath: .,
 Export-Package: com.dexels.navajo.tipi.swingx,
  com.dexels.navajo.tipi.swingx.impl,
  org.jdesktop.swingx.painter,
- tipi
-Bundle-Activator: tipi.TipiSwingXExtension
+ tipiswingx
+Bundle-Activator: tipiswingx.TipiSwingXExtension
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.tipilink,

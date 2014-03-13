@@ -8,7 +8,7 @@ Require-Bundle: com.dexels.navajo.tipi
 Bundle-ClassPath: .,
  lib/smack.jar,
  lib/smackx.jar
-Bundle-Activator: tipi.TipiJabberExtension
+Bundle-Activator: tipijabber.TipiJabberExtension
 Import-Package: com.dexels.navajo.client.jabber,
  com.dexels.navajo.client.sessiontoken,
  com.dexels.navajo.document;version="2.2.0",

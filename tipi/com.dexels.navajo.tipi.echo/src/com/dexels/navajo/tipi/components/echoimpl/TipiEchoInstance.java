@@ -30,7 +30,7 @@ import nextapp.echo2.webcontainer.command.BrowserRedirectCommand;
 import nextapp.echo2.webrender.Connection;
 import nextapp.echo2.webrender.WebRenderServlet;
 import tipi.TipiApplicationInstance;
-import tipi.TipiEchoExtension;
+import tipiecho.TipiEchoExtension;
 
 import com.dexels.navajo.echoclient.components.Styles;
 import com.dexels.navajo.tipi.TipiContext;

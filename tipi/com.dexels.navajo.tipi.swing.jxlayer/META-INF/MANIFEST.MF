@@ -10,7 +10,7 @@ Require-Bundle: com.dexels.navajo.tipi,
 Bundle-ClassPath: .,
  lib/jxlayer.jar,
  lib/filters.jar
-Bundle-Activator: tipi.TipiJxLayerExtension
+Bundle-Activator: tipijx.TipiJxLayerExtension
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.tipilink,
  com.dexels.navajo.version,

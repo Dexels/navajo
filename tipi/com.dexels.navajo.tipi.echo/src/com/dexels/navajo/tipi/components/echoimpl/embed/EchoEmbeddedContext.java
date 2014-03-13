@@ -6,7 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tipi.TipiEchoExtension;
+import tipiecho.TipiEchoExtension;
 
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.echoimpl.EchoTipiContext;

@@ -5,7 +5,7 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.8.qualifier
 Bundle-Vendor: Dexels
 Require-Bundle: com.dexels.navajo.tipi
-Bundle-Activator: tipi.TipiWebsocketExtension
+Bundle-Activator: tipiwebsocket.TipiWebsocketExtension
 Import-Package: com.dexels.navajo.client.sessiontoken,
  com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.tipilink,

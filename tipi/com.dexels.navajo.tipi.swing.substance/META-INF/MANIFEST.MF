@@ -33,7 +33,7 @@ Bundle-ClassPath: .,
  lib/laf-widget-7.2.1.1.jar,
  lib/substance-7.2.1.1.jar,
  lib/trident-7.2.1.1.jar
-Bundle-Activator: tipi.TipiSubstanceExtension
+Bundle-Activator: tipisubstance.TipiSubstanceExtension
 Export-Package: com.dexels.navajo.tipi.swing.laf.api,
  com.dexels.navajo.tipi.swing.substance,
  org.pushingpixels.lafplugin,
@@ -100,4 +100,4 @@ Export-Package: com.dexels.navajo.tipi.swing.laf.api,
  org.pushingpixels.trident.swing,
  org.pushingpixels.trident.swt,
  resource,
- tipi
+ tipisubstance

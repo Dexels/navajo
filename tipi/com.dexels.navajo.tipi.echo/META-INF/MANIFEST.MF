@@ -34,6 +34,7 @@ Import-Package: com.dexels.navajo.client.stream;version="1.0.0",
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)",
  org.w3c.dom,
- tipi
+ tipiecho
 Bundle-ClassPath: .,lib/iText.jar
+Bundle-Activator: tipiecho.TipiEchoExtension
 

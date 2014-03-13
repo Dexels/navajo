@@ -8,11 +8,11 @@ Require-Bundle: com.dexels.navajo.tipi;bundle-version="1.0.43",
  com.dexels.navajo.tipi.swing;bundle-version="[1.0.41,2.0.0)"
 Bundle-ClassPath: .,
  lib/miglayout-3.6-swing.jar
-Bundle-Activator: tipi.TipiSwingMigExtension
+Bundle-Activator: tipiswingmig.TipiSwingMigExtension
 Export-Package: com.dexels.navajo.tipi.mig,
  net.miginfocom.layout,
  net.miginfocom.swing,
- tipi
+ tipiswingmig
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.tipilink,
  com.dexels.navajo.version,
