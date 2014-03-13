@@ -1,5 +1,5 @@
 <%@page errorPage="tmlerror.jsp" language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@page import="java.io.*"%>
+<%@page import="java.io.*"%> <%@ page isELIgnored="false" %>
 <%@page import="java.net.*"%>
 <%@page import="java.util.*"%>
 <%@ taglib prefix="c" uri="../WEB-INF/tld/c.tld"%>
