@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="image/svg+xml; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@page import="com.dexels.navajo.document.*"%>
 <%@page import="com.dexels.navajo.document.types.*"%>
-<%@page import="java.io.*"%>
+<%@page import="java.io.*"%> <%@ page isELIgnored="false" %>
 <%@page import="java.net.*"%>
 <%@page import="java.util.*"%>
 <%@ page trimDirectiveWhitespaces="true" %>
