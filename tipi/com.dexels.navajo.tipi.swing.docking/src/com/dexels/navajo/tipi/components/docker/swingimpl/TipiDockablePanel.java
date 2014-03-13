@@ -1,6 +1,7 @@
-package com.dexels.navajo.tipi.components.swingimpl;
+package com.dexels.navajo.tipi.components.docker.swingimpl;
 
-import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingDockingPanel;
+import com.dexels.navajo.tipi.components.docker.swingimpl.swing.TipiSwingDockingPanel;
+import com.dexels.navajo.tipi.components.swingimpl.TipiPanel;
 
 
 public class TipiDockablePanel extends TipiPanel{

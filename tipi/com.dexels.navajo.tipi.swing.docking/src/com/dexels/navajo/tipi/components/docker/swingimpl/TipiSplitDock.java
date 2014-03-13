@@ -1,7 +1,7 @@
-package com.dexels.navajo.tipi.components.swingimpl;
+package com.dexels.navajo.tipi.components.docker.swingimpl;
 
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
-import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingSplitDock;
+import com.dexels.navajo.tipi.components.docker.swingimpl.swing.TipiSwingSplitDock;
 import com.javadocking.dock.Dock;
 import com.javadocking.dock.Position;
 

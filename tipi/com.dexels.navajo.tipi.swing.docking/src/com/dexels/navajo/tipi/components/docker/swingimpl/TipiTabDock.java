@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.components.swingimpl;
+package com.dexels.navajo.tipi.components.docker.swingimpl;
 
 import java.awt.Component;
 
@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
-import com.dexels.navajo.tipi.components.swingimpl.swing.TipiDockable;
+import com.dexels.navajo.tipi.components.docker.swingimpl.swing.TipiDockable;
 import com.javadocking.dock.Position;
 import com.javadocking.dock.TabDock;
 import com.javadocking.dockable.DefaultDockable;
