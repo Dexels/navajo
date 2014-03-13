@@ -1,4 +1,4 @@
-package org.dexels.utils;
+package org.dexels.utils.scriptloader;
 
 import com.dexels.navajo.script.api.NavajoClassSupplier;
 

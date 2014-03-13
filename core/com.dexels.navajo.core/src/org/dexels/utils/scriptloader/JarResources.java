@@ -1,4 +1,4 @@
-package org.dexels.utils;
+package org.dexels.utils.scriptloader;
 
 import java.io.BufferedInputStream;
 import java.io.File;
