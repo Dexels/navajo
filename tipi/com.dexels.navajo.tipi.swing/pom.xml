@@ -11,5 +11,8 @@
 		<version>1.0.0</version>
 		<relativePath>../../setup/com.dexels.repository</relativePath>
 	</parent>
-
+	<!-- Disable testing code (there are no tests anyway at this point, there seems to be a problem with javax.jnlp -->
+	<build>
+		<testOutputDirectory>${project.build.directory}/nonexistent</testOutputDirectory>
+	</build>
 </project>
