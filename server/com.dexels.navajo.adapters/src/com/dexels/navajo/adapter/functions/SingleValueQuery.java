@@ -71,7 +71,6 @@ public class SingleValueQuery extends FunctionInterface {
 	  String datasource = "";
 	  String user = "";
 
-	  //sql.setDebug(true);
 	  try {
 		  sql = JDBCFactory.getJDBCMap(getAccess());
 		  if (query.indexOf(DATASOURCEDELIMITER) != -1) {
@@ -114,7 +113,6 @@ public class SingleValueQuery extends FunctionInterface {
 public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 	  JDBCMappable sql = evaluateQuery();
 	  setDbIdentifier(sql.getDbIdentifier());
-	  sql.setDebug(false);
 	  Object result = null;
 	  try {
 		  
