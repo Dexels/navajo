@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" configuration-policy="require" deactivate="deactivate" immediate="true" name="navajo.local.client">
+   <implementation class="com.dexels.navajo.server.LocalInstanceClient"/>
+   <service>
+      <provide interface="com.dexels.navajo.script.api.LocalClient"/>
+   </service>
+   <reference bind="setDispatcher" cardinality="1..1" interface="com.dexels.navajo.server.DispatcherInterface" name="DispatcherInterface" policy="dynamic" unbind="clearDispatcher"/>
+</scr:component>

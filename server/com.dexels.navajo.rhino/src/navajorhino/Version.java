@@ -1,14 +1,12 @@
 package navajorhino;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
 
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
 
 public class Version extends com.dexels.navajo.version.AbstractVersion {
 
-	@SuppressWarnings("rawtypes")
-	private ServiceRegistration handler;
+//	private ServiceRegistration handler;
 
 	private static BundleContext defaultContext = null;
 	
@@ -40,9 +38,9 @@ public class Version extends com.dexels.navajo.version.AbstractVersion {
 	@Override
 	public void stop(BundleContext arg0) throws Exception {
 		super.stop(arg0);
-		if(handler!=null) {
-			handler.unregister();
-		}
+//		if(handler!=null) {
+//			handler.unregister();
+//		}
 		defaultContext = null;
 	}
 	

@@ -30,9 +30,10 @@ public class CheckCommand extends ConsoleCommand {
 	@Descriptor(value = "Check the modification dates of a certain script.") 
 
 	public void check(@Descriptor(value = "The path of the script") String script,@Descriptor(value = "The current tenant")  String tenant) throws FileNotFoundException {
-		Date installed = bundleCreator.getBundleInstallationDate(script,tenant);
-		Date modified = bundleCreator.getScriptModificationDate(script,tenant);
-		Date compiled = bundleCreator.getCompiledModificationDate(script,tenant);
+		final String extension = ".xml";
+		Date installed = bundleCreator.getBundleInstallationDate(script,tenant,extension);
+		Date modified = bundleCreator.getScriptModificationDate(script,tenant,extension);
+		Date compiled = bundleCreator.getCompiledModificationDate(script,tenant,extension);
 		System.out.println("Modified at: "+modified);
 		System.out.println("Compiled at: "+compiled);
 		System.out.println("Installed at: "+installed);

@@ -30,20 +30,18 @@ public class ServletArticleRuntimeImpl extends BaseRuntimeImpl implements Articl
 	private final String token;
 	private final String username;
 	private final StringWriter writer = new StringWriter();
-	private String instance; 
 	private final Map<String, String[]> parameterMap; 
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(ServletArticleRuntimeImpl.class);
 	
 	public ServletArticleRuntimeImpl(HttpServletRequest req, HttpServletResponse resp, File article,String articleName, Map<String, String[]> parameterMap,String instance, Map<String, String> suppliedScopes) throws IOException {
-		super(articleName,article,suppliedScopes);
+		super(articleName,article,suppliedScopes,instance);
 		this.request = req;
 		this.parameterMap = parameterMap;
 		this.response = resp;
 		this.token = URLDecoder.decode(req.getParameter("token"),"UTF-8").replaceAll(" ", "+");
 		this.username = req.getParameter("username");
-		this.instance = instance;
 	}
 
 	

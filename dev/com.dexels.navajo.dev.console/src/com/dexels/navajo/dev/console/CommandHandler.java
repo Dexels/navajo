@@ -63,7 +63,7 @@ public class CommandHandler {
 	
 	public void activate(BundleContext bundleContext) {
 		this.bundleContext = bundleContext;
-		logger.info("Command handler in business");
+		logger.debug("Command handler activated");
 
 //		CompileCommand c = new CompileCommand();
 //		c.setBundleCreator(bundleCreator);
@@ -147,7 +147,7 @@ public class CommandHandler {
 		dd.put("osgi.command.function", command);
 		ServiceRegistration<?> sr = bundleContext.registerService(c.getClass().getName(), c,dd );
 		registeredCommands.add(sr);
-		logger.info("registered: "+command+" with class: "+c.getClass().getName());
+		logger.debug("registered: "+command+" with class: "+c.getClass().getName());
 
 	}
 

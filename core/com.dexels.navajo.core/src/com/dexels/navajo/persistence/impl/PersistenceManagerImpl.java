@@ -107,6 +107,10 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 		}
 	}
 	
+	public void setSharedStore(SharedStoreInterface sharedStore) {
+		this.sharedPersistenceStore = sharedStore;
+	}
+	
 	public void init() {
 		if ( this.sharedPersistenceStore == null ) {
 			synchronized ( semaphore ) {
@@ -322,9 +326,10 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 
 	public boolean isCached(String service, String serviceKeyValues) {
 		PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
-		Iterator iter = pm.inMemoryCache.values().iterator();
+		final SharedTribalMap<String, PersistentEntry> inMemoryCache2 = pm.inMemoryCache;
+		Iterator<PersistentEntry> iter = inMemoryCache2.values().iterator();
 		while ( iter.hasNext() ) {
-			PersistentEntry pe = (PersistentEntry) iter.next();
+			PersistentEntry pe = iter.next();
 			if ( pe != null && (  pe.getService().equals(service) && ( serviceKeyValues == null || pe.getKeyValues().equals(serviceKeyValues) ) ) ) {
 				return true;
 			}
@@ -414,6 +419,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 		if ( ne instanceof NavajoCompileScriptEvent ) {
 			NavajoCompileScriptEvent ncse = (NavajoCompileScriptEvent) ne;
 			//AuditLog.log("PERSISTENCEMANAGER", "Received NavajoCompileScriptEvent for " + ncse.getWebservice(), Level.INFO);
+			// No idea what this is about. Todo remove?
 			PersistenceManagerImpl p;
 			try {
 				p = new PersistenceManagerImpl();

@@ -18,7 +18,7 @@ import com.dexels.navajo.server.api.NavajoServerContext;
 
 public class NavajoServerContextComponent implements NavajoServerContext {
 
-	private String installationPath;
+	protected String installationPath;
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoServerContextComponent.class);
@@ -32,6 +32,8 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 	private ConfigurationAdmin myConfigurationAdmin = null;
 //	private final Set<Configuration> monitoredFolderConfigurations = new HashSet<Configuration>();
 	private final Map<String,Configuration> resourcePids = new HashMap<String,Configuration>();
+
+	protected boolean suppressAdapters = false;;
 
 	public void setConfigurationAdmin(ConfigurationAdmin ca) {
 		this.myConfigurationAdmin = ca;
@@ -50,8 +52,15 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 		try {
 			String contextPath = (String)settings.get("contextPath");
 			installationPath = (String) settings.get("installationPath");
+			String injectedPath = System.getenv("navajo.path");
+			if(injectedPath!=null) {
+				installationPath = injectedPath;
+			}
+			String suppressAdapters = System.getProperty("navajo.suppress.adaptersfolder");
+			if("true".equals(suppressAdapters)) {
+				this.suppressAdapters  = true;
+			}
 			initializeContext(installationPath,contextPath);
-			
 		} catch (IOException e) {
 			logger.error("Error creating folder monitor: ",e);
 		} catch( Throwable t) {
@@ -62,7 +71,9 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 	protected void initializeContext(String installationPath,String contextPath) throws IOException {
 		this.installationPath = installationPath;
 		try {
-			addFolderMonitorListener(contextPath,installationPath,"adapters");
+			if(!suppressAdapters) {
+				addFolderMonitorListener(contextPath,installationPath,"adapters");
+			}
 			addFolderMonitorListener(contextPath,installationPath,"camel");
 		} catch (InvalidSyntaxException e) {
 			logger.error("Error creating folder monitor: ",e);
@@ -98,7 +109,8 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 			return;
 		}
 		//fileInstallConfiguration = myConfigurationAdmin.createFactoryConfiguration("org.apache.felix.fileinstall",null);
-		final String absolutePath = monitoredFolder.getAbsolutePath();
+//		monitoredFolder.getCanonicalFile().getAbsolutePath()
+		final String absolutePath = monitoredFolder.getCanonicalFile().getAbsolutePath();
 		Configuration newConfig = getUniqueResourceConfig(contextPath, absolutePath);
 		Dictionary<String,Object> d = newConfig.getProperties();
 		if(d==null) {
@@ -106,6 +118,7 @@ public class NavajoServerContextComponent implements NavajoServerContext {
 		}
 		d.put("felix.fileinstall.dir",absolutePath );
 		d.put("contextPath",contextPath );
+		d.put("injectedBy","repository-instance" );
 		String pid = newConfig.getPid();
 		resourcePids.put(pid, newConfig);
 		newConfig.update(d);	

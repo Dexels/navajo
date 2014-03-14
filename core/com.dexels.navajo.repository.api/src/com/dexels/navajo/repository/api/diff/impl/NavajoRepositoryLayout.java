@@ -1,5 +1,6 @@
 package com.dexels.navajo.repository.api.diff.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,10 +16,17 @@ public class NavajoRepositoryLayout implements RepositoryLayout {
 //	result.add("workflows");
 //	result.add("tasks");
 	
-	private final List<String> monitoredFolders = Arrays.asList("config", "scripts", "article","authorization","adapters","workflows","tasks");
+	private final List<String> monitoredFolders = Arrays.asList("config", "scripts", "article","authorization","workflows","tasks");
 	@Override
 	public List<String> getMonitoredFolders() {
-		return monitoredFolders;
+		String suppressAdapters = System.getenv("navajo.suppress.adaptersfolder");
+		if("true".equals(suppressAdapters)) {
+			return monitoredFolders;		
+		}
+		List<String> result = new ArrayList<String>(monitoredFolders);
+		result.add("adapters");
+		return result;
+		
 	}
 
 }

@@ -72,18 +72,18 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 
     @Override
     public final InputStream getScript(String name) throws IOException {
-    	return getScript(name, null);
+    	return getScript(name, null,".xml");
     }
     
 	@Override
-    public final InputStream getScript(String name, String tenant) throws IOException {
+    public final InputStream getScript(String name, String tenant, String extension) throws IOException {
     	InputStream input;
 		String scriptPath = getScriptPath();
 		if(!scriptPath.endsWith("/")) {
 			scriptPath = scriptPath+"/";
 		}
 		String path = null;
-		if(hasTenantScriptFile(name, tenant)) {
+		if(hasTenantScriptFile(name, tenant, extension)) {
 			path = scriptPath + name +"_"+tenant+ ".xml";
 		} else {
 			path = scriptPath + name + ".xml";
@@ -111,17 +111,17 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
     }
 
 	@Override
-	public Date getScriptModificationDate(String scriptPackage, String tenant) throws FileNotFoundException {
-		File scr = getApplicableScriptFile(scriptPackage, tenant);
+	public Date getScriptModificationDate(String scriptPackage, String tenant, String extension) throws FileNotFoundException {
+		File scr = getApplicableScriptFile(scriptPackage, tenant, extension);
 		return new Date(scr.lastModified());
 		
 	}
 	
 	@Override
-	public File getApplicableBundleForScript(String rpcName, String tenant) {
+	public File getApplicableBundleForScript(String rpcName, String tenant, String extension) {
 
 		try {
-			if(hasTenantScriptFile(rpcName, tenant)) {
+			if(hasTenantScriptFile(rpcName, tenant,extension)) {
 				return getApplicableFile(rpcName, tenant, getCompiledScriptPath(), ".jar",false);
 			} else {
 				return getGenericFile(rpcName, getCompiledScriptPath(),  ".jar");
@@ -135,16 +135,16 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 	}
 	
 	@Override
-	public File getApplicableScriptFile(String rpcName, String tenant) throws FileNotFoundException {
-		return getApplicableFile(rpcName, tenant, getScriptPath(), ".xml",true);
+	public File getApplicableScriptFile(String rpcName, String tenant, String extension) throws FileNotFoundException {
+		return getApplicableFile(rpcName, tenant, getScriptPath(), extension ,true);
 	}
 
 	@Override
-	public boolean hasTenantScriptFile(String rpcName, String tenant) {
+	public boolean hasTenantScriptFile(String rpcName, String tenant, String extension) {
 		if(tenant==null) {
 			return false;
 		}
-		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, getScriptPath(), ".xml",true);
+		File qualifiedFile = getTenantSpecificFile(rpcName, tenant, getScriptPath(),extension,true);
 		return qualifiedFile!=null;
 	}
 	

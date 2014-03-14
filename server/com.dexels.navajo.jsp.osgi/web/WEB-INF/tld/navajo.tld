@@ -43,7 +43,12 @@
       <name>postHandler</name>
       <tagclass>com.dexels.navajo.jsp.tags.PostHandlerTag</tagclass>
       <info>Looks for navajo modifications in the post variables</info>
-  
+   </tag>
+
+     <tag>
+      <name>instance</name>
+      <tagclass>com.dexels.navajo.jsp.tags.InstanceTag</tagclass>
+      <info>Sets the selectedInstance attribute of the session to the instance parameter</info>
    </tag>
   
    <tag>

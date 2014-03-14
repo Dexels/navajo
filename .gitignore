@@ -4,6 +4,7 @@ dist/
 work/
 classes/
 bin/
+core/com.dexels.navajo.core/sharedstore/
 .DS_Store
 *.war
 *.jar

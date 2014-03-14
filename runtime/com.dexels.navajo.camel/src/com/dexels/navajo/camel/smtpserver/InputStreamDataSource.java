@@ -6,8 +6,6 @@ import java.io.OutputStream;
 
 import javax.activation.DataSource;
 
-import com.dexels.navajo.document.types.Binary;
-
 public class InputStreamDataSource implements DataSource {
 
 	private final InputStream inputStream;

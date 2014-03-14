@@ -200,7 +200,10 @@ public class TipiCobraBrowser extends TipiSwingDataComponentImpl {
 		while (m.find()) {
 			String text = m.group(1);
 			// ... possibly process 'text' ...
-			m.appendReplacement(sb, Matcher.quoteReplacement(attributeName + "=\"" + replacementMap.get(text) + "\""));
+			final String value = replacementMap.get(text);
+			if(value!=null) {
+				m.appendReplacement(sb, Matcher.quoteReplacement(attributeName + "=\"" + value + "\""));
+			}
 		}
 		m.appendTail(sb);
 		return sb.toString();

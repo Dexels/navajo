@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.dexels.utils.JarResources;
+import org.dexels.utils.scriptloader.JarResources;
 
 public class NavajoLegacyClassLoader extends NavajoClassLoader {
 

@@ -57,7 +57,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String method = req.getMethod();
+//		String method = req.getMethod();
 
 		String clientId = req.getParameter("token");
 		if(clientId==null) {
@@ -70,7 +70,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		if(pathInfo==null) {
 			throw new ServletException("No article found, please specify after article");
 		}
-		File article = context.resolveArticle(pathInfo);
+		File article = context.resolveArticle(determineArticleFromRequest(req));
 		if(article.exists()) {
 			ArticleRuntime runtime = new ServletArticleRuntimeImpl(req, resp, article,pathInfo,req.getParameterMap(),instance,scopes);
 			try {
@@ -91,6 +91,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 	
 	private String determineInstanceFromRequest(final HttpServletRequest req) {
 		String pathinfo = req.getPathInfo();
+		logger.info("Assuming multi teant, trying to determine instance from path info: "+pathinfo);
 		if(pathinfo.startsWith("/")) {
 			pathinfo = pathinfo.substring(1);
 		}
@@ -98,10 +99,27 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		if(pathinfo.indexOf('/')!=-1) {
 			instance = pathinfo.substring(0, pathinfo.indexOf('/'));
 		} else {
-			instance = pathinfo;
+			instance = null;
 		}
 		return instance;
 	}
+	
+	private String determineArticleFromRequest(final HttpServletRequest req) {
+		String pathinfo = req.getPathInfo();
+		logger.info("Assuming multi teant, trying to determine instance from path info: "+pathinfo);
+		if(pathinfo.startsWith("/")) {
+			pathinfo = pathinfo.substring(1);
+		}
+		String article = null;
+		final int indexOf = pathinfo.indexOf('/');
+		if(indexOf!=-1) {
+			article = pathinfo.substring(indexOf+1, pathinfo.length());
+		} else {
+			article = null;
+		}
+		return article;
+	}
+
 
 	private String getToken(HttpServletRequest req) {
 

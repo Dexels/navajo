@@ -15,6 +15,7 @@
 <jsp:useBean id="installerContext" class="com.dexels.navajo.jsp.server.InstallerContext" scope="application" />
 <jsp:setProperty property="installerContext" name="serverContext" value="${installerContext}"/>
 <jsp:setProperty property="pageContext" name="installerContext" value="${pageContext}"/>
+<nav:instance/>
 <nav:postHandler/>
 <html>
 <head>
@@ -67,12 +68,13 @@
           <!-- start: skip link navigation -->
 
         </div>
-        <h2><a href="index.jsp"><c:import url="tml/writeversion.jsp" /></a></h2>
+        <h2><a href="index.jsp">[[ ${sessionScope["selectedInstance"]} ]]<c:import url="tml/writeversion.jsp" /></a></h2>
         <div style="float: right; position: absolute;  right: 30px; top: 10px;"><a href="http://www.dexels.com"><img src="images/logo_dexels.png"/></a></div>
       </div>
       <div id="nav">
         <!-- skiplink anchor: navigation -->
         <a id="navigation" name="navigation"></a>
+
         <div class="hlist">
   
           <!-- main navigation: horizontal list -->
@@ -87,6 +89,7 @@
        </div>
         <div id="col3">
           <div id="col3_content" class="clearfix" style="overflow:auto">
+   		<c:import url="tml/writeinstances.jsp" />
 			<c:catch var="signal">
 				<c:import url="tml/manager/content.jsp"/>
 			</c:catch>

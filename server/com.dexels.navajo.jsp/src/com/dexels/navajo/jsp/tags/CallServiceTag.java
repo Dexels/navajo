@@ -1,6 +1,7 @@
 package com.dexels.navajo.jsp.tags;
 
 import java.io.StringWriter;
+import java.util.Map;
 
 import javax.servlet.jsp.JspException;
 
@@ -39,7 +40,7 @@ public class CallServiceTag extends BaseNavajoTag {
 		myNavajo = navajo;
 	}
 
-	public void callOldStyle() throws JspException {
+	private void callOldStyle() throws JspException {
 		if(myService==null || "".equals(myService)) {
 			throw new JspException("Error calling service: No service supplied!");
 		}
@@ -56,10 +57,12 @@ public class CallServiceTag extends BaseNavajoTag {
 		}
 	}
 	
-	public void callNewStyle() {
+	private void callNewStyle(LocalClient lc) {
 		try {
+			String instance = (String) getPageContext().getSession().getAttribute("currentInstance");
+			
 			Navajo navajo = null;
-			if (myNavajo==null) {
+			if (myNavajo==null || "".equals(myNavajo)) {
 				navajo = NavajoFactory.getInstance().createNavajo();
 				navajo.addHeader(NavajoFactory.getInstance().createHeader(navajo, myService, null,null, -1));
 			} else {
@@ -70,12 +73,11 @@ public class CallServiceTag extends BaseNavajoTag {
 				}
 				navajo.getHeader().setRPCName(myService);
 			}
-			LocalClient lc = (LocalClient) getPageContext().getServletContext().getAttribute("localClient");
 			if(lc==null) {
 				
 				throw new JspException("Error: No LocalClient found in Call Service: Has a navajo context been defined?");
 			}
-			resultNavajo = lc.call(navajo);
+			resultNavajo = lc.call(instance,navajo);
 			getNavajoContext().putNavajo(myService, resultNavajo);
 
 			
@@ -91,11 +93,33 @@ public class CallServiceTag extends BaseNavajoTag {
 		}
 		logger.debug("Calling service: "+myService);
 		LocalClient lc = (LocalClient) getPageContext().getServletContext().getAttribute("localClient");
-		if(lc==null) {
-			callOldStyle();
+		Map<String,LocalClient> localClients = (Map<String,LocalClient>) getPageContext().getServletContext().getAttribute("localClients");
+		if(localClients==null) {
+			logger.warn("No localClients in JSP environment. No multitenant, perhaps?");
 		} else {
-			callNewStyle();
+			logger.warn(">>>>> Number of localClients: "+localClients.size());
 		}
+
+		boolean multitenant = localClients!=null&&localClients.size()>0;
+		
+		String selectedInstance = (String) getPageContext().getSession().getAttribute("selectedInstance");
+		String sessionId =  getPageContext().getSession().getId();
+		System.err.println("Session Id: "+sessionId);
+		if (multitenant) {
+			if(selectedInstance==null) {
+				throw new JspException("Multitenant mode, but no selected instance");
+			}
+			lc = localClients.get(selectedInstance);
+			callNewStyle(lc);
+		} else {
+			if(lc==null) {
+				callOldStyle();
+			} else {
+				callNewStyle(lc);
+			}
+			
+		}
+		
 		resultNavajo = getNavajoContext().getNavajo(myService);
 		
 		if(resultNavajo==null) {

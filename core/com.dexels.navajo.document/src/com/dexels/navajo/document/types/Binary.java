@@ -85,7 +85,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 
     private FormatDescription currentFormatDescription;
 
-	private transient MessageDigest messageDigest;
+	private final MessageDigest messageDigest;
 
 	private byte[] digest;
     
@@ -105,8 +105,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
 
     public Binary(InputStream is, boolean lazy) {
-        super(Property.BINARY_PROPERTY);
-        createDigest();
+//        super(Property.BINARY_PROPERTY);
+//        createDigest();
+        this();
         if (lazy) {
         	throw new UnsupportedOperationException("Constructing lazy binary based on a stream. This is not working.");
 //            lazyInputStream = is;
@@ -120,17 +121,15 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         }
      }
 
-	private void createDigest() {
+    public Binary() {
+        super(Property.BINARY_PROPERTY);
+        MessageDigest md = null;
 		try {
-			this.messageDigest = MessageDigest.getInstance("MD5");
+			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e1) {
 			logger.warn("Failed creating messageDigest in binary. Expect problems", e1);
 		}
-	}    
-    
-    public Binary() {
-        super(Property.BINARY_PROPERTY);
-        createDigest();
+		this.messageDigest = md;
         setMimeType(guessContentType());
      }    
     
@@ -182,11 +181,10 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     
     private void loadBinaryFromStream(InputStream is, boolean close) throws IOException, FileNotFoundException {
         OutputStream os = createTempFileOutputStream();
-        messageDigest.reset();
         copyResource(os, is,close);
 
 
-		setDigest(messageDigest.digest());
+//		setDigest(messageDigest.digest());
 //    	if(NavajoFactory.getInstance().isSandboxMode()) {
 //    		inMemory = ((ByteArrayOutputStream)os).toByteArray();
 //    	}
@@ -226,11 +224,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
     
 	private OutputStream createTempFileOutputStream() throws IOException, FileNotFoundException {
-		if(messageDigest==null) {
-			createDigest();
-		} else {
-			messageDigest.reset();
-		}
+		messageDigest.reset();
     	if(NavajoFactory.getInstance().isSandboxMode()) {
     		ByteArrayOutputStream baos = new ByteArrayOutputStream() {
     			@Override
@@ -280,8 +274,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
 
     public Binary(File f, boolean lazy) throws IOException {
-        super(Property.BINARY_PROPERTY);
-        if (lazy) {
+    	this();
+    	if (lazy) {
             lazySourceFile = f;
         } else {
             loadBinaryFromStream(new FileInputStream(f));
@@ -307,10 +301,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
      *           
      */
     public Binary(byte[] data) {
-        super(Property.BINARY_PROPERTY);
-        //Thread.dumpStack();
-        createDigest();
-        // TODO: For sandbox, set inMemory directly to data
+
+    	this();
+    	// TODO: For sandbox, set inMemory directly to data
         if (data != null) {
             try {
                 OutputStream fos = createTempFileOutputStream();
@@ -331,9 +324,8 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
      * @throws IOException 
      */
     public Binary(Reader reader) throws IOException {
-        super(Property.BINARY_PROPERTY);
-//        createDigest();
-        parseFromReader(reader);
+    	this();
+    	parseFromReader(reader);
     }
 
     private void parseFromReader(Reader reader) throws IOException {
@@ -354,7 +346,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         fos.close();
         this.mimetype = getSubType("mime");
         this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
-		setDigest(messageDigest.digest());
+//		setDigest(messageDigest.digest());
    }
 
 

@@ -31,6 +31,7 @@ public class OracleWrapped implements DataSource {
 	
 	public void activate(Map<String,Object> settings) {
 		data = new OracleJDBCDataSourceService();
+		String name = (String) settings.get("name");
 		try {
 			Properties p = new Properties();
 			for (Entry<String,Object> element : settings.entrySet()) {
@@ -46,6 +47,7 @@ public class OracleWrapped implements DataSource {
 		} catch (Exception e) {
 			logger.error("Error creating oracle ",e);
 		}
+		logger.info("Created oracle datasource with setting: "+settings);
 //		logger.info("Activation successful");
 	}
 	

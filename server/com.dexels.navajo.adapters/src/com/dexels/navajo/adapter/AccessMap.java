@@ -272,13 +272,12 @@ private String getOutMessageStack() {
     return stackBuffer.toString();
   }
 
-  @SuppressWarnings("rawtypes")
 private String getMapStack() {
    StringBuffer stackBuffer = new StringBuffer();
-   Stack s = myAccess.getCompiledScript().getTreeNodeStack();
-   Iterator iter = s.iterator();
+   Stack<MappableTreeNode> s = myAccess.getCompiledScript().getTreeNodeStack();
+   Iterator<MappableTreeNode> iter = s.iterator();
    while (iter.hasNext()) {
-     MappableTreeNode o = (MappableTreeNode) iter.next();
+     MappableTreeNode o = iter.next();
      if (o != null && o.myObject != null) {
        stackBuffer.append(o.myObject.getClass().getName() + "\n");
      }

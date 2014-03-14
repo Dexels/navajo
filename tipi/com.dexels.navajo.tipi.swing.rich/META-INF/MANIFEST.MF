@@ -2,12 +2,11 @@ Bundle-Name: Navajo Rich Tipi
 Bundle-SymbolicName: com.dexels.navajo.tipi.swing.rich
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.0.15.qualifier
+Bundle-Version: 1.0.17.qualifier
 Export-Package: com.dexels.navajo.tipi.components.rich,
- com.dexels.navajo.tipi.components.rich.ui,
- tipi
+ com.dexels.navajo.tipi.components.rich.ui
 Bundle-Vendor: Dexels
-Bundle-Activator: tipi.TipiRichExtension
+Bundle-Activator: tipiswingrich.TipiRichExtension
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.rich.components,

@@ -35,7 +35,7 @@ import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;
 
-public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterface {
+public class NavajoConfigComponent implements NavajoConfigInterface {
 
 	private NavajoIOConfig navajoIOConfig = null;
 	private RepositoryFactory repositoryFactory;
@@ -46,7 +46,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	private final Map<Class<?>,ServiceReference<?>> serviceReferences = new HashMap<Class<?>,ServiceReference<?>>();
 	private final Map<String, DescriptionProviderInterface> desciptionProviders = new HashMap<String,DescriptionProviderInterface>();
 	private ConfigurationAdmin myConfigurationAdmin;
-	private PersistenceManager persistenceManager;
+	private PersistenceManagerImpl persistenceManager;
 	private AsyncStore asyncStore;
 	private WorkerInterface integrityWorker;
 	private final static Logger logger = LoggerFactory
@@ -84,6 +84,7 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 			this.properties = props;
 			this.bundleContext = bundleContext;
 			this.persistenceManager = new PersistenceManagerImpl();
+			this.persistenceManager.setSharedStore(getSharedStore());
 		} catch (Throwable e) {
 			logger.error("activation error",bundleContext);
 		}
@@ -167,8 +168,8 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	}
 
 	@Override
-	public Date getScriptModificationDate(String scriptPath, String tenant) throws FileNotFoundException {
-		return navajoIOConfig.getScriptModificationDate(scriptPath, tenant);
+	public Date getScriptModificationDate(String scriptPath, String tenant,String extension) throws FileNotFoundException {
+		return navajoIOConfig.getScriptModificationDate(scriptPath, tenant,extension);
 	}
 
 	@Override
@@ -433,24 +434,24 @@ public class NavajoConfigComponent implements NavajoIOConfig, NavajoConfigInterf
 	}
 
 	@Override
-	public File getApplicableScriptFile(String rpcName, String tenant)
+	public File getApplicableScriptFile(String rpcName, String tenant, String extension)
 			throws FileNotFoundException {
-		return navajoIOConfig.getApplicableScriptFile(rpcName, tenant);
+		return navajoIOConfig.getApplicableScriptFile(rpcName, tenant,extension);
 	}
 
 	@Override
-	public File getApplicableBundleForScript(String rpcName, String tenant) {
-		return navajoIOConfig.getApplicableBundleForScript(rpcName, tenant);
+	public File getApplicableBundleForScript(String rpcName, String tenant, String extension) {
+		return navajoIOConfig.getApplicableBundleForScript(rpcName, tenant,extension);
 	}
 
 	@Override
-	public boolean hasTenantScriptFile(String rpcName, String tenant) {
-		return navajoIOConfig.hasTenantScriptFile(rpcName, tenant);
+	public boolean hasTenantScriptFile(String rpcName, String tenant,String extension) {
+		return navajoIOConfig.hasTenantScriptFile(rpcName, tenant,extension);
 	}
 
 	@Override
-	public InputStream getScript(String name, String tenant) throws IOException {
-		return navajoIOConfig.getScript(name, tenant);
+	public InputStream getScript(String name, String tenant,String extension) throws IOException {
+		return navajoIOConfig.getScript(name, tenant,extension);
 	}
 
 	

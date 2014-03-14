@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.repository.api.diff.EntryChangeType;
+import com.dexels.navajo.repository.api.diff.RepositoryChange;
 
 public class WatchDir implements Closeable,Runnable {
 
@@ -154,7 +155,7 @@ public class WatchDir implements Closeable,Runnable {
 			properties.put(EntryChangeType.MODIFY.name(), modified);
 			properties.put(EntryChangeType.DELETE.name(), deleted);
 			properties.put("repositoryRoot", repoRoot.toString());
-			fileRepository.sendChangeEvent("repository/change", properties);
+			fileRepository.sendChangeEvent(RepositoryChange.TOPIC, properties);
 			return 1;
 
 
@@ -179,7 +180,7 @@ public class WatchDir implements Closeable,Runnable {
 			}
 			List<WatchEvent<Path>> eventList = new ArrayList<WatchEvent<Path>>();
 			for (WatchEvent<?> event : key.pollEvents()) {
-				System.err.println("Displaying events:");
+//				System.err.println("Displaying events:");
 				WatchEvent.Kind<?> kind = event.kind();
 
 				// TODO provide example of how OVERFLOW event is handled

@@ -138,6 +138,7 @@ public class PullComponent {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	private boolean installDependency(String[] dependencies,
 			boolean performDeploy) {
 		

@@ -54,7 +54,7 @@ public class TestRuntime {
 	public void testSearchClub() throws IOException, ArticleException, DirectOutputThrowable {
 		// this test is a bit outdated
 		File art =context.resolveArticle("/searchclub");
-		TestRuntimeImpl tr = new TestRuntimeImpl("searchclub",art);
+		TestRuntimeImpl tr = new TestRuntimeImpl("searchclub",art,null);
 		context.interpretArticle(art,tr);
 		String out =tr.getOutput();
 		System.err.println(out);
@@ -68,7 +68,7 @@ public class TestRuntime {
 	@Test
 	public void testVerjaardag() throws IOException, ArticleException, DirectOutputThrowable {
 		File art =context.resolveArticle("/verjaardagen");
-		TestRuntimeImpl tr = new TestRuntimeImpl("verjaardagen",art);
+		TestRuntimeImpl tr = new TestRuntimeImpl("verjaardagen",art,null);
 		context.interpretArticle(art,tr);
 		String out =tr.getOutput();
 		System.err.println(out);
@@ -83,7 +83,7 @@ public class TestRuntime {
 	@Test
 	public void testTeams() throws IOException, ArticleException, DirectOutputThrowable {
 		File art =context.resolveArticle("/teams");
-		TestRuntimeImpl tr = new TestRuntimeImpl("teams",art);
+		TestRuntimeImpl tr = new TestRuntimeImpl("teams",art,null);
 		context.interpretArticle(art,tr);
 		String out =tr.getOutput();
 		System.err.println(out);

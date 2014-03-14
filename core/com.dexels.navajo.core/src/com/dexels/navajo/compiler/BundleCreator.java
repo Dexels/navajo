@@ -32,14 +32,14 @@ public interface BundleCreator {
 	public void createBundle(String script, Date date, String extension,
 			List<String> failures, List<String> success, List<String> skipped, boolean force,boolean keepIntermediateFiles, String tenant) throws Exception;
 
-	public Date getBundleInstallationDate(String scriptPath, String tenant);
-	public Date getScriptModificationDate(String scriptPath, String tenant) throws FileNotFoundException;
-	public Date getCompiledModificationDate(String scriptPath, String tenant);
+	public Date getBundleInstallationDate(String scriptPath, String tenant, String extension);
+	public Date getScriptModificationDate(String scriptPath, String tenant,String extension) throws FileNotFoundException;
+	public Date getCompiledModificationDate(String scriptPath, String tenant,String extension);
 
 //	public void installBundles(File baseDir, List<String> failures, List<String> success) throws Exception;
-	public void installBundles(String scriptPath, String tenant,List<String> failures,List<String> success, List<String> skipped, boolean force) throws Exception;
+	public void installBundles(String scriptPath, String tenant,List<String> failures,List<String> success, List<String> skipped, boolean force,String extension) throws Exception;
 	public void installBundle(String scriptPath,String tenant,
-			List<String> failures, List<String> success, List<String> skipped, boolean force);
+			List<String> failures, List<String> success, List<String> skipped, boolean force,String extension);
 
 	public void verifyScript(String script, List<String> failed,
 			List<String> success);
@@ -57,7 +57,7 @@ public interface BundleCreator {
 	 * @return Null if not found
 	 * @throws ClassNotFoundException if something weird happened
 	 */
-	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant) throws ClassNotFoundException;
+	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant,String extension) throws ClassNotFoundException;
 
 	/**
 	 * Same as getCompiledScript, only will try to install (and compile if needed) bundle if it isn't there.
@@ -65,6 +65,6 @@ public interface BundleCreator {
 	 * @return
 	 * @throws Exception
 	 */
-	public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified,boolean force) throws Exception;
+	public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified,boolean force,String extension) throws Exception;
 
 }

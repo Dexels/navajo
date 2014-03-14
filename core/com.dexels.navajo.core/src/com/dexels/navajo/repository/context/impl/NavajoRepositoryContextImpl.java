@@ -25,6 +25,10 @@ public class NavajoRepositoryContextImpl extends NavajoServerContextComponent im
 	}
 	
 	public void activate() throws IOException, InvalidSyntaxException {
+		String suppressAdapters = System.getProperty("navajo.suppress.adaptersfolder");
+		if("true".equals(suppressAdapters)) {
+			this.suppressAdapters  = true;
+		}
 		initializeContext(getInstallationPath(),"default");
 	}
 	

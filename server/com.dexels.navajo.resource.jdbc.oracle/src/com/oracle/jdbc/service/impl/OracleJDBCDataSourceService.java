@@ -1,22 +1,3 @@
-/*
-  Copyright (c) 2011, Christoph L��ubrich. All rights reserved.
-
-  The MySQLJDBCDataSourceService is licensed under the same terms as the MySQL Connector/J
-  which are the terms of the GPLv2  <http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
-
-  This program is free software; you can redistribute it and/or modify it under the terms
-  of the GNU General Public License as published by the Free Software Foundation; version 2
-  of the License.
-
-  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-  See the GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License along with this
-  program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth
-  Floor, Boston, MA 02110-1301  USA
-
-*/
 package com.oracle.jdbc.service.impl;
 
 import java.sql.Connection;
@@ -48,7 +29,7 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
 	private final static Logger logger = LoggerFactory
 			.getLogger(OracleJDBCDataSourceService.class);
 	private ObjectPool pool;
-	@SuppressWarnings("unused")
+	
 	private PoolableConnectionFactory poolableConnectionFactory;
     public void start() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         //Load driver if not already done...
@@ -105,12 +86,9 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
      * @throws Exception 
      */
     public DataSource setup(OracleConnectionPoolDataSource base, Properties props) throws Exception {
-//    	 Oracle settings: {service.pid=navajo.resource.oracle-1332524829528-5, user=knvbkern, url=jdbc:oracle:thin:@10.0.0.1:1521:1521:aardnoot, service.factoryPid=navajo.resource.oracle, password=knvb, name=navajo.resource.default, maxPoolSize=10, initialPoolSize=10}
-//
     	if (props == null) {
             return null;
         }
-//        logger.info("Oracle settings: "+props);
         if (props.containsKey(JDBC_DATABASE_NAME)) {
         	base.setDatabaseName(props.getProperty(JDBC_DATABASE_NAME));
         }

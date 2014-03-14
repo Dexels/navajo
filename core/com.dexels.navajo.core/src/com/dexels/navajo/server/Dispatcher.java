@@ -767,7 +767,7 @@ public final Navajo handle(Navajo inMessage,boolean skipAuth,AfterWebServiceEmit
   
   @Override
   public final Navajo handle(Navajo inMessage,boolean skipAuth) throws FatalException {
-	    return processNavajo(inMessage, "default", null, null, skipAuth,null,null);
+	    return processNavajo(inMessage, null, null, null, skipAuth,null,null);
 	  }
 
   @Override
@@ -1003,6 +1003,7 @@ public final boolean isBusy() {
         MDC.put("accessId", access.accessID);
         MDC.put("rpcName", access.getRpcName());
         MDC.put("rpcUser", access.getRpcUser());
+        MDC.put("tenant", access.getInstance());
         MDC.put("rootPath", getNavajoConfig().getRootPath());
         MDC.put("instanceName", getNavajoConfig().getInstanceName());
         MDC.put("instanceGroup", getNavajoConfig().getInstanceGroup());
@@ -1122,17 +1123,20 @@ public final boolean isBusy() {
 private Access authenticateUser(Navajo inMessage, String instance,
 		Object userCertificate, String rpcName, String rpcUser,
 		String rpcPassword) throws SystemException, AuthorizationException {
-	Access access;
-	if(instance!=null && !"default".equals(instance)) {
-		  logger.info("using multitenant: "+instance);
+	Access access = null;
+	if(instance!=null ) {
+//		  logger.info("using multitenant: "+instance, new Exception());
+		  
 		  AAAInterface aaai = getAuthorizator(instance);
 		  if(aaai!=null) {
 			  access = aaai.authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
 			  return access;
 		  }
-		  logger.warn("No access returned from multitenant, instance specific authorization");
+		  logger.warn("No access returned from multitenant, instance specific authorization. Instance: "+instance);
 	  }
-	  access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+	  if(access==null) {
+			access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+	  }
 	  access.setInstance(instance);
 	  return access;
 }
@@ -1163,7 +1167,7 @@ public Navajo handleCallbackPointers(Navajo inMessage) {
 }
   
   
-	public String getServlet(Access access) {
+	private String getServlet(Access access) {
 		String compLanguage = DispatcherFactory.getInstance().getNavajoConfig().getCompilationLanguage();
 		if("javascript".equals(compLanguage)) {
 			return "com.dexels.navajo.rhino.RhinoHandler";

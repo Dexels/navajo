@@ -39,8 +39,6 @@ import org.apache.camel.impl.DefaultMessage;
 import org.apache.james.protocols.smtp.MailAddress;
 import org.apache.james.protocols.smtp.MailEnvelope;
 
-import com.dexels.navajo.document.types.Binary;
-
 /**
  * Message implementation which can holds all data for a {@link MailEnvelope}.
  * 
@@ -77,6 +75,7 @@ public class MailEnvelopeMessage extends DefaultMessage{
      * @throws IOException 
      * @throws MessagingException 
      */
+	@SuppressWarnings("rawtypes")
     public void populate(MailEnvelope env) throws MessagingException, IOException {
     	ByteArrayOutputStream baos = new ByteArrayOutputStream();
     	copyResource(baos, env.getMessageInputStream());

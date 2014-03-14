@@ -20,6 +20,9 @@ public class GrusProviderImpl implements GrusProvider {
 	private final Map<String, Map<String,DataSource>> instances = new HashMap<String, Map<String,DataSource>>();
 	private final Map<String,DataSource> defaultDataSources = new HashMap<String,DataSource>();
 	private final Map<DataSource,Map<String,Object>> settingsMap = new HashMap<DataSource, Map<String,Object>>();
+
+	private final Map<String,Map<String,Object>> defaultSettingsMap = new HashMap<String, Map<String,Object>>();
+
 	private final AtomicInteger connectionCounter = new AtomicInteger();
 	private final Map<Long,GrusConnection> grusIds = new HashMap<Long, GrusConnection>();
 
@@ -35,10 +38,12 @@ public class GrusProviderImpl implements GrusProvider {
 		String name = (String) settings.get("name");
 		List<String> aliases = (List<String>) settings.get("aliases");
 		if (instance==null) {
-			defaultDataSources.put(name,source);
+			defaultSettingsMap.put("navajo.resource."+name, settings);
+			defaultDataSources.put("navajo.resource."+name,source);
 			if(aliases!=null) {
 				for (String alias : aliases) {
-					defaultDataSources.put(alias,source);
+					defaultSettingsMap.put("navajo.resource."+alias, settings);
+					defaultDataSources.put("navajo.resource."+alias,source);
 				}
 			}
 			
@@ -64,17 +69,20 @@ public class GrusProviderImpl implements GrusProvider {
 	
 	private DataSource getInstanceDataSource(String instance, String name,String username) {
 		if (instance==null) {
-			DataSource dataSource = defaultDataSources.get(name);
-			if(dataSource != null) {
-				return dataSource;
-			}
+
 			
 		} else {
 			DataSource dataSource = getInstanceDataSources(instance).get(name);
 			if(dataSource != null) {
 				return dataSource;
 			}
+//			dataSource = getInstanceDataSources("*").get(name);
+//			return dataSource;
 
+		}
+		DataSource dataSource = defaultDataSources.get("navajo.resource."+name);
+		if(dataSource != null) {
+			return dataSource;
 		}
 // I think this makes no sense
 //		dataSource = getInstanceDataSources("*").get(name);
@@ -96,25 +104,25 @@ public class GrusProviderImpl implements GrusProvider {
 	@Override
 	public GrusConnection requestConnection(String instance, String name, String username) throws UserException {
 		DataSource dataSourceInstance = null;
-		if(instance==null) {
-			dataSourceInstance = defaultDataSources.get("navajo.resource."+name);
-		} else {
-			dataSourceInstance = getInstanceDataSource(instance, name,username);
-		}
+		dataSourceInstance = getInstanceDataSource(instance, name,username);
 		
 //		jdbc:oracle:thin:@odysseus:1521:SLTEST02
 		
 		Map<String,Object> settings = settingsMap.get(dataSourceInstance);
-		if(settings==null) {
-			logger.error("Error resolving datasource for instance: "+instance+" and name: "+name);
+		if(instance!=null && settings==null) {
+			logger.error("Error resolving datasource for instance: "+instance+" and name: "+name+" settings map: "+settingsMap+" defaultS");
 			throw new UserException(-1,"Error resolving datasource for instance: "+instance+" and name: "+name);
 		}
+		if(settings==null && instance==null) {
+			settings = defaultSettingsMap.get("navajo.resource."+name);
+		}
+		
 		int id = connectionCounter.getAndIncrement();
 		GrusConnection gc;
 		try {
 			gc = new GrusDataSource(id, dataSourceInstance,settings,this);
 		} catch (Exception e) {
-			throw new UserException(-1,"Could not create datasource connection for: "+instance+" and name: "+name);
+			throw new UserException(-1,"Could not create datasource connection for: "+instance+" and name: "+name,e);
 		}
 		grusIds.put((long) id,gc);
 		return gc;

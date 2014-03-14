@@ -68,17 +68,19 @@ public class ServiceCommand implements ArticleCommand {
 		} else {
 			n = NavajoFactory.getInstance().createNavajo();
 		}
-		Header h = NavajoFactory.getInstance().createHeader(n, name, runtime.getUsername(), runtime.getPassword(), -1);
+		final String username = runtime.getUsername();
+		Header h = NavajoFactory.getInstance().createHeader(n, name, username, runtime.getPassword(), -1);
 		n.addHeader(h);
-		final Navajo result = performCall(runtime, name, n);
+		final Navajo result = performCall(runtime, name, n,runtime.getInstance());
+		result.write(System.err);
 		runtime.pushNavajo(name, result);
 		return null;
 	}
 
-	protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n)
+	protected Navajo performCall(ArticleRuntime runtime, String name, Navajo n, String instance)
 			throws ArticleException {
 		try {
-			Navajo result = localClient.call(n);
+			Navajo result = localClient.call(instance,n);
 			return result;
 		} catch (FatalException e) {
 			throw new ArticleException("Error calling service: "+name, e);

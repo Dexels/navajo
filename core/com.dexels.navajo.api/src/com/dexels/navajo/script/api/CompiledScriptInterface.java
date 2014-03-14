@@ -114,12 +114,12 @@ public interface CompiledScriptInterface {
 
 	public NavajoClassSupplier getClassLoader();
 
-	public Stack getTreeNodeStack();
+	public Stack<MappableTreeNode> getTreeNodeStack();
 
 	public void setInDoc(Navajo inDoc);
 
 	public Navajo getInDoc();
 
-	public Stack getOutMsgStack();
+	public Stack<Message> getOutMsgStack();
 
 }

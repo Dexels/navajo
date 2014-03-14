@@ -25,6 +25,7 @@ public class HelpCommand extends ConsoleCommand {
 		}
 	}
 	
+	@Override
 	public void help(CommandSession session) {
 		session.getConsole().println("Available commands ( type help <command> for more info):");
 		List<String> all = new ArrayList<String>();

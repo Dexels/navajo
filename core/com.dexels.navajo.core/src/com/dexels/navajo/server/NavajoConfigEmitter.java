@@ -9,11 +9,14 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,12 +25,14 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
+import com.dexels.navajo.repository.api.util.RepositoryEventParser;
 import com.dexels.navajo.script.api.SystemException;
 import com.dexels.navajo.server.api.NavajoServerContext;
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 
-public class NavajoConfigEmitter {
+public class NavajoConfigEmitter implements EventHandler {
 
+	private static final String CONFIG_SERVER_XML = "config/server.xml";
 	private static final int MAX_ACCESS_SET_SIZE = 50;
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoConfigEmitter.class);
@@ -64,11 +69,15 @@ public class NavajoConfigEmitter {
 	
 	
 	public void activate() {
-		logger.info("Activating HTTP server component");
+		parseServerXml();
+	}
+
+
+	private void parseServerXml() {
 		try {
 			String rootPath = this.navajoContext.getInstallationPath();
 			File rp = new File(rootPath);
-			File serverXml = new File(rp,"config/server.xml");
+			File serverXml = new File(rp,CONFIG_SERVER_XML);
 			URL srv = serverXml.toURI().toURL();
 			final String absolutePath = properDir(rp.getAbsolutePath());
 			createNavajoConfigConfiguration(srv, absolutePath);
@@ -334,5 +343,16 @@ public class NavajoConfigEmitter {
 	private final static String properDir(String in) {
 		String result = in + (in.endsWith("/") ? "" : "/");
 		return result;
+	}
+
+
+	@Override
+	public void handleEvent(Event e) {
+		
+		List<String> paths = new ArrayList<String>();
+		paths.add(CONFIG_SERVER_XML);
+		if(RepositoryEventParser.touched(e,paths)) {
+			parseServerXml();
+		}
 	}
 }

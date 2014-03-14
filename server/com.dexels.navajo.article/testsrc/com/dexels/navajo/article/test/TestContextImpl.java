@@ -46,7 +46,7 @@ public abstract class TestContextImpl extends BaseContextImpl {
 			}
 			
 			@Override
-			public Date getScriptModificationDate(String scriptPath, String tenant) {
+			public Date getScriptModificationDate(String scriptPath, String tenant,String extension) {
 				return null;
 			}
 			
@@ -120,26 +120,25 @@ public abstract class TestContextImpl extends BaseContextImpl {
 			}
 
 			@Override
-			public File getApplicableScriptFile(String rpcName, String tenant)
+			public File getApplicableScriptFile(String rpcName, String tenant,String extension)
 					throws FileNotFoundException {
 				return null;
 			}
 
 			@Override
 			public File getApplicableBundleForScript(String rpcName,
-					String tenant)  {
+					String tenant,String extension)  {
 				return null;
 			}
 
 			@Override
-			public boolean hasTenantScriptFile(String rpcName, String tenant) {
+			public boolean hasTenantScriptFile(String rpcName, String tenant,String extension) {
 				return false;
 			}
 
 			@Override
-			public InputStream getScript(String name, String tenant)
+			public InputStream getScript(String name, String tenant,String extension)
 					throws IOException {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		});

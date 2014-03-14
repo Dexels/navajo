@@ -3,7 +3,10 @@ package com.dexels.navajo.persistence.impl;
 import java.io.File;
 
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -14,6 +17,7 @@ import com.dexels.navajo.persistence.PersistenceManagerFactory;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.test.TestNavajoConfig;
+import com.dexels.navajo.sharedstore.SharedMemoryStore;
 import com.dexels.navajo.sharedstore.SharedStoreFactory;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;
 
@@ -24,6 +28,10 @@ class ConstructorTest implements Constructor {
 	public ConstructorTest(String myId) {
 		this.myId = myId;
 	}
+	
+    @Rule
+    public TemporaryFolder folder= new TemporaryFolder();
+   
 
 	@Override
 	public Persistable construct() throws Exception {
@@ -43,32 +51,37 @@ public class PersistenceManagerImplTest {
 	private SharedStoreInterface si;
 	private PersistenceManagerImpl pi = null;
 
+	@Before
 	public void setUp() throws Exception {
-		new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
-		DispatcherFactory.getInstance().setUseAuthorisation(false);
-		si = SharedStoreFactory.getInstance();
-		pi = (PersistenceManagerImpl) PersistenceManagerFactory.getInstance(
-				"com.dexels.navajo.persistence.impl.PersistenceManagerImpl",
-				null);
+		final TestNavajoConfig navajoConfig = new TestNavajoConfig();
+		final Dispatcher injectedDispatcher = new Dispatcher(navajoConfig);
+//		DispatcherFactory. new DispatcherFactory(injectedDispatcher);
+		DispatcherFactory.setInstance(injectedDispatcher);
+		injectedDispatcher.setUseAuthorisation(false);
+		si = new SharedMemoryStore();
+		pi = new PersistenceManagerImpl();
+		navajoConfig.setMyPersistenceManager(pi);
+		pi.setSharedStore(si);
 	}
 
-	private void deleteFiles(File f) {
-		if (f.isFile()) {
-			f.delete();
-		}
-		if (f.isDirectory()) {
-			File[] children = f.listFiles();
-			for (int i = 0; i < children.length; i++) {
-				deleteFiles(children[i]);
-			}
-			f.delete();
-		}
-	}
+//	private void deleteFiles(File f) {
+//		if (f.isFile()) {
+//			f.delete();
+//		}
+//		if (f.isDirectory()) {
+//			File[] children = f.listFiles();
+//			for (int i = 0; i < children.length; i++) {
+//				deleteFiles(children[i]);
+//			}
+//			f.delete();
+//		}
+//	}
 
 	public void tearDown() throws Exception {
-		File f = new File("/tmp/sharedstore");
-		deleteFiles(f);
-		SharedStoreFactory.clear();
+//		File f = new File("/tmp/sharedstore");
+//		deleteFiles(f);
+//		si.
+//		SharedStoreFactory.clear();
 	}
 
 	@Test
@@ -76,9 +89,7 @@ public class PersistenceManagerImplTest {
 		Navajo p = (Navajo) pi.get(new ConstructorTest("1234"), "aap.noot",
 				"aap/noot", 10000, true);
 		Assert.assertNotNull(p);
-		if (p != null) {
-			Assert.assertNotNull(p.getMessage("1234"));
-		}
+		Assert.assertNotNull(p.getMessage("1234"));
 	}
 
 	@Test
@@ -119,9 +130,7 @@ public class PersistenceManagerImplTest {
 				true);
 		Navajo n = (Navajo) pi.read("aap.noot", "aap/noot", 213232);
 		Assert.assertNotNull(n);
-		if (n != null) {
-			Assert.assertNotNull(n.getMessage("123456"));
-		}
+		Assert.assertNotNull(n.getMessage("123456"));
 	}
 
 }

@@ -27,6 +27,7 @@ public class CompileServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String script = req.getParameter("script");
+		final String extension = ".xml";
 		if(script==null) {
 			resp.sendError(500,"No script parameter supplied");
 			return;
@@ -55,7 +56,7 @@ public class CompileServlet extends HttpServlet {
 			for (String failed : failures) {
 				logger.info("Failed: "+failed);
 			}
-			bundleCreator.installBundles(script,tenant, failures, success, skipped, true);
+			bundleCreator.installBundles(script,tenant, failures, success, skipped, true,extension);
 		} catch (Throwable e) {
 			logger.error("Error compiling scripts form servlet:",e);
 		}

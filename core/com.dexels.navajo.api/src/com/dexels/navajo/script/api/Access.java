@@ -124,7 +124,6 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	private transient Message currentOutMessage;
 	private transient Object userCertificate;
-	private static Object mutex = new Object();
 	private transient Set<Map<?,?>> piggyBackData = null;
 	private String clientToken = null;
 	private String clientInfo = null;
@@ -704,15 +703,7 @@ public final class Access implements java.io.Serializable, Mappable {
 		consoleOutput.write(s);
 	}
 	
-	/**
-	 * Returns the access' object private console writer.
-	 * 
-	 * @return
-	 */
-	private final PrintWriter getConsoleWriter() {
-		return consoleOutput;
-	}
-	
+
 	/**
 	 * Static method that does not check for existence of Access object.
 	 * If Access is null, the output is written to System.err

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -77,7 +78,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		Map<String,Message> globalResources = readResources(globalResourceFile,aliases);
 		for (Message dataSource : globalResources.values()) {
 			try {
-				addDatasource("*",dataSource,aliases);
+				addDatasource(null,dataSource,aliases);
 			} catch (IOException e) {
 				logger.error("Error: ", e);
 			}
@@ -102,6 +103,10 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 	
 	private void addWatchedFolder(File folder,String fileFilter, String configName) {
+		if(!folder.exists()) {
+			logger.debug("Not watching folder: "+folder.getAbsolutePath()+" because it does not exist");
+			return;
+		}
 		final String factoryPid = "org.apache.felix.fileinstall";
 		final String filter = "(&(service.factoryPid="+factoryPid+")(name="+configName+"))";
 		try {
@@ -215,6 +220,46 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 //		registerInstance(name);
 		registerInstanceProperties(name,copyOfProperties);
 		registerInstanceResources(name,resources,aliases);
+		registerLocalClients(name,instanceFolder);
+	}
+
+	private void registerLocalClients(String name, File instanceFolder) {
+		Map<String,Object> settings = new HashMap<String, Object>();
+		settings.put("instance", name);
+		File clientProperties = new File(instanceFolder,"navajoclient.cfg");
+		if(!clientProperties.exists()) {
+			logger.debug("Ignoring non existing navajoclient.cfg");
+			return;
+		}
+		InputStream is = null;
+		try {
+			is = new FileInputStream(clientProperties);
+			PropertyResourceBundle prb = new PropertyResourceBundle(is);
+			Enumeration<String> en = prb.getKeys();
+			do {
+				String next = en.nextElement();
+				settings.put(next, prb.getObject(next));
+			} while(en.hasMoreElements());
+			injectLocalClient(name,settings);
+		} catch (Exception e) {
+			logger.error("Error: ", e);
+		} finally {
+			if(is!=null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		
+	}
+
+	private void injectLocalClient(String instance, Map<String, Object> settings) throws IOException {
+		final String filter = "(&(instance="+instance+")(service.factoryPid=navajo.local.client))";
+		Configuration cc = createOrReuse("navajo.local.client", filter);
+		Dictionary<String, Object> dict = new Hashtable<String, Object>(settings);
+		updateIfChanged(cc, dict);
+
 	}
 
 	private void registerAuthorization(String instance, File instanceFolder) throws IOException {
@@ -296,14 +341,11 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		String name = dataSource.getName();
 		List<Property> props = dataSource.getAllProperties();
 		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
-		System.err.println("Processing data source:");
-		dataSource.write(System.err);
 		for (Property property : props) {
 			// skip type, it is not a 'real' connection setter
 			if(property.getName().equals("type") || property.getName().equals("alias")) {
 				continue;
 			}
-			System.err.println("Processing property with name: "+property.getName()+" and value: "+property.getTypedValue());
 			// Conversion 
 			if(property.getName().equals("username")) {
 				settings.put("user", property.getTypedValue());
@@ -338,7 +380,9 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			settings.put("aliases", aliasVector);
 		}
 		settings.put("name", name);
-		settings.put("instance", instance);
+		if (instance!=null) {
+			settings.put("instance", instance);
+		}
 		String type = (String)dataSource.getProperty("type").getTypedValue();
 		
 		if(configAdmin==null) {
@@ -347,7 +391,12 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		}
 //		configAdmin.getConfiguration(arg0)
 //		Configuration cc = configAdmin.getConfiguration("navajo.resource."+instance+"."+name,null);
-		final String filter = "(&(instance="+instance+")(name=navajo.resource."+name+")(service.factoryPid=navajo.resource"+type+"))";
+		final String filter;
+		if (instance==null) {
+			filter = "(&(name=navajo.resource."+name+")(service.factoryPid=navajo.resource."+type+"))";
+		} else {
+			filter = "(&(instance="+instance+")(name=navajo.resource."+name+")(service.factoryPid=navajo.resource."+type+"))";
+		}
 		Configuration cc = createOrReuse("navajo.resource."+type, filter);
 		updateIfChanged(cc, settings);
 //		cc.update(settings);

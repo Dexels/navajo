@@ -1,9 +1,13 @@
 package com.dexels.navajo.sharedstore;
 
-import org.junit.AfterClass;
+import java.io.File;
+
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -13,15 +17,18 @@ import com.dexels.navajo.document.NavajoFactory;
 public class SerializationUtilTest {
 
 	static SharedStoreInterface ssi = null;
-		
-	@BeforeClass 
-	public static void setUp() throws Exception {
-		ssi = new SimpleSharedStore("/Users/arjenschoneveld/SHAREDSTORE");
+    @Rule
+    public TemporaryFolder folder= new TemporaryFolder();
+    
+	@Before
+	public void setUp() throws Exception {
+		final File newFolder = folder.newFolder("simpleSharedStore");
+		ssi = new SimpleSharedStore(newFolder.getAbsolutePath());
 		SharedStoreFactory.setInstance(ssi);
 	}
 	
-	@AfterClass
-	public static void cleanup() {
+	@After
+	public void cleanup() {
 		SerializationUtil.removeAllNavajos();
 	}
 	

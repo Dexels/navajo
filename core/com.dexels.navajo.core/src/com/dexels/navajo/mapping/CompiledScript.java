@@ -84,7 +84,7 @@ private final HashMap functions = new HashMap();
   protected Navajo inDoc = null;
   protected Message currentOutMsg = null;
   protected Access myAccess = null;
-  protected final Stack outMsgStack = new Stack();
+  protected final Stack<Message> outMsgStack = new Stack();
   protected final Stack paramMsgStack = new Stack();
   protected Message currentParamMsg = null;
   protected Message currentInMsg = null;
@@ -113,6 +113,7 @@ private final HashMap functions = new HashMap();
   private CompiledScriptFactory factory;
 
   
+@SuppressWarnings("unused")
 private final static Logger logger = LoggerFactory
 		.getLogger(CompiledScript.class);
 
@@ -224,6 +225,7 @@ public boolean getKill() {
   /* (non-Javadoc)
  * @see com.dexels.navajo.script.api.CompiledScriptInterface#setClassLoader(com.dexels.navajo.script.api.NavajoClassSupplier)
  */
+@Override
 public void setClassLoader(NavajoClassSupplier loader) {
 	  this.classLoader = loader;
   }
@@ -231,6 +233,7 @@ public void setClassLoader(NavajoClassSupplier loader) {
   /* (non-Javadoc)
  * @see com.dexels.navajo.script.api.CompiledScriptInterface#getClassLoader()
  */
+@Override
 public NavajoClassSupplier getClassLoader() {
 	  return this.classLoader;
   }
@@ -291,35 +294,35 @@ public Dependency [] getDependencies() {
 	  
   }
   
-  /**
-   * Recursively call store() or kill() method on all "open" mappable tree nodes.
-   *
-   * @param mtn
-   */
-  private final void callStoreOrKill(MappableTreeNode mtn, String storeOrKill) {
-    try {
-      if (mtn.getMyMap() != null) {
-        if (storeOrKill.equals("store")) {
-          System.err.println("Calling store for object " + mtn.getMyMap());
-          if ( mtn.getMyMap() instanceof Mappable ) {
-             ((Mappable) mtn.getMyMap()).store();
-          }
-        }
-        else {
-          System.err.println("Calling kill for object " + mtn.getMyMap());
-          if ( mtn.getMyMap() instanceof Mappable ) {
-        	  ((Mappable) mtn.getMyMap()).kill();
-          }
-        }
-      }
-    }
-    catch (Exception e) {
-    	logger.error("Error: ", e);
-    }
-    if (mtn.getParent() != null) {
-      callStoreOrKill(mtn.getParent(), storeOrKill);
-    }
-  }
+//  /**
+//   * Recursively call store() or kill() method on all "open" mappable tree nodes.
+//   *
+//   * @param mtn
+//   */
+//  private final void callStoreOrKill(MappableTreeNode mtn, String storeOrKill) {
+//    try {
+//      if (mtn.getMyMap() != null) {
+//        if (storeOrKill.equals("store")) {
+//          System.err.println("Calling store for object " + mtn.getMyMap());
+//          if ( mtn.getMyMap() instanceof Mappable ) {
+//             ((Mappable) mtn.getMyMap()).store();
+//          }
+//        }
+//        else {
+//          System.err.println("Calling kill for object " + mtn.getMyMap());
+//          if ( mtn.getMyMap() instanceof Mappable ) {
+//        	  ((Mappable) mtn.getMyMap()).kill();
+//          }
+//        }
+//      }
+//    }
+//    catch (Exception e) {
+//    	logger.error("Error: ", e);
+//    }
+//    if (mtn.getParent() != null) {
+//      callStoreOrKill(mtn.getParent(), storeOrKill);
+//    }
+//  }
 
   
   
@@ -330,8 +333,8 @@ public Dependency [] getDependencies() {
 public final void run(Access access) throws Exception {
 
 	  myAccess = access;
-	  @SuppressWarnings("unused")
-	final String myThreadName = getThreadName();
+//	  @SuppressWarnings("unused")
+//	final String myThreadName = getThreadName();
 	  //JMXHelper.registerMXBean(this, JMXHelper.SCRIPT_DOMAIN, myThreadName);
 
 	  long start = System.currentTimeMillis();
@@ -382,7 +385,11 @@ public final void run(Access access) throws Exception {
 	  }
   }
 
-  /**
+  protected Access getAccess() {
+	return myAccess;
+}
+
+/**
    * Deprecated method to check validation errors. Use <validations> block inside webservice script instead.
    *
    * @param conditions
@@ -592,11 +599,12 @@ public String getDescription() {
   }
 
 @Override
-  public Stack getTreeNodeStack() {
+  public Stack<MappableTreeNode> getTreeNodeStack() {
 	return treeNodeStack;
 }
 
-public Stack getOutMsgStack() {
+@Override
+public Stack<Message> getOutMsgStack() {
 	return outMsgStack;
 }
 
@@ -676,6 +684,7 @@ public Selection getCurrentSelection() {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.script.api.CompiledScriptInterface#setFactory(com.dexels.navajo.script.api.CompiledScriptFactory)
 	 */
+	@Override
 	public void setFactory(CompiledScriptFactory factory) {
 		this.factory = factory;
 	}

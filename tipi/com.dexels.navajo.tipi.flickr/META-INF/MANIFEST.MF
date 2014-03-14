@@ -8,7 +8,7 @@ Require-Bundle: com.dexels.navajo.client,
  com.dexels.navajo.tipi;bundle-version="1.1.42"
 Bundle-ClassPath: lib/flickrapi-1.0b4.jar,
  .
-Bundle-Activator: tipi.TipiFlickrExtension
+Bundle-Activator: tipiflickr.TipiFlickrExtension
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.tipilink,

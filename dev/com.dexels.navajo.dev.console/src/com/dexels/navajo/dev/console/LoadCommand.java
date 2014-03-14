@@ -4,7 +4,6 @@ package com.dexels.navajo.dev.console;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Descriptor;
 import org.apache.felix.service.command.Parameter;
 import org.apache.karaf.shell.commands.Command;
@@ -43,6 +42,7 @@ public class LoadCommand {
 			
 //			, @Descriptor(value ="The current tenant to assume, will use 'default' if unspecified") @Parameter(absentValue="default", names = {"-t","--tenant"}) String tenant
 			String tenant = "default";
+			final String extension = ".xml";
 			System.out.println("Installing path: "+script+" for tenant: "+tenant);
 			if(script.equals("/")) {
 				script = "";
@@ -51,7 +51,7 @@ public class LoadCommand {
 			List<String> failed = new ArrayList<String>();
 			List<String> skipped = new ArrayList<String>();
 //			this.bundleCreator.installAllBundles("",script,);
-			this.bundleCreator.installBundles(script,tenant, failed, success, skipped,force);
+			this.bundleCreator.installBundles(script,tenant, failed, success, skipped,force,extension);
 			for (String fail : failed) {
 				System.out.println("Installation error: "+fail);
 			}

@@ -15,7 +15,7 @@ public interface NavajoIOConfig {
 	public File getContextRoot();
 
 	public InputStream getScript(String name) throws IOException;
-	public InputStream getScript(String name, String tenant) throws IOException;
+	public InputStream getScript(String name, String tenant,String extension) throws IOException;
 	public InputStream getConfig(String name) throws IOException;
     public InputStream getResourceBundle(String name) throws IOException;
     public Writer getOutputWriter(String outputPath, String scriptPackage, String scriptName, String extension) throws IOException;
@@ -40,10 +40,10 @@ public interface NavajoIOConfig {
 	 * @return
 	 * @throws FileNotFoundException 
 	 */
-	public Date getScriptModificationDate(String scriptPath, String tenant) throws FileNotFoundException;
+	public Date getScriptModificationDate(String scriptPath, String tenant,String extension) throws FileNotFoundException;
 
-	public File getApplicableScriptFile(String rpcName, String tenant) throws FileNotFoundException;
-	public File getApplicableBundleForScript(String rpcName, String tenant) ;
+	public File getApplicableScriptFile(String rpcName, String tenant, String extension) throws FileNotFoundException;
+	public File getApplicableBundleForScript(String rpcName, String tenant, String extension) ;
 
 	//	public Date getBundleModificationDate(String scriptPath) {
 //		// TODO Auto-generated method stub
@@ -57,7 +57,7 @@ public interface NavajoIOConfig {
 	@Deprecated
 	public File getJarFolder();
 
-	public boolean hasTenantScriptFile(String rpcName, String tenant);
+	public boolean hasTenantScriptFile(String rpcName, String tenant, String extension);
 
 
 }

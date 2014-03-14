@@ -20,22 +20,11 @@ public class MySqlDataSourceComponent implements DataSource {
 			.getLogger(MySqlDataSourceComponent.class);
 	
 	public void activate(Map<String,Object> props) {
-	
 		try {
-//			MySQLJDBCDataSourceService factory = new MySQLJDBCDataSourceService();
 			MySQLJDBCDataSourceService service = new MySQLJDBCDataSourceService();
 			service.start();
-//			Dictionary dd = cc.getProperties();
-//			Enumeration en = dd.keys();
 			Properties pr = new Properties();
 			pr.putAll(props);
-//			while (en.hasMoreElements()) {
-//				String key = (String) en.nextElement();
-//				pr.put(key, dd.get(key));
-//				logger.debug("Adding property: "+key+" , "+dd.get(key));
-//			}
-//		    prop.put(DataSourceFactory.JDBC_DATABASE_NAME, settings.get("name")); 
-
 			pr.put(DataSourceFactory.JDBC_DATABASE_NAME, props.get("name"));
 			try {
 				datasource = service.createDataSource(pr);
