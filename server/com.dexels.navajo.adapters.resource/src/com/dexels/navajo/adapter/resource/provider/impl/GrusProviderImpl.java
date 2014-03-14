@@ -38,8 +38,8 @@ public class GrusProviderImpl implements GrusProvider {
 		String name = (String) settings.get("name");
 		List<String> aliases = (List<String>) settings.get("aliases");
 		if (instance==null) {
-			defaultSettingsMap.put("navajo.resource."+name, settings);
-			defaultDataSources.put("navajo.resource."+name,source);
+			defaultSettingsMap.put(name, settings);
+			defaultDataSources.put(name,source);
 			if(aliases!=null) {
 				for (String alias : aliases) {
 					defaultSettingsMap.put("navajo.resource."+alias, settings);
@@ -114,7 +114,7 @@ public class GrusProviderImpl implements GrusProvider {
 			throw new UserException(-1,"Error resolving datasource for instance: "+instance+" and name: "+name);
 		}
 		if(settings==null && instance==null) {
-			settings = defaultSettingsMap.get("navajo.resource."+name);
+			settings = defaultSettingsMap.get(name);
 		}
 		
 		int id = connectionCounter.getAndIncrement();
