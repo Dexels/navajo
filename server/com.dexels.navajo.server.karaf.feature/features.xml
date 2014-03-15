@@ -48,9 +48,9 @@
 		<bundle dependency='true'>mvn:org.mozilla/org.mozilla.javascript/1.7.2</bundle>
 	</feature>
 
-    <feature resolver="(obr)" name='navajo.adapter' version='3.0.1' start-level='81'  >
+    <feature resolver="(obr)" name='navajo.adapter' version='3.0.2' start-level='81'  >
 		<feature version="[3.0.0,4)">navajo.server</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.0.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.0.4</bundle>
 	</feature>
 	
 	<feature resolver="(obr)" name='navajo.core.jabber' version='3.0.0' start-level='81' >
@@ -60,11 +60,11 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.smackx/3.2.2</bundle>
 	</feature>	
 
-	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.2' start-level='81' >
+	<feature resolver="(obr)" name='navajo.server.osgi' version='3.0.4' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.server</feature>
 		<feature version="[3.0.0,4)">navajo.adapter</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.eventemitter/2.0.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.resource/2.0.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters.resource/2.0.4</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.compiler.tsl/3.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.jsp.osgi/2.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.http/1.0.12</bundle>
@@ -75,6 +75,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.mysql/2.0.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.h2/1.1.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tunnel/2.0.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.instance.factory/2.0.2</bundle>
 		<bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/2.11.3</bundle>
 		<bundle dependency='true'>mvn:com.mysql/com.mysql.jdbc/5.1.18</bundle>
 		<bundle dependency='true'>mvn:com.h2database/h2/1.3.175</bundle>
@@ -150,6 +151,11 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.birt.push/2.0.0</bundle>
 	</feature>			
 
+	<feature resolver="(obr)" name='navajo.legacy' version='3.0.0' start-level='81' >
+		<feature version="[3.0.0,4)">navajo.server.osgi</feature>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.utilities/3.0.0</bundle>
+	</feature>
+	
 	<feature resolver="(obr)" name='navajo.opensource' version='3.0.0' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.server.osgi</feature>
 		<feature version="[3.0.0,4)">navajo.optional</feature>
@@ -164,9 +170,9 @@
 		<feature version="[3.0.0,4)">navajo.enterprise.mongodb</feature>
 	</feature>
 	
-	<feature resolver="(obr)" name='navajo.enterprise.core' version='3.0.2' start-level='81' >
+	<feature resolver="(obr)" name='navajo.enterprise.core' version='3.0.3' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.core.jabber</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.0.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise/3.0.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.adapters/3.0.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.listeners/3.0.0</bundle>
     </feature>
@@ -183,6 +189,7 @@
 		<bundle dependency='true'>mvn:org.apache.tika/tika-core/1.3</bundle>
 		<bundle dependency='true'>mvn:org.apache.tika/tika-bundle/1.3</bundle>
 	</feature>
+	
 	<feature resolver="(obr)" name='navajo.enterprise.cluster' version='3.0.1' start-level='81' >
 		<feature version="[3.0.0,4)">navajo.enterprise.core</feature>
 		<bundle dependency='true'>mvn:com.hazelcast/hazelcast/2.6.7</bundle>
@@ -212,6 +219,7 @@
 		<feature version="[3.0.0,4)">navajo.rhino</feature>
 		<feature version="[3.0.0,4)">navajo.dev</feature>
 		<feature version="[3.0.0,4)">navajo.jgit</feature>
+		<feature version="[3.0.0,4)">navajo.legacy</feature>
 	</feature>	
 
 	<feature resolver="(obr)" name='navajo.jgit' version='3.0.3' start-level='81' >
