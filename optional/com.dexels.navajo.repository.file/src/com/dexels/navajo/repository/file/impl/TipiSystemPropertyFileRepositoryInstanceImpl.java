@@ -9,14 +9,14 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.repository.api.RepositoryInstance;
 
-public class SystemPropertyFileRepositoryInstanceImpl extends BaseFileRepositoryInstanceImpl implements RepositoryInstance {
+public class TipiSystemPropertyFileRepositoryInstanceImpl extends BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 	
-	public SystemPropertyFileRepositoryInstanceImpl() {
+	public TipiSystemPropertyFileRepositoryInstanceImpl() {
 		
 	}
 	
 	private final static Logger logger = LoggerFactory
-			.getLogger(SystemPropertyFileRepositoryInstanceImpl.class);
+			.getLogger(TipiSystemPropertyFileRepositoryInstanceImpl.class);
 
 	public void activate(Map<String,Object> configuration) throws IOException {
 		String path = System.getProperty("file.repository.path");
@@ -26,8 +26,8 @@ public class SystemPropertyFileRepositoryInstanceImpl extends BaseFileRepository
 		if(path==null) {
 			throw new IOException("No 'file.repository.path' set, so navajo.repository.file.system is disabled");
 		}
-		if(!"navajo".equals(type)) {
-			throw new IOException("No 'file.repository.type' of type navajo, so navajo.repository.file.system is disabled");
+		if(!"tipi".equals(type)) {
+			throw new IOException("No 'file.repository.type' of type tipi, so navajo.repository.file.system is disabled");
 		}
 		applicationFolder = new File(path); //findConfiguration(path,fileInstallPath);
 		setupMonitoredFolders();

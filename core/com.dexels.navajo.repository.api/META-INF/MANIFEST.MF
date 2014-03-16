@@ -12,5 +12,5 @@ Import-Package: org.osgi.service.event;version="[1.1.0,2.0.0)",
  org.slf4j;version="[1.6.0,1.8.0)"
 Service-Component: OSGI-INF/navajo.repository.manager.xml,
  OSGI-INF/navajo.repository.layout.navajo.xml,
- OSGI-INF/navajo.repository.layout.multitenant.xml
-
+ OSGI-INF/navajo.repository.layout.multitenant.xml,
+ OSGI-INF/navajo.repository.layout.tipi.xml
