@@ -65,9 +65,14 @@ public class AppStoreManagerImpl implements AppStoreManager {
 		applicationName = (String) configuration.get("tipi.store.applicationname");
 		manifestCodebase = (String) configuration.get("tipi.store.manifestcodebase");
 		codebase = (String)configuration.get("tipi.store.codebase");
-		Boolean auth = (Boolean)configuration.get("authorize");
-		if(auth!=null) {
-			authorize = auth;
+		Object authorizeObject = configuration.get("authorize");
+		if(authorizeObject instanceof Boolean) {
+			Boolean auth = (Boolean)authorizeObject;
+			if(auth!=null) {
+				authorize = auth;
+			}
+		} else {
+			authorize = false;
 		}
 	}
 	
