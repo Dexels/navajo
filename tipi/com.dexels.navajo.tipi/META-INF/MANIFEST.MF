@@ -119,4 +119,5 @@ Bundle-ClassPath: beansclasses/,
  .
 Service-Component: OSGI-INF/tipi.context.manager.xml,OSGI-INF/tipi.context.instance.xml,
  OSGI-INF/tipi.multitenant.instance.xml,OSGI-INF/tipi.extensions.xml,
- OSGI-INF/tipi.multitenant.configurator.xml,OSGI-INF/tipi.repository.provider.xml
+ OSGI-INF/tipi.multitenant.configurator.xml,
+ OSGI-INF/tipi.repository.provider.xml

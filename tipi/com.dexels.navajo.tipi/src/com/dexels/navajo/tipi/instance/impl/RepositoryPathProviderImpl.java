@@ -16,6 +16,9 @@ public class RepositoryPathProviderImpl implements InstancePathProvider {
 	
 	private RepositoryInstance repositoryInstance;
 	
+	public RepositoryPathProviderImpl() {
+		
+	}
 	public void setRepositoryInstance(RepositoryInstance ri) {
 		this.repositoryInstance = ri;
 	}
