@@ -194,11 +194,18 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		applicationFolder = new File(gitRepoFolder,repositoryName);
 		super.setSettings(settings);
 		File keyFolder = repositoryManager.getSshFolder();
+		// Not pretty..
 		if(keyFolder!=null && keyFolder.exists()) {
 			privateKey = null;
-			publicKey = null;
 			privateKey = new File(keyFolder,key);
+			if(!privateKey.exists() || !privateKey.isFile()) {
+				privateKey = null;
+			}
+			publicKey = null;
 			publicKey = new File(keyFolder,key+".pub");
+			if(!publicKey.exists() || !publicKey.isFile()) {
+				publicKey = null;
+			}
 		}
 		try {
 			

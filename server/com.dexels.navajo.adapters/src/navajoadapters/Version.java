@@ -5,7 +5,6 @@ import navajoextension.AbstractCoreExtension;
 import org.dexels.grus.GrusManager;
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.adapter.StandardAdapterLibrary;
 import com.dexels.navajo.adapter.functions.StandardAdapterFunctionLibrary;
 import com.dexels.navajo.functions.util.FunctionFactoryFactory;
@@ -61,42 +60,8 @@ public class Version extends AbstractCoreExtension {
 			StandardAdapterLibrary library = new StandardAdapterLibrary();
 			registerAll(library);
 
-//			fi.injectExtension(extensionDef);
-//			for (String functionName : fi.getFunctionNames(extensionDef)) {
-//				FunctionDefinition fd = fi.getDef(extensionDef, functionName);
-//				 Dictionary<String, Object> props = new Hashtable<String, Object>();
-//				props.put("functionName", functionName);
-//				props.put("functionDefinition", fd);
-//				context.registerService(FunctionInterface.class.getName(), fi
-//						.instantiateFunctionClass(fd, getClass().getClassLoader()),
-//						props);
-//			}
-//			
-//			
-//			StandardAdapterLibrary library = new StandardAdapterLibrary();
-//			fi.injectExtension(library);
-//			for(String adapterName: fi.getAdapterNames(library)) {
-//				fi.getAdapterConfig(library).get(adapterName);
-//				String adapterClass = fi.getAdapterClass(adapterName,library);
-//				Class<?> c = null;
-//				
-//				try {
-//					c = Class.forName(adapterClass);
-//					 Dictionary<String, Object> props = new Hashtable<String, Object>();
-//					 props.put("adapterName", adapterName);
-//					 props.put("adapterClass", c.getName());
-//
-//					if(adapterClass!=null) {
-//						context.registerService(Class.class.getName(), c, props);
-//					}
-//				} catch (Exception e) {
-//					logger.error("Error loading class for adapterClass: "+adapterClass,e);
-//				}
-//				
-//			}
 		} catch (Throwable e) {
 			logger.error("Trouble starting NavajoAdapters bundle",e);
-			e.printStackTrace();
 		}
 	}
 	
