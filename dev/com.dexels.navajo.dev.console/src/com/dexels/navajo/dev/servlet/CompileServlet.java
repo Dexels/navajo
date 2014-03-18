@@ -29,7 +29,7 @@ public class CompileServlet extends HttpServlet {
 		String script = req.getParameter("script");
 		final String extension = ".xml";
 		if(script==null) {
-			resp.sendError(500,"No script parameter supplied");
+			resp.sendError(400,"No script parameter supplied");
 			return;
 		}
 		String tenant = req.getParameter("tenant");
