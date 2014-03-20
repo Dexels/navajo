@@ -1,9 +1,25 @@
 <metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.1.0">
-	<OCD description="Repository File Instance" name="Repository File Instance" id="navajo.repository.file">
-		<AD name="Storage Folder" id="storage.path" required="true" type="String" />
+	<OCD description="Repository Single Tenant Instance" name="Repository Single Tenant Instance" id="navajo.repository.navajo">
+		<AD name="Storage Folder" id="repository.folder" required="true" type="String" />
+		<AD name="Repository name" id="repository.name" required="false" type="String" />
+	</OCD>
+	<OCD description="Repository Single Tenant Instance" name="Repository Multi Tenant Instance" id="navajo.repository.multitenant">
+		<AD name="Storage Folder" id="repository.folder" required="true" type="String" />
+		<AD name="Repository name" id="repository.name" required="false" type="String" />
+	</OCD>
+	<OCD description="Repository Single Tenant Instance" name="Repository Tipi Instance" id="navajo.repository.tipi">
+		<AD name="Storage Folder" id="repository.folder" required="true" type="String" />
+		<AD name="Repository name" id="repository.name" required="false" type="String" />
 	</OCD>
 
-	<Designate pid="navajo.repository.file">
-		<Object ocdref="navajo.repository.file" />
+	<Designate factoryPid="navajo.repository.navajo">
+		<Object ocdref="navajo.repository.navajo" />
 	</Designate>
+	<Designate factoryPid="navajo.repository.multitenant">
+		<Object ocdref="navajo.repository.multitenant" />
+	</Designate>
+	<Designate factoryPid="navajo.repository.tipi">
+		<Object ocdref="navajo.repository.tipi" />
+	</Designate>
+
 </metatype:MetaData>

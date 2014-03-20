@@ -32,12 +32,11 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 
 	private final Map<String,Object> settings = new HashMap<String, Object>();
 	private final Map<String,AppStoreOperation> operations = new HashMap<String, AppStoreOperation>();
-	private final Map<String,RepositoryLayout> repositoryLayout = new HashMap<String, RepositoryLayout>();
+	private RepositoryLayout repositoryLayout = null;
 	private final Map<String,Map<String,Object>> operationSettings = new HashMap<String, Map<String,Object>>();
 
 	protected final Set<Path> monitoredPaths = new HashSet<Path>();
 	protected String type;
-	protected boolean active = false;
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(FileRepositoryInstanceImpl.class);
@@ -111,28 +110,19 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 	
 	@Override
 	public List<String> getMonitoredFolders() {
-		RepositoryLayout r = repositoryLayout.get(type);
-		if(r==null) {
+		if(repositoryLayout==null) {
 			logger.warn("Unknown repository layout: "+type+", change monitoring might not work!");
 			return null;
 		}
-		return r.getMonitoredFolders();
+		return repositoryLayout.getMonitoredFolders();
 	}
 	
-	public void addRepositoryLayout(RepositoryLayout r, Map<String,Object> settings) {
-		final String layoutName = (String) settings.get("name");
-		repositoryLayout.put(layoutName,r);
-		if(active && layoutName.equals(type)) {
-			try {
-				setupMonitoredFolders();
-			} catch (IOException e) {
-				logger.error("Error: ", e);
-			}
-		}
+	public void setRepositoryLayout(RepositoryLayout r) {
+		repositoryLayout = r;
 	}
 	
-	public void removeRepositoryLayout(RepositoryLayout r, Map<String,Object> settings) {
-		repositoryLayout.remove(settings.get("name"));
+	public void clearRepositoryLayout(RepositoryLayout r) {
+		repositoryLayout = null;
 	}
 
 	protected File findConfiguration(String path, String fileInstallPath)

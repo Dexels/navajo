@@ -7,9 +7,11 @@ Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.dexels.navajo.repository.api;version="1.0.0",
  com.dexels.navajo.repository.api.diff;version="1.0.0",
+ org.osgi.framework;version="[1.5.0,2.0.0)",
+ org.osgi.service.cm;version="[1.4.0,1.6.0)",
  org.osgi.service.event;version="[1.1.0,2.0.0)",
  org.slf4j;version="[1.6.0,1.8.0)"
-Service-Component: OSGI-INF/navajo.repository.file.xml,
- OSGI-INF/navajo.repository.file.system.xml,
- OSGI-INF/navajo.tipi.repository.file.system.xml,
- OSGI-INF/navajo.multitenant.repository.file.system.xml
+Service-Component: OSGI-INF/navajo.repository.multitenant.xml,
+ OSGI-INF/navajo.file.repository.manager.xml,
+ OSGI-INF/navajo.repository.navajo.xml,
+ OSGI-INF/navajo.repository.tipi.xml

@@ -16,13 +16,12 @@ public class FileRepositoryInstanceImpl extends BaseFileRepositoryInstanceImpl i
 	public void activate(Map<String,Object> configuration) throws IOException {
 
 		String path = (String) configuration.get("repository.folder");
-		type = (String) configuration.get("type");
+		type = (String) configuration.get("repository.type");
 		repositoryName = (String) configuration.get("repository.name");
 		final String fileInstallPath= (String) configuration.get("felix.fileinstall.filename");
 
 		applicationFolder = findConfiguration(path,fileInstallPath);
 		super.setupMonitoredFolders();
-		active = true;
 	}
 
 	public void deactivate() {
@@ -34,7 +33,6 @@ public class FileRepositoryInstanceImpl extends BaseFileRepositoryInstanceImpl i
 			}
 			watchDir = null;
 		}
-		active = false;
 	}
 	
 
