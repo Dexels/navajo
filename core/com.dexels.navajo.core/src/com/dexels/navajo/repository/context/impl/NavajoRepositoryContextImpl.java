@@ -11,6 +11,9 @@ import com.dexels.navajo.server.impl.NavajoServerContextComponent;
 public class NavajoRepositoryContextImpl extends NavajoServerContextComponent implements NavajoServerContext {
 	private RepositoryInstance repositoryInstance;
 	
+	public NavajoRepositoryContextImpl() {
+		
+	}
 	public void setRepositoryInstance(RepositoryInstance ri) {
 		this.repositoryInstance = ri;
 	}

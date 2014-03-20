@@ -48,7 +48,7 @@ public class CompileServlet extends HttpServlet {
 			List<String> success = new ArrayList<String>();
 			List<String> failures = new ArrayList<String>();
 			List<String> skipped = new ArrayList<String>();
-			bundleCreator.createBundle(script,new Date(),"xml",failures,success,skipped, force,keepIntermediateFiles,"default");
+			bundleCreator.createBundle(script,new Date(),"xml",failures,success,skipped, force,keepIntermediateFiles);
 			long tm2 = System.currentTimeMillis() - tm;
 			logger.info("Compiling java complete. took: "+tm2+" millis.");
 			logger.info("Succeeded: "+success.size()+" failed: "+failures.size()+" skipped: "+skipped.size());
@@ -56,7 +56,7 @@ public class CompileServlet extends HttpServlet {
 			for (String failed : failures) {
 				logger.info("Failed: "+failed);
 			}
-			bundleCreator.installBundles(script,tenant, failures, success, skipped, true,extension);
+			bundleCreator.installBundles(script,failures, success, skipped, true,extension);
 		} catch (Throwable e) {
 			logger.error("Error compiling scripts form servlet:",e);
 		}

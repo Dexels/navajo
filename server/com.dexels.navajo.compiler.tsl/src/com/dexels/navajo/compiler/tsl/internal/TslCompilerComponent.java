@@ -67,22 +67,8 @@ public class TslCompilerComponent implements ScriptCompiler {
 		} else {
 			scriptString = packagePath + "/"+script.replaceAll("_", "|");
 		}
-//		scriptString = scriptPath.replaceAll("_", "|");
 		String scriptSource = script;
-
-//		Navajo n = NavajoFactory.getInstance().createNavajo(navajoIOConfig.getScript(scriptPath));
-//		List<Operation> all =  n.getAllOperations();
-//		if(!all.isEmpty()) {
-//			parseEntity(n);
-//		}
-//		
-		//		if(hasTenantSpecificFile) {
-//			scriptSource = script+"_"+tenant;
-//		}
-//		String scriptString = scriptPath.replaceAll("/", "_");
 		compiler.compileToJava(scriptSource, navajoIOConfig.getScriptPath(), navajoIOConfig.getCompiledScriptPath(), packagePath, scriptPackage, prc, navajoIOConfig,dependencies,tenant,hasTenantSpecificFile);
-		//		logger.info("Javafile: "+javaFile);
-//		System.err.println("Packages: "+packages);
 		Set<String> dependentResources = new HashSet<String>();
 		
 		for (Dependency d : dependencies) {
@@ -112,7 +98,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		generateFactoryClass(script, packagePath,dependentResources);
 
 		generateManifest(scriptString,"1.0.0",packagePath, script,packages,compileDate);
-		generateDs(packagePath, script,dependencies,dependentResources,tenant,hasTenantSpecificFile);
+		generateDs(packagePath, script,dependencies,dependentResources);
 	}
 	
 	private void generateFactoryClass(String script, String packagePath, Set<String> resources) throws IOException {
@@ -216,7 +202,7 @@ public class TslCompilerComponent implements ScriptCompiler {
 		w.close();
 	}
 	
-	private void generateDs(String packagePath, String script,List<Dependency> dependencies, Set<String> dependentResources,final String tenant, boolean hasTenantSpecificFile) throws IOException {
+	private void generateDs(String packagePath, String script,List<Dependency> dependencies, Set<String> dependentResources) throws IOException {
 		
 		String fullName;
 		if (packagePath.equals("")) {
@@ -235,12 +221,14 @@ public class TslCompilerComponent implements ScriptCompiler {
 //		String tenant = null;
 		
 		symbolicName = fullName.replaceAll("/", ".");
-//		if(symbolicName.indexOf("_")!=-1) {
-//			final String[] split = symbolicName.split("_");
-//			symbolicName = split[0];
-//			tenant = split[1];
-//			logger.error("Anomaly in creating bundle: shouldn't happen");
-//		}
+		boolean hasTenantSpecificFile = false;
+		String tenant = null;
+		if(symbolicName.indexOf("_")!=-1) {
+			final String[] split = symbolicName.split("_");
+			symbolicName = split[0];
+			tenant = split[1];
+			hasTenantSpecificFile = true;
+		}
 
 		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
 		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");

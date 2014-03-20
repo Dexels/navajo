@@ -3550,6 +3550,15 @@ public class TslCompiler {
 
 	}
 
+	/** 
+	 * Non OSGi
+	 * @param currentDir
+	 * @param outputPath
+	 * @param offsetPath
+	 * @param classpath
+	 * @param configPath
+	 * @param tenant
+	 */
 	public static void compileDirectory(File currentDir, File outputPath,
 			String offsetPath, String[] classpath, String configPath,
 			String tenant) {

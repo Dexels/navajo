@@ -111,13 +111,16 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
     }
 
 	@Override
-	public Date getScriptModificationDate(String scriptPackage, String tenant, String extension) throws FileNotFoundException {
-		File scr = getApplicableScriptFile(scriptPackage, tenant, extension);
+	public Date getScriptModificationDate(String rpcName, String tenant, String extension) throws FileNotFoundException {
+		File scr = getApplicableScriptFile(rpcName, tenant, extension);
 		return new Date(scr.lastModified());
 		
 	}
 	
 	@Override
+	/**
+	 * rpcName does not include tenant suffix
+	 */
 	public File getApplicableBundleForScript(String rpcName, String tenant, String extension) {
 
 		try {
@@ -140,6 +143,9 @@ public abstract class FileNavajoConfig implements NavajoIOConfig {
 	}
 
 	@Override
+	/**
+	 * Name does not include tenant suffix
+	 */
 	public boolean hasTenantScriptFile(String rpcName, String tenant, String extension) {
 		if(tenant==null) {
 			return false;
