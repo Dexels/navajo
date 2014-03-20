@@ -102,6 +102,10 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 
 		logger.debug("scriptName: "+scriptName);
 		logger.debug("extension: "+extension);
+		if(".rptdesign".equals(extension)) {
+			logger.info("Ignoring report "+scriptName);
+			return;
+		}
 		enqueueScript(scriptName,extension);
 	}
 
