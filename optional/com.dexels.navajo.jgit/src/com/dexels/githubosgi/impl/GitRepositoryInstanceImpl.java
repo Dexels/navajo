@@ -556,4 +556,5 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 		return type;
 	}
 
+
 }

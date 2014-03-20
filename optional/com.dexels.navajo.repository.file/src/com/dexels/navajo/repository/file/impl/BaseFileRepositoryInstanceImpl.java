@@ -250,6 +250,12 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 		return 0;
 	}
 
+	@Override
+	public String getDeployment() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 
 }

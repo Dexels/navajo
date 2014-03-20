@@ -23,7 +23,8 @@ public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 	private final Map<String,AppStoreOperation> operations = new HashMap<String, AppStoreOperation>();
 	private final Map<String,Map<String,Object>> operationSettings = new HashMap<String, Map<String,Object>>();
 	protected String type;
-	
+	protected String deployment;
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(RepositoryInstanceImpl.class);
 	
@@ -111,6 +112,11 @@ public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 	@Override
 	public String toString() {
 		return getRepositoryName()+": "+repositoryType()+"=>"+applicationType();
+	}
+
+	@Override
+	public String getDeployment() {
+		return deployment;
 	}
 
 }
