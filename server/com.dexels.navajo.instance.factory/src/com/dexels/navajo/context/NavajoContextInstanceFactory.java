@@ -61,19 +61,19 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 //		this.bundleContext = context;
 
 		try {
-			startInstanceFactory(repositoryInstance.getRepositoryFolder());
+			startInstanceFactory(repositoryInstance.getRepositoryFolder(),repositoryInstance.getDeployment());
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("Error: ", e);
 		}
 	}
 
-	private void startInstanceFactory(File rootPath) {
+	private void startInstanceFactory(File rootPath, String deployment) {
 		File settings = new File(rootPath,"settings");
 		File config = new File(rootPath,"config");
 		File globalResourceFile = new File(config,"resources.xml");
 		File[] fd = settings.listFiles();
 		File globalPropertyFile = new File(settings,"application.properties");
-		Map<String,Object> globalProperties = readProperties(globalPropertyFile);
+		Map<String,Object> globalProperties = readProperties(globalPropertyFile,deployment);
 		Map<String,Set<String>> aliases = new HashMap<String, Set<String>>();
 		Map<String,Message> globalResources = readResources(globalResourceFile,aliases);
 		for (Message dataSource : globalResources.values()) {
@@ -89,7 +89,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 				System.err.println("dir found: "+file.getAbsolutePath());
 				String name = file.getName();
 				try {
-					appendInstance(name, file,Collections.unmodifiableMap(globalProperties),Collections.unmodifiableMap(globalResources));
+					appendInstance(name, file,Collections.unmodifiableMap(globalProperties),Collections.unmodifiableMap(globalResources),deployment);
 				} catch (IOException e) {
 					logger.error("Error appending instance: {}",name,e);
 				}
@@ -171,7 +171,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		return result;
 	}
 
-	private Map<String,Object> readProperties(File propertyFile) {
+	private Map<String,Object> readProperties(File propertyFile,String deployment) {
 		final Map<String,Object> result = new HashMap<String, Object>();
 		if(!propertyFile.exists()) {
 			logger.warn("Skipping non-existant global property file: {}",propertyFile.getAbsolutePath());
@@ -182,8 +182,23 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			fi = new FileInputStream(propertyFile);
 			ResourceBundle rb = new PropertyResourceBundle(fi);
 			for (String s : rb.keySet()) {
-				result.put(s, rb.getObject(s));
+				if(deployment!=null) {
+					if(s.indexOf("/")>=0) {
+						// slash in key:
+						String[] parts = s.split("/");
+						if(parts[0].equals(deployment)) {
+							// matched
+							result.put(parts[1], rb.getObject(s));
+						} else {
+							// skip altogether
+						}
+					}
+				} else {
+					result.put(s, rb.getObject(s));
+				}
 			}
+			
+			
 		} catch (IOException e) {
 			logger.warn("Problem reading global property file: {}",propertyFile.getAbsolutePath(), e);
 		} finally {
@@ -199,7 +214,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		return result;
 	}
 
-	private void appendInstance(String name, File instanceFolder, Map<String, Object> globalProperties, Map<String, Message> globalResources) throws IOException {
+	private void appendInstance(String name, File instanceFolder, Map<String, Object> globalProperties, Map<String, Message> globalResources, String deployment) throws IOException {
 		logger.info ("Name: "+name);
 		Map<String, Object> copyOfProperties = new HashMap<String, Object>(globalProperties);
 //		copyOfProperties.putAll(globalProperties);
@@ -207,7 +222,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		File config = new File(instanceFolder,"config");
 		File instanceProperties = new File(config,"application.properties");
 		if(instanceProperties.exists()) {
-			final Map<String, Object> instanceSpecific = readProperties(instanceProperties);
+			final Map<String, Object> instanceSpecific = readProperties(instanceProperties,deployment);
 			logger.info("spec: "+instanceSpecific.size()+instanceProperties.getAbsolutePath());
 			copyOfProperties.putAll(instanceSpecific);
 		}

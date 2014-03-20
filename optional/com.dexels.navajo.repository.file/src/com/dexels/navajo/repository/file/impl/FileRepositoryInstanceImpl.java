@@ -18,6 +18,7 @@ public class FileRepositoryInstanceImpl extends BaseFileRepositoryInstanceImpl i
 		String path = (String) configuration.get("repository.folder");
 		type = (String) configuration.get("repository.type");
 		repositoryName = (String) configuration.get("repository.name");
+		deployment = (String) configuration.get("repository.deployment");
 		final String fileInstallPath= (String) configuration.get("felix.fileinstall.filename");
 
 		applicationFolder = findConfiguration(path,fileInstallPath);

@@ -41,6 +41,7 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 	private final static Logger logger = LoggerFactory
 			.getLogger(FileRepositoryInstanceImpl.class);
 	protected WatchDir watchDir;
+	protected String deployment;
 	
 	public void setEventAdmin(EventAdmin eventAdmin) {
 		this.eventAdmin = eventAdmin;
@@ -252,8 +253,7 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 
 	@Override
 	public String getDeployment() {
-		// TODO Auto-generated method stub
-		return null;
+		return deployment;
 	}
 
 
