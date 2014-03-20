@@ -29,20 +29,7 @@ public class GrusDataSource implements GrusConnection {
 		this.datasource = dataSourceInstance;
 		this.id = id;
 		this.grusProvider = provider;
-//		component.id = 115
-//		component.name = navajo.resource.oracle
-//		instance = tbn
-//		max_connections = 100
-//		min_connections = 1
-//		name = finance
-//		objectClass = [javax.sql.DataSource]
-//		password = tbn
-//		refresh = 0.01
-//		service.factoryPid = navajo.resource.oracle
-//		service.pid = navajo.resource.oracle-1371816104784-98
-//		type = oracle
-//		url = jdbc:oracle:thin:@odysseus:1521:SLTEST02
-//		user = tbnkern
+
 		String url = (String) settings.get("url");
 		String user = (String) settings.get("user");
 		String password = (String) settings.get("password");
@@ -60,9 +47,11 @@ public class GrusDataSource implements GrusConnection {
 		double refresh = 0.01;
 		if(refreshObject!=null) {
 			refresh = (Double) refreshObject;
-			
 		}
-		
+
+		if(this.datasource==null) {
+			throw new Exception("No datasource in GrusDataSource");
+		}
 		this.dbConnectionBroker = new DbConnectionBrokerWrapper(this, user, maxConns);
 		
 		this.connection = this.datasource.getConnection();
