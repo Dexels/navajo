@@ -75,7 +75,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		File globalPropertyFile = new File(settings,"application.properties");
 		Map<String,Object> globalProperties = readProperties(globalPropertyFile,deployment);
 		Map<String,Set<String>> aliases = new HashMap<String, Set<String>>();
-		Map<String,Message> globalResources = readResources(globalResourceFile,aliases);
+		Map<String,Message> globalResources = readResources(globalResourceFile,aliases,deployment);
 		for (Message dataSource : globalResources.values()) {
 			try {
 				addDatasource(null,dataSource,aliases);
@@ -122,41 +122,42 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		
 	}
 
-	private Map<String,Message> readResources(File resource, Map<String, Set<String>> aliases) {
+	private Map<String,Message> readResources(File resource, Map<String, Set<String>> aliases, String deployment) {
 		Map<String,Message> result = new HashMap<String, Message>();
 		FileReader fr = null;
 		try {
 			fr = new FileReader(resource);
 			Navajo n = NavajoFactory.getInstance().createNavajo(fr);
-			Message m = n.getMessage("datasources");
-			if(m!=null) {
-				logger.warn("In datasource definitions, please use 'resources' instead of 'datasources' as top level tag");
+			Message resources = n.getMessage("datasources");
+			Message deployments = n.getMessage("deployments");
+			Message aliasMessage = n.getMessage("alias");
+			if(resources!=null) {
+				logger.warn("In datasource definitions, please use 'resources' instead of 'datasources' as top level message name");
 			} else {
-				m = n.getMessage("resources");
+				resources = n.getMessage("resources");
 			}
-			if(m==null) {
-				logger.warn("In datasource definitions, no 'resources' found.");
-				return result;
-			}
-			Message aliasMap = n.getMessage("alias");
-			if(aliasMap!=null) {
-				List<Property> aliasProps = aliasMap.getAllProperties();
-				for (Property property : aliasProps) {
-					String aliasValue = (String) property.getTypedValue();
-					String name = property.getName();
-					Set<String> found = aliases.get(aliasValue);
-					if(found==null) {
-						found = new HashSet<String>();
-						aliases.put(aliasValue, found);
-					}
-					found.add(name);
+//			if(resources==null) {
+//				logger.warn("In datasource definitions, no 'resources' found.");
+//				return result;
+//			}
+			appendResources(aliases, result, resources, aliasMessage);
+			logger.info("# of (deployment independent): resources "+result.size());
+			if(deployment!=null && deployments!=null) {
+			for (Message deploymentMessage : deployments.getAllMessages()) {
+				String name = deploymentMessage.getName();
+				if(name.equals(deployment)) {
+					Message deploymentResources = deploymentMessage.getMessage("resources");
+					Message deploymentAliasMessage = deploymentMessage.getMessage("alias");
+//					Map<String, Set<String>> deploymentAliases = new HashMap<String, Set<String>>(aliases);
+					appendResources(aliases, result, deploymentResources, deploymentAliasMessage);
+				} else {
+					logger.debug("Ignoring not-matching datasource ("+name+" vs. "+deployment+")");
 				}
 			}
-			List<Message> sources = m.getAllMessages();
-			for (Message rsrc : sources) {
-				result.put(rsrc.getName(), rsrc);
+			} else {
+				logger.warn("No deployment whatsoever, ignoring all deployment specific sources");
 			}
-			logger.info("# of resources: "+result.size());
+
 		} catch (FileNotFoundException e) {
 			logger.debug("Problem reading file: {}",resource,e);
 		} finally {
@@ -169,6 +170,29 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			}
 		}
 		return result;
+	}
+
+	private void appendResources(Map<String, Set<String>> aliases,
+			Map<String, Message> result, Message resources, Message aliasMessage) {
+		if(aliasMessage!=null) {
+			List<Property> aliasProps = aliasMessage.getAllProperties();
+			for (Property property : aliasProps) {
+				String aliasValue = (String) property.getTypedValue();
+				String name = property.getName();
+				Set<String> found = aliases.get(aliasValue);
+				if(found==null) {
+					found = new HashSet<String>();
+					aliases.put(aliasValue, found);
+				}
+				found.add(name);
+			}
+		}
+		if (resources != null) {
+			List<Message> sources = resources.getAllMessages();
+			for (Message rsrc : sources) {
+				result.put(rsrc.getName(), rsrc);
+			}
+		}
 	}
 
 	private Map<String,Object> readProperties(File propertyFile,String deployment) {
@@ -228,7 +252,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		}
 		File instanceResource = new File(config,"resources.xml");
 		Map<String,Set<String>> aliases = new HashMap<String, Set<String>>();
-		Map<String,Message> resources = readResources(instanceResource,aliases);
+		Map<String,Message> resources = readResources(instanceResource,aliases, deployment);
 
 		registerAuthorization(name, instanceFolder);
 		//		copyOfResources.putAll(resources);
