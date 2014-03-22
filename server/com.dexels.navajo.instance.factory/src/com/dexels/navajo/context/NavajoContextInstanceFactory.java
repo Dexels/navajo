@@ -44,7 +44,6 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	private final Set<String> resourcePids = new HashSet<String>();
 
 	public NavajoContextInstanceFactory() {
-		System.err.println("constructed!");
 	}
 
 	private RepositoryInstance repositoryInstance;
@@ -86,7 +85,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		logger.info("Global properties: #"+globalProperties.size());
 		for (File file : fd) {
 			if(file.isDirectory()) {
-				System.err.println("dir found: "+file.getAbsolutePath());
+				logger.debug("dir found: "+file.getAbsolutePath());
 				String name = file.getName();
 				try {
 					appendInstance(name, file,Collections.unmodifiableMap(globalProperties),Collections.unmodifiableMap(globalResources),deployment);
@@ -216,6 +215,8 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 						} else {
 							// skip altogether
 						}
+					} else {
+						result.put(s, rb.getObject(s));
 					}
 				} else {
 					result.put(s, rb.getObject(s));
@@ -239,7 +240,10 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 
 	private void appendInstance(String name, File instanceFolder, Map<String, Object> globalProperties, Map<String, Message> globalResources, String deployment) throws IOException {
-		logger.info ("Name: "+name);
+		logger.info ("Instance name: "+name);
+		if(skipDeployment(instanceFolder,deployment)) {
+			return;
+		}
 		Map<String, Object> copyOfProperties = new HashMap<String, Object>(globalProperties);
 //		copyOfProperties.putAll(globalProperties);
 //		Map<String,Message> copyOfResources = new HashMap<String, Message>(globalResources);
@@ -259,10 +263,43 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 //		registerInstance(name);
 		registerInstanceProperties(name,copyOfProperties);
 		registerInstanceResources(name,resources,aliases);
-		registerLocalClients(name,instanceFolder);
+		registerLocalClients(name,instanceFolder,deployment);
 	}
 
-	private void registerLocalClients(String name, File instanceFolder) {
+	private boolean skipDeployment(File instanceFolder, String deployment) {
+		File deploymentFile = new File(instanceFolder,"deployment.cfg");
+		if(!deploymentFile.exists()) {
+			return false;
+		}
+		InputStream is = null;
+		try {
+			is = new FileInputStream(deploymentFile);
+			PropertyResourceBundle prb = new PropertyResourceBundle(is);
+			String deploymentList = prb.getString("deployment");
+			if(deploymentList==null) {
+				logger.warn("Bad deployment file in {}",instanceFolder.getAbsolutePath()+" : Key ' deployment' missing. Skipping instance.");
+				return true;
+			}
+			String[] parts = deploymentList.split(",");
+			for (String element : parts) {
+				if(element.equals(deployment)) {
+					return false;
+				}
+			}
+		} catch (Exception e) {
+			logger.error("Error: ", e);
+		} finally {
+			if(is!=null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		return true;
+	}
+
+	private void registerLocalClients(String name, File instanceFolder,String deployment) {
 		Map<String,Object> settings = new HashMap<String, Object>();
 		settings.put("instance", name);
 		File clientProperties = new File(instanceFolder,"navajoclient.cfg");
@@ -277,7 +314,16 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			Enumeration<String> en = prb.getKeys();
 			do {
 				String next = en.nextElement();
-				settings.put(next, prb.getObject(next));
+				if(next.indexOf("/")!=-1) {
+					String[] parts = next.split("/");
+					if(!parts[0].equals(deployment)) {
+						continue;
+					} else {
+						settings.put(next, prb.getObject(parts[1]));
+					}
+				} else {
+					settings.put(next, prb.getObject(next));
+				}
 			} while(en.hasMoreElements());
 			injectLocalClient(name,settings);
 		} catch (Exception e) {
@@ -444,7 +490,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		addResourceGroup(name,instance,type,settings);
 	}
 
-	protected Configuration createOrReuse(String pid, final String filter)
+	private Configuration createOrReuse(String pid, final String filter)
 			throws IOException {
 		Configuration cc = null;
 		try {
