@@ -192,6 +192,7 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 
 		repositoryName = name + "-"+branch;
 		applicationFolder = new File(gitRepoFolder,repositoryName);
+		this.deployment = (String) settings.get("deployment");
 		super.setSettings(settings);
 		File keyFolder = repositoryManager.getSshFolder();
 		// Not pretty..
