@@ -1,8 +1,10 @@
 package com.dexels.navajo.adapter.resource.provider.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
@@ -33,6 +35,7 @@ public class GrusProviderImpl implements GrusProvider {
 
 	public void addDataSource(DataSource source, Map<String,Object> settings) {
 		settingsMap.put(source, settings);
+		List<String> instances = getInstances(settings);
 
 		String instance = (String) settings.get("instance");
 		String name = (String) settings.get("name");
@@ -48,14 +51,26 @@ public class GrusProviderImpl implements GrusProvider {
 			}
 			
 		} else {
-			Map<String, DataSource> instanceDataSources = getInstanceDataSources(instance);
-			instanceDataSources.put(name,source);
-			if(aliases!=null) {
-				for (String alias : aliases) {
-					instanceDataSources.put(alias,source);
+			for (String currentInstance : instances) {
+				Map<String, DataSource> instanceDataSources = getInstanceDataSources(currentInstance);
+				instanceDataSources.put(name,source);
+				if(aliases!=null) {
+					for (String alias : aliases) {
+						instanceDataSources.put(alias,source);
+					}
 				}
 			}
 		}
+	}
+
+	private List<String> getInstances(Map<String, Object> settings) {
+		List<String> result = new ArrayList<String>();
+		for (Entry<String,Object> e : settings.entrySet()) {
+			if(e.getValue().equals("instance")) {
+				result.add(e.getKey());
+			}
+		}
+		return result;
 	}
 
 	private Map<String, DataSource> getInstanceDataSources(String instance) {

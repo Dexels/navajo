@@ -16,7 +16,7 @@ public class TestNavajoContextInstance {
 
 	@Test
 	public void test() {
-		context.activate();
+		context.activate(null);
 		
 	}
 

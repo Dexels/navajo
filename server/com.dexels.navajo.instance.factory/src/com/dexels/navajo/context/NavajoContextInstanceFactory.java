@@ -21,7 +21,10 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.Vector;
 
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceEvent;
+import org.osgi.framework.ServiceListener;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
@@ -38,10 +41,16 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoContextInstanceFactory.class);
 
+	private final boolean sharableResources = true;
+
 	// private BundleContext bundleContext;
 	private ConfigurationAdmin configAdmin;
 	
 	private Set<Configuration> ownedConfigurations = new HashSet<Configuration>();
+
+	private int modified = 0;
+	private int registered = 0;
+	private int unregistering = 0;
 	// private final Map<String,Set<String>> aliasesForDataSource = new
 	// HashMap<String, Set<String>>();
 	private final Set<String> resourcePids = new HashSet<String>();
@@ -59,8 +68,34 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		this.repositoryInstance = null;
 	}
 
-	public void activate() {
+	public void activate(BundleContext context) {
 		// this.bundleContext = context;
+		if(context!=null) {
+			
+			context.addServiceListener(new ServiceListener() {
+				
+				@Override
+				public void serviceChanged(ServiceEvent se) {
+					switch (se.getType()) {
+					case ServiceEvent.MODIFIED:
+						System.err.println("service MODIFIED: "+se.getServiceReference());
+						modified++;
+						break;
+					case ServiceEvent.REGISTERED:
+						System.err.println("service REGISTERED: "+se.getServiceReference());
+						registered++;
+						break;
+					case ServiceEvent.UNREGISTERING:
+						System.err.println("service UNREGISTERING: "+se.getServiceReference());
+						unregistering++;
+						break;
+					default:
+						break;
+					}
+				    System.err.println("STATS: "+modified+" modified. "+registered+" registered. "+unregistering+" unregistering");
+				}
+			});
+		}
 		try {
 			String deployment = repositoryInstance.getDeployment();
 			startInstanceFactory(repositoryInstance.getRepositoryFolder(),
@@ -129,6 +164,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			d.put("felix.fileinstall.filter", fileFilter);
 			d.put("configName", configName);
 			cc.update(d);
+			ownedConfigurations.add(cc);
 		} catch (IOException e) {
 			logger.error("Error: ", e);
 		}
@@ -477,22 +513,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			}
 
 		}
-		// Set<String> allNames = new HashSet<String>();
-		// allNames.add("navajo.resource."+name);
 		Set<String> aliaseSet = aliases.get(name);
-		//
-		// if(aliaseSet!=null) {
-		// for (String alias : aliaseSet) {
-		// allNames.add("navajo.resource."+alias);
-		// }
-		// allNames.addAll(aliaseSet);
-		// }
-		// String[] allNamesArray = new String[allNames.size()];
-		// int i = 0;
-		// for (String string : allNames) {
-		// allNamesArray[i] = string;
-		// i++;
-		// }
 		if (aliaseSet != null) {
 			for (String alias : aliaseSet) {
 				settings.put(alias, "alias");
@@ -504,31 +525,62 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		settings.put("name", name);
 		if (instance != null) {
 			settings.put("instance", instance);
+			settings.put(instance, "instance");
 		}
 		String type = (String) dataSource.getProperty("type").getTypedValue();
 
 		if (configAdmin == null) {
-			logger.debug("No configuration admin, assuming testing");
+			logger.warn("No configuration admin, assuming testing");
 			return;
 		}
-		// configAdmin.getConfiguration(arg0)
-		// Configuration cc =
-		// configAdmin.getConfiguration("navajo.resource."+instance+"."+name,null);
-		final String filter;
-		if (instance == null) {
-			filter = "(&(name=navajo.resource." + name
-					+ ")(service.factoryPid=navajo.resource." + type + "))";
-		} else {
-			filter = "(&(instance=" + instance + ")(name=navajo.resource."
-					+ name + ")(service.factoryPid=navajo.resource." + type
-					+ "))";
+		String uniqueId = getUniqueId(settings);
+		if(uniqueId!=null) {
+			settings.put("navajo.uniqueid", uniqueId);
 		}
+		final String filter = createFilter(instance, name, settings, type,uniqueId);
 		Configuration cc = createOrReuse("navajo.resource." + type, filter);
-		updateIfChanged(cc, settings);
-		// cc.update(settings);
+		appendIfChanged(cc, settings);
 		logger.debug("Data source settings for source: {} : {}", name, settings);
 
-		addResourceGroup(name, instance, type, settings);
+//		addResourceGroup(name, instance, type, settings);
+	}
+
+	private String createFilter(String instance, String name,
+			Dictionary<String, Object> settings, String type, String uniqueId) {
+		if(this.sharableResources && uniqueId!=null) {
+			final String filter;
+			filter = "(&(navajo.uniqueid=" + uniqueId
+					+ ")(service.factoryPid=navajo.resource." + type + "))";
+			return filter;
+			
+		} else {
+			final String filter;
+			if (instance == null) {
+				filter = "(&(name=navajo.resource." + name
+						+ ")(service.factoryPid=navajo.resource." + type + "))";
+			} else {
+				filter = "(&(instance=" + instance + ")(name=navajo.resource."
+						+ name + ")(service.factoryPid=navajo.resource." + type
+						+ "))";
+			}
+			return filter;
+		}
+	}
+
+	/**
+	 * Create a unique id based on url and username, if available
+	 * @param settings
+	 * @return id, or null
+	 */
+	private String getUniqueId(Dictionary<String, Object> settings) {
+		String url = (String) settings.get("url");
+		String user = (String) settings.get("user");
+		if(user!=null && url!=null) {
+			String unique = url+"|"+user;
+			logger.info("Created uuid: "+unique);
+			return unique;
+		}
+		return null;
 	}
 
 	private Configuration createOrReuse(String pid, final String filter)
@@ -565,18 +617,43 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			c.update(settings);
 		}
 	}
-
-	private void addResourceGroup(String name, String instance, String type,
+	
+	private void appendIfChanged(Configuration c,
 			Dictionary<String, Object> settings) throws IOException {
-		// Dictionary<String,Object> settings = new Hashtable<String,Object>();
-		String pid = "navajo.resource." + type;
-		final String filter = "(&(service.factoryPid=" + pid + ")(name=" + name
-				+ ")(instance=" + instance + "))";
-		Configuration cc = createOrReuse(pid, filter);
-		settings.put("name", name);
-		settings.put("type", type);
-		cc.update(settings);
+		Dictionary<String, Object> old = c.getProperties();
+		if (old != null) {
+			if (!old.equals(settings)) {
+				Dictionary<String, Object> merged = new Hashtable<String, Object>();
+				Enumeration<String> keys = old.keys();
+				while (keys.hasMoreElements()) {
+					String next = keys.nextElement();
+					merged.put(next, old.get(next));
+				}
+				keys = settings.keys();
+				while (keys.hasMoreElements()) {
+					String next = keys.nextElement();
+					merged.put(next, settings.get(next));
+				}
+				
+				c.update(merged);
+			}
+		} else {
+			c.update(settings);
+		}
 	}
+
+
+//	private void addResourceGroup(String name, String instance, String type,
+//			Dictionary<String, Object> settings) throws IOException {
+//		// Dictionary<String,Object> settings = new Hashtable<String,Object>();
+//		String pid = "navajo.resource." + type;
+//		final String filter = "(&(service.factoryPid=" + pid + ")(name=" + name
+//				+ ")(instance=" + instance + "))";
+//		Configuration cc = createOrReuse(pid, filter);
+//		settings.put("name", name);
+//		settings.put("type", type);
+//		cc.update(settings);
+//	}
 
 	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
 		System.err.println("setting configadmin");
