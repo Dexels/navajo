@@ -38,16 +38,19 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoContextInstanceFactory.class);
 
-//	private BundleContext bundleContext;
+	// private BundleContext bundleContext;
 	private ConfigurationAdmin configAdmin;
-//	private final Map<String,Set<String>> aliasesForDataSource = new HashMap<String, Set<String>>();
+	
+	private Set<Configuration> ownedConfigurations = new HashSet<Configuration>();
+	// private final Map<String,Set<String>> aliasesForDataSource = new
+	// HashMap<String, Set<String>>();
 	private final Set<String> resourcePids = new HashSet<String>();
 
 	public NavajoContextInstanceFactory() {
 	}
 
 	private RepositoryInstance repositoryInstance;
-	
+
 	public void setRepositoryInstance(RepositoryInstance ri) {
 		this.repositoryInstance = ri;
 	}
@@ -55,59 +58,70 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	public void clearRepositoryInstance(RepositoryInstance ri) {
 		this.repositoryInstance = null;
 	}
-	
-	public void activate() {
-//		this.bundleContext = context;
 
+	public void activate() {
+		// this.bundleContext = context;
 		try {
-			startInstanceFactory(repositoryInstance.getRepositoryFolder(),repositoryInstance.getDeployment());
+			String deployment = repositoryInstance.getDeployment();
+			startInstanceFactory(repositoryInstance.getRepositoryFolder(),
+					deployment);
+			
+			
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
 		}
 	}
 
 	private void startInstanceFactory(File rootPath, String deployment) {
-		File settings = new File(rootPath,"settings");
-		File config = new File(rootPath,"config");
-		File globalResourceFile = new File(config,"resources.xml");
+		File settings = new File(rootPath, "settings");
+		File config = new File(rootPath, "config");
+		File globalResourceFile = new File(config, "resources.xml");
 		File[] fd = settings.listFiles();
-		File globalPropertyFile = new File(settings,"application.properties");
-		Map<String,Object> globalProperties = readProperties(globalPropertyFile,deployment);
-		Map<String,Set<String>> aliases = new HashMap<String, Set<String>>();
-		Map<String,Message> globalResources = readResources(globalResourceFile,aliases,deployment);
+		File globalPropertyFile = new File(settings, "application.properties");
+		Map<String, Object> globalProperties = readProperties(
+				globalPropertyFile, deployment);
+		Map<String, Set<String>> aliases = new HashMap<String, Set<String>>();
+		Map<String, Message> globalResources = readResources(
+				globalResourceFile, aliases, deployment);
 		for (Message dataSource : globalResources.values()) {
 			try {
-				addDatasource(null,dataSource,aliases);
+				addDatasource(null, dataSource, aliases);
 			} catch (IOException e) {
 				logger.error("Error: ", e);
 			}
 		}
-		logger.info("Global properties: #"+globalProperties.size());
+		logger.info("Global properties: #" + globalProperties.size());
 		for (File file : fd) {
-			if(file.isDirectory()) {
-				logger.debug("dir found: "+file.getAbsolutePath());
+			if (file.isDirectory()) {
+				logger.debug("dir found: " + file.getAbsolutePath());
 				String name = file.getName();
 				try {
-					appendInstance(name, file,Collections.unmodifiableMap(globalProperties),Collections.unmodifiableMap(globalResources),deployment);
+					appendInstance(name, file,
+							Collections.unmodifiableMap(globalProperties),
+							Collections.unmodifiableMap(globalResources),
+							deployment);
 				} catch (IOException e) {
-					logger.error("Error appending instance: {}",name,e);
+					logger.error("Error appending instance: {}", name, e);
 				}
 			}
 		}
-		addWatchedFolder(config,".*\\.cfg","config");
+		addWatchedFolder(config, ".*\\.cfg", "config");
 
-		File adapters = new File(rootPath,"adapters");
-		
-		addWatchedFolder(adapters,".*\\.jar","adapters");
+		File adapters = new File(rootPath, "adapters");
+
+		addWatchedFolder(adapters, ".*\\.jar", "adapters");
 	}
-	
-	private void addWatchedFolder(File folder,String fileFilter, String configName) {
-		if(!folder.exists()) {
-			logger.debug("Not watching folder: "+folder.getAbsolutePath()+" because it does not exist");
+
+	private void addWatchedFolder(File folder, String fileFilter,
+			String configName) {
+		if (!folder.exists()) {
+			logger.debug("Not watching folder: " + folder.getAbsolutePath()
+					+ " because it does not exist");
 			return;
 		}
 		final String factoryPid = "org.apache.felix.fileinstall";
-		final String filter = "(&(service.factoryPid="+factoryPid+")(name="+configName+"))";
+		final String filter = "(&(service.factoryPid=" + factoryPid + ")(name="
+				+ configName + "))";
 		try {
 			Configuration cc = createOrReuse(factoryPid, filter);
 			Dictionary<String, Object> d = new Hashtable<String, Object>();
@@ -118,11 +132,12 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		} catch (IOException e) {
 			logger.error("Error: ", e);
 		}
-		
+
 	}
 
-	private Map<String,Message> readResources(File resource, Map<String, Set<String>> aliases, String deployment) {
-		Map<String,Message> result = new HashMap<String, Message>();
+	private Map<String, Message> readResources(File resource,
+			Map<String, Set<String>> aliases, String deployment) {
+		Map<String, Message> result = new HashMap<String, Message>();
 		FileReader fr = null;
 		try {
 			fr = new FileReader(resource);
@@ -130,41 +145,53 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			Message resources = n.getMessage("datasources");
 			Message deployments = n.getMessage("deployments");
 			Message aliasMessage = n.getMessage("alias");
-			if(resources!=null) {
+			if (resources != null) {
 				logger.warn("In datasource definitions, please use 'resources' instead of 'datasources' as top level message name");
 			} else {
 				resources = n.getMessage("resources");
 			}
-//			if(resources==null) {
-//				logger.warn("In datasource definitions, no 'resources' found.");
-//				return result;
-//			}
+			// if(resources==null) {
+			// logger.warn("In datasource definitions, no 'resources' found.");
+			// return result;
+			// }
 			appendResources(aliases, result, resources, aliasMessage);
-			logger.info("# of (deployment independent): resources "+result.size());
-			if(deployment!=null && deployments!=null) {
-			for (Message deploymentMessage : deployments.getAllMessages()) {
-				String name = deploymentMessage.getName();
-				if(name.equals(deployment)) {
-					Message deploymentResources = deploymentMessage.getMessage("resources");
-					Message deploymentAliasMessage = deploymentMessage.getMessage("alias");
-//					Map<String, Set<String>> deploymentAliases = new HashMap<String, Set<String>>(aliases);
-					appendResources(aliases, result, deploymentResources, deploymentAliasMessage);
-				} else {
-					logger.debug("Ignoring not-matching datasource ("+name+" vs. "+deployment+")");
+			logger.info("# of (deployment independent): resources "
+					+ result.size());
+			if (deployment != null && deployments != null) {
+				for (Message deploymentMessage : deployments.getAllMessages()) {
+					String name = deploymentMessage.getName();
+					if (name.equals(deployment)) {
+						Message deploymentResources = deploymentMessage
+								.getMessage("resources");
+						Message deploymentAliasMessage = deploymentMessage
+								.getMessage("alias");
+						// Map<String, Set<String>> deploymentAliases = new
+						// HashMap<String, Set<String>>(aliases);
+						appendResources(aliases, result, deploymentResources,
+								deploymentAliasMessage);
+					} else {
+						logger.debug("Ignoring not-matching datasource ("
+								+ name + " vs. " + deployment + ")");
+					}
 				}
-			}
 			} else {
 				logger.warn("No deployment whatsoever, ignoring all deployment specific sources");
+				logger.warn("deployment: "+deployment);
+				if(deployments!=null) {
+					deployments.write(System.err);
+				} else {
+					logger.warn("No deployments message");
+				}
 			}
 
 		} catch (FileNotFoundException e) {
-			logger.debug("Problem reading file: {}",resource,e);
+			logger.debug("Problem reading file: {}", resource, e);
 		} finally {
-			if(fr!=null) {
+			if (fr != null) {
 				try {
 					fr.close();
 				} catch (IOException e) {
-					logger.debug("Problem closing file: {}",resource,e);
+					logger.debug("Problem closing file: {}", resource, e);
 				}
 			}
 		}
@@ -173,13 +200,13 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 
 	private void appendResources(Map<String, Set<String>> aliases,
 			Map<String, Message> result, Message resources, Message aliasMessage) {
-		if(aliasMessage!=null) {
+		if (aliasMessage != null) {
 			List<Property> aliasProps = aliasMessage.getAllProperties();
 			for (Property property : aliasProps) {
 				String aliasValue = (String) property.getTypedValue();
 				String name = property.getName();
 				Set<String> found = aliases.get(aliasValue);
-				if(found==null) {
+				if (found == null) {
 					found = new HashSet<String>();
 					aliases.put(aliasValue, found);
 				}
@@ -194,10 +221,12 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		}
 	}
 
-	private Map<String,Object> readProperties(File propertyFile,String deployment) {
-		final Map<String,Object> result = new HashMap<String, Object>();
-		if(!propertyFile.exists()) {
-			logger.warn("Skipping non-existant global property file: {}",propertyFile.getAbsolutePath());
+	private Map<String, Object> readProperties(File propertyFile,
+			String deployment) {
+		final Map<String, Object> result = new HashMap<String, Object>();
+		if (!propertyFile.exists()) {
+			logger.warn("Skipping non-existant global property file: {}",
+					propertyFile.getAbsolutePath());
 			return result;
 		}
 		InputStream fi = null;
@@ -205,11 +234,11 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			fi = new FileInputStream(propertyFile);
 			ResourceBundle rb = new PropertyResourceBundle(fi);
 			for (String s : rb.keySet()) {
-				if(deployment!=null) {
-					if(s.indexOf("/")>=0) {
+				if (deployment != null) {
+					if (s.indexOf("/") >= 0) {
 						// slash in key:
 						String[] parts = s.split("/");
-						if(parts[0].equals(deployment)) {
+						if (parts[0].equals(deployment)) {
 							// matched
 							result.put(parts[1], rb.getObject(s));
 						} else {
@@ -222,53 +251,61 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 					result.put(s, rb.getObject(s));
 				}
 			}
-			
-			
+
 		} catch (IOException e) {
-			logger.warn("Problem reading global property file: {}",propertyFile.getAbsolutePath(), e);
+			logger.warn("Problem reading global property file: {}",
+					propertyFile.getAbsolutePath(), e);
 		} finally {
-			if(fi!=null) {
+			if (fi != null) {
 				try {
 					fi.close();
 				} catch (IOException e) {
-					logger.debug("Problem closing file: {}",propertyFile,e);
+					logger.debug("Problem closing file: {}", propertyFile, e);
 				}
 			}
 		}
-		
+
 		return result;
 	}
 
-	private void appendInstance(String name, File instanceFolder, Map<String, Object> globalProperties, Map<String, Message> globalResources, String deployment) throws IOException {
-		logger.info ("Instance name: "+name);
-		if(skipDeployment(instanceFolder,deployment)) {
+	private void appendInstance(String name, File instanceFolder,
+			Map<String, Object> globalProperties,
+			Map<String, Message> globalResources, String deployment)
+			throws IOException {
+		logger.info("Instance name: " + name);
+		if (skipDeployment(instanceFolder, deployment)) {
 			return;
 		}
-		Map<String, Object> copyOfProperties = new HashMap<String, Object>(globalProperties);
-//		copyOfProperties.putAll(globalProperties);
-//		Map<String,Message> copyOfResources = new HashMap<String, Message>(globalResources);
-		File config = new File(instanceFolder,"config");
-		File instanceProperties = new File(config,"application.properties");
-		if(instanceProperties.exists()) {
-			final Map<String, Object> instanceSpecific = readProperties(instanceProperties,deployment);
-			logger.info("spec: "+instanceSpecific.size()+instanceProperties.getAbsolutePath());
+		Map<String, Object> copyOfProperties = new HashMap<String, Object>(
+				globalProperties);
+		// copyOfProperties.putAll(globalProperties);
+		// Map<String,Message> copyOfResources = new HashMap<String,
+		// Message>(globalResources);
+		File config = new File(instanceFolder, "config");
+		File instanceProperties = new File(config, "application.properties");
+		if (instanceProperties.exists()) {
+			final Map<String, Object> instanceSpecific = readProperties(
+					instanceProperties, deployment);
+			logger.info("spec: " + instanceSpecific.size()
+					+ instanceProperties.getAbsolutePath());
 			copyOfProperties.putAll(instanceSpecific);
 		}
-		File instanceResource = new File(config,"resources.xml");
-		Map<String,Set<String>> aliases = new HashMap<String, Set<String>>();
-		Map<String,Message> resources = readResources(instanceResource,aliases, deployment);
+		File instanceResource = new File(config, "resources.xml");
+		Map<String, Set<String>> aliases = new HashMap<String, Set<String>>();
+		Map<String, Message> resources = readResources(instanceResource,
+				aliases, deployment);
 
 		registerAuthorization(name, instanceFolder);
-		//		copyOfResources.putAll(resources);
-//		registerInstance(name);
-		registerInstanceProperties(name,copyOfProperties);
-		registerInstanceResources(name,resources,aliases);
-		registerLocalClients(name,instanceFolder,deployment);
+		// copyOfResources.putAll(resources);
+		// registerInstance(name);
+		registerInstanceProperties(name, copyOfProperties);
+		registerInstanceResources(name, resources, aliases);
+		registerLocalClients(name, instanceFolder, deployment);
 	}
 
 	private boolean skipDeployment(File instanceFolder, String deployment) {
-		File deploymentFile = new File(instanceFolder,"deployment.cfg");
-		if(!deploymentFile.exists()) {
+		File deploymentFile = new File(instanceFolder, "deployment.cfg");
+		if (!deploymentFile.exists()) {
 			return false;
 		}
 		InputStream is = null;
@@ -276,20 +313,23 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			is = new FileInputStream(deploymentFile);
 			PropertyResourceBundle prb = new PropertyResourceBundle(is);
 			String deploymentList = prb.getString("deployment");
-			if(deploymentList==null) {
-				logger.warn("Bad deployment file in {}",instanceFolder.getAbsolutePath()+" : Key ' deployment' missing. Skipping instance.");
+			if (deploymentList == null) {
+				logger.warn(
+						"Bad deployment file in {}",
+						instanceFolder.getAbsolutePath()
+								+ " : Key ' deployment' missing. Skipping instance.");
 				return true;
 			}
 			String[] parts = deploymentList.split(",");
 			for (String element : parts) {
-				if(element.equals(deployment)) {
+				if (element.equals(deployment)) {
 					return false;
 				}
 			}
 		} catch (Exception e) {
 			logger.error("Error: ", e);
 		} finally {
-			if(is!=null) {
+			if (is != null) {
 				try {
 					is.close();
 				} catch (IOException e) {
@@ -299,11 +339,12 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		return true;
 	}
 
-	private void registerLocalClients(String name, File instanceFolder,String deployment) {
-		Map<String,Object> settings = new HashMap<String, Object>();
+	private void registerLocalClients(String name, File instanceFolder,
+			String deployment) {
+		Map<String, Object> settings = new HashMap<String, Object>();
 		settings.put("instance", name);
-		File clientProperties = new File(instanceFolder,"navajoclient.cfg");
-		if(!clientProperties.exists()) {
+		File clientProperties = new File(instanceFolder, "navajoclient.cfg");
+		if (!clientProperties.exists()) {
 			logger.debug("Ignoring non existing navajoclient.cfg");
 			return;
 		}
@@ -314,9 +355,9 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			Enumeration<String> en = prb.getKeys();
 			do {
 				String next = en.nextElement();
-				if(next.indexOf("/")!=-1) {
+				if (next.indexOf("/") != -1) {
 					String[] parts = next.split("/");
-					if(!parts[0].equals(deployment)) {
+					if (!parts[0].equals(deployment)) {
 						continue;
 					} else {
 						settings.put(next, prb.getObject(parts[1]));
@@ -324,41 +365,46 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 				} else {
 					settings.put(next, prb.getObject(next));
 				}
-			} while(en.hasMoreElements());
-			injectLocalClient(name,settings);
+			} while (en.hasMoreElements());
+			injectLocalClient(name, settings);
 		} catch (Exception e) {
 			logger.error("Error: ", e);
 		} finally {
-			if(is!=null) {
+			if (is != null) {
 				try {
 					is.close();
 				} catch (IOException e) {
 				}
 			}
 		}
-		
+
 	}
 
-	private void injectLocalClient(String instance, Map<String, Object> settings) throws IOException {
-		final String filter = "(&(instance="+instance+")(service.factoryPid=navajo.local.client))";
+	private void injectLocalClient(String instance, Map<String, Object> settings)
+			throws IOException {
+		final String filter = "(&(instance=" + instance
+				+ ")(service.factoryPid=navajo.local.client))";
 		Configuration cc = createOrReuse("navajo.local.client", filter);
-		Dictionary<String, Object> dict = new Hashtable<String, Object>(settings);
+		Dictionary<String, Object> dict = new Hashtable<String, Object>(
+				settings);
 		updateIfChanged(cc, dict);
 
 	}
 
-	private void registerAuthorization(String instance, File instanceFolder) throws IOException {
-		
-		File authFolder = new File(instanceFolder,"authorization");
-		if(!authFolder.exists()) {
+	private void registerAuthorization(String instance, File instanceFolder)
+			throws IOException {
+
+		File authFolder = new File(instanceFolder, "authorization");
+		if (!authFolder.exists()) {
 			return;
 		}
-		File[] impls = authFolder.listFiles(new FileFilter(){
+		File[] impls = authFolder.listFiles(new FileFilter() {
 
 			@Override
 			public boolean accept(File f) {
 				return f.isDirectory();
-			}});
+			}
+		});
 		for (File file : impls) {
 			String name = file.getName();
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -366,97 +412,88 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			map.put("multitenant", true);
 			registerConfiguration(instance, map, "navajo.authorization."+name);
 		}
-		
+
 	}
 
-	private void registerInstanceResources(String name,Map<String, Message> resources, Map<String, Set<String>> aliases) throws IOException {
+	private void registerInstanceResources(String name,
+			Map<String, Message> resources, Map<String, Set<String>> aliases)
+			throws IOException {
 		for (Message dataSource : resources.values()) {
-			addDatasource(name,dataSource, aliases);
+			addDatasource(name, dataSource, aliases);
 		}
 	}
-	
-//	navajo.instance.properties
-	private void registerInstanceProperties(String instance, Map<String, Object> map) throws IOException {
+
+	// navajo.instance.properties
+	private void registerInstanceProperties(String instance,
+			Map<String, Object> map) throws IOException {
 		registerConfiguration(instance, map, "navajo.global.manager");
 	}
-	
-	private void registerConfiguration(String instance, Map<String, Object> map, String pid) throws IOException {
-		logger.info("# of properties in {}: "+map.size(),instance);
-		final String totalFilter = "(service.factoryPid=)";
-		Configuration[] list;
-//		Constants.SERVICE_PID
-		try {
-			list = configAdmin.listConfigurations(totalFilter);
-			logger.info("Total # of instance properties: "+(list!=null?list.length:0));
-		} catch (InvalidSyntaxException e1) {
-			logger.error("Error: ", e1);
-		}
-		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
-		final String filter = "(&(instance="+instance+")(factoryPid="+pid+"))";
-		Configuration cc = null;
-		try {
-			Configuration[] c = configAdmin.listConfigurations(filter);
-			if(c!=null && c.length>1) {
-				logger.warn("Multiple configurations found for filter: {}", filter);
-			}
-			if(c!=null && c.length>0) {
-				cc = c[0];
-			}
-		} catch (InvalidSyntaxException e) {
-			logger.error("Error in filter: {}",filter,e);
-		}
-		if(cc==null) {
-			cc = configAdmin.createFactoryConfiguration(pid,null);
-			resourcePids.add(cc.getPid());
-		}
+
+	private void registerConfiguration(String instance,
+			Map<String, Object> map, String pid) throws IOException {
+
+		Dictionary<String, Object> settings = new Hashtable<String, Object>();
+		final String filter = "(&(instance=" + instance + ")(factoryPid=" + pid
+				+ "))";
+		Configuration cc = createOrReuse(pid, filter);
 		settings.put("instance", instance);
-		for (Entry<String,Object> x : map.entrySet()) {
+		for (Entry<String, Object> x : map.entrySet()) {
 			settings.put(x.getKey(), x.getValue());
 		}
-		cc.update(settings);
-		logger.debug("Instance properties for source: {} : {}",instance,settings);
+		updateIfChanged(cc, settings);
+		logger.debug("Instance properties for source: {} : {}", instance,
+				settings);
 
 	}
 
 	public void deactivate() {
+		for (Configuration owned : ownedConfigurations) {
+			logger.debug("Deleting configuration: "+owned.getPid());
+			try {
+				owned.delete();
+			} catch (IOException e) {
+				logger.error("Failed to delete owned (?) configuration: {}",owned.getPid(), e);
+			}
+		}
 		logger.info("NavajoContextInstance deactivated");
 	}
 
-	private void addDatasource(String instance,Message dataSource, Map<String, Set<String>> aliases) throws IOException {
+	private void addDatasource(String instance, Message dataSource,
+			Map<String, Set<String>> aliases) throws IOException {
 		String name = dataSource.getName();
 		List<Property> props = dataSource.getAllProperties();
-		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
+		Dictionary<String, Object> settings = new Hashtable<String, Object>();
 		for (Property property : props) {
 			// skip type, it is not a 'real' connection setter
-			if(property.getName().equals("type") || property.getName().equals("alias")) {
+			if (property.getName().equals("type")
+					|| property.getName().equals("alias")) {
 				continue;
 			}
-			// Conversion 
-			if(property.getName().equals("username")) {
+			// Conversion
+			if (property.getName().equals("username")) {
 				settings.put("user", property.getTypedValue());
 			} else {
 				settings.put(property.getName(), property.getTypedValue());
 			}
-		
-			
+
 		}
-//		Set<String> allNames = new HashSet<String>();
-		//allNames.add("navajo.resource."+name);
+		// Set<String> allNames = new HashSet<String>();
+		// allNames.add("navajo.resource."+name);
 		Set<String> aliaseSet = aliases.get(name);
-//
-//		if(aliaseSet!=null) {
-//			for (String alias : aliaseSet) {
-//				allNames.add("navajo.resource."+alias);
-//			}
-//			allNames.addAll(aliaseSet);
-//		}
-//		String[] allNamesArray = new String[allNames.size()];
-//		int i = 0;
-//		for (String string : allNames) {
-//			allNamesArray[i] = string;
-//			i++;
-//		}
-		if(aliaseSet!=null) {
+		//
+		// if(aliaseSet!=null) {
+		// for (String alias : aliaseSet) {
+		// allNames.add("navajo.resource."+alias);
+		// }
+		// allNames.addAll(aliaseSet);
+		// }
+		// String[] allNamesArray = new String[allNames.size()];
+		// int i = 0;
+		// for (String string : allNames) {
+		// allNamesArray[i] = string;
+		// i++;
+		// }
+		if (aliaseSet != null) {
 			for (String alias : aliaseSet) {
 				settings.put(alias, "alias");
 			}
@@ -465,29 +502,33 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			settings.put("aliases", aliasVector);
 		}
 		settings.put("name", name);
-		if (instance!=null) {
+		if (instance != null) {
 			settings.put("instance", instance);
 		}
-		String type = (String)dataSource.getProperty("type").getTypedValue();
-		
-		if(configAdmin==null) {
+		String type = (String) dataSource.getProperty("type").getTypedValue();
+
+		if (configAdmin == null) {
 			logger.debug("No configuration admin, assuming testing");
 			return;
 		}
-//		configAdmin.getConfiguration(arg0)
-//		Configuration cc = configAdmin.getConfiguration("navajo.resource."+instance+"."+name,null);
+		// configAdmin.getConfiguration(arg0)
+		// Configuration cc =
+		// configAdmin.getConfiguration("navajo.resource."+instance+"."+name,null);
 		final String filter;
-		if (instance==null) {
-			filter = "(&(name=navajo.resource."+name+")(service.factoryPid=navajo.resource."+type+"))";
+		if (instance == null) {
+			filter = "(&(name=navajo.resource." + name
+					+ ")(service.factoryPid=navajo.resource." + type + "))";
 		} else {
-			filter = "(&(instance="+instance+")(name=navajo.resource."+name+")(service.factoryPid=navajo.resource."+type+"))";
+			filter = "(&(instance=" + instance + ")(name=navajo.resource."
+					+ name + ")(service.factoryPid=navajo.resource." + type
+					+ "))";
 		}
-		Configuration cc = createOrReuse("navajo.resource."+type, filter);
+		Configuration cc = createOrReuse("navajo.resource." + type, filter);
 		updateIfChanged(cc, settings);
-//		cc.update(settings);
-		logger.debug("Data source settings for source: {} : {}",name,settings);
-		
-		addResourceGroup(name,instance,type,settings);
+		// cc.update(settings);
+		logger.debug("Data source settings for source: {} : {}", name, settings);
+
+		addResourceGroup(name, instance, type, settings);
 	}
 
 	private Configuration createOrReuse(String pid, final String filter)
@@ -495,38 +536,42 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		Configuration cc = null;
 		try {
 			Configuration[] c = configAdmin.listConfigurations(filter);
-			if(c!=null && c.length>1) {
-				logger.warn("Multiple configurations found for filter: {}", filter);
+			if (c != null && c.length > 1) {
+				logger.warn("Multiple configurations found for filter: {}",
+						filter);
 			}
-			if(c!=null && c.length>0) {
+			if (c != null && c.length > 0) {
 				cc = c[0];
 			}
 		} catch (InvalidSyntaxException e) {
-			logger.error("Error in filter: {}",filter,e);
+			logger.error("Error in filter: {}", filter, e);
 		}
-		if(cc==null) {
-			cc = configAdmin.createFactoryConfiguration(pid,null);
+		if (cc == null) {
+			cc = configAdmin.createFactoryConfiguration(pid, null);
 			resourcePids.add(cc.getPid());
+			ownedConfigurations.add(cc);
 		}
 		return cc;
 	}
-	
-	private void updateIfChanged(Configuration c, Dictionary<String,Object> settings) throws IOException {
-		Dictionary<String,Object> old = c.getProperties();
-		if(old!=null) {
-			if(!old.equals(settings)) {
+
+	private void updateIfChanged(Configuration c,
+			Dictionary<String, Object> settings) throws IOException {
+		Dictionary<String, Object> old = c.getProperties();
+		if (old != null) {
+			if (!old.equals(settings)) {
 				c.update(settings);
 			}
 		} else {
 			c.update(settings);
 		}
 	}
-	
 
-	private void addResourceGroup(String name, String instance, String type,Dictionary<String,Object> settings) throws IOException {
-//		Dictionary<String,Object> settings = new Hashtable<String,Object>(); 
-		String pid = "navajo.resource."+type;
-		final String filter = "(&(service.factoryPid="+pid+")(name="+name+")(instance="+instance+"))";
+	private void addResourceGroup(String name, String instance, String type,
+			Dictionary<String, Object> settings) throws IOException {
+		// Dictionary<String,Object> settings = new Hashtable<String,Object>();
+		String pid = "navajo.resource." + type;
+		final String filter = "(&(service.factoryPid=" + pid + ")(name=" + name
+				+ ")(instance=" + instance + "))";
 		Configuration cc = createOrReuse(pid, filter);
 		settings.put("name", name);
 		settings.put("type", type);
@@ -539,7 +584,8 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	}
 
 	/**
-	 * @param configAdmin the configAdmin to remove 
+	 * @param configAdmin
+	 *            the configAdmin to remove
 	 */
 	public void clearConfigAdmin(ConfigurationAdmin configAdmin) {
 		this.configAdmin = null;
@@ -550,5 +596,4 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 		return repositoryInstance.getRepositoryFolder().getAbsolutePath();
 	}
 
-	
 }
