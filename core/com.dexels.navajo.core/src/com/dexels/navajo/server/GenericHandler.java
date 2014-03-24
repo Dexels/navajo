@@ -575,6 +575,7 @@ public class GenericHandler extends ServiceHandler {
 ////		 return ss;
 //	}
 
+	// THIS rpcName seems to have a tenant suffix
 	private CompiledScriptInterface loadOnDemand(BundleContext bundleContext, String rpcName,boolean force,String extension) throws Exception {
 		if(bundleContext==null) {
 			logger.debug("No OSGi context found");
@@ -595,7 +596,10 @@ public class GenericHandler extends ServiceHandler {
 			tenant = access.getInstance();
 		}
 		
-		CompiledScriptInterface sc = bc.getOnDemandScriptService(rpcName,tenant,tenantConfig.hasTenantScriptFile(rpcName,tenant,extension),force,extension);
+		
+		boolean hasTenantScriptFile = tenantConfig.hasTenantScriptFile(rpcName,tenant,extension);
+		String scriptName = hasTenantScriptFile?rpcName+"_"+tenant:rpcName;
+		CompiledScriptInterface sc = bc.getOnDemandScriptService(scriptName,rpcName,tenant,hasTenantScriptFile,force,extension);
 		// wait for it..
 		bundleContext.ungetService(ref);
 		return sc;

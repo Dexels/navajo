@@ -22,6 +22,8 @@ public class TipiVaadinGlobalInstance {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiVaadinGlobalInstance.class);
 	
+	private final String PROPERTY_HTTP_CONTEXT_ID = "httpContext.id";
+
 	public void activate(final Map<String,Object> settings, BundleContext bundleContext) {
 		String root = (String) settings.get("rootPath");
 		logger.info("========>  Activating");
@@ -61,6 +63,7 @@ public class TipiVaadinGlobalInstance {
 			final String alias, Servlet s) {
 		Dictionary<String, Object> vaadinRegistrationSettings = new Hashtable<String, Object>();
 		 vaadinRegistrationSettings.put("alias", alias);
+		 vaadinRegistrationSettings.put(PROPERTY_HTTP_CONTEXT_ID, "tipi");
 			return bundleContext.registerService(Servlet.class, s, vaadinRegistrationSettings);
 	}
 	public void deactivate() {

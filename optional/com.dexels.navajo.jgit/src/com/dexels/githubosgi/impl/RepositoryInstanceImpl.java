@@ -23,7 +23,7 @@ public abstract class RepositoryInstanceImpl implements RepositoryInstance {
 	private final Map<String,AppStoreOperation> operations = new HashMap<String, AppStoreOperation>();
 	private final Map<String,Map<String,Object>> operationSettings = new HashMap<String, Map<String,Object>>();
 	protected String type;
-	
+
 	private final static Logger logger = LoggerFactory
 			.getLogger(RepositoryInstanceImpl.class);
 	

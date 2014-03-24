@@ -2,7 +2,7 @@ Bundle-Name: Navajo Adapters
 Bundle-SymbolicName: com.dexels.navajo.adapters
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 2.0.3.qualifier
+Bundle-Version: 2.0.7.qualifier
 DynamicImport-Package: *
 Bundle-Activator: navajoadapters.Version
 Export-Package: com.dexels.navajo.adapter,
@@ -40,7 +40,6 @@ Export-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.datasource;uses:="javax.activation,com.dexels.navajo.document.types",
  com.dexels.navajo.http;uses:="com.dexels.navajo.document.types",
  com.dexels.navajo.jdbc;uses:="com.dexels.navajo.server,com.dexels.navajo.document.types,org.slf4j",
- com.dexels.navajo.tester;uses:="com.dexels.navajo.client,com.dexels.navajo.document",
  internal;uses:="com.dexels.navajo.serviceplugin,com.dexels.navajo.document",
  navajoadapters;uses:="org.osgi.framework,navajoextension",
  org.dexels.grus;version="1.0.0"

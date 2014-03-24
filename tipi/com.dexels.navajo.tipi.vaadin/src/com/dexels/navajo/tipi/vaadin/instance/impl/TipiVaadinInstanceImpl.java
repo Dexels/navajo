@@ -20,7 +20,8 @@ public class TipiVaadinInstanceImpl {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiVaadinInstanceImpl.class);
 	private ServiceRegistration<Servlet> tipiServlet;
-	
+	private final String PROPERTY_HTTP_CONTEXT_ID = "httpContext.id";
+
 	public void activate(final Map<String,Object> settings, BundleContext bundleContext) {
 		logger.info("Activating Tipi Instance: {}",settings);
 		final String profile = (String) settings.get("tipi.instance.profile");
@@ -56,6 +57,7 @@ public class TipiVaadinInstanceImpl {
 			final String alias, Servlet s) {
 		Dictionary<String, Object> vaadinRegistrationSettings = new Hashtable<String, Object>();
 		 vaadinRegistrationSettings.put("alias", alias);
+		 vaadinRegistrationSettings.put(PROPERTY_HTTP_CONTEXT_ID, "tipi");
 		 //vaadinRegistrationSettings.put("init.disable-xsrf-protection", "true");
 			return bundleContext.registerService(Servlet.class, s, vaadinRegistrationSettings);
 	}

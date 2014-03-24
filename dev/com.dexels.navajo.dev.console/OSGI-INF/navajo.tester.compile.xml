@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="navajo.tester.compile">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="false" name="navajo.tester.compile">
    <implementation class="com.dexels.navajo.dev.servlet.CompileServlet"/>
    <service>
       <provide interface="javax.servlet.Servlet"/>

@@ -7,5 +7,5 @@
    <service>
       <provide interface="javax.servlet.Servlet"/>
    </service>
-   <property name="httpContext.id" type="String" value="navajo.context"/>
+   <property name="httpContext.id" type="String" value="tipi"/>
 </scr:component>

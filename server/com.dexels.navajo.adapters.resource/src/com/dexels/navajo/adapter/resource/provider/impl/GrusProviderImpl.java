@@ -109,12 +109,13 @@ public class GrusProviderImpl implements GrusProvider {
 //		jdbc:oracle:thin:@odysseus:1521:SLTEST02
 		
 		Map<String,Object> settings = settingsMap.get(dataSourceInstance);
-		if(instance!=null && settings==null) {
-			logger.error("Error resolving datasource for instance: "+instance+" and name: "+name+" settings map: "+settingsMap+" defaultS");
-			throw new UserException(-1,"Error resolving datasource for instance: "+instance+" and name: "+name);
-		}
-		if(settings==null && instance==null) {
+//		if(instance!=null && settings==null) {
+//			logger.error("Error resolving datasource for instance: "+instance+" and name: "+name+" settings map: "+settingsMap+" defaultS");
+//			throw new UserException(-1,"Error resolving datasource for instance: "+instance+" and name: "+name);
+//		}
+		if(settings==null && dataSourceInstance==null) {
 			settings = defaultSettingsMap.get(name);
+			dataSourceInstance = defaultDataSources.get(name);
 		}
 		
 		int id = connectionCounter.getAndIncrement();

@@ -33,7 +33,7 @@ public class CheckCommand extends ConsoleCommand {
 		final String extension = ".xml";
 		Date installed = bundleCreator.getBundleInstallationDate(script,tenant,extension);
 		Date modified = bundleCreator.getScriptModificationDate(script,tenant,extension);
-		Date compiled = bundleCreator.getCompiledModificationDate(script,tenant,extension);
+		Date compiled = bundleCreator.getCompiledModificationDate(script,extension);
 		System.out.println("Modified at: "+modified);
 		System.out.println("Compiled at: "+compiled);
 		System.out.println("Installed at: "+installed);

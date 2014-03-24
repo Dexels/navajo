@@ -40,7 +40,7 @@ public interface NavajoIOConfig {
 	 * @return
 	 * @throws FileNotFoundException 
 	 */
-	public Date getScriptModificationDate(String scriptPath, String tenant,String extension) throws FileNotFoundException;
+	public Date getScriptModificationDate(String rpcName, String tenant,String extension) throws FileNotFoundException;
 
 	public File getApplicableScriptFile(String rpcName, String tenant, String extension) throws FileNotFoundException;
 	public File getApplicableBundleForScript(String rpcName, String tenant, String extension) ;
@@ -57,6 +57,9 @@ public interface NavajoIOConfig {
 	@Deprecated
 	public File getJarFolder();
 
+	/**
+	 * Name does not include tenant suffix
+	 */
 	public boolean hasTenantScriptFile(String rpcName, String tenant, String extension);
 
 

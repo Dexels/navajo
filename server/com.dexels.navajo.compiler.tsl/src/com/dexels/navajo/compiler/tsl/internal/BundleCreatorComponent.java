@@ -101,24 +101,21 @@ public class BundleCreatorComponent implements BundleCreator {
 		String formatted = df.format(d);
 		return formatted;
 	}
-
+/**
+ * scriptName includes the _TENANT part
+ */
 	@Override
 	public void createBundle(String scriptName, Date compilationDate,
 			String scriptExtension, List<String> failures,
 			List<String> success, List<String> skipped, boolean force,
-			boolean keepIntermediate, String tenant) throws Exception {
+			boolean keepIntermediate) throws Exception {
 		// TODO does scriptExtension always include the dot?
 		if(!scriptExtension.startsWith(".")) {
 			throw new IllegalAccessError("SCript extension did not start with a dot!");
 		}
 		String script = scriptName.replaceAll("\\.", "/");
-
-		int scoreIndex = scriptName.lastIndexOf("_");
-		if(scoreIndex>=0) {
-			tenant = scriptName.substring(scoreIndex+1, scriptName.length());
-//			scriptName = scriptName.substring(0,scoreIndex);
-		}
-
+		final String tenant = tenantFromScriptPath(scriptName);
+		final String rpcName = rpcNameFromScriptPath(scriptName);
 		
 		File scriptFolder = new File(navajoIOConfig.getScriptPath());
 		File f = new File(scriptFolder, script);
@@ -129,7 +126,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		final String formatCompilationDate = formatCompilationDate(compilationDate);
 		if (isDirectory(script, scriptFolder, f) ) {
 			compileAllIn(f, compilationDate, failures, success, skipped, force,
-					keepIntermediate,tenant,scriptExtension);
+					keepIntermediate,scriptExtension);
 		} else {
 			File scriptFile = navajoIOConfig.getApplicableScriptFile(script, tenant,scriptExtension);
 			boolean hasTenantSpecificFile = navajoIOConfig.hasTenantScriptFile(script, tenant,scriptExtension);
@@ -140,7 +137,7 @@ public class BundleCreatorComponent implements BundleCreator {
 						+ " full path: " + scriptFile.getAbsolutePath());
 				return;
 			}
-			Date compiled = getCompiledModificationDate(script,tenant,scriptExtension);
+			Date compiled = getCompiledModificationDate(scriptName,scriptExtension);
 			Date modified = getScriptModificationDate(script,tenant,scriptExtension);
 			if (!force && compiled != null && compiled.after(modified)) {
 				// logger.debug("Skipping up-to-date script: "+scriptFile.getAbsolutePath());
@@ -175,7 +172,7 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	private void compileAllIn(File baseDir, Date compileDate,
 			List<String> failures, List<String> success, List<String> skipped,
-			boolean force, boolean keepIntermediate, String tenant, String extension) throws Exception {
+			boolean force, boolean keepIntermediate, String extension) throws Exception {
 		File scriptPath = new File(navajoIOConfig.getScriptPath());
 		
 		Iterator<File> it = FileUtils.iterateFiles(baseDir,
@@ -190,7 +187,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			String withoutEx = relative.substring(0, relative.lastIndexOf('.'));
 			try {
 				createBundle(withoutEx, compileDate, extension, failures,
-						success, skipped, force, keepIntermediate,tenant);
+						success, skipped, force, keepIntermediate);
 			} catch (Exception e) {
 				logger.error("Error compiling script: " + relative, e);
 				failures.add("Error compiling script: " + relative);
@@ -200,20 +197,21 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	@Override
-	public void installBundles(String scriptPath,String tenant, List<String> failures,
+	public void installBundles(String scriptPath, List<String> failures,
 			List<String> success, List<String> skipped, boolean force, String extension)
 			throws Exception {
 		// final String extension = "jar";
 		File outputFolder = new File(navajoIOConfig.getCompiledScriptPath());
 		File f = new File(outputFolder, scriptPath);
+		String tenant = tenantFromScriptPath(scriptPath);
 		File jarFile = getScriptBundleJar(scriptPath,tenant,".xml");
 		// new File(outputFolder,scriptPath+"."+extension);
 
 		if (jarFile!=null && jarFile.exists()) {
-			installBundle(scriptPath,tenant, failures, success, skipped, force,extension);
+			installBundle(scriptPath, failures, success, skipped, force,extension);
 		} else {
 			if (f.isDirectory()) {
-				installBundles(tenant,f, failures, success, skipped, force,extension);
+				installBundles(f, failures, success, skipped, force,extension);
 			} else {
 				logger.error("Jar not found: " + scriptPath + " full path: "
 						+ jarFile);
@@ -223,7 +221,31 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	}
 
-	private void installBundles(String tenant, File baseDir, List<String> failures,
+	private String tenantFromScriptPath(String scriptPath) {
+		int scoreIndex = scriptPath.lastIndexOf("_");
+		if(scoreIndex>=0) {
+			return scriptPath.substring(scoreIndex+1, scriptPath.length());
+		} else {
+			return null;
+		}
+	}
+	private String rpcNameFromScriptPath(String scriptPath) {
+		int scoreIndex = scriptPath.lastIndexOf("_");
+		if(scoreIndex>=0) {
+			return scriptPath.substring(0,scoreIndex);
+		} else {
+			return scriptPath;
+		}
+	}
+	
+	private String scriptPathFromRpcNameAndTenant(String rpcName, String tenant) {
+		if(tenant==null) {
+			return rpcName;
+		}
+		return rpcName+"_"+tenant;
+	}
+
+	private void installBundles(File baseDir, List<String> failures,
 			List<String> success, List<String> skipped, boolean force,String scriptExtension)
 			throws Exception {
 		final String extension = "jar";
@@ -239,16 +261,16 @@ public class BundleCreatorComponent implements BundleCreator {
 			}
 			// logger.info("File: "+relative);
 			String withoutEx = relative.substring(0, relative.lastIndexOf('.'));
-			installBundle(withoutEx, tenant,failures, success, skipped, force,scriptExtension);
+			installBundle(withoutEx,failures, success, skipped, force,scriptExtension);
 
 		}
 	}
 
 	@Override
-	public void installBundle(String scriptPath, String tenant, List<String> failures,
+	public void installBundle(String scriptPath, List<String> failures,
 			List<String> success, List<String> skipped, boolean force,String extension) {
 		try {
-			Bundle b = doInstall(scriptPath,tenant, force,extension);
+			Bundle b = doInstall(scriptPath, force,extension);
 			if (b == null) {
 				skipped.add(scriptPath);
 			} else {
@@ -266,9 +288,11 @@ public class BundleCreatorComponent implements BundleCreator {
 		}
 	}
 
-	private Bundle doInstall(String scriptPath, String tenant, boolean force,String extension)
+	private Bundle doInstall(String scriptPath, boolean force,String extension)
 			throws BundleException, FileNotFoundException, MalformedURLException {
-		File bundleFile = getScriptBundleJar(scriptPath,tenant,extension);
+		String tenant = tenantFromScriptPath(scriptPath);
+		String rpcName = rpcNameFromScriptPath(scriptPath);
+		File bundleFile = getScriptBundleJar(rpcName,tenant,extension);
 		final String uri = bundleFile.toURI().toURL().toString(); // SCRIPTPROTOCOL + scriptPath;
 		Bundle previous = bundleContext.getBundle(uri);
 		if (previous != null) {
@@ -353,7 +377,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		FileUtils.copyFile(manifestFile, metainfManifest);
 		FileUtils.copyFile(dsFile, osgiinfScript);
 //		final File jarFile = new File(outB, scriptPath + ".jar");
-		final File jarFile = navajoIOConfig.getApplicableBundleForScript(scriptPath, tenant,extension);
+		final File jarFile = navajoIOConfig.getApplicableBundleForScript(rpcNameFromScriptPath(scriptPath),tenantFromScriptPath(scriptPath),extension);
 		
 		
 		addFolderToJar(bundleDir, null, jarFile, bundleDir.getAbsolutePath()+ "/");
@@ -423,8 +447,11 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	@Override
-	public Date getBundleInstallationDate(String scriptPath,String tenant, String extension) {
-		File bundleFile = navajoIOConfig.getApplicableBundleForScript(scriptPath, tenant, extension);
+	/**
+	 * rpcName does not include tenant suffix
+	 */
+	public Date getBundleInstallationDate(String rpcName,String tenant, String extension) {
+		File bundleFile = navajoIOConfig.getApplicableBundleForScript(rpcName, tenant, extension);
 		URL u;
 		try {
 			u = bundleFile.toURI().toURL();
@@ -444,15 +471,15 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 	@Override
-	public Date getScriptModificationDate(String scriptPath, String tenant,String extension) throws FileNotFoundException {
-		return navajoIOConfig.getScriptModificationDate(scriptPath, tenant,extension);
+	public Date getScriptModificationDate(String rpcName, String tenant,String extension) throws FileNotFoundException {
+		return navajoIOConfig.getScriptModificationDate(rpcName, tenant,extension);
 	}
 
 	
 	@Override
-	public Date getCompiledModificationDate(String scriptPath, String tenant,String extension) {
+	public Date getCompiledModificationDate(String scriptPath, String extension) {
 		String scriptName = scriptPath.replaceAll("\\.", "/");
-		File jarFile = navajoIOConfig.getApplicableBundleForScript(scriptName,tenant,extension);
+		File jarFile = navajoIOConfig.getApplicableBundleForScript(rpcNameFromScriptPath(scriptName),tenantFromScriptPath(scriptPath),extension);
 //		public File getApplicableBundleForScript(String rpcName, String tenant) throws FileNotFoundException;
 
 		if (jarFile==null || !jarFile.exists()) {
@@ -461,8 +488,8 @@ public class BundleCreatorComponent implements BundleCreator {
 		return new Date(jarFile.lastModified());
 	}
 
-	private File getScriptBundleJar(String script, String tenant,String extension) {
-		return navajoIOConfig.getApplicableBundleForScript(script, tenant,extension);
+	private File getScriptBundleJar(String rpcName,String tenant, String extension) {
+		return navajoIOConfig.getApplicableBundleForScript(rpcName,tenant,extension);
 	}
 
 	private boolean checkForRecompile(String rpcName, String tenant, boolean tenantQualified,String extension) throws FileNotFoundException {
@@ -477,7 +504,7 @@ public class BundleCreatorComponent implements BundleCreator {
 			if (install.before(mod)) {
 				logger.debug("Install: " + install);
 				logger.debug("mod: " + mod);
-				logger.debug("comp: ", getCompiledModificationDate(rpcName,tenant,extension));
+				logger.debug("comp: ", getCompiledModificationDate(scriptPathFromRpcNameAndTenant(rpcName, tenant),extension));
 				logger.debug("Obsolete script found. Needs recompile.");
 				return true;
 			}
@@ -485,10 +512,10 @@ public class BundleCreatorComponent implements BundleCreator {
 		return false;
 	}
 
-	private boolean needsCompilation(String scriptPath,String tenant,String extension)
+	private boolean needsCompilation(String scriptPath,String extension)
 			throws FileNotFoundException {
-		Date compiled = getCompiledModificationDate(scriptPath,tenant,extension);
-		Date script = getScriptModificationDate(scriptPath,tenant,extension);
+		Date compiled = getCompiledModificationDate(scriptPath,extension);
+		Date script = getScriptModificationDate(rpcNameFromScriptPath(scriptPath),tenantFromScriptPath(scriptPath),extension);
 		if (script == null) {
 			throw new FileNotFoundException("Script " + scriptPath
 					+ " is missing!");
@@ -540,9 +567,22 @@ public class BundleCreatorComponent implements BundleCreator {
 
 	}
 
+	/**
+	 * rpcName does not include tenant suffix
+	 */
 	@Override
-	public CompiledScriptInterface getOnDemandScriptService(String rpcName, String tenant, boolean tenantQualified, boolean force, String extension)
+	public CompiledScriptInterface getOnDemandScriptService(String scriptName, String rpcName, String tenant, boolean tenantQualified, boolean force, String extension)
 			throws Exception {
+		if(rpcName.indexOf("/")!=-1) {
+			String bareScript = rpcName.substring(scriptName.lastIndexOf("/")+1);
+			if(bareScript.indexOf('_')!=-1) {
+				throw new IllegalArgumentException("rpcName should not have a tenant suffix: "+rpcName+" scriptName: "+scriptName +" bare: "+bareScript);
+			}
+		} else {
+			if(rpcName.indexOf('_')!=-1) {
+				throw new IllegalArgumentException("rpcName should not have a tenant suffix: "+rpcName+" scriptName: "+scriptName);
+			}
+		}
 		CompiledScriptInterface sc = getCompiledScript(rpcName,tenant,extension);
 
 		boolean forceReinstall = false;
@@ -556,16 +596,16 @@ public class BundleCreatorComponent implements BundleCreator {
 		List<String> success = new ArrayList<String>();
 		List<String> skipped = new ArrayList<String>();
 		// so no resolution
-		if (needsCompilation(rpcName,tenant,extension) || force) {
-			createBundle(rpcName, new Date(), ".xml", failures, success,
-					skipped, force, false,tenant);
+		if (needsCompilation(scriptName,extension) || force) {
+			createBundle(scriptName, new Date(), ".xml", failures, success,
+					skipped, force, false);
 			forceReinstall = true;
 			// createBundleJar(rpcName, formatCompilationDate(new Date()),
 			// false);
 		}
 
 		// File bundleJar = getScriptBundleJar(rpcName);
-		installBundle(rpcName, tenant,failures, success, skipped, forceReinstall,extension);
+		installBundle(scriptName,failures, success, skipped, forceReinstall,extension);
 
 		logger.debug("On demand installation finished, waiting for service...");
 //		CompiledScript cs = waitForService(rpcName,tenant);

@@ -44,7 +44,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 	 * @see com.dexels.navajo.compiler.tsl.internal.BundleQueue#enqueueScript(java.lang.String)
 	 */
 	@Override
-	public void enqueueScript(final String script, final String extension, final String tenant) {
+	public void enqueueScript(final String script, final String extension) {
 		executor.execute(new Runnable(){
 
 			@Override
@@ -54,7 +54,7 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 				List<String> skipped = new ArrayList<String>();
 				logger.info("Eagerly compiling: "+script);
 				try {
-					bundleCreator.createBundle(script, new Date(), extension, failures, success, skipped, false, false, tenant);
+					bundleCreator.createBundle(script, new Date(), extension, failures, success, skipped, false, false);
 					if(!skipped.isEmpty()) {
 						logger.info("Script compilation skipped: "+script);
 					}
@@ -99,16 +99,14 @@ public class BundleQueueComponent implements EventHandler, BundleQueue {
 		}
 		String scriptName = stripped.substring(0,dotIndex);
 		String extension = stripped.substring(dotIndex,stripped.length());
-		int scoreIndex = scriptName.lastIndexOf("_");
-		String tenant = null;
-		if(scoreIndex>=0) {
-			tenant = scriptName.substring(scoreIndex+1, scriptName.length());
-//			scriptName = scriptName.substring(0,scoreIndex);
-		}
+
 		logger.debug("scriptName: "+scriptName);
 		logger.debug("extension: "+extension);
-		logger.debug("tenant: "+tenant);
-		enqueueScript(scriptName,extension,tenant);
+		if(".rptdesign".equals(extension)) {
+			logger.info("Ignoring report "+scriptName);
+			return;
+		}
+		enqueueScript(scriptName,extension);
 	}
 
 	public static void main(String[] args) {

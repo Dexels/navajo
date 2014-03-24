@@ -99,7 +99,6 @@ public class CallbackServlet extends WebSocketServlet implements Runnable {
 			try {
 				Thread.sleep(60000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 		}
 	}
