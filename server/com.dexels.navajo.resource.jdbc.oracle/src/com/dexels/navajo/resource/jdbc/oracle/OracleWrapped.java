@@ -31,7 +31,7 @@ public class OracleWrapped implements DataSource {
 	
 	public void activate(Map<String,Object> settings) {
 		data = new OracleJDBCDataSourceService();
-		String name = (String) settings.get("name");
+//		String name = (String) settings.get("name");
 		try {
 			Properties p = new Properties();
 			for (Entry<String,Object> element : settings.entrySet()) {
