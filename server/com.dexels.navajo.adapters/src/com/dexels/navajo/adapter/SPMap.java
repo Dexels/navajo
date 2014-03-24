@@ -164,7 +164,7 @@ public void load(Access access) throws UserException, MappableException {
     										  param, 
     										  i, 
     										  this,
-    										  myConnectionBroker.getDbIdentifier(), 
+    										  this.getDbIdentifier(), 
     										  this.isLegacyMode,
     										  this.debug, 
     										  this.myAccess);
