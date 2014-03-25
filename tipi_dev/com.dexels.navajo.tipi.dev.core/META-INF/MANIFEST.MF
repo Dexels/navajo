@@ -6,6 +6,7 @@ Bundle-Version: 1.1.21.qualifier
 Export-Package: com.dexels.navajo.tipi.dev.core.extensionmanager;version="1.0.0",
  com.dexels.navajo.tipi.dev.core.projectbuilder;version="1.0.0",
  com.dexels.navajo.tipi.dev.core.projectbuilder.impl;version="1.0.0",
+ com.dexels.navajo.tipi.dev.core.sign;version="1.0.0",
  com.dexels.navajo.tipi.dev.core.util;version="1.0.0",
  com.dexels.navajo.tipi.dev.core.util.zip;version="1.0.0"
 Bundle-Vendor: Dexels

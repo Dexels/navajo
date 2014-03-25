@@ -84,7 +84,10 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 			this.properties = props;
 			this.bundleContext = bundleContext;
 			this.persistenceManager = new PersistenceManagerImpl();
-			this.persistenceManager.setSharedStore(getSharedStore());
+			if(bundleContext==null) {
+				// just for non-osgi, to be sure
+				this.persistenceManager.setSharedStore(getSharedStore());
+			}
 		} catch (Throwable e) {
 			logger.error("activation error",bundleContext);
 		}
@@ -429,7 +432,6 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 
 	@Override
 	public SharedStoreInterface getSharedStore() {
-		logger.warn("This method is not implemented for OSGi");
 		throw new NoSuchMethodError("Method not supported by OSGi");
 	}
 

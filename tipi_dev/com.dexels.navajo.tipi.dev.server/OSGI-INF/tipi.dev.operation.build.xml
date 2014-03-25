@@ -19,4 +19,5 @@
    <property name="event.topics" type="String">
 		repository/change
    </property>
+   <reference bind="setSignComponent" cardinality="1..1" interface="com.dexels.navajo.tipi.dev.core.sign.SignComponent" name="SignComponent" policy="dynamic" unbind="clearSignComponent"/>
 </scr:component>

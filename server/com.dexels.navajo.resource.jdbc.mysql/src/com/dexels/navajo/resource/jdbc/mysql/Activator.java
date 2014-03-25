@@ -20,9 +20,9 @@ public class Activator implements BundleActivator {
 	 */
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
-		MySQLJDBCDataSourceService factory = new MySQLJDBCDataSourceService();
-        factory.start();
-        managedFactory = new JdbcManagedResourceFactory(bundleContext, factory,  "navajo.resource.mysql",  "Navajo MySQL Resource Driver");
+//		MySQLJDBCDataSourceService factory = new MySQLJDBCDataSourceService();
+//        factory.start();
+//        managedFactory = new JdbcManagedResourceFactory(bundleContext, factory,  "navajo.resource.mysql",  "Navajo MySQL Resource Driver");
 	}
 
 	/*
@@ -31,8 +31,8 @@ public class Activator implements BundleActivator {
 	 */
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
-		logger.info("Stopping MySQL");
-		managedFactory.close();
+//		logger.info("Stopping MySQL");
+//		managedFactory.close();
 	}
 
 

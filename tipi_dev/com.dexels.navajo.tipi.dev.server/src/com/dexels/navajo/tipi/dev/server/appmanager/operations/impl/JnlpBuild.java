@@ -4,11 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,10 +22,9 @@ import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.repository.api.AppStoreOperation;
 import com.dexels.navajo.repository.api.RepositoryInstance;
-import com.dexels.navajo.tipi.dev.ant.AntRun;
-import com.dexels.navajo.tipi.dev.ant.LoggingOutputStream;
 import com.dexels.navajo.tipi.dev.core.projectbuilder.Dependency;
 import com.dexels.navajo.tipi.dev.core.projectbuilder.LocalJnlpBuilder;
+import com.dexels.navajo.tipi.dev.core.sign.SignComponent;
 import com.dexels.navajo.tipi.dev.server.appmanager.impl.RepositoryInstanceWrapper;
 import com.dexels.navajo.tipi.dev.server.appmanager.impl.UnsignJarTask;
 
@@ -38,6 +34,8 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation,EventH
 	private static final long serialVersionUID = -325075211700621696L;
 	private final static Logger logger = LoggerFactory
 			.getLogger(JnlpBuild.class);
+	
+	private SignComponent signComponent;
 	
 	public void build(String name) throws IOException {
 		RepositoryInstance as = applications.get(name);
@@ -65,6 +63,13 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation,EventH
 		
 	}
 	
+	public void setSignComponent(SignComponent signComponent) {
+		this.signComponent = signComponent;
+	}
+	
+	public void clearSignComponent(SignComponent signComponent) {
+		this.signComponent = null;
+	}
 	
 	public void build() {
 		for (RepositoryInstance a: applications.values()) {
@@ -190,41 +195,44 @@ public class JnlpBuild extends BaseOperation implements AppStoreOperation,EventH
 	}
 
 	private void signJnlp(File jnlpFile,String profile, String alias, String storepass, File keystore, File baseDir) {
-		Map<String,String> props = new HashMap<String, String>();
-		try {
-			Map<String,Class<?>> tasks = new HashMap<String,Class<?>>();
-			tasks.put("signjar", org.apache.tools.ant.taskdefs.SignJar.class);
-			props.put("storepass",storepass);
-			props.put("alias", alias);
-			props.put("profile", profile);
-			props.put("keystore",keystore.getAbsolutePath());
-			props.put("jnlpFile", jnlpFile.getAbsolutePath());
-			Logger antlogger = LoggerFactory.getLogger("tipi.appstore.ant");
-			PrintStream los = new PrintStream( new LoggingOutputStream(antlogger));
-			AntRun.callAnt(JnlpBuild.class.getClassLoader().getResourceAsStream("ant/signjnlp.xml"), baseDir, props,tasks,null,los);
-		} catch (IOException e) {
-			logger.error("Error: ", e);
-		}
+		signComponent.signJnlp(jnlpFile, profile, alias, storepass, keystore, baseDir);
+//		Map<String,String> props = new HashMap<String, String>();
+//		try {
+//			Map<String,Class<?>> tasks = new HashMap<String,Class<?>>();
+//			tasks.put("signjar", org.apache.tools.ant.taskdefs.SignJar.class);
+//			props.put("storepass",storepass);
+//			props.put("alias", alias);
+//			props.put("profile", profile);
+//			props.put("keystore",keystore.getAbsolutePath());
+//			props.put("jnlpFile", jnlpFile.getAbsolutePath());
+//			Logger antlogger = LoggerFactory.getLogger("tipi.appstore.ant");
+//			PrintStream los = new PrintStream( new LoggingOutputStream(antlogger));
+//			AntRun.callAnt(JnlpBuild.class.getClassLoader().getResourceAsStream("ant/signjnlp.xml"), baseDir, props,tasks,null,los);
+//		} catch (IOException e) {
+//			logger.error("Error: ", e);
+//		}
 	}
 
 	private void signdependency(Dependency d, String alias, String storepass, File keystore, File repo) {
-		Map<String,String> props = new HashMap<String, String>();
-		try {
-			Map<String,Class<?>> tasks = new HashMap<String,Class<?>>();
-			tasks.put("signjar", org.apache.tools.ant.taskdefs.SignJar.class);
-			props.put("storepass",storepass);
-			props.put("alias", alias);
-			props.put("keystore",keystore.getAbsolutePath());
-			File cachedFile = d.getFilePathForDependency(repo);
-			props.put("jarfile", cachedFile.getAbsolutePath());
-			Logger antlogger = LoggerFactory.getLogger("tipi.appstore.ant");
-			PrintStream los = new PrintStream( new LoggingOutputStream(antlogger));
-			AntRun.callAnt(JnlpBuild.class.getClassLoader().getResourceAsStream("ant/signsingle.xml"), repo, props,tasks,null,los);
-		} catch (IOException e) {
-			logger.error("Error: ", e);
-		}
+		signComponent.signdependency(d, alias, storepass, keystore, repo);
+//		Map<String,String> props = new HashMap<String, String>();
+//		try {
+//			Map<String,Class<?>> tasks = new HashMap<String,Class<?>>();
+//			tasks.put("signjar", org.apache.tools.ant.taskdefs.SignJar.class);
+//			props.put("storepass",storepass);
+//			props.put("alias", alias);
+//			props.put("keystore",keystore.getAbsolutePath());
+//			File cachedFile = d.getFilePathForDependency(repo);
+//			props.put("jarfile", cachedFile.getAbsolutePath());
+//			Logger antlogger = LoggerFactory.getLogger("tipi.appstore.ant");
+//			PrintStream los = new PrintStream( new LoggingOutputStream(antlogger));
+//			AntRun.callAnt(JnlpBuild.class.getClassLoader().getResourceAsStream("ant/signsingle.xml"), repo, props,tasks,null,los);
+//		} catch (IOException e) {
+//			logger.error("Error: ", e);
+//		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void handleEvent(Event event) {
 		RepositoryInstance ri = (RepositoryInstance)event.getProperty("repository");

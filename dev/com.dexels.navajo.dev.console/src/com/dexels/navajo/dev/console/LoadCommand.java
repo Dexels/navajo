@@ -6,14 +6,17 @@ import java.util.List;
 
 import org.apache.felix.service.command.Descriptor;
 import org.apache.felix.service.command.Parameter;
+import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.commands.Option;
+import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.compiler.BundleCreator;
 
 @Command(scope = "navajo", name = "load", description="Loads scripts")
-public class LoadCommand {
+public class LoadCommand extends OsgiCommandSupport {
 	
 	
 	private final static Logger logger = LoggerFactory
@@ -21,6 +24,16 @@ public class LoadCommand {
 	
 	private BundleCreator bundleCreator = null;
 
+    @Argument(index = 0, name = "arg", 
+            description = "The command argument", 
+            required = false, multiValued = false)
+    String script = null;
+	
+    @Option(name = "-f", aliases = {"--force"}, description = "Compile even if the script seems unchanged", required = false, multiValued = false)
+         boolean force;
+
+    
+	
 	public void setBundleCreator(BundleCreator bundleCreator) {
 		this.bundleCreator = bundleCreator;
 	}
@@ -33,11 +46,18 @@ public class LoadCommand {
 	}
 
 	@Descriptor(value = "install a script with a certain path.") 
-	public void load(@Descriptor(value = "Force installation if the script is already installed") @Parameter(names = { "-f", "--force" }, presentValue = "true", absentValue = "false") boolean force,@Descriptor(value = "The path, prefix, or '/' to install everything")  String script) {
+	public void load(@Descriptor(value = "Force installation if the script is already installed") @Parameter(names = { "-f", "--force" }, presentValue = "true", absentValue = "false") boolean force,@Descriptor(value = "The path, prefix, or '/' to install everything")  String script) throws Exception {
 		loadbundle(force, script);
 	}
 	@Descriptor(value = "install a script with a certain path.") 
-	public void loadbundle(@Descriptor(value = "Force installation if the script is already installed") @Parameter(names = { "-f", "--force" }, presentValue = "true", absentValue = "false") boolean force,@Descriptor(value = "The path, prefix, or '/' to install everything")  String script) {
+	public void loadbundle(@Descriptor(value = "Force installation if the script is already installed") @Parameter(names = { "-f", "--force" }, presentValue = "true", absentValue = "false") boolean force,@Descriptor(value = "The path, prefix, or '/' to install everything")  String script) throws Exception {
+		this.force = force;
+		this.script = script;
+		doExecute();
+	}
+
+	@Override
+	protected Object doExecute() throws Exception {
 		try {
 			
 //			, @Descriptor(value ="The current tenant to assume, will use 'default' if unspecified") @Parameter(absentValue="default", names = {"-t","--tenant"}) String tenant
@@ -62,5 +82,6 @@ public class LoadCommand {
 		} catch (Throwable e) {
 			logger.error("Error: ", e);
 		}
+		return null;
 	}
 }

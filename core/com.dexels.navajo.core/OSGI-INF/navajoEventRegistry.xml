@@ -4,4 +4,5 @@
    <service>
       <provide interface="com.dexels.navajo.events.NavajoEventRegistry"/>
    </service>
+   <property name="jmx.objectname" type="String" value="Navajo Event Registry"/>
 </scr:component>
