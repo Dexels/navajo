@@ -1,7 +1,12 @@
 package com.dexels.navajo.tipi.instance.impl;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,10 +20,28 @@ public class RepositoryPathProviderImpl implements InstancePathProvider {
 			.getLogger(RepositoryPathProviderImpl.class);
 	
 	private RepositoryInstance repositoryInstance;
+
+	private ConfigurationAdmin configAdmin;
+
+	private Configuration configuration;
 	
 	public RepositoryPathProviderImpl() {
 		
 	}
+	
+
+	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
+		this.configAdmin = configAdmin;
+	}
+
+	/**
+	 * @param configAdmin the configAdmin to remove 
+	 */
+	public void clearConfigAdmin(ConfigurationAdmin configAdmin) {
+		this.configAdmin = null;
+	}
+	
+	
 	public void setRepositoryInstance(RepositoryInstance ri) {
 		this.repositoryInstance = ri;
 	}
@@ -28,11 +51,31 @@ public class RepositoryPathProviderImpl implements InstancePathProvider {
 	}
 
 	public void activate() {
-		logger.info("Activate repo");
+		logger.debug("Activate repo");
+		File instancePath = getInstancePath();
+		File etc = new File(instancePath,"etc");
+		if(etc.exists()) {
+			try {
+				configuration = configAdmin.createFactoryConfiguration("org.apache.felix.fileinstall",null);
+				Dictionary<String,Object> d = new Hashtable<String,Object>();
+				d.put("felix.fileinstall.dir", etc.getAbsolutePath());
+				configuration.update(d);
+			} catch (IOException e) {
+				logger.error("Error: ", e);
+			}
+			
+		}
 	}
 	
 	public void deactivate() {
-		logger.info("Deactivate repo");
+		logger.debug("Deactivate repo");
+		if(configuration!=null) {
+			try {
+				configuration.delete();
+			} catch (IOException e) {
+				logger.error("Error: ", e);
+			}
+		}
 	}
 	
 	@Override

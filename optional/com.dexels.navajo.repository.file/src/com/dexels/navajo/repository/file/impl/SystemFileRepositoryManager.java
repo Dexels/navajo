@@ -42,7 +42,9 @@ public class SystemFileRepositoryManager {
 		}
 		Configuration c = createOrReuse("navajo.repository."+type, "(repository.name=system.managed.repository)");
 		Dictionary<String,Object> properties = new Hashtable<String,Object>();
+		// I think this one can be removed:
 		properties.put("repository.type", type);
+		properties.put("type", type);
 		properties.put("repository.name", repositoryName);
 		properties.put("repository.folder", path);
 		properties.put("repo", "file");
@@ -79,7 +81,6 @@ public class SystemFileRepositoryManager {
 		
 	}
 	public void setConfigAdmin(ConfigurationAdmin configAdmin) {
-		System.err.println("setting configadmin");
 		this.configAdmin = configAdmin;
 	}
 
