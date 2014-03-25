@@ -30,7 +30,7 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 	
 	private EventAdmin eventAdmin = null;
 
-	private final Map<String,Object> settings = new HashMap<String, Object>();
+	protected final Map<String,Object> settings = new HashMap<String, Object>();
 	private final Map<String,AppStoreOperation> operations = new HashMap<String, AppStoreOperation>();
 	private RepositoryLayout repositoryLayout = null;
 	private final Map<String,Map<String,Object>> operationSettings = new HashMap<String, Map<String,Object>>();

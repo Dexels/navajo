@@ -16,23 +16,35 @@
         {{#each applications}} 
 		<div class="panel panel-primary application" style="margin:30px 0px;">
 			<div class="panel-heading">
+				 {{#compare settings.repo 'git' operator='==='}}
 				<h2 class="panel-title"><a href="{{settings.httpUrl}}/tree/{{settings.branch}}">{{@key}} - {{settings.branch}}</a></h2>
+				{{/compare}}
+				 {{#compare settings.repo 'git' operator='!='}}
+				<h2 class="panel-title">{{@key}}</h2>
+				{{/compare}}
 			</div>
 			<div class="panel-body">
-				<p>Current version: <a href="{{settings.httpUrl}}/commit/{{settings.lastCommitVersion}}">{{settings.lastCommitVersion}}</a> </p>
-				<p>Message: {{settings.lastCommitMessage}}</p>
-				<p>Date: {{settings.lastCommitDate}}</p>
-				<p>Author: <a href="https://github.com/{{settings.lastCommitAuthor}}">{{settings.lastCommitAuthor}}</a></p>
-				<p>Cache tipi: <a href="/apps/{{@key}}/tipi/remotedigest.properties">properties</a>
-				<p>Cache resource: <a href="/apps/{{@key}}/resource/remotedigest.properties">properties</a>
-				<p>Xsd: <a href="/apps/{{@key}}/tipi/tipi.xsd">XSD</a>
-				<form>
-					{{#each profileStatus}}
-						<a href="../apps/{{../repositoryName}}/{{@key}}.jnlp" class="{{classForStatus this}}">{{@key}}</a>
-					{{/each}}
-				
-				</form>
+				 {{#compare settings.repo 'git'  operator='==='}}
+					<p>Current version: <a href="{{settings.httpUrl}}/commit/{{settings.lastCommitVersion}}">{{settings.lastCommitVersion}}</a> </p>
+					<p>Message: {{settings.lastCommitMessage}}</p>
+					<p>Date: {{settings.lastCommitDate}}</p>
+					<p>Author: <a href="https://github.com/{{settings.lastCommitAuthor}}">{{settings.lastCommitAuthor}}</a></p>
+				{{/compare}}
+				 {{#compare settings.type 'webstart' operator='==='}}
+					<p>Cache tipi: <a href="/apps/{{@key}}/tipi/remotedigest.properties">properties</a>
+					<p>Cache resource: <a href="/apps/{{@key}}/resource/remotedigest.properties">properties</a>
+					<p>Xsd: <a href="/apps/{{@key}}/tipi/tipi.xsd">XSD</a>
+					<form>
+						{{#each profileStatus}}
+							<a href="../apps/{{../repositoryName}}/{{@key}}.jnlp" class="{{classForStatus this}}">{{@key}}</a>
+						{{/each}}
+					
+					</form>
+				{{/compare}}
 			</div>
+			
+			{{#compare settings.type 'webstart' operator='==='}}
+			
 			<div class="panel-group" id="dependencies{{@key}}">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -78,7 +90,7 @@
 					</div>
 				</div>
 			<div>
-
+			{{/compare}}
 			<div class="panel-footer">
 				<div class="btn-group">
         {{#each operations}} 
@@ -133,6 +145,46 @@
 			}
 			return "btn btn-danger";
 		});
+		
+		Handlebars.registerHelper('equal', function(lvalue, rvalue, options) {
+		    if (arguments.length < 3)
+		        throw new Error("Handlebars Helper equal needs 2 parameters");
+		    if( lvalue!=rvalue ) {
+		        return options.inverse(this);
+		    } else {
+		        return options.fn(this);
+		    }
+			});
+			Handlebars.registerHelper('compare', function(lvalue, rvalue, options) {
+			
+			    if (arguments.length < 3)
+			        throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
+			
+			    operator = options.hash.operator || "==";
+			
+			    var operators = {
+			        '==':       function(l,r) { return l == r; },
+			        '===':      function(l,r) { return l === r; },
+			        '!=':       function(l,r) { return l != r; },
+			        '<':        function(l,r) { return l < r; },
+			        '>':        function(l,r) { return l > r; },
+			        '<=':       function(l,r) { return l <= r; },
+			        '>=':       function(l,r) { return l >= r; },
+			        'typeof':   function(l,r) { return typeof l == r; }
+			    }
+			
+			    if (!operators[operator])
+			        throw new Error("Handlerbars Helper 'compare' doesn't know the operator "+operator);
+			
+			    var result = operators[operator](lvalue,rvalue);
+			
+			    if( result ) {
+			        return options.fn(this);
+			    } else {
+			        return options.inverse(this);
+			    }
+			
+			});
 		function loadApplicationData() {
 
 			$.getJSON('../list', function(data) {

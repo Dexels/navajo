@@ -45,6 +45,7 @@ public class SystemFileRepositoryManager {
 		properties.put("repository.type", type);
 		properties.put("repository.name", repositoryName);
 		properties.put("repository.folder", path);
+		properties.put("repo", "file");
 		if(deployment!=null) {
 			properties.put("repository.deployment", deployment);
 		}

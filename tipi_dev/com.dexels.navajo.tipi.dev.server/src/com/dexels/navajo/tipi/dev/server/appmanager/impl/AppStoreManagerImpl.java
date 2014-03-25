@@ -72,6 +72,7 @@ public class AppStoreManagerImpl implements AppStoreManager {
 				authorize = auth;
 			}
 		} else {
+			// it's a string
 			authorize = false;
 		}
 	}
