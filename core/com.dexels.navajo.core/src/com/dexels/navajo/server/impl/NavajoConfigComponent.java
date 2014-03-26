@@ -49,10 +49,20 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 	private PersistenceManagerImpl persistenceManager;
 	private AsyncStore asyncStore;
 	private WorkerInterface integrityWorker;
+	private SharedStoreInterface sharedStore;
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoConfigComponent.class);
 	
 	public NavajoConfigComponent() {
+	}
+	
+	
+	public void setSharedStore(SharedStoreInterface sharedStore) {
+		this.sharedStore = sharedStore;
+	}
+	
+	public void clearSharedStore(SharedStoreInterface sharedShore) {
+		this.sharedStore = null;
 	}
 	
 	public void setIOConfig(NavajoIOConfig config) {
@@ -432,7 +442,7 @@ public class NavajoConfigComponent implements NavajoConfigInterface {
 
 	@Override
 	public SharedStoreInterface getSharedStore() {
-		throw new NoSuchMethodError("Method not supported by OSGi");
+		return sharedStore;
 	}
 
 	@Override
