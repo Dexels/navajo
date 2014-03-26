@@ -23,8 +23,6 @@ import java.util.Vector;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceEvent;
-import org.osgi.framework.ServiceListener;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
@@ -48,9 +46,9 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	
 	private Set<Configuration> ownedConfigurations = new HashSet<Configuration>();
 
-	private int modified = 0;
-	private int registered = 0;
-	private int unregistering = 0;
+//	private int modified = 0;
+//	private int registered = 0;
+//	private int unregistering = 0;
 	// private final Map<String,Set<String>> aliasesForDataSource = new
 	// HashMap<String, Set<String>>();
 	private final Set<String> resourcePids = new HashSet<String>();
@@ -70,32 +68,32 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 
 	public void activate(BundleContext context) {
 		// this.bundleContext = context;
-		if(context!=null) {
-			
-			context.addServiceListener(new ServiceListener() {
-				
-				@Override
-				public void serviceChanged(ServiceEvent se) {
-					switch (se.getType()) {
-					case ServiceEvent.MODIFIED:
-						System.err.println("service MODIFIED: "+se.getServiceReference());
-						modified++;
-						break;
-					case ServiceEvent.REGISTERED:
-						System.err.println("service REGISTERED: "+se.getServiceReference());
-						registered++;
-						break;
-					case ServiceEvent.UNREGISTERING:
-						System.err.println("service UNREGISTERING: "+se.getServiceReference());
-						unregistering++;
-						break;
-					default:
-						break;
-					}
-				    System.err.println("STATS: "+modified+" modified. "+registered+" registered. "+unregistering+" unregistering");
-				}
-			});
-		}
+//		if(context!=null) {
+//			
+//			context.addServiceListener(new ServiceListener() {
+//				
+//				@Override
+//				public void serviceChanged(ServiceEvent se) {
+//					switch (se.getType()) {
+//					case ServiceEvent.MODIFIED:
+//						System.err.println("service MODIFIED: "+se.getServiceReference());
+//						modified++;
+//						break;
+//					case ServiceEvent.REGISTERED:
+//						System.err.println("service REGISTERED: "+se.getServiceReference());
+//						registered++;
+//						break;
+//					case ServiceEvent.UNREGISTERING:
+//						System.err.println("service UNREGISTERING: "+se.getServiceReference());
+//						unregistering++;
+//						break;
+//					default:
+//						break;
+//					}
+//				    System.err.println("STATS: "+modified+" modified. "+registered+" registered. "+unregistering+" unregistering");
+//				}
+//			});
+//		}
 		try {
 			String deployment = repositoryInstance.getDeployment();
 			startInstanceFactory(repositoryInstance.getRepositoryFolder(),
