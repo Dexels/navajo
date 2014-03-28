@@ -80,7 +80,7 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.mysql/2.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.resource.jdbc.h2/1.1.0</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.tunnel/2.0.0</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.instance.factory/2.0.8</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.instance.factory/2.0.10</bundle>
 		<bundle dependency='true'>mvn:org.mongodb/mongo-java-driver/2.11.3</bundle>
 		<bundle dependency='true'>mvn:com.mysql/com.mysql.jdbc/5.1.18</bundle>
 		<bundle dependency='true'>mvn:com.h2database/h2/1.3.175</bundle>
