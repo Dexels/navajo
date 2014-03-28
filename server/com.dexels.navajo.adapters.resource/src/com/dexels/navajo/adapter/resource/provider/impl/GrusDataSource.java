@@ -30,9 +30,7 @@ public class GrusDataSource implements GrusConnection {
 		this.id = id;
 		this.grusProvider = provider;
 
-		String url = (String) settings.get("url");
 		String user = (String) settings.get("user");
-		String password = (String) settings.get("password");
 		final Object minObject = settings.get("min_connections");
 		int minConns = 1;
 		if(minObject!=null) {
