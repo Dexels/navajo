@@ -591,6 +591,9 @@ public class BundleCreatorComponent implements BundleCreator {
 			if (!force && !needsRecompile) {
 				return sc;
 			}
+			if(needsRecompile) {
+				forceReinstall = true;
+			}
 		}
 		List<String> failures = new ArrayList<String>();
 		List<String> success = new ArrayList<String>();
