@@ -63,6 +63,7 @@ public  class AbstractVersion extends BaseVersion implements BundleActivator {
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	public static void shutdownNavajoExtension(String name) {
 		  // This should be replaced by OSGi bundle management
 		  logger.warn("non-OSGi Extension shutdown of: "+name);
