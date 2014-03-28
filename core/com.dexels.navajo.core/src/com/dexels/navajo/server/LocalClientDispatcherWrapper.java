@@ -48,8 +48,12 @@ public class LocalClientDispatcherWrapper implements LocalClient {
 	public Navajo call(String instance, Navajo n) throws FatalException {
 		Header h = n.getHeader();
 		if (h != null) {
-				h.setRPCUser(user);
+			if(h.getRPCUser()==null) {
+				 h.setRPCUser(user);
+			}
+			if(h.getRPCPassword()==null) {
 				h.setRPCPassword(pass);
+			}
 		}
 		return dispatcherInterface.handle(n, instance, null, null);
 	}

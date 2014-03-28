@@ -150,7 +150,7 @@ public abstract class TestContextImpl extends BaseContextImpl {
 		final TableCommand table = new TableCommand("table");
 		addCommand(table);
 		ServiceCommand service = new TestServiceCommand();
-		service.setLocalClient(new LocalClient() {
+		service.addLocalClient(new LocalClient() {
 			
 			@Override
 			public boolean isSpecialWebservice(String name) {
@@ -188,7 +188,7 @@ public abstract class TestContextImpl extends BaseContextImpl {
 				return TestContextImpl.this.call(instance, n);
 			}
 
-		});
+		}, null);
 		addCommand(service);
 	}
 	
