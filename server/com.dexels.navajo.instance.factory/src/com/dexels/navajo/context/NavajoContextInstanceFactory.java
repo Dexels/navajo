@@ -39,7 +39,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 	private final static Logger logger = LoggerFactory
 			.getLogger(NavajoContextInstanceFactory.class);
 
-	private final boolean sharableResources = true;
+	private final boolean sharableResources = false;
 
 	// private BundleContext bundleContext;
 	private ConfigurationAdmin configAdmin;
