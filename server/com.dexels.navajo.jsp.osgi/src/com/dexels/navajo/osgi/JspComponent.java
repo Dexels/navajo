@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -33,7 +32,7 @@ public class JspComponent implements ServletContextListener {
 	private LocalClient localClient = null;
 
 	private final Map<String,LocalClient> localClients = new HashMap<String, LocalClient>();
-	private ServletContext servletContext;
+//	private ServletContext servletContext;
 	public WebContainer getWebContainer() {
 		return webContainer;
 	}
@@ -104,12 +103,12 @@ public class JspComponent implements ServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		logger.debug("Context destroyed.");
-		this.servletContext = null;
+//		this.servletContext = null;
 		}
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		this.servletContext = sce.getServletContext();
+//		this.servletContext = sce.getServletContext();
 		sce.getServletContext().setAttribute("navajoContext",
 				clientContext);
 		sce.getServletContext().setAttribute("localClient", localClient);

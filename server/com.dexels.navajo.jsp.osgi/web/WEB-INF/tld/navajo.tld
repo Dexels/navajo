@@ -50,7 +50,22 @@
       <tagclass>com.dexels.navajo.jsp.tags.InstanceTag</tagclass>
       <info>Sets the selectedInstance attribute of the session to the instance parameter</info>
    </tag>
-  
+       <tag>
+      <name>clientSetup</name>
+      <tagclass>com.dexels.navajo.jsp.tags.ClientSetupTag</tagclass>
+      <info>Sets the credentials into the session</info>
+      <attribute>
+         <name>username</name>
+         <required>true</required>
+	      <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>password</name>
+         <required>true</required>
+	      <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      
+   </tag>
    <tag>
       <name>service</name>
       <tagclass>com.dexels.navajo.jsp.tags.ServiceTag</tagclass>

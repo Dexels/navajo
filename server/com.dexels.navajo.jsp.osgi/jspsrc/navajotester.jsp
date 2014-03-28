@@ -16,6 +16,9 @@
 <jsp:setProperty property="installerContext" name="serverContext" value="${installerContext}"/>
 <jsp:setProperty property="pageContext" name="installerContext" value="${pageContext}"/>
 <nav:instance/>
+ <c:if test="${param['updateUser']!= null }">
+	<nav:clientSetup username="${param.setupUsername}" password="${param.setupPassword}"/>
+</c:if>
 <nav:postHandler/>
 <html>
 <head>
