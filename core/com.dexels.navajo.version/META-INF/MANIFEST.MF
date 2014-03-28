@@ -2,7 +2,7 @@ Bundle-Name: Navajo Version Control
 Bundle-SymbolicName: com.dexels.navajo.version
 Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.2.14
+Bundle-Version: 1.2.15.qualifier
 Bundle-Activator: com.dexels.navajo.version.Version
 Export-Package: com.dexels.navajo.version;version="1.1.0";uses:="org.osgi.framework,org.slf4j",
  navajo;version="1.1.0"
