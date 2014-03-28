@@ -19,6 +19,8 @@ public class SystemFileRepositoryManager {
 	
 	private final static Logger logger = LoggerFactory
 			.getLogger(SystemFileRepositoryManager.class);
+
+	private Configuration configuration;
 	
 	
 	public void activate(Map<String,Object> configuration) throws IOException {
@@ -56,27 +58,31 @@ public class SystemFileRepositoryManager {
 
 	protected Configuration createOrReuse(String pid, final String filter)
 			throws IOException {
-		Configuration cc = null;
+		configuration = null;
 		try {
 			Configuration[] c = configAdmin.listConfigurations(filter);
 			if(c!=null && c.length>1) {
 				logger.warn("Multiple configurations found for filter: {}", filter);
 			}
 			if(c!=null && c.length>0) {
-				cc = c[0];
+				configuration = c[0];
 			}
 		} catch (InvalidSyntaxException e) {
 			logger.error("Error in filter: {}",filter,e);
 		}
-		if(cc==null) {
-			cc = configAdmin.createFactoryConfiguration(pid,null);
-//			resourcePids.add(cc.getPid());
+		if(configuration==null) {
+			configuration = configAdmin.createFactoryConfiguration(pid,null);
 		}
-		return cc;
+		return configuration;
 	}
 	
 	
 	public void deactivate() {
+		try {
+			configuration.delete();
+		} catch (IOException e) {
+			logger.error("Error: ", e);
+		}
 		
 		
 	}
