@@ -394,7 +394,7 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 					if (!parts[0].equals(deployment)) {
 						continue;
 					} else {
-						settings.put(next, prb.getObject(parts[1]));
+						settings.put(parts[1], prb.getObject(next));
 					}
 				} else {
 					settings.put(next, prb.getObject(next));
