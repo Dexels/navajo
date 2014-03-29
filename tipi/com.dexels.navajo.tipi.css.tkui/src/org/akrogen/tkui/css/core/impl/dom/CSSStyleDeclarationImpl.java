@@ -234,11 +234,8 @@ public class CSSStyleDeclarationImpl extends AbstractCSSNode implements
 		if (parentRule instanceof ExtendedCSSRule) {
 			ExtendedCSSRule rule = (ExtendedCSSRule) parentRule;
 			SelectorList selectorList = rule.getSelectorList();
-			int length = selectorList.getLength();
-			for (int i = 0; i < length; i++) {
-				Selector selector = selectorList.item(i);
-				return selector;
-			}
+			Selector selector = selectorList.item(0);
+			return selector;
 		}
 		return null;
 	}

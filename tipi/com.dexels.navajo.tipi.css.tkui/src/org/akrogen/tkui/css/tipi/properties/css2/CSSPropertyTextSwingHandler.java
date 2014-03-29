@@ -60,7 +60,6 @@ public class CSSPropertyTextSwingHandler extends AbstractCSSPropertyTextHandler 
 
 	public void applyCSSPropertyTextTransform(Object element, CSSValue value,
 			String pseudo, CSSEngine engine) throws Exception {
-		Component component = (Component) element;
 		String defaultText = null;// (String) component
 		// .getClientProperty(CSSSwingConstants.COMPONENT_TEXT_KEY);
 		// if (element instanceof JTextComponent) {
@@ -92,19 +91,19 @@ public class CSSPropertyTextSwingHandler extends AbstractCSSPropertyTextHandler 
 
 	public String retrieveCSSPropertyTextTransform(Object element,
 			CSSEngine engine) throws Exception {
-		String text = null;
-		Component component = (Component) element;
-		if (component instanceof JTextComponent) {
-			text = ((JTextComponent) element).getText();
-		} else {
-			if (component instanceof JLabel) {
-				text = ((JLabel) element).getText();
-			} else {
-				if (component instanceof AbstractButton) {
-					text = ((AbstractButton) element).getText();
-				}
-			}
-		}
+//		String text = null;
+//		Component component = (Component) element;
+//		if (component instanceof JTextComponent) {
+//			text = ((JTextComponent) element).getText();
+//		} else {
+//			if (component instanceof JLabel) {
+//				text = ((JLabel) element).getText();
+//			} else {
+//				if (component instanceof AbstractButton) {
+//					text = ((AbstractButton) element).getText();
+//				}
+//			}
+//		}
 		// if (text != null)
 		// component.putClientProperty(CSSSwingConstants.COMPONENT_TEXT_KEY,
 		// text);

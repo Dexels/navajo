@@ -29,6 +29,7 @@ public class RepositoryEventParser {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	private static List<String> extractForChangeTypes(Event e, EntryChangeType[] types) {
 		String topic = e.getTopic();
 		if(!RepositoryChange.TOPIC.equals(topic)) {

@@ -1,10 +1,8 @@
 package com.dexels.navajo.jsp.tags;
 
 import java.io.StringWriter;
-import java.util.Enumeration;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 
 import org.slf4j.Logger;
@@ -64,14 +62,7 @@ public class CallServiceTag extends BaseNavajoTag {
 			String instance = (String) getPageContext().getSession().getAttribute("currentInstance");
 			String sessionUsername = (String) getPageContext().getSession().getAttribute("sessionUsername");
 			String sessionPassword = (String) getPageContext().getSession().getAttribute("sessionPassword");
-			System.err.println("SESSION USER: "+sessionUsername);
-			HttpSession hs = getPageContext().getSession();
-			System.err.println("Session id: "+hs.getId());
-			Enumeration<String> attr = hs.getAttributeNames();
-			while (attr.hasMoreElements()) {
-				String e = (String) attr.nextElement();
-				System.err.println("Session. Key: "+e+" value: "+hs.getAttribute(e));
-			}
+
 			Navajo navajo = null;
 			if (myNavajo==null || "".equals(myNavajo)) {
 				navajo = NavajoFactory.getInstance().createNavajo();
@@ -84,7 +75,6 @@ public class CallServiceTag extends BaseNavajoTag {
 				} else {
 					navajo.addHeader(NavajoFactory.getInstance().createHeader(navajo, myService, sessionUsername, sessionPassword, -1));
 				}
-//				navajo.getHeader().setRPCName(myService);
 			}
 			if(lc==null) {
 				
@@ -117,7 +107,7 @@ public class CallServiceTag extends BaseNavajoTag {
 		boolean multitenant = localClients!=null&&localClients.size()>0;
 		
 		String selectedInstance = (String) getPageContext().getSession().getAttribute("selectedInstance");
-		String sessionId =  getPageContext().getSession().getId();
+//		String sessionId =  getPageContext().getSession().getId();
 		//System.err.println("Session Id: "+sessionId);
 		if (multitenant) {
 			if(selectedInstance==null) {

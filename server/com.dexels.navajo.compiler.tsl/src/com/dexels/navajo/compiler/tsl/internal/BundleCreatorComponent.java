@@ -115,7 +115,7 @@ public class BundleCreatorComponent implements BundleCreator {
 		}
 		String script = scriptName.replaceAll("\\.", "/");
 		final String tenant = tenantFromScriptPath(scriptName);
-		final String rpcName = rpcNameFromScriptPath(scriptName);
+//		final String rpcName = rpcNameFromScriptPath(scriptName);
 		
 		File scriptFolder = new File(navajoIOConfig.getScriptPath());
 		File f = new File(scriptFolder, script);
@@ -625,6 +625,7 @@ public class BundleCreatorComponent implements BundleCreator {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public CompiledScriptInterface getCompiledScript(String rpcName, String tenant,String extension)
 			throws ClassNotFoundException {

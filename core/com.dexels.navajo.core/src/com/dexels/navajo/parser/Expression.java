@@ -94,7 +94,6 @@ public final class Expression {
     	return evaluate(clause, inMessage, o, parent, null, sel, tl,null);
     }
     
-    @Deprecated
     public final static Operand evaluate(String clause, Navajo inMessage, MappableTreeNode o, Message parent) throws TMLExpressionException, SystemException {
         return evaluate(clause, inMessage, o, parent, null, null, null,null);
     }

@@ -7,7 +7,6 @@ import net.oauth.v2.OAuth2Constant;
 import net.oauth.v2.OAuth2Util;
 
 import com.multi.oauth2.provider.dao.OAuth2Service;
-import com.multi.oauth2.provider.dao.impl.OAuth2DAOImpl;
 import com.multi.oauth2.provider.vo.ClientVO;
 import com.multi.oauth2.provider.vo.TokenVO;
 import com.multi.oauth2.provider.vo.UserVO;

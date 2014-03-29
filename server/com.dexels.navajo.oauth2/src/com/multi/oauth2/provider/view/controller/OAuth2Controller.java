@@ -78,6 +78,7 @@ public class OAuth2Controller extends HttpServlet {
 		return tVO;
 	}
 	
+	@SuppressWarnings("unused")
 	private TokenVO refreshToken(String clientRefreshToken) throws OAuth2Exception {
 		TokenVO tVO= null;
 		try {

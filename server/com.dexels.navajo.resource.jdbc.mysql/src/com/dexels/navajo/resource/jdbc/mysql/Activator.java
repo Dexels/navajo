@@ -2,17 +2,8 @@ package com.dexels.navajo.resource.jdbc.mysql;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.dexels.navajo.resource.jdbc.JdbcManagedResourceFactory;
-import com.mysql.jdbc.service.MySQLJDBCDataSourceService;
 
 public class Activator implements BundleActivator {
-
-	private static final Logger logger = LoggerFactory.getLogger(Activator.class);
-	private JdbcManagedResourceFactory managedFactory;
-
 
 	/*
 	 * (non-Javadoc)

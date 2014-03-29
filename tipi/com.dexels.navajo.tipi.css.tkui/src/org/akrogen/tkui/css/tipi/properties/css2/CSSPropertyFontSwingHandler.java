@@ -107,9 +107,12 @@ public class CSSPropertyFontSwingHandler extends AbstractCSSPropertyFontHandler
 							.getCSSElementContext(element));
 			if (fontProperties == null)
 				return;
-			Font newFont = (Font) engine.convert(fontProperties, Font.class,
-					component);
-//			if (newFont != null)
+//			Font newFont = (Font) engine.convert(fontProperties, Font.class,
+//					component);
+
+			
+			
+			//			if (newFont != null)
 //				component.setFont(newFont);
 			// TODO commented out Frank
 		}

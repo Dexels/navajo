@@ -32,7 +32,6 @@ import javax.swing.JPanel;
 import de.xeinfach.kafenio.component.ExternalEditorFrame;
 import de.xeinfach.kafenio.interfaces.KafenioContainerInterface;
 import de.xeinfach.kafenio.interfaces.KafenioControllerSaveContentInterface;
-import de.xeinfach.kafenio.util.HTMLTranslate;
 import de.xeinfach.kafenio.util.LeanLogger;
 import de.xeinfach.kafenio.util.Utils;
 /**

@@ -103,6 +103,7 @@ public class JettyServer {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void addVaadinContext(final String contextPath, final Bundle bundle, Server jettyServer, HandlerList handlers, boolean useTouch) throws ClassNotFoundException {
 		ServletContextHandler webAppContext = new ServletContextHandler(jettyServer,contextPath,true,false);
 		webAppContext.setClassLoader(Thread.currentThread().getContextClassLoader());

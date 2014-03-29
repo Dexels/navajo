@@ -359,6 +359,7 @@ public class CssComponentResponderImpl implements
 					return null;
 				}
 
+				@SuppressWarnings("rawtypes")
 				@Override
 				public Collection getCSSPropertyHandlers(String property)
 						throws Exception {
@@ -416,6 +417,7 @@ public class CssComponentResponderImpl implements
 				return null;
 			}
 
+			@SuppressWarnings("rawtypes")
 			@Override
 			public Collection getCSSPropertyHandlers(String property)
 					throws Exception {

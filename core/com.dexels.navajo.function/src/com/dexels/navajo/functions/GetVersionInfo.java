@@ -41,6 +41,7 @@ public final class GetVersionInfo extends FunctionInterface {
 		return "GetVersionInfo([package name])";
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public final Object evaluate() throws TMLExpressionException {
 		Object o = getOperand(0);

@@ -47,7 +47,8 @@ public final class ToDouble extends FunctionInterface {
         return "Get a Double version of supplied object. Returns 0.0 if object is null.";
     }
     
-    public static void main(String [] args) throws Exception {
+    @SuppressWarnings("rawtypes")
+	public static void main(String [] args) throws Exception {
    	 Locale.setDefault(Locale.GERMAN);
 		FunctionFactoryInterface fi= FunctionFactoryFactory.getInstance();
 		fi.init();

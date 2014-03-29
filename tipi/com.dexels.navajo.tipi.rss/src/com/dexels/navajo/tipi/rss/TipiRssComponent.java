@@ -94,7 +94,7 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 		n.addMethod(mm);
 		return n;
 	}
-	@SuppressWarnings({ })
+	@SuppressWarnings({"unchecked" })
 	private Navajo getRssNavajo(Channel c, String service) throws NavajoException {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 			Header h =NavajoFactory.getInstance().createHeader(n, service, "unknown","unknown", -1);
@@ -182,6 +182,7 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 		addProperty(m, name, e, type,null);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws MalformedURLException, RssParserException, IOException {
 		TipiRssComponent trc = new TipiRssComponent();
 		Rss r = trc.createRssFeed("http://search-result.com/directhit/xml/NL_algemeen.xml");

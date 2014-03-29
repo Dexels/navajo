@@ -193,7 +193,7 @@ protected Navajo myDocRoot;
 		boolean hasText = hasTextNode();
 		boolean hasChildren = (list != null) && list.size() > 0;
 		if(list==null) {
-			list = Collections.EMPTY_LIST;
+			list = Collections.emptyList();
 		}
 		if (hasChildren && hasText) {
 			throw new IllegalStateException("Can not have both children AND text");

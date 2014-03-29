@@ -30,7 +30,7 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
 			.getLogger(OracleJDBCDataSourceService.class);
 	private ObjectPool pool;
 	
-	private PoolableConnectionFactory poolableConnectionFactory;
+//	private PoolableConnectionFactory poolableConnectionFactory;
     public void start() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         //Load driver if not already done...
         Class<?> clazz = Class.forName("oracle.jdbc.OracleDriver");
@@ -185,7 +185,7 @@ public class OracleJDBCDataSourceService implements DataSourceFactory {
 			return baseSource.getConnection(username,password);
 		}
 	};
-       poolableConnectionFactory = new PoolableConnectionFactory(
+	new PoolableConnectionFactory(
      	connectionFactory,connectionPool,null,"select 1 from dual",false,false);
 
        PoolingDataSource dataSource = 

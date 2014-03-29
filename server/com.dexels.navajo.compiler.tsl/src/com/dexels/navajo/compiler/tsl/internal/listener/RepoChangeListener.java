@@ -11,6 +11,7 @@ import com.dexels.navajo.compiler.BundleCreator;
 
 public class RepoChangeListener implements EventHandler {
 
+	@SuppressWarnings("unused")
 	private BundleCreator bundleCreator = null;
 	
 	private final static Logger logger = LoggerFactory

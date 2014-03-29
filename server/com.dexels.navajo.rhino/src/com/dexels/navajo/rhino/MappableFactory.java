@@ -14,6 +14,7 @@ public class MappableFactory {
 	private final static Logger logger = LoggerFactory
 			.getLogger(MappableFactory.class);
 	
+	@SuppressWarnings("unchecked")
 	public Mappable createMappable(String className, Navajo input,
 			Navajo output, Message currentOutMessage) {
 		try {

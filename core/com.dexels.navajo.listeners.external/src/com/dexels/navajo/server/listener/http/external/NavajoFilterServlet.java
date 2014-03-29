@@ -120,6 +120,7 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 		nrw.processResponse(originalRequest, indoc, outdoc, originalResponse);
 	}
 
+	@SuppressWarnings("unchecked")
 	private NavajoRequestWrapper getRequestWrapper(String inFilter) {
 		try {
 			Class<? extends NavajoRequestWrapper> rwrapperClass = (Class<? extends NavajoRequestWrapper>) Class
@@ -135,6 +136,7 @@ public class NavajoFilterServlet extends TmlStandardServlet {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	private NavajoResponseWrapper getResponseWrapper(String outFilter) {
 		try {
 			Class<? extends NavajoResponseWrapper> rwrapperClass = (Class<? extends NavajoResponseWrapper>) Class

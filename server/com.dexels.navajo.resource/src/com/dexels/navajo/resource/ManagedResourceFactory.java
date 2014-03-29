@@ -64,6 +64,7 @@ public abstract class ManagedResourceFactory<T> implements ManagedServiceFactory
 		return name;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void updated(String pid, Dictionary<String, ? > settings)
 			throws ConfigurationException {
