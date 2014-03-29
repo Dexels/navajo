@@ -1,6 +1,5 @@
 package com.dexels.navajo.jsp.tags;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.slf4j.Logger;
@@ -37,10 +36,10 @@ public class ClientSetupTag extends BaseNavajoTag {
 
 		String sessionId =  getPageContext().getSession().getId();
 		logger.debug("Tag Session Id: "+sessionId+" setting to instance: "+username);
-		if(username!=null) {
+		if(username!=null && !"".equals(username)) {
 			getPageContext().getSession().setAttribute("sessionUsername", username);
 		}
-		if(password!=null) {
+		if(password!=null && !"".equals(password)) {
 			getPageContext().getSession().setAttribute("sessionPassword", password);
 		}
 		return SKIP_BODY;
