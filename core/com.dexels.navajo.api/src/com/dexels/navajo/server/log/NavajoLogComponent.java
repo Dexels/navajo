@@ -90,6 +90,9 @@ public class NavajoLogComponent implements LogListener {
 					logger.warn(log.getMessage(), log.getException());
 					break;
 				case LogService.LOG_ERROR:
+					if(log.getException()!=null) {
+						log.getException().printStackTrace();
+					}
 					logger.error(log.getMessage(), log.getException());
 					break;
 				}

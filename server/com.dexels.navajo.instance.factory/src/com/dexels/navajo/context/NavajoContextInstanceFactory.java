@@ -525,7 +525,12 @@ public class NavajoContextInstanceFactory implements NavajoServerContext {
 			settings.put("instance", instance);
 			settings.put(instance, "instance");
 		}
-		String type = (String) dataSource.getProperty("type").getTypedValue();
+		
+		Property typeProperty = dataSource.getProperty("type");
+		if(typeProperty==null) {
+			throw new NullPointerException("No type property missing for instance: "+instance+" and name: "+name);
+		}
+		String type = (String) typeProperty.getTypedValue();
 
 		if (configAdmin == null) {
 			logger.warn("No configuration admin, assuming testing");
