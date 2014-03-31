@@ -558,8 +558,13 @@ public class GitRepositoryInstanceImpl extends RepositoryInstanceImpl implements
 
 	@Override
 	public String getDeployment() {
-		return (String)getSettings().get("deployment");
+		String settingsDeployment = (String)getSettings().get("deployment");
+		if(settingsDeployment!=null && !"".equals(settingsDeployment)) {
+			return settingsDeployment;
 		}
+		String envDeployment = System.getProperty("DEPLOYMENT");
+		return envDeployment;
+	}
 
 
 }

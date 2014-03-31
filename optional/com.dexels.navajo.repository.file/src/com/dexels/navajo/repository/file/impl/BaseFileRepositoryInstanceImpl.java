@@ -253,7 +253,11 @@ public class BaseFileRepositoryInstanceImpl implements RepositoryInstance {
 
 	@Override
 	public String getDeployment() {
-		return deployment;
+		if(deployment!=null && !"".equals(deployment)) {
+			return deployment;
+		}
+		String envDeployment = System.getProperty("DEPLOYMENT");
+		return envDeployment;
 	}
 
 
