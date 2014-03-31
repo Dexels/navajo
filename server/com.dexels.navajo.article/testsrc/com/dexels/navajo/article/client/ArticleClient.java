@@ -49,7 +49,7 @@ public class ArticleClient {
 	}
 
 	private JsonNode getJSONFromURL(String item) throws IOException {
-		return getJSONFromURL(item, Collections.EMPTY_MAP);
+		return getJSONFromURL(item, Collections.<String, String> emptyMap());
 	}
 
 	public ObjectNode getArticleMeta(String name) {
