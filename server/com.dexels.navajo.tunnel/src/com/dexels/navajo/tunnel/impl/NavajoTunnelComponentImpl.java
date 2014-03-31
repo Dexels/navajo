@@ -250,6 +250,12 @@ public class NavajoTunnelComponentImpl {
 			}
 		}
 		session.setDaemonThread(true);
+		try {
+			session.sendKeepAliveMsg();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 //		System.err.println("assigned: " + assigned);
 //
 //		if (assigned == 0) {
