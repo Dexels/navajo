@@ -851,7 +851,7 @@ public class TslCompiler {
 					contextClass = Class.forName(className, false, loader);
 				}
 			} catch (Exception e) {
-				throw new Exception("Could not find adapter: " + className);
+				throw new Exception("Could not find field: " + className + "/" + mapPath, e);
 			}
 
 			addDependency("dependentObjects.add( new JavaDependency( -1, \""
@@ -2241,7 +2241,7 @@ public class TslCompiler {
 	 * be supplied...
 	 * 
 	 */
-	private Class locateContextClass(String mapPath, int offset) {
+	private Class locateContextClass(String mapPath, int offset) throws Exception {
 
 		// System.err.println("Count element: "+count);
 		// System.err.println("in locateContextClass(" + mapPath + ")");
@@ -2263,8 +2263,10 @@ public class TslCompiler {
 		}
 		// System.err.println("Count element: "+count);
 		// System.err.println("STACK: "+contextClassStack);
-		Class m = contextClassStack.get(contextClassStack.size() - (count)
-				- offset);
+		if ( contextClassStack.size() - count - offset < 0 ) {
+			throw new Exception("Could not resolve field: " + mapPath);
+		}
+		Class m = contextClassStack.get(contextClassStack.size() - count - offset);
 		// System.err.println("Mappable: "+m);
 		return m;
 	}
