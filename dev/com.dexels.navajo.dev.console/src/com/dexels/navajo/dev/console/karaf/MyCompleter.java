@@ -17,25 +17,33 @@
  * under the License.
  */
 
-package com.dexels.navajo.dev.console;
+package com.dexels.navajo.dev.console.karaf;
 
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
-import org.apache.karaf.shell.console.OsgiCommandSupport;
+import java.util.List;
 
-//import org.apache.karaf.shell.commands.Command;
-//import org.apache.karaf.shell.commands.Argument;
-//import org.apache.karaf.shell.console.OsgiCommandSupport;
+import org.apache.karaf.shell.console.Completer;
+import org.apache.karaf.shell.console.completer.StringsCompleter;
 
-@Command(scope = "mycommand", name = "hello", description="Says hello")
-public class MyCommand extends OsgiCommandSupport {
+/**
+* <p>
+* My completer.
+* </p>
+*/
 
-    @Argument(index = 0, name = "arg", description = "The command argument", required = false, multiValued = false)
-    String arg = null;
+public class MyCompleter implements Completer {
 
+    /**
+     * @param buffer it's the beginning string typed by the user
+     * @param cursor it's the position of the cursor
+     * @param candidates the list of completions proposed to the user
+     */
     @Override
-    protected Object doExecute() throws Exception {
-        System.out.println("Executing My Command Demo");
-        return null;
+	public int complete(String buffer, int cursor, List<String> candidates) {
+
+        StringsCompleter delegate = new StringsCompleter();
+        delegate.getStrings().add("one");
+        delegate.getStrings().add("two");
+        delegate.getStrings().add("three");
+        return delegate.complete(buffer, cursor, candidates);
     }
 }
