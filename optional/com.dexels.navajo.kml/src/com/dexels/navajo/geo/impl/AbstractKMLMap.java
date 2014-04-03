@@ -180,7 +180,12 @@ public abstract class AbstractKMLMap {
 				XMLElement icon = new CaseSensitiveXMLElement("Icon");
 				iconStyle.addChild(icon);
 				String iconShape = "http://maps.google.com/mapfiles/kml/shapes/play.png";
-				if (message.getProperty("Icon") != null) {
+				if (message.getProperty("IconURL") != null ) {
+					iconShape = message.getProperty("IconURL").getValue();
+					// Make sure to replace &amp; with &
+					iconShape = iconShape.replaceAll("&amp;", "&");
+					System.err.println("URL: " + iconShape);
+				} else if (message.getProperty("Icon") != null) {
 					iconShape = "http://maps.google.com/mapfiles/kml/" + message.getProperty("Icon").getTypedValue();
 				}
 				icon.addTagKeyValue("href", iconShape);
@@ -489,4 +494,10 @@ public abstract class AbstractKMLMap {
 		this.useLOD = useLOD;
 	}
 
+	public static void main(String [] args) {
+		
+		String url = "http://localhost:9090/PostmanLegacy?service=competition/poolassignment/PoolIcon&amp;username=ROOT&amp;password=R20T&amp;PoolIcon/PoolName=02&amp;dataPath=/PoolIcon/Icon";
+		
+		System.err.println(url.replaceAll("&amp;", "&"));
+	}
 }

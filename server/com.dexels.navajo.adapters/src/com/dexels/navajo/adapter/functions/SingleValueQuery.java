@@ -91,7 +91,7 @@ public class SingleValueQuery extends FunctionInterface {
 
 		  }
 		  if (transactionContext != -1) {
-			  logger.debug("SINGLEVALUEQUERY: USING TRANSACTIONCONTEXT: " + transactionContext);
+			  //logger.debug("SINGLEVALUEQUERY: USING TRANSACTIONCONTEXT: " + transactionContext);
 			  sql.setTransactionContext(transactionContext);
 		  }
 		  sql.setQuery(query);
