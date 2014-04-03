@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- This file is in alphabetical order -->
 <functiondef>
-	<function name="CreatePlacemarkIcon" class="com.dexels.navajo.functions.CreatePlacemarkIcon">
-		<description>Creates an icon from a description</description>
-		<input>string</input>
-		<result>binary</result>
-	</function>
 	<function name="StoreBinary" class="com.dexels.navajo.functions.StoreBinary">
 		<description>Store a binary object in Shared Store
 		</description>
