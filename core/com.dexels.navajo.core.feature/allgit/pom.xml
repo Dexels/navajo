@@ -18,6 +18,7 @@
 		<module>../../com.dexels.navajo.client.async</module>
 		<module>../../com.dexels.navajo.function</module>
 		<module>../../com.dexels.navajo.api</module>
+		<module>../../com.dexels.navajo.log</module>
 		<module>../../com.dexels.navajo.listeners.external</module>
 
 		<module>../</module>
