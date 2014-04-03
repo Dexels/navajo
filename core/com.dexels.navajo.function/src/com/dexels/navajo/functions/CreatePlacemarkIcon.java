@@ -75,7 +75,7 @@ public class CreatePlacemarkIcon extends FunctionInterface {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			// Continue without setting width and height
 		}
 		label = (String) l;
