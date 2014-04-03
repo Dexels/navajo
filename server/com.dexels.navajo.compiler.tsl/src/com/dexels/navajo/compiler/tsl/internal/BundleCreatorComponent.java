@@ -587,7 +587,13 @@ public class BundleCreatorComponent implements BundleCreator {
 
 		boolean forceReinstall = false;
 		if (sc != null) {
-			boolean needsRecompile = checkForRecompile(rpcName,tenant,tenantQualified,extension);
+			boolean needsRecompile = false;
+			try {
+				needsRecompile = checkForRecompile(rpcName,tenant,tenantQualified,extension);
+			} catch (FileNotFoundException e) {
+				logger.warn("Can not find scriptfile, but the service seems available. Continuing: ", e);
+				force = false;
+			}
 			if (!force && !needsRecompile) {
 				return sc;
 			}
