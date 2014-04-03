@@ -37,7 +37,7 @@ public class CompileServlet extends HttpServlet {
 			tenant = "default";
 		}
 		boolean force = true;
-		boolean keepIntermediateFiles = false;
+		boolean keepIntermediateFiles = true;
 		
 		try {
 			long tm = System.currentTimeMillis();
