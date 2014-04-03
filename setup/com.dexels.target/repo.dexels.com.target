@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="979">
+<?pde version="3.8"?><target name="Navajo Repo" sequenceNumber="984">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.restlet.ext.osgi.servlet.feature.feature.group" version="0.5.2.201207252154"/>
@@ -355,13 +355,14 @@
 <repository location="http://repo.dexels.com/eclipse/orbit_mirror"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.equinox.sdk.feature.group" version="3.9.0.v20140221-1852"/>
-<unit id="org.eclipse.equinox.server.core.feature.group" version="1.2.0.v20140110-1610"/>
-<repository location="http://repo.dexels.com/eclipse/equinox"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="com.dexels.thirdparty.feature.feature.group" version="1.8.7.RELEASE"/>
 <repository location="http://repo.dexels.com/eclipse/3rdparty_1.8.7"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.equinox.executable.feature.group" version="3.6.0.v20140117-1004"/>
+<unit id="org.eclipse.equinox.sdk.feature.group" version="3.9.0.v20140221-1852"/>
+<unit id="org.eclipse.equinox.core.feature.feature.group" version="1.1.0.v20140110-1610"/>
+<repository location="http://repo.dexels.com/eclipse/equinox_kepler"/>
 </location>
 </locations>
 <includeBundles>
