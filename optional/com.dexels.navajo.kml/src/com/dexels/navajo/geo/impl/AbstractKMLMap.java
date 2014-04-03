@@ -197,7 +197,7 @@ public abstract class AbstractKMLMap {
 				String name = folder.getProperty("Name").getValue();
 				XMLElement folderElt = createFolder(name);
 				m = folder.getMessage(messagePath);
-				if(ll!=null) {
+				if(m != null) {
 					ll = m.getAllMessages();
 					for (Message message : ll) {
 						XMLElement placemark = createPointPlaceMark(message);
