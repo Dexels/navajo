@@ -20,7 +20,7 @@
 		<module>optional/com.dexels.navajo.other.feature/allgit/</module>
 		<module>optional/com.dexels.navajo.geo.feature/allgit/</module>
 		<module>optional/com.dexels.navajo.twitter.feature/allgit/</module>
-		<module>examples/</module>
+		<module>example/</module>
 		<module>setup/com.dexels.p2</module>
 	</modules>
 	<parent>
