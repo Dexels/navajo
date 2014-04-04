@@ -26,7 +26,8 @@ public class HeadlessTipiContext extends TipiContext {
 	// private final Thread myInvokingThread;
 
 	public HeadlessTipiContext(List<TipiExtension> ed) {
-		super(null, ed);
+		super(new HeadlessApplicationInstance(), ed);
+		
 		// myInvokingThread = Thread.currentThread();
 	}
 

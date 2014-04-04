@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import tipi.TipiExtension;
 
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.headless.HeadlessApplicationInstance;
+import com.dexels.navajo.tipi.headless.HeadlessApplicationFactory;
 import com.dexels.navajo.tipi.headless.HeadlessTipiContext;
 public class AbstractTipiTest  {
 
@@ -34,7 +34,7 @@ public class AbstractTipiTest  {
 	public void setContext(String definition, File tipiDir, String[] properties, List<TipiExtension> ed)
 			throws Exception {
 		
-		myContext = (HeadlessTipiContext) HeadlessApplicationInstance
+		myContext = (HeadlessTipiContext) HeadlessApplicationFactory
 				.initialize(definition, tipiDir, properties, ed);
 		logger.info("Resource loader set: " + tipiDir.getAbsolutePath());
 	}

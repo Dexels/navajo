@@ -40,7 +40,7 @@ public class EventInjectTipi extends AbstractTipiTest {
 		logger.info("USERDIR: " + System.getProperty("user.dir"));
 		injectEvent("/init/button", "onActionPerformed");
 		try {
-			Thread.sleep(300);
+			Thread.sleep(500);
 		} catch (InterruptedException e1) {
 		}
 
