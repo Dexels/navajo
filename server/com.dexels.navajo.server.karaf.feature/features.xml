@@ -56,6 +56,7 @@
 	<feature resolver="(obr)" name='navajo.kml' version='3.0.0' start-level='81'  >
 		<feature version="[3.0.4,4)">navajo.adapter</feature>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.kml/1.1.2</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.svg/1.1.1</bundle>
 	</feature>
 	
 	<feature resolver="(obr)" name='navajo.core.jabber' version='3.0.0' start-level='81' >
