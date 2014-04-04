@@ -21,12 +21,8 @@ Import-Package: com.dexels.navajo.adapters.svg,
  navajoextension,
  org.osgi.framework;version="1.5.0",
  org.slf4j;version="[1.6.1,1.8.0)"
-Bundle-ClassPath: lib/milStd2525_png.jar,
- lib/omcorba.jar,
- lib/omj3d.jar,
- lib/omsvg.jar,
- lib/openmap.jar,
- .
+Bundle-ClassPath: .,
+ lib/openmap.jar
 Export-Package: com.dexels.geospatial,
  com.dexels.navajo.geo,
  com.dexels.navajo.geo.impl
