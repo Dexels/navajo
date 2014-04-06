@@ -90,8 +90,11 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 														// instead
 		JsonParser jp = factory.createJsonParser(decoded);
 		JsonNode node = mapper.readTree(jp);
-
-		process(mapper, node);
+		String pingHeader = req.getHeader("X-GitHub-Event");
+		if("push".equals(pingHeader)) {
+			processPush(mapper, node);
+		}
+		resp.getWriter().write("ok");
 	}
 
 	public void addRepositoryInstance(RepositoryInstance a,
@@ -113,7 +116,7 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 		this.repositoryManager = null;
 	}
 
-	private void process(ObjectMapper mapper, JsonNode node)
+	private void processPush(ObjectMapper mapper, JsonNode node)
 			throws IOException, JsonGenerationException, JsonMappingException {
 		final String name = node.get("repository").get("name").asText();
 		final String url = node.get("repository").get("url").asText();
@@ -259,7 +262,7 @@ public class GitHubServlet extends HttpServlet implements Servlet {
 			}
 
 		});
-		ghs.process(mapper, node);
+		ghs.processPush(mapper, node);
 		fis.close();
 	}
 
