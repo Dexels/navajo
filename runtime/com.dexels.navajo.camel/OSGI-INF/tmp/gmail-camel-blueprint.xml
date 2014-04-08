@@ -7,7 +7,7 @@
 	<camelContext xmlns="http://camel.apache.org/schema/blueprint"
 		id="gmail">
 		<route>
-			<from uri="imaps://imap.gmail.com?username=dexels@gmail.com&amp;password=j1p_da2n&amp;delete=false&amp;unseen=true&amp;consumer.delay=30000" />
+			<from uri="imaps://imap.gmail.com?username=user@gmail.com&amp;password=12345&amp;delete=false&amp;unseen=true&amp;consumer.delay=30000" />
 			<camel:process ref="generalProcessor"></camel:process>
 			<to uri="log:gmail?showAll=true&amp;level=WARN" />
 		</route>
