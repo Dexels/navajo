@@ -115,7 +115,7 @@ public class ArticleServlet extends HttpServlet implements Servlet {
 		if(indexOf!=-1) {
 			article = pathinfo.substring(indexOf+1, pathinfo.length());
 		} else {
-			article = null;
+			article = pathinfo;
 		}
 		return article;
 	}
