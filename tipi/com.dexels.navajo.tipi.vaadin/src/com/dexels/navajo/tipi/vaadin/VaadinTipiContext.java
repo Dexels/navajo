@@ -108,7 +108,7 @@ public class VaadinTipiContext extends TipiContext {
 
 	@Override
 	public void setSplash(Object s) {
-		logger.info("Splash {}",s);
+		logger.debug("Splash {}",s);
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class VaadinTipiContext extends TipiContext {
 
 	@Override
 	public void setSplashInfo(String s) {
-		logger.info("Splash {}",s);
+		logger.debug("Splash {}",s);
 
 	}
 	

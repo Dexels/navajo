@@ -326,7 +326,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 	}
 
 	public void setTipiInstallationFolder(File install) {
-		logger.info("Using install: "+install.getAbsolutePath());
+		logger.debug("Using install: "+install.getAbsolutePath());
 		File tipi = new File(install,"tipi");
 		File resource = new File(install,"resource");
 		setTipiResourceLoader(new FileResourceLoader(tipi));
@@ -817,7 +817,7 @@ public abstract class TipiContext implements ITipiExtensionContainer, Serializab
 
 	public InputStream getTipiResourceStream(String location)
 			throws IOException {
-		logger.warn("Getting tipi file: "+location+" loader: "+tipiResourceLoader);
+		logger.debug("Getting tipi file: "+location+" loader: "+tipiResourceLoader);
 		if (tipiResourceLoader != null) {
 			return tipiResourceLoader.getResourceStream(location);
 		} else {

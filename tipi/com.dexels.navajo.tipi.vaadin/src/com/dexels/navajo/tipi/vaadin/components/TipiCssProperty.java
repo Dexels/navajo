@@ -368,7 +368,6 @@ public class TipiCssProperty extends TipiVaadinComponentImpl implements Property
 			@Override
 			public void textChange(TextChangeEvent event) {
 				
-				logger.info("New: "+event.getText()+" old value: "+property.getTypedValue()+" eventval: "+event.getText());
 				currentDataSource.setRespondToServerSideChanges(false);
 				TipiCssProperty.this.property.setValue(event.getText());
 				currentDataSource.setRespondToServerSideChanges(true);
