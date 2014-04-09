@@ -6,7 +6,7 @@
 		</description>
 		<input>string, binary</input>
 		<result>string</result>
-	</function>
+	</function> 
 	<function name="GetBinary" class="com.dexels.navajo.functions.GetBinary">
 		<description>Gets a binary object from Shared Store
 		</description>
@@ -372,7 +372,7 @@
 	<function name="GetPropertyAttribute"
 		class="com.dexels.navajo.functions.GetPropertyAttribute">
 		<description>Gets the type of property as a string</description>
-		<input>property,attribute</input>
+		<input>string,string</input>
 		<result>string</result>
 	</function>
 	<function name="GetPropertyDirection"
@@ -483,7 +483,7 @@
 	<function name="IsEmpty" class="com.dexels.navajo.functions.IsEmpty">
 		<description>Determines whether a given object is null or empty
 		</description>
-		<input>string|binary|list|message|array|integer|boolean|date|clocktime|memo|money|percentage|stopwatchtime|float|selection
+		<input>string|binary|list|message|integer|boolean|date|clocktime|memo|money|percentage|stopwatchtime|float|selection
 		</input>
 		<result>boolean</result>
 	</function>
@@ -500,8 +500,8 @@
 		<result>boolean</result>
 	</function>
 	<function name="IsNumeric" class="com.dexels.navajo.functions.IsNumeric">
-		<description>IsNumeric(string|integer|double|float)</description>
-		<input>string|integer|double|float</input>
+		<description>IsNumeric(string|integer|float)</description>
+		<input>string|integer|float</input>
 		<result>boolean</result>
 	</function>
 	<function name="IsServiceCached" class="com.dexels.navajo.functions.IsServiceCached">
@@ -676,7 +676,7 @@
 		<description>This function return the size of a list argument, the
 			length of an array, or the size of an array message.
 		</description>
-		<input>string|binary|list|message|array</input>
+		<input>string|binary|list|message</input>
 		<result>integer</result>
 	</function>
 	<function name="StringDistance" class="com.dexels.navajo.functions.StringDistance">
@@ -708,7 +708,7 @@
 	</function>
 	<function name="StripTime" class="com.dexels.navajo.functions.StripTime">
 		<description>StripTime(date|string,[string])</description>
-		<input>date|string,[string]</input>
+		<input>date|string,string|empty</input>
 		<result>date</result>
 	</function>
 	<function name="Sum" class="com.dexels.navajo.functions.Sum">
