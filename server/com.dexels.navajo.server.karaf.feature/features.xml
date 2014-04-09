@@ -53,10 +53,10 @@
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.adapters/2.0.8</bundle>
 	</feature>
 	
-	<feature resolver="(obr)" name='navajo.kml' version='3.0.0' start-level='81'  >
+	<feature resolver="(obr)" name='navajo.kml' version='3.0.2' start-level='81'  >
 		<feature version="[3.0.4,4)">navajo.adapter</feature>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.kml/1.1.2</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.svg/1.1.1</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.kml/1.2.0</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.svg/1.1.0</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.bcel/5.2_4</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.xalan/2.7.1_4</bundle>
 		<bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.batik/1.7_3</bundle>
@@ -212,18 +212,18 @@
  		<bundle dependency='true'>mvn:com.dexels.navajo/com.dexels.navajo.enterprise.hazelcast/3.0.2</bundle>
 	</feature>
 
-	<feature resolver="(obr)" name='sportlink.libraries' version='3.0.5' start-level='82' >
+	<feature resolver="(obr)" name='sportlink.libraries' version='3.0.7' start-level='82' >
 		<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.nevobo.dps/1.0.0</bundle> -->
 		<feature version="[3.0.0,4)">navajo.function</feature> 
 		<feature version="[3.0.0,4)">navajo.adapter</feature> 
 		<feature version="[3.0.0,4)">navajo.article</feature> 
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.aaa/3.0.6</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.0.6</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.adapters/3.0.10</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.functions/3.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.financial.adapters/3.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.comp/3.0.2</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.tensing/1.0.4</bundle>
-		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.optimizepool/3.0.4</bundle>
+		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.optimizepool/3.0.6</bundle>
 		<bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.nevobo.dps/1.0.3</bundle>
 				<!-- <bundle dependency='true'>mvn:com.dexels.navajo/com.sportlink.crystal/1.0.5</bundle> -->
 	</feature>
@@ -236,7 +236,7 @@
 		<feature version="[3.0.0,4)">navajo.dev</feature>
 		<feature version="[3.0.0,4)">navajo.jgit</feature>
 		<feature version="[3.0.0,4)">navajo.legacy</feature>
-		<!-- <feature version="[3.0.0,4)">navajo.kml</feature> -->
+		<feature version="[3.0.0,4)">navajo.kml</feature>
 	</feature>	
 
 	<feature resolver="(obr)" name='navajo.jgit' version='3.0.7' start-level='81' >
