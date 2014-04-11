@@ -1,6 +1,6 @@
 package com.dexels.navajo.adapter;
 
-import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
+import com.dexels.navajo.adapter.mailmap.AttachementMap;
 
 public interface MailMapInterface {
 
@@ -14,8 +14,8 @@ public interface MailMapInterface {
 	public void setText(String s);
 	public void setBcc(String bcc);
 	public void setCc(String cc);
-	public void setMultipleAttachments(AttachmentMapInterface[] c);
+	public void setMultipleAttachments(AttachementMap[] c);
 	public void setRelatedMultipart(boolean b);
-	public void setAttachment(AttachmentMapInterface m);
+	public void setAttachment(AttachementMap m);
 	
 }

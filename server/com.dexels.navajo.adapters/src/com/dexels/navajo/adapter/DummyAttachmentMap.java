@@ -3,10 +3,11 @@ package com.dexels.navajo.adapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dexels.navajo.adapter.mailmap.AttachementMap;
 import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
 import com.dexels.navajo.document.types.Binary;
 
-public class DummyAttachmentMap implements AttachmentMapInterface {
+public class DummyAttachmentMap extends AttachementMap implements AttachmentMapInterface {
 
 	private String attachFile;
 	

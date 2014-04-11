@@ -81,7 +81,7 @@ public class MailMap implements MailMapInterface, Mappable,
 	public boolean ignoreFailures = false;
 
 	public boolean relatedMultipart = false;
-	private List<AttachmentMapInterface> attachments = null;
+	private List<AttachementMap> attachments = null;
 	private String[] recipientArray = null;
 	private String[] ccArray = null;
 	private String[] bccArray = null;
@@ -418,15 +418,23 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	@Override
-	public void setMultipleAttachments(AttachmentMapInterface[] c) {
+	public void setMultipleAttachments(AttachementMap[] c) {
 
 		if (attachments == null) {
-			attachments = new ArrayList<AttachmentMapInterface>();
+			attachments = new ArrayList<AttachementMap>();
 		}
 
 		for (int i = 0; i < c.length; i++) {
 			attachments.add(c[i]);
 		}
+	}
+	
+	public AttachementMap[] getMultipleAttachments() {
+		return attachments.toArray(new AttachementMap[attachments.size()]);
+	}
+	
+	public AttachementMap getAttachment() {
+		return attachments.get(0);
 	}
 
 	@Override
@@ -435,9 +443,9 @@ public class MailMap implements MailMapInterface, Mappable,
 	}
 
 	@Override
-	public void setAttachment(AttachmentMapInterface m) {
+	public void setAttachment(AttachementMap m) {
 		if (attachments == null) {
-			attachments = new ArrayList<AttachmentMapInterface>();
+			attachments = new ArrayList<AttachementMap>();
 		}
 		attachments.add(m);
 	}
@@ -452,6 +460,12 @@ public class MailMap implements MailMapInterface, Mappable,
 		return null;
 	}
 
+	// for scala compatibility
+	public boolean getUseEncryption() {
+		return useEncryption;
+	}
+
+	
 	public boolean isUseEncryption() {
 		return useEncryption;
 	}
@@ -523,6 +537,34 @@ public class MailMap implements MailMapInterface, Mappable,
 	public DependentResource[] getDependentResourceFields() {
 		return new DependentResource[] { new GenericDependentResource(
 				"mailserver", "mailServer", AdapterFieldDependency.class) };
+	}
+
+	public String getRecipients() {
+		return recipients;
+	}
+
+	public String getMailServer() {
+		return mailServer;
+	}
+
+	public String getSender() {
+		return sender;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public boolean getIgnoreFailures() {
+		return ignoreFailures;
+	}
+
+	public boolean getQueuedSend() {
+		return queuedSend;
 	}
 
 }

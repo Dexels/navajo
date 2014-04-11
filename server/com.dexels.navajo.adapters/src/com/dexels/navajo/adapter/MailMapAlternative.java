@@ -402,7 +402,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 	}
 
 	@Override
-	public void setMultipleAttachments(AttachmentMapInterface[] c) {
+	public void setMultipleAttachments(AttachementMap[] c) {
 
 		if (attachments == null) {
 			attachments = new ArrayList<AttachmentMapInterface>();
@@ -430,7 +430,7 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 	}
 
 	@Override
-	public void setAttachment(AttachmentMapInterface m) {
+	public void setAttachment(AttachementMap m) {
 		if (attachments == null) {
 			attachments = new ArrayList<AttachmentMapInterface>();
 		}
@@ -518,6 +518,34 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 	public DependentResource[] getDependentResourceFields() {
 		return new DependentResource[] { new GenericDependentResource(
 				"mailserver", "mailServer", AdapterFieldDependency.class) };
+	}
+
+	public String getMailServer() {
+		return mailServer;
+	}
+
+	public boolean getQueuedSend() {
+		return queuedSend;
+	}
+
+	public String getRecipients() {
+		return recipients;
+	}
+
+	public String getSender() {
+		return sender;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public boolean getIgnoreFailures() {
+		return ignoreFailures;
 	}
 
 	public static void main(String[] args) throws UserException {

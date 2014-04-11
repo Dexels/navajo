@@ -438,6 +438,10 @@ public class CommonsMailMap implements Mappable, Queuable {
 		queuedSend = b;
 	}
 
+	public boolean getQueuedSend() {
+		return queuedSend;
+	}
+	
 	@Override
 	public void setMaxRetries(int r) {
 		maxRetries = r;
@@ -505,7 +509,11 @@ public class CommonsMailMap implements Mappable, Queuable {
 	public boolean isUseEncryption() {
 		return useEncryption;
 	}
-
+	
+	// for scala compatibility
+	public boolean getUseEncryption() {
+		return useEncryption;
+	}
 	public void setUseEncryption(boolean useEncryption) {
 		this.useEncryption = useEncryption;
 	}

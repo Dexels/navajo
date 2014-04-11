@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
+import com.dexels.navajo.adapter.mailmap.AttachementMap;
 import com.dexels.navajo.script.api.Access;
 import com.dexels.navajo.script.api.Mappable;
 import com.dexels.navajo.script.api.MappableException;
@@ -31,7 +31,7 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 	public String text;
 	
 	@Override
-	public void setAttachment(AttachmentMapInterface m) {
+	public void setAttachment(AttachementMap m) {
 		logger.info("In DummyMailMap, setAttachment(" + m + ")");
 	}
 
@@ -63,7 +63,7 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 	}
 
 	@Override
-	public void setMultipleAttachments(AttachmentMapInterface[] c) {
+	public void setMultipleAttachments(AttachementMap[] c) {
 		logger.info("In DummyMailMap, setMultipleAttachments size: " + c.length );
 		this.multipleAttachments = (DummyAttachmentMap []) c;
 	}
