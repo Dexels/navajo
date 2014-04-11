@@ -24,7 +24,7 @@ import com.dexels.navajo.script.api.UserException;
  * @author not attributable
  * @version 1.0
  */
-
+@Deprecated
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
 public class DatabaseInfo implements Mappable {
 
@@ -39,6 +39,10 @@ public class DatabaseInfo implements Mappable {
   private final static Logger logger = LoggerFactory
 		.getLogger(DatabaseInfo.class);
 
+
+  public DatabaseInfo() {
+	  logger.warn("DatabaseInfo won't work for now");
+  }
   public DatabaseInfo(DatabaseMetaData dbmd, String datasource) {
 
     try {
