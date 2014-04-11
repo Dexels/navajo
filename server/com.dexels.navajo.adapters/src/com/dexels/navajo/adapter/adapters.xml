@@ -93,9 +93,11 @@
 			<value name="mimeType" type="string" required="false" direction="out" />
 			<value name="size" type="integer" required="false" direction="out" />
 			<value name="fileAge" type="integer" required="false" direction="out" />
-			<value name="delete" type="boolean" required="false" direction="out" />
 		</values>
 		<methods>
+			<method name="delete">
+				<param name="param" field="delete" type="boolean" value="true" required="automatic" />
+			</method>
 		</methods>
 	</map>
 
@@ -298,7 +300,6 @@
 			<value name="block" type="boolean" required="false" direction="in" />
 			<value name="username" type="string" required="false" direction="in" />
 			<value name="password" type="string" required="false" direction="in" />
-			<value name="server" type="string" required="false" direction="in" />
 			<value name="resource" type="string" required="false" direction="in" />
 			<value name="useCurrentOutDoc" type="boolean" required="false" direction="in" />
 			<value name="useCurrentMessages" type="string" required="false" direction="in" />
@@ -352,7 +353,7 @@
 				<param name="inputProperties" field="inputProperties" type="string" required="false" />
 				<param name="outputProperties" field="outputProperties" type="string" required="false" />
 				<param name="block" field="block" type="boolean" required="false" />
-				<param name="name" field="doSend" type="string" required="true"  />
+				<param name="doSend" field="doSend" type="string" required="true"  />
 				<param name="appendTo" field="appendTo" type="string" required="false" />
 				<param name="append" field="append" type="string" required="false" />
 			</method>
@@ -483,6 +484,15 @@
 		<tagname>resultrow</tagname>
 		<abstract>false</abstract>
 		<object>com.dexels.navajo.adapter.sqlmap.ResultSetMap</object>
+		<values>
+			<value name="columnName" type="string" direction="in" />
+			<value name="columnValue" type="any" direction="out" />
+		</values>
+		<methods>
+			<method name="value" type="any" valueField="columnValue">
+				<param name="name" field="columnName" type="string" required="true" />
+			</method>
+		</methods>
 	</map>
 	<!-- Audit Log adapter -->
 	<map>
@@ -640,23 +650,23 @@
 	</map>
 
 	<map>
-		<tagname>adminmap</tagname>
+		<tagname>adminMap</tagname>
 		<object>com.dexels.navajo.adapter.AdminMap</object>
 	</map>
 	<map>
-		<tagname>accessmap</tagname>
+		<tagname>accessMap</tagname>
 		<object>com.dexels.navajo.adapter.AccessMap</object>
 	</map>
 	<map>
-		<tagname>multiplesqlmap</tagname>
+		<tagname>multipleSQLMap</tagname>
 		<object>com.dexels.navajo.adapter.MultipleSQLMap</object>
 	</map>
 	<map>
-		<tagname>selectionmap</tagname>
+		<tagname>selectionMap</tagname>
 		<object>com.dexels.navajo.adapter.SelectionMap</object>
 	</map>
 	<map>
-		<tagname>sequencedinsertmap</tagname>
+		<tagname>sequencedInsertMap</tagname>
 		<object>com.dexels.navajo.adapter.SequencedInsertMap</object>
 	</map>
 </adapterdef>
