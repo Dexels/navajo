@@ -212,6 +212,10 @@ public class TmlToXmlMap implements Mappable {
 			}
 		}
 	}
+	public String getRootPath() {
+		return rootPath;
+	}
+
 	public static void main(String[] args) throws UserException {
 			TmlToXmlMap t2x = new TmlToXmlMap();
 

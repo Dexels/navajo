@@ -319,4 +319,12 @@ SOAPAction: "https://sportlink.rfxweb.nl/GetClub"
 		setRequestBody(xmlRequest.getContent(), containsSoapBody);
 		
 	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public String getSoapAction() {
+		return soapAction;
+	}
 }

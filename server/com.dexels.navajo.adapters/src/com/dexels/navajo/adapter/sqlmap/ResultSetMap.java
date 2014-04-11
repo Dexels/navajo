@@ -110,4 +110,8 @@ public class ResultSetMap implements Mappable {
         return MappingUtils.determineNavajoType(getColumnValue(columnName));
     }
 
+	public String getColumnName() {
+		return columnName;
+	}
+
 }

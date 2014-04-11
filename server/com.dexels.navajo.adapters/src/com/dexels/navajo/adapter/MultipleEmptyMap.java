@@ -37,5 +37,8 @@ public void kill() {
     this.emptyMaps = emptyMaps;
   }
 
+  public com.dexels.navajo.adapter.EmptyMap [] getLoop() {
+	  return emptyMaps;
+  }
   public com.dexels.navajo.adapter.EmptyMap [] emptyMaps;
 }

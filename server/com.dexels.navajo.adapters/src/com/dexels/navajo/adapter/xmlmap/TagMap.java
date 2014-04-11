@@ -427,4 +427,8 @@ public class TagMap implements Mappable {
 	@Override
 	public void kill() {
 	}
+
+	public int getIndent() {
+		return indent;
+	}
 }

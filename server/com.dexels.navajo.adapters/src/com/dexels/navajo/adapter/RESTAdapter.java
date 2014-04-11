@@ -82,4 +82,12 @@ public class RESTAdapter extends NavajoMap {
 		}
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
 }

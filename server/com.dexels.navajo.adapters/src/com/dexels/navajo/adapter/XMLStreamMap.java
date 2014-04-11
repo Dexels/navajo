@@ -147,6 +147,10 @@ public class XMLStreamMap implements Mappable {
 		}		
 	}
 	
+	public int getIndent() {
+		return indent;
+	}
+
 	public static void main(String[] args) throws UserException, MappableException, FileNotFoundException, IOException{
 		XMLStreamMap map = new XMLStreamMap();
 		map.load(null);

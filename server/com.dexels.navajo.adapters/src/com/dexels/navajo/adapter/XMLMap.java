@@ -153,6 +153,14 @@ public class XMLMap extends TagMap implements Mappable {
 		parseString(s);
 	}
 
+	public String getStart() {
+		return start;
+	}
+
+	public String getStringContent() {
+		return stringContent;
+	}
+
 	public static void main(String [] args) throws Exception {
 		XMLMap xml = new XMLMap();
 		xml.setStart("xml");

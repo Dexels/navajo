@@ -56,6 +56,8 @@ public class CSVMap implements Mappable {
 	public int maximumImportCount;
 
 	private boolean update = false;
+
+
 	private List<CSVEntryMap> draftEntries = null;
 	
 	private final static Logger logger = LoggerFactory.getLogger(CSVMap.class);
@@ -63,6 +65,19 @@ public class CSVMap implements Mappable {
 	@Override
 	public void load(Access access) throws MappableException, UserException {
 
+	}
+
+	// for scala compatibility
+	public boolean getUpdate() {
+		return update;
+	}
+	
+	public boolean isUpdate() {
+		return update;
+	}
+
+	public void setUpdate(boolean update) {
+		this.update = update;
 	}
 
 	public void setEntry(CSVEntryMap newEntry) {
@@ -198,6 +213,7 @@ public class CSVMap implements Mappable {
 		this.fileContent = b;
 	}
 
+	
 	@Override
 	public void store() throws MappableException, UserException {
 		if (draftEntries != null) {
@@ -274,6 +290,11 @@ public class CSVMap implements Mappable {
         return skipFirstRow;
     }
 
+    // for scala compatibility
+    public boolean getSkipFirstRow() {
+        return skipFirstRow;
+    }
+
     public void setSkipFirstRow(boolean skipFirstRow) {
         this.skipFirstRow = skipFirstRow;
     }
@@ -285,4 +306,16 @@ public class CSVMap implements Mappable {
     public void setMaximumImportCount(int maximumImportCount) {
         this.maximumImportCount = maximumImportCount;
     }
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public Binary getFileContent() {
+		return fileContent;
+	}
+
+	public String getSeparator() {
+		return separator;
+	}
 }

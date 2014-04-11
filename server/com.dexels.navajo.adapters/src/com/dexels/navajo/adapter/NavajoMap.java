@@ -99,7 +99,9 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   public OptionMap [] selections;
  
   public String messagePointer;
-  public String selectionPointer = null;
+
+
+public String selectionPointer = null;
 
   public boolean exists;
   public String append;
@@ -158,7 +160,13 @@ public class NavajoMap extends AsyncMappable implements Mappable, HasDependentRe
   
   private List<String> deletedProperties = new ArrayList<String>();
   private List<String> deletedMessages = new ArrayList<String>();
+  private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
+  private static final long MAX_WAITTIME = 300000;
+
   
+  public NavajoMap() {
+	  
+  }
   public String getId() {
 	  return id;
   }
@@ -171,10 +179,13 @@ public void setMyResponseListener(NavajoMapResponseListener myResponseListener) 
 	  this.myResponseListener = myResponseListener;
   }
 
-private final static Logger logger = LoggerFactory.getLogger(NavajoMap.class);
-private static final long MAX_WAITTIME = 300000;
 
   public boolean isBlock() {
+	  return block;
+  }
+
+  // for scala compatibility
+  public boolean getBlock() {
 	  return block;
   }
 
@@ -1747,4 +1758,37 @@ public Throwable getCaughtException() {
 	return caughtThrowable;
 }
 
+public String getMessagePointer() {
+	return messagePointer;
+}
+public boolean getUseCurrentOutDoc() {
+	return useCurrentOutDoc;
+}
+public String getUseCurrentMessages() {
+	return useCurrentMessages;
+}
+public boolean getBreakOnConditionError() {
+	return breakOnConditionError;
+}
+public boolean getBreakOnException() {
+	return breakOnException;
+}
+public String getSelectionPointer() {
+	return selectionPointer;
+}
+public boolean getSendThrough() {
+	return sendThrough;
+}
+public String getUsername() {
+	return username;
+}
+public String getServer() {
+	return server;
+}
+public String getTrigger() {
+	return trigger;
+}
+public String getPassword() {
+	return password;
+}
 }

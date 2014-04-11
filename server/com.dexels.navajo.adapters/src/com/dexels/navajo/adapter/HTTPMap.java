@@ -95,6 +95,15 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 		myAccess = access;
 	}
 
+	// for scala compatibility
+	public boolean getQueuedSend() {
+		return queuedSend;
+	}
+	
+	public boolean isQueuedSend() {
+		return queuedSend;
+	}
+
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.adapter.URLMap#setTextContent(java.lang.String)
 	 */
@@ -479,6 +488,30 @@ public class HTTPMap implements Mappable, Queuable, HTTPMapInterface {
 	@Override
 	public void setCatchConnectionTimeOut(boolean catchConnectionTimeOut) {
 		this.catchConnectionTimeOut = catchConnectionTimeOut;
+	}
+
+	public Binary getContent() {
+		return content;
+	}
+
+	public long getContentLength() {
+		return contentLength;
+	}
+
+	public String getTextContent() {
+		return textContent;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public String getContentType() {
+		return contentType;
+	}
+
+	public String getUrl() {
+		return url;
 	}
 	
 }

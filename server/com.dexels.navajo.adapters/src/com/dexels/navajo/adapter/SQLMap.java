@@ -766,6 +766,9 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 		setQuery(query);
 	}
 
+	public Binary getBinaryQuery() {
+		return new Binary(query.getBytes());
+	}
 	/**
 	 * Use this method to define a new query. All parameters used by a previous
 	 * query are removed. replace " characters with ' characters.
@@ -1764,5 +1767,17 @@ public class SQLMap implements JDBCMappable, Mappable, HasDependentResources, De
 	}
 	public ArrayList getBinaryStreamList() {
 		return binaryStreamList;
+	}
+
+	public String getUpdate() {
+		return update;
+	}
+
+	public Binary getBinaryUpdate() {
+		return binaryUpdate;
+	}
+
+	public Object getParameter() {
+		return parameter;
 	}
 }

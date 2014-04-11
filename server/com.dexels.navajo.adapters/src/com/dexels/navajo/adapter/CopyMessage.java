@@ -126,4 +126,20 @@ public void kill() {
     this.copyMessageTo = name;
   }
 
+public boolean getUseOutputDoc() {
+	return useOutputDoc;
+}
+
+public boolean getUseDefinitionMessage() {
+	return useDefinitionMessage;
+}
+
+public String getCopyMessageFrom() {
+	return copyMessageFrom;
+}
+
+public String getCopyMessageTo() {
+	return copyMessageTo;
+}
+
 }

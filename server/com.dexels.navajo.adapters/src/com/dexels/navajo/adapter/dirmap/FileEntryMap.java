@@ -60,6 +60,10 @@ public class FileEntryMap {
 		file.delete();
 	}
 
+	public void setDelete() {
+		file.delete();
+	}
+
 	public String getName() {
 		return file.getName();
 	}
