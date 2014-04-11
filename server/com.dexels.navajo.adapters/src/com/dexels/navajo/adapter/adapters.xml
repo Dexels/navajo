@@ -179,7 +179,7 @@
 			<value name="textContent" type="string" required="false" direction="in" />
 			<value name="contentType" type="string" required="false" direction="in" />
 			<value name="content" type="binary" required="false" direction="in" />
-			<value name="queuedsend" type="boolean" required="false" direction="in" />
+			<value name="queuedSend" type="boolean" required="false" direction="in" />
 		</values>
 		<methods>
 			<method name="doSend">
@@ -187,9 +187,7 @@
 			</method>
 		</methods>
 	</map>
-	<!-- FTP adapter -->
-	<!-- MOVED TO ENTERPRISE ADAPTERS TODO CHECK AND FIX -->
-	<!-- -->
+
 	<!-- Mail adapter -->
 	<map>
 		<tagname>mail</tagname>
@@ -233,11 +231,10 @@
 		<values>
 			<value name="mailServer" type="string" required="true" direction="in" />
 			<value name="queuedSend" type="boolean" required="false" direction="in" />
-			<value name="ignoreFailures" type="boolean" required="false" direction="in" />
-			<value name="sender" type="string" required="false" direction="in" />
+			<value name="from" type="string" required="false" direction="in" />
 			<value name="subject" type="string" required="false" direction="in" />
-			<value name="text" type="string" required="false" direction="in" />
-			<value name="recipients" type="string" required="false" direction="in" />
+			<value name="bodyText" type="string" required="false" direction="in" />
+			<value name="to" type="string" required="false" direction="in" />
 			<value name="attachment" map="attachment" required="false" direction="in" />
 			<value name="multipleAttachments" map="attachment []" required="false" direction="in" />
 			<value name="smtpUser" type="string" required="false" direction="in" />
@@ -275,7 +272,7 @@
 			<!-- Append response from non-blocking called navajomap -->
 			<method name="appendResponse">
 				<param name="id" field="id" type="string" required="false" />
-				<param name="appendTo" field="appendTo" type="any" required="false" />
+				<param name="appendTo" field="appendTo" type="string" required="false" />
 				<param name="append" field="append" type="string" required="true" />
 			</method>
 			<!-- Set messagePointer for a specified NavajoMap id -->
@@ -355,7 +352,7 @@
 				<param name="inputProperties" field="inputProperties" type="string" required="false" />
 				<param name="outputProperties" field="outputProperties" type="string" required="false" />
 				<param name="block" field="block" type="boolean" required="false" />
-				<param name="name" field="doSend" type="boolean" required="true" />
+				<param name="name" field="doSend" type="string" required="true"  />
 				<param name="appendTo" field="appendTo" type="string" required="false" />
 				<param name="append" field="append" type="string" required="false" />
 			</method>
@@ -472,7 +469,7 @@
 				<param name="value" field="parameter" type="any" required="false" />
 			</method>
 			<method name="addOutputParameter">
-				<param name="type" field="outputParameterType" type="any" required="false" />
+				<param name="type" field="outputParameterType" type="string" required="false" />
 			</method>
 			<method name="doUpdate">
 				<param name="value" field="doUpdate" type="boolean" required="automatic" value="true" />
@@ -556,8 +553,8 @@
 				<param name="content" field="insert" type="binary" required="true" />
 			</method>
 			<method name="setText">
-				<param name="tag" field="childName" required="true" />
-				<param name="value" field="childText" required="true" />
+				<param name="tag" field="childName" required="true"  type="string"/>
+				<param name="value" field="childText" required="true"  type="string"/>
 			</method>
 			<method name="setAttribute">
 				<param name="tag" field="childName" type="string" required="true" />
@@ -643,23 +640,23 @@
 	</map>
 
 	<map>
-		<tagname>com.dexels.navajo.adapter.AdminMap</tagname>
+		<tagname>adminmap</tagname>
 		<object>com.dexels.navajo.adapter.AdminMap</object>
 	</map>
 	<map>
-		<tagname>com.dexels.navajo.adapter.AccessMap</tagname>
+		<tagname>accessmap</tagname>
 		<object>com.dexels.navajo.adapter.AccessMap</object>
 	</map>
 	<map>
-		<tagname>com.dexels.navajo.adapter.MultipleSQLMap</tagname>
+		<tagname>multiplesqlmap</tagname>
 		<object>com.dexels.navajo.adapter.MultipleSQLMap</object>
 	</map>
 	<map>
-		<tagname>com.dexels.navajo.adapter.SelectionMap</tagname>
+		<tagname>selectionmap</tagname>
 		<object>com.dexels.navajo.adapter.SelectionMap</object>
 	</map>
 	<map>
-		<tagname>com.dexels.navajo.adapter.SequencedInsertMap</tagname>
+		<tagname>sequencedinsertmap</tagname>
 		<object>com.dexels.navajo.adapter.SequencedInsertMap</object>
 	</map>
 </adapterdef>
