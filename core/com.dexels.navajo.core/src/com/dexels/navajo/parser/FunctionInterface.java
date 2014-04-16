@@ -337,4 +337,12 @@ public abstract class FunctionInterface {
 	public Access getAccess() {
 		return this.access;
 	}
+	
+	public String getInstance() {
+		if (this.access==null) {
+			return null;
+		} else {
+			return this.access.getInstance();
+		}
+	}
 }
