@@ -93,7 +93,7 @@ public class ElementCommand implements ArticleCommand {
 			msgNode.put(propname, p.getValue());
 			return null;
 		} else {
-			ObjectNode on = runtime.getObjectMapper().createObjectNode();
+			ObjectNode on = runtime.getRootNode();
 			on.put(name, p.getValue());
 			return on;
 		}
@@ -105,5 +105,5 @@ public class ElementCommand implements ArticleCommand {
 	public boolean writeMetadata(XMLElement e, ArrayNode outputArgs,ObjectMapper mapper) {
 		return false;
 	}
-
+	
 }

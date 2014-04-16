@@ -48,4 +48,6 @@ public interface ArticleRuntime {
 	public String resolveScope(String name) throws ArticleException;
 
 	public String getInstance();
+
+	public ObjectNode getRootNode();
 }

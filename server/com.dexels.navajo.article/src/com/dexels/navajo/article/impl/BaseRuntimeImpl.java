@@ -119,7 +119,15 @@ public abstract class BaseRuntimeImpl implements ArticleRuntime {
 	}
 	
 	@Override
+	public ObjectNode getRootNode() {
+		return rootNode;
+	}
+	
+	@Override
 	public ObjectNode getGroupNode( String name) throws ArticleException {
+//		if("".equals(name) || "/".equals(name)) {
+//			return rootNode;
+//		}
 		String[] split = name.split("/");
 		int i = 0;
 		ObjectNode current = null;
