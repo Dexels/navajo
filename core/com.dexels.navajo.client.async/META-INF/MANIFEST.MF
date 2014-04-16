@@ -1,7 +1,7 @@
 Bundle-Name: Navajo Async Client
 Bundle-SymbolicName: com.dexels.navajo.client.async
 Bundle-ManifestVersion: 2
-Bundle-Version: 1.2.6
+Bundle-Version: 1.2.7.qualifier
 Export-Package: com.dexels.navajo.client.async,
  navajoasyncclient
 Bundle-Vendor: Dexels
