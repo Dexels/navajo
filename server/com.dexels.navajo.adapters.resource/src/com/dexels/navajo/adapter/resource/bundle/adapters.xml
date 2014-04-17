@@ -29,7 +29,7 @@
     </map>
     
         <map>
-        <tagname>http</tagname>
+        <tagname>httpurl</tagname>
         <object>com.dexels.navajo.adapter.resource.URLMap</object>
         <values>
             <value name="url" type="string" required="true" direction="in"/>
