@@ -6,17 +6,23 @@ import java.util.Map;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dexels.navajo.article.ArticleContext;
 import com.dexels.navajo.article.ArticleException;
 import com.dexels.navajo.article.ArticleRuntime;
 import com.dexels.navajo.article.command.ArticleCommand;
 import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.script.api.AuthorizationException;
 import com.dexels.navajo.script.api.FatalException;
 import com.dexels.navajo.script.api.LocalClient;
+import com.dexels.navajo.script.api.UserException;
+import com.dexels.navajo.server.ConditionErrorException;
 
 public class ServiceCommand implements ArticleCommand {
 
@@ -24,6 +30,10 @@ public class ServiceCommand implements ArticleCommand {
 	private LocalClient localClient;
 	private final Map<String, LocalClient> instanceClients = new HashMap<String, LocalClient>();
 
+	
+	private final static Logger logger = LoggerFactory
+			.getLogger(ServiceCommand.class);
+	
 	public ServiceCommand() {
 		// default constructor
 	}
@@ -89,10 +99,55 @@ public class ServiceCommand implements ArticleCommand {
 			String instance) throws ArticleException {
 		try {
 			Navajo result = localClient.call(instance, n);
+
+
+		      try {
+				handleError(result);
+			} catch (UserException e) {
+				throw new ArticleException("Error calling service",e);
+			} catch (AuthorizationException e) {
+				throw new ArticleException("Error calling service",e);
+			} catch (ConditionErrorException e) {
+				throw new ArticleException("Error calling service",e);
+			}
 			return result;
 		} catch (FatalException e) {
 			throw new ArticleException("Error calling service: " + name, e);
 		}
+	}
+
+	private void handleError(Navajo result) throws UserException,
+			AuthorizationException, ConditionErrorException {
+		result.write(System.err);
+		Message error = result.getMessage("error");
+		  if (error != null  ) {
+		      String errMsg = error.getProperty("message").getValue();
+		      String errCode = error.getProperty("code").getValue();
+		      int errorCode = -1;
+		          try {
+					errorCode = Integer.parseInt(errCode);
+				} catch (NumberFormatException e) {
+					logger.error("Error: ", e);
+				}
+		      throw new UserException(errorCode, errMsg);
+		  }
+
+		  boolean authenticationError = false;
+		  Message aaaError = result.getMessage(AuthorizationException.AUTHENTICATION_ERROR_MESSAGE);
+		  if (aaaError == null) {
+		    aaaError = result.getMessage(AuthorizationException.AUTHORIZATION_ERROR_MESSAGE);
+		  } else {
+		    authenticationError = true;
+		  }
+		  if (aaaError != null) {
+		    throw new AuthorizationException(authenticationError, !authenticationError,
+		                                     aaaError.getProperty("User").getValue(),
+		                                     aaaError.getProperty("Message").getValue());
+		  }
+
+		  if ( result.getMessage("ConditionErrors") != null) {
+		      throw new ConditionErrorException(result);
+		  }
 	}
 
 	public void removeLocalClient(LocalClient localClient, Map<String, String> setting) {
