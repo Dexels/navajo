@@ -5,7 +5,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Property;
@@ -36,12 +38,19 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
 	private Calendar calValue;
 
 	private boolean shortFormat = false;
-
-	private final static ThreadLocal<DateFormat> df = new ThreadLocal<DateFormat>() {
+    
+	private final static ThreadLocal<DateFormat> dfMedium = new ThreadLocal<DateFormat>() {
 		@Override
 		protected DateFormat initialValue()
 		{
 			return SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN);
+		}
+	}; 
+	private final static ThreadLocal<DateFormat> dfShort = new ThreadLocal<DateFormat>() {
+		@Override
+		protected DateFormat initialValue()
+		{
+			return SimpleDateFormat.getTimeInstance(DateFormat.SHORT, Locale.GERMAN);
 		}
 	}; 
 
@@ -121,7 +130,7 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
             //throw new Exception("Invalid clocktime: " + s);
           }
           try {
-            value = df.get().parse("00:" + s + ":00");
+            value = dfMedium.get().parse("00:" + s + ":00");
           }
           catch (Exception e) {
             calValue = null;
@@ -175,10 +184,13 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
         s += ":00";
       }
       try {
-        value = df.get().parse(s);
+        value = dfMedium.get().parse(s);
         calValue = Calendar.getInstance();
         calValue.setTime(value);
         normalize();
+        if (getSubType("showseconds").equalsIgnoreCase("false")) {
+        	setShortFormat(true);
+        }
       }
       catch (Exception e) {
         //throw new Exception(e);
@@ -231,20 +243,19 @@ public final String toString() {
 		  return toShortString();
 	  }
     if (calValue != null) {
-      return df.get().format(calValue.getTime());
+      return dfMedium.get().format(calValue.getTime());
     }
     else {
       return "";
     }
   }
   public final String toShortString() {
-	    if (calValue != null) {
-	      return df.get().format(calValue.getTime());
-	    }
-	    else {
-	      return null;
-	    }
-	  }
+    if (calValue != null) {
+    	return dfShort.get().format(calValue.getTime());
+    } else {
+    	return null;
+    }
+  }
   
   
 
