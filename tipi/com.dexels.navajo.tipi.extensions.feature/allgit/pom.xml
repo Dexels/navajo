@@ -30,7 +30,6 @@
 		<module>../../com.dexels.navajo.tipi.swing.mig.feature/allgit</module>
 		<!-- <module>../../com.dexels.navajo.tipi.swing.rdf.feature/allgit</module>  -->
 		<module>../../com.dexels.navajo.tipi.swing.substance.feature/allgit</module>
-		<module>../../com.dexels.navajo.tipi.swing.svg.feature/allgit</module> 
 		<module>../</module>
 	</modules>
 	
