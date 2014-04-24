@@ -188,7 +188,7 @@ public final class ClockTime extends NavajoType implements Comparable<ClockTime>
         calValue = Calendar.getInstance();
         calValue.setTime(value);
         normalize();
-        if (getSubType("showseconds").equalsIgnoreCase("false")) {
+        if (getSubType("showseconds") != null && getSubType("showseconds").equalsIgnoreCase("false")) {
         	setShortFormat(true);
         }
       }
