@@ -66,9 +66,6 @@
    <feature url="features/com.dexels.navajo.tipi.swing.substance.feature_1.1.6.qualifier.jar" id="com.dexels.navajo.tipi.swing.substance.feature" version="1.1.6.qualifier">
       <category name="TipiOptional"/>
    </feature>
-   <feature url="features/com.dexels.navajo.tipi.swing.svg.feature_1.0.7.qualifier.jar" id="com.dexels.navajo.tipi.swing.svg.feature" version="1.0.7.qualifier">
-      <category name="TipiOptional"/>
-   </feature>
    <feature url="features/com.dexels.navajo.core.feature_1.0.9.qualifier.jar" id="com.dexels.navajo.core.feature" version="1.0.9.qualifier">
       <category name="Navajo Core"/>
    </feature>

@@ -86,10 +86,6 @@
          version="0.0.0"/>
 
    <includes
-         id="com.dexels.navajo.tipi.swing.svg.feature"
-         version="0.0.0"/>
-
-   <includes
          id="com.dexels.navajo.tipi.vaadin.feature"
          version="0.0.0"/>
 
