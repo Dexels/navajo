@@ -5,6 +5,9 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 1.0.13.qualifier
 Bundle-Activator: navajofunctionspdf.Version
 Bundle-Vendor: Dexels
+Navajo-Extension: com/dexels/navajo/pdf/functions/functions.xml
+Navajo-Name: PdfFunctions
+Eclipse-ExtensibleAPI: true
 Import-Package: com.dexels.navajo.document;version="2.2.0",
  com.dexels.navajo.document.types;version="2.2.0",
  com.dexels.navajo.parser,

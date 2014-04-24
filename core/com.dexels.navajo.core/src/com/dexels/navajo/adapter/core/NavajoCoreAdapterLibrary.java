@@ -34,7 +34,7 @@ public class NavajoCoreAdapterLibrary implements ExtensionDefinition {
 
 	@Override
 	public String getDescription() {
-		return "The Enterprise Navajo Adapter Library";
+		return "The Core Navajo Adapter Library";
 	}
 
 	@Override

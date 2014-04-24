@@ -187,6 +187,14 @@ public class ServiceMapper implements Mappable {
 	public void store() throws MappableException, UserException {
 	}
 
+	public String getServiceClass() {
+		return serviceClass;
+	}
+
+	public String getServiceMethod() {
+		return serviceMethod;
+	}
+
 	public static void main(String [] args) throws Exception {
 		
 		ServiceMapper sm = new ServiceMapper();

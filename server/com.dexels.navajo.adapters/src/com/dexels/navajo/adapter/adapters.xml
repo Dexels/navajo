@@ -353,7 +353,7 @@
 				<param name="inputProperties" field="inputProperties" type="string" required="false" />
 				<param name="outputProperties" field="outputProperties" type="string" required="false" />
 				<param name="block" field="block" type="boolean" required="false" />
-				<param name="name" field="doSend" type="boolean" required="true" />
+				<param name="name" field="doSend" type="string" required="true" />
 				<param name="appendTo" field="appendTo" type="string" required="false" />
 				<param name="append" field="append" type="string" required="false" />
 			</method>

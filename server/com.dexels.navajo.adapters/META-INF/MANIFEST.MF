@@ -5,6 +5,9 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 2.0.13.qualifier
 DynamicImport-Package: *
 Bundle-Activator: navajoadapters.Version
+Navajo-Name: Core
+Navajo-Extension: com/dexels/navajo/adapter/adapters.xml
+Eclipse-ExtensibleAPI: true
 Export-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.adapter.clieop,
  com.dexels.navajo.adapter.csvmap;uses:="com.dexels.navajo.server,com.dexels.navajo.mapping",

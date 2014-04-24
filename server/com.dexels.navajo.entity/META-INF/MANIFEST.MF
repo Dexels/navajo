@@ -5,6 +5,9 @@ Bundle-SymbolicName: com.dexels.navajo.entity
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Dexels
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Navajo-Extension: com/dexels/navajo/entity/adapters/adapters.xml
+Navajo-Name: Entity
+Eclipse-ExtensibleAPI: true
 Import-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.adapter.messagemap,
  com.dexels.navajo.client;version="1.0.0",

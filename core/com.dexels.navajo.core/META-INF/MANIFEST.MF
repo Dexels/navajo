@@ -3,6 +3,9 @@ Bundle-SymbolicName: com.dexels.navajo.core
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
 Bundle-Version: 3.0.17.qualifier
+Navajo-Extension: com/dexels/navajo/adapter/core/coreadapters.xml
+Navajo-Name: Core
+Eclipse-ExtensibleAPI: true
 Bundle-Activator: navajocore.Version
 Export-Package: com.dexels.navajo.adapter.core;uses:="navajo",
  com.dexels.navajo.adapter.navajomap.manager;uses:="com.dexels.navajo.server.resource",
