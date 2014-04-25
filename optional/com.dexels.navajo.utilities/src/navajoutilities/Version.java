@@ -5,7 +5,7 @@ import navajoextension.AbstractCoreExtension;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import com.dexels.navajo.util.UtilitiesLibrary;
+import com.dexels.navajo.util.legacy.UtilitiesLibrary;
 
 
 public class Version extends AbstractCoreExtension implements BundleActivator {

@@ -1,4 +1,4 @@
-package com.dexels.navajo.util;
+package com.dexels.navajo.util.legacy;
 
 import java.io.BufferedReader;
 import java.io.File;
