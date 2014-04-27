@@ -62,11 +62,13 @@ public class CommonsMailMap implements Mappable, Queuable {
 	private String[] toArray = null;
 	private String[] ccArray = null;
 	private String[] bccArray = null;
-	private List<AttachmentMapInterface> attachments = null;
+	private List<AttachementMap> attachments = null;
 	public AttachementMap[] multipleAttachments = null;
 	public AttachementMap attachment = null;
 
 	
+
+
 	public CommonsMailMap() {}
 	
 	/**
@@ -532,9 +534,9 @@ public class CommonsMailMap implements Mappable, Queuable {
 		return bins;
 	}
 
-	public void setMultipleAttachments(AttachmentMapInterface[] c) {
+	public void setMultipleAttachments(AttachementMap[] c) {
 		if (attachments == null) {
-			attachments = new ArrayList<AttachmentMapInterface>();
+			attachments = new ArrayList<AttachementMap>();
 		}
 
 		for (int i = 0; i < c.length; i++) {
@@ -542,9 +544,21 @@ public class CommonsMailMap implements Mappable, Queuable {
 		}
 	}
 
-	public void setAttachment(AttachmentMapInterface m) {
+	public AttachementMap[] getMultipleAttachments() {
 		if (attachments == null) {
-			attachments = new ArrayList<AttachmentMapInterface>();
+			return new AttachementMap[0];
+		}
+		
+		return attachments.toArray(new AttachementMap[attachments.size()]);
+	}
+	
+	public AttachementMap getAttachment() {
+		return attachment;
+	}
+	
+	public void setAttachment(AttachementMap m) {
+		if (attachments == null) {
+			attachments = new ArrayList<AttachementMap>();
 		}
 		attachments.add(m);
 	}

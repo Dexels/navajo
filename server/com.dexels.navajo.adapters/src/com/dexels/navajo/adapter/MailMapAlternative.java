@@ -573,5 +573,24 @@ public class MailMapAlternative implements MailMapInterface, Mappable,
 
 		mma.send();
 	}
+	
 
+
+	public AttachementMap[] getMultipleAttachments() {
+		if (attachments == null) {
+			return new AttachementMap[0];
+		}
+		
+		return attachments.toArray(new AttachementMap[attachments.size()]);
+	}
+	
+	public AttachementMap getAttachment() {
+		return attachment;
+	}
+
+	public AttachementMap getRelatedBodyPart() {
+		return relatedBodyPart;
+	}
+
+	 
 }
