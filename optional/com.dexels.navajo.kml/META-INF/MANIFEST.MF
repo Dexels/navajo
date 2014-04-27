@@ -4,6 +4,9 @@ Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.2.1.qualifier
 Bundle-Vendor: Dexels
+Navajo-Name: Kml
+Navajo-Extension: com/dexels/navajo/geo/kmladapterdef.xml
+Eclipse-ExtensibleAPI: true
 Import-Package: com.dexels.navajo.adapters.svg,
  com.dexels.navajo.client,
  com.dexels.navajo.document;version="2.2.0",

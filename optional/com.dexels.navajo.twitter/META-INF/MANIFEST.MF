@@ -4,6 +4,9 @@ Bundle-Description: Core version manager
 Bundle-ManifestVersion: 2
 Bundle-Version: 1.1.1.qualifier
 Bundle-Activator: navajotwitter.Version
+Navajo-Name: Twitter
+Navajo-Extension: com/dexels/twitter/adapter.xml
+Eclipse-ExtensibleAPI: true
 Export-Package: com.dexels.twitter,
  com.google.gdata.util.common.base,
  com.winterwell.jgeoplanet,

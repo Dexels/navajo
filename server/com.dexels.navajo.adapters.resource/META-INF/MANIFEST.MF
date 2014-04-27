@@ -6,8 +6,9 @@ Bundle-Version: 2.0.11.qualifier
 DynamicImport-Package: *
 Bundle-Activator: navajoadaptersresource.Version
 Bundle-Vendor: Dexels
-Require-Bundle: com.dexels.navajo.listeners,
- com.dexels.navajo.resource;bundle-version="1.0.0"
+Navajo-Name: ResourceAdapters
+Navajo-Extension: com/dexels/navajo/adapter/resource/bundle/adapters.xml
+Eclipse-ExtensibleAPI: true
 Import-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.adapter.sqlmap,
  com.dexels.navajo.client,
@@ -22,11 +23,13 @@ Import-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.resource.http,
  com.dexels.navajo.script.api;version="1.0.0",
  com.dexels.navajo.server,
- com.dexels.navajo.util,
+ com.dexels.navajo.util;version="1.0.0",
+ com.dexels.navajo.util.legacy,
  com.dexels.navajo.version,
  javax.activation,
  javax.mail,
  javax.mail.internet,
+ javax.servlet;version="[2.5.0,4.0.0)",
  navajo,
  navajoextension,
  org.dexels.grus;version="1.0.0",

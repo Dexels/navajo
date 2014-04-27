@@ -5,8 +5,8 @@ Bundle-ManifestVersion: 2
 Bundle-Version: 2.0.13.qualifier
 DynamicImport-Package: *
 Bundle-Activator: navajoadapters.Version
-Navajo-Name: Core
-Navajo-Extension: com/dexels/navajo/adapter/adapters.xml
+Navajo-Name: Adapters
+Navajo-Extension: com/dexels/navajo/adapter/adapters.xml,com/dexels/navajo/adapter/functions/adapterfunctions.xml
 Eclipse-ExtensibleAPI: true
 Export-Package: com.dexels.navajo.adapter,
  com.dexels.navajo.adapter.clieop,
@@ -70,7 +70,7 @@ Import-Package: com.dexels.navajo.adapter.navajomap.manager,
  com.dexels.navajo.server.jmx,
  com.dexels.navajo.server.resource,
  com.dexels.navajo.serviceplugin,
- com.dexels.navajo.util,
+ com.dexels.navajo.util;version="1.0.0",
  com.dexels.navajo.version,
  javax.activation,
  javax.mail,

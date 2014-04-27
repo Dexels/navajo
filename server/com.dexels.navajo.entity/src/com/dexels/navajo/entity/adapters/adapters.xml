@@ -1,4 +1,5 @@
 <adapterdef>
+	<require bundle="com.dexels.navajo.adapters"/>
 	<map>
 		<tagname>exampletransactionaladapter</tagname>
 		<object>com.dexels.navajo.entity.adapters.ExampleTransactionalAdapter</object>

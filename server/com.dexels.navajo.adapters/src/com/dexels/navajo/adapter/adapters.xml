@@ -119,7 +119,7 @@
 			<value name="loop" map="arrayelement []" required="false" direction="in" />
 		</values>
 	</map>
-	<map>
+	<map abstract="true">
 		<tagname>arrayelement</tagname>
 		<object>com.dexels.navajo.adapter.EmptyMap</object>
 	</map>
@@ -166,7 +166,7 @@
 			<value name="entries" map="csvline []" required="false" direction="out" />
 		</values>
 	</map>
-	<map>
+	<map abstract="true">
 		<tagname>csvline</tagname>
 		<object>com.dexels.navajo.adapter.csvmap.CSVEntryMap</object>
 		<description />
@@ -244,7 +244,7 @@
 			<value name="useEncryption" type="boolean" required="false" direction="in" />
 		</values>
 	</map>
-	<map>
+	<map abstract="true">
 		<tagname>attachment</tagname>
 		<object>com.dexels.navajo.adapter.mailmap.AttachementMap</object>
 		<description />
@@ -480,7 +480,7 @@
 			</method>
 		</methods>
 	</map>
-	<map>
+	<map abstract="true">
 		<tagname>resultrow</tagname>
 		<abstract>false</abstract>
 		<object>com.dexels.navajo.adapter.sqlmap.ResultSetMap</object>
