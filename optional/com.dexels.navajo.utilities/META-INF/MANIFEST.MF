@@ -2,7 +2,7 @@ Bundle-Name: Navajo Utilities
 Bundle-SymbolicName: com.dexels.navajo.utilities
 Bundle-Description: A Hello World bundle
 Bundle-ManifestVersion: 2
-Bundle-Version: 3.0.1.qualifier
+Bundle-Version: 3.0.2
 Bundle-Vendor: Dexels
 Bundle-ClassPath: lib/ganymed-ssh2-build210.jar,.
 Export-Package: com.dexels.navajo.install,
