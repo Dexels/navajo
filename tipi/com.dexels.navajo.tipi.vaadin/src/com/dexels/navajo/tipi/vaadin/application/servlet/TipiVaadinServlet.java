@@ -41,6 +41,10 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 	private final static Logger logger = LoggerFactory
 			.getLogger(TipiVaadinServlet.class);
 
+	private final static Logger httpLogger = LoggerFactory
+			.getLogger("http.logger");
+
+	
 	private static final long serialVersionUID = 8125011483209557703L;
 	private ContextInstance contextInstance;
 	private Set<Application> applications = new HashSet<Application>();
@@ -51,7 +55,9 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 
 	private String language =null;
 	private String region = null;
+	private String httpDebug = null;
 
+	
 	protected String widgetset;
 	protected String productionMode;
 
@@ -108,6 +114,7 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		final String deployment= (String) settings.get("tipi.instance.deployment");
 		language = (String) settings.get("tipi.instance.language");
 		region = (String) settings.get("tipi.instance.region");
+		httpDebug = (String) settings.get("http.debug");
 		productionMode = (String) settings.get("tipi.instance.productionmode");
 		widgetset = (String) settings.get("tipi.instance.widgetset");
 
@@ -193,6 +200,10 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 			return;
 		}
 		
+		if("true".equals(httpDebug)) {
+			dumpRequestHeaders(request);
+		}
+		
 		TipiVaadinApplication instance = (TipiVaadinApplication) request.getSession().getAttribute("tipiInstance");
 		if(instance==null) {
 			response.getWriter().write("No instance");
@@ -238,6 +249,17 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		}
 		
 	}
+
+	private void dumpRequestHeaders(HttpServletRequest request) {
+		Enumeration<String> en = request.getHeaderNames();
+		while (en.hasMoreElements()) {
+			String name = (String) en.nextElement();
+			String value = request.getHeader(name);
+			httpLogger.debug("HTTP Header: "+name+" value: >"+value+"<");
+		}
+	}
+
+
 
 	public void activate() {
 		logger.info("Activating Vaadin Servlet");
