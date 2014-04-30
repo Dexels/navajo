@@ -294,6 +294,11 @@ public void store() throws MappableException, UserException {
 			  list.add(inDoc.getMessage(messageOffset));
 			  //list = inDoc.getMessages(messageOffset);
 		  }
+		  
+		  // If no messages were found, there is nothing to append
+		  if (list.isEmpty()) {
+			  return;
+		  }
 
 		  /**
 		   * appendTo logic. If appendTo ends with '/' append the entire append message to the defined appendTo message.
