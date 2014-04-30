@@ -20,19 +20,6 @@ public class TipiPanel extends TipiVaadinComponentImpl {
 	@Override
 	public Object createContainer() {
 		VerticalLayout panel = new VerticalLayout();
-		panel.addListener(new LayoutClickListener() {
-			private static final long serialVersionUID = 1L;
-			@Override
-            public void layoutClick(LayoutClickEvent event) {
-                try {
-                	performTipiEvent("onActionPerformed", null, true);
-				} catch (TipiBreakException e) {
-					logger.debug("Error: ",e);
-				} catch (TipiException e) {
-					logger.error("Error: ",e);
-				}
-            }
-        });
 		return panel;
 	}
 

@@ -180,11 +180,15 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		String referer = request.getHeader("x-forwarded-host");
 		logger.info("Creating application. Referer: "+referer);
 		tipiApplication.setReferer(referer);
+		String logoutURL = null;
+		
 		if(referer!=null) {
-			tipiApplication.setLogoutURL("http://"+referer+request.getRequestURI());
-		}  else {
-			tipiApplication.setLogoutURL(request.getRequestURL().toString());
+			logoutURL = "http://" + referer + request.getRequestURI();
+		} else {
+			logoutURL = request.getRequestURL().toString();
 		}
+		logger.info("Setting logout url to: "+logoutURL);
+		tipiApplication.setLogoutURL(logoutURL);
      	HttpSession hs = request.getSession();
      	hs.setAttribute("tipiInstance",tipiApplication);
 		// add request data?

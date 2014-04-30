@@ -5,7 +5,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/Tidy.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/vaadin-chameleon-theme-1.1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/confirmdialog-1.1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/ContextMenu3.1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/PagedTable-0.6.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/vaadin-tinymce-1.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/borderlayout-0.3.jar"/>

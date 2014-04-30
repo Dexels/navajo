@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.vaadin.components.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.peter.contextmenu.ContextMenu;
 
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
@@ -85,9 +84,7 @@ public abstract class TipiVaadinComponentImpl extends TipiDataComponentImpl {
 
 	@Override
 	public void addToContainer(Object c, Object constraints) {
-		if(c instanceof ContextMenu) {
-			logger.debug("Register context. Not working yet.");
-		}
+
 		if(!(c instanceof Component)) {
 			throw new IllegalArgumentException("Can not add non-vaadin component to component: "+c);
 		}
