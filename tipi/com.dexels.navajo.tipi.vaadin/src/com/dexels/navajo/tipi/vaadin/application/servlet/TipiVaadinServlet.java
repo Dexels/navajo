@@ -193,15 +193,16 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 		String eval = request.getParameter("evaluate");
-		if(eval==null) {
-			super.service(request, response);
-			return;
-		}
 		
 		if(httpLogger.isDebugEnabled()) {
 			dumpRequestHeaders(request);
 		}
 		
+		if(eval==null) {
+			super.service(request, response);
+			return;
+		}
+
 		TipiVaadinApplication instance = (TipiVaadinApplication) request.getSession().getAttribute("tipiInstance");
 		if(instance==null) {
 			response.getWriter().write("No instance");
