@@ -181,7 +181,9 @@ public class TipiVaadinServlet extends AbstractApplicationServlet {
 		logger.info("Creating application. Referer: "+referer);
 		tipiApplication.setReferer(referer);
 		if(referer!=null) {
-			tipiApplication.setLogoutURL("http://"+referer+request.getContextPath());
+			tipiApplication.setLogoutURL("http://"+referer+request.getRequestURI());
+		}  else {
+			tipiApplication.setLogoutURL(request.getRequestURL().toString());
 		}
      	HttpSession hs = request.getSession();
      	hs.setAttribute("tipiInstance",tipiApplication);
